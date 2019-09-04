@@ -1,0 +1,70 @@
+buildscript {
+    ext.kotlin_version = '1.3.50' // Required for Kotlin integration
+    ext.spring_boot_version = '2.1.0.RELEASE'
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
+    }
+}
+
+apply plugin: 'kotlin' // Required for Kotlin integration
+apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+    baseName = 'brn-service'
+    version = '0.1.0'
+}
+
+repositories {
+    jcenter()
+}
+
+configurations {
+    ktlint
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+    compile "org.springframework.boot:spring-boot-starter-web"
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    compile 'org.apache.logging.log4j:log4j-api-kotlin:1.0.0'
+    compile 'org.apache.logging.log4j:log4j-api:2.11.2'
+    compile 'org.apache.logging.log4j:log4j-core:2.11.2'
+
+    ktlint "com.github.shyiko:ktlint:0.31.0"
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "-F", "src/**/*.kt"
+}
+
+def outputDir = "${project.buildDir}/reports/ktlint/"
+def outputFile = "${outputDir}ktlint-checkstyle-report.xml"
+project.task("ktlint", type: JavaExec) {
+    group = "verification"
+    description = "Runs ktlint."
+    main = "com.github.shyiko.ktlint.Main"
+    classpath = project.configurations.ktlint
+    args = [
+            "--reporter=plain",
+            "--reporter=checkstyle,output=${outputFile}",
+            "src/**/*.kt"
+    ]
+}
+compileKotlin.dependsOn ktlint
