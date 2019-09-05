@@ -10,9 +10,7 @@ There are many children/people nowadays with the impairment in auditory cognitiv
 (and their amount is increasing over time) on speech understanding layer.
 Between this people and last researches there is steel a big gap unfortunately, special in russian-language society.
 So the main idea of this project is to link this people with such problems/necessities and last science results in this area to help them.
-
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ science source for this topic,
-
 https://www.youtube.com/watch?v=BMNrFENZ4Rw&list=PL22UXqXsyq0em3CfoSMRfNwWblRM_AnTk  brain plasticity
 
 Mandatory. AMOUNT OF TARGET USERS.
