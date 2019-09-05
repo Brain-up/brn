@@ -1,4 +1,4 @@
-package com.brn.service
+package com.epam.brn.service
 
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service

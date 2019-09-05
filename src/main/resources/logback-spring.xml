@@ -41,6 +41,6 @@
     </root>
 
     <!-- start of custom settings besides root appenders -->
-    <logger name="com.brn" level="DEBUG"/>
+    <logger name="com.epam.brn" level="DEBUG"/>
 
 </configuration>
