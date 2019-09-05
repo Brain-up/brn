@@ -1,7 +1,7 @@
-package com.brn.controller
+package com.epam.brn.controller
 
-import com.brn.dto.UserData
-import com.brn.service.UserDetailService
+import com.epam.brn.dto.UserData
+import com.epam.brn.service.UserDetailService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
