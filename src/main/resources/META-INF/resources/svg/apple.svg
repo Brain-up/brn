@@ -1,0 +1,9 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    >
+  <title>Apple</title>
+  <g>
+    <ellipse cx="51" cy="51" rx="48" ry="48" fill="#eeee00" stroke="#f0f000" stroke-width="2"/>
+  </g>
+</svg>
