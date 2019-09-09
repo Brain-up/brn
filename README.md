@@ -22,7 +22,7 @@ Availability of business people or subject matter experts capacity to support th
 there are group of russian scientist who work in this field and ready to support this project in semantic questions.
 
 Technologies
-Server side: Java/Kotlin + Spring (rest api for front)
-DB: Postgres
-Front-end : up to front-end developers 
-Using some libraries which are working with audio information
+Server side: Java/Kotlin + Spring boot (rest api for front).
+DB: Postgres (h2 on development now).
+Front-end : up to front-end developers - angular / react.
+Using some libraries which are working with audio information.
