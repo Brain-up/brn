@@ -33,5 +33,6 @@ out/
 /target/
 
 ### Eclipse & Vaadin ###
+/bin/
 /node_modules/
 /webpack.generated.js
