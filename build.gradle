@@ -22,6 +22,13 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "kotlin-jpa"
 
+// --- Eclipse ---------------------------------------------------------------------------------------------------------
+apply plugin: "eclipse"
+eclipse.project {
+    natures 'org.jetbrains.kotlin.core.kotlinNature'
+}
+// --- /Eclipse --------------------------------------------------------------------------------------------------------
+
 jar {
     baseName = 'brn-service'
     version = '0.1.0'
@@ -29,16 +36,18 @@ jar {
 
 repositories {
     jcenter()
-    maven { url "https://maven.vaadin.com/vaadin-addons" } //+++
 }
 
-//+++ +
-dependencyManagement {
-  imports {
-    mavenBom 'com.vaadin:vaadin-bom:14.0.3'
-  }
+// --- Vaadin ----------------------------------------------------------------------------------------------------------
+repositories {
+    maven { url "https://maven.vaadin.com/vaadin-addons" } //+++
 }
-//+++ -
+dependencyManagement {
+    imports {
+        mavenBom 'com.vaadin:vaadin-bom:14.0.3'
+    }
+}
+// --- /Vaadin ---------------------------------------------------------------------------------------------------------
 
 configurations {
     ktlint
