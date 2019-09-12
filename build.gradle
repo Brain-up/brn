@@ -46,12 +46,15 @@ repositories {
 
 // --- Vaadin ----------------------------------------------------------------------------------------------------------
 repositories {
-    maven { url "https://maven.vaadin.com/vaadin-addons" } //+++
+    maven { url 'https://maven.vaadin.com/vaadin-addons' }
 }
 dependencyManagement {
     imports {
         mavenBom 'com.vaadin:vaadin-bom:14.0.3'
     }
+}
+dependencies {
+   compile 'com.vaadin:vaadin-spring-boot-starter'
 }
 // --- /Vaadin ---------------------------------------------------------------------------------------------------------
 
@@ -65,7 +68,7 @@ dependencies {
 //    compile "org.springframework.boot:spring-boot-starter"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "com.h2database:h2:1.4.199"
-    compile "com.vaadin:vaadin-spring-boot-starter" //+++
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
