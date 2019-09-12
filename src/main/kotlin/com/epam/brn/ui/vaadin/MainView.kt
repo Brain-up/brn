@@ -1,4 +1,4 @@
-package com.epam.brn.spring
+package com.epam.brn.ui.vaadin
 
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.Image

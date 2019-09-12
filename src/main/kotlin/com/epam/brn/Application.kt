@@ -1,4 +1,4 @@
-package com.epam.brn.spring
+package com.epam.brn
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
