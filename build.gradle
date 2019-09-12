@@ -23,9 +23,15 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "kotlin-jpa"
 
 // --- Eclipse ---------------------------------------------------------------------------------------------------------
-apply plugin: "eclipse"
+// see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
+apply plugin: 'eclipse'
 eclipse.project {
     natures 'org.jetbrains.kotlin.core.kotlinNature'
+}
+eclipse {
+    classpath {
+        containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
+    }
 }
 // --- /Eclipse --------------------------------------------------------------------------------------------------------
 
