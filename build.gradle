@@ -68,7 +68,6 @@ dependencies {
 //    compile "org.springframework.boot:spring-boot-starter"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "com.h2database:h2:1.4.199"
-
     testCompile('org.springframework.boot:spring-boot-starter-test')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
