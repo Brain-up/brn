@@ -36,3 +36,6 @@ out/
 /bin/
 /node_modules/
 /webpack.generated.js
+
+### logs ###
+**/*.log
