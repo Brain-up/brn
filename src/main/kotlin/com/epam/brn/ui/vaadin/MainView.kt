@@ -9,9 +9,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.dom.Element
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.server.PWA
+import com.lifescience.brn.constant.BrnPath
 
 @SuppressWarnings("serial")
-@Route("")
+@Route(BrnPath.UI_VAADIN_ROUTE)
 @PWA(name = "EPAM for kids", shortName = "EPAM for kids")
 public class MainView : VerticalLayout() {
 
