@@ -13,7 +13,7 @@ import com.lifescience.brn.constant.BrnPath
 
 @SuppressWarnings("serial")
 @Route(BrnPath.UI_VAADIN_ROUTE)
-@PWA(name = "EPAM for kids", shortName = "EPAM for kids")
+@PWA(name = "EPAM auditory skills training tool", shortName = "EPAM BRN")
 public class MainView : VerticalLayout() {
 
     val panelLeft = object : HorizontalLayout() {
