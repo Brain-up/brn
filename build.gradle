@@ -22,19 +22,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "kotlin-jpa"
 
-// --- Eclipse ---------------------------------------------------------------------------------------------------------
-// see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
-apply plugin: 'eclipse'
-eclipse.project {
-    natures 'org.jetbrains.kotlin.core.kotlinNature'
-}
-eclipse {
-    classpath {
-        containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
-    }
-}
-// --- /Eclipse --------------------------------------------------------------------------------------------------------
-
 jar {
     baseName = 'brn-service'
     version = '0.1.0'
@@ -44,23 +31,6 @@ repositories {
     jcenter()
 }
 
-// --- Vaadin ----------------------------------------------------------------------------------------------------------
-repositories {
-    maven { url 'https://maven.vaadin.com/vaadin-addons' }
-}
-dependencyManagement {
-    imports {
-        mavenBom 'com.vaadin:vaadin-bom:14.0.3'
-    }
-}
-dependencies {
-   compile 'com.vaadin:vaadin-spring-boot-starter'
-}
-// --- /Vaadin ---------------------------------------------------------------------------------------------------------
-
-configurations {
-    ktlint
-}
 ext['mockito.vershion'] = "${mockitoVersion}"
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
@@ -81,8 +51,6 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api-kotlin:1.0.0'
     compile 'org.apache.logging.log4j:log4j-api:2.11.2'
     compile 'org.apache.logging.log4j:log4j-core:2.11.2'
-
-    ktlint "com.github.shyiko:ktlint:0.31.0"
 }
 
 compileKotlin {
@@ -99,6 +67,41 @@ compileTestKotlin {
     }
 }
 
+// --- Eclipse ---------------------------------------------------------------------------------------------------------
+// see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
+apply plugin: 'eclipse'
+eclipse.project {
+    natures 'org.jetbrains.kotlin.core.kotlinNature'
+}
+eclipse {
+    classpath {
+        containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
+    }
+}
+// --- /Eclipse --------------------------------------------------------------------------------------------------------
+
+// --- Vaadin ----------------------------------------------------------------------------------------------------------
+repositories {
+    maven { url 'https://maven.vaadin.com/vaadin-addons' }
+}
+dependencyManagement {
+    imports {
+        mavenBom 'com.vaadin:vaadin-bom:14.0.3'
+    }
+}
+dependencies {
+   compile 'com.vaadin:vaadin-spring-boot-starter'
+}
+// --- /Vaadin ---------------------------------------------------------------------------------------------------------
+
+// --- ktlint ----------------------------------------------------------------------------------------------------------
+configurations {
+    ktlint
+}
+dependencies {
+    ktlint "com.github.shyiko:ktlint:0.31.0"
+}
+
 task ktlintFormat(type: JavaExec, group: "formatting") {
     description = "Fix Kotlin code style deviations."
     classpath = configurations.ktlint
@@ -106,8 +109,6 @@ task ktlintFormat(type: JavaExec, group: "formatting") {
     args "-F", "src/**/*.kt"
 }
 
-def outputDir = "${project.buildDir}/reports/ktlint/"
-def outputFile = "${outputDir}ktlint-checkstyle-report.xml"
 project.task("ktlint", type: JavaExec) {
     group = "verification"
     description = "Runs ktlint."
@@ -115,8 +116,9 @@ project.task("ktlint", type: JavaExec) {
     classpath = project.configurations.ktlint
     args = [
             "--reporter=plain",
-            "--reporter=checkstyle,output=${outputFile}",
+            "--reporter=checkstyle,output=${project.buildDir}/reports/ktlint/ktlint-checkstyle-report.xml",
             "src/**/*.kt"
     ]
 }
 compileKotlin.dependsOn ktlint
+// --- /ktlint ---------------------------------------------------------------------------------------------------------
