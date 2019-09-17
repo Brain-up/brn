@@ -10,10 +10,17 @@ import com.vaadin.flow.dom.Element
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.server.PWA
 import com.lifescience.brn.constant.BrnPath
+import com.vaadin.flow.router.PageTitle
+
+object UiLabels{
+    const val appShortName = "EPAM BRN"
+    const val appDescription = "EPAM auditory skills training tool"
+}
 
 @SuppressWarnings("serial")
 @Route(BrnPath.UI_VAADIN_ROUTE)
-@PWA(name = "EPAM auditory skills training tool", shortName = "EPAM BRN")
+@PageTitle(UiLabels.appDescription)
+@PWA(name = UiLabels.appDescription, shortName = UiLabels.appShortName)
 public class MainView : VerticalLayout() {
 
     val panelLeft = object : HorizontalLayout() {
