@@ -30,3 +30,13 @@ out/
 
 ### VS Code ###
 .vscode/
+/target/
+
+### Eclipse & Vaadin ###
+/bin/
+/node_modules/
+/webpack.generated.js
+
+### logs ###
+**/*.log
+**/*.log.*.gz
