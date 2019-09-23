@@ -35,7 +35,7 @@ ext['mockito.vershion'] = "${mockitoVersion}"
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
     compile "org.springframework.boot:spring-boot-starter-web"
-//    compile "org.springframework.boot:spring-boot-starter"
+    compile "org.springframework.boot:spring-boot-starter"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "com.h2database:h2:1.4.199"
     testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -67,7 +67,7 @@ compileTestKotlin {
     }
 }
 
-// --- Eclipse ---------------------------------------------------------------------------------------------------------
+// --- Eclipse ---
 // see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
 apply plugin: 'eclipse'
 eclipse.project {
@@ -78,9 +78,8 @@ eclipse {
         containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
     }
 }
-// --- /Eclipse --------------------------------------------------------------------------------------------------------
 
-// --- Vaadin ----------------------------------------------------------------------------------------------------------
+// --- Vaadin ---
 repositories {
     maven { url 'https://maven.vaadin.com/vaadin-addons' }
 }
@@ -92,9 +91,8 @@ dependencyManagement {
 dependencies {
    compile 'com.vaadin:vaadin-spring-boot-starter'
 }
-// --- /Vaadin ---------------------------------------------------------------------------------------------------------
 
-// --- ktlint ----------------------------------------------------------------------------------------------------------
+// --- ktlint ---
 configurations {
     ktlint
 }
@@ -121,4 +119,4 @@ project.task("ktlint", type: JavaExec) {
     ]
 }
 compileKotlin.dependsOn ktlint
-// --- /ktlint ---------------------------------------------------------------------------------------------------------
+

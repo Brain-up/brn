@@ -12,7 +12,7 @@ import com.vaadin.flow.server.PWA
 import com.lifescience.brn.constant.BrnPath
 import com.vaadin.flow.router.PageTitle
 
-object UiLabels{
+object UiLabels {
     const val appShortName = "EPAM BRN"
     const val appDescription = "EPAM auditory skills training tool"
 }
@@ -37,6 +37,7 @@ public class MainView : VerticalLayout() {
                 this.setAttribute("src", "/audio/t-rex-roar.mp3")
             }
         }
+
         init {
             this.add(buttonGo)
             this.getElement().appendChild(audio)
@@ -55,7 +56,10 @@ public class MainView : VerticalLayout() {
         init {
             this.getStyle()
                 .set("position", "absolute")
-                .set("margin", "0px") // a hack to override default setting as :host([theme~="spacing"]) ::slotted(*) { margin-top: 1em; }
+                .set(
+                    "margin",
+                    "0px"
+                ) // a hack to override default setting as :host([theme~="spacing"]) ::slotted(*) { margin-top: 1em; }
                 .set("width", "100px")
                 .set("top", "20%")
                 .set("left", "20%")
