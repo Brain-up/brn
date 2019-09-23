@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlin_version = '1.3.50' // Required for Kotlin integration
-        spring_boot_version = '2.1.0.RELEASE'
+        spring_boot_version = '2.1.8.RELEASE'
         mockitoVersion = '3.0.0'
         junitVersion = '5.3.1'
     }
@@ -31,14 +31,13 @@ repositories {
     jcenter()
 }
 
-ext['mockito.vershion'] = "${mockitoVersion}"
+ext['mockito.version'] = "${mockitoVersion}"
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "com.h2database:h2:1.4.199"
-    testCompile('org.springframework.boot:spring-boot-starter-test')
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
@@ -51,6 +50,14 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api-kotlin:1.0.0'
     compile 'org.apache.logging.log4j:log4j-api:2.11.2'
     compile 'org.apache.logging.log4j:log4j-core:2.11.2'
+
+    implementation("com.vaadin:vaadin-spring-boot-starter")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'com.vaadin:vaadin-bom:14.0.5'
+    }
 }
 
 compileKotlin {
@@ -67,32 +74,7 @@ compileTestKotlin {
     }
 }
 
-// --- Eclipse ---
-// see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
-apply plugin: 'eclipse'
-eclipse.project {
-    natures 'org.jetbrains.kotlin.core.kotlinNature'
-}
-eclipse {
-    classpath {
-        containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
-    }
-}
-
-// --- Vaadin ---
-repositories {
-    maven { url 'https://maven.vaadin.com/vaadin-addons' }
-}
-dependencyManagement {
-    imports {
-        mavenBom 'com.vaadin:vaadin-bom:14.0.3'
-    }
-}
-dependencies {
-   compile 'com.vaadin:vaadin-spring-boot-starter'
-}
-
-// --- ktlint ---
+// --- ktlint - kotlin code style plugin ---
 configurations {
     ktlint
 }
@@ -120,3 +102,35 @@ project.task("ktlint", type: JavaExec) {
 }
 compileKotlin.dependsOn ktlint
 
+tasks.withType(Test) { Test task ->
+    task.useJUnitPlatform { JUnitPlatformOptions options ->
+        options.excludeTags 'integration-test'
+    }
+    testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+}
+
+task integrationTest(type: Test) { Test task ->
+    task.useJUnitPlatform { JUnitPlatformOptions options ->
+        options.includeTags 'integration-test'
+    }
+    testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+
+    task.systemProperties(System.properties)
+    println "Test task system properties: " + task.systemProperties
+    tasks.check.dependsOn task
+    task.shouldRunAfter tasks.test
+}
+
+// --- Eclipse ---
+// see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
+//apply plugin: 'eclipse'
+//eclipse.project {
+//    natures 'org.jetbrains.kotlin.core.kotlinNature'
+//}
+//eclipse {
+//    classpath {
+//        containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
+//    }
+//}
