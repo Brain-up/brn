@@ -34,6 +34,9 @@ https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 
 ## Developer notes for Vaadin UI
 
+The Vaadin 14 team expects you to have Node.js and npm tools installed on your computer. 
+(https://nodejs.org/en/download/)
+
 Open [http://localhost:8080/ui-vaadin](http://localhost:8080/ui-vaadin) in your browser.
 
 If you want to run your app locally in production mode, run `mvn spring-boot:run -Pproduction`
