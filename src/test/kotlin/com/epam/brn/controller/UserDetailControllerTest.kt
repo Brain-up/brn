@@ -25,7 +25,7 @@ internal class UserDetailControllerTest {
         val name = "Name"
         val email = "email@email.ru"
         val phone = "+7911111111"
-        `when`(userDetailsService.addUser(name, email, phone)).then { }
+        `when`(userDetailsService.addUser(name, email, phone)).thenReturn(1)
 
         // WHEN
         userDetailController.addUser(name, email, phone)
