@@ -31,11 +31,16 @@ Just click on “JOIN TEAM” button and we will get in touch with you shortly. 
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 
 ---
+## Developer
+
+1. The Vaadin 14 team expects you to have Node.js and npm tools installed on your computer. 
+(https://nodejs.org/en/download/) after install - restart Idea.
+
+2. run command 'gradle assemble' to build project successfully
+
+3. Application.kt - main class to run application from idea directly
 
 ## Developer notes for Vaadin UI
-
-The Vaadin 14 team expects you to have Node.js and npm tools installed on your computer. 
-(https://nodejs.org/en/download/)
 
 Open [http://localhost:8080/ui-vaadin](http://localhost:8080/ui-vaadin) in your browser.
 

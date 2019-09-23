@@ -8,7 +8,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.dom.Element
 import com.vaadin.flow.router.Route
-import com.vaadin.flow.server.PWA
 import com.lifescience.brn.constant.BrnPath
 import com.vaadin.flow.router.PageTitle
 
@@ -20,7 +19,7 @@ object UiLabels {
 @SuppressWarnings("serial")
 @Route(BrnPath.UI_VAADIN_ROUTE)
 @PageTitle(UiLabels.appDescription)
-@PWA(name = UiLabels.appDescription, shortName = UiLabels.appShortName)
+// @PWA(name = UiLabels.appDescription, shortName = UiLabels.appShortName)
 public class MainView : VerticalLayout() {
 
     val panelLeft = object : HorizontalLayout() {
