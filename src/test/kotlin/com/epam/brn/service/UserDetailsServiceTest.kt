@@ -5,7 +5,6 @@ import com.epam.brn.repo.UserDetailsRepository
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -13,7 +12,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 
-@Disabled
 @ExtendWith(MockitoExtension::class)
 internal class UserDetailsServiceTest {
 
