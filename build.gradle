@@ -4,6 +4,7 @@ buildscript {
         spring_boot_version = '2.1.8.RELEASE'
         mockitoVersion = '3.0.0'
         junitVersion = '5.3.1'
+        flywayVersion = "5.2.4"
     }
     repositories {
         jcenter()
@@ -33,12 +34,13 @@ repositories {
 
 ext['mockito.version'] = "${mockitoVersion}"
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter"
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "com.h2database:h2:1.4.199"
-
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.postgresql:postgresql"
+    implementation "org.flywaydb:flyway-core:$flywayVersion"
+    
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
     }

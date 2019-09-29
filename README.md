@@ -49,3 +49,24 @@ If you want to run your app locally in production mode, run `mvn spring-boot:run
 For documentation on using Vaadin Flow and Spring, visit [vaadin.com/docs](https://vaadin.com/docs/flow/spring/tutorial-spring-basic.html).
 
 For more information on Vaadin Flow, visit [vaadin.com/flow](https://vaadin.com/flow).
+
+## Data base
+The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
+
+Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
+
+To install docker:
+* [on windows](https://docs.docker.com/docker-for-windows/install/)
+* [on mac](https://docs.docker.com/docker-for-mac/install/)
+* [oubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [debian](https://docs.docker.com/install/linux/docker-ce/debian/)
+* [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
+
+To run docker use the following command:
+
+*  on linux:
+`docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
+* on windows: `?`
+
+_$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
+[how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10)
