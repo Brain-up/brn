@@ -8,13 +8,9 @@ data class Exercise(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val name: String,
-    val tasksCount: Int? = null
-) {
+    val description: String? = "",
+    val level: Short? = 0,
     @ManyToOne
-    lateinit var exerciseGroup: ExerciseGroup
-
-    constructor(name: String, exerciseGroup: ExerciseGroup) : this(name = name) {
-        this.exerciseGroup = exerciseGroup
-    }
-
-}
+    @JoinColumn(name = "exercise_series_id")
+    var exerciseSeries: ExerciseSeries
+)

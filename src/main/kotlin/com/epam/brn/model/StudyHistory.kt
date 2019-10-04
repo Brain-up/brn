@@ -8,14 +8,15 @@ data class StudyHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
-    @OneToOne
+    @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "user_id")
     val user: User,
-    val startTime: LocalDateTime,
-    val endTime: LocalDateTime
-
-) {
-    @OneToOne
+    @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "exercise_id")
-    val exercise: Exercise? = null
-}
+    val exercise: Exercise? = null,
+    val startTime: LocalDateTime,
+    val endTime: LocalDateTime,
+    val doneTasksCount: Short,
+    val successTasksCount: Short,
+    val repetitionCount: Short
+)

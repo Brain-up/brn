@@ -3,13 +3,13 @@ package com.epam.brn.model
 import javax.persistence.*
 
 @Entity
-data class Level(
+data class Progress(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
     @Column(nullable = false)
-    val level: String
+    val progress: String
 ) {
-    @OneToMany(mappedBy = "level")
-    val exerciseGroups: MutableSet<ExerciseGroup> = HashSet()
+    @OneToOne(cascade = [(CascadeType.ALL)])
+    val exerciseGroup: ExerciseGroup? = null
 }
