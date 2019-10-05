@@ -16,8 +16,8 @@ class ExerciseController(@Autowired val userDetailService: UserDetailsService) {
     @GetMapping
     fun getExercises(@RequestParam(value = "seriesId", defaultValue = "0") groupId: String): List<ExerciseDto> {
         return listOf(
-            ExerciseDto("1", "однослоговые слова"),
-            ExerciseDto("2", "двуслоговые слова слова"),
-            ExerciseDto("3", "сложные слова слова"))
+            ExerciseDto("1", "однослоговые слова", "1"),
+            ExerciseDto("2", "двуслоговые слова слова", "1"),
+            ExerciseDto("3", "сложные слова слова", "1"))
     }
 }

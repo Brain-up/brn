@@ -16,7 +16,7 @@ data class StudyHistory(
     val id: Int,
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "user_id")
-    val user: User,
+    val userAccount: UserAccount,
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "exercise_id")
     val exercise: Exercise? = null,
