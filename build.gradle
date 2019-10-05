@@ -4,7 +4,7 @@ buildscript {
         spring_boot_version = '2.1.8.RELEASE'
         mockitoVersion = '3.0.0'
         junitVersion = '5.3.1'
-        flywayVersion = "5.2.4"
+//        flywayVersion = "5.2.4"
     }
     repositories {
         jcenter()
@@ -39,7 +39,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.postgresql:postgresql"
-    implementation "org.flywaydb:flyway-core:$flywayVersion"
+//    implementation "org.flywaydb:flyway-core:$flywayVersion"
     
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'

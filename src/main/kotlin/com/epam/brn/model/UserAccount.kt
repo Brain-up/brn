@@ -12,7 +12,7 @@ import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 
 @Entity
-data class User(
+data class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
