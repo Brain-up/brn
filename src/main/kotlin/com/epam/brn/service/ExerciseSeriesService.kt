@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.SeriesDto
 import com.epam.brn.model.ExerciseSeries
 import com.epam.brn.repo.ExerciseSeriesRepository
 import org.apache.logging.log4j.kotlin.logger
@@ -11,7 +12,12 @@ class ExerciseSeriesService(@Autowired val exerciseSeriesRepository: ExerciseSer
 
     private val log = logger()
 
-    fun findUserDetails(name: String): List<ExerciseSeries> {
-        return exerciseSeriesRepository.findAll() as List<ExerciseSeries>
+    fun findSeries(userId: String): List<SeriesDto> {
+        // todo find users avaliable series
+        val series: List<ExerciseSeries> = exerciseSeriesRepository.findAll() as List<ExerciseSeries>
+        // todo use mapping from Andrey
+        val seriesDtos =
+            listOf(SeriesDto(series[0].id.toString(), series[0].name), SeriesDto(series[1].id.toString(), series[1].name))
+        return seriesDtos
     }
 }
