@@ -29,10 +29,8 @@ https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 
 ---
 ## For developer's start
-1. The Vaadin 14 team expects you to have Node.js and npm tools installed on your computer. 
-(https://nodejs.org/en/download/) after install - restart Idea.
-2. run command 'gradle assemble' to build project successfully
-3. Application.kt - main class to run application from idea directly
+1. run command 'gradle assemble' to build project successfully
+2. Application.kt - main class to run application from idea directly
 
 ## Data base
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
@@ -63,8 +61,16 @@ be found in the 'build\reports\ktlint' folder.
 It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 Please note that if `gradlew ktlint` task fails, project build will fail also.
 
-## Developer notes for Vaadin UI
-Open [http://localhost:8080/ui-vaadin](http://localhost:8080/ui-vaadin) in your browser.
-If you want to run your app locally in production mode, run `mvn spring-boot:run -Pproduction`
-For documentation on using Vaadin Flow and Spring, visit [vaadin.com/docs](https://vaadin.com/docs/flow/spring/tutorial-spring-basic.html).
-For more information on Vaadin Flow, visit [vaadin.com/flow](https://vaadin.com/flow).
+## FE dev pre-requisites
+1. node v10 or above (https://nodejs.org/en/download/)
+2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
+
+## How to start FE dev server
+Run following commands:
+```bash
+cd ./frontend/ &&\
+yarn &&\
+./node_modules/ember-cli/bin/ember serve
+```
+FE dev server now accesable at http://localhost:4200/
+
