@@ -9,4 +9,5 @@ interface ExerciseRepository : CrudRepository<Exercise, Long> {
 
     fun findByNameLike(name: String): List<Exercise>
     fun findByIdLike(id: String): List<Exercise>
+    fun findByExerciseSeriesIdLike(exerciseSeriesId: String): List<Exercise>
 }
