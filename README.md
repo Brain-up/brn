@@ -73,5 +73,5 @@ For more information on Vaadin Flow, visit [vaadin.com/flow](https://vaadin.com/
 1. create branch from dev with name EPAMLABSBRN-1 for example
 2. development
 3. make MR, put it to our skype chat and wait several reviews (1 minimum)
-4. merge to dev branches
+4. merge to in dev branch
 
