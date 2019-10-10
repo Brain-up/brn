@@ -69,4 +69,9 @@ If you want to run your app locally in production mode, run `mvn spring-boot:run
 For documentation on using Vaadin Flow and Spring, visit [vaadin.com/docs](https://vaadin.com/docs/flow/spring/tutorial-spring-basic.html).
 For more information on Vaadin Flow, visit [vaadin.com/flow](https://vaadin.com/flow).
 
-==================================== ===
+=== dev process ===
+1. create branch from dev with name EPAMLABSBRN-1 for example
+2. development
+3. make MR, put it to our skype chat and wait several reviews (1 minimum)
+4. merge to dev branches
+
