@@ -1,0 +1,29 @@
+<br>
+
+<audio controls autoplay src={{@task.audioFileUrl}}/>
+
+{{#if (eq this.lastAnswer @task.word)}}
+  <p class="task-player__results">
+    <br>
+    Ваш ответ: «{{this.lastAnswer}}»
+    <br>
+    👍 Верно!
+    <br>
+    <br>
+    <button autofocus onclick={{action this.onFinished}}>
+      Далee »
+    </button>
+  </p>
+{{else}}
+  <ul class="task-player__options">
+    {{#each this.shuffledWords as |word|}}
+      <li class="task-player__option">
+        <button
+          onclick={{action this.handleSubmit word}}
+          class="task-player__option-button">
+          {{word}}
+        </button>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}

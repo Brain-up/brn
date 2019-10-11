@@ -1,0 +1,12 @@
+<h2>{{capitalize @series.name}}</h2>
+<nav>
+  <ol class="series-nav__exercies-list">
+    {{#each @series.exercises as |exercise|}}
+      <li class="">
+        {{#link-to "series.exercise" exercise class="series-nav__exercies-link"}}
+          {{capitalize exercise.name}}
+        {{/link-to}}
+      </li>
+    {{/each}}
+  </ol>
+</nav>
