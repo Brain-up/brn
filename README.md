@@ -65,11 +65,11 @@ Please note that if `gradlew ktlint` task fails, project build will fail also.
 ## FE/BE dev process
 1. create branch from dev with name EPAMLABSBRN-1 for example
 2. development
-3. make MR, put it to our skype chat and wait several reviews (1 minimum)
-4. merge to in dev branch
+3. make MR (with task name and description about what was done), put it to our skype chat and wait several reviews (1 minimum)
+4. merge it in dev branch
 
-
-
+### REST API
+http://localhost:8080/swagger-ui.html
 
 ## FE dev pre-requisites
 1. node v10 or above (https://nodejs.org/en/download/)
