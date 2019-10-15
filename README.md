@@ -78,9 +78,7 @@ http://localhost:8080/swagger-ui.html
 ## How to start FE dev server
 Run following commands:
 ```bash
-cd ./frontend/ &&\
-yarn &&\
-./node_modules/ember-cli/bin/ember serve
+cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
 ```
 FE dev server now accesable at http://localhost:4200/
 
