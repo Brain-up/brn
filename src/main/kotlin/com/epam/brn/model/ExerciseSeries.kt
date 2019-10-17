@@ -24,4 +24,8 @@ class ExerciseSeries(
     val exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "exerciseSeries", cascade = [(CascadeType.ALL)])
     val exercises: MutableSet<Exercise> = HashSet()
-)
+) {
+    override fun toString(): String {
+        return "ExerciseSeries(id=$id, name='$name', description='$description', exerciseGroup=$exerciseGroup, exercises=$exercises)"
+    }
+}

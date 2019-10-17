@@ -18,4 +18,8 @@ data class Exercise(
     @ManyToOne
     @JoinColumn(name = "exercise_series_id")
     var exerciseSeries: ExerciseSeries
-)
+) {
+    override fun toString(): String {
+        return "Exercise(id=$id, name='$name', description=$description, level=$level, exerciseSeries=$exerciseSeries)"
+    }
+}

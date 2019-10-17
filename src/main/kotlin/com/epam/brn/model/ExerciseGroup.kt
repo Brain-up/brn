@@ -19,4 +19,8 @@ data class ExerciseGroup(
 ) {
     @OneToMany(mappedBy = "exerciseSeries")
     val exercises: MutableSet<Exercise> = HashSet()
+
+    override fun toString(): String {
+        return "ExerciseGroup(id=$id, name='$name', description='$description', exercises=$exercises)"
+    }
 }
