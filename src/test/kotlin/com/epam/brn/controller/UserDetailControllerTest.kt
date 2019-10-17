@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.service.UserDetailsService
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -20,6 +21,7 @@ internal class UserDetailControllerTest {
     lateinit var userDetailsService: UserDetailsService
 
     @Test
+    @Disabled
     fun `should insert user`() {
         // GIVEN
         val name = "Name"

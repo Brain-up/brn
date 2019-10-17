@@ -12,7 +12,7 @@ import javax.persistence.Column
 data class UserDetails @JvmOverloads constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Long? = null,
     @Column(nullable = false)
     val name: String,
     @Column(nullable = true)
