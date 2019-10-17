@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 
@@ -32,8 +33,7 @@ internal class StudyHistoryControllerTest {
             endTime = LocalDateTime.now(),
             exerciseId = 1L
         )
-        doNothing().`when`(studyHistoryService).saveStudyHistory(dto)
-
+        `when`(studyHistoryService.saveStudyHistory(dto)).thenReturn(1L)
         // WHEN
         studyHistoryController.createStudyHistory(dto)
 
