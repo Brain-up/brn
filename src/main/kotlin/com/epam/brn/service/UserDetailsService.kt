@@ -16,12 +16,7 @@ class UserDetailsService(@Autowired val userDetailsDAO: UserDetailsRepository) {
         return 1
     }
 
-    fun addUser(name: String, email: String, phone: String): Int {
-        // val newUser = UserDetails()
-//        log.info("add new user $name $email $phone")
-//        val newUser = userDetailsDAO.save(UserDetails(1, name, email, phone))
-        return 0
-    }
+    // TODO implement method add user
 
     fun findUserDetails(name: String): UserDetails? {
         return userDetailsDAO.findByNameLike(name).first()
