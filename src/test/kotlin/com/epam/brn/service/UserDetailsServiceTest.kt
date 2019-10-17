@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
@@ -24,12 +25,12 @@ internal class UserDetailsServiceTest {
     @Test
     fun `should insert user`() {
         // GIVEN
-        val id = 1
+        val id = 1L
         val name = "Name"
         val email = "email@email.ru"
         val phone = "+7911111111"
         val userDetails = UserDetails(id, name, email, phone)
-        Mockito.`when`(userDetailsRepository.save(userDetails)).thenReturn(userDetails)
+        `when`(userDetailsRepository.save(userDetails)).thenReturn(userDetails)
 
         // WHEN
         val newUserId = userDetailsService.addUser(name, email, phone)

@@ -5,6 +5,7 @@ import com.epam.brn.service.StudyHistoryService
 import com.lifescience.brn.constant.BrnPath
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(BrnPath.STUDY_HISTORY)
 @Api(value = BrnPath.STUDY_HISTORY, description = "Contains the results of a finished exercise")
-class StudyStoryController(@Autowired val studyHistoryService: StudyHistoryService) {
+class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
     @PostMapping("/createStudyHistory")
-    fun createStudyHistory(@RequestBody studyHistoryDto: StudyHistoryDto) {
+    fun createStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
         studyHistoryService.saveStudyHistory(studyHistoryDto)
     }
 }

@@ -13,7 +13,7 @@ import javax.persistence.OneToOne
 data class StudyHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Long,
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "user_id")
     val userAccount: UserAccount,
@@ -25,4 +25,8 @@ data class StudyHistory(
     val doneTasksCount: Short,
     val successTasksCount: Short,
     val repetitionCount: Short
-)
+){
+    override fun toString(): String {
+        return "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, doneTasksCount=$doneTasksCount, successTasksCount=$successTasksCount, repetitionCount=$repetitionCount)"
+    }
+}

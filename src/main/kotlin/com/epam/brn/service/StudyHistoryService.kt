@@ -17,10 +17,10 @@ class StudyHistoryService(
 ) {
     private val log = logger()
 
-    fun saveStudyHistory(studyHistoryDto: StudyHistoryDto) {
+    fun saveStudyHistory(studyHistoryDto: StudyHistoryDto): Long {
         val userReference = entityManager.getReference(UserAccount::class.java, studyHistoryDto.userId)
         val exerciseReference = entityManager.getReference(Exercise::class.java, studyHistoryDto.exerciseId)
-        studyHistoryRepository.save(
+        val savedStudyHistory = studyHistoryRepository.save(
             StudyHistory(
                 id = 0,
                 userAccount = userReference,
@@ -32,6 +32,7 @@ class StudyHistoryService(
                 repetitionCount = studyHistoryDto.repetitionCount
             )
         )
-        log.debug("Created new study story ${studyHistoryDto}")
+        log.debug("Created new study story ${savedStudyHistory}")
+        return savedStudyHistory.id
     }
 }
