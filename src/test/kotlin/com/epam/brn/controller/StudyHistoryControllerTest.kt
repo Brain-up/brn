@@ -34,6 +34,7 @@ internal class StudyHistoryControllerTest {
             exerciseId = 1L
         )
         `when`(studyHistoryService.saveStudyHistory(dto)).thenReturn(1L)
+
         // WHEN
         studyHistoryController.createStudyHistory(dto)
 
