@@ -3,7 +3,6 @@ package com.epam.brn.dto
 import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 
-
 class StudyHistoryDto(
     @NotNull
     val userId: Long,

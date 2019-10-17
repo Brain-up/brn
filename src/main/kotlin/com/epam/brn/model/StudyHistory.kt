@@ -25,7 +25,7 @@ data class StudyHistory(
     val doneTasksCount: Short,
     val successTasksCount: Short,
     val repetitionCount: Short
-){
+) {
     override fun toString(): String {
         return "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, doneTasksCount=$doneTasksCount, successTasksCount=$successTasksCount, repetitionCount=$repetitionCount)"
     }

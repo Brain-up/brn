@@ -32,7 +32,7 @@ class StudyHistoryService(
                 repetitionCount = studyHistoryDto.repetitionCount
             )
         )
-        log.debug("Created new study story ${savedStudyHistory}")
+        log.debug("Created new study story $savedStudyHistory")
         return savedStudyHistory.id
     }
 }

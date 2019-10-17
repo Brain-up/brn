@@ -18,7 +18,7 @@ import java.time.LocalDate
 
 @Profile("dev")
 @Configuration
-class BlogConfiguration(
+class DevConfig(
     @Autowired val userAccountRepository: UserAccountRepository,
     @Autowired val exerciseRepository: ExerciseRepository,
     @Autowired val exerciseSeriesRepository: ExerciseSeriesRepository,
