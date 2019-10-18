@@ -21,7 +21,4 @@ class UserDetailsService(@Autowired val userDetailsDAO: UserDetailsRepository) {
     fun findUserDetails(name: String): UserDetails? {
         return userDetailsDAO.findByNameLike(name).first()
     }
-
-    fun updateLevel(userId: String, exerciseId: Int) {
-    }
 }
