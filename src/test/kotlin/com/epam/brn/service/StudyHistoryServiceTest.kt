@@ -3,7 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseSeries
+import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
@@ -73,7 +73,7 @@ internal class StudyHistoryServiceTest {
         return Exercise(
             id = 0,
             description = toString(),
-            exerciseSeries = ExerciseSeries(
+            series = Series(
                 id = 0,
                 description = "desc",
                 name = "group",
