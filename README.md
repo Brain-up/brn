@@ -37,7 +37,7 @@ https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
 'gradle build' with tests
 2. Application.kt - main class to run application from idea directly
 
-## Data base
+## Data base Postgrees (run from docker image)
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
 To install docker:
@@ -48,7 +48,6 @@ To install docker:
 * [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
 
 To run docker use the following command:
-
 *  on linux:
 `docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 * on windows: 
@@ -68,7 +67,6 @@ Use `gradlew ktlint` command to check code style. If this task fails, the relate
 be found in the 'build\reports\ktlint' folder. 
 It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 Please note that if `gradlew ktlint` task fails, project build will fail also.
-
 
 ## FE/BE dev process
 1. create branch from dev with name EPAMLABSBRN-1 for example
@@ -90,4 +88,9 @@ cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
 ```
 FE dev server now accesable at http://localhost:4200/
 
+## How to start BE dev server
+Run following commands build and run as example:
+C:\Brain\brn>gradlew build
+C:\Brain\brn>java -jar C:\brain\brn\build\libs\epam-brn.jar
 
+BE server accesable as http://localhost:8080/swagger-ui.html
