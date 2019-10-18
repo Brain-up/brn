@@ -1,9 +1,9 @@
 buildscript {
     ext {
-        kotlin_version = "1.3.50" // Required for Kotlin integration
-        spring_boot_version = "2.1.8.RELEASE"
-        mockitoVersion = "3.0.0"
-        junitVersion = "5.3.1"
+        kotlin_version = '1.3.50' // Required for Kotlin integration
+        spring_boot_version = '2.1.8.RELEASE'
+        mockitoVersion = '3.0.0'
+        junitVersion = '5.3.1'
         flywayVersion = "5.2.4"
     }
     repositories {
@@ -11,83 +11,73 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
-        // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
     }
 }
 
-apply plugin: "kotlin" // Required for Kotlin integration
+apply plugin: 'kotlin' // Required for Kotlin integration
 apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
-apply plugin: "org.springframework.boot"
-apply plugin: "io.spring.dependency-management"
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: "kotlin-jpa"
 apply plugin: "kotlin-allopen"
 
 jar {
-    baseName = "brn-service"
-    version = "0.1.0"
+    baseName = 'brn-service'
+    version = '0.1.0'
 }
 
 allOpen {
-    annotation "javax.persistence.Entity"
-    annotation "javax.persistence.MappedSuperclass"
-    annotation "javax.persistence.Embeddable"
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
-ext["mockito.version"] = "${mockitoVersion}"
+ext['mockito.version'] = "${mockitoVersion}"
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
-    implementation "com.vaadin:vaadin-spring-boot-starter"
-
-    testImplementation "org.springframework.batch:spring-batch-test"
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: "junit", module: "junit"
+    
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
     }
+    testCompile("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    testCompile("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
+    testCompile('com.nhaarman:mockito-kotlin:1.6.0')
+    compile 'org.mapstruct:mapstruct:1.3.1.Final'
+    compile 'org.apache.logging.log4j:log4j-api-kotlin:1.0.0'
+    compile 'org.apache.logging.log4j:log4j-api:2.11.2'
+    compile 'org.apache.logging.log4j:log4j-core:2.11.2'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
-    testCompile "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
-    testCompile "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
-    testCompile "com.nhaarman:mockito-kotlin:1.6.0"
-
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-
-    compile "org.mapstruct:mapstruct:1.3.1.Final"
-    compile "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
-    compile "org.apache.logging.log4j:log4j-api:2.11.2"
-    compile "org.apache.logging.log4j:log4j-core:2.11.2"
-    compile group: "org.apache.commons", name: "commons-lang3", version: "3.9"
-    compile group: "org.apache.commons", name: "commons-math3", version: "3.6.1"
-    compile group: "io.springfox", name: "springfox-swagger-ui", version: "2.9.2"
-    compile group: "io.springfox", name: "springfox-swagger2", version: "2.9.2"
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "com.vaadin:vaadin-bom:14.0.5"
-    }
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 }
 
 compileKotlin {
     kotlinOptions {
-        freeCompilerArgs = ["-Xjsr305=strict"]
-        jvmTarget = "1.8"
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '1.8'
     }
 }
 
 compileTestKotlin {
     kotlinOptions {
-        freeCompilerArgs = ["-Xjsr305=strict"]
-        jvmTarget = "1.8"
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '1.8'
     }
 }
 
@@ -121,21 +111,33 @@ compileKotlin.dependsOn ktlint
 
 tasks.withType(Test) { Test task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
-        options.excludeTags "integration-test"
+        options.excludeTags 'integration-test'
     }
     testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = "full"
+    testLogging.exceptionFormat = 'full'
 }
 
 task integrationTest(type: Test) { Test task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
-        options.includeTags "integration-test"
+        options.includeTags 'integration-test'
     }
     testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = "full"
+    testLogging.exceptionFormat = 'full'
 
     task.systemProperties(System.properties)
     println "Test task system properties: " + task.systemProperties
     tasks.check.dependsOn task
     task.shouldRunAfter tasks.test
 }
+
+// --- Eclipse ---
+// see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
+//apply plugin: 'eclipse'
+//eclipse.project {
+//    natures 'org.jetbrains.kotlin.core.kotlinNature'
+//}
+//eclipse {
+//    classpath {
+//        containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
+//    }
+//}
