@@ -2,11 +2,11 @@ package com.epam.brn.config
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseSeries
+import com.epam.brn.model.Series
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ExerciseSeriesRepository
+import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +21,7 @@ import java.time.LocalDate
 class DevConfig(
     @Autowired val userAccountRepository: UserAccountRepository,
     @Autowired val exerciseRepository: ExerciseRepository,
-    @Autowired val exerciseSeriesRepository: ExerciseSeriesRepository,
+    @Autowired val seriesRepository: SeriesRepository,
     @Autowired val exerciseGroupRepository: ExerciseGroupRepository
 ) {
     private val log = logger()
@@ -43,15 +43,15 @@ class DevConfig(
         )
         log.debug("Created $exerciseGroup")
 
-        val exerciseSeries = exerciseSeriesRepository.save(
-            ExerciseSeries(
+        val series = seriesRepository.save(
+            Series(
                 id = 0,
                 description = "desc",
                 name = "group",
                 exerciseGroup = exerciseGroup
             )
         )
-        log.debug("Created $exerciseSeries")
+        log.debug("Created $series")
 
         val useraccount = userAccountRepository.save(
             UserAccount(
@@ -67,7 +67,7 @@ class DevConfig(
             Exercise(
                 id = 0,
                 description = toString(),
-                exerciseSeries = exerciseSeries,
+                series = series,
                 level = 0,
                 name = "exercise"
             )

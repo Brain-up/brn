@@ -17,7 +17,7 @@ class StudyHistoryService(
 ) {
     private val log = logger()
 
-    fun saveStudyHistory(studyHistoryDto: StudyHistoryDto): Long {
+    fun saveStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         val userReference = entityManager.getReference(UserAccount::class.java, studyHistoryDto.userId)
         val exerciseReference = entityManager.getReference(Exercise::class.java, studyHistoryDto.exerciseId)
         val savedStudyHistory = studyHistoryRepository.save(

@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
-import com.lifescience.brn.constant.BrnPath
+import com.epam.brn.constant.BrnPath
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.annotation.Validated
