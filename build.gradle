@@ -65,14 +65,6 @@ dependencies {
 
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-
-    implementation("com.vaadin:vaadin-spring-boot-starter")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom 'com.vaadin:vaadin-bom:14.0.5'
-    }
 }
 
 compileKotlin {
