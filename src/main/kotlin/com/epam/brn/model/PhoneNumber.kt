@@ -10,7 +10,7 @@ import javax.persistence.Id
 data class PhoneNumber(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Long? = null,
     @Column(nullable = false)
     val number: String
 )

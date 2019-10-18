@@ -8,7 +8,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.dom.Element
 import com.vaadin.flow.router.Route
-import com.lifescience.brn.constant.BrnPath
+import com.epam.brn.constant.BrnPath
 import com.vaadin.flow.router.PageTitle
 
 object UiLabels {
@@ -28,7 +28,7 @@ public class MainView : VerticalLayout() {
                 this.getElement().setAttribute("onclick", "document.getElementsByTagName('audio')[0].play()")
                 // TODO check if there may be a more Vaadin-style approach 
                 // TODO check whether audio is supported; disable the button and issue an error message if not
-                // NOTE with audio being disabled at OS level, Chrome does not yield any errors
+                // NOTE with audio being disabled at OS progress, Chrome does not yield any errors
             }
         }
         val audio = object : Element("audio") {
