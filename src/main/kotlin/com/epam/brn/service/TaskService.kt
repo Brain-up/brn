@@ -3,11 +3,10 @@ package com.epam.brn.service
 import com.epam.brn.dto.TaskDto
 import com.epam.brn.repo.TaskRepository
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class TaskService(@Autowired val taskRepository: TaskRepository) {
+class TaskService(private val taskRepository: TaskRepository) {
 
     private val log = logger()
 

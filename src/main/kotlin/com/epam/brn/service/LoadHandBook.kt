@@ -6,13 +6,12 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationListener
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.stereotype.Service
 
 @Service
-class LoadHandBook(@Autowired private val exerciseGroupRepository: ExerciseGroupRepository) :
+class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository) :
     ApplicationListener<ContextRefreshedEvent> {
 
     override fun onApplicationEvent(event: ContextRefreshedEvent) {
