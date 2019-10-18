@@ -22,7 +22,6 @@ class StudyHistoryService(
         val exerciseReference = entityManager.getReference(Exercise::class.java, studyHistoryDto.exerciseId)
         val savedStudyHistory = studyHistoryRepository.save(
             StudyHistory(
-                id = 0,
                 userAccount = userReference,
                 exercise = exerciseReference,
                 startTime = studyHistoryDto.startTime,
