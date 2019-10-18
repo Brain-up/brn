@@ -12,12 +12,9 @@ class StudyHistoryDto(
     val startTime: LocalDateTime,
     @NotNull
     val endTime: LocalDateTime,
-    @NotNull
-    val doneTasksCount: Short,
-    @NotNull
-    val successTasksCount: Short,
-    @NotNull
-    val repetitionCount: Short
+    val doneTasksCount: Short = 0,
+    val successTasksCount: Short = 0,
+    val repetitionCount: Short = 0
 ) {
     override fun toString(): String {
         return "StudyHistoryDto(userId=$userId, exerciseId=$exerciseId, startTime=$startTime, endTime=$endTime, doneTasksCount=$doneTasksCount, successTasksCount=$successTasksCount, repetitionCount=$repetitionCount)"
