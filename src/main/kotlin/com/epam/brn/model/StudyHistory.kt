@@ -13,7 +13,7 @@ import javax.persistence.OneToOne
 data class StudyHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long? = null,
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "user_id")
     val userAccount: UserAccount,

@@ -5,17 +5,17 @@ It would contain several series of media exercises (maybe organized like like ww
 ## WHAT CHALLENGES YOU CAN GET IN THIS PROJECT
 We use latest technologies, so there you can acquaint with them, try them and get a useful experience. 
 - Server side: Java/Kotlin + Spring boot (rest api for front)
-- DB: Postgres (h2 now is used for development)
-- Front-end : up to front-end developers - React or Angular (now Vaadin is used in one branch)
+- DB: Postgres (h2 we plan to use for tests)
+- Front-end : up to front-end developers - Ember, React or Angular
 
 ## SCIENCE SOURCE
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ science source for this topic 
 https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit  additional description with links to analogs 
 
 ## WE ARE LOOKING FOR:
-1. front-end developers (react or angular - now there are no one, only vaadin in one branch)
-2. server-side developers Kotlin/Java   to develop new components and personalization algorithms
-3.  DevOps  to make ci cd process
+1. front-end developers (ember, react or angular..)
+2. server-side developers Kotlin/Java   to develop new components, end-points and personalization algorithms
+3. DevOps  to make ci cd process
 4. Creative UX designers for UX research and prototypes testing. Your ideas how to improve user retention are welcome.
 
 Join us, learn something new you want, try your skills, prove yourself, get experience and go ahead!
@@ -27,9 +27,14 @@ Just click on “JOIN TEAM” button and we will get in touch with you shortly. 
 ### JIRA
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 
+### Some documentation
+https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
+
 ---
 ## For developer's start
+0. clone dev branch (git clone ...)
 1. run command 'gradle assemble' to build project successfully
+'gradle build' with tests
 2. Application.kt - main class to run application from idea directly
 
 ## Data base
@@ -46,7 +51,10 @@ To run docker use the following command:
 
 *  on linux:
 `docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
-* on windows: `?`
+* on windows: 
+`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
+or simple
+`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11`
 
 _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10)
@@ -64,7 +72,7 @@ Please note that if `gradlew ktlint` task fails, project build will fail also.
 
 ## FE/BE dev process
 1. create branch from dev with name EPAMLABSBRN-1 for example
-2. development
+2. development + tests
 3. make MR (with task name and description about what was done), put it to our skype chat and wait several reviews (1 minimum)
 4. merge it in dev branch
 

@@ -1,4 +1,4 @@
-package com.lifescience.brn.constant
+package com.epam.brn.constant
 
 object BrnPath {
     const val HOME = "/home"
