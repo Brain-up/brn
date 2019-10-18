@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @Api(value = BrnPath.STUDY_HISTORY, description = "Contains the results of a finished exercise")
 class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
-    @PostMapping("/createStudyHistory")
+    @PostMapping
     fun createStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
         studyHistoryService.saveStudyHistory(studyHistoryDto)
     }
