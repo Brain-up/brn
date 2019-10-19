@@ -10,7 +10,7 @@
     👍 Верно!
     <br>
     <br>
-    <button autofocus onclick={{action this.onFinished}}>
+    <button autofocus class="c-button u-small" onclick={{action this.onFinished}}>
       Далee »
     </button>
   </p>
@@ -20,7 +20,7 @@
       <li class="task-player__option">
         <button
           onclick={{action this.handleSubmit word}}
-          class="task-player__option-button">
+          class="task-player__option-button c-button c-button--ghost u-super">
           {{word}}
         </button>
       </li>
