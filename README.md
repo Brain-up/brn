@@ -32,7 +32,7 @@ https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
 
 ---
 ## For developer's start
-0. clone dev branch (git clone ...)
+0. clone dev branch (git clone https://github.com/Brain-up/brn.git)
 1. run command 'gradle assemble' to build project successfully
 'gradle build' with tests
 2. Application.kt - main class to run application from idea directly
