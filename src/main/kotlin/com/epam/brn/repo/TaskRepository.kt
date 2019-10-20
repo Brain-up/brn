@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 interface TaskRepository : CrudRepository<Task, Long> {
 
     @Query("select DISTINCT t FROM Task t left JOIN FETCH t.answerOptions")
-    fun findAllTasksWithAnswers(): List<Task>
+    fun findAllTasksWithJoinedAnswers(): List<Task>
     @Query("select DISTINCT t FROM Task t left JOIN FETCH t.answerOptions where t.exercise.id = ?1")
-    fun findAllTasksWithExerciseIdWithAnswers(id: Long): List<Task>
+    fun findAllTasksByExerciseIdWithJoinedAnswers(id: Long): List<Task>
 }

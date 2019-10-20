@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController
 class TaskController(private val taskService: TaskService) {
 
     @GetMapping
-    fun getTasksForExerciseId(@RequestParam(value = "exerciseId", required = false) exerciseId: String?): List<TaskDto> {
+    fun getTasksForExerciseId(@RequestParam(value = "exerciseId", required = false) exerciseId: Long?): List<TaskDto> {
         // TODO will be improve, search will be more flexible
 
         exerciseId?.let {
-            return taskService.findAllTasksWithExerciseIdWithAnswers(it)
+            return taskService.findAllTasksByExerciseIdIncludeAnswers(it)
         }
-        return taskService.findAllTasksWithAnswers()
+        return taskService.findAllTasksIncludeAnswers()
     }
 }

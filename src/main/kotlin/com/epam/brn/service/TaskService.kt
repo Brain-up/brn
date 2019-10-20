@@ -10,13 +10,13 @@ class TaskService(private val taskRepository: TaskRepository) {
 
     private val log = logger()
 
-    fun findAllTasksWithExerciseIdWithAnswers(exerciseId: String): List<TaskDto> {
-        val tasks = taskRepository.findAllTasksWithExerciseIdWithAnswers(exerciseId.toLong())
+    fun findAllTasksByExerciseIdIncludeAnswers(exerciseId: Long): List<TaskDto> {
+        val tasks = taskRepository.findAllTasksByExerciseIdWithJoinedAnswers(exerciseId)
         return tasks.map { task -> task.toDto() }
     }
 
-    fun findAllTasksWithAnswers(): List<TaskDto> {
-        val tasks = taskRepository.findAllTasksWithAnswers()
+    fun findAllTasksIncludeAnswers(): List<TaskDto> {
+        val tasks = taskRepository.findAllTasksWithJoinedAnswers()
         return tasks.map { task -> task.toDto() }
     }
 }
