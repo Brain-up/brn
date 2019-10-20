@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface ResourceRepository : CrudRepository<Resource, Long> {
 
     fun findByIdLike(id: String): List<Resource>
+
+    fun findByWordLike(word: String): List<Resource>
 }

@@ -16,21 +16,21 @@ import javax.persistence.GenerationType
     uniqueConstraints = [UniqueConstraint(columnNames = ["word", "audioFileUrl"])],
     indexes = [
         Index(name = "word_audio_file_idx", columnList = "word, audioFileUrl"),
-        Index(name = "word_idx", columnList = "word")
+        Index(name = "audio_file_idx", columnList = "audioFileUrl")
     ]
 )
 data class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long? = null,
     @Column(nullable = false)
-    val audioFileUrl: String,
+    var audioFileUrl: String? = "",
     @Column(nullable = false)
-    val word: String,
-    val pictureFileUrl: String,
-    val soundsCount: Int,
+    var word: String? = "",
+    var pictureFileUrl: String? = "",
+    var soundsCount: Int? = 0,
     @ManyToMany(mappedBy = "answerOptions")
-    val tasks: MutableSet<Task> = HashSet()
+    var tasks: MutableSet<Task> = HashSet()
 ) {
     fun toDto() = ResourceDto(
         id = id,
@@ -60,7 +60,7 @@ data class Resource(
         result = 31 * result + audioFileUrl.hashCode()
         result = 31 * result + word.hashCode()
         result = 31 * result + pictureFileUrl.hashCode()
-        result = 31 * result + soundsCount
+        result = 31 * result + soundsCount.hashCode()
         return result
     }
 
