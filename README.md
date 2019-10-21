@@ -90,8 +90,10 @@ FE dev server now accesable at http://localhost:4200/
 
 ## How to start BE dev server
 Run following commands build and run as example:
-C:\Brain\brn>gradlew build
-C:\Brain\brn>gradlew assemble (build without tests)
-C:\Brain\brn>java -jar C:\brain\brn\build\libs\epam-brn.jar
+* 1. C:\Brain\brn>gradlew build
+* or
+* C:\Brain\brn>gradlew assemble (build without tests)
+
+* 2. C:\Brain\brn>java -jar C:\brain\brn\build\libs\epam-brn.jar
 
 BE server accesable as http://localhost:8080/swagger-ui.html
