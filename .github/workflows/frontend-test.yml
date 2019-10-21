@@ -10,14 +10,12 @@ jobs:
     name: Install dependencies
     runs-on: ubuntu-latest
     steps: 
-      - name: Install dependencies
-        working-directory: frontend
-        uses: nuxt/actions-yarn@node-10
-        args: install
+      - uses: actions/checkout@v1
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
   tests:
     name: Run tests
     needs: deps
     steps: 
-      - name: Build & test
-        working-directory: frontend
-        uses: alexlafroscia/actions-ember-testing@master
+      - uses: alexlafroscia/actions-ember-testing@master
