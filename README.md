@@ -75,7 +75,7 @@ Please note that if `gradlew ktlint` task fails, project build will fail also.
 4. merge it in dev branch
 
 ### REST API
-http://localhost:8080/swagger-ui.html
+http://localhost:8081/swagger-ui.html
 
 ## FE dev pre-requisites
 1. node v10 or above (https://nodejs.org/en/download/)
@@ -88,12 +88,14 @@ cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
 ```
 FE dev server now accesable at http://localhost:4200/
 
+## BE dev pre-requisites
+1. docker (https://hub.docker.com/search/?type=edition&offering=community)
+
 ## How to start BE dev server
-Run following commands build and run as example:
-* 1. C:\Brain\brn>gradlew build
-* or
-* C:\Brain\brn>gradlew assemble (build without tests)
-
-* 2. C:\Brain\brn>java -jar C:\brain\brn\build\libs\epam-brn.jar
-
-BE server accesable as http://localhost:8080/swagger-ui.html
+```bash
+docker-compose up
+```
+Deamon mode (no console output):
+```bash
+docker-compose -d up
+```
