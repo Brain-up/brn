@@ -1,5 +1,3 @@
-NOW WE ARE MOVED TO ORGANIZATION REP https://github.com/Brain-up/brn
-
 ## WHAT IS BRN.EPAM.COM? 
 It is a web-application which is now developed to support people with central auditory skills deficit, with or without hearing loss, users of cochlear implant or hearing aids. It may be taken by children older than 7 years, adults/ elderly subjects, or anyone who wants to improve auditory skills and train the brain to listen better. 
 It would contain several series of media exercises (maybe organized like like www.uchi.ru for example).
