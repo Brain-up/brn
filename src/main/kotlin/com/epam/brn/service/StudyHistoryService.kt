@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.converter.StudyHistoryConverter
+import com.epam.brn.converter.StudyHistoryNotNullConverter
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
@@ -40,12 +41,29 @@ class StudyHistoryService(
         ).id
     }
 
-    fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+    fun replaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         val studyHistoryEntity = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
         ).get()
         return updateEntity(studyHistoryDto, studyHistoryEntity)
+    }
+
+    fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+        val studyHistoryEntity = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+            studyHistoryDto.userId,
+            studyHistoryDto.exerciseId
+        ).get()
+        return updateEntityNotNull(studyHistoryDto, studyHistoryEntity)
+    }
+
+    private fun updateEntityNotNull(
+        studyHistoryDto: StudyHistoryDto,
+        studyHistoryEntity: StudyHistory
+    ): Long? {
+        Mappers.getMapper(StudyHistoryNotNullConverter::class.java)
+            .updateStudyHistory(studyHistoryDto, studyHistoryEntity)
+        return studyHistoryRepository.save(studyHistoryEntity).id
     }
 
     private fun updateEntity(
