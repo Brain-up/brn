@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class SeriesController(@Autowired val seriesService: SeriesService) {
 
     @GetMapping
-    fun getSeries(@RequestParam(value = "groupId", defaultValue = "0") groupId: String): List<SeriesDto> {
-        return seriesService.findSeries("1")
+    fun getSeries(@RequestParam(value = "groupId", defaultValue = "0") groupId: Long): List<SeriesDto> {
+        return seriesService.findSeriesForGroup(groupId)
     }
 }
