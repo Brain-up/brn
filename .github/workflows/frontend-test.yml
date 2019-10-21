@@ -16,6 +16,7 @@ jobs:
           cmd: install
   tests:
     name: Run tests
+    runs-on: ubuntu-latest
     needs: deps
     steps: 
       - uses: alexlafroscia/actions-ember-testing@master
