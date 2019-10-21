@@ -1,0 +1,22 @@
+name: Frontend tests
+on:
+  pull_request:
+    paths:
+    - 'frontend/**'
+
+jobs: 
+  deps: 
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Install dependencies
+        working-directory: frontend
+        uses: "nuxt/actions-yarn@node-10"
+        args: "install"
+  tests:
+    name: Run tests
+    needs: deps
+    steps: 
+      - name: Build & test
+        working-directory: frontend
+        uses: "alexlafroscia/actions-ember-testing@master"
