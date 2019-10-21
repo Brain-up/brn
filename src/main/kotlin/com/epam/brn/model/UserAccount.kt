@@ -15,7 +15,7 @@ import javax.persistence.OneToOne
 data class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Long? = null,
     @Column(nullable = false)
     val name: String,
     @Column(nullable = false)
@@ -27,4 +27,8 @@ data class UserAccount(
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
     val progress: Progress? = null
+
+    override fun toString(): String {
+        return "UserAccount(id=$id, name='$name', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
+    }
 }
