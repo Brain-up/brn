@@ -1,9 +1,6 @@
 import Route from '@ember/routing/route';
-import { inject } from '@ember/service';
 
 export default Route.extend({
-  store: inject(),
-
   model({ series_id }) {
     return this.store.findRecord('series', series_id, { include: 'exercises' });
   },

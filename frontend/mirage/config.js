@@ -23,7 +23,8 @@ export default function() {
     https://www.ember-cli-mirage.com/docs/route-handlers/shorthands
   */
   this.timing = 10;
+  this.resource('groups');
   this.resource('series');
   this.resource('exercises');
-  this.resource('task');
+  this.resource('tasks');
 }

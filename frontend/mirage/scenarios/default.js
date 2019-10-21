@@ -6,6 +6,12 @@ export default function(server) {
     // description: 'A series of audio exercises',
   });
 
+  const groups = server.createList('group',8)
+  groups[0].series.add( series );
+  groups[0].save();
+  series.group = groups[0];
+  series.save();
+
   const exercise1 = server.create('exercise',{
     id: 1,
     series,
