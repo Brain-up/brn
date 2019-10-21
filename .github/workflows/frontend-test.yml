@@ -4,6 +4,7 @@ on:
     paths:
     - 'frontend/**'
 
+
 jobs: 
   deps: 
     name: Install dependencies
