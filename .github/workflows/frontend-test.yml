@@ -11,12 +11,12 @@ jobs:
     steps: 
       - name: Install dependencies
         working-directory: frontend
-        uses: "nuxt/actions-yarn@node-10"
-        args: "install"
+        uses: nuxt/actions-yarn@node-10
+        args: install
   tests:
     name: Run tests
     needs: deps
     steps: 
       - name: Build & test
         working-directory: frontend
-        uses: "alexlafroscia/actions-ember-testing@master"
+        uses: alexlafroscia/actions-ember-testing@master
