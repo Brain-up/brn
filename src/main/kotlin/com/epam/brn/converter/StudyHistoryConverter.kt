@@ -4,9 +4,9 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.StudyHistory
 import org.mapstruct.Mapper
 import org.mapstruct.MappingTarget
-import org.mapstruct.NullValueCheckStrategy
+import org.mapstruct.NullValuePropertyMappingStrategy
 
-@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 interface StudyHistoryConverter {
 
     fun convertToDto(studyHistory: StudyHistory): StudyHistoryDto
