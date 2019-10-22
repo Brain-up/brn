@@ -11,6 +11,7 @@ import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
+import javax.validation.constraints.NotNull
 
 @Entity
 @Table(
@@ -19,6 +20,7 @@ import javax.persistence.UniqueConstraint
     ]
 )
 data class StudyHistory(
+    @NotNull
     @Id
     @GeneratedValue(generator = "study_history_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
@@ -27,9 +29,11 @@ data class StudyHistory(
         allocationSize = 50
     )
     val id: Long? = null,
+    @NotNull
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "user_id")
     var userAccount: UserAccount?,
+    @NotNull
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise? = null,

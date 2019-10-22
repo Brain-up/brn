@@ -1,9 +1,12 @@
 package com.epam.brn.dto
 
 import java.time.LocalDateTime
+import javax.validation.constraints.NotNull
 
 data class StudyHistoryDto(
+    @NotNull
     var userId: Long?,
+    @NotNull
     var exerciseId: Long?,
     var startTime: LocalDateTime?,
     var endTime: LocalDateTime?,
