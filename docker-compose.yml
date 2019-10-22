@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: admin
   brn:
     container_name: brn
-    command: java -jar build/libs/epam-brn.jar --Dspring.profiles.active=prod
+    command: java -jar build/libs/epam-brn.jar
     build:
       context: .
       dockerfile: Dockerfile
