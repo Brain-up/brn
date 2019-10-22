@@ -29,10 +29,12 @@ You can also send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikov
 # GETTING STARTED!
 
 ## RESOURCES
-### JIRA
-https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 ### DOCUMENTATION
 https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
+### JIRA
+https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
+### JENKINS
+https://kb.epam.com/display/EPMCOSRINT/Jenkins
 
 ## GET THE PROJECT RUNNING
 0. Clone dev branch with idea or using command line "git clone https://github.com/Brain-up/brn.git"
