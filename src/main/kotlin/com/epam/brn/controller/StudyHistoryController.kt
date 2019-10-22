@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController
 class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
     @PostMapping
-    fun createStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
-        studyHistoryService.saveStudyHistory(studyHistoryDto)
+    fun saveOrReplaceStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
+        studyHistoryService.saveOrReplaceStudyHistory(studyHistoryDto)
     }
 
     @PatchMapping
@@ -29,7 +29,7 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     }
 
     @PutMapping
-    fun updateStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
+    fun replaceStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
         studyHistoryService.replaceStudyHistory(studyHistoryDto)
     }
 }

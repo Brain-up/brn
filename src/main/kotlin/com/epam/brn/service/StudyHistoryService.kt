@@ -17,7 +17,7 @@ class StudyHistoryService(
     @Autowired val studyHistoryRepository: StudyHistoryRepository,
     @Autowired val entityManager: EntityManager
 ) {
-    fun saveStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+    fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         val userReference = entityManager.getReference(UserAccount::class.java, studyHistoryDto.userId)
         val exerciseReference = entityManager.getReference(Exercise::class.java, studyHistoryDto.exerciseId)
         val studyHistoryEntityOptional = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
@@ -54,10 +54,10 @@ class StudyHistoryService(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
         ).get()
-        return updateEntityNotNull(studyHistoryDto, studyHistoryEntity)
+        return updateEntityNotNullOnly(studyHistoryDto, studyHistoryEntity)
     }
 
-    private fun updateEntityNotNull(
+    private fun updateEntityNotNullOnly(
         studyHistoryDto: StudyHistoryDto,
         studyHistoryEntity: StudyHistory
     ): Long? {
