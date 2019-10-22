@@ -59,10 +59,11 @@ To run docker use the following command:
 *  on linux:
 `docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 * on windows: 
-`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11`
+`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 
 _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
-[how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10)
+[how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
+Alternatively, you can just replace the variables by "admin", the default user and password for development.
 
 ### Code style
 Please refer for details to kb resources: https://kb.epam.com/display/EPMCOSRINT/Code+style
@@ -87,6 +88,9 @@ Please note that if `gradlew ktlint` task fails, project build will fail also.
 1. node v10 or above (https://nodejs.org/en/download/)
 2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
 
+## BACK END REQUISITES
+1. Docker - https://hub.docker.com/search/?type=edition&offering=community 
+
 ## START YOUR FRONT END DEVELOPMENT SERVER
 Run following commands:
 ```bash
@@ -95,13 +99,15 @@ cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
 FE dev server now accesable at http://localhost:4200/
 
 ## START BACKEND APPLICATION
-Run following commands build and run as example:
+From console, execute:
 ```bash
- C:\Brain\brn>gradlew build
- C:\Brain\brn>gradlew assemble (build without tests)
- C:\Brain\brn>java -jar C:\brain\brn\build\libs\epam-brn.jar
+docker-compose up
+```
+Alternatively, use daemon mode (no console output):
+```bash
+docker-compose -d up
 ```
 BE server accesible as http://localhost:8080/swagger-ui.html
 
 ## REST API 
-http://localhost:8080/swagger-ui.html
+- http://localhost:8081/swagger-ui.html 
