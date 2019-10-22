@@ -12,6 +12,7 @@ jobs:
     steps: 
       - uses: actions/checkout@v1
       - uses: borales/actions-yarn@v2.0.0
+        working-directory: ./frontend
         with:
           cmd: install
   tests:
@@ -20,3 +21,4 @@ jobs:
     needs: deps
     steps: 
       - uses: alexlafroscia/actions-ember-testing@master
+        working-directory: ./frontend
