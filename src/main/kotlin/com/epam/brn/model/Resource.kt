@@ -2,13 +2,23 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.ResourceDto
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
+import javax.persistence.Index
+import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 import javax.persistence.Id
-import javax.persistence.ManyToMany
+import javax.persistence.GeneratedValue
 import javax.persistence.Column
+import javax.persistence.ManyToMany
+import javax.persistence.GenerationType
 
 @Entity
+@Table(
+    uniqueConstraints = [UniqueConstraint(columnNames = ["word", "audioFileUrl"])],
+    indexes = [
+        Index(name = "word_audio_file_idx", columnList = "word, audioFileUrl"),
+        Index(name = "word_idx", columnList = "word")
+    ]
+)
 data class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +27,7 @@ data class Resource(
     val audioFileUrl: String,
     @Column(nullable = false)
     val word: String,
-    @Column(nullable = false)
     val pictureFileUrl: String,
-    @Column(nullable = false)
     val soundsCount: Int,
     @ManyToMany(mappedBy = "answerOptions")
     val tasks: MutableSet<Task> = HashSet()
