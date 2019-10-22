@@ -100,8 +100,6 @@ internal class StudyHistoryServiceTest {
             successTasksCount = dto.successTasksCount,
             repetitionCount = dto.repetitionCount
         )
-        `when`(entityManager.getReference(UserAccount::class.java, dto.userId)).thenReturn(getUserAccount())
-        `when`(entityManager.getReference(Exercise::class.java, dto.exerciseId)).thenReturn(getExercise())
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         `when`(
             studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
