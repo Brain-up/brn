@@ -14,10 +14,10 @@ import java.time.LocalDateTime
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryControllerTest {
 
-    @InjectMocks
-    lateinit var studyHistoryController: StudyHistoryController
     @Mock
     lateinit var studyHistoryService: StudyHistoryService
+    @InjectMocks
+    lateinit var studyHistoryController: StudyHistoryController
 
     @Test
     fun `should save study history`() {
