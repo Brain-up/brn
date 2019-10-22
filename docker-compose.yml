@@ -3,13 +3,12 @@ services:
   db_brn:
     image: postgres
     restart: always
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-    ports:
-      - 5432:5432
-
   brn:
     container_name: brn
     command: java -jar build/libs/epam-brn.jar
@@ -19,5 +18,7 @@ services:
     ports:
       - 8081:8080
     environment:
-      PG_USER: admin
-      PG_PASSWORD: admin
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      SPRING_PROFILE: prod
