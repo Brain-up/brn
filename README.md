@@ -29,10 +29,13 @@ You can also send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikov
 # GETTING STARTED!
 
 ## RESOURCES
+
 ### DOCUMENTATION
 https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
+
 ### JIRA
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
+
 ### JENKINS
 https://kb.epam.com/display/EPMCOSRINT/Jenkins
 
@@ -83,8 +86,7 @@ Please note that if `gradlew ktlint` task fails, project build will fail also.
 5. Notify the team in our our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. Thank you very much for your support!
 
-
-## FRONT END DEVELOPMENT REQUISITES
+## FRONT END REQUISITES
 1. node v10 or above (https://nodejs.org/en/download/)
 2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
 

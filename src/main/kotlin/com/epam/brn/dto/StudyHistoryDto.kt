@@ -2,7 +2,7 @@ package com.epam.brn.dto
 
 import java.time.LocalDateTime
 
-class StudyHistoryDto(
+data class StudyHistoryDto(
     var userId: Long?,
     var exerciseId: Long?,
     var startTime: LocalDateTime?,
