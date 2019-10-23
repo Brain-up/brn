@@ -83,7 +83,7 @@ http://localhost:8081/swagger-ui.html
 
 ## How to start FE dev server
 Run following commands:
-``` bash linux/mac:
+``` linux/mac:
 cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
 ``` for windows:
 /c/brain/brnOrg/frontend (dev)
@@ -96,6 +96,7 @@ FE dev server now accesable at http://localhost:4200/
 1. docker (https://hub.docker.com/search/?type=edition&offering=community)
 
 ## How to start BE dev server
+from directory with project
 ```bash
 docker-compose up
 ```
