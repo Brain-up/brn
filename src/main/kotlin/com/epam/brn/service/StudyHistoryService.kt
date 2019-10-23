@@ -21,15 +21,16 @@ class StudyHistoryService(
 ) {
         private val log = logger()
     fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
-        log.debug("Saving $studyHistoryDto")
         val studyHistoryEntityOptional = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
         )
         if (studyHistoryEntityOptional.isPresent) {
+            log.debug("Replacing $studyHistoryDto")
             val studyHistoryEntity = studyHistoryEntityOptional.get()
             return updateEntity(studyHistoryDto, studyHistoryEntity)
         }
+        log.debug("Saving $studyHistoryDto")
         val userReference = entityManager.getReference(UserAccount::class.java, studyHistoryDto.userId)
         val exerciseReference = entityManager.getReference(Exercise::class.java, studyHistoryDto.exerciseId)
         return studyHistoryRepository.save(
