@@ -7,7 +7,6 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
-import org.mapstruct.factory.Mappers
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
@@ -15,7 +14,9 @@ import javax.persistence.EntityManager
 @Service
 class StudyHistoryService(
     @Autowired val studyHistoryRepository: StudyHistoryRepository,
-    @Autowired val entityManager: EntityManager
+    @Autowired val entityManager: EntityManager,
+    @Autowired val studyHistoryNotNullConverter: StudyHistoryNotNullConverter,
+    @Autowired val studyHistoryConverter: StudyHistoryConverter
 ) {
     fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         val studyHistoryEntityOptional = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
@@ -61,7 +62,7 @@ class StudyHistoryService(
         studyHistoryDto: StudyHistoryDto,
         studyHistoryEntity: StudyHistory
     ): Long? {
-        Mappers.getMapper(StudyHistoryNotNullConverter::class.java)
+        studyHistoryNotNullConverter
             .updateStudyHistory(studyHistoryDto, studyHistoryEntity)
         return studyHistoryRepository.save(studyHistoryEntity).id
     }
@@ -70,7 +71,7 @@ class StudyHistoryService(
         studyHistoryDto: StudyHistoryDto,
         studyHistoryEntity: StudyHistory
     ): Long? {
-        Mappers.getMapper(StudyHistoryConverter::class.java)
+        studyHistoryConverter
             .updateStudyHistory(studyHistoryDto, studyHistoryEntity)
         return studyHistoryRepository.save(studyHistoryEntity).id
     }

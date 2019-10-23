@@ -1,5 +1,7 @@
 package com.epam.brn.service
 
+import com.epam.brn.converter.StudyHistoryConverter
+import com.epam.brn.converter.StudyHistoryNotNullConverter
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -7,6 +9,7 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
+import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -27,7 +30,10 @@ internal class StudyHistoryServiceTest {
     lateinit var entityManager: EntityManager
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
-
+    @Mock
+    lateinit var studyHistoryNotNullConverter: StudyHistoryNotNullConverter
+    @Mock
+    lateinit var studyHistoryConverter: StudyHistoryConverter
     @InjectMocks
     lateinit var studyHistoryService: StudyHistoryService
 
@@ -146,7 +152,8 @@ internal class StudyHistoryServiceTest {
             successTasksCount = 0,
             repetitionCount = 1
         )
-        `when`(studyHistoryRepository.save(updatedEntity)).thenReturn(updatedEntity)
+        `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
+        doNothing().`when`(studyHistoryNotNullConverter).updateStudyHistory(dto, existingEntity)
         `when`(
             studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
                 dto.userId, dto.exerciseId
@@ -156,7 +163,7 @@ internal class StudyHistoryServiceTest {
         studyHistoryService.patchStudyHistory(dto)
 
         // THEN
-        verify(studyHistoryRepository).save(updatedEntity)
+        verify(studyHistoryRepository).save(any())
     }
 
     @Test
@@ -191,7 +198,8 @@ internal class StudyHistoryServiceTest {
             successTasksCount = 2,
             repetitionCount = 2
         )
-        `when`(studyHistoryRepository.save(updatedEntity)).thenReturn(updatedEntity)
+        `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
+        doNothing().`when`(studyHistoryConverter).updateStudyHistory(dto, existingEntity)
         `when`(
             studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
                 dto.userId, dto.exerciseId
@@ -201,7 +209,7 @@ internal class StudyHistoryServiceTest {
         studyHistoryService.replaceStudyHistory(dto)
 
         // THEN
-        verify(studyHistoryRepository).save(updatedEntity)
+        verify(studyHistoryRepository).save(any())
     }
 
     private fun getExercise(): Exercise {
