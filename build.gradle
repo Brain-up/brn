@@ -133,7 +133,7 @@ task integrationTest(type: Test) { Test task ->
     }
     testLogging.showStandardStreams = true
     testLogging.exceptionFormat = "full"
-
+    System.properties.remove("java.endorsed.dirs")
     task.systemProperties(System.properties)
     println "Test task system properties: " + task.systemProperties
     tasks.check.dependsOn task
