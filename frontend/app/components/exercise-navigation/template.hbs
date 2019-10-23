@@ -1,12 +1,16 @@
-{{#each (sort-by "order" @tasks) as |task index|}}
-  {{#if (eq 0 index)}}
-    Задачи:
-  {{/if}}
+<nav class="c-pagination">
+  <div class="c-pagination__pages tasks-pages-pagination">
+    {{#each (sort-by "order" @tasks) as |task index|}}
+      {{#if (eq 0 index)}}
+        <span class="tasks-pages-pagination__name">Задачи:</span>
+      {{/if}}
 
-  {{#link-to "series.exercise.task" task}}
-    {{~task.order~}}
-  {{/link-to}}
-  &nbsp;
-{{else}}
-  Пока в этом упражнении нет задач 🤷‍♂️
-{{/each}}
+      {{#link-to "series.exercise.task" task putActiveAttr=true class="c-pagination__control"}}
+        {{~task.order~}}
+      {{/link-to}}
+      &nbsp;
+    {{else}}
+      Пока в этом упражнении нет задач 🤷‍♂️
+    {{/each}}
+  </div>
+</nav>
