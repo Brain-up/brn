@@ -1,0 +1,12 @@
+<h1>
+  {{@group.name}}
+</h1>
+<ol>
+  {{#each @group.series as |series|}}
+    <li>
+      {{#link-to "series" series}}
+        {{series.name}}
+      {{/link-to}}
+    </li>
+  {{/each}}
+</ol>
