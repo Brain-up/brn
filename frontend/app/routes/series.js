@@ -5,10 +5,6 @@ export default Route.extend({
     return this.store.findRecord('series', series_id, { include: 'exercises' });
   },
 
-  model({ series_id }) {
-    return this.store.findRecord('series', series_id, { include: 'exercises' });
-  },
-
   async afterModel(series, { to }) {
     // in case if series was pre-loaded
     // asking for exercises again
