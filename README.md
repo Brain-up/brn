@@ -45,8 +45,11 @@ https://kb.epam.com/display/EPMCOSRINT/Jenkins
 
 ## START YOUR FRONT END DEVELOPMENT SERVER
 Run following commands:
-```bash
+``` linux/mac:
 cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
+``` for windows:
+/c/brain/brnOrg/frontend (dev)
+$ ./node_modules/.bin/ember serve --port=4201
 ```
 FE dev server now accesable at http://localhost:4200/
 
