@@ -1,13 +1,18 @@
-html, body {
-  background:#efefef;
+@font-face {
+  font-family: 'Open Sans';
+  src: url('fonts/OpenSans-Regular.ttf') format('ttf');
+}
+
+html,
+body {
+  background: #efefef;
   height: 100%;
-  margin:0;
-  font-family: Roboto;
+  margin: 0;
+  font-family: sans-serif;
 }
 
 body > div.ember-view {
-  min-height:100%;
-  width: 1166px;
+  min-height: 100%;
   margin: 0 auto;
   background: white;
   padding: 30px;
@@ -20,65 +25,93 @@ main {
 
 .series-nav__exercies-list {
   list-style: none;
-  padding:0;
-  margin:0;
+  padding: 0;
+  margin: 0;
   height: 100%;
 }
 
 .series-page--aside {
-  border-right: 1px lightgrey solid;
-  padding-right:10px;
+  border-right: 1px rgb(116, 116, 140) solid;
+  padding-right: 10px;
 }
 
 .series-nav__exercies-link {
   font-size: 18px;
-  margin-bottom: .2em;
+  margin-bottom: 0.2em;
   display: inline-block;
 }
 
 .series-nav__exercies-link.active {
-  outline: 2px solid black;
   outline-offset: 2px;
 }
 
 .series-page--canvas {
   flex-grow: 2;
   margin-top: 25px;
-  padding:0px 30px
+  padding: 0px 30px;
+}
+
+.series-page--canvas audio {
+	margin: 0 auto 15px;
+    width: calc(100% - 10px);
 }
 
 /* TASK PLAYER */
 .task-player__options {
-  list-style:none;
-  padding:0;
-  display:flex;
-  flex-wrap:wrap;
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .task-player__option {
-  flex-basis:33.33%;
-  padding:10px;
+  flex-basis: 33.33%;
+  padding: 0 10px 10px 0;
   box-sizing: border-box;
 }
 
 .task-player__option-button {
   height: 100px;
   width: 100%;
-  display:block;
-  font-size:40px;
-}
-
-
-.task-player__results {
-  text-align: center;
+  display: block;
   font-size: 40px;
 }
 
-.task-player__results button {
-  font-size: 45px;
+.task-player__results {
+  text-align: center;
+  font-size: 35px;
+  color: rgb(44, 62, 80)
 }
-
 
 .exercise-navigation {
   font-size: 20px;
+}
+
+.tasks-pages-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.tasks-pages-pagination__name {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.exercise-navigation > nav.c-pagination {
+  padding-left: 0;
+  padding-top: 0;
+}
+
+.series-nav__exercies-list > li {
+  margin-bottom: 5px;
+}
+
+a.active {
+  color: #3a3a86;
+}
+
+a {
+  color: #7a7ab7;
+  text-decoration: none;
 }

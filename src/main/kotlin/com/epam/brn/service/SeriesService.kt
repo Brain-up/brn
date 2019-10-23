@@ -10,8 +10,9 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
 
     private val log = logger()
 
-    fun findSeries(userId: String): List<SeriesDto> {
-        val series = seriesRepository.findAll()
+    fun findSeriesForGroup(groupId: Long): List<SeriesDto> {
+        val series = seriesRepository.findByExerciseGroupLike(groupId)
+        log.info("try to find series for groupId=$groupId")
         return series.map { seriesEntry -> seriesEntry.toDto() }
     }
 }

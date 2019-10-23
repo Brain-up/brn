@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.ManyToMany
 import javax.persistence.JoinTable
+import javax.persistence.FetchType
 
 @Entity
 data class Task(
@@ -25,7 +26,7 @@ data class Task(
     val id: Long? = null,
     val name: String? = "",
     val serialNumber: Int? = 0,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
     val exercise: Exercise? = null,
     @OneToOne(cascade = [(CascadeType.ALL)], optional = true)

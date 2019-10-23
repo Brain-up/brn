@@ -11,6 +11,7 @@ import javax.persistence.CascadeType
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Column
+import javax.persistence.FetchType
 
 @Entity
 data class Series(
@@ -26,7 +27,7 @@ data class Series(
     val name: String,
     @Column
     val description: String,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_group_id")
     val exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)])

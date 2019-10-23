@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
 
 export default Route.extend({
+
   model({ exercise_id }) {
     return this.store.findRecord('exercise', exercise_id, { include: 'tasks' });
   },

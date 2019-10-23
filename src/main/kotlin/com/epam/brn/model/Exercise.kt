@@ -10,6 +10,7 @@ import javax.persistence.SequenceGenerator
 import javax.persistence.CascadeType
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.persistence.FetchType
 
 @Entity
 data class Exercise(
@@ -24,7 +25,7 @@ data class Exercise(
     val name: String,
     val description: String? = "",
     val level: Short? = 0,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL])
