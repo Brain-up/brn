@@ -100,16 +100,14 @@ cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
 ```
 FE dev server now accesable at http://localhost:4200/
 
-## START BACKEND APPLICATION
-From console, execute:
+## START BACKEND 
+1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
+2. From console, from project's folder, execute:
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 Alternatively, use daemon mode (no console output):
 ```bash
-docker-compose -d up
+docker-compose -d up --build
 ```
-BE server accesible as http://localhost:8080/swagger-ui.html
-
-## REST API 
-- http://localhost:8081/swagger-ui.html 
+REST API will be accessible at http://localhost:8081/swagger-ui.html 
