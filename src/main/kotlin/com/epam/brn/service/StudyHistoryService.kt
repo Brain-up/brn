@@ -7,6 +7,7 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.EntityManager
@@ -18,7 +19,9 @@ class StudyHistoryService(
     @Autowired val studyHistoryNotNullConverter: StudyHistoryNotNullConverter,
     @Autowired val studyHistoryConverter: StudyHistoryConverter
 ) {
+        private val log = logger()
     fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+        log.debug("Saving $studyHistoryDto")
         val studyHistoryEntityOptional = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
@@ -43,6 +46,7 @@ class StudyHistoryService(
     }
 
     fun replaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+        log.debug("Replacing $studyHistoryDto")
         val studyHistoryEntity = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
@@ -51,6 +55,7 @@ class StudyHistoryService(
     }
 
     fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+        log.debug("Patching $studyHistoryDto")
         val studyHistoryEntity = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
