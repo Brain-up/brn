@@ -6,17 +6,19 @@ on:
 
 jobs: 
   deps: 
-    name: Install dependencies
+    name: Run all tests
     runs-on: ubuntu-latest
     steps: 
+      - uses: actions/checkout@v1
+      - name: Set Node.js 10.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 10.x
       - name: Install dependencies
-        working-directory: frontend
-        uses: "nuxt/actions-yarn@node-10"
-        args: "install"
-  tests:
-    name: Run tests
-    needs: deps
-    steps: 
-      - name: Build & test
-        working-directory: frontend
-        uses: "alexlafroscia/actions-ember-testing@master"
+        working-directory: ./frontend
+        run: |
+          npm install
+      - name: Run ember app tests 
+        working-directory: ./frontend
+        run: |
+          npm run test
