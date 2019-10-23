@@ -37,7 +37,7 @@ https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
 'gradle build' with tests
 2. Application.kt - main class to run application from idea directly
 
-## Data base Postgrees (run from docker image)
+## Data base Postgres (run from docker image)
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
 To install docker:
