@@ -39,14 +39,16 @@ https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 ### JENKINS
 https://kb.epam.com/display/EPMCOSRINT/Jenkins
 
-## GET THE PROJECT RUNNING
-0. Clone dev branch with idea or using command line "git clone https://github.com/Brain-up/brn.git"
-1. Run command 'gradle assemble' to build project successfully
-'gradle build' with tests.
-2. Use --spring.profiles.active=dev when running spring project, in command line or change it in application.properties.
-3. Application.kt is the main class to run application.
+## FRONT END REQUISITES
+1. node v10 or above (https://nodejs.org/en/download/)
+2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
 
-Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
+## START YOUR FRONT END DEVELOPMENT SERVER
+Run following commands:
+```bash
+cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
+```
+FE dev server now accesable at http://localhost:4200/
 
 ## GET DATABASE RUNNING
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
@@ -68,6 +70,30 @@ _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced d
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
 Alternatively, you can just replace the variables by "admin", the default user and password for development.
 
+## GET THE BACKEND PROJECT RUNNING
+0. Clone dev branch with idea or using command line "git clone https://github.com/Brain-up/brn.git"
+1. Run command 'gradle assemble' to build project successfully
+'gradle build' with tests.
+2. Use --spring.profiles.active=dev when running spring project, in command line or change it in application.properties.
+3. Application.kt is the main class to run application.
+
+Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
+
+## BACK END REQUISITES
+1. Docker - https://hub.docker.com/search/?type=edition&offering=community 
+
+###START BACKEND USING DOCKER COMPOSE
+1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
+2. From console, from project's folder, execute:
+```bash
+docker-compose up --build
+```
+Alternatively, use daemon mode (no console output):
+```bash
+docker-compose -d up --build
+```
+REST API will be accessible at http://localhost:8081/swagger-ui.html 
+
 ### Code style
 Please refer for details to kb resources: https://kb.epam.com/display/EPMCOSRINT/Code+style
 
@@ -85,29 +111,3 @@ Please note that if `gradlew ktlint` task fails, project build will fail also.
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. Thank you very much for your support!
-
-## FRONT END REQUISITES
-1. node v10 or above (https://nodejs.org/en/download/)
-2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
-
-## BACK END REQUISITES
-1. Docker - https://hub.docker.com/search/?type=edition&offering=community 
-
-## START YOUR FRONT END DEVELOPMENT SERVER
-Run following commands:
-```bash
-cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
-```
-FE dev server now accesable at http://localhost:4200/
-
-## START BACKEND 
-1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
-2. From console, from project's folder, execute:
-```bash
-docker-compose up --build
-```
-Alternatively, use daemon mode (no console output):
-```bash
-docker-compose -d up --build
-```
-REST API will be accessible at http://localhost:8081/swagger-ui.html 
