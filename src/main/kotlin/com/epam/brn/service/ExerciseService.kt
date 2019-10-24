@@ -3,10 +3,10 @@ package com.epam.brn.service
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
+import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.Optional
 
 @Service
 class ExerciseService(
@@ -23,6 +23,6 @@ class ExerciseService(
     fun findAvailableExercises(userID: Long): List<ExerciseDto> {
         log.debug("Searching available exercises for $userID")
         val history = studyHistoryRepository.findByUserAccount_Id(userID)
-        return history.map { h -> Optional.ofNullable(h.exercise).map { e -> e.toDto() }.orElse(null) }
+        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDto() }
     }
 }
