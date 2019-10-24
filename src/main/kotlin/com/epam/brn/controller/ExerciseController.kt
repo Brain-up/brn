@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.EXERCISE)
-@Api(value = BrnPath.EXERCISE, description = "Contains the results of a finished exercise")
+@RequestMapping(BrnPath.EXERCISES)
+@Api(value = BrnPath.EXERCISES, description = "Contains actions over exercises")
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
@@ -24,7 +24,7 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
         return exerciseService.findExercises(name)
     }
 
-    @RequestMapping(value = [BrnPath.USER + "/{userID}"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/user/{userID}"], method = [RequestMethod.GET])
     fun getAvailableExercises(
         @PathVariable("userID") userID: Long
     ): List<ExerciseDto> {
