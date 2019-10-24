@@ -6,6 +6,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.Index
 import javax.persistence.JoinColumn
 import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
@@ -16,7 +17,8 @@ import javax.persistence.UniqueConstraint
 @Table(
     uniqueConstraints = [
         UniqueConstraint(columnNames = ["user_id", "exercise_id"])
-    ]
+    ],
+    indexes = [Index(name = "study_history_ix_user_exercise", columnList = "user_id,exercise_id")]
 )
 data class StudyHistory(
     @Id

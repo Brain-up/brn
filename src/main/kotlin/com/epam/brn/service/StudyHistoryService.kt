@@ -9,6 +9,7 @@ import com.epam.brn.repo.StudyHistoryRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.security.InvalidParameterException
 import javax.persistence.EntityManager
 
 @Service
@@ -22,9 +23,9 @@ class StudyHistoryService(
         return studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
-        ).map { x ->
+        ).map { studyHistoryEntity ->
             log.debug("Replacing $studyHistoryDto")
-            updateEntity(studyHistoryDto, x)
+            updateEntity(studyHistoryDto, studyHistoryEntity)
         }.orElseGet {
             log.debug("Saving $studyHistoryDto")
             val userReference = entityManager.getReference(UserAccount::class.java, studyHistoryDto.userId)
@@ -43,22 +44,24 @@ class StudyHistoryService(
         }
     }
 
+    @Throws(InvalidParameterException::class)
     fun replaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         log.debug("Replacing $studyHistoryDto")
-        val studyHistoryEntity = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+        return studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
-        ).get()
-        return updateEntity(studyHistoryDto, studyHistoryEntity)
+        ).map { studyHistoryEntity -> updateEntity(studyHistoryDto, studyHistoryEntity) }
+            .orElseThrow { InvalidParameterException("Could not find requested study history") }
     }
 
+    @Throws(InvalidParameterException::class)
     fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         log.debug("Patching $studyHistoryDto")
-        val studyHistoryEntity = studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+        return studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
-        ).get()
-        return updateEntityNotNullOnly(studyHistoryDto, studyHistoryEntity)
+        ).map { studyHistoryEntity -> updateEntityNotNullOnly(studyHistoryDto, studyHistoryEntity) }
+            .orElseThrow { InvalidParameterException("Could not find requested study history") }
     }
 
     private fun updateEntityNotNullOnly(
