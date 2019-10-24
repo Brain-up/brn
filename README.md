@@ -1,43 +1,59 @@
-## WHAT IS BRN.EPAM.COM? 
-It is a web-application which is now developed to support people with central auditory skills deficit, with or without hearing loss, users of cochlear implant or hearing aids. It may be taken by children older than 7 years, adults/ elderly subjects, or anyone who wants to improve auditory skills and train the brain to listen better. 
-It would contain several series of media exercises (maybe organized like like www.uchi.ru for example).
+# BRN.EPAM.COM - Brain Up! 
+This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
+It is projected to contain several series of media exercises, which should be added incrementally. The tool structure and usage could be organized in the same way as other tools like www.uchi.ru .
+
+## SCIENCE SOURCES
+ - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ 
+ - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit   
  
-## WHAT CHALLENGES YOU CAN GET IN THIS PROJECT
-We use latest technologies, so there you can acquaint with them, try them and get a useful experience. 
-- Server side: Java/Kotlin + Spring boot (rest api for front)
-- DB: Postgres (h2 we plan to use for tests)
-- Front-end : up to front-end developers - Ember, React or Angular
+## WHAT CHALLENGES YOU CAN TAKE AS A DEVELOPER ON IN THIS PROJECT
+We use latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. Being an open source project you can show your work in it to any person interested, proving your development expertise.
 
-## SCIENCE SOURCE
-https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ science source for this topic 
-https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit  additional description with links to analogs 
+## WHAT WE ARE LOOKING FOR:
+1. Front-end developers: Ember, React or Angular. 
+2. Server-side developers: Kotlin and Java. Components, REST and algorithms.
+3. DevOps: Continuous integration and delivery.
+4. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
 
-## WE ARE LOOKING FOR:
-1. front-end developers (ember, react or angular..)
-2. server-side developers Kotlin/Java   to develop new components, end-points and personalization algorithms
-3. DevOps  to make ci cd process
-4. Creative UX designers for UX research and prototypes testing. Your ideas how to improve user retention are welcome.
+Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
-Join us, learn something new you want, try your skills, prove yourself, get experience and go ahead!
+## TOOLS WE USE:
+- Back-end: Java/Kotlin + Spring boot. Rest api as integration layer.
+- Front-end : TBD - Ember, React or Angular.
+- DB: Postgres in production, H2 for testing.
 
 ## HOW TO JOIN?
-Just click on “JOIN TEAM” button and we will get in touch with you shortly. Or please email to
-[elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) and describe your interests or any questions.
+Just click on “JOIN TEAM” button and we will get in touch with you shortly. 
+You can also send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) describing your interests or any questions you may have.
+
+# GETTING STARTED!
+
+## RESOURCES
+
+### DOCUMENTATION
+https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
 
 ### JIRA
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 
-### Some documentation
-https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
+### JENKINS
+https://kb.epam.com/display/EPMCOSRINT/Jenkins
 
----
-## For developer's start
-0. clone dev branch (git clone https://github.com/Brain-up/brn.git)
-1. run command 'gradle assemble' to build project successfully
-'gradle build' with tests
-2. Application.kt - main class to run application from idea directly
+## FRONT END REQUISITES
+1. node v10 or above (https://nodejs.org/en/download/)
+2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
 
-## Data base Postgres (run from docker image)
+## START YOUR FRONT END DEVELOPMENT SERVER
+Run following commands:
+``` linux/mac:
+cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
+``` for windows:
+/c/brain/brnOrg/frontend (dev)
+$ ./node_modules/.bin/ember serve --port=4201
+```
+FE dev server now accesable at http://localhost:4200/
+
+## GET DATABASE RUNNING
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
 To install docker:
@@ -49,14 +65,37 @@ To install docker:
 
 To run docker use the following command:
 *  on linux:
-`docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_USER=$POSTGRES_USER postgres:11`
+`docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 * on windows: 
-`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_USER=$POSTGRES_USER postgres:11`
-or simple
-`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11`
+`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 
-_$POSTGRES_PASSWORD_ and _$POSTGRES_USER_ are environment variables and  could be replaced directly or added to your operation system 
-[how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10)
+_$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
+[how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
+Alternatively, you can just replace the variables by "admin", the default user and password for development.
+
+## GET THE BACKEND PROJECT RUNNING
+0. Clone dev branch with idea or using command line "git clone https://github.com/Brain-up/brn.git"
+1. Run command 'gradle assemble' to build project successfully
+'gradle build' with tests.
+2. Use --spring.profiles.active=dev when running spring project, in command line or change it in application.properties.
+3. Application.kt is the main class to run application.
+
+Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
+
+## BACK END REQUISITES
+1. Docker - https://hub.docker.com/search/?type=edition&offering=community 
+
+###START BACKEND USING DOCKER COMPOSE
+1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
+2. From console, from project's folder, execute:
+```bash
+docker-compose up --build
+```
+Alternatively, use daemon mode (no console output):
+```bash
+docker-compose -d up --build
+```
+REST API will be accessible at http://localhost:8081/swagger-ui.html 
 
 ### Code style
 Please refer for details to kb resources: https://kb.epam.com/display/EPMCOSRINT/Code+style
@@ -68,39 +107,10 @@ be found in the 'build\reports\ktlint' folder.
 It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 Please note that if `gradlew ktlint` task fails, project build will fail also.
 
-## FE/BE dev process
-1. create branch from dev with name EPAMLABSBRN-1 for example
-2. development + tests
-3. make MR (with task name and description about what was done), put it to our skype chat and wait several reviews (1 minimum)
-4. merge it in dev branch
-
-### REST API
-http://localhost:8081/swagger-ui.html
-
-## FE dev pre-requisites
-1. node v10 or above (https://nodejs.org/en/download/)
-2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
-
-## How to start FE dev server
-Run following commands:
-``` linux/mac:
-cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
-``` for windows:
-/c/brain/brnOrg/frontend (dev)
-$ ./node_modules/.bin/ember serve --port=4201
-
-```
-FE dev server now accesable at http://localhost:4200/
-
-## BE dev pre-requisites
-1. docker (https://hub.docker.com/search/?type=edition&offering=community)
-
-## How to start BE dev server
-from directory with project
-```bash
-docker-compose up
-```
-Deamon mode (no console output):
-```bash
-docker-compose -d up
-```
+## DEVELOPMENT PROCESS
+1. Get a task assigned in JIRA.
+2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
+3. Implement your task, do not forget to test. Remember to follow project's coding standards: https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
+4. Create pull request with task name and description about what was done. 
+5. Notify the team in our our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
+6. The task gets merged by a project mantainer. Thank you very much for your support!
