@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
-    fun findByIdLike(id: String): List<StudyHistory>
+    fun findByUserAccount_Id(id: Long?): List<StudyHistory>
 }
