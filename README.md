@@ -39,19 +39,8 @@ https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 ### JENKINS
 https://kb.epam.com/display/EPMCOSRINT/Jenkins
 
-## FRONT END REQUISITES
-1. node v10 or above (https://nodejs.org/en/download/)
-2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
-
-## START YOUR FRONT END DEVELOPMENT SERVER
-Run following commands:
-``` linux/mac:
-cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
-``` for windows:
-/c/brain/brnOrg/frontend (dev)
-$ ./node_modules/.bin/ember serve --port=4201
-```
-FE dev server now accesable at http://localhost:4200/
+### Coding standarts
+https://kb.epam.com/display/EPMCOSRINT/Coding+standarts
 
 ## GET DATABASE RUNNING
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
@@ -85,7 +74,7 @@ Note that if you are using IntelliJ, you may want to use version 2019.2 and late
 ## BACK END REQUISITES
 1. Docker - https://hub.docker.com/search/?type=edition&offering=community 
 
-###START BACKEND USING DOCKER COMPOSE
+### START BACKEND USING DOCKER COMPOSE - it is sutable for front-end developers
 1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
 2. From console, from project's folder, execute:
 ```bash
@@ -97,11 +86,26 @@ docker-compose -d up --build
 ```
 REST API will be accessible at http://localhost:8081/swagger-ui.html 
 
+### START BACKEND from IDEA
+just run Application.kt
+
+## FRONT END REQUISITES
+1. node v10 or above (https://nodejs.org/en/download/)
+2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
+
+## START YOUR FRONT-END DEVELOPMENT SERVER
+Run following commands:
+``` linux/mac:
+cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
+``` for windows:
+/c/brain/brnOrg/frontend (dev)
+$ ./node_modules/.bin/ember serve --port=4201
+```
+FE dev server now accesable at http://localhost:4200/
+
 ### Code style
 Please refer for details to kb resources: https://kb.epam.com/display/EPMCOSRINT/Code+style
-
 Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
-
 Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can
 be found in the 'build\reports\ktlint' folder. 
 It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
