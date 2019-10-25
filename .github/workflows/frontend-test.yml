@@ -38,4 +38,4 @@ jobs:
         with:
           working-directory: ./frontend
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          coverage-file: "coverage/coverage-summary.json"
+          coverage-file: "./frontend/coverage/coverage-summary.json"
