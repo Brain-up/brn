@@ -29,15 +29,14 @@ You can also send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikov
 
 # GETTING STARTED!
 ## RESOURCES
-
 ### DOCUMENTATION
 https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
-
 ### JIRA
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
-
 ### JENKINS
 https://kb.epam.com/display/EPMCOSRINT/Jenkins
+### CODING STANDARDS
+https://kb.epam.com/display/EPMCOSRINT/Coding+standarts
 
 ## FRONT END DEVELOPMENT
 ### REQUISITES
@@ -77,7 +76,7 @@ _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced d
 Alternatively, you can just replace the variables by "admin", the default user and password for development.
 
 ### GET THE BACKEND PROJECT RUNNING
-1. Run command 'gradle assemble' from main project folder to build project successfully 'gradle build' with tests.
+1. Run command 'gradle build' from main project folder to build project with tests.
 2. Use --spring.profiles.active=dev when running spring project, in command line or change it in application.properties.
 3. Application.kt is the main class to run application.
 
@@ -87,17 +86,8 @@ Note that if you are using IntelliJ, you may want to use version 2019.2 and late
 ### REQUISITES
 1. Docker - https://hub.docker.com/search/?type=edition&offering=community 
 
-### START BACKEND USING DOCKER COMPOSE
-1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
-2. From console, from project's folder, execute:
-```bash
-docker-compose up --build
-```
-Alternatively, use daemon mode (no console output):
-```bash
-docker-compose -d up --build
-```
-REST API will be accessible at http://localhost:8081/swagger-ui.html 
+### START BACKEND from IDEA
+just run Application.kt after launching database in docker.
 
 ### Code style
 - Please refer for details to kb resources: https://kb.epam.com/display/EPMCOSRINT/Code+style
@@ -106,10 +96,23 @@ REST API will be accessible at http://localhost:8081/swagger-ui.html
 - It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 - Please note that if `gradlew ktlint` task fails, project build will fail also.
 
+## DEPLOY USING DOCKER COMPOSE
+   1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
+   2. From console, from project's folder, execute:
+   ```bash
+   docker-compose up --build
+   ```
+   Alternatively, use daemon mode (no console output):
+   ```bash
+   docker-compose -d up --build
+   ```
+   REST API will be accessible at http://localhost:8081/swagger-ui.html 
+
 ## DEVELOPMENT PROCESS
 1. Get a task assigned in JIRA.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
-3. Implement your task, do not forget to test. Remember to follow project's coding standards: https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
+3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. Thank you very much for your support!
+
