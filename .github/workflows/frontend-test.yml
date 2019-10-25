@@ -11,15 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v1
-      - name: Set Node.js 10.x
-        uses: actions/setup-node@master
-        with:
-          node-version: 10.x
+      - uses: mydea/actions-ember-testing@v1
       - name: Install dependencies
-        working-directory: ./frontend
-        run: |
-          yarn
-      - name: Run ember app tests 
-        working-directory: ./frontend
-        run: |
-          yarn test
+        run: yarn install
+      - name: Run tests
+        run: yarn test
+      - name: Lint JS
+        run: yarn lint:js
+      - name: Lint HBS
+        run: yarn lint:hbs
