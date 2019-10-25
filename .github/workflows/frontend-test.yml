@@ -15,9 +15,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - name: Run tests
-        working-directory: ./frontend
-        run: yarn test
       - name: Lint .js 
         working-directory: ./frontend
         run: yarn lint:js
@@ -27,4 +24,5 @@ jobs:
       - uses: mydea/ember-cli-code-coverage-action@v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          test-command: "cd ./frontend && yarn test-coverage"
+          test-command: "run_fe_tests.sh"
+          coverage-file: "./fronted/coverage/coverage-summary.json"
