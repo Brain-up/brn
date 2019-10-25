@@ -6,8 +6,8 @@ on:
     - '.github/workflows/frontend-test.yml'
 
 jobs: 
-  deps: 
-    name: Install dependencies 
+  test: 
+    name: Frontend tests
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v1
@@ -26,7 +26,7 @@ jobs:
         run: yarn test
 
   coverage:
-    name: Examine test coverage changes
+    name: Test coverage changes
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v1
