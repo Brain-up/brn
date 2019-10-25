@@ -15,23 +15,12 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-  lint:
-    name: Source files static analysis
-    runs-on: ubuntu-latest
-    needs: deps
-    steps: 
       - name: Lint *.js files
         working-directory: ./frontend
         run: yarn lint:js
       - name: Lint *.hbs files
         working-directory: ./frontend
         run: yarn lint:hbs
-
-  test:
-    name: Run tests 
-    runs-on: ubuntu-latest
-    needs: deps
-    steps: 
       - name: Run tests
         working-directory: ./frontend
         run: yarn test
@@ -39,8 +28,12 @@ jobs:
   coverage:
     name: Examine test coverage changes
     runs-on: ubuntu-latest
-    needs: deps
     steps: 
+      - uses: actions/checkout@v1
+      - uses: mydea/actions-ember-testing@v1
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: yarn install
       - uses: H1D/ember-cli-code-coverage-action@2ca066d
         with:
           working-directory: ./frontend
