@@ -51,6 +51,7 @@
     "ember-cli-htmlbars": "^4.0.0",
     "ember-cli-inject-live-reload": "^2.0.1",
     "ember-cli-mirage": "^1.1.2",
+    "ember-cli-postcss": "^5.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-stencil": "^1.0.0",
     "ember-cli-template-lint": "^1.0.0-beta.3",
@@ -75,6 +76,7 @@
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
     "loader.js": "^4.7.0",
+    "postcss-import": "^12.0.1",
     "prettier": "^1.18.2",
     "qunit-dom": "^0.9.0"
   },
@@ -82,6 +84,7 @@
     "node": "8.* || >= 10.*"
   },
   "dependencies": {
-    "eslint": "^6.5.1"
+    "eslint": "^6.5.1",
+    "ember-component-css": "^0.7.4"
   }
 }
