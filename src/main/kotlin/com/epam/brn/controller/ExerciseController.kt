@@ -25,7 +25,7 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     }
 
     @RequestMapping(value = ["/user/{userID}"], method = [RequestMethod.GET])
-    fun getAvailableExercises(
+    fun getDoneExercises(
         @PathVariable("userID") userID: Long
     ): List<ExerciseDto> {
         return exerciseService.findDoneExercises(userID)
