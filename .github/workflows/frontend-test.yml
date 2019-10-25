@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: mydea/actions-ember-testing@v1
       - name: Install dependencies
+        working-directory: ./frontend
         run: yarn install
       - name: Run tests
         run: yarn test
