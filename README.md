@@ -97,16 +97,16 @@ just run Application.kt after launching database in docker.
 - Please note that if `gradlew ktlint` task fails, project build will fail also.
 
 ## DEPLOY USING DOCKER COMPOSE
-   1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
-   2. From console, from project's folder, execute:
-   ```bash
-   docker-compose up --build
-   ```
-   Alternatively, use daemon mode (no console output):
-   ```bash
-   docker-compose -d up --build
-   ```
-   REST API will be accessible at http://localhost:8081/swagger-ui.html 
+1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
+2. From console, from project's folder, execute:
+```bash
+docker-compose up --build
+```
+Alternatively, use daemon mode (no console output):
+```bash
+docker-compose -d up --build
+```
+REST API will be accessible at http://localhost:8081/swagger-ui.html 
 
 ## DEVELOPMENT PROCESS
 1. Get a task assigned in JIRA.
@@ -114,5 +114,8 @@ just run Application.kt after launching database in docker.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
-6. The task gets merged by a project mantainer. Thank you very much for your support!
+6. The task gets merged by a project mantainer. 
+
+
+### Thank you very much for your support!
 
