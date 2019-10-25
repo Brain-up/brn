@@ -1,0 +1,25 @@
+.task-player__options {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.task-player__option {
+  flex-basis: 33.33%;
+  padding: 0 10px 10px 0;
+  box-sizing: border-box;
+}
+
+.task-player__option-button {
+  height: 100px;
+  width: 100%;
+  display: block;
+  font-size: 40px;
+}
+
+.task-player__results {
+  text-align: center;
+  font-size: 35px;
+  color: rgb(44, 62, 80);
+}
