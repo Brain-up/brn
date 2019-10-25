@@ -21,7 +21,8 @@ jobs:
       - name: Lint *.hbs files
         working-directory: ./frontend
         run: yarn lint:hbs
-      - uses: mydea/ember-cli-code-coverage-action@v1
+      - uses: H1D/ember-cli-code-coverage-action@v1
         with:
+          working-directory: ./frontend
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           coverage-file: "coverage/coverage-summary.json"
