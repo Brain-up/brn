@@ -24,11 +24,11 @@ internal class ExercisesControllerTest {
         val userID: Long = 1
         val exercise = ExerciseDto(1, "exe", "desc")
         val listExercises = listOf(exercise)
-        Mockito.`when`(exerciseService.findAvailableExercises(userID)).thenReturn(listExercises)
+        Mockito.`when`(exerciseService.findDoneExercises(userID)).thenReturn(listExercises)
         // WHEN
         val actualResult = exerciseController.getAvailableExercises(userID)
         // THEN
         Assertions.assertTrue(actualResult.contains(exercise))
-        verify(exerciseService).findAvailableExercises(userID)
+        verify(exerciseService).findDoneExercises(userID)
     }
 }

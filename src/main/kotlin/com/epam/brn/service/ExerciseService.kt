@@ -20,7 +20,7 @@ class ExerciseService(
         return exercises.map { exercise -> exercise.toDto() }
     }
 
-    fun findAvailableExercises(userID: Long): List<ExerciseDto> {
+    fun findDoneExercises(userID: Long): List<ExerciseDto> {
         log.debug("Searching available exercises for $userID")
         val history = studyHistoryRepository.findByUserAccount_Id(userID)
         return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDto() }

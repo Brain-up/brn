@@ -32,7 +32,7 @@ internal class ExerciseServiceTest {
         `when`(studyHistoryMock.exercise).thenReturn(exerciseMock)
         `when`(studyHistoryRepository.findByUserAccount_Id(userID)).thenReturn(listOf(studyHistoryMock))
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findAvailableExercises(userID)
+        val actualResult: List<ExerciseDto> = exerciseService.findDoneExercises(userID)
         // THEN
         assertTrue(actualResult.contains(exerciseMock.toDto()))
     }

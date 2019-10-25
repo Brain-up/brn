@@ -28,6 +28,6 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     fun getAvailableExercises(
         @PathVariable("userID") userID: Long
     ): List<ExerciseDto> {
-        return exerciseService.findAvailableExercises(userID)
+        return exerciseService.findDoneExercises(userID)
     }
 }
