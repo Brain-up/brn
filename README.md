@@ -113,6 +113,6 @@ just run Application.kt after launching database in docker.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
 4. Create pull request with task name and description about what was done. 
-5. Notify the team in our our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
+5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. Thank you very much for your support!
 
