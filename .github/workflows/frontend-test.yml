@@ -17,8 +17,8 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: |
-          npm install
+          yarn
       - name: Run ember app tests 
         working-directory: ./frontend
         run: |
-          npm run test
+          yarn test
