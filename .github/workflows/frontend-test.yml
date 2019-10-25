@@ -15,14 +15,13 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - name: Lint .js 
+      - name: Lint *.js files
         working-directory: ./frontend
         run: yarn lint:js
-      - name: Lint .hbs
+      - name: Lint *.hbs files
         working-directory: ./frontend
         run: yarn lint:hbs
       - uses: mydea/ember-cli-code-coverage-action@v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          test-command: "run_fe_tests.sh"
-          coverage-file: "./fronted/coverage/coverage-summary.json"
+          coverage-file: "coverage/coverage-summary.json"
