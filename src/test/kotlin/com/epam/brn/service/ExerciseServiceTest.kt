@@ -30,6 +30,7 @@ internal class ExerciseServiceTest {
         val studyHistoryMock: StudyHistory = mock(StudyHistory::class.java)
         val exerciseMock: Exercise = mock(Exercise::class.java)
         `when`(studyHistoryMock.exercise).thenReturn(exerciseMock)
+        `when`(exerciseMock.toDto()).thenReturn(mock(ExerciseDto::class.java))
         `when`(studyHistoryRepository.findByUserAccount_Id(userID)).thenReturn(listOf(studyHistoryMock))
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findAvailableExercises(userID)
