@@ -24,3 +24,7 @@ jobs:
       - name: Lint .hbs
         working-directory: ./frontend
         run: yarn lint:hbs
+      - uses: mydea/ember-cli-code-coverage-action@v1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          test-command: "cd ./frontend && yarn test-coverage"

@@ -16,6 +16,7 @@
     "lint:js": "eslint .",
     "start": "ember serve",
     "test": "ember test",
+    "test-coverage": "COVERAGE=true ember test",
     "on:precommit": "lint-staged"
   },
   "husky": {
