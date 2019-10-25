@@ -16,8 +16,11 @@ jobs:
         working-directory: ./frontend
         run: yarn install
       - name: Run tests
+        working-directory: ./frontend
         run: yarn test
-      - name: Lint JS
+      - name: Lint .js 
+        working-directory: ./frontend
         run: yarn lint:js
-      - name: Lint HBS
+      - name: Lint .hbs
+        working-directory: ./frontend
         run: yarn lint:hbs
