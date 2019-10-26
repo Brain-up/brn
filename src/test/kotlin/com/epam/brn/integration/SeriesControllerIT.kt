@@ -49,8 +49,7 @@ class SeriesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.SERIES)
-                .param("groupId", idGroup.toString())
+                .get("${BrnPath.GROUPS}/$idGroup/${BrnPath.SERIES}")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
         )
         // THEN

@@ -3,6 +3,7 @@ package com.epam.brn.constant
 object BrnPath {
     const val HOME = "/home"
     const val USER = "/user"
+    const val GROUPS = "/groups"
     const val SERIES = "/series"
     const val EXERCISE = "/exercise"
     const val TASKS = "/tasks"

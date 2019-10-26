@@ -1,8 +1,11 @@
 package com.epam.brn.service
 
+import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
+import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -10,6 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesServiceTest {
@@ -30,5 +34,30 @@ internal class SeriesServiceTest {
         // THEN
         val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDto() }
         assertEquals(expectedResult, actualResult)
+        verify(seriesRepository).findByExerciseGroupLike(groupId)
+    }
+
+    @Test
+    fun `should get series for id`() {
+        // GIVEN
+        val seriesId: Long = 1
+        val series = mock(Series::class.java)
+        `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.of(series))
+        // WHEN
+        val actualResult = seriesService.findSeriesForId(seriesId)
+        // THEN
+        verify(seriesRepository).findById(seriesId)
+    }
+
+    @Test
+    fun `should not get series for id`() {
+        // GIVEN
+        val seriesId: Long = 1
+        val series = mock(Series::class.java)
+        `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.empty())
+        // WHEN
+        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesForId(seriesId) }
+        // THEN
+        verify(seriesRepository).findById(seriesId)
     }
 }
