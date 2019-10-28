@@ -22,7 +22,7 @@ class ExerciseService(
 
     fun findDoneExercises(userID: Long): List<ExerciseDto> {
         log.debug("Searching available exercises for $userID")
-        val history = studyHistoryRepository.findByUserAccount_Id(userID)
+        val history = studyHistoryRepository.findByUserAccountId(userID)
         return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDto() }
     }
 }
