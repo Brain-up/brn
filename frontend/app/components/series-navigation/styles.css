@@ -1,0 +1,25 @@
+.series-nav__exercies-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.series-nav__exercies-link {
+  font-size: 18px;
+  margin-bottom: 0.2em;
+  display: inline-block;
+}
+
+.series-nav__exercies-link.active {
+  outline-offset: 2px;
+}
+
+.series-nav__exercies-list > li {
+  margin-bottom: 5px;
+}
+
+.exercise-navigation > nav.c-pagination {
+  padding-left: 0;
+  padding-top: 0;
+}
