@@ -1,0 +1,72 @@
+#%RAML 1.0
+title: BRN API
+version: v1
+baseUri: http://localhost:8080
+mediaType:
+  - application/json
+
+# GROUP ----------------------------
+
+/groups:
+  get:
+    responses:
+      200:
+        body:
+          example: !include samples/groups.json
+  /{groupId}:
+    get:
+      responses:
+        200:
+          body:
+            example: !include samples/group.json
+
+# SERIES ----------------------------
+
+/series:
+  get:
+    queryParameters:
+      groupId:
+        description: "ID of the group series belongs to"
+        required: true
+        type: string
+        examle: "42"
+    responses:
+      200:
+        body:
+          example: !include samples/series_by_group.json
+  /{seriesId}:
+    get:
+      responses:
+        200:
+          body:
+            example: !include samples/series.json
+
+# EXERCISE ----------------------------
+
+/exercises:
+  get:
+    queryParameters:
+      seriesId:
+        description: "ID of the series exercises belongs to"
+        required: true
+        type: string
+        examle: "42"
+    responses:
+      200:
+        body:
+          example: !include samples/exercises_by_series.json
+
+# TASK ----------------------------
+
+/tasks:
+  get:
+    queryParameters:
+      exerciseID:
+        description: "ID of the exercise tasks belongs to"
+        required: true
+        type: string
+        examle: "42"
+    responses:
+      200:
+        body:
+          example: !include samples/tasks_by_exercise.json
