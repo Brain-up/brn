@@ -16,6 +16,7 @@
     "lint:js": "eslint .",
     "start": "ember serve",
     "test": "ember test",
+    "test-coverage": "COVERAGE=true ember test",
     "on:precommit": "lint-staged"
   },
   "husky": {
@@ -44,6 +45,7 @@
     "ember-cli": "~3.13.1",
     "ember-cli-app-version": "^3.2.0",
     "ember-cli-babel": "^7.11.1",
+    "ember-cli-code-coverage": "^1.0.0-beta.8",
     "ember-cli-dependency-checker": "^3.1.0",
     "ember-cli-deploy": "^1.0.2",
     "ember-cli-deploy-build": "^2.0.0",
@@ -84,7 +86,7 @@
     "node": "8.* || >= 10.*"
   },
   "dependencies": {
-    "eslint": "^6.5.1",
-    "ember-component-css": "^0.7.4"
+    "ember-component-css": "^0.7.4",
+    "eslint": "^6.5.1"
   }
 }
