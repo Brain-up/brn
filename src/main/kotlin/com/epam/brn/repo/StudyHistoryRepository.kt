@@ -8,6 +8,6 @@ import java.util.Optional
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
-    fun findByUserAccount_Id(id: Long?): List<StudyHistory>
-    fun findByUserAccount_IdAndExercise_Id(userId: Long?, exerciseId: Long?): Optional<StudyHistory>
+    fun findByUserAccountId(id: Long?): List<StudyHistory>
+    fun findByUserAccountIdAndExerciseId(userId: Long?, exerciseId: Long?): Optional<StudyHistory>
 }
