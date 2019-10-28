@@ -60,7 +60,7 @@ internal class StudyHistoryServiceTest {
         `when`(entityManager.getReference(Exercise::class.java, dto.exerciseId)).thenReturn(getExercise())
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(entity)
         `when`(
-            studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+            studyHistoryRepository.findByUserAccountIdAndExerciseId(
                 dto.userId, dto.exerciseId
             )
         ).thenReturn(Optional.empty())
@@ -105,7 +105,7 @@ internal class StudyHistoryServiceTest {
         )
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         `when`(
-            studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+            studyHistoryRepository.findByUserAccountIdAndExerciseId(
                 dto.userId,
                 dto.exerciseId
             )
@@ -152,7 +152,7 @@ internal class StudyHistoryServiceTest {
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
         `when`(
-            studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+            studyHistoryRepository.findByUserAccountIdAndExerciseId(
                 dto.userId, dto.exerciseId
             )
         ).thenReturn(Optional.of(existingEntity))
@@ -198,7 +198,7 @@ internal class StudyHistoryServiceTest {
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         doNothing().`when`(studyHistoryConverter).updateStudyHistory(dto, existingEntity)
         `when`(
-            studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+            studyHistoryRepository.findByUserAccountIdAndExerciseId(
                 dto.userId, dto.exerciseId
             )
         ).thenReturn(Optional.of(existingEntity))

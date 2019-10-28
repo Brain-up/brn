@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.USER)
-@Api(value = BrnPath.USER, description = "")
+@RequestMapping(BrnPath.USERS)
+@Api(value = BrnPath.USERS, description = "Contains actions over user details and accounts")
 class UserDetailController(@Autowired val userDetailService: UserDetailsService) {
 
     @GetMapping("/getLevel")
