@@ -20,7 +20,7 @@ class StudyHistoryService(
 ) {
     private val log = logger()
     fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
-        return studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+        return studyHistoryRepository.findByUserAccountIdAndExerciseId(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
         ).map { studyHistoryEntity ->
@@ -47,7 +47,7 @@ class StudyHistoryService(
     @Throws(InvalidParameterException::class)
     fun replaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         log.debug("Replacing $studyHistoryDto")
-        return studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+        return studyHistoryRepository.findByUserAccountIdAndExerciseId(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
         ).map { studyHistoryEntity -> updateEntity(studyHistoryDto, studyHistoryEntity) }
@@ -57,7 +57,7 @@ class StudyHistoryService(
     @Throws(InvalidParameterException::class)
     fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
         log.debug("Patching $studyHistoryDto")
-        return studyHistoryRepository.findByUserAccount_IdAndExercise_Id(
+        return studyHistoryRepository.findByUserAccountIdAndExerciseId(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
         ).map { studyHistoryEntity -> updateEntityNotNullOnly(studyHistoryDto, studyHistoryEntity) }

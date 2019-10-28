@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.STUDY_HISTORY)
-@Api(value = BrnPath.STUDY_HISTORY, description = "Contains the results of a finished exercise")
+@RequestMapping(BrnPath.STUDY_HISTORIES)
+@Api(value = BrnPath.STUDY_HISTORIES, description = "Contains actions over the results of finished exercise")
 class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
     @PostMapping

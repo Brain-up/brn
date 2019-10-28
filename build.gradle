@@ -30,11 +30,6 @@ apply plugin: "kotlin-allopen"
 apply plugin: "kotlin-kapt"
 apply plugin: "net.ltgt.apt-idea"
 
-jar {
-    baseName = "brn-service"
-    version = "0.1.0"
-}
-
 allOpen {
     annotation "javax.persistence.Entity"
     annotation "javax.persistence.MappedSuperclass"
@@ -54,7 +49,19 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-batch"
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
-    
+
+    compile "org.mapstruct:mapstruct:1.3.1.Final"
+    compile "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
+    compile "org.apache.logging.log4j:log4j-api:2.11.2"
+    compile "org.apache.logging.log4j:log4j-core:2.11.2"
+    compile group: "org.apache.commons", name: "commons-lang3", version: "3.9"
+    compile group: "org.apache.commons", name: "commons-math3", version: "3.6.1"
+    compile group: "org.apache.commons", name: "commons-collections4", version: "4.0"
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+    compile group: "io.springfox", name: "springfox-swagger-ui", version: "2.9.2"
+    compile group: "io.springfox", name: "springfox-swagger2", version: "2.9.2"
+    compile "com.h2database:h2"
+
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "junit", module: "junit"
     }
@@ -62,16 +69,6 @@ dependencies {
     testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testCompile "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
     testCompile "com.nhaarman:mockito-kotlin:1.6.0"
-    compile "org.mapstruct:mapstruct:1.3.1.Final"
-    compile "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
-    compile "org.apache.logging.log4j:log4j-api:2.11.2"
-    compile "org.apache.logging.log4j:log4j-core:2.11.2"
-    compile group: "org.apache.commons", name: "commons-lang3", version: "3.9"
-    compile group: "org.apache.commons", name: "commons-math3", version: "3.6.1"
-
-    compile group: "io.springfox", name: "springfox-swagger-ui", version: "2.9.2"
-    compile group: "io.springfox", name: "springfox-swagger2", version: "2.9.2"
-    compile "com.h2database:h2"
 
     kapt("org.mapstruct:mapstruct-processor:1.3.1.Final")
     kapt("org.mapstruct:mapstruct-jdk8:1.3.1.Final")
