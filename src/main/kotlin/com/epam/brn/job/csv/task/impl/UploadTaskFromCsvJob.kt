@@ -2,49 +2,42 @@ package com.epam.brn.job.csv.task.impl
 
 import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.exception.FileFormatException
+import com.epam.brn.job.CsvUtils
 import com.epam.brn.job.csv.task.UploadFromCsvJob
 import com.epam.brn.service.TaskService
 import com.epam.brn.service.parsers.csv.CSVParserService
 import com.epam.brn.service.parsers.csv.converter.impl.TaskCsvToTaskModelConverter
-import org.springframework.beans.factory.annotation.Autowired
+import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 
 import java.io.InputStream
-import java.nio.file.Files
 
 @Component
-class UploadTaskFromCsvJob(@Autowired val csvParserService: CSVParserService, @Autowired val taskService: TaskService) :
+class UploadTaskFromCsvJob(private val csvParserService: CSVParserService, private val taskService: TaskService) :
     UploadFromCsvJob {
 
     @Throws(FileFormatException::class)
-    override fun uploadTask(file: MultipartFile) {
-        if (!isFileContentTypeCsv(file.contentType ?: "")) throw FileFormatException(CSV_FILE_FORMAT_ERROR)
+    override fun uploadTasks(file: MultipartFile) {
+        if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY)) throw FileFormatException(CSV_FILE_FORMAT_ERROR)
 
-        uploadTask(file.inputStream)
+        uploadTasks(file.inputStream)
     }
 
     @Throws(FileFormatException::class)
-    override fun uploadTask(file: File) {
-        if (!isFileCsv(file)) throw FileFormatException(CSV_FILE_FORMAT_ERROR)
-
-        uploadTask(file.inputStream())
+    override fun uploadTasks(file: File) {
+        uploadTasks(file.inputStream())
     }
 
     @Transactional
-    private fun uploadTask(inputStream: InputStream) {
+    private fun uploadTasks(inputStream: InputStream) {
         val tasks = csvParserService.parseCsvFile(inputStream, TaskCsvToTaskModelConverter())
-        tasks.forEach(taskService::save)
-    }
-
-    private fun isFileCsv(file: File): Boolean {
-        val contentType = Files.probeContentType(file.toPath())
-        return isFileContentTypeCsv(contentType)
+        tasks.forEach { taskService.save(it) }
     }
 
     private fun isFileContentTypeCsv(contentType: String): Boolean {
-        return "text/csv".equals(contentType)
+        return CsvUtils.isFileContentTypeCsv(contentType)
     }
 }

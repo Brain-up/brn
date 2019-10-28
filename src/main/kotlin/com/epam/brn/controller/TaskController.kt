@@ -5,6 +5,7 @@ import com.epam.brn.dto.TaskDto
 import com.epam.brn.job.csv.task.UploadFromCsvJob
 import com.epam.brn.service.TaskService
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,10 +30,10 @@ class TaskController(private val taskService: TaskService, private val uploadTas
         return taskService.findAllTasksIncludeAnswers()
     }
 
-    @PostMapping(BrnPath.TASK)
-    fun addTask(@RequestParam(value = "taskFile") taskFile: MultipartFile): ResponseEntity<String> {
-        uploadTaskFromCsvJob.uploadTask(taskFile)
+    @PostMapping
+    fun addTasks(@RequestParam(value = "taskFile") taskFile: MultipartFile): ResponseEntity<String> {
+        uploadTaskFromCsvJob.uploadTasks(taskFile)
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 }

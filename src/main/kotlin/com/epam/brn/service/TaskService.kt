@@ -21,7 +21,7 @@ class TaskService(private val taskRepository: TaskRepository) {
         return tasks.map { task -> task.toDto() }
     }
 
-    fun save(task: Task) {
-        taskRepository.save(task)
+    fun save(task: Task): Task {
+        return taskRepository.save(task)
     }
 }

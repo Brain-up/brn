@@ -38,7 +38,7 @@ data class Task(
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
-    var answerOptions: MutableSet<Resource> = mutableSetOf()
+    var answerOptions: MutableSet<Resource> = hashSetOf()
 ) {
     fun toDto() = TaskDto(
         id = id,

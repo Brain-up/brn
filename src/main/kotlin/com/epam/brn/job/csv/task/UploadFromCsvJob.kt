@@ -7,8 +7,8 @@ import java.io.File
 interface UploadFromCsvJob {
 
     @Throws(FileFormatException::class)
-    fun uploadTask(file: MultipartFile)
+    fun uploadTasks(file: MultipartFile)
 
     @Throws(FileFormatException::class)
-    fun uploadTask(file: File)
+    fun uploadTasks(file: File)
 }

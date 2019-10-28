@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
 class TaskCsv(
 
     @JsonProperty("exerciseId")
-    val exerciseId: String,
+    val exerciseId: Long,
 
-    @JsonProperty("orderNumber")
-    val orderNumber: String,
+    @JsonProperty("serialNumber")
+    val serialNumber: Int,
 
     @JsonProperty("word")
     val word: String,

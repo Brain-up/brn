@@ -1,10 +1,10 @@
 package com.epam.brn.job
 
-import com.epam.brn.constant.BrnJob.PATH_TO_PRECESSED_RESOURCES
 import com.epam.brn.job.csv.task.UploadFromCsvJob
 import org.apache.commons.io.FileUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.io.File
@@ -17,6 +17,9 @@ class UploadFileJobRunner {
 
     private val log = logger()
 
+    @Value(value = "\${brn.processed.files.path}")
+    private lateinit var pathToProcessedResources: String
+
     @Autowired
     private lateinit var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvJob>
 
@@ -28,7 +31,7 @@ class UploadFileJobRunner {
         sourcesWithJobs.forEach { (path, job) ->
             Files.walk(Paths.get(path))
                 .filter(this::isCsvFile)
-                .map { filePath -> loadFile(job, filePath, successfullyProcessedResources) }
+                .forEach { loadFile(job, it, successfullyProcessedResources) }
         }
 
         moveSuccessfullyProcessedResources(successfullyProcessedResources, jobId)
@@ -38,7 +41,7 @@ class UploadFileJobRunner {
         val file = filePath.toFile()
 
         try {
-            job.uploadTask(file)
+            job.uploadTasks(file)
             successfullyProcessedResources.add(file)
         } catch (e: Exception) {
             log.error("Something went wrong while loading file ${file.name}", e)
@@ -47,9 +50,9 @@ class UploadFileJobRunner {
 
     private fun moveSuccessfullyProcessedResources(successfullyProcessedResources: Set<File>, jobId: String) {
         successfullyProcessedResources.stream()
-            .forEach { file ->
-                val oldPath = file.path
-                val newPath = PATH_TO_PRECESSED_RESOURCES + jobId + "_" + file.name
+            .forEach {
+                val oldPath = it.path
+                val newPath = pathToProcessedResources + File.separator + jobId + "_" + it.name
 
                 FileUtils.moveFile(
                     FileUtils.getFile(oldPath),
@@ -61,6 +64,6 @@ class UploadFileJobRunner {
     }
 
     private fun isCsvFile(filePath: Path): Boolean {
-        return Files.isRegularFile(filePath) && "text/csv".equals(Files.probeContentType(filePath))
+        return Files.isRegularFile(filePath) && CsvUtils.isFileContentTypeCsv(Files.probeContentType(filePath))
     }
 }

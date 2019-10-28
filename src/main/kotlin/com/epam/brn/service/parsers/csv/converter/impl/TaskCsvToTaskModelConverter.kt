@@ -8,8 +8,10 @@ import com.epam.brn.service.ResourceService
 import com.epam.brn.service.parsers.csv.converter.Converter
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
 import org.apache.commons.collections4.CollectionUtils
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
@@ -32,21 +34,17 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     }
 
     private fun convertSerialNumber(source: TaskCsv, target: Task) {
-        target.serialNumber = source.orderNumber.toInt()
+        target.serialNumber = source.serialNumber
     }
 
     private fun convertExercise(source: TaskCsv, target: Task) {
-        val exerciseId = source.exerciseId.toLong()
-        val exercise = exerciseService.findExercisesById(exerciseId)
-
-        if (!exercise.isPresent) throw EntityNotFoundException("Exercise with id $exerciseId was not found")
-
-        target.exercise = exercise.get()
+        target.exercise = exerciseService.findExercisesById(source.exerciseId)
     }
 
     private fun convertCorrectAnswer(source: TaskCsv, target: Task) {
         val word = source.word
-        val resources = resourceService.findByWordLike(word)
+        val fileName = source.fileName
+        val resources = resourceService.findByWordAndAudioFileUrlLike(word, fileName)
 
         if (CollectionUtils.isEmpty(resources)) {
             val resource = Resource()
@@ -62,6 +60,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
 
     private fun convertAnswers(source: TaskCsv, target: Task) {
         target.answerOptions = CollectionUtils.emptyIfNull(source.words)
+            .filter { StringUtils.isNotEmpty(it) }
             .map(this::getResourceByWord)
             .toMutableSet()
     }

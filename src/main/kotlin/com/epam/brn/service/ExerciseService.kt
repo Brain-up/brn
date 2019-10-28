@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.repo.ExerciseRepository
@@ -9,7 +10,6 @@ import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.Optional
 
 @Service
 class ExerciseService(
@@ -30,7 +30,8 @@ class ExerciseService(
         return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks() }
     }
 
-    fun findExercisesById(id: Long): Optional<Exercise> {
+    fun findExercisesById(id: Long): Exercise {
         return exerciseRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Exercise entity was not found by id $id") }
     }
 }

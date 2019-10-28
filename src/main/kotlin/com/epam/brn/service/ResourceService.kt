@@ -14,7 +14,11 @@ class ResourceService(@Autowired val resourceRepository: ResourceRepository) {
         return resourceRepository.findByWordLike(word)
     }
 
-    fun save(resource: Resource) {
-        resourceRepository.save(resource)
+    fun findByWordAndAudioFileUrlLike(word: String, audioFileUrl: String): List<Resource> {
+        return resourceRepository.findByWordAndAudioFileUrlLike(word, audioFileUrl)
+    }
+
+    fun save(resource: Resource): Resource {
+        return resourceRepository.save(resource)
     }
 }
