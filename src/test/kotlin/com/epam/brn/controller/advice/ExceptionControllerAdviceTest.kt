@@ -1,6 +1,5 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.dto.ErrorResponse
 import com.epam.brn.exception.NoDataFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -20,7 +19,6 @@ internal class ExceptionControllerAdviceTest {
         // THEN
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType())
-        assertEquals("tasks were not found", (responseEntity.body as ErrorResponse).message)
     }
 
     @Test
@@ -32,7 +30,6 @@ internal class ExceptionControllerAdviceTest {
         // THEN
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType())
-        assertEquals("some exception", (responseEntity.body as ErrorResponse).message)
     }
 
     @Test
@@ -44,6 +41,5 @@ internal class ExceptionControllerAdviceTest {
         // THEN
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType())
-        assertEquals("some test exception", (responseEntity.body as ErrorResponse).message)
     }
 }

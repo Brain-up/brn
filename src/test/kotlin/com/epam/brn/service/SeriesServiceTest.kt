@@ -42,9 +42,10 @@ internal class SeriesServiceTest {
         // GIVEN
         val seriesId: Long = 1
         val series = mock(Series::class.java)
+        val include = "exercises"
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.of(series))
         // WHEN
-        val actualResult = seriesService.findSeriesForId(seriesId)
+        seriesService.findSeriesForId(seriesId, include)
         // THEN
         verify(seriesRepository).findById(seriesId)
     }
@@ -53,10 +54,10 @@ internal class SeriesServiceTest {
     fun `should not get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        val series = mock(Series::class.java)
+        val include = "exercises"
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.empty())
         // WHEN
-        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesForId(seriesId) }
+        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesForId(seriesId, include) }
         // THEN
         verify(seriesRepository).findById(seriesId)
     }

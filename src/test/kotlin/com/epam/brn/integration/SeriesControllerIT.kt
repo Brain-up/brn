@@ -4,6 +4,7 @@ import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.SeriesRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -22,6 +23,8 @@ class SeriesControllerIT {
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+    @Autowired
+    lateinit var seriesRepository: SeriesRepository
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -49,7 +52,8 @@ class SeriesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.GROUPS}/$idGroup/${BrnPath.SERIES}")
+                .get("${BrnPath.SERIES}")
+                .param("groupId", idGroup.toString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
         )
         // THEN
@@ -59,5 +63,25 @@ class SeriesControllerIT {
         val response = resultAction.andReturn().response.contentAsString
         Assertions.assertTrue(response.contains("распознование слов тест"))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
+    }
+
+    @Test
+    fun `test get series for seriesId`() {
+        // GIVEN
+        loadGroupWithExercises()
+        val seriesId = seriesRepository.findByNameLike("распознование слов тест").get(0).id
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("${BrnPath.SERIES}/$seriesId")
+                .param("include", "exercises")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+        )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        val response = resultAction.andReturn().response.contentAsString
+        Assertions.assertTrue(response.contains("распознование слов тест"))
     }
 }

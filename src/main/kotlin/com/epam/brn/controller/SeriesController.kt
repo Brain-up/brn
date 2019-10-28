@@ -1,6 +1,10 @@
 package com.epam.brn.controller
 
+import com.epam.brn.constant.BrnFlags.INCLUDE
+import com.epam.brn.constant.BrnParams.GROUP_ID
+import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnPath
+import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.service.SeriesService
 import io.swagger.annotations.Api
@@ -10,25 +14,27 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import springfox.documentation.spring.web.json.Json
 
 @RestController
-@RequestMapping(BrnPath.GROUPS)
-@Api(value = "${BrnPath.GROUPS}/groupId/${BrnPath.SERIES}", description = "End point for working with series")
+@RequestMapping(BrnPath.SERIES)
+@Api(value = "${BrnPath.SERIES}", description = "End points for working with series")
 class SeriesController(@Autowired val seriesService: SeriesService) {
 
-    @GetMapping("{groupId}/${BrnPath.SERIES}")
+    @GetMapping
     fun getSeriesForGroup(
-        @PathVariable(value = "groupId") groupId: Long,
-        @RequestParam(value = "include") include: String
-    ): List<SeriesDto> {
-        return seriesService.findSeriesForGroup(groupId, include)
+        @RequestParam(value = GROUP_ID) groupId: Long,
+        @RequestParam(value = INCLUDE, defaultValue = "") include: String
+    ): BaseResponseDto {
+        val listDto = seriesService.findSeriesForGroup(groupId, include)
+        return BaseResponseDto(data = Json(listDto.toString()))
     }
 
-    @GetMapping("{groupId}/${BrnPath.SERIES}/{seriesId}")
+    @GetMapping("{$SERIES_ID}")
     fun getSeriesForId(
-        @PathVariable(value = "groupId") groupId: Long,
-        @PathVariable(value = "seriesId") seriesId: Long
+        @PathVariable(value = SERIES_ID) seriesId: Long,
+        @RequestParam(value = INCLUDE, defaultValue = "") include: String
     ): SeriesDto {
-        return seriesService.findSeriesForId(seriesId)
+        return seriesService.findSeriesForId(seriesId, include)
     }
 }
