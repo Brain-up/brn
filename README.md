@@ -24,7 +24,7 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 
 ## HOW TO JOIN?
 Just click on “JOIN TEAM” button and we will get in touch with you shortly. 
-You can also send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) describing your interests or any questions you may have.
+You can also send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) or directly to [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.
 
 # GETTING STARTED!
 
