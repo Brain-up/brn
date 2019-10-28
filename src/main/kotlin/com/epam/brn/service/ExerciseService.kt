@@ -13,6 +13,6 @@ class ExerciseService(@Autowired val exerciseRepository: ExerciseRepository) {
 
     fun findExercises(name: String): List<ExerciseDto> {
         val exercises = exerciseRepository.findByNameLike(name)
-        return exercises.map { exercise -> exercise.toDto() }
+        return exercises.map { exercise -> exercise.toDtoWithTasks() }
     }
 }

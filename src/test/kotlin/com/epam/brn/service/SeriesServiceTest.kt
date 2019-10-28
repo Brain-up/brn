@@ -30,9 +30,9 @@ internal class SeriesServiceTest {
         val listSeries = listOf(series)
         `when`(seriesRepository.findByExerciseGroupLike(groupId)).thenReturn(listOf(series))
         // WHEN
-        val actualResult = seriesService.findSeriesForGroup(groupId)
+        val actualResult = seriesService.findSeriesForGroup(groupId, "")
         // THEN
-        val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDto() }
+        val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDtoWithExercises() }
         assertEquals(expectedResult, actualResult)
         verify(seriesRepository).findByExerciseGroupLike(groupId)
     }

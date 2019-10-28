@@ -22,22 +22,24 @@ internal class SeriesControllerTest {
     fun `should get series for group`() {
         // GIVEN
         val groupId: Long = 1
-        val series1 = SeriesDto(1, "testName", "testDescr")
-        val series2 = SeriesDto(2, "testName", "testDescr")
+        val series1 = SeriesDto(1, 1, "testName", "testDescr")
+        val series2 = SeriesDto(1, 2, "testName", "testDescr")
+        val include = ""
         val listSeries = listOf(series1, series2)
-        Mockito.`when`(seriesService.findSeriesForGroup(groupId)).thenReturn(listSeries)
+        Mockito.`when`(seriesService.findSeriesForGroup(groupId, include)).thenReturn(listSeries)
         // WHEN
-        val actualResult = seriesController.getSeriesForGroup(groupId)
+        val actualResult = seriesController.getSeriesForGroup(groupId, include)
         // THEN
         Assertions.assertEquals(listSeries, actualResult)
-        verify(seriesService).findSeriesForGroup(groupId)
+        verify(seriesService).findSeriesForGroup(groupId, include)
     }
 
     @Test
     fun `should get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        val series = SeriesDto(seriesId, "testName", "testDescr")
+        val series = SeriesDto(1, seriesId, "testName", "testDescr")
+        val include = ""
         Mockito.`when`(seriesService.findSeriesForId(seriesId)).thenReturn(series)
         // WHEN
         val actualResult = seriesController.getSeriesForId(1, seriesId)

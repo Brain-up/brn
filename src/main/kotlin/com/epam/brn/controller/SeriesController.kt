@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController
 class SeriesController(@Autowired val seriesService: SeriesService) {
 
     @GetMapping("{groupId}/${BrnPath.SERIES}")
-    fun getSeriesForGroup(@PathVariable(value = "groupId") groupId: Long): List<SeriesDto> {
-        return seriesService.findSeriesForGroup(groupId)
+    fun getSeriesForGroup(
+        @PathVariable(value = "groupId") groupId: Long,
+        @RequestParam(value = "include") include: String
+    ): List<SeriesDto> {
+        return seriesService.findSeriesForGroup(groupId, include)
     }
 
     @GetMapping("{groupId}/${BrnPath.SERIES}/{seriesId}")
