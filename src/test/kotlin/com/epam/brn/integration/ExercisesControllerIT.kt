@@ -81,8 +81,7 @@ class ExercisesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.EXERCISES)
-                .param("exerciseID", existingExercise.id.toString())
+                .get(BrnPath.EXERCISES + "/" + existingExercise.id)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
         )
         // THEN
