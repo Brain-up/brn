@@ -17,7 +17,7 @@ class ExerciseService(
 
     fun findExercises(name: String): List<ExerciseDto> {
         val exercises = exerciseRepository.findByNameLike(name)
-        return exercises.map { exercise -> exercise.toDto() }
+        return exercises.map { exercise -> exercise.toDtoWithTasks() }
     }
 
     fun findDoneExercises(userID: Long): List<ExerciseDto> {

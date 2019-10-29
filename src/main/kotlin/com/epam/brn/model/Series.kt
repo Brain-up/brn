@@ -30,14 +30,21 @@ data class Series(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_group_id")
     val exerciseGroup: ExerciseGroup,
-    @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)])
+    @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     val exercises: MutableSet<Exercise> = HashSet()
 ) {
-    fun toDto() = SeriesDto(
+    fun toDtoWithExercises() = SeriesDto(
+        exerciseGroupId = exerciseGroup.id,
         id = id,
         name = name,
         description = description,
-        exercises = exercises.map { exercise -> exercise.toDto() }.toMutableSet()
+        exercises = exercises.map { exercise -> exercise.toDtoWithoutTasks() }.toMutableSet()
+    )
+    fun toDtoWithoutExercises() = SeriesDto(
+        exerciseGroupId = exerciseGroup.id,
+        id = id,
+        name = name,
+        description = description
     )
 
     override fun equals(other: Any?): Boolean {

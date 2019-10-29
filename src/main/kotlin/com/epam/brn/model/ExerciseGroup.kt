@@ -31,7 +31,7 @@ data class ExerciseGroup(
         id = id,
         name = name,
         description = description,
-        series = series.map { series -> series.toDto() }.toMutableSet()
+        series = series.map { series -> series.toDtoWithExercises() }.toMutableSet()
     )
 
     override fun equals(other: Any?): Boolean {
