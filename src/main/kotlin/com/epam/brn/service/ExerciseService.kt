@@ -16,11 +16,6 @@ class ExerciseService(
 ) {
     private val log = logger()
 
-    fun findExercisesByNameLike(name: String): List<ExerciseDto> {
-        val exercises = exerciseRepository.findByNameLike(name)
-        return exercises.map { exercise -> exercise.toDto() }
-    }
-
     fun findExercisesByID(exerciseID: Long): ExerciseDto {
         val exercise = exerciseRepository.findById(exerciseID)
         return exercise.map { e -> e.toDto() }

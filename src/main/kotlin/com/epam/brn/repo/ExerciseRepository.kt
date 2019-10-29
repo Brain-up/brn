@@ -5,7 +5,4 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ExerciseRepository : CrudRepository<Exercise, Long> {
-
-    fun findByNameLike(name: String): List<Exercise>
-}
+interface ExerciseRepository : CrudRepository<Exercise, Long>

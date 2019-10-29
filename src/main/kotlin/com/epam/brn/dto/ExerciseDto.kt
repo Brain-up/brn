@@ -2,12 +2,14 @@ package com.epam.brn.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-class ExerciseDto(
-    val id: Long?,
-    val name: String,
-    val description: String?,
-    val level: Short? = 0,
+data class ExerciseDto(
+    var id: Long?,
+    var name: String?,
+    var description: String?,
+    var level: Short? = 0,
     @JsonIgnore
     var seriesId: Long? = null,
-    val tasks: MutableSet<TaskDto> = HashSet()
-)
+    var tasks: MutableSet<TaskDto>? = HashSet()
+) {
+    constructor() : this(null, null, null, null, null, null)
+}

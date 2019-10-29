@@ -19,7 +19,7 @@ internal class ExercisesControllerTest {
     lateinit var exerciseService: ExerciseService
 
     @Test
-    fun `should get exercises for group`() {
+    fun `should get done exercises for user`() {
         // GIVEN
         val userID: Long = 1
         val exercise = ExerciseDto(1, "exe", "desc")
@@ -28,7 +28,20 @@ internal class ExercisesControllerTest {
         // WHEN
         val actualResult = exerciseController.getDoneExercises(userID)
         // THEN
-        Assertions.assertTrue(actualResult.contains(exercise))
+        Assertions.assertTrue(actualResult.data.contains(exercise))
         verify(exerciseService).findDoneExercises(userID)
+    }
+
+    @Test
+    fun `should get exercise by id`() {
+        // GIVEN
+        val exerciseID: Long = 1
+        val exercise = ExerciseDto(1, "exe", "desc")
+        Mockito.`when`(exerciseService.findExercisesByID(exerciseID)).thenReturn(exercise)
+        // WHEN
+        val actualResult = exerciseController.getExercisesByID(exerciseID)
+        // THEN
+        Assertions.assertTrue(actualResult.data.contains(exercise))
+        verify(exerciseService).findExercisesByID(exerciseID)
     }
 }

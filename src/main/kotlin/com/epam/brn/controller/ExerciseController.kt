@@ -2,8 +2,10 @@ package com.epam.brn.controller
 
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.ExerciseDtoWrapper
+import com.epam.brn.exception.InvalidParametersException
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
+import org.apache.commons.lang3.ObjectUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,22 +19,27 @@ import java.util.Collections
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
-    fun getExercisesByName(
-        @RequestParam(value = "name", required = true) name: String
-    ): ExerciseDtoWrapper {
-        return ExerciseDtoWrapper(data = exerciseService.findExercisesByNameLike(name))
-    }
-
-    @GetMapping
     fun getExercisesByID(
-        @RequestParam(value = "userID", required = true) userID: Long
+        @RequestParam(value = "exerciseID", required = false) exerciseID: Long?,
+        @RequestParam(value = "userID", required = false) userID: Long?
     ): ExerciseDtoWrapper {
-        return ExerciseDtoWrapper(data = Collections.singletonList(exerciseService.findExercisesByID(userID)))
+        if (ObjectUtils.isNotEmpty(exerciseID).xor(ObjectUtils.isNotEmpty(userID))) {
+            if (ObjectUtils.isNotEmpty(exerciseID)) {
+                return getExercisesByID(exerciseID!!)
+            }
+            return getDoneExercises(userID!!)
+        }
+        throw InvalidParametersException("Only exerciseID or userID is allowed, but one is required")
     }
 
-    @GetMapping
+    fun getExercisesByID(
+        exerciseID: Long
+    ): ExerciseDtoWrapper {
+        return ExerciseDtoWrapper(data = Collections.singletonList(exerciseService.findExercisesByID(exerciseID)))
+    }
+
     fun getDoneExercises(
-        @RequestParam(value = "userID", required = true) userID: Long
+        userID: Long
     ): ExerciseDtoWrapper {
         return ExerciseDtoWrapper(data = exerciseService.findDoneExercises(userID))
     }
