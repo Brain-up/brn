@@ -1,20 +1,39 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.SeriesService
+import com.epam.brn.constant.BrnFlags.INCLUDE
+import com.epam.brn.constant.BrnParams.GROUP_ID
+import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnPath
-import com.epam.brn.dto.SeriesDto
+import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.service.SeriesService
+import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(BrnPath.SERIES)
+@Api(value = "${BrnPath.SERIES}", description = "End points for working with series")
 class SeriesController(@Autowired val seriesService: SeriesService) {
 
     @GetMapping
-    fun getSeries(@RequestParam(value = "groupId", defaultValue = "0") groupId: Long): List<SeriesDto> {
-        return seriesService.findSeriesForGroup(groupId)
+    fun getSeriesForGroup(
+        @RequestParam(value = GROUP_ID) groupId: Long,
+        @RequestParam(value = INCLUDE, defaultValue = "") include: String
+    ): BaseResponseDto {
+        val listDto = seriesService.findSeriesForGroup(groupId, include)
+        return BaseResponseDto(data = listDto)
+    }
+
+    @GetMapping("{$SERIES_ID}")
+    fun getSeriesForId(
+        @PathVariable(value = SERIES_ID) seriesId: Long,
+        @RequestParam(value = INCLUDE, defaultValue = "") include: String
+    ): BaseResponseDto {
+        val seriesDto = seriesService.findSeriesForId(seriesId, include)
+        return BaseResponseDto(data = seriesDto)
     }
 }
