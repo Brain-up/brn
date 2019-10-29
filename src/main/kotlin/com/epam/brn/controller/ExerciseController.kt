@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.constant.BrnPath
-import com.epam.brn.dto.ExerciseDtoWrapper
+import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,14 +21,14 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @GetMapping
     fun getExercisesByUserID(
         @RequestParam(value = "userID") userID: Long
-    ): ExerciseDtoWrapper {
-        return ExerciseDtoWrapper(data = exerciseService.findDoneExercises(userID))
+    ): BaseResponseDto {
+        return BaseResponseDto(data = exerciseService.findDoneExercises(userID))
     }
 
     @RequestMapping(value = ["/{exerciseID}"], method = [RequestMethod.GET])
     fun getExercisesByID(
         @PathVariable("exerciseID") exerciseID: Long
-    ): ExerciseDtoWrapper {
-        return ExerciseDtoWrapper(data = Collections.singletonList(exerciseService.findExercisesByID(exerciseID)))
+    ): BaseResponseDto {
+        return BaseResponseDto(data = Collections.singletonList(exerciseService.findExercisesByID(exerciseID)))
     }
 }

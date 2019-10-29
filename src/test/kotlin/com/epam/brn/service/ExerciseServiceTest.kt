@@ -36,7 +36,7 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findDoneExercises(1L)
         // THEN
-        assertTrue(actualResult.contains(exerciseMock.toDto()))
+        assertTrue(actualResult.contains(exerciseMock.toDtoWithoutTasks()))
     }
 
     @Test
@@ -44,7 +44,7 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
         val exerciseDtoMock = ExerciseDto()
-        `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
+        `when`(exerciseMock.toDtoWithoutTasks()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN
         val actualResult: ExerciseDto = exerciseService.findExercisesByID(1L)

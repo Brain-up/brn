@@ -26,9 +26,10 @@ internal class ExercisesControllerTest {
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findDoneExercises(userID)).thenReturn(listExercises)
         // WHEN
-        val actualResult = exerciseController.getExercisesByUserID(userID)
+        val actualResultData: List<ExerciseDto> =
+            exerciseController.getExercisesByUserID(userID).data as List<ExerciseDto>
         // THEN
-        Assertions.assertTrue(actualResult.data.contains(exercise))
+        Assertions.assertTrue(actualResultData.contains(exercise))
         verify(exerciseService).findDoneExercises(userID)
     }
 
@@ -39,9 +40,10 @@ internal class ExercisesControllerTest {
         val exercise = ExerciseDto(1, "exe", "desc")
         Mockito.`when`(exerciseService.findExercisesByID(exerciseID)).thenReturn(exercise)
         // WHEN
-        val actualResult = exerciseController.getExercisesByID(exerciseID)
+        val actualResultData: List<ExerciseDto> =
+            exerciseController.getExercisesByID(exerciseID).data as List<ExerciseDto>
         // THEN
-        Assertions.assertTrue(actualResult.data.contains(exercise))
+        Assertions.assertTrue(actualResultData.contains(exercise))
         verify(exerciseService).findExercisesByID(exerciseID)
     }
 }
