@@ -1,16 +1,15 @@
 package com.epam.brn.controller
 
 import com.epam.brn.constant.BrnPath
-import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ExerciseDtoWrapper
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 @RequestMapping(BrnPath.EXERCISES)
@@ -20,14 +19,21 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @GetMapping
     fun getExercisesByName(
         @RequestParam(value = "name", required = true) name: String
-    ): List<ExerciseDto> {
-        return exerciseService.findExercises(name)
+    ): ExerciseDtoWrapper {
+        return ExerciseDtoWrapper(data = exerciseService.findExercisesByNameLike(name))
     }
 
-    @RequestMapping(value = ["/user/{userID}"], method = [RequestMethod.GET])
+    @GetMapping
+    fun getExercisesByID(
+        @RequestParam(value = "userID", required = true) userID: Long
+    ): ExerciseDtoWrapper {
+        return ExerciseDtoWrapper(data = Collections.singletonList(exerciseService.findExercisesByID(userID)))
+    }
+
+    @GetMapping
     fun getDoneExercises(
-        @PathVariable("userID") userID: Long
-    ): List<ExerciseDto> {
-        return exerciseService.findDoneExercises(userID)
+        @RequestParam(value = "userID", required = true) userID: Long
+    ): ExerciseDtoWrapper {
+        return ExerciseDtoWrapper(data = exerciseService.findDoneExercises(userID))
     }
 }

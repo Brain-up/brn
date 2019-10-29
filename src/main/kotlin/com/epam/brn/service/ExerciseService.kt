@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.apache.commons.collections4.CollectionUtils.emptyIfNull
@@ -15,9 +16,15 @@ class ExerciseService(
 ) {
     private val log = logger()
 
-    fun findExercises(name: String): List<ExerciseDto> {
+    fun findExercisesByNameLike(name: String): List<ExerciseDto> {
         val exercises = exerciseRepository.findByNameLike(name)
         return exercises.map { exercise -> exercise.toDto() }
+    }
+
+    fun findExercisesByID(exerciseID: Long): ExerciseDto {
+        val exercise = exerciseRepository.findById(exerciseID)
+        return exercise.map { e -> e.toDto() }
+            .orElseThrow { NoDataFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
     fun findDoneExercises(userID: Long): List<ExerciseDto> {

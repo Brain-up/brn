@@ -2,7 +2,7 @@ package com.epam.brn.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-data class ExerciseDto(
+class ExerciseDto(
     val id: Long?,
     val name: String,
     val description: String?,
