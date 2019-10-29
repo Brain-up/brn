@@ -1,4 +1,5 @@
 export default function() {
+  this.passthrough('/write-coverage');
 
   // These comments are here to help you get started. Feel free to delete them.
 

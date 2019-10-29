@@ -2,11 +2,10 @@ package com.epam.brn.constant
 
 object BrnPath {
     const val HOME = "/home"
-    const val USER = "/user"
+    const val USERS = "/users"
     const val GROUPS = "/groups"
     const val SERIES = "/series"
-    const val EXERCISE = "/exercise"
+    const val EXERCISES = "/exercises"
     const val TASKS = "/tasks"
-    const val UI_VAADIN_ROUTE = "ui-vaadin" // without leading slash as per Vaadin convention
-    const val STUDY_HISTORY = "/study-history"
+    const val STUDY_HISTORIES = "/study-histories"
 }
