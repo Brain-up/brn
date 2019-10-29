@@ -26,7 +26,7 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
     fun findSeriesForId(seriesId: Long, include: String): SeriesDto {
         log.debug("try to find series for seriesId=$seriesId")
         val series = seriesRepository.findById(seriesId)
-            .orElseGet { throw NoDataFoundException("no series was found for id=$seriesId") }
+            .orElseThrow { NoDataFoundException("no series was found for id=$seriesId") }
         if (include == EXERCISES)
             return series.toDtoWithExercises()
         else

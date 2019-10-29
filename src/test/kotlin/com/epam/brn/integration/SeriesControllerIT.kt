@@ -69,7 +69,7 @@ class SeriesControllerIT {
     fun `test get series for seriesId`() {
         // GIVEN
         loadGroupWithExercises()
-        val seriesId = seriesRepository.findByNameLike("распознование слов тест").get(0).id
+        val seriesId = seriesRepository.findByNameLike("распознование слов тест")[0].id
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
