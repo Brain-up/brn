@@ -23,22 +23,25 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
         @RequestParam(value = "exerciseID", required = false) exerciseID: Long?,
         @RequestParam(value = "userID", required = false) userID: Long?
     ): ExerciseDtoWrapper {
-        if (ObjectUtils.isNotEmpty(exerciseID).xor(ObjectUtils.isNotEmpty(userID))) {
-            if (ObjectUtils.isNotEmpty(exerciseID)) {
-                return getExercisesByID(exerciseID!!)
-            }
-            return getDoneExercises(userID!!)
+        if (isValidParams(exerciseID, userID)) {
+            throw InvalidParametersException("Only one argument is allowed")
         }
-        throw InvalidParametersException("Only exerciseID or userID is allowed, but one is required")
+        if (ObjectUtils.isNotEmpty(exerciseID)) {
+            return getExercisesByID(exerciseID!!)
+        }
+        return getDoneExercises(userID!!)
     }
 
-    fun getExercisesByID(
+    private fun isValidParams(exerciseID: Long?, userID: Long?) =
+        ObjectUtils.isNotEmpty(exerciseID).xor(ObjectUtils.isNotEmpty(userID))
+
+    private fun getExercisesByID(
         exerciseID: Long
     ): ExerciseDtoWrapper {
         return ExerciseDtoWrapper(data = Collections.singletonList(exerciseService.findExercisesByID(exerciseID)))
     }
 
-    fun getDoneExercises(
+    private fun getDoneExercises(
         userID: Long
     ): ExerciseDtoWrapper {
         return ExerciseDtoWrapper(data = exerciseService.findDoneExercises(userID))
