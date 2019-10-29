@@ -1,5 +1,7 @@
 package com.epam.brn.controller
 
+import com.epam.brn.constant.BrnParams.EXERCISE_ID
+import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.service.ExerciseService
@@ -20,14 +22,14 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
     fun getExercisesByUserID(
-        @RequestParam(value = "userID") userID: Long
+        @RequestParam(value = USER_ID) userID: Long
     ): BaseResponseDto {
         return BaseResponseDto(data = exerciseService.findDoneExercises(userID))
     }
 
-    @RequestMapping(value = ["/{exerciseID}"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/{$EXERCISE_ID}"], method = [RequestMethod.GET])
     fun getExercisesByID(
-        @PathVariable("exerciseID") exerciseID: Long
+        @PathVariable(EXERCISE_ID) exerciseID: Long
     ): BaseResponseDto {
         return BaseResponseDto(data = Collections.singletonList(exerciseService.findExercisesByID(exerciseID)))
     }

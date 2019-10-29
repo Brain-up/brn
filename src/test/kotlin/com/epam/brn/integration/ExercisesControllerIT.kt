@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -62,7 +63,7 @@ class ExercisesControllerIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(BrnPath.EXERCISES)
-                .param("userID", existingUser.id.toString())
+                .param(USER_ID, existingUser.id.toString())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
         )
         // THEN
