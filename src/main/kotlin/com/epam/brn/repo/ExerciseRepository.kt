@@ -6,7 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ExerciseRepository : CrudRepository<Exercise, Long> {
-
     fun findByNameLike(name: String): List<Exercise>
-    fun findBySeriesIdLike(seriesId: String): List<Exercise>
 }
