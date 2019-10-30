@@ -23,7 +23,7 @@ internal class ExercisesControllerTest {
     fun `should get done exercises for user`() {
         // GIVEN
         val userID: Long = 1
-        val exercise = ExerciseDto(1, 1, "name", "desc", 1)
+        val exercise = ExerciseDto(1, "name", "desc", 1)
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findDoneExercises(userID)).thenReturn(listExercises)
         // WHEN
