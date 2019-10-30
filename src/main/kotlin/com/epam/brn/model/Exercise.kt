@@ -21,10 +21,10 @@ data class Exercise(
         sequenceName = "exercise_id_seq",
         allocationSize = 50
     )
-    val id: Long? = null,
-    val name: String,
-    val description: String? = "",
-    val level: Short? = 0,
+    var id: Long? = null,
+    var name: String,
+    var description: String? = "",
+    var level: Short? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series,

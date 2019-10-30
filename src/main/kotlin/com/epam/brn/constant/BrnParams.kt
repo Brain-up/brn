@@ -8,4 +8,5 @@ object BrnParams {
     const val SERIES_ID = "seriesId"
     const val EXERCISE_ID = "exerciseId"
     const val TASK_ID = "taskId"
+    const val USER_ID = "userId"
 }
