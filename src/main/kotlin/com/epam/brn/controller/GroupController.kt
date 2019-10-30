@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @Api(value = BrnPath.GROUPS, description = "Contains actions over groups")
 class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsService) {
 
-    //The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to
+    // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to
     // group being a reserved word in db.
     @GetMapping
     fun getAllGroups(): BaseResponseDto {

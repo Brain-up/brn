@@ -34,6 +34,6 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findDoneExercises(userID)
         // THEN
-        assertTrue(actualResult.contains(exerciseMock.toDto()))
+        assertTrue(actualResult.contains(exerciseMock.toDtoWithoutTasks()))
     }
 }
