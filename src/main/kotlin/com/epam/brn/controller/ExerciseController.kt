@@ -1,7 +1,9 @@
 package com.epam.brn.controller
 
+import com.epam.brn.constant.BrnParams.EXERCISE_ID
+import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
-import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,16 +20,16 @@ import org.springframework.web.bind.annotation.RestController
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
-    fun getExercisesByName(
-        @RequestParam(value = "name", required = true) name: String
-    ): List<ExerciseDto> {
-        return exerciseService.findExercises(name)
+    fun getExercisesByUserID(
+        @RequestParam(value = USER_ID) userID: Long
+    ): BaseResponseDto {
+        return BaseResponseDto(data = exerciseService.findDoneExercises(userID))
     }
 
-    @RequestMapping(value = ["/user/{userID}"], method = [RequestMethod.GET])
-    fun getDoneExercises(
-        @PathVariable("userID") userID: Long
-    ): List<ExerciseDto> {
-        return exerciseService.findDoneExercises(userID)
+    @RequestMapping(value = ["/{$EXERCISE_ID}"], method = [RequestMethod.GET])
+    fun getExercisesByID(
+        @PathVariable(EXERCISE_ID) exerciseID: Long
+    ): BaseResponseDto {
+        return BaseResponseDto(data = exerciseService.findExerciseByID(exerciseID))
     }
 }
