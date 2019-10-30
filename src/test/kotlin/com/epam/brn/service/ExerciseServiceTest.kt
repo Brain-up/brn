@@ -47,7 +47,7 @@ internal class ExerciseServiceTest {
         `when`(exerciseMock.toDtoWithoutTasks()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN
-        val actualResult: ExerciseDto = exerciseService.findExercisesByID(1L)
+        val actualResult: ExerciseDto = exerciseService.findExerciseByID(1L)
         // THEN
         assertEquals(actualResult, exerciseDtoMock)
     }

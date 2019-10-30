@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.util.Collections
 
 @RestController
 @RequestMapping(BrnPath.EXERCISES)
@@ -31,6 +30,6 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     fun getExercisesByID(
         @PathVariable(EXERCISE_ID) exerciseID: Long
     ): BaseResponseDto {
-        return BaseResponseDto(data = Collections.singletonList(exerciseService.findExercisesByID(exerciseID)))
+        return BaseResponseDto(data = exerciseService.findExerciseByID(exerciseID))
     }
 }

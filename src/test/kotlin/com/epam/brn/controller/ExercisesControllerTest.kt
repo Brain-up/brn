@@ -3,7 +3,8 @@ package com.epam.brn.controller
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.service.ExerciseService
 import com.nhaarman.mockito_kotlin.verify
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -29,7 +30,7 @@ internal class ExercisesControllerTest {
         val actualResultData: List<ExerciseDto> =
             exerciseController.getExercisesByUserID(userID).data as List<ExerciseDto>
         // THEN
-        Assertions.assertTrue(actualResultData.contains(exercise))
+        assertTrue(actualResultData.contains(exercise))
         verify(exerciseService).findDoneExercises(userID)
     }
 
@@ -38,12 +39,12 @@ internal class ExercisesControllerTest {
         // GIVEN
         val exerciseID: Long = 1
         val exercise = ExerciseDto(1, "exe", "desc")
-        Mockito.`when`(exerciseService.findExercisesByID(exerciseID)).thenReturn(exercise)
+        Mockito.`when`(exerciseService.findExerciseByID(exerciseID)).thenReturn(exercise)
         // WHEN
-        val actualResultData: List<ExerciseDto> =
-            exerciseController.getExercisesByID(exerciseID).data as List<ExerciseDto>
+        val actualResultData: ExerciseDto =
+            exerciseController.getExercisesByID(exerciseID).data as ExerciseDto
         // THEN
-        Assertions.assertTrue(actualResultData.contains(exercise))
-        verify(exerciseService).findExercisesByID(exerciseID)
+        assertEquals(actualResultData, exercise)
+        verify(exerciseService).findExerciseByID(exerciseID)
     }
 }

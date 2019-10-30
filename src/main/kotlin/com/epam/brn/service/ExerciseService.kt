@@ -16,7 +16,7 @@ class ExerciseService(
 ) {
     private val log = logger()
 
-    fun findExercisesByID(exerciseID: Long): ExerciseDto {
+    fun findExerciseByID(exerciseID: Long): ExerciseDto {
         val exercise = exerciseRepository.findById(exerciseID)
         return exercise.map { e -> e.toDtoWithoutTasks() }
             .orElseThrow { NoDataFoundException("Could not find requested exerciseID=$exerciseID") }
