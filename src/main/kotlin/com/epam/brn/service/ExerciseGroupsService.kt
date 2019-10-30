@@ -16,7 +16,7 @@ class ExerciseGroupsService(
 ) {
     private val log = logger()
 
-    fun findGroups(): List<ExerciseGroupDto> {
+    fun findAllGroups(): List<ExerciseGroupDto> {
         log.debug("Searching all groups")
         val groups: List<ExerciseGroup> = exerciseGroupRepository.findAll()
         return CollectionUtils.emptyIfNull(groups).map { x -> x.toDto() }

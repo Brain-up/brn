@@ -13,7 +13,7 @@ import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class ExercisesControllerTest {
+internal class ExerciseControllerTest {
     @InjectMocks
     lateinit var exerciseController: ExerciseController
     @Mock

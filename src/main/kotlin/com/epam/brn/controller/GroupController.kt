@@ -21,7 +21,7 @@ class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsServic
     // group being a reserved word in db.
     @GetMapping
     fun getAllGroups(): BaseResponseDto {
-        return BaseResponseDto(data = exerciseGroupsService.findGroups())
+        return BaseResponseDto(data = exerciseGroupsService.findAllGroups())
     }
 
     @RequestMapping(value = ["/{$GROUP_ID}"], method = [RequestMethod.GET])
