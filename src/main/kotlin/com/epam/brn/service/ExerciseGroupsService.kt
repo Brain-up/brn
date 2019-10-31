@@ -19,7 +19,7 @@ class ExerciseGroupsService(
     fun findAllGroups(): List<ExerciseGroupDto> {
         log.debug("Searching all groups")
         val groups: List<ExerciseGroup> = exerciseGroupRepository.findAll()
-        return CollectionUtils.emptyIfNull(groups).map { x -> x.toDto() }
+        return CollectionUtils.emptyIfNull(groups).mapNotNull { x -> x.toDto() }
     }
 
     fun findGroupById(groupId: Long): ExerciseGroupDto {
