@@ -13,7 +13,7 @@ import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class ExercisesControllerTest {
+internal class ExerciseControllerTest {
     @InjectMocks
     lateinit var exerciseController: ExerciseController
     @Mock
@@ -23,7 +23,7 @@ internal class ExercisesControllerTest {
     fun `should get done exercises for user`() {
         // GIVEN
         val userID: Long = 1
-        val exercise = ExerciseDto(1, "exe", "desc")
+        val exercise = ExerciseDto(1, "name", "desc", 1)
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findDoneExercises(userID)).thenReturn(listExercises)
         // WHEN

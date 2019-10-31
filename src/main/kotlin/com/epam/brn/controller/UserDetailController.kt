@@ -37,6 +37,6 @@ class UserDetailController(@Autowired val userDetailService: UserDetailsService)
         @RequestParam("email") email: String,
         @RequestParam("phone") phone: String
     ) {
-//        userDetailService.addUser(name, email, phone)
+        // Not implemented
     }
 }

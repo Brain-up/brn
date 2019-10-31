@@ -6,11 +6,11 @@ import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -20,13 +20,15 @@ import org.springframework.web.bind.annotation.RestController
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
+    @ApiOperation("Get done exercises for user")
     fun getExercisesByUserID(
         @RequestParam(value = USER_ID) userID: Long
     ): BaseResponseDto {
         return BaseResponseDto(data = exerciseService.findDoneExercises(userID))
     }
 
-    @RequestMapping(value = ["/{$EXERCISE_ID}"], method = [RequestMethod.GET])
+    @GetMapping(value = ["/{$EXERCISE_ID}"])
+    @ApiOperation("Get exercise by id")
     fun getExercisesByID(
         @PathVariable(EXERCISE_ID) exerciseID: Long
     ): BaseResponseDto {
