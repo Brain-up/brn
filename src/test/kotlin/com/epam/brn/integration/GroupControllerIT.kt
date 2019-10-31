@@ -32,8 +32,8 @@ class GroupControllerIT {
     @Test
     fun `test get all groups`() {
         // GIVEN
-        val exerciseGroupName = "SOMEGROUPNAME"
-        val existingExerciseGroup = insertExerciseGroup(exerciseGroupName)
+        val exerciseGroupName1 = "SOMEGROUPNAME1"
+        val existingExerciseGroup1 = insertExerciseGroup(exerciseGroupName1)
         val exerciseGroupName2 = "SOMEGROUPNAME2"
         val existingExerciseGroup2 = insertExerciseGroup(exerciseGroupName2)
         // WHEN
@@ -47,7 +47,7 @@ class GroupControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
         val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(existingExerciseGroup.name))
+        assertTrue(response.contains(existingExerciseGroup1.name))
         assertTrue(response.contains(existingExerciseGroup2.name))
     }
 
