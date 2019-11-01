@@ -34,7 +34,7 @@ internal class ExerciseServiceTest {
         `when`(studyHistoryMock.exercise).thenReturn(exerciseMock)
         `when`(studyHistoryRepository.findByUserAccountId(anyLong())).thenReturn(listOf(studyHistoryMock))
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findDoneExercises(1L)
+        val actualResult: List<ExerciseDto> = exerciseService.findDoneExercisesByUserId(1L)
         // THEN
         assertTrue(actualResult.contains(exerciseMock.toDtoWithoutTasks()))
     }
@@ -47,7 +47,7 @@ internal class ExerciseServiceTest {
         `when`(exerciseMock.toDtoWithoutTasks()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN
-        val actualResult: ExerciseDto = exerciseService.findExerciseByID(1L)
+        val actualResult: ExerciseDto = exerciseService.findExerciseById(1L)
         // THEN
         assertEquals(actualResult, exerciseDtoMock)
     }

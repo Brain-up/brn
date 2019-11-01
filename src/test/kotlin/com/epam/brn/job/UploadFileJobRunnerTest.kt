@@ -1,6 +1,7 @@
 package com.epam.brn.job
 
 import com.epam.brn.job.csv.task.UploadFromCsvJob
+import com.epam.brn.job.impl.UploadFileJobRunnerImpl
 import com.nhaarman.mockito_kotlin.anyOrNull
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.AfterEach
@@ -31,7 +32,7 @@ class UploadFileJobRunnerTest {
     private val pathToProcessedTaskFiles = "$pathToTaskFiles\\processed"
 
     @InjectMocks
-    lateinit var uploadFileJobRunner: UploadFileJobRunner
+    lateinit var uploadFileJobRunner: UploadFileJobRunnerImpl
 
     @Mock
     lateinit var uploadTaskFromCsvJob: UploadFromCsvJob

@@ -27,7 +27,7 @@ internal class GroupControllerTest {
         Mockito.`when`(exerciseGroupsService.findAllGroups()).thenReturn(listGroups)
         // WHEN
         val actualResultData: List<ExerciseGroupDto> =
-            groupController.getAllGroups().data as List<ExerciseGroupDto>
+            groupController.getAllGroups().body?.data as List<ExerciseGroupDto>
         // THEN
         assertTrue(actualResultData.contains(group))
         verify(exerciseGroupsService).findAllGroups()
@@ -41,7 +41,7 @@ internal class GroupControllerTest {
         Mockito.`when`(exerciseGroupsService.findGroupById(groupId)).thenReturn(group)
         // WHEN
         val actualResultData: ExerciseGroupDto =
-            groupController.getGroupById(groupId).data as ExerciseGroupDto
+            groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
         // THEN
         assertEquals(actualResultData, group)
         verify(exerciseGroupsService).findGroupById(groupId)

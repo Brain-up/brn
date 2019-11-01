@@ -19,7 +19,7 @@ class StudyHistoryService(
     @Autowired val studyHistoryConverter: StudyHistoryConverter
 ) {
     private val log = logger()
-    fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+    fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): StudyHistoryDto? {
         return studyHistoryRepository.findByUserAccountIdAndExerciseId(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
@@ -40,12 +40,12 @@ class StudyHistoryService(
                     successTasksCount = studyHistoryDto.successTasksCount,
                     repetitionCount = studyHistoryDto.repetitionCount
                 )
-            ).id
+            ).toDto()
         }
     }
 
     @Throws(InvalidParameterException::class)
-    fun replaceStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+    fun replaceStudyHistory(studyHistoryDto: StudyHistoryDto): StudyHistoryDto? {
         log.debug("Replacing $studyHistoryDto")
         return studyHistoryRepository.findByUserAccountIdAndExerciseId(
             studyHistoryDto.userId,
@@ -55,7 +55,7 @@ class StudyHistoryService(
     }
 
     @Throws(InvalidParameterException::class)
-    fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): Long? {
+    fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): StudyHistoryDto? {
         log.debug("Patching $studyHistoryDto")
         return studyHistoryRepository.findByUserAccountIdAndExerciseId(
             studyHistoryDto.userId,
@@ -67,18 +67,18 @@ class StudyHistoryService(
     private fun updateEntityNotNullOnly(
         studyHistoryDto: StudyHistoryDto,
         studyHistoryEntity: StudyHistory
-    ): Long? {
+    ): StudyHistoryDto? {
         studyHistoryConverter
             .updateStudyHistoryWhereNotNull(studyHistoryDto, studyHistoryEntity)
-        return studyHistoryRepository.save(studyHistoryEntity).id
+        return studyHistoryRepository.save(studyHistoryEntity).toDto()
     }
 
     private fun updateEntity(
         studyHistoryDto: StudyHistoryDto,
         studyHistoryEntity: StudyHistory
-    ): Long? {
+    ): StudyHistoryDto? {
         studyHistoryConverter
             .updateStudyHistory(studyHistoryDto, studyHistoryEntity)
-        return studyHistoryRepository.save(studyHistoryEntity).id
+        return studyHistoryRepository.save(studyHistoryEntity).toDto()
     }
 }
