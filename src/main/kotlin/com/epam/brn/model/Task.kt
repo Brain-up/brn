@@ -25,20 +25,20 @@ data class Task(
     )
     val id: Long? = null,
     val name: String? = "",
-    val serialNumber: Int? = 0,
+    var serialNumber: Int? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
-    val exercise: Exercise? = null,
+    var exercise: Exercise? = null,
     @OneToOne(cascade = [(CascadeType.ALL)], optional = true)
     @JoinColumn(name = "resource_id")
-    val correctAnswer: Resource? = null,
+    var correctAnswer: Resource? = null,
     @ManyToMany(cascade = [(CascadeType.ALL)])
     @JoinTable(
         name = "task_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
-    val answerOptions: MutableSet<Resource> = HashSet()
+    var answerOptions: MutableSet<Resource> = hashSetOf()
 ) {
     fun toDto() = TaskDto(
         id = id,

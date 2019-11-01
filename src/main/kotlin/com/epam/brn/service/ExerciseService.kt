@@ -1,6 +1,8 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.exception.EntityNotFoundException
+import com.epam.brn.model.Exercise
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
@@ -26,5 +28,10 @@ class ExerciseService(
         log.debug("Searching available exercises for $userID")
         val history = studyHistoryRepository.findByUserAccountId(userID)
         return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks() }
+    }
+
+    fun findExercisesById(id: Long): Exercise {
+        return exerciseRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Exercise entity was not found by id $id") }
     }
 }
