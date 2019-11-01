@@ -29,7 +29,7 @@ mediaType:
         description: "ID of the group series belongs to"
         required: true
         type: string
-        examle: "42"
+        example: "42"
     responses:
       200:
         body:
@@ -48,13 +48,18 @@ mediaType:
     queryParameters:
       seriesId:
         description: "ID of the series exercises belongs to"
-        required: true
+        required: false
         type: string
-        examle: "42"
+        example: "42"
+      userId:
+        description: "ID of the user for which we want to get done exercises"
+        required: false
+        type: string
+        example: "42"
     responses:
       200:
         body:
-          example: !include samples/exercises_by_series.json
+          example: !include samples/exercises.json
 
 # TASK ----------------------------
 
@@ -65,7 +70,7 @@ mediaType:
         description: "ID of the exercise tasks belongs to"
         required: true
         type: string
-        examle: "42"
+        example: "42"
     responses:
       200:
         body:
