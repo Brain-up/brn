@@ -29,7 +29,7 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     @PatchMapping
     fun patchStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<String> {
         studyHistoryService.patchStudyHistory(studyHistoryDto)
-        return ResponseEntity.ok().build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @PutMapping
