@@ -2,8 +2,8 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Exercise
 import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.apache.commons.collections4.CollectionUtils.emptyIfNull
@@ -25,7 +25,7 @@ class ExerciseService(
     }
 
     fun findDoneExercisesByUserId(userId: Long): List<ExerciseDto> {
-        log.debug("Searching available exercises for $userId")
+        log.debug("Searching available exercises for user=$userId")
         val history = studyHistoryRepository.findByUserAccountId(userId)
         return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks() }
     }
@@ -33,5 +33,11 @@ class ExerciseService(
     fun findExercisesById(id: Long): Exercise {
         return exerciseRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Exercise entity was not found by id $id") }
+    }
+
+    fun findDoneExercisesByUserIdAndSeries(userId: Long, seriesId: Long): Any {
+        log.debug("Searching available exercises for user=$userId with series=$seriesId")
+        val history = studyHistoryRepository.findByUserAccountIdAndExerciseSeriesId(userId, seriesId)
+        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks() }
     }
 }

@@ -9,5 +9,6 @@ import java.util.Optional
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     fun findByUserAccountId(id: Long?): List<StudyHistory>
+    fun findByUserAccountIdAndExerciseSeriesId(userId: Long?, seriesId: Long?): List<StudyHistory>
     fun findByUserAccountIdAndExerciseId(userId: Long?, exerciseId: Long?): Optional<StudyHistory>
 }
