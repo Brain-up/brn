@@ -28,7 +28,7 @@ internal class ExerciseControllerTest {
         Mockito.`when`(exerciseService.findDoneExercisesByUserId(userID)).thenReturn(listExercises)
         // WHEN
         val actualResultData: List<ExerciseDto> =
-            exerciseController.getExercisesByUserID(userID).body?.data as List<ExerciseDto>
+            exerciseController.getExercisesByUserID(userID, null).body?.data as List<ExerciseDto>
         // THEN
         assertTrue(actualResultData.contains(exercise))
         verify(exerciseService).findDoneExercisesByUserId(userID)
