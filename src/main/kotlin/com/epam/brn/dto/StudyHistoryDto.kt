@@ -12,7 +12,8 @@ data class StudyHistoryDto(
     var endTime: LocalDateTime?,
     var doneTasksCount: Short?,
     var successTasksCount: Short?,
-    var repetitionCount: Short?
+    var repetitionCount: Short?,
+    var id: Long? = null
 ) {
     constructor() : this(null, null, null, null, null, null, null)
 

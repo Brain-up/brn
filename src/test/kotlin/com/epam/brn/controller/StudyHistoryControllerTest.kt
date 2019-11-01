@@ -31,7 +31,7 @@ internal class StudyHistoryControllerTest {
             endTime = LocalDateTime.now(),
             exerciseId = 1L
         )
-        `when`(studyHistoryService.saveOrReplaceStudyHistory(dto)).thenReturn(1L)
+        `when`(studyHistoryService.saveOrReplaceStudyHistory(dto)).thenReturn(dto)
 
         // WHEN
         studyHistoryController.saveOrReplaceStudyHistory(dto)
@@ -52,7 +52,7 @@ internal class StudyHistoryControllerTest {
             endTime = null,
             exerciseId = 1L
         )
-        `when`(studyHistoryService.patchStudyHistory(dto)).thenReturn(1L)
+        `when`(studyHistoryService.patchStudyHistory(dto)).thenReturn(dto)
 
         // WHEN
         studyHistoryController.patchStudyHistory(dto)
@@ -73,7 +73,7 @@ internal class StudyHistoryControllerTest {
             endTime = LocalDateTime.now(),
             exerciseId = 1L
         )
-        `when`(studyHistoryService.replaceStudyHistory(dto)).thenReturn(1L)
+        `when`(studyHistoryService.replaceStudyHistory(dto)).thenReturn(dto)
 
         // WHEN
         studyHistoryController.replaceStudyHistory(dto)

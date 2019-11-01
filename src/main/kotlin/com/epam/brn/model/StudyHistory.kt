@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.StudyHistoryDto
 import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -46,4 +47,15 @@ data class StudyHistory(
     override fun toString(): String {
         return "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, doneTasksCount=$doneTasksCount, successTasksCount=$successTasksCount, repetitionCount=$repetitionCount)"
     }
+
+    fun toDto() = StudyHistoryDto(
+        id = this.id,
+        userId = this.userAccount?.id,
+        exerciseId = this.exercise?.id,
+        startTime = this.startTime,
+        endTime = this.endTime,
+        doneTasksCount = this.doneTasksCount,
+        successTasksCount = this.successTasksCount,
+        repetitionCount = this.repetitionCount
+    )
 }
