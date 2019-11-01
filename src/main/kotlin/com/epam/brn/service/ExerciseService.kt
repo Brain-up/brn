@@ -27,7 +27,7 @@ class ExerciseService(
     fun findDoneExercisesByUserId(userId: Long): List<ExerciseDto> {
         log.debug("Searching available exercises for user=$userId")
         val history = studyHistoryRepository.findByUserAccountId(userId)
-        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks() }
+        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks(true) }
     }
 
     fun findExercisesById(id: Long): Exercise {
@@ -38,6 +38,6 @@ class ExerciseService(
     fun findDoneExercisesByUserIdAndSeries(userId: Long, seriesId: Long): Any {
         log.debug("Searching available exercises for user=$userId with series=$seriesId")
         val history = studyHistoryRepository.findByUserAccountIdAndExerciseSeriesId(userId, seriesId)
-        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks() }
+        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks(true) }
     }
 }
