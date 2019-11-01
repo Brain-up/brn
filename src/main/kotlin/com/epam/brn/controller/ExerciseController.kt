@@ -1,7 +1,6 @@
 package com.epam.brn.controller
 
 import com.epam.brn.constant.BrnParams.EXERCISE_ID
-import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
@@ -24,16 +23,9 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @GetMapping
     @ApiOperation("Get done exercises for user")
     fun getExercisesByUserID(
-        @RequestParam(value = USER_ID, required = false) userId: Long?,
-        @RequestParam(value = SERIES_ID, required = false) seriesId: Long?
+        @RequestParam(value = USER_ID) userId: Long
     ): ResponseEntity<BaseResponseDto> {
-        if (userId != null && seriesId != null) {
-            // TODO the other thing
-        }
-        if (userId != null) {
-            return ResponseEntity.ok().body(BaseResponseDto(data = exerciseService.findDoneExercises(userId)))
-        }
-        return ResponseEntity.badRequest().build()
+        return ResponseEntity.ok().body(BaseResponseDto(data = exerciseService.findDoneExercisesByUserId(userId)))
     }
 
     @GetMapping(value = ["/{$EXERCISE_ID}"])

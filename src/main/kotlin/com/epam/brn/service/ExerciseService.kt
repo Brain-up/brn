@@ -24,9 +24,9 @@ class ExerciseService(
             .orElseThrow { NoDataFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
-    fun findDoneExercises(userID: Long): List<ExerciseDto> {
-        log.debug("Searching available exercises for $userID")
-        val history = studyHistoryRepository.findByUserAccountId(userID)
+    fun findDoneExercisesByUserId(userId: Long): List<ExerciseDto> {
+        log.debug("Searching available exercises for $userId")
+        val history = studyHistoryRepository.findByUserAccountId(userId)
         return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks() }
     }
 
