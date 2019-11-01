@@ -7,6 +7,7 @@ import com.epam.brn.service.ExerciseGroupsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,15 +22,15 @@ class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsServic
     // group being a reserved word in db.
     @GetMapping
     @ApiOperation("Get all groups")
-    fun getAllGroups(): BaseResponseDto {
-        return BaseResponseDto(data = exerciseGroupsService.findAllGroups())
+    fun getAllGroups(): ResponseEntity<BaseResponseDto> {
+        return ResponseEntity.ok().body(BaseResponseDto(data = exerciseGroupsService.findAllGroups()))
     }
 
     @GetMapping(value = ["/{$GROUP_ID}"])
     @ApiOperation("Get group by id")
     fun getGroupById(
         @PathVariable(GROUP_ID) groupId: Long
-    ): BaseResponseDto {
-        return BaseResponseDto(data = exerciseGroupsService.findGroupById(groupId))
+    ): ResponseEntity<BaseResponseDto> {
+        return ResponseEntity.ok().body(BaseResponseDto(data = exerciseGroupsService.findGroupById(groupId)))
     }
 }

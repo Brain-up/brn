@@ -5,6 +5,8 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,17 +21,20 @@ import org.springframework.web.bind.annotation.RestController
 class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
     @PostMapping
-    fun saveOrReplaceStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
+    fun saveOrReplaceStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<String> {
         studyHistoryService.saveOrReplaceStudyHistory(studyHistoryDto)
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @PatchMapping
-    fun patchStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
+    fun patchStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<String> {
         studyHistoryService.patchStudyHistory(studyHistoryDto)
+        return ResponseEntity.ok().build()
     }
 
     @PutMapping
-    fun replaceStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto) {
+    fun replaceStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<String> {
         studyHistoryService.replaceStudyHistory(studyHistoryDto)
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 }
