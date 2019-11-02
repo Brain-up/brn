@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.SeriesDto
+import com.epam.brn.dto.SeriesFullDto
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -33,18 +34,20 @@ data class Series(
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     val exercises: MutableSet<Exercise> = HashSet()
 ) {
-    fun toDtoWithExercises() = SeriesDto(
+    fun toDtoWithExerciseIds() = SeriesDto(
         exerciseGroupId = exerciseGroup.id,
         id = id,
         name = name,
         description = description,
-        exercises = exercises.map { exercise -> exercise.toDtoWithoutTasks() }.toMutableSet()
+        exercises = exercises.map { exercise -> exercise.id }.toMutableSet()
     )
-    fun toDtoWithoutExercises() = SeriesDto(
+
+    fun toDtoWithFullExercises() = SeriesFullDto(
         exerciseGroupId = exerciseGroup.id,
         id = id,
         name = name,
-        description = description
+        description = description,
+        exercises = exercises.map { exercise -> exercise.toDtoWithTasks() }.toMutableSet()
     )
 
     override fun equals(other: Any?): Boolean {

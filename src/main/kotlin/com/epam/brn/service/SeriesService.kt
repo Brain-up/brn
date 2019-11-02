@@ -1,6 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.SeriesDto
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.repo.SeriesRepository
 import org.apache.logging.log4j.kotlin.logger
@@ -12,24 +11,22 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
     val EXERCISES = "exercises"
     private val log = logger()
 
-    fun findSeriesForGroup(groupId: Long, include: String): List<SeriesDto> {
+    fun findSeriesForGroup(groupId: Long, include: String): List<Any> {
         log.debug("try to find series for groupId=$groupId")
         val series = seriesRepository.findByExerciseGroupLike(groupId)
-        var listDto: List<SeriesDto>
         if (include == EXERCISES)
-            listDto = series.map { seriesEntry -> seriesEntry.toDtoWithExercises() }
+            return series.map { seriesEntry -> seriesEntry.toDtoWithFullExercises() }
         else
-            listDto = series.map { seriesEntry -> seriesEntry.toDtoWithoutExercises() }
-        return listDto
+            return series.map { seriesEntry -> seriesEntry.toDtoWithExerciseIds() }
     }
 
-    fun findSeriesForId(seriesId: Long, include: String): SeriesDto {
+    fun findSeriesForId(seriesId: Long, include: String): Any {
         log.debug("try to find series for seriesId=$seriesId")
         val series = seriesRepository.findById(seriesId)
             .orElseThrow { NoDataFoundException("no series was found for id=$seriesId") }
         if (include == EXERCISES)
-            return series.toDtoWithExercises()
+            return series.toDtoWithFullExercises()
         else
-            return series.toDtoWithoutExercises()
+            return series.toDtoWithExerciseIds()
     }
 }

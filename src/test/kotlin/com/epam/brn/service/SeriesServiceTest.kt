@@ -32,7 +32,7 @@ internal class SeriesServiceTest {
         // WHEN
         val actualResult = seriesService.findSeriesForGroup(groupId, "")
         // THEN
-        val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDtoWithExercises() }
+        val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDtoWithExerciseIds() }
         assertEquals(expectedResult, actualResult)
         verify(seriesRepository).findByExerciseGroupLike(groupId)
     }
