@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.anyOrNull
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,6 +24,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
 
+@Disabled
 @ExtendWith(MockitoExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UploadFileJobRunnerTest {
