@@ -8,6 +8,7 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.service.SeriesService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,17 +24,17 @@ class SeriesController(@Autowired val seriesService: SeriesService) {
     fun getSeriesForGroup(
         @RequestParam(value = GROUP_ID) groupId: Long,
         @RequestParam(value = INCLUDE, defaultValue = "") include: String
-    ): BaseResponseDto {
+    ): ResponseEntity<BaseResponseDto> {
         val listDto = seriesService.findSeriesForGroup(groupId, include)
-        return BaseResponseDto(data = listDto)
+        return ResponseEntity.ok().body(BaseResponseDto(data = listDto))
     }
 
     @GetMapping("{$SERIES_ID}")
     fun getSeriesForId(
         @PathVariable(value = SERIES_ID) seriesId: Long,
         @RequestParam(value = INCLUDE, defaultValue = "") include: String
-    ): BaseResponseDto {
+    ): ResponseEntity<BaseResponseDto> {
         val seriesDto = seriesService.findSeriesForId(seriesId, include)
-        return BaseResponseDto(data = seriesDto)
+        return ResponseEntity.ok().body(BaseResponseDto(data = seriesDto))
     }
 }

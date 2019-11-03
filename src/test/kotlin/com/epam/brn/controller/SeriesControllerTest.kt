@@ -31,8 +31,8 @@ internal class SeriesControllerTest {
         val actualResult = seriesController.getSeriesForGroup(groupId, include)
         // THEN
         verify(seriesService).findSeriesForGroup(groupId, include)
-        assertTrue(actualResult.data.toString().contains("testName1"))
-        assertTrue(actualResult.data.toString().contains("testName2"))
+        assertTrue(actualResult.body.toString().contains("testName1"))
+        assertTrue(actualResult.body.toString().contains("testName2"))
     }
 
     @Test
@@ -46,6 +46,6 @@ internal class SeriesControllerTest {
         val actualResult = seriesController.getSeriesForId(1, include)
         // THEN
         verify(seriesService).findSeriesForId(seriesId, include)
-        assertTrue(actualResult.data.toString().contains("testName"))
+        assertTrue(actualResult.body.toString().contains("testName"))
     }
 }
