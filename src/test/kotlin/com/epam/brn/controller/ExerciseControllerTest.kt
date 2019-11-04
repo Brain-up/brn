@@ -27,6 +27,7 @@ internal class ExerciseControllerTest {
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findDoneExercisesByUserId(userID)).thenReturn(listExercises)
         // WHEN
+        @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
             exerciseController.getExercisesByUserID(userID).body?.data as List<ExerciseDto>
         // THEN

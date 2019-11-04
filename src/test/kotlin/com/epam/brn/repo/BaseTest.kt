@@ -16,6 +16,7 @@ abstract class BaseTest {
     val listOfWords = listOf("son", "lon", "slo")
     val nameOfTaskWithAnswers = "firstTask"
     var exerciseId: Long? = null
+    var savedTasked: Task? = null
 
     @BeforeAll
     fun init() {
@@ -54,5 +55,6 @@ abstract class BaseTest {
         exercise.tasks.addAll(listOf(task, secondTask))
         exerciseGroupRepository.save(group)
         exerciseId = exercise.id
+        savedTasked = task
     }
 }
