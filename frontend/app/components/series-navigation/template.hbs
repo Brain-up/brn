@@ -1,9 +1,17 @@
-<h2 class="c-heading u-xlarge">{{capitalize @series.name}}</h2>
+<h2 class="c-heading u-xlarge">
+  {{capitalize @series.name}}
+</h2>
 <nav>
   <ol class="series-nav__exercies-list">
     {{#each @series.exercises as |exercise|}}
       <li class="">
-        {{#link-to "series.exercise" exercise class="series-nav__exercies-link"}}
+        {{#link-to
+          "series.exercise"
+          exercise
+          data-test-series-navigation-list
+          data-test-series-navigation-list-id=exercise.id
+          class="series-nav__exercies-link"
+        }}
           {{capitalize exercise.name}}
         {{/link-to}}
       </li>
