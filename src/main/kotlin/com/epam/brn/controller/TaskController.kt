@@ -24,20 +24,14 @@ class TaskController(private val taskService: TaskService, private val uploadTas
     private val log = logger()
 
     @GetMapping
-    @ApiOperation("Get all tasks")
-    fun getTasks(
-        @RequestParam(value = "exerciseId", required = false) exerciseId: Long?
+    @ApiOperation("Get all tasks by exercise id")
+    fun getTasksByExerciseId(
+        @RequestParam(value = "exerciseId") exerciseId: Long
     ): ResponseEntity<BaseResponseDto> {
-        exerciseId?.let {
-            log.debug("Getting tasks for exercisedId $exerciseId")
-            return ResponseEntity
-                .ok()
-                .body(BaseResponseDto(data = taskService.getAllTasksByExerciseId(it)))
-        }
-        log.debug("Getting all tasks")
+        log.debug("Getting tasks for exercisedId $exerciseId")
         return ResponseEntity
             .ok()
-            .body(BaseResponseDto(data = taskService.getAllTasks()))
+            .body(BaseResponseDto(data = taskService.getAllTasksByExerciseId(exerciseId)))
     }
 
     @GetMapping(value = ["/{${BrnParams.TASK_ID}}"])

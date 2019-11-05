@@ -47,24 +47,6 @@ class TaskControllerTest {
         }
 
         @Test
-        fun `should get all tasks`() {
-            // GIVEN
-            val exerciseId: Long? = null
-            val taskFirst = TaskDto(id = LONG_ONE, serialNumber = INTEGER_ONE, exercise = LONG_ONE)
-            val taskSecond = TaskDto(id = 2L, serialNumber = INTEGER_TWO, exercise = LONG_ONE)
-            `when`(taskService.getAllTasks()).thenReturn(listOf(taskFirst, taskSecond))
-            // WHEN
-            @Suppress("UNCHECKED_CAST")
-            val actualResult: List<TaskDto> =
-                taskController.getTasks(exerciseId).body?.data as List<TaskDto>
-            // THEN
-            assertThat(actualResult)
-                .hasSize(INTEGER_TWO)
-                .containsExactly(taskFirst, taskSecond)
-            verify(taskService).getAllTasks()
-        }
-
-        @Test
         fun `should get tasks by exerciseId`() {
             // GIVEN
             val exerciseId = LONG_ONE
@@ -74,7 +56,7 @@ class TaskControllerTest {
             // WHEN
             @Suppress("UNCHECKED_CAST")
             val actualResult: List<TaskDto> =
-                taskController.getTasks(exerciseId).body?.data as List<TaskDto>
+                taskController.getTasksByExerciseId(exerciseId).body?.data as List<TaskDto>
             // THEN
             assertThat(actualResult)
                 .hasSize(INTEGER_TWO)

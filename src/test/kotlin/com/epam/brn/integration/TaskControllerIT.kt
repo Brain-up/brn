@@ -7,7 +7,6 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
-import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -75,23 +74,6 @@ class TaskControllerIT {
     }
 
     @Test
-    fun `test get all tasks`() {
-        // WHEN
-        val resultAction = mockMvc.perform(
-            get(BrnPath.TASKS)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-        )
-        // THEN
-        resultAction
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data", hasSize<Any>(4)))
-        val response = resultAction.andReturn().response.contentAsString
-        assertThat(response).contains(firstSavedTask.name)
-        assertThat(response).contains(secondSavedTask.name)
-    }
-
-    @Test
     fun `test get task by id`() {
         // WHEN
         val pathInfo = "/${firstSavedTask.id}"
@@ -105,7 +87,6 @@ class TaskControllerIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.data.name").value(firstSavedTask.name!!))
             .andExpect(jsonPath("$.data.id").value(firstSavedTask.id!!))
-        val response = resultAction.andReturn().response.contentAsString
     }
 
     @Test
