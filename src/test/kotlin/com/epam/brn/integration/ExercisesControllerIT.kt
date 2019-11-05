@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.Exercise
@@ -57,11 +58,12 @@ class ExercisesControllerIT {
     }
 
     @Test
-    fun `test get done exercises by userID`() {
+    fun `test get done exercises by userId`() {
         // GIVEN
         val exerciseName = "SOMENAME"
         val existingUser = insertUser()
-        val existingExercise = insertExercise(exerciseName)
+        val existingSeries = insertSeries()
+        val existingExercise = insertExercise(exerciseName, existingSeries)
         insertStudyHistory(existingUser, existingExercise)
         // WHEN
         val resultAction = mockMvc.perform(
@@ -79,10 +81,35 @@ class ExercisesControllerIT {
     }
 
     @Test
-    fun `test get exercises by exerciseID`() {
+    fun `test get done exercises by userId and seriesId`() {
         // GIVEN
         val exerciseName = "SOMENAME"
-        val existingExercise = insertExercise(exerciseName)
+        val existingSeries = insertSeries()
+        val existingUser = insertUser()
+        val existingExercise = insertExercise(exerciseName, existingSeries)
+        insertStudyHistory(existingUser, existingExercise)
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .get(BrnPath.EXERCISES)
+                .param(USER_ID, existingUser.id.toString())
+                .param(SERIES_ID, existingSeries.id.toString())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+        )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        val response = resultAction.andReturn().response.contentAsString
+        assertTrue(response.contains(exerciseName))
+    }
+
+    @Test
+    fun `test get exercises by exerciseId`() {
+        // GIVEN
+        val exerciseName = "SOMENAME"
+        val existingSeries = insertSeries()
+        val existingExercise = insertExercise(exerciseName, existingSeries)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -126,7 +153,7 @@ class ExercisesControllerIT {
         )
     }
 
-    fun insertExercise(exerciseName: String): Exercise {
+    private fun insertSeries(): Series {
         val exerciseGroup = exerciseGroupRepository.save(
             ExerciseGroup(
                 id = 0,
@@ -134,7 +161,7 @@ class ExercisesControllerIT {
                 name = "group"
             )
         )
-        val series = seriesRepository.save(
+        return seriesRepository.save(
             Series(
                 id = 0,
                 description = "desc",
@@ -142,6 +169,9 @@ class ExercisesControllerIT {
                 exerciseGroup = exerciseGroup
             )
         )
+    }
+
+    fun insertExercise(exerciseName: String, series: Series): Exercise {
         return exerciseRepository.save(
             Exercise(
                 id = 0,

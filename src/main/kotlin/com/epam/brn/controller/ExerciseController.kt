@@ -23,7 +23,7 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
     @ApiOperation("Get done exercises for user")
-    fun getExercisesByUserID(
+    fun getExercises(
         @RequestParam(value = USER_ID, required = true) userId: Long,
         @RequestParam(value = SERIES_ID, required = false) seriesId: Long?
     ): ResponseEntity<BaseResponseDto> {

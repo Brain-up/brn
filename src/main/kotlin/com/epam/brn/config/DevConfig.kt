@@ -35,12 +35,12 @@ class DevConfig(
     @Bean
     fun databaseInitializer() = ApplicationRunner {
         log.debug("------- Started DEV initialization")
-        createDBMockContentValues()
-        loadInitialDataToDb()
+        loadInitialDBDataForAPIDev()
+        loadInitialDBDataForFileUploadDev()
         log.debug("------- Finished DEV initialization")
     }
 
-    private fun createDBMockContentValues() {
+    private fun loadInitialDBDataForAPIDev() {
         val exerciseGroup = exerciseGroupRepository.save(
             ExerciseGroup(
                 id = 0,
@@ -107,7 +107,7 @@ class DevConfig(
         log.debug("---- Created $studyHistory")
     }
 
-    fun loadInitialDataToDb() {
+    fun loadInitialDBDataForFileUploadDev() {
         val resource11 =
             Resource(audioFileUrl = "no_noise/бал.mp3", word = "бал", pictureFileUrl = "", soundsCount = 1)
         val resource12 =
