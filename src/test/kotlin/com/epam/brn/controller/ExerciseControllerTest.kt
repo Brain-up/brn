@@ -27,6 +27,7 @@ internal class ExerciseControllerTest {
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findExercisesByUserId(userID)).thenReturn(listExercises)
         // WHEN
+        @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
             exerciseController.getExercises(userID, null).body?.data as List<ExerciseDto>
         // THEN
@@ -43,6 +44,7 @@ internal class ExerciseControllerTest {
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)).thenReturn(listExercises)
         // WHEN
+        @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
             exerciseController.getExercises(userId, seriesId).body?.data as List<ExerciseDto>
         // THEN
@@ -57,6 +59,7 @@ internal class ExerciseControllerTest {
         val exercise = ExerciseDto(1, "exe", "desc")
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
+        @Suppress("UNCHECKED_CAST")
         val actualResultData: ExerciseDto =
             exerciseController.getExercisesByID(exerciseID).body?.data as ExerciseDto
         // THEN

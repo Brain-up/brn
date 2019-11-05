@@ -14,7 +14,6 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -76,8 +76,7 @@ class ExercisesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(exerciseName))
+            .andExpect(jsonPath("$.data[0].name").value(exerciseName))
     }
 
     @Test
@@ -100,8 +99,7 @@ class ExercisesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(exerciseName))
+            .andExpect(jsonPath("$.data[0].name").value(exerciseName))
     }
 
     @Test
@@ -120,8 +118,7 @@ class ExercisesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(exerciseName))
+            .andExpect(jsonPath("$.data.name").value(exerciseName))
     }
 
     private fun insertStudyHistory(
