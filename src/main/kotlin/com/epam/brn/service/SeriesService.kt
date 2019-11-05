@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.SeriesDto
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.repo.SeriesRepository
 import org.apache.logging.log4j.kotlin.logger
@@ -8,25 +9,18 @@ import org.springframework.stereotype.Service
 @Service
 class SeriesService(private val seriesRepository: SeriesRepository) {
 
-    val EXERCISES = "exercises"
     private val log = logger()
 
-    fun findSeriesForGroup(groupId: Long, include: String): List<Any> {
+    fun findSeriesForGroup(groupId: Long): List<SeriesDto> {
         log.debug("try to find series for groupId=$groupId")
         val series = seriesRepository.findByExerciseGroupLike(groupId)
-        if (include == EXERCISES)
-            return series.map { seriesEntry -> seriesEntry.toDtoWithFullExercises() }
-        else
-            return series.map { seriesEntry -> seriesEntry.toDtoWithExerciseIds() }
+        return series.map { seriesEntry -> seriesEntry.toDto() }
     }
 
-    fun findSeriesForId(seriesId: Long, include: String): Any {
+    fun findSeriesForId(seriesId: Long): SeriesDto {
         log.debug("try to find series for seriesId=$seriesId")
         val series = seriesRepository.findById(seriesId)
             .orElseThrow { NoDataFoundException("no series was found for id=$seriesId") }
-        if (include == EXERCISES)
-            return series.toDtoWithFullExercises()
-        else
-            return series.toDtoWithExerciseIds()
+        return series.toDto()
     }
 }

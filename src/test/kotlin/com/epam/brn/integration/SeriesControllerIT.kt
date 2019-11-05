@@ -79,7 +79,6 @@ class SeriesControllerIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get("${BrnPath.SERIES}/$seriesId")
-                .param("include", "exercises")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
         )
         // THEN

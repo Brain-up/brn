@@ -30,9 +30,9 @@ internal class SeriesServiceTest {
         val listSeries = listOf(series)
         `when`(seriesRepository.findByExerciseGroupLike(groupId)).thenReturn(listOf(series))
         // WHEN
-        val actualResult = seriesService.findSeriesForGroup(groupId, "")
+        val actualResult = seriesService.findSeriesForGroup(groupId)
         // THEN
-        val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDtoWithExerciseIds() }
+        val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDto() }
         assertEquals(expectedResult, actualResult)
         verify(seriesRepository).findByExerciseGroupLike(groupId)
     }
@@ -42,10 +42,9 @@ internal class SeriesServiceTest {
         // GIVEN
         val seriesId: Long = 1
         val series = mock(Series::class.java)
-        val include = "exercises"
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.of(series))
         // WHEN
-        seriesService.findSeriesForId(seriesId, include)
+        seriesService.findSeriesForId(seriesId)
         // THEN
         verify(seriesRepository).findById(seriesId)
     }
@@ -54,10 +53,9 @@ internal class SeriesServiceTest {
     fun `should not get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        val include = "exercises"
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.empty())
         // WHEN
-        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesForId(seriesId, include) }
+        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesForId(seriesId) }
         // THEN
         verify(seriesRepository).findById(seriesId)
     }

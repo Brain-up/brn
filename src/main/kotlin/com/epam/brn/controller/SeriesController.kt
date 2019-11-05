@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnFlags.INCLUDE
 import com.epam.brn.constant.BrnParams.GROUP_ID
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnPath
@@ -21,20 +20,14 @@ import org.springframework.web.bind.annotation.RestController
 class SeriesController(@Autowired val seriesService: SeriesService) {
 
     @GetMapping
-    fun getSeriesForGroup(
-        @RequestParam(value = GROUP_ID) groupId: Long,
-        @RequestParam(value = INCLUDE, defaultValue = "") include: String
-    ): ResponseEntity<BaseResponseDto> {
-        val listDto = seriesService.findSeriesForGroup(groupId, include)
+    fun getSeriesForGroup(@RequestParam(value = GROUP_ID) groupId: Long): ResponseEntity<BaseResponseDto> {
+        val listDto = seriesService.findSeriesForGroup(groupId)
         return ResponseEntity.ok().body(BaseResponseDto(data = listDto))
     }
 
     @GetMapping("{$SERIES_ID}")
-    fun getSeriesForId(
-        @PathVariable(value = SERIES_ID) seriesId: Long,
-        @RequestParam(value = INCLUDE, defaultValue = "") include: String
-    ): ResponseEntity<BaseResponseDto> {
-        val seriesDto = seriesService.findSeriesForId(seriesId, include)
+    fun getSeriesForId(@PathVariable(value = SERIES_ID) seriesId: Long): ResponseEntity<BaseResponseDto> {
+        val seriesDto = seriesService.findSeriesForId(seriesId)
         return ResponseEntity.ok().body(BaseResponseDto(data = seriesDto))
     }
 }

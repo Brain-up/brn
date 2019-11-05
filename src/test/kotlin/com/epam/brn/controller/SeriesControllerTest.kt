@@ -24,13 +24,12 @@ internal class SeriesControllerTest {
         val groupId: Long = 1
         val series1 = SeriesDto(1, 1, "testName1", "testDescr1")
         val series2 = SeriesDto(1, 2, "testName2", "testDescr2")
-        val include = ""
         val listSeries = listOf(series1, series2)
-        Mockito.`when`(seriesService.findSeriesForGroup(groupId, include)).thenReturn(listSeries)
+        Mockito.`when`(seriesService.findSeriesForGroup(groupId)).thenReturn(listSeries)
         // WHEN
-        val actualResult = seriesController.getSeriesForGroup(groupId, include)
+        val actualResult = seriesController.getSeriesForGroup(groupId)
         // THEN
-        verify(seriesService).findSeriesForGroup(groupId, include)
+        verify(seriesService).findSeriesForGroup(groupId)
         assertTrue(actualResult.body.toString().contains("testName1"))
         assertTrue(actualResult.body.toString().contains("testName2"))
     }
@@ -40,12 +39,11 @@ internal class SeriesControllerTest {
         // GIVEN
         val seriesId: Long = 1
         val series = SeriesDto(1, seriesId, "testName", "testDescr")
-        val include = ""
-        Mockito.`when`(seriesService.findSeriesForId(seriesId, include)).thenReturn(series)
+        Mockito.`when`(seriesService.findSeriesForId(seriesId)).thenReturn(series)
         // WHEN
-        val actualResult = seriesController.getSeriesForId(1, include)
+        val actualResult = seriesController.getSeriesForId(1)
         // THEN
-        verify(seriesService).findSeriesForId(seriesId, include)
+        verify(seriesService).findSeriesForId(seriesId)
         assertTrue(actualResult.body.toString().contains("testName"))
     }
 }
