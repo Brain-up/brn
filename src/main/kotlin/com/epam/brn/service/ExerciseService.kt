@@ -24,20 +24,22 @@ class ExerciseService(
             .orElseThrow { NoDataFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
-    fun findDoneExercisesByUserId(userId: Long): List<ExerciseDto> {
-        log.debug("Searching available exercises for user=$userId")
-        val history = studyHistoryRepository.findByUserAccountId(userId)
-        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks(true) }
-    }
-
-    fun findExercisesById(id: Long): Exercise {
+    fun findExerciseEntityById(id: Long): Exercise {
         return exerciseRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Exercise entity was not found by id $id") }
     }
 
-    fun findDoneExercisesByUserIdAndSeries(userId: Long, seriesId: Long): Any {
+    fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
+        log.debug("Searching available exercises for user=$userId")
+        val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
+        val history = exerciseRepository.findAll()
+        return emptyIfNull(history).map { x -> x.toDtoWithoutTasks(exercisesIdList.contains(x.id)) }
+    }
+
+    fun findExercisesByUserIdAndSeries(userId: Long, seriesId: Long): List<ExerciseDto> {
         log.debug("Searching available exercises for user=$userId with series=$seriesId")
-        val history = studyHistoryRepository.findByUserAccountIdAndExerciseSeriesId(userId, seriesId)
-        return emptyIfNull(history).mapNotNull { it.exercise }.map { it.toDtoWithoutTasks(true) }
+        val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
+        val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
+        return emptyIfNull(exercises).map { x -> x.toDtoWithoutTasks(exercisesIdList.contains(x.id)) }
     }
 }

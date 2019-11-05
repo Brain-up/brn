@@ -29,9 +29,9 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     ): ResponseEntity<BaseResponseDto> {
         seriesId?.let {
             return ResponseEntity.ok()
-                .body(BaseResponseDto(data = exerciseService.findDoneExercisesByUserIdAndSeries(userId, it)))
+                .body(BaseResponseDto(data = exerciseService.findExercisesByUserIdAndSeries(userId, it)))
         }
-        return ResponseEntity.ok().body(BaseResponseDto(data = exerciseService.findDoneExercisesByUserId(userId)))
+        return ResponseEntity.ok().body(BaseResponseDto(data = exerciseService.findExercisesByUserId(userId)))
     }
 
     @GetMapping(value = ["/{$EXERCISE_ID}"])

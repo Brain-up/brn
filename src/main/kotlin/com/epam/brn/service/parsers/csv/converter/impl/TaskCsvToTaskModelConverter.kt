@@ -37,7 +37,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     }
 
     private fun convertExercise(source: TaskCsv, target: Task) {
-        target.exercise = exerciseService.findExercisesById(source.exerciseId)
+        target.exercise = exerciseService.findExerciseEntityById(source.exerciseId)
     }
 
     private fun convertCorrectAnswer(source: TaskCsv, target: Task) {
