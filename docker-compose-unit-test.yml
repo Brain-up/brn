@@ -18,4 +18,5 @@ services:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+      DB_URL: db_brn-test
       SPRING_PROFILE: dev
