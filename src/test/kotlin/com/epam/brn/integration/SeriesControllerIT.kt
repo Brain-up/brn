@@ -67,6 +67,7 @@ class SeriesControllerIT {
         val response = resultAction.andReturn().response.contentAsString
         Assertions.assertTrue(response.contains("распознование слов тест"))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
+        Assertions.assertTrue(response.contains("exercises"))
     }
 
     @Test
@@ -78,7 +79,6 @@ class SeriesControllerIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get("${BrnPath.SERIES}/$seriesId")
-                .param("include", "exercises")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
         )
         // THEN
@@ -87,5 +87,6 @@ class SeriesControllerIT {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
         val response = resultAction.andReturn().response.contentAsString
         Assertions.assertTrue(response.contains("распознование слов тест"))
+        Assertions.assertTrue(response.contains("exercises"))
     }
 }

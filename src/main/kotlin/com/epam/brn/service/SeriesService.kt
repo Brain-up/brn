@@ -9,27 +9,18 @@ import org.springframework.stereotype.Service
 @Service
 class SeriesService(private val seriesRepository: SeriesRepository) {
 
-    val EXERCISES = "exercises"
     private val log = logger()
 
-    fun findSeriesForGroup(groupId: Long, include: String): List<SeriesDto> {
+    fun findSeriesForGroup(groupId: Long): List<SeriesDto> {
         log.debug("try to find series for groupId=$groupId")
         val series = seriesRepository.findByExerciseGroupLike(groupId)
-        var listDto: List<SeriesDto>
-        if (include == EXERCISES)
-            listDto = series.map { seriesEntry -> seriesEntry.toDtoWithExercises() }
-        else
-            listDto = series.map { seriesEntry -> seriesEntry.toDtoWithoutExercises() }
-        return listDto
+        return series.map { seriesEntry -> seriesEntry.toDto() }
     }
 
-    fun findSeriesForId(seriesId: Long, include: String): SeriesDto {
+    fun findSeriesForId(seriesId: Long): SeriesDto {
         log.debug("try to find series for seriesId=$seriesId")
         val series = seriesRepository.findById(seriesId)
             .orElseThrow { NoDataFoundException("no series was found for id=$seriesId") }
-        if (include == EXERCISES)
-            return series.toDtoWithExercises()
-        else
-            return series.toDtoWithoutExercises()
+        return series.toDto()
     }
 }

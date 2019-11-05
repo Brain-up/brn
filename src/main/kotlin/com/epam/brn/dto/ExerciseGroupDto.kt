@@ -7,7 +7,7 @@ data class ExerciseGroupDto(
     @NotBlank
     val name: String?,
     val description: String?,
-    val series: MutableSet<SeriesDto> = HashSet()
+    val series: MutableSet<Long?> = HashSet()
 ) {
     constructor() : this(null, null, null)
 }
