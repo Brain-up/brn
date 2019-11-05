@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  db_brn-test:
+    container_name: db_brn-test
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+  brn-test:
+    container_name: brn-test
+    command: ./gradlew clean test
+    build:
+      context: .
+      dockerfile: Dockerfile_test
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      DB_URL: db_brn-test
+      SPRING_PROFILE: dev

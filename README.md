@@ -115,7 +115,7 @@ REST API will be accessible at http://localhost:8081/swagger-ui.html
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. 
-
+# 7. check that build job on jenkins passes successfully.
 
 ### Thank you very much for your support!
 
