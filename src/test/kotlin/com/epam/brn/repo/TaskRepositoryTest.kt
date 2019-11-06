@@ -39,6 +39,20 @@ class TaskRepositoryTest : BaseTest() {
         }
 
         @Test
+        fun `should return task by id`() {
+            // WHEN
+            val resultedTask =
+                savedTasked?.id?.let { taskRepository.findById(it) }
+
+            // THEN
+            assertThat(resultedTask)
+                .hasValueSatisfying {
+                    assertThat(it)
+                        .isEqualToComparingOnlyGivenFields(savedTasked, "id", "name", "serialNumber")
+                }
+        }
+
+        @Test
         fun `should return all tasks`() {
 
             // WHEN

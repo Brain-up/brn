@@ -29,7 +29,7 @@ import java.util.stream.Collectors
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UploadFileJobRunnerTest {
 
-    private val pathToTaskFiles = "src\\test\\resources\\inputData\\tasks"
+    private val pathToTaskFiles = "src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks"
 
     private val pathToProcessedTaskFiles = "$pathToTaskFiles\\processed"
 

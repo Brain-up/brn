@@ -9,5 +9,5 @@ data class SeriesDto(
     @NotBlank
     val name: String,
     val description: String?,
-    val exercises: MutableSet<ExerciseDto> = HashSet()
+    val exercises: MutableSet<Long?> = HashSet()
 )
