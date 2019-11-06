@@ -22,3 +22,10 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       SPRING_PROFILE: prod
+  brn_fe:
+    container_name: brn_fe
+    build:
+      context: frontend
+      dockerfile: frontend/Dockerfile_frontend
+    ports:
+      - 80:80
