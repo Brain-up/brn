@@ -26,6 +26,7 @@ internal class GroupControllerTest {
         val listGroups = listOf(group)
         Mockito.`when`(exerciseGroupsService.findAllGroups()).thenReturn(listGroups)
         // WHEN
+        @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseGroupDto> =
             groupController.getAllGroups().body?.data as List<ExerciseGroupDto>
         // THEN
