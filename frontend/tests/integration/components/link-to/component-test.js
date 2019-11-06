@@ -6,10 +6,9 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | link-to', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it doesnt have aria-current attribute by default', async function(assert) {
+  test('it doesnt have aria-current if not active', async function(assert) {
     await render(hbs`
-	  {{#link-to "series" 
-		active=true}}
+    {{#link-to "series"}}
         text
       {{/link-to}}
     `);
@@ -17,11 +16,10 @@ module('Integration | Component | link-to', function(hooks) {
     assert.dom('[aria-current]').doesNotExist();
   });
 
-  test('it has aria-current attribute if it has putActiveAttr as true', async function(assert) {
+  test('it has aria-current attribute if active', async function(assert) {
     await render(hbs`
-	  {{#link-to "series" 
-	  	putActiveAttr=true
-		active=true}}
+   {{#link-to "series"
+    active=true}}
         text
       {{/link-to}}
     `);

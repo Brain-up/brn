@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import stubTasksInfo from './test-support/stub-tasks-info';
 
 const TEST_EXERCISE_NAMES = ['Type1', 'Type2'];
 
@@ -17,14 +16,21 @@ module('Integration | Component | series-navigation', function(hooks) {
         store.createRecord('exercise', {
           name,
           id: index,
-          tasks: [store.createRecord('task', stubTasksInfo[0])],
+          tasks: [
+            store.createRecord('task', [
+              {
+                order: '1',
+                word: 'бал',
+              },
+            ]),
+          ],
         }),
       ),
     });
     this.set('series', series);
 
-    await render(hbs`<SeriesNavigation 
-	@series={{this.series}}/>`);
+    await render(hbs`<SeriesNavigation
+      @series={{this.series}}/>`);
   });
 
   test('renders all exercises', async function(assert) {
