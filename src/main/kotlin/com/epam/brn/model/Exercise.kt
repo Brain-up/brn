@@ -1,16 +1,16 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseDto
-import javax.persistence.CascadeType
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.SequenceGenerator
+import javax.persistence.CascadeType
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
-import javax.persistence.SequenceGenerator
+import javax.persistence.FetchType
 
 @Entity
 data class Exercise(
@@ -31,21 +31,18 @@ data class Exercise(
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val tasks: MutableSet<Task> = HashSet()
 ) {
-    fun toDtoWithTasks(available: Boolean? = null) = ExerciseDto(
+    fun toDtoWithTasks() = ExerciseDto(
         seriesId = series.id,
         id = id,
         name = name,
         description = description,
-        tasks = tasks.map { task -> task.toDto() }.toMutableSet(),
-        available = available
+        tasks = tasks.map { task -> task.toDto() }.toMutableSet()
     )
-
-    fun toDtoWithoutTasks(available: Boolean? = null) = ExerciseDto(
+    fun toDtoWithoutTasks() = ExerciseDto(
         seriesId = series.id,
         id = id,
         name = name,
-        description = description,
-        available = available
+        description = description
     )
 
     override fun equals(other: Any?): Boolean {

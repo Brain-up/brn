@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.Exercise
@@ -14,6 +13,7 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +24,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -58,12 +57,11 @@ class ExercisesControllerIT {
     }
 
     @Test
-    fun `test get done exercises by userId`() {
+    fun `test get done exercises by userID`() {
         // GIVEN
         val exerciseName = "SOMENAME"
         val existingUser = insertUser()
-        val existingSeries = insertSeries()
-        val existingExercise = insertExercise(exerciseName, existingSeries)
+        val existingExercise = insertExercise(exerciseName)
         insertStudyHistory(existingUser, existingExercise)
         // WHEN
         val resultAction = mockMvc.perform(
@@ -76,38 +74,15 @@ class ExercisesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data[0].name").value(exerciseName))
+        val response = resultAction.andReturn().response.contentAsString
+        assertTrue(response.contains(exerciseName))
     }
 
     @Test
-    fun `test get done exercises by userId and seriesId`() {
+    fun `test get exercises by exerciseID`() {
         // GIVEN
         val exerciseName = "SOMENAME"
-        val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExercise = insertExercise(exerciseName, existingSeries)
-        insertStudyHistory(existingUser, existingExercise)
-        // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get(BrnPath.EXERCISES)
-                .param(USER_ID, existingUser.id.toString())
-                .param(SERIES_ID, existingSeries.id.toString())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-        )
-        // THEN
-        resultAction
-            .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data[0].name").value(exerciseName))
-    }
-
-    @Test
-    fun `test get exercises by exerciseId`() {
-        // GIVEN
-        val exerciseName = "SOMENAME"
-        val existingSeries = insertSeries()
-        val existingExercise = insertExercise(exerciseName, existingSeries)
+        val existingExercise = insertExercise(exerciseName)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -118,7 +93,8 @@ class ExercisesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data.name").value(exerciseName))
+        val response = resultAction.andReturn().response.contentAsString
+        assertTrue(response.contains(exerciseName))
     }
 
     private fun insertStudyHistory(
@@ -150,7 +126,7 @@ class ExercisesControllerIT {
         )
     }
 
-    private fun insertSeries(): Series {
+    fun insertExercise(exerciseName: String): Exercise {
         val exerciseGroup = exerciseGroupRepository.save(
             ExerciseGroup(
                 id = 0,
@@ -158,7 +134,7 @@ class ExercisesControllerIT {
                 name = "group"
             )
         )
-        return seriesRepository.save(
+        val series = seriesRepository.save(
             Series(
                 id = 0,
                 description = "desc",
@@ -166,9 +142,6 @@ class ExercisesControllerIT {
                 exerciseGroup = exerciseGroup
             )
         )
-    }
-
-    fun insertExercise(exerciseName: String, series: Series): Exercise {
         return exerciseRepository.save(
             Exercise(
                 id = 0,

@@ -4,7 +4,6 @@
    "id": "1",
    "name": "однослоговые слова",
    "series": "1",
-   "available": true,
    "tasks": [
     "1",
     "2",
@@ -17,7 +16,6 @@
    "id": "2",
    "name": "двуслоговые слова",
    "series": "1",
-   "available": true,
    "tasks": [
     "6",
     "7",
@@ -30,7 +28,6 @@
    "id": "3",
    "name": "сложные слова",
    "series": "1",
-   "available": false,
    "tasks": [
     "16",
     "17",
