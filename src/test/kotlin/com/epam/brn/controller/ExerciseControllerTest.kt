@@ -44,10 +44,10 @@ internal class ExerciseControllerTest {
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
         @Suppress("UNCHECKED_CAST")
-        val actualResultData: ExerciseDto =
-            exerciseController.getExercisesByID(exerciseID).body?.data as ExerciseDto
+        val actualResultData: List<ExerciseDto> =
+            exerciseController.getExercisesByID(exerciseID).body?.data as List<ExerciseDto>
         // THEN
-        assertEquals(actualResultData, exercise)
+        assertEquals(actualResultData[0], exercise)
         verify(exerciseService).findExerciseById(exerciseID)
     }
 }

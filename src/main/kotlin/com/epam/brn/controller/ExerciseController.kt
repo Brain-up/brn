@@ -36,6 +36,6 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     fun getExercisesByID(
         @PathVariable(EXERCISE_ID) exerciseId: Long
     ): ResponseEntity<BaseResponseDto> {
-        return ResponseEntity.ok().body(BaseResponseDto(data = exerciseService.findExerciseById(exerciseId)))
+        return ResponseEntity.ok().body(BaseResponseDto(data = listOf(exerciseService.findExerciseById(exerciseId))))
     }
 }

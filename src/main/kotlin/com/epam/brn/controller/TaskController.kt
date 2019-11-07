@@ -38,7 +38,7 @@ class TaskController(private val taskService: TaskService, private val uploadTas
     @ApiOperation("Get task by id")
     fun getTaskById(@PathVariable(BrnParams.TASK_ID) taskId: Long): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok()
-            .body(BaseResponseDto(data = taskService.getTaskById(taskId)))
+            .body(BaseResponseDto(data = listOf(taskService.getTaskById(taskId))))
     }
 
     @PostMapping

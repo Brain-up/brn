@@ -6,9 +6,9 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
-import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
-import org.hamcrest.Matchers.hasSize
+import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
@@ -85,8 +84,10 @@ class TaskControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data.name").value(firstSavedTask.name!!))
-            .andExpect(jsonPath("$.data.id").value(firstSavedTask.id!!))
+        val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
+        val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
+        assertEquals(firstSavedTask.name, jsonDataObject.get("name"))
+        assertEquals(firstSavedTask.id, jsonDataObject.getLong("id"))
     }
 
     @Test
@@ -102,7 +103,10 @@ class TaskControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data[0].name").value(firstSavedTask.name!!))
-            .andExpect(jsonPath("$.data", hasSize<Any>(INTEGER_ONE)))
+        val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
+        val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
+        assertEquals(firstSavedTask.name, jsonDataObject.get("name"))
+        assertEquals(firstSavedTask.id, jsonDataObject.getLong("id"))
+        assertEquals(1, jsonResponse.getJSONArray("data").length())
     }
 }

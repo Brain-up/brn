@@ -31,6 +31,6 @@ class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsServic
     fun getGroupById(
         @PathVariable(GROUP_ID) groupId: Long
     ): ResponseEntity<BaseResponseDto> {
-        return ResponseEntity.ok().body(BaseResponseDto(data = exerciseGroupsService.findGroupById(groupId)))
+        return ResponseEntity.ok().body(BaseResponseDto(data = listOf(exerciseGroupsService.findGroupById(groupId))))
     }
 }
