@@ -13,7 +13,9 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
+import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -96,7 +98,9 @@ class ExercisesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data.name").value(exerciseName))
+        val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
+        val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
+        Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
     }
 
     private fun insertStudyHistory(
