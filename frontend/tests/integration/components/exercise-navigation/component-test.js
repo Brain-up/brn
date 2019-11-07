@@ -34,7 +34,7 @@ module('Integration | Component | exercise-navigation', function(hooks) {
     assert.equal(pageObject.navLinks.length, this.tasks.length);
     assert.deepEqual(
       pageObject.navLinks.mapBy('linkText'),
-      this.tasks.mapBy('order'),
+      ['1', '2', '3',],
     );
   });
 
@@ -61,10 +61,10 @@ module('Integration | Component | exercise-navigation', function(hooks) {
     await render(hbs`<ExerciseNavigation 
       @tasks={{this.tasks}}/>`);
 
-    assert.equal(pageObject.navLinks.length, this.tasks.length);
+    assert.equal(pageObject.navLinks.length, 3);
     assert.deepEqual(
       pageObject.navLinks.mapBy('linkText'),
-      ['1', '2', '3',],
+      ['3', '1', '2',],
     );
   });
 });
