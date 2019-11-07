@@ -2,11 +2,9 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -27,16 +25,36 @@ internal class ExerciseServiceTest {
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
     @Test
-    fun `should get done exercises by user`() {
+    fun `should get exercises by user`() {
         // GIVEN
-        val studyHistoryMock: StudyHistory = mock(StudyHistory::class.java)
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        `when`(studyHistoryMock.exercise).thenReturn(exerciseMock)
-        `when`(studyHistoryRepository.findByUserAccountId(anyLong())).thenReturn(listOf(studyHistoryMock))
+        val exerciseDtoMock = ExerciseDto()
+        val exerciseId = 1L
+        `when`(exerciseMock.toDtoWithoutTasks(true)).thenReturn(exerciseDtoMock)
+        `when`(exerciseMock.id).thenReturn(exerciseId)
+        `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong())).thenReturn(listOf(exerciseId))
+        `when`(exerciseRepository.findAll()).thenReturn(listOf(exerciseMock))
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findDoneExercisesByUserId(1L)
+        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(exerciseId)
         // THEN
-        assertTrue(actualResult.contains(exerciseMock.toDtoWithoutTasks()))
+        assertEquals(actualResult, listOf(exerciseDtoMock))
+    }
+
+    @Test
+    fun `should get exercises by user and series`() {
+        // GIVEN
+        val exerciseMock: Exercise = mock(Exercise::class.java)
+        val exerciseDtoMock = ExerciseDto()
+        val exerciseId = 1L
+        val seriesId = 1L
+        `when`(exerciseMock.toDtoWithoutTasks(true)).thenReturn(exerciseDtoMock)
+        `when`(exerciseMock.id).thenReturn(exerciseId)
+        `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong(), anyLong())).thenReturn(listOf(exerciseId))
+        `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exerciseMock))
+        // WHEN
+        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(exerciseId, seriesId)
+        // THEN
+        assertEquals(actualResult, listOf(exerciseDtoMock))
     }
 
     @Test

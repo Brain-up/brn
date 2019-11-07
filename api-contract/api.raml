@@ -48,7 +48,7 @@ mediaType:
     queryParameters:
       seriesId:
         description: "ID of the series exercises belongs to"
-        required: false
+        required: true
         type: string
         example: "42"
       userId:
@@ -60,7 +60,12 @@ mediaType:
       200:
         body:
           example: !include samples/exercises.json
-
+  /{exerciseId}:
+    get:
+      responses:
+        200:
+          body:
+            example: !include samples/exercises.json
 # TASK ----------------------------
 
 /tasks:
