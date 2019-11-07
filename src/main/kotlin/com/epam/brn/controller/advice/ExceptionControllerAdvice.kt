@@ -23,7 +23,7 @@ class ExceptionControllerAdvice {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .body(BaseResponseDto(errors = (listOf(e.message.toString())).toString()))
+            .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }
 
     @ExceptionHandler(Throwable::class)
@@ -55,5 +55,5 @@ class ExceptionControllerAdvice {
     fun makeInternalServerErrorResponseEntity(e: Throwable) = ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .contentType(MediaType.APPLICATION_JSON_UTF8)
-        .body(BaseResponseDto(errors = (listOf(e.message.toString())).toString()))
+        .body(BaseResponseDto(errors = listOf(e.message.toString())))
 }
