@@ -60,7 +60,12 @@ mediaType:
       200:
         body:
           example: !include samples/exercises.json
-
+  /{exerciseId}:
+    get:
+      responses:
+        200:
+          body:
+            example: !include samples/exercises.json
 # TASK ----------------------------
 
 /tasks:
