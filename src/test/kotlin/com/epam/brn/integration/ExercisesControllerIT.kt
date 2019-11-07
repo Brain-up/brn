@@ -58,28 +58,6 @@ class ExercisesControllerIT {
     }
 
     @Test
-    fun `test get done exercises by userId`() {
-        // GIVEN
-        val exerciseName = "SOMENAME"
-        val existingUser = insertUser()
-        val existingSeries = insertSeries()
-        val existingExercise = insertExercise(exerciseName, existingSeries)
-        insertStudyHistory(existingUser, existingExercise)
-        // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get(BrnPath.EXERCISES)
-                .param(USER_ID, existingUser.id.toString())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-        )
-        // THEN
-        resultAction
-            .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data[0].name").value(exerciseName))
-    }
-
-    @Test
     fun `test get done exercises by userId and seriesId`() {
         // GIVEN
         val exerciseName = "SOMENAME"
