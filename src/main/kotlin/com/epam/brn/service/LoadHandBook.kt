@@ -7,10 +7,12 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
 import org.springframework.context.ApplicationListener
+import org.springframework.context.annotation.Profile
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.stereotype.Service
 
 @Service
+@Profile("dev", "prod")
 class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository) :
     ApplicationListener<ContextRefreshedEvent> {
 
