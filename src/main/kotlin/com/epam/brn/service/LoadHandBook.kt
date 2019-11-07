@@ -1,113 +1,24 @@
-package com.epam.brn.config
+package com.epam.brn.service
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.Series
-import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.Task
 import com.epam.brn.model.Resource
-import com.epam.brn.model.UserAccount
+import com.epam.brn.model.Series
+import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.UserAccountRepository
-import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.ApplicationRunner
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
-import java.time.LocalDate
-import java.time.LocalDateTime
+import org.springframework.context.ApplicationListener
+import org.springframework.context.event.ContextRefreshedEvent
+import org.springframework.stereotype.Service
 
-@Profile("dev")
-@Configuration
-class DevConfig(
-    @Autowired val userAccountRepository: UserAccountRepository,
-    @Autowired val exerciseRepository: ExerciseRepository,
-    @Autowired val seriesRepository: SeriesRepository,
-    @Autowired val studyHistoryRepository: StudyHistoryRepository,
-    @Autowired val exerciseGroupRepository: ExerciseGroupRepository
-) {
-    private val log = logger()
+@Service
+class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository) :
+    ApplicationListener<ContextRefreshedEvent> {
 
-    @Bean
-    fun databaseInitializer() = ApplicationRunner {
-        log.debug("------- Started DEV initialization")
-        loadInitialDBDataForAPIDev()
-        loadInitialDBDataForFileUploadDev()
-        log.debug("------- Finished DEV initialization")
+    override fun onApplicationEvent(event: ContextRefreshedEvent) {
+        loadInitialDataToDb()
     }
 
-    private fun loadInitialDBDataForAPIDev() {
-        val exerciseGroup = exerciseGroupRepository.save(
-            ExerciseGroup(
-                id = 0,
-                description = "desc",
-                name = "group"
-            )
-        )
-        log.debug("---- Created $exerciseGroup")
-
-        val series = seriesRepository.save(
-            Series(
-                id = 0,
-                description = "desc",
-                name = "group",
-                exerciseGroup = exerciseGroup
-            )
-        )
-        log.debug("---- Created $series")
-
-        val useraccount = userAccountRepository.save(
-            UserAccount(
-                id = 0,
-                name = "manuel",
-                birthDate = LocalDate.now(),
-                email = "123@123.asd"
-            )
-        )
-        log.debug("---- Created $useraccount")
-
-        val exercise = exerciseRepository.save(
-            Exercise(
-                id = 0,
-                description = "someDescription",
-                series = series,
-                level = 0,
-                name = "exercise"
-            )
-        )
-        log.debug("---- Created $exercise")
-
-        val exercise2 = exerciseRepository.save(
-            Exercise(
-                id = 0,
-                description = "someDescription2",
-                series = series,
-                level = 0,
-                name = "exercise2"
-            )
-        )
-        log.debug("---- Created $exercise2")
-
-        val studyHistory = studyHistoryRepository.save(
-            StudyHistory(
-                id = 0,
-                userAccount = useraccount,
-                exercise = exercise,
-                endTime = LocalDateTime.now(),
-                startTime = LocalDateTime.now(),
-                doneTasksCount = 2,
-                successTasksCount = 1,
-                repetitionCount = 3
-            )
-        )
-        log.debug("---- Created $studyHistory")
-    }
-
-    fun loadInitialDBDataForFileUploadDev() {
+    fun loadInitialDataToDb() {
         val resource11 =
             Resource(audioFileUrl = "no_noise/бал.mp3", word = "бал", pictureFileUrl = "", soundsCount = 1)
         val resource12 =
@@ -120,6 +31,7 @@ class DevConfig(
             Resource(audioFileUrl = "no_noise/гад.mp3", word = "гад", pictureFileUrl = "", soundsCount = 1)
         val resource16 =
             Resource(audioFileUrl = "", word = "сад", pictureFileUrl = "", soundsCount = 1)
+
         val resource21 =
             Resource(audioFileUrl = "noise_0db/бал.mp3", word = "бал", pictureFileUrl = "", soundsCount = 1)
         val resource22 =
@@ -132,19 +44,20 @@ class DevConfig(
             Resource(audioFileUrl = "noise_0db/гад.mp3", word = "гад", pictureFileUrl = "", soundsCount = 1)
         val resource26 =
             Resource(audioFileUrl = "", word = "сад", pictureFileUrl = "", soundsCount = 1)
+
         val group = ExerciseGroup(name = "речевые упражения", description = "речевые упражения")
         val series1 =
             Series(name = "распознование слов", description = "распознование слов", exerciseGroup = group)
         val series2 =
             Series(name = "диахоничкеское слушание", description = "диахоничкеское слушание", exerciseGroup = group)
         group.series.addAll(setOf(series1, series2))
-
         val exercise1 = Exercise(
             name = "Однослоговые слова",
             description = "Однослоговые слова без шума",
             level = 0,
             series = series1
         )
+
         val task11 = Task(
             name = "task",
             serialNumber = 1,
@@ -152,7 +65,6 @@ class DevConfig(
             correctAnswer = resource11
         )
         task11.answerOptions.addAll(setOf(resource12, resource13, resource14, resource15, resource16))
-
         val task12 = Task(
             name = "task",
             serialNumber = 2,
