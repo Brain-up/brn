@@ -25,7 +25,7 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @ApiOperation("Get done exercises for user")
     fun getExercises(
         @RequestParam(value = USER_ID, required = true) userId: Long,
-        @RequestParam(value = SERIES_ID, required = false) seriesId: Long?
+        @RequestParam(value = SERIES_ID, required = true) seriesId: Long?
     ): ResponseEntity<BaseResponseDto> {
         seriesId?.let {
             return ResponseEntity.ok()
