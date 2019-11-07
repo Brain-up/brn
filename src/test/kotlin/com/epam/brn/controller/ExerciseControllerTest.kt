@@ -20,22 +20,6 @@ internal class ExerciseControllerTest {
     lateinit var exerciseService: ExerciseService
 
     @Test
-    fun `should get exercises for user`() {
-        // GIVEN
-        val userID: Long = 1
-        val exercise = ExerciseDto(1, "name", "desc", 1)
-        val listExercises = listOf(exercise)
-        Mockito.`when`(exerciseService.findExercisesByUserId(userID)).thenReturn(listExercises)
-        // WHEN
-        @Suppress("UNCHECKED_CAST")
-        val actualResultData: List<ExerciseDto> =
-            exerciseController.getExercises(userID, null).body?.data as List<ExerciseDto>
-        // THEN
-        assertTrue(actualResultData.contains(exercise))
-        verify(exerciseService).findExercisesByUserId(userID)
-    }
-
-    @Test
     fun `should get exercises for user and series`() {
         // GIVEN
         val userId: Long = 1
