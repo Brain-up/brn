@@ -20,19 +20,36 @@ internal class ExerciseControllerTest {
     lateinit var exerciseService: ExerciseService
 
     @Test
-    fun `should get done exercises for user`() {
+    fun `should get exercises for user`() {
         // GIVEN
         val userID: Long = 1
         val exercise = ExerciseDto(1, "name", "desc", 1)
         val listExercises = listOf(exercise)
-        Mockito.`when`(exerciseService.findDoneExercisesByUserId(userID)).thenReturn(listExercises)
+        Mockito.`when`(exerciseService.findExercisesByUserId(userID)).thenReturn(listExercises)
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
-            exerciseController.getExercisesByUserID(userID).body?.data as List<ExerciseDto>
+            exerciseController.getExercises(userID, null).body?.data as List<ExerciseDto>
         // THEN
         assertTrue(actualResultData.contains(exercise))
-        verify(exerciseService).findDoneExercisesByUserId(userID)
+        verify(exerciseService).findExercisesByUserId(userID)
+    }
+
+    @Test
+    fun `should get exercises for user and series`() {
+        // GIVEN
+        val userId: Long = 1
+        val seriesId: Long = 1
+        val exercise = ExerciseDto(1, "name", "desc", 1)
+        val listExercises = listOf(exercise)
+        Mockito.`when`(exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)).thenReturn(listExercises)
+        // WHEN
+        @Suppress("UNCHECKED_CAST")
+        val actualResultData: List<ExerciseDto> =
+            exerciseController.getExercises(userId, seriesId).body?.data as List<ExerciseDto>
+        // THEN
+        assertTrue(actualResultData.contains(exercise))
+        verify(exerciseService).findExercisesByUserIdAndSeries(userId, seriesId)
     }
 
     @Test
@@ -42,6 +59,7 @@ internal class ExerciseControllerTest {
         val exercise = ExerciseDto(1, "exe", "desc")
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
+        @Suppress("UNCHECKED_CAST")
         val actualResultData: ExerciseDto =
             exerciseController.getExercisesByID(exerciseID).body?.data as ExerciseDto
         // THEN
