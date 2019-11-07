@@ -42,10 +42,10 @@ internal class ExerciseControllerTest {
         val exercise = ExerciseDto(1, "exe", "desc")
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
-        val actualResultData: ExerciseDto =
-            exerciseController.getExercisesByID(exerciseID).body?.data as ExerciseDto
+        val actualResultData: List<ExerciseDto> =
+            exerciseController.getExercisesByID(exerciseID).body?.data as List<ExerciseDto>
         // THEN
-        assertEquals(actualResultData, exercise)
+        assertEquals(actualResultData[0], exercise)
         verify(exerciseService).findExerciseById(exerciseID)
     }
 }
