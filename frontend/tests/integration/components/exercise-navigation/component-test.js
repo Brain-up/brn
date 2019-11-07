@@ -64,7 +64,7 @@ module('Integration | Component | exercise-navigation', function(hooks) {
     assert.equal(pageObject.navLinks.length, this.tasks.length);
     assert.deepEqual(
       pageObject.navLinks.mapBy('linkText'),
-      this.tasks.mapBy('order').sort(),
+      ['1', '2', '3',],
     );
   });
 });
