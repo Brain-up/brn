@@ -127,7 +127,7 @@ project.task("ktlint", type: JavaExec) {
             "src/**/*.kt"
     ]
 }
-compileKotlin.dependsOn ktlint
+// compileKotlin.dependsOn ktlint
 
 tasks.withType(Test) { Test task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
