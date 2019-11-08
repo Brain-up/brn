@@ -22,7 +22,7 @@ export default class TaskPlayerComponent extends Component {
   handleSubmit(word) {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {
-      const currentWordsOrder = [].concat(this.shuffledWords);
+      const currentWordsOrder = Array.from(this.shuffledWords);
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
