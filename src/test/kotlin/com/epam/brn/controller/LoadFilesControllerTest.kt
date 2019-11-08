@@ -1,0 +1,38 @@
+package com.epam.brn.controller
+
+import com.epam.brn.job.csv.task.UploadFromCsvJob
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.mock.web.MockMultipartFile
+import java.io.File
+import java.io.FileInputStream
+
+@ExtendWith(MockitoExtension::class)
+internal class LoadFilesControllerTest {
+
+    @InjectMocks
+    lateinit var loadFilesController: LoadFilesController
+
+    @Mock
+    lateinit var uploadFromCsvJob: UploadFromCsvJob
+
+    @Test
+    fun `should upload tasks from task csv file`() {
+        // GIVEN
+        val taskFile = MockMultipartFile(
+            "task.csv",
+            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}tasks.csv")
+        )
+
+        // WHEN
+        loadFilesController.addTasks(taskFile)
+
+        // THEN
+        verify(uploadFromCsvJob, times(1)).uploadTasks(taskFile)
+    }
+}
