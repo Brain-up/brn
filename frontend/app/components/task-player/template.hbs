@@ -1,16 +1,21 @@
-<br>
-
-<audio controls autoplay src={{@task.audioFileUrl}}/>
-
+<br />
+<audio controls autoplay src={{@task.audioFileUrl}}></audio>
 {{#if (eq this.lastAnswer @task.word)}}
-  <p class="task-player__results">
-    <br>
-    Ваш ответ: «{{this.lastAnswer}}»
-    <br>
+  <p class="task-player__results" data-test-right-answer-notification>
+    <br />
+    Ваш ответ: «
+    {{this.lastAnswer}}
+    »
+    <br />
     👍 Верно!
-    <br>
-    <br>
-    <button autofocus class="c-button u-small" onclick={{action this.onFinished}}>
+    <br />
+    <br />
+    <button
+      data-test-next-task-button
+      autofocus
+      class="c-button u-small"
+      onclick={{action this.onFinished}}
+    >
       Далee »
     </button>
   </p>
@@ -19,8 +24,11 @@
     {{#each this.shuffledWords as |word|}}
       <li class="task-player__option">
         <button
+          data-test-task-answer
+          data-test-task-answer-option={{word}}
           onclick={{action this.handleSubmit word}}
-          class="task-player__option-button c-button c-button--ghost u-super">
+          class="task-player__option-button c-button c-button--ghost u-super"
+        >
           {{word}}
         </button>
       </li>

@@ -1,26 +1,60 @@
-import { module, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import { chooseAnswer, goToNextTask } from './test-support/helpers';
+import pageObject from './test-support/page-object';
 
 module('Integration | Component | task-player', function(hooks) {
   setupRenderingTest(hooks);
 
-  skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`<TaskPlayer />`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
+  hooks.beforeEach(async function() {
+    const store = this.owner.lookup('service:store');
+    this.set(
+      'model',
+      store.createRecord('task', {
+        order: '1',
+        word: 'бал',
+        words: ['бал', 'бум', 'быль'],
+      }),
+    );
     await render(hbs`
-      <TaskPlayer>
-        template block text
-      </TaskPlayer>
+    <TaskPlayer
+      @task={{this.model}}/>
     `);
+  });
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+  test('refreshes options list after a wrong answer', async function(assert) {
+    const wrongAnswers = this.model.words.filter(
+      (wordOption) => wordOption !== this.model.word,
+    );
+    const order = pageObject.options.mapBy('optionValue');
+
+    await chooseAnswer(wrongAnswers[0]);
+
+    assert.notOk(pageObject.hasRightAnswer);
+
+    await settled();
+
+    const newOrder = pageObject.options.mapBy('optionValue');
+    assert.notDeepEqual(order, newOrder);
+  });
+
+  test('shows notification if answer is right and calls onFinished', async function(assert) {
+    assert.expect(2);
+    this.set('onFinished', function() {
+      assert.ok(true, 'calls onFinished');
+    });
+
+    await render(hbs`
+      <TaskPlayer
+        @onFinished={{this.onFinished}}
+        @task={{this.model}}/>
+      `);
+
+    await chooseAnswer(this.model.word);
+    assert.ok(pageObject.hasRightAnswer);
+
+    await goToNextTask();
   });
 });
