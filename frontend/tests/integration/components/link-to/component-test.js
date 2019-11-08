@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import pageObject from './test-support/page-object';
 
 module('Integration | Component | link-to', function(hooks) {
   setupRenderingTest(hooks);
@@ -13,7 +14,7 @@ module('Integration | Component | link-to', function(hooks) {
       {{/link-to}}
     `);
 
-    assert.dom('[aria-current]').doesNotExist();
+    assert.notOk(pageObject.hasAriaCurrentAttribute);
   });
 
   test('it has aria-current attribute if active', async function(assert) {
@@ -23,6 +24,6 @@ module('Integration | Component | link-to', function(hooks) {
         text
       {{/link-to}}
     `);
-    assert.dom('[aria-current]').exists();
+    assert.ok(pageObject.hasAriaCurrentAttribute);
   });
 });

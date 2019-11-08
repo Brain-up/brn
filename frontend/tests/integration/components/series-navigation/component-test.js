@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import pageObject from './test-support/page-object';
 
 const TEST_EXERCISE_NAMES = ['Type1', 'Type2'];
 
@@ -34,8 +35,6 @@ module('Integration | Component | series-navigation', function(hooks) {
   });
 
   test('renders all exercises', async function(assert) {
-    assert
-      .dom('[data-test-series-navigation-list]')
-      .exists({ count: TEST_EXERCISE_NAMES.length });
+    assert.equal(pageObject.linksAmount, TEST_EXERCISE_NAMES.length);
   });
 });

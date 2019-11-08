@@ -4,7 +4,6 @@ import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { chooseAnswer, goToNextTask } from './test-support/helpers';
 import pageObject from './test-support/page-object';
-import deepEqual from 'brn/utils/deep-equal';
 
 module('Integration | Component | task-player', function(hooks) {
   setupRenderingTest(hooks);
@@ -33,12 +32,12 @@ module('Integration | Component | task-player', function(hooks) {
 
     await chooseAnswer(wrongAnswers[0]);
 
-    assert.dom('[data-test-right-answer-notification]').doesNotExist();
+    assert.notOk(pageObject.hasRightAnswer);
 
     await settled();
 
     const newOrder = pageObject.options.mapBy('optionValue');
-    assert.ok(!deepEqual(order, newOrder), 'options order changed');
+    assert.notDeepEqual(order, newOrder);
   });
 
   test('shows notification if answer is right and calls onFinished', async function(assert) {
@@ -54,7 +53,7 @@ module('Integration | Component | task-player', function(hooks) {
       `);
 
     await chooseAnswer(this.model.word);
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(pageObject.hasRightAnswer);
 
     await goToNextTask();
   });
