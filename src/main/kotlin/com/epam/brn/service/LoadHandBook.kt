@@ -7,16 +7,16 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
 import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Profile
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 
 @Service
 @Profile("dev", "prod")
-class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository) :
-    ApplicationListener<ApplicationReadyEvent> {
+class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository) {
 
-    override fun onApplicationEvent(event: ApplicationReadyEvent) {
+    @EventListener(ApplicationReadyEvent::class)
+    fun onApplicationEvent(event: ApplicationReadyEvent) {
         loadInitialDataToDb()
     }
 
