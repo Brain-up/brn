@@ -8,4 +8,5 @@ object BrnPath {
     const val EXERCISES = "/exercises"
     const val TASKS = "/tasks"
     const val STUDY_HISTORIES = "/study-histories"
+    const val FILES = "/files"
 }

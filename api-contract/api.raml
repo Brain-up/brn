@@ -80,3 +80,17 @@ mediaType:
       200:
         body:
           example: !include samples/tasks_by_exercise.json
+
+# LOAD FILES ----------------------
+
+/files:
+  post:
+    body:
+      multipart/form-data:
+        properties:
+          files:
+            description: "File with tasks to be uploaded"
+            required: true
+            type: file
+    responses:
+      201:
