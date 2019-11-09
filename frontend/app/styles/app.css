@@ -1,4 +1,4 @@
-@import url('pod-styles.css');
+@import 'pod-styles.css';
 
 html,
 body {
@@ -18,6 +18,7 @@ body > div.ember-view {
 
 main {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .series-page--aside {
@@ -43,4 +44,9 @@ a.active {
 a {
   color: #7a7ab7;
   text-decoration: none;
+}
+
+.breadcrumbs-container {
+  width: 100%;
+  padding: 15px 0;
 }
