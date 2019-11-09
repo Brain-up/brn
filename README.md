@@ -11,7 +11,7 @@ We use latest technologies and best practices, so developers will get to know ne
 Most importantly being an open source project you can show your work in it to any person interested, proving your development expertise with actual examples of your work flow and code samples in a live application. 
 
 ## WE ARE LOOKING FOR
-1. Front-end developers: Ember, React or Angular. 
+1. Front-end developers: Ember, Angular. 
 2. Server-side developers: Kotlin and Java. Components, REST and algorithms.
 3. DevOps: Continuous integration and delivery.
 4. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
@@ -20,12 +20,13 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 
 ## TOOLS WE USE
 - Back-end: Java/Kotlin + Spring boot. Rest api as integration layer.
-- Front-end : TBD - Ember, React or Angular.
+- Front-end : TBD - Ember, Angular.
 - DB: Postgres in production, H2 for testing.
 
 ## HOW TO JOIN?
-Just click on “JOIN TEAM” button and we will get in touch with you shortly. 
-You can also send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) or directly to [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.
+1. for epam developers: Just click on “JOIN TEAM” button in https://contribute.epam.com/products/143 and we will get in touch with you shortly. 
+2. for all other developers: you can send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) or directly to [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.
+our project skype chat: https://join.skype.com/jxSiWkgwT2x1
 
 # GETTING STARTED!
 ## RESOURCES
