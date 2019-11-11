@@ -1,6 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.converter.StudyHistoryConverter
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
@@ -15,8 +14,7 @@ import javax.persistence.EntityManager
 @Service
 class StudyHistoryService(
     @Autowired val studyHistoryRepository: StudyHistoryRepository,
-    @Autowired val entityManager: EntityManager,
-    @Autowired val studyHistoryConverter: StudyHistoryConverter
+    @Autowired val entityManager: EntityManager
 ) {
     private val log = logger()
     fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): StudyHistoryDto? {
@@ -68,8 +66,7 @@ class StudyHistoryService(
         studyHistoryDto: StudyHistoryDto,
         studyHistoryEntity: StudyHistory
     ): StudyHistoryDto? {
-        studyHistoryConverter
-            .updateStudyHistoryWhereNotNull(studyHistoryDto, studyHistoryEntity)
+//        studyHistoryConverter.updateStudyHistoryWhereNotNull(studyHistoryDto, studyHistoryEntity)
         return studyHistoryRepository.save(studyHistoryEntity).toDto()
     }
 
@@ -77,8 +74,7 @@ class StudyHistoryService(
         studyHistoryDto: StudyHistoryDto,
         studyHistoryEntity: StudyHistory
     ): StudyHistoryDto? {
-        studyHistoryConverter
-            .updateStudyHistory(studyHistoryDto, studyHistoryEntity)
+//        studyHistoryConverter.updateStudyHistory(studyHistoryDto, studyHistoryEntity)
         return studyHistoryRepository.save(studyHistoryEntity).toDto()
     }
 }
