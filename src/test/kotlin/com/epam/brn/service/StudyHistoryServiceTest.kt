@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.converter.StudyHistoryConverter
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -28,8 +29,8 @@ internal class StudyHistoryServiceTest {
     lateinit var entityManager: EntityManager
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
-//    @Mock
-//    lateinit var studyHistoryConverter: StudyHistoryConverter
+    @Mock
+    lateinit var studyHistoryConverter: StudyHistoryConverter
     @InjectMocks
     lateinit var studyHistoryService: StudyHistoryService
 
@@ -149,7 +150,7 @@ internal class StudyHistoryServiceTest {
             repetitionCount = 1
         )
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
-        // doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
+        doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
         `when`(
             studyHistoryRepository.findByUserAccountIdAndExerciseId(
                 dto.userId, dto.exerciseId
@@ -195,7 +196,7 @@ internal class StudyHistoryServiceTest {
             repetitionCount = 2
         )
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
-        // doNothing().`when`(studyHistoryConverter).updateStudyHistory(dto, existingEntity)
+        doNothing().`when`(studyHistoryConverter).updateStudyHistory(dto, existingEntity)
         `when`(
             studyHistoryRepository.findByUserAccountIdAndExerciseId(
                 dto.userId, dto.exerciseId

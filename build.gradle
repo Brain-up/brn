@@ -27,7 +27,7 @@ apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 apply plugin: "kotlin-jpa"
 apply plugin: "kotlin-allopen"
-//apply plugin: "kotlin-kapt"
+apply plugin: "kotlin-kapt"
 apply plugin: "net.ltgt.apt-idea"
 
 allOpen {
@@ -60,7 +60,7 @@ dependencies {
     testCompile "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
     testCompile "com.nhaarman:mockito-kotlin:1.6.0"
     testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test', version: '1.3.50'
-//    compile "org.mapstruct:mapstruct:1.3.1.Final"
+    compile "org.mapstruct:mapstruct:1.3.1.Final"
     compile "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
     compile "org.apache.logging.log4j:log4j-api:2.11.2"
     compile "org.apache.logging.log4j:log4j-core:2.11.2"
@@ -83,8 +83,8 @@ dependencies {
     testCompile "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
     testCompile "com.nhaarman:mockito-kotlin:1.6.0"
 
-//    kapt("org.mapstruct:mapstruct-processor:1.3.1.Final")
-//    kapt("org.mapstruct:mapstruct-jdk8:1.3.1.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.3.1.Final")
+    kapt("org.mapstruct:mapstruct-jdk8:1.3.1.Final")
 }
 
 compileKotlin {
@@ -127,7 +127,7 @@ project.task("ktlint", type: JavaExec) {
             "src/**/*.kt"
     ]
 }
-//compileKotlin.dependsOn ktlint
+// compileKotlin.dependsOn ktlint
 
 tasks.withType(Test) { Test task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
