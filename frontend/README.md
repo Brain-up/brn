@@ -30,6 +30,10 @@ You will need the following things properly installed on your computer.
 * `ember test`
 * `ember test --server`
 
+#### Test coverage report
+* `yarn test:cover`
+* open `./coverage/index.html` to see detailed report
+
 ### Linting
 
 * `yarn lint:hbs`
