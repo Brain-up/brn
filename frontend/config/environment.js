@@ -24,7 +24,7 @@ module.exports = function(environment) {
     },
   };
 
-  if (environment === 'development') {
+  if (environment === 'development' || environment === 'mirage') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -32,10 +32,12 @@ module.exports = function(environment) {
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
     ENV.APP.RUNLOOP_DEBUG = true;
 
-    ENV['ember-cli-mirage'] = {
-      enabled: false,
-    };
-    ENV.BRN.API_HOST = undefined;
+    if (environment === 'mirage') {
+      ENV['ember-cli-mirage'] = {
+        enabled: true,
+      };
+      ENV.BRN.API_HOST = undefined;
+    }
   }
 
   if (environment === 'test') {

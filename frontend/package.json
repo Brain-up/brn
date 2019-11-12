@@ -18,7 +18,8 @@
     "test": "ember test",
     "test-coverage": "COVERAGE=true ember test",
     "on:precommit": "lint-staged",
-    "serve-local": "ember s  --secure-proxy=false --proxy=http://localhost:8081"
+    "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
+    "mirage": "ember s --environment=mirage"
   },
   "husky": {
     "hooks": {
