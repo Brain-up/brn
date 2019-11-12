@@ -20,7 +20,7 @@ class ExerciseService(
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
         val exercise = exerciseRepository.findById(exerciseID)
-        return exercise.map { e -> e.toDtoWithoutTasks() }
+        return exercise.map { e -> e.toDto() }
             .orElseThrow { NoDataFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
@@ -33,13 +33,13 @@ class ExerciseService(
         log.debug("Searching available exercises for user=$userId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
         val history = exerciseRepository.findAll()
-        return emptyIfNull(history).map { x -> x.toDtoWithoutTasks(exercisesIdList.contains(x.id)) }
+        return emptyIfNull(history).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
     }
 
     fun findExercisesByUserIdAndSeries(userId: Long, seriesId: Long): List<ExerciseDto> {
         log.debug("Searching available exercises for user=$userId with series=$seriesId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
         val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
-        return emptyIfNull(exercises).map { x -> x.toDtoWithoutTasks(exercisesIdList.contains(x.id)) }
+        return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
     }
 }
