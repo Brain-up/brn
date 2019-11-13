@@ -1,3 +1,26 @@
-<TaskPlayer
-  @onFinished={{transition-to "series.exercise.task" (next this.model this.model.exercise.tasks)}}
-  @task={{this.model}}/>
+{{#let
+  (has-next this.model this.model.exercise.tasks)
+  (has-next
+    this.model.parent.content this.model.parent.content.parent.content.children
+  ) as |hasNextTask hasNextExercise|
+}}
+  <TaskPlayer
+    @onFinished={{if
+      hasNextTask
+      (transition-to
+        "series.exercise.task" (next this.model this.model.exercise.tasks)
+      )
+      (transition-to
+        "series.exercise"
+        (next
+          this.model.parent.content
+          this.model.parent.content.parent.content.children
+        )
+      )
+    }}
+    @onRightAnswer={{transition-to "series.exercise.task" this.model}}
+    @task={{this.model}}
+    @lastTask={{not hasNextTask}}
+    @lastExercise={{not hasNextExercise}}
+  />
+{{/let}}

@@ -1,4 +1,3 @@
-import Route from '@ember/routing/route';
+import checkInteractionRoute from '../../check-interaction';
 
-export default Route.extend({
-});
+export default checkInteractionRoute.extend({});

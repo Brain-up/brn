@@ -10,14 +10,16 @@
     👍 Верно!
     <br />
     <br />
-    <button
-      data-test-next-task-button
-      autofocus
-      class="c-button u-small"
-      onclick={{action this.onFinished}}
-    >
-      Далee »
-    </button>
+    {{#if (not (and @lastTask @lastExercise))}}
+      <button
+        data-test-next-task-button
+        autofocus
+        class="c-button u-small"
+        onclick={{action this.onFinished}}
+      >
+        {{if @lastTask "Перейти к следующему упражнению »" "Далee »"}}
+      </button>
+    {{/if}}
   </p>
 {{else}}
   <ul class="task-player__options">
