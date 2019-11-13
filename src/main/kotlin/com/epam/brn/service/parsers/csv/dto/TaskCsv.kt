@@ -3,14 +3,14 @@ package com.epam.brn.service.parsers.csv.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
-@JsonPropertyOrder(value = ["exerciseId, orderNumber, word, fileName, words"])
+@JsonPropertyOrder(value = ["exerciseId, serialNumber, word, fileName, words"])
 class TaskCsv(
 
     @JsonProperty("exerciseId")
     val exerciseId: Long,
 
     @JsonProperty("serialNumber")
-    val serialNumber: Int,
+    val serialNumber: Long,
 
     @JsonProperty("word")
     val word: String,

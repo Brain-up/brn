@@ -14,7 +14,9 @@ class CSVParserService {
 
         val csvSchema = csvMapper
             .schemaFor(Source::class.java)
-            .withArrayElementSeparator(StringUtils.SPACE)
+            .withColumnSeparator(' ')
+            .withLineSeparator(StringUtils.SPACE)
+            .withArrayElementSeparator(",")
             .withHeader()
 
         return csvMapper

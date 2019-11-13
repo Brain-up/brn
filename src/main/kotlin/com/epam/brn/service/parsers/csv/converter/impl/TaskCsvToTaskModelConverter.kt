@@ -33,7 +33,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     }
 
     private fun convertSerialNumber(source: TaskCsv, target: Task) {
-        target.serialNumber = source.serialNumber
+        target.serialNumber = source.serialNumber.toInt()
     }
 
     private fun convertExercise(source: TaskCsv, target: Task) {
