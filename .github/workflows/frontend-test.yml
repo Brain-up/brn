@@ -34,8 +34,9 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - uses: H1D/ember-cli-code-coverage-action@2ca066d
+      - uses: mydea/ember-cli-code-coverage-action@v1.1
         with:
           working-directory: ./frontend
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          test-command: "yarn test:cover"
           coverage-file: "./frontend/coverage/coverage-summary.json"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
