@@ -8,6 +8,7 @@ import com.epam.brn.service.TaskService
 import com.epam.brn.service.parsers.csv.CSVParserService
 import com.epam.brn.service.parsers.csv.converter.impl.TaskCsvToTaskModelConverter
 import org.apache.commons.lang3.StringUtils
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -18,6 +19,9 @@ import java.io.InputStream
 @Component
 class UploadTaskFromCsvJob(private val csvParserService: CSVParserService, private val taskService: TaskService) :
     UploadFromCsvJob {
+
+    @Autowired
+    private lateinit var taskCsvToTaskModelConverter: TaskCsvToTaskModelConverter
 
     @Throws(FileFormatException::class)
     override fun uploadTasks(file: MultipartFile) {
@@ -33,7 +37,7 @@ class UploadTaskFromCsvJob(private val csvParserService: CSVParserService, priva
 
     @Transactional
     private fun uploadTasks(inputStream: InputStream) {
-        val tasks = csvParserService.parseCsvFile(inputStream, TaskCsvToTaskModelConverter())
+        val tasks = csvParserService.parseCsvFile(inputStream, taskCsvToTaskModelConverter)
         tasks.forEach { taskService.save(it) }
     }
 

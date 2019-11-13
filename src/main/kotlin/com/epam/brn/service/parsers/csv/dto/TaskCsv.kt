@@ -9,8 +9,8 @@ class TaskCsv(
     @JsonProperty("exerciseId")
     val exerciseId: Long,
 
-    @JsonProperty("serialNumber")
-    val serialNumber: Int,
+    @JsonProperty("orderNumber")
+    val orderNumber: Int,
 
     @JsonProperty("word")
     val word: String,
