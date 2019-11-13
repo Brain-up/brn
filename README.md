@@ -31,13 +31,13 @@ our project skype chat: https://join.skype.com/jxSiWkgwT2x1
 # GETTING STARTED!
 ## RESOURCES
 ### DOCUMENTATION
-https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
+https://kb.epam.com/display/EPMLABSBRN/Brn+project+documentation
 ### JIRA
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 ### JENKINS
-https://kb.epam.com/display/EPMCOSRINT/Jenkins
+https://kb.epam.com/pages/viewpage.action?pageId=885110636
 ### CODING STANDARDS
-https://kb.epam.com/display/EPMCOSRINT/Coding+standarts
+https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
 ### REQUISITES
