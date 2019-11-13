@@ -10,7 +10,8 @@ class CsvUtils {
             BrnCsvTypes.TEXT_CSV_TYPE,
             BrnCsvTypes.MS_EXCEL_TYPE,
             BrnCsvTypes.PLAIN_TYPE,
-            BrnCsvTypes.TSV_TYPE
+            BrnCsvTypes.TSV_TYPE,
+            BrnCsvTypes.OCTET_STREAM
         )
 
         fun isFileContentTypeCsv(contentType: String): Boolean {

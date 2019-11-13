@@ -9,4 +9,6 @@ object BrnCsvTypes {
     const val PLAIN_TYPE = "text/plain"
 
     const val TSV_TYPE = "text/tsv"
+
+    const val OCTET_STREAM = "application/octet-stream"
 }

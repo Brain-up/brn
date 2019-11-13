@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component
 class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
 
     @Autowired
-    private lateinit var exerciseService: ExerciseService
+    lateinit var exerciseService: ExerciseService
 
     @Autowired
-    private lateinit var resourceService: ResourceService
+    lateinit var resourceService: ResourceService
 
     override fun convert(source: TaskCsv): Task {
         val target = Task()
@@ -33,7 +33,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     }
 
     private fun convertSerialNumber(source: TaskCsv, target: Task) {
-        target.serialNumber = source.serialNumber
+        target.serialNumber = source.orderNumber
     }
 
     private fun convertExercise(source: TaskCsv, target: Task) {
@@ -46,12 +46,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
         val resources = resourceService.findByWordAndAudioFileUrlLike(word, fileName)
 
         if (CollectionUtils.isEmpty(resources)) {
-            val resource = Resource()
-            resource.word = word
-            resource.audioFileUrl = source.fileName
-
-            resourceService.save(resource)
-            target.correctAnswer = resource
+            target.correctAnswer = createResource(word, fileName)
         } else {
             target.correctAnswer = resources[0]
         }
@@ -60,17 +55,27 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     private fun convertAnswers(source: TaskCsv, target: Task) {
         target.answerOptions = CollectionUtils.emptyIfNull(source.words)
             .filter { StringUtils.isNotEmpty(it) }
-            .map(this::getResourceByWord)
+            .map { word -> getResourceByWord(word.replace("[()]".toRegex(), ""), source.fileName) }
             .toMutableSet()
     }
 
-    private fun getResourceByWord(word: String): Resource {
+    private fun getResourceByWord(word: String, fileName: String): Resource {
         val resources = resourceService.findByWordLike(word)
 
         if (CollectionUtils.isEmpty(resources)) {
-            throw EntityNotFoundException("Resource with word $word was not found")
+            return createResource(word, fileName)
         }
 
         return resources[0]
+    }
+
+    private fun createResource(word: String, fileName: String): Resource {
+        val resource = Resource()
+        resource.word = word
+        resource.audioFileUrl = fileName
+
+        resourceService.save(resource)
+
+        return resource
     }
 }
