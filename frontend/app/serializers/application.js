@@ -6,4 +6,9 @@ export default DS.JSONSerializer.extend({
     const data = payload.data;
     return this._super(store, primaryModelClass, data, id, requestType);
   },
+
+  normalizeSingleResponse(store, primaryModelClass, payload, id, requestType) {
+    const data = Array.isArray(payload) ? payload[0] : payload;
+    return this._super(store, primaryModelClass, data, id, requestType);
+  },
 });
