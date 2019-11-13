@@ -16,6 +16,7 @@ class CSVParserService {
             .schemaFor(Source::class.java)
             .withColumnSeparator(' ')
             .withLineSeparator(StringUtils.SPACE)
+            .withColumnReordering(true)
             .withArrayElementSeparator(",")
             .withHeader()
 

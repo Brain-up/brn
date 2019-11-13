@@ -4,6 +4,7 @@ import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
+import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,9 +29,9 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto()
+        val exerciseDtoMock = ExerciseDto(1, "name", "descr", 1, 1)
         val exerciseId = 1L
-        `when`(exerciseMock.toDtoWithoutTasks(true)).thenReturn(exerciseDtoMock)
+        `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
         `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong())).thenReturn(listOf(exerciseId))
         `when`(exerciseRepository.findAll()).thenReturn(listOf(exerciseMock))
@@ -38,16 +39,18 @@ internal class ExerciseServiceTest {
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(exerciseId)
         // THEN
         assertEquals(actualResult, listOf(exerciseDtoMock))
+        verify(exerciseRepository).findAll()
+        verify(studyHistoryRepository).getDoneExercisesIdList(anyLong())
     }
 
     @Test
     fun `should get exercises by user and series`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto()
+        val exerciseDtoMock = ExerciseDto(1, "name", "descr", 1, 1)
         val exerciseId = 1L
         val seriesId = 1L
-        `when`(exerciseMock.toDtoWithoutTasks(true)).thenReturn(exerciseDtoMock)
+        `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
         `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong(), anyLong())).thenReturn(listOf(exerciseId))
         `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exerciseMock))
@@ -55,18 +58,21 @@ internal class ExerciseServiceTest {
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(exerciseId, seriesId)
         // THEN
         assertEquals(actualResult, listOf(exerciseDtoMock))
+        verify(exerciseRepository).findExercisesBySeriesId(seriesId)
+        verify(studyHistoryRepository).getDoneExercisesIdList(anyLong(), anyLong())
     }
 
     @Test
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto()
-        `when`(exerciseMock.toDtoWithoutTasks()).thenReturn(exerciseDtoMock)
+        val exerciseDtoMock = ExerciseDto(1, "name", "descr", 1, 1)
+        `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN
         val actualResult: ExerciseDto = exerciseService.findExerciseById(1L)
         // THEN
         assertEquals(actualResult, exerciseDtoMock)
+        verify(exerciseRepository).findById(anyLong())
     }
 }

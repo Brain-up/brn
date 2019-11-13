@@ -31,13 +31,13 @@ our project skype chat: https://join.skype.com/jxSiWkgwT2x1
 # GETTING STARTED!
 ## RESOURCES
 ### DOCUMENTATION
-https://kb.epam.com/display/EPMCOSRINT/PROJECT+Recovery+brain+auditory+abilities
+https://kb.epam.com/display/EPMLABSBRN/Brn+project+documentation
 ### JIRA
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 ### JENKINS
-https://kb.epam.com/display/EPMCOSRINT/Jenkins
+https://kb.epam.com/pages/viewpage.action?pageId=885110636
 ### CODING STANDARDS
-https://kb.epam.com/display/EPMCOSRINT/Coding+standarts
+https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
 ### REQUISITES
@@ -74,7 +74,8 @@ To run docker use the following command:
 
 _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
-Alternatively, you can just replace the variables by "admin", the default user and password for development.
+Alternatively, you can just replace the variables by "admin", the default user and password for development:
+_docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11_
 
 ### GET THE BACKEND PROJECT RUNNING
 1. Run command 'gradle build' from main project folder to build project with tests.

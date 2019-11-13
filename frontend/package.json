@@ -12,12 +12,14 @@
   },
   "scripts": {
     "build": "ember build",
+    "test": "ember test",
+    "test:cover": "COVERAGE=true ember test --silent",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "start": "ember serve",
-    "test": "ember test",
-    "test-coverage": "COVERAGE=true ember test",
-    "on:precommit": "lint-staged"
+    "on:precommit": "lint-staged",
+    "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
+    "mirage": "ember s --environment=mirage"
   },
   "husky": {
     "hooks": {
@@ -51,7 +53,6 @@
     "@ember/optional-features": "^1.0.0",
     "babel-eslint": "^8.0.0",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-a11y": "^0.2.2",
     "ember-awesome-macros": "^5.0.1",
     "ember-cli": "~3.13.1",
     "ember-cli-app-version": "^3.2.0",
