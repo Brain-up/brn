@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - uses: mydea/ember-cli-code-coverage-action@v1.1
+      - uses: mydea/ember-cli-code-coverage-action@v1.1.0
         with:
           working-directory: ./frontend
           test-command: "yarn test:cover"
