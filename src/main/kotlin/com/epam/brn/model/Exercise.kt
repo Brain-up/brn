@@ -31,21 +31,13 @@ data class Exercise(
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val tasks: MutableSet<Task> = HashSet()
 ) {
-    fun toDtoWithTasks(available: Boolean? = null) = ExerciseDto(
+    fun toDto(available: Boolean? = null) = ExerciseDto(
         seriesId = series.id,
         id = id,
         name = name,
         description = description,
-        tasks = tasks.map { task -> task.toDto() }.toMutableSet(),
-        available = available
-    )
-
-    fun toDtoWithoutTasks(available: Boolean? = null) = ExerciseDto(
-        seriesId = series.id,
-        id = id,
-        name = name,
-        description = description,
-        available = available
+        available = available,
+        tasks = tasks.map { task -> task.id }.toMutableSet()
     )
 
     override fun equals(other: Any?): Boolean {

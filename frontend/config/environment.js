@@ -13,22 +13,31 @@ module.exports = function(environment) {
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
-        Date: false
-      }
+        Date: false,
+      },
     },
 
-    APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
-    }
+    APP: {},
+
+    BRN: {
+      API_HOST: 'https://localhost:8081',
+    },
   };
 
-  if (environment === 'development') {
+  if (environment === 'development' || environment === 'mirage') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV.APP.RUNLOOP_DEBUG = true;
+
+    if (environment === 'mirage') {
+      ENV['ember-cli-mirage'] = {
+        enabled: true,
+      };
+      ENV.BRN.API_HOST = undefined;
+    }
   }
 
   if (environment === 'test') {
