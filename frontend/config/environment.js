@@ -18,26 +18,15 @@ module.exports = function(environment) {
     },
 
     APP: {},
-
-    BRN: {
-      API_HOST: 'https://localhost:8081',
-    },
   };
 
-  if (environment === 'development' || environment === 'mirage') {
+  if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
     ENV.APP.RUNLOOP_DEBUG = true;
-
-    if (environment === 'mirage') {
-      ENV['ember-cli-mirage'] = {
-        enabled: true,
-      };
-      ENV.BRN.API_HOST = undefined;
-    }
   }
 
   if (environment === 'test') {
