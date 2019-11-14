@@ -10,4 +10,4 @@ RUN node node_modules/ember-cli/bin/ember deploy production
 
 FROM nginx
 
-COPY --from=build-front /build_app/tmp/deploy-dist/* /usr/share/nginx/html/
+COPY --from=build-front /build_app/tmp/deploy-dist /usr/share/nginx/html/
