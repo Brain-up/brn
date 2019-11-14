@@ -8,9 +8,7 @@ data class ExerciseDto(
     var description: String?,
     var level: Short? = 0,
     @JsonIgnore
-    var seriesId: Long? = null,
-    var tasks: MutableSet<TaskDto>? = HashSet(),
-    var available: Boolean? = null
-) {
-    constructor() : this(null, null, null, null, null, null)
-}
+    var seriesId: Long?,
+    var available: Boolean? = null,
+    var tasks: MutableSet<Long?> = HashSet()
+)
