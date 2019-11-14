@@ -1,13 +1,6 @@
-FROM java:8
+FROM gradle:jdk8
 
-RUN mkdir /brn
-
-WORKDIR brn
-
-RUN wget https://services.gradle.org/distributions/gradle-5.6.1-bin.zip -P /tmp
-
-RUN unzip -d /opt/gradle /tmp/gradle-*.zip
-
+WORKDIR /brn
 ADD . /brn
 
-RUN /opt/gradle/gradle-5.6.1/bin/gradle clean bootJar
+RUN gradle clean bootJar --no-daemon
