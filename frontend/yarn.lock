@@ -4825,6 +4825,13 @@ ember-awesome-macros@^5.0.1:
     ember-cli-string-utils "^1.1.0"
     ember-macro-helpers "^4.2.2"
 
+ember-bind-helper@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ember-bind-helper/-/ember-bind-helper-1.0.0.tgz#ec0080409336531625553a34e2d8297e824b43d7"
+  integrity sha512-O0lQPw3+nlf+mg7OnqxrC06dlg+GX+jvCAaodt7t2Q6lVqTty4GgNGCJ5ZEEBMP+ZJfJCApyLYw2b0jLkOuAKQ==
+  dependencies:
+    ember-cli-babel "^7.5.0"
+
 ember-cli-app-version@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-3.2.0.tgz#7b9ad0e1b63ae0518648356ee24c703e922bc26e"

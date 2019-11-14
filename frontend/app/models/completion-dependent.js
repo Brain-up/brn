@@ -21,7 +21,7 @@ export default Model.extend({
     },
   ),
   canInteractWith(child) {
-    const children = this.get('children');
+    const children = this.get('children') || [];
     const previousChildren = children.slice(0, children.indexOf(child));
     return (
       !previousChildren.length ||
