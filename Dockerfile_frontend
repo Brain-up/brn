@@ -9,5 +9,6 @@ RUN yarn
 RUN node node_modules/ember-cli/bin/ember deploy production
 
 FROM nginx
-
+COPY default.conf /etc/nginx/conf.d/
 COPY --from=build-front /build_app/tmp/deploy-dist /usr/share/nginx/html/
+
