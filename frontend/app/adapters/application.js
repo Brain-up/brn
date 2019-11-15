@@ -1,8 +1,7 @@
 import DS from 'ember-data';
-import ENV from 'brn/config/environment';
 
 export default DS.RESTAdapter.extend({
-  host: ENV.BRN.API_HOST,
+  namespace: 'api',
   coalesceFindRequests: false,
   shouldReloadRecord: () => false,
   shouldBackgroundReloadRecord: () => false,
