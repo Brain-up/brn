@@ -14,6 +14,7 @@
     "build": "ember build",
     "test": "ember test",
     "test:cover": "COVERAGE=true ember test --silent",
+    "test-coverage": "COVERAGE=true ember test --silent",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "start": "ember serve",
