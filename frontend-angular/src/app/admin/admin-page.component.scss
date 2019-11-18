@@ -1,0 +1,14 @@
+.main {
+  margin: auto;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid silver;
+  width: 400px;
+  height: 200px;
+
+  & button:not(:last-child) {
+    margin-right: 10px;
+  }
+}

@@ -1,0 +1,20 @@
+<form class="upload-tasks-content" [formGroup]="tasksGroup">
+  <mat-form-field>
+    <mat-label>Group</mat-label>
+    <mat-select formControlName="group">
+      <mat-option *ngFor="let group of groups$ | async" [value]="group">
+        {{group.name}}
+      </mat-option>
+      <mat-error *ngIf="tasksGroup.controls.group.hasError('required')">Please, choose a group</mat-error>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Series</mat-label>
+    <mat-select [disabled]="!tasksGroup.controls.group.valid">
+      <mat-option *ngIf="series$ | async as serie" [value]="serie">
+        {{serie.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <app-upload-file [disabled]="!tasksGroup.controls.serie.valid"></app-upload-file>
+</form>

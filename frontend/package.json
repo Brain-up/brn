@@ -31,7 +31,7 @@
   "lint-staged": {
     "./{app,tests,config}/**/*.{js,ts,json}": [
       "node ./node_modules/prettier/bin-prettier.js --write",
-      "node ./node_modules/.bin/eslint --fix",
+      "eslint --fix",
       "git add"
     ],
     "./{app,tests}/**/*.hbs": [
@@ -40,7 +40,7 @@
     ],
     "./{app,tests,config}/**/*.{css}": [
       "node ./node_modules/prettier/bin-prettier.js --write",
-      "node ./node_modules/.bin/stylelint --fix",
+      "stylelint --fix",
       "git add"
     ]
   },
