@@ -8,7 +8,6 @@ RUN yarn
 
 RUN node node_modules/ember-cli/bin/ember deploy production
 
-
 COPY frontend-angular/ /build_app_angular/
 
 WORKDIR /build_app_angular/
@@ -18,8 +17,7 @@ RUN npm install
 RUN npm run build
 
 FROM nginx
-
-COPY --from=build-front /build_app/tmp/deploy-dist/* /usr/share/nginx/html/
-
+COPY default.conf /etc/nginx/conf.d/
+COPY --from=build-front /build_app/tmp/deploy-dist /usr/share/nginx/html/
 COPY --from=build-front /build_app_angular/dist/frontend-angular/* /usr/share/nginx/html/admin/
 
