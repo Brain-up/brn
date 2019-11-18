@@ -25,7 +25,8 @@
             "aot": false,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {"glob": "**/*", "input": "../api-contract/samples", "output": "api"}
             ],
             "styles": [
               "src/styles.scss"

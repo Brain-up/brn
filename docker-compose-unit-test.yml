@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: admin
   brn-test:
     container_name: brn-test
-    command: ./gradlew clean test
+    command: gradle clean test --no-daemon
     build:
       context: .
       dockerfile: Dockerfile_test
