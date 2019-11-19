@@ -48,7 +48,7 @@ class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository)
             Resource(audioFileUrl = "", word = "сад", pictureFileUrl = "", soundsCount = 1)
 
         val group1 = ExerciseGroup(name = "Речевые упражения", description = "речевые упражения")
-        val group2 = ExerciseGroup(name = "Нереечевые упражения", description = "неречевые упражения")
+        val group2 = ExerciseGroup(name = "Неречевые упражения", description = "неречевые упражения")
         val series1 =
             Series(name = "распознование слов", description = "распознование слов", exerciseGroup = group2)
         val series2 =
