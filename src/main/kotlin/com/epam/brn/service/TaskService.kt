@@ -27,11 +27,11 @@ class TaskService(private val taskRepository: TaskRepository) {
         return tasks.map { task -> task.toDto() }
     }
 
+    @CacheEvict("tasks")
     fun save(task: Task): Task {
         return taskRepository.save(task)
     }
 
-    @CacheEvict("tasks")
     fun getTaskById(taskId: Long): TaskDto {
         log.debug("Searching task with id=$taskId")
         return taskRepository.findById(taskId)
