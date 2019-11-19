@@ -7,8 +7,6 @@ export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
   lastAnswer = null;
 
-  onFinished() {}
-
   didReceiveAttrs() {
     this.shuffle();
     this.set('lastAnswer', null);
@@ -30,7 +28,6 @@ export default class TaskPlayerComponent extends Component {
       }
     } else {
       this.task.savePassed();
-      this.onRightAnswer();
     }
   }
 }

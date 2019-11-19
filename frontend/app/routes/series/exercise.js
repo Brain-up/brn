@@ -8,7 +8,11 @@ export default checkInteractionRoute.extend({
   async afterModel(exercise, { to }) {
     this._super(...arguments);
     await this.store.query('task', { exerciseId: exercise.id });
-    if (to.name.endsWith('exercise.index') && exercise.tasks.firstObject) {
+    if (
+      to.name.endsWith('exercise.index') &&
+      exercise.tasks.firstObject &&
+      !to.paramNames.includes('task_id')
+    ) {
       this.transitionTo('series.exercise.task', exercise.tasks.firstObject);
     }
   },

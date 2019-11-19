@@ -10,14 +10,14 @@
     👍 Верно!
     <br />
     <br />
-    {{#if (not (and @lastTask @lastExercise))}}
+    {{#if (not @task.isLastTask)}}
       <button
         data-test-next-task-button
         autofocus
         class="c-button u-small"
-        onclick={{action this.onFinished}}
+        onclick={{if @task.isCompleted (action this.onRightAnswer)}}
       >
-        {{if @lastTask "Перейти к следующему упражнению »" "Далee »"}}
+        Далee »
       </button>
     {{/if}}
   </p>
