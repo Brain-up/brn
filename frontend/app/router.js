@@ -14,6 +14,7 @@ Router.map(function() {
   });
   this.route('groups', function() {});
   this.route('group', { path: 'groups/:group_id' });
+  this.route('not-accessable');
 });
 
 export default Router;

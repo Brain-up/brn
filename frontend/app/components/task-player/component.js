@@ -7,8 +7,6 @@ export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
   lastAnswer = null;
 
-  onFinished() {}
-
   didReceiveAttrs() {
     this.shuffle();
     this.set('lastAnswer', null);
@@ -19,6 +17,8 @@ export default class TaskPlayerComponent extends Component {
     this.notifyPropertyChange('shuffledWords');
   }
 
+  onRightAnswer() {}
+
   handleSubmit(word) {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {
@@ -26,6 +26,8 @@ export default class TaskPlayerComponent extends Component {
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
+    } else {
+      this.task.savePassed();
     }
   }
 }

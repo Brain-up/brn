@@ -16,8 +16,10 @@ module('Integration | Component | task-player', function(hooks) {
         order: '1',
         word: 'бал',
         words: ['бал', 'бум', 'быль'],
+        exercise: store.createRecord('exercise'),
       }),
     );
+
     await render(hbs`
     <TaskPlayer
       @task={{this.model}}/>
@@ -40,15 +42,17 @@ module('Integration | Component | task-player', function(hooks) {
     assert.notDeepEqual(order, newOrder);
   });
 
-  test('shows notification if answer is right and calls onFinished', async function(assert) {
+  test('shows notification if answer is right and calls onRightAnswer', async function(assert) {
     assert.expect(2);
-    this.set('onFinished', function() {
-      assert.ok(true, 'calls onFinished');
+    const store = this.owner.lookup('service:store');
+    this.model.exercise.set('tasks', [this.model, store.createRecord('task')]);
+    this.set('onRightAnswer', function() {
+      assert.ok(true, 'calls onRightAnswer');
     });
 
     await render(hbs`
       <TaskPlayer
-        @onFinished={{this.onFinished}}
+        @onRightAnswer={{this.onRightAnswer}}
         @task={{this.model}}/>
       `);
 
