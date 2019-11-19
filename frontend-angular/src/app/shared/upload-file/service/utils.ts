@@ -12,16 +12,14 @@ export const upload: (files: Set<File>) => (httpClient: HttpClient) => (url: str
     });
     const progress$ = new Subject<number>();
     httpClient.request(req).subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        const percentDone = Math.round(100 * event.loaded / event.total);
-        progress$.next(percentDone);
-      } else if (event instanceof HttpResponse) {
-        progress$.complete();
-      }
-    }, err => {
-      console.log('making progress$ errrrr: %O', err);
-      progress$.error(err);
-    });
+        if (event.type === HttpEventType.UploadProgress) {
+          const percentDone = Math.round(100 * event.loaded / event.total);
+          progress$.next(percentDone);
+        } else if (event instanceof HttpResponse) {
+          progress$.complete();
+        }
+      }, err => progress$.error(err)
+    );
     status[file.name] = {
       progress: progress$.asObservable()
     };
