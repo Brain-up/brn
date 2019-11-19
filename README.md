@@ -108,7 +108,12 @@ Alternatively, use daemon mode (no console output):
 ```bash
 docker-compose -d up --build
 ```
-REST API will be accessible at http://localhost:8081/swagger-ui.html 
+REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
+
+docker useful command:
+docker ps -a -q for show all containers
+docker stop idContainer for stop running container
+docker rm $(docker ps -a -q) Remove all stopped containers
 
 ## DEVELOPMENT PROCESS
 1. Get a task assigned in JIRA.
