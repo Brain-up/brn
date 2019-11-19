@@ -2,9 +2,17 @@ import {ChangeDetectionStrategy, Component, OnInit, Self} from '@angular/core';
 import {UPLOAD_DESTINATION, UploadService} from '../../../shared/upload-file/service/upload.service';
 import {fold, fromNullable} from 'fp-ts/lib/Option';
 import {pipe} from 'fp-ts/lib/pipeable';
-import {forkJoin, noop, Observable, throwError} from 'rxjs';
+import {forkJoin, noop, Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
+
+function showHappySnackbar(message: string) {
+  this.snackbar.open(message, ' 😊 ', {duration: 2000});
+}
+
+function showSadSnackbar(err: { message: string }) {
+  this.snackbar.open(err.message, ' 😪 ', {duration: 2000});
+}
 
 @Component({
   selector: 'app-load-file',
@@ -38,15 +46,8 @@ export class LoadFileComponent implements OnInit {
   private processUploadResults(fileInfo: { [key: string]: { progress: Observable<number> } }) {
     forkJoin(Object.values(fileInfo).map(({progress}) => progress))
       .pipe(
-        tap(_ => this.snackbar.open(`${Object.keys(fileInfo).join(',')} was successfully uploaded`, ' 😊 ', {
-          duration: 2000
-        })),
-        catchError(err => {
-          this.snackbar.open(err.message, ' 😪 ', {
-            duration: 2000
-          });
-          return throwError(err);
-        })
+        tap(showHappySnackbar.bind(this, `${Object.keys(fileInfo).join(',')} was successfully uploaded`)),
+        catchError(showSadSnackbar.bind(this))
       )
       .subscribe();
   }
