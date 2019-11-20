@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 const { attr, belongsTo } = DS;
-import { tag, isEmpty } from 'ember-awesome-macros';
+import { isEmpty } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import CompletionDependent from './completion-dependent';
@@ -11,7 +11,7 @@ export default class Task extends CompletionDependent.extend({
   name: attr('string'),
   word: attr('string'),
   order: attr('number'),
-  audioFileId: attr('string'),
+  audioFileUrl: attr('string'),
   words: attr('array'),
   exercise: belongsTo('exercise', { async: true }),
   tasksManager: service(),
@@ -41,6 +41,4 @@ export default class Task extends CompletionDependent.extend({
   savePassed() {
     return this.tasksManager.saveAsCompleted(this);
   },
-
-  audioFileUrl: tag`/audio/${'audioFileId'}`,
 }) {}
