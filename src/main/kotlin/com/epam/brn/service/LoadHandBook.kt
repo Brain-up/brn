@@ -129,7 +129,7 @@ class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository)
         task12.answerOptions.addAll(setOf(resource11, resource13, resource14, resource15, resource16))
         exercise1.tasks.addAll(listOf(task11, task12))
 
-        series1.exercises.addAll(listOf(exercise1, exercise2, exercise3, exercise4, exercise5, exercise6, exercise7, exercise8, exercise9))
+        series1.exercises.addAll(linkedSetOf(exercise1, exercise2, exercise3, exercise4, exercise5, exercise6, exercise7, exercise8, exercise9))
 
         group2.series.addAll(listOf(series1, series2))
         exerciseGroupRepository.saveAll(listOf(group1, group2))
