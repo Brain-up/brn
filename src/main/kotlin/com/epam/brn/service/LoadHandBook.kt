@@ -6,7 +6,6 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.SeriesRepository
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
@@ -14,8 +13,7 @@ import org.springframework.stereotype.Service
 
 @Service
 @Profile("dev", "prod")
-class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository,
-                   private val seriesRepository: SeriesRepository) {
+class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository) {
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
@@ -51,6 +49,7 @@ class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository,
 
         val group1 = ExerciseGroup(name = "Неречевые упражения", description = "неречевые упражения")
         val group2 = ExerciseGroup(name = "Речевые упражения", description = "речевые упражения")
+
         val series1 =
             Series(name = "Распознование слов", description = "распознование слов", exerciseGroup = group2)
         val series2 =

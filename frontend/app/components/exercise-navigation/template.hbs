@@ -13,6 +13,7 @@
         putActiveAttr=true
         class="c-pagination__control"
         data-test-pagination-link-number=task.order
+        disabled=(not task.canInteract)
       }}
         {{task.order}}
       {{/link-to}}

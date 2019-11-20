@@ -12,13 +12,13 @@ export class AdminService {
   }
 
   getGroups(): Observable<Group[]> {
-    return this.httpClient.get<{ data: Group[] }>('/api/groups.json').pipe(
+    return this.httpClient.get<{ data: Group[] }>('/api/groups').pipe(
       pluck('data'),
     );
   }
 
-  getSeries(): Observable<Series> {
-    return this.httpClient.get<{ data: Series }>('/api/series.json').pipe(
+  getSeriesByGroupId(groupId: string): Observable<Series[]> {
+    return this.httpClient.get<{ data: Series[] }>('/api/series', {params: {groupId}}).pipe(
       pluck('data')
     );
   }
