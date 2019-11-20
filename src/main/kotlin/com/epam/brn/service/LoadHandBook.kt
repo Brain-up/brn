@@ -47,12 +47,13 @@ class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository)
         val resource26 =
             Resource(audioFileUrl = "", word = "сад", pictureFileUrl = "", soundsCount = 1)
 
-        val group1 = ExerciseGroup(name = "Речевые упражения", description = "речевые упражения")
-        val group2 = ExerciseGroup(name = "Неречевые упражения", description = "неречевые упражения")
+        val group1 = ExerciseGroup(name = "Неречевые упражения", description = "неречевые упражения")
+        val group2 = ExerciseGroup(name = "Речевые упражения", description = "речевые упражения")
+
         val series1 =
-            Series(name = "распознование слов", description = "распознование слов", exerciseGroup = group2)
+            Series(name = "Распознование слов", description = "распознование слов", exerciseGroup = group2)
         val series2 =
-            Series(name = "диахоничкеское слушание", description = "диахоничкеское слушание", exerciseGroup = group2)
+            Series(name = "Диахоничкеское слушание", description = "диахоничкеское слушание", exerciseGroup = group2)
 
         // ============ exercise ==========
         val exercise1 = Exercise(
@@ -126,13 +127,11 @@ class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository)
             correctAnswer = resource12
         )
         task12.answerOptions.addAll(setOf(resource11, resource13, resource14, resource15, resource16))
-        exercise1.tasks.addAll(setOf(task11, task12))
+        exercise1.tasks.addAll(listOf(task11, task12))
 
-        series1.exercises.addAll(setOf(exercise1, exercise2, exercise3))
-        series1.exercises.addAll(setOf(exercise4, exercise5, exercise6))
-        series1.exercises.addAll(setOf(exercise7, exercise8, exercise9))
+        series1.exercises.addAll(listOf(exercise1, exercise2, exercise3, exercise4, exercise5, exercise6, exercise7, exercise8, exercise9))
 
-        group2.series.addAll(setOf(series1, series2))
-        exerciseGroupRepository.saveAll(setOf(group1, group2))
+        group2.series.addAll(listOf(series1, series2))
+        exerciseGroupRepository.saveAll(listOf(group1, group2))
     }
 }
