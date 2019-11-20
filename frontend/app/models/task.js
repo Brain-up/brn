@@ -11,7 +11,6 @@ export default class Task extends CompletionDependent.extend({
   name: attr('string'),
   word: attr('string'),
   order: attr('number'),
-  audioFileId: attr('string'),
   audioFileUrl: attr('string'),
   words: attr('array'),
   exercise: belongsTo('exercise', { async: true }),
