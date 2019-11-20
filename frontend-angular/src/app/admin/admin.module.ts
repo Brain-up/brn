@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AdminPageComponent} from './admin-page.component';
-import {MatButtonModule} from '@angular/material';
+import {MatButtonModule, MatIconModule, MatSnackBarModule} from '@angular/material';
 import {RouterModule} from '@angular/router';
 import {LoadFileComponent} from './components/load-file/load-file.component';
 import {LoadTasksComponent} from './components/load-tasks/load-tasks.component';
@@ -11,9 +11,11 @@ import {SharedModule} from '../shared/shared.module';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {HttpClientModule} from '@angular/common/http';
+import {UploadFileModule} from '../shared/upload-file/upload-file.module';
+import {HomeComponent} from './components/home/home.component';
 
 @NgModule({
-  declarations: [AdminPageComponent, LoadFileComponent, LoadTasksComponent],
+  declarations: [AdminPageComponent, LoadFileComponent, LoadTasksComponent, HomeComponent],
   exports: [AdminPageComponent],
   imports: [
     CommonModule,
@@ -21,18 +23,34 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     RouterModule.forChild([
       {
+        path: '',
+        component: HomeComponent,
+        data: {
+          animation: 'Admin'
+        }
+      },
+      {
         path: LOAD_FILE_PATH,
-        component: LoadFileComponent
+        component: LoadFileComponent,
+        data: {
+          animation: 'LoadAll'
+        }
       },
       {
         path: LOAD_TASKS_FILE,
-        component: LoadTasksComponent
+        component: LoadTasksComponent,
+        data: {
+          animation: 'LoadTasks'
+        }
       }
     ]),
+    UploadFileModule,
     MatButtonModule,
     SharedModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule,
+    MatIconModule
   ]
 })
 export class AdminModule {

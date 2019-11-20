@@ -6,7 +6,10 @@ import {AdminPageComponent} from './admin/admin-page.component';
 const routes: Routes = [
   {
     path: '',
-    component: AdminPageComponent
+    component: AdminPageComponent,
+    data: {
+      animation: 'Admin'
+    }
   }
 ];
 
