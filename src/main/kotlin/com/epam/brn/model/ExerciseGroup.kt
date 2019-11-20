@@ -25,7 +25,7 @@ data class ExerciseGroup(
     @Column
     val description: String? = "",
     @OneToMany(mappedBy = "exerciseGroup", cascade = [(CascadeType.ALL)])
-    val series: MutableList<Series> = ArrayList()
+    val series: MutableSet<Series> = LinkedHashSet()
 ) {
     fun toDto() = ExerciseGroupDto(
         id = id,

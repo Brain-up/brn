@@ -29,7 +29,7 @@ data class Exercise(
     @JoinColumn(name = "exercise_series_id")
     var series: Series,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val tasks: MutableList<Task> = ArrayList()
+    val tasks: MutableSet<Task> = LinkedHashSet()
 ) {
     fun toDto(available: Boolean? = null) = ExerciseDto(
         seriesId = series.id,
