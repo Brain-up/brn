@@ -20,7 +20,7 @@ data class ExerciseGroup(
         allocationSize = 50
     )
     val id: Long? = null,
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val name: String,
     @Column
     val description: String? = "",
