@@ -13,7 +13,7 @@ export default ApplicationSerializer.extend({
       ...hash,
       words: hash.answerOptions.mapBy('word').concat(hash.correctAnswer.word),
       word: hash.correctAnswer.word,
-      audioFileUrl: hash.correctAnswer.audioFileUrl,
+      audioFileUrl: '/audio/' + hash.correctAnswer.audioFileUrl,
     };
     return this._super(typeClass, hash);
   },
