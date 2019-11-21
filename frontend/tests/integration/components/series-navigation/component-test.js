@@ -4,7 +4,7 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import pageObject from './test-support/page-object';
 
-const TEST_EXERCISE_NAMES = ['Type1', 'Type2'];
+const TEST_EXERCISE_NAMES = ['Type 1', 'Type 2'];
 
 module('Integration | Component | series-navigation', function(hooks) {
   setupRenderingTest(hooks);
@@ -17,6 +17,7 @@ module('Integration | Component | series-navigation', function(hooks) {
         store.createRecord('exercise', {
           name,
           id: index,
+          order: TEST_EXERCISE_NAMES.length - index,
           tasks: [
             store.createRecord('task', [
               {
@@ -35,6 +36,10 @@ module('Integration | Component | series-navigation', function(hooks) {
   });
 
   test('renders all exercises', async function(assert) {
-    assert.equal(pageObject.linksAmount, TEST_EXERCISE_NAMES.length);
+    assert.equal(pageObject.links.length, 2);
+  });
+
+  test('renders according to order', async function(assert) {
+    assert.deepEqual(pageObject.links.mapBy('text'), ['Type 2', 'Type 1']);
   });
 });
