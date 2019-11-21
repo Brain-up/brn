@@ -20,12 +20,12 @@ data class ExerciseGroup(
         allocationSize = 50
     )
     val id: Long? = null,
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val name: String,
     @Column
     val description: String? = "",
     @OneToMany(mappedBy = "exerciseGroup", cascade = [(CascadeType.ALL)])
-    val series: MutableSet<Series> = HashSet()
+    val series: MutableSet<Series> = LinkedHashSet()
 ) {
     fun toDto() = ExerciseGroupDto(
         id = id,

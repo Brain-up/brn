@@ -42,11 +42,29 @@ a.active {
 }
 
 a {
-  color: #7a7ab7;
+  color: #6868a5;
   text-decoration: none;
 }
 
 .breadcrumbs-container {
   width: 100%;
   padding: 15px 0;
+}
+
+a[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.not-accessable {
+  text-align: center;
+  width: 100%;
+}
+
+.not-accessable > * {
+  display: block;
+}
+
+.not-accessable h5 {
+  margin-top: 0;
 }

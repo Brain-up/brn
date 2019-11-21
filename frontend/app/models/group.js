@@ -1,8 +1,9 @@
 import DS from 'ember-data';
-const { Model, attr, hasMany } = DS;
+const { attr, hasMany } = DS;
+import CompletionDependent from './completion-dependent';
 
-export default Model.extend({
+export default class Group extends CompletionDependent.extend({
   name: attr('string'),
   description: attr('string'),
   series: hasMany('series', { async: true }),
-});
+}) {}

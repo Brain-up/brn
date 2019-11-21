@@ -19,5 +19,5 @@ RUN npm run build
 FROM nginx
 COPY default.conf /etc/nginx/conf.d/
 COPY --from=build-front /build_app/tmp/deploy-dist /usr/share/nginx/html/
-COPY --from=build-front /build_app_angular/dist/frontend-angular/* /usr/share/nginx/html/admin/
+COPY --from=build-front /build_app_angular/dist/frontend-angular /usr/share/nginx/html/admin/
 

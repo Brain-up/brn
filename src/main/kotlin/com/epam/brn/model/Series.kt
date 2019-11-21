@@ -23,7 +23,7 @@ data class Series(
         allocationSize = 50
     )
     val id: Long? = null,
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val name: String,
     @Column
     val description: String,
@@ -31,7 +31,7 @@ data class Series(
     @JoinColumn(name = "exercise_group_id")
     val exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val exercises: MutableSet<Exercise> = HashSet()
+    val exercises: MutableSet<Exercise> = LinkedHashSet()
 ) {
     fun toDto() = SeriesDto(
         exerciseGroupId = exerciseGroup.id,

@@ -1,3 +1,4 @@
 <TaskPlayer
-  @onFinished={{transition-to "series.exercise.task" (next this.model this.model.exercise.tasks)}}
-  @task={{this.model}}/>
+  @onRightAnswer={{transition-to "series.exercise.task" this.model.nextTask}}
+  @task={{this.model}}
+/>
