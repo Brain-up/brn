@@ -6,6 +6,7 @@ export default checkInteractionRoute.extend({
   },
 
   async afterModel(exercise, { to }) {
+    this._super(...arguments);
     await this.store.query('task', { exerciseId: exercise.id });
     if (
       to.name.endsWith('exercise.index') &&
