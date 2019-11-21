@@ -3,7 +3,7 @@
 </h2>
 <nav>
   <ol class="series-nav__exercies-list" data-test-series-navigation-list>
-    {{#each (sort-by "order" @series.exercises) as |exercise|}}
+    {{#each (sort-by "order" "id" @series.exercises) as |exercise|}}
       <li class="">
         {{#link-to
           "series.exercise"
