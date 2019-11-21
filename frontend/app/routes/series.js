@@ -1,15 +1,19 @@
 import checkInteractionRoute from './check-interaction';
 
 export default checkInteractionRoute.extend({
-  model({ series_id }) {
-    return this.store.findRecord('series', series_id);
+  async model({ series_id }) {
+    const series = this.store.findRecord('series', series_id);
+    if (!series.group) {
+      await this.store.findAll('group');
+    }
+    return series;
   },
 
   async afterModel(series, { to }) {
     this._super(...arguments);
     await this.store.query('exercise', { seriesId: series.id });
-    if (to.name === 'series.index' && series.exercises.firstObject) {
-      this.transitionTo('series.exercise', series.exercises.firstObject);
+    if (to.name === 'series.index' && series.sortedChildren.firstObject) {
+      this.transitionTo('series.exercise', series.sortedChildren.firstObject);
     }
   },
 });

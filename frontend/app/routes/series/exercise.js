@@ -6,14 +6,16 @@ export default checkInteractionRoute.extend({
   },
 
   async afterModel(exercise, { to }) {
-    this._super(...arguments);
     await this.store.query('task', { exerciseId: exercise.id });
     if (
       to.name.endsWith('exercise.index') &&
-      exercise.tasks.firstObject &&
+      exercise.sortedChildren.firstObject &&
       !to.paramNames.includes('task_id')
     ) {
-      this.transitionTo('series.exercise.task', exercise.tasks.firstObject);
+      this.transitionTo(
+        'series.exercise.task',
+        exercise.sortedChildren.firstObject,
+      );
     }
   },
 });

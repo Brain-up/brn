@@ -3,18 +3,20 @@
 </h2>
 <nav>
   <ol class="series-nav__exercies-list">
-    {{#each @series.exercises as |exercise|}}
-      <li class="">
-        {{#link-to
-          "series.exercise"
-          exercise
-          data-test-series-navigation-list-link
-          data-test-series-navigation-list-link-id=exercise.id
-          class="series-nav__exercies-link"
-          disabled=(not exercise.canInteract)
-        }}
-          {{capitalize exercise.name}}
-        {{/link-to}}
+    {{#each (sort-by "order" "id" @series.sortedChildren) as |exercise|}}
+      <li>
+        {{#let exercise.sortedChildren.firstObject as |firstTask|}}
+          {{#link-to
+            (if firstTask "series.exercise.task" "series.exercise")
+            (if firstTask exercise.sortedChildren.firstObject exercise)
+            data-test-series-navigation-list-link
+            data-test-series-navigation-list-link-id=exercise.id
+            class="series-nav__exercies-link"
+            disabled=(not exercise.canInteract)
+          }}
+            {{capitalize exercise.name}}
+          {{/link-to}}
+        {{/let}}
       </li>
     {{/each}}
   </ol>

@@ -6,13 +6,20 @@ import { inject as service } from '@ember/service';
 export default Model.extend({
   tasksManager: service(),
   canInteract: computed(
-    'tasksManager.completedTasks.[]',
+    'previousSiblings.[]',
     'parent.children.@each.isCompleted',
+    'tasksManager.completedTasks.[]',
     function() {
-      const parent = this.parent.content || this.parent;
-      return parent.canInteractWith.apply(this.parent, [this]);
+      return (
+        !this.previousSiblings.length ||
+        this.previousSiblings.every((sibling) => sibling.isCompleted)
+      );
     },
   ),
+  sortChildrenBy: 'id',
+  sortedChildren: computed('children.[]', function() {
+    return this.children ? this.children.sortBy(this.sortChildrenBy) : null;
+  }),
   isCompleted: computed(
     'tasksManager.completedTasks.[]',
     'children.@each.isCompleted',
@@ -20,12 +27,11 @@ export default Model.extend({
       return this.get('children').every((child) => child.isCompleted);
     },
   ),
-  canInteractWith(child) {
-    const children = this.get('children') || [];
-    const previousChildren = children.slice(0, children.indexOf(child));
-    return (
-      !previousChildren.length ||
-      previousChildren.every((previousChild) => previousChild.isCompleted)
-    );
-  },
+  isFirst: computed(function() {
+    return !this.previousSiblings.length;
+  }),
+  previousSiblings: computed('parent.sortedChildren.[]', function() {
+    const allSiblings = this.parent.get('sortedChildren') || [];
+    return allSiblings.slice(0, allSiblings.indexOf(this));
+  }),
 });

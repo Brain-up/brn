@@ -5,5 +5,5 @@ import CompletionDependent from './completion-dependent';
 export default class Group extends CompletionDependent.extend({
   name: attr('string'),
   description: attr('string'),
-  series: hasMany('series', { async: true }),
+  series: hasMany('series', { async: false }),
 }) {}
