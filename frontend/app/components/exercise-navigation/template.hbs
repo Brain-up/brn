@@ -5,20 +5,21 @@
         {{#each (sort-by "order:desc" @tasks) as |task index|}}
           <li
             class="tasks-pagination-item
-              {{if task.isCompleted " tasks-pagination-item--right"}}
-
               {{if task.nextAttempt " tasks-pagination-item--next-attempt"}}"
-            style={{concat
-              "width: calc(100% - 36px*"
-              index
-              ");"
-              (if
-                task.isCompleted
-                (concat
-                  "transform: translateX(calc(100% - 36px*" task.order "));"
+            style={{html-safe
+              (concat
+                "width: calc(100% - 36px*"
+                index
+                ");"
+                (if
+                  task.isCompleted
+                  (concat
+                    "transform: translateX(calc(100% - 36px*" task.order "));"
+                  )
                 )
               )
             }}
+            {{! template-lint-configure no-inline-styles false }}
           >
             {{#link-to
               data-test-pagination-link
