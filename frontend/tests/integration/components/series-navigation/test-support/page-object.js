@@ -1,7 +1,9 @@
-import { create, count } from 'ember-cli-page-object';
+import { create, collection, text } from 'ember-cli-page-object';
 
 const page = create({
-  linksAmount: count('[data-test-series-navigation-list-link]'),
+  links: collection('[data-test-series-navigation-list-link]', {
+    text: text(),
+  }),
 });
 
 export default page;

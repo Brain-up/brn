@@ -2,9 +2,9 @@
   {{capitalize @series.name}}
 </h2>
 <nav>
-  <ol class="series-nav__exercies-list">
-    {{#each (sort-by "order" "id" @series.sortedChildren) as |exercise|}}
-      <li>
+  <ol class="series-nav__exercies-list" data-test-series-navigation-list>
+    {{#each (sort-by "order" "id" @series.exercises) as |exercise|}}
+      <li class="">
         {{#let exercise.sortedChildren.firstObject as |firstTask|}}
           {{#link-to
             (if firstTask "series.exercise.task" "series.exercise")
