@@ -45,14 +45,21 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
 
     private fun convertCorrectAnswer(source: TaskCsv, target: Task) {
         val word = source.word
-        val fileName = source.fileName
-        val resources = resourceService.findByWordAndAudioFileUrlLike(word, fileName)
+        val audioFileName = source.audioFileName
+        val resources = resourceService.findByWordAndAudioFileUrlLike(word, audioFileName)
+
+        val correctAnswer: Resource
 
         if (CollectionUtils.isEmpty(resources)) {
-            target.correctAnswer = createAndGetResource(word, fileName)
+            correctAnswer = createAndGetResource(word, audioFileName, source.pictureFileName)
         } else {
-            target.correctAnswer = resources[0]
+            correctAnswer = resources[0]
+            correctAnswer.pictureFileUrl = source.pictureFileName
+
+            resourceService.save(correctAnswer)
         }
+
+        target.correctAnswer = correctAnswer
     }
 
     private fun convertAnswers(source: TaskCsv, target: Task) {
@@ -67,20 +74,24 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
         val resources = resourceService.findByWordLike(word)
 
         if (CollectionUtils.isEmpty(resources)) {
-            return createAndGetResource(word, StringUtils.EMPTY)
+            return createAndGetResource(word, StringUtils.EMPTY, StringUtils.EMPTY)
         }
 
         return resources[0]
     }
 
-    private fun createAndGetResource(word: String, fileName: String): Resource {
+    private fun createAndGetResource(word: String, audioFileName: String, pictureFileName: String): Resource {
         val resource = Resource()
         resource.word = word
 
-        if (StringUtils.isNotEmpty(fileName)) {
-            resource.audioFileUrl = fileName
+        if (StringUtils.isNotEmpty(audioFileName)) {
+            resource.audioFileUrl = audioFileName
         } else {
             resource.audioFileUrl = defaultAudioFileUrl.format(word)
+        }
+
+        if (StringUtils.isNotEmpty(pictureFileName)) {
+            resource.pictureFileUrl = pictureFileName
         }
 
         resourceService.save(resource)
