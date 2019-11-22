@@ -1,2 +1,2 @@
-exerciseId orderNumber word fileName words
-1 1 бал no_noise/бал.mp3 (бум,быль,боль,зал,мал)
+exerciseId orderNumber word audioFileName pictureFileName words
+1 1 бал no_noise/бал.mp3 pictures/бал.png (бум,быль,боль,зал,мал)
