@@ -20,6 +20,7 @@
     "start": "ember serve",
     "on:precommit": "lint-staged",
     "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
+    "remote": "ember s --secure-proxy=false --proxy=http://ecse005003f1.epam.com/",
     "mirage": "ember s"
   },
   "husky": {
