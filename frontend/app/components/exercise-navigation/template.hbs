@@ -1,24 +1,39 @@
-<nav class="c-pagination">
+<nav class="c-pagination c-pagination--tasks">
   <div class="c-pagination__pages tasks-pages-pagination">
-    {{#each (sort-by "order" @tasks) as |task index|}}
-      {{#if (eq 0 index)}}
-        <span class="tasks-pages-pagination__name">
-          Задачи:
-        </span>
-      {{/if}}
-      {{#link-to
-        data-test-pagination-link
-        "series.exercise.task"
-        task
-        putActiveAttr=true
-        class="c-pagination__control"
-        data-test-pagination-link-number=task.order
-        disabled=(not task.canInteract)
-      }}
-        {{task.order}}
-      {{/link-to}}
+    {{#if @tasks.length}}
+      <ul class="clearfix">
+        {{#each (sort-by "order:desc" @tasks) as |task index|}}
+          <li
+            class="tasks-pagination-item
+              {{if task.isCompleted " tasks-pagination-item--right"}}
+
+              {{if task.nextAttempt " tasks-pagination-item--next-attempt"}}"
+            style={{concat
+              "width: calc(100% - 36px*"
+              index
+              ");"
+              (if
+                task.isCompleted
+                (concat
+                  "transform: translateX(calc(100% - 36px*" task.order "));"
+                )
+              )
+            }}
+          >
+            {{#link-to
+              data-test-pagination-link
+              "series.exercise.task"
+              task
+              putActiveAttr=true
+              class=(concat "c-pagination__control")
+              data-test-pagination-link-number=task.order
+              disabled=(not task.canInteract)
+            }}{{/link-to}}
+          </li>
+        {{/each}}
+      </ul>
     {{else}}
       Пока в этом упражнении нет задач 🤷‍♂️
-    {{/each}}
+    {{/if}}
   </div>
 </nav>
