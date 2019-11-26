@@ -20,7 +20,7 @@ export default class Task extends CompletionDependent.extend({
     return this.tasksManager.isCompleted(this);
   }),
   nextTaskSameExersise: computed('exercise.tasks.[]', function() {
-    return arrayNext(this, this.exercise.get('tasks'));
+    return arrayNext(this, this.exercise.content.get('sortedChildren'));
   }),
   firstTaskNextExersise: computed('exercise.tasks.[]', function() {
     const siblingExercises = this.exercise.get('series.exercises');

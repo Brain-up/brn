@@ -16,7 +16,7 @@ export default Model.extend({
       );
     },
   ),
-  sortChildrenBy: 'id',
+  sortChildrenBy: 'order',
   sortedChildren: computed('children.[]', function() {
     return this.children ? this.children.sortBy(this.sortChildrenBy) : null;
   }),
@@ -24,7 +24,10 @@ export default Model.extend({
     'tasksManager.completedTasks.[]',
     'children.@each.isCompleted',
     function() {
-      return this.get('children').every((child) => child.isCompleted);
+      return (
+        this.get('children').length &&
+        this.get('children').every((child) => child.isCompleted)
+      );
     },
   ),
   isFirst: computed(function() {

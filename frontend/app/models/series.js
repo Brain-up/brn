@@ -6,7 +6,7 @@ import { reads } from '@ember/object/computed';
 export default class Series extends CompletionDependent.extend({
   name: attr('string'),
   description: attr('string'),
-  group: belongsTo('group', { async: false }),
+  group: belongsTo('group', { async: true }),
   exercises: hasMany('exercise', { async: true }),
   children: reads('exercises'),
   parent: reads('group'),

@@ -1,13 +1,13 @@
-import checkInteractionRoute from '../../check-interaction';
+import Route from '@ember/routing/route';
 
-export default checkInteractionRoute.extend({
+export default Route.extend({
   afterModel(task, { to }) {
-    this._super(...arguments);
     if (
-      to.parent.params.exercise_id &&
-      to.parent.params.exercise_id !== task.exercise.content.id
+      !task.canInteract ||
+      (to.parent.params.exercise_id &&
+        to.parent.params.exercise_id !== task.exercise.content.id)
     ) {
-      this.transitionTo('series.exercise', task.exercise.content);
+      this.transitionTo('series.exercise', task.exercise);
     }
   },
 });
