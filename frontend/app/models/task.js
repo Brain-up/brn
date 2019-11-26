@@ -38,6 +38,8 @@ export default class Task extends CompletionDependent.extend({
 
   isLastTask: isEmpty('nextTask'),
 
+  nextAttempt: false,
+
   savePassed() {
     return this.tasksManager.saveAsCompleted(this);
   },
