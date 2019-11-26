@@ -1,7 +1,7 @@
 {{! template-lint-configure no-invalid-interactive false }}
 <audio
   data-test-audio-player
-  autoplay
+  autoplay={{not testEnv}}
   src={{@audioFileUrl}}
   onplay={{action this.updateIsPlaying}}
   onended={{action this.updateIsPlaying}}

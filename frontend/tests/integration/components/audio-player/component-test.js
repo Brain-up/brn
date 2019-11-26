@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import pageObject from './page-object';
 import { timeout } from 'ember-concurrency';
@@ -11,17 +11,15 @@ module('Integration | Component | audio-player', function(hooks) {
   test('it disables button when playing', async function(assert) {
     await render(hbs`<AudioPlayer @audioFileUrl="/audio/no_noise/бал.mp3"/>`);
 
-    const audioElement = document.querySelector('[data-test-audio-player]');
-    audioElement.muted = true;
-    audioElement.autoplay = false;
+    await settled();
 
-    await timeout(1000);
+    const audioElement = document.querySelector('[data-test-audio-player]');
 
     assert.dom('[data-test-play-audio-button]').isNotDisabled();
 
-    await pageObject.playAudio();
+    await settled();
 
-    await timeout(100);
+    await pageObject.playAudio();
 
     assert.dom('[data-test-play-audio-button]').isDisabled();
 
