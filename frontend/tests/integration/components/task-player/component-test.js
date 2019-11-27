@@ -10,15 +10,22 @@ module('Integration | Component | task-player', function(hooks) {
 
   hooks.beforeEach(async function() {
     const store = this.owner.lookup('service:store');
-    this.set(
-      'model',
-      store.createRecord('task', {
-        order: '1',
-        word: 'бал',
-        words: ['бал', 'бум', 'быль'],
-        exercise: store.createRecord('exercise'),
-      }),
-    );
+    const firstTask = store.createRecord('task', {
+      id: '1',
+      order: '1',
+      word: 'бал',
+      words: ['бал', 'бум', 'быль'],
+    });
+
+    const secondTask = store.createRecord('task', {
+      id: '2',
+      order: '2',
+      word: 'бал',
+      words: ['бал', 'бум', 'быль'],
+    });
+    store.createRecord('exercise', { tasks: [firstTask, secondTask] });
+
+    this.set('model', firstTask);
 
     await render(hbs`
     <TaskPlayer
@@ -44,8 +51,6 @@ module('Integration | Component | task-player', function(hooks) {
 
   test('shows notification if answer is right and calls onRightAnswer', async function(assert) {
     assert.expect(2);
-    const store = this.owner.lookup('service:store');
-    this.model.exercise.set('tasks', [this.model, store.createRecord('task')]);
     this.set('onRightAnswer', function() {
       assert.ok(true, 'calls onRightAnswer');
     });

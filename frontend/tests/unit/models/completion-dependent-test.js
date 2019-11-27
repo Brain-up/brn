@@ -46,4 +46,30 @@ module('Unit | Model | completion dependent', function(hooks) {
       'false if some of previous sublings are not completed',
     );
   });
+
+  test('has previous sibling models prop', function(assert) {
+    let store = this.owner.lookup('service:store');
+    let parent = store.createRecord('completion-dependent');
+    const children = [
+      {
+        isCompleted: true,
+        order: 1,
+      },
+      {
+        isCompleted: false,
+        order: 2,
+      },
+      {
+        isCompleted: false,
+        order: 3,
+      },
+    ].map((childData) =>
+      store.createRecord('completion-dependent', { ...childData, parent }),
+    );
+    parent.children = children;
+    assert.deepEqual(
+      children[2].previousSiblings.mapBy('order'),
+      [children[0], children[1]].mapBy('order'),
+    );
+  });
 });
