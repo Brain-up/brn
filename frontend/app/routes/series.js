@@ -1,6 +1,6 @@
-import checkInteractionRoute from './check-interaction';
+import Route from '@ember/routing/route';
 
-export default checkInteractionRoute.extend({
+export default Route.extend({
   async model({ series_id }) {
     const series = this.store.findRecord('series', series_id);
     if (!series.group) {
@@ -10,10 +10,20 @@ export default checkInteractionRoute.extend({
   },
 
   async afterModel(series, { to }) {
-    this._super(...arguments);
+    if (!series.canInteract) {
+      this.transitionTo('group', series.get('group.id'));
+      return;
+    }
+
     await this.store.query('exercise', { seriesId: series.id });
-    if (to.name === 'series.index' && series.sortedChildren.firstObject) {
-      this.transitionTo('series.exercise', series.sortedChildren.firstObject);
+    if (
+      to.name === 'series.index' &&
+      series.get('sortedExercises.firstObject')
+    ) {
+      this.transitionTo(
+        'series.exercise.index',
+        series.get('sortedExercises.firstObject.id'),
+      );
     }
   },
 });

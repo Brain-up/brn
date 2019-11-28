@@ -11,6 +11,7 @@ export default class Exercise extends CompletionDependent.extend({
   tasks: hasMany('task', { async: true }),
   children: reads('tasks'),
   parent: reads('series'),
+  sortedTasks: reads('sortedChildren'),
   isCompleted: computed(
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',

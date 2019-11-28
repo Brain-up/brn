@@ -7,7 +7,13 @@ export default Route.extend({
       (to.parent.params.exercise_id &&
         to.parent.params.exercise_id !== task.exercise.content.id)
     ) {
-      this.transitionTo('series.exercise', task.exercise);
+      const exercise = task.get('exercise');
+      const series = exercise.get('series');
+      this.transitionTo(
+        'series.exercise.task',
+        series.get('id'),
+        exercise.get('id'),
+      );
     }
   },
 });

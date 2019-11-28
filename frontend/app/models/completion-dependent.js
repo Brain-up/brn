@@ -33,8 +33,13 @@ export default Model.extend({
   isFirst: computed(function() {
     return !this.previousSiblings.length;
   }),
-  previousSiblings: computed('parent.sortedChildren.[]', function() {
-    const allSiblings = this.parent.get('sortedChildren') || [];
-    return allSiblings.slice(0, allSiblings.indexOf(this));
+  allSiblings: computed('parent.sortedChildren.[]', function() {
+    return this.parent.get('sortedChildren') || [];
+  }),
+  previousSiblings: computed('allSiblings.[]', function() {
+    return this.allSiblings.slice(0, this.allSiblings.indexOf(this));
+  }),
+  nextSiblings: computed('allSiblings.[]', function() {
+    return this.allSiblings.slice(this.allSiblings.indexOf(this) + 1);
   }),
 });

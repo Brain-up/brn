@@ -9,4 +9,5 @@ export default class Group extends CompletionDependent.extend({
   series: hasMany('series', { async: true }),
   children: reads('series'),
   parent: null,
+  sortedSeries: reads('sortedChildren'),
 }) {}

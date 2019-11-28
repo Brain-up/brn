@@ -23,14 +23,8 @@ export default class Task extends CompletionDependent.extend({
     return arrayNext(this, this.exercise.content.get('sortedChildren'));
   }),
   firstTaskNextExersise: computed('exercise.tasks.[]', function() {
-    const siblingExercises = this.exercise.get('series.exercises');
-    const nextExercise =
-      siblingExercises &&
-      arrayNext(
-        this.exercise.get('content'),
-        this.exercise.get('series.exercises'),
-      );
-    return nextExercise && nextExercise.get('tasks').toArray()[0];
+    const nextExercises = this.exercise.get('nextSiblings');
+    return nextExercises.mapBy('tasks.firstObject').filter(Boolean)[0];
   }),
   nextTask: computed('exercise.tasks.[]', function() {
     return this.nextTaskSameExersise || this.firstTaskNextExersise;
