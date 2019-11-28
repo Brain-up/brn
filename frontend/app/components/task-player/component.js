@@ -23,11 +23,13 @@ export default class TaskPlayerComponent extends Component {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {
       const currentWordsOrder = Array.from(this.shuffledWords);
+      this.task.set('nextAttempt', true);
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
     } else {
       this.task.savePassed();
+      this.task.set('nextAttempt', false);
     }
   }
 }

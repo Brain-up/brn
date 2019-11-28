@@ -28,14 +28,11 @@ module('Integration | Component | exercise-navigation', function(hooks) {
       ]),
     );
 
-    await render(hbs`<ExerciseNavigation 
+    await render(hbs`<ExerciseNavigation
       @tasks={{this.tasks}}/>`);
 
     assert.equal(pageObject.navLinks.length, this.tasks.length);
-    assert.deepEqual(
-      pageObject.navLinks.mapBy('linkText'),
-      ['1', '2', '3',],
-    );
+    assert.deepEqual(pageObject.navLinks.mapBy('linkNum'), ['3', '2', '1']);
   });
 
   test('renders navigation according to passed tasks ( shuffled )', async function(assert) {
@@ -58,13 +55,10 @@ module('Integration | Component | exercise-navigation', function(hooks) {
       ]),
     );
 
-    await render(hbs`<ExerciseNavigation 
+    await render(hbs`<ExerciseNavigation
       @tasks={{this.tasks}}/>`);
 
     assert.equal(pageObject.navLinks.length, 3);
-    assert.deepEqual(
-      pageObject.navLinks.mapBy('linkText'),
-      ['1', '2', '3',],
-    );
+    assert.deepEqual(pageObject.navLinks.mapBy('linkNum'), ['3', '2', '1']);
   });
 });
