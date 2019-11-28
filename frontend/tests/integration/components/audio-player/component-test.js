@@ -1,29 +1,38 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import pageObject from './page-object';
 import { timeout } from 'ember-concurrency';
+import AudioPlayer from 'brn/components/audio-player/component';
+
+AudioPlayer.reopen({
+  actions: {
+    async playAudio() {
+      this.set('isPlaying', true);
+
+      await timeout(1000);
+
+      this.set('isPlaying', false);
+    },
+  },
+});
 
 module('Integration | Component | audio-player', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it disables button when playing', async function(assert) {
-    await render(hbs`<AudioPlayer @audioFileUrl="/audio/no_noise/бал.mp3"/>`);
-
-    await settled();
-
-    const audioElement = document.querySelector('[data-test-audio-player]');
+    await render(hbs`<AudioPlayer/>`);
 
     assert.dom('[data-test-play-audio-button]').isNotDisabled();
 
-    await settled();
+    pageObject.playAudio();
 
-    await pageObject.playAudio();
+    await timeout(500);
 
     assert.dom('[data-test-play-audio-button]').isDisabled();
 
-    await timeout(audioElement.duration * 1000 + 1000);
+    await timeout(1000);
 
     assert.dom('[data-test-play-audio-button]').isNotDisabled();
   });
