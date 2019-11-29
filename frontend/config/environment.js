@@ -18,6 +18,11 @@ module.exports = function(environment) {
     },
 
     APP: {},
+    fontawesome: {
+      icons: {
+        'free-solid-svg-icons': ['brain', 'bookmark'],
+      },
+    },
   };
 
   if (environment === 'development') {

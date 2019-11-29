@@ -1,34 +1,41 @@
 @import 'pod-styles.css';
+@import 'tailwindcss/base';
+
+@import 'tailwindcss/components';
+
+@import 'tailwindcss/utilities';
+
+html {
+  background: #efefef;
+  margin: 0;
+  font-family: sans-serif;
+}
 
 html,
 body {
-  background: #efefef;
-  height: 100%;
-  margin: 0;
-  font-family: sans-serif;
+  min-height: 100vh;
+  color: #234e52;
 }
 
 body > div.ember-view {
   min-height: 100%;
   margin: 0 auto;
-  background: white;
-  padding: 30px;
   box-sizing: border-box;
 }
 
 main {
   display: flex;
   flex-wrap: wrap;
+  background: white;
+  min-height: 80vh;
+  padding: 40px;
 }
 
-.series-page--aside {
-  border-right: 1px rgb(116, 116, 140) solid;
-  padding-right: 10px;
+main > * {
+  width: 100%;
 }
 
 .series-page--canvas {
-  flex-grow: 2;
-  margin-top: 25px;
   padding: 0px 30px;
 }
 
@@ -38,17 +45,17 @@ main {
 }
 
 a.active {
-  color: #3a3a86;
+  color: #285e61;
 }
 
 a {
-  color: #6868a5;
+  color: #319795;
   text-decoration: none;
 }
 
 .breadcrumbs-container {
   width: 100%;
-  padding: 15px 0;
+  margin-bottom: 15px;
 }
 
 a[disabled] {
@@ -67,4 +74,23 @@ a[disabled] {
 
 .not-accessable h5 {
   margin-top: 0;
+}
+
+.series-container {
+  flex: 1;
+}
+
+.series-page--aside {
+  padding: 0 20px;
+  position: relative;
+}
+
+.series-page--aside__icon {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+
+.series-page--aside__icon svg {
+  font-size: 30px;
 }
