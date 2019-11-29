@@ -4,42 +4,6 @@ import { setupTest } from 'ember-qunit';
 module('Unit | Model | completion dependent', function(hooks) {
   setupTest(hooks);
 
-  test('canInteractWith method', function(assert) {
-    let store = this.owner.lookup('service:store');
-    const targetChild = {};
-    const children = [
-      {
-        isCompleted: true,
-      },
-      {
-        isCompleted: true,
-      },
-      targetChild,
-    ];
-    let model = store.createRecord('completion-dependent', { children });
-    assert.ok(
-      model.canInteractWith(targetChild),
-      'true if all the previous children are completed',
-    );
-
-    const children2 = [
-      {
-        isCompleted: true,
-      },
-      {
-        isCompleted: false,
-      },
-      targetChild,
-    ];
-    let model2 = store.createRecord('completion-dependent', {
-      children: children2,
-    });
-    assert.notOk(
-      model2.canInteractWith(targetChild),
-      'false if all the previous children are completed',
-    );
-  });
-
   test('isCompleted if all children are completed', function(assert) {
     let store = this.owner.lookup('service:store');
     const children = [
@@ -80,6 +44,32 @@ module('Unit | Model | completion dependent', function(hooks) {
     assert.notOk(
       children[2].canInteract,
       'false if some of previous sublings are not completed',
+    );
+  });
+
+  test('has previous sibling models prop', function(assert) {
+    let store = this.owner.lookup('service:store');
+    let parent = store.createRecord('completion-dependent');
+    const children = [
+      {
+        isCompleted: true,
+        order: 1,
+      },
+      {
+        isCompleted: false,
+        order: 2,
+      },
+      {
+        isCompleted: false,
+        order: 3,
+      },
+    ].map((childData) =>
+      store.createRecord('completion-dependent', { ...childData, parent }),
+    );
+    parent.children = children;
+    assert.deepEqual(
+      children[2].previousSiblings.mapBy('order'),
+      [children[0], children[1]].mapBy('order'),
     );
   });
 });

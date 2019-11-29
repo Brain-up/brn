@@ -4,17 +4,32 @@
 <nav>
   <ol class="series-nav__exercies-list" data-test-series-navigation-list>
     {{#each (sort-by "order" "id" @series.exercises) as |exercise|}}
-      <li class="">
-        {{#link-to
-          "series.exercise"
-          exercise
-          data-test-series-navigation-list-link
-          data-test-series-navigation-list-link-id=exercise.id
-          class="series-nav__exercies-link"
-          disabled=(not exercise.canInteract)
-        }}
-          {{capitalize exercise.name}}
-        {{/link-to}}
+      <li
+        data-test-series-navigation-list-link
+        data-test-series-navigation-list-link-id="exercise.id"
+      >
+        {{#let exercise.sortedTasks.firstObject as |firstTask|}}
+          {{#if firstTask}}
+            {{#link-to
+              "series.exercise.task"
+              exercise.id
+              firstTask.id
+              class="series-nav__exercies-link"
+              disabled=(not exercise.canInteract)
+            }}
+              {{capitalize exercise.name}}
+            {{/link-to}}
+          {{else}}
+            {{#link-to
+              "series.exercise"
+              exercise.id
+              class="series-nav__exercies-link"
+              disabled=(not exercise.canInteract)
+            }}
+              {{capitalize exercise.name}}
+            {{/link-to}}
+          {{/if}}
+        {{/let}}
       </li>
     {{/each}}
   </ol>
