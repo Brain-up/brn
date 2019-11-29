@@ -1,4 +1,5 @@
-<audio controls autoplay src={{@task.audioFileUrl}}></audio>
+<br />
+<AudioPlayer @audioFileUrl={{@task.audioFileUrl}} @autoplay={{true}} />
 {{#if (eq this.lastAnswer @task.word)}}
   <p class="task-player__results" data-test-right-answer-notification>
     <br />

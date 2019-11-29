@@ -1,0 +1,55 @@
+import { module, test } from 'qunit';
+import { currentURL } from '@ember/test-helpers';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { setupApplicationTest } from 'ember-qunit';
+import pageObject from './test-support/page-object';
+import {
+  getUnaccessibleTaskScenario,
+  getUnaccessibleExerciseScenario,
+  getUnaccessibleSeriesScenario,
+} from './test-support/helpers';
+
+module('Acceptance | unaccessible routes', function(hooks) {
+  setupApplicationTest(hooks);
+  setupMirage(hooks);
+
+  test('visiting unaccessible task', async function(assert) {
+    getUnaccessibleTaskScenario();
+
+    await pageObject.goToAccessibleTask();
+
+    assert.ok(pageObject.taskPlayerIsPresent, 'task player is shown');
+
+    const firstSiblingUrl = currentURL();
+
+    await pageObject.goToUnaccessibleTask();
+
+    assert.equal(currentURL(), firstSiblingUrl);
+  });
+
+  test('visiting unaccessible exercise', async function(assert) {
+    getUnaccessibleExerciseScenario();
+
+    await pageObject.goToAccessibleExercise();
+
+    assert.ok(pageObject.taskPlayerIsPresent, 'task player is shown');
+
+    const firstSiblingUrl = currentURL();
+
+    await pageObject.goToUnaccessibleExercise();
+
+    assert.equal(currentURL(), firstSiblingUrl);
+  });
+
+  test('visiting unaccessible series', async function(assert) {
+    getUnaccessibleSeriesScenario();
+
+    await pageObject.goToAccessibleSeries();
+
+    assert.ok(pageObject.taskPlayerIsPresent, 'task player is shown');
+
+    await pageObject.goToUnaccessibleSeries();
+
+    assert.equal(currentURL(), '/groups/1');
+  });
+});

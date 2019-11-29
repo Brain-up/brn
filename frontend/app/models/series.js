@@ -10,4 +10,5 @@ export default class Series extends CompletionDependent.extend({
   exercises: hasMany('exercise', { async: true }),
   children: reads('exercises'),
   parent: reads('group'),
+  sortedExercises: reads('sortedChildren'),
 }) {}

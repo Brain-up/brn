@@ -22,9 +22,10 @@
             {{! template-lint-configure no-inline-styles false }}
           >
             {{#link-to
-              data-test-pagination-link
               "series.exercise.task"
-              task
+              task.exercise.id
+              task.id
+              data-test-pagination-link
               putActiveAttr=true
               class=(concat "c-pagination__control")
               data-test-pagination-link-number=task.order

@@ -1,7 +1,7 @@
 <ul class="group-nav-list mt-4">
   {{#each @group.series as |series|}}
-    <li class="shadow mr-3">
-      {{#link-to "series" series}}
+    <li>
+      {{#link-to "series" series disabled=(not series.canInteract)}}
         {{series.name}}
       {{/link-to}}
     </li>
