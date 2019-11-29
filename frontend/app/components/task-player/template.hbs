@@ -1,4 +1,3 @@
-<br />
 <audio controls autoplay src={{@task.audioFileUrl}}></audio>
 {{#if (eq this.lastAnswer @task.word)}}
   <p class="task-player__results" data-test-right-answer-notification>
@@ -14,7 +13,7 @@
       <button
         data-test-next-task-button
         autofocus
-        class="c-button u-small"
+        class="bg-blue-500 text-white py-2 px-4 rounded"
         onclick={{if @task.isCompleted (action this.onRightAnswer)}}
       >
         Далee »
@@ -22,14 +21,14 @@
     {{/if}}
   </p>
 {{else}}
-  <ul class="task-player__options">
+  <ul class="task-player__options mt-5">
     {{#each this.shuffledWords as |word|}}
       <li class="task-player__option">
         <button
           data-test-task-answer
           data-test-task-answer-option={{word}}
           onclick={{action this.handleSubmit word}}
-          class="task-player__option-button c-button c-button--ghost u-super"
+          class="task-player__option-button bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
         >
           {{word}}
         </button>

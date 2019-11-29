@@ -2,17 +2,25 @@
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const CssImport = require('postcss-import');
+const tailwindcss = require('tailwindcss');
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
-	postcssOptions: {
-		compile: {
-		  enabled: true,
-		  plugins: [{
-			module: CssImport,
-		  }]
-		}
-	  }
+    postcssOptions: {
+      compile: {
+        enabled: true,
+        plugins: [
+          {
+            module: CssImport,
+            options: {
+              path: ['node_modules']
+            }
+          },
+          {
+            module: tailwindcss
+          }]
+      }
+    }
   });
 
   // Use `app.import` to add additional libraries to the generated

@@ -1,12 +1,9 @@
-<h1>
-  {{@group.name}}
-</h1>
-<ol>
+<ul class="group-nav-list mt-4">
   {{#each @group.series as |series|}}
-    <li>
+    <li class="shadow mr-3">
       {{#link-to "series" series}}
         {{series.name}}
       {{/link-to}}
     </li>
   {{/each}}
-</ol>
+</ul>
