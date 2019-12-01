@@ -65,7 +65,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     private fun convertAnswers(source: TaskCsv, target: Task) {
         target.answerOptions = CollectionUtils.emptyIfNull(source.words)
             .filter { StringUtils.isNotEmpty(it) }
-            .map {word -> word.replace("[()]".toRegex(), "")}
+            .map { word -> word.replace("[()]".toRegex(), "") }
             .map(this::getResourceByWord)
             .toMutableSet()
     }
