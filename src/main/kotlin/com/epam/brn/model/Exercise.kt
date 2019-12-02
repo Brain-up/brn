@@ -36,6 +36,7 @@ data class Exercise(
         id = id,
         name = name,
         description = description,
+        level = level,
         available = available,
         tasks = tasks.map { task -> task.id }.toMutableSet()
     )
