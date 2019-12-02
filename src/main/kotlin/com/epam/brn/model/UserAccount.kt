@@ -1,5 +1,7 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.dto.UserAccountDto
 import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -36,4 +38,12 @@ data class UserAccount(
     override fun toString(): String {
         return "UserAccount(id=$id, name='$userName', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
     }
+
+    fun toDto() = UserAccountDto(
+        id = this.id,
+        userName = this.userName,
+        active = this.active,
+        email= this.email,
+        birthDate = this.birthDate
+    )
 }

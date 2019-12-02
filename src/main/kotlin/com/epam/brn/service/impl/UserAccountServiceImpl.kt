@@ -1,5 +1,6 @@
 package com.epam.brn.service.impl
 
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.UserAccountService
@@ -12,8 +13,10 @@ class UserAccountServiceImpl(private val userAccountRepository: UserAccountRepos
 
     private val log = logger()
 
-    override fun findUserByName(name: String): UserAccount {
-        return userAccountRepository.findByUserName(name)
+    override fun findUserByName(name: String): UserAccountDto {
+        return userAccountRepository
+            .findByUserName(name)
+            .map(UserAccount::toDto)
             .orElseThrow {
                 log.warn("User $name is not found")
                 UsernameNotFoundException("User $name is not found")
