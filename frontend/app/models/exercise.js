@@ -7,6 +7,7 @@ import { computed } from '@ember/object';
 export default class Exercise extends CompletionDependent.extend({
   name: attr('string'),
   description: attr('string'),
+  order: attr('number'),
   series: belongsTo('series', { async: true }),
   tasks: hasMany('task', { async: true }),
   children: reads('tasks'),
