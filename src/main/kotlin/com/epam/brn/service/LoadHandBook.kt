@@ -1,19 +1,26 @@
 package com.epam.brn.service
 
+import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 @Profile("dev", "prod")
-class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository) {
+class LoadHandBook(
+    private val exerciseGroupRepository: ExerciseGroupRepository,
+    private val userAccountRepository: UserAccountRepository
+) {
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
@@ -129,9 +136,27 @@ class LoadHandBook(private val exerciseGroupRepository: ExerciseGroupRepository)
         task12.answerOptions.addAll(setOf(resource11, resource13, resource14, resource15, resource16))
         exercise1.tasks.addAll(listOf(task11, task12))
 
-        series1.exercises.addAll(linkedSetOf(exercise1, exercise2, exercise3, exercise4, exercise5, exercise6, exercise7, exercise8, exercise9))
+        series1.exercises.addAll(
+            linkedSetOf(
+                exercise1,
+                exercise2,
+                exercise3,
+                exercise4,
+                exercise5,
+                exercise6,
+                exercise7,
+                exercise8,
+                exercise9
+            )
+        )
 
         group2.series.addAll(listOf(series1, series2))
         exerciseGroupRepository.saveAll(listOf(group1, group2))
+
+        val password = BCryptPasswordEncoder().encode("admin")
+        val userAccount =
+            UserAccount(userName = "admin", password = password, email = "admin@admin.com", active = true);
+        userAccount.authoritySet.addAll(setOf(Authority(authority = "ROLE_ADMIN", userAccount = userAccount)))
+        userAccountRepository.save(userAccount)
     }
 }

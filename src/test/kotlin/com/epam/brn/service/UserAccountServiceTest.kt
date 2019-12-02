@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.repo.UserDetailsRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -9,13 +9,13 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class UserDetailsServiceTest {
+internal class UserAccountServiceTest {
 
     @InjectMocks
-    lateinit var userDetailsService: UserDetailsService
+    lateinit var userAccountService: UserAccountService
 
     @Mock
-    lateinit var userDetailsRepository: UserDetailsRepository
+    lateinit var userAccountRepository: UserAccountRepository
 
     @Test
     @Disabled

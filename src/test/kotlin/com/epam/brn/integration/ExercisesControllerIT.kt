@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -35,6 +36,7 @@ import java.time.LocalDateTime
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
+@WithMockUser(username = "admin", roles = ["ADMIN"])
 class ExercisesControllerIT {
 
     @Autowired
@@ -125,9 +127,11 @@ class ExercisesControllerIT {
         return userAccountRepository.save(
             UserAccount(
                 id = 0,
-                name = "manuel",
+                userName = "manuel",
                 birthDate = LocalDate.now(),
-                email = "123@123.asd"
+                email = "123@123.asd",
+                password = "password",
+                active = true
             )
         )
     }

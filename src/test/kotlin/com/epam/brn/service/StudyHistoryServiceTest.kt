@@ -231,9 +231,11 @@ internal class StudyHistoryServiceTest {
     private fun getUserAccount(): UserAccount {
         return UserAccount(
             id = 0,
-            name = "manuel",
+            userName = "manuel",
             birthDate = LocalDate.now(),
-            email = "123@123.asd"
+            email = "123@123.asd",
+            password = "password",
+            active = true
         )
     }
 }

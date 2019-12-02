@@ -1,11 +1,11 @@
 package com.epam.brn.controller
 
+import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.UserData
-import com.epam.brn.model.UserDetails
-import com.epam.brn.service.UserDetailsService
+import com.epam.brn.model.UserAccount
+import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import com.epam.brn.constant.BrnPath
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,19 +16,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(BrnPath.USERS)
 @Api(value = BrnPath.USERS, description = "Contains actions over user details and accounts")
-class UserDetailController(@Autowired val userDetailService: UserDetailsService) {
-
-    @GetMapping("/getLevel")
-    @ApiOperation("Get level for user")
-    fun getLevel(@RequestParam(value = "userId", defaultValue = "0") userId: String): UserData {
-        val level = userDetailService.getLevel(userId)
-        return UserData(userId, level)
-    }
+class UserDetailController(@Autowired val userAccountService: UserAccountService) {
 
     @GetMapping("/findUser")
-    fun findUserByName(@RequestParam(value = "name", defaultValue = "0") name: String): UserDetails? {
-        val user = userDetailService.findUserDetails(name)
-        return user
+    fun findUserByName(@RequestParam(value = "name", defaultValue = "0") name: String): UserAccount {
+        return userAccountService.findUserByName(name)
     }
 
     @PostMapping("/addUser")

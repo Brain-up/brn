@@ -17,9 +17,12 @@ data class UserAccount(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
-    val name: String,
+    val userName: String,
     @Column(nullable = false)
     val email: String,
+    @Column(nullable = false)
+    val password: String,
+    val active: Boolean,
     val birthDate: LocalDate? = null
 ) {
     @OneToMany(cascade = [(CascadeType.ALL)])
@@ -27,8 +30,10 @@ data class UserAccount(
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
     val progress: Progress? = null
+    @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL])
+    var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, name='$name', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
+        return "UserAccount(id=$id, name='$userName', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
     }
 }

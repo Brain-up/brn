@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.UserDetailsService
+import com.epam.brn.service.UserAccountService
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -15,7 +15,7 @@ internal class UserDetailControllerTest {
     lateinit var userDetailController: UserDetailController
 
     @Mock
-    lateinit var userDetailsService: UserDetailsService
+    lateinit var userAccountService: UserAccountService
 
     @Test
     @Disabled
