@@ -31,12 +31,15 @@ our project skype chat: https://join.skype.com/jxSiWkgwT2x1
 # GETTING STARTED!
 ## RESOURCES
 ### DOCUMENTATION
+https://github.com/Brain-up/brn/wiki
 https://kb.epam.com/display/EPMLABSBRN/Brn+project+documentation
-### JIRA
+### JIRA/ISSUSES
+https://github.com/Brain-up/brn/issues
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
-### JENKINS
+### JENKINS (only for epamers now)
 https://kb.epam.com/pages/viewpage.action?pageId=885110636
 ### CODING STANDARDS
+https://github.com/Brain-up/brn/wiki/Coding-Standards
 https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
@@ -92,7 +95,7 @@ Note that if you are using IntelliJ, you may want to use version 2019.2 and late
 just run Application.kt after launching database in docker.
 
 ### Code style
-- Please refer for details to kb resources: https://kb.epam.com/display/EPMCOSRINT/Code+style
+- Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
 - Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
 - Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
 - It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
@@ -118,7 +121,7 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 ## DEVELOPMENT PROCESS
 1. Get a task assigned in JIRA.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
-3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
+3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. 

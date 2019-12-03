@@ -87,7 +87,7 @@ class TaskControllerIT {
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
-        val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
+        val jsonDataObject = jsonResponse.getJSONObject("data")
         assertEquals(firstSavedTask.name, jsonDataObject.get("name"))
         assertEquals(firstSavedTask.id, jsonDataObject.getLong("id"))
     }

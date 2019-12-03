@@ -101,7 +101,7 @@ class ExercisesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
-        val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
+        val jsonDataObject = jsonResponse.getJSONObject("data")
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
     }
 
