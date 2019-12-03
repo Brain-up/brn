@@ -1,26 +1,38 @@
 <br />
 <AudioPlayer @audioFileUrl={{@task.audioFileUrl}} @autoplay={{true}} />
 {{#if (eq this.lastAnswer @task.word)}}
-  <p class="task-player__results" data-test-right-answer-notification>
-    <br />
-    Ваш ответ: «
-    {{this.lastAnswer}}
-    »
-    <br />
-    👍 Верно!
-    <br />
-    <br />
-    {{#if (not @task.isLastTask)}}
-      <button
-        data-test-next-task-button
-        autofocus
-        class="bg-blue-500 text-white py-2 px-4 rounded"
-        onclick={{if @task.isCompleted (action this.onRightAnswer)}}
-      >
-        Далee »
-      </button>
+  <div class="task-player__right-answer-data flex-1 flex">
+    <div
+      class="task-player__results flex-1"
+      data-test-right-answer-notification
+    >
+      <br />
+      <span class="task-player__results__answer">
+        Ваш ответ: «
+        {{this.lastAnswer}}
+        »
+      </span>
+      <br />
+      👍 Верно!
+      <br />
+      <br />
+      {{#if (not @task.isLastTask)}}
+        <button
+          data-test-next-task-button
+          autofocus
+          class="bg-blue-500 text-white py-2 px-4 rounded"
+          onclick={{if @task.isCompleted (action this.onRightAnswer)}}
+        >
+          Далee »
+        </button>
+      {{/if}}
+    </div>
+    {{#if @task.pictureFileUrl}}
+      <div class="task-player__image flex-1 rounded shadow-md">
+        <img src={{@task.pictureFileUrl}} alt={{@task.word}} />
+      </div>
     {{/if}}
-  </p>
+  </div>
 {{else}}
   <ul class="task-player__options mt-5">
     {{#each this.shuffledWords as |word|}}

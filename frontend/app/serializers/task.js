@@ -11,6 +11,7 @@ export default ApplicationSerializer.extend({
       words: hash.answerOptions.mapBy('word').concat(hash.correctAnswer.word),
       word: hash.correctAnswer.word,
       audioFileUrl: '/audio/' + hash.correctAnswer.audioFileUrl,
+      pictureFileUrl: hash.correctAnswer.pictureFileUrl,
     };
     return this._super(typeClass, hash);
   },
