@@ -16,4 +16,4 @@
   {{if this.isPlaying "🔊" "🔈"}}
   Прослушать
 </button>
-{{yield (hash forceAudioPlayback=(action "playAudio"))}}
+{{yield (hash playAudio=(action "playAudio"))}}

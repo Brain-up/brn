@@ -19,7 +19,7 @@ export default class TaskPlayerComponent extends Component {
 
   onRightAnswer() {}
 
-  handleSubmit(word) {
+  handleSubmit(word, playAudioCallback) {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {
       const currentWordsOrder = Array.from(this.shuffledWords);
@@ -27,6 +27,7 @@ export default class TaskPlayerComponent extends Component {
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
+      playAudioCallback();
     } else {
       this.task.savePassed();
       this.task.set('nextAttempt', false);
