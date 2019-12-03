@@ -1,6 +1,9 @@
 name: Docker Image CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - EPMLABSBRN-137
 
 jobs:
   build:
@@ -8,8 +11,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image for backend
-      run: docker build . --file Dockerfile --tag brainup/brn-back:$(git rev-parse --short HEAD)
+      run: docker build . --file Dockerfile --tag brainup/brn-backend
     - name: Build the Docker image for frontent
-      run: docker build . --file Dockerfile_frontend --tag brainup/brn-front:$(git rev-parse --short HEAD)
-    - name: List of Docker images
+      run: docker build . --file Dockerfile_frontend --tag brainup/brn-frontend
+    - name: List of docker images
       run: docker images
