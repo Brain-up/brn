@@ -75,6 +75,15 @@ class HandBookLoader(
         val tasks = source.resolve(TASKS)
         require(Files.exists(tasks))
 
+        val groupsById = prepareExerciseGroups(groups)
+        val seriesById = prepareSeries(groupsById, series)
+        val exerciseById = prepareExercises(seriesById, exercises)
+        prepareTasks(exerciseById, tasks)
+
+        exerciseGroupRepository.saveAll(groupsById.values)
+    }
+
+    private fun prepareExerciseGroups(groups: Path): Map<Long, ExerciseGroup> {
         val groupsById = mutableMapOf<Long, ExerciseGroup>()
         val groupConverter = object : Converter<GroupCsv, ExerciseGroup> {
             override fun convert(source: GroupCsv): ExerciseGroup {
@@ -85,10 +94,16 @@ class HandBookLoader(
             }
         }
 
-        val exerciseGroups = Files.newInputStream(groups).use {
+        Files.newInputStream(groups).use {
             csvParserService.parseCommasSeparatedCsvFile(it, groupConverter)
         }
+        return groupsById
+    }
 
+    private fun prepareSeries(
+        groupsById: Map<Long, ExerciseGroup>,
+        series: Path
+    ): MutableMap<Long, Series> {
         val seriesById = mutableMapOf<Long, Series>()
         val seriesConverter = object : Converter<SeriesCsv, Series> {
             override fun convert(source: SeriesCsv): Series {
@@ -110,7 +125,13 @@ class HandBookLoader(
         Files.newInputStream(series).use {
             csvParserService.parseCommasSeparatedCsvFile(it, seriesConverter)
         }
+        return seriesById
+    }
 
+    private fun prepareExercises(
+        seriesById: MutableMap<Long, Series>,
+        exercises: Path
+    ): MutableMap<Long, Exercise> {
         val exerciseById = mutableMapOf<Long, Exercise>()
         val exerciseConverter = object : Converter<ExerciseCsv, Exercise> {
             override fun convert(source: ExerciseCsv): Exercise {
@@ -136,7 +157,13 @@ class HandBookLoader(
         Files.newInputStream(exercises).use {
             csvParserService.parseCommasSeparatedCsvFile(it, exerciseConverter)
         }
+        return exerciseById
+    }
 
+    private fun prepareTasks(
+        exerciseById: MutableMap<Long, Exercise>,
+        tasks: Path
+    ) {
         val taskConverter = object : Converter<TaskCsv, Task> {
             override fun convert(source: TaskCsv): Task {
                 require(exerciseById.containsKey(source.exerciseId))
@@ -170,8 +197,6 @@ class HandBookLoader(
         Files.newInputStream(tasks).use {
             csvParserService.parseCsvFile(it, taskConverter)
         }
-
-        exerciseGroupRepository.saveAll(exerciseGroups)
     }
 
     companion object {
