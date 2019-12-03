@@ -1,0 +1,27 @@
+version: '3.3'
+services:
+  db_brn:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+  brn:
+    container_name: brn
+    image: brainup/brn-backend
+    command: java -jar epam-brn.jar
+    ports:
+      - 8081:8081
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      SPRING_PROFILE: prod
+  brn_fe:
+    image: brainup/brn-frontend:latest
+    container_name: brn_fe
+    ports:
+      - 80:80
