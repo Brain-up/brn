@@ -7,6 +7,8 @@ export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
   lastAnswer = null;
 
+  classNames = ['flex-1', 'flex', 'flex-col'];
+
   didReceiveAttrs() {
     this.shuffle();
     this.set('lastAnswer', null);

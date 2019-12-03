@@ -12,6 +12,7 @@ export default class Task extends CompletionDependent.extend({
   word: attr('string'),
   order: attr('number'),
   audioFileUrl: attr('string'),
+  pictureFileUrl: attr('string'),
   words: attr('array'),
   exercise: belongsTo('exercise', { async: true }),
   tasksManager: service(),
