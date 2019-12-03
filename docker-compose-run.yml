@@ -11,10 +11,8 @@ services:
       POSTGRES_PASSWORD: admin
   brn:
     container_name: brn
+    image: brainup/brn-backend
     command: java -jar epam-brn.jar
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - 8081:8081
     environment:
@@ -25,10 +23,8 @@ services:
     depends_on:
       - db_brn
   brn_fe:
+    image: brainup/brn-frontend:latest
     container_name: brn_fe
-    build:
-      context: .
-      dockerfile: Dockerfile_frontend
     ports:
       - 80:80
     depends_on:
