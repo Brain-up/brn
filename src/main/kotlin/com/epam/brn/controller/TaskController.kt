@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.constant.BrnParams
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.TaskService
 import io.swagger.annotations.ApiOperation
 import org.apache.logging.log4j.kotlin.logger
@@ -32,8 +33,8 @@ class TaskController(private val taskService: TaskService) {
 
     @GetMapping(value = ["/{${BrnParams.TASK_ID}}"])
     @ApiOperation("Get task by id")
-    fun getTaskById(@PathVariable(BrnParams.TASK_ID) taskId: Long): ResponseEntity<BaseResponseDto> {
+    fun getTaskById(@PathVariable(BrnParams.TASK_ID) taskId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
         return ResponseEntity.ok()
-            .body(BaseResponseDto(data = listOf(taskService.getTaskById(taskId))))
+            .body(BaseSingleObjectResponseDto(data = taskService.getTaskById(taskId)))
     }
 }
