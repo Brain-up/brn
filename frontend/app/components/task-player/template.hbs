@@ -29,7 +29,7 @@
     </div>
     {{#if @task.pictureFileUrl}}
       <div class="task-player__image flex-1 rounded shadow-md">
-        <img src="{{@task.pictureFileUrl}}" />
+        <img src={{@task.pictureFileUrl}} alt={{@task.word}} />
       </div>
     {{/if}}
   </div>
