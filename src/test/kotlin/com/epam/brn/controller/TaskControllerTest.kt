@@ -40,9 +40,9 @@ class TaskControllerTest {
             val task = TaskDto(id = LONG_ONE, serialNumber = INTEGER_ONE, exercise = LONG_ONE)
             `when`(taskService.getTaskById(taskId)).thenReturn(task)
             // WHEN
-            val actualResult: List<TaskDto> = taskController.getTaskById(taskId).body?.data as List<TaskDto>
+            val actualResult: TaskDto = taskController.getTaskById(taskId).body?.data as TaskDto
             // THEN
-            assertThat(actualResult[0]).isEqualTo(task)
+            assertThat(actualResult).isEqualTo(task)
             verify(taskService).getTaskById(taskId)
         }
 
