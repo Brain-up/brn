@@ -20,8 +20,12 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       SPRING_PROFILE: prod
+    depends_on:
+      - db_brn
   brn_fe:
     image: brainup/brn-frontend:latest
     container_name: brn_fe
     ports:
       - 80:80
+    depends_on:
+      - brn
