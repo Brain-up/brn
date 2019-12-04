@@ -28,10 +28,13 @@
       {{/if}}
     </div>
     {{#if @task.pictureFileUrl}}
+      {{! template-lint-configure no-inline-styles false }}
       <div
-        aria-label="изображение {{@task.word}}"
+        aria-label={{html-safe (concat "изображение" @task.word)}}
         class="task-player__image flex-1 rounded shadow-md mx-auto"
-        style="background-image: url({{@task.pictureFileUrl}})"
+        style={{html-safe
+          (concat "background-image: url(" @task.pictureFileUrl ")")
+        }}
       ></div>
     {{/if}}
   </div>
