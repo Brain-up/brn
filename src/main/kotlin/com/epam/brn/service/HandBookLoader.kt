@@ -42,8 +42,14 @@ class HandBookLoader(
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        folder?.let { loadInitialDataFromFileSystem(it) }
-            ?: loadInitialDataFromClassPath()
+        val isInitRequired = exerciseGroupRepository.count() == 0L
+
+        log.debug("Is initialization required: $isInitRequired")
+
+        if (isInitRequired) {
+            folder?.let { loadInitialDataFromFileSystem(it) }
+                ?: loadInitialDataFromClassPath()
+        }
     }
 
     private fun loadInitialDataFromFileSystem(folder: Path) {
