@@ -10,10 +10,9 @@
 <button
   data-test-play-audio-button
   class="c-button c-button--rounded"
-  onclick={{action "playAudio"}}
+  onclick={{action this.playAudio}}
   disabled={{this.isPlaying}}
 >
   {{if this.isPlaying "🔊" "🔈"}}
   Прослушать
 </button>
-{{yield (hash playAudio=(action "playAudio"))}}

@@ -1,40 +1,39 @@
 <br />
-{{#audio-player audioFileUrl=@task.audioFileUrl autoplay=true as |player|}}
-  {{#if (eq this.lastAnswer @task.word)}}
-    <p class="task-player__results" data-test-right-answer-notification>
-      <br />
-      Ваш ответ: «
-      {{this.lastAnswer}}
-      »
-      <br />
-      👍 Верно!
-      <br />
-      <br />
-      {{#if (not @task.isLastTask)}}
+<AudioPlayer @audioFileUrl={{@task.audioFileUrl}} @autoplay={{true}} />
+{{#if (eq this.lastAnswer @task.word)}}
+  <p class="task-player__results" data-test-right-answer-notification>
+    <br />
+    Ваш ответ: «
+    {{this.lastAnswer}}
+    »
+    <br />
+    👍 Верно!
+    <br />
+    <br />
+    {{#if (not @task.isLastTask)}}
+      <button
+        data-test-next-task-button
+        autofocus
+        class="bg-blue-500 text-white py-2 px-4 rounded"
+        onclick={{if @task.isCompleted (action this.goToNextTask)}}
+      >
+        Далee »
+      </button>
+    {{/if}}
+  </p>
+{{else}}
+  <ul class="task-player__options mt-5">
+    {{#each this.shuffledWords as |word|}}
+      <li class="task-player__option">
         <button
-          data-test-next-task-button
-          autofocus
-          class="bg-blue-500 text-white py-2 px-4 rounded"
-          onclick={{if @task.isCompleted (action this.onRightAnswer)}}
+          data-test-task-answer
+          data-test-task-answer-option={{word}}
+          onclick={{action this.handleSubmit word player.playAudio}}
+          class="task-player__option-button bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
         >
-          Далee »
+          {{word}}
         </button>
-      {{/if}}
-    </p>
-  {{else}}
-    <ul class="task-player__options mt-5">
-      {{#each this.shuffledWords as |word|}}
-        <li class="task-player__option">
-          <button
-            data-test-task-answer
-            data-test-task-answer-option={{word}}
-            onclick={{action this.handleSubmit word player.playAudio}}
-            class="task-player__option-button bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          >
-            {{word}}
-          </button>
-        </li>
-      {{/each}}
-    </ul>
-  {{/if}}
-{{/audio-player}}
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
