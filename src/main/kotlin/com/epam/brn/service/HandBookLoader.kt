@@ -12,14 +12,16 @@ import com.epam.brn.service.parsers.csv.dto.ExerciseCsv
 import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import com.epam.brn.service.parsers.csv.dto.SeriesCsv
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
+import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Service
+import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
 /**
  * This class is responsible for
@@ -28,52 +30,60 @@ import java.nio.file.Paths
 @Service
 @Profile("dev", "prod")
 class HandBookLoader(
+    private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val csvParserService: CSVParserService
 ) {
+
+    private val log = logger()
 
     @Value("\${init.folder:#{null}}")
     var folder: Path? = null
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        val isInitRequired = exerciseGroupRepository.count() == 0L
-
-        if (isInitRequired) {
-            folder?.let { loadInitialDataFromFileSystem(it) }
-                ?: loadInitialDataFromClassPath()
-        }
+        folder?.let { loadInitialDataFromFileSystem(it) }
+            ?: loadInitialDataFromClassPath()
     }
 
     private fun loadInitialDataFromFileSystem(folder: Path) {
+        log.debug("Loading data from file system $folder")
+
         if (!Files.exists(folder)) {
             throw IllegalArgumentException("$folder with intial data does not exist")
         }
-        loadInitialDataToDb(folder)
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS)
+            .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
+            .toMap()
+
+        try {
+            loadInitialDataToDb(sources)
+        } finally {
+            sources.onEach { (_, inputStream) ->
+                try {
+                    inputStream.close()
+                } catch (e: Exception) {
+                    log.error(e)
+                }
+            }
+        }
     }
 
     private fun loadInitialDataFromClassPath() {
-        val source = "initFiles"
-        val sourcePath = Paths.get(
-            javaClass.classLoader.getResource(source)?.toURI()
-                ?: throw IllegalStateException("Classpath resource $source does not exist!")
-        )
+        log.debug("Loading data from classpath initFiles")
 
-        loadInitialDataToDb(sourcePath)
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS)
+            .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
+            .toMap()
+
+        loadInitialDataToDb(sources)
     }
 
-    private fun loadInitialDataToDb(source: Path) {
-        val exercises = source.resolve(EXERCISES)
-        require(Files.exists(exercises))
-
-        val groups = source.resolve(GROUPS)
-        require(Files.exists(groups))
-
-        val series = source.resolve(SERIES)
-        require(Files.exists(series))
-
-        val tasks = source.resolve(TASKS)
-        require(Files.exists(tasks))
+    private fun loadInitialDataToDb(sources: Map<String, InputStream>) {
+        val exercises = sources.getValue(EXERCISES)
+        val groups = sources.getValue(GROUPS)
+        val series = sources.getValue(SERIES)
+        val tasks = sources.getValue(TASKS)
 
         val groupsById = prepareExerciseGroups(groups)
         val seriesById = prepareSeries(groupsById, series)
@@ -81,9 +91,11 @@ class HandBookLoader(
         prepareTasks(exerciseById, tasks)
 
         exerciseGroupRepository.saveAll(groupsById.values)
+
+        log.debug("Initialization succeeded")
     }
 
-    private fun prepareExerciseGroups(groups: Path): Map<Long, ExerciseGroup> {
+    private fun prepareExerciseGroups(groupsInputStream: InputStream): Map<Long, ExerciseGroup> {
         val groupsById = mutableMapOf<Long, ExerciseGroup>()
         val groupConverter = object : Converter<GroupCsv, ExerciseGroup> {
             override fun convert(source: GroupCsv): ExerciseGroup {
@@ -94,22 +106,21 @@ class HandBookLoader(
             }
         }
 
-        Files.newInputStream(groups).use {
-            csvParserService.parseCommasSeparatedCsvFile(it, groupConverter)
-        }
+        csvParserService.parseCommasSeparatedCsvFile(groupsInputStream, groupConverter)
+
         return groupsById
     }
 
     private fun prepareSeries(
         groupsById: Map<Long, ExerciseGroup>,
-        series: Path
+        seriesInputStream: InputStream
     ): MutableMap<Long, Series> {
         val seriesById = mutableMapOf<Long, Series>()
         val seriesConverter = object : Converter<SeriesCsv, Series> {
             override fun convert(source: SeriesCsv): Series {
                 require(groupsById.containsKey(source.groupId))
 
-                val group = groupsById[source.groupId]!!
+                val group = groupsById.getValue(source.groupId)
                 val exerciseSeries = Series(
                     name = source.name,
                     description = source.description,
@@ -122,15 +133,14 @@ class HandBookLoader(
             }
         }
 
-        Files.newInputStream(series).use {
-            csvParserService.parseCommasSeparatedCsvFile(it, seriesConverter)
-        }
+        csvParserService.parseCommasSeparatedCsvFile(seriesInputStream, seriesConverter)
+
         return seriesById
     }
 
     private fun prepareExercises(
         seriesById: MutableMap<Long, Series>,
-        exercises: Path
+        exercisesInputStream: InputStream
     ): MutableMap<Long, Exercise> {
         val exerciseById = mutableMapOf<Long, Exercise>()
         val exerciseConverter = object : Converter<ExerciseCsv, Exercise> {
@@ -154,15 +164,13 @@ class HandBookLoader(
             }
         }
 
-        Files.newInputStream(exercises).use {
-            csvParserService.parseCommasSeparatedCsvFile(it, exerciseConverter)
-        }
+        csvParserService.parseCommasSeparatedCsvFile(exercisesInputStream, exerciseConverter)
         return exerciseById
     }
 
     private fun prepareTasks(
         exerciseById: MutableMap<Long, Exercise>,
-        tasks: Path
+        tasksInputStream: InputStream
     ) {
         val taskConverter = object : Converter<TaskCsv, Task> {
             override fun convert(source: TaskCsv): Task {
@@ -194,9 +202,7 @@ class HandBookLoader(
             }
         }
 
-        Files.newInputStream(tasks).use {
-            csvParserService.parseCsvFile(it, taskConverter)
-        }
+        csvParserService.parseCsvFile(tasksInputStream, taskConverter)
     }
 
     companion object {

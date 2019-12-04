@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ResourceLoader
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
@@ -26,9 +27,10 @@ class CsvLoadingTestIT {
     class Config {
         @Bean
         fun handBookLoader(
+            resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
             csvParserService: CSVParserService
-        ) = HandBookLoader(exerciseGroupRepository, csvParserService)
+        ) = HandBookLoader(resourceLoader, exerciseGroupRepository, csvParserService)
     }
 
     @Autowired
