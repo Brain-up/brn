@@ -1,7 +1,7 @@
 <br />
 <AudioPlayer @audioFileUrl={{@task.audioFileUrl}} @autoplay={{true}} />
 {{#if (eq this.lastAnswer @task.word)}}
-  <div class="task-player__right-answer-data flex-1 flex">
+  <div class="task-player__right-answer-data flex flex-wrap flex-1 mt-5">
     <div
       class="task-player__results flex-1"
       data-test-right-answer-notification
@@ -28,9 +28,11 @@
       {{/if}}
     </div>
     {{#if @task.pictureFileUrl}}
-      <div class="task-player__image flex-1 rounded shadow-md">
-        <img src={{@task.pictureFileUrl}} alt={{@task.word}} />
-      </div>
+      <div
+        aria-label="изображение {{@task.word}}"
+        class="task-player__image flex-1 rounded shadow-md mx-auto"
+        style="background-image: url({{@task.pictureFileUrl}})"
+      ></div>
     {{/if}}
   </div>
 {{else}}
