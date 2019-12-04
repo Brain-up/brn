@@ -1,15 +1,13 @@
 version: '3.3'
 services:
-  db_brn-test:
-    container_name: db_brn-test
+  db:
     image: postgres
     restart: always
     environment:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-  brn-test:
-    container_name: brn-test
+  sut:
     command: gradle clean test --no-daemon
     build:
       context: .
@@ -18,5 +16,7 @@ services:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      DB_URL: db_brn-test
+      DB_URL: db
       SPRING_PROFILE: dev
+    depends_on:
+      - db

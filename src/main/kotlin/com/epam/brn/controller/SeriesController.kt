@@ -4,6 +4,7 @@ import com.epam.brn.constant.BrnParams.GROUP_ID
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.SeriesService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,8 +27,8 @@ class SeriesController(@Autowired val seriesService: SeriesService) {
     }
 
     @GetMapping("{$SERIES_ID}")
-    fun getSeriesForId(@PathVariable(value = SERIES_ID) seriesId: Long): ResponseEntity<BaseResponseDto> {
+    fun getSeriesForId(@PathVariable(value = SERIES_ID) seriesId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
         val seriesDto = seriesService.findSeriesForId(seriesId)
-        return ResponseEntity.ok().body(BaseResponseDto(data = listOf(seriesDto)))
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = seriesDto))
     }
 }

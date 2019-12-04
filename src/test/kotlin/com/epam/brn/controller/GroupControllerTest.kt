@@ -10,6 +10,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class GroupControllerTest {
@@ -40,10 +41,10 @@ internal class GroupControllerTest {
         val group = ExerciseGroupDto(1, "name", "desc")
         Mockito.`when`(exerciseGroupsService.findGroupById(groupId)).thenReturn(group)
         // WHEN
-        val actualResultData: List<ExerciseGroupDto> =
-            groupController.getGroupById(groupId).body?.data as List<ExerciseGroupDto>
+        val actualResultData: ExerciseGroupDto =
+            groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
         // THEN
-        assertTrue(actualResultData.contains(group))
+        assertEquals(actualResultData,group)
         verify(exerciseGroupsService).findGroupById(groupId)
     }
 }

@@ -9,6 +9,8 @@ export default class TaskPlayerComponent extends Component {
 
   @service('audio') audio;
 
+  classNames = ['flex-1', 'flex', 'flex-col'];
+
   didReceiveAttrs() {
     this.shuffle();
     this.set('lastAnswer', null);

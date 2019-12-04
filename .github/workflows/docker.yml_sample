@@ -1,0 +1,18 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image for backend
+      run: docker build . --file Dockerfile --tag brainup/brn-backend
+    - name: Build the Docker image for frontent
+      run: docker build . --file Dockerfile_frontend --tag brainup/brn-frontend
+    - name: List of docker images
+      run: docker images
