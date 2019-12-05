@@ -10,11 +10,6 @@ export default Route.extend({
   },
 
   async afterModel(series, { to }) {
-    if (!series.canInteract) {
-      this.transitionTo('group', series.get('group.id'));
-      return;
-    }
-
     await this.store.query('exercise', { seriesId: series.id });
     if (
       to.name === 'series.index' &&
