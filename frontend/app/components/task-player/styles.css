@@ -29,6 +29,10 @@
   white-space: nowrap;
 }
 
+.task-player__right-answer-data {
+  max-height: 350px;
+}
+
 .task-player__image {
   animation: fade-out 0.5s;
   min-width: 250px;

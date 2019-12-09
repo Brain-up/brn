@@ -7,13 +7,18 @@ export default Route.extend({
       (to.parent.params.exercise_id &&
         to.parent.params.exercise_id !== task.exercise.content.id)
     ) {
-      const exercise = task.get('exercise');
-      const series = exercise.get('series');
-      this.transitionTo(
-        'series.exercise.task',
-        series.get('id'),
-        exercise.get('id'),
-      );
+      this.store
+        .findRecord('exercise', to.parent.params.exercise_id)
+        .then((exercise) => {
+          const series = exercise.get('series');
+          const firstTask = exercise.get('sortedTasks.firstObject');
+          this.transitionTo(
+            'series.exercise.task',
+            series.get('id'),
+            exercise.get('id'),
+            firstTask.get('id'),
+          );
+        });
     }
   },
 });

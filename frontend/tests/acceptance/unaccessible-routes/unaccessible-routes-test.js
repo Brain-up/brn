@@ -27,16 +27,16 @@ module('Acceptance | unaccessible routes', function(hooks) {
     assert.equal(currentURL(), firstSiblingUrl);
   });
 
-  test('visiting unaccessible exercise', async function(assert) {
+  test('visiting task that is not in the current exercise( using non-first exercise )', async function(assert) {
     getUnaccessibleExerciseScenario();
 
-    await pageObject.goToAccessibleExercise();
+    await pageObject.goToRightTaskInTheExercise();
 
     assert.ok(pageObject.taskPlayerIsPresent, 'task player is shown');
 
     const firstSiblingUrl = currentURL();
 
-    await pageObject.goToUnaccessibleExercise();
+    await pageObject.goToWrongTaskInTheExercise();
 
     assert.equal(currentURL(), firstSiblingUrl);
   });

@@ -1,5 +1,6 @@
 import DS from 'ember-data';
 const { attr, hasMany, belongsTo } = DS;
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 
 export default class Series extends DS.Model.extend({
@@ -9,5 +10,7 @@ export default class Series extends DS.Model.extend({
   exercises: hasMany('exercise', { async: true }),
   children: reads('exercises'),
   parent: reads('group'),
-  sortedExercises: reads('sortedChildren'),
+  sortedExercises: computed('exercises.{[],@each.order}', function() {
+    return this.exercises.sortBy('order');
+  }),
 }) {}
