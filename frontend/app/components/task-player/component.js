@@ -21,11 +21,6 @@ export default class TaskPlayerComponent extends Component {
     this.notifyPropertyChange('shuffledWords');
   }
 
-  goToNextTask() {
-    this.onRightAnswer();
-    this.audio.player.playAudio();
-  }
-
   onRightAnswer() {}
 
   handleSubmit(word) {
