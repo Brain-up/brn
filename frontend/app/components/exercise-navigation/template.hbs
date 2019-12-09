@@ -10,7 +10,7 @@
               (concat
                 "width: calc(100% - 36px*"
                 index
-                ");"
+                " - 5px);"
                 (if
                   task.isCompleted
                   (concat
@@ -27,7 +27,7 @@
               task.id
               data-test-pagination-link
               putActiveAttr=true
-              class=(concat "c-pagination__control")
+              class="inline-block"
               data-test-pagination-link-number=task.order
               disabled=(not task.canInteract)
             }}{{/link-to}}
