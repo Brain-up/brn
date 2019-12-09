@@ -37,6 +37,7 @@ main > * {
 
 .series-page--canvas {
   padding: 0px 30px;
+  flex-basis: 70%;
 }
 
 .series-page--canvas audio {
@@ -83,6 +84,7 @@ a[disabled] {
 .series-page--aside {
   padding: 0 20px;
   position: relative;
+  flex-basis: 30%;
 }
 
 .series-page--aside__icon {

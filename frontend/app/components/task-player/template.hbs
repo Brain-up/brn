@@ -1,7 +1,7 @@
 <br />
 <AudioPlayer @audioFileUrl={{@task.audioFileUrl}} @autoplay={{true}} />
 {{#if (eq this.lastAnswer @task.word)}}
-  <div class="task-player__right-answer-data flex-1 flex">
+  <div class="task-player__right-answer-data flex flex-wrap flex-1 mt-5">
     <div
       class="task-player__results flex-1"
       data-test-right-answer-notification
