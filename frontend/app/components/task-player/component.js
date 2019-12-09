@@ -2,10 +2,12 @@ import Component from '@ember/component';
 import { A } from '@ember/array';
 import { inject } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
+import ENV from 'brn/config/environment';
 
 export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
   lastAnswer = null;
+  rootURL = ENV.rootURL;
 
   classNames = ['flex-1', 'flex', 'flex-col'];
 
