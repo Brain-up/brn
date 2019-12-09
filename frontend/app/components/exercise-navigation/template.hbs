@@ -14,7 +14,9 @@
                 (if
                   task.isCompleted
                   (concat
-                    "transform: translateX(calc(100% - 36px*" task.order "));"
+                    "transform: translateX(calc(100% - 36px*"
+                    (subtract @tasks.length index)
+                    "));"
                   )
                 )
               )

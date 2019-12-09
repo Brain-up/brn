@@ -28,6 +28,10 @@
   white-space: nowrap;
 }
 
+.task-player__right-answer-data {
+  max-height: 350px;
+}
+
 .task-player__image {
   overflow: hidden;
   position: relative;
