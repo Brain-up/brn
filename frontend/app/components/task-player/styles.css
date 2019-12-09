@@ -22,6 +22,7 @@
   text-align: center;
   font-size: 32px;
   color: rgb(44, 62, 80);
+  padding-right: 10px;
 }
 
 .task-player__results__answer {
@@ -29,22 +30,12 @@
 }
 
 .task-player__image {
-  overflow: hidden;
-  position: relative;
   animation: fade-out 0.5s;
-}
-
-.task-player__image img {
-  position: absolute;
-  min-width: 100%;
-  min-height: 100%;
-  height: auto;
-  width: auto;
-  max-width: 200%;
-  max-height: 120%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  min-width: 250px;
+  max-width: 400px;
+  min-height: 250px;
+  background-size: cover;
+  background-position: center;
 }
 
 @keyframes fade-out {

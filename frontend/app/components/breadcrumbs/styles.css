@@ -1,0 +1,10 @@
+.breadcrumbs li {
+  display: inline-block;
+  margin-right: 6px;
+  position: relative;
+}
+
+.breadcrumbs li:not(:first-child):before {
+  content: '/';
+  margin-right: 6px;
+}

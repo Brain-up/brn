@@ -1,21 +1,21 @@
 {{#let (if @group @group @series.group) as |group|}}
-  <blaze-breadcrumbs aria-label="Breadcrumbs">
-    <blaze-breadcrumb>
+  <ul aria-label="Breadcrumbs" class="list-none breadcrumbs">
+    <li>
       {{#link-to "groups"}}
         Groups
       {{/link-to}}
-    </blaze-breadcrumb>
-    <blaze-breadcrumb data-test-group-breadcrumb>
+    </li>
+    <li data-test-group-breadcrumb>
       {{#link-to "group" group}}
         {{group.name}}
       {{/link-to}}
-    </blaze-breadcrumb>
+    </li>
     {{#if @series}}
-      <blaze-breadcrumb data-test-series-breadcrumb>
+      <li data-test-series-breadcrumb>
         {{#link-to "series" @series}}
           {{@series.name}}
         {{/link-to}}
-      </blaze-breadcrumb>
+      </li>
     {{/if}}
-  </blaze-breadcrumbs>
+  </ul>
 {{/let}}
