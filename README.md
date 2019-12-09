@@ -31,15 +31,15 @@ our project skype chat: https://join.skype.com/jxSiWkgwT2x1
 # GETTING STARTED!
 ## RESOURCES
 ### DOCUMENTATION
-https://github.com/Brain-up/brn/wiki
+https://github.com/Brain-up/brn/wiki ||
 https://kb.epam.com/display/EPMLABSBRN/Brn+project+documentation
 ### JIRA/ISSUSES
-https://github.com/Brain-up/brn/issues
+https://github.com/Brain-up/brn/issues ||
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 ### JENKINS (only for epamers now)
 https://kb.epam.com/pages/viewpage.action?pageId=885110636
 ### CODING STANDARDS
-https://github.com/Brain-up/brn/wiki/Coding-Standards
+https://github.com/Brain-up/brn/wiki/Coding-Standards ||
 https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
@@ -129,3 +129,4 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 
 ### Thank you very much for your support!
 
+our application is run on http://ecse005003f1.epam.com/ && http://31.184.253.199/
