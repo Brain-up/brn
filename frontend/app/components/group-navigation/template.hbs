@@ -1,7 +1,7 @@
 <ul class="group-nav-list mt-4">
-  {{#each @group.series as |series|}}
+  {{#each (sort-by "id" @group.series) as |series|}}
     <li>
-      {{#link-to "series" series disabled=(not series.canInteract)}}
+      {{#link-to "series" series}}
         {{series.name}}
       {{/link-to}}
     </li>
