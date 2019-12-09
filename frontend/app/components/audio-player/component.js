@@ -1,7 +1,13 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  audio: service(),
+  init() {
+    this._super(...arguments);
+    this.audio.register(this);
+  },
   updateIsPlaying() {
     set(
       this,
@@ -12,9 +18,7 @@ export default Component.extend({
         !this.audioElement.ended,
     );
   },
-  actions: {
-    playAudio() {
-      return this.audioElement.play();
-    },
+  playAudio() {
+    return this.audioElement.play();
   },
 });

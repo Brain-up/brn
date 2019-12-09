@@ -7,14 +7,12 @@ import { timeout } from 'ember-concurrency';
 import AudioPlayer from 'brn/components/audio-player/component';
 
 AudioPlayer.reopen({
-  actions: {
-    async playAudio() {
-      this.set('isPlaying', true);
+  async playAudio() {
+    this.set('isPlaying', true);
 
-      await timeout(1000);
+    await timeout(1000);
 
-      this.set('isPlaying', false);
-    },
+    this.set('isPlaying', false);
   },
 });
 
