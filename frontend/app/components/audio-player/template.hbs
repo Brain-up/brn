@@ -10,7 +10,7 @@
 <button
   data-test-play-audio-button
   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-  onclick={{action "playAudio"}}
+  onclick={{action this.playAudio}}
   disabled={{this.isPlaying}}
 >
   {{if this.isPlaying "🔊" "🔈"}}

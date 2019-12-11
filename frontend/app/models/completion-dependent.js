@@ -17,7 +17,7 @@ export default Model.extend({
     },
   ),
   sortChildrenBy: 'order',
-  sortedChildren: computed('children.[]', function() {
+  sortedChildren: computed('children.{[],@each.order}', function() {
     return this.children ? this.children.sortBy(this.sortChildrenBy) : null;
   }),
   isCompleted: computed(

@@ -1,11 +1,13 @@
 import Component from '@ember/component';
 import { A } from '@ember/array';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 
 export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
   lastAnswer = null;
+
+  @service('audio') audio;
 
   classNames = ['flex-1', 'flex', 'flex-col'];
 
@@ -29,15 +31,14 @@ export default class TaskPlayerComponent extends Component {
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
+      this.audio.player.playAudio();
     } else {
       this.task.savePassed();
       this.task.set('nextAttempt', false);
     }
   }
 }
-({
-  router: inject(),
-});
+({});
 
 function shuffleArray(a) {
   for (let i = a.length - 1; i > 0; i--) {
