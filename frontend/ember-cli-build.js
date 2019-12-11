@@ -7,6 +7,9 @@ const tailwindcss = require('tailwindcss');
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     postcssOptions: {
+      fingerprint: {
+        exclude: ['pictures/'],
+      },
       compile: {
         enabled: true,
         plugins: [
