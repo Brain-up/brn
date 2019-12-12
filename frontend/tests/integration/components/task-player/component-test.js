@@ -1,8 +1,9 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, settled } from '@ember/test-helpers';
+import { timeout } from 'ember-concurrency';
 import hbs from 'htmlbars-inline-precompile';
-import { chooseAnswer, goToNextTask } from './test-support/helpers';
+import { chooseAnswer } from './test-support/helpers';
 import pageObject from './test-support/page-object';
 
 module('Integration | Component | task-player', function(hooks) {
@@ -15,6 +16,7 @@ module('Integration | Component | task-player', function(hooks) {
       order: '1',
       word: 'бал',
       words: ['бал', 'бум', 'быль'],
+      pictureFileUrl: 'path',
     });
 
     const secondTask = store.createRecord('task', {
@@ -33,19 +35,26 @@ module('Integration | Component | task-player', function(hooks) {
     `);
   });
 
-  test('refreshes options list after a wrong answer', async function(assert) {
+  test('refreshes options list and shows regret image after a wrong answer', async function(assert) {
     const wrongAnswers = this.model.words.filter(
       (wordOption) => wordOption !== this.model.word,
     );
     const order = pageObject.options.mapBy('optionValue');
 
-    await chooseAnswer(wrongAnswers[0]);
+    chooseAnswer(wrongAnswers[0]);
 
     assert.notOk(pageObject.hasRightAnswer);
+
+    await timeout(1500);
+
+    assert
+      .dom('[data-test-answer-correctness-widget]')
+      .hasAttribute('data-test-isnt-correct');
 
     await settled();
 
     const newOrder = pageObject.options.mapBy('optionValue');
+
     assert.notDeepEqual(order, newOrder);
   });
 
@@ -63,7 +72,5 @@ module('Integration | Component | task-player', function(hooks) {
 
     await chooseAnswer(this.model.word);
     assert.ok(pageObject.hasRightAnswer);
-
-    await goToNextTask();
   });
 });

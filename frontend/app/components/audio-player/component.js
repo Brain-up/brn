@@ -6,6 +6,7 @@ export default Component.extend({
   audio: service(),
   init() {
     this._super(...arguments);
+    this.set('playAudio', this.playAudio.bind(this));
     this.audio.register(this);
   },
   updateIsPlaying() {
@@ -19,6 +20,6 @@ export default Component.extend({
     );
   },
   playAudio() {
-    return this.audioElement.play();
+    this.audioElement.play();
   },
 });

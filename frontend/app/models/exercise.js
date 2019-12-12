@@ -26,4 +26,10 @@ export default class Exercise extends CompletionDependent.extend({
       );
     },
   ),
+  siblingExercises: computed('series.sortedExercises.[]', function() {
+    return this.series.get('sortedExercises') || [];
+  }),
+  nextSiblings: computed('siblingExercises.[]', function() {
+    return this.siblingExercises.slice(this.siblingExercises.indexOf(this) + 1);
+  }),
 }) {}

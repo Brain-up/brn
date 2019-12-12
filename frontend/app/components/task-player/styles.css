@@ -18,6 +18,11 @@
   font-size: 40px;
 }
 
+.task-player__option-button:disabled {
+  opacity: 50%;
+  cursor: default;
+}
+
 .task-player__results {
   text-align: center;
   font-size: 32px;
@@ -29,17 +34,15 @@
   white-space: nowrap;
 }
 
-.task-player__right-answer-data {
-  max-height: 350px;
-}
-
 .task-player__image {
   animation: fade-out 0.5s;
-  min-width: 250px;
-  max-width: 400px;
-  min-height: 250px;
+  min-width: 350px;
+  min-height: 350px;
+  max-width: 100%;
+  max-height: 100%;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 @keyframes fade-out {

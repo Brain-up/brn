@@ -33,6 +33,8 @@ export default class Task extends CompletionDependent.extend({
 
   isLastTask: isEmpty('nextTask'),
 
+  isLastExerciseTask: isEmpty('nextTaskSameExersise'),
+
   nextAttempt: false,
 
   savePassed() {
