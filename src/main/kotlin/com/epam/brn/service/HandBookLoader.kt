@@ -1,5 +1,7 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.SeriesTypeEnum
+import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -34,18 +36,18 @@ class HandBookLoader(
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val csvParserService: CSVParserService
 ) {
-
     private val log = logger()
 
     @Value("\${init.folder:#{null}}")
     var folder: Path? = null
 
+    @Value(value = "\${brn.audio.file.default.path}")
+    private lateinit var defaultAudioFileUrl: String
+
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
         val isInitRequired = exerciseGroupRepository.count() == 0L
-
         log.debug("Is initialization required: $isInitRequired")
-
         if (isInitRequired) {
             folder?.let { loadInitialDataFromFileSystem(it) }
                 ?: loadInitialDataFromClassPath()
@@ -55,10 +57,10 @@ class HandBookLoader(
     private fun loadInitialDataFromFileSystem(folder: Path) {
         log.debug("Loading data from file system $folder")
 
-        if (!Files.exists(folder)) {
+        if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
-        }
-        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS)
+
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES)
             .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
             .toMap()
 
@@ -77,11 +79,9 @@ class HandBookLoader(
 
     private fun loadInitialDataFromClassPath() {
         log.debug("Loading data from classpath initFiles")
-
-        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS)
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES)
             .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
             .toMap()
-
         loadInitialDataToDb(sources)
     }
 
@@ -89,15 +89,13 @@ class HandBookLoader(
         val exercises = sources.getValue(EXERCISES)
         val groups = sources.getValue(GROUPS)
         val series = sources.getValue(SERIES)
-        val tasks = sources.getValue(TASKS)
+        val tasks = sources.getValue(TASKS_FOR_SINGLE_WORDS_SERIES)
 
         val groupsById = prepareExerciseGroups(groups)
         val seriesById = prepareSeries(groupsById, series)
         val exerciseById = prepareExercises(seriesById, exercises)
-        prepareTasks(exerciseById, tasks)
-
+        prepareTasksForSingleWordsSeries(exerciseById, tasks)
         exerciseGroupRepository.saveAll(groupsById.values)
-
         log.debug("Initialization succeeded")
     }
 
@@ -107,13 +105,10 @@ class HandBookLoader(
             override fun convert(source: GroupCsv): ExerciseGroup {
                 val exerciseGroup = ExerciseGroup(name = source.name, description = source.description)
                 groupsById[source.groupId] = exerciseGroup
-
                 return exerciseGroup
             }
         }
-
         csvParserService.parseCommasSeparatedCsvFile(groupsInputStream, groupConverter)
-
         return groupsById
     }
 
@@ -125,7 +120,6 @@ class HandBookLoader(
         val seriesConverter = object : Converter<SeriesCsv, Series> {
             override fun convert(source: SeriesCsv): Series {
                 require(groupsById.containsKey(source.groupId))
-
                 val group = groupsById.getValue(source.groupId)
                 val exerciseSeries = Series(
                     name = source.name,
@@ -133,14 +127,11 @@ class HandBookLoader(
                     exerciseGroup = group
                 )
                 group.series += exerciseSeries
-
                 seriesById[source.seriesId] = exerciseSeries
                 return exerciseSeries
             }
         }
-
         csvParserService.parseCommasSeparatedCsvFile(seriesInputStream, seriesConverter)
-
         return seriesById
     }
 
@@ -152,29 +143,23 @@ class HandBookLoader(
         val exerciseConverter = object : Converter<ExerciseCsv, Exercise> {
             override fun convert(source: ExerciseCsv): Exercise {
                 require(seriesById.containsKey(source.seriesId))
-
                 val exerciseSeries = seriesById[source.seriesId]!!
-
                 val exercise = Exercise(
                     name = source.name,
                     description = source.description,
                     level = source.level,
                     series = exerciseSeries
                 )
-
                 exerciseById[source.exerciseId] = exercise
-
                 exerciseSeries.exercises += exercise
-
                 return exercise
             }
         }
-
         csvParserService.parseCommasSeparatedCsvFile(exercisesInputStream, exerciseConverter)
         return exerciseById
     }
 
-    private fun prepareTasks(
+    private fun prepareTasksForSingleWordsSeries(
         exerciseById: MutableMap<Long, Exercise>,
         tasksInputStream: InputStream
     ) {
@@ -186,7 +171,8 @@ class HandBookLoader(
                     word = source.word,
                     audioFileUrl = source.audioFileName,
                     pictureFileUrl = source.pictureFileName,
-                    soundsCount = 1 // TODO need to detect sounds count
+                    soundsCount = 1, // TODO need to detect sounds count
+                    wordType = WordTypeEnum.valueOf(source.wordType).toString()
                 )
 
                 val options = source.words
@@ -199,20 +185,18 @@ class HandBookLoader(
                     serialNumber = source.orderNumber,
                     exercise = exercise,
                     correctAnswer = answer,
-                    answerOptions = options
+                    answerOptions = options,
+                    seriesType = SeriesTypeEnum.SINGLE_WORDS.toString()
                 )
-
                 exercise.tasks += task
-
                 return task
             }
         }
-
         csvParserService.parseCsvFile(tasksInputStream, taskConverter)
     }
 
     companion object {
-        private const val TASKS = "tasks.csv"
+        private const val TASKS_FOR_SINGLE_WORDS_SERIES = "tasks_for_single_words_series.csv"
         private const val SERIES = "series.csv"
         private const val GROUPS = "groups.csv"
         private const val EXERCISES = "exercises.csv"
