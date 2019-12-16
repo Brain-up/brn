@@ -107,7 +107,7 @@ test {
 }
 
 task integrationTest(type: Test) { task ->
-    task.useJUnitPlatform { options ->
+    task.useJUnitPlatform { JUnitPlatformOptions options ->
         options.includeTags "integration-test"
     }
     task.shouldRunAfter tasks.test
