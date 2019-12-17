@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.TaskDto
+import com.epam.brn.constant.SeriesTypeEnum
+import com.epam.brn.dto.TaskDtoForSingleWords
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -24,6 +25,7 @@ data class Task(
         allocationSize = 50
     )
     val id: Long? = null,
+    val seriesType: String = "",
     val name: String? = "",
     var serialNumber: Int? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,8 +42,9 @@ data class Task(
     )
     var answerOptions: MutableSet<Resource> = hashSetOf()
 ) {
-    fun toDto() = TaskDto(
+    fun toSingleWordsDto() = TaskDtoForSingleWords(
         id = id,
+        seriesType = SeriesTypeEnum.SINGLE_WORDS,
         name = name,
         serialNumber = serialNumber,
         correctAnswer = correctAnswer?.toDto(),

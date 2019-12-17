@@ -2,6 +2,7 @@
   "data": [
     {
       "id": 3,
+      "seriesType": "SINGLE_WORDS",
       "name": "task",
       "correctAnswer": {
         "id": 3,

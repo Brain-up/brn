@@ -16,9 +16,7 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    uniqueConstraints = [
-        UniqueConstraint(columnNames = ["user_id", "exercise_id"])
-    ],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "exercise_id"])],
     indexes = [Index(name = "study_history_ix_user_exercise", columnList = "user_id,exercise_id")]
 )
 data class StudyHistory(
@@ -30,22 +28,22 @@ data class StudyHistory(
         allocationSize = 50
     )
     val id: Long? = null,
+
     @OneToOne(cascade = [(CascadeType.ALL)], optional = false)
     @JoinColumn(name = "user_id")
     var userAccount: UserAccount?,
+
     @OneToOne(cascade = [(CascadeType.ALL)], optional = false)
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise? = null,
+
     var startTime: LocalDateTime?,
     var endTime: LocalDateTime?,
-    var doneTasksCount: Short?,
-    var successTasksCount: Short?,
-    var repetitionCount: Short?
+    var tasksCount: Short?,
+    var repetitionIndex: Float?
 ) {
-    constructor() : this(null, null, null, null, null, null, null, null)
-
     override fun toString(): String {
-        return "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, doneTasksCount=$doneTasksCount, successTasksCount=$successTasksCount, repetitionCount=$repetitionCount)"
+        return "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
     }
 
     fun toDto() = StudyHistoryDto(
@@ -54,8 +52,7 @@ data class StudyHistory(
         exerciseId = this.exercise?.id,
         startTime = this.startTime,
         endTime = this.endTime,
-        doneTasksCount = this.doneTasksCount,
-        successTasksCount = this.successTasksCount,
-        repetitionCount = this.repetitionCount
+        tasksCount = this.tasksCount,
+        repetitionIndex = this.repetitionIndex
     )
 }

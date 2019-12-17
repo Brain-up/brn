@@ -1,0 +1,78 @@
+{
+  "data": [
+    {
+      "id": 33,
+      "seriesType": "WORDS_SEQUENCES",
+      "name": "task for WORDS_SEQUENCES",
+      "serialNumber": 1,
+      "answerOptions": [
+        [
+          {
+            "id": 1,
+            "audioFileUrl": "no_noise/девочка.mp3",
+            "word": "девочка",
+            "pictureFileUrl": "pictures/девочка.jpg"
+          },
+          {
+            "id": 2,
+            "audioFileUrl": "no_noise/мальчик.mp3",
+            "word": "мальчик",
+            "pictureFileUrl": "pictures/мальчик.jpg"
+          }
+        ],
+        [
+          {
+            "id": 3,
+            "audioFileUrl": "no_noise/сидит.mp3",
+            "word": "сидит",
+            "pictureFileUrl": "pictures/сидит.jpg"
+          },
+          {
+            "id": 4,
+            "audioFileUrl": "no_noise/стоит.mp3",
+            "word": "стоит",
+            "pictureFileUrl": "pictures/стоит.jpg"
+          }
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "seriesType": "WORDS_SEQUENCES",
+      "name": "task for WORDS_SEQUENCES",
+      "serialNumber": 1,
+      "answerOptions": [
+        [
+          {
+            "id": 1,
+            "audioFileUrl": "no_noise/бабушка.mp3",
+            "word": "бабушка",
+            "pictureFileUrl": "pictures/бабушка.jpg"
+          },
+          {
+            "id": 2,
+            "audioFileUrl": "no_noise/дедушка.mp3",
+            "word": "дедушка",
+            "pictureFileUrl": "pictures/дедушка.jpg"
+          }
+        ],
+        [
+          {
+            "id": 3,
+            "audioFileUrl": "no_noise/идёт.mp3",
+            "word": "идёт",
+            "pictureFileUrl": "pictures/идёт.jpg"
+          },
+          {
+            "id": 4,
+            "audioFileUrl": "no_noise/спит.mp3",
+            "word": "спит",
+            "pictureFileUrl": "pictures/спит.jpg"
+          }
+        ]
+      ]
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

@@ -39,9 +39,8 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 1,
-            successTasksCount = 1,
-            doneTasksCount = 1,
+            repetitionIndex = 1f,
+            tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
             exerciseId = 1L
@@ -52,9 +51,8 @@ internal class StudyHistoryServiceTest {
             exercise = getExercise(),
             endTime = dto.endTime,
             startTime = dto.startTime,
-            doneTasksCount = dto.doneTasksCount,
-            successTasksCount = dto.successTasksCount,
-            repetitionCount = dto.repetitionCount
+            tasksCount = dto.tasksCount,
+            repetitionIndex = dto.repetitionIndex
         )
         `when`(entityManager.getReference(UserAccount::class.java, dto.userId)).thenReturn(getUserAccount())
         `when`(entityManager.getReference(Exercise::class.java, dto.exerciseId)).thenReturn(getExercise())
@@ -76,9 +74,8 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 2,
-            successTasksCount = 1,
-            doneTasksCount = 1,
+            repetitionIndex = 2f,
+            tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
             exerciseId = 1L
@@ -89,9 +86,8 @@ internal class StudyHistoryServiceTest {
             exercise = getExercise(),
             endTime = dto.endTime,
             startTime = dto.startTime,
-            doneTasksCount = dto.doneTasksCount,
-            successTasksCount = dto.successTasksCount,
-            repetitionCount = dto.repetitionCount
+            tasksCount = dto.tasksCount,
+            repetitionIndex = dto.repetitionIndex
         )
         val updatedEntity = StudyHistory(
             id = 10,
@@ -99,9 +95,8 @@ internal class StudyHistoryServiceTest {
             exercise = getExercise(),
             endTime = dto.endTime,
             startTime = dto.startTime,
-            doneTasksCount = dto.doneTasksCount,
-            successTasksCount = dto.successTasksCount,
-            repetitionCount = dto.repetitionCount
+            tasksCount = dto.tasksCount,
+            repetitionIndex = dto.repetitionIndex
         )
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         `when`(
@@ -122,9 +117,8 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = null,
-            successTasksCount = null,
-            doneTasksCount = 5,
+            repetitionIndex = null,
+            tasksCount = 5,
             startTime = null,
             endTime = null,
             exerciseId = 1L
@@ -135,9 +129,8 @@ internal class StudyHistoryServiceTest {
             exercise = getExercise(),
             endTime = LocalDateTime.now(),
             startTime = LocalDateTime.now(),
-            doneTasksCount = 0,
-            successTasksCount = 0,
-            repetitionCount = 1
+            tasksCount = 0,
+            repetitionIndex = 1f
         )
         val updatedEntity = StudyHistory(
             id = 10,
@@ -145,9 +138,8 @@ internal class StudyHistoryServiceTest {
             exercise = getExercise(),
             endTime = existingEntity.endTime,
             startTime = existingEntity.endTime,
-            doneTasksCount = 5,
-            successTasksCount = 0,
-            repetitionCount = 1
+            tasksCount = 5,
+            repetitionIndex = 1f
         )
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
@@ -168,9 +160,8 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 2,
-            successTasksCount = 2,
-            doneTasksCount = null,
+            repetitionIndex = 2f,
+            tasksCount = null,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
             exerciseId = 1L
@@ -181,9 +172,8 @@ internal class StudyHistoryServiceTest {
             exercise = getExercise(),
             endTime = null,
             startTime = dto.startTime,
-            doneTasksCount = 0,
-            successTasksCount = 0,
-            repetitionCount = 1
+            tasksCount = 0,
+            repetitionIndex = 1f
         )
         val updatedEntity = StudyHistory(
             id = 10,
@@ -191,9 +181,8 @@ internal class StudyHistoryServiceTest {
             exercise = getExercise(),
             endTime = dto.endTime,
             startTime = dto.startTime,
-            doneTasksCount = null,
-            successTasksCount = 2,
-            repetitionCount = 2
+            tasksCount = null,
+            repetitionIndex = 2f
         )
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         doNothing().`when`(studyHistoryConverter).updateStudyHistory(dto, existingEntity)

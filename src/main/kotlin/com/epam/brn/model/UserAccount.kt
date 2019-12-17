@@ -18,7 +18,7 @@ data class UserAccount(
     val id: Long? = null,
     @Column(nullable = false)
     val name: String,
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val email: String,
     val birthDate: LocalDate? = null
 ) {

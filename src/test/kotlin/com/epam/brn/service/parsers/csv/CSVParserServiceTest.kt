@@ -23,9 +23,9 @@ class CSVParserServiceTest : Spek({
         it("should parse Tasks") {
 
             val input = """
-                exerciseId orderNumber word audioFileName pictureFileName words
-                1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак)
-                1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz)
+                exerciseId orderNumber word audioFileName pictureFileName words wordType
+                1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
+                1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
@@ -34,12 +34,12 @@ class CSVParserServiceTest : Spek({
 
             result shouldContain TaskCsv(
                 1, 1, "бал", "no_noise/бал.mp3", "pictures/бал.jpg",
-                listOf("(бам", "сам", "дам", "зал", "бак)")
+                listOf("(бам", "сам", "дам", "зал", "бак)"), "OBJECT"
             )
 
             result shouldContain TaskCsv(
                 1, 3, "foo", "no_noise/foo.mp3", "pictures/foo.jpg",
-                listOf("(foo", "bar", "baz)")
+                listOf("(foo", "bar", "baz)"), "OBJECT"
             )
         }
 

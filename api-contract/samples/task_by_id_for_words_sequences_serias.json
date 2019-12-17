@@ -1,0 +1,42 @@
+{
+  "data": [
+    {
+      "id": 3,
+      "seriesType": "WORDS_SEQUENCES",
+      "name": "task for WORDS_SEQUENCES",
+      "serialNumber": 1,
+      "answerOptions": [
+        [
+          {
+            "id": 1,
+            "audioFileUrl": "no_noise/девочка.mp3",
+            "word": "девочка",
+            "pictureFileUrl": "pictures/девочка.jpg"
+          },
+          {
+            "id": 2,
+            "audioFileUrl": "no_noise/мальчик.mp3",
+            "word": "мальчик",
+            "pictureFileUrl": "pictures/мальчик.jpg"
+          }
+        ],
+        [
+          {
+            "id": 3,
+            "audioFileUrl": "no_noise/сидит.mp3",
+            "word": "сидит",
+            "pictureFileUrl": "pictures/сидит.jpg"
+          },
+          {
+            "id": 4,
+            "audioFileUrl": "no_noise/стоит.mp3",
+            "word": "стоит",
+            "pictureFileUrl": "pictures/стоит.jpg"
+          }
+        ]
+      ]
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

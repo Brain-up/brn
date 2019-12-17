@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.TaskDto
+import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.Task
 import com.epam.brn.repo.TaskRepository
@@ -12,24 +12,24 @@ class TaskService(private val taskRepository: TaskRepository) {
 
     private val log = logger()
 
-    fun getAllTasksByExerciseId(exerciseId: Long): List<TaskDto> {
+    fun getAllTasksByExerciseId(exerciseId: Long): List<TaskDtoForSingleWords> {
         val tasks = taskRepository.findAllTasksByExerciseIdWithJoinedAnswers(exerciseId)
-        return tasks.map { task -> task.toDto() }
+        return tasks.map { task -> task.toSingleWordsDto() }
     }
 
-    fun getAllTasks(): List<TaskDto> {
+    fun getAllTasks(): List<TaskDtoForSingleWords> {
         val tasks = taskRepository.findAllTasksWithJoinedAnswers()
-        return tasks.map { task -> task.toDto() }
+        return tasks.map { task -> task.toSingleWordsDto() }
     }
 
     fun save(task: Task): Task {
         return taskRepository.save(task)
     }
 
-    fun getTaskById(taskId: Long): TaskDto {
+    fun getTaskById(taskId: Long): TaskDtoForSingleWords {
         log.debug("Searching task with id=$taskId")
         return taskRepository.findById(taskId)
-            .map { it.toDto() }
+            .map { it.toSingleWordsDto() }
             .orElseThrow { NoDataFoundException("no task is found for id=$taskId") }
     }
 }
