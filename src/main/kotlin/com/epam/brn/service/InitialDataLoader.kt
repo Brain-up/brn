@@ -7,7 +7,9 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.model.Resource
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.parsers.csv.CSVParserService
 import com.epam.brn.service.parsers.csv.converter.Converter
 import com.epam.brn.service.parsers.csv.dto.ExerciseCsv
@@ -31,9 +33,10 @@ import java.nio.file.Path
  */
 @Service
 @Profile("dev", "prod")
-class HandBookLoader(
+class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
+    private val userAccountRepository: UserAccountRepository,
     private val csvParserService: CSVParserService
 ) {
     private val log = logger()
@@ -52,6 +55,7 @@ class HandBookLoader(
             folder?.let { loadInitialDataFromFileSystem(it) }
                 ?: loadInitialDataFromClassPath()
         }
+        userAccountRepository.save(UserAccount(name = "defaultUser", email = "default@default.ru"))
     }
 
     private fun loadInitialDataFromFileSystem(folder: Path) {

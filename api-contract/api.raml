@@ -95,6 +95,17 @@ mediaType:
               example_for_words_sequences_serias: !include samples/task_by_id_for_words_sequences_serias.json
 
 
+# STUDY_HISTORY ----------------------
+/study-history:
+  post:
+  description: Save history of exercises done by user
+    body:
+      application/json:
+        example: !include samples/study_history.json
+    responses:
+      201:
+        example: !include samples/study_history_response.json.json
+
 # LOAD FILES ----------------------
 /files:
   post:

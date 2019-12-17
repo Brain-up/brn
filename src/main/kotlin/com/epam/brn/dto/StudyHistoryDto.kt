@@ -4,20 +4,17 @@ import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 
 data class StudyHistoryDto(
+    var id: Long? = null,
     @NotNull
     var userId: Long?,
     @NotNull
     var exerciseId: Long?,
     var startTime: LocalDateTime?,
     var endTime: LocalDateTime?,
-    var doneTasksCount: Short?,
-    var successTasksCount: Short?,
-    var repetitionCount: Short?,
-    var id: Long? = null
+    var tasksCount: Short?,
+    var repetitionIndex: Float?
 ) {
-    constructor() : this(null, null, null, null, null, null, null)
-
     override fun toString(): String {
-        return "StudyHistoryDto(userId=$userId, exerciseId=$exerciseId, startTime=$startTime, endTime=$endTime, doneTasksCount=$doneTasksCount, successTasksCount=$successTasksCount, repetitionCount=$repetitionCount)"
+        return "StudyHistoryDto(userId=$userId, exerciseId=$exerciseId, startTime=$startTime, endTime=$endTime, doneTasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
     }
 }

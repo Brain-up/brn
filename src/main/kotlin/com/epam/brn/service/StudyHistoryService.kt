@@ -19,6 +19,7 @@ class StudyHistoryService(
     @Autowired val studyHistoryConverter: StudyHistoryConverter
 ) {
     private val log = logger()
+
     fun saveOrReplaceStudyHistory(studyHistoryDto: StudyHistoryDto): StudyHistoryDto? {
         return studyHistoryRepository.findByUserAccountIdAndExerciseId(
             studyHistoryDto.userId,
@@ -36,9 +37,8 @@ class StudyHistoryService(
                     exercise = exerciseReference,
                     startTime = studyHistoryDto.startTime,
                     endTime = studyHistoryDto.endTime,
-                    doneTasksCount = studyHistoryDto.doneTasksCount,
-                    successTasksCount = studyHistoryDto.successTasksCount,
-                    repetitionCount = studyHistoryDto.repetitionCount
+                    tasksCount = studyHistoryDto.tasksCount,
+                    repetitionIndex = studyHistoryDto.repetitionIndex
                 )
             ).toDto()
         }
