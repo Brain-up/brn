@@ -1,2 +1,13 @@
-rootProject.name = 'epam-brn'
+pluginManagement {
+    plugins {
+        id 'org.springframework.boot' version "$springVersion"
+        id 'io.spring.dependency-management' version "$springDependencyVersion"
+        id "org.jetbrains.kotlin.jvm" version "$kotlinVersion"
+        id "org.jetbrains.kotlin.plugin.spring" version "$kotlinVersion"
+        id "org.jetbrains.kotlin.plugin.jpa" version "$kotlinVersion"
+        id "org.jetbrains.kotlin.plugin.allopen" version "$kotlinVersion"
+        id "org.jetbrains.kotlin.kapt" version "$kotlinVersion"
+    }
+}
 
+rootProject.name = 'epam-brn'

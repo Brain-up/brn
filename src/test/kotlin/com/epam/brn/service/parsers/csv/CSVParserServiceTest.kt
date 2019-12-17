@@ -6,6 +6,7 @@ import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import com.epam.brn.service.parsers.csv.dto.SeriesCsv
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
 import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldContain
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.nio.charset.StandardCharsets
@@ -29,17 +30,16 @@ class CSVParserServiceTest : Spek({
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
                 csvParserService.parseCsvFile(it, makeIdentityConverter<TaskCsv>())
-            }
+            }.map { res -> res.value.first }.toList()
 
-            result shouldEqual listOf(
-                TaskCsv(
-                    1, 1, "бал", "no_noise/бал.mp3", "pictures/бал.jpg",
-                    listOf("(бам", "сам", "дам", "зал", "бак)") , "OBJECT"
-                ),
-                TaskCsv(
-                    1, 3, "foo", "no_noise/foo.mp3", "pictures/foo.jpg",
-                    listOf("(foo", "bar", "baz)"), "OBJECT"
-                )
+            result shouldContain TaskCsv(
+                1, 1, "бал", "no_noise/бал.mp3", "pictures/бал.jpg",
+                listOf("(бам", "сам", "дам", "зал", "бак)"), "OBJECT"
+            )
+
+            result shouldContain TaskCsv(
+                1, 3, "foo", "no_noise/foo.mp3", "pictures/foo.jpg",
+                listOf("(foo", "bar", "baz)"), "OBJECT"
             )
         }
 
