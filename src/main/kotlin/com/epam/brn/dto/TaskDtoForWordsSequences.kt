@@ -10,5 +10,5 @@ data class TaskDtoForWordsSequences(
     val exerciseId: Long? = null,
     val name: String? = "",
     val serialNumber: Int? = 0,
-    val answerOptions: MutableSet<ResourceDto> = HashSet()
+    val answerOptions: MutableSet<MutableSet<ResourceDto>> = HashSet()
 )
