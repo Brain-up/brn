@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
-import { timeout } from 'ember-concurrency';
+import customTimeout from 'brn/utils/custom-timeout';
 
 export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
@@ -56,16 +56,16 @@ export default class TaskPlayerComponent extends Component {
 
   async runNextTaskTimer() {
     this.onRightAnswer();
-    await timeout(3000);
+    await customTimeout(3000);
     if (this.task.isLastExerciseTask) {
       this.showExerciseResult();
-      await timeout(3000);
+      await customTimeout(3000);
     }
     this.afterCompleted();
   }
 
   async runNextAttemptTimer() {
-    await timeout(2000);
+    await customTimeout(2000);
     this.set('taskResultIsVisible', false);
   }
 }

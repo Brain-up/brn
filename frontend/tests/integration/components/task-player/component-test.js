@@ -1,8 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, settled } from '@ember/test-helpers';
-import { timeout } from 'ember-concurrency';
 import hbs from 'htmlbars-inline-precompile';
+import customTimeout from 'brn/utils/custom-timeout';
 import { chooseAnswer } from './test-support/helpers';
 import pageObject from './test-support/page-object';
 
@@ -45,7 +45,7 @@ module('Integration | Component | task-player', function(hooks) {
 
     assert.notOk(pageObject.hasRightAnswer);
 
-    await timeout(1500);
+    await customTimeout();
 
     assert
       .dom('[data-test-answer-correctness-widget]')

@@ -7,8 +7,8 @@ import {
   chooseAnswer,
   setupAfterPageVisit,
 } from './test-support/helpers';
-import { timeout } from 'ember-concurrency';
 import { settled } from '@ember/test-helpers';
+import customTimeout from 'brn/utils/custom-timeout';
 
 module('Acceptance | tasks flow', function(hooks) {
   setupApplicationTest(hooks);
@@ -23,7 +23,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     chooseAnswer(wrongAnswer.word);
 
-    await timeout(1500);
+    await customTimeout();
 
     assert
       .dom('[data-test-answer-correctness-widget]')
@@ -33,7 +33,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     chooseAnswer(targetTask.correctAnswer.word);
 
-    await timeout(1500);
+    await customTimeout();
 
     assert.dom('[data-test-right-answer-notification]').exists();
   });
@@ -47,11 +47,11 @@ module('Acceptance | tasks flow', function(hooks) {
 
     chooseAnswer(targetTask.correctAnswer.word);
 
-    await timeout(1500);
+    await customTimeout();
 
     assert.dom('[data-test-right-answer-notification]').exists();
 
-    await timeout(2500);
+    await customTimeout();
 
     assert.dom('[data-test-task-id="2"]').exists();
   });
@@ -72,11 +72,11 @@ module('Acceptance | tasks flow', function(hooks) {
 
     chooseAnswer(targetTask.correctAnswer.word);
 
-    await timeout(1500);
+    await customTimeout();
 
     assert.dom('[data-test-right-answer-notification]').exists();
 
-    await timeout(4000);
+    await customTimeout();
 
     assert
       .dom('[data-test-answer-correctness-widget]')
@@ -94,27 +94,32 @@ module('Acceptance | tasks flow', function(hooks) {
 
     chooseAnswer(targetTask.correctAnswer.word);
 
-    await timeout(1500);
+    await customTimeout();
 
     assert.dom('[data-test-right-answer-notification]').exists();
 
-    await timeout(2500);
+    await customTimeout();
 
     assert.dom('[data-test-task-id="2"]').exists();
 
     const targetTask2 = setupAfterPageVisit().targetTask;
 
-    await timeout(2500);
+    await customTimeout();
 
     chooseAnswer(targetTask2.correctAnswer.word);
 
-    await timeout(4000);
+    await customTimeout();
+
+    assert.dom('[data-test-right-answer-notification]').exists();
+
+    await customTimeout();
 
     assert
       .dom('[data-test-answer-correctness-widget]')
       .hasAttribute('data-test-is-correct');
 
-    await timeout(4000);
+    await customTimeout();
+    await customTimeout();
 
     assert
       .dom('[data-test-task-id="3"]')
