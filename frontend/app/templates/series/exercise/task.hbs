@@ -1,8 +1,6 @@
 <TaskPlayer
   data-test-task-player
-  @onRightAnswer={{queue
-    (action this.saveExerciseMaybe)
-    (action this.nextTaskTransition)
-  }}
+  @onRightAnswer={{action this.saveExerciseMaybe}}
+  @afterCompleted={{action this.nextTaskTransition}}
   @task={{this.model}}
 />

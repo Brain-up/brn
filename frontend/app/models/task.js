@@ -15,6 +15,7 @@ export default class Task extends CompletionDependent.extend({
   pictureFileUrl: attr('string'),
   words: attr('array'),
   exercise: belongsTo('exercise', { async: true }),
+  repetitionCount: attr('number'),
   tasksManager: service(),
   parent: reads('exercise'),
   isCompleted: computed('tasksManager.completedTasks.[]', function() {

@@ -31,12 +31,14 @@ export default class TaskPlayerComponent extends Component {
   }
 
   onRightAnswer() {}
+  afterCompleted() {}
 
   handleSubmit(word) {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {
       const currentWordsOrder = Array.from(this.shuffledWords);
       this.task.set('nextAttempt', true);
+      this.task.set('repetitionCount', this.task.repetitionCount + 1);
       this.set('taskResultIsVisible', true);
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
@@ -53,12 +55,13 @@ export default class TaskPlayerComponent extends Component {
   }
 
   async runNextTaskTimer() {
+    this.onRightAnswer();
     await timeout(3000);
     if (this.task.isLastExerciseTask) {
       this.showExerciseResult();
       await timeout(3000);
     }
-    this.onRightAnswer();
+    this.afterCompleted();
   }
 
   async runNextAttemptTimer() {

@@ -56,14 +56,14 @@ module('Acceptance | tasks flow', function(hooks) {
     assert.dom('[data-test-task-id="2"]').exists();
   });
 
-  test('sends a PUT request after exercise completed', async function(assert) {
+  test('sends a POST request to "study-history" after exercise completed', async function(assert) {
     assert.expect(3);
 
     getServerResponses();
     /* eslint-disable no-undef */
-    server.put('exercises/2', function() {
-      assert.ok(true, 'sends a put request');
-      return true;
+    server.post('/study-history', function(request) {
+      assert.ok(true, 'sends a post request');
+      return { id: 1, ...JSON.parse(request.requestBody) };
     });
 
     await pageObject.goToFirstTaskSecondExercise();
@@ -81,8 +81,6 @@ module('Acceptance | tasks flow', function(hooks) {
     assert
       .dom('[data-test-answer-correctness-widget]')
       .hasAttribute('data-test-is-correct');
-
-    await timeout(4000);
   });
 
   test('shows a complete victory widget after exercise completed', async function(assert) {

@@ -12,6 +12,8 @@ export default class Exercise extends CompletionDependent.extend({
   tasks: hasMany('task', { async: true }),
   children: reads('tasks'),
   parent: reads('series'),
+  startTime: attr('date'),
+  endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
   isCompleted: computed(
     'tasks.@each.isCompleted',
@@ -32,4 +34,9 @@ export default class Exercise extends CompletionDependent.extend({
   nextSiblings: computed('siblingExercises.[]', function() {
     return this.siblingExercises.slice(this.siblingExercises.indexOf(this) + 1);
   }),
+  trackTime(type = 'start') {
+    if (type === 'start' || type === 'end') {
+      this.set(`${type}Time`, new Date());
+    }
+  },
 }) {}

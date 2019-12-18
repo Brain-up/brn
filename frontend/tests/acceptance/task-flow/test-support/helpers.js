@@ -18,6 +18,10 @@ export function setupAfterPageVisit() {
 
 export function getServerResponses() {
   /* eslint-disable no-undef */
+  server.post('study-history', () => {
+    return { id: 1 };
+  });
+
   server.get('groups', () => {
     return { data: groups };
   });

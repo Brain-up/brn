@@ -22,5 +22,7 @@ export default Route.extend({
         exercise.get('sortedTasks.firstObject.id'),
       );
     }
+
+    exercise.trackTime('start');
   },
 });
