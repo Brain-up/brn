@@ -1,0 +1,18 @@
+footer {
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+a {
+  display: block;
+  max-height: 100%;
+  max-width: 70px;
+  overflow: hidden;
+}
+
+.support-title {
+  font-size: 12px;
+  margin-right: 7px;
+}

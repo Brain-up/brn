@@ -6,3 +6,15 @@ a.active {
 .fa-brain {
   margin-right: 5px;
 }
+
+.logo-text {
+  display: flex;
+  align-items: center;
+  line-height: 18px;
+  font-size: 16px;
+}
+
+.logo-text svg {
+  font-size: 25px;
+  margin-right: 10px;
+}

@@ -1,11 +1,16 @@
-<nav class="flex items-center justify-between flex-wrap bg-teal-500 p-5">
+<nav class="flex items-center justify-between flex-wrap bg-teal-500 p-4">
   <div class="flex items-center flex-shrink-0 text-white mr-8">
     {{#link-to
       "index"
       data-test-logo
       class="font-semibold text-xl tracking-tight logo-text"
     }}
-      <FaIcon @icon="brain" />BAA training
+      <FaIcon @icon="brain" />
+      <span class="logo-link__name">
+        Brain Auditory
+        <br />
+        Ability Training
+      </span>
     {{/link-to}}
   </div>
   <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
@@ -15,7 +20,7 @@
         data-test-group-link
         class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
       }}
-        Groups
+        Группы
       {{/link-to}}
     </div>
   </div>
