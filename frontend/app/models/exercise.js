@@ -39,4 +39,30 @@ export default class Exercise extends CompletionDependent.extend({
       this.set(`${type}Time`, new Date());
     }
   },
+  async postHistory() {
+    const { startTime, endTime, tasks, id } = this;
+
+    const repetitionsCount = tasks.reduce((result, task) => {
+      if (task.repetitionCount) {
+        result += task.repetitionCount;
+      }
+      return result;
+    }, 0);
+
+    const repetitionIndex = repetitionsCount / tasks.length;
+
+    await fetch('/api/study-history', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        startTime,
+        endTime,
+        repetitionIndex,
+        exerciseId: id,
+        tasksCount: tasks.length,
+      }),
+    });
+  },
 }) {}

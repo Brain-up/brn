@@ -3,7 +3,6 @@ import { inject } from '@ember/service';
 
 export default Controller.extend({
   router: inject(),
-  studyHistorySaver: inject(),
   nextTaskTransition() {
     !this.model.isLastTask
       ? this.router.transitionTo(
@@ -23,6 +22,6 @@ export default Controller.extend({
   },
   saveExercise(exercise) {
     exercise.trackTime('end');
-    this.studyHistorySaver.saveExerciseHistory(exercise);
+    exercise.postHistory();
   },
 });
