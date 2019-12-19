@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank
 
 data class SeriesDto(
     @NotBlank
-    val exerciseGroupId: Long? = null,
+    val group: Long? = null,
     val id: Long?,
     @NotBlank
     val name: String,

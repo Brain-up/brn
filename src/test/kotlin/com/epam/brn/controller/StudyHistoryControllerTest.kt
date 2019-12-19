@@ -24,9 +24,8 @@ internal class StudyHistoryControllerTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 1,
-            successTasksCount = 1,
-            doneTasksCount = 1,
+            repetitionIndex = 1f,
+            tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
             exerciseId = 1L
@@ -45,9 +44,8 @@ internal class StudyHistoryControllerTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = null,
-            successTasksCount = 2,
-            doneTasksCount = null,
+            repetitionIndex = 1f,
+            tasksCount = null,
             startTime = null,
             endTime = null,
             exerciseId = 1L
@@ -66,9 +64,8 @@ internal class StudyHistoryControllerTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 10,
-            successTasksCount = 1,
-            doneTasksCount = 1,
+            repetitionIndex = 1f,
+            tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
             exerciseId = 1L

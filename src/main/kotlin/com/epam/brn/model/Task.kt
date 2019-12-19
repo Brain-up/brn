@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.TaskDto
+import com.epam.brn.constant.SeriesTypeEnum
+import com.epam.brn.dto.TaskDtoForSingleWords
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -24,6 +25,7 @@ data class Task(
         allocationSize = 50
     )
     val id: Long? = null,
+    val seriesType: String = "",
     val name: String? = "",
     var serialNumber: Int? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,8 +42,9 @@ data class Task(
     )
     var answerOptions: MutableSet<Resource> = hashSetOf()
 ) {
-    fun toDto() = TaskDto(
+    fun toSingleWordsDto() = TaskDtoForSingleWords(
         id = id,
+        seriesType = SeriesTypeEnum.SINGLE_WORDS,
         name = name,
         serialNumber = serialNumber,
         correctAnswer = correctAnswer?.toDto(),
@@ -50,15 +53,12 @@ data class Task(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as Task
-
         if (id != other.id) return false
         if (name != other.name) return false
         if (serialNumber != other.serialNumber) return false
         if (exercise != other.exercise) return false
         if (correctAnswer != other.correctAnswer) return false
-
         return true
     }
 
@@ -71,7 +71,5 @@ data class Task(
         return result
     }
 
-    override fun toString(): String {
-        return "Task(id=$id, name=$name, serialNumber=$serialNumber)"
-    }
+    override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
 }

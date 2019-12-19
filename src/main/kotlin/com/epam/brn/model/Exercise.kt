@@ -44,15 +44,12 @@ data class Exercise(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as Exercise
-
         if (id != other.id) return false
         if (name != other.name) return false
         if (description != other.description) return false
         if (level != other.level) return false
         if (series != other.series) return false
-
         return true
     }
 
@@ -65,7 +62,5 @@ data class Exercise(
         return result
     }
 
-    override fun toString(): String {
-        return "Exercise(id=$id, name='$name', description=$description, level=$level)"
-    }
+    override fun toString() = "Exercise(id=$id, name='$name', description=$description, level=$level)"
 }

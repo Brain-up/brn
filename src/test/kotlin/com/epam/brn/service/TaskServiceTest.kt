@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.TaskDto
+import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.Task
 import com.epam.brn.repo.TaskRepository
@@ -55,7 +55,7 @@ internal class TaskServiceTest {
             // THEN
             assertThat(findAllTasksWithAnswers)
                 .usingElementComparatorOnFields("id", "name", "serialNumber")
-                .containsExactly(TaskDto(id = testTask.id, name = testTask.name, serialNumber = testTask.serialNumber))
+                .containsExactly(TaskDtoForSingleWords(id = testTask.id, name = testTask.name, serialNumber = testTask.serialNumber))
         }
 
         @Test
@@ -71,7 +71,7 @@ internal class TaskServiceTest {
             // THEN
             assertThat(findAllTasksWithAnswers)
                 .isEqualToComparingOnlyGivenFields(
-                    TaskDto(id = testTask.id, name = testTask.name, serialNumber = testTask.serialNumber),
+                    TaskDtoForSingleWords(id = testTask.id, name = testTask.name, serialNumber = testTask.serialNumber),
                     "id", "name", "serialNumber"
                 )
         }
@@ -103,8 +103,8 @@ internal class TaskServiceTest {
             assertThat(findAllTasksWithAnswers)
                 .usingElementComparatorOnFields("id", "name", "serialNumber")
                 .containsExactly(
-                    TaskDto(id = testTask.id, name = testTask.name, serialNumber = testTask.serialNumber),
-                    TaskDto(
+                    TaskDtoForSingleWords(id = testTask.id, name = testTask.name, serialNumber = testTask.serialNumber),
+                    TaskDtoForSingleWords(
                         id = secondTestTask.id,
                         name = secondTestTask.name,
                         serialNumber = secondTestTask.serialNumber

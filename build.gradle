@@ -1,34 +1,12 @@
-buildscript {
-    ext {
-        kotlin_version = "1.3.50" // Required for Kotlin integration
-        spring_boot_version = "2.1.8.RELEASE"
-        mockitoVersion = "3.0.0"
-        junitVersion = "5.3.1"
-        flywayVersion = "5.2.4"
-    }
-    repositories {
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
-        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.21"
-    }
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.kotlin.plugin.spring"
+    id "org.jetbrains.kotlin.plugin.jpa"
+    id "org.jetbrains.kotlin.plugin.allopen"
+    id "org.jetbrains.kotlin.kapt"
 }
-
-apply plugin: "kotlin" // Required for Kotlin integration
-apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
-apply plugin: "org.springframework.boot"
-apply plugin: "io.spring.dependency-management"
-apply plugin: "kotlin-jpa"
-apply plugin: "kotlin-allopen"
-apply plugin: "kotlin-kapt"
-apply plugin: "net.ltgt.apt-idea"
 
 allOpen {
     annotation "javax.persistence.Entity"
@@ -42,55 +20,42 @@ repositories {
 
 ext["mockito.version"] = "${mockitoVersion}"
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-batch"
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
 
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
-    
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: "junit", module: "junit"
-    }
-    testCompile "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-    testCompile "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
-    testCompile "com.nhaarman:mockito-kotlin:1.6.0"
-    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test', version: '1.3.50'
-    compile "org.mapstruct:mapstruct:1.3.1.Final"
-    compile "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
-    compile "org.apache.logging.log4j:log4j-api:2.11.2"
-    compile "org.apache.logging.log4j:log4j-core:2.11.2"
-    compile group: "org.apache.commons", name: "commons-lang3", version: "3.9"
-    compile group: "org.apache.commons", name: "commons-math3", version: "3.6.1"
-    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-    compile group: "commons-io", name: "commons-io", version: "2.6"
 
-    compile group: "org.apache.commons", name: "commons-collections4", version: "4.0"
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
-    compile group: "io.springfox", name: "springfox-swagger-ui", version: "2.9.2"
-    compile group: "io.springfox", name: "springfox-swagger2", version: "2.9.2"
-    compile "com.h2database:h2"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:1.3.50"
+    implementation "org.mapstruct:mapstruct:1.3.1.Final"
+    implementation "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
+    implementation "org.apache.commons:commons-lang3:3.9"
+    implementation "org.apache.commons:commons-collections4:4.1"
+    implementation "commons-io:commons-io:2.6"
+
+    implementation "io.springfox:springfox-swagger-ui:2.9.2"
+    implementation "io.springfox:springfox-swagger2:2.9.2"
+    testRuntimeOnly "com.h2database:h2"
 
     def spek_version = '2.0.8'
     testImplementation "org.spekframework.spek2:spek-dsl-jvm:$spek_version"
     testImplementation 'org.amshove.kluent:kluent:1.58'
     testRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:$spek_version"
-    testRuntimeOnly "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: "junit", module: "junit"
+        exclude group: "junit"
+        exclude group: "org.mockito"
     }
-    testCompile "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-    testCompile "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
-    testCompile "com.nhaarman:mockito-kotlin:1.6.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
 
-    kapt("org.mapstruct:mapstruct-processor:1.3.1.Final")
-    kapt("org.mapstruct:mapstruct-jdk8:1.3.1.Final")
+    kapt "org.mapstruct:mapstruct-processor:1.3.1.Final"
 }
 
 compileKotlin {
@@ -111,6 +76,7 @@ compileTestKotlin {
 configurations {
     ktlint
 }
+
 dependencies {
     ktlint "com.github.shyiko:ktlint:0.31.0"
 }
@@ -133,31 +99,16 @@ project.task("ktlint", type: JavaExec) {
             "src/**/*.kt"
     ]
 }
-// compileKotlin.dependsOn ktlint
 
 test {
-    useJUnitPlatform {
-
-    }
-}
-
-tasks.withType(Test) { Test task ->
-    task.useJUnitPlatform { JUnitPlatformOptions options ->
+    useJUnitPlatform { options ->
         options.excludeTags "integration-test"
     }
-    testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = "full"
 }
 
-task integrationTest(type: Test) { Test task ->
+task integrationTest(type: Test) { task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
         options.includeTags "integration-test"
     }
-    testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = "full"
-    System.properties.remove("java.endorsed.dirs")
-    task.systemProperties(System.properties)
-    println "Test task system properties: " + task.systemProperties
-    tasks.check.dependsOn task
     task.shouldRunAfter tasks.test
 }

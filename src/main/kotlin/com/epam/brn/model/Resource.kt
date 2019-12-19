@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.dto.ResourceDto
 import javax.persistence.Entity
 import javax.persistence.Index
@@ -27,6 +28,7 @@ data class Resource(
     var audioFileUrl: String? = "",
     @Column(nullable = false)
     var word: String? = "",
+    var wordType: String = "",
     var pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
     @ManyToMany(mappedBy = "answerOptions")
@@ -37,7 +39,8 @@ data class Resource(
         audioFileUrl = audioFileUrl,
         word = word,
         pictureFileUrl = pictureFileUrl,
-        soundsCount = soundsCount
+        soundsCount = soundsCount,
+        wordType = WordTypeEnum.valueOf(wordType)
     )
 
     override fun equals(other: Any?): Boolean {
@@ -64,7 +67,5 @@ data class Resource(
         return result
     }
 
-    override fun toString(): String {
-        return "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word', pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount)"
-    }
+    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word', pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount)"
 }

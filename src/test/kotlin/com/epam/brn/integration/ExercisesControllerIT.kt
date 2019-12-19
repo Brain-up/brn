@@ -114,9 +114,8 @@ class ExercisesControllerIT {
                 exercise = existingExercise,
                 endTime = LocalDateTime.now(),
                 startTime = LocalDateTime.now(),
-                doneTasksCount = 2,
-                successTasksCount = 1,
-                repetitionCount = 3
+                tasksCount = 2,
+                repetitionIndex = 1f
             )
         )
     }

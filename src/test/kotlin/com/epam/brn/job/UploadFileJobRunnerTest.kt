@@ -58,7 +58,7 @@ class UploadFileJobRunnerTest {
 
         FileUtils.moveFile(
             oldFile,
-            FileUtils.getFile("$pathToTaskFiles\\tasks.csv")
+            FileUtils.getFile("$pathToTaskFiles\\tasks_for_single_words_series.csv")
         )
     }
 
