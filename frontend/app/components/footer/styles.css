@@ -3,6 +3,7 @@ footer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  font-size: 12px;
 }
 
 a {
@@ -10,9 +11,4 @@ a {
   max-height: 100%;
   max-width: 70px;
   overflow: hidden;
-}
-
-.support-title {
-  font-size: 12px;
-  margin-right: 7px;
 }
