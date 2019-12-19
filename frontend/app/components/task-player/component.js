@@ -55,6 +55,10 @@ export default class TaskPlayerComponent extends Component {
   }
 
   async runNextTaskTimer() {
+    this.element.style.setProperty(
+      '--word-picture-url',
+      `url(${this.task.pictureFileUrl})`,
+    );
     this.onRightAnswer();
     await customTimeout(3000);
     if (this.task.isLastExerciseTask) {

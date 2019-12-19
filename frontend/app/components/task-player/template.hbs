@@ -12,9 +12,7 @@
           data-test-right-answer-notification
           aria-label={{html-safe (concat "изображение " @task.word)}}
           class="task-player__image flex-1 rounded shadow-md mx-auto"
-          style={{html-safe
-            (concat "background-image: url(" @task.pictureFileUrl ")")
-          }}
+          role="img"
         ></div>
       {{/if}}
     </div>
