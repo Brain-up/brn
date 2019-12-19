@@ -1,9 +1,6 @@
 <TaskPlayer
   data-test-task-player
-  @onRightAnswer={{transition-to
-    "series.exercise.task"
-    this.model.nextTask.exercise.id
-    this.model.nextTask.id
-  }}
+  @onRightAnswer={{action this.saveExerciseMaybe}}
+  @afterCompleted={{action this.nextTaskTransition}}
   @task={{this.model}}
 />
