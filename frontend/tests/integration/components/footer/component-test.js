@@ -9,6 +9,6 @@ module('Integration | Component | footer', function(hooks) {
   test('it renders', async function(assert) {
     await render(hbs`<Footer />`);
 
-    assert.equal(this.element.textContent.trim(), 'При поддержке');
+    assert.dom(this.element).includesText('При поддержке');
   });
 });
