@@ -18,9 +18,11 @@ body {
 }
 
 body > div.ember-view {
-  min-height: 100%;
+  min-height: 100vh;
   margin: 0 auto;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 main {
@@ -29,6 +31,7 @@ main {
   background: white;
   min-height: 80vh;
   padding: 25px 40px 40px;
+  flex: 1;
 }
 
 main > * {
