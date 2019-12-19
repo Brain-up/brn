@@ -1,4 +1,5 @@
 name: Frontend tests
+
 on:
   pull_request:
     paths:
@@ -34,9 +35,10 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - uses: mydea/ember-cli-code-coverage-action@v1.1.0
+      - uses: H1D/ember-cli-code-coverage-action@f72d3f0bdbff80c841c688ad1070e6f11032d94a
         with:
           working-directory: ./frontend
           test-command: "yarn test:cover"
           coverage-file: "./frontend/coverage/coverage-summary.json"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          message: "Frontend test coverage: {testCoverage}%"
