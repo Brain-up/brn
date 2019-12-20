@@ -45,7 +45,7 @@ class UploadFileJobRunnerImpl : UploadFileJobRunner {
         val file = filePath.toFile()
 
         try {
-            job.uploadTasks(file)
+            job.loadFullTaskFile(file)
             successfullyProcessedResources.add(file)
         } catch (e: Exception) {
             log.error("Something went wrong while loading file ${file.name}", e)

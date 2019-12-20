@@ -27,20 +27,10 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     override fun convert(source: TaskCsv): Task {
         val target = Task()
 
-        convertSerialNumber(source, target)
-        convertExercise(source, target)
         convertCorrectAnswer(source, target)
         convertAnswers(source, target)
 
         return target
-    }
-
-    private fun convertSerialNumber(source: TaskCsv, target: Task) {
-        target.serialNumber = source.orderNumber
-    }
-
-    private fun convertExercise(source: TaskCsv, target: Task) {
-        target.exercise = exerciseService.findExerciseEntityById(source.exerciseId)
     }
 
     private fun convertCorrectAnswer(source: TaskCsv, target: Task) {

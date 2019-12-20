@@ -9,4 +9,6 @@ object BrnPath {
     const val TASKS = "/tasks"
     const val STUDY_HISTORIES = "/study-history"
     const val FILES = "/files"
+    const val LOAD_FULL_TASK_FILE = "/loadFullTaskFile"
+    const val LOAD_TASK_FILE = "/loadTaskFile"
 }
