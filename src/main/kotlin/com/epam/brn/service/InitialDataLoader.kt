@@ -205,8 +205,11 @@ class InitialDataLoader(
         csvParserService.parseCsvFile(tasksInputStream, taskConverter)
     }
 
-    //todo: get data from file
-    private fun prepareTasksForWordsSequencesSeries(seriesById: MutableMap<Long, Series>, tasksInputStream: InputStream) {
+    // todo: get data from file
+    private fun prepareTasksForWordsSequencesSeries(
+        seriesById: MutableMap<Long, Series>,
+        tasksInputStream: InputStream
+    ) {
         val resource1 = Resource(
             word = "девочка",
             wordType = WordTypeEnum.OBJECT.toString(),
@@ -236,7 +239,7 @@ class InitialDataLoader(
             serialNumber = 1,
             answerOptions = mutableSetOf(resource1, resource2, resource3, resource4)
         )
-        val  exercise = Exercise(
+        val exercise = Exercise(
             series = seriesById[2L]!!,
             name = "Распознование последовательности слов",
             description = "Распознование последовательности слов",

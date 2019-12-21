@@ -50,8 +50,8 @@ class TaskControllerIT {
             exerciseGroup = group
         )
         group.series.addAll(setOf(series1, series2))
-        savedExercise = Exercise(name = "First", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS)
-        val secondExercise = Exercise(name = "Second", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS)
+        savedExercise = Exercise(name = "First", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
+        val secondExercise = Exercise(name = "Second", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
         series1.exercises.addAll(listOf(savedExercise, secondExercise))
         firstSavedTask = Task(
             name = "firstTaskForExercise",

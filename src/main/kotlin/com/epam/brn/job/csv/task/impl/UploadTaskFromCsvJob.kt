@@ -12,10 +12,8 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-
 import java.io.InputStream
 
 @Component

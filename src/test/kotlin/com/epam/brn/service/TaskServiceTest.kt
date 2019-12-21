@@ -8,7 +8,6 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.TaskRepository
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -21,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertSame
 
 @ExtendWith(
     MockitoExtension::class
@@ -52,7 +52,7 @@ internal class TaskServiceTest {
             `when`(exerciseRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(exercise))
 
-            `when`(exercise.exerciseType).thenReturn(ExerciseTypeEnum.SINGLE_WORDS)
+            `when`(exercise.exerciseType).thenReturn(ExerciseTypeEnum.SINGLE_WORDS.toString())
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -64,17 +64,18 @@ internal class TaskServiceTest {
         @Test
         fun `should return task by id`() {
             // GIVEN
-            val testTask = Task(id = 1, name = "test_task", serialNumber = 12)
+            val task = mock(Task::class.java)
+            val exercise = mock(Exercise::class.java)
+            val taskDto = TaskDtoForSingleWords()
             `when`(taskRepository.findById(LONG_ONE))
-                .thenReturn(Optional.of(testTask))
+                .thenReturn(Optional.of(task))
+            `when`(task.exercise).thenReturn(exercise)
+            `when`(task.toSingleWordsDto()).thenReturn(taskDto)
+            `when`(exercise.exerciseType).thenReturn(ExerciseTypeEnum.SINGLE_WORDS.toString())
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
             // THEN
-            assertThat(taskById)
-                .isEqualToComparingOnlyGivenFields(
-                    TaskDtoForSingleWords(id = testTask.id, name = testTask.name, serialNumber = testTask.serialNumber),
-                    "id", "name", "serialNumber"
-                )
+            assertSame(taskDto, taskById)
         }
 
         @Test

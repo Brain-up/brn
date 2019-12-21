@@ -41,7 +41,7 @@ internal class ExerciseControllerTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseID: Long = 1
-        val exercise = ExerciseDto(1,1, "exe", "desc", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exercise = ExerciseDto(1, 1, "exe", "desc", 1, ExerciseTypeEnum.SINGLE_WORDS)
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
         @Suppress("UNCHECKED_CAST")

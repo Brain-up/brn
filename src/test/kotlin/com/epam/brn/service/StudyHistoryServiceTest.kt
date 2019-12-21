@@ -215,7 +215,7 @@ internal class StudyHistoryServiceTest {
             ),
             level = 0,
             name = "exercise",
-            exerciseType = ExerciseTypeEnum.SINGLE_WORDS
+            exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
         )
     }
 

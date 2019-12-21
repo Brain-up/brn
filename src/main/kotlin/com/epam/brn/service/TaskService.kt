@@ -1,7 +1,6 @@
 package com.epam.brn.service
 
 import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Task
@@ -11,26 +10,28 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class TaskService(val taskRepository: TaskRepository,
-                  val exerciseRepository: ExerciseRepository) {
+class TaskService(
+    val taskRepository: TaskRepository,
+    val exerciseRepository: ExerciseRepository
+) {
 
     private val log = logger()
 
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
-        val exercise: Exercise =  exerciseRepository.findById(exerciseId).get()
+        val exercise: Exercise = exerciseRepository.findById(exerciseId).get()
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
-        return when(ExerciseTypeEnum.valueOf(exercise.exerciseType)){
-            ExerciseTypeEnum.SINGLE_WORDS ->  tasks.map { task -> task.toSingleWordsDto() }
-            ExerciseTypeEnum.WORDS_SEQUENCES ->  tasks.map { task -> task.toSequenceWordsDto() }
+        return when (ExerciseTypeEnum.valueOf(exercise.exerciseType)) {
+            ExerciseTypeEnum.SINGLE_WORDS -> tasks.map { task -> task.toSingleWordsDto() }
+            ExerciseTypeEnum.WORDS_SEQUENCES -> tasks.map { task -> task.toSequenceWordsDto() }
         }
     }
 
     fun getTaskById(taskId: Long): Any {
         log.debug("Searching task with id=$taskId")
         val task = taskRepository.findById(taskId).orElseThrow { NoDataFoundException("No task found for id=$taskId") }
-        return when(ExerciseTypeEnum.valueOf(task.exercise!!.exerciseType)) {
-           ExerciseTypeEnum.SINGLE_WORDS -> task.toSingleWordsDto()
-           ExerciseTypeEnum.WORDS_SEQUENCES -> task.toSequenceWordsDto(task!!.exercise?.template)
+        return when (ExerciseTypeEnum.valueOf(task.exercise!!.exerciseType)) {
+            ExerciseTypeEnum.SINGLE_WORDS -> task.toSingleWordsDto()
+            ExerciseTypeEnum.WORDS_SEQUENCES -> task.toSequenceWordsDto(task!!.exercise?.template)
         }
     }
 

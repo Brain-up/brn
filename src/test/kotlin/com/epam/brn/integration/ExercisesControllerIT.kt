@@ -158,7 +158,7 @@ class ExercisesControllerIT {
                 series = series,
                 level = 0,
                 name = exerciseName,
-                exerciseType = ExerciseTypeEnum.SINGLE_WORDS
+                exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
             )
         )
     }
