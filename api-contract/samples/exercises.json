@@ -1,43 +1,162 @@
 {
  "data": [
   {
-   "id": "1",
-   "name": "однослоговые слова",
-   "series": "1",
-   "available": true,
+   "seriesId": 1,
+   "id": 1,
+   "name": "Однослоговые слова без шума",
+   "description": "Однослоговые слова без шума",
+   "level": 1,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
    "tasks": [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5"
+    2,
+    4,
+    5,
+    6,
+    1,
+    3
    ]
   },
   {
-   "id": "2",
-   "name": "двуслоговые слова",
-   "series": "1",
-   "available": true,
+   "seriesId": 1,
+   "id": 2,
+   "name": "Однослоговые слова без шума",
+   "description": "Однослоговые слова без шума",
+   "level": 2,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
    "tasks": [
-    "6",
-    "7",
-    "8",
-    "9",
-    "10"
+    7,
+    10,
+    11,
+    9,
+    8,
+    12
    ]
   },
   {
-   "id": "3",
-   "name": "сложные слова",
-   "series": "1",
-   "available": false,
+   "seriesId": 1,
+   "id": 3,
+   "name": "Однослоговые слова без шума",
+   "description": "Однослоговые слова без шума",
+   "level": 3,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
    "tasks": [
-    "16",
-    "17",
-    "18",
-    "19",
-    "110"
+    16,
+    14,
+    18,
+    15,
+    19,
+    17,
+    13
+   ]
+  },
+  {
+   "seriesId": 1,
+   "id": 4,
+   "name": "Однослоговые слова малым шумом",
+   "description": "Однослоговые слова c малым шумом",
+   "level": 4,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
+   "tasks": [
+    21,
+    23,
+    20,
+    22,
+    24,
+    25
+   ]
+  },
+  {
+   "seriesId": 1,
+   "id": 5,
+   "name": "Однослоговые слова малым шумом",
+   "description": "Однослоговые слова c малым шумом",
+   "level": 5,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
+   "tasks": [
+    28,
+    31,
+    30,
+    27,
+    29,
+    26
+   ]
+  },
+  {
+   "seriesId": 1,
+   "id": 6,
+   "name": "Однослоговые слова малым шумом",
+   "description": "Однослоговые слова c малым шумом",
+   "level": 6,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
+   "tasks": [
+    36,
+    35,
+    38,
+    37,
+    33,
+    34,
+    32
+   ]
+  },
+  {
+   "seriesId": 1,
+   "id": 7,
+   "name": "Однослоговые слова c сильным шумом",
+   "description": "Однослоговые слова c сильным шумом",
+   "level": 7,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
+   "tasks": [
+    39,
+    41,
+    44,
+    42,
+    40,
+    43
+   ]
+  },
+  {
+   "seriesId": 1,
+   "id": 8,
+   "name": "Однослоговые слова c сильным шумом",
+   "description": "Однослоговые слова c сильным шумом",
+   "level": 8,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
+   "tasks": [
+    49,
+    45,
+    50,
+    46,
+    47,
+    48
+   ]
+  },
+  {
+   "seriesId": 1,
+   "id": 9,
+   "name": "Однослоговые слова c сильным шумом",
+   "description": "Однослоговые слова c сильным шумом",
+   "level": 9,
+   "exerciseType": "SINGLE_WORDS",
+   "template": "",
+   "tasks": [
+    54,
+    55,
+    53,
+    51,
+    56,
+    57,
+    52
    ]
   }
- ]
+ ],
+ "errors": [],
+ "meta": []
 }

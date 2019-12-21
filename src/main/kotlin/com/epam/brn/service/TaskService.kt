@@ -1,35 +1,40 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.model.Exercise
 import com.epam.brn.model.Task
+import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.TaskRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class TaskService(private val taskRepository: TaskRepository) {
+class TaskService(val taskRepository: TaskRepository,
+                  val exerciseRepository: ExerciseRepository) {
 
     private val log = logger()
 
-    fun getAllTasksByExerciseId(exerciseId: Long): List<TaskDtoForSingleWords> {
-        val tasks = taskRepository.findAllTasksByExerciseIdWithJoinedAnswers(exerciseId)
-        return tasks.map { task -> task.toSingleWordsDto() }
+    fun getTasksByExerciseId(exerciseId: Long): List<Any> {
+        val exercise: Exercise =  exerciseRepository.findById(exerciseId).get()
+        val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
+        return when(ExerciseTypeEnum.valueOf(exercise.exerciseType)){
+            ExerciseTypeEnum.SINGLE_WORDS ->  tasks.map { task -> task.toSingleWordsDto() }
+            ExerciseTypeEnum.WORDS_SEQUENCES ->  tasks.map { task -> task.toSequenceWordsDto() }
+        }
     }
 
-    fun getAllTasks(): List<TaskDtoForSingleWords> {
-        val tasks = taskRepository.findAllTasksWithJoinedAnswers()
-        return tasks.map { task -> task.toSingleWordsDto() }
+    fun getTaskById(taskId: Long): Any {
+        log.debug("Searching task with id=$taskId")
+        val task = taskRepository.findById(taskId).orElseThrow { NoDataFoundException("No task found for id=$taskId") }
+        return when(ExerciseTypeEnum.valueOf(task.exercise!!.exerciseType)) {
+           ExerciseTypeEnum.SINGLE_WORDS -> task.toSingleWordsDto()
+           ExerciseTypeEnum.WORDS_SEQUENCES -> task.toSequenceWordsDto(task!!.exercise?.template)
+        }
     }
 
     fun save(task: Task): Task {
         return taskRepository.save(task)
-    }
-
-    fun getTaskById(taskId: Long): TaskDtoForSingleWords {
-        log.debug("Searching task with id=$taskId")
-        return taskRepository.findById(taskId)
-            .map { it.toSingleWordsDto() }
-            .orElseThrow { NoDataFoundException("no task is found for id=$taskId") }
     }
 }

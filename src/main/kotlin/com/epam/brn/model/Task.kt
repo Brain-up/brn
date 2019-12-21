@@ -1,7 +1,8 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.SeriesTypeEnum
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.TaskDtoForSingleWords
+import com.epam.brn.dto.TaskDtoForWordsSequences
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -25,7 +26,6 @@ data class Task(
         allocationSize = 50
     )
     val id: Long? = null,
-    val seriesType: String = "",
     val name: String? = "",
     var serialNumber: Int? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,12 +44,22 @@ data class Task(
 ) {
     fun toSingleWordsDto() = TaskDtoForSingleWords(
         id = id,
-        seriesType = SeriesTypeEnum.SINGLE_WORDS,
+        exerciseType = ExerciseTypeEnum.SINGLE_WORDS,
         name = name,
         serialNumber = serialNumber,
         correctAnswer = correctAnswer?.toDto(),
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toMutableSet()
     )
+
+    fun toSequenceWordsDto(template: String? = "") = TaskDtoForWordsSequences(
+        id = id,
+        exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
+        template = template
+    )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
