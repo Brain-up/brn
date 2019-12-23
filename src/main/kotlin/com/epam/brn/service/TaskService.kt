@@ -18,7 +18,7 @@ class TaskService(
     private val log = logger()
 
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
-        val exercise: Exercise = exerciseRepository.findById(exerciseId).get()
+        val exercise: Exercise = exerciseRepository.findById(exerciseId).orElseThrow { NoDataFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         return when (ExerciseTypeEnum.valueOf(exercise.exerciseType)) {
             ExerciseTypeEnum.SINGLE_WORDS -> tasks.map { task -> task.toSingleWordsDto() }
