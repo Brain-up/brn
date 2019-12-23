@@ -28,7 +28,7 @@ class TaskController(private val taskService: TaskService) {
         log.debug("Getting tasks for exercisedId $exerciseId")
         return ResponseEntity
             .ok()
-            .body(BaseResponseDto(data = taskService.getAllTasksByExerciseId(exerciseId)))
+            .body(BaseResponseDto(data = taskService.getTasksByExerciseId(exerciseId)))
     }
 
     @GetMapping(value = ["/{${BrnParams.TASK_ID}}"])

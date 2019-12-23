@@ -48,7 +48,7 @@ class TaskControllerTest {
             val exerciseId = LONG_ONE
             val taskFirst = TaskDtoForSingleWords(id = LONG_ONE, serialNumber = INTEGER_ONE, exerciseId = LONG_ONE)
             val taskSecond = TaskDtoForSingleWords(id = 2L, serialNumber = INTEGER_TWO, exerciseId = LONG_ONE)
-            `when`(taskService.getAllTasksByExerciseId(exerciseId)).thenReturn(listOf(taskFirst, taskSecond))
+            `when`(taskService.getTasksByExerciseId(exerciseId)).thenReturn(listOf(taskFirst, taskSecond))
             // WHEN
             @Suppress("UNCHECKED_CAST")
             val actualResult: List<TaskDtoForSingleWords> =
@@ -57,7 +57,7 @@ class TaskControllerTest {
             assertThat(actualResult)
                 .hasSize(INTEGER_TWO)
                 .containsExactly(taskFirst, taskSecond)
-            verify(taskService).getAllTasksByExerciseId(exerciseId)
+            verify(taskService).getTasksByExerciseId(exerciseId)
         }
     }
 }

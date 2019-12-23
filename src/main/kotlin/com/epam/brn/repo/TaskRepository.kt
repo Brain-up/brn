@@ -13,7 +13,7 @@ interface TaskRepository : CrudRepository<Task, Long> {
     fun findAllTasksWithJoinedAnswers(): List<Task>
 
     @Query("select DISTINCT t FROM Task t left JOIN FETCH t.answerOptions where t.exercise.id = ?1")
-    fun findAllTasksByExerciseIdWithJoinedAnswers(id: Long): List<Task>
+    fun findTasksByExerciseIdWithJoinedAnswers(id: Long): List<Task>
 
     @Query("select DISTINCT t FROM Task t left JOIN FETCH t.answerOptions where t.id = ?1")
     override fun findById(id: Long): Optional<Task>

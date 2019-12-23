@@ -1,6 +1,6 @@
 package com.epam.brn.constant
 
-enum class SeriesTypeEnum {
+enum class ExerciseTypeEnum {
     SINGLE_WORDS,
     WORDS_SEQUENCES
 }

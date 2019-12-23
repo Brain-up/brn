@@ -1,84 +1,60 @@
 {
-  "data": [
-    {
-      "id": 3,
-      "seriesType": "SINGLE_WORDS",
-      "name": "task",
-      "correctAnswer": {
-        "id": 3,
-        "audioFileUrl": "no_noise/бал.mp3",
-        "word": "бал",
-        "pictureFileUrl": "",
+  "data": {
+    "id": 57,
+    "exerciseType": "SINGLE_WORDS",
+    "name": "",
+    "correctAnswer": {
+      "id": 337,
+      "audioFileUrl": "noise_9db/ход.mp3",
+      "word": "ход",
+      "wordType": "OBJECT",
+      "pictureFileUrl": "pictures/ход.jpg",
+      "soundsCount": 1
+    },
+    "serialNumber": 36,
+    "answerOptions": [
+      {
+        "id": 340,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "рот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
         "soundsCount": 1
       },
-      "serialNumber": 1,
-      "answerOptions": [
-        {
-          "id": 8,
-          "audioFileUrl": "no_noise/бум.mp3",
-          "word": "бум",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 9,
-          "audioFileUrl": "noise_0db/вить.mp3",
-          "word": "вить",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 4,
-          "audioFileUrl": "no_noise/быль.mp3",
-          "word": "быль",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 10,
-          "audioFileUrl": "",
-          "word": "сад",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 11,
-          "audioFileUrl": "noise_0db/быль.mp3",
-          "word": "быль",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 5,
-          "audioFileUrl": "noise_0db/гад.mp3",
-          "word": "гад",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 1,
-          "audioFileUrl": "noise_0db/бум.mp3",
-          "word": "бум",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 6,
-          "audioFileUrl": "no_noise/гад.mp3",
-          "word": "гад",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        },
-        {
-          "id": 7,
-          "audioFileUrl": "no_noise/вить.mp3",
-          "word": "вить",
-          "pictureFileUrl": "",
-          "soundsCount": 1
-        }
-      ]
-    }
-  ],
+      {
+        "id": 339,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "пот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      },
+      {
+        "id": 342,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "кот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      },
+      {
+        "id": 341,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "сот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      },
+      {
+        "id": 338,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "сад",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      }
+    ]
+  },
   "errors": [],
   "meta": []
 }

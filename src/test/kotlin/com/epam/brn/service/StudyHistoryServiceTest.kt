@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.converter.StudyHistoryConverter
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
@@ -213,7 +214,8 @@ internal class StudyHistoryServiceTest {
                 )
             ),
             level = 0,
-            name = "exercise"
+            name = "exercise",
+            exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
         )
     }
 

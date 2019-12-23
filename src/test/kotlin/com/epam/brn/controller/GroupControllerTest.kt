@@ -44,7 +44,7 @@ internal class GroupControllerTest {
         val actualResultData: ExerciseGroupDto =
             groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
         // THEN
-        assertEquals(actualResultData,group)
+        assertEquals(actualResultData, group)
         verify(exerciseGroupsService).findGroupById(groupId)
     }
 }

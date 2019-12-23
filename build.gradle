@@ -100,6 +100,8 @@ project.task("ktlint", type: JavaExec) {
     ]
 }
 
+compileKotlin.dependsOn ktlint
+
 test {
     useJUnitPlatform { options ->
         options.excludeTags "integration-test"
