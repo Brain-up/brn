@@ -108,13 +108,36 @@ mediaType:
         example: !include samples/study_history_response.json.json
 
 # LOAD FILES ----------------------
-/files:
+/admin/loadFile:
   post:
     body:
       multipart/form-data:
         properties:
           taskFile:
             description: "File with tasks to be uploaded"
+            format: "exerciseId orderNumber word audioFileName pictureFileName words wordType
+                     1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
+            required: true
+            type: file
+    responses:
+      201:
+
+/admin/loadTasksFile:
+  post:
+    body:
+      multipart/form-data:
+        properties:
+          seriesId:
+            description: "ID of the series created exercises belongs to"
+            required: true
+            type: string
+            example: "42"
+          taskFile:
+            description: "File with tasks to be uploaded"
+            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
+                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
+            formatForSeries2: "orderNumber words
+                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
             required: true
             type: file
     responses:
