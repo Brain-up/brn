@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class TaskService(
-    val taskRepository: TaskRepository,
-    val exerciseRepository: ExerciseRepository
+    private val taskRepository: TaskRepository,
+    private val exerciseRepository: ExerciseRepository
 ) {
 
     private val log = logger()
