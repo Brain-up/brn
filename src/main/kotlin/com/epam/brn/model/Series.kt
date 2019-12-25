@@ -22,14 +22,14 @@ data class Series(
         sequenceName = "series_id_seq",
         allocationSize = 50
     )
-    val id: Long? = null,
+    var id: Long? = null,
     @Column(nullable = false, unique = true)
-    val name: String,
+    var name: String,
     @Column
-    val description: String,
+    var description: String? = "",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_group_id")
-    val exerciseGroup: ExerciseGroup,
+    var exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     val exercises: MutableSet<Exercise> = LinkedHashSet()
 ) {
