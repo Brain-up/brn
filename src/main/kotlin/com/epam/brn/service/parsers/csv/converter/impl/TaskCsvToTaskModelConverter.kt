@@ -1,5 +1,6 @@
 package com.epam.brn.service.parsers.csv.converter.impl
 
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
@@ -8,12 +9,15 @@ import com.epam.brn.service.parsers.csv.converter.Converter
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
+
+    private val log = logger()
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
@@ -27,10 +31,26 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     override fun convert(source: TaskCsv): Task {
         val target = Task()
 
+        convertSerialNumber(source, target)
+        convertExercise(source, target)
         convertCorrectAnswer(source, target)
         convertAnswers(source, target)
 
         return target
+    }
+
+    private fun convertSerialNumber(source: TaskCsv, target: Task) {
+        target.serialNumber = source.orderNumber
+    }
+
+    private fun convertExercise(source: TaskCsv, target: Task) {
+        try {
+            target.exercise = exerciseService.findExerciseEntityByName(source.exerciseName)
+        } catch (e: EntityNotFoundException) {
+            log.debug("Entity was not found by name $source.exerciseName")
+
+            target.exercise = exerciseService.createExercise(source.exerciseName)
+        }
     }
 
     private fun convertCorrectAnswer(source: TaskCsv, target: Task) {

@@ -3,69 +3,57 @@ package com.epam.brn.job.csv.task.impl
 import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
-import com.epam.brn.job.csv.task.UploadFromCsvJob
+import com.epam.brn.job.csv.task.UploadFromCsvService
 import com.epam.brn.model.Task
-import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.ExerciseGroupsService
+import com.epam.brn.service.SeriesService
 import com.epam.brn.service.TaskService
 import com.epam.brn.service.parsers.csv.CSVParserService
 import com.epam.brn.service.parsers.csv.converter.impl.TaskCsvToTaskModelConverter
-import com.epam.brn.service.parsers.csv.converter.impl.TaskFullCsvToTaskModelConverter
+import java.io.File
+import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
-import java.io.InputStream
 
 @Component
-class UploadTaskFromCsvJob(private val csvParserService: CSVParserService, private val taskService: TaskService) :
-    UploadFromCsvJob {
+class UploadTaskFromCsvService(private val csvParserService: CSVParserService, private val taskService: TaskService) :
+    UploadFromCsvService {
     private val log = logger()
-
-    @Autowired
-    private lateinit var taskFullCsvToTaskModelConverter: TaskFullCsvToTaskModelConverter
 
     @Autowired
     private lateinit var taskCsvToTaskModelConverter: TaskCsvToTaskModelConverter
 
     @Autowired
-    private lateinit var exerciseService: ExerciseService
+    private lateinit var seriesService: SeriesService
+
+    @Autowired
+    private lateinit var exerciseGroupsService: ExerciseGroupsService
 
     @Throws(FileFormatException::class)
-    override fun loadFullTaskFile(file: MultipartFile): Map<String, String> {
+    override fun loadTaskFile(file: MultipartFile, seriesId: Long?): Map<String, String> {
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY)) throw FileFormatException(CSV_FILE_FORMAT_ERROR)
 
-        return uploadFullTasks(file.inputStream)
+        return uploadTasks(file.inputStream, seriesId)
     }
 
     @Throws(FileFormatException::class)
-    override fun loadFullTaskFile(file: File): Map<String, String> {
-        return uploadFullTasks(file.inputStream())
+    override fun loadTaskFile(file: File): Map<String, String> {
+        return uploadTasks(file.inputStream(), null)
     }
 
-    @Throws(FileFormatException::class)
-    override fun loadTaskFile(file: MultipartFile, exerciseId: Long, serialNumber: Int): Map<String, String> {
-        if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY)) throw FileFormatException(CSV_FILE_FORMAT_ERROR)
+    private fun uploadTasks(inputStream: InputStream, seriesId: Long?): Map<String, String> {
+        val tasks = csvParserService.parseCsvFile(inputStream, taskCsvToTaskModelConverter)
 
-        val tasks = csvParserService.parseCsvFile(file.inputStream, taskCsvToTaskModelConverter)
-
-        tasks.forEach { task -> setAdditionalFieldsToTask(task.value.first, serialNumber, exerciseId) }
+        if (seriesId != null) tasks.forEach { task -> setExerciseSeries(task.value.first, seriesId) }
 
         return saveTasks(tasks)
     }
 
-    private fun setAdditionalFieldsToTask(taskFile: Task?, serialNumber: Int, exerciseId: Long) {
-        if (taskFile != null) {
-            taskFile.serialNumber = serialNumber
-            taskFile.exercise = exerciseService.findExerciseEntityById(exerciseId)
-        }
-    }
-
-    private fun uploadFullTasks(inputStream: InputStream): Map<String, String> {
-        val tasks = csvParserService.parseCsvFile(inputStream, taskFullCsvToTaskModelConverter)
-
-        return saveTasks(tasks)
+    private fun setExerciseSeries(taskFile: Task?, seriesId: Long) {
+        taskFile?.exercise?.series = seriesService.findSeriesForId(seriesId)
     }
 
     private fun isFileContentTypeCsv(contentType: String): Boolean {

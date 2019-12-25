@@ -2,7 +2,7 @@ package com.epam.brn.job.impl
 
 import com.epam.brn.job.CsvUtils
 import com.epam.brn.job.UploadFileJobRunner
-import com.epam.brn.job.csv.task.UploadFromCsvJob
+import com.epam.brn.job.csv.task.UploadFromCsvService
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -25,7 +25,7 @@ class UploadFileJobRunnerImpl : UploadFileJobRunner {
     private lateinit var pathToProcessedResources: String
 
     @Autowired
-    private lateinit var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvJob>
+    private lateinit var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvService>
 
     @Scheduled(cron = "\${cron.expression.input.data.upload}")
     override fun perform() {
@@ -41,11 +41,11 @@ class UploadFileJobRunnerImpl : UploadFileJobRunner {
         moveSuccessfullyProcessedResources(successfullyProcessedResources, jobId)
     }
 
-    private fun loadFile(job: UploadFromCsvJob, filePath: Path, successfullyProcessedResources: HashSet<File>) {
+    private fun loadFile(service: UploadFromCsvService, filePath: Path, successfullyProcessedResources: HashSet<File>) {
         val file = filePath.toFile()
 
         try {
-            job.loadFullTaskFile(file)
+            service.loadTaskFile(file)
             successfullyProcessedResources.add(file)
         } catch (e: Exception) {
             log.error("Something went wrong while loading file ${file.name}", e)
