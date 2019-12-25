@@ -1,6 +1,10 @@
-<TaskPlayer
-  data-test-task-player
-  @onRightAnswer={{action this.saveExerciseMaybe}}
-  @afterCompleted={{action this.nextTaskTransition}}
-  @task={{this.model}}
-/>
+{{#if (eq this.model.exerciseType "SINGLE_WORDS")}}
+  <TaskPlayer
+    data-test-task-player
+    @onRightAnswer={{action this.saveExerciseMaybe}}
+    @afterCompleted={{action this.nextTaskTransition}}
+    @task={{this.model}}
+  />
+{{else if (eq this.model.exerciseType "WORDS_SEQUENCES")}}
+  <WordsSeqTaskPlayer @task={{this.model}} />
+{{/if}}

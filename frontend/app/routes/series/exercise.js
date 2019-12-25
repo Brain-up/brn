@@ -11,7 +11,6 @@ export default Route.extend({
       return;
     }
 
-    await this.store.query('task', { exerciseId: exercise.id });
     if (
       to.name.endsWith('exercise.index') &&
       exercise.get('sortedTasks.firstObject') &&

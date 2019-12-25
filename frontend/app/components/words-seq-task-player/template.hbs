@@ -1,0 +1,14 @@
+<div class="flex">
+  {{#each @task.selectedItemsOrder as |type|}}
+    <div class="column flex-1">
+      {{#each (get @task.answerOptions type) as |answerOption|}}
+        <TextImageButton
+          data-test-task-answer-option={{answerOption.word}}
+          @clickAction={{action this.checkMaybe}}
+          @pictureFileUrl={{answerOption.pictureFileUrl}}
+          @word={{answerOption.word}}
+        />
+      {{/each}}
+    </div>
+  {{/each}}
+</div>
