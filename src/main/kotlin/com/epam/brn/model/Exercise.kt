@@ -43,7 +43,7 @@ data class Exercise(
         exerciseType = ExerciseTypeEnum.valueOf(exerciseType),
         level = level,
         available = available,
-        tasks = tasks.map { task -> task.id }.toMutableSet()
+        tasks = tasks.map { task -> task.id to "task/$exerciseType" }.toMap()
     )
 
     override fun equals(other: Any?): Boolean {
@@ -71,5 +71,6 @@ data class Exercise(
         return result
     }
 
-    override fun toString() = "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
+    override fun toString() =
+        "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
 }

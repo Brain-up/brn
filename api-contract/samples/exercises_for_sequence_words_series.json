@@ -1,0 +1,18 @@
+{
+ "data": [
+  {
+   "seriesId": 2,
+   "id": 10,
+   "name": "Распознование последовательности слов",
+   "description": "Распознование последовательности слов",
+   "level": 1,
+   "exerciseType": "WORDS_SEQUENCES",
+   "template": "<OBJECT OBJECT_ACTION>",
+   "tasks": {
+    "58": "task/WORDS_SEQUENCES"
+   }
+  }
+ ],
+ "errors": [],
+ "meta": []
+}

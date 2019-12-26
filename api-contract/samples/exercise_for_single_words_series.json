@@ -7,15 +7,15 @@
     "level": 9,
     "exerciseType": "SINGLE_WORDS",
     "template": "",
-    "tasks": [
-      54,
-      55,
-      53,
-      51,
-      56,
-      57,
-      52
-    ]
+    "tasks": {
+      "54": "task/SINGLE_WORDS",
+      "55": "task/SINGLE_WORDS",
+      "53": "task/SINGLE_WORDS",
+      "51": "task/SINGLE_WORDS",
+      "56": "task/SINGLE_WORDS",
+      "57": "task/SINGLE_WORDS",
+      "52": "task/SINGLE_WORDS"
+    }
   },
   "errors": [],
   "meta": []
