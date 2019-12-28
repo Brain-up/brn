@@ -1,21 +1,38 @@
 {
   "data": {
     "seriesId": 1,
-    "id": 9,
+    "id": 8,
     "name": "Однослоговые слова c сильным шумом",
     "description": "Однослоговые слова c сильным шумом",
-    "level": 9,
+    "level": 8,
     "exerciseType": "SINGLE_WORDS",
     "template": "",
-    "tasks": {
-      "54": "task/SINGLE_WORDS",
-      "55": "task/SINGLE_WORDS",
-      "53": "task/SINGLE_WORDS",
-      "51": "task/SINGLE_WORDS",
-      "56": "task/SINGLE_WORDS",
-      "57": "task/SINGLE_WORDS",
-      "52": "task/SINGLE_WORDS"
-    }
+    "tasks": [
+      {
+        "id": 49,
+        "type": "task/SINGLE_WORDS"
+      },
+      {
+        "id": 45,
+        "type": "task/SINGLE_WORDS"
+      },
+      {
+        "id": 50,
+        "type": "task/SINGLE_WORDS"
+      },
+      {
+        "id": 46,
+        "type": "task/SINGLE_WORDS"
+      },
+      {
+        "id": 47,
+        "type": "task/SINGLE_WORDS"
+      },
+      {
+        "id": 48,
+        "type": "task/SINGLE_WORDS"
+      }
+    ]
   },
   "errors": [],
   "meta": []

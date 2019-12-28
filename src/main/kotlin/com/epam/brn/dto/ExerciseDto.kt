@@ -13,5 +13,5 @@ data class ExerciseDto(
     var template: String? = "",
     @JsonIgnore
     var available: Boolean? = null,
-    var tasks: Map<Long?, String> = HashMap()
+    var tasks: MutableSet<ShortTaskDto> = HashSet()
 )

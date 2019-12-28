@@ -8,14 +8,32 @@
    "level": 1,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "2": "task/SINGLE_WORDS",
-    "4": "task/SINGLE_WORDS",
-    "5": "task/SINGLE_WORDS",
-    "6": "task/SINGLE_WORDS",
-    "1": "task/SINGLE_WORDS",
-    "3": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 2,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 4,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 5,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 6,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 1,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 3,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -25,14 +43,32 @@
    "level": 2,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "7": "task/SINGLE_WORDS",
-    "10": "task/SINGLE_WORDS",
-    "11": "task/SINGLE_WORDS",
-    "9": "task/SINGLE_WORDS",
-    "8": "task/SINGLE_WORDS",
-    "12": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 7,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 10,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 11,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 9,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 8,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 12,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -42,15 +78,36 @@
    "level": 3,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "16": "task/SINGLE_WORDS",
-    "14": "task/SINGLE_WORDS",
-    "18": "task/SINGLE_WORDS",
-    "15": "task/SINGLE_WORDS",
-    "19": "task/SINGLE_WORDS",
-    "17": "task/SINGLE_WORDS",
-    "13": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 16,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 14,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 18,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 15,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 19,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 17,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 13,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -60,14 +117,32 @@
    "level": 4,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "21": "task/SINGLE_WORDS",
-    "23": "task/SINGLE_WORDS",
-    "20": "task/SINGLE_WORDS",
-    "22": "task/SINGLE_WORDS",
-    "24": "task/SINGLE_WORDS",
-    "25": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 21,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 23,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 20,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 22,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 24,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 25,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -77,14 +152,32 @@
    "level": 5,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "28": "task/SINGLE_WORDS",
-    "31": "task/SINGLE_WORDS",
-    "30": "task/SINGLE_WORDS",
-    "27": "task/SINGLE_WORDS",
-    "29": "task/SINGLE_WORDS",
-    "26": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 28,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 31,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 30,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 27,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 29,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 26,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -94,15 +187,36 @@
    "level": 6,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "36": "task/SINGLE_WORDS",
-    "35": "task/SINGLE_WORDS",
-    "38": "task/SINGLE_WORDS",
-    "37": "task/SINGLE_WORDS",
-    "33": "task/SINGLE_WORDS",
-    "34": "task/SINGLE_WORDS",
-    "32": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 36,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 35,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 38,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 37,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 33,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 34,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 32,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -112,14 +226,32 @@
    "level": 7,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "39": "task/SINGLE_WORDS",
-    "41": "task/SINGLE_WORDS",
-    "44": "task/SINGLE_WORDS",
-    "42": "task/SINGLE_WORDS",
-    "40": "task/SINGLE_WORDS",
-    "43": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 39,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 41,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 44,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 42,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 40,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 43,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -129,14 +261,32 @@
    "level": 8,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "49": "task/SINGLE_WORDS",
-    "45": "task/SINGLE_WORDS",
-    "50": "task/SINGLE_WORDS",
-    "46": "task/SINGLE_WORDS",
-    "47": "task/SINGLE_WORDS",
-    "48": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 49,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 45,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 50,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 46,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 47,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 48,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   },
   {
    "seriesId": 1,
@@ -146,15 +296,36 @@
    "level": 9,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
-   "tasks": {
-    "54": "task/SINGLE_WORDS",
-    "55": "task/SINGLE_WORDS",
-    "53": "task/SINGLE_WORDS",
-    "51": "task/SINGLE_WORDS",
-    "56": "task/SINGLE_WORDS",
-    "57": "task/SINGLE_WORDS",
-    "52": "task/SINGLE_WORDS"
-   }
+   "tasks": [
+    {
+     "id": 54,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 55,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 53,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 51,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 56,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 57,
+     "type": "task/SINGLE_WORDS"
+    },
+    {
+     "id": 52,
+     "type": "task/SINGLE_WORDS"
+    }
+   ]
   }
  ],
  "errors": [],

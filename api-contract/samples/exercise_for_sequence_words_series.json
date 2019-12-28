@@ -7,9 +7,12 @@
     "level": 1,
     "exerciseType": "WORDS_SEQUENCES",
     "template": "<OBJECT OBJECT_ACTION>",
-    "tasks": {
-      "58": "task/WORDS_SEQUENCES"
-    }
+    "tasks": [
+      {
+        "id": 58,
+        "type": "task/WORDS_SEQUENCES"
+      }
+    ]
   },
   "errors": [],
   "meta": []
