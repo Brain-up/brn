@@ -1,6 +1,9 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
+import { isArray } from '@ember/array';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import customTimeout from '../../utils/custom-timeout';
 
 export default Component.extend({
   audio: service(),
@@ -9,17 +12,60 @@ export default Component.extend({
     this.set('playAudio', this.playAudio.bind(this));
     this.audio.register(this);
   },
+  didReceiveAttrs() {
+    this._super(...arguments);
+    this.setAudioElements();
+  },
+  autoplay: false,
+  filesToPlay: computed('audioFileUrl', 'audioFileUrl.[]', function() {
+    return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
+  }),
+  async setAudioElements() {
+    this.set(
+      'audioElements',
+      this.filesToPlay.map((src) => {
+        const audio = new Audio(src);
+        audio.onplay = this.updateIsPlaying.bind(this);
+        audio.onended = this.updateIsPlaying.bind(this);
+        audio.preload = 'metadata';
+        return audio;
+      }),
+    );
+    await Promise.all(
+      this.audioElements.map(
+        (a) =>
+          new Promise((resolve) => {
+            a.oncanplaythrough = () => resolve(true);
+          }),
+      ),
+    );
+    if (this.autoplay) {
+      await this.playAudio();
+    }
+  },
+  isPlayingElement(element) {
+    return (
+      !element.paused &&
+      element.currentTime < element.duration &&
+      !element.ended
+    );
+  },
   updateIsPlaying() {
     set(
       this,
       'isPlaying',
-      this.audioElement &&
-        !this.audioElement.paused &&
-        this.audioElement.currentTime < this.audioElement.duration &&
-        !this.audioElement.ended,
+      this.audioElements.length &&
+        this.audioElements.reduce((result, element) => {
+          result = result || this.isPlayingElement(element);
+          return result;
+        }, false),
     );
   },
-  playAudio() {
-    this.audioElement.play();
+  async playAudio() {
+    /* eslint-disable no-unused-vars */
+    for (let audioElement of this.audioElements) {
+      audioElement.play();
+      await customTimeout(audioElement.duration * 1000);
+    }
   },
 });

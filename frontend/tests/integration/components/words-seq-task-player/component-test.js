@@ -2,25 +2,32 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import data from './test-support/data-storage';
+import pageObject from './test-support/page-object';
 
 module('Integration | Component | words-seq-task-player', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  hooks.beforeEach(async function() {
+    const store = this.owner.lookup('service:store');
+    this.set('model', store.createRecord('task/words-sequences'));
 
-    await render(hbs`<WordsSeqTaskPlayer />`);
+    this.model.setProperties(data.task);
 
-    assert.equal(this.element.textContent.trim(), '');
+    await render(hbs`<WordsSeqTaskPlayer @task={{this.model}}/>`);
+  });
 
-    // Template block usage:
-    await render(hbs`
-      <WordsSeqTaskPlayer>
-        template block text
-      </WordsSeqTaskPlayer>
-    `);
+  test('it shows all the words', async function(assert) {
+    const pageWords = pageObject.buttons.mapBy('word');
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    Object.values(data.task.answerOptions)
+      .reduce((array, subArray) => {
+        array = array.concat(subArray);
+        return array;
+      }, [])
+      .mapBy('word')
+      .forEach((word) => {
+        assert.ok(pageWords.includes(word), `word "${word}" is present`);
+      });
   });
 });

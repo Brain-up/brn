@@ -20,7 +20,12 @@ module.exports = function(environment) {
     APP: {},
     fontawesome: {
       icons: {
-        'free-solid-svg-icons': ['brain', 'bookmark'],
+        'free-solid-svg-icons': [
+          'brain',
+          'bookmark',
+          'times-circle',
+          'check-circle',
+        ],
       },
     },
   };

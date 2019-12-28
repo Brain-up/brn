@@ -1,14 +1,26 @@
-<div class="flex">
-  {{#each @task.selectedItemsOrder as |type|}}
-    <div class="column flex-1">
-      {{#each (get @task.answerOptions type) as |answerOption|}}
-        <TextImageButton
-          data-test-task-answer-option={{answerOption.word}}
-          @clickAction={{action this.checkMaybe}}
-          @pictureFileUrl={{answerOption.pictureFileUrl}}
-          @word={{answerOption.word}}
-        />
-      {{/each}}
-    </div>
-  {{/each}}
+<AudioPlayer @audioFileUrl={{this.audioFiles}} @autoplay={{true}} />
+<div class="flex mt-4">
+  {{#if (and this.tasksCopy.length this.uncompletedTasks.length)}}
+    {{#each @task.selectedItemsOrder as |type|}}
+      <div class="column flex-1">
+        {{#each (get @task.answerOptions type) as |answerOption|}}
+          <TextImageButton
+            data-test-task-answer-option={{answerOption.word}}
+            @checked={{this.answerCompleted}}
+            @isCorrect={{this.isCorrect}}
+            @disabled={{this.audio.player.isPlaying}}
+            @isSelected={{eq
+              (get this.currentAnswerObject type)
+              answerOption.word
+            }}
+            @clickAction={{action this.checkMaybe answerOption}}
+            @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
+            @word={{answerOption.word}}
+          />
+        {{/each}}
+      </div>
+    {{/each}}
+  {{else}}
+    <AnswerCorrectnessWidget @isCorrect={{true}} />
+  {{/if}}
 </div>

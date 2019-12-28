@@ -23,13 +23,14 @@ function createTasks(firstTaskPart, ...restPartsOptions) {
 export default class WordsSequences extends BaseTask.extend({
   template: attr('string'),
   answerOptions: attr(),
+  wrongAnswers: attr('array'),
   selectedItemsOrder: computed('template', function() {
     return this.template
       .split('<')[1]
       .split('>')[0]
       .split(' ');
   }),
-  possibleTasks: computed('objects.[]', 'objectActions.[]', function() {
+  possibleTasks: computed('answerOptions.[]', function() {
     const taskPartsOptions = this.selectedItemsOrder.map(
       (orderItemName) => this.answerOptions[orderItemName],
     );
@@ -43,7 +44,17 @@ export default class WordsSequences extends BaseTask.extend({
   }),
   tasksSequence: computed('doubledTasks.[]', function() {
     return shuffleArray(this.doubledTasks).map((item, index) => {
-      return { ...item, order: index };
+      return {
+        answer: [...item],
+        order: index,
+      };
     });
+  }),
+  tasksToSolve: computed('wrongAnswers.[]', 'tasksSequence.[]', function() {
+    return this.tasksSequence.concat(
+      this.wrongAnswers.map((wrongAnswer, index) => {
+        return { ...wrongAnswer, order: this.tasksSequence.length + index };
+      }),
+    );
   }),
 }) {}

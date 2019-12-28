@@ -1,4 +1,4 @@
-<ExerciseNavigation
-  class="exercise-navigation"
-  @tasks={{this.model.tasks}}/>
+{{#unless this.model.hideExerciseNavigation}}
+  <ExerciseNavigation class="exercise-navigation" @tasks={{this.model.tasks}} />
+{{/unless}}
 {{outlet}}
