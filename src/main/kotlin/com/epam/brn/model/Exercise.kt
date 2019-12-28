@@ -2,6 +2,7 @@ package com.epam.brn.model
 
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -43,7 +44,7 @@ data class Exercise(
         exerciseType = ExerciseTypeEnum.valueOf(exerciseType),
         level = level,
         available = available,
-        tasks = tasks.map { task -> task.id }.toMutableSet()
+        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()
     )
 
     override fun equals(other: Any?): Boolean {
@@ -71,5 +72,6 @@ data class Exercise(
         return result
     }
 
-    override fun toString() = "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
+    override fun toString() =
+        "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
 }

@@ -8,7 +8,10 @@
     "exerciseType": "WORDS_SEQUENCES",
     "template": "<OBJECT OBJECT_ACTION>",
     "tasks": [
-      58
+      {
+        "id": 58,
+        "type": "task/WORDS_SEQUENCES"
+      }
     ]
   },
   "errors": [],

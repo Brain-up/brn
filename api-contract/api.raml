@@ -6,7 +6,6 @@ mediaType:
   - application/json
 
 # GROUP ----------------------------
-
 /groups:
   get:
     responses:
@@ -21,7 +20,6 @@ mediaType:
             example: !include samples/group.json
 
 # SERIES ----------------------------
-
 /series:
   get:
     queryParameters:
@@ -42,7 +40,6 @@ mediaType:
             example: !include samples/series.json
 
 # EXERCISE ----------------------------
-
 /exercises:
   get:
     queryParameters:
@@ -59,7 +56,8 @@ mediaType:
     responses:
       200:
         body:
-          example: !include samples/exercises.json
+          example1: !include samples/exercises_for_sequence_words_series.json
+          example2: !include samples/exercises_for_single_words_series.json
   /{exerciseId}:
     get:
       responses:
