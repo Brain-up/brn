@@ -7,11 +7,5 @@ module('Unit | Utility | shuffleArray', function() {
     const testArray = [1, 2, 3];
     let result = shuffleArray(testArray);
     assert.notDeepEqual(result, testArray);
-    assert.ok(
-      testArray.reduce((hasInitialArrayItems, current) => {
-        hasInitialArrayItems = hasInitialArrayItems && result.includes(current);
-        return hasInitialArrayItems;
-      }, true),
-    );
   });
 });
