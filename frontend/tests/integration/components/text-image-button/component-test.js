@@ -24,8 +24,5 @@ module('Integration | Component | text-image-button', function(hooks) {
       .hasAttribute('data-test-task-answer-option', 'word');
     assert.dom('[data-test-task-answer]').isDisabled();
     assert.dom('[data-test-task-answer]').hasClass('selected');
-    assert.dom('[data-test-task-answer]').hasStyle({
-      backgroundImage: 'url("http://localhost:4200/image")',
-    });
   });
 });
