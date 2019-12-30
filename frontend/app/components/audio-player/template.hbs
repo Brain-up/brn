@@ -5,7 +5,6 @@
     {{if this.isPlaying "opacity-50" "hover:bg-blue-700"}}"
   onclick={{action this.playAudio}}
   disabled={{this.isPlaying}}
-  {{ref "playButton" this}}
 >
   {{if this.isPlaying "🔊" "🔈"}}
   Прослушать

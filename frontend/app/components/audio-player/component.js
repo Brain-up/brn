@@ -4,17 +4,32 @@ import { isArray } from '@ember/array';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import customTimeout from '../../utils/custom-timeout';
+import deepEqual from '../../utils/deep-equal';
 
 export default Component.extend({
   audio: service(),
   init() {
     this._super(...arguments);
     this.set('playAudio', this.playAudio.bind(this));
+    this.set('previousFiles', []);
     this.audio.register(this);
   },
-  didReceiveAttrs() {
+  async didReceiveAttrs() {
     this._super(...arguments);
-    this.setAudioElements();
+
+    if (!deepEqual(this.filesToPlay, this.previousFiles)) {
+      await this.setAudioElements();
+      if (this.autoplay) {
+        await this.playAudio();
+      }
+    }
+    if (!this.isDestroyed && !this.isDestroying) {
+      this.set('previousFiles', this.filesToPlay);
+    }
+  },
+  willDestroyElement() {
+    this._super(...arguments);
+    this.set('audioElements', []);
   },
   autoplay: false,
   filesToPlay: computed('audioFileUrl', 'audioFileUrl.[]', function() {
@@ -39,9 +54,6 @@ export default Component.extend({
           }),
       ),
     );
-    if (this.autoplay) {
-      await this.playAudio();
-    }
   },
   isPlayingElement(element) {
     return (
@@ -64,8 +76,10 @@ export default Component.extend({
   async playAudio() {
     /* eslint-disable no-unused-vars */
     for (let audioElement of this.audioElements) {
-      audioElement.play();
-      await customTimeout(audioElement.duration * 1000);
+      if (!this.isDestroyed && !this.isDestroying) {
+        audioElement.play();
+        await customTimeout(audioElement.duration * 1000);
+      }
     }
   },
 });

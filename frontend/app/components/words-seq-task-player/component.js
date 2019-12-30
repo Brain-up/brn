@@ -3,7 +3,7 @@ import { reads } from '@ember/object/computed';
 import { computed, set } from '@ember/object';
 import { inject } from '@ember/service';
 import deepCopy from '../../utils/deep-copy';
-import { array, raw } from 'ember-awesome-macros';
+import { array } from 'ember-awesome-macros';
 import deepEqual from '../../utils/deep-equal';
 import customTimeout from '../../utils/custom-timeout';
 
@@ -18,15 +18,18 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.set('tasksCopy', []);
-    this.startTask();
     this.updateLocalTasks();
+    this.startTask();
   },
   isCorrect: false,
-  checked: false,
   audio: inject(),
-  currentUserObjectChoice: null,
-  currentUserActionChoice: null,
-  uncompletedTasks: array.filterBy('tasksCopy', raw('done'), false),
+  uncompletedTasks: computed(
+    'tasksCopy',
+    'tasksCopy.@each.isCompleted',
+    function() {
+      return this.tasksCopy.filterBy('isCompleted', false);
+    },
+  ),
   firstUncompletedTask: reads('uncompletedTasks.firstObject'),
   audioFiles: array.map('firstUncompletedTask.answer', (answer) => {
     return `/audio/${answer.audioFileUrl}`;
@@ -40,31 +43,38 @@ export default Component.extend({
       true,
     );
   }),
-  updateLocalTasks() {
-    const completedOrders = this.tasksCopy
-      .filterBy('done', true)
-      .mapBy('order');
-    this.set(
-      'tasksCopy',
-      deepCopy(this.task.tasksToSolve).map((copy) => {
-        return { ...copy, done: completedOrders.includes(copy.order) };
-      }),
-    );
-  },
   startNewTask() {
-    this.markDone(this.firstUncompletedTask);
+    this.markCompleted(this.firstUncompletedTask);
     this.startTask();
   },
-  markDone(task) {
-    set(task, 'done', true);
+  markCompleted(task) {
+    set(task, 'isCompleted', true);
+  },
+  markNextAttempt(task) {
+    set(task, 'nextAttempt', true);
   },
   startTask() {
-    this.set('checked', false);
     this.set('isCorrect', false);
     this.set(
       'currentAnswerObject',
       getEmptyTemplate(this.task.selectedItemsOrder),
     );
+  },
+  updateLocalTasks() {
+    const completedOrders = this.tasksCopy
+      .filterBy('isCompleted', true)
+      .mapBy('order');
+    const tasksCopy = deepCopy(this.task.tasksToSolve).map((copy) => {
+      const isCompleted = completedOrders.includes(copy.order);
+      const copyEquivalent = this.tasksCopy.findBy('order', copy.order);
+      return {
+        ...copy,
+        isCompleted,
+        nextAttempt: copyEquivalent && !!copyEquivalent.nextAttempt,
+        canInteract: true,
+      };
+    });
+    this.set('tasksCopy', tasksCopy);
   },
   async checkMaybe(selectedData) {
     this.set('currentAnswerObject', {
@@ -72,7 +82,6 @@ export default Component.extend({
       [selectedData.wordType]: selectedData.word,
     });
     if (this.answerCompleted) {
-      this.set('checked', true);
       const isCorrect = deepEqual(
         this.task.selectedItemsOrder.map(
           (orderName) => this.currentAnswerObject[orderName],
@@ -83,13 +92,19 @@ export default Component.extend({
         this.task.wrongAnswers.pushObject({
           ...this.firstUncompletedTask,
         });
+        this.markNextAttempt(this.firstUncompletedTask);
       }
       this.set('isCorrect', isCorrect);
 
+      this.updateLocalTasks();
+
       await customTimeout(1000);
 
-      this.updateLocalTasks();
       this.startNewTask();
+
+      if (!this.firstUncompletedTask) {
+        this.task.savePassed();
+      }
     }
   },
 });

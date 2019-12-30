@@ -14,7 +14,8 @@ export default Route.extend({
     if (
       to.name.endsWith('exercise.index') &&
       exercise.get('sortedTasks.firstObject') &&
-      !to.paramNames.includes('task_id')
+      !to.paramNames.includes('task_id') &&
+      exercise.exerciseType !== 'WORDS_SEQUENCES'
     ) {
       this.transitionTo(
         'series.exercise.task',

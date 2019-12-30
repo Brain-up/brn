@@ -1,8 +1,8 @@
 import { create, collection, attribute, is } from 'ember-cli-page-object';
 
 const page = create({
-  navLinks: collection('[data-test-pagination-link]', {
-    linkNum: attribute('data-test-pagination-link-number'),
+  navLinks: collection('[data-test-progress-indicator-item]', {
+    linkNum: attribute('data-test-progress-indicator-item-number'),
     ariaCurrent: is('[aria-current]'),
   }),
 });

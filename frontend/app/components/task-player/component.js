@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
+import shuffleArray from 'brn/utils/shuffle-array';
 import customTimeout from 'brn/utils/custom-timeout';
 
 export default class TaskPlayerComponent extends Component {
@@ -74,11 +75,3 @@ export default class TaskPlayerComponent extends Component {
   }
 }
 ({});
-
-function shuffleArray(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}

@@ -53,7 +53,10 @@ export default class WordsSequences extends BaseTask.extend({
   tasksToSolve: computed('wrongAnswers.[]', 'tasksSequence.[]', function() {
     return this.tasksSequence.concat(
       this.wrongAnswers.map((wrongAnswer, index) => {
-        return { ...wrongAnswer, order: this.tasksSequence.length + index };
+        return {
+          ...wrongAnswer,
+          order: this.tasksSequence.length + index,
+        };
       }),
     );
   }),
