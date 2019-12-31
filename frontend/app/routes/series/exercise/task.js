@@ -20,5 +20,7 @@ export default Route.extend({
           );
         });
     }
+
+    task.set('repetitionCount', 0);
   },
 });

@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -156,7 +157,8 @@ class ExercisesControllerIT {
                 description = toString(),
                 series = series,
                 level = 0,
-                name = exerciseName
+                name = exerciseName,
+                exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
             )
         )
     }

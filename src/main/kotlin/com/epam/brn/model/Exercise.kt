@@ -1,6 +1,8 @@
 package com.epam.brn.model
 
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -24,6 +26,8 @@ data class Exercise(
     var id: Long? = null,
     var name: String,
     var description: String? = "",
+    var template: String? = "",
+    var exerciseType: String,
     var level: Short? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
@@ -36,9 +40,11 @@ data class Exercise(
         id = id,
         name = name,
         description = description,
+        template = template,
+        exerciseType = ExerciseTypeEnum.valueOf(exerciseType),
         level = level,
         available = available,
-        tasks = tasks.map { task -> task.id }.toMutableSet()
+        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()
     )
 
     override fun equals(other: Any?): Boolean {
@@ -49,6 +55,8 @@ data class Exercise(
         if (name != other.name) return false
         if (description != other.description) return false
         if (level != other.level) return false
+        if (template != other.template) return false
+        if (exerciseType != other.exerciseType) return false
         if (series != other.series) return false
         return true
     }
@@ -58,9 +66,12 @@ data class Exercise(
         result = 31 * result + name.hashCode()
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + (level ?: 0)
+        result = 31 * result + (template?.hashCode() ?: 0)
+        result = 31 * result + (exerciseType.hashCode())
         result = 31 * result + series.hashCode()
         return result
     }
 
-    override fun toString() = "Exercise(id=$id, name='$name', description=$description, level=$level)"
+    override fun toString() =
+        "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
 }

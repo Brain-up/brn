@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.constant.SeriesTypeEnum
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -49,13 +49,13 @@ class InitialDataLoader(
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
+        userAccountRepository.save(UserAccount(name = "defaultUser", email = "default@default.ru"))
+
         val isInitRequired = exerciseGroupRepository.count() == 0L
         log.debug("Is initialization required: $isInitRequired")
-        if (isInitRequired) {
+        if (isInitRequired)
             folder?.let { loadInitialDataFromFileSystem(it) }
                 ?: loadInitialDataFromClassPath()
-        }
-        userAccountRepository.save(UserAccount(name = "defaultUser", email = "default@default.ru"))
     }
 
     private fun loadInitialDataFromFileSystem(folder: Path) {
@@ -64,7 +64,7 @@ class InitialDataLoader(
         if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
 
-        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES)
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES, TASKS_FOR_WORDS_SEQUENCES_SERIES)
             .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
             .toMap()
 
@@ -83,7 +83,7 @@ class InitialDataLoader(
 
     private fun loadInitialDataFromClassPath() {
         log.debug("Loading data from classpath initFiles")
-        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES)
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES, TASKS_FOR_WORDS_SEQUENCES_SERIES)
             .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
             .toMap()
         loadInitialDataToDb(sources)
@@ -93,12 +93,14 @@ class InitialDataLoader(
         val exercises = sources.getValue(EXERCISES)
         val groups = sources.getValue(GROUPS)
         val series = sources.getValue(SERIES)
-        val tasks = sources.getValue(TASKS_FOR_SINGLE_WORDS_SERIES)
+        val tasksForSingleWordsSeries = sources.getValue(TASKS_FOR_SINGLE_WORDS_SERIES)
+        val tasksForWordsSequencesSeries = sources.getValue(TASKS_FOR_WORDS_SEQUENCES_SERIES)
 
         val groupsById = prepareExerciseGroups(groups)
         val seriesById = prepareSeries(groupsById, series)
         val exerciseById = prepareExercises(seriesById, exercises)
-        prepareTasksForSingleWordsSeries(exerciseById, tasks)
+        prepareTasksForSingleWordsSeries(exerciseById, tasksForSingleWordsSeries)
+        prepareTasksForWordsSequencesSeries(seriesById, tasksForWordsSequencesSeries)
         exerciseGroupRepository.saveAll(groupsById.values)
         log.debug("Initialization succeeded")
     }
@@ -146,13 +148,17 @@ class InitialDataLoader(
         val exerciseById = mutableMapOf<Long, Exercise>()
         val exerciseConverter = object : Converter<ExerciseCsv, Exercise> {
             override fun convert(source: ExerciseCsv): Exercise {
-                require(seriesById.containsKey(source.seriesId))
-                val exerciseSeries = seriesById[source.seriesId]!!
+                val seriesId = source.seriesId
+                require(seriesById.containsKey(seriesId))
+                val exerciseSeries = seriesById[seriesId]!!
+                val exerciseType =
+                    if (seriesId == 1L) ExerciseTypeEnum.SINGLE_WORDS else ExerciseTypeEnum.WORDS_SEQUENCES
                 val exercise = Exercise(
                     name = source.name,
                     description = source.description,
                     level = source.level,
-                    series = exerciseSeries
+                    series = exerciseSeries,
+                    exerciseType = exerciseType.toString()
                 )
                 exerciseById[source.exerciseId] = exercise
                 exerciseSeries.exercises += exercise
@@ -189,9 +195,9 @@ class InitialDataLoader(
                     serialNumber = source.orderNumber,
                     exercise = exercise,
                     correctAnswer = answer,
-                    answerOptions = options,
-                    seriesType = SeriesTypeEnum.SINGLE_WORDS.toString()
+                    answerOptions = options
                 )
+                exercise.exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
                 exercise.tasks += task
                 return task
             }
@@ -199,8 +205,56 @@ class InitialDataLoader(
         csvParserService.parseCsvFile(tasksInputStream, taskConverter)
     }
 
+    // todo: get data from file
+    private fun prepareTasksForWordsSequencesSeries(
+        seriesById: MutableMap<Long, Series>,
+        tasksInputStream: InputStream
+    ) {
+        val resource1 = Resource(
+            word = "девочка",
+            wordType = WordTypeEnum.OBJECT.toString(),
+            audioFileUrl = "series2/девочка.mp3",
+            pictureFileUrl = "pictures/withWord/девочка.jpg"
+        )
+        val resource2 = Resource(
+            word = "мальчик",
+            wordType = WordTypeEnum.OBJECT.toString(),
+            audioFileUrl = "series2/мальчик.mp3",
+            pictureFileUrl = "pictures/withWord/мальчик.jpg"
+        )
+        val resource3 = Resource(
+            word = "сидит",
+            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
+            audioFileUrl = "series2/сидит.mp3",
+            pictureFileUrl = "pictures/withWord/сидит.jpg"
+        )
+        val resource4 = Resource(
+            word = "спит",
+            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
+            audioFileUrl = "series2/спит.mp3",
+            pictureFileUrl = "pictures/withWord/спит.jpg"
+        )
+
+        val task = Task(
+            serialNumber = 1,
+            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4)
+        )
+        val exercise = Exercise(
+            series = seriesById[2L]!!,
+            name = "Распознование последовательности слов",
+            description = "Распознование последовательности слов",
+            template = "<OBJECT OBJECT_ACTION>",
+            exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString(),
+            level = 1
+        )
+        task.exercise = exercise
+        exercise.tasks.add(task)
+        (seriesById[1L] as Series).exercises.add(exercise)
+    }
+
     companion object {
         private const val TASKS_FOR_SINGLE_WORDS_SERIES = "tasks_for_single_words_series.csv"
+        private const val TASKS_FOR_WORDS_SEQUENCES_SERIES = "tasks_for_words_sequences_series.csv"
         private const val SERIES = "series.csv"
         private const val GROUPS = "groups.csv"
         private const val EXERCISES = "exercises.csv"

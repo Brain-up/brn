@@ -10,9 +10,6 @@ module.exports = function (defaults) {
       exclude: ['pictures/'],
     },
     postcssOptions: {
-      fingerprint: {
-        exclude: ['pictures/'],
-      },
       compile: {
         enabled: true,
         plugins: [
