@@ -3,6 +3,10 @@ package com.epam.brn.job.impl
 import com.epam.brn.job.CsvUtils
 import com.epam.brn.job.UploadFileJobRunner
 import com.epam.brn.job.csv.task.UploadFromCsvJob
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import org.apache.commons.io.FileUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,10 +14,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
 
 @Component
 @Profile("default", "dev")

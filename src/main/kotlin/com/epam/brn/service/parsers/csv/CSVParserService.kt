@@ -3,16 +3,16 @@ package com.epam.brn.service.parsers.csv
 import com.epam.brn.service.parsers.csv.converter.Converter
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
-import org.apache.commons.io.IOUtils
-import org.apache.commons.lang3.StringUtils
-import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
-import org.apache.logging.log4j.kotlin.logger
-import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.stream.Collectors.toList
+import org.apache.commons.io.IOUtils
+import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
+import org.apache.logging.log4j.kotlin.logger
+import org.springframework.stereotype.Service
 
 @Service
 class CSVParserService {

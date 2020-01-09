@@ -4,11 +4,11 @@ import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
+import java.util.Optional
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.Optional
 
 @Service
 class ExerciseGroupsService(

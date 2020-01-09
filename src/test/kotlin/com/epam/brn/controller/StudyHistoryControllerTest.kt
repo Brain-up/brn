@@ -3,13 +3,13 @@ package com.epam.brn.controller
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import com.nhaarman.mockito_kotlin.verify
+import java.time.LocalDateTime
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDateTime
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryControllerTest {

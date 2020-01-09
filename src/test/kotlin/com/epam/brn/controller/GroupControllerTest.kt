@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.service.ExerciseGroupsService
 import com.nhaarman.mockito_kotlin.verify
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -10,7 +11,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
-import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class GroupControllerTest {

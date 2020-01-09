@@ -11,6 +11,10 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
 import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.verify
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.Optional
+import javax.persistence.EntityManager
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.any
@@ -18,10 +22,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.Optional
-import javax.persistence.EntityManager
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryServiceTest {

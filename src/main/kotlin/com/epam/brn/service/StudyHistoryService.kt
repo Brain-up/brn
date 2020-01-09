@@ -6,11 +6,11 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
+import java.security.InvalidParameterException
+import javax.persistence.EntityManager
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.security.InvalidParameterException
-import javax.persistence.EntityManager
 
 @Service
 class StudyHistoryService(

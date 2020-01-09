@@ -3,18 +3,18 @@ package com.epam.brn.model
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.dto.TaskDtoForWordsSequences
+import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
-import javax.persistence.SequenceGenerator
-import javax.persistence.CascadeType
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
-import javax.persistence.ManyToMany
-import javax.persistence.JoinTable
-import javax.persistence.FetchType
+import javax.persistence.SequenceGenerator
 
 @Entity
 data class Task(
