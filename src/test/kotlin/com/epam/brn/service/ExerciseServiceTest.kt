@@ -14,6 +14,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.anyShort
+import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 
@@ -75,5 +77,17 @@ internal class ExerciseServiceTest {
         // THEN
         assertEquals(actualResult, exerciseDtoMock)
         verify(exerciseRepository).findById(anyLong())
+    }
+
+    @Test
+    fun `should get exercise by name and level`() {
+        // GIVEN
+        val exerciseMock: Exercise = mock(Exercise::class.java)
+        `when`(exerciseRepository.findExerciseByNameAndLevel("name", 1)).thenReturn(Optional.of(exerciseMock))
+        // WHEN
+        val actualResult: Exercise = exerciseService.findExerciseByNameAndLevel("name", 1)
+        // THEN
+        assertEquals(actualResult, exerciseMock)
+        verify(exerciseRepository).findExerciseByNameAndLevel(anyString(), anyShort())
     }
 }
