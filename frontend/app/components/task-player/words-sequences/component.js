@@ -2,10 +2,10 @@ import Component from '@ember/component';
 import { reads } from '@ember/object/computed';
 import { computed, set } from '@ember/object';
 import { inject } from '@ember/service';
-import deepCopy from '../../utils/deep-copy';
+import deepCopy from 'brn/utils/deep-copy';
 import { array } from 'ember-awesome-macros';
-import deepEqual from '../../utils/deep-equal';
-import customTimeout from '../../utils/custom-timeout';
+import deepEqual from 'brn/utils/deep-equal';
+import customTimeout from 'brn/utils/custom-timeout';
 
 function getEmptyTemplate(selectedItemsOrder = []) {
   return selectedItemsOrder.reduce((result, currentKey) => {

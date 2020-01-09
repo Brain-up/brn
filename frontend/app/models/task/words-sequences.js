@@ -24,6 +24,7 @@ export default class WordsSequences extends BaseTask.extend({
   template: attr('string'),
   answerOptions: attr(),
   wrongAnswers: attr('array'),
+  exerciseType: 'words-sequences',
   selectedItemsOrder: computed('template', function() {
     return this.template
       .split('<')[1]

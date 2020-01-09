@@ -6,6 +6,7 @@ const page = create({
     ariaCurrent: is('[aria-current]'),
     style: attribute('style'),
   }),
+  maxItemsAmount: attribute('data-test-max-amount', '[data-test-items-list]'),
 });
 
 export default page;

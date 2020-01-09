@@ -13,7 +13,9 @@ export default Component.extend({
   },
   progressContainer: null,
   progressItems: null,
-  maxAmount: 10,
+  maxAmount: computed('itemsLength', 'progressContainerWidth', function() {
+    return Math.floor(this.progressContainerWidth / 36) - 2;
+  }),
   itemsLength: reads('progressItems.length'),
   completedItemsLength: array.filterBy(
     'progressItems',
@@ -22,21 +24,41 @@ export default Component.extend({
   ),
   progressContainerWidth: reads('progressContainer.offsetWidth'),
   shouldHideExtraItems: computed(
-    'itemsLength',
+    'maxAmount',
     'progressContainerWidth',
     function() {
-      return this.progressContainerWidth < this.itemsLength * 36 + 118;
+      return this.maxAmount < this.itemsLength;
     },
   ),
-  hiddenCompletedCount: computed('progressItems.@each.isCompleted', function() {
+  itemsToHideCount: computed('progressItems.@each.isCompleted', function() {
     const completedToHide = this.completedItemsLength.length - 5;
     return completedToHide >= 0 ? completedToHide : 0;
   }),
   hiddenUncompletedCount: computed(
     'itemsLength',
-    'hiddenCompletedCount',
+    'itemsToHideCount',
     function() {
-      return this.itemsLength - this.hiddenCompletedCount - this.maxAmount;
+      const amount = this.itemsLength - this.itemsToHideCount - this.maxAmount;
+      return amount;
+    },
+  ),
+  negativeHiddenUncompletedCount: computed(
+    'hiddenUncompletedCount',
+    function() {
+      return this.hiddenUncompletedCount < 0 ? this.hiddenUncompletedCount : 0;
+    },
+  ),
+  positiveHiddenUncompletedCount: computed(
+    'hiddenUncompletedCount',
+    function() {
+      return this.hiddenUncompletedCount > 0 ? this.hiddenUncompletedCount : 0;
+    },
+  ),
+  hiddenCompletedCount: computed(
+    'itemsToHideCount',
+    'negativeHiddenUncompletedCount',
+    function() {
+      return this.itemsToHideCount + this.negativeHiddenUncompletedCount;
     },
   ),
   betweenPadding: computed('progressContainerWidth', function() {

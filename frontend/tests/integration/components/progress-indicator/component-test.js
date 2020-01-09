@@ -72,7 +72,9 @@ module('Integration | Component | progress-indicator', function(hooks) {
     completeByOrder(this.longList, 7);
     await customTimeout();
 
-    assert.dom('[data-test-hidden-uncompleted]').hasText('+88');
+    assert
+      .dom('[data-test-hidden-uncompleted]')
+      .hasText(`+${100 - 2 - pageObject.maxItemsAmount}`);
     assert.dom('[data-test-hidden-completed]').hasText('+2');
   });
 });

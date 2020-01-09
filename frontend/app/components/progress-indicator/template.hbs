@@ -3,6 +3,8 @@
   <nav id="progressContainer" class="c-pagination c-pagination--tasks mb-3">
     {{#if @progressItems.length}}
       <ul
+        data-test-items-list
+        data-test-max-amount={{this.maxAmount}}
         class="clearfix items-list"
         style={{html-safe
           (concat
@@ -11,7 +13,11 @@
             ");"
             (if
               this.shouldHideExtraItems
-              (concat "right: calc(36px*(-" this.hiddenCompletedCount "));")
+              (concat
+                "right: calc(36px*(-"
+                (sum this.itemsToHideCount this.negativeHiddenUncompletedCount)
+                "))"
+              )
             )
           )
         }}
@@ -54,8 +60,8 @@
     <div class="flex justify-between hidden-counter">
       <span data-test-hidden-uncompleted>
         {{if
-          this.hiddenUncompletedCount
-          (concat "+" this.hiddenUncompletedCount)
+          this.positiveHiddenUncompletedCount
+          (concat "+" this.positiveHiddenUncompletedCount)
         }}
       </span>
       <span data-test-hidden-completed>

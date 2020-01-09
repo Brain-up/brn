@@ -14,7 +14,9 @@ module('Integration | Component | words-seq-task-player', function(hooks) {
 
     this.model.setProperties(data.task);
 
-    await render(hbs`<WordsSeqTaskPlayer @task={{this.model}}/>`);
+    await render(hbs`<TaskPlayer
+      @task={{this.model}}
+    />`);
   });
 
   test('it shows all the words', async function(assert) {
