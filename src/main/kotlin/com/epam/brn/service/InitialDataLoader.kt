@@ -217,27 +217,39 @@ class InitialDataLoader(
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
         val resource2 = Resource(
-            word = "мальчик",
+            word = "дедушка",
             wordType = WordTypeEnum.OBJECT.toString(),
-            audioFileUrl = "series2/мальчик.mp3",
-            pictureFileUrl = "pictures/withWord/мальчик.jpg"
+            audioFileUrl = "series2/дедушка.mp3",
+            pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
         val resource3 = Resource(
-            word = "сидит",
-            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/сидит.mp3",
-            pictureFileUrl = "pictures/withWord/сидит.jpg"
+            word = "бабушка",
+            wordType = WordTypeEnum.OBJECT.toString(),
+            audioFileUrl = "series2/бабушка.mp3",
+            pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
         val resource4 = Resource(
-            word = "спит",
+            word = "бросает",
             wordType = WordTypeEnum.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/спит.mp3",
-            pictureFileUrl = "pictures/withWord/спит.jpg"
+            audioFileUrl = "series2/бросает.mp3",
+            pictureFileUrl = "pictures/withWord/бросает.jpg"
+        )
+        val resource5 = Resource(
+            word = "читает",
+            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
+            audioFileUrl = "series2/читает.mp3",
+            pictureFileUrl = "pictures/withWord/читает.jpg"
+        )
+        val resource6 = Resource(
+            word = "рисует",
+            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
+            audioFileUrl = "series2/рисует.mp3",
+            pictureFileUrl = "pictures/withWord/рисует.jpg"
         )
 
         val task = Task(
             serialNumber = 1,
-            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4)
+            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
         )
         val exercise = Exercise(
             series = seriesById[2L]!!,
