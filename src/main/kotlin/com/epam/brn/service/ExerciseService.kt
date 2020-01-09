@@ -29,6 +29,11 @@ class ExerciseService(
             .orElseThrow { EntityNotFoundException("Exercise entity was not found by id $id") }
     }
 
+    fun findExerciseByNameAndLevel(name: String, level: Short): Exercise {
+        return exerciseRepository.findExerciseByNameAndLevel(name, level)
+            .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
+    }
+
     fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
         log.debug("Searching available exercises for user=$userId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
