@@ -116,6 +116,7 @@ module('Acceptance | tasks flow', function(hooks) {
     const targetTask2 = setupAfterPageVisit().targetTask;
 
     await customTimeout();
+    await customTimeout();
 
     chooseAnswer(targetTask2.correctAnswer.word);
 
