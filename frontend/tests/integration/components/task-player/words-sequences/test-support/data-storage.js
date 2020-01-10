@@ -8,7 +8,7 @@ const task = {
     OBJECT_ACTION: [
       {
         id: 345,
-        audioFileUrl: 'no_noise/линь.mp3',
+        audioFileUrl: '',
         word: 'линь',
         wordType: 'OBJECT_ACTION',
         pictureFileUrl: 'pictures/линь.jpg',
@@ -18,7 +18,7 @@ const task = {
     OBJECT: [
       {
         id: 344,
-        audioFileUrl: 'no_noise/вить.mp3',
+        audioFileUrl: '',
         word: 'вить',
         wordType: 'OBJECT',
         pictureFileUrl: 'pictures/вить.jpg',

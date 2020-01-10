@@ -12,13 +12,7 @@ import AudioPlayer from 'brn/components/audio-player/component';
 import customTimeout from 'brn/utils/custom-timeout';
 
 AudioPlayer.reopen({
-  async playAudio() {
-    this.set('isPlaying', true);
-
-    await customTimeout();
-
-    this.set('isPlaying', false);
-  },
+  async playAudio() {},
 });
 
 module('Acceptance | tasks flow', function(hooks) {
@@ -115,7 +109,6 @@ module('Acceptance | tasks flow', function(hooks) {
 
     const targetTask2 = setupAfterPageVisit().targetTask;
 
-    await customTimeout();
     await customTimeout();
 
     chooseAnswer(targetTask2.correctAnswer.word);
