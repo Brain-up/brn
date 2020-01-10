@@ -14,7 +14,7 @@ export default Component.extend({
   progressContainer: null,
   progressItems: null,
   maxAmount: computed('itemsLength', 'progressContainerWidth', function() {
-    return Math.floor(this.progressContainerWidth / 36) - 2;
+    return Math.floor(this.progressContainerWidth / 36) - 5;
   }),
   itemsLength: reads('progressItems.length'),
   completedItemsLength: array.filterBy(
