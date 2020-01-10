@@ -1,6 +1,10 @@
 <ProgressIndicator @progressItems={{this.tasksCopy}} />
 {{#if this.tasksCopy.length}}
-  <AudioPlayer @audioFileUrl={{this.audioFiles}} @autoplay={{true}} />
+  <AudioPlayer
+    @audioFileUrl={{this.audioFiles}}
+    @autoplay={{true}}
+    @disabled={{@task.pauseExecution}}
+  />
   <div class="flex mt-4">
     {{#if this.uncompletedTasks.length}}
       {{#each @task.selectedItemsOrder as |type|}}
@@ -8,21 +12,27 @@
           class="column flex-1 flex-col
             {{if (not (eq @task.selectedItemsOrder.lastObject type)) "pr-2"}}"
         >
-          {{#each (get @task.answerOptions type) as |answerOption|}}
-            <TextImageButton
-              data-test-task-answer-option={{answerOption.word}}
-              @checked={{this.answerCompleted}}
-              @isCorrect={{this.isCorrect}}
-              @disabled={{this.audio.player.isPlaying}}
-              @isSelected={{eq
-                (get this.currentAnswerObject type)
-                answerOption.word
-              }}
-              @clickAction={{action this.checkMaybe answerOption}}
-              @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
-              @word={{answerOption.word}}
-            />
-          {{/each}}
+          {{#let
+            (or
+              this.audio.player.isPlaying @task.pauseExecution
+            ) as |disableAnswer|
+          }}
+            {{#each (get @task.answerOptions type) as |answerOption|}}
+              <TextImageButton
+                data-test-task-answer-option={{answerOption.word}}
+                @checked={{this.answerCompleted}}
+                @isCorrect={{this.isCorrect}}
+                @disabled={{disableAnswer}}
+                @isSelected={{eq
+                  (get this.currentAnswerObject type)
+                  answerOption.word
+                }}
+                @clickAction={{action this.checkMaybe answerOption}}
+                @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
+                @word={{answerOption.word}}
+              />
+            {{/each}}
+          {{/let}}
         </div>
       {{/each}}
     {{else}}
