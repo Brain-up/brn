@@ -8,6 +8,7 @@ export default class Exercise extends CompletionDependent.extend({
   name: attr('string'),
   description: attr('string'),
   order: attr('number'),
+  exerciseType: attr('string'),
   series: belongsTo('series', { async: true }),
   tasks: hasMany('task', { async: true }),
   children: reads('tasks'),
@@ -15,6 +16,9 @@ export default class Exercise extends CompletionDependent.extend({
   startTime: attr('date'),
   endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
+  hideExerciseNavigation: computed(function() {
+    return this.exerciseType === 'WORDS_SEQUENCES';
+  }),
   isCompleted: computed(
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',

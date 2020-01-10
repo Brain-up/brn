@@ -25,6 +25,8 @@ module.exports = function(environment) {
           'bookmark',
           'pause-circle',
           'play-circle',
+          'times-circle',
+          'check-circle',
         ],
       },
     },

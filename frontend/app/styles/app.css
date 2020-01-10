@@ -41,6 +41,7 @@ main > * {
 .series-page--canvas {
   padding-left: 30px;
   flex-basis: 70%;
+  overflow: hidden;
 }
 
 .series-page--canvas audio {
@@ -98,4 +99,18 @@ a[disabled] {
 
 .series-page--aside__icon svg {
   font-size: 30px;
+}
+
+.task-square-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 9px 9px 0;
+  height: 70px;
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
+  flex-basis: 32%;
+  border: 1px solid #eee;
+  border-radius: 3px;
 }

@@ -1,0 +1,43 @@
+button {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+  overflow: hidden;
+  background-size: cover;
+  background-image: var(--word-picture-url);
+  background-position: center bottom;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+span {
+  background: #fff;
+  padding: 2px 3px;
+  line-height: 18px;
+  font-size: 18px;
+  display: inline-block;
+}
+
+.selected {
+  box-shadow: 0 0 5px 1px #2b6cb0;
+}
+
+.correctness-indicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.correctness-indicator.right {
+  color: #46cb18;
+}
+
+.correctness-indicator.wrong {
+  color: #ff0100;
+}

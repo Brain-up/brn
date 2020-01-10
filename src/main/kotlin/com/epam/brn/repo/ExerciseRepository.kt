@@ -8,5 +8,6 @@ import java.util.Optional
 @Repository
 interface ExerciseRepository : JpaRepository<Exercise, Long> {
     fun findExercisesBySeriesId(seriesId: Long): List<Exercise>
+    fun findExerciseByNameAndLevel(name: String, level: Short): Optional<Exercise>
     override fun findById(seriesId: Long): Optional<Exercise>
 }

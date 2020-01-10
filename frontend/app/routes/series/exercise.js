@@ -11,11 +11,11 @@ export default Route.extend({
       return;
     }
 
-    await this.store.query('task', { exerciseId: exercise.id });
     if (
       to.name.endsWith('exercise.index') &&
       exercise.get('sortedTasks.firstObject') &&
-      !to.paramNames.includes('task_id')
+      !to.paramNames.includes('task_id') &&
+      exercise.exerciseType !== 'WORDS_SEQUENCES'
     ) {
       this.transitionTo(
         'series.exercise.task',
