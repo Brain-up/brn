@@ -1,5 +1,7 @@
 <TaskPlayer
   data-test-task-player
+  data-test-task-id={{this.model.id}}
+  data-test-task-exercise-id={{this.model.exercise.id}}
   @onRightAnswer={{action this.saveExerciseMaybe}}
   @afterCompleted={{action this.nextTaskTransition}}
   @task={{this.model}}

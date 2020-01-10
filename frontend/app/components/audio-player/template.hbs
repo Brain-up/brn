@@ -1,12 +1,4 @@
 {{! template-lint-configure no-invalid-interactive false }}
-<audio
-  data-test-audio-player
-  autoplay={{@autoplay}}
-  src={{@audioFileUrl}}
-  onplay={{action this.updateIsPlaying}}
-  onended={{action this.updateIsPlaying}}
-  {{ref "audioElement" this}}
-></audio>
 <button
   data-test-play-audio-button
   class="bg-blue-500 text-white font-bold py-2 px-4 rounded-full

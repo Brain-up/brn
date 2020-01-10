@@ -4,6 +4,7 @@ export function getData() {
       serialNumber: 1,
       id: 1,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [
         {
           id: 4,
@@ -54,6 +55,7 @@ export function getData() {
       serialNumber: 2,
       id: 2,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [
         {
           id: 4,
@@ -104,6 +106,7 @@ export function getData() {
       serialNumber: 3,
       id: 3,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [
         {
           id: 4,
@@ -152,8 +155,23 @@ export function getData() {
     },
   ];
   const exercises = [
-    { order: 1, id: 1, name: 'default', tasks: [1, 2] },
-    { order: 2, id: 2, name: 'default', tasks: [3] },
+    {
+      order: 1,
+      id: 1,
+      exerciseType: 'SINGLE_WORDS',
+      name: 'default',
+      tasks: [
+        { id: 1, type: 'task/single-words' },
+        { id: 2, type: 'task/single-words' },
+      ],
+    },
+    {
+      order: 2,
+      id: 2,
+      exerciseType: 'SINGLE_WORDS',
+      name: 'default',
+      tasks: [{ id: 3, type: 'task/single-words' }],
+    },
   ];
   const series = [
     { order: 1, id: 1, name: 'default', exerciseGroupId: 1, exercises: [1, 2] },

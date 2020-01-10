@@ -9,12 +9,13 @@ import { reads } from '@ember/object/computed';
 
 export default class Task extends CompletionDependent.extend({
   name: attr('string'),
-  word: attr('string'),
   order: attr('number'),
-  audioFileUrl: attr('string'),
-  pictureFileUrl: attr('string'),
-  words: attr('array'),
-  exercise: belongsTo('exercise', { async: true }),
+  exerciseType: attr('string'),
+  exercise: belongsTo('exercise', {
+    async: true,
+    inverse: 'tasks',
+    polymorphic: true,
+  }),
   repetitionCount: attr('number'),
   tasksManager: service(),
   parent: reads('exercise'),

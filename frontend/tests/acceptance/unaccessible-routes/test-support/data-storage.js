@@ -4,6 +4,7 @@ export function getTaskScenarioData() {
       serialNumber: 1,
       id: 1,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
@@ -11,11 +12,22 @@ export function getTaskScenarioData() {
       serialNumber: 2,
       id: 2,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
   ];
-  const exercises = [{ order: 1, id: 1, name: 'default', tasks: [1, 2] }];
+  const exercises = [
+    {
+      order: 1,
+      id: 1,
+      name: 'default',
+      tasks: [
+        { id: 1, type: 'task/SINGLE_WORDS' },
+        { id: 2, type: 'task/SINGLE_WORDS' },
+      ],
+    },
+  ];
   const series = [
     { order: 1, id: 1, name: 'default', exerciseGroupId: 1, exercises: [1] },
   ];
@@ -32,6 +44,7 @@ export function getExerciseScenarioData() {
       serialNumber: 1,
       id: 1,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
@@ -39,6 +52,7 @@ export function getExerciseScenarioData() {
       serialNumber: 2,
       id: 2,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
@@ -46,13 +60,27 @@ export function getExerciseScenarioData() {
       serialNumber: 3,
       id: 3,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
   ];
   const exercises = [
-    { order: 1, id: 1, name: 'default', tasks: [1, 2] },
-    { order: 2, id: 2, name: 'default', tasks: [3] },
+    {
+      order: 1,
+      id: 1,
+      name: 'default',
+      tasks: [
+        { id: 1, type: 'task/SINGLE_WORDS' },
+        { id: 2, type: 'task/SINGLE_WORDS' },
+      ],
+    },
+    {
+      order: 2,
+      id: 2,
+      name: 'default',
+      tasks: [{ id: 3, type: 'task/SINGLE_WORDS' }],
+    },
   ];
   const series = [
     { order: 1, id: 1, name: 'default', exerciseGroupId: 1, exercises: [1, 2] },
@@ -70,6 +98,7 @@ export function getSeriesScenarioData() {
       serialNumber: 1,
       id: 1,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
@@ -77,6 +106,7 @@ export function getSeriesScenarioData() {
       serialNumber: 2,
       id: 2,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
@@ -84,13 +114,27 @@ export function getSeriesScenarioData() {
       serialNumber: 3,
       id: 3,
       name: 'default',
+      exerciseType: 'SINGLE_WORDS',
       answerOptions: [],
       correctAnswer: { word: '', audioFileUrl: '' },
     },
   ];
   const exercises = [
-    { order: 1, id: 1, name: 'default', tasks: [1, 2] },
-    { order: 2, id: 2, name: 'default', tasks: [3] },
+    {
+      order: 1,
+      id: 1,
+      name: 'default',
+      tasks: [
+        { id: 1, type: 'task/SINGLE_WORDS' },
+        { id: 2, type: 'task/SINGLE_WORDS' },
+      ],
+    },
+    {
+      order: 2,
+      id: 2,
+      name: 'default',
+      tasks: [{ id: 3, type: 'task/SINGLE_WORDS' }],
+    },
   ];
   const series = [
     { order: 1, id: 1, name: 'default', exerciseGroupId: 1, exercises: [1] },

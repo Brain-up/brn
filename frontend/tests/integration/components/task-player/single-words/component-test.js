@@ -11,7 +11,7 @@ module('Integration | Component | task-player', function(hooks) {
 
   hooks.beforeEach(async function() {
     const store = this.owner.lookup('service:store');
-    const firstTask = store.createRecord('task', {
+    const firstTask = store.createRecord('task/single-words', {
       id: '1',
       order: '1',
       word: 'бал',
@@ -19,7 +19,7 @@ module('Integration | Component | task-player', function(hooks) {
       pictureFileUrl: 'path',
     });
 
-    const secondTask = store.createRecord('task', {
+    const secondTask = store.createRecord('task/single-words', {
       id: '2',
       order: '2',
       word: 'бал',
