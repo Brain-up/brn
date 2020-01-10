@@ -8,7 +8,7 @@ export function getData() {
       answerOptions: [
         {
           id: 4,
-          audioFileUrl: 'no_noise/вить.mp3',
+          audioFileUrl: '',
           word: 'вить',
           pictureFileUrl: '',
           soundsCount: 1,
@@ -22,21 +22,21 @@ export function getData() {
         },
         {
           id: 2,
-          audioFileUrl: 'no_noise/быль.mp3',
+          audioFileUrl: '',
           word: 'быль',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
           id: 5,
-          audioFileUrl: 'no_noise/бум.mp3',
+          audioFileUrl: '',
           word: 'бум',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
           id: 3,
-          audioFileUrl: 'no_noise/гад.mp3',
+          audioFileUrl: '',
           word: 'гад',
           pictureFileUrl: '',
           soundsCount: 1,
@@ -44,7 +44,7 @@ export function getData() {
       ],
       correctAnswer: {
         id: 4,
-        audioFileUrl: 'no_noise/вить.mp3',
+        audioFileUrl: '',
         word: 'вить',
         pictureFileUrl:
           'https://klike.net/uploads/posts/2019-07/1564314090_3.jpg',
@@ -59,7 +59,7 @@ export function getData() {
       answerOptions: [
         {
           id: 4,
-          audioFileUrl: 'no_noise/вить.mp3',
+          audioFileUrl: '',
           word: 'вить',
           pictureFileUrl: '',
           soundsCount: 1,
@@ -73,21 +73,21 @@ export function getData() {
         },
         {
           id: 2,
-          audioFileUrl: 'no_noise/быль.mp3',
+          audioFileUrl: '',
           word: 'быль',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
           id: 5,
-          audioFileUrl: 'no_noise/бум.mp3',
+          audioFileUrl: '',
           word: 'бум',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
           id: 3,
-          audioFileUrl: 'no_noise/гад.mp3',
+          audioFileUrl: '',
           word: 'гад',
           pictureFileUrl: '',
           soundsCount: 1,
@@ -95,7 +95,7 @@ export function getData() {
       ],
       correctAnswer: {
         id: 4,
-        audioFileUrl: 'no_noise/вить.mp3',
+        audioFileUrl: '',
         word: 'вить',
         pictureFileUrl:
           'https://klike.net/uploads/posts/2019-07/1564314090_3.jpg',
@@ -110,7 +110,7 @@ export function getData() {
       answerOptions: [
         {
           id: 4,
-          audioFileUrl: 'no_noise/вить.mp3',
+          audioFileUrl: '',
           word: 'вить',
           pictureFileUrl: '',
           soundsCount: 1,
@@ -124,21 +124,21 @@ export function getData() {
         },
         {
           id: 2,
-          audioFileUrl: 'no_noise/быль.mp3',
+          audioFileUrl: '',
           word: 'быль',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
           id: 5,
-          audioFileUrl: 'no_noise/бум.mp3',
+          audioFileUrl: '',
           word: 'бум',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
           id: 3,
-          audioFileUrl: 'no_noise/гад.mp3',
+          audioFileUrl: '',
           word: 'гад',
           pictureFileUrl: '',
           soundsCount: 1,
@@ -146,7 +146,7 @@ export function getData() {
       ],
       correctAnswer: {
         id: 4,
-        audioFileUrl: 'no_noise/вить.mp3',
+        audioFileUrl: '',
         word: 'вить',
         pictureFileUrl:
           'https://klike.net/uploads/posts/2019-07/1564314090_3.jpg',

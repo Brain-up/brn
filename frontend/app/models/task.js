@@ -17,8 +17,10 @@ export default class Task extends CompletionDependent.extend({
     polymorphic: true,
   }),
   repetitionCount: attr('number'),
-  tasksManager: service(),
   parent: reads('exercise'),
+  tasksManager: service(),
+  studyingTimer: service(),
+  pauseExecution: reads('studyingTimer.isPaused'),
   isCompleted: computed('tasksManager.completedTasks.[]', function() {
     return this.tasksManager.isCompleted(this);
   }),

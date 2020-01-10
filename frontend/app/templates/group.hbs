@@ -1,3 +1,6 @@
-<Breadcrumbs @group={{this.model}} />
+<div class="flex items-center mb-2">
+  <Breadcrumbs @group={{this.model}} />
+  <Timer @paused={{true}} @hideControls={{true}} />
+</div>
 <GroupNavigation @group={{this.model}} />
 {{outlet}}

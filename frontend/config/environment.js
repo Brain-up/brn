@@ -23,6 +23,8 @@ module.exports = function(environment) {
         'free-solid-svg-icons': [
           'brain',
           'bookmark',
+          'pause-circle',
+          'play-circle',
           'times-circle',
           'check-circle',
         ],

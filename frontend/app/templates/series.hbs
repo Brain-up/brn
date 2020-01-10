@@ -1,4 +1,7 @@
-<Breadcrumbs @series={{this.model}} />
+<div class="flex items-center mb-2">
+  <Breadcrumbs @series={{this.model}} />
+  <Timer />
+</div>
 <div class="flex series-container">
   <aside class="series-page--aside shadow-md border-gray-300 border rounded">
     <SeriesNavigation @series={{this.model}} />

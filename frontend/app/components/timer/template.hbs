@@ -1,0 +1,14 @@
+<div class="timer-wrapper font-semibold text-red-400">
+  <span data-test-timer-display-value>
+    {{this.displayValue}}
+  </span>
+  {{#unless @hideControls}}
+    <button onclick={{action this.togglePause}}>
+      {{#if this.isPaused}}
+        <FaIcon @icon="play-circle" />
+      {{else}}
+        <FaIcon @icon="pause-circle" />
+      {{/if}}
+    </button>
+  {{/unless}}
+</div>

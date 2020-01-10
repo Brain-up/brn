@@ -8,7 +8,7 @@ const TASK_DATA = {
     OBJECT_ACTION: [
       {
         id: 345,
-        audioFileUrl: 'no_noise/линь.mp3',
+        audioFileUrl: '',
         word: 'линь',
         wordType: 'OBJECT_ACTION',
         pictureFileUrl: 'pictures/линь.jpg',
@@ -16,7 +16,7 @@ const TASK_DATA = {
       },
       {
         id: 346,
-        audioFileUrl: 'no_noise/бал.mp3',
+        audioFileUrl: '',
         word: 'бал',
         wordType: 'OBJECT_ACTION',
         pictureFileUrl: 'pictures/бал.jpg',
@@ -26,7 +26,7 @@ const TASK_DATA = {
     OBJECT: [
       {
         id: 344,
-        audioFileUrl: 'no_noise/вить.mp3',
+        audioFileUrl: '',
         word: 'вить',
         wordType: 'OBJECT',
         pictureFileUrl: 'pictures/вить.jpg',
@@ -34,7 +34,7 @@ const TASK_DATA = {
       },
       {
         id: 343,
-        audioFileUrl: 'no_noise/быль.mp3',
+        audioFileUrl: '',
         word: 'быль',
         wordType: 'OBJECT',
         pictureFileUrl: 'pictures/быль.jpg',

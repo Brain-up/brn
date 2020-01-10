@@ -30,7 +30,7 @@ main {
   flex-wrap: wrap;
   background: white;
   min-height: 80vh;
-  padding: 40px;
+  padding: 25px 40px 40px;
   flex: 1;
 }
 
@@ -39,7 +39,7 @@ main > * {
 }
 
 .series-page--canvas {
-  padding: 0px 30px;
+  padding-left: 30px;
   flex-basis: 70%;
   overflow: hidden;
 }
