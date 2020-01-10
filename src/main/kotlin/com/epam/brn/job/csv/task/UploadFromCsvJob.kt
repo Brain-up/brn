@@ -1,8 +1,8 @@
 package com.epam.brn.job.csv.task
 
 import com.epam.brn.exception.FileFormatException
-import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import org.springframework.web.multipart.MultipartFile
 
 interface UploadFromCsvJob {
 

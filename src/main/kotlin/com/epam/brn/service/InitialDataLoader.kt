@@ -4,9 +4,9 @@ import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
-import com.epam.brn.model.Resource
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -16,6 +16,9 @@ import com.epam.brn.service.parsers.csv.dto.ExerciseCsv
 import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import com.epam.brn.service.parsers.csv.dto.SeriesCsv
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
+import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Path
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -23,9 +26,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Service
-import java.io.InputStream
-import java.nio.file.Files
-import java.nio.file.Path
 
 /**
  * This class is responsible for

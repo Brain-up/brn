@@ -2,15 +2,15 @@ package com.epam.brn.model
 
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.dto.ResourceDto
+import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 import javax.persistence.Index
+import javax.persistence.ManyToMany
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
-import javax.persistence.Id
-import javax.persistence.GeneratedValue
-import javax.persistence.Column
-import javax.persistence.ManyToMany
-import javax.persistence.GenerationType
 
 @Entity
 @Table(

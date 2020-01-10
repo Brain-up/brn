@@ -1,14 +1,14 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseGroupDto
+import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.SequenceGenerator
-import javax.persistence.CascadeType
 import javax.persistence.OneToMany
-import javax.persistence.Column
+import javax.persistence.SequenceGenerator
 
 @Entity
 data class ExerciseGroup(

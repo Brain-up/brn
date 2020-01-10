@@ -5,11 +5,11 @@ import com.epam.brn.service.parsers.csv.dto.ExerciseCsv
 import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import com.epam.brn.service.parsers.csv.dto.SeriesCsv
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
-import org.amshove.kluent.shouldEqual
+import java.nio.charset.StandardCharsets
 import org.amshove.kluent.shouldContain
+import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import java.nio.charset.StandardCharsets
 
 private inline fun <reified T> makeIdentityConverter(): Converter<T, T> =
     object : Converter<T, T> {

@@ -3,14 +3,14 @@ package com.epam.brn.controller
 import com.epam.brn.job.csv.task.UploadFromCsvJob
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import java.io.File
+import java.io.FileInputStream
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.mock.web.MockMultipartFile
-import java.io.File
-import java.io.FileInputStream
 
 @ExtendWith(MockitoExtension::class)
 internal class LoadFilesControllerTest {
