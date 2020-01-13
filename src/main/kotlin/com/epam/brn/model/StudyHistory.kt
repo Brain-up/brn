@@ -31,16 +31,16 @@ data class StudyHistory(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    var userAccount: UserAccount?,
+    var userAccount: UserAccount,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
-    var exercise: Exercise? = null,
+    var exercise: Exercise,
 
-    var startTime: LocalDateTime?,
-    var endTime: LocalDateTime?,
-    var tasksCount: Short?,
-    var repetitionIndex: Float?
+    var startTime: LocalDateTime? = null,
+    var endTime: LocalDateTime? = null,
+    var tasksCount: Short? = null,
+    var repetitionIndex: Float? = null
 ) {
     override fun toString() =
         "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
