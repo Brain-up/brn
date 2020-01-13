@@ -4,27 +4,20 @@ import { isArray } from '@ember/array';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import customTimeout from '../../utils/custom-timeout';
-import deepEqual from '../../utils/deep-equal';
 
 export default Component.extend({
   audio: service(),
   init() {
     this._super(...arguments);
     this.set('playAudio', this.playAudio.bind(this));
-    this.set('previousFiles', []);
     this.audio.register(this);
   },
   async didReceiveAttrs() {
     this._super(...arguments);
 
-    if (!deepEqual(this.filesToPlay, this.previousFiles)) {
-      await this.setAudioElements();
-      if (this.autoplay) {
-        await this.playAudio();
-      }
-    }
-    if (!this.isDestroyed && !this.isDestroying) {
-      this.set('previousFiles', this.filesToPlay);
+    await this.setAudioElements();
+    if (this.autoplay) {
+      await this.playAudio();
     }
   },
   willDestroyElement() {

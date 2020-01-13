@@ -31,7 +31,8 @@ export default Component.extend({
     },
   ),
   itemsToHideCount: computed('progressItems.@each.isCompleted', function() {
-    const completedToHide = this.completedItemsLength.length - 5;
+    const completedToHide =
+      this.completedItemsLength.length - Math.floor(this.maxAmount / 2);
     return completedToHide >= 0 ? completedToHide : 0;
   }),
   hiddenUncompletedCount: computed(
