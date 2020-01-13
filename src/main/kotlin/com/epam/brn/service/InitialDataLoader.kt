@@ -50,6 +50,7 @@ class InitialDataLoader(
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
         userAccountRepository.save(UserAccount(name = "defaultUser", email = "default@default.ru"))
+        userAccountRepository.save(UserAccount(name = "defaultUser2", email = "default2@default.ru"))
 
         val isInitRequired = exerciseGroupRepository.count() == 0L
         log.debug("Is initialization required: $isInitRequired")
