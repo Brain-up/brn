@@ -13,4 +13,5 @@ export default class Series extends DS.Model.extend({
   sortedExercises: computed('exercises.{[],@each.order}', function() {
     return this.exercises.sortBy('order');
   }),
+  sortedChildren: reads('sortedExercises'),
 }) {}

@@ -83,6 +83,15 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
+    const targetTask2 = setupAfterPageVisit().targetTask;
+
+    await customTimeout();
+
+    chooseAnswer(targetTask2.correctAnswer.word);
+
+    await customTimeout();
+    await customTimeout();
+
     assert
       .dom('[data-test-answer-correctness-widget]')
       .hasAttribute('data-test-is-correct');
