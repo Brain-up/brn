@@ -9,11 +9,6 @@
 
     {{if @disabled "opacity-50"}}"
 >
-  <img
-    src={{this.pictureFileUrl}}
-    alt="изображение со словом {{@word}}"
-    class="word-image"
-  />
   {{#if (and @checked @isSelected)}}
     {{#if @isCorrect}}
       <FaIcon class="correctness-indicator right" @icon="check-circle" />

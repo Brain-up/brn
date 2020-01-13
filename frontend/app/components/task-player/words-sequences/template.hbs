@@ -1,16 +1,16 @@
 <ProgressIndicator @progressItems={{this.tasksCopy}} />
 {{#if this.tasksCopy.length}}
-  <AudioPlayer
-    @audioFileUrl={{this.audioFiles}}
-    @autoplay={{true}}
-    @disabled={{@task.pauseExecution}}
-  />
-  <div class="flex mt-4">
-    {{#if this.uncompletedTasks.length}}
+  {{#if this.uncompletedTasks.length}}
+    <AudioPlayer
+      @audioFileUrl={{this.audioFiles}}
+      @autoplay={{true}}
+      @disabled={{@task.pauseExecution}}
+    />
+    <div class="flex mt-4">
       {{#each @task.selectedItemsOrder as |type|}}
         <div
-          class="column flex-1 flex-col
-            {{if (not (eq @task.selectedItemsOrder.lastObject type)) "pr-2"}}"
+          class="column flex-1 flex-col type-column
+            {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
         >
           {{#let
             (or
@@ -19,7 +19,6 @@
           }}
             {{#each (get @task.answerOptions type) as |answerOption|}}
               <TextImageButton
-                data-test-task-answer-option={{answerOption.word}}
                 @checked={{this.answerCompleted}}
                 @isCorrect={{this.isCorrect}}
                 @disabled={{disableAnswer}}
@@ -35,8 +34,8 @@
           {{/let}}
         </div>
       {{/each}}
-    {{else}}
-      <AnswerCorrectnessWidget @isCorrect={{true}} />
-    {{/if}}
-  </div>
+    </div>
+  {{else}}
+    <AnswerCorrectnessWidget @isCorrect={{true}} />
+  {{/if}}
 {{/if}}

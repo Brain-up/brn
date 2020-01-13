@@ -74,7 +74,14 @@ module('Integration | Component | progress-indicator', function(hooks) {
 
     assert
       .dom('[data-test-hidden-uncompleted]')
-      .hasText(`+${100 - 2 - pageObject.maxItemsAmount}`);
-    assert.dom('[data-test-hidden-completed]').hasText('+2');
+      .hasText(`+${100 - pageObject.maxItemsAmount}`);
+    assert.dom('[data-test-hidden-completed]').hasText('');
+
+    for (let index = 8; index <= pageObject.maxItemsAmount / 2 + 1; index++) {
+      completeByOrder(this.longList, index);
+    }
+    await customTimeout();
+
+    assert.dom('[data-test-hidden-completed]').hasText('+1');
   });
 });

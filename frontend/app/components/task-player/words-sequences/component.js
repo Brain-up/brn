@@ -15,7 +15,7 @@ function getEmptyTemplate(selectedItemsOrder = []) {
 }
 
 export default Component.extend({
-  init() {
+  didInsertElement() {
     this._super(...arguments);
     this.set('tasksCopy', []);
     this.updateLocalTasks();
@@ -49,6 +49,7 @@ export default Component.extend({
   },
   markCompleted(task) {
     set(task, 'isCompleted', true);
+    set(task, 'nextAttempt', false);
   },
   markNextAttempt(task) {
     set(task, 'nextAttempt', true);
@@ -88,23 +89,30 @@ export default Component.extend({
         ),
         this.firstUncompletedTask.answer.mapBy('word'),
       );
-      if (!isCorrect) {
-        this.task.wrongAnswers.pushObject({
-          ...this.firstUncompletedTask,
-        });
-        this.markNextAttempt(this.firstUncompletedTask);
-      }
+
       this.set('isCorrect', isCorrect);
 
-      this.updateLocalTasks();
+      isCorrect
+        ? await this.handleCorrectAnswer()
+        : await this.handleWrongAnswer();
+    }
+  },
 
-      await customTimeout(1000);
+  async handleWrongAnswer() {
+    this.task.wrongAnswers.pushObject({
+      ...this.firstUncompletedTask,
+    });
+    this.markNextAttempt(this.firstUncompletedTask);
+    this.updateLocalTasks();
+    await customTimeout(1000);
+    this.startTask();
+  },
 
-      this.startNewTask();
-
-      if (!this.firstUncompletedTask) {
-        this.task.savePassed();
-      }
+  async handleCorrectAnswer() {
+    await customTimeout(1000);
+    this.startNewTask();
+    if (!this.firstUncompletedTask) {
+      this.task.savePassed();
     }
   },
 });

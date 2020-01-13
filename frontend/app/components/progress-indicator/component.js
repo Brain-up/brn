@@ -13,8 +13,12 @@ export default Component.extend({
   },
   progressContainer: null,
   progressItems: null,
+  betweenPaddingItemsCount: 5,
   maxAmount: computed('itemsLength', 'progressContainerWidth', function() {
-    return Math.floor(this.progressContainerWidth / 36) - 5;
+    return (
+      Math.floor(this.progressContainerWidth / 36) -
+      this.betweenPaddingItemsCount
+    );
   }),
   itemsLength: reads('progressItems.length'),
   completedItemsLength: array.filterBy(
@@ -31,7 +35,8 @@ export default Component.extend({
     },
   ),
   itemsToHideCount: computed('progressItems.@each.isCompleted', function() {
-    const completedToHide = this.completedItemsLength.length - 5;
+    const completedToHide =
+      this.completedItemsLength.length - Math.floor(this.maxAmount / 2);
     return completedToHide >= 0 ? completedToHide : 0;
   }),
   hiddenUncompletedCount: computed(
@@ -61,9 +66,13 @@ export default Component.extend({
       return this.itemsToHideCount + this.negativeHiddenUncompletedCount;
     },
   ),
-  betweenPadding: computed('progressContainerWidth', function() {
-    return this.shouldHideExtraItems
-      ? this.progressContainerWidth - 36 * this.maxAmount - 5
-      : 0;
-  }),
+  betweenPadding: computed(
+    'progressContainerWidth',
+    'hiddenUncompletedCount',
+    function() {
+      return this.shouldHideExtraItems && this.hiddenUncompletedCount > 0
+        ? 36 * this.hiddenUncompletedCount
+        : 0;
+    },
+  ),
 });
