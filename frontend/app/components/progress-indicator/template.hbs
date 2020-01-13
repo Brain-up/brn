@@ -2,64 +2,56 @@
 <div class="mb-3">
   <nav id="progressContainer" class="c-pagination c-pagination--tasks mb-3">
     {{#if @progressItems.length}}
-      {{#let
-        (sum
-          this.itemsToHideCount this.negativeHiddenUncompletedCount
-        ) as |listRightOffset|
-      }}
-        <ul
-          data-test-items-list
-          data-test-max-amount={{this.maxAmount}}
-          class="clearfix items-list"
-          style={{html-safe
-            (concat
-              "width: calc(36px*"
-              @progressItems.length
-              ");"
-              (if
-                this.shouldHideExtraItems
-                (concat "right: calc(36px*(-" listRightOffset "))")
+      <ul
+        data-test-items-list
+        data-test-max-amount={{this.maxAmount}}
+        class="clearfix items-list"
+        style={{html-safe
+          (concat
+            "width: calc(36px*"
+            @progressItems.length
+            ");"
+            (if
+              this.shouldHideExtraItems
+              (concat
+                "right: calc(36px*(-"
+                (sum this.itemsToHideCount this.negativeHiddenUncompletedCount)
+                "))"
               )
             )
-          }}
-        >
-          {{#each (sort-by "order:desc" @progressItems) as |item index|}}
-            <li
-              data-test-progress-indicator-item
-              data-test-progress-indicator-item-number={{item.order}}
-              class="tasks-pagination-item
-                {{if item.nextAttempt " tasks-pagination-item--next-attempt"}}"
-              style={{html-safe
-                (concat
-                  "width: calc((100% - 36px*"
-                  index
-                  ") + "
-                  (if
-                    (and this.shouldHideExtraItems this.betweenPadding)
-                    this.betweenPadding
-                    0
-                  )
-                  "px + 36px*"
-                  this.hiddenCompletedCount
-                  " - 5px);"
-                  (if
-                    item.isCompleted
-                    (concat
-                      "transform: translateX(calc(100% - 36px*"
-                      (subtract @progressItems.length index)
-                      "));"
-                    )
+          )
+        }}
+      >
+        {{#each (sort-by "order:desc" @progressItems) as |item index|}}
+          <li
+            data-test-progress-indicator-item
+            data-test-progress-indicator-item-number={{item.order}}
+            class="tasks-pagination-item
+              {{if item.nextAttempt " tasks-pagination-item--next-attempt"}}"
+            style={{html-safe
+              (concat
+                "width: calc((100% - 36px*"
+                index
+                ") + "
+                (if this.shouldHideExtraItems this.betweenPadding -5)
+                "px);"
+                (if
+                  item.isCompleted
+                  (concat
+                    "transform: translateX(calc(100% - 36px*"
+                    (subtract @progressItems.length index)
+                    "));"
                   )
                 )
-              }}
-            >
-              <span
-                class="inline-block {{unless item.canInteract "opacity-50"}}"
-              ></span>
-            </li>
-          {{/each}}
-        </ul>
-      {{/let}}
+              )
+            }}
+          >
+            <span
+              class="inline-block {{unless item.canInteract "opacity-50"}}"
+            ></span>
+          </li>
+        {{/each}}
+      </ul>
     {{else}}
       Пока в этом упражнении нет задач 🤷‍♂️
     {{/if}}

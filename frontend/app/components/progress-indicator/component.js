@@ -13,12 +13,8 @@ export default Component.extend({
   },
   progressContainer: null,
   progressItems: null,
-  betweenPaddingItemsCount: 5,
   maxAmount: computed('itemsLength', 'progressContainerWidth', function() {
-    return (
-      Math.floor(this.progressContainerWidth / 36) -
-      this.betweenPaddingItemsCount
-    );
+    return Math.floor(this.progressContainerWidth / 36) - 5;
   }),
   itemsLength: reads('progressItems.length'),
   completedItemsLength: array.filterBy(
@@ -66,13 +62,9 @@ export default Component.extend({
       return this.itemsToHideCount + this.negativeHiddenUncompletedCount;
     },
   ),
-  betweenPadding: computed(
-    'progressContainerWidth',
-    'hiddenUncompletedCount',
-    function() {
-      return this.shouldHideExtraItems && this.hiddenUncompletedCount > 0
-        ? 36 * this.hiddenUncompletedCount
-        : 0;
-    },
-  ),
+  betweenPadding: computed('progressContainerWidth', function() {
+    return this.shouldHideExtraItems
+      ? this.progressContainerWidth - 36 * this.maxAmount - 5
+      : 0;
+  }),
 });
