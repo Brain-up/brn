@@ -3,8 +3,9 @@ name: Frontend tests
 on:
   pull_request:
     paths:
-    - 'frontend/**'
-    - '.github/workflows/frontend-test.yml'
+      - 'Dockerfile_frontend'
+      - 'frontend/**'
+      - '.github/workflows/frontend-test.yml'
 
 jobs: 
   test: 
