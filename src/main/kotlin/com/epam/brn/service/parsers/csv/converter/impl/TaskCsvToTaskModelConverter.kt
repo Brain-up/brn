@@ -30,12 +30,10 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
 
     override fun convert(source: TaskCsv): Task {
         val target = Task()
-
         convertSerialNumber(source, target)
         convertExercise(source, target)
         convertCorrectAnswer(source, target)
         convertAnswers(source, target)
-
         return target
     }
 
@@ -48,7 +46,6 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
             target.exercise = exerciseService.findExerciseEntityByName(source.exerciseName)
         } catch (e: EntityNotFoundException) {
             log.debug("Entity was not found by name $source.exerciseName")
-
             target.exercise = exerciseService.createExercise(source.exerciseName)
         }
     }
@@ -57,18 +54,14 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
         val word = source.word
         val audioFileName = source.audioFileName
         val resources = resourceService.findByWordAndAudioFileUrlLike(word, audioFileName)
-
         val correctAnswer: Resource
-
         if (CollectionUtils.isEmpty(resources)) {
             correctAnswer = createAndGetResource(word, audioFileName, source.pictureFileName)
         } else {
             correctAnswer = resources[0]
             correctAnswer.pictureFileUrl = source.pictureFileName
-
             resourceService.save(correctAnswer)
         }
-
         target.correctAnswer = correctAnswer
     }
 
@@ -82,30 +75,20 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
 
     private fun getResourceByWord(word: String): Resource {
         val resources = resourceService.findByWordLike(word)
-
-        if (CollectionUtils.isEmpty(resources)) {
-            return createAndGetResource(word, StringUtils.EMPTY, StringUtils.EMPTY)
-        }
-
-        return resources[0]
+        return if (CollectionUtils.isEmpty(resources))
+            createAndGetResource(word, StringUtils.EMPTY, StringUtils.EMPTY)
+        else
+            resources[0]
     }
 
     private fun createAndGetResource(word: String, audioFileName: String, pictureFileName: String): Resource {
         val resource = Resource()
         resource.word = word
-
-        if (StringUtils.isNotEmpty(audioFileName)) {
-            resource.audioFileUrl = audioFileName
-        } else {
-            resource.audioFileUrl = defaultAudioFileUrl.format(word)
-        }
-
-        if (StringUtils.isNotEmpty(pictureFileName)) {
-            resource.pictureFileUrl = pictureFileName
-        }
-
+        resource.audioFileUrl =
+            if (StringUtils.isNotEmpty(audioFileName)) audioFileName else defaultAudioFileUrl.format(word)
+        resource.pictureFileUrl =
+            if (StringUtils.isNotEmpty(pictureFileName)) pictureFileName else null
         resourceService.save(resource)
-
         return resource
     }
 }
