@@ -8,6 +8,7 @@
    "level": 1,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": true,
    "tasks": [
     {
      "id": 2,
@@ -43,6 +44,7 @@
    "level": 2,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": true,
    "tasks": [
     {
      "id": 7,
@@ -78,6 +80,7 @@
    "level": 3,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": true,
    "tasks": [
     {
      "id": 16,
@@ -117,6 +120,7 @@
    "level": 4,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": true,
    "tasks": [
     {
      "id": 21,
@@ -152,6 +156,7 @@
    "level": 5,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": true,
    "tasks": [
     {
      "id": 28,
@@ -187,6 +192,7 @@
    "level": 6,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": true,
    "tasks": [
     {
      "id": 36,
@@ -226,6 +232,7 @@
    "level": 7,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": true,
    "tasks": [
     {
      "id": 39,
@@ -261,6 +268,7 @@
    "level": 8,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": false,
    "tasks": [
     {
      "id": 49,
@@ -296,6 +304,7 @@
    "level": 9,
    "exerciseType": "SINGLE_WORDS",
    "template": "",
+   "available": false,
    "tasks": [
     {
      "id": 54,

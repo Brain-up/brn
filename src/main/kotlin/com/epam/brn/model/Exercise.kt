@@ -38,7 +38,7 @@ data class Exercise(
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val tasks: MutableSet<Task> = LinkedHashSet()
 ) {
-    fun toDto(available: Boolean? = null) = ExerciseDto(
+    fun toDto(available: Boolean = true) = ExerciseDto(
         seriesId = series?.id,
         id = id,
         name = name,
