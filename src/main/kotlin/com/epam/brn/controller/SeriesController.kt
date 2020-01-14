@@ -28,7 +28,7 @@ class SeriesController(@Autowired val seriesService: SeriesService) {
 
     @GetMapping("{$SERIES_ID}")
     fun getSeriesForId(@PathVariable(value = SERIES_ID) seriesId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
-        val seriesDto = seriesService.findSeriesForId(seriesId)
+        val seriesDto = seriesService.findSeriesDtoForId(seriesId)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = seriesDto))
     }
 }

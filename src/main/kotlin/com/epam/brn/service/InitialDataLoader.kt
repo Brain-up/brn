@@ -98,8 +98,8 @@ class InitialDataLoader(
 
         val groupsById = prepareExerciseGroups(groups)
         val seriesById = prepareSeries(groupsById, series)
-        val exerciseById = prepareExercises(seriesById, exercises)
-        prepareTasksForSingleWordsSeries(exerciseById, tasksForSingleWordsSeries)
+        val exerciseByName = prepareExercises(seriesById, exercises)
+        prepareTasksForSingleWordsSeries(exerciseByName, tasksForSingleWordsSeries)
         prepareTasksForWordsSequencesSeries(seriesById, tasksForWordsSequencesSeries)
         exerciseGroupRepository.saveAll(groupsById.values)
         log.debug("Initialization succeeded")
@@ -144,8 +144,8 @@ class InitialDataLoader(
     private fun prepareExercises(
         seriesById: MutableMap<Long, Series>,
         exercisesInputStream: InputStream
-    ): MutableMap<Long, Exercise> {
-        val exerciseById = mutableMapOf<Long, Exercise>()
+    ): MutableMap<Pair<String, Int>, Exercise> {
+        val exerciseByName = mutableMapOf<Pair<String, Int>, Exercise>()
         val exerciseConverter = object : Converter<ExerciseCsv, Exercise> {
             override fun convert(source: ExerciseCsv): Exercise {
                 val seriesId = source.seriesId
@@ -160,22 +160,24 @@ class InitialDataLoader(
                     series = exerciseSeries,
                     exerciseType = exerciseType.toString()
                 )
-                exerciseById[source.exerciseId] = exercise
+                exerciseByName[Pair(source.name, source.level)] = exercise
                 exerciseSeries.exercises += exercise
                 return exercise
             }
         }
         csvParserService.parseCommasSeparatedCsvFile(exercisesInputStream, exerciseConverter)
-        return exerciseById
+        return exerciseByName
     }
 
     private fun prepareTasksForSingleWordsSeries(
-        exerciseById: MutableMap<Long, Exercise>,
+        exerciseByNameAndLevel: MutableMap<Pair<String, Int>, Exercise>,
         tasksInputStream: InputStream
     ) {
         val taskConverter = object : Converter<TaskCsv, Task> {
             override fun convert(source: TaskCsv): Task {
-                require(exerciseById.containsKey(source.exerciseId))
+                val exerciseName = source.exerciseName
+                val level = source.level
+                require(exerciseByNameAndLevel.containsKey(Pair(exerciseName, level)))
 
                 val answer = Resource(
                     word = source.word,
@@ -190,7 +192,7 @@ class InitialDataLoader(
                     .map { answer.copy(word = it) }
                     .toMutableSet()
 
-                val exercise = exerciseById[source.exerciseId]!!
+                val exercise = exerciseByNameAndLevel[Pair(exerciseName, level)]!!
                 val task = Task(
                     serialNumber = source.orderNumber,
                     exercise = exercise,

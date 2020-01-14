@@ -27,19 +27,19 @@ data class Exercise(
         allocationSize = 50
     )
     var id: Long? = null,
-    var name: String,
+    var name: String = "",
     var description: String? = "",
     var template: String? = "",
-    var exerciseType: String,
-    var level: Short? = 0,
+    var exerciseType: String = "",
+    var level: Int? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
-    var series: Series,
+    var series: Series? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val tasks: MutableSet<Task> = LinkedHashSet()
 ) {
     fun toDto(available: Boolean? = null) = ExerciseDto(
-        seriesId = series.id,
+        seriesId = series?.id,
         id = id,
         name = name,
         description = description,

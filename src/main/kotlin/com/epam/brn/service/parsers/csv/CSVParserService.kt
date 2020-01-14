@@ -52,49 +52,49 @@ class CSVParserService {
     }
 
     final inline fun <reified Source, reified Target> parseCsvFile(file: ByteArrayInputStream, converter: Converter<Source, Target>): Map<String, Pair<Target?, String?>> {
-            val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
+        val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
 
-            val csvMapper = CsvMapper()
+        val csvMapper = CsvMapper()
 
-            val csvSchema = csvMapper
-                .schemaFor(Source::class.java)
-                .withColumnSeparator(' ')
-                .withLineSeparator(StringUtils.SPACE)
-                .withColumnReordering(true)
-                .withArrayElementSeparator(",")
-                .withHeader()
+        val csvSchema = csvMapper
+            .schemaFor(Source::class.java)
+            .withColumnSeparator(' ')
+            .withLineSeparator(StringUtils.SPACE)
+            .withColumnReordering(true)
+            .withArrayElementSeparator(",")
+            .withHeader()
 
-            val readValues = csvMapper
-                .readerWithTypedSchemaFor(Source::class.java)
-                .with(csvSchema)
-                .readValues<Source>(file)
+        val readValues = csvMapper
+            .readerWithTypedSchemaFor(Source::class.java)
+            .with(csvSchema)
+            .readValues<Source>(file)
 
-            val parsedValues = hashMapOf<String, Source>()
-            val sourceToTarget = hashMapOf<String, Pair<Target?, String?>>()
+        val parsedValues = hashMapOf<String, Source>()
+        val sourceToTarget = hashMapOf<String, Pair<Target?, String?>>()
 
-            while (readValues.hasNextValue()) {
-                val lineNumber = readValues.currentLocation.lineNr
-                try {
-                    val line = readValues.nextValue()
-                    csvLineNumbersToValues[lineNumber]?.let {
-                        parsedValues[it] = line
-                    }
-
-                    log.debug("Successfully parsed line with number $lineNumber")
-                } catch (e: Exception) {
-                    csvLineNumbersToValues[lineNumber]?.let {
-                        sourceToTarget[it] = Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
-                    }
-
-                    log.error("Failed to parse line with number $lineNumber ", e)
+        while (readValues.hasNextValue()) {
+            val lineNumber = readValues.currentLocation.lineNr
+            try {
+                val line = readValues.nextValue()
+                csvLineNumbersToValues[lineNumber]?.let {
+                    parsedValues[it] = line
                 }
+
+                log.debug("Successfully parsed line with number $lineNumber")
+            } catch (e: Exception) {
+                csvLineNumbersToValues[lineNumber]?.let {
+                    sourceToTarget[it] = Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
+                }
+
+                log.error("Failed to parse line with number $lineNumber ", e)
             }
+        }
 
-            sourceToTarget.putAll(parsedValues
-                .map { parsedValue -> parsedValue.key to Pair(converter.convert(parsedValue.value), null) }
-                .toMap())
+        sourceToTarget.putAll(parsedValues
+            .map { parsedValue -> parsedValue.key to Pair(converter.convert(parsedValue.value), null) }
+            .toMap())
 
-            return sourceToTarget
+        return sourceToTarget
     }
 
     fun getCsvLineNumbersToValues(file: InputStream): Map<Int, String> {

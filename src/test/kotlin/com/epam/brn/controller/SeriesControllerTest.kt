@@ -39,11 +39,11 @@ internal class SeriesControllerTest {
         // GIVEN
         val seriesId: Long = 1
         val series = SeriesDto(1, seriesId, "testName", "testDescr")
-        Mockito.`when`(seriesService.findSeriesForId(seriesId)).thenReturn(series)
+        Mockito.`when`(seriesService.findSeriesDtoForId(seriesId)).thenReturn(series)
         // WHEN
         val actualResult = seriesController.getSeriesForId(1)
         // THEN
-        verify(seriesService).findSeriesForId(seriesId)
+        verify(seriesService).findSeriesDtoForId(seriesId)
         assertTrue(actualResult.body.toString().contains("testName"))
     }
 }

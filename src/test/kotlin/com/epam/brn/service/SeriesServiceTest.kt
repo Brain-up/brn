@@ -44,7 +44,7 @@ internal class SeriesServiceTest {
         val series = mock(Series::class.java)
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.of(series))
         // WHEN
-        seriesService.findSeriesForId(seriesId)
+        seriesService.findSeriesDtoForId(seriesId)
         // THEN
         verify(seriesRepository).findById(seriesId)
     }
@@ -55,7 +55,7 @@ internal class SeriesServiceTest {
         val seriesId: Long = 1
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.empty())
         // WHEN
-        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesForId(seriesId) }
+        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
         // THEN
         verify(seriesRepository).findById(seriesId)
     }

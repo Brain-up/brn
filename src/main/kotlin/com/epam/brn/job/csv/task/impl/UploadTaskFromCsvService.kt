@@ -3,8 +3,10 @@ package com.epam.brn.job.csv.task.impl
 import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
-import com.epam.brn.job.csv.task.UploadFromCsvJob
+import com.epam.brn.job.csv.task.UploadFromCsvService
 import com.epam.brn.model.Task
+import com.epam.brn.service.ExerciseGroupsService
+import com.epam.brn.service.SeriesService
 import com.epam.brn.service.TaskService
 import com.epam.brn.service.parsers.csv.CSVParserService
 import com.epam.brn.service.parsers.csv.converter.impl.TaskCsvToTaskModelConverter
@@ -17,29 +19,41 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
 @Component
-class UploadTaskFromCsvJob(private val csvParserService: CSVParserService, private val taskService: TaskService) :
-    UploadFromCsvJob {
+class UploadTaskFromCsvService(private val csvParserService: CSVParserService, private val taskService: TaskService) :
+    UploadFromCsvService {
     private val log = logger()
 
     @Autowired
     private lateinit var taskCsvToTaskModelConverter: TaskCsvToTaskModelConverter
 
+    @Autowired
+    private lateinit var seriesService: SeriesService
+
+    @Autowired
+    private lateinit var exerciseGroupsService: ExerciseGroupsService
+
     @Throws(FileFormatException::class)
-    override fun uploadTasks(file: MultipartFile): Map<String, String> {
+    override fun loadTaskFile(file: MultipartFile, seriesId: Long?): Map<String, String> {
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY)) throw FileFormatException(CSV_FILE_FORMAT_ERROR)
 
-        return uploadTasks(file.inputStream)
+        return uploadTasks(file.inputStream, seriesId)
     }
 
     @Throws(FileFormatException::class)
-    override fun uploadTasks(file: File): Map<String, String> {
-        return uploadTasks(file.inputStream())
+    override fun loadTaskFile(file: File): Map<String, String> {
+        return uploadTasks(file.inputStream(), null)
     }
 
-    private fun uploadTasks(inputStream: InputStream): Map<String, String> {
+    private fun uploadTasks(inputStream: InputStream, seriesId: Long?): Map<String, String> {
         val tasks = csvParserService.parseCsvFile(inputStream, taskCsvToTaskModelConverter)
 
+        if (seriesId != null) tasks.forEach { task -> setExerciseSeries(task.value.first, seriesId) }
+
         return saveTasks(tasks)
+    }
+
+    private fun setExerciseSeries(taskFile: Task?, seriesId: Long) {
+        taskFile?.exercise?.series = seriesService.findSeriesForId(seriesId)
     }
 
     private fun isFileContentTypeCsv(contentType: String): Boolean {
