@@ -144,8 +144,8 @@ class InitialDataLoader(
     private fun prepareExercises(
         seriesById: MutableMap<Long, Series>,
         exercisesInputStream: InputStream
-    ): MutableMap<String, Exercise> {
-        val exerciseByName = mutableMapOf<String, Exercise>()
+    ): MutableMap<Pair<String, Int>, Exercise> {
+        val exerciseByName = mutableMapOf<Pair<String, Int>, Exercise>()
         val exerciseConverter = object : Converter<ExerciseCsv, Exercise> {
             override fun convert(source: ExerciseCsv): Exercise {
                 val seriesId = source.seriesId
@@ -160,7 +160,7 @@ class InitialDataLoader(
                     series = exerciseSeries,
                     exerciseType = exerciseType.toString()
                 )
-                exerciseByName[source.name] = exercise
+                exerciseByName[Pair(source.name, source.level)] = exercise
                 exerciseSeries.exercises += exercise
                 return exercise
             }
@@ -170,12 +170,14 @@ class InitialDataLoader(
     }
 
     private fun prepareTasksForSingleWordsSeries(
-        exerciseByName: MutableMap<String, Exercise>,
+        exerciseByNameAndLevel: MutableMap<Pair<String, Int>, Exercise>,
         tasksInputStream: InputStream
     ) {
         val taskConverter = object : Converter<TaskCsv, Task> {
             override fun convert(source: TaskCsv): Task {
-                require(exerciseByName.containsKey(source.exerciseName))
+                val exerciseName = source.exerciseName
+                val level = source.level
+                require(exerciseByNameAndLevel.containsKey(Pair(exerciseName, level)))
 
                 val answer = Resource(
                     word = source.word,
@@ -190,7 +192,7 @@ class InitialDataLoader(
                     .map { answer.copy(word = it) }
                     .toMutableSet()
 
-                val exercise = exerciseByName[source.exerciseName]!!
+                val exercise = exerciseByNameAndLevel[Pair(exerciseName, level)]!!
                 val task = Task(
                     serialNumber = source.orderNumber,
                     exercise = exercise,

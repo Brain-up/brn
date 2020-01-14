@@ -12,7 +12,7 @@ data class ExerciseCsv(
     val seriesId: Long,
 
     @JsonProperty("level")
-    val level: Short,
+    val level: Int,
 
     @JsonProperty("name")
     val name: String,
