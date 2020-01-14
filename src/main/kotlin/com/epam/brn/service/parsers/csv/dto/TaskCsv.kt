@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class TaskCsv(
 
+    @JsonProperty("level")
+    val level: Int,
+
     @JsonProperty("exerciseName")
     val exerciseName: String,
 

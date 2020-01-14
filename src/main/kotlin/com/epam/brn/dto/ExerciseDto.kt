@@ -8,7 +8,7 @@ data class ExerciseDto(
     var id: Long?,
     var name: String?,
     var description: String?,
-    var level: Short? = 0,
+    var level: Int? = 0,
     var exerciseType: ExerciseTypeEnum,
     var template: String? = "",
     @JsonIgnore

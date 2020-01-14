@@ -31,7 +31,7 @@ data class Exercise(
     var description: String? = "",
     var template: String? = "",
     var exerciseType: String = "",
-    var level: Short? = 0,
+    var level: Int? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series? = null,
