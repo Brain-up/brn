@@ -2,14 +2,14 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.StudyHistoryDto
 import java.time.LocalDateTime
-import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
+import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
@@ -29,22 +29,21 @@ data class StudyHistory(
     )
     val id: Long? = null,
 
-    @OneToOne(cascade = [(CascadeType.ALL)], optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    var userAccount: UserAccount?,
+    var userAccount: UserAccount,
 
-    @OneToOne(cascade = [(CascadeType.ALL)], optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
-    var exercise: Exercise? = null,
+    var exercise: Exercise,
 
-    var startTime: LocalDateTime?,
-    var endTime: LocalDateTime?,
-    var tasksCount: Short?,
-    var repetitionIndex: Float?
+    var startTime: LocalDateTime? = null,
+    var endTime: LocalDateTime? = null,
+    var tasksCount: Short? = null,
+    var repetitionIndex: Float? = null
 ) {
-    override fun toString(): String {
-        return "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
-    }
+    override fun toString() =
+        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
