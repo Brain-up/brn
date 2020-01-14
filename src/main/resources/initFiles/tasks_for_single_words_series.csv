@@ -1,4 +1,4 @@
-exerciseId orderNumber word audioFileName pictureFileName words wordType
+exerciseName orderNumber word audioFileName pictureFileName words wordType
 1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
 1 2 бум no_noise/бум.mp3 pictures/бум.jpg (зум,кум,шум,зуб,куб) OBJECT
 1 3 быль no_noise/быль.mp3 pictures/быль.jpg (пыль,соль,мыль,дыль,киль) OBJECT
