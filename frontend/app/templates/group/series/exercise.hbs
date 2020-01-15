@@ -1,13 +1,13 @@
 {{#if (not this.model.hideExerciseNavigation)}}
   <ExerciseNavigation class="exercise-navigation" @tasks={{this.model.tasks}} />
-{{else if (eq this.target.currentRouteName "series.exercise.index")}}
+{{else if (eq this.target.currentRouteName "group.series.exercise.index")}}
   <h2 class="text-center text-xl mb-3 mt-3">
     Задачи:
   </h2>
   <div class="flex flex-wrap">
     {{#each this.model.tasks as |task|}}
       {{#link-to
-        "series.exercise.task"
+        "group.series.exercise.task"
         task
         class=(concat
           "task-square-link shadow" (if (not task.canInteract) " opacity-50")

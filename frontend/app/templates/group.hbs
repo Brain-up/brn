@@ -2,5 +2,11 @@
   <Breadcrumbs @group={{this.model}} />
   <Timer @paused={{true}} @hideControls={{true}} />
 </div>
-<GroupNavigation @group={{this.model}} />
-{{outlet}}
+<div class="flex series-container">
+  <aside class="series-page--aside">
+    <GroupNavigation @group={{this.model}} />
+  </aside>
+  <div class="series-page--canvas flex flex-col flex-grow">
+    {{outlet}}
+  </div>
+</div>

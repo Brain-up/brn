@@ -1,4 +1,8 @@
-<div class="flex items-center mb-2">
+<div class="series-page--canvas flex flex-col flex-grow">
+  <SeriesNavigation @exercises={{this.model.exercises}} />
+</div>
+{{outlet}}
+{{!-- <div class="flex items-center mb-2">
   <Breadcrumbs @series={{this.model}} />
   <Timer />
 </div>
@@ -12,4 +16,4 @@
   <div class="series-page--canvas flex flex-col flex-grow">
     {{outlet}}
   </div>
-</div>
+</div> --}}
