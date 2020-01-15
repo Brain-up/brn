@@ -119,7 +119,7 @@ docker stop idContainer for stop running container
 docker rm $(docker ps -a -q) Remove all stopped containers
 
 ## DEVELOPMENT PROCESS
-1. Get a task assigned in JIRA.
+1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused with @ElenaSpb.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
 4. Create pull request with task name and description about what was done. 
