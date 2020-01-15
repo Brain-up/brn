@@ -1757,38 +1757,6 @@
   resolved "https://registry.yarnpkg.com/@miragejs/pretender-node-polyfill/-/pretender-node-polyfill-0.1.2.tgz#d26b6b7483fb70cd62189d05c95d2f67153e43f2"
   integrity sha512-M/BexG/p05C5lFfMunxo/QcgIJnMT2vDVCd00wNqK2ImZONIlEETZwWJu1QtLxtmYlSHlCFl3JNzp0tLe7OJ5g==
 
-"@miragejs/server@0.1.27":
-  version "0.1.27"
-  resolved "https://registry.yarnpkg.com/@miragejs/server/-/server-0.1.27.tgz#a4e850b28e384a7d92715a538b54074e38e9a931"
-  integrity sha512-UuhoUFwlZ8Y1lnmQfoNU2EmMmHq5cgbI15GN61nopfUN2KbPX4ZpuCzINcQa1WOlsFBoQzBgzqbacXxjmmT8kg==
-  dependencies:
-    "@miragejs/pretender-node-polyfill" "^0.1.0"
-    inflected "^2.0.4"
-    lodash.assign "^4.2.0"
-    lodash.camelcase "^4.3.0"
-    lodash.clonedeep "^4.5.0"
-    lodash.compact "^3.0.1"
-    lodash.find "^4.6.0"
-    lodash.flatten "^4.4.0"
-    lodash.forin "^4.4.0"
-    lodash.get "^4.4.2"
-    lodash.has "^4.5.2"
-    lodash.invokemap "^4.6.0"
-    lodash.isempty "^4.4.0"
-    lodash.isequal "^4.5.0"
-    lodash.isfunction "^3.0.9"
-    lodash.isinteger "^4.0.4"
-    lodash.isplainobject "^4.0.6"
-    lodash.lowerfirst "^4.3.1"
-    lodash.map "^4.6.0"
-    lodash.mapvalues "^4.6.0"
-    lodash.pick "^4.4.0"
-    lodash.snakecase "^4.1.1"
-    lodash.uniq "^4.5.0"
-    lodash.uniqby "^4.7.0"
-    lodash.values "^4.3.0"
-    pretender "3.0.2"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -3681,7 +3649,7 @@ broccoli-node-info@^2.1.0:
   resolved "https://registry.yarnpkg.com/broccoli-node-info/-/broccoli-node-info-2.1.0.tgz#ca84560e8570ff78565bea1699866ddbf58ad644"
   integrity sha512-l6qDuboJThHfRVVWQVaTs++bFdrFTP0gJXgsWenczc1PavRVUmL1Eyb2swTAXXMpDOnr2zhNOBLx4w9AxkqbPQ==
 
-broccoli-persistent-filter@^1.1.5, broccoli-persistent-filter@^1.1.6, broccoli-persistent-filter@^1.2.0, broccoli-persistent-filter@^1.4.3:
+broccoli-persistent-filter@^1.1.6, broccoli-persistent-filter@^1.2.0, broccoli-persistent-filter@^1.4.3:
   version "1.4.6"
   resolved "https://registry.yarnpkg.com/broccoli-persistent-filter/-/broccoli-persistent-filter-1.4.6.tgz#80762d19000880a77da33c34373299c0f6a3e615"
   integrity sha512-0RejLwoC95kv4kta8KAa+FmECJCK78Qgm8SRDEK7YyU0N9Cx6KpY3UCDy9WELl3mCXLN8TokNxc7/hp3lL4lfw==
@@ -3872,14 +3840,6 @@ broccoli-stew@^3.0.0:
     rsvp "^4.8.5"
     symlink-or-copy "^1.2.0"
     walk-sync "^1.1.3"
-
-broccoli-string-replace@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/broccoli-string-replace/-/broccoli-string-replace-0.1.2.tgz#1ed92f85680af8d503023925e754e4e33676b91f"
-  integrity sha1-HtkvhWgK+NUDAjkl51Tk4zZ2uR8=
-  dependencies:
-    broccoli-persistent-filter "^1.1.5"
-    minimatch "^3.0.3"
 
 broccoli-style-manifest@^1.5.2:
   version "1.5.2"
@@ -5353,41 +5313,7 @@ ember-ast-helpers@0.3.5:
     "@glimmer/compiler" "^0.27.0"
     "@glimmer/syntax" "^0.27.0"
 
-ember-auto-import@^1.2.19:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-1.5.2.tgz#e97ed96b600caa6090ffed83e4611c3e7ec9bad7"
-  integrity sha512-skVQpfdc6G5OVRsyemDn3vI1nj/iBBgnoqRLRka0ZbDT2GqelmyJ86bp+Bd/ztJe45Le3we+LXbR7T54RU5A9w==
-  dependencies:
-    "@babel/core" "^7.1.6"
-    "@babel/preset-env" "^7.0.0"
-    "@babel/traverse" "^7.1.6"
-    "@babel/types" "^7.1.6"
-    "@embroider/core" "^0.4.3"
-    babel-core "^6.26.3"
-    babel-loader "^8.0.6"
-    babel-plugin-syntax-dynamic-import "^6.18.0"
-    babel-template "^6.26.0"
-    babylon "^6.18.0"
-    broccoli-debug "^0.6.4"
-    broccoli-plugin "^1.3.0"
-    debug "^3.1.0"
-    ember-cli-babel "^6.6.0"
-    enhanced-resolve "^4.0.0"
-    fs-extra "^6.0.1"
-    fs-tree-diff "^1.0.0"
-    handlebars "~4.1.2"
-    js-string-escape "^1.0.1"
-    lodash "^4.17.10"
-    mkdirp "^0.5.1"
-    pkg-up "^2.0.0"
-    resolve "^1.7.1"
-    rimraf "^2.6.2"
-    symlink-or-copy "^1.2.0"
-    typescript-memoize "^1.0.0-alpha.3"
-    walk-sync "^0.3.3"
-    webpack "~4.28"
-
-ember-auto-import@^1.5.2:
+ember-auto-import@^1.2.19, ember-auto-import@^1.5.2:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-1.5.3.tgz#b32936f874d1ed7057ad2ed3f6116357820be44b"
   integrity sha512-7JfdunM1BmLy/lyUXu7uEoi0Gi4+dxkGM23FgIEyW5g7z4MidhP53Fc61t49oPSnq7+J4lLpbH1f6C+mDMgb4A==
@@ -5641,22 +5567,20 @@ ember-cli-lodash-subset@^2.0.1:
   resolved "https://registry.yarnpkg.com/ember-cli-lodash-subset/-/ember-cli-lodash-subset-2.0.1.tgz#20cb68a790fe0fde2488ddfd8efbb7df6fe766f2"
   integrity sha1-IMtop5D+D94kiN39jvu332/nZvI=
 
-ember-cli-mirage@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/ember-cli-mirage/-/ember-cli-mirage-1.1.2.tgz#582598aa599649601401b79a021b4ded5155907f"
-  integrity sha512-0qgP5sBheXkrpea+R8dGA0LLsj9SEg6adafNdZ1RzA+nIPC8hE+UEzDQNFqRiZv/fPfdWSDnwQboaHDLiu9hqw==
+ember-cli-mirage@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/ember-cli-mirage/-/ember-cli-mirage-1.1.6.tgz#4092966379a77ed2700ee0255c6426b272ef0607"
+  integrity sha512-xvW9ziv9JUKv9IA7SnmeCg0/pKiacro2Vg/kv8iqzFTRGMos51QrrsCI/2rXjAloGJM1SnaKL1TWUp25e76RVw==
   dependencies:
-    "@miragejs/server" "0.1.27"
     broccoli-file-creator "^2.1.1"
     broccoli-funnel "^2.0.1"
     broccoli-merge-trees "^3.0.2"
-    broccoli-string-replace "^0.1.2"
-    chalk "^2.4.2"
     ember-auto-import "^1.2.19"
     ember-cli-babel "^7.5.0"
     ember-get-config "^0.2.2"
     ember-inflector "^2.0.0 || ^3.0.0"
     lodash-es "^4.17.11"
+    miragejs "^0.1.31"
 
 ember-cli-node-assets@^0.2.2:
   version "0.2.2"
@@ -6818,10 +6742,10 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-fake-xml-http-request@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/fake-xml-http-request/-/fake-xml-http-request-2.0.1.tgz#e4a7f256af055d8059deb23c9d7ae721d28cf078"
-  integrity sha512-KzT+G4aLM1Btg25QRGxB6yGLGOVZXXzrH8I4OG3KHwsdoqFclyW3alieqh5NaYGcmbQvNOn/ldGO1rGKf7CNdA==
+fake-xml-http-request@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/fake-xml-http-request/-/fake-xml-http-request-2.1.1.tgz#279fdac235840d7a4dff77d98ec44bce9fc690a6"
+  integrity sha512-Kn2WYYS6cDBS5jq/voOfSGCA0TafOYAUPbEp8mUVpD/DVV5bQIDjlq+MLLvNUokkbTpjBVlLDaM5PnX+PwZMlw==
 
 fast-deep-equal@^2.0.1:
   version "2.0.1"
@@ -7579,17 +7503,6 @@ handlebars@^4.1.2, handlebars@^4.3.1:
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.4.5.tgz#1b1f94f9bfe7379adda86a8b73fb570265a0dddd"
   integrity sha512-0Ce31oWVB7YidkaTq33ZxEbN+UDxMMgThvCe8ptgQViymL5DPis9uLdTA13MiRPhgvqyxIegugrP97iK3JeBHg==
-  dependencies:
-    neo-async "^2.6.0"
-    optimist "^0.6.1"
-    source-map "^0.6.1"
-  optionalDependencies:
-    uglify-js "^3.1.4"
-
-handlebars@~4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.1.2.tgz#b6b37c1ced0306b221e094fc7aca3ec23b131b67"
-  integrity sha512-nvfrjqvt9xQ8Z/w0ijewdD/vvWDTOweBUm96NTr66Wfvo1mJenBLwcYmPs3TIBP5ruzYGD7Hx/DaM9RmhroGPw==
   dependencies:
     neo-async "^2.6.0"
     optimist "^0.6.1"
@@ -9680,6 +9593,38 @@ minizlib@^1.2.1:
   dependencies:
     minipass "^2.9.0"
 
+miragejs@^0.1.31:
+  version "0.1.32"
+  resolved "https://registry.yarnpkg.com/miragejs/-/miragejs-0.1.32.tgz#077ed497e928adf2bc85d89550967cd223e4a2a7"
+  integrity sha512-HVA79I/Ta3H9/uQ60XcsKyeiq9vGUN0JDyaC6XZrGnSBXxj2ZEZurrdkvYNXeYd2cJELD/f3750IjB0lRkXBgA==
+  dependencies:
+    "@miragejs/pretender-node-polyfill" "^0.1.0"
+    inflected "^2.0.4"
+    lodash.assign "^4.2.0"
+    lodash.camelcase "^4.3.0"
+    lodash.clonedeep "^4.5.0"
+    lodash.compact "^3.0.1"
+    lodash.find "^4.6.0"
+    lodash.flatten "^4.4.0"
+    lodash.forin "^4.4.0"
+    lodash.get "^4.4.2"
+    lodash.has "^4.5.2"
+    lodash.invokemap "^4.6.0"
+    lodash.isempty "^4.4.0"
+    lodash.isequal "^4.5.0"
+    lodash.isfunction "^3.0.9"
+    lodash.isinteger "^4.0.4"
+    lodash.isplainobject "^4.0.6"
+    lodash.lowerfirst "^4.3.1"
+    lodash.map "^4.6.0"
+    lodash.mapvalues "^4.6.0"
+    lodash.pick "^4.4.0"
+    lodash.snakecase "^4.1.1"
+    lodash.uniq "^4.5.0"
+    lodash.uniqby "^4.7.0"
+    lodash.values "^4.3.0"
+    pretender "3.1.0"
+
 mississippi@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/mississippi/-/mississippi-3.0.0.tgz#ea0a3291f97e0b5e8776b363d5f0a12d94c67022"
@@ -10768,12 +10713,12 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-pretender@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/pretender/-/pretender-3.0.2.tgz#1e9123914c4e4bd1b553ca78a401120d300d265f"
-  integrity sha512-6gIDHUaJKRZv7ZgP3CsKicvxtBB3brBr2LWKvJYvEyZRicG9JV2SKokK2TIK0b4Zz9+4C79y57MZHpqUjvJqDg==
+pretender@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/pretender/-/pretender-3.1.0.tgz#d8d7cc8502a9dbda82346ea399b9c63e7012f584"
+  integrity sha512-BxCsLXzbD7LsHBF7t8phgDa9EBWxJEYR8YqvYgrwri/YHnm9r6EiDThqHumW5FdxHlk4F10/xT2rv24C929r1Q==
   dependencies:
-    fake-xml-http-request "^2.0.0"
+    fake-xml-http-request "^2.1.1"
     route-recognizer "^0.3.3"
     whatwg-fetch "^3.0.0"
 
