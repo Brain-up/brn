@@ -19,7 +19,7 @@ Most importantly being an open source project you can show your work in it to an
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
-- Back-end: Java/Kotlin + Spring boot. Rest api as integration layer.
+- Back-end: KOTLIN/java + Spring boot. Rest api as integration layer.
 - Front-end : TBD - Ember, Angular.
 - DB: Postgres in production, H2 for testing.
 
