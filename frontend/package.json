@@ -89,7 +89,7 @@
     "ember-ref-modifier": "^0.0.1",
     "ember-resolver": "^5.3.0",
     "ember-source": "~3.13.0",
-    "ember-test-selectors": "^2.1.0",
+    "ember-test-selectors": "^3.0.0",
     "ember-transition-helper": "^1.0.0",
     "ember-truth-helpers": "^2.1.0",
     "eslint-config-prettier": "^6.4.0",
