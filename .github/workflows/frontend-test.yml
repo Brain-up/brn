@@ -32,11 +32,12 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@v1
-      - uses: mydea/actions-ember-testing@v1
+      - uses: rwjblue/setup-volta@v1
+      - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - uses: H1D/ember-cli-code-coverage-action@25d53d8882e3c8d807c8b28786875b25c83ad2d1
+      - uses: mydea/ember-cli-code-coverage-action@e4130abc6c57d272d9d123870c26b8c284128adc
         with:
           working-directory: ./frontend
           test-command: "yarn test:cover"
