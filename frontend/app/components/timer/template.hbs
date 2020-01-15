@@ -4,7 +4,7 @@
   </span>
   {{#unless @hideControls}}
     <button onclick={{action this.togglePause}}>
-      {{#if this.isPaused}}
+      {{#if (or this.isPaused (not this.isStarted))}}
         <FaIcon @icon="play-circle" />
       {{else}}
         <FaIcon @icon="pause-circle" />

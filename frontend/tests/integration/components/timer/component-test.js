@@ -20,7 +20,7 @@ module('Integration | Component | timer', function(hooks) {
     this.set('studyingTimer', {
       countedSeconds: 94,
       pause() {},
-      resume() {},
+      register() {},
     });
     await render(
       hbs`<Timer @studyingTimer={{this.studyingTimer}} @paused={{true}}/>`,

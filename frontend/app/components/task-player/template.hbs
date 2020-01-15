@@ -3,4 +3,14 @@
   onRightAnswer=this.onRightAnswer
   afterCompleted=this.afterCompleted
   task=@task
+  disableAnswers=this.disableAnswers
+  disableAudioPlayer=this.disableAudioPlayer
+  autoplay=(not this.disableAudioPlayer)
 }}
+{{#if
+  (and
+    this.justEnteredTask (or this.studyingTimer.isPaused (not this.isStarted))
+  )
+}}
+  <StartTaskButton @startTask={{action this.startTask}} />
+{{/if}}

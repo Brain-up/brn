@@ -24,20 +24,11 @@ export default class Task extends CompletionDependent.extend({
   isCompleted: computed('tasksManager.completedTasks.[]', function() {
     return this.tasksManager.isCompleted(this);
   }),
-  nextTaskSameExersise: computed('exercise.tasks.[]', function() {
-    return arrayNext(this, this.exercise.content.get('sortedChildren'));
-  }),
-  firstTaskNextExersise: computed('exercise.tasks.[]', function() {
-    const nextExercises = this.exercise.get('nextSiblings');
-    return nextExercises.mapBy('tasks.firstObject').filter(Boolean)[0];
-  }),
   nextTask: computed('exercise.tasks.[]', function() {
-    return this.nextTaskSameExersise || this.firstTaskNextExersise;
+    return arrayNext(this, this.exercise.content.get('sortedChildren'));
   }),
 
   isLastTask: isEmpty('nextTask'),
-
-  isLastExerciseTask: isEmpty('nextTaskSameExersise'),
 
   nextAttempt: false,
 

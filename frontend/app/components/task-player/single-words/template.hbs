@@ -1,11 +1,6 @@
 <br />
-<AudioPlayer
-  @audioFileUrl={{@task.audioFileUrl}}
-  @autoplay={{true}}
-  @disabled={{@task.pauseExecution}}
-/>
 {{#if (eq this.lastAnswer @task.word)}}
-  {{#if (not (and this.exerciseResultIsVisible @task.isLastExerciseTask))}}
+  {{#if (not (and this.exerciseResultIsVisible @task.isLastTask))}}
     <div
       class="task-player__right-answer-data flex flex-wrap flex-1 mt-5"
       {{did-insert (action this.runNextTaskTimer)}}
@@ -29,29 +24,28 @@
     {{did-insert (action this.runNextAttemptTimer)}}
   />
 {{else}}
+  <AudioPlayer
+    @audioFileUrl={{@task.audioFileUrl}}
+    @autoplay={{@autoplay}}
+    @disabled={{@disableAudioPlayer}}
+  />
   <ul class="task-player__options mt-5">
     {{#each this.shuffledWords as |word|}}
       <li class="task-player__option">
-        {{#let
-          (or
-            this.audio.player.isPlaying @task.pauseExecution
-          ) as |disableAnswer|
-        }}
-          <button
-            data-test-task-answer
-            data-test-task-answer-option={{word}}
-            disabled={{disableAnswer}}
-            onclick={{action this.handleSubmit word}}
-            class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
-              {{if
-                disableAnswer
-                "opacity-50 cursor-default"
-                "hover:bg-blue-500 hover:text-white hover:border-transparent"
-              }}"
-          >
-            {{word}}
-          </button>
-        {{/let}}
+        <button
+          data-test-task-answer
+          data-test-task-answer-option={{word}}
+          disabled={{@disableAnswers}}
+          onclick={{action this.handleSubmit word}}
+          class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
+            {{if
+              @disableAnswers
+              "opacity-50 cursor-default"
+              "hover:bg-blue-500 hover:text-white hover:border-transparent"
+            }}"
+        >
+          {{word}}
+        </button>
       </li>
     {{/each}}
   </ul>
