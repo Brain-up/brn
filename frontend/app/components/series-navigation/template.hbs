@@ -5,7 +5,13 @@
   <div class="exercise-block__levels">
     {{#each this.sortedExercises as |exercise|}}
       {{#if (eq exercise.name header)}}
-        <div class="task-square-link shadow exercise-block__level">
+        {{#link-to
+          "group.series.exercise"
+          exercise.id
+          data-test-series-navigation-list-link
+          class="task-square-link shadow exercise-block__level"
+          disabled=(not exercise.canInteract)
+        }}
           <FaIcon
             @icon="check-circle"
             class={{if
@@ -15,17 +21,9 @@
             }}
           />
           <div>
-            {{#link-to
-              "group.series.exercise"
-              exercise.id
-              data-test-series-navigation-list-link
-              class="series-nav__exercies-link"
-              disabled=(not exercise.canInteract)
-            }}
-              Level{{exercise.level}}
-            {{/link-to}}
+            Level{{exercise.level}}
           </div>
-        </div>
+        {{/link-to}}
       {{/if}}
     {{/each}}
   </div>
