@@ -54,7 +54,7 @@
   "devDependencies": {
     "@ember/optional-features": "^1.0.0",
     "@fortawesome/ember-fontawesome": "^0.2.1",
-    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@ember/render-modifiers": "^1.0.2",
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
