@@ -1,4 +1,5 @@
 import Service from '@ember/service';
+import { reads } from '@ember/object/computed';
 
 export default Service.extend({
   init() {
@@ -8,4 +9,5 @@ export default Service.extend({
   register(player) {
     this.set('player', player);
   },
+  isPlaying: reads('player.isPlaying'),
 });

@@ -113,6 +113,9 @@ export default Component.extend({
     this.startNewTask();
     if (!this.firstUncompletedTask) {
       this.task.savePassed();
+      this.onRightAnswer();
+      await customTimeout(3000);
+      this.afterCompleted();
     }
   },
 });

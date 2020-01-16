@@ -29,10 +29,20 @@ module('Integration | Component | task-player', function(hooks) {
 
     this.set('model', firstTask);
 
+    this.set('mockTimerService', {
+      isPaused: false,
+      isStarted: true,
+      runTimer() {},
+    });
+
     await render(hbs`
     <TaskPlayer
-      @task={{this.model}}/>
+      @task={{this.model}}
+      @studyingTimer={{this.mockTimerService}}
+    />
     `);
+
+    await pageObject.startTask();
   });
 
   test('refreshes options list and shows regret image after a wrong answer', async function(assert) {
@@ -67,10 +77,15 @@ module('Integration | Component | task-player', function(hooks) {
     await render(hbs`
       <TaskPlayer
         @onRightAnswer={{this.onRightAnswer}}
-        @task={{this.model}}/>
+        @task={{this.model}}
+        @studyingTimer={{this.mockTimerService}}
+      />
       `);
 
+    await pageObject.startTask();
+
     await chooseAnswer(this.model.word);
+    await customTimeout();
     assert.ok(pageObject.hasRightAnswer);
   });
 });

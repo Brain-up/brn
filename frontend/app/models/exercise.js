@@ -66,6 +66,7 @@ export default class Exercise extends CompletionDependent.extend({
         repetitionIndex,
         exerciseId: id,
         tasksCount: tasks.length,
+        userId: 2, //temporary
       }),
     });
   },

@@ -10,6 +10,7 @@ export default class TaskPlayerComponent extends Component {
   lastAnswer = null;
   exerciseResultIsVisible = false;
   taskResultIsVisible = false;
+  previousTaskWords = null;
 
   @service('audio') audio;
 
@@ -21,8 +22,11 @@ export default class TaskPlayerComponent extends Component {
   ];
 
   didReceiveAttrs() {
-    this.shuffle();
-    this.set('lastAnswer', null);
+    if (this.previousTaskWords !== this.task.words) {
+      this.shuffle();
+      this.set('lastAnswer', null);
+    }
+    this.set('previousTaskWords', this.task.words);
     this.set('exerciseResultIsVisible', false);
   }
 
@@ -41,7 +45,6 @@ export default class TaskPlayerComponent extends Component {
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
-      this.audio.player.playAudio();
     } else {
       this.task.savePassed();
       this.task.set('nextAttempt', false);
@@ -59,7 +62,7 @@ export default class TaskPlayerComponent extends Component {
     );
     this.onRightAnswer();
     await customTimeout(3000);
-    if (this.task.isLastExerciseTask) {
+    if (this.task.isLastTask) {
       this.showExerciseResult();
       await customTimeout(3000);
     }

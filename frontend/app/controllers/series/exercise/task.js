@@ -10,13 +10,13 @@ export default Controller.extend({
           this.model.get('nextTask.exercise.id'),
           this.model.get('nextTask.id'),
         )
-      : '';
+      : this.router.transitionTo(
+          'series.index',
+          this.model.get('exercise.series.id'),
+        );
   },
   saveExerciseMaybe() {
-    if (
-      this.model.isLastExerciseTask &&
-      this.model.get('exercise.isCompleted')
-    ) {
+    if (this.model.isLastTask && this.model.get('exercise.isCompleted')) {
       this.saveExercise(this.model.get('exercise.content'));
     }
   },
