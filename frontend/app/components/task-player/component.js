@@ -18,11 +18,7 @@ export default Component.extend({
   disableAnswers: computed('audio.isPlaying', 'disableAudioPlayer', function() {
     return this.audio.isPlaying || this.disableAudioPlayer;
   }),
-  disableAudioPlayer: or(
-    'task.pauseExecution',
-    'studyingTimer.isPaused',
-    not('studyingTimer.isStarted'),
-  ),
+  disableAudioPlayer: or('task.pauseExecution', not('studyingTimer.isStarted')),
   onRightAnswer() {},
   afterCompleted() {},
   async startTask() {

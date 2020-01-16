@@ -3,7 +3,7 @@
     {{this.displayValue}}
   </span>
   {{#unless @hideControls}}
-    <button onclick={{action this.togglePause}}>
+    <button onclick={{action this.studyingTimer.togglePause}}>
       {{#if (or this.isPaused (not this.isStarted))}}
         <FaIcon @icon="play-circle" />
       {{else}}

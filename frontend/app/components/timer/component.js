@@ -52,12 +52,12 @@ export default Component.extend({
     cancel(this.timerId);
   },
 
-  togglePause() {
+  runTimer() {
     if (!this.isStarted) {
       this.startTimer();
     } else {
-      this.studyingTimer.togglePause();
-      !this.isPaused ? this.setStartTime() : '';
+      this.studyingTimer.resume();
+      this.setStartTime();
     }
   },
 });

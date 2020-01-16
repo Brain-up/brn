@@ -9,8 +9,7 @@ export default Service.extend({
     this.set('timerInstance', timer);
   },
   runTimer() {
-    this.set('isPaused', false);
-    return this.timerInstance.togglePause();
+    return this.timerInstance.runTimer();
   },
   setTime(seconds) {
     this.set('countedSeconds', seconds);
@@ -20,5 +19,8 @@ export default Service.extend({
   },
   pause() {
     this.set('isPaused', true);
+  },
+  resume() {
+    this.set('isPaused', false);
   },
 });

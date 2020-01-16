@@ -21,6 +21,7 @@ module('Integration | Component | timer', function(hooks) {
       countedSeconds: 94,
       pause() {},
       register() {},
+      togglePause() {},
     });
     await render(
       hbs`<Timer @studyingTimer={{this.studyingTimer}} @paused={{true}}/>`,
