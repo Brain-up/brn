@@ -1,6 +1,6 @@
-{{#unless (eq this.target.currentRouteName "group.series.exercise.task")}}
+{{#if (not (eq this.target.currentRouteName "group.series.exercise.task"))}}
   <div class="series-page--canvas flex flex-col flex-grow">
     <SeriesNavigation @exercises={{this.model.exercises}} />
   </div>
-{{/unless}}
+{{/if}}
 {{outlet}}

@@ -159,6 +159,6 @@ module('Acceptance | tasks flow', function(hooks) {
     await customTimeout();
     await customTimeout();
 
-    assert.equal(currentURL(), '/series/1');
+    assert.equal(currentURL(), '/groups/1/series/1');
   });
 });
