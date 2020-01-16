@@ -23,3 +23,29 @@
   padding-left: 0;
   padding-top: 0;
 }
+
+.exercise-block__levels {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.exercise-block__level {
+  flex-direction: initial;
+  align-items: center;
+}
+
+.exercise-block__icon {
+  color: #319795;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.inactive-icon {
+  color: grey;
+  /* color: #fc8181; */
+  cursor: not-allowed;
+}
+
+h2 {
+  margin-bottom: 20px;
+}

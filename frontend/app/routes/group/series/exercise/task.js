@@ -21,7 +21,7 @@ export default Route.extend({
           const series = exercise.get('series');
           const firstTask = exercise.get('sortedTasks.firstObject');
           this.transitionTo(
-            'series.exercise.task',
+            'group.series.exercise.task',
             series.get('id'),
             exercise.get('id'),
             firstTask.get('id'),

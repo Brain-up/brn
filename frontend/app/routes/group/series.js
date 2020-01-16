@@ -16,7 +16,7 @@ export default Route.extend({
       series.get('sortedExercises.firstObject')
     ) {
       this.transitionTo(
-        'series.exercise.index',
+        'route.index',
         series.id,
         series.get('sortedExercises.firstObject.id'),
       );

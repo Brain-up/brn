@@ -6,12 +6,12 @@ export default Controller.extend({
   nextTaskTransition() {
     !this.model.isLastTask
       ? this.router.transitionTo(
-          'series.exercise.task',
+          'group.series.exercise.task',
           this.model.get('nextTask.exercise.id'),
           this.model.get('nextTask.id'),
         )
       : this.router.transitionTo(
-          'series.index',
+          'group.series.index',
           this.model.get('exercise.series.id'),
         );
   },

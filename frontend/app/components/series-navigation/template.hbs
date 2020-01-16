@@ -1,4 +1,35 @@
-<h2 class="text-xl font-semibold tracking-tight leading-snug m-6 ml-0">
+{{#each this.exerciseHeaders as |header|}}
+  <h2>
+    {{header}}
+  </h2>
+  <div class="exercise-block__levels">
+    {{#each this.sortedExercises as |exercise|}}
+      {{#if (eq exercise.name header)}}
+        <div class="task-square-link shadow exercise-block__level">
+          <FaIcon
+            @icon="check-circle"
+            class={{if
+              exercise.canInteract
+              "exercise-block__icon fa-3x"
+              "exercise-block__icon inactive-icon fa-3x"
+            }}
+          />
+          <div>
+            {{#link-to
+              "group.series.exercise"
+              exercise.id
+              class="series-nav__exercies-link"
+              disabled=(not exercise.canInteract)
+            }}
+              Level{{exercise.level}}
+            {{/link-to}}
+          </div>
+        </div>
+      {{/if}}
+    {{/each}}
+  </div>
+{{/each}}
+{{!-- <h2 class="text-xl font-semibold tracking-tight leading-snug m-6 ml-0">
   {{capitalize @series.name}}
 </h2>
 <nav>
@@ -11,7 +42,7 @@
         {{#let exercise.sortedTasks.firstObject as |firstTask|}}
           {{#if firstTask}}
             {{#link-to
-              "series.exercise.task"
+              "group.series.exercise.task"
               exercise.id
               firstTask.id
               class="series-nav__exercies-link"
@@ -21,7 +52,7 @@
             {{/link-to}}
           {{else}}
             {{#link-to
-              "series.exercise"
+              "group.series.exercise"
               exercise.id
               class="series-nav__exercies-link"
               disabled=(not exercise.canInteract)
@@ -33,4 +64,4 @@
       </li>
     {{/each}}
   </ol>
-</nav>
+</nav> --}}

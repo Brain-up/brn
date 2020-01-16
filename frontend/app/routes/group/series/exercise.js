@@ -9,7 +9,7 @@ export default Route.extend({
 
   async afterModel(exercise, { to }) {
     if (!exercise.canInteract) {
-      this.transitionTo('series.exercise', exercise.get('series.id'));
+      this.transitionTo('group.series.exercise', exercise.get('series.id'));
       return;
     }
 
@@ -19,7 +19,7 @@ export default Route.extend({
       !to.paramNames.includes('task_id')
     ) {
       this.transitionTo(
-        'series.exercise.task',
+        'group.series.exercise.task',
         exercise.get('sortedTasks.firstObject.id'),
       );
     }

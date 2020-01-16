@@ -2,5 +2,13 @@
   <Breadcrumbs @group={{this.model}} />
   <Timer @paused={{true}} @hideControls={{true}} />
 </div>
-<GroupNavigation @group={{this.model}} />
-{{outlet}}
+<div class="flex series-container">
+  {{#unless (eq this.target.currentRouteName "group.series.exercise.task")}}
+    <aside class="series-page--aside shadow-md">
+      <GroupNavigation @group={{this.model}} />
+    </aside>
+  {{/unless}}
+  <div class="series-page--canvas flex flex-col flex-grow">
+    {{outlet}}
+  </div>
+</div>
