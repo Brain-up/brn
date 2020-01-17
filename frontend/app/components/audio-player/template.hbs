@@ -2,11 +2,14 @@
 {{#let (or this.isPlaying @disabled) as |disablePlayButton|}}
   <button
     data-test-play-audio-button
-    class="bg-blue-500 text-white font-bold rounded-full
+    class="bg-blue-500 text-white font-bold rounded-full p-2 pr-3 pl-4
+
+
       {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}}"
     onclick={{action this.playAudio}}
     disabled={{disablePlayButton}}
   >
-    <FaIcon @icon="redo-alt" />
+    {{if this.isPlaying "🔊" "🔈"}}
+    Прослушать
   </button>
 {{/let}}

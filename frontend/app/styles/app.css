@@ -118,26 +118,6 @@ a[disabled] {
   align-items: center;
 }
 
-.start-task-button button {
-  padding: 90px 95px 90px 105px;
-  line-height: 90px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 80px;
-  z-index: 1;
-  background: radial-gradient(
-    #fc8181 45%,
-    rgba(252, 129, 129, 0.3) 0,
-    transparent 90%
-  );
-  outline: none;
-  transition: 0.3s;
-}
-
-.start-task-button button:active {
-  transform: scale(0.8);
-}
-
 .start-task-button::after {
   content: '';
   z-index: 0;
