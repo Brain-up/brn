@@ -45,6 +45,10 @@ function getServerResponses({ tasks, series, groups, exercises }) {
     return { data: tasks.findBy('id', Number(request.params.id)) };
   });
 
+  server.get('groups/:id', (schema, request) => {
+    return { data: groups.findBy('id', Number(request.params.id)) };
+  });
+
   server.get('series/:id', (schema, request) => {
     return { data: series.findBy('id', Number(request.params.id)) };
   });

@@ -8,10 +8,8 @@ import { later, cancel } from '@ember/runloop';
 export default Component.extend({
   init() {
     this._super(...arguments);
-    this.paused ? this.studyingTimer.pause() : this.studyingTimer.resume();
-    if (!this.isPaused && !Ember.testing) {
-      this.startTimer();
-    }
+    this.studyingTimer.register(this);
+    this.set('isStarted', false);
   },
   willDestroyElement() {
     this._super(...arguments);
@@ -20,6 +18,7 @@ export default Component.extend({
   studyingTimer: inject(),
   countedSeconds: reads('studyingTimer.countedSeconds'),
   isPaused: reads('studyingTimer.isPaused'),
+  isStarted: false,
   timer: null,
   displayValue: computed('countedSeconds', function() {
     const mins = Math.floor(this.countedSeconds / 60);
@@ -43,16 +42,21 @@ export default Component.extend({
 
   startTimer() {
     this.setStartTime();
-    this.set('timerId', later(this, this.updateSecondsCount, 1000));
+    this.set('isStarted', true);
+    Ember.testing
+      ? ''
+      : this.set('timerId', later(this, this.updateSecondsCount, 1000));
   },
 
   stopTimer() {
     cancel(this.timerId);
   },
 
-  togglePause() {
-    this.studyingTimer.togglePause();
-    if (!this.isPaused) {
+  runTimer() {
+    if (!this.isStarted) {
+      this.startTimer();
+    } else {
+      this.studyingTimer.resume();
       this.setStartTime();
     }
   },

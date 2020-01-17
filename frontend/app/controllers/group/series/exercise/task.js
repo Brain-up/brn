@@ -6,17 +6,17 @@ export default Controller.extend({
   nextTaskTransition() {
     !this.model.isLastTask
       ? this.router.transitionTo(
-          'series.exercise.task',
+          'group.series.exercise.task',
           this.model.get('nextTask.exercise.id'),
           this.model.get('nextTask.id'),
         )
-      : '';
+      : this.router.transitionTo(
+          'group.series.index',
+          this.model.get('exercise.series.id'),
+        );
   },
   saveExerciseMaybe() {
-    if (
-      this.model.isLastExerciseTask &&
-      this.model.get('exercise.isCompleted')
-    ) {
+    if (this.model.isLastTask && this.model.get('exercise.isCompleted')) {
       this.saveExercise(this.model.get('exercise.content'));
     }
   },

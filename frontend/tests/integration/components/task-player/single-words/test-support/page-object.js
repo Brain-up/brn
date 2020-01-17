@@ -3,6 +3,7 @@ import {
   collection,
   attribute,
   isVisible,
+  clickable,
 } from 'ember-cli-page-object';
 
 const page = create({
@@ -10,6 +11,7 @@ const page = create({
     optionValue: attribute('data-test-task-answer-option'),
   }),
   hasRightAnswer: isVisible('[data-test-right-answer-notification]'),
+  startTask: clickable('[data-test-start-task-button]'),
 });
 
 export default page;

@@ -8,13 +8,9 @@ import AudioPlayer from 'brn/components/audio-player/component';
 
 AudioPlayer.reopen({
   async playAudio() {
-    if (!this.isDestroyed && !this.isDestroying) {
-      this.set('isPlaying', true);
-
-      await customTimeout();
-
-      this.set('isPlaying', false);
-    }
+    this.isDestroyed ? '' : this.set('isPlaying', true);
+    await customTimeout();
+    this.isDestroyed ? '' : this.set('isPlaying', false);
   },
 });
 

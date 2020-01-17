@@ -51,7 +51,7 @@ module('Integration | Component | breadcrumbs', function(hooks) {
     const seriesLink = pageObject.seriesLinks[0].anchor[0];
     assert.equal(groupLink.href, '/groups/2');
     assert.equal(groupLink.text, 'group 2');
-    assert.equal(seriesLink.href, '/series/1');
+    assert.equal(seriesLink.href, '/groups/2/series/1');
     assert.equal(seriesLink.text, 'series 1');
   });
 });

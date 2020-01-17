@@ -14,9 +14,8 @@ export default Component.extend({
   },
   async didReceiveAttrs() {
     this._super(...arguments);
-
     await this.setAudioElements();
-    if (this.autoplay) {
+    if (this.autoplay && this.previousPlayedUrls !== this.audioFileUrl) {
       await this.playAudio();
     }
   },
@@ -33,8 +32,6 @@ export default Component.extend({
       'audioElements',
       this.filesToPlay.map((src) => {
         const audio = new Audio(src);
-        audio.onplay = this.updateIsPlaying.bind(this);
-        audio.onended = this.updateIsPlaying.bind(this);
         audio.preload = 'metadata';
         return audio;
       }),
@@ -43,7 +40,11 @@ export default Component.extend({
       this.audioElements.map(
         (a) =>
           new Promise((resolve) => {
-            a.oncanplaythrough = () => resolve(true);
+            a.oncanplaythrough = () => {
+              a.onplay = this.updateIsPlaying.bind(this, a);
+              a.onended = this.updateIsPlaying.bind(this, a);
+              resolve(true);
+            };
           }),
       ),
     );
@@ -55,16 +56,21 @@ export default Component.extend({
       !element.ended
     );
   },
-  updateIsPlaying() {
-    set(
-      this,
-      'isPlaying',
-      this.audioElements.length &&
-        this.audioElements.reduce((result, element) => {
-          result = result || this.isPlayingElement(element);
-          return result;
-        }, false),
-    );
+  updateIsPlaying(actionElement) {
+    if (!this.isDestroyed && !this.isDestroying) {
+      set(
+        this,
+        'isPlaying',
+        this.audioElements.length &&
+          this.audioElements.reduce((result, element) => {
+            result =
+              result ||
+              this.isPlayingElement(element) ||
+              this.isPlayingElement(actionElement);
+            return result;
+          }, false),
+      );
+    }
   },
   async playAudio() {
     /* eslint-disable no-unused-vars */
@@ -74,5 +80,8 @@ export default Component.extend({
         await customTimeout(audioElement.duration * 1000);
       }
     }
+    !this.isDestroyed && !this.isDestroying
+      ? this.set('previousPlayedUrls', this.audioFileUrl)
+      : '';
   },
 });
