@@ -1,2 +1,2 @@
 #!/bin/sh
-cd frontend && yarn test-coverage
+cd frontend && yarn test:coverage

@@ -41,7 +41,7 @@ jobs:
       - uses: mydea/ember-cli-code-coverage-action@e4130abc6c57d272d9d123870c26b8c284128adc
         with:
           working-directory: ./frontend
-          test-command: "yarn test:cover"
+          test-command: "yarn test:coverage"
           coverage-file: "./frontend/coverage/coverage-summary.json"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           message: "Frontend test coverage: {testCoverage}%"
