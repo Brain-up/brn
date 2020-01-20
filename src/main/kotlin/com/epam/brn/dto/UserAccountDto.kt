@@ -8,4 +8,4 @@ data class UserAccountDto(
     val email: String,
     val active: Boolean,
     val birthDate: LocalDate? = null
-) {}
+)

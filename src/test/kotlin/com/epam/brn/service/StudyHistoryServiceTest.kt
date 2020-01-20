@@ -129,15 +129,3 @@ internal class StudyHistoryServiceTest {
         verify(studyHistoryRepository).save(any())
     }
 }
-
-    private fun getUserAccount(): UserAccount {
-        return UserAccount(
-            id = 0,
-            userName = "manuel",
-            birthDate = LocalDate.now(),
-            email = "123@123.asd",
-            password = "password",
-            active = true
-        )
-    }
-}

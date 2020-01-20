@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
@@ -34,17 +34,19 @@ class AuthorizationAuthenticationIT {
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
 
+    @Autowired
+    lateinit var passwordEncoder: PasswordEncoder
+
     internal val userName: String = "admin"
     internal val password: String = "admin"
 
     @BeforeEach
     fun initBeforeEachTest() {
-        val password = BCryptPasswordEncoder().encode(password)
+        val password = passwordEncoder.encode(password)
         val userAccount =
             UserAccount(userName = userName, password = password, email = "admin@admin.com", active = true)
         userAccount.authoritySet.addAll(setOf(Authority(authority = "ROLE_ADMIN", userAccount = userAccount)))
         userAccountRepository.save(userAccount)
-
     }
 
     @AfterEach
@@ -106,7 +108,6 @@ class AuthorizationAuthenticationIT {
             .andExpect(status().`is`(403))
     }
 
-
     @Test
     fun `test get groups basic authentication`() {
         // WHEN
@@ -130,6 +131,4 @@ class AuthorizationAuthenticationIT {
         resultAction
             .andExpect(status().isUnauthorized)
     }
-
-
 }

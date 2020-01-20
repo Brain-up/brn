@@ -1,6 +1,5 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.UserAccountDto
 import java.time.LocalDate
 import javax.persistence.CascadeType
@@ -43,7 +42,7 @@ data class UserAccount(
         id = this.id,
         userName = this.userName,
         active = this.active,
-        email= this.email,
+        email = this.email,
         birthDate = this.birthDate
     )
 }
