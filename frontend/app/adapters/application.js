@@ -8,7 +8,7 @@ export default DS.RESTAdapter.extend({
   shouldBackgroundReloadRecord: () => false,
   headers: computed(function() {
     return {
-      Authorization: 'Basic dfkldklfsdjfkshfksghf;ldjsklghklsjfsdfjdsf;sdf',
+      Authorization: 'Basic YWRtaW46YWRtaW4=',
     };
   }),
 });
