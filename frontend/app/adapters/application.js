@@ -2,6 +2,11 @@ import DS from 'ember-data';
 import { computed } from '@ember/object';
 
 export default DS.RESTAdapter.extend({
+  headers: computed(function() {
+    return {
+      Authorization: 'Basic YWRtaW46YWRtaW4=',
+    };
+  }),
   namespace: 'api',
   coalesceFindRequests: false,
   shouldReloadRecord: () => false,
@@ -16,9 +21,4 @@ export default DS.RESTAdapter.extend({
     }
     return this._super(id, actualModelName, snapshot);
   },
-  headers: computed(function() {
-    return {
-      Authorization: 'Basic YWRtaW46YWRtaW4=',
-    };
-  }),
 });
