@@ -5,7 +5,14 @@ export default Route.extend({
     return this.store.findRecord('group', group_id);
   },
 
-  async afterModel(group) {
+  async afterModel(group, { to }) {
     await this.store.query('series', { groupId: group.id });
+    if (to.name === 'group.index' && group.get('sortedSeries.firstObject')) {
+      this.transitionTo(
+        'group.series.index',
+        group.id,
+        group.get('sortedSeries.firstObject.id'),
+      );
+    }
   },
 });

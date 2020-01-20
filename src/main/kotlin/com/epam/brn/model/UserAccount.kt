@@ -20,7 +20,7 @@ data class UserAccount(
     val id: Long? = null,
     @Column(nullable = false)
     val userName: String,
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
     val password: String,

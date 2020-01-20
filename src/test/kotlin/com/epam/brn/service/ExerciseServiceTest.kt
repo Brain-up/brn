@@ -1,10 +1,12 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.nhaarman.mockito_kotlin.verify
+import java.util.Optional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -12,9 +14,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.anyShort
+import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class ExerciseServiceTest {
@@ -29,7 +32,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, "name", "descr", 1, 1)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
         val exerciseId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
@@ -47,7 +50,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user and series`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, "name", "descr", 1, 1)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
         val exerciseId = 1L
         val seriesId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
@@ -66,7 +69,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, "name", "descr", 1, 1)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
         `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN
@@ -74,5 +77,17 @@ internal class ExerciseServiceTest {
         // THEN
         assertEquals(actualResult, exerciseDtoMock)
         verify(exerciseRepository).findById(anyLong())
+    }
+
+    @Test
+    fun `should get exercise by name and level`() {
+        // GIVEN
+        val exerciseMock: Exercise = mock(Exercise::class.java)
+        `when`(exerciseRepository.findExerciseByNameAndLevel("name", 1)).thenReturn(Optional.of(exerciseMock))
+        // WHEN
+        val actualResult: Exercise = exerciseService.findExerciseByNameAndLevel("name", 1)
+        // THEN
+        assertEquals(actualResult, exerciseMock)
+        verify(exerciseRepository).findExerciseByNameAndLevel(anyString(), anyShort())
     }
 }

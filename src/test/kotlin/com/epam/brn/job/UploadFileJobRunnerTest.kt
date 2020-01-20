@@ -1,8 +1,12 @@
 package com.epam.brn.job
 
-import com.epam.brn.job.csv.task.UploadFromCsvJob
+import com.epam.brn.job.csv.task.UploadFromCsvService
 import com.epam.brn.job.impl.UploadFileJobRunnerImpl
 import com.nhaarman.mockito_kotlin.anyOrNull
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.stream.Collectors
 import org.apache.commons.io.FileUtils
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
@@ -12,17 +16,12 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.stream.Collectors
 
 @Disabled
 @ExtendWith(MockitoExtension::class)
@@ -37,10 +36,10 @@ class UploadFileJobRunnerTest {
     lateinit var uploadFileJobRunner: UploadFileJobRunnerImpl
 
     @Mock
-    lateinit var uploadTaskFromCsvJob: UploadFromCsvJob
+    lateinit var uploadTaskFromCsvService: UploadFromCsvService
 
     @Spy
-    var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvJob> = LinkedHashMap()
+    var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvService> = LinkedHashMap()
 
     @BeforeAll
     fun init() {
@@ -58,19 +57,19 @@ class UploadFileJobRunnerTest {
 
         FileUtils.moveFile(
             oldFile,
-            FileUtils.getFile("$pathToTaskFiles\\tasks.csv")
+            FileUtils.getFile("$pathToTaskFiles\\tasks_for_single_words_series.csv")
         )
     }
 
     @Test
     fun `should upload tasks from csv file during job`() {
         // GIVEN
-        sourcesWithJobs[pathToTaskFiles] = uploadTaskFromCsvJob
+        sourcesWithJobs[pathToTaskFiles] = uploadTaskFromCsvService
 
         // WHEN
         uploadFileJobRunner.perform()
 
         // THEN
-        verify(uploadTaskFromCsvJob, times(1)).uploadTasks(anyOrNull<File>())
+        verify(uploadTaskFromCsvService, times(1)).loadTaskFile(anyOrNull<File>())
     }
 }

@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.constant.BrnParams.GROUP_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.ExerciseGroupsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -30,7 +31,7 @@ class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsServic
     @ApiOperation("Get group by id")
     fun getGroupById(
         @PathVariable(GROUP_ID) groupId: Long
-    ): ResponseEntity<BaseResponseDto> {
-        return ResponseEntity.ok().body(BaseResponseDto(data = listOf(exerciseGroupsService.findGroupById(groupId))))
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = exerciseGroupsService.findGroupById(groupId)))
     }
 }

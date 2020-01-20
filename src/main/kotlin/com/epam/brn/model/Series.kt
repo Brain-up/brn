@@ -22,19 +22,19 @@ data class Series(
         sequenceName = "series_id_seq",
         allocationSize = 50
     )
-    val id: Long? = null,
+    var id: Long? = null,
     @Column(nullable = false, unique = true)
-    val name: String,
+    var name: String,
     @Column
-    val description: String,
+    var description: String? = "",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_group_id")
-    val exerciseGroup: ExerciseGroup,
+    var exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     val exercises: MutableSet<Exercise> = LinkedHashSet()
 ) {
     fun toDto() = SeriesDto(
-        exerciseGroupId = exerciseGroup.id,
+        group = exerciseGroup.id,
         id = id,
         name = name,
         description = description,
@@ -44,14 +44,11 @@ data class Series(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as Series
-
         if (id != other.id) return false
         if (name != other.name) return false
         if (description != other.description) return false
         if (exerciseGroup != other.exerciseGroup) return false
-
         return true
     }
 
@@ -63,7 +60,5 @@ data class Series(
         return result
     }
 
-    override fun toString(): String {
-        return "Series(id=$id, name='$name', description='$description')"
-    }
+    override fun toString() = "Series(id=$id, name='$name', description='$description')"
 }

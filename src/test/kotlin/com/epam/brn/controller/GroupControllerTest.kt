@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.service.ExerciseGroupsService
 import com.nhaarman.mockito_kotlin.verify
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -40,10 +41,10 @@ internal class GroupControllerTest {
         val group = ExerciseGroupDto(1, "name", "desc")
         Mockito.`when`(exerciseGroupsService.findGroupById(groupId)).thenReturn(group)
         // WHEN
-        val actualResultData: List<ExerciseGroupDto> =
-            groupController.getGroupById(groupId).body?.data as List<ExerciseGroupDto>
+        val actualResultData: ExerciseGroupDto =
+            groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
         // THEN
-        assertTrue(actualResultData.contains(group))
+        assertEquals(actualResultData, group)
         verify(exerciseGroupsService).findGroupById(groupId)
     }
 }

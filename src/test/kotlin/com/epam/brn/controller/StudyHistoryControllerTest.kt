@@ -3,13 +3,15 @@ package com.epam.brn.controller
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import com.nhaarman.mockito_kotlin.verify
+import java.time.LocalDateTime
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDateTime
+import org.springframework.http.HttpStatus
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryControllerTest {
@@ -24,20 +26,19 @@ internal class StudyHistoryControllerTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 1,
-            successTasksCount = 1,
-            doneTasksCount = 1,
+            repetitionIndex = 1f,
+            tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
-            exerciseId = 1L
+            exerciseId = 1L,
+            responseCode = HttpStatus.CREATED
         )
-        `when`(studyHistoryService.saveOrReplaceStudyHistory(dto)).thenReturn(dto)
-
+        `when`(studyHistoryService.saveOrUpdateStudyHistory(dto)).thenReturn(dto)
         // WHEN
-        studyHistoryController.saveOrReplaceStudyHistory(dto)
-
+        val result = studyHistoryController.saveOrUpdateStudyHistory(dto)
         // THEN
-        verify(studyHistoryService).saveOrReplaceStudyHistory(dto)
+        verify(studyHistoryService).saveOrUpdateStudyHistory(dto)
+        assertEquals(HttpStatus.CREATED, result.statusCode)
     }
 
     @Test
@@ -45,40 +46,16 @@ internal class StudyHistoryControllerTest {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = null,
-            successTasksCount = 2,
-            doneTasksCount = null,
+            repetitionIndex = 1f,
+            tasksCount = null,
             startTime = null,
             endTime = null,
             exerciseId = 1L
         )
         `when`(studyHistoryService.patchStudyHistory(dto)).thenReturn(dto)
-
         // WHEN
         studyHistoryController.patchStudyHistory(dto)
-
         // THEN
         verify(studyHistoryService).patchStudyHistory(dto)
-    }
-
-    @Test
-    fun `should replace study history`() {
-        // GIVEN
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionCount = 10,
-            successTasksCount = 1,
-            doneTasksCount = 1,
-            startTime = LocalDateTime.now(),
-            endTime = LocalDateTime.now(),
-            exerciseId = 1L
-        )
-        `when`(studyHistoryService.replaceStudyHistory(dto)).thenReturn(dto)
-
-        // WHEN
-        studyHistoryController.replaceStudyHistory(dto)
-
-        // THEN
-        verify(studyHistoryService).replaceStudyHistory(dto)
     }
 }

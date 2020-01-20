@@ -5,6 +5,7 @@ import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -35,7 +36,7 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @ApiOperation("Get exercise by id")
     fun getExercisesByID(
         @PathVariable(EXERCISE_ID) exerciseId: Long
-    ): ResponseEntity<BaseResponseDto> {
-        return ResponseEntity.ok().body(BaseResponseDto(data = listOf(exerciseService.findExerciseById(exerciseId))))
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = exerciseService.findExerciseById(exerciseId)))
     }
 }

@@ -1,36 +1,30 @@
-<h2 class="c-heading u-xlarge">
-  {{capitalize @series.name}}
-</h2>
-<nav>
-  <ol class="series-nav__exercies-list" data-test-series-navigation-list>
-    {{#each (sort-by "order" "id" @series.exercises) as |exercise|}}
-      <li
-        data-test-series-navigation-list-link
-        data-test-series-navigation-list-link-id="exercise.id"
-      >
-        {{#let exercise.sortedTasks.firstObject as |firstTask|}}
-          {{#if firstTask}}
-            {{#link-to
-              "series.exercise.task"
-              exercise.id
-              firstTask.id
-              class="series-nav__exercies-link"
-              disabled=(not exercise.canInteract)
+{{#each this.exerciseHeaders as |header|}}
+  <h2 data-test-series-navigation-header>
+    {{header}}
+  </h2>
+  <div class="exercise-block__levels">
+    {{#each this.sortedExercises as |exercise|}}
+      {{#if (eq exercise.name header)}}
+        {{#link-to
+          "group.series.exercise"
+          exercise.id
+          data-test-series-navigation-list-link
+          class="task-square-link shadow exercise-block__level"
+          disabled=(not exercise.canInteract)
+        }}
+          <FaIcon
+            @icon="check-circle"
+            class={{if
+              exercise.canInteract
+              "exercise-block__icon fa-3x"
+              "exercise-block__icon inactive-icon fa-3x"
             }}
-              {{capitalize exercise.name}}
-            {{/link-to}}
-          {{else}}
-            {{#link-to
-              "series.exercise"
-              exercise.id
-              class="series-nav__exercies-link"
-              disabled=(not exercise.canInteract)
-            }}
-              {{capitalize exercise.name}}
-            {{/link-to}}
-          {{/if}}
-        {{/let}}
-      </li>
+          />
+          <div>
+            Упражнение {{exercise.level}}
+          </div>
+        {{/link-to}}
+      {{/if}}
     {{/each}}
-  </ol>
-</nav>
+  </div>
+{{/each}}

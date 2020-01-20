@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.constant.BrnPath
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -51,8 +52,8 @@ class TaskControllerIT {
             exerciseGroup = group
         )
         group.series.addAll(setOf(series1, series2))
-        savedExercise = Exercise(name = "First", description = "desc", level = 0, series = series1)
-        val secondExercise = Exercise(name = "Second", description = "desc", level = 0, series = series1)
+        savedExercise = Exercise(name = "First", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
+        val secondExercise = Exercise(name = "Second", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
         series1.exercises.addAll(listOf(savedExercise, secondExercise))
         firstSavedTask = Task(
             name = "firstTaskForExercise",
@@ -87,7 +88,7 @@ class TaskControllerIT {
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
-        val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
+        val jsonDataObject = jsonResponse.getJSONObject("data")
         assertEquals(firstSavedTask.name, jsonDataObject.get("name"))
         assertEquals(firstSavedTask.id, jsonDataObject.getLong("id"))
     }

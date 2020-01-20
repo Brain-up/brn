@@ -10,4 +10,5 @@ export default class Group extends CompletionDependent.extend({
   children: reads('series'),
   parent: null,
   sortedSeries: reads('sortedChildren'),
+  sortChildrenBy: 'id',
 }) {}

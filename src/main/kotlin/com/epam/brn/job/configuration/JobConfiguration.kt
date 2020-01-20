@@ -1,17 +1,17 @@
 package com.epam.brn.job.configuration
 
 import com.epam.brn.constant.BrnJob.PATH_TO_TASK_CSV_RESOURCES
-import com.epam.brn.job.csv.task.UploadFromCsvJob
+import com.epam.brn.job.csv.task.UploadFromCsvService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class JobConfiguration(private val uploadTaskFromCsvJob: UploadFromCsvJob) {
+class JobConfiguration(private val uploadTaskFromCsvService: UploadFromCsvService) {
 
     @Bean
-    fun sourcesWithJobs(): LinkedHashMap<String, UploadFromCsvJob> {
+    fun sourcesWithJobs(): LinkedHashMap<String, UploadFromCsvService> {
         return linkedMapOf(
-            PATH_TO_TASK_CSV_RESOURCES to uploadTaskFromCsvJob
+            PATH_TO_TASK_CSV_RESOURCES to uploadTaskFromCsvService
         )
     }
 }

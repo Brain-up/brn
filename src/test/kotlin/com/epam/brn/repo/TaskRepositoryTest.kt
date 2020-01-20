@@ -29,7 +29,7 @@ class TaskRepositoryTest : BaseTest() {
 
             // WHEN
             val findAllTasksWithAnswers =
-                exerciseId?.let { taskRepository.findAllTasksByExerciseIdWithJoinedAnswers(it) }
+                exerciseId?.let { taskRepository.findTasksByExerciseIdWithJoinedAnswers(it) }
 
             // THEN
             assertThat(findAllTasksWithAnswers)

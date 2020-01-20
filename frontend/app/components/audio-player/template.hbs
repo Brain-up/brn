@@ -1,18 +1,15 @@
 {{! template-lint-configure no-invalid-interactive false }}
-<audio
-  data-test-audio-player
-  autoplay={{@autoplay}}
-  src={{@audioFileUrl}}
-  onplay={{action this.updateIsPlaying}}
-  onended={{action this.updateIsPlaying}}
-  {{ref "audioElement" this}}
-></audio>
-<button
-  data-test-play-audio-button
-  class="c-button c-button--rounded"
-  onclick={{action "playAudio"}}
-  disabled={{this.isPlaying}}
->
-  {{if this.isPlaying "🔊" "🔈"}}
-  Прослушать
-</button>
+{{#let (or this.isPlaying @disabled) as |disablePlayButton|}}
+  <button
+    data-test-play-audio-button
+    class="bg-blue-500 text-white font-bold rounded-full p-2 pr-3 pl-4
+
+
+      {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}}"
+    onclick={{action this.playAudio}}
+    disabled={{disablePlayButton}}
+  >
+    {{if this.isPlaying "🔊" "🔈"}}
+    Прослушать
+  </button>
+{{/let}}

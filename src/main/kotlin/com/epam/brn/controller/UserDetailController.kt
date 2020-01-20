@@ -5,6 +5,7 @@ import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.UserData
 import com.epam.brn.model.UserAccount
 import com.epam.brn.service.UserAccountService

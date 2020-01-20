@@ -1,7 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.TaskDto
-import com.epam.brn.job.csv.task.impl.UploadTaskFromCsvJob
+import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.service.TaskService
 import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
@@ -26,9 +25,6 @@ class TaskControllerTest {
     @Mock
     lateinit var taskService: TaskService
 
-    @Mock
-    lateinit var uploadTaskFromCsvJob: UploadTaskFromCsvJob
-
     @Nested
     @DisplayName("Tests for getting tasks operations in TaskController")
     inner class GetTasks {
@@ -37,12 +33,12 @@ class TaskControllerTest {
         fun `should get task by id`() {
             // GIVEN
             val taskId = LONG_ONE
-            val task = TaskDto(id = LONG_ONE, serialNumber = INTEGER_ONE, exercise = LONG_ONE)
+            val task = TaskDtoForSingleWords(id = LONG_ONE, serialNumber = INTEGER_ONE, exerciseId = LONG_ONE)
             `when`(taskService.getTaskById(taskId)).thenReturn(task)
             // WHEN
-            val actualResult: List<TaskDto> = taskController.getTaskById(taskId).body?.data as List<TaskDto>
+            val actualResult: TaskDtoForSingleWords = taskController.getTaskById(taskId).body?.data as TaskDtoForSingleWords
             // THEN
-            assertThat(actualResult[0]).isEqualTo(task)
+            assertThat(actualResult).isEqualTo(task)
             verify(taskService).getTaskById(taskId)
         }
 
@@ -50,18 +46,18 @@ class TaskControllerTest {
         fun `should get tasks by exerciseId`() {
             // GIVEN
             val exerciseId = LONG_ONE
-            val taskFirst = TaskDto(id = LONG_ONE, serialNumber = INTEGER_ONE, exercise = LONG_ONE)
-            val taskSecond = TaskDto(id = 2L, serialNumber = INTEGER_TWO, exercise = LONG_ONE)
-            `when`(taskService.getAllTasksByExerciseId(exerciseId)).thenReturn(listOf(taskFirst, taskSecond))
+            val taskFirst = TaskDtoForSingleWords(id = LONG_ONE, serialNumber = INTEGER_ONE, exerciseId = LONG_ONE)
+            val taskSecond = TaskDtoForSingleWords(id = 2L, serialNumber = INTEGER_TWO, exerciseId = LONG_ONE)
+            `when`(taskService.getTasksByExerciseId(exerciseId)).thenReturn(listOf(taskFirst, taskSecond))
             // WHEN
             @Suppress("UNCHECKED_CAST")
-            val actualResult: List<TaskDto> =
-                taskController.getTasksByExerciseId(exerciseId).body?.data as List<TaskDto>
+            val actualResult: List<TaskDtoForSingleWords> =
+                taskController.getTasksByExerciseId(exerciseId).body?.data as List<TaskDtoForSingleWords>
             // THEN
             assertThat(actualResult)
                 .hasSize(INTEGER_TWO)
                 .containsExactly(taskFirst, taskSecond)
-            verify(taskService).getAllTasksByExerciseId(exerciseId)
+            verify(taskService).getTasksByExerciseId(exerciseId)
         }
     }
 }

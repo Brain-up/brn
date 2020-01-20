@@ -3,24 +3,24 @@ package com.epam.brn.service
 import com.epam.brn.converter.StudyHistoryConverter
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
 import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.verify
+import java.time.LocalDateTime
+import java.util.Optional
+import javax.persistence.EntityManager
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.Optional
-import javax.persistence.EntityManager
+import org.springframework.http.HttpStatus
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryServiceTest {
@@ -35,198 +35,100 @@ internal class StudyHistoryServiceTest {
     lateinit var studyHistoryService: StudyHistoryService
 
     @Test
-    fun `should insert study history when doesnt exist`() {
+    fun `should create studyHistory when doesnt exist`() {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 1,
-            successTasksCount = 1,
-            doneTasksCount = 1,
+            repetitionIndex = 1f,
+            tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
             exerciseId = 1L
         )
-        val entity = StudyHistory(
-            id = null,
-            userAccount = getUserAccount(),
-            exercise = getExercise(),
-            endTime = dto.endTime,
-            startTime = dto.startTime,
-            doneTasksCount = dto.doneTasksCount,
-            successTasksCount = dto.successTasksCount,
-            repetitionCount = dto.repetitionCount
+        val exerciseMock = Mockito.mock(Exercise::class.java)
+        val userAccountMock = Mockito.mock(UserAccount::class.java)
+        val studyHistoryEntity = StudyHistory(
+            userAccount = userAccountMock,
+            exercise = exerciseMock
         )
-        `when`(entityManager.getReference(UserAccount::class.java, dto.userId)).thenReturn(getUserAccount())
-        `when`(entityManager.getReference(Exercise::class.java, dto.exerciseId)).thenReturn(getExercise())
-        `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(entity)
+        `when`(entityManager.getReference(UserAccount::class.java, dto.userId)).thenReturn(userAccountMock)
+        `when`(entityManager.getReference(Exercise::class.java, dto.exerciseId)).thenReturn(exerciseMock)
         `when`(
-            studyHistoryRepository.findByUserAccountIdAndExerciseId(
-                dto.userId, dto.exerciseId
-            )
+            studyHistoryRepository.findByUserAccountIdAndExerciseId(dto.userId, dto.exerciseId)
         ).thenReturn(Optional.empty())
         // WHEN
-        studyHistoryService.saveOrReplaceStudyHistory(dto)
-
+        val result = studyHistoryService.saveOrUpdateStudyHistory(dto)
         // THEN
-        verify(studyHistoryRepository).save(entity)
+        assertEquals(HttpStatus.CREATED, result.responseCode)
+        verify(studyHistoryConverter).updateStudyHistory(dto, studyHistoryEntity)
+        verify(studyHistoryRepository).save(any(StudyHistory::class.java))
     }
 
     @Test
-    fun `should replace study history when already exists`() {
+    fun `should update existing studyHistory`() {
         // GIVEN
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = 2,
-            successTasksCount = 1,
-            doneTasksCount = 1,
+            repetitionIndex = 2f,
+            tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
             exerciseId = 1L
         )
-        val existingEntity = StudyHistory(
-            id = 10,
-            userAccount = getUserAccount(),
-            exercise = getExercise(),
-            endTime = dto.endTime,
-            startTime = dto.startTime,
-            doneTasksCount = dto.doneTasksCount,
-            successTasksCount = dto.successTasksCount,
-            repetitionCount = dto.repetitionCount
-        )
-        val updatedEntity = StudyHistory(
-            id = 10,
-            userAccount = getUserAccount(),
-            exercise = getExercise(),
-            endTime = dto.endTime,
-            startTime = dto.startTime,
-            doneTasksCount = dto.doneTasksCount,
-            successTasksCount = dto.successTasksCount,
-            repetitionCount = dto.repetitionCount
-        )
-        `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
+        val existingStudyHistoryEntity = Mockito.mock(StudyHistory::class.java)
         `when`(
-            studyHistoryRepository.findByUserAccountIdAndExerciseId(
-                dto.userId,
-                dto.exerciseId
-            )
-        ).thenReturn(Optional.of(existingEntity))
+            studyHistoryRepository.findByUserAccountIdAndExerciseId(dto.userId, dto.exerciseId)
+        ).thenReturn(Optional.of(existingStudyHistoryEntity))
         // WHEN
-        studyHistoryService.saveOrReplaceStudyHistory(dto)
-
+        val result = studyHistoryService.saveOrUpdateStudyHistory(dto)
         // THEN
-        verify(studyHistoryRepository).save(updatedEntity)
+        assertEquals(HttpStatus.OK, result.responseCode)
+        verify(studyHistoryConverter).updateStudyHistory(dto, existingStudyHistoryEntity)
+        verify(studyHistoryRepository).save(any(StudyHistory::class.java))
     }
 
     @Test
     fun `should update study history only with not null elements`() {
         // GIVEN
+        val exerciseMock = Mockito.mock(Exercise::class.java)
+        val userAccountMock = Mockito.mock(UserAccount::class.java)
         val dto = StudyHistoryDto(
             userId = 1L,
-            repetitionCount = null,
-            successTasksCount = null,
-            doneTasksCount = 5,
+            repetitionIndex = null,
+            tasksCount = 5,
             startTime = null,
             endTime = null,
             exerciseId = 1L
         )
         val existingEntity = StudyHistory(
             id = 10,
-            userAccount = getUserAccount(),
-            exercise = getExercise(),
+            userAccount = userAccountMock,
+            exercise = exerciseMock,
             endTime = LocalDateTime.now(),
             startTime = LocalDateTime.now(),
-            doneTasksCount = 0,
-            successTasksCount = 0,
-            repetitionCount = 1
+            tasksCount = 0,
+            repetitionIndex = 1f
         )
         val updatedEntity = StudyHistory(
             id = 10,
-            userAccount = getUserAccount(),
-            exercise = getExercise(),
+            userAccount = userAccountMock,
+            exercise = exerciseMock,
             endTime = existingEntity.endTime,
             startTime = existingEntity.endTime,
-            doneTasksCount = 5,
-            successTasksCount = 0,
-            repetitionCount = 1
+            tasksCount = 5,
+            repetitionIndex = 1f
         )
         `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
         doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
         `when`(
-            studyHistoryRepository.findByUserAccountIdAndExerciseId(
-                dto.userId, dto.exerciseId
-            )
+            studyHistoryRepository.findByUserAccountIdAndExerciseId(dto.userId, dto.exerciseId)
         ).thenReturn(Optional.of(existingEntity))
         // WHEN
         studyHistoryService.patchStudyHistory(dto)
-
         // THEN
         verify(studyHistoryRepository).save(any())
     }
-
-    @Test
-    fun `should replace study history`() {
-        // GIVEN
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionCount = 2,
-            successTasksCount = 2,
-            doneTasksCount = null,
-            startTime = LocalDateTime.now(),
-            endTime = LocalDateTime.now(),
-            exerciseId = 1L
-        )
-        val existingEntity = StudyHistory(
-            id = 10,
-            userAccount = getUserAccount(),
-            exercise = getExercise(),
-            endTime = null,
-            startTime = dto.startTime,
-            doneTasksCount = 0,
-            successTasksCount = 0,
-            repetitionCount = 1
-        )
-        val updatedEntity = StudyHistory(
-            id = 10,
-            userAccount = getUserAccount(),
-            exercise = getExercise(),
-            endTime = dto.endTime,
-            startTime = dto.startTime,
-            doneTasksCount = null,
-            successTasksCount = 2,
-            repetitionCount = 2
-        )
-        `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
-        doNothing().`when`(studyHistoryConverter).updateStudyHistory(dto, existingEntity)
-        `when`(
-            studyHistoryRepository.findByUserAccountIdAndExerciseId(
-                dto.userId, dto.exerciseId
-            )
-        ).thenReturn(Optional.of(existingEntity))
-        // WHEN
-        studyHistoryService.replaceStudyHistory(dto)
-
-        // THEN
-        verify(studyHistoryRepository).save(any())
-    }
-
-    private fun getExercise(): Exercise {
-        return Exercise(
-            id = 0,
-            description = toString(),
-            series = Series(
-                id = 0,
-                description = "desc",
-                name = "group",
-                exerciseGroup = ExerciseGroup(
-                    id = 0,
-                    description = "desc",
-                    name = "group"
-                )
-            ),
-            level = 0,
-            name = "exercise"
-        )
-    }
+}
 
     private fun getUserAccount(): UserAccount {
         return UserAccount(
