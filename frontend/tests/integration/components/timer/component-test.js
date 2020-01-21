@@ -3,7 +3,6 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import customTimeout from 'brn/utils/custom-timeout';
-import TimerService from 'brn/services/studying-timer';
 
 module('Integration | Component | timer', function(hooks) {
   setupRenderingTest(hooks);
@@ -33,23 +32,16 @@ module('Integration | Component | timer', function(hooks) {
   });
 
   test('pauses on idle', async function(assert) {
-    this.set('studyingTimer', TimerService.create({ idleTime: 10 }));
-
-    await render(hbs`<Timer @studyingTimer={{this.studyingTimer}}/>`);
-
-    assert.dom('[data-test-timer-display-value]').hasText('00:00');
+    await render(hbs`<Timer @idleTime={{2}}/>`);
 
     assert
       .dom('[data-test-timer-wrapper]')
       .hasNoAttribute('data-test-timer-is-paused');
 
     await customTimeout();
-    await customTimeout();
 
     assert
       .dom('[data-test-timer-wrapper]')
       .hasAttribute('data-test-timer-is-paused');
-
-    this.studyingTimer.destroy();
   });
 });
