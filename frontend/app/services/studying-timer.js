@@ -5,10 +5,9 @@ import config from 'brn/config/environment';
 export default Service.extend({
   willDestroy() {
     this._super(...arguments);
-    this.idleWatcher.stop();
+    this.idleWatcher && this.idleWatcher.stop();
   },
   countedSeconds: 0,
-  idleTime: null,
   isPaused: false,
   isStarted: reads('timerInstance.isStarted'),
   register(timer) {
