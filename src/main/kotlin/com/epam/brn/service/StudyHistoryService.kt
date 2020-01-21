@@ -27,10 +27,10 @@ class StudyHistoryService(
             studyHistoryDto.userId,
             studyHistoryDto.exerciseId
         )
+        var isNew = false
         val studyHistory = existingStudyHistory.map { studyHistoryEntity ->
             log.debug("Replacing $studyHistoryDto")
             studyHistoryConverter.updateStudyHistory(studyHistoryDto, studyHistoryEntity)
-            studyHistoryDto.responseCode = HttpStatus.OK
             studyHistoryEntity
         }
             .orElseGet {
@@ -39,11 +39,13 @@ class StudyHistoryService(
                 val exerciseReference = entityManager.getReference(Exercise::class.java, studyHistoryDto.exerciseId)
                 val studyHistoryEntity = StudyHistory(userAccount = userReference, exercise = exerciseReference)
                 studyHistoryConverter.updateStudyHistory(studyHistoryDto, studyHistoryEntity)
-                studyHistoryDto.responseCode = HttpStatus.CREATED
+                isNew = true
                 studyHistoryEntity
             }
         studyHistoryRepository.save(studyHistory)
-        return studyHistoryDto
+        val studyDto = studyHistory.toDto()
+        studyDto.responseCode = if (isNew) HttpStatus.CREATED else HttpStatus.OK
+        return studyDto
     }
 
     @Throws(InvalidParameterException::class)

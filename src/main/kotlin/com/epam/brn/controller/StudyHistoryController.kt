@@ -22,7 +22,7 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     @PostMapping
     fun saveOrUpdateStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<StudyHistoryDto> {
         val studyHistoryResult = studyHistoryService.saveOrUpdateStudyHistory(studyHistoryDto)
-        return ResponseEntity.status(studyHistoryResult.responseCode!!).body(studyHistoryDto)
+        return ResponseEntity.status(studyHistoryResult.responseCode!!).body(studyHistoryResult)
     }
 
     @PatchMapping
