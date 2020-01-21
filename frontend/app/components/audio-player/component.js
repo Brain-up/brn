@@ -101,7 +101,12 @@ export default Component.extend({
       : '';
   },
   createAnimationInterval() {
-    return createAnimationInterval.apply(this);
+    this.set(
+      'animationInterval',
+      setInterval(() => {
+        defineProgressValue.apply(this);
+      }, 16),
+    );
   },
   setProgress(progress) {
     window.requestAnimationFrame(() =>
@@ -115,20 +120,15 @@ export default Component.extend({
   },
 });
 
-export function createAnimationInterval() {
-  this.set(
-    'animationInterval',
-    setInterval(() => {
-      const playedTime = this.audioElements.reduce(
-        (currentPlayedTime, audioElement) => {
-          currentPlayedTime = currentPlayedTime + audioElement.currentTime;
-          return currentPlayedTime;
-        },
-        0,
-      );
-      !this.isDestroyed && !this.isDestroying
-        ? this.setProgress((playedTime * 100) / this.audioElementsLength)
-        : '';
-    }, 16),
+export function defineProgressValue() {
+  const playedTime = this.audioElements.reduce(
+    (currentPlayedTime, audioElement) => {
+      currentPlayedTime = currentPlayedTime + audioElement.currentTime;
+      return currentPlayedTime;
+    },
+    0,
   );
+  !this.isDestroyed && !this.isDestroying
+    ? this.setProgress((playedTime * 100) / this.audioElementsLength)
+    : '';
 }

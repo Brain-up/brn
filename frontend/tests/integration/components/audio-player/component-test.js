@@ -5,14 +5,14 @@ import hbs from 'htmlbars-inline-precompile';
 import pageObject from './page-object';
 import customTimeout from 'brn/utils/custom-timeout';
 import AudioPlayer, {
-  createAnimationInterval,
+  defineProgressValue,
 } from 'brn/components/audio-player/component';
 
 AudioPlayer.reopen({
   async playAudio() {
     this.isDestroyed ? '' : this.set('isPlaying', true);
     await customTimeout();
-    createAnimationInterval.apply(this);
+    defineProgressValue.apply(this);
     await customTimeout();
     this.isDestroyed ? '' : this.set('isPlaying', false);
   },
