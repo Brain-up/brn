@@ -9,6 +9,7 @@ export default Service.extend({
     this.set('timerInstance', timer);
   },
   runTimer() {
+    this.resume();
     return this.timerInstance.runTimer();
   },
   setTime(seconds) {

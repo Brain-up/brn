@@ -1,0 +1,14 @@
+button {
+  padding: 9px 10px;
+  line-height: 16px;
+  font-size: 16px;
+
+  --progress: 100%;
+  background: linear-gradient(
+    to right,
+    rgb(66, 153, 225),
+    rgb(66, 153, 225) var(--progress),
+    rgb(129, 129, 129) var(--progress)
+  );
+  transition: background 0.3s linear;
+}

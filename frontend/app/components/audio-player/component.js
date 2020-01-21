@@ -12,6 +12,11 @@ export default Component.extend({
     this.set('playAudio', this.playAudio.bind(this));
     this.audio.register(this);
   },
+  didInsertElement() {
+    this._super(...arguments);
+    const button = this.element.querySelector('button');
+    this.set('setButtonProperty', button.style.setProperty.bind(button.style));
+  },
   async didReceiveAttrs() {
     this._super(...arguments);
     await this.setAudioElements();
@@ -22,10 +27,17 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this.set('audioElements', []);
+    this.animationInterval && clearInterval(this.animationInterval);
   },
   autoplay: false,
   filesToPlay: computed('audioFileUrl', 'audioFileUrl.[]', function() {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
+  }),
+  audioElementsLength: computed('audioElements', function() {
+    return this.audioElements.reduce((totalLenght, audioElement) => {
+      totalLenght = totalLenght + audioElement.duration;
+      return totalLenght;
+    }, 0);
   }),
   async setAudioElements() {
     this.set(
@@ -70,9 +82,13 @@ export default Component.extend({
             return result;
           }, false),
       );
+      if (!this.isPlaying) {
+        this.audioElements.forEach((element) => (element.currentTime = 0));
+      }
     }
   },
   async playAudio() {
+    this.createAnimationInterval();
     /* eslint-disable no-unused-vars */
     for (let audioElement of this.audioElements) {
       if (!this.isDestroyed && !this.isDestroying) {
@@ -84,4 +100,35 @@ export default Component.extend({
       ? this.set('previousPlayedUrls', this.audioFileUrl)
       : '';
   },
+  createAnimationInterval() {
+    return createAnimationInterval.apply(this);
+  },
+  setProgress(progress) {
+    window.requestAnimationFrame(() =>
+      this.setButtonProperty('--progress', progress + '%'),
+    );
+    this.set('audioPlayingProgress', progress);
+    if (progress >= 99) {
+      this.set('audioPlayingProgress', 100);
+      clearInterval(this.animationInterval);
+    }
+  },
 });
+
+export function createAnimationInterval() {
+  this.set(
+    'animationInterval',
+    setInterval(() => {
+      const playedTime = this.audioElements.reduce(
+        (currentPlayedTime, audioElement) => {
+          currentPlayedTime = currentPlayedTime + audioElement.currentTime;
+          return currentPlayedTime;
+        },
+        0,
+      );
+      !this.isDestroyed && !this.isDestroying
+        ? this.setProgress((playedTime * 100) / this.audioElementsLength)
+        : '';
+    }, 16),
+  );
+}
