@@ -22,8 +22,11 @@ export default Component.extend({
   timer: null,
   displayValue: computed('countedSeconds', function() {
     const mins = Math.floor(this.countedSeconds / 60);
+    const hours = Math.floor(mins / 60);
     const seconds = this.countedSeconds % 60;
-    return `${leadingZero(mins)}:${leadingZero(seconds)}`;
+    return `${
+      hours ? leadingZero(hours) + ':' : ''
+    }${leadingZero(mins - hours * 60)}:${leadingZero(seconds)}`;
   }),
 
   updateSecondsCount() {

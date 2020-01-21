@@ -6,7 +6,7 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | timer', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('has mm:ss format', async function(assert) {
+  test('supports mm:ss format', async function(assert) {
     this.set('countedSeconds', 67);
     this.set('startTimer', function() {});
     await render(
@@ -14,6 +14,16 @@ module('Integration | Component | timer', function(hooks) {
     );
 
     assert.dom('[data-test-timer-display-value]').hasText('01:07');
+  });
+
+  test('supports hh:mm:ss format', async function(assert) {
+    this.set('countedSeconds', 3705);
+    this.set('startTimer', function() {});
+    await render(
+      hbs`<Timer @countedSeconds={{this.countedSeconds}} @startTimer={{this.startTimer}}/>`,
+    );
+
+    assert.dom('[data-test-timer-display-value]').hasText('01:01:45');
   });
 
   test('continues with time from studying-timer', async function(assert) {
