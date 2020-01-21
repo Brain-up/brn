@@ -32,7 +32,7 @@ module('Integration | Component | timer', function(hooks) {
   });
 
   test('pauses on idle', async function(assert) {
-    await render(hbs`<Timer @idleTime={{2}}/>`);
+    await render(hbs`<Timer @idleTimeout={{2}}/>`);
 
     assert
       .dom('[data-test-timer-wrapper]')

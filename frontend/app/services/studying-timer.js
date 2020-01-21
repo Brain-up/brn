@@ -35,7 +35,7 @@ export default Service.extend({
     this.set(
       'idleWatcher',
       new IdleJs({
-        idle: player.timerInstance.idleTime || config.idleTime,
+        idle: player.timerInstance.idleTimeout || config.idleTimeout,
         onIdle: function() {
           player.pause();
         },
