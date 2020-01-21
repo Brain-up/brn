@@ -24,9 +24,14 @@ class ExerciseService(
             .orElseThrow { NoDataFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
-    fun findExerciseEntityById(id: Long): Exercise {
-        return exerciseRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("Exercise entity was not found by id $id") }
+    fun findExerciseEntityByName(name: String): Exercise {
+        return exerciseRepository.findExerciseByName(name)
+            .orElseThrow { EntityNotFoundException("Exercise entity was not found by name $name") }
+    }
+
+    fun findExerciseByNameAndLevel(name: String, level: Short): Exercise {
+        return exerciseRepository.findExerciseByNameAndLevel(name, level)
+            .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
     }
 
     fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
@@ -41,5 +46,17 @@ class ExerciseService(
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
         val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
         return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
+    }
+
+    fun save(exercise: Exercise): Exercise {
+        return exerciseRepository.save(exercise)
+    }
+
+    fun createExercise(name: String): Exercise {
+        val exercise = Exercise()
+        exercise.name = name
+        exerciseRepository.save(exercise)
+
+        return exercise
     }
 }

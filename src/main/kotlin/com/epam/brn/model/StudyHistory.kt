@@ -2,23 +2,21 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.StudyHistoryDto
 import java.time.LocalDateTime
-import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
+import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    uniqueConstraints = [
-        UniqueConstraint(columnNames = ["user_id", "exercise_id"])
-    ],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "exercise_id"])],
     indexes = [Index(name = "study_history_ix_user_exercise", columnList = "user_id,exercise_id")]
 )
 data class StudyHistory(
@@ -30,23 +28,22 @@ data class StudyHistory(
         allocationSize = 50
     )
     val id: Long? = null,
-    @OneToOne(cascade = [(CascadeType.ALL)], optional = false)
-    @JoinColumn(name = "user_id")
-    var userAccount: UserAccount?,
-    @OneToOne(cascade = [(CascadeType.ALL)], optional = false)
-    @JoinColumn(name = "exercise_id")
-    var exercise: Exercise? = null,
-    var startTime: LocalDateTime?,
-    var endTime: LocalDateTime?,
-    var doneTasksCount: Short?,
-    var successTasksCount: Short?,
-    var repetitionCount: Short?
-) {
-    constructor() : this(null, null, null, null, null, null, null, null)
 
-    override fun toString(): String {
-        return "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, doneTasksCount=$doneTasksCount, successTasksCount=$successTasksCount, repetitionCount=$repetitionCount)"
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var userAccount: UserAccount,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exercise_id")
+    var exercise: Exercise,
+
+    var startTime: LocalDateTime? = null,
+    var endTime: LocalDateTime? = null,
+    var tasksCount: Short? = null,
+    var repetitionIndex: Float? = null
+) {
+    override fun toString() =
+        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
@@ -54,8 +51,7 @@ data class StudyHistory(
         exerciseId = this.exercise?.id,
         startTime = this.startTime,
         endTime = this.endTime,
-        doneTasksCount = this.doneTasksCount,
-        successTasksCount = this.successTasksCount,
-        repetitionCount = this.repetitionCount
+        tasksCount = this.tasksCount,
+        repetitionIndex = this.repetitionIndex
     )
 }

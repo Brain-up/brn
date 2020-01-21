@@ -1,0 +1,9 @@
+<div class="exercise-container">
+  {{#if (not this.model.hideExerciseNavigation)}}
+    <ExerciseNavigation
+      class="exercise-navigation"
+      @tasks={{this.model.tasks}}
+    />
+  {{/if}}
+  {{outlet}}
+</div>

@@ -1,14 +1,15 @@
 package com.epam.brn.dto
 
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.epam.brn.constant.ExerciseTypeEnum
 
 data class ExerciseDto(
+    var seriesId: Long?,
     var id: Long?,
     var name: String?,
     var description: String?,
-    var level: Short? = 0,
-    @JsonIgnore
-    var seriesId: Long?,
-    var available: Boolean? = null,
-    var tasks: MutableSet<Long?> = HashSet()
+    var level: Int? = 0,
+    var exerciseType: ExerciseTypeEnum,
+    var template: String? = "",
+    var available: Boolean = true,
+    var tasks: MutableSet<ShortTaskDto> = HashSet()
 )

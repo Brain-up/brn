@@ -1,0 +1,19 @@
+<button
+  data-test-task-answer
+  data-test-task-answer-option={{@word}}
+  disabled={{@disabled}}
+  onclick={{@clickAction}}
+  class="bg-transparent border
+    border-blue-500 rounded text-blue-700 mb-2
+    {{if @isSelected "selected"}}
+
+    {{if @disabled "opacity-50"}}"
+>
+  {{#if (and @checked @isSelected)}}
+    {{#if @isCorrect}}
+      <FaIcon class="correctness-indicator right" @icon="check-circle" />
+    {{else}}
+      <FaIcon class="correctness-indicator wrong" @icon="times-circle" />
+    {{/if}}
+  {{/if}}
+</button>

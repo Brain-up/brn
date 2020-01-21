@@ -29,4 +29,5 @@ export default function() {
   this.resource('series');
   this.resource('exercises');
   this.resource('tasks');
+  this.resource('study-history')
 }

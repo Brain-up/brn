@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import pageObject from './test-support/page-object';
-import { createStubTasks } from './test-support/helpers';
+import { createStubTasks } from 'brn/tests/test-support/general-helpers';
 
 module('Integration | Component | exercise-navigation', function(hooks) {
   setupRenderingTest(hooks);

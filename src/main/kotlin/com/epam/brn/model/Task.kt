@@ -1,18 +1,20 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.TaskDto
+import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.dto.TaskDtoForSingleWords
+import com.epam.brn.dto.TaskDtoForWordsSequences
+import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
-import javax.persistence.SequenceGenerator
-import javax.persistence.CascadeType
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
-import javax.persistence.ManyToMany
-import javax.persistence.JoinTable
-import javax.persistence.FetchType
+import javax.persistence.SequenceGenerator
 
 @Entity
 data class Task(
@@ -40,25 +42,33 @@ data class Task(
     )
     var answerOptions: MutableSet<Resource> = hashSetOf()
 ) {
-    fun toDto() = TaskDto(
+    fun toSingleWordsDto() = TaskDtoForSingleWords(
         id = id,
+        exerciseType = ExerciseTypeEnum.SINGLE_WORDS,
         name = name,
         serialNumber = serialNumber,
         correctAnswer = correctAnswer?.toDto(),
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toMutableSet()
     )
+
+    fun toSequenceWordsDto(template: String? = "") = TaskDtoForWordsSequences(
+        id = id,
+        exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
+        template = template
+    )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as Task
-
         if (id != other.id) return false
         if (name != other.name) return false
         if (serialNumber != other.serialNumber) return false
         if (exercise != other.exercise) return false
         if (correctAnswer != other.correctAnswer) return false
-
         return true
     }
 
@@ -71,7 +81,5 @@ data class Task(
         return result
     }
 
-    override fun toString(): String {
-        return "Task(id=$id, name=$name, serialNumber=$serialNumber)"
-    }
+    override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
 }

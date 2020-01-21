@@ -1,46 +1,29 @@
 import Component from '@ember/component';
-import { A } from '@ember/array';
-import { inject } from '@ember/service';
-import deepEqual from 'brn/utils/deep-equal';
+import { computed } from '@ember/object';
+import { dasherize } from '@ember/string';
+import { or, not } from 'ember-awesome-macros';
+import { inject as service } from '@ember/service';
 
-export default class TaskPlayerComponent extends Component {
-  shuffledWords = null;
-  lastAnswer = null;
-
-  didReceiveAttrs() {
-    this.shuffle();
-    this.set('lastAnswer', null);
-  }
-
-  shuffle() {
-    this.set('shuffledWords', A(shuffleArray(this.task.words)));
-    this.notifyPropertyChange('shuffledWords');
-  }
-
-  onRightAnswer() {}
-
-  handleSubmit(word) {
-    this.set('lastAnswer', word);
-    if (word !== this.task.word) {
-      const currentWordsOrder = Array.from(this.shuffledWords);
-      this.task.set('nextAttempt', true);
-      while (deepEqual(currentWordsOrder, this.shuffledWords)) {
-        this.shuffle();
-      }
-    } else {
-      this.task.savePassed();
-      this.task.set('nextAttempt', false);
-    }
-  }
-}
-({
-  router: inject(),
+export default Component.extend({
+  init() {
+    this._super(...arguments);
+    this.set('justEnteredTask', true);
+  },
+  audio: service(),
+  studyingTimer: service(),
+  task: null,
+  componentType: computed('task.exerciseType', function() {
+    return `task-player/${dasherize(this.task.exerciseType)}`;
+  }),
+  disableAnswers: computed('audio.isPlaying', 'disableAudioPlayer', function() {
+    return this.audio.isPlaying || this.disableAudioPlayer;
+  }),
+  disableAudioPlayer: or('task.pauseExecution', not('studyingTimer.isStarted')),
+  onRightAnswer() {},
+  afterCompleted() {},
+  async startTask() {
+    this.studyingTimer.runTimer();
+    this.task.exercise.content.trackTime('start');
+    this.set('justEnteredTask', false);
+  },
 });
-
-function shuffleArray(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}

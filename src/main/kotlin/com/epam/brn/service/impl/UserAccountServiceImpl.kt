@@ -21,6 +21,5 @@ class UserAccountServiceImpl(private val userAccountRepository: UserAccountRepos
                 log.warn("User $name is not found")
                 UsernameNotFoundException("User $name is not found")
             }
-
     }
 }

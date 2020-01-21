@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnParams.USER_ID
 import com.epam.brn.constant.BrnPath
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -13,6 +14,8 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
+import java.time.LocalDate
+import java.time.LocalDateTime
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -29,8 +32,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -116,9 +117,8 @@ class ExercisesControllerIT {
                 exercise = existingExercise,
                 endTime = LocalDateTime.now(),
                 startTime = LocalDateTime.now(),
-                doneTasksCount = 2,
-                successTasksCount = 1,
-                repetitionCount = 3
+                tasksCount = 2,
+                repetitionIndex = 1f
             )
         )
     }
@@ -161,7 +161,8 @@ class ExercisesControllerIT {
                 description = toString(),
                 series = series,
                 level = 0,
-                name = exerciseName
+                name = exerciseName,
+                exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
             )
         )
     }

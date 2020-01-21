@@ -6,7 +6,6 @@ mediaType:
   - application/json
 
 # GROUP ----------------------------
-
 /groups:
   get:
     responses:
@@ -21,7 +20,6 @@ mediaType:
             example: !include samples/group.json
 
 # SERIES ----------------------------
-
 /series:
   get:
     queryParameters:
@@ -42,7 +40,6 @@ mediaType:
             example: !include samples/series.json
 
 # EXERCISE ----------------------------
-
 /exercises:
   get:
     queryParameters:
@@ -59,13 +56,15 @@ mediaType:
     responses:
       200:
         body:
-          example: !include samples/exercises.json
+          example1: !include samples/exercises_for_sequence_words_series.json
+          example2: !include samples/exercises_for_single_words_series.json
   /{exerciseId}:
     get:
       responses:
         200:
           body:
-            example: !include samples/exercises.json
+            example1: !include samples/exercise_for_single_words_series.json
+            example2: !include samples/exercise_for_sequence_words_series.json
 # TASK ----------------------------
 
 /tasks:
@@ -82,7 +81,8 @@ mediaType:
       200:
         body:
           application/json:
-            example: !include samples/tasks_by_exercise.json
+            example_for_single_words_series: !include samples/tasks_by_exercise_for_single_words_series.json
+            example_for_words_sequences_serias: !include samples/tasks_by_exercise_for_words_sequences_serias.json
   /{taskId}:
     get:
       description: Get a task by id
@@ -90,18 +90,52 @@ mediaType:
         200:
           body:
             application/json:
-              example: !include samples/task_by_id.json
+              example_for_single_words_series: !include samples/task_by_id_for_single_words_series.json
+              example_for_words_sequences_serias: !include samples/task_by_id_for_words_sequences_serias.json
 
+
+# STUDY_HISTORY ----------------------
+/study-history:
+  post:
+  description: Save history of exercises done by user
+    body:
+      application/json:
+        example: !include samples/study_history.json
+    responses:
+      201:
+        example: !include samples/study_history_response.json.json
 
 # LOAD FILES ----------------------
-
-/files:
+/admin/loadFile:
   post:
     body:
       multipart/form-data:
         properties:
           taskFile:
             description: "File with tasks to be uploaded"
+            format: "exerciseId orderNumber word audioFileName pictureFileName words wordType
+                     1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
+            required: true
+            type: file
+    responses:
+      201:
+
+/admin/loadTasksFile:
+  post:
+    body:
+      multipart/form-data:
+        properties:
+          seriesId:
+            description: "ID of the series created exercises belongs to"
+            required: true
+            type: string
+            example: "42"
+          taskFile:
+            description: "File with tasks to be uploaded"
+            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
+                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
+            formatForSeries2: "orderNumber words
+                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
             required: true
             type: file
     responses:

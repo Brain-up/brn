@@ -7,6 +7,7 @@ object BrnPath {
     const val SERIES = "/series"
     const val EXERCISES = "/exercises"
     const val TASKS = "/tasks"
-    const val STUDY_HISTORIES = "/study-histories"
+    const val STUDY_HISTORIES = "/study-history"
     const val FILES = "/files"
+    const val LOAD_TASKS_FILE = "/loadTasksFile"
 }

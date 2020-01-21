@@ -1,9 +1,9 @@
 package com.epam.brn.controller.advice
 
+import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.ErrorResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
-import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.NoDataFoundException
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus

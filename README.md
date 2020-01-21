@@ -19,7 +19,7 @@ Most importantly being an open source project you can show your work in it to an
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
-- Back-end: Java/Kotlin + Spring boot. Rest api as integration layer.
+- Back-end: KOTLIN/java + Spring boot. Rest api as integration layer.
 - Front-end : TBD - Ember, Angular.
 - DB: Postgres in production, H2 for testing.
 
@@ -31,15 +31,15 @@ our project skype chat: https://join.skype.com/jxSiWkgwT2x1
 # GETTING STARTED!
 ## RESOURCES
 ### DOCUMENTATION
-https://github.com/Brain-up/brn/wiki
+https://github.com/Brain-up/brn/wiki ||
 https://kb.epam.com/display/EPMLABSBRN/Brn+project+documentation
 ### JIRA/ISSUSES
-https://github.com/Brain-up/brn/issues
+https://github.com/Brain-up/brn/issues ||
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
 ### JENKINS (only for epamers now)
 https://kb.epam.com/pages/viewpage.action?pageId=885110636
 ### CODING STANDARDS
-https://github.com/Brain-up/brn/wiki/Coding-Standards
+https://github.com/Brain-up/brn/wiki/Coding-Standards ||
 https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
@@ -119,7 +119,7 @@ docker stop idContainer for stop running container
 docker rm $(docker ps -a -q) Remove all stopped containers
 
 ## DEVELOPMENT PROCESS
-1. Get a task assigned in JIRA.
+1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused with @ElenaSpb.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
 4. Create pull request with task name and description about what was done. 
@@ -129,3 +129,4 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 
 ### Thank you very much for your support!
 
+our application is run on http://ecse005003f1.epam.com/ && http://31.184.253.199/

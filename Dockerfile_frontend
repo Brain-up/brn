@@ -1,4 +1,4 @@
-FROM node:10 as build-front
+FROM node:13 as build-front
 
 COPY frontend/ /build_app/
 

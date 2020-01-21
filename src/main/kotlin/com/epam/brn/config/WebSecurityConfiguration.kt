@@ -23,7 +23,6 @@ class WebSecurityConfiguration(
             .passwordEncoder(passwordEncoder())
     }
 
-
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
@@ -40,6 +39,4 @@ class WebSecurityConfiguration(
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
-
-
 }

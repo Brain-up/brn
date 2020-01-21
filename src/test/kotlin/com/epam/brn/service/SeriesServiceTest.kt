@@ -4,6 +4,7 @@ import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.nhaarman.mockito_kotlin.verify
+import java.util.Optional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -13,7 +14,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesServiceTest {
@@ -44,7 +44,7 @@ internal class SeriesServiceTest {
         val series = mock(Series::class.java)
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.of(series))
         // WHEN
-        seriesService.findSeriesForId(seriesId)
+        seriesService.findSeriesDtoForId(seriesId)
         // THEN
         verify(seriesRepository).findById(seriesId)
     }
@@ -55,7 +55,7 @@ internal class SeriesServiceTest {
         val seriesId: Long = 1
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.empty())
         // WHEN
-        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesForId(seriesId) }
+        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
         // THEN
         verify(seriesRepository).findById(seriesId)
     }

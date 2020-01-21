@@ -1,0 +1,14 @@
+footer {
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 12px;
+}
+
+a {
+  display: block;
+  max-height: 100%;
+  max-width: 70px;
+  overflow: hidden;
+}
