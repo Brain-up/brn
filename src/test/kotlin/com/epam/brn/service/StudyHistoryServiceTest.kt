@@ -76,6 +76,7 @@ internal class StudyHistoryServiceTest {
             exerciseId = 1L
         )
         val existingStudyHistoryEntity = Mockito.mock(StudyHistory::class.java)
+        `when`(existingStudyHistoryEntity.toDto()).thenReturn(dto)
         `when`(
             studyHistoryRepository.findByUserAccountIdAndExerciseId(dto.userId, dto.exerciseId)
         ).thenReturn(Optional.of(existingStudyHistoryEntity))
