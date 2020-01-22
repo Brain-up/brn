@@ -94,7 +94,7 @@ export default Component.extend({
   },
 
   async playAudio() {
-    this.startAnimationTask.perform({ startAnimation: true });
+    this.updateProgressTask.perform();
     /* eslint-disable no-unused-vars */
     for (let audioElement of this.audioElements) {
       if (!this.isDestroyed && !this.isDestroying) {
@@ -117,17 +117,11 @@ export default Component.extend({
     }
   },
 
-  startAnimationTask: task(function*(options = { startAnimation: false }) {
-    if (options.startAnimation) {
-      this.set('stopAnimation', false);
-    }
-
+  updateProgressTask: task(function*() {
     this.defineProgressValue(this);
     yield timeout(16);
 
-    if (!this.stopAnimation) {
-      this.startAnimationTask.perform();
-    }
+    this.updateProgressTask.perform();
   }).enqueue(),
 
   defineProgressValue() {
@@ -150,7 +144,7 @@ export default Component.extend({
     this.set('audioPlayingProgress', progress);
     if (progress >= 99 || Ember.testing) {
       this.set('audioPlayingProgress', 100);
-      this.set('stopAnimation', true);
+      this.updateProgressTask.cancelAll();
     }
   },
 });
