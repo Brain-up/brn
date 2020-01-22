@@ -25,9 +25,9 @@ export default Component.extend({
   audio: inject(),
   uncompletedTasks: computed(
     'tasksCopy',
-    'tasksCopy.@each.isCompleted',
+    'tasksCopy.@each.completedInCurrentCycle',
     function() {
-      return this.tasksCopy.filterBy('isCompleted', false);
+      return this.tasksCopy.filterBy('completedInCurrentCycle', false);
     },
   ),
   firstUncompletedTask: reads('uncompletedTasks.firstObject'),
@@ -48,7 +48,7 @@ export default Component.extend({
     this.startTask();
   },
   markCompleted(task) {
-    set(task, 'isCompleted', true);
+    set(task, 'completedInCurrentCycle', true);
     set(task, 'nextAttempt', false);
   },
   markNextAttempt(task) {
@@ -63,14 +63,14 @@ export default Component.extend({
   },
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
-      .filterBy('isCompleted', true)
+      .filterBy('completedInCurrentCycle', true)
       .mapBy('order');
     const tasksCopy = deepCopy(this.task.tasksToSolve).map((copy) => {
-      const isCompleted = completedOrders.includes(copy.order);
+      const completedInCurrentCycle = completedOrders.includes(copy.order);
       const copyEquivalent = this.tasksCopy.findBy('order', copy.order);
       return {
         ...copy,
-        isCompleted,
+        completedInCurrentCycle,
         nextAttempt: copyEquivalent && !!copyEquivalent.nextAttempt,
         canInteract: true,
       };

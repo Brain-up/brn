@@ -3,7 +3,7 @@ import deepCopy from 'brn/utils/deep-copy';
 
 export function completeByOrder(items, order) {
   const target = items.findBy('order', order);
-  set(target, 'isCompleted', true);
+  set(target, 'completedInCurrentCycle', true);
 }
 
 export function getLongItemsList() {
