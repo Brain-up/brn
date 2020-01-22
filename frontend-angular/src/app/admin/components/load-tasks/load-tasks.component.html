@@ -18,5 +18,5 @@
     </mat-select>
     <mat-error *ngIf="tasksGroup.controls.series.hasError('required')">Field must not be empty</mat-error>
   </mat-form-field>
-  <app-upload-file [disabled]="!tasksGroup.controls.series.valid"></app-upload-file>
+  <app-upload-file [disabled]="!tasksGroup.controls.series.valid" (filesAdded)="onFilesAdded($event)"></app-upload-file>
 </form>
