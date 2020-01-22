@@ -1,14 +1,19 @@
 package com.epam.brn.controller
 
+import com.epam.brn.constant.BrnParams
 import com.epam.brn.constant.BrnPath
-import com.epam.brn.dto.UserData
-import com.epam.brn.model.UserDetails
-import com.epam.brn.service.UserDetailsService
+import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -16,27 +21,18 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(BrnPath.USERS)
 @Api(value = BrnPath.USERS, description = "Contains actions over user details and accounts")
-class UserDetailController(@Autowired val userDetailService: UserDetailsService) {
+class UserDetailController(@Autowired val userAccountService: UserAccountService) {
 
-    @GetMapping("/getLevel")
-    @ApiOperation("Get level for user")
-    fun getLevel(@RequestParam(value = "userId", defaultValue = "0") userId: String): UserData {
-        val level = userDetailService.getLevel(userId)
-        return UserData(userId, level)
+    @GetMapping
+    @ApiOperation("Get user by username")
+    fun findUserByName(@RequestParam(BrnParams.USER_NAME) userName: String): ResponseEntity<BaseResponseDto> {
+        return ResponseEntity.ok()
+            .body(BaseResponseDto(data = listOf(userAccountService.findUserByName(userName))))
     }
 
-    @GetMapping("/findUser")
-    fun findUserByName(@RequestParam(value = "name", defaultValue = "0") name: String): UserDetails? {
-        val user = userDetailService.findUserDetails(name)
-        return user
-    }
-
-    @PostMapping("/addUser")
-    fun addUser(
-        @RequestParam("name") name: String,
-        @RequestParam("email") email: String,
-        @RequestParam("phone") phone: String
-    ) {
-        // Not implemented
+    @PostMapping
+    fun addUser(@Validated @RequestBody userAccountDto: UserAccountDto): ResponseEntity<UserAccountDto> {
+        // TODO implement adding new user and update com.epam.brn.dto.UserAccountDto
+        return ResponseEntity.status(HttpStatus.CREATED).body(null)
     }
 }

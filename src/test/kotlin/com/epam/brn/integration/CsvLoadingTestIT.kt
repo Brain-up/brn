@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
@@ -31,8 +32,9 @@ class CsvLoadingTestIT {
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
-            csvParserService: CSVParserService
-        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, csvParserService)
+            csvParserService: CSVParserService,
+            passwordEncoder: PasswordEncoder
+        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, csvParserService, passwordEncoder)
     }
 
     @Autowired
