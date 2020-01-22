@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.model.Authority
@@ -81,7 +82,7 @@ class InitialDataLoader(
         val password = passwordEncoder.encode("admin")
         val userAccount =
             UserAccount(userName = "admin", password = password, email = "admin@admin.com", active = true)
-        userAccount.authoritySet.addAll(setOf(Authority(authority = "ROLE_ADMIN", userAccount = userAccount)))
+        userAccount.authoritySet.addAll(setOf(Authority(authority = AUTH_ROLE_ADMIN, userAccount = userAccount)))
         userAccountRepository.save(userAccount)
     }
 

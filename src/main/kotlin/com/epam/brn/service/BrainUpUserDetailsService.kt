@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
-@Service("customUserDetailService")
-class CustomUserDetailsService(private val userAccountRepository: UserAccountRepository) : UserDetailsService {
+@Service("brainUpUserDetailService")
+class BrainUpUserDetailsService(private val userAccountRepository: UserAccountRepository) : UserDetailsService {
     override fun loadUserByUsername(userName: String): UserDetails {
         return userAccountRepository.findByUserName(userName)
             .map { CustomUserDetails(it) }
