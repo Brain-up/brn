@@ -1,7 +1,7 @@
 import { timeout } from 'ember-concurrency';
-import ENV from 'brn/config/environment';
+import Ember from 'ember';
 
 export default async function customTimeout(ms) {
-  const delay = ENV.environment !== 'test' ? ms : 1;
+  const delay = Ember.testing ? 1 : ms;
   return await timeout(delay);
 }

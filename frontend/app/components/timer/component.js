@@ -8,12 +8,15 @@ import { later, cancel } from '@ember/runloop';
 export default Component.extend({
   init() {
     this._super(...arguments);
-    this.studyingTimer.register(this);
-    this.set('isStarted', false);
   },
   willDestroyElement() {
     this._super(...arguments);
     this.stopTimer();
+  },
+  didInsertElement() {
+    this._super(...arguments);
+    this.studyingTimer.register(this);
+    this.set('isStarted', false);
   },
   studyingTimer: inject(),
   countedSeconds: reads('studyingTimer.countedSeconds'),
