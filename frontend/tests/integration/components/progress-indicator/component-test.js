@@ -55,7 +55,7 @@ module('Integration | Component | progress-indicator', function(hooks) {
     );
   });
 
-  test('shades completed items and those in progress', async function(assert) {
+  test('shades items except of completed items and the one that is currently in progress', async function(assert) {
     assert
       .dom('[data-test-progress-indicator-item-number="3"] span')
       .hasAttribute('data-test-shaded-progress-circle-element');
