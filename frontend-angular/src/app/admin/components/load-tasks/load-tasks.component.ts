@@ -1,11 +1,15 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, Self} from '@angular/core';
 import {AdminService} from '../../services/admin.service';
-import {iif, Observable, of} from 'rxjs';
+import {EMPTY, forkJoin, iif, noop, Observable, of} from 'rxjs';
 import {Group, Series} from '../../model/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {switchMap, tap} from 'rxjs/operators';
+import {catchError, switchMap, tap} from 'rxjs/operators';
 import {UPLOAD_DESTINATION, UploadService} from '../../../shared/upload-file/service/upload.service';
 import {untilDestroyed} from 'ngx-take-until-destroy';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {pipe} from 'fp-ts/lib/pipeable';
+import {fold, fromNullable} from 'fp-ts/lib/Option';
+import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
 
 @Component({
   selector: 'app-load-tasks',
@@ -14,7 +18,7 @@ import {untilDestroyed} from 'ngx-take-until-destroy';
   providers: [
     {
       provide: UPLOAD_DESTINATION,
-      useValue: '/loadTasks'
+      useValue: 'api/loadTasksFile'
     },
     UploadService
   ],
@@ -27,7 +31,8 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
 
   constructor(private adminAPI: AdminService,
               private fb: FormBuilder,
-              @Self() private uploadFileService: UploadService) {
+              @Self() private uploadFileService: UploadService,
+              private snackbar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -52,4 +57,22 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
+  onFilesAdded(files: Set<File>) {
+    pipe(
+      fromNullable(this.uploadFileService.upload(files, {seriesId: this.tasksGroup.controls.series.value.id})),
+      fold(noop, (fileInfo) => this.processUploadResults(fileInfo))
+    );
+  }
+
+  private processUploadResults(fileInfo: { [key: string]: { progress: Observable<number> } }) {
+    forkJoin(Object.values(fileInfo).map(({progress}) => progress))
+      .pipe(
+        tap(showHappySnackbar.bind(null, this.snackbar, `${Object.keys(fileInfo).join(',')} was successfully uploaded`)),
+        catchError(err => {
+          showSadSnackbar.bind(null, this.snackbar)(err);
+          return EMPTY;
+        })
+      )
+      .subscribe();
+  }
 }

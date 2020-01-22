@@ -14,10 +14,10 @@ export class UploadService {
               private httpClient: HttpClient) {
   }
 
-  upload(files: Set<File>): { [key: string]: { progress: Observable<number> } } {
+  upload(files: Set<File>, params?: Record<string, any>): { [key: string]: { progress: Observable<number> } } {
     return pipe(
       fromNullable(this.uploadDestination),
-      map(upload(files)(this.httpClient)),
+      map(upload(files, params)(this.httpClient)),
       getOrElse(null)
     );
   }
