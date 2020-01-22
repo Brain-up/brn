@@ -1,9 +1,11 @@
+import Ember from 'ember';
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { isArray } from '@ember/array';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import customTimeout from '../../utils/custom-timeout';
+import { timeout, task } from 'ember-concurrency';
 
 export default Component.extend({
   audio: service(),
@@ -39,6 +41,7 @@ export default Component.extend({
       return totalLenght;
     }, 0);
   }),
+
   async setAudioElements() {
     this.set(
       'audioElements',
@@ -61,6 +64,7 @@ export default Component.extend({
       ),
     );
   },
+
   isPlayingElement(element) {
     return (
       !element.paused &&
@@ -68,6 +72,7 @@ export default Component.extend({
       !element.ended
     );
   },
+
   updateIsPlaying(actionElement) {
     if (!this.isDestroyed && !this.isDestroying) {
       set(
@@ -87,48 +92,65 @@ export default Component.extend({
       }
     }
   },
+
   async playAudio() {
-    this.createAnimationInterval();
+    this.startAnimationTask.perform({ startAnimation: true });
     /* eslint-disable no-unused-vars */
     for (let audioElement of this.audioElements) {
       if (!this.isDestroyed && !this.isDestroying) {
-        audioElement.play();
+        if (Ember.testing) {
+          this.set('isPlaying', true);
+        } else {
+          audioElement.play();
+        }
+
         await customTimeout(audioElement.duration * 1000);
       }
     }
+
     !this.isDestroyed && !this.isDestroying
       ? this.set('previousPlayedUrls', this.audioFileUrl)
       : '';
+
+    if (Ember.testing) {
+      this.set('isPlaying', false);
+    }
   },
-  createAnimationInterval() {
-    this.set(
-      'animationInterval',
-      setInterval(() => {
-        defineProgressValue.apply(this);
-      }, 16),
+
+  startAnimationTask: task(function*(options = { startAnimation: false }) {
+    if (options.startAnimation) {
+      this.set('stopAnimation', false);
+    }
+
+    this.defineProgressValue(this);
+    yield timeout(16);
+
+    if (!this.stopAnimation) {
+      this.startAnimationTask.perform();
+    }
+  }).enqueue(),
+
+  defineProgressValue() {
+    const playedTime = this.audioElements.reduce(
+      (currentPlayedTime, audioElement) => {
+        currentPlayedTime = currentPlayedTime + audioElement.currentTime;
+        return currentPlayedTime;
+      },
+      0,
     );
+    !this.isDestroyed && !this.isDestroying
+      ? this.setProgress((playedTime * 100) / this.audioElementsLength)
+      : '';
   },
+
   setProgress(progress) {
     window.requestAnimationFrame(() =>
       this.setButtonProperty('--progress', progress + '%'),
     );
     this.set('audioPlayingProgress', progress);
-    if (progress >= 99) {
+    if (progress >= 99 || Ember.testing) {
       this.set('audioPlayingProgress', 100);
-      clearInterval(this.animationInterval);
+      this.set('stopAnimation', true);
     }
   },
 });
-
-export function defineProgressValue() {
-  const playedTime = this.audioElements.reduce(
-    (currentPlayedTime, audioElement) => {
-      currentPlayedTime = currentPlayedTime + audioElement.currentTime;
-      return currentPlayedTime;
-    },
-    0,
-  );
-  !this.isDestroyed && !this.isDestroying
-    ? this.setProgress((playedTime * 100) / this.audioElementsLength)
-    : '';
-}

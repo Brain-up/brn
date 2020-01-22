@@ -8,13 +8,8 @@ import {
   setupAfterPageVisit,
 } from './test-support/helpers';
 import { settled } from '@ember/test-helpers';
-import AudioPlayer from 'brn/components/audio-player/component';
 import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
-
-AudioPlayer.reopen({
-  async playAudio() {},
-});
 
 module('Acceptance | tasks flow', function(hooks) {
   setupApplicationTest(hooks);
