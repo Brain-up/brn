@@ -14,11 +14,6 @@ export default Component.extend({
     this.set('playAudio', this.playAudio.bind(this));
     this.audio.register(this);
   },
-  didInsertElement() {
-    this._super(...arguments);
-    const button = this.element.querySelector('button');
-    this.set('setButtonProperty', button.style.setProperty.bind(button.style));
-  },
   async didReceiveAttrs() {
     this._super(...arguments);
     await this.setAudioElements();
@@ -139,12 +134,14 @@ export default Component.extend({
 
   setProgress(progress) {
     window.requestAnimationFrame(() =>
-      this.setButtonProperty('--progress', progress + '%'),
+      this.buttonElement.style.setProperty('--progress', `${progress}%`),
     );
     this.set('audioPlayingProgress', progress);
-    if (progress >= 99 || Ember.testing) {
-      this.set('audioPlayingProgress', 100);
+
+    if (progress === 100) {
       this.updateProgressTask.cancelAll();
+    } else if (progress >= 99 || Ember.testing) {
+      this.setProgress(100);
     }
   },
 });
