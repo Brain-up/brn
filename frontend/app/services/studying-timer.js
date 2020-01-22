@@ -15,6 +15,7 @@ export default Service.extend({
     this.startIdleWatcher();
   },
   runTimer() {
+    this.resume();
     return this.timerInstance.runTimer();
   },
   setTime(seconds) {
