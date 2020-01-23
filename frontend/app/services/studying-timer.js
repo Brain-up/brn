@@ -32,22 +32,23 @@ export default Service.extend({
   },
   startIdleWatcher() {
     const player = this;
+    const { timerInstance } = player;
     /* eslint-disable no-undef */
     this.set(
       'idleWatcher',
       new IdleJs({
-        idle: player.timerInstance.idleTimeout || config.idleTimeout,
+        idle: timerInstance.idleTimeout || config.idleTimeout,
         onIdle: function() {
           player.pause();
         },
         onActive: function() {
-          player.timerInstance.runTimer();
+          timerInstance.relaunchStartedTimer();
         },
         onHide: function() {
           player.pause();
         },
         onShow: function() {
-          player.timerInstance.runTimer();
+          timerInstance.relaunchStartedTimer();
         },
       }),
     );
