@@ -82,7 +82,7 @@ export default Component.extend({
             return result;
           }, false),
       );
-      if (!this.isPlaying) {
+      if (!this.isPlaying && this.audioPlayingProgress === 100) {
         this.audioElements.forEach((element) => (element.currentTime = 0));
       }
     }
