@@ -3,6 +3,7 @@ const { attr, hasMany, belongsTo } = DS;
 import CompletionDependent from './completion-dependent';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
+import arrayPreviousItems from 'brn/utils/array-previous-items';
 
 export default class Exercise extends CompletionDependent.extend({
   name: attr('string'),
@@ -19,6 +20,12 @@ export default class Exercise extends CompletionDependent.extend({
   sortedTasks: reads('sortedChildren'),
   hideExerciseNavigation: computed(function() {
     return this.exerciseType === 'WORDS_SEQUENCES';
+  }),
+  previousSiblings: computed('series.groupedByNameExercises', function() {
+    return arrayPreviousItems(
+      this,
+      this.get('series.groupedByNameExercises')[this.name],
+    );
   }),
   isCompleted: computed(
     'tasks.@each.isCompleted',

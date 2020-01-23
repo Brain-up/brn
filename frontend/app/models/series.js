@@ -14,4 +14,15 @@ export default class Series extends DS.Model.extend({
     return this.exercises.sortBy('order');
   }),
   sortedChildren: reads('sortedExercises'),
+  groupedByNameExercises: computed('exercises.{[],@each.name}', function() {
+    return this.exercises.reduce((resultObj, currentExercise) => {
+      const { name } = currentExercise;
+      const targetGroup = resultObj[name];
+      resultObj[name] = targetGroup
+        ? targetGroup.concat([currentExercise]).sortBy('order')
+        : [currentExercise];
+
+      return resultObj;
+    }, {});
+  }),
 }) {}
