@@ -55,6 +55,29 @@ module('Integration | Component | progress-indicator', function(hooks) {
     );
   });
 
+  test('shades items except of completed items and the one that is currently in progress', async function(assert) {
+    assert
+      .dom('[data-test-progress-indicator-item-number="3"] span')
+      .hasAttribute('data-test-shaded-progress-circle-element');
+    assert
+      .dom('[data-test-progress-indicator-item-number="2"] span')
+      .hasAttribute('data-test-shaded-progress-circle-element');
+
+    completeByOrder(this.tasks, 1);
+    await customTimeout(1000);
+
+    assert
+      .dom('[data-test-progress-indicator-item-number="2"] span')
+      .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
+
+    completeByOrder(this.tasks, 2);
+    await customTimeout(1000);
+
+    assert
+      .dom('[data-test-progress-indicator-item-number="3"] span')
+      .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
+  });
+
   test('hides excessive items', async function(assert) {
     await clearRender();
 

@@ -27,6 +27,7 @@
             data-test-progress-indicator-item
             data-test-progress-indicator-item-number={{item.order}}
             class="tasks-pagination-item
+
               {{if item.nextAttempt " tasks-pagination-item--next-attempt"}}"
             style={{html-safe
               (concat
@@ -36,7 +37,7 @@
                 (if this.shouldHideExtraItems this.betweenPadding -5)
                 "px);"
                 (if
-                  item.isCompleted
+                  item.completedInCurrentCycle
                   (concat
                     "transform: translateX(calc(100% - 36px*"
                     (subtract @progressItems.length index)
@@ -46,9 +47,20 @@
               )
             }}
           >
-            <span
-              class="inline-block {{unless item.canInteract "opacity-50"}}"
-            ></span>
+            {{#let
+              (not
+                (or
+                  item.completedInCurrentCycle
+                  (eq index this.currentItemInProgress)
+                )
+              ) as |shadeItem|
+            }}
+              <span
+                data-test-shaded-progress-circle-element={{shadeItem}}
+                class="inline-block {{if shadeItem "opacity-50"}}"
+              >
+              </span>
+            {{/let}}
           </li>
         {{/each}}
       </ul>
