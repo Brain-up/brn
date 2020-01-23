@@ -42,13 +42,13 @@ export default Service.extend({
           player.pause();
         },
         onActive: function() {
-          timerInstance.isStarted && timerInstance.runTimer();
+          timerInstance.relaunchStartedTimer();
         },
         onHide: function() {
           player.pause();
         },
         onShow: function() {
-          timerInstance.isStarted && timerInstance.runTimer();
+          timerInstance.relaunchStartedTimer();
         },
       }),
     );
