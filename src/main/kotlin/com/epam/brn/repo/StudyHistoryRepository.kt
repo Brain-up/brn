@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
@@ -23,4 +24,16 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
     fun findByUserAccountId(id: Long?): List<StudyHistory>
     fun findByUserAccountIdAndExerciseId(userId: Long?, exerciseId: Long?): Optional<StudyHistory>
+
+    @Query(
+        value = "SELECT s.startTime. FROM StudyHistory s " +
+                " WHERE s.userAccount.id = :userId"
+    )
+    fun getStartTime(): LocalDateTime
+
+    @Query(
+        value = "SELECT s.endTime.id FROM StudyHistory s " +
+                " WHERE s.userAccount.id = :userId"
+    )
+    fun getEndTime(): LocalDateTime
 }

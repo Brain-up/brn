@@ -13,6 +13,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class StudyHistoryService(
@@ -58,4 +59,13 @@ class StudyHistoryService(
         }
             .orElseThrow { NoDataFoundException("Could not find requested study history with id=${studyHistoryDto.id}") }
     }
+
+    fun getStartTime(): LocalDateTime {
+        return studyHistoryRepository.getStartTime()
+    }
+
+    fun getEndTime(): LocalDateTime {
+        return studyHistoryRepository.getEndTime()
+    }
+
 }
