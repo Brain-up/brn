@@ -21,7 +21,7 @@ export default class TaskPlayerComponent extends Component {
 
   @service('audio') audio;
 
-  @task(function*() {
+  @(task(function*() {
     this.element.style.setProperty(
       '--word-picture-url',
       `url(${this.task.pictureFileUrl})`,
@@ -33,13 +33,13 @@ export default class TaskPlayerComponent extends Component {
       yield customTimeout(3000);
     }
     this.afterCompleted();
-  })
+  }).restartable())
   nextTaskTimer;
 
-  @task(function*() {
+  @(task(function*() {
     yield customTimeout(2000);
     this.set('taskResultIsVisible', false);
-  })
+  }).drop())
   nextAttemptTimer;
 
   classNames = ['flex-1', 'flex', 'flex-col'];
