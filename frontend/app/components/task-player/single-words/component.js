@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 import shuffleArray from 'brn/utils/shuffle-array';
 import customTimeout from 'brn/utils/custom-timeout';
+import { task } from 'ember-concurrency';
 
 export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
@@ -12,7 +13,34 @@ export default class TaskPlayerComponent extends Component {
   taskResultIsVisible = false;
   previousTaskWords = null;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.nextTaskTimer.cancelAll();
+    this.nextAttemptTimer.cancelAll();
+  }
+
   @service('audio') audio;
+
+  @task(function*() {
+    this.element.style.setProperty(
+      '--word-picture-url',
+      `url(${this.task.pictureFileUrl})`,
+    );
+    this.onRightAnswer();
+    yield customTimeout(3000);
+    if (this.task.isLastTask) {
+      this.showExerciseResult();
+      yield customTimeout(3000);
+    }
+    this.afterCompleted();
+  })
+  nextTaskTimer;
+
+  @task(function*() {
+    yield customTimeout(2000);
+    this.set('taskResultIsVisible', false);
+  })
+  nextAttemptTimer;
 
   classNames = ['flex-1', 'flex', 'flex-col'];
 
@@ -53,25 +81,6 @@ export default class TaskPlayerComponent extends Component {
 
   showExerciseResult() {
     this.set('exerciseResultIsVisible', true);
-  }
-
-  async runNextTaskTimer() {
-    this.element.style.setProperty(
-      '--word-picture-url',
-      `url(${this.task.pictureFileUrl})`,
-    );
-    this.onRightAnswer();
-    await customTimeout(3000);
-    if (this.task.isLastTask) {
-      this.showExerciseResult();
-      await customTimeout(3000);
-    }
-    this.afterCompleted();
-  }
-
-  async runNextAttemptTimer() {
-    await customTimeout(2000);
-    this.set('taskResultIsVisible', false);
   }
 }
 ({});

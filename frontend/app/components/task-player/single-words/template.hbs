@@ -3,7 +3,7 @@
   {{#if (not (and this.exerciseResultIsVisible @task.isLastTask))}}
     <div
       class="task-player__right-answer-data flex flex-wrap flex-1 mt-5"
-      {{did-insert (action this.runNextTaskTimer)}}
+      {{did-insert (perform this.nextTaskTimer)}}
     >
       {{#if @task.pictureFileUrl}}
         {{! template-lint-configure no-inline-styles false }}
@@ -21,7 +21,7 @@
 {{else if (and @task.nextAttempt this.taskResultIsVisible)}}
   <AnswerCorrectnessWidget
     @isCorrect={{false}}
-    {{did-insert (action this.runNextAttemptTimer)}}
+    {{did-insert (perform this.nextAttemptTimer)}}
   />
 {{else}}
   <AudioPlayer
@@ -38,6 +38,7 @@
           disabled={{@disableAnswers}}
           onclick={{action this.handleSubmit word}}
           class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
+
             {{if
               @disableAnswers
               "opacity-50 cursor-default"
