@@ -71,7 +71,7 @@
     "ember-cli-htmlbars": "^4.2.2",
     "ember-cli-inject-live-reload": "^2.0.2",
     "ember-cli-mirage": "^1.1.6",
-    "ember-cli-page-object": "^1.16.1",
+    "ember-cli-page-object": "^1.16.2",
     "ember-cli-postcss": "^5.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-stencil": "^1.0.0",
