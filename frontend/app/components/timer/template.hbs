@@ -1,4 +1,8 @@
-<div class="timer-wrapper font-semibold text-red-400">
+<div
+  data-test-timer-wrapper
+  data-test-timer-is-paused={{this.isPaused}}
+  class="timer-wrapper font-semibold text-red-400"
+>
   <span data-test-timer-display-value>
     {{this.displayValue}}
   </span>

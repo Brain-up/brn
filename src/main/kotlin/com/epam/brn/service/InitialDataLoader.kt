@@ -1,7 +1,9 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
@@ -25,6 +27,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.core.io.ResourceLoader
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 /**
@@ -37,7 +40,8 @@ class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val userAccountRepository: UserAccountRepository,
-    private val csvParserService: CSVParserService
+    private val csvParserService: CSVParserService,
+    private val passwordEncoder: PasswordEncoder
 ) {
     private val log = logger()
 
@@ -49,14 +53,37 @@ class InitialDataLoader(
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        userAccountRepository.save(UserAccount(name = "defaultUser", email = "default@default.ru"))
-        userAccountRepository.save(UserAccount(name = "defaultUser2", email = "default2@default.ru"))
+        addAdminUser()
+        userAccountRepository.save(
+            UserAccount(
+                userName = "defaultUser",
+                email = "default@default.ru",
+                active = true,
+                password = "password"
+            )
+        )
+        userAccountRepository.save(
+            UserAccount(
+                userName = "defaultUser2",
+                email = "default2@default.ru",
+                active = true,
+                password = "password"
+            )
+        )
 
         val isInitRequired = exerciseGroupRepository.count() == 0L
         log.debug("Is initialization required: $isInitRequired")
         if (isInitRequired)
             folder?.let { loadInitialDataFromFileSystem(it) }
                 ?: loadInitialDataFromClassPath()
+    }
+
+    private fun addAdminUser() {
+        val password = passwordEncoder.encode("admin")
+        val userAccount =
+            UserAccount(userName = "admin", password = password, email = "admin@admin.com", active = true)
+        userAccount.authoritySet.addAll(setOf(Authority(authority = AUTH_ROLE_ADMIN, userAccount = userAccount)))
+        userAccountRepository.save(userAccount)
     }
 
     private fun loadInitialDataFromFileSystem(folder: Path) {

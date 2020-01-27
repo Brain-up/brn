@@ -1,9 +1,11 @@
+import Ember from 'ember';
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { isArray } from '@ember/array';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import customTimeout from '../../utils/custom-timeout';
+import { timeout, task } from 'ember-concurrency';
 
 export default Component.extend({
   audio: service(),
@@ -22,11 +24,19 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this.set('audioElements', []);
+    this.animationInterval && clearInterval(this.animationInterval);
   },
   autoplay: false,
   filesToPlay: computed('audioFileUrl', 'audioFileUrl.[]', function() {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }),
+  audioElementsLength: computed('audioElements', function() {
+    return this.audioElements.reduce((totalLenght, audioElement) => {
+      totalLenght = totalLenght + audioElement.duration;
+      return totalLenght;
+    }, 0);
+  }),
+
   async setAudioElements() {
     this.set(
       'audioElements',
@@ -49,6 +59,7 @@ export default Component.extend({
       ),
     );
   },
+
   isPlayingElement(element) {
     return (
       !element.paused &&
@@ -56,6 +67,7 @@ export default Component.extend({
       !element.ended
     );
   },
+
   updateIsPlaying(actionElement) {
     if (!this.isDestroyed && !this.isDestroying) {
       set(
@@ -70,18 +82,66 @@ export default Component.extend({
             return result;
           }, false),
       );
+      if (!this.isPlaying && this.audioPlayingProgress === 100) {
+        this.audioElements.forEach((element) => (element.currentTime = 0));
+      }
     }
   },
+
   async playAudio() {
+    this.updateProgressTask.perform();
     /* eslint-disable no-unused-vars */
     for (let audioElement of this.audioElements) {
       if (!this.isDestroyed && !this.isDestroying) {
-        audioElement.play();
+        if (Ember.testing) {
+          this.set('isPlaying', true);
+        } else {
+          audioElement.play();
+        }
+
         await customTimeout(audioElement.duration * 1000);
       }
     }
+
     !this.isDestroyed && !this.isDestroying
       ? this.set('previousPlayedUrls', this.audioFileUrl)
       : '';
+
+    if (Ember.testing) {
+      this.set('isPlaying', false);
+    }
+  },
+
+  updateProgressTask: task(function*() {
+    this.defineProgressValue(this);
+    yield timeout(16);
+
+    this.updateProgressTask.perform();
+  }).enqueue(),
+
+  defineProgressValue() {
+    const playedTime = this.audioElements.reduce(
+      (currentPlayedTime, audioElement) => {
+        currentPlayedTime = currentPlayedTime + audioElement.currentTime;
+        return currentPlayedTime;
+      },
+      0,
+    );
+    !this.isDestroyed && !this.isDestroying
+      ? this.setProgress((playedTime * 100) / this.audioElementsLength)
+      : '';
+  },
+
+  setProgress(progress) {
+    window.requestAnimationFrame(() =>
+      this.buttonElement.style.setProperty('--progress', `${progress}%`),
+    );
+    this.set('audioPlayingProgress', progress);
+
+    if (progress === 100) {
+      this.updateProgressTask.cancelAll();
+    } else if (progress >= 99 || Ember.testing) {
+      this.setProgress(100);
+    }
   },
 });

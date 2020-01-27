@@ -9,5 +9,6 @@ object BrnParams {
     const val EXERCISE_ID = "exerciseId"
     const val TASK_ID = "taskId"
     const val USER_ID = "userId"
+    const val USER_NAME = "userName"
     const val TASK_FILE = "taskFile"
 }

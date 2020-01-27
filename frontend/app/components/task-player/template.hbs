@@ -7,10 +7,6 @@
   disableAudioPlayer=this.disableAudioPlayer
   autoplay=(not this.disableAudioPlayer)
 }}
-{{#if
-  (and
-    this.justEnteredTask (or this.studyingTimer.isPaused (not this.isStarted))
-  )
-}}
+{{#if this.justEnteredTask}}
   <StartTaskButton @startTask={{action this.startTask}} />
 {{/if}}

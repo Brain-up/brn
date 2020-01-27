@@ -6,14 +6,14 @@ import { reads } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
 
 export default Component.extend({
-  init() {
-    this._super(...arguments);
-    this.studyingTimer.register(this);
-    this.set('isStarted', false);
-  },
   willDestroyElement() {
     this._super(...arguments);
     this.stopTimer();
+  },
+  didInsertElement() {
+    this._super(...arguments);
+    this.studyingTimer.register(this);
+    this.set('isStarted', false);
   },
   studyingTimer: inject(),
   countedSeconds: reads('studyingTimer.countedSeconds'),
@@ -22,8 +22,11 @@ export default Component.extend({
   timer: null,
   displayValue: computed('countedSeconds', function() {
     const mins = Math.floor(this.countedSeconds / 60);
+    const hours = Math.floor(mins / 60);
     const seconds = this.countedSeconds % 60;
-    return `${leadingZero(mins)}:${leadingZero(seconds)}`;
+    return `${
+      hours ? leadingZero(hours) + ':' : ''
+    }${leadingZero(mins - hours * 60)}:${leadingZero(seconds)}`;
   }),
 
   updateSecondsCount() {
@@ -53,12 +56,12 @@ export default Component.extend({
   },
 
   runTimer() {
-    if (!this.isStarted) {
-      this.startTimer();
-    } else {
-      this.studyingTimer.resume();
-      this.setStartTime();
-    }
+    this.isStarted ? this.relaunchStartedTimer() : this.startTimer();
+  },
+
+  relaunchStartedTimer() {
+    this.studyingTimer.resume();
+    this.setStartTime();
   },
 });
 

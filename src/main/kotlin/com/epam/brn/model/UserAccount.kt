@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.UserAccountDto
 import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -17,9 +18,12 @@ data class UserAccount(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
-    val name: String,
+    val userName: String,
     @Column(nullable = false, unique = true)
     val email: String,
+    @Column(nullable = false)
+    val password: String,
+    val active: Boolean,
     val birthDate: LocalDate? = null
 ) {
     @OneToMany(cascade = [(CascadeType.ALL)])
@@ -27,8 +31,18 @@ data class UserAccount(
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
     val progress: Progress? = null
+    @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL])
+    var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, name='$name', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
+        return "UserAccount(id=$id, name='$userName', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
     }
+
+    fun toDto() = UserAccountDto(
+        id = this.id,
+        userName = this.userName,
+        active = this.active,
+        email = this.email,
+        birthDate = this.birthDate
+    )
 }

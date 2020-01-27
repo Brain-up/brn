@@ -2,17 +2,10 @@ import {ChangeDetectionStrategy, Component, OnInit, Self} from '@angular/core';
 import {UPLOAD_DESTINATION, UploadService} from '../../../shared/upload-file/service/upload.service';
 import {fold, fromNullable} from 'fp-ts/lib/Option';
 import {pipe} from 'fp-ts/lib/pipeable';
-import {forkJoin, noop, Observable} from 'rxjs';
+import {EMPTY, forkJoin, noop, Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
-
-function showHappySnackbar(message: string) {
-  this.snackbar.open(message, ' 😊 ', {duration: 2000});
-}
-
-function showSadSnackbar(err: { message: string }) {
-  this.snackbar.open(err.message, ' 😪 ', {duration: 2000});
-}
+import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
 
 @Component({
   selector: 'app-load-file',
@@ -47,7 +40,10 @@ export class LoadFileComponent implements OnInit {
     forkJoin(Object.values(fileInfo).map(({progress}) => progress))
       .pipe(
         tap(showHappySnackbar.bind(this, `${Object.keys(fileInfo).join(',')} was successfully uploaded`)),
-        catchError(showSadSnackbar.bind(this))
+        catchError(err => {
+          showSadSnackbar.bind(null, this.snackbar)(err);
+          return EMPTY;
+        })
       )
       .subscribe();
   }
