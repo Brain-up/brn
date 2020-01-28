@@ -1,0 +1,12 @@
+#!/bin/bash
+protected_branch_master='master'
+protected_branch_dev='dev'
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [[ $protected_branch_master == $current_branch || $protected_branch_dev == $current_branch ]]; then
+  echo "You are on branch $BRANCH. You a not supposed to push to this branch."
+  echo "Please use feature/bugfix branches."
+  exit 1
+fi
+
+exit 0
