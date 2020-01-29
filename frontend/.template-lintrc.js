@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-  extends: 'recommended',
+  extends: 'octane',
   rules: {
     'self-closing-void-elements': false,
-  },
+  }
 };
