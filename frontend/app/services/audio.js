@@ -7,6 +7,6 @@ export default class AudioService extends Service {
     this.player = player;
   }
   get isPlaying() {
-    return this.player.isPlaying;
+    return this.player && this.player.isPlaying;
   }
 }
