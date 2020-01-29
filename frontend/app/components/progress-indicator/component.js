@@ -22,9 +22,13 @@ export default Component.extend({
     raw('completedInCurrentCycle'),
     true,
   ),
-  currentItemInProgress: computed('completedItems.[]', function() {
-    return this.itemsLength - this.completedItems.length - 1;
-  }),
+  currentItemInProgress: computed(
+    'itemsLength',
+    'completedItems.[]',
+    function() {
+      return this.itemsLength - this.completedItems.length - 1;
+    },
+  ),
   progressContainerWidth: reads('progressContainer.offsetWidth'),
   shouldHideExtraItems: computed(
     'maxAmount',
