@@ -62,17 +62,18 @@ module('Integration | Component | progress-indicator', function(hooks) {
     assert
       .dom('[data-test-progress-indicator-item-number="2"] span')
       .hasAttribute('data-test-shaded-progress-circle-element');
+    assert
+      .dom('[data-test-progress-indicator-item-number="1"] span')
+      .hasAttribute('data-test-shaded-progress-circle-element');
 
-    completeByOrder(this.tasks, 1);
+    completeByOrder(this.tasks, 2);
     await customTimeout(1000);
-
     assert
       .dom('[data-test-progress-indicator-item-number="2"] span')
       .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
 
-    completeByOrder(this.tasks, 2);
+    completeByOrder(this.tasks, 3);
     await customTimeout(1000);
-
     assert
       .dom('[data-test-progress-indicator-item-number="3"] span')
       .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
