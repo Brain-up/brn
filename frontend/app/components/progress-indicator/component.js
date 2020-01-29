@@ -1,80 +1,57 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
-import { array, raw } from 'ember-awesome-macros';
-
-export default Component.extend({
-  didInsertElement() {
-    this._super(...arguments);
-    this.set(
-      'progressContainer',
-      this.element.querySelector('#progressContainer'),
-    );
-  },
-  progressContainer: null,
-  progressItems: null,
-  maxAmount: computed('itemsLength', 'progressContainerWidth', function() {
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { run } from '@ember/runloop';
+export default class ProgressIndicatorComponent extends Component {
+  @tracked progressContainerWidth = 0;
+  @action
+  setOffsetWidth(value, node) {
+    this.progressContainerWidth = value;
+    run('next', () => {
+      node.setAttribute('data-test-inidicator-root', '');
+    });
+  }
+  get progressItems() {
+    return this.args.progressItems || [];
+  }
+  get maxAmount() {
     return Math.floor(this.progressContainerWidth / 36) - 5;
-  }),
-  itemsLength: reads('progressItems.length'),
-  completedItems: array.filterBy(
-    'progressItems',
-    raw('completedInCurrentCycle'),
-    true,
-  ),
-  currentItemInProgress: computed(
-    'itemsLength',
-    'completedItems.[]',
-    function() {
-      return this.itemsLength - this.completedItems.length - 1;
-    },
-  ),
-  progressContainerWidth: reads('progressContainer.offsetWidth'),
-  shouldHideExtraItems: computed(
-    'maxAmount',
-    'progressContainerWidth',
-    function() {
-      return this.maxAmount < this.itemsLength;
-    },
-  ),
-  itemsToHideCount: computed(
-    'progressItems.@each.completedInCurrentCycle',
-    function() {
-      const completedToHide =
-        this.completedItems.length - Math.floor(this.maxAmount / 2);
-      return completedToHide >= 0 ? completedToHide : 0;
-    },
-  ),
-  hiddenUncompletedCount: computed(
-    'itemsLength',
-    'itemsToHideCount',
-    function() {
-      const amount = this.itemsLength - this.itemsToHideCount - this.maxAmount;
-      return amount;
-    },
-  ),
-  negativeHiddenUncompletedCount: computed(
-    'hiddenUncompletedCount',
-    function() {
-      return this.hiddenUncompletedCount < 0 ? this.hiddenUncompletedCount : 0;
-    },
-  ),
-  positiveHiddenUncompletedCount: computed(
-    'hiddenUncompletedCount',
-    function() {
-      return this.hiddenUncompletedCount > 0 ? this.hiddenUncompletedCount : 0;
-    },
-  ),
-  hiddenCompletedCount: computed(
-    'itemsToHideCount',
-    'negativeHiddenUncompletedCount',
-    function() {
-      return this.itemsToHideCount + this.negativeHiddenUncompletedCount;
-    },
-  ),
-  betweenPadding: computed('progressContainerWidth', function() {
+  }
+  get itemsLength() {
+    return this.progressItems.length;
+  }
+  get completedItems() {
+    return this.progressItems.filter(
+      ({ completedInCurrentCycle }) => completedInCurrentCycle === true,
+    );
+  }
+  get currentItemInProgress() {
+    return this.itemsLength - this.completedItems.length - 1;
+  }
+  get shouldHideExtraItems() {
+    return this.maxAmount < this.itemsLength;
+  }
+  get itemsToHideCount() {
+    const completedToHide =
+      this.completedItems.length - Math.floor(this.maxAmount / 2);
+    return completedToHide >= 0 ? completedToHide : 0;
+  }
+  get hiddenUncompletedCount() {
+    const amount = this.itemsLength - this.itemsToHideCount - this.maxAmount;
+    return amount;
+  }
+  get negativeHiddenUncompletedCount() {
+    return this.hiddenUncompletedCount < 0 ? this.hiddenUncompletedCount : 0;
+  }
+  get positiveHiddenUncompletedCount() {
+    return this.hiddenUncompletedCount > 0 ? this.hiddenUncompletedCount : 0;
+  }
+  get hiddenCompletedCount() {
+    return this.itemsToHideCount + this.negativeHiddenUncompletedCount;
+  }
+  get betweenPadding() {
     return this.shouldHideExtraItems
       ? this.progressContainerWidth - 36 * this.maxAmount - 5
       : 0;
-  }),
-});
+  }
+}
