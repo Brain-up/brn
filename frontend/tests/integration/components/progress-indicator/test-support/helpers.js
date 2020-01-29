@@ -7,6 +7,16 @@ export function completeByOrder(items, order) {
   set(target, 'completedInCurrentCycle', true);
 }
 
+class DefaultItem {
+  @tracked isCompleted;
+  @tracked canInteract;
+  @tracked order;
+  @tracked completedInCurrentCycle;
+  constructor(params) {
+    Object.assign(this, params);
+  }
+}
+
 export function getLongItemsList() {
   let counter = 0;
   const listLength = 100;
