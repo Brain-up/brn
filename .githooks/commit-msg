@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+# regex to validate in commit msg
+commit_regex='(EPMLABSBRN)(-\d+)'
+error_msg="Aborting commit. Your commit message is missing a JIRA issue name, see example: 'EPMLABSBRN-111'"
+
+if ! grep -iqE "$commit_regex" "$1"; then
+    echo "$error_msg" >&2
+    exit 1
+fi
