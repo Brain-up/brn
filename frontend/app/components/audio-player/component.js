@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import Component from '@ember/component';
 import { isArray } from '@ember/array';
-import { action, defineProperty } from '@ember/object';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import customTimeout from '../../utils/custom-timeout';
 import { timeout, task } from 'ember-concurrency';
@@ -14,21 +14,18 @@ export default class AudioPlayerComponent extends Component {
     next(() => {
       this.audio.register(this);
     });
-    defineProperty(
-      this,
-      'updateProgressTask',
-      task(function*() {
-        this.defineProgressValue(this);
-        yield timeout(16);
-
-        this.updateProgressTask.perform();
-      }).enqueue(),
-    );
   }
 
   @service audio;
 
-  @tracked updateProgressTask = null;
+  @(task(function*() {
+    this.defineProgressValue(this);
+    yield timeout(16);
+
+    this.updateProgressTask.perform();
+  }).enqueue())
+  updateProgressTask;
+
   @tracked audioElements = [];
 
   @tracked autoplay = false;
