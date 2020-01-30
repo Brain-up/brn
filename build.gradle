@@ -103,6 +103,10 @@ project.task("ktlint", type: JavaExec) {
     ]
 }
 
+project.exec {
+    commandLine = "git config core.hooksPath .githooks".split(" ")
+}
+
 compileKotlin.dependsOn ktlint
 
 test {
