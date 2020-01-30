@@ -32,7 +32,7 @@ export default class WordsSequencesComponent extends Component {
     );
   }
   get firstUncompletedTask() {
-    return this.uncompletedTasks[0] || null;
+    return this.uncompletedTasks.firstObject;
   }
   get audioFiles() {
     return this.firstUncompletedTask.answer.map(({ audioFileUrl }) => {
@@ -101,9 +101,7 @@ export default class WordsSequencesComponent extends Component {
   }
 
   async handleWrongAnswer() {
-    this.task.wrongAnswers.pushObject({
-      ...this.firstUncompletedTask,
-    });
+    this.task.wrongAnswers.pushObject(this.firstUncompletedTask.serialize());
     this.markNextAttempt(this.firstUncompletedTask);
     this.updateLocalTasks();
     await customTimeout(1000);

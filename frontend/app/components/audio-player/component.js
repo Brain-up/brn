@@ -32,6 +32,10 @@ export default class AudioPlayerComponent extends Component {
 
   @tracked isPlaying = false;
 
+  @tracked previousPlayedUrls;
+
+  @tracked audioFileUrl;
+
   async didReceiveAttrs() {
     await this.setAudioElements();
     if (this.autoplay && this.previousPlayedUrls !== this.audioFileUrl) {
@@ -118,7 +122,6 @@ export default class AudioPlayerComponent extends Component {
     !this.isDestroyed && !this.isDestroying
       ? this.set('previousPlayedUrls', this.audioFileUrl)
       : '';
-
     if (Ember.testing) {
       this.isPlaying = false;
     }

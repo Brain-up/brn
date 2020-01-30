@@ -10,5 +10,19 @@ export class TaskItem {
 	constructor(params = {}) {
 	  Object.assign(this, params);
 	}
+	serialize() {
+		let obj = {
+			isCompleted: this.isCompleted,
+			canInteract: this.canInteract,
+			order: this.order,
+			completedInCurrentCycle: this.completedInCurrentCycle,
+			nextAttempt: this.nextAttempt,
+			answer: this.answer.slice(0)
+		};
+		Object.keys(this).forEach((key)=>{
+			obj[key] = typeof this[key] === 'object' ? {... this[key]} : this[key];
+		});
+		return obj;
+	}
   }
   
