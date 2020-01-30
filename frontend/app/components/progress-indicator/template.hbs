@@ -6,7 +6,7 @@
       class="c-pagination c-pagination--tasks mb-3"
       {{offset-width this.setOffsetWidth}}
     >
-      {{#if @progressItems.length}}
+      {{#if (and @progressItems.length  this.progressContainerWidth)}}
         <ul
           data-test-items-list
           data-test-max-amount={{this.maxAmount}}
