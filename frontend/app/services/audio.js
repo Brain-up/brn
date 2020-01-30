@@ -1,13 +1,12 @@
 import Service from '@ember/service';
-import { reads } from '@ember/object/computed';
-
-export default Service.extend({
-  init() {
-    this._super(...arguments);
-    this.set('player', null);
-  },
+import { tracked } from '@glimmer/tracking';
+export default class AudioService extends Service {
+  @tracked
+  player = null;
   register(player) {
-    this.set('player', player);
-  },
-  isPlaying: reads('player.isPlaying'),
-});
+    this.player = player;
+  }
+  get isPlaying() {
+    return this.player && this.player.isPlaying;
+  }
+}

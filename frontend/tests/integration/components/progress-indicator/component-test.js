@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, clearRender } from '@ember/test-helpers';
+import { render, waitFor } from '@ember/test-helpers';
 import customTimeout from 'brn/utils/custom-timeout';
 import hbs from 'htmlbars-inline-precompile';
 import { createStubTasks } from 'brn/tests/test-support/general-helpers';
@@ -29,12 +29,13 @@ module('Integration | Component | progress-indicator', function(hooks) {
         },
       ]),
     );
-    await render(hbs`<ProgressIndicator
-      @progressItems={{this.tasks}}
-    />`);
   });
 
   test('renders all progress items', async function(assert) {
+    await render(hbs`<ProgressIndicator
+      @progressItems={{this.tasks}}
+    />`);
+    await waitFor('[data-test-inidicator-root]');
     assert.dom('[data-test-progress-indicator-item]').exists({ count: 3 });
     assert.deepEqual(pageObject.progressIndicators.mapBy('indicatorNum'), [
       '3',
@@ -44,6 +45,11 @@ module('Integration | Component | progress-indicator', function(hooks) {
   });
 
   test('moves comleted to the right', async function(assert) {
+    await render(hbs`<ProgressIndicator
+      @progressItems={{this.tasks}}
+    />`);
+    await waitFor('[data-test-inidicator-root]');
+
     completeByOrder(this.tasks, 1);
     completeByOrder(this.tasks, 2);
     completeByOrder(this.tasks, 3);
@@ -56,36 +62,40 @@ module('Integration | Component | progress-indicator', function(hooks) {
   });
 
   test('shades items except of completed items and the one that is currently in progress', async function(assert) {
+    await render(hbs`<ProgressIndicator
+      @progressItems={{this.tasks}}
+    />`);
+    await waitFor('[data-test-inidicator-root]');
+
     assert
       .dom('[data-test-progress-indicator-item-number="3"] span')
       .hasAttribute('data-test-shaded-progress-circle-element');
     assert
       .dom('[data-test-progress-indicator-item-number="2"] span')
       .hasAttribute('data-test-shaded-progress-circle-element');
-
-    completeByOrder(this.tasks, 1);
+    // currentItemInProgress
+    assert
+      .dom('[data-test-progress-indicator-item-number="1"] span')
+      .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
+    completeByOrder(this.tasks, 2);
     await customTimeout(1000);
-
     assert
       .dom('[data-test-progress-indicator-item-number="2"] span')
       .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
 
-    completeByOrder(this.tasks, 2);
+    completeByOrder(this.tasks, 3);
     await customTimeout(1000);
-
     assert
       .dom('[data-test-progress-indicator-item-number="3"] span')
       .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
   });
 
   test('hides excessive items', async function(assert) {
-    await clearRender();
-
     this.set('longList', getLongItemsList());
-
     await render(hbs`<ProgressIndicator
       @progressItems={{this.longList}}
     />`);
+    await waitFor('[data-test-inidicator-root]');
     completeByOrder(this.longList, 1);
     completeByOrder(this.longList, 2);
     completeByOrder(this.longList, 3);
@@ -93,18 +103,16 @@ module('Integration | Component | progress-indicator', function(hooks) {
     completeByOrder(this.longList, 5);
     completeByOrder(this.longList, 6);
     completeByOrder(this.longList, 7);
-    await customTimeout();
 
+    await customTimeout(100);
     assert
       .dom('[data-test-hidden-uncompleted]')
       .hasText(`+${100 - pageObject.maxItemsAmount}`);
     assert.dom('[data-test-hidden-completed]').hasText('');
-
     for (let index = 8; index <= pageObject.maxItemsAmount / 2 + 1; index++) {
       completeByOrder(this.longList, index);
     }
-    await customTimeout();
-
+    await customTimeout(100);
     assert.dom('[data-test-hidden-completed]').hasText('+1');
   });
 });

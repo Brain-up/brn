@@ -6,12 +6,24 @@ import deepCopy from 'brn/utils/deep-copy';
 import { array } from 'ember-awesome-macros';
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
+import { tracked } from '@glimmer/tracking';
 
 function getEmptyTemplate(selectedItemsOrder = []) {
   return selectedItemsOrder.reduce((result, currentKey) => {
     result[currentKey] = null;
     return result;
   }, {});
+}
+
+class Item {
+  @tracked isCompleted;
+  @tracked canInteract;
+  @tracked order;
+  @tracked completedInCurrentCycle;
+  @tracked nextAttempt;
+  constructor(params) {
+    Object.assign(this, params);
+  }
 }
 
 export default Component.extend({
@@ -68,12 +80,12 @@ export default Component.extend({
     const tasksCopy = deepCopy(this.task.tasksToSolve).map((copy) => {
       const completedInCurrentCycle = completedOrders.includes(copy.order);
       const copyEquivalent = this.tasksCopy.findBy('order', copy.order);
-      return {
+      return new Item({
         ...copy,
         completedInCurrentCycle,
         nextAttempt: copyEquivalent && !!copyEquivalent.nextAttempt,
         canInteract: true,
-      };
+      });
     });
     this.set('tasksCopy', tasksCopy);
   },

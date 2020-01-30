@@ -5,10 +5,11 @@
     data-test-playing-progress={{this.audioPlayingProgress}}
     class="bg-blue-500 text-white font-bold rounded-full
 
+
       {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}}"
-    onclick={{action this.playAudio}}
     disabled={{disablePlayButton}}
-    {{ref "buttonElement" this}}
+    {{on "click" this.playAudio}}
+    {{ref this "buttonElement"}}
   >
     <FaIcon @icon="redo-alt" />
   </button>
