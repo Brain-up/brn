@@ -133,9 +133,11 @@ export default Component.extend({
   },
 
   setProgress(progress) {
-    window.requestAnimationFrame(() =>
-      this.buttonElement.style.setProperty('--progress', `${progress}%`),
-    );
+	window.requestAnimationFrame(() => {
+		if (this.buttonElement) {
+			this.buttonElement.style.setProperty('--progress', `${progress}%`);
+		}
+	});
     this.set('audioPlayingProgress', progress);
 
     if (progress === 100) {

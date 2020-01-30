@@ -6,7 +6,7 @@
       class="c-pagination c-pagination--tasks mb-3"
       {{offset-width this.setOffsetWidth}}
     >
-      {{#if (and @progressItems.length  this.progressContainerWidth)}}
+      {{#if (and this.progressItems.length  this.progressContainerWidth)}}
         <ul
           data-test-items-list
           data-test-max-amount={{this.maxAmount}}
@@ -14,7 +14,7 @@
           style={{html-safe
             (concat
               "width: calc(36px*"
-              @progressItems.length
+              this.progressItems.length
               ");"
               (if
                 this.shouldHideExtraItems
@@ -29,7 +29,7 @@
             )
           }}
         >
-          {{#each (sort-by "order:desc" @progressItems) as |item index|}}
+          {{#each (sort-by "order:desc" this.progressItems) as |item index|}}
             <li
               data-test-progress-indicator-item
               data-test-progress-indicator-item-number={{item.order}}
@@ -48,7 +48,7 @@
                     item.completedInCurrentCycle
                     (concat
                       "transform: translateX(calc(100% - 36px*"
-                      (subtract @progressItems.length index)
+                      (subtract this.progressItems.length index)
                       "));"
                     )
                   )
