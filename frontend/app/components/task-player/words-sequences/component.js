@@ -1,12 +1,11 @@
 import Component from '@ember/component';
-import { reads } from '@ember/object/computed';
-import { computed, set } from '@ember/object';
-import { inject } from '@ember/service';
+import { set } from '@ember/object';
+import { inject as service } from '@ember/service';
 import deepCopy from 'brn/utils/deep-copy';
-import { array } from 'ember-awesome-macros';
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
+import { tracked } from '@glimmer/tracking';
 
 function getEmptyTemplate(selectedItemsOrder = []) {
   return selectedItemsOrder.reduce((result, currentKey) => {
@@ -15,27 +14,32 @@ function getEmptyTemplate(selectedItemsOrder = []) {
   }, {});
 }
 
-export default Component.extend({
+export default class WordsSequencesComponent extends Component {
   didInsertElement() {
-    this._super(...arguments);
-    this.set('tasksCopy', []);
     this.updateLocalTasks();
-    this.startTask();
-  },
-  isCorrect: false,
-  audio: inject(),
-  uncompletedTasks: computed(
-    'tasksCopy',
-    'tasksCopy.@each.completedInCurrentCycle',
-    function() {
-      return this.tasksCopy.filterBy('completedInCurrentCycle', false);
-    },
-  ),
-  firstUncompletedTask: reads('uncompletedTasks.firstObject'),
-  audioFiles: array.map('firstUncompletedTask.answer', (answer) => {
-    return `/audio/${answer.audioFileUrl}`;
-  }),
-  answerCompleted: computed('currentAnswerObject', function() {
+	this.startTask();
+  }
+  @service audio;
+  @tracked
+  tasksCopy = [];
+  @tracked
+  currentAnswerObject = null;
+  @tracked
+  isCorrect = false;
+  get uncompletedTasks() {
+    return this.tasksCopy.filter(
+      ({ completedInCurrentCycle }) => completedInCurrentCycle === false,
+    );
+  }
+  get firstUncompletedTask() {
+    return this.uncompletedTasks[0] || null;
+  }
+  get audioFiles() {
+    return this.firstUncompletedTask.answer.map(({ audioFileUrl }) => {
+      return `/audio/${audioFileUrl}`;
+    });
+  }
+  get answerCompleted() {
     return Object.values(this.currentAnswerObject).reduce(
       (isCompleted, currentValue) => {
         isCompleted = isCompleted && !!currentValue;
@@ -43,25 +47,22 @@ export default Component.extend({
       },
       true,
     );
-  }),
+  }
   startNewTask() {
     this.markCompleted(this.firstUncompletedTask);
     this.startTask();
-  },
+  }
   markCompleted(task) {
     set(task, 'completedInCurrentCycle', true);
     set(task, 'nextAttempt', false);
-  },
+  }
   markNextAttempt(task) {
     set(task, 'nextAttempt', true);
-  },
+  }
   startTask() {
-    this.set('isCorrect', false);
-    this.set(
-      'currentAnswerObject',
-      getEmptyTemplate(this.task.selectedItemsOrder),
-    );
-  },
+    this.isCorrect = false;
+    this.currentAnswerObject = getEmptyTemplate(this.task.selectedItemsOrder);
+  }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
       .filterBy('completedInCurrentCycle', true)
@@ -76,13 +77,13 @@ export default Component.extend({
         canInteract: true,
       });
     });
-    this.set('tasksCopy', tasksCopy);
-  },
+    this.tasksCopy = tasksCopy;
+  }
   async checkMaybe(selectedData) {
-    this.set('currentAnswerObject', {
+    this.currentAnswerObject = {
       ...this.currentAnswerObject,
       [selectedData.wordType]: selectedData.word,
-    });
+    };
     if (this.answerCompleted) {
       const isCorrect = deepEqual(
         this.task.selectedItemsOrder.map(
@@ -91,13 +92,13 @@ export default Component.extend({
         this.firstUncompletedTask.answer.mapBy('word'),
       );
 
-      this.set('isCorrect', isCorrect);
+      this.isCorrect = isCorrect;
 
       isCorrect
         ? await this.handleCorrectAnswer()
         : await this.handleWrongAnswer();
     }
-  },
+  }
 
   async handleWrongAnswer() {
     this.task.wrongAnswers.pushObject({
@@ -107,7 +108,7 @@ export default Component.extend({
     this.updateLocalTasks();
     await customTimeout(1000);
     this.startTask();
-  },
+  }
 
   async handleCorrectAnswer() {
     await customTimeout(1000);
@@ -118,5 +119,5 @@ export default Component.extend({
       await customTimeout(3000);
       this.afterCompleted();
     }
-  },
-});
+  }
+}

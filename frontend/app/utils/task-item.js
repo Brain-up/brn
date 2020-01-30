@@ -6,6 +6,7 @@ export class TaskItem {
 	@tracked order;
 	@tracked completedInCurrentCycle;
 	@tracked nextAttempt;
+	@tracked answer = [];
 	constructor(params = {}) {
 	  Object.assign(this, params);
 	}
