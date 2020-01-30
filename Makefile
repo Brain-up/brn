@@ -1,4 +1,8 @@
 # Backend
+init-githooks:
+	@echo "[init-githooks]"
+	git config core.hooksPath .githooks
+
 clean:
 	rm -rf build out
 	rm -rf frontend/node_modules

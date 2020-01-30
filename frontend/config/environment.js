@@ -30,6 +30,7 @@ module.exports = function(environment) {
           'play-circle',
           'times-circle',
           'check-circle',
+          'chevron-left',
         ],
       },
     },

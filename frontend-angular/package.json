@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201",
-    "build": "ng build --base-href /admin/",
+    "build": "ng build --prod --base-href /admin/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

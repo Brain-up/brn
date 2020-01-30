@@ -2,6 +2,7 @@ import DS from 'ember-data';
 const { Model } = DS;
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import arrayPreviousItems from 'brn/utils/array-previous-items';
 
 export default Model.extend({
   tasksManager: service(),
@@ -37,7 +38,7 @@ export default Model.extend({
     return this.parent.get('sortedChildren') || [];
   }),
   previousSiblings: computed('allSiblings.[]', function() {
-    return this.allSiblings.slice(0, this.allSiblings.indexOf(this));
+    return arrayPreviousItems(this, this.allSiblings);
   }),
   nextSiblings: computed('allSiblings.[]', function() {
     return this.allSiblings.slice(this.allSiblings.indexOf(this) + 1);

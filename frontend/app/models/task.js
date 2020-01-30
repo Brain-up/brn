@@ -24,6 +24,12 @@ export default class Task extends CompletionDependent.extend({
   isCompleted: computed('tasksManager.completedTasks.[]', function() {
     return this.tasksManager.isCompleted(this);
   }),
+  completedInCurrentCycle: computed(
+    'tasksManager.completedCycleTasks.[]',
+    function() {
+      return this.tasksManager.isCompletedInCurrentCycle(this);
+    },
+  ),
   nextTask: computed('exercise.tasks.[]', function() {
     return arrayNext(this, this.exercise.content.get('sortedChildren'));
   }),

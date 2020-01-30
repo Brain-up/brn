@@ -6,9 +6,6 @@ import { reads } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
 
 export default Component.extend({
-  init() {
-    this._super(...arguments);
-  },
   willDestroyElement() {
     this._super(...arguments);
     this.stopTimer();
@@ -59,12 +56,12 @@ export default Component.extend({
   },
 
   runTimer() {
-    if (!this.isStarted) {
-      this.startTimer();
-    } else {
-      this.studyingTimer.resume();
-      this.setStartTime();
-    }
+    this.isStarted ? this.relaunchStartedTimer() : this.startTimer();
+  },
+
+  relaunchStartedTimer() {
+    this.studyingTimer.resume();
+    this.setStartTime();
   },
 });
 

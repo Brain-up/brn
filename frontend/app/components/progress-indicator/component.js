@@ -17,11 +17,14 @@ export default Component.extend({
     return Math.floor(this.progressContainerWidth / 36) - 5;
   }),
   itemsLength: reads('progressItems.length'),
-  completedItemsLength: array.filterBy(
+  completedItems: array.filterBy(
     'progressItems',
-    raw('isCompleted'),
+    raw('completedInCurrentCycle'),
     true,
   ),
+  currentItemInProgress: computed('completedItems.[]', function() {
+    return this.itemsLength - this.completedItems.length - 1;
+  }),
   progressContainerWidth: reads('progressContainer.offsetWidth'),
   shouldHideExtraItems: computed(
     'maxAmount',
@@ -30,11 +33,14 @@ export default Component.extend({
       return this.maxAmount < this.itemsLength;
     },
   ),
-  itemsToHideCount: computed('progressItems.@each.isCompleted', function() {
-    const completedToHide =
-      this.completedItemsLength.length - Math.floor(this.maxAmount / 2);
-    return completedToHide >= 0 ? completedToHide : 0;
-  }),
+  itemsToHideCount: computed(
+    'progressItems.@each.completedInCurrentCycle',
+    function() {
+      const completedToHide =
+        this.completedItems.length - Math.floor(this.maxAmount / 2);
+      return completedToHide >= 0 ? completedToHide : 0;
+    },
+  ),
   hiddenUncompletedCount: computed(
     'itemsLength',
     'itemsToHideCount',

@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 
 export default Route.extend({
   studyingTimer: service(),
+  tasksManager: service(),
   model({ exercise_id }) {
     return this.store.findRecord('exercise', exercise_id);
   },
@@ -26,5 +27,6 @@ export default Route.extend({
   },
   deactivate() {
     this.studyingTimer.pause();
+    this.tasksManager.clearCurrentCycleTaks();
   },
 });

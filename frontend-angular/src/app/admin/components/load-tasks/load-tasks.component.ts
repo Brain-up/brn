@@ -18,7 +18,7 @@ import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
   providers: [
     {
       provide: UPLOAD_DESTINATION,
-      useValue: 'api/loadTasksFile'
+      useValue: '/api/loadTasksFile'
     },
     UploadService
   ],
