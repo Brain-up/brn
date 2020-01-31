@@ -5,6 +5,7 @@ export default Route.extend({
   async model({ task_id }) {
     const defaultTask = await this.store.findRecord('task', task_id);
     const modelType = dasherize(defaultTask.exerciseType);
+    this.store.deleteRecord(defaultTask);
     let task = await this.store.findRecord(`task/${modelType}`, task_id);
     return task;
   },

@@ -3,18 +3,17 @@ import { currentURL } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
-import {
-  getUnaccessibleTaskScenario,
-  getUnaccessibleExerciseScenario,
-  getUnaccessibleSeriesScenario,
-} from './test-support/helpers';
+import unaccessibleExerciseScenario from '../../../mirage/scenarios/unaccessibleExerciseScenario';
+import unaccessibleTaskScenario from '../../../mirage/scenarios/unaccessibleTaskScenario';
+import unaccessibleSeriesScenario from '../../../mirage/scenarios/unaccessibleSeriesScenario';
 
 module('Acceptance | unaccessible routes', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
   test('visiting unaccessible task', async function(assert) {
-    getUnaccessibleTaskScenario();
+    /* eslint-disable no-undef */
+    unaccessibleTaskScenario(server);
 
     await pageObject.goToAccessibleTask();
 
@@ -28,7 +27,8 @@ module('Acceptance | unaccessible routes', function(hooks) {
   });
 
   test('visiting task that is not in the current exercise( using non-first exercise )', async function(assert) {
-    getUnaccessibleExerciseScenario();
+    /* eslint-disable no-undef */
+    unaccessibleExerciseScenario(server);
 
     await pageObject.goToRightTaskInTheExercise();
 
@@ -42,7 +42,8 @@ module('Acceptance | unaccessible routes', function(hooks) {
   });
 
   skip('visiting unaccessible series', async function(assert) {
-    getUnaccessibleSeriesScenario();
+    /* eslint-disable no-undef */
+    unaccessibleSeriesScenario(server);
 
     await pageObject.goToAccessibleSeries();
 

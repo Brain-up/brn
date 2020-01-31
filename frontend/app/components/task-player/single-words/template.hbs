@@ -34,10 +34,16 @@
       <li class="task-player__option">
         <button
           data-test-task-answer
+          data-test-right-answer={{and this.testMode (eq @task.word word)}}
+          data-test-wrong-answer={{and
+            this.testMode
+            (not (eq @task.word word))
+          }}
           data-test-task-answer-option={{word}}
           disabled={{@disableAnswers}}
           onclick={{action this.handleSubmit word}}
           class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
+
 
             {{if
               @disableAnswers

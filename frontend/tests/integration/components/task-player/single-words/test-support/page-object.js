@@ -12,6 +12,10 @@ const page = create({
   }),
   hasRightAnswer: isVisible('[data-test-right-answer-notification]'),
   startTask: clickable('[data-test-start-task-button]'),
+  chooseRightAnswer: clickable('[data-test-right-answer]'),
+  wrongAnswers: collection('[data-test-wrong-answer]', {
+    choose: clickable(),
+  }),
 });
 
 export default page;

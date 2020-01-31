@@ -14,7 +14,7 @@
   {{#if (not this.model.hideExerciseNavigation)}}
     <ExerciseNavigation
       class="exercise-navigation"
-      @tasks={{this.model.tasks}}
+      @tasks={{this.model.sortedTasks}}
     />
   {{/if}}
   {{outlet}}

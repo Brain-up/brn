@@ -31,7 +31,7 @@ export default class Exercise extends CompletionDependent.extend({
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',
     function() {
-      const tasksCompleted = this.get('tasks').every(
+      const tasksCompleted = this.get('sortedTasks').every(
         (task) => task.isCompleted,
       );
       return (

@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import Component from '@ember/component';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
@@ -56,6 +57,7 @@ export default class TaskPlayerComponent extends Component {
     }
     this.set('previousTaskWords', this.task.words);
     this.set('exerciseResultIsVisible', false);
+    this.set('testMode', Ember.testing);
   }
 
   shuffle() {

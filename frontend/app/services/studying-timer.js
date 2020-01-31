@@ -19,16 +19,16 @@ export default Service.extend({
     return this.timerInstance.runTimer();
   },
   setTime(seconds) {
-    this.set('countedSeconds', seconds);
+    !this.isDestroyed && this.set('countedSeconds', seconds);
   },
   togglePause() {
-    this.set('isPaused', !this.isPaused);
+    !this.isDestroyed && this.set('isPaused', !this.isPaused);
   },
   pause() {
-    this.set('isPaused', true);
+    !this.isDestroyed && this.set('isPaused', true);
   },
   resume() {
-    this.set('isPaused', false);
+    !this.isDestroyed && this.set('isPaused', false);
   },
   startIdleWatcher() {
     const player = this;

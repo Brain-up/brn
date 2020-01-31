@@ -1,24 +1,23 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { getServerResponses, chooseAnswer } from '../general-helpers';
-import { getTestData } from './test-support/data-storage';
 import pageObject from './test-support/page-object';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import exerciseAvailabilityScenario from '../../../mirage/scenarios/exercise-availability';
 
 module('Acceptance | exercises availability', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
   hooks.beforeEach(function() {
-    getServerResponses(getTestData());
+    /* eslint-disable no-undef */
+    exerciseAvailabilityScenario(server);
   });
 
   test('shows the right number of exercise groups', async function(assert) {
     await pageObject.goToSeriesPage();
 
-    assert.dom('[data-test-series-navigation-header]').exists({ count: 2 });
-    assert.dom('[data-test-exercises-name-group]').exists({ count: 2 });
-    assert.dom('[data-test-series-navigation-list-link]').exists({ count: 4 });
+    assert.equal(pageObject.exerciseGroupsCount, 2, 'has two groups (by name)');
+    assert.equal(pageObject.exercisesCount, 4, 'has four exercises');
   });
 
   test('first exercices in the name group is available by default', async function(assert) {
@@ -53,7 +52,7 @@ module('Acceptance | exercises availability', function(hooks) {
     await pageObject.goToFirstExercisePage();
     await pageObject.startTask();
 
-    await chooseAnswer('test option');
+    await pageObject.chooseRightAnswer();
 
     assert.dom('[data-test-exercise-level="1"]').exists({ count: 2 });
     assert

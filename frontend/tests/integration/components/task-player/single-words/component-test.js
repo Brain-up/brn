@@ -3,7 +3,6 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import customTimeout from 'brn/utils/custom-timeout';
-import { chooseAnswer } from './test-support/helpers';
 import pageObject from './test-support/page-object';
 
 module('Integration | Component | task-player', function(hooks) {
@@ -46,12 +45,9 @@ module('Integration | Component | task-player', function(hooks) {
   });
 
   test('refreshes options list and shows regret image after a wrong answer', async function(assert) {
-    const wrongAnswers = this.model.words.filter(
-      (wordOption) => wordOption !== this.model.word,
-    );
     const order = pageObject.options.mapBy('optionValue');
 
-    chooseAnswer(wrongAnswers[0]);
+    pageObject.wrongAnswers[0].choose();
 
     assert.notOk(pageObject.hasRightAnswer);
 
@@ -84,7 +80,7 @@ module('Integration | Component | task-player', function(hooks) {
 
     await pageObject.startTask();
 
-    await chooseAnswer(this.model.word);
+    await pageObject.chooseRightAnswer();
     await customTimeout();
     assert.ok(pageObject.hasRightAnswer);
   });

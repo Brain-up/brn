@@ -29,5 +29,7 @@ export default function() {
   this.resource('series');
   this.resource('exercises');
   this.resource('tasks');
-  this.resource('study-history')
+  this.post('study-history', function(){
+    return { id: 1 };
+  });
 }

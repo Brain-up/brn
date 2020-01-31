@@ -2,8 +2,6 @@ import { module, test } from 'qunit';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
-import { setupAfterPageVisit } from './test-support/helpers';
-import { chooseAnswer } from '../general-helpers';
 import { settled } from '@ember/test-helpers';
 import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
@@ -31,11 +29,9 @@ module('Acceptance | tasks flow', function(hooks) {
   test('shows regret widget if answer is wrong and a word image if right', async function(assert) {
     await pageObject.goToFirstTask();
 
-    const { targetTask, wrongAnswer } = setupAfterPageVisit();
-
     await pageObject.startTask();
 
-    chooseAnswer(wrongAnswer.word);
+    pageObject.wrongAnswers[0].choose();
 
     await customTimeout();
 
@@ -45,7 +41,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await settled();
 
-    chooseAnswer(targetTask.correctAnswer.word);
+    await pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -55,11 +51,9 @@ module('Acceptance | tasks flow', function(hooks) {
   test('goest to next task after a right answer picture', async function(assert) {
     await pageObject.goToFirstTask();
 
-    const { targetTask } = setupAfterPageVisit();
-
     await pageObject.startTask();
 
-    chooseAnswer(targetTask.correctAnswer.word);
+    await pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -81,23 +75,18 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await pageObject.goToFirstTaskSecondExercise();
 
-    let { targetTask } = setupAfterPageVisit();
-
     await pageObject.startTask();
 
-    chooseAnswer(targetTask.correctAnswer.word);
+    await pageObject.chooseRightAnswer();
 
     await customTimeout();
 
     assert.dom('[data-test-right-answer-notification]').exists();
 
     await customTimeout();
-
-    const targetTask2 = setupAfterPageVisit().targetTask;
-
     await customTimeout();
 
-    chooseAnswer(targetTask2.correctAnswer.word);
+    await pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -116,11 +105,9 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await pageObject.goToFirstTask();
 
-    let { targetTask } = setupAfterPageVisit();
-
     await pageObject.startTask();
 
-    chooseAnswer(targetTask.correctAnswer.word);
+    await pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -130,11 +117,9 @@ module('Acceptance | tasks flow', function(hooks) {
 
     assert.dom('[data-test-task-id="2"]').exists();
 
-    const targetTask2 = setupAfterPageVisit().targetTask;
-
     await customTimeout();
 
-    chooseAnswer(targetTask2.correctAnswer.word);
+    await pageObject.chooseRightAnswer();
 
     await customTimeout();
 
