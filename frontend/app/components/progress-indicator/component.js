@@ -34,7 +34,7 @@ export default class ProgressIndicatorComponent extends Component {
     return this.itemsLength - this.completedItems.length - 1;
   }
   get shouldHideExtraItems() {
-    return this.completedItems.length && this.maxAmount < this.itemsLength;
+    return this.maxAmount < this.itemsLength;
   }
   get itemsToHideCount() {
     const completedToHide =
