@@ -3,18 +3,19 @@ import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
 import { setupAfterPageVisit } from './test-support/helpers';
-import { getServerResponses, chooseAnswer } from '../general-helpers';
+import { chooseAnswer } from '../general-helpers';
 import { settled } from '@ember/test-helpers';
 import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
-import { getData } from './test-support/data-storage';
+import taskFlowScenario from '../../../mirage/scenarios/task-flow';
 
 module('Acceptance | tasks flow', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
   hooks.beforeEach(() => {
-    getServerResponses(getData());
+    /* eslint-disable no-undef */
+    taskFlowScenario(server);
   });
 
   test('has a start task button if the task is not started yet', async function(assert) {
