@@ -1,33 +1,36 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
 import { dasherize } from '@ember/string';
-import { or, not } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
-export default Component.extend({
-  init() {
-    this._super(...arguments);
-    this.set('justEnteredTask', true);
-  },
-  audio: service(),
-  studyingTimer: service(),
-  task: null,
-  componentType: computed('task.exerciseType', function() {
+export default class TaskPlayerComponent extends Component {
+  @service
+  audio;
+  @service
+  studyingTimer;
+  @tracked
+  justEnteredTask = true;
+  @tracked
+  task = null;
+  get componentType() {
     return `task-player/${dasherize(this.task.exerciseType)}`;
-  }),
-  disableAnswers: computed('audio.isPlaying', 'disableAudioPlayer', function() {
+  }
+  get disableAnswers() {
     return this.audio.isPlaying || this.disableAudioPlayer;
-  }),
-  disableAudioPlayer: or(
-    'task.pauseExecution',
-    not('studyingTimer.isStarted'),
-    'justEnteredTask',
-  ),
-  onRightAnswer() {},
-  afterCompleted() {},
+  }
+
+  get disableAudioPlayer() {
+    return (
+      this.task.pauseExecution ||
+      !this.studyingTimer.isStarted ||
+      this.justEnteredTask
+    );
+  }
+  onRightAnswer() {}
+  afterCompleted() {}
   async startTask() {
     this.studyingTimer.runTimer();
     this.task.exercise.content.trackTime('start');
     this.set('justEnteredTask', false);
-  },
-});
+  }
+}
