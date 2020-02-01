@@ -40,6 +40,9 @@ export default Component.extend({
   },
 
   setStartTime() {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
     this.set('timeStart', new Date().getTime() - this.countedSeconds * 1000);
   },
 

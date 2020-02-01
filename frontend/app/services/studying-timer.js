@@ -1,57 +1,70 @@
 import Service from '@ember/service';
-import { reads } from '@ember/object/computed';
+import { action } from '@ember/object';
 import config from 'brn/config/environment';
+import { tracked } from '@glimmer/tracking';
 
-export default Service.extend({
+export default class StudyingTimerService extends Service {
   willDestroy() {
-    this._super(...arguments);
+    super.willDestroy();
     this.idleWatcher && this.idleWatcher.stop();
-  },
-  countedSeconds: 0,
-  isPaused: false,
-  isStarted: reads('timerInstance.isStarted'),
+  }
+  @tracked
+  idleWatcher = null;
+  @tracked
+  countedSeconds = 0;
+  @tracked
+  isPaused = false;
+  @tracked
+  timerInstance = null;
+  get isStarted() {
+    return this.timerInstance && this.timerInstance.isStarted;
+  }
+  @action
   register(timer) {
-    this.set('timerInstance', timer);
+    this.timerInstance = timer;
     this.startIdleWatcher();
-  },
+  }
+  @action
   runTimer() {
     this.resume();
     return this.timerInstance.runTimer();
-  },
+  }
+  @action
   setTime(seconds) {
     !this.isDestroyed && this.set('countedSeconds', seconds);
-  },
+  }
+  @action
   togglePause() {
     !this.isDestroyed && this.set('isPaused', !this.isPaused);
-  },
+  }
+  @action
   pause() {
     !this.isDestroyed && this.set('isPaused', true);
-  },
+  }
+  @action
   resume() {
     !this.isDestroyed && this.set('isPaused', false);
-  },
+  }
+  @action
   startIdleWatcher() {
     const player = this;
     const { timerInstance } = player;
     /* eslint-disable no-undef */
-    this.set(
-      'idleWatcher',
-      new IdleJs({
-        idle: timerInstance.idleTimeout || config.idleTimeout,
-        onIdle: function() {
-          player.pause();
-        },
-        onActive: function() {
-          timerInstance.relaunchStartedTimer();
-        },
-        onHide: function() {
-          player.pause();
-        },
-        onShow: function() {
-          timerInstance.relaunchStartedTimer();
-        },
-      }),
-    );
+    this.idleWatcher = new IdleJs({
+      idle: timerInstance.idleTimeout || config.idleTimeout,
+      onIdle() {
+        player.pause();
+      },
+      onActive() {
+        timerInstance.relaunchStartedTimer();
+      },
+      onHide() {
+        player.pause();
+      },
+      onShow() {
+        timerInstance.relaunchStartedTimer();
+      },
+    });
     this.idleWatcher.start();
-  },
-});
+  }
+}
