@@ -22,7 +22,7 @@ class ExceptionControllerAdvice {
         logger.error("Data was not found. ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }
 
@@ -38,7 +38,7 @@ class ExceptionControllerAdvice {
 
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse(e.message))
     }
 
@@ -48,12 +48,12 @@ class ExceptionControllerAdvice {
 
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse(e.message))
     }
 
     fun makeInternalServerErrorResponseEntity(e: Throwable) = ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .contentType(MediaType.APPLICATION_JSON_UTF8)
+        .contentType(MediaType.APPLICATION_JSON)
         .body(BaseResponseDto(errors = listOf(e.message.toString())))
 }
