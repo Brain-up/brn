@@ -24,7 +24,7 @@ data class UserAccount(
     @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
-    val password: String,
+    val password: String?,
     val active: Boolean,
     val birthDate: LocalDate? = null
 ) {
@@ -33,7 +33,12 @@ data class UserAccount(
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
     val progress: Progress? = null
-    @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [(CascadeType.MERGE)])
+    @JoinTable(
+        name = "user_authorities",
+        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
+    )
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
@@ -45,6 +50,10 @@ data class UserAccount(
         userName = this.userName,
         active = this.active,
         email = this.email,
-        birthDate = this.birthDate
+        birthDate = this.birthDate,
+        password = null,
+        authorities = this.authoritySet
+            .map(Authority::authorityName)
+            .toMutableSet()
     )
 }

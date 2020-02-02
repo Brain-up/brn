@@ -103,7 +103,54 @@ mediaType:
         example: !include samples/study_history.json
     responses:
       201:
-        example: !include samples/study_history_response.json.json
+        example: !include samples/study_history_response.json
+
+# USERS ----------------------
+/users:
+  post:
+  description: Add a new user to the system
+    body:
+      application/json:
+        example: !include samples/users_post_body.json
+    responses:
+      201:
+        example: !include samples/users_post_response.json
+  get:
+      description: Get the user by userName
+      queryParameters:
+        userName:
+          description: "Name of the user"
+          required: true
+          type: string
+          example: "user"
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+  /{userId}:
+    get:
+      description: Get a user by id
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+    delete:
+      description: delete a user
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+  /current:
+    get:
+      description: Get logged in user from the current session
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
 
 # LOAD FILES ----------------------
 /admin/loadFile:

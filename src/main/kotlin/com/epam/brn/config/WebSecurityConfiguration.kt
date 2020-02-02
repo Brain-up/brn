@@ -30,6 +30,8 @@ class WebSecurityConfiguration(
         http.authorizeRequests()
             .antMatchers("/login").permitAll()
             .antMatchers("/admin/**").hasRole(ADMIN)
+            .antMatchers("/users/current").hasAnyRole(ADMIN, USER)
+            .antMatchers("/users/**").hasRole(ADMIN)
             .antMatchers("/**").hasAnyRole(ADMIN, USER)
             .and().formLogin()
             .and().logout().logoutSuccessUrl("/login").permitAll()
