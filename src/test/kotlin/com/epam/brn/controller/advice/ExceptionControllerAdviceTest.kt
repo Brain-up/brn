@@ -24,7 +24,7 @@ internal class ExceptionControllerAdviceTest {
         // THEN
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("tasks were not found"))
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType())
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType())
     }
 
     @Test
@@ -36,7 +36,7 @@ internal class ExceptionControllerAdviceTest {
         // THEN
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType())
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType())
     }
 
     @Test
@@ -47,7 +47,7 @@ internal class ExceptionControllerAdviceTest {
         val responseEntity = exceptionControllerAdvice.handleFileFormatException(exception)
         // THEN
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.headers.contentType)
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
         assertEquals(CSV_FILE_FORMAT_ERROR, (responseEntity.body as ErrorResponse).message)
     }
 
@@ -60,6 +60,6 @@ internal class ExceptionControllerAdviceTest {
         // THEN
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some test exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType())
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType())
         }
 }

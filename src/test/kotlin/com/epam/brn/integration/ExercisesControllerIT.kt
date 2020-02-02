@@ -76,12 +76,12 @@ class ExercisesControllerIT {
                 .get(BrnPath.EXERCISES)
                 .param(USER_ID, existingUser.id.toString())
                 .param(SERIES_ID, existingSeries.id.toString())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data[0].name").value(exerciseName))
     }
 
@@ -95,12 +95,12 @@ class ExercisesControllerIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(BrnPath.EXERCISES + "/" + existingExercise.id)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONObject("data")
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
