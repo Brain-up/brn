@@ -1,0 +1,14 @@
+<section class="upload-tasks-content">
+  <PaperForm>
+    <div class="layout-row">
+      <PaperSelect @label="Group" @options={{this.options}} @onChange={{this.onGroupChange}} as |item|>
+        {{item.name}}
+      </PaperSelect>
+    </div>
+    <div class="layout-row">
+      <PaperSelect @label="Series" @options={{this.options}} @onChange={{this.onGroupChange}} as |item|>
+        {{item.name}}
+      </PaperSelect>
+    </div>
+  </PaperForm>
+</section>

@@ -1,0 +1,30 @@
+@import "ember-paper";
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.upload-tasks-content {
+  display: flex;
+  flex-flow: column;
+  width: 400px;
+  margin: 20px auto;
+}
+
+
+.main {
+  display: flex;
+  flex-flow: column;
+  width: 50%;
+  min-width: 400px;
+  margin: auto;
+  border: 1px silver solid;
+  height: 100%;
+}
