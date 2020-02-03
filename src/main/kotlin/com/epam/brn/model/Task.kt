@@ -32,17 +32,17 @@ data class Task(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise? = null,
-    @OneToOne(cascade = [(CascadeType.MERGE)], optional = true)
+    @OneToOne(cascade = [(CascadeType.ALL)], optional = true)
     @JoinColumn(name = "resource_id")
     var correctAnswer: Resource? = null,
-    @ManyToMany(cascade = [(CascadeType.MERGE)])
+    @ManyToMany(cascade = [(CascadeType.ALL)])
     @JoinTable(
         name = "task_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
     var answerOptions: MutableSet<Resource> = hashSetOf(),
-    @ManyToMany(cascade = [(CascadeType.MERGE)])
+    @ManyToMany(cascade = [(CascadeType.ALL)])
     @JoinTable(
         name = "answer_parts_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
