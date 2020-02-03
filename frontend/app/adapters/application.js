@@ -15,7 +15,8 @@ export default DS.RESTAdapter.extend({
     let actualModelName = modelName;
     if (
       modelName === 'task/single-words' ||
-      modelName === 'task/words-sequences'
+      modelName === 'task/words-sequences' ||
+      modelName === 'task/sentence'
     ) {
       actualModelName = 'tasks';
     }
