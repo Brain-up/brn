@@ -2,9 +2,9 @@ name: Java CI
 
 on:
   push:
-    paths:
-    - '!frontend/**'
-    - '!frontend-angular/**'
+    paths-ignore:
+    - 'frontend/**'
+    - 'frontend-angular/**'
 
 jobs:
   build:
