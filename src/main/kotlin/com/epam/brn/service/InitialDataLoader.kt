@@ -213,11 +213,11 @@ class InitialDataLoader(
 
         resourceService.saveAll(listOf(resource1, resource2, resource3, resource4, resource5, resource6))
 
-        val task = Task(
+        val task2 = Task(
             serialNumber = 1,
             answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
         )
-        val exercise = Exercise(
+        val exercise2 = Exercise(
             series = seriesService.findSeriesForId(2L),
             name = "Распознование последовательности слов",
             description = "Распознование последовательности слов",
@@ -226,11 +226,38 @@ class InitialDataLoader(
             level = 1
         )
 
-        task.exercise = exercise
-        exercise.tasks.add(task)
-        seriesService.findSeriesWithExercisesForId(1L).exercises.add(exercise)
+        task2.exercise = exercise2
+        exercise2.tasks.add(task2)
+        seriesService.findSeriesWithExercisesForId(2L).exercises.add(exercise2)
 
-        exerciseService.save(exercise)
+        exerciseService.save(exercise2)
+
+        // for 3 series
+        val resource7 = Resource(
+            word = "девочка рисует",
+            wordType = WordTypeEnum.SENTENCE.toString(),
+            audioFileUrl = "series3/девочка_рисует.mp3"
+        )
+        val task3 = Task(
+            serialNumber = 2,
+            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6),
+            correctAnswer = resource7,
+            answerParts = mutableMapOf(1 to resource1, 2 to resource6)
+        )
+        val exercise3 = Exercise(
+            series = seriesService.findSeriesForId(3L),
+            name = "Распознование предложений из 2 слов",
+            description = "Распознование предложений из 2 слов",
+            template = "<OBJECT OBJECT_ACTION>",
+            exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
+            level = 1
+        )
+
+        task3.exercise = exercise3
+        exercise3.tasks.add(task3)
+        seriesService.findSeriesWithExercisesForId(3L).exercises.add(exercise3)
+
+        exerciseService.save(exercise3)
     }
 
     companion object {
