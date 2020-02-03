@@ -65,6 +65,7 @@ mediaType:
           body:
             example1: !include samples/exercise_for_single_words_series.json
             example2: !include samples/exercise_for_sequence_words_series.json
+            example3: !include samples/exercise_for_sentence_series.json
 # TASK ----------------------------
 
 /tasks:
@@ -82,7 +83,7 @@ mediaType:
         body:
           application/json:
             example_for_single_words_series: !include samples/tasks_by_exercise_for_single_words_series.json
-            example_for_words_sequences_serias: !include samples/tasks_by_exercise_for_words_sequences_serias.json
+            example_for_words_sequences_series: !include samples/tasks_by_exercise_for_words_sequences_series.json
   /{taskId}:
     get:
       description: Get a task by id
@@ -91,8 +92,8 @@ mediaType:
           body:
             application/json:
               example_for_single_words_series: !include samples/task_by_id_for_single_words_series.json
-              example_for_words_sequences_serias: !include samples/task_by_id_for_words_sequences_serias.json
-
+              example_for_words_sequences_series: !include samples/task_by_id_for_words_sequences_series.json
+              example_for_sentence_series: !include samples/task_by_id_for_sentence_series.json
 
 # STUDY_HISTORY ----------------------
 /study-history:
