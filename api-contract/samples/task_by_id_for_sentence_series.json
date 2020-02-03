@@ -1,0 +1,91 @@
+{
+  "data": {
+    "id": 59,
+    "exerciseType": "SENTENCE",
+    "name": "",
+    "serialNumber": 2,
+    "template": "<OBJECT OBJECT_ACTION>",
+    "correctAnswer": {
+      "id": 349,
+      "audioFileUrl": "series3/девочка_рисует.mp3",
+      "word": "девочка рисует",
+      "wordType": "SENTENCE",
+      "pictureFileUrl": "",
+      "soundsCount": 0
+    },
+    "answerParts": [
+      {
+        "id": 343,
+        "audioFileUrl": "series2/девочка.mp3",
+        "word": "девочка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/withWord/девочка.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 348,
+        "audioFileUrl": "series2/рисует.mp3",
+        "word": "рисует",
+        "wordType": "OBJECT_ACTION",
+        "pictureFileUrl": "pictures/withWord/рисует.jpg",
+        "soundsCount": 0
+      }
+    ],
+    "answerOptions": {
+      "OBJECT_ACTION": [
+        {
+          "id": 348,
+          "audioFileUrl": "series2/рисует.mp3",
+          "word": "рисует",
+          "wordType": "OBJECT_ACTION",
+          "pictureFileUrl": "pictures/withWord/рисует.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 346,
+          "audioFileUrl": "series2/бросает.mp3",
+          "word": "бросает",
+          "wordType": "OBJECT_ACTION",
+          "pictureFileUrl": "pictures/withWord/бросает.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 347,
+          "audioFileUrl": "series2/читает.mp3",
+          "word": "читает",
+          "wordType": "OBJECT_ACTION",
+          "pictureFileUrl": "pictures/withWord/читает.jpg",
+          "soundsCount": 0
+        }
+      ],
+      "OBJECT": [
+        {
+          "id": 344,
+          "audioFileUrl": "series2/дедушка.mp3",
+          "word": "дедушка",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/withWord/дедушка.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 345,
+          "audioFileUrl": "series2/бабушка.mp3",
+          "word": "бабушка",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/withWord/бабушка.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 343,
+          "audioFileUrl": "series2/девочка.mp3",
+          "word": "девочка",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/withWord/девочка.jpg",
+          "soundsCount": 0
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "meta": []
+}
