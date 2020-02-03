@@ -10,7 +10,7 @@
         {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}}"
       disabled={{disablePlayButton}}
       {{on "click" this.playAudio}}
-      {{ref "buttonElement" this}}
+      {{ref this "buttonElement"}}
     >
       <FaIcon @icon="redo-alt" />
     </button>
