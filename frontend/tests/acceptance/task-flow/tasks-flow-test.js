@@ -41,7 +41,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await settled();
 
-    await pageObject.chooseRightAnswer();
+    pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -53,7 +53,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await pageObject.startTask();
 
-    await pageObject.chooseRightAnswer();
+    pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -77,7 +77,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await pageObject.startTask();
 
-    await pageObject.chooseRightAnswer();
+    pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -86,7 +86,7 @@ module('Acceptance | tasks flow', function(hooks) {
     await customTimeout();
     await customTimeout();
 
-    await pageObject.chooseRightAnswer();
+    pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -107,7 +107,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await pageObject.startTask();
 
-    await pageObject.chooseRightAnswer();
+    pageObject.chooseRightAnswer();
 
     await customTimeout();
 
@@ -119,7 +119,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    await pageObject.chooseRightAnswer();
+    pageObject.chooseRightAnswer();
 
     await customTimeout();
 
