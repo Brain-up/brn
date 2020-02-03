@@ -29,7 +29,7 @@ class ExerciseService(
             .orElseThrow { EntityNotFoundException("Exercise entity was not found by name $name") }
     }
 
-    fun findExerciseByNameAndLevel(name: String, level: Short): Exercise {
+    fun findExerciseByNameAndLevel(name: String, level: Int): Exercise {
         return exerciseRepository.findExerciseByNameAndLevel(name, level)
             .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
     }

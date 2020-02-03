@@ -8,7 +8,7 @@ import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseGroupsService
 import com.epam.brn.service.SeriesService
 import com.epam.brn.service.TaskService
-import com.epam.brn.service.parsers.csv.CSVParserService
+import com.epam.brn.service.parsers.csv.FirstSeriesCSVParserService
 import com.epam.brn.service.parsers.csv.converter.impl.TaskCsvToTaskModelConverter
 import java.io.File
 import java.io.InputStream
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
 @Component
-class UploadTaskFromCsvService(private val csvParserService: CSVParserService, private val taskService: TaskService) :
+class UploadTaskFromCsvService(private val firstSeriesCsvParserService: FirstSeriesCSVParserService, private val taskService: TaskService) :
     UploadFromCsvService {
     private val log = logger()
 
@@ -45,7 +45,7 @@ class UploadTaskFromCsvService(private val csvParserService: CSVParserService, p
     }
 
     private fun uploadTasks(inputStream: InputStream, seriesId: Long?): Map<String, String> {
-        val tasks = csvParserService.parseCsvFile(inputStream, taskCsvToTaskModelConverter)
+        val tasks = firstSeriesCsvParserService.parseCsvFile(inputStream, taskCsvToTaskModelConverter)
 
         if (seriesId != null) tasks.forEach { task -> setExerciseSeries(task.value.first, seriesId) }
 

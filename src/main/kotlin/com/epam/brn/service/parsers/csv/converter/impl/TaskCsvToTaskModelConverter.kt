@@ -43,7 +43,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
 
     private fun convertExercise(source: TaskCsv, target: Task) {
         try {
-            target.exercise = exerciseService.findExerciseEntityByName(source.exerciseName)
+            target.exercise = exerciseService.findExerciseByNameAndLevel(source.exerciseName, source.level)
         } catch (e: EntityNotFoundException) {
             log.debug("Entity was not found by name $source.exerciseName")
             target.exercise = exerciseService.createExercise(source.exerciseName)
@@ -60,16 +60,18 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
         } else {
             correctAnswer = resources[0]
             correctAnswer.pictureFileUrl = source.pictureFileName
-            resourceService.save(correctAnswer)
         }
-        target.correctAnswer = correctAnswer
+
+        target.correctAnswer = resourceService.save(correctAnswer)
     }
 
     private fun convertAnswers(source: TaskCsv, target: Task) {
         target.answerOptions = CollectionUtils.emptyIfNull(source.words)
+            .asSequence()
             .filter { StringUtils.isNotEmpty(it) }
             .map { word -> word.replace("[()]".toRegex(), "") }
             .map(this::getResourceByWord)
+            .map(resourceService::save)
             .toMutableSet()
     }
 
@@ -88,7 +90,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
             if (StringUtils.isNotEmpty(audioFileName)) audioFileName else defaultAudioFileUrl.format(word)
         resource.pictureFileUrl =
             if (StringUtils.isNotEmpty(pictureFileName)) pictureFileName else null
-        resourceService.save(resource)
+
         return resource
     }
 }
