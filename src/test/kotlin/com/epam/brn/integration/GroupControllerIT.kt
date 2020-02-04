@@ -46,12 +46,12 @@ class GroupControllerIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(BrnPath.GROUPS)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
         assertTrue(response.contains(existingExerciseGroup1.name))
         assertTrue(response.contains(existingExerciseGroup2.name))
@@ -66,12 +66,12 @@ class GroupControllerIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(BrnPath.GROUPS + "/" + existingExerciseGroup.id)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
         assertTrue(response.contains(existingExerciseGroup.name))
     }

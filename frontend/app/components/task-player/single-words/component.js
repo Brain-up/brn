@@ -5,6 +5,7 @@ import deepEqual from 'brn/utils/deep-equal';
 import shuffleArray from 'brn/utils/shuffle-array';
 import customTimeout from 'brn/utils/custom-timeout';
 import { task } from 'ember-concurrency';
+import { action } from '@ember/object';
 
 export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
@@ -63,6 +64,7 @@ export default class TaskPlayerComponent extends Component {
     this.notifyPropertyChange('shuffledWords');
   }
 
+  @action
   handleSubmit(word) {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {

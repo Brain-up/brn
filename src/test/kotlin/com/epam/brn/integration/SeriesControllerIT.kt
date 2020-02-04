@@ -60,12 +60,12 @@ class SeriesControllerIT {
             MockMvcRequestBuilders
                 .get(BrnPath.SERIES)
                 .param("groupId", idGroup.toString())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
         Assertions.assertTrue(response.contains("распознование слов тест"))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
@@ -81,12 +81,12 @@ class SeriesControllerIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get("${BrnPath.SERIES}/$seriesId")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
         Assertions.assertTrue(response.contains("распознование слов тест"))
         Assertions.assertTrue(response.contains("exercises"))
