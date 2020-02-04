@@ -30,46 +30,47 @@
           }}
         >
           {{#each (sort-by "order:desc" this.progressItems) as |item index|}}
-            <li
-              data-test-progress-indicator-item
-              data-test-progress-indicator-item-number={{item.order}}
-              class="tasks-pagination-item
+            {{#let
+              (not
+                (or
+                  item.completedInCurrentCycle
+                  (eq index this.currentItemInProgress)
+                )
+              ) as |shadeItem|
+            }}
+              <li
+                data-test-progress-indicator-item
+                data-test-progress-indicator-item-number={{item.order}}
+                data-test-shaded-progress-circle-element={{shadeItem}}
+                class="tasks-pagination-item
 
 
-                {{if item.nextAttempt " tasks-pagination-item--next-attempt"}}"
-              style={{html-safe
-                (concat
-                  "width: calc((100% - 36px*"
-                  index
-                  ") + "
-                  (if this.shouldHideExtraItems this.betweenPadding -5)
-                  "px);"
-                  (if
-                    item.completedInCurrentCycle
-                    (concat
-                      "transform: translateX(calc(100% - 36px*"
-                      (subtract this.progressItems.length index)
-                      "));"
+                  {{if
+                    item.nextAttempt
+                    " tasks-pagination-item--next-attempt"
+                  }}"
+                style={{html-safe
+                  (concat
+                    "width: calc((100% - 36px*"
+                    index
+                    ") + "
+                    (if this.shouldHideExtraItems this.betweenPadding -5)
+                    "px);"
+                    (if
+                      item.completedInCurrentCycle
+                      (concat
+                        "transform: translateX(calc(100% - 36px*"
+                        (subtract this.progressItems.length index)
+                        "));"
+                      )
                     )
                   )
-                )
-              }}
-            >
-              {{#let
-                (not
-                  (or
-                    item.completedInCurrentCycle
-                    (eq index this.currentItemInProgress)
-                  )
-                ) as |shadeItem|
-              }}
-                <span
-                  data-test-shaded-progress-circle-element={{shadeItem}}
-                  class="inline-block {{if shadeItem "opacity-50"}}"
-                >
+                }}
+              >
+                <span class="inline-block {{if shadeItem "opacity-50"}}">
                 </span>
-              {{/let}}
-            </li>
+              </li>
+            {{/let}}
           {{/each}}
         </ul>
       {{else}}

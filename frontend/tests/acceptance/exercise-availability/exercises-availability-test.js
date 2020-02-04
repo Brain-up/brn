@@ -23,27 +23,28 @@ module('Acceptance | exercises availability', function(hooks) {
   test('first exercices in the name group is available by default', async function(assert) {
     await pageObject.goToSeriesPage();
 
-    assert.dom('[data-test-exercise-level="1"]').exists({ count: 2 });
-    assert
-      .dom(
-        '[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]',
-      )
-      .hasNoAttribute('disabled');
-    assert
-      .dom(
-        '[data-test-exercise-level="1"][data-test-exercise-name="exercise 2"]',
-      )
-      .hasNoAttribute('disabled');
-    assert
-      .dom(
-        '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',
-      )
-      .hasAttribute('disabled', 'disabled');
-    assert
-      .dom(
-        '[data-test-exercise-level="2"][data-test-exercise-name="exercise 2"]',
-      )
-      .hasAttribute('disabled', 'disabled');
+    assert.equal(
+      pageObject.firstLevelExercisesCount,
+      2,
+      'has two first level exercises',
+    );
+
+    assert.notOk(
+      pageObject.firstGroupFirstExerciseIsDisabled,
+      'group 1: first exercise is not disabled',
+    );
+    assert.notOk(
+      pageObject.secondGroupFirstExerciseIsDisabled,
+      'group 2: first exercise is not disabled',
+    );
+    assert.ok(
+      pageObject.firstGroupSecondExerciseIsDisabled,
+      'group 1: second exercise is disabled',
+    );
+    assert.ok(
+      pageObject.secondGroupSecondExerciseIsDisabled,
+      'group 2: second exercise is disabled',
+    );
   });
 
   test('marks available exercises withing a name group if previous is completed', async function(assert) {
@@ -53,17 +54,13 @@ module('Acceptance | exercises availability', function(hooks) {
     await pageObject.startTask();
 
     await pageObject.chooseRightAnswer();
-
-    assert.dom('[data-test-exercise-level="1"]').exists({ count: 2 });
-    assert
-      .dom(
-        '[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]',
-      )
-      .hasNoAttribute('disabled');
-    assert
-      .dom(
-        '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',
-      )
-      .hasNoAttribute('disabled');
+    assert.notOk(
+      pageObject.firstGroupFirstExerciseIsDisabled,
+      'group 1: first exercise is not disabled',
+    );
+    assert.notOk(
+      pageObject.firstGroupSecondExerciseIsDisabled,
+      'group 1: second exercise is disabled',
+    );
   });
 });

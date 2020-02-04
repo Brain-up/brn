@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import pageObject from './test-support/page-object';
 
 module('Integration | Component | header', function(hooks) {
   setupRenderingTest(hooks);
@@ -10,7 +11,7 @@ module('Integration | Component | header', function(hooks) {
     this.owner.lookup('router:main').setupRouter();
     await render(hbs`<Header />`);
 
-    assert.dom('[data-test-group-link]').hasAttribute('href', '/groups');
-    assert.dom('[data-test-logo]').hasAttribute('href', '/');
+    assert.equal(pageObject.groupsLink, '/groups', 'has a right groups link');
+    assert.equal(pageObject.logoLink, '/', 'has core link in the main logo');
   });
 });

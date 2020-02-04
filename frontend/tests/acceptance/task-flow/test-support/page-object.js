@@ -4,6 +4,7 @@ import {
   attribute,
   clickable,
   collection,
+  isPresent,
 } from 'ember-cli-page-object';
 
 const page = create({
@@ -17,6 +18,19 @@ const page = create({
   wrongAnswers: collection('[data-test-wrong-answer]', {
     choose: clickable(),
   }),
+  startButtonIsPresent: isPresent('[data-test-start-task-button]'),
+  correctnessWidgetIndicatesCorrect: attribute(
+    'data-test-is-correct',
+    '[data-test-answer-correctness-widget]',
+  ),
+  correctnessWidgetIndicatesIncorrect: attribute(
+    'data-test-isnt-correct',
+    '[data-test-answer-correctness-widget]',
+  ),
+  rightAnswerNotificationExists: isPresent(
+    '[data-test-right-answer-notification]',
+  ),
+  secondTaskIsShown: isPresent('[data-test-task-id="2"]'),
 });
 
 export default page;

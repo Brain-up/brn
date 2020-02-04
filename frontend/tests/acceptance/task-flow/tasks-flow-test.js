@@ -19,11 +19,14 @@ module('Acceptance | tasks flow', function(hooks) {
   test('has a start task button if the task is not started yet', async function(assert) {
     await pageObject.goToFirstTask();
 
-    assert.dom('[data-test-start-task-button]').exists();
+    assert.ok(pageObject.startButtonIsPresent, 'start button is present');
 
     await pageObject.startTask();
 
-    assert.dom('[data-test-start-task-button]').doesNotExist();
+    assert.notOk(
+      pageObject.startButtonIsPresent,
+      'start button is not present',
+    );
   });
 
   test('shows regret widget if answer is wrong and a word image if right', async function(assert) {
@@ -35,9 +38,11 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert
-      .dom('[data-test-answer-correctness-widget]')
-      .hasAttribute('data-test-isnt-correct');
+    assert.equal(
+      pageObject.correctnessWidgetIndicatesIncorrect,
+      '',
+      'wrong answer notification',
+    );
 
     await settled();
 
@@ -45,7 +50,10 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(
+      pageObject.rightAnswerNotificationExists,
+      'right answer notification is present',
+    );
   });
 
   test('goest to next task after a right answer picture', async function(assert) {
@@ -57,11 +65,14 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(
+      pageObject.rightAnswerNotificationExists,
+      'right answer notification is present',
+    );
 
     await customTimeout();
 
-    assert.dom('[data-test-task-id="2"]').exists();
+    assert.ok(pageObject.secondTaskIsShown, 'moved to the next task');
   });
 
   test('sends a POST request to "study-history" after exercise completed', async function(assert) {
@@ -81,7 +92,10 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(
+      pageObject.rightAnswerNotificationExists,
+      'right answer notification is present',
+    );
 
     await customTimeout();
     await customTimeout();
@@ -90,13 +104,18 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(
+      pageObject.rightAnswerNotificationExists,
+      'right answer notification is present',
+    );
 
     await customTimeout();
 
-    assert
-      .dom('[data-test-answer-correctness-widget]')
-      .hasAttribute('data-test-is-correct');
+    assert.equal(
+      pageObject.correctnessWidgetIndicatesCorrect,
+      '',
+      'correct answer notification',
+    );
   });
 
   test('shows a complete victory widget after exercise completed and goes to series route', async function(assert) {
@@ -111,11 +130,14 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(
+      pageObject.rightAnswerNotificationExists,
+      'right answer notification is present',
+    );
 
     await customTimeout();
 
-    assert.dom('[data-test-task-id="2"]').exists();
+    assert.ok(pageObject.secondTaskIsShown, 'moved to the next task');
 
     await customTimeout();
 
@@ -123,13 +145,18 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(
+      pageObject.rightAnswerNotificationExists,
+      'right answer notification is present',
+    );
 
     await customTimeout();
 
-    assert
-      .dom('[data-test-answer-correctness-widget]')
-      .hasAttribute('data-test-is-correct');
+    assert.equal(
+      pageObject.correctnessWidgetIndicatesCorrect,
+      '',
+      'correct answer notification',
+    );
 
     await customTimeout();
     await customTimeout();

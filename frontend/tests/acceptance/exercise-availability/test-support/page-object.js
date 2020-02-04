@@ -1,4 +1,10 @@
-import { create, visitable, clickable, count } from 'ember-cli-page-object';
+import {
+  create,
+  visitable,
+  clickable,
+  count,
+  attribute,
+} from 'ember-cli-page-object';
 
 const page = create({
   goToSeriesPage: visitable('/groups/1/series/1'),
@@ -9,6 +15,22 @@ const page = create({
   exercisesCount: count('[data-test-series-navigation-list-link]'),
 
   firstLevelExercisesCount: count('[data-test-exercise-level="1"]'),
+  firstGroupFirstExerciseIsDisabled: attribute(
+    'disabled',
+    '[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]',
+  ),
+  secondGroupFirstExerciseIsDisabled: attribute(
+    'disabled',
+    '[data-test-exercise-level="1"][data-test-exercise-name="exercise 2"]',
+  ),
+  firstGroupSecondExerciseIsDisabled: attribute(
+    'disabled',
+    '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',
+  ),
+  secondGroupSecondExerciseIsDisabled: attribute(
+    'disabled',
+    '[data-test-exercise-level="2"][data-test-exercise-name="exercise 2"]',
+  ),
 });
 
 export default page;

@@ -36,7 +36,11 @@ module('Integration | Component | progress-indicator', function(hooks) {
       @progressItems={{this.tasks}}
     />`);
     await waitFor('[data-test-inidicator-root]');
-    assert.dom('[data-test-progress-indicator-item]').exists({ count: 3 });
+    assert.equal(
+      pageObject.indicatorItemsCount,
+      3,
+      'has three indicator items',
+    );
     assert.deepEqual(pageObject.progressIndicators.mapBy('indicatorNum'), [
       '3',
       '2',
@@ -67,27 +71,30 @@ module('Integration | Component | progress-indicator', function(hooks) {
     />`);
     await waitFor('[data-test-inidicator-root]');
 
-    assert
-      .dom('[data-test-progress-indicator-item-number="3"] span')
-      .hasAttribute('data-test-shaded-progress-circle-element');
-    assert
-      .dom('[data-test-progress-indicator-item-number="2"] span')
-      .hasAttribute('data-test-shaded-progress-circle-element');
-    // currentItemInProgress
-    assert
-      .dom('[data-test-progress-indicator-item-number="1"] span')
-      .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
+    assert.ok(pageObject.shadedItems.includes('3'), 'the third item is shaded');
+    assert.ok(
+      pageObject.shadedItems.includes('2'),
+      'the second item is shaded',
+    );
+
+    assert.notOk(
+      pageObject.shadedItems.includes('1'),
+      'current item is not shaded',
+    );
+
+    completeByOrder(this.tasks, 1);
+    await customTimeout(1000);
+
+    assert.notOk(
+      pageObject.shadedItems.includes('2'),
+      'the second item is not shaded(became current)',
+    );
+    assert.ok(pageObject.shadedItems.includes('3'), 'the third item is shaded');
+
     completeByOrder(this.tasks, 2);
     await customTimeout(1000);
-    assert
-      .dom('[data-test-progress-indicator-item-number="2"] span')
-      .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
 
-    completeByOrder(this.tasks, 3);
-    await customTimeout(1000);
-    assert
-      .dom('[data-test-progress-indicator-item-number="3"] span')
-      .doesNotHaveAttribute('data-test-shaded-progress-circle-element');
+    assert.notOk(pageObject.hasAnyShadedItems, 'the third item is not shaded');
   });
 
   test('hides excessive items', async function(assert) {
@@ -105,14 +112,25 @@ module('Integration | Component | progress-indicator', function(hooks) {
     completeByOrder(this.longList, 7);
 
     await customTimeout(100);
-    assert
-      .dom('[data-test-hidden-uncompleted]')
-      .hasText(`+${100 - pageObject.maxItemsAmount}`);
-    assert.dom('[data-test-hidden-completed]').hasText('');
+
+    assert.equal(
+      pageObject.hiddenUncompletedIndicatorValue,
+      `+${100 - pageObject.maxItemsAmount}`,
+      'shows a right amount of hidden uncompleted items',
+    );
+    assert.equal(
+      pageObject.hiddenCompletedIndicatorValue,
+      '',
+      'there are no completed hidden items',
+    );
     for (let index = 8; index <= pageObject.maxItemsAmount / 2 + 1; index++) {
       completeByOrder(this.longList, index);
     }
     await customTimeout(100);
-    assert.dom('[data-test-hidden-completed]').hasText('+1');
+    assert.equal(
+      pageObject.hiddenCompletedIndicatorValue,
+      '+1',
+      'there is one hidden completed item',
+    );
   });
 });

@@ -46,11 +46,6 @@ export default class TaskPlayerComponent extends Component {
 
   classNames = ['flex-1', 'flex', 'flex-col'];
 
-  attributeBindings = [
-    'task.id:data-test-task-id',
-    'task.exercise.id:data-test-task-exercise-id',
-  ];
-
   didReceiveAttrs() {
     if (this.previousTaskWords !== this.task.words) {
       this.shuffle();

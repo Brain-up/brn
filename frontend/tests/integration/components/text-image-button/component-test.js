@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import pageObject from './test-support/page-object';
 
 module('Integration | Component | text-image-button', function(hooks) {
   setupRenderingTest(hooks);
@@ -19,10 +20,12 @@ module('Integration | Component | text-image-button', function(hooks) {
       @word="word"
     />`);
 
-    assert
-      .dom('[data-test-task-answer]')
-      .hasAttribute('data-test-task-answer-option', 'word');
-    assert.dom('[data-test-task-answer]').isDisabled();
-    assert.dom('[data-test-task-answer]').hasClass('selected');
+    assert.equal(
+      pageObject.buttonText,
+      'word',
+      'has an option with the text: "word"',
+    );
+    assert.ok(pageObject.buttonIsDisabled, 'answer option button is disabled');
+    assert.ok(pageObject.buttonIsSelected, 'answer is selected');
   });
 });

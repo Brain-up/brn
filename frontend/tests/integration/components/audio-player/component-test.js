@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import pageObject from './page-object';
+import pageObject from './test-support/page-object';
 import customTimeout from 'brn/utils/custom-timeout';
 
 module('Integration | Component | audio-player', function(hooks) {
@@ -28,18 +28,18 @@ module('Integration | Component | audio-player', function(hooks) {
   });
 
   test('it disables button when playing', async function(assert) {
-    assert.dom('[data-test-play-audio-button]').isNotDisabled();
+    assert.notOk(pageObject.buttonIsDisabled, 'button is not disabled');
 
     pageObject.playAudio();
 
     await customTimeout();
 
-    assert.dom('[data-test-play-audio-button]').isDisabled();
+    assert.ok(pageObject.buttonIsDisabled, 'button is disabled');
 
     await customTimeout();
     await customTimeout();
 
-    assert.dom('[data-test-play-audio-button]').isNotDisabled();
+    assert.notOk(pageObject.buttonIsDisabled, 'button is not disabled');
   });
 
   test('it shows playing progress', async function(assert) {
@@ -47,8 +47,6 @@ module('Integration | Component | audio-player', function(hooks) {
 
     await customTimeout();
 
-    assert
-      .dom('[data-test-play-audio-button]')
-      .hasAttribute('data-test-playing-progress', '100');
+    assert.equal(pageObject.progressValue, '100', 'progress value is 100');
   });
 });
