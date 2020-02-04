@@ -1,43 +1,55 @@
-<section class="upload-tasks-content">
-  <PaperForm>
-    <div class="layout-row">
-      <PaperSelect @label="Group" @options={{this.options}} @onChange={{this.onGroupChange}} as |item|>
-        {{item.name}}
-      </PaperSelect>
-    </div>
-    <div class="layout-row">
-      <PaperSelect @label="Series" @options={{this.options}} @onChange={{this.onGroupChange}} as |item|>
-        {{item.name}}
-      </PaperSelect>
-    </div>
-    <div class="layout-row">
-      <FileDropzone @name="tasks" as |dropzone queue|>
-        {{#if dropzone.active}}
-          {{#if dropzone.valid}}
-            <h4>
-              Drop to upload
-            </h4>
-          {{else}}
-            Invalid
-          {{/if}}
-        {{else if queue.files.length}}
-          Uploading{{queue.files.length}}files. ({{queue.progress}}%)
-        {{else}}
-          <h4>
-            Upload Tasks
-          </h4>
-          <p>
-            {{#if dropzone.supported}}
-              Drag and drop documents onto this area to upload them or
-            {{/if}}
-            <FileUpload @name="tasks" @assept=".csv" @onfileadd={{this.upload}}>
-              <a id="upload-task" tabindex="0">
-                Add an Task.
-              </a>
-            </FileUpload>
-          </p>
-        {{/if}}
-      </FileDropzone>
-    </div>
-  </PaperForm>
+<section class="upload-tasks-content" {{did-insert this.loadGroups}}>
+	<div class="layout-row">
+		<label>Group</label>
+		<PowerSelect @options={{this.groups}} @selected={{this.selectedGroup}} @onChange={{this.onGroupChange}} as
+			|item|>
+			{{item.name}}
+		</PowerSelect>
+	</div>
+	<div class="layout-row">
+		<label>Series</label>
+		<PowerSelect @options={{this.series}} @selected={{this.selectedSeria}} @onChange={{this.onSeriaChange}} as
+			|item|>
+			{{item.name}}
+		</PowerSelect>
+	</div>
+	<br>
+	{{#if (not (and this.selectedGroup this.selectedSeria))}}
+	
+	<BsAlert @type="warning" @dismissable={{false}} >
+		You need to select group and seria to start file uploading.
+	</BsAlert>
+	{{else}}
+	<div class="layout-row">
+		<FileDropzone @name="tasks" as |dropzone queue|>
+			{{#if dropzone.active}}
+			{{#if dropzone.valid}}
+			<h4>
+				Drop to upload
+			</h4>
+			{{else}}
+			Invalid
+			{{/if}}
+			{{else if queue.files.length}}
+			Uploading{{queue.files.length}}files. ({{queue.progress}}%)
+			{{else}}
+			<h4>
+				Upload Tasks
+			</h4>
+			<p>
+				{{#if dropzone.supported}}
+				Drag and drop documents onto this area to upload them or
+				{{/if}}
+				<FileUpload @name="tasks" @assept=".csv" @onfileadd={{this.upload}}>
+					<a id="upload-task" tabindex="0">
+						<b>Add an Task.</b>
+					</a>
+				</FileUpload>
+			</p>
+			{{/if}}
+		</FileDropzone>
+	</div>
+	{{/if}}
+
+
 </section>

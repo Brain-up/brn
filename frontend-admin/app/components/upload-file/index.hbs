@@ -1,14 +1,31 @@
 <section class="upload-tasks-content">
-  <PaperForm>
-    <div class="layout-row">
-      <PaperSelect @label="Group" @options={{this.options}} @onChange={{this.onGroupChange}} as |item|>
-        {{item.name}}
-      </PaperSelect>
-    </div>
-    <div class="layout-row">
-      <PaperSelect @label="Series" @options={{this.options}} @onChange={{this.onGroupChange}} as |item|>
-        {{item.name}}
-      </PaperSelect>
-    </div>
-  </PaperForm>
+	<div class="layout-row">
+		<FileDropzone @name="tasks" as |dropzone queue|>
+			{{#if dropzone.active}}
+			{{#if dropzone.valid}}
+			<h4>
+				Drop to upload
+			</h4>
+			{{else}}
+			Invalid
+			{{/if}}
+			{{else if queue.files.length}}
+			Uploading{{queue.files.length}}files. ({{queue.progress}}%)
+			{{else}}
+			<h4>
+				Upload Tasks
+			</h4>
+			<p>
+				{{#if dropzone.supported}}
+				Drag and drop documents onto this area to upload them or
+				{{/if}}
+				<FileUpload @name="tasks" @assept=".csv" @onfileadd={{this.upload}}>
+					<a id="upload-task" tabindex="0">
+						Add an Task.
+					</a>
+				</FileUpload>
+			</p>
+			{{/if}}
+		</FileDropzone>
+	</div>
 </section>

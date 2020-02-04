@@ -14,6 +14,11 @@ export class SeriesModel {
     exercises = []
 }
 
+function queryParams(params) {
+    return Object.keys(params)
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+        .join('&');
+}
 
 export default class UploaderService extends Service {
     getAuthHeaders() {
@@ -31,7 +36,7 @@ export default class UploaderService extends Service {
     }
     apiPrefix = '/api';
     async loadJSON(endpoint, data = {}) {
-        const req = await fetch(`${this.apiPrefix}/${endpoint}`, { body: data, headers: this.headers() });
+        const req = await fetch(`${this.apiPrefix}/${endpoint}?${queryParams(data)}`, { headers: this.headers() });
         if (req.ok) {
             return await req.json();
         } else {
@@ -50,7 +55,7 @@ export default class UploaderService extends Service {
             return null;
         }
     }
-    //  '/api/files'
+    // '/api/files'
     // '/api/loadTasksFile'
     async getGroups() {
         return await this.loadJSON('groups');
