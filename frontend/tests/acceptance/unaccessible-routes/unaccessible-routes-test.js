@@ -3,9 +3,9 @@ import { currentURL } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
-import unaccessibleExerciseScenario from '../../../mirage/scenarios/unaccessibleExerciseScenario';
-import unaccessibleTaskScenario from '../../../mirage/scenarios/unaccessibleTaskScenario';
-import unaccessibleSeriesScenario from '../../../mirage/scenarios/unaccessibleSeriesScenario';
+import unaccessibleExerciseScenario from '../../../mirage/scenarios/unaccessible-exercise';
+import unaccessibleTaskScenario from '../../../mirage/scenarios/unaccessible-task';
+import unaccessibleSeriesScenario from '../../../mirage/scenarios/unaccessible-series';
 
 module('Acceptance | unaccessible routes', function(hooks) {
   setupApplicationTest(hooks);
