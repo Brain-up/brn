@@ -1,25 +1,27 @@
-<nav class="flex items-center justify-between flex-wrap bg-teal-500 p-4">
-  <div class="flex items-center flex-shrink-0 text-white mr-8">
-    {{#link-to
-      "index"
-      data-test-logo
-      class="font-semibold text-xl tracking-tight logo-text"
-    }}
-      <FaIcon @icon="brain" />
-      <span class="logo-link__name">
-        Brain Up
-      </span>
-    {{/link-to}}
-  </div>
-  <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-    <div class="text-sm lg:flex-grow">
+<div class="{{this.styleNamespace}} header" ...attributes>
+  <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-4">
+    <div class="flex items-center flex-shrink-0 text-white mr-8">
       {{#link-to
-        "groups"
-        data-test-group-link
-        class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+        "index"
+        data-test-logo
+        class="font-semibold text-xl tracking-tight logo-text"
       }}
-        Группы
+        <FaIcon @icon="brain" />
+        <span class="logo-link__name">
+          Brain Up
+        </span>
       {{/link-to}}
     </div>
-  </div>
-</nav>
+    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+      <div class="text-sm lg:flex-grow">
+        {{#link-to
+          "groups"
+          data-test-group-link
+          class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+        }}
+          Группы
+        {{/link-to}}
+      </div>
+    </div>
+  </nav>
+</div>

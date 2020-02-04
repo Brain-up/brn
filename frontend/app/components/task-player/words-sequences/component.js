@@ -15,9 +15,10 @@ function getEmptyTemplate(selectedItemsOrder = []) {
 }
 
 export default class WordsSequencesComponent extends Component {
+  tagName = '';
   didInsertElement() {
     this.updateLocalTasks();
-	this.startTask();
+	  this.startTask();
   }
   @service audio;
   @tracked

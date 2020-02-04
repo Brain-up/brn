@@ -1,26 +1,32 @@
-<h3 class="mb-4">
-  {{if
-    @isCorrect
-    "Поздравляем! Упражнение выполнено!"
-    "Неверно. Попробуйте ещё раз!"
-  }}
-</h3>
-{{! template-lint-configure no-inline-styles false }}
 <div
-  data-test-answer-correctness-widget
-  data-test-is-correct={{@isCorrect}}
-  data-test-isnt-correct={{not @isCorrect}}
-  class="answer-correctness-widget flex-1 rounded mx-auto"
-  aria-label={{html-safe (concat "правильный ответ")}}
-  style={{html-safe
-    (concat
-      (concat "background-image: url('/pictures/" this.imagePath ".jpg')")
-      ", "
-      (concat "url('/pictures/" this.imagePath ".png')")
-      ", "
-      (concat "url('/pictures/" this.imagePath ".jpeg')")
-      ", "
-      (concat "url('/pictures/" this.imagePath ".svg')")
-    )
-  }}
-></div>
+  class="{{this.styleNamespace}}
+     flex flex-wrap flex-1 mt-5 flex-col text-center"
+  ...attributes
+>
+  <h3 class="mb-4">
+    {{if
+      @isCorrect
+      "Поздравляем! Упражнение выполнено!"
+      "Неверно. Попробуйте ещё раз!"
+    }}
+  </h3>
+  {{! template-lint-configure no-inline-styles false }}
+  <div
+    data-test-answer-correctness-widget
+    data-test-is-correct={{@isCorrect}}
+    data-test-isnt-correct={{not @isCorrect}}
+    class="answer-correctness-widget flex-1 rounded mx-auto"
+    aria-label={{html-safe (concat "правильный ответ")}}
+    style={{html-safe
+      (concat
+        (concat "background-image: url('/pictures/" this.imagePath ".jpg')")
+        ", "
+        (concat "url('/pictures/" this.imagePath ".png')")
+        ", "
+        (concat "url('/pictures/" this.imagePath ".jpeg')")
+        ", "
+        (concat "url('/pictures/" this.imagePath ".svg')")
+      )
+    }}
+  ></div>
+</div>
