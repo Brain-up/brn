@@ -35,9 +35,12 @@ export default class WordsSequencesComponent extends Component {
     return this.uncompletedTasks.firstObject;
   }
   get audioFiles() {
-    return this.firstUncompletedTask.answer.map(({ audioFileUrl }) => {
-      return `/audio/${audioFileUrl}`;
-    });
+    return (
+      this.firstUncompletedTask &&
+      this.firstUncompletedTask.answer.map(({ audioFileUrl }) => {
+        return `/audio/${audioFileUrl}`;
+      })
+    );
   }
   get answerCompleted() {
     return Object.values(this.currentAnswerObject).reduce(
@@ -112,10 +115,8 @@ export default class WordsSequencesComponent extends Component {
     await customTimeout(1000);
     this.startNewTask();
     if (!this.firstUncompletedTask) {
-      this.task.savePassed();
-      this.onRightAnswer();
       await customTimeout(3000);
-      this.afterCompleted();
+      this.onRightAnswer();
     }
   }
 }
