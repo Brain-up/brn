@@ -238,6 +238,9 @@ class InitialDataLoader(
             wordType = WordTypeEnum.SENTENCE.toString(),
             audioFileUrl = "series3/девочка_рисует.mp3"
         )
+
+        resourceService.save(resource7)
+
         val task3 = Task(
             serialNumber = 2,
             answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6),
