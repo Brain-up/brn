@@ -30,7 +30,7 @@
     }
   },
   "lint-staged": {
-    "./{app,tests,config}/**/*.{js,ts,json}": [
+    "./{app,tests,config}/**/*.{js,ts}": [
       "node ./node_modules/prettier/bin-prettier.js --write",
       "eslint --fix",
       "git add"

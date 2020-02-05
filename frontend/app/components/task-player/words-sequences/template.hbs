@@ -1,38 +1,35 @@
 <div class={{this.styleNamespace}} ...attributes>
   <ProgressIndicator @progressItems={{this.tasksCopy}} />
   {{#if this.tasksCopy.length}}
-    {{#if this.uncompletedTasks.length}}
-      <AudioPlayer
-        @audioFileUrl={{this.audioFiles}}
-        @autoplay={{@autoplay}}
-        @disabled={{@disableAudioPlayer}}
-      />
-      <div class="flex mt-4 justify-center">
-        {{#each @task.selectedItemsOrder as |type|}}
-          <div
-            class="column flex-1 flex-col type-column
+    <AudioPlayer
+      @audioFileUrl={{this.audioFiles}}
+      @autoplay={{@autoplay}}
+      @disabled={{@disableAudioPlayer}}
+    />
+    <div class="flex mt-4 justify-center">
+      {{#each @task.selectedItemsOrder as |type|}}
+        <div
+          class="column flex-1 flex-col type-column
 
-              {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
-          >
-            {{#each (get @task.answerOptions type) as |answerOption|}}
-              <TextImageButton
-                @checked={{this.answerCompleted}}
-                @isCorrect={{this.isCorrect}}
-                @disabled={{@disableAnswers}}
-                @isSelected={{eq
-                  (get this.currentAnswerObject type)
-                  answerOption.word
-                }}
-                @clickAction={{action this.checkMaybe answerOption}}
-                @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
-                @word={{answerOption.word}}
-              />
-            {{/each}}
-          </div>
-        {{/each}}
-      </div>
-    {{else}}
-      <AnswerCorrectnessWidget @isCorrect={{true}} />
-    {{/if}}
+
+            {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
+        >
+          {{#each (get @task.answerOptions type) as |answerOption|}}
+            <TextImageButton
+              @checked={{this.answerCompleted}}
+              @isCorrect={{this.isCorrect}}
+              @disabled={{@disableAnswers}}
+              @isSelected={{eq
+                (get this.currentAnswerObject type)
+                answerOption.word
+              }}
+              @clickAction={{action this.checkMaybe answerOption}}
+              @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
+              @word={{answerOption.word}}
+            />
+          {{/each}}
+        </div>
+      {{/each}}
+    </div>
   {{/if}}
 </div>

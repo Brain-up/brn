@@ -28,7 +28,6 @@ export default class TaskPlayerComponent extends Component {
     );
   }
   onRightAnswer() {}
-  afterCompleted() {}
   async startTask() {
     this.studyingTimer.runTimer();
     this.task.exercise.content.trackTime('start');
