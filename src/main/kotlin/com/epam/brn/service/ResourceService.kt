@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
 import org.apache.logging.log4j.kotlin.logger
@@ -20,5 +21,14 @@ class ResourceService(@Autowired val resourceRepository: ResourceRepository) {
 
     fun save(resource: Resource): Resource {
         return resourceRepository.save(resource)
+    }
+
+    fun saveAll(resources: List<Resource>): MutableIterable<Resource> {
+        return resourceRepository.saveAll(resources)
+    }
+
+    fun findById(id: Long): Resource {
+        return resourceRepository.findById(id)
+            .orElseThrow { NoDataFoundException("no resource was found for id=$id") }
     }
 }

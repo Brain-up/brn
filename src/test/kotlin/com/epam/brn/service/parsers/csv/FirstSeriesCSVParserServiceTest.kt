@@ -16,9 +16,9 @@ private inline fun <reified T> makeIdentityConverter(): Converter<T, T> =
         override fun convert(source: T) = source
     }
 
-val csvParserService = CSVParserService()
+val csvParserService = FirstSeriesCSVParserService()
 
-class CSVParserServiceTest : Spek({
+class FirstSeriesCSVParserServiceTest : Spek({
     describe("Csv Parser Service") {
         it("should parse Tasks") {
 

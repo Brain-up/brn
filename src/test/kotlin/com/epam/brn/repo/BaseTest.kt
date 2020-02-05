@@ -14,6 +14,9 @@ abstract class BaseTest {
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
 
+    @Autowired
+    lateinit var resourceRepository: ResourceRepository
+
     val listOfWords = listOf("son", "lon", "slo")
     val nameOfTaskWithAnswers = "firstTask"
     var exerciseId: Long? = null
@@ -40,6 +43,9 @@ abstract class BaseTest {
             Resource(audioFileUrl = "audio_s", word = listOfWords[1], pictureFileUrl = "picture_s", soundsCount = 0)
         val thirdResource =
             Resource(audioFileUrl = "audio_t", word = listOfWords[2], pictureFileUrl = "picture_t", soundsCount = 0)
+
+        resourceRepository.saveAll(listOf(firstResource, secondResource, thirdResource))
+
         val task = Task(
             name = nameOfTaskWithAnswers,
             serialNumber = 1,
