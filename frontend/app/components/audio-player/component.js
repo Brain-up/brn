@@ -9,6 +9,7 @@ import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 
 export default class AudioPlayerComponent extends Component {
+  tagName = '';
   init() {
     super.init(...arguments);
     next(() => {

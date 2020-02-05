@@ -1,11 +1,14 @@
-{{component
-  this.componentType
-  onRightAnswer=this.onRightAnswer
-  task=@task
-  disableAnswers=this.disableAnswers
-  disableAudioPlayer=this.disableAudioPlayer
-  autoplay=(not this.disableAudioPlayer)
-}}
-{{#if this.justEnteredTask}}
-  <StartTaskButton @startTask={{action this.startTask}} />
-{{/if}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{component
+    this.componentType
+    onRightAnswer=this.onRightAnswer
+    afterCompleted=this.afterCompleted
+    task=@task
+    disableAnswers=this.disableAnswers
+    disableAudioPlayer=this.disableAudioPlayer
+    autoplay=(not this.disableAudioPlayer)
+  }}
+  {{#if this.justEnteredTask}}
+    <StartTaskButton @startTask={{action this.startTask}} />
+  {{/if}}
+</div>
