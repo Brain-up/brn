@@ -7,7 +7,8 @@ enum class WordTypeEnum {
     ADDITION_OBJECT,
     ADDITION_OBJECT_DESCRIPTION,
     COUNT,
-    SENTENCE
+    SENTENCE,
+    UNKNOWN
 }
 
 val mapPositionToWordType = mapOf(
