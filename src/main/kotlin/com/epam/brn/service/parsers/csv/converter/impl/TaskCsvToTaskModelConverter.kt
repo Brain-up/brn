@@ -62,6 +62,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
         } else {
             correctAnswer = resources[0]
             correctAnswer.pictureFileUrl = source.pictureFileName
+            correctAnswer.wordType = wordType
         }
         target.correctAnswer = resourceService.save(correctAnswer)
     }
@@ -79,7 +80,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     private fun getResourceByWord(word: String): Resource {
         val resources = resourceService.findByWordLike(word)
         return if (CollectionUtils.isEmpty(resources))
-            createAndGetResource(word, StringUtils.EMPTY, StringUtils.EMPTY, WordTypeEnum.OBJECT.toString())
+            createAndGetResource(word, StringUtils.EMPTY, StringUtils.EMPTY, WordTypeEnum.UNKNOWN.toString())
         else
             resources.first()
     }
