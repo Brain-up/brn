@@ -11,11 +11,13 @@ module('Integration | Component | series-navigation', function(hooks) {
 
   hooks.beforeEach(async function() {
     const store = this.owner.lookup('service:store');
+    const testSeries = store.createRecord('series');
     const exercises = TEST_EXERCISE_NAMES.map((name, index) =>
       store.createRecord('exercise', {
         name,
         id: index,
         order: TEST_EXERCISE_NAMES.length - index,
+        series: testSeries,
         tasks: [
           store.createRecord('task', [
             {

@@ -1,9 +1,10 @@
 import { set } from '@ember/object';
 import deepCopy from 'brn/utils/deep-copy';
+import { TaskItem } from 'brn/utils/task-item';
 
 export function completeByOrder(items, order) {
   const target = items.findBy('order', order);
-  set(target, 'isCompleted', true);
+  set(target, 'completedInCurrentCycle', true);
 }
 
 export function getLongItemsList() {
@@ -16,10 +17,12 @@ export function getLongItemsList() {
     canInteract: true,
   };
   while (counter < listLength) {
-    resultArray.push({
-      ...deepCopy(defaultItem),
-      order: counter,
-    });
+    resultArray.push(
+      new TaskItem({
+        ...deepCopy(defaultItem),
+        order: counter,
+      }),
+    );
     counter++;
   }
 

@@ -2,22 +2,22 @@ import { module, test } from 'qunit';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
-import {
-  getServerResponses,
-  chooseAnswer,
-  setupAfterPageVisit,
-} from './test-support/helpers';
+import { setupAfterPageVisit } from './test-support/helpers';
+import { getServerResponses, chooseAnswer } from '../general-helpers';
 import { settled } from '@ember/test-helpers';
 import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
+import { getData } from './test-support/data-storage';
 
 module('Acceptance | tasks flow', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
-  test('has a start task button if the task is not started yet', async function(assert) {
-    getServerResponses();
+  hooks.beforeEach(() => {
+    getServerResponses(getData());
+  });
 
+  test('has a start task button if the task is not started yet', async function(assert) {
     await pageObject.goToFirstTask();
 
     assert.dom('[data-test-start-task-button]').exists();
@@ -28,8 +28,6 @@ module('Acceptance | tasks flow', function(hooks) {
   });
 
   test('shows regret widget if answer is wrong and a word image if right', async function(assert) {
-    getServerResponses();
-
     await pageObject.goToFirstTask();
 
     const { targetTask, wrongAnswer } = setupAfterPageVisit();
@@ -54,8 +52,6 @@ module('Acceptance | tasks flow', function(hooks) {
   });
 
   test('goest to next task after a right answer picture', async function(assert) {
-    getServerResponses();
-
     await pageObject.goToFirstTask();
 
     const { targetTask } = setupAfterPageVisit();
@@ -76,7 +72,6 @@ module('Acceptance | tasks flow', function(hooks) {
   test('sends a POST request to "study-history" after exercise completed', async function(assert) {
     assert.expect(4);
 
-    getServerResponses();
     /* eslint-disable no-undef */
     server.post('/study-history', function(request) {
       assert.ok(true, 'sends a post request');
@@ -115,7 +110,6 @@ module('Acceptance | tasks flow', function(hooks) {
   });
 
   test('shows a complete victory widget after exercise completed and goes to series route', async function(assert) {
-    getServerResponses();
     /* eslint-disable no-undef */
     server.put('exercises/1', function() {});
 

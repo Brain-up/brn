@@ -6,8 +6,8 @@ import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import com.epam.brn.service.parsers.csv.dto.SeriesCsv
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
 import java.nio.charset.StandardCharsets
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
-import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -16,9 +16,9 @@ private inline fun <reified T> makeIdentityConverter(): Converter<T, T> =
         override fun convert(source: T) = source
     }
 
-val csvParserService = CSVParserService()
+val csvParserService = FirstSeriesCSVParserService()
 
-class CSVParserServiceTest : Spek({
+class FirstSeriesCSVParserServiceTest : Spek({
     describe("Csv Parser Service") {
         it("should parse Tasks") {
 
@@ -56,7 +56,7 @@ class CSVParserServiceTest : Spek({
             }
 
             val name = "Однослоговые слова без шума"
-            result shouldEqual listOf(
+            result shouldBeEqualTo listOf(
                 ExerciseCsv(1, 1, 1, name, name), ExerciseCsv(2, 1, 2, name, name)
             )
         }
@@ -73,7 +73,7 @@ class CSVParserServiceTest : Spek({
                 csvParserService.parseCommasSeparatedCsvFile(it, makeIdentityConverter<GroupCsv>())
             }
 
-            result shouldEqual listOf(
+            result shouldBeEqualTo listOf(
                 GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения"),
                 GroupCsv(
                     2, "Речевые упражнения", "Речевые упражнения"
@@ -93,7 +93,7 @@ class CSVParserServiceTest : Spek({
                 csvParserService.parseCommasSeparatedCsvFile(it, makeIdentityConverter<SeriesCsv>())
             }
 
-            result shouldEqual listOf(
+            result shouldBeEqualTo listOf(
                 SeriesCsv(2, 1, "Распознование слов", "Распознование слов"),
                 SeriesCsv(
                     2, 2, "Составление предложений", "Составление предложений"

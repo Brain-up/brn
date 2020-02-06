@@ -4,6 +4,8 @@ import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 import shuffleArray from 'brn/utils/shuffle-array';
 import customTimeout from 'brn/utils/custom-timeout';
+import { task } from 'ember-concurrency';
+import { action } from '@ember/object';
 
 export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
@@ -13,6 +15,18 @@ export default class TaskPlayerComponent extends Component {
   previousTaskWords = null;
 
   @service('audio') audio;
+
+  @(task(function*() {
+    yield customTimeout(3000);
+    this.onRightAnswer();
+  }).restartable())
+  runNextTaskTimer;
+
+  @(task(function*() {
+    yield customTimeout(2000);
+    this.set('taskResultIsVisible', false);
+  }).drop())
+  showTaskResult;
 
   classNames = ['flex-1', 'flex', 'flex-col'];
 
@@ -35,43 +49,20 @@ export default class TaskPlayerComponent extends Component {
     this.notifyPropertyChange('shuffledWords');
   }
 
+  @action
   handleSubmit(word) {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {
       const currentWordsOrder = Array.from(this.shuffledWords);
-      this.task.set('nextAttempt', true);
       this.task.set('repetitionCount', this.task.repetitionCount + 1);
+      this.task.set('nextAttempt', true);
       this.set('taskResultIsVisible', true);
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
     } else {
-      this.task.savePassed();
       this.task.set('nextAttempt', false);
     }
-  }
-
-  showExerciseResult() {
-    this.set('exerciseResultIsVisible', true);
-  }
-
-  async runNextTaskTimer() {
-    this.element.style.setProperty(
-      '--word-picture-url',
-      `url(${this.task.pictureFileUrl})`,
-    );
-    this.onRightAnswer();
-    await customTimeout(3000);
-    if (this.task.isLastTask) {
-      this.showExerciseResult();
-      await customTimeout(3000);
-    }
-    this.afterCompleted();
-  }
-
-  async runNextAttemptTimer() {
-    await customTimeout(2000);
-    this.set('taskResultIsVisible', false);
   }
 }
 ({});

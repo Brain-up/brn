@@ -130,3 +130,6 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 ### Thank you very much for your support!
 
 our application is run on http://ecse005003f1.epam.com/ && http://31.184.253.199/
+
+### License
+This project is licensed under the MIT license. See the LICENSE file for more info.

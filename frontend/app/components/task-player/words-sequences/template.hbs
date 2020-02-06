@@ -1,6 +1,6 @@
-<ProgressIndicator @progressItems={{this.tasksCopy}} />
-{{#if this.tasksCopy.length}}
-  {{#if this.uncompletedTasks.length}}
+<div class={{this.styleNamespace}} ...attributes>
+  <ProgressIndicator @progressItems={{this.tasksCopy}} />
+  {{#if this.tasksCopy.length}}
     <AudioPlayer
       @audioFileUrl={{this.audioFiles}}
       @autoplay={{@autoplay}}
@@ -10,6 +10,8 @@
       {{#each @task.selectedItemsOrder as |type|}}
         <div
           class="column flex-1 flex-col type-column
+
+
             {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
         >
           {{#each (get @task.answerOptions type) as |answerOption|}}
@@ -29,7 +31,5 @@
         </div>
       {{/each}}
     </div>
-  {{else}}
-    <AnswerCorrectnessWidget @isCorrect={{true}} />
   {{/if}}
-{{/if}}
+</div>

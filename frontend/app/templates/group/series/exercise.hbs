@@ -1,3 +1,15 @@
+{{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
+  <div class="flex items-center mb-2 justify-between">
+    <div>
+      <FaIcon @icon="chevron-left" />
+      <LinkTo @route="group.series" @model={{this.model.series}}>
+        Назад
+      </LinkTo>
+    </div>
+    <Timer @paused={{true}} />
+  </div>
+{{/if}}
+
 <div class="exercise-container">
   {{#if (not this.model.hideExerciseNavigation)}}
     <ExerciseNavigation
@@ -5,5 +17,13 @@
       @tasks={{this.model.tasks}}
     />
   {{/if}}
-  {{outlet}}
+
+  {{#if this.exerciseIsCompletedInCurrentCycle}}
+    <AnswerCorrectnessWidget
+      @isCorrect={{true}}
+      {{did-insert (action this.afterCompleted)}}
+    />
+  {{else}}
+    {{outlet}}
+  {{/if}}
 </div>

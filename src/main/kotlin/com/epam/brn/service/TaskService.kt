@@ -22,7 +22,8 @@ class TaskService(
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         return when (ExerciseTypeEnum.valueOf(exercise.exerciseType)) {
             ExerciseTypeEnum.SINGLE_WORDS -> tasks.map { task -> task.toSingleWordsDto() }
-            ExerciseTypeEnum.WORDS_SEQUENCES -> tasks.map { task -> task.toSequenceWordsDto() }
+            ExerciseTypeEnum.WORDS_SEQUENCES -> tasks.map { task -> task.toSequenceWordsDto(task!!.exercise?.template) }
+            ExerciseTypeEnum.SENTENCE -> tasks.map { task -> task.toSentenceDto(task!!.exercise?.template) }
         }
     }
 
@@ -32,10 +33,9 @@ class TaskService(
         return when (ExerciseTypeEnum.valueOf(task.exercise!!.exerciseType)) {
             ExerciseTypeEnum.SINGLE_WORDS -> task.toSingleWordsDto()
             ExerciseTypeEnum.WORDS_SEQUENCES -> task.toSequenceWordsDto(task!!.exercise?.template)
+            ExerciseTypeEnum.SENTENCE -> task.toSentenceDto(task!!.exercise?.template)
         }
     }
 
-    fun save(task: Task): Task {
-        return taskRepository.save(task)
-    }
+    fun save(task: Task): Task = taskRepository.save(task)
 }

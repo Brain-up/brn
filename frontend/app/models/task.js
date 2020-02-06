@@ -16,6 +16,7 @@ export default class Task extends CompletionDependent.extend({
     inverse: 'tasks',
     polymorphic: true,
   }),
+  _completedInCurrentCycle: null,
   repetitionCount: attr('number'),
   parent: reads('exercise'),
   tasksManager: service(),
@@ -23,6 +24,18 @@ export default class Task extends CompletionDependent.extend({
   pauseExecution: reads('studyingTimer.isPaused'),
   isCompleted: computed('tasksManager.completedTasks.[]', function() {
     return this.tasksManager.isCompleted(this);
+  }),
+  completedInCurrentCycle: computed('tasksManager.completedCycleTasks.[]', {
+    get() {
+      return (
+        this._completedInCurrentCycle ||
+        this.tasksManager.isCompletedInCurrentCycle(this)
+      );
+    },
+    set(value) {
+      this._completedInCurrentCycle = value;
+      return true;
+    },
   }),
   nextTask: computed('exercise.tasks.[]', function() {
     return arrayNext(this, this.exercise.content.get('sortedChildren'));
