@@ -1,5 +1,6 @@
 package com.epam.brn.service.parsers.csv.converter.impl
 
+import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
@@ -52,16 +53,16 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
 
     private fun convertCorrectAnswer(source: TaskCsv, target: Task) {
         val word = source.word
+        val wordType = source.wordType
         val audioFileName = source.audioFileName
         val resources = resourceService.findByWordAndAudioFileUrlLike(word, audioFileName)
         val correctAnswer: Resource
         if (CollectionUtils.isEmpty(resources)) {
-            correctAnswer = createAndGetResource(word, audioFileName, source.pictureFileName)
+            correctAnswer = createAndGetResource(word, audioFileName, source.pictureFileName, wordType)
         } else {
             correctAnswer = resources[0]
             correctAnswer.pictureFileUrl = source.pictureFileName
         }
-
         target.correctAnswer = resourceService.save(correctAnswer)
     }
 
@@ -78,19 +79,19 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
     private fun getResourceByWord(word: String): Resource {
         val resources = resourceService.findByWordLike(word)
         return if (CollectionUtils.isEmpty(resources))
-            createAndGetResource(word, StringUtils.EMPTY, StringUtils.EMPTY)
+            createAndGetResource(word, StringUtils.EMPTY, StringUtils.EMPTY, WordTypeEnum.OBJECT.toString())
         else
-            resources[0]
+            resources.first()
     }
 
-    private fun createAndGetResource(word: String, audioFileName: String, pictureFileName: String): Resource {
+    private fun createAndGetResource(word: String, audioFileName: String, pictureFileName: String, wordType: String): Resource {
         val resource = Resource()
         resource.word = word
+        resource.wordType = WordTypeEnum.valueOf(wordType).toString()
         resource.audioFileUrl =
             if (StringUtils.isNotEmpty(audioFileName)) audioFileName else defaultAudioFileUrl.format(word)
         resource.pictureFileUrl =
             if (StringUtils.isNotEmpty(pictureFileName)) pictureFileName else null
-
         return resource
     }
 }
