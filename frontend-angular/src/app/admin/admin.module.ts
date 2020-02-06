@@ -11,7 +11,6 @@ import {SharedModule} from '../shared/shared.module';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {HttpClientModule} from '@angular/common/http';
-import {UploadFileModule} from '../shared/upload-file/upload-file.module';
 import {HomeComponent} from './components/home/home.component';
 
 @NgModule({
@@ -44,7 +43,6 @@ import {HomeComponent} from './components/home/home.component';
         }
       }
     ]),
-    UploadFileModule,
     MatButtonModule,
     SharedModule,
     MatFormFieldModule,

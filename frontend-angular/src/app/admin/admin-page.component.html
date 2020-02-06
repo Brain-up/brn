@@ -1,10 +1,11 @@
 <div class="header">
-  <button mat-raised-button (click)="navigate('file')">
-    <mat-icon>description</mat-icon>
-    Load Full File</button>
-  <button mat-raised-button (click)="navigate('tasks')">
-    Load Tasks File
-    <mat-icon>library_books</mat-icon>
+  <button (click)="navigate('file')">
+    <!-- <mat-icon>description</mat-icon> -->
+    Load Resource Files To Storage
+  </button>
+  <button (click)="navigate('tasks')">
+    Load configuration files to appl
+    <!-- <mat-icon>library_books</mat-icon> -->
   </button>
 </div>
 <div [@routeAnimations]="o && o.activatedRouteData

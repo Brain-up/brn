@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit, Self} from '@angular/core';
-import {UPLOAD_DESTINATION, UploadService} from '../../../shared/upload-file/service/upload.service';
+import {UPLOAD_DESTINATION, UploadService} from '../../../shared/services/upload/upload.service';
 import {fold, fromNullable} from 'fp-ts/lib/Option';
 import {pipe} from 'fp-ts/lib/pipeable';
 import {EMPTY, forkJoin, noop, Observable, of} from 'rxjs';

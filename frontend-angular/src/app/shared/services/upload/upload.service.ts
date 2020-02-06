@@ -3,7 +3,7 @@ import {fromNullable, getOrElse, map} from 'fp-ts/lib/Option';
 import {pipe} from 'fp-ts/lib/pipeable';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {upload} from './utils';
+import {upload} from '../utils';
 
 export const UPLOAD_DESTINATION: InjectionToken<string> = new InjectionToken('upload.destination');
 

@@ -4,7 +4,7 @@ import {EMPTY, forkJoin, iif, noop, Observable, of} from 'rxjs';
 import {Group, Series} from '../../model/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {catchError, switchMap, tap} from 'rxjs/operators';
-import {UPLOAD_DESTINATION, UploadService} from '../../../shared/upload-file/service/upload.service';
+import {UPLOAD_DESTINATION, UploadService} from '../../../shared/services/upload/upload.service';
 import {untilDestroyed} from 'ngx-take-until-destroy';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {pipe} from 'fp-ts/lib/pipeable';
@@ -54,8 +54,7 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   onFilesAdded(files: Set<File>) {
     pipe(
