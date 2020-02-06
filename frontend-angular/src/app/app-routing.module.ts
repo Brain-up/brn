@@ -4,13 +4,7 @@ import {AdminPageComponent} from './admin/admin-page.component';
 
 
 const routes: Routes = [
-  {
-    path: '',
-    component: AdminPageComponent,
-    data: {
-      animation: 'Admin'
-    }
-  }
+
 ];
 
 @NgModule({

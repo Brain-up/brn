@@ -12,3 +12,29 @@
     margin-right: 10px;
   }
 }
+
+.admin {
+  &__header-title {
+    padding-left: 20px;
+  }
+  &__header-hamburger {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &__sidenav {
+    box-shadow: 6px 0 6px rgba(0,0,0,0.1);
+  }
+  &__sidenav-items {
+    padding: 0;
+    margin: 0;
+  }
+  &__sidenav-item {
+    width: 200px;
+    list-style-type: none;
+  }
+  &__sidenav-item-btn {
+    width: 100%;
+    height: 60px;
+  }
+}

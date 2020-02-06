@@ -26,5 +26,6 @@ export class UploadFileComponent implements OnInit {
       }
     }
     this.filesAdded.emit(filesToGo);
+    console.log(filesToGo);
   }
 }

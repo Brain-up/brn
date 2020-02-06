@@ -37,6 +37,7 @@ export class LoadFileComponent implements OnInit {
   }
 
   private processUploadResults(fileInfo: { [key: string]: { progress: Observable<number> } }) {
+    console.log(fileInfo);
     forkJoin(Object.values(fileInfo).map(({progress}) => progress))
       .pipe(
         tap(showHappySnackbar.bind(this, `${Object.keys(fileInfo).join(',')} was successfully uploaded`)),

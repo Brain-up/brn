@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
 import {AdminModule} from './admin/admin.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
@@ -10,6 +12,7 @@ import {BasicAuthInterceptor} from './shared/services/basic-auth.interceptor.ser
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -18,6 +21,8 @@ import { environment } from 'src/environments/environment';
     BrowserModule,
     AdminModule,
     AppRoutingModule,
+    MatSidenavModule,
+    MatToolbarModule,
     StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

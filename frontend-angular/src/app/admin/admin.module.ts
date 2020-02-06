@@ -12,43 +12,71 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {HttpClientModule} from '@angular/common/http';
 import {HomeComponent} from './components/home/home.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
-  declarations: [AdminPageComponent, LoadFileComponent, LoadTasksComponent, HomeComponent],
+  declarations: [
+    AdminPageComponent,
+    LoadFileComponent,
+    LoadTasksComponent,
+    HomeComponent
+  ],
   exports: [AdminPageComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     RouterModule.forChild([
       {
         path: '',
-        component: HomeComponent,
+        component: AdminPageComponent,
         data: {
           animation: 'Admin'
-        }
+        },
+        children: [
+          {
+            path: 'home',
+            component: HomeComponent,
+            children: [
+              {
+                path: 'file',
+                component: LoadFileComponent,
+                data: {
+                  animation: 'LoadAll'
+                }
+              },
+              {
+                path: 'tasks',
+                component: LoadTasksComponent,
+                data: {
+                  animation: 'LoadTasks'
+                }
+              },
+            ],
+            data: {
+              animation: 'Admin'
+            }
+          },
+          {
+            path: '',
+            redirectTo: '/home',
+            pathMatch: 'full'
+          }
+        ]
       },
-      {
-        path: LOAD_FILE_PATH,
-        component: LoadFileComponent,
-        data: {
-          animation: 'LoadAll'
-        }
-      },
-      {
-        path: LOAD_TASKS_FILE,
-        component: LoadTasksComponent,
-        data: {
-          animation: 'LoadTasks'
-        }
-      }
+
     ]),
     MatButtonModule,
     SharedModule,
     MatFormFieldModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatIconModule
+    MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
   ]
 })
 export class AdminModule {

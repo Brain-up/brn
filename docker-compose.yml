@@ -21,7 +21,7 @@ services:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      SPRING_PROFILE: prod
+      SPRING_PROFILE: dev
     depends_on:
       - db_brn
   brn_fe:
