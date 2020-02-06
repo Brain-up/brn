@@ -7,7 +7,7 @@ button {
   background-size: cover;
   background-image: var(--word-picture-url);
   background-position: center bottom;
-  transition: 0.1s;
+  transition: transform 0.1s;
 }
 
 button:disabled {
@@ -23,7 +23,7 @@ span {
 }
 
 .selected {
-  box-shadow: 0 0 5px 1px #2b6cb0;
+  box-shadow: 0 0 0 5px #00ccff inset;
   transform: scale(1.015);
 }
 
@@ -36,10 +36,10 @@ span {
   border-radius: 50%;
 }
 
-.correctness-indicator.right {
-  color: #46cb18;
+.is-answer-part.is-correct {
+  box-shadow: 0 0 0 5px #32cd32 inset;
 }
 
-.correctness-indicator.wrong {
-  color: #ff0100;
+.is-answer-part.is-not-correct {
+  box-shadow: 0 0 0 5px #ff0000 inset;
 }

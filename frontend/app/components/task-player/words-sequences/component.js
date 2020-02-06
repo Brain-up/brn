@@ -52,6 +52,22 @@ export default class WordsSequencesComponent extends Component {
       true,
     );
   }
+  get wrongAnswerParts() {
+    return this.rightWordsList.reduce((result, currentWord) => {
+      this.currentTaskAnswerWords.includes(currentWord)
+        ? ''
+        : result.push(currentWord);
+      return result;
+    }, []);
+  }
+  get rightWordsList() {
+    return this.task.selectedItemsOrder.map(
+      (orderName) => this.currentAnswerObject[orderName],
+    );
+  }
+  get currentTaskAnswerWords() {
+    return this.firstUncompletedTask.answer.mapBy('word');
+  }
   startNewTask() {
     this.markCompleted(this.firstUncompletedTask);
     this.startTask();
@@ -90,10 +106,8 @@ export default class WordsSequencesComponent extends Component {
     };
     if (this.answerCompleted) {
       const isCorrect = deepEqual(
-        this.task.selectedItemsOrder.map(
-          (orderName) => this.currentAnswerObject[orderName],
-        ),
-        this.firstUncompletedTask.answer.mapBy('word'),
+        this.rightWordsList,
+        this.currentTaskAnswerWords,
       );
 
       this.isCorrect = isCorrect;
