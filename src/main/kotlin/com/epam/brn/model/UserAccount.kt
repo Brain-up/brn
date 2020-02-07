@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 
@@ -22,7 +24,7 @@ data class UserAccount(
     @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
-    val password: String,
+    val password: String?,
     val active: Boolean,
     val birthDate: LocalDate? = null
 ) {
@@ -31,18 +33,30 @@ data class UserAccount(
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
     val progress: Progress? = null
-    @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL])
+    @ManyToMany(cascade = [(CascadeType.MERGE)])
+    @JoinTable(
+        name = "user_authorities",
+        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
+    )
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
         return "UserAccount(id=$id, name='$userName', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
     }
 
-    fun toDto() = UserAccountDto(
-        id = this.id,
-        userName = this.userName,
-        active = this.active,
-        email = this.email,
-        birthDate = this.birthDate
-    )
+    fun toDto(): UserAccountDto {
+        val userAccountDto = UserAccountDto(
+            id = this.id,
+            userName = this.userName,
+            active = this.active,
+            email = this.email,
+            birthDate = this.birthDate,
+            password = null
+        )
+        userAccountDto.authorities = this.authoritySet
+            .map(Authority::authorityName)
+            .toMutableSet()
+        return userAccountDto
+    }
 }
