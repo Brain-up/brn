@@ -10,5 +10,11 @@ import org.springframework.stereotype.Repository
 interface UserAccountRepository : JpaRepository<UserAccount, Long> {
 
     @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet where u.userName = ?1")
-    fun findByUserName(userName: String): Optional<UserAccount>
+    fun findUserAccountByUserName(userName: String): Optional<UserAccount>
+
+    @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet where u.email = ?1")
+    fun findUserAccountByEmail(email: String): Optional<UserAccount>
+
+    @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet where u.id = ?1")
+    fun findUserAccountById(id: Long): Optional<UserAccount>
 }
