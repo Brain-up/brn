@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
+import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.model.Authority
@@ -39,7 +40,8 @@ class InitialDataLoader(
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val userAccountRepository: UserAccountRepository,
     private val firstSeriesCsvParserService: FirstSeriesCSVParserService,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val authorityService: AuthorityService
 ) {
     private val log = logger()
 
@@ -75,23 +77,13 @@ class InitialDataLoader(
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        addAdminUser()
-        userAccountRepository.save(
-            UserAccount(
-                userName = "defaultUser",
-                email = "default@default.ru",
-                active = true,
-                password = "password"
-            )
-        )
-        userAccountRepository.save(
-            UserAccount(
-                userName = "defaultUser2",
-                email = "default2@default.ru",
-                active = true,
-                password = "password"
-            )
-        )
+        val adminAuthority = authorityService.save(Authority(authorityName = AUTH_ROLE_ADMIN))
+        val userAuthority = authorityService.save(Authority(authorityName = AUTH_ROLE_USER))
+        val admin = addAdminUser(adminAuthority)
+        val listOfUsers = addDefaultUsers(userAuthority)
+        listOfUsers.add(admin)
+
+        userAccountRepository.saveAll(listOfUsers)
 
         val isInitRequired = exerciseGroupRepository.count() == 0L
         log.debug("Is initialization required: $isInitRequired")
@@ -100,12 +92,31 @@ class InitialDataLoader(
                 ?: loadInitialDataFromClassPath()
     }
 
-    private fun addAdminUser() {
+    private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
+        val password = passwordEncoder.encode("password")
+        val firstUser = UserAccount(
+            userName = "defaultUser",
+            email = "default@default.ru",
+            active = true,
+            password = password
+        )
+        val secondUser = UserAccount(
+            userName = "defaultUser2",
+            email = "default2@default.ru",
+            active = true,
+            password = password
+        )
+        firstUser.authoritySet.addAll(setOf(userAuthority))
+        secondUser.authoritySet.addAll(setOf(userAuthority))
+        return mutableListOf(firstUser, secondUser)
+    }
+
+    private fun addAdminUser(adminAuthority: Authority): UserAccount {
         val password = passwordEncoder.encode("admin")
         val userAccount =
             UserAccount(userName = "admin", password = password, email = "admin@admin.com", active = true)
-        userAccount.authoritySet.addAll(setOf(Authority(authority = AUTH_ROLE_ADMIN, userAccount = userAccount)))
-        userAccountRepository.save(userAccount)
+        userAccount.authoritySet.addAll(setOf(adminAuthority))
+        return userAccount
     }
 
     private fun loadInitialDataFromFileSystem(folder: Path) {
