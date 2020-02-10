@@ -81,12 +81,12 @@ class TaskControllerIT {
         val pathInfo = "/${firstSavedTask.id}"
         val resultAction = mockMvc.perform(
             get(BrnPath.TASKS + pathInfo).secure(false)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONObject("data")
         assertEquals(firstSavedTask.name, jsonDataObject.get("name"))
@@ -99,13 +99,13 @@ class TaskControllerIT {
         val resultAction = mockMvc.perform(
             get(BrnPath.TASKS)
                 .param("exerciseId", savedExercise.id.toString())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
         )
 
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
         assertEquals(firstSavedTask.name, jsonDataObject.get("name"))

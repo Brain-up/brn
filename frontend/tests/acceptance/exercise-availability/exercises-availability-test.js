@@ -54,6 +54,7 @@ module('Acceptance | exercises availability', function(hooks) {
     await pageObject.startTask();
 
     await pageObject.chooseRightAnswer();
+
     assert.notOk(
       pageObject.firstGroupFirstExerciseIsDisabled,
       'group 1: first exercise is not disabled',

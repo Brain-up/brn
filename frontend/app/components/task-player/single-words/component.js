@@ -23,26 +23,17 @@ export default class TaskPlayerComponent extends Component {
 
   @service('audio') audio;
 
-  @task(function*() {
-    this.element.style.setProperty(
-      '--word-picture-url',
-      `url(${this.task.pictureFileUrl})`,
-    );
-    this.onRightAnswer();
+  @(task(function*() {
     yield customTimeout(3000);
-    if (this.task.isLastTask) {
-      this.showExerciseResult();
-      yield customTimeout(3000);
-    }
-    this.afterCompleted();
-  })
-  nextTaskTimer;
+    this.onRightAnswer();
+  }).restartable())
+  runNextTaskTimer;
 
-  @task(function*() {
+  @(task(function*() {
     yield customTimeout(2000);
     this.set('taskResultIsVisible', false);
-  })
-  nextAttemptTimer;
+  }).drop())
+  runAnswerCorrectnessHidingTimer;
 
   classNames = ['flex-1', 'flex', 'flex-col'];
 
@@ -66,20 +57,15 @@ export default class TaskPlayerComponent extends Component {
     this.set('lastAnswer', word);
     if (word !== this.task.word) {
       const currentWordsOrder = Array.from(this.shuffledWords);
-      this.task.set('nextAttempt', true);
       this.task.set('repetitionCount', this.task.repetitionCount + 1);
+      this.task.set('nextAttempt', true);
       this.set('taskResultIsVisible', true);
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
     } else {
-      this.task.savePassed();
       this.task.set('nextAttempt', false);
     }
-  }
-
-  showExerciseResult() {
-    this.set('exerciseResultIsVisible', true);
   }
 }
 ({});

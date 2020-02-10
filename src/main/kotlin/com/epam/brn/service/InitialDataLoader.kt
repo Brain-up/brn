@@ -277,11 +277,11 @@ class InitialDataLoader(
             pictureFileUrl = "pictures/withWord/рисует.jpg"
         )
 
-        val task = Task(
+        val task2 = Task(
             serialNumber = 1,
             answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
         )
-        val exercise = Exercise(
+        val exercise2 = Exercise(
             series = seriesById[2L]!!,
             name = "Распознование последовательности слов",
             description = "Распознование последовательности слов",
@@ -289,9 +289,35 @@ class InitialDataLoader(
             exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString(),
             level = 1
         )
-        task.exercise = exercise
-        exercise.tasks.add(task)
-        (seriesById[1L] as Series).exercises.add(exercise)
+
+        // todo: remove this code after making task of loading this data from file
+        task2.exercise = exercise2
+        exercise2.tasks.add(task2)
+        (seriesById[2L] as Series).exercises.add(exercise2)
+
+        // for 3 series
+        val resource7 = Resource(
+            word = "девочка рисует",
+            wordType = WordTypeEnum.SENTENCE.toString(),
+            audioFileUrl = "series3/девочка_рисует.mp3"
+        )
+        val task3 = Task(
+            serialNumber = 2,
+            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6),
+            correctAnswer = resource7,
+            answerParts = mutableMapOf(1 to resource1, 2 to resource6)
+        )
+        val exercise3 = Exercise(
+            series = seriesById[3L]!!,
+            name = "Распознование предложений из 2 слов",
+            description = "Распознование предложений из 2 слов",
+            template = "<OBJECT OBJECT_ACTION>",
+            exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
+            level = 1
+        )
+        task3.exercise = exercise3
+        exercise3.tasks.add(task3)
+        (seriesById[3L] as Series).exercises.add(exercise3)
     }
 
     companion object {

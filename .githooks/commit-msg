@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # regex to validate in commit msg
-commit_regex='EPMLABSBRN-[0-9]{1,3} .*$'
+commit_regex='^(EPMLABSBRN-[0-9]{1,3}|Merge|merge) .*$'
 
 error_msg="Aborting commit. Your commit message is missing a JIRA issue name, see example: 'EPMLABSBRN-111'"
 
-if ! grep -P "$commit_regex" "$1"; then
+if ! grep -E "$commit_regex" "$1"; then
     echo -e "$error_msg" >&2
     exit 1
 fi

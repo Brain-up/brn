@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.dto.TaskDtoForSentence
 import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.dto.TaskDtoForWordsSequences
 import javax.persistence.CascadeType
@@ -40,7 +41,14 @@ data class Task(
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
-    var answerOptions: MutableSet<Resource> = hashSetOf()
+    var answerOptions: MutableSet<Resource> = hashSetOf(),
+    @ManyToMany(cascade = [(CascadeType.ALL)])
+    @JoinTable(
+        name = "answer_parts_resources",
+        joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
+    )
+    var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
     fun toSingleWordsDto() = TaskDtoForSingleWords(
         id = id,
@@ -58,6 +66,17 @@ data class Task(
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
         template = template
+    )
+
+    fun toSentenceDto(template: String? = "") = TaskDtoForSentence(
+        id = id,
+        exerciseType = ExerciseTypeEnum.SENTENCE,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
+        template = template,
+        answerParts = answerParts.values.map { part -> part.toDto() },
+        correctAnswer = correctAnswer!!.toDto()
     )
 
     override fun equals(other: Any?): Boolean {

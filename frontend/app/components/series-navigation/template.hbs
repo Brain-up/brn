@@ -1,32 +1,34 @@
-{{#each this.exerciseHeaders as |header|}}
-  <h2 data-test-series-navigation-header>
-    {{header}}
-  </h2>
-  <div data-test-exercises-name-group class="exercise-block__levels">
-    {{#each this.sortedExercises as |exercise|}}
-      {{#if (eq exercise.name header)}}
-        {{#link-to
-          "group.series.exercise"
-          exercise.id
-          data-test-series-navigation-list-link
-          data-test-exercise-level=exercise.level
-          data-test-exercise-name=exercise.name
-          class="task-square-link shadow exercise-block__level"
-          disabled=(not exercise.canInteract)
-        }}
-          <FaIcon
-            @icon="check-circle"
-            class={{if
-              exercise.canInteract
-              "exercise-block__icon fa-3x"
-              "exercise-block__icon inactive-icon fa-3x"
-            }}
-          />
-          <div>
-            Упражнение {{exercise.level}}
-          </div>
-        {{/link-to}}
-      {{/if}}
-    {{/each}}
-  </div>
-{{/each}}
+<div class={{this.styleNamespace}} ...attributes>
+  {{#each this.exerciseHeaders as |header|}}
+    <h2 data-test-series-navigation-header>
+      {{header}}
+    </h2>
+    <div data-test-exercises-name-group class="exercise-block__levels">
+      {{#each this.sortedExercises as |exercise|}}
+        {{#if (eq exercise.name header)}}
+          {{#link-to
+            "group.series.exercise"
+            exercise.id
+            data-test-series-navigation-list-link
+            data-test-exercise-level=exercise.level
+            data-test-exercise-name=exercise.name
+            class="task-square-link shadow exercise-block__level"
+            disabled=(not exercise.canInteract)
+          }}
+            <FaIcon
+              @icon="check-circle"
+              class={{if
+                exercise.canInteract
+                "exercise-block__icon fa-3x"
+                "exercise-block__icon inactive-icon fa-3x"
+              }}
+            />
+            <div>
+              Упражнение {{exercise.level}}
+            </div>
+          {{/link-to}}
+        {{/if}}
+      {{/each}}
+    </div>
+  {{/each}}
+</div>
