@@ -27,15 +27,6 @@ span {
   transform: scale(1.015);
 }
 
-.correctness-indicator {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 20px;
-  background: #fff;
-  border-radius: 50%;
-}
-
 .is-answer-part.is-correct {
   box-shadow: 0 0 0 5px #32cd32 inset;
 }

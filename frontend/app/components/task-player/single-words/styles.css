@@ -1,0 +1,12 @@
+.selected {
+  box-shadow: 0 0 0 5px #00ccff inset;
+  transform: scale(1.015);
+}
+
+.is-checked.is-correct {
+  box-shadow: 0 0 0 5px #32cd32 inset;
+}
+
+.is-checked.is-not-correct {
+  box-shadow: 0 0 0 5px #ff0000 inset;
+}

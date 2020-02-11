@@ -1,15 +1,10 @@
 <br />
-{{#if (eq this.lastAnswer @task.word)}}
+{{#if (and (not this.showCorrectnessFrame) (eq this.lastAnswer @task.word))}}
   <ImageDisplayBlock
     data-test-right-answer-notification
     @pictureFileUrl={{@task.pictureFileUrl}}
     @label={{@task.word}}
     {{did-insert (perform this.runNextTaskTimer)}}
-  />
-{{else if (and @task.nextAttempt this.taskResultIsVisible)}}
-  <AnswerCorrectnessWidget
-    @isCorrect={{false}}
-    {{did-insert (perform this.showTaskResult)}}
   />
 {{else}}
   <AudioPlayer
@@ -19,24 +14,35 @@
   />
   <ul class="task-player__options mt-5">
     {{#each this.shuffledWords as |word|}}
-      <li class="task-player__option">
-        <button
-          data-test-task-answer
-          data-test-task-answer-option={{word}}
-          disabled={{@disableAnswers}}
-          class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
+      {{#let (eq word @task.word) as |isCorrect|}}
+        <li class="task-player__option">
+          <button
+            data-test-task-answer
+            data-test-task-answer-option={{word}}
+            data-test-correctness-value={{isCorrect}}
+            disabled={{@disableAnswers}}
+            class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
+
+              {{if isCorrect "is-correct" "is-not-correct"}}
 
 
-            {{if
-              @disableAnswers
-              "opacity-50 cursor-default"
-              "hover:bg-blue-500 hover:text-white hover:border-transparent"
-            }}"
-          {{on "click" (fn this.handleSubmit word)}}
-        >
-          {{word}}
-        </button>
-      </li>
+              {{if
+                (and this.showCorrectnessFrame (eq this.lastAnswer word))
+                "is-checked"
+              }}
+
+
+              {{if
+                @disableAnswers
+                "opacity-50 cursor-default"
+                "hover:bg-blue-500 hover:text-white hover:border-transparent"
+              }}"
+            {{on "click" (fn this.handleSubmit word)}}
+          >
+            {{word}}
+          </button>
+        </li>
+      {{/let}}
     {{/each}}
   </ul>
 {{/if}}
