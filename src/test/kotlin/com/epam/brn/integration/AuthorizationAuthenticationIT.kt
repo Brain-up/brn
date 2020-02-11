@@ -45,7 +45,7 @@ class AuthorizationAuthenticationIT {
         val password = passwordEncoder.encode(password)
         val userAccount =
             UserAccount(userName = userName, password = password, email = "admin@admin.com", active = true)
-        userAccount.authoritySet.addAll(setOf(Authority(authority = "ROLE_ADMIN", userAccount = userAccount)))
+        userAccount.authoritySet.addAll(setOf(Authority(authorityName = "ROLE_ADMIN")))
         userAccountRepository.save(userAccount)
     }
 

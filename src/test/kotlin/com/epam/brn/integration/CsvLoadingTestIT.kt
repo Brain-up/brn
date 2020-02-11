@@ -1,10 +1,12 @@
 package com.epam.brn.integration
 
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.service.parsers.csv.FirstSeriesCSVParserService
 import org.amshove.kluent.shouldHaveSize
@@ -33,8 +35,9 @@ class CsvLoadingTestIT {
             exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
             firstSeriesCsvParserService: FirstSeriesCSVParserService,
-            passwordEncoder: PasswordEncoder
-        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, firstSeriesCsvParserService, passwordEncoder)
+            passwordEncoder: PasswordEncoder,
+            authorityService: AuthorityService
+        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, firstSeriesCsvParserService, passwordEncoder, authorityService)
     }
 
     @Autowired
@@ -52,12 +55,16 @@ class CsvLoadingTestIT {
     @Autowired
     private lateinit var taskRepository: TaskRepository
 
+    @Autowired
+    private lateinit var authorityRepository: AuthorityRepository
+
     @Test
     fun `should load test data from classpath initFiles folder`() {
         exerciseGroupRepository.findAll() shouldHaveSize 2
         seriesRepository.findAll() shouldHaveSize 3
-        exerciseRepository.findAll() shouldHaveSize 9
-        taskRepository.findAll() shouldHaveSize 57
-        userAccountRepository.findAll() shouldHaveSize 1
+        exerciseRepository.findAll() shouldHaveSize 10
+        taskRepository.findAll() shouldHaveSize 58
+        userAccountRepository.findAll() shouldHaveSize 3
+        authorityRepository.findAll() shouldHaveSize 2
     }
 }
