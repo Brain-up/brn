@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 // import { A } from '@ember/array';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 // import shuffleArray from 'brn/utils/shuffle-array';
@@ -22,6 +23,14 @@ export default class SentenceComponent extends Component {
     'task.exercise.id:data-test-task-exercise-id',
   ];
 
+  @tracked currentAnswerObject = null;
+
+  get audioFiles() {
+    return this.task.answerParts.map(({ audioFileUrl }) => {
+      return `/audio/${audioFileUrl}`;
+    });
+  }
+
   didReceiveAttrs() {
     if (this.previousTaskWords !== this.task.words) {
       this.shuffle();
@@ -32,12 +41,30 @@ export default class SentenceComponent extends Component {
   }
 
   shuffle() {
-    console.log(this.task);
     // this.set('shuffledWords', A(shuffleArray(this.task.words)));
     // this.notifyPropertyChange('shuffledWords');
   }
 
-  async checkMaybe() {}
+  async checkMaybe(selectedData) {
+    this.currentAnswerObject = {
+      ...this.currentAnswerObject,
+      [selectedData.wordType]: selectedData.word,
+    };
+    if (this.answerCompleted) {
+      const isCorrect = deepEqual(
+        this.task.selectedItemsOrder.map(
+          (orderName) => this.currentAnswerObject[orderName],
+        ),
+        this.task.correctAnswer.mapBy('word'),
+      );
+
+      this.isCorrect = isCorrect;
+
+      isCorrect
+        ? await this.handleCorrectAnswer()
+        : await this.handleWrongAnswer();
+    }
+  }
 
   @action
   handleSubmit(word) {
