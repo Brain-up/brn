@@ -23,7 +23,7 @@ if (
 ) {
   process.stderr.write(
     [
-      "You are on branch $BRANCH. You a not supposed to push to this branch.",
+      "You are on branch " + branch + ". You a not supposed to push to this branch.",
       "Please use feature/bugfix branches."
     ].join("\n")
   );
