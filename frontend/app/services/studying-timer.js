@@ -31,7 +31,9 @@ export default class StudyingTimerService extends Service {
   }
   @action
   setTime(seconds) {
-    !this.isDestroyed && this.set('countedSeconds', seconds);
+    if (!this.isDestroyed) {
+      this.countedSeconds = seconds;
+    }
   }
   @action
   togglePause() {

@@ -15,12 +15,6 @@ export default class TaskPlayerComponent extends Component {
   taskResultIsVisible = false;
   previousTaskWords = null;
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.nextTaskTimer.cancelAll();
-    this.nextAttemptTimer.cancelAll();
-  }
-
   @service('audio') audio;
 
   @(task(function*() {

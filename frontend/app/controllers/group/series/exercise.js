@@ -10,7 +10,9 @@ export default Controller.extend({
   exerciseIsCompletedInCurrentCycle: computed(
     'model.tasks.@each.completedInCurrentCycle',
     function() {
-      return this.model.tasks.every((task) => task.completedInCurrentCycle);
+      return this.model.sortedTasks.every(
+        (task) => task.completedInCurrentCycle,
+      );
     },
   ),
   goToSeries() {
