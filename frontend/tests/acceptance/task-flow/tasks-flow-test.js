@@ -38,9 +38,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert
-      .dom('[data-test-answer-correctness-widget]')
-      .hasAttribute('data-test-isnt-correct');
+    assert.ok(pageObject.hasWrongAnswer, 'answer is not correct');
 
     await settled();
 
@@ -48,7 +46,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(pageObject.hasRightAnswer, 'correct answer');
   });
 
   test('goest to next task after a right answer picture', async function(assert) {
@@ -62,7 +60,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(pageObject.hasRightAnswer, 'correct answer');
 
     await customTimeout();
 
@@ -88,7 +86,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(pageObject.hasRightAnswer, 'correct answer');
 
     await customTimeout();
 
@@ -100,7 +98,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(pageObject.hasRightAnswer, 'correct answer');
 
     await customTimeout();
 
@@ -123,7 +121,7 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(pageObject.hasRightAnswer, 'correct answer');
 
     await customTimeout();
 
@@ -137,13 +135,11 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
 
-    assert.dom('[data-test-right-answer-notification]').exists();
+    assert.ok(pageObject.hasRightAnswer, 'correct answer');
 
     await customTimeout();
 
-    assert
-      .dom('[data-test-answer-correctness-widget]')
-      .hasAttribute('data-test-is-correct');
+    assert.ok(pageObject.hasWrongAnswer, 'answer is not correct');
 
     await customTimeout();
     await customTimeout();

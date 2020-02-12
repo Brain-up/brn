@@ -14,33 +14,39 @@
   />
   <ul class="task-player__options mt-5">
     {{#each this.shuffledWords as |word|}}
-      {{#let (eq word @task.word) as |isCorrect|}}
+      {{#let
+        (eq word @task.word)
+        (eq this.lastAnswer word) as |isCorrect isChosen|
+      }}
         <li class="task-player__option">
-          <button
-            data-test-task-answer
-            data-test-task-answer-option={{word}}
-            data-test-correctness-value={{isCorrect}}
-            disabled={{@disableAnswers}}
-            class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
-
-              {{if isCorrect "is-correct" "is-not-correct"}}
-
-
-              {{if
-                (and this.showCorrectnessFrame (eq this.lastAnswer word))
-                "is-checked"
-              }}
+          {{#let (and this.showCorrectnessFrame isChosen) as |isTarget|}}
+            <button
+              data-test-task-answer
+              data-test-task-answer-option={{word}}
+              data-test-correct-answer={{and isTarget isCorrect}}
+              data-test-not-correct-answer={{and isTarget (not isCorrect)}}
+              disabled={{@disableAnswers}}
+              class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
 
 
-              {{if
-                @disableAnswers
-                "opacity-50 cursor-default"
-                "hover:bg-blue-500 hover:text-white hover:border-transparent"
-              }}"
-            {{on "click" (fn this.handleSubmit word)}}
-          >
-            {{word}}
-          </button>
+                {{if isCorrect "is-correct" "is-not-correct"}}
+
+
+
+                {{if isTarget "is-checked"}}
+
+
+
+                {{if
+                  @disableAnswers
+                  "opacity-50 cursor-default"
+                  "hover:bg-blue-500 hover:text-white hover:border-transparent"
+                }}"
+              {{on "click" (fn this.handleSubmit word)}}
+            >
+              {{word}}
+            </button>
+          {{/let}}
         </li>
       {{/let}}
     {{/each}}

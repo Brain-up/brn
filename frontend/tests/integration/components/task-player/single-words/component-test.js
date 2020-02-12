@@ -57,9 +57,7 @@ module('Integration | Component | task-player', function(hooks) {
 
     await customTimeout();
 
-    assert
-      .dom('[data-test-answer-correctness-widget]')
-      .hasAttribute('data-test-isnt-correct');
+    assert.ok(pageObject.hasWrongAnswer, 'answer is not correct');
 
     await settled();
 
