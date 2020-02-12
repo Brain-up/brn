@@ -1,11 +1,19 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.UserAccountService
-import org.junit.jupiter.api.Disabled
+import com.nhaarman.mockito_kotlin.verify
+import org.apache.commons.lang3.math.NumberUtils
+import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
@@ -17,21 +25,79 @@ internal class UserDetailControllerTest {
     @Mock
     lateinit var userAccountService: UserAccountService
 
-    @Test
-    @Disabled
-    fun `should insert user`() {
-        // TODO write a test with new service methods
+    lateinit var userAccountDto: UserAccountDto
 
-        /*      // GIVEN
-              val name = "Name"
-              val email = "email@email.ru"
-              val phone = "+7911111111"
-              `when`(userDetailsService.addUser(name, email, phone)).thenReturn(1)
+    val userId: Long = NumberUtils.LONG_ONE
 
-              // WHEN
-              userDetailController.addUser(name, email, phone)
+    @BeforeEach
+    fun initBeforeEachTest() {
+        userAccountDto = UserAccountDto(
+            id = userId,
+            userName = "testUser",
+            email = "unittest@test.ru",
+            active = true,
+            password = "pwd"
+        )
+    }
 
-              // THEN
-              verify(userDetailsService, times(1)).addUser(name, email, phone)*/
+    @Nested
+    @DisplayName("Tests for creation of user accounts")
+    inner class CreateUserAccounts {
+        @Test
+        fun `should insert user`() {
+            // GIVEN
+            Mockito.`when`(userAccountService.addUser(userAccountDto)).thenReturn(userAccountDto)
+            // WHEN
+            @Suppress("UNCHECKED_CAST")
+            val savedUserAccountDto = userDetailController.addUser(userAccountDto).body?.data as List<UserAccountDto>
+            // THEN
+            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
+            verify(userAccountService).addUser(userAccountDto)
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests for user accounts")
+    inner class GetUserAccounts {
+        @Test
+        fun `should get user by id`() {
+            // GIVEN
+            Mockito.`when`(userAccountService.findUserById(userId)).thenReturn(userAccountDto)
+            // WHEN
+
+            @Suppress("UNCHECKED_CAST")
+            val savedUserAccountDto = userDetailController.findUserById(userId).body?.data as List<UserAccountDto>
+            // THEN
+            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
+            verify(userAccountService).findUserById(userId)
+        }
+
+        @Test
+        fun `should get user by userName`() {
+            // GIVEN
+            Mockito.`when`(userAccountService.findUserById(userId)).thenReturn(userAccountDto)
+            // WHEN
+            @Suppress("UNCHECKED_CAST")
+            val savedUserAccountDto = userDetailController.findUserById(userId).body?.data as List<UserAccountDto>
+            // THEN
+            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
+            verify(userAccountService).findUserById(userId)
+        }
+
+        @Test
+        fun `should get logged in user from the current session`() {
+            // GIVEN
+            Mockito.`when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountDto)
+            // WHEN
+            @Suppress("UNCHECKED_CAST")
+            val savedUserAccountDto = userDetailController.getCurrentUser().body?.data as List<UserAccountDto>
+            // THEN
+            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
+            verify(userAccountService).getUserFromTheCurrentSession()
+        }
     }
 }

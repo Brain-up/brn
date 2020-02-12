@@ -39,12 +39,12 @@ internal class GroupControllerTest {
         // GIVEN
         val groupId = 1L
         val group = ExerciseGroupDto(1, "name", "desc")
-        Mockito.`when`(exerciseGroupsService.findGroupById(groupId)).thenReturn(group)
+        Mockito.`when`(exerciseGroupsService.findGroupDtoById(groupId)).thenReturn(group)
         // WHEN
         val actualResultData: ExerciseGroupDto =
             groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
         // THEN
         assertEquals(actualResultData, group)
-        verify(exerciseGroupsService).findGroupById(groupId)
+        verify(exerciseGroupsService).findGroupDtoById(groupId)
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service("brainUpUserDetailService")
 class BrainUpUserDetailsService(private val userAccountRepository: UserAccountRepository) : UserDetailsService {
     override fun loadUserByUsername(userName: String): UserDetails {
-        return userAccountRepository.findByUserName(userName)
+        return userAccountRepository.findUserAccountByUserName(userName)
             .map { CustomUserDetails(it) }
             .orElseThrow { UsernameNotFoundException("User with username: $userName doesn't exist") }
     }

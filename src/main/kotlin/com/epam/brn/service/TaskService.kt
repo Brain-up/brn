@@ -37,7 +37,5 @@ class TaskService(
         }
     }
 
-    fun save(task: Task): Task {
-        return taskRepository.save(task)
-    }
+    fun save(task: Task): Task = taskRepository.save(task)
 }

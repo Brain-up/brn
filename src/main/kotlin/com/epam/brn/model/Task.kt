@@ -32,17 +32,17 @@ data class Task(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise? = null,
-    @OneToOne(cascade = [(CascadeType.ALL)], optional = true)
+    @OneToOne(cascade = [(CascadeType.MERGE)], optional = true)
     @JoinColumn(name = "resource_id")
     var correctAnswer: Resource? = null,
-    @ManyToMany(cascade = [(CascadeType.ALL)])
+    @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "task_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
     var answerOptions: MutableSet<Resource> = hashSetOf(),
-    @ManyToMany(cascade = [(CascadeType.ALL)])
+    @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "answer_parts_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
@@ -79,15 +79,20 @@ data class Task(
         correctAnswer = correctAnswer!!.toDto()
     )
 
+    override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
+
         other as Task
+
         if (id != other.id) return false
         if (name != other.name) return false
         if (serialNumber != other.serialNumber) return false
         if (exercise != other.exercise) return false
         if (correctAnswer != other.correctAnswer) return false
+
         return true
     }
 
@@ -99,6 +104,4 @@ data class Task(
         result = 31 * result + (correctAnswer?.hashCode() ?: 0)
         return result
     }
-
-    override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
 }
