@@ -31,6 +31,16 @@ export default class SentenceComponent extends Component {
     });
   }
 
+  get answerCompleted() {
+    return this.currentAnswerObject && Object.values(this.currentAnswerObject).reduce(
+      (isCompleted, currentValue) => {
+        isCompleted = isCompleted && !!currentValue;
+        return isCompleted;
+      },
+      true,
+    )
+  }
+
   didReceiveAttrs() {
     if (this.previousTaskWords !== this.task.words) {
       this.shuffle();
@@ -55,7 +65,7 @@ export default class SentenceComponent extends Component {
         this.task.selectedItemsOrder.map(
           (orderName) => this.currentAnswerObject[orderName],
         ),
-        this.task.correctAnswer.mapBy('word'),
+        this.task.answerParts.mapBy('word'),
       );
 
       this.isCorrect = isCorrect;
@@ -104,6 +114,12 @@ export default class SentenceComponent extends Component {
   async runNextAttemptTimer() {
     await customTimeout(2000);
     this.set('taskResultIsVisible', false);
+  }
+
+  async handleWrongAnswer() {
+  }
+
+  async handleCorrectAnswer() {
   }
 }
 ({});
