@@ -6,7 +6,7 @@ mediaType:
   - application/json
 
 # GROUP ----------------------------
-/groups:
+/api/groups:
   get:
     responses:
       200:
@@ -20,7 +20,7 @@ mediaType:
             example: !include samples/group.json
 
 # SERIES ----------------------------
-/series:
+/api/series:
   get:
     queryParameters:
       groupId:
@@ -40,7 +40,7 @@ mediaType:
             example: !include samples/series.json
 
 # EXERCISE ----------------------------
-/exercises:
+/api/exercises:
   get:
     queryParameters:
       seriesId:
@@ -66,9 +66,9 @@ mediaType:
             example1: !include samples/exercise_for_single_words_series.json
             example2: !include samples/exercise_for_sequence_words_series.json
             example3: !include samples/exercise_for_sentence_series.json
-# TASK ----------------------------
 
-/tasks:
+# TASK ----------------------------
+/api/tasks:
   get:
     description: |
     The tasks endpoint returns tasks assotiated with specified exercise id
@@ -96,7 +96,7 @@ mediaType:
               example_for_sentence_series: !include samples/task_by_id_for_sentence_series.json
 
 # STUDY_HISTORY ----------------------
-/study-history:
+/api/study-history:
   post:
   description: Save history of exercises done by user
     body:
@@ -107,7 +107,7 @@ mediaType:
         example: !include samples/study_history_response.json
 
 # USERS ----------------------
-/users:
+/api/users:
   post:
   description: Add a new user to the system
     body:
@@ -154,21 +154,7 @@ mediaType:
               example: !include samples/users_get_response.json
 
 # LOAD FILES ----------------------
-/admin/loadFile:
-  post:
-    body:
-      multipart/form-data:
-        properties:
-          taskFile:
-            description: "File with tasks to be uploaded"
-            format: "exerciseId orderNumber word audioFileName pictureFileName words wordType
-                     1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
-            required: true
-            type: file
-    responses:
-      201:
-
-/admin/loadTasksFile:
+/api/loadTasksFile:
   post:
     body:
       multipart/form-data:
