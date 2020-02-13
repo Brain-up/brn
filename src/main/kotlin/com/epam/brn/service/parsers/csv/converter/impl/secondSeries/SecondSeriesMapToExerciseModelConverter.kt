@@ -22,8 +22,11 @@ class SecondSeriesMapToExerciseModelConverter : Converter<Map<String, Any>, Exer
     val LEVEL = "level"
     val WORDS = "words"
 
-    @Value(value = "\${brn.audio.file.default.path}")
-    private lateinit var defaultAudioFileUrl: String
+    @Value(value = "\${brn.audio.file.second.series.path}")
+    private lateinit var audioFileUrl: String
+
+    @Value(value = "\${brn.picture.file.default.path}")
+    private lateinit var pictureFileUrl: String
 
     @Autowired
     lateinit var resourceService: ResourceService
@@ -51,6 +54,7 @@ class SecondSeriesMapToExerciseModelConverter : Converter<Map<String, Any>, Exer
     private fun convertTask(target: Exercise) {
         val task = Task()
         task.serialNumber = 2
+        task.exercise = target
         target.tasks.add(task)
     }
 
@@ -98,7 +102,8 @@ class SecondSeriesMapToExerciseModelConverter : Converter<Map<String, Any>, Exer
         val resource = Resource()
         resource.word = word
         resource.wordType = WordTypeEnum.valueOf(wordType).toString()
-        resource.audioFileUrl = defaultAudioFileUrl.format(word)
+        resource.audioFileUrl = audioFileUrl.format(word)
+        resource.pictureFileUrl = pictureFileUrl.format(word)
 
         return resource
     }
