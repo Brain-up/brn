@@ -51,6 +51,7 @@ class SecondSeriesMapToExerciseModelConverter : Converter<Map<String, Any>, Exer
     private fun convertTask(target: Exercise) {
         val task = Task()
         task.serialNumber = 2
+        task.exercise = target
         target.tasks.add(task)
     }
 
