@@ -1,12 +1,13 @@
 #%RAML 1.0
 title: BRN API
 version: v1
-baseUri: http://localhost:8080/api
+baseUri: http://localhost:8081/api
+baseTestUri: http://10.66.216.143:8081/api
 mediaType:
   - application/json
 
 # GROUP ----------------------------
-/api/groups:
+/groups:
   get:
     responses:
       200:
@@ -20,7 +21,7 @@ mediaType:
             example: !include samples/group.json
 
 # SERIES ----------------------------
-/api/series:
+/series:
   get:
     queryParameters:
       groupId:
@@ -40,7 +41,7 @@ mediaType:
             example: !include samples/series.json
 
 # EXERCISE ----------------------------
-/api/exercises:
+/exercises:
   get:
     queryParameters:
       seriesId:
@@ -68,7 +69,7 @@ mediaType:
             example3: !include samples/exercise_for_sentence_series.json
 
 # TASK ----------------------------
-/api/tasks:
+/tasks:
   get:
     description: |
     The tasks endpoint returns tasks assotiated with specified exercise id
@@ -96,7 +97,7 @@ mediaType:
               example_for_sentence_series: !include samples/task_by_id_for_sentence_series.json
 
 # STUDY_HISTORY ----------------------
-/api/study-history:
+/study-history:
   post:
   description: Save history of exercises done by user
     body:
@@ -107,7 +108,7 @@ mediaType:
         example: !include samples/study_history_response.json
 
 # USERS ----------------------
-/api/users:
+/users:
   post:
   description: Add a new user to the system
     body:
@@ -154,7 +155,7 @@ mediaType:
               example: !include samples/users_get_response.json
 
 # LOAD FILES ----------------------
-/api/loadTasksFile:
+/loadTasksFile:
   post:
     body:
       multipart/form-data:
