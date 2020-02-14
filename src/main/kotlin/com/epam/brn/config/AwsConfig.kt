@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Profile
 @Profile("!integration-tests")
 class AwsConfig {
 
-    val dateTimeFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")
-    val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")
-    val expirationFormat = DateTimeFormatter.ISO_DATE_TIME
+    val dateTimeFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!
+    val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")!!
+    val expirationFormat = DateTimeFormatter.ISO_DATE_TIME!!
 
     @Value("\${cloud.expireAfterDuration}")
     val expireAfterDuration: String = ""
@@ -52,16 +52,11 @@ class AwsConfig {
     val accessRule: String by lazy { CannedACL.valueOf(accessRuleCanned).toString() }
     val expireAfter: Duration by lazy { Duration.parse(expireAfterDuration) }
 
-    fun instant(): OffsetDateTime {
-        return Instant.now().atOffset(ZoneOffset.UTC)
-    }
+    fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
+    fun uuid(): String = UUID.randomUUID().toString()
 
-    fun uuid(): String {
-        return UUID.randomUUID().toString()
-    }
-
-    inner class Conditions() {
-        val now: OffsetDateTime = instant()
+    inner class Conditions {
+        private val now: OffsetDateTime = instant()
         val date: String = dateFormat(now)
 
         // POLICY CONDITIONS

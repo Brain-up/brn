@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(BrnPath.CLOUD)
 @Api(value = BrnPath.CLOUD, description = "Contains actions for cloud upload and bucket listing")
-class CloudController() {
+class CloudController {
 
     private val log = logger()
 
@@ -31,20 +31,16 @@ class CloudController() {
     @ApiOperation("Get upload form")
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam fileName: String?): ResponseEntity<Map<String, Any>?> {
-        var response: Map<String, Any>
         try {
-            response = cloudService.signatureForClientDirectUpload(fileName)
+            return ResponseEntity.ok(cloudService.signatureForClientDirectUpload(fileName))
         } catch (exception: IllegalArgumentException) {
             log.error(exception)
             return ResponseEntity.badRequest().build()
         }
-        return ResponseEntity.ok(response)
     }
 
     @GetMapping(RESOURCES_ROOT_URL)
     @ApiOperation("Get bucket url")
     @Throws(Exception::class)
-    fun listBucket(): ResponseEntity<String> {
-        return ResponseEntity.ok(cloudService.listBucket())
-    }
+    fun listBucket(): ResponseEntity<String> = ResponseEntity.ok(cloudService.listBucket())
 }

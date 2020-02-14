@@ -20,9 +20,12 @@ class GoogleCloudConfig {
     val projectId: String = ""
     @Value("\${google.bucketName}")
     val bucketName: String = ""
+    @Value("\${google.bucketLink}")
+    val bucketLink: String = ""
+    @Value("\${google.credentialScope}")
+    val credentialScope: String = ""
 
     val expireAfter: Duration by lazy { Duration.parse(expireAfterDuration) }
     val credentials: GoogleCredentials by lazy { GoogleCredentials.fromStream(FileInputStream(credentialsPath))
-        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform")) }
-    val bucketLink: String by lazy { "https://storage.googleapis.com/storage/v1/b/$bucketName/o" }
+        .createScoped(Lists.newArrayList(credentialScope)) }
 }

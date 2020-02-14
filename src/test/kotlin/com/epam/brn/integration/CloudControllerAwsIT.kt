@@ -36,14 +36,8 @@ class CloudControllerAwsIT {
         @Bean
         fun awsConfig(): AwsConfig {
             return object : AwsConfig() {
-
-                override fun instant(): OffsetDateTime {
-                    return Instant.ofEpochMilli(1580384357114).atOffset(ZoneOffset.UTC)
-                }
-
-                override fun uuid(): String {
-                    return "c49791b2-b27b-4edf-bac8-8734164c20e6"
-                }
+                override fun instant(): OffsetDateTime = Instant.ofEpochMilli(1580384357114).atOffset(ZoneOffset.UTC)
+                override fun uuid(): String = "c49791b2-b27b-4edf-bac8-8734164c20e6"
             }
         }
     }

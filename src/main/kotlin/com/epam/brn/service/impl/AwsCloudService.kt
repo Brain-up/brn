@@ -15,14 +15,12 @@ import org.springframework.stereotype.Service
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudService {
 
-    final val mapperIndented = ObjectMapper()
+    private final val mapperIndented = ObjectMapper()
     init {
         mapperIndented.enable(SerializationFeature.INDENT_OUTPUT)
     }
 
-    override fun listBucket(): String {
-        return awsConfig.bucketLink
-    }
+    override fun listBucket(): String = awsConfig.bucketLink
 
     override fun signatureForClientDirectUpload(fileName: String?): Map<String, Any> {
         val conditions = awsConfig.Conditions()
@@ -65,11 +63,10 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
             conditions.metaTagStartsWith
         )) {
             if (condition.second.isNotEmpty()) {
-                if (condition in arrayOf(conditions.uploadKeyStartsWith, conditions.contentTypeStartsWith, conditions.metaTagStartsWith)) {
+                if (condition in arrayOf(conditions.uploadKeyStartsWith, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
                     includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))
-                } else {
+                else
                     includedFields.add(hashMapOf(condition))
-                }
             }
         }
         val policy = hashMapOf(
@@ -98,9 +95,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         return hmacSHA256("aws4_request", kService)
     }
 
-    private fun base64Encoded(bytes: ByteArray): String {
-        return Base64.encodeAsString(*bytes)
-    }
+    private fun base64Encoded(bytes: ByteArray): String = Base64.encodeAsString(*bytes)
 
     private fun hmacSHA256(data: String, key: ByteArray): ByteArray {
         val mac = Mac.getInstance("HmacSHA256")
@@ -108,7 +103,5 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         return mac.doFinal(data.toByteArray())
     }
 
-    private fun toHex(bytes: ByteArray): String {
-        return bytes.joinToString("") { "%02x".format(it) }
-    }
+    private fun toHex(bytes: ByteArray): String = bytes.joinToString("") { "%02x".format(it) }
 }
