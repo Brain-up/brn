@@ -12,6 +12,7 @@ import {BasicAuthInterceptor} from './shared/services/basic-auth.interceptor.ser
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { environment } from 'src/environments/environment';
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production
     }),
+    EffectsModule.forRoot([]),
     BrowserAnimationsModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true}],

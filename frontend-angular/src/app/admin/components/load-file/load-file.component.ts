@@ -6,6 +6,9 @@ import {EMPTY, forkJoin, noop, Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
 import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
+import { Store } from '@ngrx/store';
+import { uploadFile } from '../../../shared/ngrx/actions'
+import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
 
 @Component({
   selector: 'app-load-file',
@@ -14,7 +17,7 @@ import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
   providers: [
     {
       provide: UPLOAD_DESTINATION,
-      useValue: '/api/files'
+      useValue: '/api/loadTasksFile?seriesId=1'
     },
     UploadService
   ],
@@ -22,8 +25,11 @@ import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
 })
 export class LoadFileComponent implements OnInit {
 
-  constructor(@Self() private uploadFileService: UploadService,
-              private snackbar: MatSnackBar) {
+  constructor(
+    private store: Store<any>,
+     @Self() private uploadFileService: UploadService,
+     private snackBarService: SnackBarService
+    ) {
   }
 
   ngOnInit() {
@@ -37,12 +43,11 @@ export class LoadFileComponent implements OnInit {
   }
 
   private processUploadResults(fileInfo: { [key: string]: { progress: Observable<number> } }) {
-    console.log(fileInfo);
     forkJoin(Object.values(fileInfo).map(({progress}) => progress))
       .pipe(
-        tap(showHappySnackbar.bind(this, `${Object.keys(fileInfo).join(',')} was successfully uploaded`)),
+        tap(()=> this.snackBarService.showHappySnackbar(`${Object.keys(fileInfo).join(',')} was successfully uploaded`)),
         catchError(err => {
-          showSadSnackbar.bind(null, this.snackbar)(err);
+          this.snackBarService.showSadSnackbar(err);
           return EMPTY;
         })
       )

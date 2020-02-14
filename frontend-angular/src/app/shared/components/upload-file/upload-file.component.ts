@@ -21,11 +21,12 @@ export class UploadFileComponent implements OnInit {
     const filesToGo: Set<File> = new Set<File>();
     const files: { [key: string]: File } = this.file.nativeElement.files;
     for (const key in files) {
+      // console.log(files);
       if (!isNaN(parseInt(key, 10))) {
         filesToGo.add(files[key]);
       }
     }
     this.filesAdded.emit(filesToGo);
-    console.log(filesToGo);
+    // console.log(filesToGo);
   }
 }
