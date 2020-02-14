@@ -4,10 +4,6 @@ import {fold, fromNullable} from 'fp-ts/lib/Option';
 import {pipe} from 'fp-ts/lib/pipeable';
 import {EMPTY, forkJoin, noop, Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {MatSnackBar} from '@angular/material';
-import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
-import { Store } from '@ngrx/store';
-import { uploadFile } from '../../../shared/ngrx/actions'
 import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
 
 @Component({
@@ -26,7 +22,6 @@ import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.ser
 export class LoadFileComponent implements OnInit {
 
   constructor(
-    private store: Store<any>,
      @Self() private uploadFileService: UploadService,
      private snackBarService: SnackBarService
     ) {

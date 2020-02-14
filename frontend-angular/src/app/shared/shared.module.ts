@@ -4,7 +4,6 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { UploadService } from './services/upload/upload.service';
-import { UploadEffects } from '../admin/ngrx/effects';
 import { SnackBarService } from './services/snack-bar/snack-bar.service';
 
 @NgModule({
@@ -13,7 +12,6 @@ import { SnackBarService } from './services/snack-bar/snack-bar.service';
   providers: [UploadService, SnackBarService],
   imports: [
     CommonModule,
-    EffectsModule.forFeature([UploadEffects]),
   ]
 })
 export class SharedModule {

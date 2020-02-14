@@ -5,7 +5,6 @@ import {MatButtonModule, MatIconModule, MatSnackBarModule} from '@angular/materi
 import {RouterModule} from '@angular/router';
 import {LoadFileComponent} from './components/load-file/load-file.component';
 import {LoadTasksComponent} from './components/load-tasks/load-tasks.component';
-import {LOAD_FILE_PATH, LOAD_TASKS_FILE} from '../shared/app-path';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
 import {MatFormFieldModule} from '@angular/material/form-field';

@@ -7,12 +7,10 @@
   width: 400px;
   height: 200px;
   border: thin solid black;
-
   & button:not(:last-child) {
     margin-right: 10px;
   }
 }
-
 .admin {
   &__header-title {
     padding-left: 20px;
