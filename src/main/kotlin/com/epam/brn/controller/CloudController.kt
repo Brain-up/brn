@@ -15,17 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * Documentation for testing, properties: https://kb.epam.com/display/EPMLABSBRN/Aws%2CSelectel%2CIbm%2CGoogle+Cloud
+ * Documentation https://github.com/Brain-up/brn/wiki/Cloud-file-resource-loading
  */
 @RestController
 @RequestMapping(BrnPath.CLOUD)
 @Api(value = BrnPath.CLOUD, description = "Contains actions for cloud upload and bucket listing")
-class CloudController {
+class CloudController(@Autowired private val cloudService: CloudService) {
 
     private val log = logger()
-
-    @Autowired
-    lateinit var cloudService: CloudService
 
     @GetMapping(UPLOAD)
     @ApiOperation("Get upload form")

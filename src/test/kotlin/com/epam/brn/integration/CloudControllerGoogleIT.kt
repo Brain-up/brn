@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.config.GoogleCloudConfig
 import com.epam.brn.constant.BrnPath
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -9,8 +8,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
@@ -26,15 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @Tag("integration-test")
 @TestPropertySource(properties = ["cloud.provider=google"])
 class CloudControllerGoogleIT {
-
-    @TestConfiguration
-    class GoogleCloudTestConfig {
-        @Bean
-        fun googleCloudConfig(): GoogleCloudConfig {
-            return object : GoogleCloudConfig() {
-            }
-        }
-    }
 
     @Autowired
     lateinit var mockMvc: MockMvc
