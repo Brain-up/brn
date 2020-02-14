@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
+ * Provides form parameters for client direct file upload to cloud and url for client to list bucket contents
  * Documentation https://github.com/Brain-up/brn/wiki/Cloud-file-resource-loading
  */
 @RestController
