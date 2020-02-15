@@ -1,7 +1,7 @@
 package com.epam.brn.job.configuration
 
 import com.epam.brn.constant.BrnJob.PATH_TO_TASK_CSV_RESOURCES
-import com.epam.brn.job.csv.task.UploadFromCsvService
+import com.epam.brn.csv.UploadFromCsvService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

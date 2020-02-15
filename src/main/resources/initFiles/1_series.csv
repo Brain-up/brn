@@ -1,10 +1,4 @@
 level exerciseName orderNumber word audioFileName pictureFileName words wordType
-0 "Слова без шума" 1 бал no_noise/бал.mp3 pictures/бал.jpg (бум,быль,вить,гад,дуб) OBJECT
-0 "Слова без шума" 2 бум no_noise/бум.mp3 pictures/бум.jpg (бал,быль,вить,гад,дуб) OBJECT
-0 "Слова без шума" 3 быль no_noise/быль.mp3 pictures/быль.jpg (бал,бум,вить,гад,дуб) OBJECT
-0 "Слова без шума" 4 вить no_noise/вить.mp3 pictures/вить.jpg (бал,бум,быль,гад,дуб) OBJECT_ACTION
-0 "Слова без шума" 5 гад no_noise/гад.mp3 pictures/гад.jpg (бал,бум,быль,вить,дуб) OBJECT
-0 "Слова без шума" 6 дуб no_noise/дуб.mp3 pictures/дуб.jpg (бал,бум,быль,вить,гад) OBJECT
 1 "Однослоговые слова без шума" 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бум) OBJECT
 1 "Однослоговые слова без шума" 2 бум no_noise/бум.mp3 pictures/бум.jpg (зум,кум,шум,зуб,куб) OBJECT
 1 "Однослоговые слова без шума" 3 быль no_noise/быль.mp3 pictures/быль.jpg (пыль,соль,мыль,дыль,киль) OBJECT

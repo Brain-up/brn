@@ -1,6 +1,6 @@
 package com.epam.brn.job
 
-import com.epam.brn.job.csv.task.UploadFromCsvService
+import com.epam.brn.csv.UploadFromCsvService
 import com.epam.brn.job.impl.UploadFileJobRunnerImpl
 import com.nhaarman.mockito_kotlin.anyOrNull
 import java.io.File
