@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class SeriesCsvToSeriesConverter : Converter<SeriesCsv, Series> {
+class SeriesCsvConverter : Converter<SeriesCsv, Series> {
 
     @Autowired
     lateinit var exerciseGroupsService: ExerciseGroupsService
@@ -17,7 +17,8 @@ class SeriesCsvToSeriesConverter : Converter<SeriesCsv, Series> {
         return Series(
             name = source.name,
             description = source.description,
-            exerciseGroup = exerciseGroupsService.findGroupById(source.groupId)
+            exerciseGroup = exerciseGroupsService.findGroupById(source.groupId),
+            id = source.seriesId
             )
     }
 }

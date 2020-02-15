@@ -33,11 +33,24 @@ class CsvLoadingTestIT {
         fun handBookLoader(
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
+            eriesRepository: SeriesRepository,
+            exerciseRepository: ExerciseRepository,
+            taskRepository: TaskRepository,
             userAccountRepository: UserAccountRepository,
             csvMappingIteratorParser: CsvMappingIteratorParser,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService
-        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, csvMappingIteratorParser, passwordEncoder, authorityService)
+        ) = InitialDataLoader(
+            resourceLoader,
+            exerciseGroupRepository,
+            eriesRepository,
+            exerciseRepository,
+            taskRepository,
+            userAccountRepository,
+            csvMappingIteratorParser,
+            passwordEncoder,
+            authorityService
+        )
     }
 
     @Autowired

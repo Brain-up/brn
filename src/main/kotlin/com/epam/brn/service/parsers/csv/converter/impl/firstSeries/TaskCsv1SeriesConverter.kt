@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
+class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
 
     private val log = logger()
 
@@ -46,7 +46,7 @@ class TaskCsvToTaskModelConverter : Converter<TaskCsv, Task> {
         try {
             target.exercise = exerciseService.findExerciseByNameAndLevel(source.exerciseName, source.level)
         } catch (e: EntityNotFoundException) {
-            log.debug("Entity was not found by name $source.exerciseName")
+            log.debug("Entity was not found by name ${source.exerciseName}")
             target.exercise = exerciseService.createExercise(source.exerciseName)
         }
     }

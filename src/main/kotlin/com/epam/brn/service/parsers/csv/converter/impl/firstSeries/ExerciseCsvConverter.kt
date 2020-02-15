@@ -9,20 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class ExerciseCsvToExerciseModelConverter : Converter<ExerciseCsv, Exercise> {
+class ExerciseCsvConverter : Converter<ExerciseCsv, Exercise> {
 
     @Autowired
     lateinit var seriesService: SeriesService
 
     override fun convert(source: ExerciseCsv): Exercise {
         val target = Exercise()
-
         convertSeries(source, target)
         convertExerciseType(source, target)
         target.name = source.name
         target.level = source.level
         target.description = source.description
-
+        target.id = source.exerciseId
         return target
     }
 
@@ -32,8 +31,12 @@ class ExerciseCsvToExerciseModelConverter : Converter<ExerciseCsv, Exercise> {
 
     private fun convertExerciseType(source: ExerciseCsv, target: Exercise) {
         val exerciseType =
-            if (source.seriesId == 1L) ExerciseTypeEnum.SINGLE_WORDS else ExerciseTypeEnum.WORDS_SEQUENCES
-
+            when (source.seriesId) {
+                1L -> ExerciseTypeEnum.SINGLE_WORDS
+                2L -> ExerciseTypeEnum.WORDS_SEQUENCES
+                3L -> ExerciseTypeEnum.SENTENCE
+                else -> throw IllegalArgumentException("There no ExerciseType for seriesId=${source.seriesId}")
+            }
         target.exerciseType = exerciseType.toString()
     }
 }

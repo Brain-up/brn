@@ -8,7 +8,7 @@ import java.io.InputStream
 import org.springframework.stereotype.Service
 
 @Service
-class SecondSeriesCSVParserService : CsvParser<Map<String, Any>> {
+class CSVParser2SeriesService : CsvParser<Map<String, Any>> {
 
     override fun parseCsvFile(file: InputStream): MappingIterator<Map<String, Any>> {
         val csvMapper = CsvMapper()

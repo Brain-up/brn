@@ -6,9 +6,8 @@ import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import org.springframework.stereotype.Component
 
 @Component
-class ExerciseGroupCsvToExerciseGroupConverter : Converter<GroupCsv, ExerciseGroup> {
+class GroupCsvConverter : Converter<GroupCsv, ExerciseGroup> {
 
-    override fun convert(source: GroupCsv): ExerciseGroup {
-        return ExerciseGroup(name = source.name, description = source.description)
-    }
+    override fun convert(source: GroupCsv) =
+        ExerciseGroup(name = source.name, description = source.description, id = source.groupId)
 }

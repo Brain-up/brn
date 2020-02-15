@@ -1,16 +1,16 @@
-package com.epam.brn.service.parsers.csv.firstSeries.commaSeparated
+package com.epam.brn.service.parsers.csv.firstSeries
 
-import com.epam.brn.service.parsers.csv.dto.GroupCsv
+import com.epam.brn.service.parsers.csv.CsvParser
+import com.epam.brn.service.parsers.csv.dto.TaskCsv
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import com.fasterxml.jackson.dataformat.csv.CsvParser
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class CommaSeparatedExerciseGroupCSVParserService : com.epam.brn.service.parsers.csv.CsvParser<GroupCsv> {
+class TaskCSVParser1SeriesService : CsvParser<TaskCsv> {
 
     val log = logger()
 
@@ -19,22 +19,20 @@ class CommaSeparatedExerciseGroupCSVParserService : com.epam.brn.service.parsers
      *
      * @return csv-line to pair of model object and error. One pair values must be empty.
      */
-
-    override fun parseCsvFile(file: InputStream): MappingIterator<GroupCsv> {
-        val csvMapper = CsvMapper().apply {
-            enable(CsvParser.Feature.TRIM_SPACES)
-        }
+    override fun parseCsvFile(file: InputStream): MappingIterator<TaskCsv> {
+        val csvMapper = CsvMapper()
 
         val csvSchema = csvMapper
-            .schemaFor(GroupCsv::class.java)
-            .withColumnSeparator(',')
+            .schemaFor(TaskCsv::class.java)
+            .withColumnSeparator(' ')
             .withLineSeparator(StringUtils.SPACE)
             .withColumnReordering(true)
+            .withArrayElementSeparator(",")
             .withHeader()
 
         return csvMapper
-            .readerWithTypedSchemaFor(GroupCsv::class.java)
+            .readerWithTypedSchemaFor(TaskCsv::class.java)
             .with(csvSchema)
-            .readValues<GroupCsv>(file)
+            .readValues<TaskCsv>(file)
     }
 }

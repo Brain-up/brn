@@ -5,9 +5,9 @@ import com.epam.brn.service.parsers.csv.dto.ExerciseCsv
 import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import com.epam.brn.service.parsers.csv.dto.SeriesCsv
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
-import com.epam.brn.service.parsers.csv.firstSeries.TaskCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.TaskCSVParser1SeriesService
 import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
-import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseGroupCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedGroupCSVParserService
 import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
 import java.nio.charset.StandardCharsets
 import org.amshove.kluent.shouldBeEqualTo
@@ -22,11 +22,11 @@ private inline fun <reified T> makeIdentityConverter(): Converter<T, T> =
 
 val csvMappintIteratorParser = CsvMappingIteratorParser()
 
-val taskCSVParserService = TaskCSVParserService()
+val taskCSVParserService = TaskCSVParser1SeriesService()
 
 val commaSeparatedExerciseCSVParserService = CommaSeparatedExerciseCSVParserService()
 
-val commaSeparatedExerciseGroupCSVParserService = CommaSeparatedExerciseGroupCSVParserService()
+val commaSeparatedExerciseGroupCSVParserService = CommaSeparatedGroupCSVParserService()
 
 val commaSeparatedSeriesCSVParserService = CommaSeparatedSeriesCSVParserService()
 

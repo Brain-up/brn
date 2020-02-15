@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class SecondSeriesMapToExerciseModelConverter : Converter<Map<String, Any>, Exercise> {
+class Exercise2SeriesConverter : Converter<Map<String, Any>, Exercise> {
 
     val EXERCISE_NAME = "exerciseName"
     val LEVEL = "level"
