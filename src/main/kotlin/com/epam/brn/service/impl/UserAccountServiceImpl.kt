@@ -2,7 +2,7 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.dto.UserAccountDto
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
@@ -69,7 +69,7 @@ class UserAccountServiceImpl(
     override fun findUserById(id: Long): UserAccountDto {
         return userAccountRepository.findUserAccountById(id)
             .map { it.toDto() }
-            .orElseThrow { NoDataFoundException("No user was found for id = $id") }
+            .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
     }
 
     override fun getUserFromTheCurrentSession(): UserAccountDto {
@@ -90,12 +90,12 @@ class UserAccountServiceImpl(
         if (principal is Principal)
             return principal.name
 
-        throw NoDataFoundException("There is no user in the session")
+        throw EntityNotFoundException("There is no user in the session")
     }
 
     override fun findUserByEmail(email: String): UserAccountDto {
         return userAccountRepository.findUserAccountByEmail(email)
             .map { it.toDto() }
-            .orElseThrow { NoDataFoundException("No user was found for email=$email") }
+            .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 }

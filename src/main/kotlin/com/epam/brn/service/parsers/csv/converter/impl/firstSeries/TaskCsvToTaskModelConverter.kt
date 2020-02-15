@@ -1,4 +1,4 @@
-package com.epam.brn.service.parsers.csv.converter.impl
+package com.epam.brn.service.parsers.csv.converter.impl.firstSeries
 
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.exception.EntityNotFoundException

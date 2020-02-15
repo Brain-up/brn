@@ -8,7 +8,7 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
-import com.epam.brn.service.parsers.csv.FirstSeriesCSVParserService
+import com.epam.brn.service.parsers.csv.CsvMappingIteratorParser
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -34,10 +34,10 @@ class CsvLoadingTestIT {
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
-            firstSeriesCsvParserService: FirstSeriesCSVParserService,
+            csvMappingIteratorParser: CsvMappingIteratorParser,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService
-        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, firstSeriesCsvParserService, passwordEncoder, authorityService)
+        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, csvMappingIteratorParser, passwordEncoder, authorityService)
     }
 
     @Autowired

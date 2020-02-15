@@ -6,16 +6,25 @@ import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
+import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.parsers.csv.FirstSeriesCSVParserService
-import com.epam.brn.service.parsers.csv.converter.impl.ExerciseCsvToExerciseModelConverter
-import com.epam.brn.service.parsers.csv.converter.impl.ExerciseGroupCsvToExerciseGroupConverter
-import com.epam.brn.service.parsers.csv.converter.impl.SeriesCsvToSeriesConverter
-import com.epam.brn.service.parsers.csv.converter.impl.TaskCsvToTaskModelConverter
+import com.epam.brn.service.parsers.csv.CsvMappingIteratorParser
+import com.epam.brn.service.parsers.csv.converter.impl.firstSeries.ExerciseCsvToExerciseModelConverter
+import com.epam.brn.service.parsers.csv.converter.impl.firstSeries.ExerciseGroupCsvToExerciseGroupConverter
+import com.epam.brn.service.parsers.csv.converter.impl.firstSeries.SeriesCsvToSeriesConverter
+import com.epam.brn.service.parsers.csv.converter.impl.firstSeries.TaskCsvToTaskModelConverter
+import com.epam.brn.service.parsers.csv.converter.impl.secondSeries.SecondSeriesMapToExerciseModelConverter
+import com.epam.brn.service.parsers.csv.firstSeries.TaskCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseGroupCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedTaskCSVParserService
+import com.epam.brn.service.parsers.csv.secondSeries.SecondSeriesCSVParserService
 import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
@@ -39,7 +48,7 @@ class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val userAccountRepository: UserAccountRepository,
-    private val firstSeriesCsvParserService: FirstSeriesCSVParserService,
+    private val csvMappingIteratorParser: CsvMappingIteratorParser,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService
 ) {
@@ -61,6 +70,9 @@ class InitialDataLoader(
     lateinit var taskCsvToTaskModelConverter: TaskCsvToTaskModelConverter
 
     @Autowired
+    lateinit var secondSeriesMapToExerciseModelConverter: SecondSeriesMapToExerciseModelConverter
+
+    @Autowired
     lateinit var exerciseService: ExerciseService
 
     @Autowired
@@ -74,6 +86,24 @@ class InitialDataLoader(
 
     @Autowired
     lateinit var taskService: TaskService
+
+    @Autowired
+    lateinit var commaSeparatedTaskCSVParserService: CommaSeparatedTaskCSVParserService
+
+    @Autowired
+    lateinit var commaSeparatedExerciseCSVParserService: CommaSeparatedExerciseCSVParserService
+
+    @Autowired
+    lateinit var commaSeparatedSeriesCSVParserService: CommaSeparatedSeriesCSVParserService
+
+    @Autowired
+    lateinit var commaSeparatedExerciseGroupCSVParserService: CommaSeparatedExerciseGroupCSVParserService
+
+    @Autowired
+    lateinit var secondSeriesCSVParserService: SecondSeriesCSVParserService
+
+    @Autowired
+    lateinit var taskCSVParserService: TaskCSVParserService
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
@@ -155,68 +185,86 @@ class InitialDataLoader(
         loadSeries(sources.getValue(SERIES))
         loadExercises(sources.getValue(EXERCISES))
         loadTasksForSingleWordsSeries(sources.getValue(TASKS_FOR_SINGLE_WORDS_SERIES))
+        loadTasksForWordsSequencesSecondSeries(sources.getValue(TASKS_FOR_WORDS_SEQUENCES_SERIES))
 
         prepareTasksForWordsSequencesSeries(sources.getValue(TASKS_FOR_WORDS_SEQUENCES_SERIES))
         log.debug("Initialization succeeded")
     }
 
     private fun loadExerciseGroups(groupsInputStream: InputStream) {
-        firstSeriesCsvParserService.parseCommasSeparatedCsvFile(groupsInputStream, exerciseGroupCsvToExerciseGroupConverter)
+        csvMappingIteratorParser.parseCsvFile(groupsInputStream, exerciseGroupCsvToExerciseGroupConverter, commaSeparatedExerciseGroupCSVParserService)
+            .map(Map.Entry<String, Pair<ExerciseGroup?, String?>>::value)
+            .map(Pair<ExerciseGroup?, String?>::first)
+            .map { value -> value!! }
             .map(exerciseGroupService::save)
     }
 
     private fun loadSeries(seriesInputStream: InputStream) {
-        firstSeriesCsvParserService.parseCommasSeparatedCsvFile(seriesInputStream, seriesCsvToSeriesConverter)
+        csvMappingIteratorParser.parseCsvFile(seriesInputStream, seriesCsvToSeriesConverter, commaSeparatedSeriesCSVParserService)
+            .map(Map.Entry<String, Pair<Series?, String?>>::value)
+            .map(Pair<Series?, String?>::first)
+            .map { value -> value!! }
             .map(seriesService::save)
     }
 
     private fun loadExercises(exercisesInputStream: InputStream) {
-        firstSeriesCsvParserService.parseCommasSeparatedCsvFile(exercisesInputStream, exerciseModelConverter)
+        csvMappingIteratorParser.parseCsvFile(exercisesInputStream, exerciseModelConverter, commaSeparatedExerciseCSVParserService)
+            .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
+            .map(Pair<Exercise?, String?>::first)
+            .map { value -> value!! }
             .map(exerciseService::save)
     }
 
     private fun loadTasksForSingleWordsSeries(tasksInputStream: InputStream) {
-        firstSeriesCsvParserService.parseCsvFile(tasksInputStream, taskCsvToTaskModelConverter)
+        csvMappingIteratorParser.parseCsvFile(tasksInputStream, taskCsvToTaskModelConverter, taskCSVParserService)
             .map(Map.Entry<String, Pair<Task?, String?>>::value)
             .map(Pair<Task?, String?>::first)
             .map { value -> value!! }
             .map(taskService::save)
     }
 
+    private fun loadTasksForWordsSequencesSecondSeries(tasksInputStream: InputStream) {
+        csvMappingIteratorParser.parseCsvFile(tasksInputStream, secondSeriesMapToExerciseModelConverter, secondSeriesCSVParserService)
+            .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
+            .map(Pair<Exercise?, String?>::first)
+            .map { value -> value!! }
+            .map(exerciseService::save)
+    }
+
     // todo: get data from file
     private fun prepareTasksForWordsSequencesSeries(tasksInputStream: InputStream) {
         val resource1 = Resource(
-            word = "девочка",
+            word = "девочкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),
             audioFileUrl = "series2/девочка.mp3",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
         val resource2 = Resource(
-            word = "дедушка",
+            word = "дедушкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),
             audioFileUrl = "series2/дедушка.mp3",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
         val resource3 = Resource(
-            word = "бабушка",
+            word = "бабушкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),
             audioFileUrl = "series2/бабушка.mp3",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
         val resource4 = Resource(
-            word = "бросает",
+            word = "бросаетTest",
             wordType = WordTypeEnum.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/бросает.mp3",
             pictureFileUrl = "pictures/withWord/бросает.jpg"
         )
         val resource5 = Resource(
-            word = "читает",
+            word = "читаетTest",
             wordType = WordTypeEnum.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/читает.mp3",
             pictureFileUrl = "pictures/withWord/читает.jpg"
         )
         val resource6 = Resource(
-            word = "рисует",
+            word = "рисуетTest",
             wordType = WordTypeEnum.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/рисует.mp3",
             pictureFileUrl = "pictures/withWord/рисует.jpg"
@@ -224,24 +272,24 @@ class InitialDataLoader(
 
         resourceService.saveAll(listOf(resource1, resource2, resource3, resource4, resource5, resource6))
 
-        val task2 = Task(
-            serialNumber = 1,
-            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
-        )
-        val exercise2 = Exercise(
-            series = seriesService.findSeriesForId(2L),
-            name = "Распознование последовательности слов",
-            description = "Распознование последовательности слов",
-            template = "<OBJECT OBJECT_ACTION>",
-            exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString(),
-            level = 1
-        )
-
-        task2.exercise = exercise2
-        exercise2.tasks.add(task2)
-        seriesService.findSeriesWithExercisesForId(2L).exercises.add(exercise2)
-
-        exerciseService.save(exercise2)
+//        val task2 = Task(
+//            serialNumber = 1,
+//            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
+//        )
+//        val exercise2 = Exercise(
+//            series = seriesService.findSeriesForId(2L),
+//            name = "Распознование последовательности слов",
+//            description = "Распознование последовательности слов",
+//            template = "<OBJECT OBJECT_ACTION>",
+//            exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString(),
+//            level = 1
+//        )
+//
+//        task2.exercise = exercise2
+//        exercise2.tasks.add(task2)
+//        seriesService.findSeriesWithExercisesForId(2L).exercises.add(exercise2)
+//
+//        exerciseService.save(exercise2)
 
         // for 3 series
         val resource7 = Resource(

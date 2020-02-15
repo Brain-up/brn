@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
 import org.apache.logging.log4j.kotlin.logger
@@ -29,6 +29,6 @@ class ResourceService(@Autowired val resourceRepository: ResourceRepository) {
 
     fun findById(id: Long): Resource {
         return resourceRepository.findById(id)
-            .orElseThrow { NoDataFoundException("no resource was found for id=$id") }
+            .orElseThrow { EntityNotFoundException("no resource was found for id=$id") }
     }
 }

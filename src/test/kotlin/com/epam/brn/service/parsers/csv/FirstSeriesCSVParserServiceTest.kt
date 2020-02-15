@@ -5,6 +5,10 @@ import com.epam.brn.service.parsers.csv.dto.ExerciseCsv
 import com.epam.brn.service.parsers.csv.dto.GroupCsv
 import com.epam.brn.service.parsers.csv.dto.SeriesCsv
 import com.epam.brn.service.parsers.csv.dto.TaskCsv
+import com.epam.brn.service.parsers.csv.firstSeries.TaskCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseGroupCSVParserService
+import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
 import java.nio.charset.StandardCharsets
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
@@ -16,7 +20,15 @@ private inline fun <reified T> makeIdentityConverter(): Converter<T, T> =
         override fun convert(source: T) = source
     }
 
-val csvParserService = FirstSeriesCSVParserService()
+val csvMappintIteratorParser = CsvMappingIteratorParser()
+
+val taskCSVParserService = TaskCSVParserService()
+
+val commaSeparatedExerciseCSVParserService = CommaSeparatedExerciseCSVParserService()
+
+val commaSeparatedExerciseGroupCSVParserService = CommaSeparatedExerciseGroupCSVParserService()
+
+val commaSeparatedSeriesCSVParserService = CommaSeparatedSeriesCSVParserService()
 
 class FirstSeriesCSVParserServiceTest : Spek({
     describe("Csv Parser Service") {
@@ -29,7 +41,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvParserService.parseCsvFile(it, makeIdentityConverter<TaskCsv>())
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<TaskCsv>(), taskCSVParserService)
             }.map { res -> res.value.first }.toList()
 
             result shouldContain TaskCsv(
@@ -52,8 +64,8 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvParserService.parseCommasSeparatedCsvFile(it, makeIdentityConverter<ExerciseCsv>())
-            }
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<ExerciseCsv>(), commaSeparatedExerciseCSVParserService)
+            }.map { res -> res.value.first }.toList()
 
             val name = "Однослоговые слова без шума"
             result shouldBeEqualTo listOf(
@@ -64,21 +76,17 @@ class FirstSeriesCSVParserServiceTest : Spek({
         it("should parse Groups") {
 
             val input = """
-                groupId,  name,  description
+                groupId, name, description
                 1, Неречевые упражнения, Неречевые упражнения
                 2, Речевые упражнения, Речевые упражнения              
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvParserService.parseCommasSeparatedCsvFile(it, makeIdentityConverter<GroupCsv>())
-            }
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<GroupCsv>(), commaSeparatedExerciseGroupCSVParserService)
+            }.map { res -> res.value.first }.toList()
 
-            result shouldBeEqualTo listOf(
-                GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения"),
-                GroupCsv(
-                    2, "Речевые упражнения", "Речевые упражнения"
-                )
-            )
+            result shouldContain GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения")
+            result shouldContain GroupCsv(2, "Речевые упражнения", "Речевые упражнения")
         }
 
         it("should parse Series") {
@@ -90,15 +98,11 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvParserService.parseCommasSeparatedCsvFile(it, makeIdentityConverter<SeriesCsv>())
-            }
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<SeriesCsv>(), commaSeparatedSeriesCSVParserService)
+            }.map { res -> res.value.first }.toList()
 
-            result shouldBeEqualTo listOf(
-                SeriesCsv(2, 1, "Распознование слов", "Распознование слов"),
-                SeriesCsv(
-                    2, 2, "Составление предложений", "Составление предложений"
-                )
-            )
+            result shouldContain SeriesCsv(2, 1, "Распознование слов", "Распознование слов")
+            result shouldContain SeriesCsv(2, 2, "Составление предложений", "Составление предложений")
         }
     }
 })

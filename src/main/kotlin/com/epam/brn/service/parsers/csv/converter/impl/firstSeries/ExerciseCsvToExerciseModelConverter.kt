@@ -1,4 +1,4 @@
-package com.epam.brn.service.parsers.csv.converter.impl
+package com.epam.brn.service.parsers.csv.converter.impl.firstSeries
 
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.model.Exercise
