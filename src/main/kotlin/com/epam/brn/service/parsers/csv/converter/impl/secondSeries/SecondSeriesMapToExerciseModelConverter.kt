@@ -110,7 +110,6 @@ class SecondSeriesMapToExerciseModelConverter : Converter<Map<String, Any>, Exer
 
     private fun setWordType(resource: Resource, wordType: WordTypeEnum?): Resource {
         resource.wordType = wordType?.toString() ?: WordTypeEnum.UNKNOWN.toString()
-
         return resource
     }
 }

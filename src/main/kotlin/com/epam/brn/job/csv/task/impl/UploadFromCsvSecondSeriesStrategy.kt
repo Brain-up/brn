@@ -8,26 +8,25 @@ import com.epam.brn.service.parsers.csv.converter.impl.secondSeries.SecondSeries
 import com.epam.brn.service.parsers.csv.secondSeries.SecondSeriesCSVParserService
 import java.io.InputStream
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class UploadFromCsvServiceSecondSeriesStrategy(private val csvMappingIteratorParser: CsvMappingIteratorParser) :
+class UploadFromCsvSecondSeriesStrategy(
+    private val csvMappingIteratorParser: CsvMappingIteratorParser,
+    private val secondSeriesMapToExerciseModelConverter: SecondSeriesMapToExerciseModelConverter,
+    private val secondSeriesCSVParserService: SecondSeriesCSVParserService,
+    private val exerciseService: ExerciseService
+) :
     UploadFromCsvStrategy {
 
     private val log = logger()
 
-    @Autowired
-    private lateinit var secondSeriesMapToExerciseModelConverter: SecondSeriesMapToExerciseModelConverter
-
-    @Autowired
-    private lateinit var secondSeriesCSVParserService: SecondSeriesCSVParserService
-
-    @Autowired
-    private lateinit var exerciseService: ExerciseService
-
     override fun uploadFile(inputStream: InputStream): Map<String, String> {
-        val exercises = csvMappingIteratorParser.parseCsvFile(inputStream, secondSeriesMapToExerciseModelConverter, secondSeriesCSVParserService)
+        val exercises = csvMappingIteratorParser.parseCsvFile(
+            inputStream,
+            secondSeriesMapToExerciseModelConverter,
+            secondSeriesCSVParserService
+        )
         return saveExercises(exercises)
     }
 

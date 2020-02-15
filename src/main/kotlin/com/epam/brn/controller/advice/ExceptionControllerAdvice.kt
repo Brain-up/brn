@@ -31,20 +31,11 @@ class ExceptionControllerAdvice {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(ErrorResponse(e.message))
-    }
-
-    @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
-        logger.error("Entity not found exception: ${e.message}", e)
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(ErrorResponse(e.message))
+            .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<ErrorResponse> {
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponseDto> {
         logger.error("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)

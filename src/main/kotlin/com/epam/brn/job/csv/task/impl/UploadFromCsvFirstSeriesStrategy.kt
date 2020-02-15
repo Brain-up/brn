@@ -9,30 +9,21 @@ import com.epam.brn.service.parsers.csv.converter.impl.firstSeries.TaskCsvToTask
 import com.epam.brn.service.parsers.csv.firstSeries.TaskCSVParserService
 import java.io.InputStream
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class UploadFromCsvServiceFirstSeriesStrategy(
+class UploadFromCsvFirstSeriesStrategy(
     private val csvMappingIteratorParser: CsvMappingIteratorParser,
-    private val taskService: TaskService
+    private val taskService: TaskService,
+    private val taskCsvToTaskModelConverter: TaskCsvToTaskModelConverter,
+    private val seriesService: SeriesService,
+    private val taskCSVParserService: TaskCSVParserService
 ) : UploadFromCsvStrategy {
     private val log = logger()
 
-    @Autowired
-    private lateinit var taskCsvToTaskModelConverter: TaskCsvToTaskModelConverter
-
-    @Autowired
-    private lateinit var seriesService: SeriesService
-
-    @Autowired
-    private lateinit var taskCSVParserService: TaskCSVParserService
-
     override fun uploadFile(inputStream: InputStream): Map<String, String> {
         val tasks = csvMappingIteratorParser.parseCsvFile(inputStream, taskCsvToTaskModelConverter, taskCSVParserService)
-
         tasks.forEach { task -> setExerciseSeries(task.value.first) }
-
         return saveTasks(tasks)
     }
 
