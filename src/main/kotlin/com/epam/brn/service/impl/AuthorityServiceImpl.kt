@@ -1,6 +1,6 @@
 package com.epam.brn.service.impl
 
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.service.AuthorityService
@@ -16,13 +16,13 @@ class AuthorityServiceImpl(private val authorityRepository: AuthorityRepository)
     override fun findAuthorityById(authorityId: Long): Authority {
         log.debug("getting the authority with authorityId=$authorityId")
         return authorityRepository.findAuthoritiesById(authorityId)
-            ?: throw NoDataFoundException("Authority with authorityId = $authorityId is not found")
+            ?: throw EntityNotFoundException("Authority with authorityId = $authorityId is not found")
     }
 
     override fun findAuthorityByAuthorityName(authorityName: String): Authority {
         log.debug("getting the authority with authorityName=$authorityName")
         return authorityRepository.findAuthorityByAuthorityName(authorityName)
-            ?: throw NoDataFoundException("Authority with name = $authorityName is not found")
+            ?: throw EntityNotFoundException("Authority with name = $authorityName is not found")
     }
 
     override fun save(authority: Authority) = authorityRepository.save(authority)

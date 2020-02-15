@@ -234,37 +234,37 @@ class InitialDataLoader(
     // todo: get data from file
     private fun prepareTasksForWordsSequencesSeries(tasksInputStream: InputStream) {
         val resource1 = Resource(
-            word = "девочка",
+            word = "девочкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),
             audioFileUrl = "series2/девочка.mp3",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
         val resource2 = Resource(
-            word = "дедушка",
+            word = "дедушкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),
             audioFileUrl = "series2/дедушка.mp3",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
         val resource3 = Resource(
-            word = "бабушка",
+            word = "бабушкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),
             audioFileUrl = "series2/бабушка.mp3",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
         val resource4 = Resource(
-            word = "бросает",
+            word = "бросаетTest",
             wordType = WordTypeEnum.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/бросает.mp3",
             pictureFileUrl = "pictures/withWord/бросает.jpg"
         )
         val resource5 = Resource(
-            word = "читает",
+            word = "читаетTest",
             wordType = WordTypeEnum.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/читает.mp3",
             pictureFileUrl = "pictures/withWord/читает.jpg"
         )
         val resource6 = Resource(
-            word = "рисует",
+            word = "рисуетTest",
             wordType = WordTypeEnum.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/рисует.mp3",
             pictureFileUrl = "pictures/withWord/рисует.jpg"

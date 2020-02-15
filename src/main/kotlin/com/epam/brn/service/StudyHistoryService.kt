@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.converter.StudyHistoryConverter
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
@@ -58,6 +58,6 @@ class StudyHistoryService(
             studyHistoryConverter.updateStudyHistoryWhereNotNull(studyHistoryDto, studyHistoryEntity)
             studyHistoryRepository.save(studyHistoryEntity).toDto()
         }
-            .orElseThrow { NoDataFoundException("Could not find requested study history with id=${studyHistoryDto.id}") }
+            .orElseThrow { EntityNotFoundException("Could not find requested study history with id=${studyHistoryDto.id}") }
     }
 }

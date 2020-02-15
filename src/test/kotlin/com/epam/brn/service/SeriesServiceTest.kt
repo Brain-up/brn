@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.nhaarman.mockito_kotlin.verify
@@ -55,7 +55,7 @@ internal class SeriesServiceTest {
         val seriesId: Long = 1
         `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.empty())
         // WHEN
-        assertThrows(NoDataFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
+        assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
         // THEN
         verify(seriesRepository).findById(seriesId)
     }
