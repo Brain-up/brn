@@ -23,7 +23,6 @@ import com.epam.brn.service.parsers.csv.firstSeries.TaskCSVParserService
 import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
 import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedExerciseGroupCSVParserService
 import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
-import com.epam.brn.service.parsers.csv.firstSeries.commaSeparated.CommaSeparatedTaskCSVParserService
 import com.epam.brn.service.parsers.csv.secondSeries.SecondSeriesCSVParserService
 import java.io.InputStream
 import java.nio.file.Files
@@ -86,9 +85,6 @@ class InitialDataLoader(
 
     @Autowired
     lateinit var taskService: TaskService
-
-    @Autowired
-    lateinit var commaSeparatedTaskCSVParserService: CommaSeparatedTaskCSVParserService
 
     @Autowired
     lateinit var commaSeparatedExerciseCSVParserService: CommaSeparatedExerciseCSVParserService
@@ -155,7 +151,7 @@ class InitialDataLoader(
         if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
 
-        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES, TASKS_FOR_WORDS_SEQUENCES_SERIES)
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_1_SERIES, TASKS_FOR_2_SERIES)
             .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
             .toMap()
 
@@ -174,7 +170,7 @@ class InitialDataLoader(
 
     private fun loadInitialDataFromClassPath() {
         log.debug("Loading data from classpath initFiles")
-        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_SINGLE_WORDS_SERIES, TASKS_FOR_WORDS_SEQUENCES_SERIES)
+        val sources = listOf(EXERCISES, GROUPS, SERIES, TASKS_FOR_1_SERIES, TASKS_FOR_2_SERIES)
             .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
             .toMap()
         loadInitialDataToDb(sources)
@@ -184,10 +180,10 @@ class InitialDataLoader(
         loadExerciseGroups(sources.getValue(GROUPS))
         loadSeries(sources.getValue(SERIES))
         loadExercises(sources.getValue(EXERCISES))
-        loadTasksForSingleWordsSeries(sources.getValue(TASKS_FOR_SINGLE_WORDS_SERIES))
-        loadTasksForWordsSequencesSecondSeries(sources.getValue(TASKS_FOR_WORDS_SEQUENCES_SERIES))
+        loadTasksForSingleWordsSeries(sources.getValue(TASKS_FOR_1_SERIES))
+        loadTasksForWordsSequencesSecondSeries(sources.getValue(TASKS_FOR_2_SERIES))
 
-        prepareTasksForWordsSequencesSeries(sources.getValue(TASKS_FOR_WORDS_SEQUENCES_SERIES))
+        prepareTasksForWordsSequencesSeries(sources.getValue(TASKS_FOR_2_SERIES))
         log.debug("Initialization succeeded")
     }
 
@@ -231,7 +227,7 @@ class InitialDataLoader(
             .map(exerciseService::save)
     }
 
-    // todo: get data from file
+    // todo: get data from file for 3 series
     private fun prepareTasksForWordsSequencesSeries(tasksInputStream: InputStream) {
         val resource1 = Resource(
             word = "девочкаTest",
@@ -269,27 +265,7 @@ class InitialDataLoader(
             audioFileUrl = "series2/рисует.mp3",
             pictureFileUrl = "pictures/withWord/рисует.jpg"
         )
-
         resourceService.saveAll(listOf(resource1, resource2, resource3, resource4, resource5, resource6))
-
-//        val task2 = Task(
-//            serialNumber = 1,
-//            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
-//        )
-//        val exercise2 = Exercise(
-//            series = seriesService.findSeriesForId(2L),
-//            name = "Распознование последовательности слов",
-//            description = "Распознование последовательности слов",
-//            template = "<OBJECT OBJECT_ACTION>",
-//            exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString(),
-//            level = 1
-//        )
-//
-//        task2.exercise = exercise2
-//        exercise2.tasks.add(task2)
-//        seriesService.findSeriesWithExercisesForId(2L).exercises.add(exercise2)
-//
-//        exerciseService.save(exercise2)
 
         // for 3 series
         val resource7 = Resource(
@@ -297,7 +273,6 @@ class InitialDataLoader(
             wordType = WordTypeEnum.SENTENCE.toString(),
             audioFileUrl = "series3/девочка_рисует.mp3"
         )
-
         resourceService.save(resource7)
 
         val task3 = Task(
@@ -323,8 +298,9 @@ class InitialDataLoader(
     }
 
     companion object {
-        private const val TASKS_FOR_SINGLE_WORDS_SERIES = "tasks_for_single_words_series.csv"
-        private const val TASKS_FOR_WORDS_SEQUENCES_SERIES = "tasks_for_words_sequences_series.csv"
+        private const val TASKS_FOR_1_SERIES = "1_series.csv"
+        private const val TASKS_FOR_2_SERIES = "2_series.csv"
+        private const val TASKS_FOR_3_SERIES = "3_series.csv"
         private const val SERIES = "series.csv"
         private const val GROUPS = "groups.csv"
         private const val EXERCISES = "exercises.csv"
