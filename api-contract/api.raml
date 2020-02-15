@@ -175,3 +175,27 @@ mediaType:
             type: file
     responses:
       201:
+
+/cloud:
+  /upload:
+    get:
+      queryParameters:
+        filename:
+          description: "File name to be used for uploading"
+          required: true
+          type: string
+          example: "file1.jpg"
+      description: Get cloud upload form
+      responses:
+        200:
+          body:
+            application/json:
+              example_for_aws_upload_form: !include samples/example_for_aws_upload_form.json
+              example_for_google_upload_form: !include samples/example_for_google_upload_form.json
+  /url:
+    get:
+      description: Get cloud bucket url
+      responses:
+        200:
+          body:
+            example: "https://cloudprovider.bucket.com"

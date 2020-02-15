@@ -1,0 +1,32 @@
+{
+  "action": "http://bucket.s3.amazonaws.com",
+  "input": [
+    {
+      "policy": "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzYWltZG9ydWtsdTIiDQogIH0sIHsNCiAgICAiYWNsIiA6ICJwcml2YXRlIg0KICB9LCBbICJzdGFydHMtd2l0aCIsICIka2V5IiwgInRhc2tzLyIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
+    },
+    {
+      "x-amz-signature": "873651b83f0da2c80da917a00dee62fd2142c78d2a5a388fbd57e647eb6c0bc3"
+    },
+    {
+      "key": "tasks/${filename}"
+    },
+    {
+      "acl": "private"
+    },
+    {
+      "x-amz-meta-uuid": "c49791b2-b27b-4edf-bac8-8734164c20e6"
+    },
+    {
+      "x-amz-server-side-encryption": "AES256"
+    },
+    {
+      "x-amz-credential": "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request"
+    },
+    {
+      "x-amz-algorithm": "AWS4-HMAC-SHA256"
+    },
+    {
+      "x-amz-date": "20200130T113917Z"
+    }
+  ]
+}
