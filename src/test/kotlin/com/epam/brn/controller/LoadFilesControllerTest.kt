@@ -25,8 +25,8 @@ internal class LoadFilesControllerTest {
     fun `should upload tasks from task csv file`() {
         // GIVEN
         val taskFile = MockMultipartFile(
-            "tasks_for_single_words_series.csv",
-            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}tasks_for_single_words_series.csv")
+            "1_series.csv",
+            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}1_series.csv")
         )
         // WHEN
         loadFilesController.loadTaskFile(taskFile, 1)
