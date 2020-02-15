@@ -22,7 +22,7 @@ internal class LoadFilesControllerTest {
     lateinit var uploadFromCsvService: UploadFromCsvService
 
     @Test
-    fun `should upload tasks from task csv file`() {
+    fun `should upload tasks from task csv file for 1 series`() {
         // GIVEN
         val taskFile = MockMultipartFile(
             "1_series.csv",
