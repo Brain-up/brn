@@ -40,9 +40,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
             conditions.contentTypeStartsWith,
             conditions.metaTagStartsWith
         )) {
-            if (condition.second.isNotEmpty()) {
+            if (condition.second.isNotEmpty())
                 inputs.add(mapOf(condition))
-            }
         }
         return mapOf("action" to awsConfig.bucketLink, "input" to inputs)
     }

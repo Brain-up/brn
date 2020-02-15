@@ -11,6 +11,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.lang.IllegalArgumentException
 
 @ControllerAdvice
 class ExceptionControllerAdvice {
@@ -26,16 +27,9 @@ class ExceptionControllerAdvice {
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }
 
-    @ExceptionHandler(Throwable::class)
-    fun handleException(e: Throwable): ResponseEntity<BaseResponseDto> {
-        logger.error("Internal exception: ${e.message}", e)
-        return makeInternalServerErrorResponseEntity(e)
-    }
-
     @ExceptionHandler(FileFormatException::class)
     fun handleFileFormatException(e: FileFormatException): ResponseEntity<ErrorResponse> {
         logger.error("File format exception: ${e.message}", e)
-
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -45,11 +39,25 @@ class ExceptionControllerAdvice {
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
         logger.error("Entity not found exception: ${e.message}", e)
-
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse(e.message))
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<ErrorResponse> {
+        logger.error("IllegalArgumentException: ${e.message}", e)
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(ErrorResponse(e.message))
+    }
+
+    @ExceptionHandler(Throwable::class)
+    fun handleException(e: Throwable): ResponseEntity<BaseResponseDto> {
+        logger.error("Internal exception: ${e.message}", e)
+        return makeInternalServerErrorResponseEntity(e)
     }
 
     fun makeInternalServerErrorResponseEntity(e: Throwable) = ResponseEntity

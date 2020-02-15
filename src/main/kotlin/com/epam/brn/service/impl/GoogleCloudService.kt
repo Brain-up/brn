@@ -19,9 +19,8 @@ import org.springframework.stereotype.Service
 class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) : CloudService {
 
     override fun signatureForClientDirectUpload(fileName: String?): Map<String, String> {
-        if (fileName == null) {
+        if (fileName.isNullOrEmpty())
             throw IllegalArgumentException("File name should not be empty")
-        }
         val storage: Storage =
             StorageOptions.newBuilder().setCredentials(cloudConfig.credentials).setProjectId(cloudConfig.projectId)
                 .build().getService()
@@ -33,7 +32,6 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
             Storage.SignUrlOption.httpMethod(HttpMethod.POST),
             Storage.SignUrlOption.withV4Signature()
         )
-
         return mapOf("action" to url.toString())
     }
 
