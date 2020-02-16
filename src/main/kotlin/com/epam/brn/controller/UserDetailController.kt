@@ -44,8 +44,6 @@ class UserDetailController(@Autowired val userDetailService: UserDetailsService)
     @ApiOperation("Get amount of time spend on tasks for user")
     fun getWorkTime(): Long {
         val timeSpend = userDetailService.getWorkTime()  // return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = taskService.getTaskById(taskId)))
-
         return timeSpend
     }
-
 }

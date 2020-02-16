@@ -48,6 +48,5 @@ class UserDetailsService(@Autowired val userDetailsDAO: UserDetailsRepository) {
             studyHistoryDto.responseCode = HttpStatus.OK
             studyHistoryEntity
         }
-
     }
 }

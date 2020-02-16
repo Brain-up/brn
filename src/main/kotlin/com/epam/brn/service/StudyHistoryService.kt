@@ -67,5 +67,4 @@ class StudyHistoryService(
     fun getEndTime(): LocalDateTime {
         return studyHistoryRepository.getEndTime()
     }
-
 }
