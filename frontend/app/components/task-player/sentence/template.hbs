@@ -1,28 +1,5 @@
-<br />
-{{#if (eq this.lastAnswer @task.word)}}
-  {{#if (not (and this.exerciseResultIsVisible @task.isLastTask))}}
-    <div
-      class="task-player__right-answer-data flex flex-wrap flex-1 mt-5"
-      {{did-insert (action this.runNextTaskTimer)}}
-    >
-      {{#if @task.pictureFileUrl}}
-        {{! template-lint-configure no-inline-styles false }}
-        <div
-          data-test-right-answer-notification
-          aria-label={{html-safe (concat "изображение " @task.word)}}
-          class="task-player__image flex-1 rounded mx-auto"
-          role="img"
-        ></div>
-      {{/if}}
-    </div>
-  {{else}}
-    <AnswerCorrectnessWidget @isCorrect={{true}} />
-  {{/if}}
-{{else if (and @task.nextAttempt this.taskResultIsVisible)}}
-  <AnswerCorrectnessWidget
-    @isCorrect={{false}}
-    {{did-insert (action this.runNextAttemptTimer)}}
-  />
+{{#if (and this.exerciseResultIsVisible @task.isLastTask)}}
+  <AnswerCorrectnessWidget @isCorrect={{true}} />
 {{else}}
   <AudioPlayer
     @audioFileUrl={{this.audioFiles}}
@@ -33,7 +10,6 @@
     {{#each @task.selectedItemsOrder as |type|}}
       <div
         class="column flex-1 flex-col type-column
-
 
           {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
       >

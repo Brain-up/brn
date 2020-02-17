@@ -15,7 +15,4 @@ export default class TaskSentenceModel extends BaseTask.extend({
   correctAnswer: attr('string'),
   exerciseType: 'sentence',
   answerParts: attr('array'),
-  answerTypes: computed('answerOptions', function() {
-    return Object.keys(this.answerOptions);
-  }),
 }) {}

@@ -5,8 +5,6 @@ export default BaseTaskSerializer.extend({
     const hashCopy = {
       ...hash,
       correctAnswer: hash.correctAnswer.word,
-      answer: hash.correctAnswer,
-      words: hash.answerOptions,
     };
     return this._super(typeClass, hashCopy);
   },

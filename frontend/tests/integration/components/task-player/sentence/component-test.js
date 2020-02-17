@@ -1,7 +1,5 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | task-player/sentence', function(hooks) {
   setupRenderingTest(hooks);
@@ -10,17 +8,6 @@ module('Integration | Component | task-player/sentence', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<TaskPlayer::Sentence />`);
-
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <TaskPlayer::Sentence>
-        template block text
-      </TaskPlayer::Sentence>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });
