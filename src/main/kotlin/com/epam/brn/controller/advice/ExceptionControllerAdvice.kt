@@ -43,6 +43,12 @@ class ExceptionControllerAdvice {
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }
 
+    @ExceptionHandler(UninitializedPropertyAccessException::class)
+    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BaseResponseDto> {
+        logger.error("Internal exception: ${e.message}", e)
+        return makeInternalServerErrorResponseEntity(e)
+    }
+
     @ExceptionHandler(Throwable::class)
     fun handleException(e: Throwable): ResponseEntity<BaseResponseDto> {
         logger.error("Internal exception: ${e.message}", e)

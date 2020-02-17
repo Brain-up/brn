@@ -1,12 +1,16 @@
 package com.epam.brn.config
 
 import com.amazonaws.services.glacier.model.CannedACL
+import java.io.FileInputStream
+import java.io.IOException
 import java.time.Duration
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Properties
 import java.util.UUID
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -14,6 +18,7 @@ import org.springframework.context.annotation.Profile
 @Configuration
 @Profile("!integration-tests")
 class AwsConfig {
+    private val log = logger()
 
     val dateTimeFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!
     val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")!!
@@ -21,10 +26,12 @@ class AwsConfig {
 
     @Value("\${cloud.expireAfterDuration}")
     val expireAfterDuration: String = ""
+    @Value("\${aws.credentialsPath}")
+    val credentialsPath: String = ""
     @Value("\${aws.accessRuleCanned}")
     val accessRuleCanned: String = ""
-    @Value("\${aws.accessKeyId}")
-    val accessKeyId: String = ""
+    val credentials: Properties by lazy { initCredentials() }
+    val accessKeyId: String by lazy { credentials.getProperty("aws.accessKeyId") }
     @Value("\${aws.uploadKeyStartsWith}")
     val uploadKeyStartsWith: String = ""
     @Value("\${aws.bucketName}")
@@ -39,8 +46,7 @@ class AwsConfig {
     @Value("\${aws.metaTagStartsWith:}")
     val metaTagStartsWith: String = ""
     // signature calc
-    @Value("\${aws.secretAccessKey}")
-    val secretAccessKey: String = ""
+    val secretAccessKey: String by lazy { credentials.getProperty("aws.secretAccessKey") }
     @Value("\${aws.serviceName}")
     val serviceName: String = ""
     @Value("\${aws.region}")
@@ -54,8 +60,23 @@ class AwsConfig {
 
     fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
     fun uuid(): String = UUID.randomUUID().toString()
+    fun initCredentials(): Properties {
+        val properties = Properties()
+        try {
+            FileInputStream(credentialsPath).use { input ->
+                properties.load(input)
+            }
+        } catch (ex: IOException) {
+            log.info("Could not load aws properties from path $credentialsPath")
+        }
+        return properties
+    }
 
     inner class Conditions {
+        init {
+            if (accessKeyId == null || secretAccessKey == null)
+                throw UninitializedPropertyAccessException("Missing property in cloud upload configuration")
+        }
         private val now: OffsetDateTime = instant()
         val date: String = dateFormat(now)
 
@@ -80,6 +101,6 @@ class AwsConfig {
             expirationFormat.format(dateTime.plus(expireAfter))
         private fun dateTimeFormat(dateTime: OffsetDateTime): String = dateTimeFormat.format(dateTime)
         private fun dateFormat(dateTime: OffsetDateTime): String = dateFormat.format(dateTime)
-        private fun credentialFormat(dateTime: OffsetDateTime): String = String.format(xamzCredential, this.dateFormat(dateTime))
+        private fun credentialFormat(dateTime: OffsetDateTime): String = String.format(xamzCredential, this@AwsConfig.accessKeyId, this.dateFormat(dateTime))
     }
 }
