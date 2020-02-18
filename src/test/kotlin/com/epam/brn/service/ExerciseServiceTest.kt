@@ -13,8 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyLong
-import org.mockito.Mockito.anyShort
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -88,6 +88,6 @@ internal class ExerciseServiceTest {
         val actualResult: Exercise = exerciseService.findExerciseByNameAndLevel("name", 1)
         // THEN
         assertEquals(actualResult, exerciseMock)
-        verify(exerciseRepository).findExerciseByNameAndLevel(anyString(), anyShort())
+        verify(exerciseRepository).findExerciseByNameAndLevel(anyString(), anyInt())
     }
 }

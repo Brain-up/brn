@@ -1,27 +1,15 @@
 <br />
 {{#if (eq this.lastAnswer @task.word)}}
-  {{#if (not (and this.exerciseResultIsVisible @task.isLastTask))}}
-    <div
-      class="task-player__right-answer-data flex flex-wrap flex-1 mt-5"
-      {{did-insert (action this.runNextTaskTimer)}}
-    >
-      {{#if @task.pictureFileUrl}}
-        {{! template-lint-configure no-inline-styles false }}
-        <div
-          data-test-right-answer-notification
-          aria-label={{html-safe (concat "изображение " @task.word)}}
-          class="task-player__image flex-1 rounded mx-auto"
-          role="img"
-        ></div>
-      {{/if}}
-    </div>
-  {{else}}
-    <AnswerCorrectnessWidget @isCorrect={{true}} />
-  {{/if}}
+  <ImageDisplayBlock
+    data-test-right-answer-notification
+    @pictureFileUrl={{@task.pictureFileUrl}}
+    @label={{@task.word}}
+    {{did-insert (perform this.runNextTaskTimer)}}
+  />
 {{else if (and @task.nextAttempt this.taskResultIsVisible)}}
   <AnswerCorrectnessWidget
     @isCorrect={{false}}
-    {{did-insert (action this.runNextAttemptTimer)}}
+    {{did-insert (perform this.showTaskResult)}}
   />
 {{else}}
   <AudioPlayer
@@ -37,6 +25,7 @@
           data-test-task-answer-option={{word}}
           disabled={{@disableAnswers}}
           class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
+
 
             {{if
               @disableAnswers

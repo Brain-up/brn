@@ -2,14 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 
 export default Component.extend({
-  classNames: [
-    'flex',
-    'flex-wrap',
-    'flex-1',
-    'mt-5',
-    'flex-col',
-    'text-center',
-  ],
+  tagName: '',
   maxImagesNumber: 8,
   imagePath: computed(function() {
     return this.getImagePath();

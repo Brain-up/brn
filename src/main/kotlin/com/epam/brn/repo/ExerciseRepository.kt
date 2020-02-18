@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ExerciseRepository : JpaRepository<Exercise, Long> {
     fun findExercisesBySeriesId(seriesId: Long): List<Exercise>
-    fun findExerciseByNameAndLevel(name: String, level: Short): Optional<Exercise>
+    fun findExerciseByNameAndLevel(name: String, level: Int): Optional<Exercise>
     override fun findById(seriesId: Long): Optional<Exercise>
 
     fun findExerciseByName(name: String): Optional<Exercise>

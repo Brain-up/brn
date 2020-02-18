@@ -17,5 +17,13 @@
       @tasks={{this.model.tasks}}
     />
   {{/if}}
-  {{outlet}}
+
+  {{#if this.exerciseIsCompletedInCurrentCycle}}
+    <AnswerCorrectnessWidget
+      @isCorrect={{true}}
+      {{did-insert (action this.afterCompleted)}}
+    />
+  {{else}}
+    {{outlet}}
+  {{/if}}
 </div>

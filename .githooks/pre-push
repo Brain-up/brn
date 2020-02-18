@@ -1,12 +1,33 @@
-#!/bin/bash
-protected_branch_master='master'
-protected_branch_dev='dev'
-current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+#!/usr/bin/env node
+"use strict";
 
-if [[ $protected_branch_master == $current_branch || $protected_branch_dev == $current_branch ]]; then
-  echo "You are on branch $BRANCH. You a not supposed to push to this branch."
-  echo "Please use feature/bugfix branches."
-  exit 1
-fi
+process.title = "pre push";
 
-exit 0
+function parseBranch(buf) {
+  const match = /ref: refs\/heads\/([^\n]+)/.exec(buf.toString());
+  return match ? match[1] : null;
+}
+
+var protected_branches = ["dev", "master"];
+var fs = require("fs");
+var cwd = process.cwd();
+var path = require("path");
+var branch = parseBranch(
+  fs.readFileSync(path.join(cwd, ".git", "HEAD"), "utf8")
+);
+
+if (
+  protected_branches.filter(function(name) {
+    return name === branch;
+  }).length
+) {
+  process.stderr.write(
+    [
+      "You are on branch " + branch + ". You a not supposed to push to this branch.",
+      "Please use feature/bugfix branches."
+    ].join("\n")
+  );
+  process.exit(1);
+} else {
+  process.exit(0);
+}

@@ -10,4 +10,7 @@ object BrnPath {
     const val STUDY_HISTORIES = "/study-history"
     const val FILES = "/files"
     const val LOAD_TASKS_FILE = "/loadTasksFile"
+    const val CLOUD = "/cloud"
+    const val UPLOAD = "/upload"
+    const val RESOURCES_ROOT_URL = "/url"
 }

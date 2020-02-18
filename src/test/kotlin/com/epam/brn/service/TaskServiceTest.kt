@@ -1,7 +1,7 @@
 package com.epam.brn.service
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.TaskDtoForSingleWords
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
@@ -45,17 +45,13 @@ internal class TaskServiceTest {
             val exercise = mock(Exercise::class.java)
             val task1 = mock(Task::class.java)
             val task2 = mock(Task::class.java)
-
             `when`(taskRepository.findTasksByExerciseIdWithJoinedAnswers(LONG_ONE))
                 .thenReturn(listOf(task1, task2))
             `when`(exerciseRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(exercise))
-
             `when`(exercise.exerciseType).thenReturn(ExerciseTypeEnum.SINGLE_WORDS.toString())
-
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
-
             // THEN
             assertEquals(2, foundTasks.size)
         }
@@ -83,7 +79,7 @@ internal class TaskServiceTest {
             `when`(taskRepository.findById(LONG_ONE))
                 .thenReturn(Optional.empty())
             // THEN
-            assertFailsWith<NoDataFoundException> {
+            assertFailsWith<EntityNotFoundException> {
                 taskService.getTaskById(LONG_ONE)
             }
         }

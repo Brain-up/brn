@@ -1,12 +1,30 @@
-#!/bin/bash
-master_branches=('origin/master' 'master' 'origin/dev' 'dev')
-current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+#!/usr/bin/env node
+"use strict";
 
-for branch in "${master_branches[@]}"
-do
-    if [ $branch = $current_branch ]; then
-        echo "You're about to commit to $branch and it's not allowed"
-        exit 1
-    fi
-done
-exit 0
+process.title = "pre commit";
+
+function parseBranch(buf) {
+  const match = /ref: refs\/heads\/([^\n]+)/.exec(buf.toString());
+  return match ? match[1] : null;
+}
+
+var protected_branches = ["origin/master", "master", "origin/dev", "dev"];
+var fs = require("fs");
+var cwd = process.cwd();
+var path = require("path");
+var branch = parseBranch(
+  fs.readFileSync(path.join(cwd, ".git", "HEAD"), "utf8")
+);
+
+if (
+  protected_branches.filter(function(name) {
+    return name === branch;
+  }).length
+) {
+  process.stderr.write(
+    "You're about to commit to " + branch + " and it's not allowed"
+  );
+  process.exit(1);
+} else {
+  process.exit(0);
+}

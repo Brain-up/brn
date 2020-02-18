@@ -1,5 +1,7 @@
 package com.epam.brn.config
 
+import com.epam.brn.constant.BrnPath.CLOUD
+import com.epam.brn.constant.BrnPath.UPLOAD
 import com.epam.brn.constant.BrnRoles.ADMIN
 import com.epam.brn.constant.BrnRoles.USER
 import org.springframework.beans.factory.annotation.Qualifier
@@ -30,6 +32,9 @@ class WebSecurityConfiguration(
         http.authorizeRequests()
             .antMatchers("/login").permitAll()
             .antMatchers("/admin/**").hasRole(ADMIN)
+            .antMatchers("/users/current").hasAnyRole(ADMIN, USER)
+            .antMatchers("/users/**").hasRole(ADMIN)
+            .antMatchers("$CLOUD$UPLOAD").hasRole(ADMIN)
             .antMatchers("/**").hasAnyRole(ADMIN, USER)
             .and().formLogin()
             .and().logout().logoutSuccessUrl("/login").permitAll()

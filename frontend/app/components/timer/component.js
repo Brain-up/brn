@@ -6,20 +6,25 @@ import { reads } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
 
 export default Component.extend({
+  tagName: '',
+
   willDestroyElement() {
     this._super(...arguments);
     this.stopTimer();
   },
+
   didInsertElement() {
     this._super(...arguments);
     this.studyingTimer.register(this);
     this.set('isStarted', false);
   },
+
   studyingTimer: inject(),
   countedSeconds: reads('studyingTimer.countedSeconds'),
   isPaused: reads('studyingTimer.isPaused'),
   isStarted: false,
   timer: null,
+
   displayValue: computed('countedSeconds', function() {
     const mins = Math.floor(this.countedSeconds / 60);
     const hours = Math.floor(mins / 60);
@@ -40,9 +45,9 @@ export default Component.extend({
   },
 
   setStartTime() {
-	if (this.isDestroyed || this.isDestroying) {
-		return;
-	}
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
     this.set('timeStart', new Date().getTime() - this.countedSeconds * 1000);
   },
 

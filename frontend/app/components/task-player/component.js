@@ -12,6 +12,7 @@ export default class TaskPlayerComponent extends Component {
   justEnteredTask = true;
   @tracked
   task = null;
+  tagName = '';
   get componentType() {
     return `task-player/${dasherize(this.task.exerciseType)}`;
   }
@@ -27,7 +28,6 @@ export default class TaskPlayerComponent extends Component {
     );
   }
   onRightAnswer() {}
-  afterCompleted() {}
   async startTask() {
     this.studyingTimer.runTimer();
     this.task.exercise.content.trackTime('start');
