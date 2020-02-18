@@ -151,7 +151,7 @@ class InitialDataLoader(
         if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
 
-        val sources = listOf(GROUPS, SERIES, EXERCISES, TASKS_FOR_1_SERIES, TASKS_FOR_2_SERIES, TASKS_FOR_3_SERIES)
+        val sources = listOf(GROUPS, SERIES, EXERCISES, tasksForSeries(1), tasksForSeries(2), tasksForSeries(3))
             .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
             .toMap()
 
@@ -170,7 +170,7 @@ class InitialDataLoader(
 
     private fun loadInitialDataFromClassPath() {
         log.debug("Loading data from classpath initFiles")
-        val sources = listOf(GROUPS, SERIES, EXERCISES, TASKS_FOR_1_SERIES, TASKS_FOR_2_SERIES, TASKS_FOR_3_SERIES)
+        val sources = listOf(GROUPS, SERIES, EXERCISES, tasksForSeries(1), tasksForSeries(2), tasksForSeries(3))
             .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
             .toMap()
         loadInitialDataToDb(sources)
@@ -180,9 +180,9 @@ class InitialDataLoader(
         loadExerciseGroups(sources.getValue(GROUPS))
         loadSeries(sources.getValue(SERIES))
         loadExercises(sources.getValue(EXERCISES))
-        loadTasksFor1Series(sources.getValue(TASKS_FOR_1_SERIES))
-        loadTasksFor2Series(sources.getValue(TASKS_FOR_2_SERIES))
-        loadTasksFor3Series(sources.getValue(TASKS_FOR_3_SERIES))
+        loadTasksFor1Series(sources.getValue(tasksForSeries(1)))
+        loadTasksFor2Series(sources.getValue(tasksForSeries(2)))
+        loadTasksFor3Series(sources.getValue(tasksForSeries(3)))
         log.debug("Initialization succeeded")
     }
 
@@ -321,9 +321,7 @@ class InitialDataLoader(
     }
 
     companion object {
-        private const val TASKS_FOR_1_SERIES = "1_series.csv"
-        private const val TASKS_FOR_2_SERIES = "2_series.csv"
-        private const val TASKS_FOR_3_SERIES = "3_series.csv"
+        fun tasksForSeries(seriesId: Long) = "${seriesId}_series.csv"
         private const val SERIES = "series.csv"
         private const val GROUPS = "groups.csv"
         private const val EXERCISES = "exercises.csv"

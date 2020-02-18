@@ -4,7 +4,9 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.nhaarman.mockito_kotlin.verify
+import java.io.IOException
 import java.util.Optional
+import kotlin.test.assertTrue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -13,7 +15,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.core.io.DefaultResourceLoader
+import org.springframework.core.io.ResourceLoader
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesServiceTest {
@@ -21,6 +26,8 @@ internal class SeriesServiceTest {
     lateinit var seriesService: SeriesService
     @Mock
     lateinit var seriesRepository: SeriesRepository
+    @Spy
+    var resourceLoader: ResourceLoader = DefaultResourceLoader()
 
     @Test
     fun `should get series for group`() {
@@ -58,5 +65,29 @@ internal class SeriesServiceTest {
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
         // THEN
         verify(seriesRepository).findById(seriesId)
+    }
+
+    @Test
+    fun `should get series file preview`() {
+        // GIVEN
+        val seriesId: Long = 1
+        // WHEN
+        val preview: String = seriesService.getSeriesFilePreview(seriesId)
+        // THEN
+        assertTrue(preview.isNotEmpty())
+    }
+
+    @Test
+    fun `should throw exception for missing series file`() {
+        // GIVEN
+        val nonExistingSeriesId: Long = Long.MAX_VALUE
+        // WHEN
+        val executable: () -> Unit = { seriesService.getSeriesFilePreview(nonExistingSeriesId) }
+        val expectedType: Class<IOException> = IOException::class.java
+        val message = "should throw IO exception"
+        assertThrows(
+            expectedType, executable, message
+        )
+        // THEN
     }
 }
