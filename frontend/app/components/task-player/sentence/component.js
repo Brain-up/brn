@@ -95,7 +95,7 @@ export default class SentenceComponent extends Component {
   async handleWrongAnswer() {
     await customTimeout(1000);
     this.task.set('repetitionCount', this.task.repetitionCount + 1);
-    this.task.reload();
+    this.notifyPropertyChange('audioFiles');
     this.currentAnswerObject = null;
   }
 
