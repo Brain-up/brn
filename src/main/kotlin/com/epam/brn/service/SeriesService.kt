@@ -62,10 +62,10 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
         val lineNumberReader = LineNumberReader(InputStreamReader(inputStream))
         val lines = StringBuilder()
         var line = lineNumberReader.readLine()
-        while (line != null && lineNumberReader.lineNumber <= numLines) {
-            if (lineNumberReader.lineNumber > 1) { lines.append("\r\n") }
-            lines.append(line)
+        line?.let { lines.append(it) }
+        while (lineNumberReader.lineNumber < numLines) {
             line = lineNumberReader.readLine()
+            line?.let { lines.append("\r\n").append(it) } ?: break
         }
         return lines.toString()
     }
