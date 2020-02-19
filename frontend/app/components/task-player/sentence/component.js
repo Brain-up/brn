@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
@@ -7,7 +7,7 @@ import customTimeout from 'brn/utils/custom-timeout';
 export default class SentenceComponent extends Component {
   @tracked exerciseResultIsVisible = false;
 
-  @tracked taskCopy;
+  @tracked task = this.args.task;
 
   @tracked wrongAnswerParts = [];
 
@@ -25,7 +25,7 @@ export default class SentenceComponent extends Component {
   @tracked currentAnswerObject = null;
 
   didReceiveAttrs() {
-    this.set('exerciseResultIsVisible', false);
+    this.exerciseResultIsVisible = false;
   }
 
   get audioFiles() {
@@ -79,23 +79,22 @@ export default class SentenceComponent extends Component {
   }
 
   showExerciseResult() {
-    this.set('exerciseResultIsVisible', true);
+    this.exerciseResultIsVisible = true;
   }
 
   async runNextTaskTimer() {
-    this.onRightAnswer();
+    this.args.onRightAnswer();
     await customTimeout(3000);
     if (this.task.isLastTask) {
       this.showExerciseResult();
       await customTimeout(3000);
     }
-    this.afterCompleted();
   }
 
   async handleWrongAnswer() {
     await customTimeout(1000);
     this.task.set('repetitionCount', this.task.repetitionCount + 1);
-    this.notifyPropertyChange('audioFiles');
+    this.audio.player.playAudio();
     this.currentAnswerObject = null;
   }
 
@@ -104,4 +103,3 @@ export default class SentenceComponent extends Component {
     this.runNextTaskTimer();
   }
 }
-({});
