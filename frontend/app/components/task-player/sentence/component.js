@@ -7,13 +7,13 @@ import customTimeout from 'brn/utils/custom-timeout';
 export default class SentenceComponent extends Component {
   @tracked exerciseResultIsVisible = false;
 
-  @tracked task = this.args.task;
+  get task() {
+    return this.args.task;
+  }
 
   @tracked wrongAnswerParts = [];
 
   @service('audio') audio;
-
-  classNames = ['flex-1', 'flex', 'flex-col'];
 
   attributeBindings = [
     'task.id:data-test-task-id',

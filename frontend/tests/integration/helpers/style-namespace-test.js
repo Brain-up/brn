@@ -12,6 +12,6 @@ module('Integration | Helper | style-namespace', function(hooks) {
 
     await render(hbs`{{style-namespace inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '__task-player__ecb83');
+    assert.dom().includesText('task-player');
   });
 });
