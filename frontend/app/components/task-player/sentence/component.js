@@ -15,18 +15,9 @@ export default class SentenceComponent extends Component {
 
   @service('audio') audio;
 
-  attributeBindings = [
-    'task.id:data-test-task-id',
-    'task.exercise.id:data-test-task-exercise-id',
-  ];
-
   @tracked isCorrect = false;
 
   @tracked currentAnswerObject = null;
-
-  didReceiveAttrs() {
-    this.exerciseResultIsVisible = false;
-  }
 
   get audioFiles() {
     return this.task.answerParts.map(({ audioFileUrl }) => {
