@@ -2,6 +2,9 @@ package com.epam.brn.constant
 
 object BrnPath {
     const val HOME = "/home"
+    const val API = "/api"
+    const val AUTH = "/oauth"
+    const val TOKEN = "/token"
     const val USERS = "/users"
     const val GROUPS = "/groups"
     const val SERIES = "/series"
