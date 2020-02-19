@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.constant.BrnParams.GROUP_ID
-import com.epam.brn.constant.BrnParams.SERIES_FILE_PREVIEW
+import com.epam.brn.constant.BrnParams.SERIES_FILE_FORMAT
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
@@ -33,10 +33,10 @@ class SeriesController(@Autowired val seriesService: SeriesService) {
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = seriesDto))
     }
 
-    @GetMapping("$SERIES_FILE_PREVIEW/{$SERIES_ID}")
-    fun getSeriesFilePreview(
+    @GetMapping("/$SERIES_FILE_FORMAT/{$SERIES_ID}")
+    fun getSeriesUploadFileFormat(
         @PathVariable(value = SERIES_ID) seriesId: Long
-    ): ResponseEntity<String> {
-        return ResponseEntity.ok().body(seriesService.getSeriesFilePreview(seriesId))
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = seriesService.getSeriesUploadFileFormat(seriesId)))
     }
 }

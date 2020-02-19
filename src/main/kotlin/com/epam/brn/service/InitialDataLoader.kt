@@ -151,7 +151,7 @@ class InitialDataLoader(
         if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
 
-        val sources = listOf(GROUPS, SERIES, EXERCISES, tasksForSeries(1), tasksForSeries(2), tasksForSeries(3))
+        val sources = listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
             .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
             .toMap()
 
@@ -170,7 +170,7 @@ class InitialDataLoader(
 
     private fun loadInitialDataFromClassPath() {
         log.debug("Loading data from classpath initFiles")
-        val sources = listOf(GROUPS, SERIES, EXERCISES, tasksForSeries(1), tasksForSeries(2), tasksForSeries(3))
+        val sources = listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
             .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
             .toMap()
         loadInitialDataToDb(sources)
@@ -180,9 +180,9 @@ class InitialDataLoader(
         loadExerciseGroups(sources.getValue(GROUPS))
         loadSeries(sources.getValue(SERIES))
         loadExercises(sources.getValue(EXERCISES))
-        loadTasksFor1Series(sources.getValue(tasksForSeries(1)))
-        loadTasksFor2Series(sources.getValue(tasksForSeries(2)))
-        loadTasksFor3Series(sources.getValue(tasksForSeries(3)))
+        loadTasksFor1Series(sources.getValue(fileNameForSeries(1)))
+        loadTasksFor2Series(sources.getValue(fileNameForSeries(2)))
+        loadTasksFor3Series(sources.getValue(fileNameForSeries(3)))
         log.debug("Initialization succeeded")
     }
 
@@ -321,7 +321,7 @@ class InitialDataLoader(
     }
 
     companion object {
-        fun tasksForSeries(seriesId: Long) = "${seriesId}_series.csv"
+        fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
         private const val SERIES = "series.csv"
         private const val GROUPS = "groups.csv"
         private const val EXERCISES = "exercises.csv"

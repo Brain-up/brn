@@ -9,15 +9,12 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.LineNumberReader
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Service
 
 @Service
-class SeriesService(private val seriesRepository: SeriesRepository, private val resourceLoader: ResourceLoader) {
+class SeriesService(private val seriesRepository: SeriesRepository) {
 
-    @Value("\${previewNumLines:5}")
-    val previewNumLines: Int = 5
+    val dataFormatNumLines = 5
 
     private val log = logger()
 
@@ -50,27 +47,24 @@ class SeriesService(private val seriesRepository: SeriesRepository, private val 
         return seriesRepository.save(series)
     }
 
-    fun getSeriesFilePreview(seriesId: Long): String {
-        val seriesFileName = InitialDataLoader.tasksForSeries(seriesId = seriesId)
+    fun getSeriesUploadFileFormat(seriesId: Long): String {
+        val seriesFileName = InitialDataLoader.fileNameForSeries(seriesId = seriesId)
         return try {
-            resourceLoader.getResource("classpath:initFiles/$seriesFileName").inputStream.use { readFirstNLines(it, previewNumLines) }
+            Thread.currentThread().contextClassLoader.getResourceAsStream("initFiles/$seriesFileName").use { readFirstNLines(it, dataFormatNumLines) }
         } catch (exception: Exception) {
-            log.info(
-                "First $previewNumLines lines from file $seriesFileName for series $seriesId could not be read",
-                exception
-            )
-            throw IOException("File preview for series $seriesId could not be read")
+            throw IOException("First $dataFormatNumLines lines from file $seriesFileName for series $seriesId could not be read", exception)
         }
     }
 
     private fun readFirstNLines(inputStream: InputStream, numLines: Int): String {
         val lineNumberReader = LineNumberReader(InputStreamReader(inputStream))
-        val preview = StringBuilder()
+        val lines = StringBuilder()
         var line = lineNumberReader.readLine()
         while (line != null && lineNumberReader.lineNumber <= numLines) {
-            preview.append(line).append("\r\n")
+            if (lineNumberReader.lineNumber > 1) { lines.append("\r\n") }
+            lines.append(line)
             line = lineNumberReader.readLine()
         }
-        return preview.toString()
+        return lines.toString()
     }
 }

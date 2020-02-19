@@ -6,7 +6,6 @@ import com.epam.brn.repo.SeriesRepository
 import com.nhaarman.mockito_kotlin.verify
 import java.io.IOException
 import java.util.Optional
-import kotlin.test.assertTrue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -68,13 +67,14 @@ internal class SeriesServiceTest {
     }
 
     @Test
-    fun `should get series file preview`() {
+    fun `should get series file format`() {
         // GIVEN
         val seriesId: Long = 1
         // WHEN
-        val preview: String = seriesService.getSeriesFilePreview(seriesId)
+        val file: String = seriesService.getSeriesUploadFileFormat(seriesId)
         // THEN
-        assertTrue(preview.isNotEmpty())
+        val numLines = file.split("\n").size
+        kotlin.test.assertEquals(numLines, seriesService.dataFormatNumLines)
     }
 
     @Test
@@ -82,7 +82,7 @@ internal class SeriesServiceTest {
         // GIVEN
         val nonExistingSeriesId: Long = Long.MAX_VALUE
         // WHEN
-        val executable: () -> Unit = { seriesService.getSeriesFilePreview(nonExistingSeriesId) }
+        val executable: () -> Unit = { seriesService.getSeriesUploadFileFormat(nonExistingSeriesId) }
         val expectedType: Class<IOException> = IOException::class.java
         val message = "should throw IO exception"
         assertThrows(

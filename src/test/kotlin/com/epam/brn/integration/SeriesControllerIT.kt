@@ -5,6 +5,7 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
+import java.nio.charset.Charset
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Tag
@@ -66,7 +67,7 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.contentAsString
+        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
         Assertions.assertTrue(response.contains("распознование слов тест"))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
         Assertions.assertTrue(response.contains("exercises"))
@@ -87,8 +88,25 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.contentAsString
+        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
         Assertions.assertTrue(response.contains("распознование слов тест"))
         Assertions.assertTrue(response.contains("exercises"))
+    }
+
+    @Test
+    fun `test get file format for seriesId`() {
+        val seriesId = 1
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("${BrnPath.SERIES}/fileFormat/$seriesId")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
+        Assertions.assertTrue(response.isNotEmpty())
     }
 }
