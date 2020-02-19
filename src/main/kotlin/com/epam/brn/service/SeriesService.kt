@@ -9,11 +9,13 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.LineNumberReader
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class SeriesService(private val seriesRepository: SeriesRepository) {
 
+    @Value("\${brn.dataFormatNumLines}")
     val dataFormatNumLines = 5
 
     private val log = logger()
