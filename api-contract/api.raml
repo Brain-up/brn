@@ -164,6 +164,17 @@ mediaType:
       200:
         example: !include samples/auth.json
 
+/login:
+  post:
+  description: Simple login
+      body:
+        application/json:
+          example: !include samples/login.json
+      responses:
+        201:
+          example: !include samples/auth.json
+
+
 # LOAD FILES ----------------------
 /loadTasksFile:
   post:
