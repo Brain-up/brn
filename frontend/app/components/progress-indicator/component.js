@@ -2,12 +2,8 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { run } from '@ember/runloop';
-import podNames from 'ember-component-css/pod-names';
 
 export default class ProgressIndicatorComponent extends Component {
-  get styleNamespace() {
-    return podNames['progress-indicator'];
-  }
   @tracked progressContainerWidth = 0;
   @action
   setOffsetWidth(value, node) {
