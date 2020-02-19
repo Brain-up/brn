@@ -162,7 +162,7 @@ mediaType:
             example: "grant_type=http%3A%2F%2Fauth0.com%2Foauth%2Fgrant-type%2Fpassword-realm&username=user%40example.com&password=pwd&audience=YOUR_API_IDENTIFIER&scope=read%3Asample&client_id=%24%7Baccount.clientId%7D&client_secret=YOUR_CLIENT_SECRET&realm=employees"
     responses:
       200:
-        example: !include samples/auth.json
+        example: !include samples/authResponse.json
 
 /login:
   post:
@@ -172,7 +172,7 @@ mediaType:
           example: !include samples/login.json
       responses:
         201:
-          example: !include samples/auth.json
+          example: !include samples/authResponse.json
 
 
 # LOAD FILES ----------------------
