@@ -132,4 +132,4 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 our application is run on http://ecse005003f1.epam.com/ && http://31.184.253.199/
 
 ### License
-This project is licensed under the MIT license. See the LICENSE [text](https://github.com/Brain-up/brn/wiki/MIT-License).
+This project is licensed under the MIT license. See the LICENSE [text](https://opensource.org/licenses/MIT).
