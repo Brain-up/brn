@@ -157,7 +157,7 @@ mediaType:
 # Auth ----------------------
 /login:
   post:
-  description: Simple login for exist user
+  description: Login for exist user
     body:
      application/json:
         example: !include samples/login.json
@@ -170,12 +170,12 @@ mediaType:
 
 /registration:
   post:
-  description: Simple registration for exist user
+  description: Registration for new user
      body:
          application/json:
             example: !include samples/registration.json
          responses:
-          200:
+          201:
             example: !include samples/authSuccessResponse.json
           403:
             example: !include samples/authSuchUserAlreadyExistErrorResponse.json
