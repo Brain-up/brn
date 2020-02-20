@@ -1,5 +1,3 @@
 {
-  "data": [],
-  "errors": ["User with such email already exists"],
-  "meta": []
+  "error": "Bad credentials - user admin@admin.ru already exists."
 }
