@@ -14,10 +14,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.core.io.DefaultResourceLoader
-import org.springframework.core.io.ResourceLoader
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesServiceTest {
@@ -25,8 +22,6 @@ internal class SeriesServiceTest {
     lateinit var seriesService: SeriesService
     @Mock
     lateinit var seriesRepository: SeriesRepository
-    @Spy
-    var resourceLoader: ResourceLoader = DefaultResourceLoader()
 
     @Test
     fun `should get series for group`() {
