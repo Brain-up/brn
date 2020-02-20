@@ -51,29 +51,26 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
 
     fun getSeriesUploadFileFormat(seriesId: Long): String {
         val seriesFileName = InitialDataLoader.fileNameForSeries(seriesId = seriesId)
-        val resourceAsStream =
-            Thread.currentThread().contextClassLoader.getResourceAsStream("initFiles/$seriesFileName")
-        return readFirstNLines(resourceAsStream, dataFormatNumLines)
+        return try {
+            val resourceAsStream =
+                Thread.currentThread().contextClassLoader.getResourceAsStream("initFiles/$seriesFileName")
+            readFirstNLines(resourceAsStream, dataFormatNumLines)
+        } catch (exception: Exception) {
+            throw IOException("First $dataFormatNumLines lines from file $seriesFileName for series $seriesId could not be read", exception)
+        }
     }
 
     private fun readFirstNLines(inputStream: InputStream, numLines: Int): String {
-        return try {
-            inputStream.use {
-                val lineNumberReader = LineNumberReader(InputStreamReader(inputStream))
-                val lines = StringBuilder()
-                var line = lineNumberReader.readLine()
-                line?.let { lines.append(it) }
-                while (lineNumberReader.lineNumber < numLines) {
-                    line = lineNumberReader.readLine()
-                    line?.let { lines.append("\r\n").append(it) } ?: break
-                }
-                lines.toString()
+        return inputStream.use {
+            val lineNumberReader = LineNumberReader(InputStreamReader(inputStream))
+            val lines = StringBuilder()
+            var line = lineNumberReader.readLine()
+            line?.let { lines.append(it) }
+            while (lineNumberReader.lineNumber < numLines) {
+                line = lineNumberReader.readLine()
+                line?.let { lines.append("\r\n").append(it) } ?: break
             }
-        } catch (exception: Exception) {
-            throw IOException(
-                "First $dataFormatNumLines lines from file could not be read",
-                exception
-            )
+            lines.toString()
         }
     }
 }
