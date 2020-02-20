@@ -1,6 +1,7 @@
 {
   "email": "admin@admin.ru",
   "password": "password123",
-  "name" : "Ivan Ivanov",
-  "birthDate" : "2011-12-18"
+  "firstName" : "Ivan",
+  "lastName" : "Ivanov",
+  "birthday" : "2019-12-18T13:00:00.000"
 }
