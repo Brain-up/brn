@@ -1,4 +1,5 @@
 {
-"userName": "admin",
-"password": "admin"
+  "grant_type": "password",
+  "username": "admin",
+  "password": "admin"
 }

@@ -10,7 +10,6 @@ object BrnParams {
     const val TASK_ID = "taskId"
     const val USER_ID = "userId"
     const val USER_NAME = "userName"
-    const val PASSWORD = "password"
     const val TASK_FILE = "taskFile"
     const val CURRENT_USER = "current"
 }
