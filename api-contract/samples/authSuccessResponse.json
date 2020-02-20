@@ -1,0 +1,9 @@
+{
+  "data": {
+    "access_token": "hashedValue",
+    "token_type": "Bearer",
+    "expires_in": 36000
+  },
+  "errors": [],
+  "meta": []
+}
