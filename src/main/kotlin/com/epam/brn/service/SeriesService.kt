@@ -68,7 +68,7 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
             line?.let { lines.append(it) }
             while (lineNumberReader.lineNumber < numLines) {
                 line = lineNumberReader.readLine()
-                line?.let { lines.append("\r\n").append(it) } ?: break
+                line?.let { lines.append("\n").append(it) } ?: break
             }
             lines.toString()
         }
