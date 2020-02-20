@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.csv.CsvMappingIteratorParser
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
@@ -8,7 +9,6 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
-import com.epam.brn.service.parsers.csv.FirstSeriesCSVParserService
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -33,11 +33,24 @@ class CsvLoadingTestIT {
         fun handBookLoader(
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
+            eriesRepository: SeriesRepository,
+            exerciseRepository: ExerciseRepository,
+            taskRepository: TaskRepository,
             userAccountRepository: UserAccountRepository,
-            firstSeriesCsvParserService: FirstSeriesCSVParserService,
+            csvMappingIteratorParser: CsvMappingIteratorParser,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService
-        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, firstSeriesCsvParserService, passwordEncoder, authorityService)
+        ) = InitialDataLoader(
+            resourceLoader,
+            exerciseGroupRepository,
+            eriesRepository,
+            exerciseRepository,
+            taskRepository,
+            userAccountRepository,
+            csvMappingIteratorParser,
+            passwordEncoder,
+            authorityService
+        )
     }
 
     @Autowired

@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.UserAccountDto
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
@@ -94,7 +94,7 @@ internal class UserAccountServiceTest {
         @Test
         fun `should throw an exception when there is no user by specified id`() {
             // THEN
-            assertFailsWith<NoDataFoundException> {
+            assertFailsWith<EntityNotFoundException> {
                 userAccountService.findUserById(NumberUtils.LONG_ONE)
             }
         }
