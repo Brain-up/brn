@@ -5,6 +5,8 @@ import {pipe} from 'fp-ts/lib/pipeable';
 import {EMPTY, forkJoin, noop, Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { FolderService } from '../../services/folders/folder.service';
 
 @Component({
   selector: 'app-load-file',
@@ -20,14 +22,21 @@ import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.ser
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadFileComponent implements OnInit {
-
+  folders: Observable<Array<string>>;
+  uploadFileForm: FormGroup;
   constructor(
      @Self() private uploadFileService: UploadService,
-     private snackBarService: SnackBarService
+     private snackBarService: SnackBarService,
+     private folderService: FolderService
     ) {
   }
 
   ngOnInit() {
+    this.folders = this.folderService.getFolders()
+    this.uploadFileForm = new FormGroup({
+      files: new FormControl(),
+      folder: new FormControl(),
+    });
   }
 
   onFilesAdded(files: Set<File>) {
@@ -35,6 +44,9 @@ export class LoadFileComponent implements OnInit {
       fromNullable(this.uploadFileService.upload(files)),
       fold(noop, (fileInfo) => this.processUploadResults(fileInfo))
     );
+  }
+  loadFiles() {
+    console.log(this.uploadFileForm.value)
   }
 
   private processUploadResults(fileInfo: { [key: string]: { progress: Observable<number> } }) {

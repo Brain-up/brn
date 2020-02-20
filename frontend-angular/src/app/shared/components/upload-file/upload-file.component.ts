@@ -1,20 +1,36 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild, forwardRef, Renderer2} from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
   styleUrls: ['./upload-file.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(()=> UploadFileComponent),
+      multi: true
+    }
+  ]
 })
-export class UploadFileComponent implements OnInit {
+export class UploadFileComponent implements OnInit, ControlValueAccessor {
   @Input() disabled = false;
   @Output() filesAdded: EventEmitter<Set<File>> = new EventEmitter();
   @ViewChild('file', {static: true}) file;
 
-  constructor() {
-  }
-
   ngOnInit() {
+  }
+  private onChange:  (change: Set<File>)=> void;
+  private onTouch: ()=> void;
+  writeValue(value: FileList) {
+    this.renderer.setProperty(this.file, 'files', value)
+  }
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: ()=> void) {
+    this.onTouch = fn;
   }
 
   onFilesAdded() {
@@ -26,7 +42,8 @@ export class UploadFileComponent implements OnInit {
         filesToGo.add(files[key]);
       }
     }
-    this.filesAdded.emit(filesToGo);
-    // console.log(filesToGo);
+    this.onChange(filesToGo)
+  }
+  constructor(private renderer: Renderer2) {
   }
 }

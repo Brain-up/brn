@@ -14,6 +14,7 @@ import {HomeComponent} from './components/home/home.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FolderService } from './services/folders/folder.service';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatIconModule,
     MatSidenavModule,
     MatToolbarModule,
+  ],
+  providers: [
+    FolderService
   ]
 })
 export class AdminModule {
