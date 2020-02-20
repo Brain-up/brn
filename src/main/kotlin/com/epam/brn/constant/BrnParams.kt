@@ -6,7 +6,6 @@ package com.epam.brn.constant
 object BrnParams {
     const val GROUP_ID = "groupId"
     const val SERIES_ID = "seriesId"
-    const val SERIES_FILE_FORMAT = "fileFormat"
     const val EXERCISE_ID = "exerciseId"
     const val TASK_ID = "taskId"
     const val USER_ID = "userId"

@@ -51,7 +51,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(IOException::class)
-    fun handleIOException(e: Throwable): ResponseEntity<BaseResponseDto> {
+    fun handleIOException(e: IOException): ResponseEntity<BaseResponseDto> {
         logger.error("Internal exception: ${e.message}", e)
         return makeInternalServerErrorResponseEntity(e)
     }

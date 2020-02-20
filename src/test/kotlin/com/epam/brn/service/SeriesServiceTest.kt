@@ -74,7 +74,7 @@ internal class SeriesServiceTest {
         val file: String = seriesService.getSeriesUploadFileFormat(seriesId)
         // THEN
         val numLines = file.split("\n").size
-        kotlin.test.assertEquals(numLines, seriesService.dataFormatNumLines)
+        kotlin.test.assertEquals(seriesService.dataFormatNumLines, numLines)
     }
 
     @Test

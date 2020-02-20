@@ -107,6 +107,6 @@ class SeriesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
-        Assertions.assertTrue(response.isNotEmpty())
+        Assertions.assertTrue(response.split("\\n").size > 1)
     }
 }
