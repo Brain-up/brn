@@ -58,5 +58,7 @@ class AwsCloudServiceTest {
             )
         )
         Assertions.assertEquals(signatureExpected, signature, "$signatureExpected\n\n$signature")
+        println(signatureExpected)
+        println(signature)
     }
 }
