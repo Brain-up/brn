@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
-
+import { action } from '@ember/object';
 export default class SentenceComponent extends Component {
   @tracked exerciseResultIsVisible = false;
 
@@ -43,6 +43,7 @@ export default class SentenceComponent extends Component {
     }
   }
 
+  @action
   async checkMaybe(selectedData) {
     this.currentAnswerObject = {
       ...this.currentAnswerObject,

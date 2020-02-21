@@ -23,7 +23,7 @@
                 (get this.currentAnswerObject type)
                 answerOption.word
               }}
-              @clickAction={{action this.checkMaybe answerOption}}
+              @clickAction={{fn this.checkMaybe answerOption}}
               @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
               @word={{answerOption.word}}
             />

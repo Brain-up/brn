@@ -7,6 +7,7 @@ button {
   background-size: cover;
   background-image: var(--word-picture-url);
   background-position: center bottom;
+  image-rendering: -webkit-optimize-contrast;
   transition: 0.1s;
 }
 
@@ -24,7 +25,6 @@ span {
 
 .selected {
   box-shadow: 0 0 5px 1px #2b6cb0;
-  transform: scale(1.015);
 }
 
 .correctness-indicator {

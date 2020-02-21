@@ -1,19 +1,25 @@
-<button
+<div class={{style-namespace 'text-image-button'}} {{did-insert this.setStyle @pictureFileUrl}} {{did-update this.setStyle @pictureFileUrl}}>
+  <button
   data-test-task-answer
   data-test-task-answer-option={{@word}}
   disabled={{@disabled}}
-  onclick={{@clickAction}}
-  class="bg-transparent border
-    border-blue-500 rounded text-blue-700 mb-2
-    {{if @isSelected "selected"}}
-
+  {{on 'click' @clickAction}}
+  class="bg-transparent rounded text-blue-700 mb-2 focus:outline-none focus:shadow-outline
+     transition-all duration-500 ease-in-out border-2
     {{if @disabled "opacity-50"}}"
 >
   {{#if (and @checked @isSelected)}}
     {{#if @isCorrect}}
-      <FaIcon class="correctness-indicator right" @icon="check-circle" />
+      <FaIcon class="correctness-indicator right" @icon="check-circle" 
+        {{did-insert (fn this.addFrame "border-green-500")}} 
+        {{will-destroy (fn this.removeFrame "border-green-500")}}
+      />
     {{else}}
-      <FaIcon class="correctness-indicator wrong" @icon="times-circle" />
+      <FaIcon class="correctness-indicator wrong" @icon="times-circle" 
+        {{did-insert (fn this.addFrame "border-red-500")}}
+        {{will-destroy (fn this.removeFrame "border-red-500")}}
+       />
     {{/if}}
   {{/if}}
 </button>
+</div>

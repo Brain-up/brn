@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { set } from '@ember/object';
+import { set, action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import deepCopy from 'brn/utils/deep-copy';
 import deepEqual from 'brn/utils/deep-equal';
@@ -83,6 +83,7 @@ export default class WordsSequencesComponent extends Component {
     });
     this.tasksCopy = tasksCopy;
   }
+  @action
   async checkMaybe(selectedData) {
     this.currentAnswerObject = {
       ...this.currentAnswerObject,
