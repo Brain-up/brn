@@ -57,6 +57,6 @@ class AwsCloudServiceTest {
                 mapOf("x-amz-date" to "20200130T113917Z")
             )
         )
-        Assertions.assertEquals(signatureExpected, signature)
+        Assertions.assertEquals(signatureExpected, signature,"$signatureExpected\n\n$signature")
     }
 }
