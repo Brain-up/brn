@@ -51,9 +51,10 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     }
 
     @GetMapping
-    @ApiOperation("Get user by username")
+    @ApiOperation("Get user by name")
     fun findUserByName(
-        @RequestParam(BrnParams.USER_NAME, required = true) userName: String
+        @RequestParam(BrnParams.USER_FIRST_NAME, required = true) firstName: String,
+        @RequestParam(BrnParams.USER_LAST_NAME, required = true) lastName: String
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = listOf(userAccountService.findUserByName(userName))))
+        .body(BaseResponseDto(data = listOf(userAccountService.findUserByName(firstName, lastName))))
 }

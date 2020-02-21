@@ -27,13 +27,13 @@ class UserAccountServiceImpl(
 
     private val log = logger()
 
-    override fun findUserByName(name: String): UserAccountDto {
+    override fun findUserByName(firstName: String, lastName: String): UserAccountDto {
         return userAccountRepository
-            .findUserAccountByUserName(name)
+            .findUserAccountByFirstNameAndLastName(firstName, lastName)
             .map(UserAccount::toDto)
             .orElseThrow {
-                log.warn("User $name is not found")
-                UsernameNotFoundException("User with username: $name is not found")
+                log.warn("User $firstName $lastName is not found")
+                UsernameNotFoundException("User: $firstName $lastName is not found")
             }
     }
 
@@ -74,8 +74,8 @@ class UserAccountServiceImpl(
 
     override fun getUserFromTheCurrentSession(): UserAccountDto {
         val authentication = SecurityContextHolder.getContext().authentication
-        val userName = authentication.name ?: getNameFromPrincipals(authentication)
-        return findUserByName(userName)
+        val email = authentication.name ?: getNameFromPrincipals(authentication)
+        return findUserByEmail(email)
     }
 
     override fun removeUserWithId(id: Long) {

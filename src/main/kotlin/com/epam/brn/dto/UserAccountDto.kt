@@ -11,23 +11,26 @@ import javax.validation.constraints.Size
 data class UserAccountDto(
     val id: Long? = null,
     @field:NotBlank
-    val userName: String,
+    val firstName: String,
+    @field:NotBlank
+    val lastName: String,
     @field:NotBlank
     @field:Email
     val email: String,
-    val active: Boolean = true,
     @field:NotBlank
     @field:Size(min = 4)
     var password: String? = null,
-    val birthDate: LocalDate? = null
+    val birthday: LocalDate? = null,
+    val active: Boolean = true
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
     fun toModel() = UserAccount(
         id = id,
-        userName = userName,
+        firstName = firstName,
+        lastName = lastName,
         email = email,
         password = password,
-        active = active,
-        birthDate = birthDate
+        birthday = birthday,
+        active = active
     )
 }

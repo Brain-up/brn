@@ -44,7 +44,13 @@ class AuthorizationAuthenticationIT {
     fun initBeforeEachTest() {
         val password = passwordEncoder.encode(password)
         val userAccount =
-            UserAccount(userName = userName, password = password, email = "admin@admin.com", active = true)
+            UserAccount(
+                firstName = "testUserFirstName",
+                lastName = "testUserLastName",
+                password = password,
+                email = "admin@admin.com",
+                active = true
+            )
         userAccount.authoritySet.addAll(setOf(Authority(authorityName = "ROLE_ADMIN")))
         userAccountRepository.save(userAccount)
     }
