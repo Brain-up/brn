@@ -64,20 +64,23 @@ export class FolderService {
     </ListBucketResult>`;
     
     getFolders(): Observable<Array<string>> {
-        return this.httpClient.get('https://s3.us-south.cloud-object-storage.appdomain.cloud/cloud-object-storage-gg-cos-standard-koy', {responseType: 'text'}).pipe(
-            mergeMap((response) => {
-                const domParser = new DOMParser();
-                let xmlDoc = domParser.parseFromString(response, 'application/xml');
+        // return this.httpClient.get('https://s3.us-south.cloud-object-storage.appdomain.cloud/cloud-object-storage-gg-cos-standard-koy', {responseType: 'text'}).pipe(
+        //     mergeMap((response) => {
+        //         const domParser = new DOMParser();
+        //         let xmlDoc = domParser.parseFromString(response, 'application/xml');
 
-                let keyEntries = xmlDoc.querySelectorAll('Contents Key');
-                console.log(keyEntries)
-                let folders = this.selectFolders(keyEntries).map(item => item.textContent.replace(/^\/+|\/+$/, ''));
-                return of(folders);
-            })
-            // map(response => {
+        //         let keyEntries = xmlDoc.querySelectorAll('Contents Key');
+        //         console.log(keyEntries)
+        //         let folders = this.selectFolders(keyEntries).map(item => item.textContent.replace(/^\/+|\/+$/, ''));
+               
 
-            // })
-        )
+        //         return of(folders);
+        //     })
+        //     // map(response => {
+
+        //     // })
+        // )
+        return of(['tasks'])
         // const domParser = new DOMParser();
         // let xmlDoc = domParser.parseFromString(this.mockedResponse, 'application/xml');
         // let keyEntries = xmlDoc.querySelectorAll('Contents Key');

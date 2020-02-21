@@ -8,7 +8,7 @@
     </div>
     <div class="upload-file__form-group">
       <label for="upload-file__form-label">Select File</label>
-        <app-upload-file formControlName="files" (filesAdded)="onFilesAdded($event)"></app-upload-file>
+        <app-upload-file formControlName="files"></app-upload-file>
     </div>
     <button (click)="loadFiles()">Load Files</button>
   </form>

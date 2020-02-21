@@ -21,7 +21,7 @@ export class UploadFileComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {
   }
-  private onChange:  (change: Set<File>)=> void;
+  private onChange:  (change: File)=> void;
   private onTouch: ()=> void;
   writeValue(value: FileList) {
     this.renderer.setProperty(this.file, 'files', value)
@@ -34,15 +34,15 @@ export class UploadFileComponent implements OnInit, ControlValueAccessor {
   }
 
   onFilesAdded() {
-    const filesToGo: Set<File> = new Set<File>();
-    const files: { [key: string]: File } = this.file.nativeElement.files;
-    for (const key in files) {
-      // console.log(files);
-      if (!isNaN(parseInt(key, 10))) {
-        filesToGo.add(files[key]);
-      }
-    }
-    this.onChange(filesToGo)
+    let filesToGo: FileList;
+    const files: FileList = this.file.nativeElement.files;
+    // for (const key in files) {
+    //   // console.log(files);
+    //   if (!isNaN(parseInt(key, 10))) {
+    //     filesToGo.add(files[key]);
+    //   }
+    // }
+    this.onChange(files.item(0))
   }
   constructor(private renderer: Renderer2) {
   }
