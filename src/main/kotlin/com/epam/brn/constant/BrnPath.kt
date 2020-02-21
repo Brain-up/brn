@@ -5,6 +5,7 @@ object BrnPath {
     const val USERS = "/users"
     const val GROUPS = "/groups"
     const val SERIES = "/series"
+    const val SERIES_FILE_FORMAT = "/fileFormat"
     const val EXERCISES = "/exercises"
     const val TASKS = "/tasks"
     const val STUDY_HISTORIES = "/study-history"
@@ -13,4 +14,5 @@ object BrnPath {
     const val CLOUD = "/cloud"
     const val UPLOAD = "/upload"
     const val RESOURCES_ROOT_URL = "/url"
+    const val FOLDERS = "/folders"
 }
