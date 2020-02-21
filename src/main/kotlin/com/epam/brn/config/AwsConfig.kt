@@ -79,13 +79,13 @@ class AwsConfig {
     private fun dateFormat(dateTime: OffsetDateTime): String = dateFormat.format(dateTime)
     private fun credentialFormat(dateTime: OffsetDateTime): String = String.format(xamzCredential, this@AwsConfig.accessKeyId, this.dateFormat(dateTime))
 
-    fun getConditions(): Conditions {
+    fun getConditions(filePath: String): Conditions {
         if (accessKeyId.isEmpty() || secretAccessKey.isEmpty())
             throw UninitializedPropertyAccessException("Missing property in cloud upload configuration")
-        return this.Conditions(instant(), uuid())
+        return this.Conditions(instant(), uuid(), filePath)
     }
 
-    inner class Conditions constructor(now: OffsetDateTime, uuidString: String) {
+    inner class Conditions constructor(now: OffsetDateTime, uuidString: String, filePath: String) {
         val date: String = dateFormat(now)
 
         // POLICY CONDITIONS
@@ -103,7 +103,7 @@ class AwsConfig {
         val metaTagStartsWith: Pair<String, String> = "x-amz-meta-tag" to this@AwsConfig.metaTagStartsWith
 
         // UPLOAD FORM SPECIFIC DATA
-        val uploadKey: Pair<String, String> = "key" to "${this@AwsConfig.uploadKeyStartsWith}\${filename}"
+        val uploadKey: Pair<String, String> = "key" to filePath
 
         override fun toString(): String {
             return "Conditions(date='$date', bucket=$bucket, acl=$acl, uuid=$uuid, serverSideEncryption=$serverSideEncryption, credential=$credential, algorithm=$algorithm, dateTime=$dateTime, expiration=$expiration, uploadKeyStartsWith=$uploadKeyStartsWith, successActionRedirect=$successActionRedirect, contentTypeStartsWith=$contentTypeStartsWith, metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"

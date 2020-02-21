@@ -6,6 +6,7 @@ import java.time.ZoneOffset
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -38,9 +39,9 @@ class AwsCloudServiceTest {
         Mockito.`when`(awsConfig.metaTagStartsWith).thenReturn("")
         Mockito.`when`(awsConfig.accessRule()).thenCallRealMethod()
         Mockito.`when`(awsConfig.expireAfter()).thenCallRealMethod()
-        Mockito.`when`(awsConfig.getConditions()).thenCallRealMethod()
+        Mockito.`when`(awsConfig.getConditions(anyString())).thenCallRealMethod()
         // WHEN
-        val signature = awsCloudService.signatureForClientDirectUpload("")
+        val signature = awsCloudService.signatureForClientDirectUpload("tasks/\${filename}")
         // THEN
         val signatureExpected: Map<String, Any> = mapOf(
             "action" to "http://somebucket.s3.amazonaws.com",
@@ -56,6 +57,10 @@ class AwsCloudServiceTest {
                 mapOf("x-amz-date" to "20200130T113917Z")
             )
         )
-        Assertions.assertEquals(signatureExpected, signature)
+        println("Signature $signatureExpected")
+        println("Signature $signature")
+        System.err.println("Signature $signatureExpected")
+        System.err.println("Signature $signature")
+        Assertions.assertEquals(signatureExpected, signature, "$signatureExpected\n\n$signature")
     }
 }

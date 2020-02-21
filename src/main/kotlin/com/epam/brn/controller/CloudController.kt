@@ -8,6 +8,7 @@ import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.CloudService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import java.lang.IllegalArgumentException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,8 +28,10 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     @GetMapping(UPLOAD)
     @ApiOperation("Get upload form")
     @Throws(Exception::class)
-    fun signatureForClientDirectUpload(@RequestParam fileName: String?): ResponseEntity<BaseSingleObjectResponseDto> {
-        val signedForm = cloudService.signatureForClientDirectUpload(fileName)
+    fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BaseSingleObjectResponseDto> {
+        if (filePath.isNullOrEmpty())
+            throw IllegalArgumentException("File path should be non empty")
+        val signedForm = cloudService.signatureForClientDirectUpload(filePath)
         return ResponseEntity.ok(BaseSingleObjectResponseDto(signedForm))
     }
 
