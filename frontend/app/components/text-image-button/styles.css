@@ -24,7 +24,7 @@ span {
 }
 
 .selected {
-  box-shadow: 0 0 5px 1px #2b6cb0;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
 }
 
 .correctness-indicator {
