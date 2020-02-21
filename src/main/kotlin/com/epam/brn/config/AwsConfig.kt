@@ -57,9 +57,6 @@ class AwsConfig {
     @Value("\${aws.bucketLink}")
     val bucketLink: String = ""
 
-    fun accessRule() = CannedACL.valueOf(accessRuleCanned).toString()
-    fun expireAfter() = Duration.parse(expireAfterDuration)
-
     fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
     fun uuid(): String = UUID.randomUUID().toString()
     fun initCredentials(): Properties {
@@ -73,6 +70,14 @@ class AwsConfig {
         }
         return properties
     }
+
+    fun accessRule() = CannedACL.valueOf(accessRuleCanned).toString()
+    fun expireAfter() = Duration.parse(expireAfterDuration)
+    private fun expiration(dateTime: OffsetDateTime): String =
+        expirationFormat.format(dateTime.plus(expireAfter()))
+    private fun dateTimeFormat(dateTime: OffsetDateTime): String = dateTimeFormat.format(dateTime)
+    private fun dateFormat(dateTime: OffsetDateTime): String = dateFormat.format(dateTime)
+    private fun credentialFormat(dateTime: OffsetDateTime): String = String.format(xamzCredential, this@AwsConfig.accessKeyId, this.dateFormat(dateTime))
 
     fun getConditions(): Conditions {
         if (accessKeyId.isEmpty() || secretAccessKey.isEmpty())
@@ -99,12 +104,6 @@ class AwsConfig {
 
         // UPLOAD FORM SPECIFIC DATA
         val uploadKey: Pair<String, String> = "key" to "${this@AwsConfig.uploadKeyStartsWith}\${filename}"
-
-        private fun expiration(dateTime: OffsetDateTime): String =
-            expirationFormat.format(dateTime.plus(expireAfter()))
-        private fun dateTimeFormat(dateTime: OffsetDateTime): String = dateTimeFormat.format(dateTime)
-        private fun dateFormat(dateTime: OffsetDateTime): String = dateFormat.format(dateTime)
-        private fun credentialFormat(dateTime: OffsetDateTime): String = String.format(xamzCredential, this@AwsConfig.accessKeyId, this.dateFormat(dateTime))
 
         override fun toString(): String {
             return "Conditions(date='$date', bucket=$bucket, acl=$acl, uuid=$uuid, serverSideEncryption=$serverSideEncryption, credential=$credential, algorithm=$algorithm, dateTime=$dateTime, expiration=$expiration, uploadKeyStartsWith=$uploadKeyStartsWith, successActionRedirect=$successActionRedirect, contentTypeStartsWith=$contentTypeStartsWith, metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
