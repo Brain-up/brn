@@ -12,5 +12,5 @@ interface CloudService {
     /**
      * Returns url to be used by frontend to list bucket contents
      */
-    fun listBucket(): String
+    fun bucketUrl(): String
 }
