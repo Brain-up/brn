@@ -27,13 +27,13 @@ class CloudControllerAwsIT {
 
     @Test
     fun `should get correct signature and policy for S3 upload`() {
+        val filePath = "tasks/\${filename}"
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.CLOUD}${BrnPath.UPLOAD}")
+                .get("${BrnPath.CLOUD}${BrnPath.UPLOAD}").queryParam("filePath", filePath)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
-        val literalDollar = '$'
         val response = """{
             "data": {
                 "action": "http://somebucket.s3.amazonaws.com",
@@ -45,7 +45,7 @@ class CloudControllerAwsIT {
                     "x-amz-signature": "5ed1002da60d3ad165667e04a95f7b1d75d13438fddab0d3a87f173d5a7fb4fc"
                   },
                   {
-                    "key": "tasks/$literalDollar{filename}"
+                    "key": "$filePath"
                   },
                   {
                     "acl": "private"
