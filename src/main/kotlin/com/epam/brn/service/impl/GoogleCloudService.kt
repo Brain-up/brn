@@ -35,5 +35,5 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
         return mapOf("action" to url.toString())
     }
 
-    override fun listBucket(): String = cloudConfig.bucketLink
+    override fun bucketUrl(): String = cloudConfig.bucketLink
 }
