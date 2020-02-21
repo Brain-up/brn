@@ -20,9 +20,11 @@ import org.springframework.context.annotation.Profile
 class AwsConfig {
     private val log = logger()
 
-    val dateTimeFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!
-    val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")!!
-    val expirationFormat = DateTimeFormatter.ISO_DATE_TIME!!
+    companion object {
+        val dateTimeFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!
+        val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")!!
+        val expirationFormat = DateTimeFormatter.ISO_DATE_TIME!!
+    }
 
     @Value("\${cloud.expireAfterDuration}")
     val expireAfterDuration: String = ""
@@ -31,7 +33,7 @@ class AwsConfig {
     @Value("\${aws.accessRuleCanned}")
     val accessRuleCanned: String = ""
     val credentials: Properties by lazy { initCredentials() }
-    val accessKeyId: String by lazy { credentials.getProperty("aws.accessKeyId") }
+    val accessKeyId: String by lazy { credentials.getProperty("aws.accessKeyId", "") }
     @Value("\${aws.uploadKeyStartsWith}")
     val uploadKeyStartsWith: String = ""
     @Value("\${aws.bucketName}")
@@ -46,7 +48,7 @@ class AwsConfig {
     @Value("\${aws.metaTagStartsWith:}")
     val metaTagStartsWith: String = ""
     // signature calc
-    val secretAccessKey: String by lazy { credentials.getProperty("aws.secretAccessKey") }
+    val secretAccessKey: String by lazy { credentials.getProperty("aws.secretAccessKey", "") }
     @Value("\${aws.serviceName}")
     val serviceName: String = ""
     @Value("\${aws.region}")
@@ -73,7 +75,7 @@ class AwsConfig {
     }
 
     fun getConditions(): Conditions {
-        if (accessKeyId == null || secretAccessKey == null)
+        if (accessKeyId.isEmpty() || secretAccessKey.isEmpty())
             throw UninitializedPropertyAccessException("Missing property in cloud upload configuration")
         return this.Conditions(instant(), uuid())
     }

@@ -3,7 +3,6 @@ package com.epam.brn.service.impl
 import com.epam.brn.config.AwsConfig
 import java.time.Instant
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,9 +33,6 @@ class AwsCloudServiceTest {
         Mockito.`when`(awsConfig.region).thenReturn("us-east-2")
         Mockito.`when`(awsConfig.serviceName).thenReturn("s3")
         Mockito.`when`(awsConfig.bucketLink).thenReturn("http://somebucket.s3.amazonaws.com")
-        Mockito.`when`(awsConfig.dateTimeFormat).thenReturn(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX"))
-        Mockito.`when`(awsConfig.dateFormat).thenReturn(DateTimeFormatter.ofPattern("yyyyMMdd"))
-        Mockito.`when`(awsConfig.expirationFormat).thenReturn(DateTimeFormatter.ISO_DATE_TIME)
         Mockito.`when`(awsConfig.successActionRedirect).thenReturn("")
         Mockito.`when`(awsConfig.contentTypeStartsWith).thenReturn("")
         Mockito.`when`(awsConfig.metaTagStartsWith).thenReturn("")
