@@ -3,6 +3,7 @@ package com.epam.brn.constant
 object BrnPath {
     const val CLOUD = "/cloud"
     const val EXERCISES = "/exercises"
+    const val FOLDERS = "/folders"
     const val GROUPS = "/groups"
     const val HOME = "/home"
     const val LOAD_TASKS_FILE = "/loadTasksFile"
