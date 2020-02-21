@@ -23,7 +23,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
     override fun bucketUrl(): String = awsConfig.bucketLink
 
     override fun signatureForClientDirectUpload(fileName: String?): Map<String, Any> {
-        val conditions = awsConfig.Conditions()
+        val conditions = awsConfig.getConditions()
         val policy: String = policy(conditions)
         val signature = sign(conditions.date, policy)
 
