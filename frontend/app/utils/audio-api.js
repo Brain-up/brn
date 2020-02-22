@@ -2,6 +2,12 @@ export default function audioApi() {
   return true;
 }
 
+export function toSeconds(value) {
+  return value / 1000;
+}
+export function toMilliseconds(value) {
+  return value * 1000;
+}
 
 var CrossfadeSample = {playing:false};
 

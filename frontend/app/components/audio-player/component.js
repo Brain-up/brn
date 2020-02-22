@@ -6,7 +6,7 @@ import { inject as service } from '@ember/service';
 import { timeout, task } from 'ember-concurrency';
 import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
-import { BufferLoader, createSource } from 'brn/utils/audio-api';
+import { BufferLoader, createSource, toSeconds, toMilliseconds } from 'brn/utils/audio-api';
 
 export default class AudioPlayerComponent extends Component {
   tagName = '';
@@ -117,27 +117,26 @@ export default class AudioPlayerComponent extends Component {
       );
       this.totalDuration =
         this.sources.reduce((result, item) => {
-          return result + item.source.buffer.duration * 1000;
-        }, 0) +
-        noizeSeconds * 1000;
+          return result + toMilliseconds(item.source.buffer.duration);
+        }, toMilliseconds(noizeSeconds));
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
         const noize = this.getNoize(
-          noizeSeconds ? this.totalDuration / 1000 : 0,
+          noizeSeconds ? toSeconds(this.totalDuration) : 0,
         );
         noize.source.start(0);
         startedSources.push(noize);
-        yield timeout((noizeSeconds / 2) * 1000);
+        yield timeout(toMilliseconds((noizeSeconds / 2)));
       }
       for (const item of this.sources) {
-        const duration = item.source.buffer.duration * 1000;
+        const duration = toMilliseconds(item.source.buffer.duration);
         item.source.start(0);
         startedSources.push(item);
         yield timeout(duration);
       }
       if (hasNoize) {
-        yield timeout((noizeSeconds / 2) * 1000);
+        yield timeout(toMilliseconds((noizeSeconds / 2)));
       }
       yield timeout(10);
       this.isPlaying = false;
