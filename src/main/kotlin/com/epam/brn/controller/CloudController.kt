@@ -43,5 +43,5 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     @GetMapping(FOLDERS)
     @ApiOperation("Get folders in bucket")
     @Throws(Exception::class)
-    fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> = ResponseEntity.ok(BaseSingleObjectResponseDto(""))
+    fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> = ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.listBucket()))
 }

@@ -1,6 +1,10 @@
 package com.epam.brn.config
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.glacier.model.CannedACL
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import java.io.FileInputStream
 import java.io.IOException
 import java.time.Duration
@@ -71,6 +75,18 @@ class AwsConfig {
         return properties
     }
 
+    fun getAmazonS3(): AmazonS3 {
+        val credentials = AWSStaticCredentialsProvider(
+            BasicAWSCredentials(
+                this.accessKeyId,
+                this.secretAccessKey
+            )
+        )
+        return AmazonS3ClientBuilder.standard()
+            .withCredentials(credentials)
+            .withRegion(this.region)
+            .build()
+    }
     fun accessRule() = CannedACL.valueOf(accessRuleCanned).toString()
     fun expireAfter() = Duration.parse(expireAfterDuration)
     private fun expiration(dateTime: OffsetDateTime): String =
