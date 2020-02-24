@@ -9,7 +9,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(()=> UploadFileComponent),
+      useExisting: forwardRef(() => UploadFileComponent),
       multi: true
     }
   ]
@@ -17,25 +17,24 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 export class UploadFileComponent implements OnInit, ControlValueAccessor {
   @Input() disabled = false;
   @ViewChild('file', {static: true}) file;
-
+  private onChange: (change: File) => void;
+  private onTouch: () => void;
   ngOnInit() {
   }
-  private onChange:  (change: File)=> void;
-  private onTouch: ()=> void;
+
   writeValue(value: FileList) {
-    this.renderer.setProperty(this.file, 'files', value)
+    this.renderer.setProperty(this.file, 'files', value);
   }
   registerOnChange(fn: any) {
     this.onChange = fn;
   }
-  registerOnTouched(fn: ()=> void) {
+  registerOnTouched(fn: () => void) {
     this.onTouch = fn;
   }
 
   onFilesAdded() {
     const files: FileList = this.file.nativeElement.files;
-    this.onChange(files.item(0))
+    this.onChange(files.item(0));
   }
-  constructor(private renderer: Renderer2) {
-  }
+  constructor(private renderer: Renderer2) {}
 }

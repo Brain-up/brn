@@ -1,46 +1,49 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, Self} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AdminService} from '../../services/admin.service';
-import {EMPTY, forkJoin, iif, noop, Observable, of} from 'rxjs';
+import {iif, Observable, of} from 'rxjs';
 import {Group, Series} from '../../model/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {catchError, switchMap, tap} from 'rxjs/operators';
-import {UPLOAD_DESTINATION, UploadService} from '../../../shared/services/upload/upload.service';
+import {switchMap, tap} from 'rxjs/operators';
 import {untilDestroyed} from 'ngx-take-until-destroy';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {pipe} from 'fp-ts/lib/pipeable';
-import {fold, fromNullable} from 'fp-ts/lib/Option';
-import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
 import { UploadService as UploadService2 } from '../../services/upload/upload.service';
+import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
+interface LoadTasksReturnData {
+  data: Array<any>;
+  errors: Array<string>;
+  meta: Array<any>;
+}
 @Component({
   selector: 'app-load-tasks',
   templateUrl: './load-tasks.component.html',
   styleUrls: ['./load-tasks.component.scss'],
-  providers: [
-    {
-      provide: UPLOAD_DESTINATION,
-      useValue: '/api/loadTasksFile'
-    },
-    UploadService
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoadTasksComponent implements OnInit, OnDestroy {
+export class LoadTasksComponent implements OnInit {
   groups$: Observable<Group[]>;
   tasksGroup: FormGroup;
   series$: Observable<Series[]>;
 
   constructor(private adminAPI: AdminService,
               private fb: FormBuilder,
-              @Self() private uploadFileService: UploadService,
               private uploadFileService2: UploadService2,
-              private snackbar: MatSnackBar) {
+              private router: Router,
+              private snackBarService: SnackBarService) {
   }
   onSubmit() {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('taskFile', this.tasksGroup.get('file').value);
     formData.append('seriesId', this.tasksGroup.get('series').value.id);
-    this.uploadFileService2.sendFormData('/api/loadTasksFile?seriesId=1',formData).subscribe(console.log)
+    this.uploadFileService2.sendFormData2('/api/loadTasksFile?seriesId=1', formData).subscribe(returnData => {
+      // TODO: - Check for other type of errors
+      this.snackBarService.showSadSnackbar('Successfully loaded ' + this.tasksGroup.get('file').value.name);
+      this.router.navigateByUrl('/home');
+    }, (error: HttpErrorResponse) => {
+      const errorObj = error.error as LoadTasksReturnData;
+      this.snackBarService.showSadSnackbar(errorObj.errors[0]);
+    });
   }
   ngOnInit() {
     this.tasksGroup = this.fb.group({
@@ -50,7 +53,6 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     });
     this.groups$ = this.adminAPI.getGroups();
     this.series$ = this.tasksGroup.controls.group.valueChanges.pipe(
-      tap(data=> console.log(data)),
       switchMap(({id}) => this.adminAPI.getSeriesByGroupId(id)),
     );
     this.tasksGroup.controls.group.statusChanges.pipe(
@@ -61,26 +63,5 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       ),
       untilDestroyed(this)
     ).subscribe();
-  }
-
-  ngOnDestroy(): void {}
-
-  onFilesAdded(files: Set<File>) {
-    pipe(
-      fromNullable(this.uploadFileService.upload(files, {seriesId: this.tasksGroup.controls.series.value.id})),
-      fold(noop, (fileInfo) => this.processUploadResults(fileInfo))
-    );
-  }
-
-  private processUploadResults(fileInfo: { [key: string]: { progress: Observable<number> } }) {
-    forkJoin(Object.values(fileInfo).map(({progress}) => progress))
-      .pipe(
-        tap(showHappySnackbar.bind(null, this.snackbar, `${Object.keys(fileInfo).join(',')} was successfully uploaded`)),
-        catchError(err => {
-          showSadSnackbar.bind(null, this.snackbar)(err);
-          return EMPTY;
-        })
-      )
-      .subscribe();
   }
 }

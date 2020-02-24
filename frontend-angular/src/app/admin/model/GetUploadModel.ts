@@ -14,5 +14,5 @@ export interface GetUploadModel {
             & { 'x-amz-algorithm': string }
             & { 'file': string }
             & { 'x-amz-date': string }>
-    }
+    };
 }
