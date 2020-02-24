@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
-import { UPLOAD_DESTINATION } from '../../../shared/services/upload/upload.service';
-import { EMPTY, forkJoin, Observable} from 'rxjs';
-import { catchError, tap, mergeMap } from 'rxjs/operators';
+import { Observable} from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FolderService } from '../../services/folders/folder.service';
@@ -12,13 +11,6 @@ import { Router } from '@angular/router';
   selector: 'app-load-file',
   templateUrl: './load-file.component.html',
   styleUrls: ['./load-file.component.scss'],
-  providers: [
-    {
-      provide: UPLOAD_DESTINATION,
-      useValue: '/api/loadTasksFile?seriesId=1'
-    },
-    UploadService
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadFileComponent implements OnInit {

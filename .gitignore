@@ -5,7 +5,6 @@ build/
 !**/src/main/**
 !**/src/test/**
 
-docker-compose.yml
 credentials.properties
 local.properties
 yarn.lock
