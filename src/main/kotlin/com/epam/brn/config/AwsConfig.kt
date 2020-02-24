@@ -1,6 +1,10 @@
 package com.epam.brn.config
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.glacier.model.CannedACL
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import java.io.FileInputStream
 import java.io.IOException
 import java.time.Duration
@@ -34,8 +38,6 @@ class AwsConfig {
     val accessRuleCanned: String = ""
     val credentials: Properties by lazy { initCredentials() }
     val accessKeyId: String by lazy { credentials.getProperty("aws.accessKeyId", "") }
-    @Value("\${aws.uploadKeyStartsWith}")
-    val uploadKeyStartsWith: String = ""
     @Value("\${aws.bucketName}")
     val bucketName: String = ""
     @Value("\${aws.xamzCredential}")
@@ -71,6 +73,18 @@ class AwsConfig {
         return properties
     }
 
+    fun getAmazonS3(): AmazonS3 {
+        val credentials = AWSStaticCredentialsProvider(
+            BasicAWSCredentials(
+                this.accessKeyId,
+                this.secretAccessKey
+            )
+        )
+        return AmazonS3ClientBuilder.standard()
+            .withCredentials(credentials)
+            .withRegion(this.region)
+            .build()
+    }
     fun accessRule() = CannedACL.valueOf(accessRuleCanned).toString()
     fun expireAfter() = Duration.parse(expireAfterDuration)
     private fun expiration(dateTime: OffsetDateTime): String =
@@ -97,16 +111,13 @@ class AwsConfig {
         val algorithm: Pair<String, String> = "x-amz-algorithm" to "AWS4-HMAC-SHA256"
         val dateTime: Pair<String, String> = "x-amz-date" to dateTimeFormat(now)
         val expiration: Pair<String, String> = "expiration" to expiration(now)
-        val uploadKeyStartsWith: Pair<String, String> = "key" to this@AwsConfig.uploadKeyStartsWith
+        val uploadKey: Pair<String, String> = "key" to filePath
         val successActionRedirect: Pair<String, String> = "success_action_redirect" to this@AwsConfig.successActionRedirect
         val contentTypeStartsWith: Pair<String, String> = "Content-Type" to this@AwsConfig.contentTypeStartsWith
         val metaTagStartsWith: Pair<String, String> = "x-amz-meta-tag" to this@AwsConfig.metaTagStartsWith
 
-        // UPLOAD FORM SPECIFIC DATA
-        val uploadKey: Pair<String, String> = "key" to filePath
-
         override fun toString(): String {
-            return "Conditions(date='$date', bucket=$bucket, acl=$acl, uuid=$uuid, serverSideEncryption=$serverSideEncryption, credential=$credential, algorithm=$algorithm, dateTime=$dateTime, expiration=$expiration, uploadKeyStartsWith=$uploadKeyStartsWith, successActionRedirect=$successActionRedirect, contentTypeStartsWith=$contentTypeStartsWith, metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
+            return "Conditions(date='$date', bucket=$bucket, acl=$acl, uuid=$uuid, serverSideEncryption=$serverSideEncryption, credential=$credential, algorithm=$algorithm, dateTime=$dateTime, expiration=$expiration, uploadKey=$uploadKey, successActionRedirect=$successActionRedirect, contentTypeStartsWith=$contentTypeStartsWith, metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
         }
     }
 }

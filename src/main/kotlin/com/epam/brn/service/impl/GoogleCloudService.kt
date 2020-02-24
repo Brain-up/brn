@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "google")
 @Service
 class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) : CloudService {
+    override fun listBucket(): List<String> {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
 
-    override fun signatureForClientDirectUpload(filePath: String): Map<String, String> {
+    override fun uploadForm(filePath: String): Map<String, String> {
         val storage: Storage =
             StorageOptions.newBuilder().setCredentials(cloudConfig.credentials).setProjectId(cloudConfig.projectId)
                 .build().getService()

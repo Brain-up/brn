@@ -39,10 +39,10 @@ class CloudControllerAwsIT {
                 "action": "http://somebucket.s3.amazonaws.com",
                 "input": [
                   {
-                    "policy": "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8iIF0sIHsNCiAgICAieC1hbXotbWV0YS11dWlkIiA6ICJjNDk3OTFiMi1iMjdiLTRlZGYtYmFjOC04NzM0MTY0YzIwZTYiDQogIH0sIHsNCiAgICAieC1hbXotc2VydmVyLXNpZGUtZW5jcnlwdGlvbiIgOiAiQUVTMjU2Ig0KICB9LCB7DQogICAgIngtYW16LWNyZWRlbnRpYWwiIDogIkFLSUFJN0tMS0FUV1ZDTUVLR1BBLzIwMjAwMTMwL3VzLWVhc3QtMi9zMy9hd3M0X3JlcXVlc3QiDQogIH0sIHsNCiAgICAieC1hbXotYWxnb3JpdGhtIiA6ICJBV1M0LUhNQUMtU0hBMjU2Ig0KICB9LCB7DQogICAgIngtYW16LWRhdGUiIDogIjIwMjAwMTMwVDExMzkxN1oiDQogIH0gXSwNCiAgImV4cGlyYXRpb24iIDogIjIwMjAtMDEtMzBUMjE6Mzk6MTcuMTE0WiINCn0="
+                    "policy": "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
                   },
                   {
-                    "x-amz-signature": "5ed1002da60d3ad165667e04a95f7b1d75d13438fddab0d3a87f173d5a7fb4fc"
+                    "x-amz-signature": "4d39e2b2ac5833352544d379dadad1ffba3148d9936d814f36f50b7af2cd8e8e"
                   },
                   {
                     "key": "$filePath"

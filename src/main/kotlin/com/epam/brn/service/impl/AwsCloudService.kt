@@ -1,10 +1,12 @@
 package com.epam.brn.service.impl
 
+import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.util.Base64
 import com.epam.brn.config.AwsConfig
 import com.epam.brn.service.CloudService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudService {
-
     private final val mapperIndented = ObjectMapper()
     init {
         mapperIndented.enable(SerializationFeature.INDENT_OUTPUT)
@@ -22,8 +23,32 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
 
     override fun bucketUrl(): String = awsConfig.bucketLink
 
-    override fun signatureForClientDirectUpload(filePath: String): Map<String, Any> {
+    override fun uploadForm(filePath: String): Map<String, Any> {
         val conditions = awsConfig.getConditions(filePath)
+        return signature(conditions)
+    }
+
+    override fun listBucket(): List<String> {
+        val amazonS3 = awsConfig.getAmazonS3()
+        val folders: ArrayList<String> = ArrayList()
+
+        var continuationToken: String? = null
+        while (true) {
+            val listObjectsV2Request = ListObjectsV2Request()
+            listObjectsV2Request.bucketName = awsConfig.bucketName
+            listObjectsV2Request.continuationToken = continuationToken
+            val result = amazonS3.listObjectsV2(listObjectsV2Request)
+            val matchingKeys = result.objectSummaries.stream().map { it.key }.filter { it.endsWith("/") }
+            matchingKeys.forEach { folders.add(it) }
+            if (!result.isTruncated)
+                break
+            continuationToken = result.nextContinuationToken
+        }
+
+        return folders
+    }
+
+    private fun signature(conditions: AwsConfig.Conditions): Map<String, Serializable> {
         val policy: String = policy(conditions)
         val signature = sign(conditions.date, policy)
 
@@ -51,7 +76,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         for (condition in listOf(
             conditions.bucket,
             conditions.acl,
-            conditions.uploadKeyStartsWith,
+            conditions.uploadKey,
             conditions.uuid,
             conditions.serverSideEncryption,
             conditions.credential,
@@ -62,7 +87,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
             conditions.metaTagStartsWith
         )) {
             if (condition.second.isNotEmpty()) {
-                if (condition in arrayOf(conditions.uploadKeyStartsWith, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
+                if (condition in arrayOf(conditions.uploadKey, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
                     includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))
                 else
                     includedFields.add(hashMapOf(condition))

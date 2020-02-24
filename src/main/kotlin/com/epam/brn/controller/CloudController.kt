@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
 import com.epam.brn.constant.BrnPath
+import com.epam.brn.constant.BrnPath.BUCKET_URL
 import com.epam.brn.constant.BrnPath.FOLDERS
-import com.epam.brn.constant.BrnPath.RESOURCES_ROOT_URL
 import com.epam.brn.constant.BrnPath.UPLOAD
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.CloudService
@@ -31,11 +31,11 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BaseSingleObjectResponseDto> {
         if (filePath.isNullOrEmpty())
             throw IllegalArgumentException("File path should be non empty")
-        val signedForm = cloudService.signatureForClientDirectUpload(filePath)
+        val signedForm = cloudService.uploadForm(filePath)
         return ResponseEntity.ok(BaseSingleObjectResponseDto(signedForm))
     }
 
-    @GetMapping(RESOURCES_ROOT_URL)
+    @GetMapping(BUCKET_URL)
     @ApiOperation("Get bucket url")
     @Throws(Exception::class)
     fun bucketUrl(): ResponseEntity<BaseSingleObjectResponseDto> = ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.bucketUrl()))
@@ -43,5 +43,5 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     @GetMapping(FOLDERS)
     @ApiOperation("Get folders in bucket")
     @Throws(Exception::class)
-    fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> = ResponseEntity.ok(BaseSingleObjectResponseDto(""))
+    fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> = ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.listBucket()))
 }
