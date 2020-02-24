@@ -5,6 +5,12 @@ build/
 !**/src/main/**
 !**/src/test/**
 
+docker-compose.yml
+credentials.properties
+local.properties
+yarn.lock
+src/main/resources/application-local.properties
+
 ### STS ###
 .apt_generated
 .classpath
