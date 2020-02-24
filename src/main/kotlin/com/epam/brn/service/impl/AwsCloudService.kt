@@ -1,17 +1,17 @@
 package com.epam.brn.service.impl
 
+import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.util.Base64
 import com.epam.brn.config.AwsConfig
 import com.epam.brn.service.CloudService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
-import java.io.Serializable
-import java.util.stream.Collectors
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
@@ -30,8 +30,22 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
 
     override fun listBucket(): List<String> {
         val amazonS3 = awsConfig.getAmazonS3()
-        val result = amazonS3.listObjectsV2(awsConfig.bucketName)
-        return result.objectSummaries.stream().map { it.key }.filter {it.endsWith("/")}.collect(Collectors.toList())
+        val folders: ArrayList<String> = ArrayList()
+
+        var continuationToken: String? = null
+        while (true) {
+            val listObjectsV2Request = ListObjectsV2Request()
+            listObjectsV2Request.bucketName = awsConfig.bucketName
+            listObjectsV2Request.continuationToken = continuationToken
+            val result = amazonS3.listObjectsV2(listObjectsV2Request)
+            val matchingKeys = result.objectSummaries.stream().map { it.key }.filter { it.endsWith("/") }
+            matchingKeys.forEach { folders.add(it) }
+            if (!result.isTruncated)
+                break
+            continuationToken = result.nextContinuationToken
+        }
+
+        return folders
     }
 
     private fun signature(conditions: AwsConfig.Conditions): Map<String, Serializable> {

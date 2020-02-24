@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 @Service
 class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) : CloudService {
     override fun listBucket(): List<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun signatureForClientDirectUpload(filePath: String): Map<String, String> {
