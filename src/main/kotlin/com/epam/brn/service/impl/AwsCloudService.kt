@@ -10,11 +10,12 @@ import javax.crypto.spec.SecretKeySpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
+import java.io.Serializable
+import java.util.stream.Collectors
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudService {
-
     private final val mapperIndented = ObjectMapper()
     init {
         mapperIndented.enable(SerializationFeature.INDENT_OUTPUT)
@@ -24,6 +25,16 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
 
     override fun signatureForClientDirectUpload(filePath: String): Map<String, Any> {
         val conditions = awsConfig.getConditions(filePath)
+        return signature(conditions)
+    }
+
+    override fun listBucket(): List<String> {
+        val amazonS3 = awsConfig.getAmazonS3()
+        val result = amazonS3.listObjectsV2(awsConfig.bucketName)
+        return result.objectSummaries.stream().map { it.key }.filter {it.endsWith("/")}.collect(Collectors.toList())
+    }
+
+    private fun signature(conditions: AwsConfig.Conditions): Map<String, Serializable> {
         val policy: String = policy(conditions)
         val signature = sign(conditions.date, policy)
 

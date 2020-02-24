@@ -1,5 +1,8 @@
 package com.epam.brn.service.impl
 
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.model.ListObjectsV2Result
+import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.epam.brn.config.AwsConfig
 import java.time.Instant
 import java.time.ZoneOffset
@@ -62,5 +65,31 @@ class AwsCloudServiceTest {
         System.err.println("Signature $signatureExpected")
         System.err.println("Signature $signature")
         Assertions.assertEquals(signatureExpected, signature, "$signatureExpected\n\n$signature")
+    }
+
+    @Test
+    fun `should get folder list`() {
+        // GIVEN
+        val mockS3:AmazonS3 = Mockito.mock(AmazonS3::class.java)
+        val result:ListObjectsV2Result = Mockito.mock(ListObjectsV2Result::class.java)
+        val objectSummaries: List<S3ObjectSummary> = getObjectSummaries(listOf("file","folder/","folder/file","folder/folder/"))
+        Mockito.`when`(awsConfig.getAmazonS3()).thenReturn(mockS3)
+        Mockito.`when`(awsConfig.bucketName).thenReturn("test")
+        Mockito.`when`(mockS3.listObjectsV2(anyString())).thenReturn(result)
+        Mockito.`when`(result.objectSummaries).thenReturn(objectSummaries)
+        // WHEN
+        val listBucket = awsCloudService.listBucket()
+        // THEN
+        val expected:List<String> = listOf("folder/","folder/folder/")
+        Assertions.assertEquals(expected,listBucket)
+    }
+
+    private fun getObjectSummaries(keys:List<String>): List<S3ObjectSummary> {
+        val objectSummaries: ArrayList<S3ObjectSummary> = ArrayList()
+        keys.forEach({val os = S3ObjectSummary()
+            os.key = it
+            objectSummaries.add(os)
+        })
+        return objectSummaries
     }
 }
