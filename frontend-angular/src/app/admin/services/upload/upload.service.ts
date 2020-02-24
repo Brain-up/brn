@@ -10,10 +10,10 @@ export class UploadService {
         return this.httpClient.get<GetUploadModel>(`/api/cloud/upload?filePath=${resolvedPath}`)
     }
     sendFormData(action: string, body: FormData): Observable<{}> {
-        console.log(body)
-        const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data;boundary=WebKitFormBoundaryesm9nAfJ5PWhkAnH0000001111');
-        return this.httpClient.post(action, body, {headers: headers})
+        return this.httpClient.post(action, body);
     }
-
+    uploadConfigToApl(formData: FormData) {
+        return this.httpClient.post(`/api/loadTasksFile`, formData, {headers: {'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryXEZglQkzkAJigSnp'}})
+    }
     constructor(private httpClient: HttpClient) {}
 }

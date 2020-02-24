@@ -16,7 +16,6 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 })
 export class UploadFileComponent implements OnInit, ControlValueAccessor {
   @Input() disabled = false;
-  @Output() filesAdded: EventEmitter<Set<File>> = new EventEmitter();
   @ViewChild('file', {static: true}) file;
 
   ngOnInit() {
@@ -34,14 +33,7 @@ export class UploadFileComponent implements OnInit, ControlValueAccessor {
   }
 
   onFilesAdded() {
-    let filesToGo: FileList;
     const files: FileList = this.file.nativeElement.files;
-    // for (const key in files) {
-    //   // console.log(files);
-    //   if (!isNaN(parseInt(key, 10))) {
-    //     filesToGo.add(files[key]);
-    //   }
-    // }
     this.onChange(files.item(0))
   }
   constructor(private renderer: Renderer2) {

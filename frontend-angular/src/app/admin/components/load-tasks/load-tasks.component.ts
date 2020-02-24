@@ -10,6 +10,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {pipe} from 'fp-ts/lib/pipeable';
 import {fold, fromNullable} from 'fp-ts/lib/Option';
 import {showHappySnackbar, showSadSnackbar} from '../../../shared/pure';
+import { UploadService as UploadService2 } from '../../services/upload/upload.service';
 
 @Component({
   selector: 'app-load-tasks',
@@ -32,16 +33,24 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
   constructor(private adminAPI: AdminService,
               private fb: FormBuilder,
               @Self() private uploadFileService: UploadService,
+              private uploadFileService2: UploadService2,
               private snackbar: MatSnackBar) {
   }
-
+  onSubmit() {
+    let formData = new FormData();
+    formData.append('taskFile', this.tasksGroup.get('file').value);
+    formData.append('seriesId', this.tasksGroup.get('series').value.id);
+    this.uploadFileService2.sendFormData('/api/loadTasksFile?seriesId=1',formData).subscribe(console.log)
+  }
   ngOnInit() {
     this.tasksGroup = this.fb.group({
       group: ['', Validators.required],
-      series: [{value: '', disabled: true}, Validators.required]
+      series: [{value: '', disabled: true}, Validators.required],
+      file: [null, Validators.required]
     });
     this.groups$ = this.adminAPI.getGroups();
     this.series$ = this.tasksGroup.controls.group.valueChanges.pipe(
+      tap(data=> console.log(data)),
       switchMap(({id}) => this.adminAPI.getSeriesByGroupId(id)),
     );
     this.tasksGroup.controls.group.statusChanges.pipe(

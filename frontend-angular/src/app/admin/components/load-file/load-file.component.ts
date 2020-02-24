@@ -8,6 +8,7 @@ import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.ser
 import { FormGroup, FormControl } from '@angular/forms';
 import { FolderService } from '../../services/folders/folder.service';
 import { UploadService } from '../../services/upload/upload.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-load-file',
@@ -29,7 +30,8 @@ export class LoadFileComponent implements OnInit {
     //  @Self() private uploadFileService: UploadService,
     private snackBarService: SnackBarService,
     private folderService: FolderService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private router: Router
   ) {
   }
 
@@ -59,13 +61,17 @@ export class LoadFileComponent implements OnInit {
           formData.append(key, input[key]);
         })
         formData.append('file', this.uploadFileForm.value.files)
+        console.log(data.data.action);
         return this.uploadService.sendFormData(data.data.action, formData)
       })
     ).pipe(
       tap((resp) => {
         console.log(resp)
       })
-    ).subscribe()
+    ).subscribe(_=> {
+      this.router.navigateByUrl('/home');
+      this.snackBarService.showHappySnackbar(`${fileName} was successfully uploaded`)
+    })
   }
 
   private processUploadResults(fileInfo: { [key: string]: { progress: Observable<number> } }) {
