@@ -111,16 +111,13 @@ class AwsConfig {
         val algorithm: Pair<String, String> = "x-amz-algorithm" to "AWS4-HMAC-SHA256"
         val dateTime: Pair<String, String> = "x-amz-date" to dateTimeFormat(now)
         val expiration: Pair<String, String> = "expiration" to expiration(now)
-        val uploadKeyStartsWith: Pair<String, String> = "key" to filePath
+        val uploadKey: Pair<String, String> = "key" to filePath
         val successActionRedirect: Pair<String, String> = "success_action_redirect" to this@AwsConfig.successActionRedirect
         val contentTypeStartsWith: Pair<String, String> = "Content-Type" to this@AwsConfig.contentTypeStartsWith
         val metaTagStartsWith: Pair<String, String> = "x-amz-meta-tag" to this@AwsConfig.metaTagStartsWith
 
-        // UPLOAD FORM SPECIFIC DATA
-        val uploadKey: Pair<String, String> = "key" to filePath
-
         override fun toString(): String {
-            return "Conditions(date='$date', bucket=$bucket, acl=$acl, uuid=$uuid, serverSideEncryption=$serverSideEncryption, credential=$credential, algorithm=$algorithm, dateTime=$dateTime, expiration=$expiration, uploadKeyStartsWith=$uploadKeyStartsWith, successActionRedirect=$successActionRedirect, contentTypeStartsWith=$contentTypeStartsWith, metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
+            return "Conditions(date='$date', bucket=$bucket, acl=$acl, uuid=$uuid, serverSideEncryption=$serverSideEncryption, credential=$credential, algorithm=$algorithm, dateTime=$dateTime, expiration=$expiration, uploadKey=$uploadKey, successActionRedirect=$successActionRedirect, contentTypeStartsWith=$contentTypeStartsWith, metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
         }
     }
 }

@@ -76,7 +76,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         for (condition in listOf(
             conditions.bucket,
             conditions.acl,
-            conditions.uploadKeyStartsWith,
+            conditions.uploadKey,
             conditions.uuid,
             conditions.serverSideEncryption,
             conditions.credential,
@@ -87,7 +87,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
             conditions.metaTagStartsWith
         )) {
             if (condition.second.isNotEmpty()) {
-                if (condition in arrayOf(conditions.uploadKeyStartsWith, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
+                if (condition in arrayOf(conditions.uploadKey, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
                     includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))
                 else
                     includedFields.add(hashMapOf(condition))
