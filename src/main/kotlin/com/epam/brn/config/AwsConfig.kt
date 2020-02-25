@@ -38,8 +38,6 @@ class AwsConfig {
     val accessRuleCanned: String = ""
     val credentials: Properties by lazy { initCredentials() }
     val accessKeyId: String by lazy { credentials.getProperty("aws.accessKeyId", "") }
-    @Value("\${aws.uploadKeyStartsWith}")
-    val uploadKeyStartsWith: String = ""
     @Value("\${aws.bucketName}")
     val bucketName: String = ""
     @Value("\${aws.xamzCredential}")
@@ -113,7 +111,7 @@ class AwsConfig {
         val algorithm: Pair<String, String> = "x-amz-algorithm" to "AWS4-HMAC-SHA256"
         val dateTime: Pair<String, String> = "x-amz-date" to dateTimeFormat(now)
         val expiration: Pair<String, String> = "expiration" to expiration(now)
-        val uploadKeyStartsWith: Pair<String, String> = "key" to this@AwsConfig.uploadKeyStartsWith
+        val uploadKeyStartsWith: Pair<String, String> = "key" to filePath
         val successActionRedirect: Pair<String, String> = "success_action_redirect" to this@AwsConfig.successActionRedirect
         val contentTypeStartsWith: Pair<String, String> = "Content-Type" to this@AwsConfig.contentTypeStartsWith
         val metaTagStartsWith: Pair<String, String> = "x-amz-meta-tag" to this@AwsConfig.metaTagStartsWith
