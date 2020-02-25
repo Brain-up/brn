@@ -26,7 +26,7 @@ data class UserAccount(
     @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
-    val password: String?,
+    val password: String,
     val birthday: LocalDate? = null,
     val active: Boolean
 ) {
@@ -55,7 +55,7 @@ data class UserAccount(
             active = this.active,
             email = this.email,
             birthday = this.birthday,
-            password = null
+            password = "this.password"
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)

@@ -47,7 +47,7 @@ class UserAccountServiceImpl(
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    private fun getHashedPassword(userAccountDto: UserAccountDto) = passwordEncoder.encode(userAccountDto.password)
+    fun getHashedPassword(userAccountDto: UserAccountDto) = passwordEncoder.encode(userAccountDto.password)
 
     private fun getTheAuthoritySet(userAccountDto: UserAccountDto): MutableSet<Authority> {
         var authorityNames = userAccountDto.authorities ?: mutableSetOf()

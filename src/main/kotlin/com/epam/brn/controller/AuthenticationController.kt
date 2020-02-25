@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -23,20 +20,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping
 @Api(description = "Contains login in actions")
-class AuthenticationController(
-    val authenticationService: AuthenticationService,
-    val authenticationManager: AuthenticationManager
-//    @Autowired val repository: SecurityContextRepository,
-//    @Autowired val rememberMeServices: RememberMeServices
-) {
+class AuthenticationController(val authenticationService: AuthenticationService) {
 
     @PostMapping(BrnPath.REGISTRATION)
     @ApiOperation("New user registration")
     fun registration(@Validated @RequestBody userAccountDto: UserAccountDto): ResponseEntity<AuthOutDto> {
-        val token: UsernamePasswordAuthenticationToken = authenticationService.registration(userAccountDto)
+        val basicHeader = authenticationService.registration(userAccountDto)
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(AuthOutDto(token.toString()))
+            .body(AuthOutDto(basicHeader))
     }
 
     @PostMapping(BrnPath.LOGIN)
@@ -46,13 +38,9 @@ class AuthenticationController(
         request: HttpServletRequest,
         response: HttpServletResponse
     ): ResponseEntity<AuthOutDto> {
-        val token: UsernamePasswordAuthenticationToken = authenticationService.login(loginDto)
-        val auth = authenticationManager.authenticate(token)
-        SecurityContextHolder.getContext().authentication = auth
-//        repository.saveContext(SecurityContextHolder.getContext(), request, response)
-//        rememberMeServices.loginSuccess(request, response, auth)
+        val basicHeader = authenticationService.login(loginDto)
         return ResponseEntity
             .ok()
-            .body(AuthOutDto(token.toString()))
+            .body(AuthOutDto(basicHeader))
     }
 }

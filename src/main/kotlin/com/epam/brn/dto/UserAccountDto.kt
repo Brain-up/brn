@@ -19,7 +19,7 @@ data class UserAccountDto(
     val email: String,
     @field:NotBlank
     @field:Size(min = 4)
-    var password: String? = null,
+    var password: String,
     val birthday: LocalDate? = null,
     val active: Boolean = true
 ) {

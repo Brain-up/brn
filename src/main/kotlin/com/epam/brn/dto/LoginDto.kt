@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class LoginDto(
-    val grant_type: String,
+    val grant_type: String = "password",
     @field:NotBlank
     @field:Email
     val username: String,

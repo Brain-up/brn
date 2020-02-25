@@ -107,7 +107,7 @@ internal class UserAccountServiceTest {
     @DisplayName("Tests for creation of users")
     inner class CreateUserAccounts {
         @Test
-        fun `should find a user by id`() {
+        fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
             `when`(userAccountDto.toModel()).thenReturn(userAccount)
@@ -117,6 +117,8 @@ internal class UserAccountServiceTest {
                 .thenReturn(userAccount)
             `when`(authorityService.findAuthorityByAuthorityName(anyString()))
                 .thenReturn(authority)
+            `when`(userAccountService.getHashedPassword(userAccountDto))
+                .thenReturn("password")
             // WHEN
             val userAccountDtoReturned = userAccountService.addUser(userAccountDto)
             // THEN
