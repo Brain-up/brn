@@ -7,6 +7,7 @@ import com.epam.brn.service.UserAccountService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.util.Base64Utils
@@ -26,7 +27,7 @@ class AuthenticationBasicServiceImpl(
 
     override fun login(loginDto: LoginDto): String {
         val token = UsernamePasswordAuthenticationToken(loginDto.username, loginDto.password)
-        val auth = authenticationManager.authenticate(token)
+        val auth: Authentication = authenticationManager.authenticate(token)
         SecurityContextHolder.getContext().authentication = auth
         val basicHeader = getBasicHeader(loginDto.username, loginDto.password)
         return basicHeader
