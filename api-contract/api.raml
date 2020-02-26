@@ -39,6 +39,13 @@ mediaType:
         200:
           body:
             example: !include samples/series.json
+  /fileFormat/{seriesId}:
+    get:
+      description: Get series file format by series id
+      responses:
+        200:
+          body:
+            example: !include samples/file_format.json
 
 # EXERCISE ----------------------------
 /exercises:

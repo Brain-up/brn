@@ -3,6 +3,7 @@ package com.epam.brn.controller.advice
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
+import java.io.IOException
 import java.lang.IllegalArgumentException
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
@@ -46,6 +47,12 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(UninitializedPropertyAccessException::class)
     fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BaseResponseDto> {
+        logger.error("Internal exception: ${e.message}", e)
+        return makeInternalServerErrorResponseEntity(e)
+    }
+
+    @ExceptionHandler(IOException::class)
+    fun handleIOException(e: IOException): ResponseEntity<BaseResponseDto> {
         logger.error("Internal exception: ${e.message}", e)
         return makeInternalServerErrorResponseEntity(e)
     }
