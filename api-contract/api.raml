@@ -171,7 +171,7 @@ mediaType:
     responses:
       200:
         example: !include samples/authSuccessResponse.json
-      403:
+      403 (Forbidden):
         example: !include samples/authBadCredResponse.json
 
 /registration:
@@ -181,9 +181,9 @@ mediaType:
       application/json:
         example: !include samples/registration.json
     responses:
-      201:
+      201 (Created):
         example: !include samples/authSuccessResponse.json
-      403:
+      400 (Bad Request):
         example: !include samples/authSuchUserAlreadyExistErrorResponse.json
 
 /logout:

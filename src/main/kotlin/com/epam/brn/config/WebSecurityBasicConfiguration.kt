@@ -51,5 +51,5 @@ class WebSecurityBasicConfiguration(
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
-    fun brnAuthenticationManager(): AuthenticationManager? = authenticationManager()
+    fun brnAuthenticationManager(): AuthenticationManager = super.authenticationManagerBean()
 }

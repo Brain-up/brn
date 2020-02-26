@@ -11,7 +11,6 @@ import com.epam.brn.service.UserAccountService
 import java.security.Principal
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
@@ -40,7 +39,7 @@ class UserAccountServiceImpl(
 
     override fun addUser(userAccountDto: UserAccountDto): UserAccountDto {
         val existUser = userAccountRepository.findUserAccountByEmail(userAccountDto.email)
-        existUser.ifPresent { throw BadCredentialsException("User with email ${userAccountDto.email} is already exist!") }
+        existUser.ifPresent { throw IllegalArgumentException("User with email ${userAccountDto.email} is already exist!") }
 
         val setOfAuthorities = getTheAuthoritySet(userAccountDto)
         val hashedPassword = getHashedPassword(userAccountDto)

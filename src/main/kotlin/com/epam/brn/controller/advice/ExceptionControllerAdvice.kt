@@ -58,7 +58,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(e: Throwable): ResponseEntity<BaseResponseDto> {
+    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
         logger.error("Forbidden: ${e.message}", e)
         return makeForbiddenErrorResponseEntity(e)
     }

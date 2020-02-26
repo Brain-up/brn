@@ -7,8 +7,6 @@ import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.AuthenticationService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -33,11 +31,7 @@ class AuthenticationController(val authenticationService: AuthenticationService)
 
     @PostMapping(BrnPath.LOGIN)
     @ApiOperation("Exist user login")
-    fun login(
-        @Validated @RequestBody loginDto: LoginDto,
-        request: HttpServletRequest,
-        response: HttpServletResponse
-    ): ResponseEntity<AuthOutDto> {
+    fun login(@Validated @RequestBody loginDto: LoginDto): ResponseEntity<AuthOutDto> {
         val basicHeader = authenticationService.login(loginDto)
         return ResponseEntity
             .ok()
