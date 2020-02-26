@@ -20,11 +20,9 @@ import org.springframework.context.annotation.Profile
 class AwsConfig {
     private val log = logger()
 
-    companion object {
-        val dateTimeFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!
-        val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")!!
-        val expirationFormat = DateTimeFormatter.ISO_DATE_TIME!!
-    }
+    val dateTimeFormat = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!
+    val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")!!
+    val expirationFormat = DateTimeFormatter.ISO_DATE_TIME!!
 
     @Value("\${cloud.expireAfterDuration}")
     val expireAfterDuration: String = ""
@@ -33,7 +31,7 @@ class AwsConfig {
     @Value("\${aws.accessRuleCanned}")
     val accessRuleCanned: String = ""
     val credentials: Properties by lazy { initCredentials() }
-    val accessKeyId: String by lazy { credentials.getProperty("aws.accessKeyId", "") }
+    val accessKeyId: String by lazy { credentials.getProperty("aws.accessKeyId") }
     @Value("\${aws.uploadKeyStartsWith}")
     val uploadKeyStartsWith: String = ""
     @Value("\${aws.bucketName}")
@@ -48,7 +46,7 @@ class AwsConfig {
     @Value("\${aws.metaTagStartsWith:}")
     val metaTagStartsWith: String = ""
     // signature calc
-    val secretAccessKey: String by lazy { credentials.getProperty("aws.secretAccessKey", "") }
+    val secretAccessKey: String by lazy { credentials.getProperty("aws.secretAccessKey") }
     @Value("\${aws.serviceName}")
     val serviceName: String = ""
     @Value("\${aws.region}")
@@ -56,6 +54,9 @@ class AwsConfig {
 
     @Value("\${aws.bucketLink}")
     val bucketLink: String = ""
+
+    val accessRule: String by lazy { CannedACL.valueOf(accessRuleCanned).toString() }
+    val expireAfter: Duration by lazy { Duration.parse(expireAfterDuration) }
 
     fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
     fun uuid(): String = UUID.randomUUID().toString()
@@ -71,27 +72,18 @@ class AwsConfig {
         return properties
     }
 
-    fun accessRule() = CannedACL.valueOf(accessRuleCanned).toString()
-    fun expireAfter() = Duration.parse(expireAfterDuration)
-    private fun expiration(dateTime: OffsetDateTime): String =
-        expirationFormat.format(dateTime.plus(expireAfter()))
-    private fun dateTimeFormat(dateTime: OffsetDateTime): String = dateTimeFormat.format(dateTime)
-    private fun dateFormat(dateTime: OffsetDateTime): String = dateFormat.format(dateTime)
-    private fun credentialFormat(dateTime: OffsetDateTime): String = String.format(xamzCredential, this@AwsConfig.accessKeyId, this.dateFormat(dateTime))
-
-    fun getConditions(filePath: String): Conditions {
-        if (accessKeyId.isEmpty() || secretAccessKey.isEmpty())
-            throw UninitializedPropertyAccessException("Missing property in cloud upload configuration")
-        return this.Conditions(instant(), uuid(), filePath)
-    }
-
-    inner class Conditions constructor(now: OffsetDateTime, uuidString: String, filePath: String) {
+    inner class Conditions {
+        init {
+            if (accessKeyId == null || secretAccessKey == null)
+                throw UninitializedPropertyAccessException("Missing property in cloud upload configuration")
+        }
+        private val now: OffsetDateTime = instant()
         val date: String = dateFormat(now)
 
         // POLICY CONDITIONS
         val bucket: Pair<String, String> = "bucket" to bucketName
-        val acl: Pair<String, String> = "acl" to accessRule()
-        val uuid: Pair<String, String> = "x-amz-meta-uuid" to uuidString
+        val acl: Pair<String, String> = "acl" to accessRule
+        val uuid: Pair<String, String> = "x-amz-meta-uuid" to uuid()
         val serverSideEncryption: Pair<String, String> = "x-amz-server-side-encryption" to "AES256"
         val credential: Pair<String, String> = "x-amz-credential" to credentialFormat(now)
         val algorithm: Pair<String, String> = "x-amz-algorithm" to "AWS4-HMAC-SHA256"
@@ -103,10 +95,12 @@ class AwsConfig {
         val metaTagStartsWith: Pair<String, String> = "x-amz-meta-tag" to this@AwsConfig.metaTagStartsWith
 
         // UPLOAD FORM SPECIFIC DATA
-        val uploadKey: Pair<String, String> = "key" to filePath
+        val uploadKey: Pair<String, String> = "key" to "${this@AwsConfig.uploadKeyStartsWith}\${filename}"
 
-        override fun toString(): String {
-            return "Conditions(date='$date', bucket=$bucket, acl=$acl, uuid=$uuid, serverSideEncryption=$serverSideEncryption, credential=$credential, algorithm=$algorithm, dateTime=$dateTime, expiration=$expiration, uploadKeyStartsWith=$uploadKeyStartsWith, successActionRedirect=$successActionRedirect, contentTypeStartsWith=$contentTypeStartsWith, metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
-        }
+        private fun expiration(dateTime: OffsetDateTime): String =
+            expirationFormat.format(dateTime.plus(expireAfter))
+        private fun dateTimeFormat(dateTime: OffsetDateTime): String = dateTimeFormat.format(dateTime)
+        private fun dateFormat(dateTime: OffsetDateTime): String = dateFormat.format(dateTime)
+        private fun credentialFormat(dateTime: OffsetDateTime): String = String.format(xamzCredential, this@AwsConfig.accessKeyId, this.dateFormat(dateTime))
     }
 }

@@ -14,5 +14,4 @@ object BrnPath {
     const val CLOUD = "/cloud"
     const val UPLOAD = "/upload"
     const val RESOURCES_ROOT_URL = "/url"
-    const val FOLDERS = "/folders"
 }
