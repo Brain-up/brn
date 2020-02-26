@@ -4,7 +4,10 @@ import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.util.Base64
 import com.epam.brn.config.AwsConfig
 import com.epam.brn.service.CloudService
+import com.fasterxml.jackson.core.util.DefaultIndenter
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
 import java.io.Serializable
 import javax.crypto.Mac
@@ -16,9 +19,13 @@ import org.springframework.stereotype.Service
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudService {
-    private final val mapperIndented = ObjectMapper()
+    private final val mapperIndented: ObjectWriter
     init {
-        mapperIndented.enable(SerializationFeature.INDENT_OUTPUT)
+        val indenter = DefaultIndenter().withLinefeed("\r\n")
+        val printer = DefaultPrettyPrinter().withObjectIndenter(indenter)
+        val objectMapper = ObjectMapper()
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT)
+        mapperIndented = objectMapper.writer(printer)
     }
 
     override fun bucketUrl(): String = awsConfig.bucketLink
@@ -29,7 +36,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
     }
 
     override fun listBucket(): List<String> {
-        val amazonS3 = awsConfig.getAmazonS3()
+        val amazonS3 = awsConfig.amazonS3
         val folders: ArrayList<String> = ArrayList()
 
         var continuationToken: String? = null
@@ -100,9 +107,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         return toJsonBase64(policy)
     }
 
-    private fun toJsonBase64(rawObject: Any): String {
-        val json = mapperIndented.writeValueAsString(rawObject)
-        return base64Encoded(json.toByteArray())
+    fun toJsonBase64(rawObject: Any): String {
+        return base64Encoded(mapperIndented.writeValueAsBytes(rawObject))
     }
 
     private fun sign(date: String, policy: String): String {

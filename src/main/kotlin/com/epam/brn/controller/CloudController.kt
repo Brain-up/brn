@@ -10,6 +10,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import java.lang.IllegalArgumentException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(BrnPath.CLOUD)
 @Api(value = BrnPath.CLOUD, description = "Contains actions for cloud upload and bucket listing")
+@ConditionalOnProperty(name = ["cloud.provider"])
 class CloudController(@Autowired private val cloudService: CloudService) {
 
     @GetMapping(UPLOAD)
