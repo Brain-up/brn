@@ -53,14 +53,12 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       series: [{value: '', disabled: true}, Validators.required],
       file: [null, Validators.required]
     });
+
     this.groups$ = this.adminAPI.getGroups();
     this.series$ = this.tasksGroup.controls.group.valueChanges.pipe(
       switchMap(({id}) => this.adminAPI.getSeriesByGroupId(id)),
     );
-    this.tasksGroup.controls.series.valueChanges.pipe(
-      tap(val=> {console.log(val)}),
-      // switchMap(({id})=> null)
-    ).subscribe()
+    this.tasksGroup.controls.series.valueChanges.subscribe();
     this.tasksGroup.controls.group.statusChanges.pipe(
       switchMap(status => iif(() => status === 'VALID',
         of('').pipe(tap(_ => this.tasksGroup.controls.series.enable())),
