@@ -10,6 +10,7 @@ object BrnPath {
     const val RESOURCES_ROOT_URL = "/url"
     const val REGISTRATION = "/registration"
     const val SERIES = "/series"
+    const val SERIES_FILE_FORMAT = "/fileFormat"
     const val STUDY_HISTORIES = "/study-history"
     const val TASKS = "/tasks"
     const val UPLOAD = "/upload"
