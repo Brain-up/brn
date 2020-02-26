@@ -5,6 +5,14 @@ build/
 !**/src/main/**
 !**/src/test/**
 
+<<<<<<< HEAD
+=======
+credentials.properties
+local.properties
+yarn.lock
+src/main/resources/application-local.properties
+
+>>>>>>> e1c9f2e... EPMLABSBRN-171 fixed merge conflicts
 ### STS ###
 .apt_generated
 .classpath

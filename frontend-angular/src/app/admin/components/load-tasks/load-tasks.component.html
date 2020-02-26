@@ -21,3 +21,6 @@
   <app-upload-file [disabled]="!tasksGroup.controls.series.valid" formControlName="file"></app-upload-file>
   <button type="submit">Submit</button>
 </form>
+<textarea *ngIf="format$">
+  {{format$ | async}}
+</textarea>
