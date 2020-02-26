@@ -1,7 +1,5 @@
 package com.epam.brn.service.impl
 
-import com.auth0.jwt.JWT
-import com.epam.brn.dto.AuthInDto
 import com.epam.brn.dto.LoginDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.AuthenticationService
@@ -14,7 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.util.Base64Utils
 
 @Service
-class AuthenticationServiceImpl(
+class AuthenticationBasicServiceImpl(
     private val userAccountService: UserAccountService,
     private val authenticationManager: AuthenticationManager
 ) : AuthenticationService {
@@ -36,9 +34,4 @@ class AuthenticationServiceImpl(
 
     fun getBasicHeader(userName: String, password: String) =
         Base64Utils.encodeToString("$userName:$password".toByteArray())
-
-    fun createToken(authInDto: AuthInDto): String {
-        val jwt = JWT.create()
-        return jwt.toString()
-    }
 }
