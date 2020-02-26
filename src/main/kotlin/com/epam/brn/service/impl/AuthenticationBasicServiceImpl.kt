@@ -29,8 +29,7 @@ class AuthenticationBasicServiceImpl(
         val token = UsernamePasswordAuthenticationToken(loginDto.username, loginDto.password)
         val auth: Authentication = authenticationManager.authenticate(token)
         SecurityContextHolder.getContext().authentication = auth
-        val basicHeader = getBasicHeader(loginDto.username, loginDto.password)
-        return basicHeader
+        return getBasicHeader(loginDto.username, loginDto.password)
     }
 
     fun getBasicHeader(userName: String, password: String) =
