@@ -24,12 +24,12 @@ data class UserAccountDto(
     val active: Boolean = true
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
-    fun toModel() = UserAccount(
+    fun toModel(hashedPassword: String) = UserAccount(
         id = id,
         firstName = firstName,
         lastName = lastName,
         email = email,
-        password = password,
+        password = hashedPassword,
         birthday = birthday,
         active = active
     )

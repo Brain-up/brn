@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -110,7 +111,7 @@ internal class UserAccountServiceTest {
         fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
-            `when`(userAccountDto.toModel()).thenReturn(userAccount)
+            `when`(userAccountDto.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
             `when`(userAccountDto.firstName).thenReturn(userName)
             `when`(userAccountRepository.save(userAccount))

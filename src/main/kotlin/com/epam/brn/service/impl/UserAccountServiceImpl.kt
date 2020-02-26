@@ -41,8 +41,7 @@ class UserAccountServiceImpl(
         val setOfAuthorities = getTheAuthoritySet(userAccountDto)
         val hashedPassword = getHashedPassword(userAccountDto)
 
-        userAccountDto.password = hashedPassword
-        val userAccount = userAccountDto.toModel()
+        val userAccount = userAccountDto.toModel(hashedPassword)
         userAccount.authoritySet = setOfAuthorities
         return userAccountRepository.save(userAccount).toDto()
     }
@@ -62,7 +61,8 @@ class UserAccountServiceImpl(
     }
 
     override fun save(userAccountDto: UserAccountDto): UserAccountDto {
-        val userAccountModel = userAccountDto.toModel()
+        val hashedPassword = getHashedPassword(userAccountDto)
+        val userAccountModel = userAccountDto.toModel(hashedPassword)
         return userAccountRepository.save(userAccountModel).toDto()
     }
 
