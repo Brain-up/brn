@@ -161,7 +161,7 @@ mediaType:
     body:
      application/json:
         example: !include samples/login.json
-     responses:
+    responses:
       200:
         example: !include samples/authSuccessResponse.json
       403:
@@ -170,15 +170,21 @@ mediaType:
 
 /registration:
   post:
-  description: Registration for new user
-     body:
-         application/json:
-            example: !include samples/registration.json
-         responses:
-          201:
-            example: !include samples/authSuccessResponse.json
-          403:
-            example: !include samples/authSuchUserAlreadyExistErrorResponse.json
+  description: Registration for new user with login him
+    body:
+      application/json:
+        example: !include samples/registration.json
+    responses:
+      201:
+        example: !include samples/authSuccessResponse.json
+      403:
+        example: !include samples/authSuchUserAlreadyExistErrorResponse.json
+
+/logout:
+  post:
+  description: Logout for logined user
+    responses:
+      204: No content
 
 # LOAD FILES ----------------------
 /loadTasksFile:
