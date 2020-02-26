@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -30,34 +31,38 @@ class AuthorizationAuthenticationIT {
 
     @Autowired
     lateinit var mockMvc: MockMvc
-
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
-
+    @Autowired
+    lateinit var authorityRepository: AuthorityRepository
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
 
-    internal val userName: String = "admin"
+    internal val email: String = "admin@admin.com"
     internal val password: String = "admin"
 
     @BeforeEach
     fun initBeforeEachTest() {
+        val authName = "ROLE_ADMIN"
+        authorityRepository.save(Authority(authorityName = authName))
+        val savedAuth = authorityRepository.findAuthorityByAuthorityName(authName)
         val password = passwordEncoder.encode(password)
         val userAccount =
             UserAccount(
                 firstName = "testUserFirstName",
                 lastName = "testUserLastName",
                 password = password,
-                email = "admin@admin.com",
+                email = email,
                 active = true
             )
-        userAccount.authoritySet.addAll(setOf(Authority(authorityName = "ROLE_ADMIN")))
+        userAccount.authoritySet.add(savedAuth!!)
         userAccountRepository.save(userAccount)
     }
 
     @AfterEach
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()
+        authorityRepository.deleteAll()
     }
 
     @Test
@@ -65,7 +70,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc.perform(
             get(BrnPath.GROUPS)
-                .with(user(this.userName).password(this.password).roles("USER", "ADMIN"))
+                .with(user(this.email).password(this.password).roles("USER", "ADMIN"))
         )
         // THEN
         resultAction
@@ -77,7 +82,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc.perform(
             get(BrnPath.GROUPS)
-                .with(user(this.userName).password(password).roles())
+                .with(user(this.email).password(password).roles())
         )
         // THEN
         resultAction
@@ -87,7 +92,7 @@ class AuthorizationAuthenticationIT {
     @Test
     fun `test login with valid credentials`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(formLogin().user(this.userName).password(this.password))
+        val resultAction = this.mockMvc.perform(formLogin().user(this.email).password(this.password))
         // THEN
         resultAction
             .andExpect(authenticated())
@@ -96,7 +101,7 @@ class AuthorizationAuthenticationIT {
     @Test
     fun `test login with invalid credentials`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(formLogin().user(this.userName).password("wrong"))
+        val resultAction = this.mockMvc.perform(formLogin().user(this.email).password("wrong"))
         // THEN
         resultAction
             .andExpect(unauthenticated())
@@ -107,7 +112,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc.perform(
             get(BrnPath.GROUPS)
-                .with(user(this.userName).password("wrong").roles())
+                .with(user(this.email).password("wrong").roles())
         )
         // THEN
         resultAction
@@ -119,7 +124,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc.perform(
             get(BrnPath.GROUPS)
-                .with(httpBasic(this.userName, this.password))
+                .with(httpBasic(this.email, this.password))
         )
         // THEN
         resultAction
@@ -131,7 +136,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc.perform(
             get(BrnPath.GROUPS)
-                .with(httpBasic(this.userName, "wrong"))
+                .with(httpBasic(this.email, "wrong"))
         )
         // THEN
         resultAction
