@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 class CustomUserDetails(userAccount: UserAccount) : UserDetails {
 
-    private val userName: String = userAccount.userName
+    private val userName: String = userAccount.email
     private val password: String? = userAccount.password
     private val active = userAccount.active
     private val authorities: List<GrantedAuthority>

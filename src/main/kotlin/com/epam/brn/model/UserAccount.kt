@@ -20,13 +20,15 @@ data class UserAccount(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
-    val userName: String,
+    val firstName: String,
+    @Column(nullable = true)
+    val lastName: String,
     @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
-    val password: String?,
-    val active: Boolean,
-    val birthDate: LocalDate? = null
+    val password: String,
+    val birthday: LocalDate? = null,
+    val active: Boolean
 ) {
     @OneToMany(cascade = [(CascadeType.ALL)])
     val phoneNumbers: List<PhoneNumber>? = null
@@ -42,17 +44,18 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, name='$userName', email='$email', birthDate=$birthDate, phoneNumbers=$phoneNumbers, progress=$progress)"
+        return "UserAccount(id=$id, firstName='$firstName', lastName='$lastName', email='$email', birthday=$birthday, progress=$progress)"
     }
 
     fun toDto(): UserAccountDto {
         val userAccountDto = UserAccountDto(
             id = this.id,
-            userName = this.userName,
+            firstName = this.firstName,
+            lastName = this.lastName,
             active = this.active,
             email = this.email,
-            birthDate = this.birthDate,
-            password = null
+            birthday = this.birthday,
+            password = "this.password"
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)

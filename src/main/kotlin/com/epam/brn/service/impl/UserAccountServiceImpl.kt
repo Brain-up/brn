@@ -27,27 +27,29 @@ class UserAccountServiceImpl(
 
     private val log = logger()
 
-    override fun findUserByName(name: String): UserAccountDto {
+    override fun findUserByName(firstName: String, lastName: String): UserAccountDto {
         return userAccountRepository
-            .findUserAccountByUserName(name)
+            .findUserAccountByFirstNameAndLastName(firstName, lastName)
             .map(UserAccount::toDto)
             .orElseThrow {
-                log.warn("User $name is not found")
-                UsernameNotFoundException("User with username: $name is not found")
+                log.warn("User $firstName $lastName is not found")
+                UsernameNotFoundException("User: $firstName $lastName is not found")
             }
     }
 
     override fun addUser(userAccountDto: UserAccountDto): UserAccountDto {
+        val existUser = userAccountRepository.findUserAccountByEmail(userAccountDto.email)
+        existUser.ifPresent { throw IllegalArgumentException("User with email ${userAccountDto.email} is already exist!") }
+
         val setOfAuthorities = getTheAuthoritySet(userAccountDto)
         val hashedPassword = getHashedPassword(userAccountDto)
 
-        userAccountDto.password = hashedPassword
-        val userAccount = userAccountDto.toModel()
+        val userAccount = userAccountDto.toModel(hashedPassword)
         userAccount.authoritySet = setOfAuthorities
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    private fun getHashedPassword(userAccountDto: UserAccountDto) = passwordEncoder.encode(userAccountDto.password)
+    fun getHashedPassword(userAccountDto: UserAccountDto) = passwordEncoder.encode(userAccountDto.password)
 
     private fun getTheAuthoritySet(userAccountDto: UserAccountDto): MutableSet<Authority> {
         var authorityNames = userAccountDto.authorities ?: mutableSetOf()
@@ -62,7 +64,8 @@ class UserAccountServiceImpl(
     }
 
     override fun save(userAccountDto: UserAccountDto): UserAccountDto {
-        val userAccountModel = userAccountDto.toModel()
+        val hashedPassword = getHashedPassword(userAccountDto)
+        val userAccountModel = userAccountDto.toModel(hashedPassword)
         return userAccountRepository.save(userAccountModel).toDto()
     }
 
@@ -74,8 +77,8 @@ class UserAccountServiceImpl(
 
     override fun getUserFromTheCurrentSession(): UserAccountDto {
         val authentication = SecurityContextHolder.getContext().authentication
-        val userName = authentication.name ?: getNameFromPrincipals(authentication)
-        return findUserByName(userName)
+        val email = authentication.name ?: getNameFromPrincipals(authentication)
+        return findUserByEmail(email)
     }
 
     override fun removeUserWithId(id: Long) {

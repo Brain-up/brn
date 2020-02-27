@@ -127,8 +127,9 @@ class ExercisesControllerIT {
         return userAccountRepository.save(
             UserAccount(
                 id = 0,
-                userName = "manuel",
-                birthDate = LocalDate.now(),
+                firstName = "testUserFirstName",
+                lastName = "testUserLastName",
+                birthday = LocalDate.now(),
                 email = "123@123.asd",
                 password = "password",
                 active = true

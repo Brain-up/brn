@@ -1,0 +1,7 @@
+{
+  "data": [],
+  "errors": [
+    "User with email admin@admin.com is already exist!"
+  ],
+  "meta": []
+}

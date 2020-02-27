@@ -121,13 +121,15 @@ class InitialDataLoader(
     private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
         val password = passwordEncoder.encode("password")
         val firstUser = UserAccount(
-            userName = "defaultUser",
+            firstName = "firstName",
+            lastName = "lastName",
             email = "default@default.ru",
             active = true,
             password = password
         )
         val secondUser = UserAccount(
-            userName = "defaultUser2",
+            firstName = "firstName2",
+            lastName = "lastName2",
             email = "default2@default.ru",
             active = true,
             password = password
@@ -140,7 +142,7 @@ class InitialDataLoader(
     private fun addAdminUser(adminAuthority: Authority): UserAccount {
         val password = passwordEncoder.encode("admin")
         val userAccount =
-            UserAccount(userName = "admin", password = password, email = "admin@admin.com", active = true)
+            UserAccount(firstName = "admin", lastName = "admin", password = password, email = "admin@admin.com", active = true)
         userAccount.authoritySet.addAll(setOf(adminAuthority))
         return userAccount
     }

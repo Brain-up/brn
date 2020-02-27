@@ -9,6 +9,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -56,6 +57,12 @@ class ExceptionControllerAdvice {
         return makeInternalServerErrorResponseEntity(e)
     }
 
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
+        logger.error("Forbidden: ${e.message}", e)
+        return makeUnauthorizedErrorResponseEntity(e)
+    }
+
     @ExceptionHandler(Throwable::class)
     fun handleException(e: Throwable): ResponseEntity<BaseResponseDto> {
         logger.error("Internal exception: ${e.message}", e)
@@ -64,6 +71,16 @@ class ExceptionControllerAdvice {
 
     fun makeInternalServerErrorResponseEntity(e: Throwable) = ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BaseResponseDto(errors = listOf(e.message.toString())))
+
+    fun makeForbiddenErrorResponseEntity(e: Throwable) = ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BaseResponseDto(errors = listOf(e.message.toString())))
+
+    fun makeUnauthorizedErrorResponseEntity(e: Throwable) = ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
         .contentType(MediaType.APPLICATION_JSON)
         .body(BaseResponseDto(errors = listOf(e.message.toString())))
 }
