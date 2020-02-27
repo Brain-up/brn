@@ -60,7 +60,7 @@ class ExceptionControllerAdvice {
     @ExceptionHandler(BadCredentialsException::class)
     fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
         logger.error("Forbidden: ${e.message}", e)
-        return makeForbiddenErrorResponseEntity(e)
+        return makeUnauthorizedErrorResponseEntity(e)
     }
 
     @ExceptionHandler(Throwable::class)
@@ -76,6 +76,11 @@ class ExceptionControllerAdvice {
 
     fun makeForbiddenErrorResponseEntity(e: Throwable) = ResponseEntity
         .status(HttpStatus.FORBIDDEN)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BaseResponseDto(errors = listOf(e.message.toString())))
+
+    fun makeUnauthorizedErrorResponseEntity(e: Throwable) = ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
         .contentType(MediaType.APPLICATION_JSON)
         .body(BaseResponseDto(errors = listOf(e.message.toString())))
 }

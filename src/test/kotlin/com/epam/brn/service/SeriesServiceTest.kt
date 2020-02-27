@@ -6,7 +6,6 @@ import com.epam.brn.repo.SeriesRepository
 import com.nhaarman.mockito_kotlin.verify
 import java.io.IOException
 import java.util.Optional
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -76,7 +75,7 @@ internal class SeriesServiceTest {
             1 "Однослоговые слова без шума" 3 быль no_noise/быль.mp3 pictures/быль.jpg (пыль,соль,мыль,дыль,киль) OBJECT
             1 "Однослоговые слова без шума" 4 вить no_noise/вить.mp3 pictures/вить.jpg (бить,жить,мыль,выть,лить) OBJECT_ACTION
             """.trimIndent()
-        Assertions.assertEquals(expectedFile, file)
+        assertEquals(expectedFile, file)
     }
 
     @Test
@@ -88,8 +87,6 @@ internal class SeriesServiceTest {
         // THEN
         val expectedType: Class<IOException> = IOException::class.java
         val message = "should throw IO exception"
-        assertThrows(
-            expectedType, executable, message
-        )
+        assertThrows(expectedType, executable, message)
     }
 }
