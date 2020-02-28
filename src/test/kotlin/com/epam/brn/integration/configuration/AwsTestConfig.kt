@@ -16,9 +16,10 @@ class AwsTestConfig {
         @Value("\${aws.accessRuleCanned}") accessRuleCanned: String,
         @Value("\${aws.credentialsPath}") credentialsPath: String,
         @Value("\${aws.accessKeyId}") accessKeyIdProperty: String,
-        @Value("\${aws.secretAccessKey}") secretAccessKeyProperty: String
+        @Value("\${aws.secretAccessKey}") secretAccessKeyProperty: String,
+        @Value("\${aws.region}") region: String
     ): AwsConfig {
-        return object : AwsConfig(expireAfterDuration, accessRuleCanned, credentialsPath, accessKeyIdProperty, secretAccessKeyProperty) {
+        return object : AwsConfig(expireAfterDuration, accessRuleCanned, credentialsPath, accessKeyIdProperty, secretAccessKeyProperty, region) {
             override fun instant(): OffsetDateTime = Instant.ofEpochMilli(1580384357114).atOffset(ZoneOffset.UTC)
             override fun uuid(): String = "c49791b2-b27b-4edf-bac8-8734164c20e6"
         }

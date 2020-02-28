@@ -28,7 +28,8 @@ class AwsConfig(
     @Value("\${aws.accessRuleCanned}") accessRuleCanned: String,
     @Value("\${aws.credentialsPath:}") credentialsPath: String,
     @Value("\${aws.accessKeyId:}") accessKeyIdProperty: String,
-    @Value("\${aws.secretAccessKey:}") secretAccessKeyProperty: String
+    @Value("\${aws.secretAccessKey:}") secretAccessKeyProperty: String,
+    @Value("\${aws.region}") val region: String
 ) {
     private val log = logger()
 
@@ -38,8 +39,6 @@ class AwsConfig(
         val expirationFormat = DateTimeFormatter.ISO_DATE_TIME!!
     }
 
-    @Value("\${aws.region}")
-    val region: String = ""
     @Value("\${aws.bucketName}")
     val bucketName: String = ""
     @Value("\${aws.xamzCredential}")
