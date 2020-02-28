@@ -107,9 +107,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         return toJsonBase64(policy)
     }
 
-    fun toJsonBase64(rawObject: Any): String {
-        return base64Encoded(mapperIndented.writeValueAsBytes(rawObject))
-    }
+    fun toJsonBase64(rawObject: Any) = base64Encoded(mapperIndented.writeValueAsBytes(rawObject))
+    private fun base64Encoded(bytes: ByteArray): String = Base64.encodeAsString(*bytes)
 
     private fun sign(date: String, policy: String): String {
         val signature = getSignatureKey(awsConfig.secretAccessKey, date, awsConfig.region, awsConfig.serviceName)
@@ -124,8 +123,6 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         val kService = hmacSHA256(serviceName, kRegion)
         return hmacSHA256("aws4_request", kService)
     }
-
-    private fun base64Encoded(bytes: ByteArray): String = Base64.encodeAsString(*bytes)
 
     private fun hmacSHA256(data: String, key: ByteArray): ByteArray {
         val mac = Mac.getInstance("HmacSHA256")

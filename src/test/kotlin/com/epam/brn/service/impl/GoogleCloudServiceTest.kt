@@ -30,7 +30,8 @@ class GoogleCloudServiceTest {
     }
 
     @Test
-    fun listBucket() {
+    fun `should return correct folder structure`() {
+        // GIVEN
         val resources: ArrayList<Blob> = ArrayList()
         resources.addAll(
             arrayOf(
@@ -46,8 +47,10 @@ class GoogleCloudServiceTest {
         var bucket = Mockito.mock(Bucket::class.java)
         Mockito.`when`(bucket.list()).thenReturn(pageBlob)
         Mockito.`when`(storage.get(anyString())).thenReturn(bucket)
+        // WHEN
         val bucketContent = googleCloudService.listBucket()
         val expected = listOf("folder0/", "folder2/", "folder2/folder3/", "folder7/")
+        // THEN
         Assertions.assertEquals(expected, bucketContent)
     }
 
