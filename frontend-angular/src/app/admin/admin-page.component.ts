@@ -83,6 +83,7 @@ export const slideInAnimation =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPageComponent implements OnInit {
+  opened = false;
   constructor(private router: Router) {
   }
 

@@ -1,4 +1,4 @@
-<form class="upload-tasks-content" [formGroup]="tasksGroup">
+<form class="upload-tasks-content" [formGroup]="tasksGroup" (ngSubmit)="onSubmit()">
   <mat-form-field>
     <mat-label>Group</mat-label>
     <mat-select formControlName="group" required>
@@ -18,5 +18,9 @@
     </mat-select>
     <mat-error *ngIf="tasksGroup.controls.series.hasError('required')">Field must not be empty</mat-error>
   </mat-form-field>
-  <app-upload-file [disabled]="!tasksGroup.controls.series.valid" (filesAdded)="onFilesAdded($event)"></app-upload-file>
+  <app-upload-file [disabled]="!tasksGroup.controls.series.valid" formControlName="file"></app-upload-file>
+  <button type="submit">Submit</button>
 </form>
+<textarea *ngIf="format$">
+  {{format$ | async}}
+</textarea>
