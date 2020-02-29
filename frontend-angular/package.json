@@ -18,6 +18,10 @@
     "@angular/core": "9.0.0",
     "@angular/forms": "9.0.0",
     "@angular/material": "8.2.3",
+    "@ngrx/effects": "^8.6.0",
+    "@ngrx/entity": "^8.6.0",
+    "@ngrx/store": "^8.6.0",
+    "@ngrx/store-devtools": "^8.6.0",
     "@angular/platform-browser": "9.0.0",
     "@angular/platform-browser-dynamic": "9.0.0",
     "@angular/router": "9.0.0",
@@ -29,7 +33,6 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.900.3",
-    "@angular/cli": "9.0.2",
     "@angular/cli": "9.0.3",
     "@angular/compiler-cli": "9.0.0",
     "@angular/language-service": "9.0.1",

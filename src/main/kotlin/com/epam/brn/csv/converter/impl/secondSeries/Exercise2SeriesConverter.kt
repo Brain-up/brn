@@ -4,19 +4,26 @@ import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.constant.mapPositionToWordType
 import com.epam.brn.csv.converter.Converter
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
+import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
-import org.springframework.beans.factory.annotation.Autowired
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class Exercise2SeriesConverter : Converter<Map<String, Any>, Exercise> {
+class Exercise2SeriesConverter(
+    private val resourceService: ResourceService,
+    private val seriesService: SeriesService,
+    private val exerciseService: ExerciseService
+) : Converter<Map<String, Any>, Exercise> {
+    private val log = logger()
 
     val EXERCISE_NAME = "exerciseName"
     val LEVEL = "level"
@@ -28,14 +35,8 @@ class Exercise2SeriesConverter : Converter<Map<String, Any>, Exercise> {
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureFileUrl: String
 
-    @Autowired
-    lateinit var resourceService: ResourceService
-
-    @Autowired
-    lateinit var seriesService: SeriesService
-
     override fun convert(source: Map<String, Any>): Exercise {
-        val target = Exercise()
+        val target = createOrGetExercise(source)
         convertExercise(source, target)
         convertTask(target)
         convertResources(source, target)
@@ -43,10 +44,23 @@ class Exercise2SeriesConverter : Converter<Map<String, Any>, Exercise> {
         return target
     }
 
+    private fun createOrGetExercise(source: Map<String, Any>): Exercise {
+        val name = source[EXERCISE_NAME].toString()
+        val level = source[LEVEL].toString().toInt()
+
+        return try {
+            val exercise = exerciseService.findExerciseByNameAndLevel(name, level)
+
+            log.debug("exercise with name {$name} and level {$level} is already persisted. Entity Will be updated")
+
+            exercise
+        } catch (e: EntityNotFoundException) {
+            Exercise(name = name, level = level)
+        }
+    }
+
     private fun convertExercise(source: Map<String, Any>, target: Exercise) {
-        target.name = source[EXERCISE_NAME].toString()
         target.description = source[EXERCISE_NAME].toString()
-        target.level = source[LEVEL].toString().toInt()
         target.exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString()
         target.series = seriesService.findSeriesForId(2L)
     }
@@ -94,8 +108,10 @@ class Exercise2SeriesConverter : Converter<Map<String, Any>, Exercise> {
         val resources = resourceService.findByWordLike(word)
         return if (CollectionUtils.isEmpty(resources))
             createAndGetResource(word, WordTypeEnum.UNKNOWN.toString())
-        else
+        else {
+            log.debug("Resource with word {$word} was already persisted")
             resources.first()
+        }
     }
 
     private fun createAndGetResource(word: String, wordType: String): Resource {
@@ -110,6 +126,7 @@ class Exercise2SeriesConverter : Converter<Map<String, Any>, Exercise> {
 
     private fun setWordType(resource: Resource, wordType: WordTypeEnum?): Resource {
         resource.wordType = wordType?.toString() ?: WordTypeEnum.UNKNOWN.toString()
+        log.debug("Word type for resource with id {${resource.id}} was updated to {${resource.wordType}}")
         return resource
     }
 }

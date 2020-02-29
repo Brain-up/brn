@@ -5,6 +5,11 @@ build/
 !**/src/main/**
 !**/src/test/**
 
+credentials.properties
+local.properties
+yarn.lock
+src/main/resources/application-local.properties
+
 ### STS ###
 .apt_generated
 .classpath

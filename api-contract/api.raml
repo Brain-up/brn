@@ -215,6 +215,14 @@ mediaType:
       201:
 
 /cloud:
+  /folders:
+    get:
+      description: Get cloud folder structure
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/cloud_folders.json
   /upload:
     get:
       queryParameters:

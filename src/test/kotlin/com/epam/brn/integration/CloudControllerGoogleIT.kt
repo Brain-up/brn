@@ -32,7 +32,7 @@ class CloudControllerGoogleIT {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get("${BrnPath.CLOUD}${BrnPath.UPLOAD}")
-                .queryParam("fileName", "fileNameOne")
+                .queryParam("filePath", "fileNameOne")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         resultAction
