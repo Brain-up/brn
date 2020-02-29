@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminPageComponent } from './admin-page.component';
-import { UploadService } from '../shared/services/upload/upload.service';
+import { UploadService } from './services/upload/upload.service';
 
 describe('AdminPageComponent', () => {
   let component: AdminPageComponent;
@@ -20,8 +20,4 @@ describe('AdminPageComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
 });

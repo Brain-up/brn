@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadFileComponent implements OnInit {
-  folders: Observable<Array<string>>;
+  folders$: Observable<Array<string>>;
   uploadFileForm: FormGroup;
   constructor(
     private snackBarService: SnackBarService,
@@ -25,7 +25,7 @@ export class LoadFileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.folders = this.folderService.getFolders();
+    this.folders$ = this.folderService.getFolders();
 
     this.uploadFileForm = new FormGroup({
       files: new FormControl(),

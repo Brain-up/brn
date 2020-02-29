@@ -3,7 +3,7 @@
     <div class="upload-file__form-group">
       <label for="upload-file__form-label">Select Folder</label>
       <select formControlName="folder" class="upload-file__form-control">
-        <option *ngFor="let folder of (folders | async)" [value]="folder">{{folder}}</option>
+        <option *ngFor="let folder of (folders$ | async)" [value]="folder">{{folder}}</option>
       </select>
     </div>
     <div class="upload-file__form-group">

@@ -5,7 +5,7 @@ import {Group, Series} from '../../model/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {switchMap, tap, mergeMap} from 'rxjs/operators';
 import {untilDestroyed} from 'ngx-take-until-destroy';
-import { UploadService as UploadService2 } from '../../services/upload/upload.service';
+import { UploadService  } from '../../services/upload/upload.service';
 import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -29,7 +29,7 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
 
   constructor(private adminAPI: AdminService,
               private fb: FormBuilder,
-              private uploadFileService2: UploadService2,
+              private uploadFileService: UploadService,
               private router: Router,
               private snackBarService: SnackBarService) {
   }
@@ -37,9 +37,9 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('taskFile', this.tasksGroup.get('file').value);
     formData.append('seriesId', this.tasksGroup.get('series').value.id);
-    this.uploadFileService2.sendFormData2('/api/loadTasksFile?seriesId=1', formData).subscribe(returnData => {
+    this.uploadFileService.sendFormData('/api/loadTasksFile?seriesId=1', formData).subscribe(returnData => {
       // TODO: - Check for other type of errors
-      this.snackBarService.showSadSnackbar('Successfully loaded ' + this.tasksGroup.get('file').value.name);
+      this.snackBarService.showHappySnackbar('Successfully loaded ' + this.tasksGroup.get('file').value.name);
       this.router.navigateByUrl('/home');
     }, (error: HttpErrorResponse) => {
       const errorObj = error.error as LoadTasksReturnData;
