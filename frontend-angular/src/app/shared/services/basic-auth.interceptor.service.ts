@@ -18,7 +18,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
       'https://s3.us-south.cloud-object-storage.appdomain.cloud/cloud-object-storage-gg-cos-standard-koy'
     ];
     if (unAuthenticatedUrls.indexOf(req.url) < 0) {
-      headers = req.headers.set('Authorization', 'Basic YWRtaW46YWRtaW4=');
+      headers = req.headers.set('Authorization', 'Basic YWRtaW5AYWRtaW4uY29tOmFkbWlu');
     }
 
     const authRequest = req.clone({

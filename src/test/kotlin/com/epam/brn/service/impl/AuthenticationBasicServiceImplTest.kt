@@ -89,9 +89,9 @@ internal class AuthenticationBasicServiceImplTest {
     @Test
     fun `should create BasicHeader with Base64`() {
         // GIVEN
-        val email = "testUser"
-        val password = "testPassword"
-        val basicHeader = "dGVzdFVzZXI6dGVzdFBhc3N3b3Jk"
+        val email = "admin@admin.com"
+        val password = "admin"
+        val basicHeader = "YWRtaW5AYWRtaW4uY29tOmFkbWlu"
         // WHEN
         val actualResult = authenticationBasicServiceImpl.getBasicHeader(email, password)
         // THEN
