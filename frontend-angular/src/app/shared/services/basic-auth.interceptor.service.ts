@@ -12,7 +12,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const authRequest = req.clone({
-      headers: req.headers.set('Authorization', 'Basic YWRtaW46YWRtaW4=')
+      headers: req.headers.set('Authorization', 'Basic YWRtaW5AYWRtaW4uY29tOmFkbWlu')
     });
     return next.handle(authRequest);
   }

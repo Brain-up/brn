@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 export default DS.RESTAdapter.extend({
   headers: computed(function() {
     return {
-      Authorization: 'Basic YWRtaW46YWRtaW4=',
+      Authorization: 'Basic YWRtaW5AYWRtaW4uY29tOmFkbWlu',
     };
   }),
   namespace: 'api',
