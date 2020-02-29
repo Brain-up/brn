@@ -1,10 +1,15 @@
 package com.epam.brn.service.impl
 
+import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.util.Base64
 import com.epam.brn.config.AwsConfig
 import com.epam.brn.service.CloudService
+import com.fasterxml.jackson.core.util.DefaultIndenter
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
+import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,16 +19,43 @@ import org.springframework.stereotype.Service
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudService {
-
-    private final val mapperIndented = ObjectMapper()
+    private final val mapperIndented: ObjectWriter
     init {
-        mapperIndented.enable(SerializationFeature.INDENT_OUTPUT)
+        val indenter = DefaultIndenter().withLinefeed("\r\n")
+        val printer = DefaultPrettyPrinter().withObjectIndenter(indenter)
+        val objectMapper = ObjectMapper()
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT)
+        mapperIndented = objectMapper.writer(printer)
     }
 
-    override fun listBucket(): String = awsConfig.bucketLink
+    override fun bucketUrl(): String = awsConfig.bucketLink
 
-    override fun signatureForClientDirectUpload(fileName: String?): Map<String, Any> {
-        val conditions = awsConfig.Conditions()
+    override fun uploadForm(filePath: String): Map<String, Any> {
+        val conditions = awsConfig.getConditions(filePath)
+        return signature(conditions)
+    }
+
+    override fun listBucket(): List<String> {
+        val amazonS3 = awsConfig.amazonS3
+        val folders: ArrayList<String> = ArrayList()
+
+        var continuationToken: String? = null
+        while (true) {
+            val listObjectsV2Request = ListObjectsV2Request()
+            listObjectsV2Request.bucketName = awsConfig.bucketName
+            listObjectsV2Request.continuationToken = continuationToken
+            val result = amazonS3.listObjectsV2(listObjectsV2Request)
+            val matchingKeys = result.objectSummaries.stream().map { it.key }.filter { it.endsWith("/") }
+            matchingKeys.forEach { folders.add(it) }
+            if (!result.isTruncated)
+                break
+            continuationToken = result.nextContinuationToken
+        }
+
+        return folders
+    }
+
+    private fun signature(conditions: AwsConfig.Conditions): Map<String, Serializable> {
         val policy: String = policy(conditions)
         val signature = sign(conditions.date, policy)
 
@@ -51,7 +83,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         for (condition in listOf(
             conditions.bucket,
             conditions.acl,
-            conditions.uploadKeyStartsWith,
+            conditions.uploadKey,
             conditions.uuid,
             conditions.serverSideEncryption,
             conditions.credential,
@@ -62,7 +94,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
             conditions.metaTagStartsWith
         )) {
             if (condition.second.isNotEmpty()) {
-                if (condition in arrayOf(conditions.uploadKeyStartsWith, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
+                if (condition in arrayOf(conditions.uploadKey, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
                     includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))
                 else
                     includedFields.add(hashMapOf(condition))
@@ -75,10 +107,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         return toJsonBase64(policy)
     }
 
-    private fun toJsonBase64(rawObject: Any): String {
-        val json = mapperIndented.writeValueAsString(rawObject)
-        return base64Encoded(json.toByteArray())
-    }
+    fun toJsonBase64(rawObject: Any) = base64Encoded(mapperIndented.writeValueAsBytes(rawObject))
+    private fun base64Encoded(bytes: ByteArray): String = Base64.encodeAsString(*bytes)
 
     private fun sign(date: String, policy: String): String {
         val signature = getSignatureKey(awsConfig.secretAccessKey, date, awsConfig.region, awsConfig.serviceName)
@@ -93,8 +123,6 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         val kService = hmacSHA256(serviceName, kRegion)
         return hmacSHA256("aws4_request", kService)
     }
-
-    private fun base64Encoded(bytes: ByteArray): String = Base64.encodeAsString(*bytes)
 
     private fun hmacSHA256(data: String, key: ByteArray): ByteArray {
         val mac = Mac.getInstance("HmacSHA256")

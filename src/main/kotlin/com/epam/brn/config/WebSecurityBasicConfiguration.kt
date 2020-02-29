@@ -2,6 +2,7 @@ package com.epam.brn.config
 
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.constant.BrnPath.CLOUD
+import com.epam.brn.constant.BrnPath.FOLDERS
 import com.epam.brn.constant.BrnPath.UPLOAD
 import com.epam.brn.constant.BrnRoles.ADMIN
 import com.epam.brn.constant.BrnRoles.USER
@@ -42,6 +43,7 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/users/current").hasAnyRole(ADMIN, USER)
             .antMatchers("/users/**").hasRole(ADMIN)
             .antMatchers("$CLOUD$UPLOAD").hasRole(ADMIN)
+            .antMatchers("$CLOUD$FOLDERS").hasRole(ADMIN)
             .antMatchers("/**").hasAnyRole(ADMIN, USER)
             .and().formLogin()
             .and().httpBasic()
