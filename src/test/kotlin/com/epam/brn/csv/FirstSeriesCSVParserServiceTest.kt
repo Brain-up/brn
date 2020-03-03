@@ -1,34 +1,29 @@
 package com.epam.brn.csv
 
 import com.epam.brn.csv.converter.Converter
+import com.epam.brn.csv.converter.impl.firstSeries.ExerciseCsvConverter
+import com.epam.brn.csv.converter.impl.firstSeries.GroupCsvConverter
+import com.epam.brn.csv.converter.impl.firstSeries.SeriesCsvConverter
+import com.epam.brn.csv.converter.impl.firstSeries.TaskCsv1SeriesConverter
 import com.epam.brn.csv.dto.ExerciseCsv
 import com.epam.brn.csv.dto.GroupCsv
 import com.epam.brn.csv.dto.SeriesCsv
 import com.epam.brn.csv.dto.TaskCsv
-import com.epam.brn.csv.firstSeries.TaskCSVParser1SeriesService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedGroupCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
+import com.fasterxml.jackson.databind.MappingIterator
+import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
-private inline fun <reified T> makeIdentityConverter(): Converter<T, T> =
+private inline fun <reified T> makeIdentityConverter(noinline iteratorProvider: (InputStream) -> MappingIterator<T>): Converter<T, T> =
     object : Converter<T, T> {
         override fun convert(source: T) = source
+        override fun iteratorProvider(): (file: InputStream) -> MappingIterator<T> = iteratorProvider
     }
 
 val csvMappintIteratorParser = CsvMappingIteratorParser()
-
-val taskCSVParserService = TaskCSVParser1SeriesService()
-
-val commaSeparatedExerciseCSVParserService = CommaSeparatedExerciseCSVParserService()
-
-val commaSeparatedExerciseGroupCSVParserService = CommaSeparatedGroupCSVParserService()
-
-val commaSeparatedSeriesCSVParserService = CommaSeparatedSeriesCSVParserService()
 
 class FirstSeriesCSVParserServiceTest : Spek({
     describe("Csv Parser Service") {
@@ -41,7 +36,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<TaskCsv>(), taskCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter(TaskCsv1SeriesConverter().iteratorProvider()))
             }.map { res -> res.value.first }.toList()
 
             result shouldContain TaskCsv(
@@ -64,7 +59,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<ExerciseCsv>(), commaSeparatedExerciseCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<ExerciseCsv>(ExerciseCsvConverter().iteratorProvider()))
             }.map { res -> res.value.first }.toList()
 
             val name = "Однослоговые слова без шума"
@@ -82,7 +77,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<GroupCsv>(), commaSeparatedExerciseGroupCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<GroupCsv>(GroupCsvConverter().iteratorProvider()))
             }.map { res -> res.value.first }.toList()
 
             result shouldContain GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения")
@@ -98,7 +93,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<SeriesCsv>(), commaSeparatedSeriesCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<SeriesCsv>(SeriesCsvConverter().iteratorProvider()))
             }.map { res -> res.value.first }.toList()
 
             result shouldContain SeriesCsv(2, 1, "Распознование слов", "Распознование слов")

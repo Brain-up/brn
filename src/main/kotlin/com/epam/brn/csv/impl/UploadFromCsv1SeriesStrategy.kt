@@ -3,7 +3,6 @@ package com.epam.brn.csv.impl
 import com.epam.brn.csv.CsvMappingIteratorParser
 import com.epam.brn.csv.UploadFromCsvStrategy
 import com.epam.brn.csv.converter.impl.firstSeries.TaskCsv1SeriesConverter
-import com.epam.brn.csv.firstSeries.TaskCSVParser1SeriesService
 import com.epam.brn.model.Task
 import com.epam.brn.service.SeriesService
 import com.epam.brn.service.TaskService
@@ -16,13 +15,12 @@ class UploadFromCsv1SeriesStrategy(
     private val csvMappingIteratorParser: CsvMappingIteratorParser,
     private val taskService: TaskService,
     private val taskCsv1SeriesConverter: TaskCsv1SeriesConverter,
-    private val seriesService: SeriesService,
-    private val taskCSVParser1SeriesService: TaskCSVParser1SeriesService
+    private val seriesService: SeriesService
 ) : UploadFromCsvStrategy {
     private val log = logger()
 
     override fun uploadFile(inputStream: InputStream): Map<String, String> {
-        val tasks = csvMappingIteratorParser.parseCsvFile(inputStream, taskCsv1SeriesConverter, taskCSVParser1SeriesService)
+        val tasks = csvMappingIteratorParser.parseCsvFile(inputStream, taskCsv1SeriesConverter)
         tasks.forEach { task -> setExerciseSeries(task.value.first) }
         return saveTasks(tasks)
     }

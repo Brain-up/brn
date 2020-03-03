@@ -5,21 +5,15 @@ import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.csv.CsvMappingIteratorParser
+import com.epam.brn.csv.converter.Converter
 import com.epam.brn.csv.converter.impl.firstSeries.ExerciseCsvConverter
 import com.epam.brn.csv.converter.impl.firstSeries.GroupCsvConverter
 import com.epam.brn.csv.converter.impl.firstSeries.SeriesCsvConverter
 import com.epam.brn.csv.converter.impl.firstSeries.TaskCsv1SeriesConverter
 import com.epam.brn.csv.converter.impl.secondSeries.Exercise2SeriesConverter
-import com.epam.brn.csv.firstSeries.TaskCSVParser1SeriesService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedGroupCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
-import com.epam.brn.csv.secondSeries.CSVParser2SeriesService
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
-import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -87,21 +81,6 @@ class InitialDataLoader(
 
     @Autowired
     lateinit var resourceService: ResourceService
-
-    @Autowired
-    lateinit var commaSeparatedExerciseCSVParserService: CommaSeparatedExerciseCSVParserService
-
-    @Autowired
-    lateinit var commaSeparatedSeriesCSVParserService: CommaSeparatedSeriesCSVParserService
-
-    @Autowired
-    lateinit var commaSeparatedGroupCSVParserService: CommaSeparatedGroupCSVParserService
-
-    @Autowired
-    lateinit var CSVParser2SeriesService: CSVParser2SeriesService
-
-    @Autowired
-    lateinit var taskCSVParser1SeriesService: TaskCSVParser1SeriesService
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
@@ -180,78 +159,34 @@ class InitialDataLoader(
         loadInitialDataToDb(sources)
     }
 
+    fun <CsvType, EntityType> parseEntities(inputStream: InputStream, converter: Converter<CsvType, EntityType>): List<EntityType?> {
+        return this@InitialDataLoader.csvMappingIteratorParser.parseCsvFile(
+            inputStream,
+            converter
+        )
+            .map(Map.Entry<String, Pair<EntityType?, String?>>::value)
+            .map(Pair<EntityType?, String?>::first)
+            .toList()
+    }
+
     private fun loadInitialDataToDb(sources: Map<String, InputStream>) {
-        loadExerciseGroups(sources.getValue(GROUPS))
-        loadSeries(sources.getValue(SERIES))
-        loadExercises(sources.getValue(EXERCISES))
-        loadTasksFor1Series(sources.getValue(fileNameForSeries(1)))
-        loadTasksFor2Series(sources.getValue(fileNameForSeries(2)))
+        val parsedEntities = parseEntities(sources.getValue(GROUPS), groupCsvConverter)
+        exerciseGroupRepository.saveAll(parsedEntities.sortedBy { it?.id })
+
+        val seriesEntities = parseEntities(sources.getValue(SERIES), seriesCsvConverter)
+        seriesRepository.saveAll(seriesEntities.sortedBy { it?.id })
+
+        var exerciseEntities = parseEntities(sources.getValue(EXERCISES), exerciseCsvConverter)
+        exerciseRepository.saveAll(exerciseEntities.sortedBy { it?.id })
+
+        var series1 = parseEntities(sources.getValue(fileNameForSeries(1)), taskCsv1SeriesConverter)
+        taskRepository.saveAll(series1.sortedBy { it!!.exercise!!.id })
+
+        var series2 = parseEntities(sources.getValue(fileNameForSeries(2)), exercise2SeriesConverter)
+        exerciseRepository.saveAll(series2.sortedBy { it!!.level })
+
         loadTasksFor3Series(sources.getValue(fileNameForSeries(3)))
         log.debug("Initialization succeeded")
-    }
-
-    private fun loadExerciseGroups(groupsInputStream: InputStream) {
-        val groups = csvMappingIteratorParser.parseCsvFile(
-            groupsInputStream,
-            groupCsvConverter,
-            commaSeparatedGroupCSVParserService
-        )
-            .map(Map.Entry<String, Pair<ExerciseGroup?, String?>>::value)
-            .map(Pair<ExerciseGroup?, String?>::first)
-            .sortedBy { it!!.id }
-            .toList()
-        exerciseGroupRepository.saveAll(groups)
-    }
-
-    private fun loadSeries(seriesInputStream: InputStream) {
-        val series = csvMappingIteratorParser.parseCsvFile(
-            seriesInputStream,
-            seriesCsvConverter,
-            commaSeparatedSeriesCSVParserService
-        )
-            .map(Map.Entry<String, Pair<Series?, String?>>::value)
-            .map(Pair<Series?, String?>::first)
-            .sortedBy { it!!.id }
-            .toList()
-        seriesRepository.saveAll(series)
-    }
-
-    private fun loadExercises(exercisesInputStream: InputStream) {
-        val exercises = csvMappingIteratorParser.parseCsvFile(
-            exercisesInputStream,
-            exerciseCsvConverter,
-            commaSeparatedExerciseCSVParserService
-        )
-            .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
-            .map(Pair<Exercise?, String?>::first)
-            .sortedBy { it!!.id }
-            .toList()
-        exerciseRepository.saveAll(exercises)
-    }
-
-    private fun loadTasksFor1Series(tasksInputStream: InputStream) {
-        val tasks = csvMappingIteratorParser.parseCsvFile(
-            tasksInputStream,
-            taskCsv1SeriesConverter,
-            taskCSVParser1SeriesService)
-            .map(Map.Entry<String, Pair<Task?, String?>>::value)
-            .map(Pair<Task?, String?>::first)
-            .sortedBy { it!!.exercise!!.id }
-            .toList()
-        taskRepository.saveAll(tasks)
-    }
-
-    private fun loadTasksFor2Series(tasksInputStream: InputStream) {
-        val exercises = csvMappingIteratorParser.parseCsvFile(
-            tasksInputStream,
-            exercise2SeriesConverter,
-            CSVParser2SeriesService
-        )
-            .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
-            .map(Pair<Exercise?, String?>::first)
-            .sortedBy { it!!.level }
-            .toList()
-        exerciseRepository.saveAll(exercises)
     }
 
     // todo: get data from file for 3 series

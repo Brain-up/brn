@@ -16,23 +16,20 @@ class CsvMappingIteratorParser {
 
     val log = logger()
 
-    final inline fun <reified Source, reified Target> parseCsvFile(file: InputStream, converter: Converter<Source, Target>, csvParser: CsvParser<Source>): Map<String, Pair<Target?, String?>> {
+    final fun <Source, Target> parseCsvFile(file: InputStream, converter: Converter<Source, Target>): Map<String, Pair<Target?, String?>> {
         ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-            return parseCsvFile(it, converter, csvParser)
+            return parseCsvFile(it, converter)
         }
     }
 
-    final inline fun <reified Source, reified Target> parseCsvFile(
+    final fun <Source, Target> parseCsvFile(
         file: ByteArrayInputStream,
-        converter: Converter<Source, Target>,
-        csvParser: CsvParser<Source>
+        converter: Converter<Source, Target>
     ): Map<String, Pair<Target?, String?>> {
         val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
-
+        val mappingIterator = converter.iteratorProvider().invoke(file)
         val parsedValues = hashMapOf<String, Source>()
         val sourceToTarget = hashMapOf<String, Pair<Target?, String?>>()
-
-        val mappingIterator = csvParser.parseCsvFile(file)
 
         while (mappingIterator.hasNextValue()) {
             val lineNumber = mappingIterator.currentLocation.lineNr

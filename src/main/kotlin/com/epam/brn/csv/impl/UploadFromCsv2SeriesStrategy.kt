@@ -3,7 +3,6 @@ package com.epam.brn.csv.impl
 import com.epam.brn.csv.CsvMappingIteratorParser
 import com.epam.brn.csv.UploadFromCsvStrategy
 import com.epam.brn.csv.converter.impl.secondSeries.Exercise2SeriesConverter
-import com.epam.brn.csv.secondSeries.CSVParser2SeriesService
 import com.epam.brn.model.Exercise
 import com.epam.brn.service.ExerciseService
 import java.io.InputStream
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component
 class UploadFromCsv2SeriesStrategy(
     private val csvMappingIteratorParser: CsvMappingIteratorParser,
     private val exercise2SeriesConverter: Exercise2SeriesConverter,
-    private val csvParser2SeriesService: CSVParser2SeriesService,
     private val exerciseService: ExerciseService
 ) :
     UploadFromCsvStrategy {
@@ -24,8 +22,7 @@ class UploadFromCsv2SeriesStrategy(
     override fun uploadFile(inputStream: InputStream): Map<String, String> {
         val exercises = csvMappingIteratorParser.parseCsvFile(
             inputStream,
-            exercise2SeriesConverter,
-            csvParser2SeriesService
+            exercise2SeriesConverter
         )
         return saveExercises(exercises)
     }

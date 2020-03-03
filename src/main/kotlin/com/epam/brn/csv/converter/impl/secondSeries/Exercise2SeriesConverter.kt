@@ -11,6 +11,10 @@ import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
+import com.fasterxml.jackson.databind.MappingIterator
+import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import com.fasterxml.jackson.dataformat.csv.CsvSchema
+import java.io.InputStream
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
@@ -34,6 +38,25 @@ class Exercise2SeriesConverter(
 
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureFileUrl: String
+
+    override fun iteratorProvider(): (InputStream) -> MappingIterator<Map<String, Any>> {
+        val csvMapper = CsvMapper()
+
+        val csvSchema = CsvSchema
+            .emptySchema()
+            .withHeader()
+            .withColumnSeparator(',')
+            .withColumnReordering(true)
+            .withLineSeparator(",")
+            .withArrayElementSeparator(";")
+
+        return { file ->
+            csvMapper
+                .readerFor(Map::class.java)
+                .with(csvSchema)
+                .readValues(file)
+        }
+    }
 
     override fun convert(source: Map<String, Any>): Exercise {
         val target = createOrGetExercise(source)

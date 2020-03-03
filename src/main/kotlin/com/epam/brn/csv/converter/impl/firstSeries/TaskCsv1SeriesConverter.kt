@@ -8,6 +8,9 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
+import com.fasterxml.jackson.databind.MappingIterator
+import com.fasterxml.jackson.dataformat.csv.CsvMapper
+import java.io.InputStream
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
@@ -17,6 +20,22 @@ import org.springframework.stereotype.Component
 
 @Component
 class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
+    override fun iteratorProvider(): (InputStream) -> MappingIterator<TaskCsv> {
+        val csvMapper = CsvMapper()
+
+        val csvSchema = csvMapper
+            .schemaFor(TaskCsv::class.java)
+            .withColumnSeparator(' ')
+            .withLineSeparator(" ")
+            .withColumnReordering(true)
+            .withArrayElementSeparator(",")
+            .withHeader()
+
+        return { file -> csvMapper
+            .readerWithTypedSchemaFor(TaskCsv::class.java)
+            .with(csvSchema)
+            .readValues<TaskCsv>(file) }
+    }
 
     private val log = logger()
 

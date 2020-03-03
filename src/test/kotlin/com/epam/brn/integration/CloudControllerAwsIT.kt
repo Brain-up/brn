@@ -1,11 +1,18 @@
 package com.epam.brn.integration
 
+import com.epam.brn.config.AwsConfig
 import com.epam.brn.constant.BrnPath
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
@@ -21,6 +28,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @Tag("integration-test")
 @TestPropertySource(properties = ["cloud.provider=aws"])
 class CloudControllerAwsIT {
+
+    @TestConfiguration
+    class TestConfig {
+        @Bean
+        fun awsConfig(
+            @Value("\${cloud.expireAfterDuration}") expireAfterDuration: String,
+            @Value("\${aws.accessRuleCanned}") accessRuleCanned: String,
+            @Value("\${aws.credentialsPath}") credentialsPath: String,
+            @Value("\${aws.accessKeyId}") accessKeyIdProperty: String,
+            @Value("\${aws.secretAccessKey}") secretAccessKeyProperty: String,
+            @Value("\${aws.region}") region: String
+        ): AwsConfig {
+            return object : AwsConfig(expireAfterDuration, accessRuleCanned, credentialsPath, accessKeyIdProperty, secretAccessKeyProperty, region) {
+                override fun instant(): OffsetDateTime = Instant.ofEpochMilli(1580384357114).atOffset(ZoneOffset.UTC)
+                override fun uuid(): String = "c49791b2-b27b-4edf-bac8-8734164c20e6"
+            }
+        }
+    }
 
     @Autowired
     lateinit var mockMvc: MockMvc
