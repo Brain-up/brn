@@ -3,7 +3,8 @@ package com.epam.brn.csv.converter.impl.secondSeries
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.constant.mapPositionToWordType
-import com.epam.brn.csv.converter.Converter
+import com.epam.brn.csv.converter.InitialDataUploader
+import com.epam.brn.csv.converter.RestUploader
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -11,10 +12,9 @@ import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
-import com.fasterxml.jackson.databind.MappingIterator
+import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import java.io.InputStream
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
@@ -22,24 +22,47 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class Exercise2SeriesConverter(
+class SeriesTwoUploader(
     private val resourceService: ResourceService,
     private val seriesService: SeriesService,
-    private val exerciseService: ExerciseService
-) : Converter<Map<String, Any>, Exercise> {
+    private val exerciseService: ExerciseService,
+    @Value("\${brn.audio.file.second.series.path}") val audioFileUrl: String,
+    @Value("\${brn.picture.file.default.path}") val pictureFileUrl: String
+) : InitialDataUploader<Map<String, Any>, Exercise>,
+    RestUploader<Map<String, Any>, Exercise> {
+
     private val log = logger()
 
     val EXERCISE_NAME = "exerciseName"
     val LEVEL = "level"
     val WORDS = "words"
 
-    @Value(value = "\${brn.audio.file.second.series.path}")
-    private lateinit var audioFileUrl: String
+    override fun saveEntitiesRestFromMap(entities: Map<String, Pair<Exercise?, String?>>): Map<String, String> {
+        val notSavingExercises = mutableMapOf<String, String>()
 
-    @Value(value = "\${brn.picture.file.default.path}")
-    private lateinit var pictureFileUrl: String
+        entities.forEach {
+            val key = it.key
+            val exercise = it.value.first
+            try {
+                if (exercise != null)
+                    exerciseService.save(exercise)
+                else
+                    it.value.second?.let { errorMessage -> notSavingExercises[key] = errorMessage }
+            } catch (e: Exception) {
+                notSavingExercises[key] = e.localizedMessage
+                log.warn("Failed to insert : $key ", e)
+            }
+            log.debug("Successfully inserted line: $key")
+        }
+        return notSavingExercises
+    }
 
-    override fun iteratorProvider(): (InputStream) -> MappingIterator<Map<String, Any>> {
+    override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Exercise?, String?>>) {
+        val entityList = mapToList(entities).sortedBy { it!!.level }
+        entityList.forEach { exerciseService.save(it!!) }
+    }
+
+    override fun objectReader(): ObjectReader {
         val csvMapper = CsvMapper()
 
         val csvSchema = CsvSchema
@@ -50,12 +73,9 @@ class Exercise2SeriesConverter(
             .withLineSeparator(",")
             .withArrayElementSeparator(";")
 
-        return { file ->
-            csvMapper
+        return csvMapper
                 .readerFor(Map::class.java)
                 .with(csvSchema)
-                .readValues(file)
-        }
     }
 
     override fun convert(source: Map<String, Any>): Exercise {

@@ -1,27 +1,26 @@
 package com.epam.brn.csv
 
-import com.epam.brn.csv.converter.Converter
-import com.epam.brn.csv.converter.impl.firstSeries.ExerciseCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.GroupCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.TaskCsv1SeriesConverter
+import com.epam.brn.csv.converter.impl.firstSeries.ExerciseUploader
+import com.epam.brn.csv.converter.impl.firstSeries.GroupUploader
+import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader
+import com.epam.brn.csv.converter.impl.firstSeries.SeriesUploader
 import com.epam.brn.csv.dto.ExerciseCsv
 import com.epam.brn.csv.dto.GroupCsv
 import com.epam.brn.csv.dto.SeriesCsv
 import com.epam.brn.csv.dto.TaskCsv
-import com.fasterxml.jackson.databind.MappingIterator
-import java.io.InputStream
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.ExerciseGroupsService
+import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.ResourceService
+import com.epam.brn.service.SeriesService
+import com.epam.brn.service.TaskService
 import java.nio.charset.StandardCharsets
-import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
+import org.mockito.Mockito
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-
-private inline fun <reified T> makeIdentityConverter(noinline iteratorProvider: (InputStream) -> MappingIterator<T>): Converter<T, T> =
-    object : Converter<T, T> {
-        override fun convert(source: T) = source
-        override fun iteratorProvider(): (file: InputStream) -> MappingIterator<T> = iteratorProvider
-    }
 
 val csvMappintIteratorParser = CsvMappingIteratorParser()
 
@@ -34,9 +33,13 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 1 name1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
                 2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
                 """.trimIndent()
-
+            val exerciseService = Mockito.mock(ExerciseService::class.java)
+            val seriesService = Mockito.mock(SeriesService::class.java)
+            val taskService = Mockito.mock(TaskService::class.java)
+            val resourceService = Mockito.mock(ResourceService::class.java)
+            fun task1Converter() = SeriesOneUploader(exerciseService, seriesService, taskService, resourceService, "")
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter(TaskCsv1SeriesConverter().iteratorProvider()))
+                csvMappintIteratorParser.parseCsvFile<TaskCsv>(it, task1Converter().objectReader())
             }.map { res -> res.value.first }.toList()
 
             result shouldContain TaskCsv(
@@ -55,17 +58,18 @@ class FirstSeriesCSVParserServiceTest : Spek({
             val input = """
                 exerciseId, seriesId, level, name, description
                 1, 1, 1, Однослоговые слова без шума, Однослоговые слова без шума
-                2, 1, 2, Однослоговые слова без шума, Однослоговые слова без шума                
+                2, 1, 2, Однослоговые слова без шума, Однослоговые слова без шума
                 """.trimIndent()
-
+            var exerciseRepository = Mockito.mock(ExerciseRepository::class.java)
+            var seriesService = Mockito.mock(SeriesService::class.java)
+            fun exerciseCsvConverter() = ExerciseUploader(exerciseRepository, seriesService)
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<ExerciseCsv>(ExerciseCsvConverter().iteratorProvider()))
+                csvMappintIteratorParser.parseCsvFile<ExerciseCsv>(it, exerciseCsvConverter().objectReader())
             }.map { res -> res.value.first }.toList()
 
             val name = "Однослоговые слова без шума"
-            result shouldBeEqualTo listOf(
-                ExerciseCsv(1, 1, 1, name, name), ExerciseCsv(2, 1, 2, name, name)
-            )
+            result shouldContain ExerciseCsv(1, 1, 1, name, name)
+            result shouldContain ExerciseCsv(2, 1, 2, name, name)
         }
 
         it("should parse Groups") {
@@ -73,11 +77,13 @@ class FirstSeriesCSVParserServiceTest : Spek({
             val input = """
                 groupId, name, description
                 1, Неречевые упражнения, Неречевые упражнения
-                2, Речевые упражнения, Речевые упражнения              
+                2, Речевые упражнения, Речевые упражнения
                 """.trimIndent()
 
+            val exerciseGroupRepository = Mockito.mock(ExerciseGroupRepository::class.java)
+            fun groupConverter() = GroupUploader(exerciseGroupRepository)
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<GroupCsv>(GroupCsvConverter().iteratorProvider()))
+                csvMappintIteratorParser.parseCsvFile<GroupCsv>(it, groupConverter().objectReader())
             }.map { res -> res.value.first }.toList()
 
             result shouldContain GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения")
@@ -89,11 +95,14 @@ class FirstSeriesCSVParserServiceTest : Spek({
             val input = """
                 groupId, seriesId, name, description
                 2, 1, Распознование слов, Распознование слов
-                2, 2, Составление предложений, Составление предложений         
+                2, 2, Составление предложений, Составление предложений
                 """.trimIndent()
 
+            val seriesRepository = Mockito.mock(SeriesRepository::class.java)
+            val exerciseGroupsService = Mockito.mock(ExerciseGroupsService::class.java)
+            fun seriesCsvConverter() = SeriesUploader(seriesRepository, exerciseGroupsService)
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<SeriesCsv>(SeriesCsvConverter().iteratorProvider()))
+                csvMappintIteratorParser.parseCsvFile<SeriesCsv>(it, seriesCsvConverter().objectReader())
             }.map { res -> res.value.first }.toList()
 
             result shouldContain SeriesCsv(2, 1, "Распознование слов", "Распознование слов")

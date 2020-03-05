@@ -1,22 +1,26 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
-import com.epam.brn.csv.converter.Converter
+import com.epam.brn.csv.converter.InitialDataUploader
 import com.epam.brn.csv.dto.SeriesCsv
 import com.epam.brn.model.Series
+import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.ExerciseGroupsService
-import com.fasterxml.jackson.databind.MappingIterator
+import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import java.io.InputStream
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class SeriesCsvConverter : Converter<SeriesCsv, Series> {
+class SeriesUploader(
+    private val seriesRepository: SeriesRepository,
+    private val exerciseGroupsService: ExerciseGroupsService
+) : InitialDataUploader<SeriesCsv, Series> {
 
-    @Autowired
-    lateinit var exerciseGroupsService: ExerciseGroupsService
+    override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Series?, String?>>) {
+        val entityList = mapToList(entities).sortedBy { it?.id }
+        seriesRepository.saveAll(entityList)
+    }
 
-    override fun iteratorProvider(): (InputStream) -> MappingIterator<SeriesCsv> {
+    override fun objectReader(): ObjectReader {
         val csvMapper = CsvMapper().apply {
             enable(com.fasterxml.jackson.dataformat.csv.CsvParser.Feature.TRIM_SPACES)
         }
@@ -28,11 +32,9 @@ class SeriesCsvConverter : Converter<SeriesCsv, Series> {
             .withColumnReordering(true)
             .withHeader()
 
-        return { file -> csvMapper
-            .readerWithTypedSchemaFor(SeriesCsv::class.java)
-            .with(csvSchema)
-            .readValues(file)
-        }
+        return csvMapper
+                .readerWithTypedSchemaFor(SeriesCsv::class.java)
+                .with(csvSchema)
     }
 
     override fun convert(source: SeriesCsv): Series {
@@ -41,6 +43,6 @@ class SeriesCsvConverter : Converter<SeriesCsv, Series> {
             description = source.description,
             exerciseGroup = exerciseGroupsService.findGroupById(source.groupId),
             id = source.seriesId
-            )
+        )
     }
 }

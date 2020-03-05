@@ -1,19 +1,28 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
 import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.csv.converter.Converter
+import com.epam.brn.csv.converter.InitialDataUploader
 import com.epam.brn.csv.dto.ExerciseCsv
 import com.epam.brn.model.Exercise
+import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.service.SeriesService
-import com.fasterxml.jackson.databind.MappingIterator
+import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import java.io.InputStream
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class ExerciseCsvConverter : Converter<ExerciseCsv, Exercise> {
-    override fun iteratorProvider(): (InputStream) -> MappingIterator<ExerciseCsv> {
+class ExerciseUploader(
+    private val exerciseRepository: ExerciseRepository,
+    private val seriesService: SeriesService
+) :
+    InitialDataUploader<ExerciseCsv, Exercise> {
+
+    override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Exercise?, String?>>) {
+        val entityList = mapToList(entities).sortedBy { it?.id }
+        exerciseRepository.saveAll(entityList)
+    }
+
+    override fun objectReader(): ObjectReader {
         val csvMapper = CsvMapper().apply {
             enable(com.fasterxml.jackson.dataformat.csv.CsvParser.Feature.TRIM_SPACES)
         }
@@ -25,15 +34,10 @@ class ExerciseCsvConverter : Converter<ExerciseCsv, Exercise> {
             .withColumnReordering(true)
             .withHeader()
 
-        return { file -> csvMapper
-            .readerWithTypedSchemaFor(ExerciseCsv::class.java)
-            .with(csvSchema)
-            .readValues(file)
-        }
+        return csvMapper
+                .readerWithTypedSchemaFor(ExerciseCsv::class.java)
+                .with(csvSchema)
     }
-
-    @Autowired
-    lateinit var seriesService: SeriesService
 
     override fun convert(source: ExerciseCsv): Exercise {
         val target = Exercise()

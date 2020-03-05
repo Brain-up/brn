@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.csv.CsvMappingIteratorParser
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
@@ -33,21 +32,13 @@ class CsvLoadingTestIT {
         fun handBookLoader(
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
-            eriesRepository: SeriesRepository,
-            exerciseRepository: ExerciseRepository,
-            taskRepository: TaskRepository,
             userAccountRepository: UserAccountRepository,
-            csvMappingIteratorParser: CsvMappingIteratorParser,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
-            eriesRepository,
-            exerciseRepository,
-            taskRepository,
             userAccountRepository,
-            csvMappingIteratorParser,
             passwordEncoder,
             authorityService
         )
@@ -74,7 +65,7 @@ class CsvLoadingTestIT {
     @Test
     fun `should load test data from classpath initFiles folder`() {
         exerciseGroupRepository.findAll() shouldHaveSize 2
-        seriesRepository.findAll() shouldHaveSize 3
+        seriesRepository.findAll() shouldHaveSize 4
         exerciseRepository.findAll() shouldHaveSize 13
         taskRepository.findAll() shouldHaveSize 16
         userAccountRepository.findAll() shouldHaveSize 3

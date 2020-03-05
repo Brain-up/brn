@@ -4,22 +4,17 @@ import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.CsvMappingIteratorParser
-import com.epam.brn.csv.converter.Converter
-import com.epam.brn.csv.converter.impl.firstSeries.ExerciseCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.GroupCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.TaskCsv1SeriesConverter
-import com.epam.brn.csv.converter.impl.secondSeries.Exercise2SeriesConverter
+import com.epam.brn.csv.converter.impl.firstSeries.ExerciseUploader
+import com.epam.brn.csv.converter.impl.firstSeries.GroupUploader
+import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader
+import com.epam.brn.csv.converter.impl.firstSeries.SeriesUploader
+import com.epam.brn.csv.converter.impl.secondSeries.SeriesTwoUploader
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import java.io.InputStream
 import java.nio.file.Files
@@ -45,11 +40,7 @@ import org.springframework.stereotype.Service
 class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
-    private val seriesRepository: SeriesRepository,
-    private val exerciseRepository: ExerciseRepository,
-    private val taskRepository: TaskRepository,
     private val userAccountRepository: UserAccountRepository,
-    private val csvMappingIteratorParser: CsvMappingIteratorParser,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService
 ) {
@@ -59,19 +50,19 @@ class InitialDataLoader(
     var folder: Path? = null
 
     @Autowired
-    lateinit var groupCsvConverter: GroupCsvConverter
+    lateinit var groupUploader: GroupUploader
 
     @Autowired
-    lateinit var exerciseCsvConverter: ExerciseCsvConverter
+    lateinit var exerciseUploader: ExerciseUploader
 
     @Autowired
-    lateinit var seriesCsvConverter: SeriesCsvConverter
+    lateinit var seriesUploader: SeriesUploader
 
     @Autowired
-    lateinit var taskCsv1SeriesConverter: TaskCsv1SeriesConverter
+    lateinit var seriesOneUploader: SeriesOneUploader
 
     @Autowired
-    lateinit var exercise2SeriesConverter: Exercise2SeriesConverter
+    lateinit var seriesTwoUploader: SeriesTwoUploader
 
     @Autowired
     lateinit var exerciseService: ExerciseService
@@ -159,31 +150,12 @@ class InitialDataLoader(
         loadInitialDataToDb(sources)
     }
 
-    fun <CsvType, EntityType> parseEntities(inputStream: InputStream, converter: Converter<CsvType, EntityType>): List<EntityType?> {
-        return this@InitialDataLoader.csvMappingIteratorParser.parseCsvFile(
-            inputStream,
-            converter
-        )
-            .map(Map.Entry<String, Pair<EntityType?, String?>>::value)
-            .map(Pair<EntityType?, String?>::first)
-            .toList()
-    }
-
     private fun loadInitialDataToDb(sources: Map<String, InputStream>) {
-        val parsedEntities = parseEntities(sources.getValue(GROUPS), groupCsvConverter)
-        exerciseGroupRepository.saveAll(parsedEntities.sortedBy { it?.id })
-
-        val seriesEntities = parseEntities(sources.getValue(SERIES), seriesCsvConverter)
-        seriesRepository.saveAll(seriesEntities.sortedBy { it?.id })
-
-        var exerciseEntities = parseEntities(sources.getValue(EXERCISES), exerciseCsvConverter)
-        exerciseRepository.saveAll(exerciseEntities.sortedBy { it?.id })
-
-        var series1 = parseEntities(sources.getValue(fileNameForSeries(1)), taskCsv1SeriesConverter)
-        taskRepository.saveAll(series1.sortedBy { it!!.exercise!!.id })
-
-        var series2 = parseEntities(sources.getValue(fileNameForSeries(2)), exercise2SeriesConverter)
-        exerciseRepository.saveAll(series2.sortedBy { it!!.level })
+        groupUploader.saveEntitiesInitial(sources.getValue(GROUPS))
+        seriesUploader.saveEntitiesInitial(sources.getValue(SERIES))
+        exerciseUploader.saveEntitiesInitial(sources.getValue(EXERCISES))
+        seriesOneUploader.saveEntitiesInitial(sources.getValue(fileNameForSeries(1)))
+        seriesTwoUploader.saveEntitiesInitial(sources.getValue(fileNameForSeries(2)))
 
         loadTasksFor3Series(sources.getValue(fileNameForSeries(3)))
         log.debug("Initialization succeeded")

@@ -1,26 +1,46 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.converter.Converter
+import com.epam.brn.csv.converter.InitialDataUploader
+import com.epam.brn.csv.converter.RestUploader
 import com.epam.brn.csv.dto.TaskCsv
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
-import com.fasterxml.jackson.databind.MappingIterator
+import com.epam.brn.service.SeriesService
+import com.epam.brn.service.TaskService
+import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
-import java.io.InputStream
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
-    override fun iteratorProvider(): (InputStream) -> MappingIterator<TaskCsv> {
+class SeriesOneUploader(
+    private val exerciseService: ExerciseService,
+    private val seriesService: SeriesService,
+    private val taskService: TaskService,
+    private val resourceService: ResourceService,
+    @Value("\${brn.audio.file.default.path}") val defaultAudioFileUrl: String
+) : InitialDataUploader<TaskCsv, Task>,
+    RestUploader<TaskCsv, Task> {
+
+    private val log = logger()
+
+    override fun convert(source: TaskCsv): Task {
+        val target = Task()
+        convertSerialNumber(source, target)
+        convertExercise(source, target)
+        convertCorrectAnswer(source, target)
+        convertAnswers(source, target)
+        return target
+    }
+
+    override fun objectReader(): ObjectReader {
         val csvMapper = CsvMapper()
 
         val csvSchema = csvMapper
@@ -31,30 +51,43 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
             .withArrayElementSeparator(",")
             .withHeader()
 
-        return { file -> csvMapper
-            .readerWithTypedSchemaFor(TaskCsv::class.java)
-            .with(csvSchema)
-            .readValues<TaskCsv>(file) }
+        return csvMapper
+                .readerWithTypedSchemaFor(TaskCsv::class.java)
+                .with(csvSchema)
     }
 
-    private val log = logger()
+    override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Task?, String?>>) {
+        val entityList = mapToList(entities).sortedBy { it!!.exercise!!.id }
+        entityList.forEach { taskService.save(it!!) }
+    }
 
-    @Value(value = "\${brn.audio.file.default.path}")
-    private lateinit var defaultAudioFileUrl: String
+    override fun saveEntitiesRestFromMap(entities: Map<String, Pair<Task?, String?>>): Map<String, String> {
+        entities.forEach { task -> setExerciseSeries(task.value.first) }
+        return save(entities)
+    }
 
-    @Autowired
-    lateinit var exerciseService: ExerciseService
+    private fun setExerciseSeries(taskFile: Task?) {
+        taskFile?.exercise?.series = seriesService.findSeriesForId(1)
+    }
 
-    @Autowired
-    lateinit var resourceService: ResourceService
+    private fun save(tasks: Map<String, Pair<Task?, String?>>): Map<String, String> {
+        val notSavingTasks = mutableMapOf<String, String>()
 
-    override fun convert(source: TaskCsv): Task {
-        val target = Task()
-        convertSerialNumber(source, target)
-        convertExercise(source, target)
-        convertCorrectAnswer(source, target)
-        convertAnswers(source, target)
-        return target
+        tasks.forEach {
+            val key = it.key
+            val task = it.value.first
+            try {
+                if (task != null)
+                    taskService.save(task)
+                else
+                    it.value.second?.let { errorMessage -> notSavingTasks[key] = errorMessage }
+            } catch (e: Exception) {
+                notSavingTasks[key] = e.localizedMessage
+                log.warn("Failed to insert : $key ", e)
+            }
+            log.debug("Successfully inserted line: $key")
+        }
+        return notSavingTasks
     }
 
     private fun convertSerialNumber(source: TaskCsv, target: Task) {
@@ -104,7 +137,12 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
             resources.first()
     }
 
-    private fun createAndGetResource(word: String, audioFileName: String, pictureFileName: String, wordType: String): Resource {
+    private fun createAndGetResource(
+        word: String,
+        audioFileName: String,
+        pictureFileName: String,
+        wordType: String
+    ): Resource {
         val resource = Resource()
         resource.word = word
         resource.wordType = WordTypeEnum.valueOf(wordType).toString()
