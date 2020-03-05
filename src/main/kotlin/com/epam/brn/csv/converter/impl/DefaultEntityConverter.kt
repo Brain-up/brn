@@ -14,7 +14,7 @@ import org.apache.logging.log4j.kotlin.logger
 
 open class DefaultEntityConverter<Csv, Entity>(
     val converter: CsvToEntityConverter<Csv, Entity>,
-    val objectReaderProvider: ObjectReaderProvider<Csv>
+    private val objectReaderProvider: ObjectReaderProvider<Csv>
 ) : StreamToEntityConverter<Entity> {
 
     val log = logger()

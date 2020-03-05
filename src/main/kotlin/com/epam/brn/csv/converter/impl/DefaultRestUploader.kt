@@ -8,10 +8,11 @@ import java.io.InputStream
 class DefaultRestUploader<Csv, Entity>(
     converterTemp: CsvToEntityConverter<Csv, Entity>,
     objectReaderProviderTemp: ObjectReaderProvider<Csv>,
-    val restUploader: RestUploader<Entity>
-) : DefaultEntityConverter<Csv, Entity>(converterTemp, objectReaderProviderTemp) {
+    private val restUploader: RestUploader<Entity>
+) {
+    private val defaultEntityConverter = DefaultEntityConverter(converterTemp, objectReaderProviderTemp)
     fun saveEntitiesRest(inputStream: InputStream): Map<String, String> {
-        val entities = this.streamToEntity(inputStream)
+        val entities = defaultEntityConverter.streamToEntity(inputStream)
         return restUploader.saveEntitiesRestFromMap(entities)
     }
 }

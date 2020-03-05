@@ -9,9 +9,10 @@ class DefaultInitialDataUploader<Csv, Entity>(
     converterTemp: CsvToEntityConverter<Csv, Entity>,
     objectReaderProviderTemp: ObjectReaderProvider<Csv>,
     private val initialDataUploader: InitialDataUploader<Entity>
-) : DefaultEntityConverter<Csv, Entity>(converterTemp, objectReaderProviderTemp) {
+) {
+    private val defaultEntityConverter = DefaultEntityConverter(converterTemp, objectReaderProviderTemp)
     fun saveEntitiesInitial(inputStream: InputStream) {
-        val entities = this.streamToEntity(inputStream)
+        val entities = defaultEntityConverter.streamToEntity(inputStream)
         initialDataUploader.saveEntitiesInitialFromMap(entities)
     }
 }
