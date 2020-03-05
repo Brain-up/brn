@@ -42,7 +42,7 @@ class DefaultEntityConverter() : StreamToEntityConverter {
         return entityOrErrors
     }
 
-    fun <Csv> parseCsvFile(
+    private fun <Csv> parseCsvFile(
         file: InputStream,
         objectReaderProvider: ObjectReaderProvider<Csv>
     ): Map<String, Pair<Csv?, String?>> {

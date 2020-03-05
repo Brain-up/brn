@@ -1,15 +1,12 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.BrnInitFiles
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.csv.converter.FileNameToUploader
 import com.epam.brn.csv.converter.impl.DefaultInitialDataUploader
-import com.epam.brn.csv.converter.impl.firstSeries.ExerciseUploader
-import com.epam.brn.csv.converter.impl.firstSeries.GroupUploader
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesUploader
-import com.epam.brn.csv.converter.impl.secondSeries.SeriesTwoUploader
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -52,19 +49,7 @@ class InitialDataLoader(
     var folder: Path? = null
 
     @Autowired
-    lateinit var groupUploader: GroupUploader
-
-    @Autowired
-    lateinit var exerciseUploader: ExerciseUploader
-
-    @Autowired
-    lateinit var seriesUploader: SeriesUploader
-
-    @Autowired
-    lateinit var seriesOneUploader: SeriesOneUploader
-
-    @Autowired
-    lateinit var seriesTwoUploader: SeriesTwoUploader
+    lateinit var fileNameToUploader: FileNameToUploader
 
     @Autowired
     lateinit var exerciseService: ExerciseService
@@ -127,8 +112,8 @@ class InitialDataLoader(
         if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
 
-        val sources = listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
-            .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
+        val sources = BrnInitFiles.values()
+            .map { Pair(it, Files.newInputStream(folder.resolve(it.getFileName()))) }
             .toMap()
 
         try {
@@ -146,24 +131,20 @@ class InitialDataLoader(
 
     private fun loadInitialDataFromClassPath() {
         log.debug("Loading data from classpath initFiles")
-        val sources = listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
-            .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
+        val sources = BrnInitFiles.values()
+            .map { Pair(it, resourceLoader.getResource("classpath:initFiles/${it.getFileName()}").inputStream) }
             .toMap()
         loadInitialDataToDb(sources)
     }
 
-    private fun loadInitialDataToDb(sources: Map<String, InputStream>) {
-        val groupInputUploader = sources.getValue(GROUPS) to groupUploader
-        val seriesInputUploader = sources.getValue(SERIES) to seriesUploader
-        val exerciseInputUploader = sources.getValue(EXERCISES) to exerciseUploader
-        val seriesOneInputUploader = sources.getValue(fileNameForSeries(1)) to seriesOneUploader
-        val seriesTwoInputUploader = sources.getValue(fileNameForSeries(2)) to seriesTwoUploader
-
-        for (inputUploader in arrayOf(groupInputUploader, seriesInputUploader, exerciseInputUploader, seriesOneInputUploader, seriesTwoInputUploader)) {
-            defaultInitialDataUploader.saveEntities(inputUploader.first, inputUploader.second)
+    private fun loadInitialDataToDb(sources: Map<BrnInitFiles, InputStream>) {
+        for (entry in sources) {
+            val uploader = fileNameToUploader.getUploaderFor(entry.key)
+            if (uploader != null)
+                defaultInitialDataUploader.saveEntities(entry.value, uploader)
         }
 
-        loadTasksFor3Series(sources.getValue(fileNameForSeries(3)))
+        loadTasksFor3Series(sources.getValue(BrnInitFiles.SERIES_THREE))
         log.debug("Initialization succeeded")
     }
 
@@ -235,12 +216,5 @@ class InitialDataLoader(
         seriesService.findSeriesWithExercisesForId(3L).exercises.add(exercise3)
 
         exerciseService.save(exercise3)
-    }
-
-    companion object {
-        fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
-        private const val SERIES = "series.csv"
-        private const val GROUPS = "groups.csv"
-        private const val EXERCISES = "exercises.csv"
     }
 }

@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.constant.BrnInitFiles
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
@@ -50,7 +51,7 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
     }
 
     fun getSeriesUploadFileFormat(seriesId: Long): String {
-        val seriesFileName = InitialDataLoader.fileNameForSeries(seriesId = seriesId)
+        val seriesFileName = BrnInitFiles.getFileNameForSeriesId(seriesId)
         return try {
             val resourceAsStream =
                 Thread.currentThread().contextClassLoader.getResourceAsStream("initFiles/$seriesFileName")
