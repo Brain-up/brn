@@ -4,18 +4,17 @@ import com.epam.brn.csv.converter.Uploader
 import java.io.InputStream
 import org.apache.logging.log4j.kotlin.logger
 
-class DefaultRestUploader<Csv, Entity>(
-    private val uploader: Uploader<Csv, Entity>
-) {
+class DefaultRestUploader() {
     private val log = logger()
 
-    private val defaultEntityConverter = DefaultEntityConverter(uploader, uploader)
-    fun saveEntities(inputStream: InputStream): Map<String, String> {
-        val entities = defaultEntityConverter.streamToEntity(inputStream)
-        return save(entities)
+    private val defaultEntityConverter = DefaultEntityConverter()
+
+    fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>): Map<String, String> {
+        val entities = defaultEntityConverter.streamToEntity(inputStream, uploader, uploader)
+        return save(entities, uploader)
     }
 
-    private fun save(entities: Map<String, Pair<Entity?, String?>>): Map<String, String> {
+    private fun <Entity> save(entities: Map<String, Pair<Entity?, String?>>, uploader: Uploader<*, Entity>): Map<String, String> {
         val notSavingEntities = mutableMapOf<String, String>()
 
         entities.forEach {

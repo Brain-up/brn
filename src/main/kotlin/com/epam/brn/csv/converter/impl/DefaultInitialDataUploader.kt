@@ -3,16 +3,15 @@ package com.epam.brn.csv.converter.impl
 import com.epam.brn.csv.converter.Uploader
 import java.io.InputStream
 
-class DefaultInitialDataUploader<Csv, Entity>(
-    private val uploader: Uploader<Csv, Entity>
-) {
-    private val defaultEntityConverter = DefaultEntityConverter(uploader, uploader)
-    fun saveEntities(inputStream: InputStream) {
-        val entities = defaultEntityConverter.streamToEntity(inputStream)
+class DefaultInitialDataUploader() {
+    private val entityConverter = DefaultEntityConverter()
+
+    fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>) {
+        val entities = entityConverter.streamToEntity(inputStream, uploader, uploader)
         val sorted = mapToList(entities, uploader.entityComparator())
         sorted.forEach { uploader.persistEntity(it!!) }
     }
-    fun mapToList(entities: Map<String, Pair<Entity?, String?>>, comparator: (Entity) -> Int): Iterable<Entity> {
+    fun <Entity> mapToList(entities: Map<String, Pair<Entity?, String?>>, comparator: (Entity) -> Int): Iterable<Entity> {
         val unsorted = entities.map(Map.Entry<String, Pair<Entity?, String?>>::value)
             .map(Pair<Entity?, String?>::first)
             .map { entity -> entity!! }

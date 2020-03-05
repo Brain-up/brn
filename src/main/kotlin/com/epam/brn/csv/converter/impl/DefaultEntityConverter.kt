@@ -12,16 +12,18 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.logging.log4j.kotlin.logger
 
-open class DefaultEntityConverter<Csv, Entity>(
-    val converter: CsvToEntityConverter<Csv, Entity>,
-    private val objectReaderProvider: ObjectReaderProvider<Csv>
-) : StreamToEntityConverter<Entity> {
+open class DefaultEntityConverter() : StreamToEntityConverter {
 
     val log = logger()
 
-    override fun streamToEntity(inputStream: InputStream): Map<String, Pair<Entity?, String?>> {
-        val csvMap = parseCsvFile<Csv>(
-            inputStream
+    override fun <Csv, Entity> streamToEntity(
+        inputStream: InputStream,
+        converter: CsvToEntityConverter<Csv, Entity>,
+        objectReaderProvider: ObjectReaderProvider<Csv>
+    ): Map<String, Pair<Entity?, String?>> {
+        val csvMap = parseCsvFile(
+            inputStream,
+            objectReaderProvider
         )
         val entityOrErrors = HashMap<String, Pair<Entity?, String?>>()
         for (csvEntry in csvMap) {
@@ -38,14 +40,18 @@ open class DefaultEntityConverter<Csv, Entity>(
         return entityOrErrors
     }
 
-    fun <Csv> parseCsvFile(file: InputStream): Map<String, Pair<Csv?, String?>> {
+    fun <Csv> parseCsvFile(
+        file: InputStream,
+        objectReaderProvider: ObjectReaderProvider<Csv>
+    ): Map<String, Pair<Csv?, String?>> {
         ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-            return parseCsvFile(it)
+            return parseCsvFile(it, objectReaderProvider)
         }
     }
 
     fun <Csv> parseCsvFile(
-        file: ByteArrayInputStream
+        file: ByteArrayInputStream,
+        objectReaderProvider: ObjectReaderProvider<Csv>
     ): Map<String, Pair<Csv?, String?>> {
         val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
         val mappingIterator = objectReaderProvider.objectReader().readValues<Csv>(file)

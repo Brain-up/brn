@@ -2,6 +2,6 @@ package com.epam.brn.csv.converter
 
 import java.io.InputStream
 
-interface StreamToEntityConverter<Entity> {
-    fun streamToEntity(inputStream: InputStream): Map<String, Pair<Entity?, String?>>
+interface StreamToEntityConverter {
+    fun <Csv, Entity> streamToEntity(inputStream: InputStream, converter: CsvToEntityConverter<Csv, Entity>, objectReaderProvider: ObjectReaderProvider<Csv>): Map<String, Pair<Entity?, String?>>
 }

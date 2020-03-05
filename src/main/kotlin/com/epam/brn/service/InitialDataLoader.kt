@@ -4,7 +4,6 @@ import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.converter.Uploader
 import com.epam.brn.csv.converter.impl.DefaultInitialDataUploader
 import com.epam.brn.csv.converter.impl.firstSeries.ExerciseUploader
 import com.epam.brn.csv.converter.impl.firstSeries.GroupUploader
@@ -153,27 +152,18 @@ class InitialDataLoader(
     }
 
     private fun loadInitialDataToDb(sources: Map<String, InputStream>) {
-        val groupInitialDataUploader = getInitialDataUploader(groupUploader)
-        groupInitialDataUploader.saveEntities(sources.getValue(GROUPS))
-
-        val seriesInitialDataUploader = getInitialDataUploader(seriesUploader)
-        seriesInitialDataUploader.saveEntities(sources.getValue(SERIES))
-
-        val exercisesInitialDataUploader = getInitialDataUploader(exerciseUploader)
-        exercisesInitialDataUploader.saveEntities(sources.getValue(EXERCISES))
-
-        val seriesOneInitialDataUploader = getInitialDataUploader(seriesOneUploader)
-        seriesOneInitialDataUploader.saveEntities(sources.getValue(fileNameForSeries(1)))
-
-        val seriesTwoInitialDataUploader = getInitialDataUploader(seriesTwoUploader)
-        seriesTwoInitialDataUploader.saveEntities(sources.getValue(fileNameForSeries(2)))
+        val groupInputUploader = sources.getValue(GROUPS) to groupUploader
+        val seriesInputUploader = sources.getValue(SERIES) to seriesUploader
+        val exerciseInputUploader = sources.getValue(EXERCISES) to exerciseUploader
+        val seriesOneInputUploader = sources.getValue(fileNameForSeries(1)) to seriesOneUploader
+        val seriesTwoInputUploader = sources.getValue(fileNameForSeries(2)) to seriesTwoUploader
+        val defaultInitialDataUploader = DefaultInitialDataUploader()
+        for (inputUploader in arrayOf(groupInputUploader, seriesInputUploader, exerciseInputUploader, seriesOneInputUploader, seriesTwoInputUploader)) {
+            defaultInitialDataUploader.saveEntities(inputUploader.first, inputUploader.second)
+        }
 
         loadTasksFor3Series(sources.getValue(fileNameForSeries(3)))
         log.debug("Initialization succeeded")
-    }
-
-    private fun <Csv, Entity> getInitialDataUploader(uploader: Uploader<Csv, Entity>): DefaultInitialDataUploader<Csv, Entity> {
-        return DefaultInitialDataUploader(uploader)
     }
 
     // todo: get data from file for 3 series
