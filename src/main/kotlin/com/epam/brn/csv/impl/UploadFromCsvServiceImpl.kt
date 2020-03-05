@@ -15,25 +15,24 @@ import org.springframework.web.multipart.MultipartFile
 @Component
 class UploadFromCsvServiceImpl(
     val seriesOneUploader: SeriesOneUploader,
-    val seriesTwoUploader: SeriesTwoUploader
+    val seriesTwoUploader: SeriesTwoUploader,
+    val defaultRestUploader: DefaultRestUploader
 ) : UploadFromCsvService {
-
-    private final val defaultRestUploaderSeries = DefaultRestUploader()
 
     @Throws(FileFormatException::class)
     override fun loadTaskFile(file: MultipartFile, seriesId: Long): Map<String, String> {
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException(CSV_FILE_FORMAT_ERROR)
         return when (seriesId.toInt()) {
-            1 -> defaultRestUploaderSeries.saveEntities(file.inputStream, seriesOneUploader)
-            2 -> defaultRestUploaderSeries.saveEntities(file.inputStream, seriesTwoUploader)
+            1 -> defaultRestUploader.saveEntities(file.inputStream, seriesOneUploader)
+            2 -> defaultRestUploader.saveEntities(file.inputStream, seriesTwoUploader)
             else -> throw IllegalArgumentException("There no one strategy yet for seriesId = $seriesId")
         }
     }
 
     @Throws(FileFormatException::class)
     override fun loadTaskFile(file: File): Map<String, String>? =
-        defaultRestUploaderSeries.saveEntities(file.inputStream(), seriesOneUploader)
+        defaultRestUploader.saveEntities(file.inputStream(), seriesOneUploader)
 
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
 }

@@ -3,11 +3,11 @@ package com.epam.brn.csv.converter.impl
 import com.epam.brn.csv.converter.Uploader
 import java.io.InputStream
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.stereotype.Service
 
-class DefaultRestUploader() {
+@Service
+class DefaultRestUploader(val defaultEntityConverter: DefaultEntityConverter) {
     private val log = logger()
-
-    private val defaultEntityConverter = DefaultEntityConverter()
 
     fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>): Map<String, String> {
         val entities = defaultEntityConverter.streamToEntity(inputStream, uploader, uploader)

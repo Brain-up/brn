@@ -43,7 +43,8 @@ class InitialDataLoader(
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val userAccountRepository: UserAccountRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val authorityService: AuthorityService
+    private val authorityService: AuthorityService,
+    private val defaultInitialDataUploader: DefaultInitialDataUploader
 ) {
     private val log = logger()
 
@@ -157,7 +158,7 @@ class InitialDataLoader(
         val exerciseInputUploader = sources.getValue(EXERCISES) to exerciseUploader
         val seriesOneInputUploader = sources.getValue(fileNameForSeries(1)) to seriesOneUploader
         val seriesTwoInputUploader = sources.getValue(fileNameForSeries(2)) to seriesTwoUploader
-        val defaultInitialDataUploader = DefaultInitialDataUploader()
+
         for (inputUploader in arrayOf(groupInputUploader, seriesInputUploader, exerciseInputUploader, seriesOneInputUploader, seriesTwoInputUploader)) {
             defaultInitialDataUploader.saveEntities(inputUploader.first, inputUploader.second)
         }

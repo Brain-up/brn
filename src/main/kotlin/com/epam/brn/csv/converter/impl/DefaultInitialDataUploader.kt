@@ -2,12 +2,13 @@ package com.epam.brn.csv.converter.impl
 
 import com.epam.brn.csv.converter.Uploader
 import java.io.InputStream
+import org.springframework.stereotype.Service
 
-class DefaultInitialDataUploader() {
-    private val entityConverter = DefaultEntityConverter()
+@Service
+class DefaultInitialDataUploader(val defaultEntityConverter: DefaultEntityConverter) {
 
     fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>) {
-        val entities = entityConverter.streamToEntity(inputStream, uploader, uploader)
+        val entities = defaultEntityConverter.streamToEntity(inputStream, uploader, uploader)
         val sorted = mapToList(entities, uploader.entityComparator())
         sorted.forEach { uploader.persistEntity(it!!) }
     }
