@@ -4,8 +4,8 @@ import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.converter.impl.DefaultInitialDataUploader
 import com.epam.brn.csv.converter.Uploader
+import com.epam.brn.csv.converter.impl.DefaultInitialDataUploader
 import com.epam.brn.csv.converter.impl.firstSeries.ExerciseUploader
 import com.epam.brn.csv.converter.impl.firstSeries.GroupUploader
 import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader

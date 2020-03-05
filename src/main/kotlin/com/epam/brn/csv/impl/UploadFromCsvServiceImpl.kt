@@ -2,8 +2,8 @@ package com.epam.brn.csv.impl
 
 import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.csv.UploadFromCsvService
-import com.epam.brn.csv.converter.impl.DefaultRestUploader
 import com.epam.brn.csv.converter.Uploader
+import com.epam.brn.csv.converter.impl.DefaultRestUploader
 import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader
 import com.epam.brn.csv.converter.impl.secondSeries.SeriesTwoUploader
 import com.epam.brn.csv.dto.TaskCsv
