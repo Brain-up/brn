@@ -1,7 +1,9 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
 import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.csv.converter.CsvToEntityConverter
 import com.epam.brn.csv.converter.InitialDataUploader
+import com.epam.brn.csv.converter.ObjectReaderProvider
 import com.epam.brn.csv.converter.RestUploader
 import com.epam.brn.csv.dto.TaskCsv
 import com.epam.brn.exception.EntityNotFoundException
@@ -26,8 +28,7 @@ class SeriesOneUploader(
     private val taskService: TaskService,
     private val resourceService: ResourceService,
     @Value("\${brn.audio.file.default.path}") val defaultAudioFileUrl: String
-) : InitialDataUploader<TaskCsv, Task>,
-    RestUploader<TaskCsv, Task> {
+) : InitialDataUploader<Task>, RestUploader<Task>, CsvToEntityConverter<TaskCsv, Task>, ObjectReaderProvider<TaskCsv> {
 
     private val log = logger()
 

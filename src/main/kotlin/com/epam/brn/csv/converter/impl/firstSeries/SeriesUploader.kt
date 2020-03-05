@@ -1,6 +1,8 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
+import com.epam.brn.csv.converter.CsvToEntityConverter
 import com.epam.brn.csv.converter.InitialDataUploader
+import com.epam.brn.csv.converter.ObjectReaderProvider
 import com.epam.brn.csv.dto.SeriesCsv
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component
 class SeriesUploader(
     private val seriesRepository: SeriesRepository,
     private val exerciseGroupsService: ExerciseGroupsService
-) : InitialDataUploader<SeriesCsv, Series> {
+) : InitialDataUploader<Series>, CsvToEntityConverter<SeriesCsv, Series>, ObjectReaderProvider<SeriesCsv> {
 
     override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Series?, String?>>) {
         val entityList = mapToList(entities).sortedBy { it?.id }

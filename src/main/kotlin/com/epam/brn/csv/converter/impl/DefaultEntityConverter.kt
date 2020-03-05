@@ -1,6 +1,8 @@
-package com.epam.brn.csv
+package com.epam.brn.csv.converter.impl
 
-import com.fasterxml.jackson.databind.ObjectReader
+import com.epam.brn.csv.converter.CsvToEntityConverter
+import com.epam.brn.csv.converter.ObjectReaderProvider
+import com.epam.brn.csv.converter.StreamToEntityConverter
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -10,22 +12,43 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.logging.log4j.kotlin.logger
 
-class CsvMappingIteratorParser {
+open class DefaultEntityConverter<Csv, Entity>(
+    val converter: CsvToEntityConverter<Csv, Entity>,
+    val objectReaderProvider: ObjectReaderProvider<Csv>
+) : StreamToEntityConverter<Entity> {
 
     val log = logger()
 
-    fun <Csv> parseCsvFile(file: InputStream, objectReader: ObjectReader): Map<String, Pair<Csv?, String?>> {
+    override fun streamToEntity(inputStream: InputStream): Map<String, Pair<Entity?, String?>> {
+        val csvMap = parseCsvFile<Csv>(
+            inputStream
+        )
+        val entityOrErrors = HashMap<String, Pair<Entity?, String?>>()
+        for (csvEntry in csvMap) {
+            var entityOrError: Pair<Entity?, String?>
+            val csv = csvEntry.value.first
+            val error = csvEntry.value.second
+            if (csv != null) {
+                entityOrError = Pair(converter.convert(csv), null)
+            } else {
+                entityOrError = Pair(null, error)
+            }
+            entityOrErrors.put(csvEntry.key, entityOrError)
+        }
+        return entityOrErrors
+    }
+
+    fun <Csv> parseCsvFile(file: InputStream): Map<String, Pair<Csv?, String?>> {
         ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-            return parseCsvFile(it, objectReader)
+            return parseCsvFile(it)
         }
     }
 
     fun <Csv> parseCsvFile(
-        file: ByteArrayInputStream,
-        objectReader: ObjectReader
+        file: ByteArrayInputStream
     ): Map<String, Pair<Csv?, String?>> {
         val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
-        val mappingIterator = objectReader.readValues<Csv>(file)
+        val mappingIterator = objectReaderProvider.objectReader().readValues<Csv>(file)
         val parsedValues = hashMapOf<String, Pair<Csv?, String?>>()
 
         while (mappingIterator.hasNextValue()) {

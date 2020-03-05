@@ -1,7 +1,9 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
 import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.csv.converter.CsvToEntityConverter
 import com.epam.brn.csv.converter.InitialDataUploader
+import com.epam.brn.csv.converter.ObjectReaderProvider
 import com.epam.brn.csv.dto.ExerciseCsv
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
@@ -15,7 +17,7 @@ class ExerciseUploader(
     private val exerciseRepository: ExerciseRepository,
     private val seriesService: SeriesService
 ) :
-    InitialDataUploader<ExerciseCsv, Exercise> {
+    InitialDataUploader<Exercise>, CsvToEntityConverter<ExerciseCsv, Exercise>, ObjectReaderProvider<ExerciseCsv> {
 
     override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Exercise?, String?>>) {
         val entityList = mapToList(entities).sortedBy { it?.id }

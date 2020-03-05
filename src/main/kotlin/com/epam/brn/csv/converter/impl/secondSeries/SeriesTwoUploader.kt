@@ -3,7 +3,9 @@ package com.epam.brn.csv.converter.impl.secondSeries
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.constant.mapPositionToWordType
+import com.epam.brn.csv.converter.CsvToEntityConverter
 import com.epam.brn.csv.converter.InitialDataUploader
+import com.epam.brn.csv.converter.ObjectReaderProvider
 import com.epam.brn.csv.converter.RestUploader
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -28,8 +30,7 @@ class SeriesTwoUploader(
     private val exerciseService: ExerciseService,
     @Value("\${brn.audio.file.second.series.path}") val audioFileUrl: String,
     @Value("\${brn.picture.file.default.path}") val pictureFileUrl: String
-) : InitialDataUploader<Map<String, Any>, Exercise>,
-    RestUploader<Map<String, Any>, Exercise> {
+) : InitialDataUploader<Exercise>, RestUploader<Exercise>, CsvToEntityConverter<Map<String, Any>, Exercise>, ObjectReaderProvider<Map<String, Any>> {
 
     private val log = logger()
 
