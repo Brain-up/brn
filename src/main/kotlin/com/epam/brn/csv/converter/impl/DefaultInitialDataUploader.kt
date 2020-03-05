@@ -1,18 +1,22 @@
 package com.epam.brn.csv.converter.impl
 
-import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.InitialDataUploader
-import com.epam.brn.csv.converter.ObjectReaderProvider
+import com.epam.brn.csv.converter.Uploader
 import java.io.InputStream
 
 class DefaultInitialDataUploader<Csv, Entity>(
-    converterTemp: CsvToEntityConverter<Csv, Entity>,
-    objectReaderProviderTemp: ObjectReaderProvider<Csv>,
-    private val initialDataUploader: InitialDataUploader<Entity>
+    private val uploader: Uploader<Csv, Entity>
 ) {
-    private val defaultEntityConverter = DefaultEntityConverter(converterTemp, objectReaderProviderTemp)
-    fun saveEntitiesInitial(inputStream: InputStream) {
+    private val defaultEntityConverter = DefaultEntityConverter(uploader, uploader)
+    fun saveEntities(inputStream: InputStream) {
         val entities = defaultEntityConverter.streamToEntity(inputStream)
-        initialDataUploader.saveEntitiesInitialFromMap(entities)
+        val sorted = mapToList(entities, uploader.entityComparator())
+        sorted.forEach { uploader.persistEntity(it!!) }
+    }
+    fun mapToList(entities: Map<String, Pair<Entity?, String?>>, comparator: (Entity) -> Int): Iterable<Entity> {
+        val unsorted = entities.map(Map.Entry<String, Pair<Entity?, String?>>::value)
+            .map(Pair<Entity?, String?>::first)
+            .map { entity -> entity!! }
+            .toMutableList()
+        return unsorted.sortedBy { comparator.invoke(it) }
     }
 }

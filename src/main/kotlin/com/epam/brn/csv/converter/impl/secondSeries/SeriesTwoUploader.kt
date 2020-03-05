@@ -3,10 +3,7 @@ package com.epam.brn.csv.converter.impl.secondSeries
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.constant.mapPositionToWordType
-import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.InitialDataUploader
-import com.epam.brn.csv.converter.ObjectReaderProvider
-import com.epam.brn.csv.converter.RestUploader
+import com.epam.brn.csv.converter.Uploader
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -30,7 +27,7 @@ class SeriesTwoUploader(
     private val exerciseService: ExerciseService,
     @Value("\${brn.audio.file.second.series.path}") val audioFileUrl: String,
     @Value("\${brn.picture.file.default.path}") val pictureFileUrl: String
-) : InitialDataUploader<Exercise>, RestUploader<Exercise>, CsvToEntityConverter<Map<String, Any>, Exercise>, ObjectReaderProvider<Map<String, Any>> {
+) : Uploader<Map<String, Any>, Exercise> {
 
     private val log = logger()
 
@@ -38,29 +35,12 @@ class SeriesTwoUploader(
     val LEVEL = "level"
     val WORDS = "words"
 
-    override fun saveEntitiesRestFromMap(entities: Map<String, Pair<Exercise?, String?>>): Map<String, String> {
-        val notSavingExercises = mutableMapOf<String, String>()
-
-        entities.forEach {
-            val key = it.key
-            val exercise = it.value.first
-            try {
-                if (exercise != null)
-                    exerciseService.save(exercise)
-                else
-                    it.value.second?.let { errorMessage -> notSavingExercises[key] = errorMessage }
-            } catch (e: Exception) {
-                notSavingExercises[key] = e.localizedMessage
-                log.warn("Failed to insert : $key ", e)
-            }
-            log.debug("Successfully inserted line: $key")
-        }
-        return notSavingExercises
+    override fun persistEntity(entity: Exercise) {
+        exerciseService.save(entity)
     }
 
-    override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Exercise?, String?>>) {
-        val entityList = mapToList(entities).sortedBy { it!!.level }
-        entityList.forEach { exerciseService.save(it!!) }
+    override fun entityComparator(): (Exercise) -> Int {
+        return { it.level!! }
     }
 
     override fun objectReader(): ObjectReader {

@@ -1,8 +1,6 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
-import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.InitialDataUploader
-import com.epam.brn.csv.converter.ObjectReaderProvider
+import com.epam.brn.csv.converter.Uploader
 import com.epam.brn.csv.dto.GroupCsv
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -13,11 +11,14 @@ import org.springframework.stereotype.Component
 @Component
 class GroupUploader(
     private val exerciseGroupRepository: ExerciseGroupRepository
-) : InitialDataUploader<ExerciseGroup>, CsvToEntityConverter<GroupCsv, ExerciseGroup>, ObjectReaderProvider<GroupCsv> {
+) : Uploader<GroupCsv, ExerciseGroup> {
 
-    override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<ExerciseGroup?, String?>>) {
-        val entityList = mapToList(entities).sortedBy { it?.id }
-        exerciseGroupRepository.saveAll(entityList)
+    override fun persistEntity(entity: ExerciseGroup) {
+        exerciseGroupRepository.save(entity)
+    }
+
+    override fun entityComparator(): (ExerciseGroup) -> Int {
+        return { it.id?.toInt()!! }
     }
 
     override fun objectReader(): ObjectReader {

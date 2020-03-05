@@ -1,10 +1,7 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.InitialDataUploader
-import com.epam.brn.csv.converter.ObjectReaderProvider
-import com.epam.brn.csv.converter.RestUploader
+import com.epam.brn.csv.converter.Uploader
 import com.epam.brn.csv.dto.TaskCsv
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
@@ -28,7 +25,7 @@ class SeriesOneUploader(
     private val taskService: TaskService,
     private val resourceService: ResourceService,
     @Value("\${brn.audio.file.default.path}") val defaultAudioFileUrl: String
-) : InitialDataUploader<Task>, RestUploader<Task>, CsvToEntityConverter<TaskCsv, Task>, ObjectReaderProvider<TaskCsv> {
+) : Uploader<TaskCsv, Task> {
 
     private val log = logger()
 
@@ -38,6 +35,7 @@ class SeriesOneUploader(
         convertExercise(source, target)
         convertCorrectAnswer(source, target)
         convertAnswers(source, target)
+        setExerciseSeries(target)
         return target
     }
 
@@ -57,38 +55,16 @@ class SeriesOneUploader(
                 .with(csvSchema)
     }
 
-    override fun saveEntitiesInitialFromMap(entities: Map<String, Pair<Task?, String?>>) {
-        val entityList = mapToList(entities).sortedBy { it!!.exercise!!.id }
-        entityList.forEach { taskService.save(it!!) }
+    override fun entityComparator(): (Task) -> Int {
+        return { it -> it.exercise?.id?.toInt()!! }
     }
 
-    override fun saveEntitiesRestFromMap(entities: Map<String, Pair<Task?, String?>>): Map<String, String> {
-        entities.forEach { task -> setExerciseSeries(task.value.first) }
-        return save(entities)
+    override fun persistEntity(entity: Task) {
+        taskService.save(entity)
     }
 
     private fun setExerciseSeries(taskFile: Task?) {
         taskFile?.exercise?.series = seriesService.findSeriesForId(1)
-    }
-
-    private fun save(tasks: Map<String, Pair<Task?, String?>>): Map<String, String> {
-        val notSavingTasks = mutableMapOf<String, String>()
-
-        tasks.forEach {
-            val key = it.key
-            val task = it.value.first
-            try {
-                if (task != null)
-                    taskService.save(task)
-                else
-                    it.value.second?.let { errorMessage -> notSavingTasks[key] = errorMessage }
-            } catch (e: Exception) {
-                notSavingTasks[key] = e.localizedMessage
-                log.warn("Failed to insert : $key ", e)
-            }
-            log.debug("Successfully inserted line: $key")
-        }
-        return notSavingTasks
     }
 
     private fun convertSerialNumber(source: TaskCsv, target: Task) {
