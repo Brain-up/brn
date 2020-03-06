@@ -60,9 +60,7 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     this.tasksGroup.controls.series.valueChanges.pipe(
       switchMap((val: SeriesModel) => val ? this.formatService.getFormat(val.id) : EMPTY),
       pluck('data')
-    ).subscribe(
-      val=> this.format = val
-    )
+    ).subscribe(val => this.format = val);
     this.tasksGroup.controls.group.statusChanges.pipe(
       switchMap(status => iif(() => status === 'VALID',
         of('').pipe(tap(_ => this.tasksGroup.controls.series.enable())),
@@ -71,8 +69,5 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       ),
       untilDestroyed(this)
     ).subscribe();
-  }
-  onSeriesSelect(event) {
-    console.log(event)
   }
 }

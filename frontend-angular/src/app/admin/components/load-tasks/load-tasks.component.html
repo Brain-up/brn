@@ -1,7 +1,7 @@
 <form class="upload-tasks-content" [formGroup]="tasksGroup" (ngSubmit)="onSubmit()">
   <mat-form-field>
     <mat-label>Group</mat-label>
-    <mat-select formControlName="group" required (change)="onSeriesSelect($event)">
+    <mat-select formControlName="group" required>
       <mat-option *ngFor="let group of groups$ | async" [value]="group">
         {{group.name}}
       </mat-option>
