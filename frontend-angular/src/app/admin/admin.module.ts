@@ -16,6 +16,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FolderService } from './services/folders/folder.service';
 import { UploadService } from './services/upload/upload.service';
+import { FormatService } from './services/format/format.service';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { UploadService } from './services/upload/upload.service';
   ],
   providers: [
     FolderService,
+    FormatService,
     UploadService
   ]
 })

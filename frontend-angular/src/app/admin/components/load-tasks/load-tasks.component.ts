@@ -1,20 +1,18 @@
 import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
 import {AdminService} from '../../services/admin.service';
-import {iif, Observable, of} from 'rxjs';
+import {iif, Observable, of, EMPTY} from 'rxjs';
 import {Group, Series} from '../../model/model';
+import { SeriesModel } from '../../model/series.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {switchMap, tap, mergeMap} from 'rxjs/operators';
+import {switchMap, tap, pluck} from 'rxjs/operators';
 import {untilDestroyed} from 'ngx-take-until-destroy';
 import { UploadService  } from '../../services/upload/upload.service';
 import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { FormatService } from '../../services/format/format.service';
+import { LoadTasksReturnData } from '../../model/load-tasks-return-data.model';
 
-interface LoadTasksReturnData {
-  data: Array<any>;
-  errors: Array<string>;
-  meta: Array<any>;
-}
 @Component({
   selector: 'app-load-tasks',
   templateUrl: './load-tasks.component.html',
@@ -22,7 +20,7 @@ interface LoadTasksReturnData {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadTasksComponent implements OnInit, OnDestroy {
-  format$: Observable<string>;
+  format: string;
   groups$: Observable<Group[]>;
   tasksGroup: FormGroup;
   series$: Observable<Series[]>;
@@ -31,7 +29,8 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
               private fb: FormBuilder,
               private uploadFileService: UploadService,
               private router: Router,
-              private snackBarService: SnackBarService) {
+              private snackBarService: SnackBarService,
+              private formatService: FormatService) {
   }
   onSubmit() {
     const formData = new FormData();
@@ -58,7 +57,12 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     this.series$ = this.tasksGroup.controls.group.valueChanges.pipe(
       switchMap(({id}) => this.adminAPI.getSeriesByGroupId(id)),
     );
-    this.tasksGroup.controls.series.valueChanges.subscribe();
+    this.tasksGroup.controls.series.valueChanges.pipe(
+      switchMap((val: SeriesModel) => val ? this.formatService.getFormat(val.id) : EMPTY),
+      pluck('data')
+    ).subscribe(
+      val=> this.format = val
+    )
     this.tasksGroup.controls.group.statusChanges.pipe(
       switchMap(status => iif(() => status === 'VALID',
         of('').pipe(tap(_ => this.tasksGroup.controls.series.enable())),
@@ -67,5 +71,8 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       ),
       untilDestroyed(this)
     ).subscribe();
+  }
+  onSeriesSelect(event) {
+    console.log(event)
   }
 }

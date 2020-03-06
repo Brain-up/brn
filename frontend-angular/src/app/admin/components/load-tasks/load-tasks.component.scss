@@ -3,4 +3,23 @@
   flex-flow: column;
   width: 400px;
   margin: 20px auto;
+  &__format {
+    margin-top: 30px;
+    margin-left: 30px;
+    
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__submit-btn {
+    padding: 10px 20px;
+    background-color: transparent;
+  }
+  &__format-container {
+    margin-top: 30p;
+    border: 1px solid #d8d8d8;
+    padding: 20px;
+    color: #666;
+  }
 }
