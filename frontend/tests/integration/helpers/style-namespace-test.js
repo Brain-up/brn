@@ -10,7 +10,7 @@ module('Integration | Helper | style-namespace', function(hooks) {
   test('it renders', async function(assert) {
     this.set('inputValue', 'task-player');
 
-    await render(hbs`{{style-namespace inputValue}}`);
+    await render(hbs`{{style-namespace this.inputValue}}`);
 
     assert.dom().includesText('task-player');
   });

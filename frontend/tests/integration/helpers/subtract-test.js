@@ -10,7 +10,7 @@ module('Integration | Helper | subtract', function(hooks) {
     this.set('minuend', 10);
     this.set('subtrahend', 2);
 
-    await render(hbs`{{subtract minuend subtrahend}}`);
+    await render(hbs`{{subtract this.minuend this.subtrahend}}`);
 
     assert.equal(this.element.textContent.trim(), '8');
   });
