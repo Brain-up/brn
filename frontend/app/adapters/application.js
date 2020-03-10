@@ -1,12 +1,16 @@
 import DS from 'ember-data';
-import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default DS.RESTAdapter.extend({
-  headers: computed(function() {
+  session: service('session'),
+  get headers() {
+    if (!this.session.isAuthenticated) {
+      return {};
+    }
     return {
-      Authorization: 'Basic YWRtaW5AYWRtaW4uY29tOmFkbWlu',
+      Authorization: `Basic ${this.session.data.authenticated.access_token}`,
     };
-  }),
+  },
   namespace: 'api',
   coalesceFindRequests: false,
   shouldReloadRecord: () => false,
