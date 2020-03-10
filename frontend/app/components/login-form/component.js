@@ -30,7 +30,11 @@ export default class LoginFormComponent extends Component {
       try {
         yield this.session.authenticate('authenticator:oauth2', login, password);
       } catch(error) {
-		this.errorMessage =  error.error || error;
+		if (error.responseJSON) {
+			this.errorMessage = error.responseJSON.errors.pop();
+		} else {
+			this.errorMessage =  error.error || error;
+		}
       }
 
       if (this.session.isAuthenticated) {

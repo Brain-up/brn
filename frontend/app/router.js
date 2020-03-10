@@ -17,4 +17,5 @@ Router.map(function() {
   });
   this.route('not-accessable');
   this.route('login');
+  this.route('registration');
 });
