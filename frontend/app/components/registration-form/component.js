@@ -1,5 +1,4 @@
 import LoginFormComponent from './../login-form/component';
-import fetch from 'fetch';
 import { action } from '@ember/object';
 import { task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
