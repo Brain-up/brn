@@ -1,16 +1,10 @@
 <div class="w-full max-w-xs mx-auto">
   <form class="bg-white rounded px-8 pt-6 pb-8 mb-4" {{on 'submit' this.onSubmit}}>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-        Логин
-      </label>
-      <Input name="username" autocomplete="username" @value={{this.login}} class="{{if this.usernameError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" required="true" />
+      <LoginForm::Input @label="Логин" @model={{this}} @name="login" />
     </div>
     <div class="mb-6">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-        Пароль
-      </label>
-      <Input name="password" autocomplete="current-password" @value={{this.password}} class="{{if this.passwordError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" required="true" />
+      <LoginForm::Input @label="Пароль" @model={{this}} @name="password" @type="password" />
       {{#if (or this.usernameError this.passwordError)}}
 				<p class="text-red-500 text-xs italic" data-test-form-warning>Пожалуйста, введите логин и пароль.</p>
 			{{/if}}

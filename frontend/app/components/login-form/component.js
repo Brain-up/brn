@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
+
 export default class LoginFormComponent extends Component {
 	@service('session') session;
 	@service('router') router;

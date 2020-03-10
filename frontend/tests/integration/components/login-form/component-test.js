@@ -15,7 +15,7 @@ module('Integration | Component | login-form', function(hooks) {
 
     assert.dom('form').exists();
     assert.dom('[data-test-submit-form]').hasTagName('button');
-    assert.dom('[name="username"]').hasAttribute('required');
+    assert.dom('[name="login"]').hasAttribute('required');
     assert.dom('[name="password"]').hasAttribute('required');
     assert.dom('[data-test-form-warning]').doesNotExist();
     
@@ -28,19 +28,19 @@ module('Integration | Component | login-form', function(hooks) {
     await render(hbs`<LoginForm />`);
     assert.dom('[data-test-form-warning]').doesNotExist();
     
-    await fillIn('[name="username"]', 'a');
+    await fillIn('[name="login"]', 'a');
     await fillIn('[name="password"]', 'b');
     assert.dom('[data-test-form-warning]').doesNotExist();
 
-    await fillIn('[name="username"]', '');
+    await fillIn('[name="login"]', '');
     await fillIn('[name="password"]', 'b');
     assert.dom('[data-test-form-warning]').exists();
 
-    await fillIn('[name="username"]', 'a');
+    await fillIn('[name="login"]', 'a');
     await fillIn('[name="password"]', '');
     assert.dom('[data-test-form-warning]').exists();
 
-    await fillIn('[name="username"]', '');
+    await fillIn('[name="login"]', '');
     await fillIn('[name="password"]', '');
     assert.dom('[data-test-form-warning]').exists();
     
@@ -60,7 +60,7 @@ module('Integration | Component | login-form', function(hooks) {
 
     await render(hbs`<LoginForm />`);
     
-    await fillIn('[name="username"]', 'a');
+    await fillIn('[name="login"]', 'a');
     await fillIn('[name="password"]', 'b');
     await click('[data-test-submit-form]');
   })

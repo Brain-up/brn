@@ -1,43 +1,54 @@
 <div class="w-full max-w-xs mx-auto">
-  <form class="bg-white rounded px-8 pt-6 pb-8 mb-4" {{on 'submit' this.onSubmit}}>
+  <form
+    class="bg-white rounded px-8 pt-6 pb-8 mb-4"
+    {{on "submit" this.onSubmit}}
+  >
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="firstName">
-        Имя
-      </label>
-      <Input name="firstName" autocomplete="firstName" @value={{this.firstName}} class="{{if this.usernameError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="firstName" type="text" placeholder="First Name" required="true" />
+      <LoginForm::Input @label="Имя" @model={{this}} @name="firstName" />
     </div>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="lastName">
-        Фамилия
-      </label>
-      <Input name="lastName" autocomplete="lastName" @value={{this.lastName}} class="{{if this.usernameError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="lastName" type="text" placeholder="Last Name" required="true" />
+      <LoginForm::Input @label="Фамилия" @model={{this}} @name="lastName" />
     </div>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="birthday">
-        Дата рождения
-      </label>
-      <Input name="birthday" autocomplete="birthday" @value={{this.birthday}} class="{{if this.usernameError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="birthday" type="date" required="true" />
+      <LoginForm::Input
+        @label="Дата рождения"
+        @model={{this}}
+        @name="birthday"
+        @type="date"
+      />
     </div>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-        Email
-      </label>
-      <Input name="email" type="email" placeholder="email" @value={{this.email}} class="{{if this.usernameError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" required="true" />
+      <LoginForm::Input
+        @label="Почта"
+        @model={{this}}
+        @name="email"
+        @type="email"
+      />
     </div>
     <div class="mb-6">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-        Пароль
-      </label>
-      <Input name="password" autocomplete="current-password" @value={{this.password}} class="{{if this.passwordError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" required="true" />
+      <LoginForm::Input
+        @label="Пароль"
+        @model={{this}}
+        @name="password"
+        @type="password"
+      />
       {{#if (or this.usernameError this.passwordError)}}
-				<p class="text-red-500 text-xs italic" data-test-form-warning>Пожалуйста, введите логин и пароль.</p>
-			{{/if}}
+        <p class="text-red-500 text-xs italic" data-test-form-warning>
+          Пожалуйста, введите логин и пароль.
+        </p>
+      {{/if}}
       {{#if this.errorMessage}}
-        <p class="text-red-500 text-xs italic" data-test-form-warning>{{this.errorMessage}}</p>
+        <p class="text-red-500 text-xs italic" data-test-form-warning>
+          {{this.errorMessage}}
+        </p>
       {{/if}}
     </div>
     <div class="flex items-center justify-between">
-      <button data-test-submit-form class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+      <button
+        data-test-submit-form
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        type="submit"
+      >
         Регистрация
       </button>
     </div>

@@ -3,19 +3,18 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | registration-form', function(hooks) {
+module('Integration | Component | login-form/input', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<RegistrationForm />`);
+    this.set('model', {});
+    this.set('name', 'foo');
+    await render(hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @model={{this.model}} @name={{this.name}} @type="text" @label="Foo" />`);
 
-    assert.dom('form').exists();
-    assert.dom('[data-test-submit-form]').hasTagName('button');
-    assert.dom('[name="lastName"]').hasAttribute('required');
-    assert.dom('[name="firstName"]').hasAttribute('required');
-    assert.dom('[data-test-form-warning]').doesNotExist();
+    assert.dom('input').exists();
+    assert.dom('label').exists();
   });
 });
