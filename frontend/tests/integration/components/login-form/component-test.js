@@ -64,4 +64,55 @@ module('Integration | Component | login-form', function(hooks) {
     await fillIn('[name="password"]', 'b');
     await click('[data-test-submit-form]');
   })
+
+  test('incorrect login has feedback #1', async function(assert) {
+    class MockSession extends Service {
+      authenticate() {
+        return Promise.reject({
+          responseJSON: {
+            errors: ['foo']
+          }
+        })
+      }
+    }
+    this.owner.register('service:session', MockSession);
+    await render(hbs`<LoginForm />`);
+    
+    await fillIn('[name="login"]', 'a');
+    await fillIn('[name="password"]', 'b');
+    await click('[data-test-submit-form]');
+    assert.dom('[data-test-form-error]').hasText('foo');
+  })
+
+  test('incorrect login has feedback #2', async function(assert) {
+    class MockSession extends Service {
+      authenticate() {
+        return Promise.reject({
+          error: 'boo'
+        })
+      }
+    }
+    this.owner.register('service:session', MockSession);
+    await render(hbs`<LoginForm />`);
+    
+    await fillIn('[name="login"]', 'a');
+    await fillIn('[name="password"]', 'b');
+    await click('[data-test-submit-form]');
+    assert.dom('[data-test-form-error]').hasText('boo');
+  })
+
+  test('incorrect login has feedback #2', async function(assert) {
+    class MockSession extends Service {
+      authenticate() {
+        return Promise.reject('zoo')
+      }
+    }
+    this.owner.register('service:session', MockSession);
+    await render(hbs`<LoginForm />`);
+    
+    await fillIn('[name="login"]', 'a');
+    await fillIn('[name="password"]', 'b');
+    await click('[data-test-submit-form]');
+    assert.dom('[data-test-form-error]').hasText('zoo');
+  })
 });
