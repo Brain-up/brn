@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import OAuth2PasswordGrant from 'ember-simple-auth/authenticators/oauth2-password-grant';
 import RSVP from 'rsvp';
 import { inject as service } from '@ember/service';
