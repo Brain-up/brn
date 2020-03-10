@@ -5,6 +5,7 @@ import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 export default class LoginFormComponent extends Component {
 	@service('session') session;
+	@service('router') router;
 
 	@tracked login = undefined;
 	@tracked password = undefined;
@@ -29,10 +30,11 @@ export default class LoginFormComponent extends Component {
       try {
         yield this.session.authenticate('authenticator:oauth2', login, password);
       } catch(error) {
-				this.errorMessage =  error.error || error;
+		this.errorMessage =  error.error || error;
       }
 
       if (this.session.isAuthenticated) {
+		this.router.transitionTo('index');
         // What to do with all this success?
       }
   }).drop()) loginTask;
