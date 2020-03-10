@@ -1,21 +1,13 @@
 import OAuth2PasswordGrant from 'ember-simple-auth/authenticators/oauth2-password-grant';
-import fetch from 'fetch';
 import RSVP from 'rsvp';
+import { inject as service } from '@ember/service';
 
 export default OAuth2PasswordGrant.extend({
-	serverTokenEndpoint: 'api/brnlogin',
-	makeRequest(url, data, headers = {}) {
-
-		headers['Content-Type'] = 'application/json';
-
-		const options = {
-		  body: JSON.stringify(data),
-		  headers,
-		  method: 'POST'
-		};
-	
+	network: service('network'),
+	serverTokenEndpoint: 'brnlogin',
+	makeRequest(url, data) {
 		return new RSVP.Promise((resolve, reject) => {
-		  fetch(url, options).then((response) => {
+		  this.network.postRequest(url, data).then((response) => {
 			response.text().then((text) => {
 			  try {
 				let json = JSON.parse(text);
