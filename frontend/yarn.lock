@@ -2592,6 +2592,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
+base-64@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
+  integrity sha1-eAqZyE59YAJgNhURxId2E78k9rs=
+
 base64-arraybuffer@0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-0.1.5.tgz#73926771923b5a19747ad666aa5cd4bf9c6e9ce8"
@@ -2911,7 +2916,7 @@ broccoli-file-creator@^1.1.1:
     broccoli-plugin "^1.1.0"
     mkdirp "^0.5.1"
 
-broccoli-file-creator@^2.1.1:
+broccoli-file-creator@^2.0.0, broccoli-file-creator@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/broccoli-file-creator/-/broccoli-file-creator-2.1.1.tgz#7351dd2496c762cfce7736ce9b49e3fce0c7b7db"
   integrity sha512-YpjOExWr92C5vhnK0kmD81kM7U09kdIRZk9w4ZDCDHuHXW+VE/x6AGEOQQW3loBQQ6Jk+k+TSm8dESy4uZsnjw==
@@ -2978,7 +2983,7 @@ broccoli-funnel@^1.0.1, broccoli-funnel@^1.1.0:
     symlink-or-copy "^1.0.0"
     walk-sync "^0.3.1"
 
-broccoli-funnel@^2.0.0, broccoli-funnel@^2.0.1, broccoli-funnel@^2.0.2:
+"broccoli-funnel@^1.2.0 || ^2.0.0", broccoli-funnel@^2.0.0, broccoli-funnel@^2.0.1, broccoli-funnel@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/broccoli-funnel/-/broccoli-funnel-2.0.2.tgz#0edf629569bc10bd02cc525f74b9a38e71366a75"
   integrity sha512-/vDTqtv7ipjEZQOVqO4vGDVAOZyuYzQ/EgGoyewfOgh1M7IQAToBKZI0oAQPgMBeFPPlIbfMuAngk+ohPBuaHQ==
@@ -3064,7 +3069,7 @@ broccoli-merge-trees@^2.0.0:
     broccoli-plugin "^1.3.0"
     merge-trees "^1.0.1"
 
-broccoli-merge-trees@^3.0.0, broccoli-merge-trees@^3.0.1, broccoli-merge-trees@^3.0.2:
+"broccoli-merge-trees@^2.0.0 || ^3.0.0", broccoli-merge-trees@^3.0.0, broccoli-merge-trees@^3.0.1, broccoli-merge-trees@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/broccoli-merge-trees/-/broccoli-merge-trees-3.0.2.tgz#f33b451994225522b5c9bcf27d59decfd8ba537d"
   integrity sha512-ZyPAwrOdlCddduFbsMyyFzJUrvW6b04pMvDiAQZrCwghlvgowJDY+EfoXn+eR1RRA5nmGHJ+B68T63VnpRiT1A==
@@ -3689,12 +3694,7 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30001017:
-  version "1.0.30001020"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001020.tgz#3f04c1737500ffda78be9beb0b5c1e2070e15926"
-  integrity sha512-yWIvwA68wRHKanAVS1GjN8vajAv7MBFshullKCeq/eKpK7pJBVDgFFEqvgWTkcP2+wIDeQGYFRXECjKZnLkUjA==
-
-caniuse-lite@^1.0.30001020:
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30001017, caniuse-lite@^1.0.30001020:
   version "1.0.30001027"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001027.tgz#283e2ef17d94889cc216a22c6f85303d78ca852d"
   integrity sha512-7xvKeErvXZFtUItTHgNtLgS9RJpVnwBlWX8jSo/BO8VsF6deszemZSkJJJA1KOKrXuzZH4WALpAJdq5EyfgMLg==
@@ -4298,6 +4298,13 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+cross-env@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-7.0.2.tgz#bd5ed31339a93a3418ac4f3ca9ca3403082ae5f9"
+  integrity sha512-KZP/bMEOJEDCkDQAyRhu3RL2ZO/SUVrxQVI0G3YEQ+OLbRA3c6zgixe8Mq8a/z7+HKlNEjo8oiLUs8iRijY2Rw==
+  dependencies:
+    cross-spawn "^7.0.1"
+
 cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
@@ -4309,7 +4316,7 @@ cross-spawn@^6.0.0, cross-spawn@^6.0.5:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-cross-spawn@^7.0.0:
+cross-spawn@^7.0.0, cross-spawn@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.1.tgz#0ab56286e0f7c24e153d04cc2aa027e43a9a5d14"
   integrity sha512-u7v4o84SwFpD32Z8IIcPZ6z1/ie24O6RU3RbtL5Y316l3KuHVPx9ItBgWQ6VlfAFnRnTtMUrsQ9MUUTuEZjogg==
@@ -5389,6 +5396,14 @@ ember-concurrency@^1.1.5:
     ember-compatibility-helpers "^1.2.0"
     ember-maybe-import-regenerator "^0.1.6"
 
+ember-cookies@^0.5.0:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/ember-cookies/-/ember-cookies-0.5.2.tgz#06e33463f2f83254fefaf224cc944dec3fb9d3ba"
+  integrity sha512-nZ7oG97kBcO9UHjO95ryABpnVx62Bhxo7lIsBJNmWvFXleILm9DGueiAynzXxuYWWPuKIeeSbYakrS1869tNTw==
+  dependencies:
+    ember-cli-babel "^7.1.0"
+    ember-getowner-polyfill "^1.1.0 || ^2.0.0"
+
 ember-data@~3.15.0:
   version "3.15.1"
   resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-3.15.1.tgz#cec28afa80b15b752948e6dacf6408618e92a4c1"
@@ -5457,7 +5472,7 @@ ember-get-config@^0.2.2, ember-get-config@^0.2.4:
     broccoli-file-creator "^1.1.1"
     ember-cli-babel "^6.3.0"
 
-ember-getowner-polyfill@^2.2.0:
+"ember-getowner-polyfill@^1.1.0 || ^2.0.0", ember-getowner-polyfill@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/ember-getowner-polyfill/-/ember-getowner-polyfill-2.2.0.tgz#38e7dccbcac69d5ec694000329ec0b2be651d2b2"
   integrity sha512-rwGMJgbGzxIAiWYjdpAh04Abvt0s3HuS/VjHzUFhVyVg2pzAuz45B9AzOxYXzkp88vFC7FPaiA4kE8NxNk4A4Q==
@@ -5573,6 +5588,20 @@ ember-router-generator@^2.0.0:
     "@babel/parser" "^7.4.5"
     "@babel/traverse" "^7.4.5"
     recast "^0.18.1"
+
+ember-simple-auth@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ember-simple-auth/-/ember-simple-auth-3.0.0.tgz#d994f512cda1a8a5a6ef5a853fac60c0c0d6acd6"
+  integrity sha512-JaEw5W/Z9+HIH9I2BmE/JD4KofH4rp79Y51zJpt3UQI1OwWFOzFa+ulN0rK/DVLpGOz7uL7hBIE/rtEcEN1eqA==
+  dependencies:
+    base-64 "^0.1.0"
+    broccoli-file-creator "^2.0.0"
+    broccoli-funnel "^1.2.0 || ^2.0.0"
+    broccoli-merge-trees "^2.0.0 || ^3.0.0"
+    ember-cli-babel "^7.12.0"
+    ember-cli-is-package-missing "^1.0.0"
+    ember-cookies "^0.5.0"
+    silent-error "^1.0.0"
 
 ember-source-channel-url@^2.0.1:
   version "2.0.1"
@@ -11917,12 +11946,7 @@ symbol-tree@^3.2.2:
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
-symlink-or-copy@^1.0.0, symlink-or-copy@^1.0.1, symlink-or-copy@^1.1.8, symlink-or-copy@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/symlink-or-copy/-/symlink-or-copy-1.2.0.tgz#5d49108e2ab824a34069b68974486c290020b393"
-  integrity sha512-W31+GLiBmU/ZR02Ii0mVZICuNEN9daZ63xZMPDsYgPgNjMtg+atqLEGI7PPI936jYSQZxoLb/63xos8Adrx4Eg==
-
-symlink-or-copy@^1.3.0:
+symlink-or-copy@^1.0.0, symlink-or-copy@^1.0.1, symlink-or-copy@^1.1.8, symlink-or-copy@^1.2.0, symlink-or-copy@^1.3.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/symlink-or-copy/-/symlink-or-copy-1.3.1.tgz#9506dd64d8e98fa21dcbf4018d1eab23e77f71fe"
   integrity sha512-0K91MEXFpBUaywiwSSkmKjnGcasG/rVBXFLJz5DrgGabpYD6N+3yZrfD6uUIfpuTu65DZLHi7N8CizHc07BPZA==

@@ -21,7 +21,7 @@ data class UserAccountDto(
     @field:Size(min = 4)
     var password: String,
     val birthday: LocalDate? = null,
-    val active: Boolean = true
+    var active: Boolean = true
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
     fun toModel(hashedPassword: String) = UserAccount(

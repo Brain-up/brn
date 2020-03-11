@@ -22,9 +22,8 @@ module.exports = function (defaults) {
               path: ['node_modules']
             }
           },
-          {
-            module: tailwindcss
-          }]
+          tailwindcss('./app/styles/tailwind.js')
+        ]
       }
     }
   });

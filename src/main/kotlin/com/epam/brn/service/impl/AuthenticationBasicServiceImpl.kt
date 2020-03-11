@@ -20,6 +20,7 @@ class AuthenticationBasicServiceImpl(
     private val log = logger()
 
     override fun registration(userAccountDto: UserAccountDto): String {
+        userAccountDto.active = true
         val newUser = userAccountService.addUser(userAccountDto)
         log.info("created new user id=${newUser.id}")
         return login(LoginDto(username = userAccountDto.email, password = userAccountDto.password))
