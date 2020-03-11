@@ -20,6 +20,7 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.util.Base64Utils
 
+@SuppressWarnings("kotlin:S2068")
 @ExtendWith(MockitoExtension::class)
 internal class AuthenticationBasicServiceImplTest {
     @Mock
