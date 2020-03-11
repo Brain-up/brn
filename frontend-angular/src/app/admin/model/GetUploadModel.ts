@@ -5,7 +5,6 @@ export interface GetUploadModel {
             policy: string
         }
             & { 'x-amz-signature': string }
-            & { 'x-amz-signature': string }
             & { 'key': string }
             & { 'acl': string }
             & { 'x-amz-meta-uuid': string }

@@ -11,16 +11,20 @@
   </mat-form-field>
   <mat-form-field>
     <mat-label>Series</mat-label>
-    <mat-select formControlName="series" required>
+    <mat-select formControlName="series" required >
       <mat-option *ngFor="let series of series$ | async" [value]="series">
         {{series.name}}
+        <!-- {{series.id}} -->
       </mat-option>
     </mat-select>
     <mat-error *ngIf="tasksGroup.controls.series.hasError('required')">Field must not be empty</mat-error>
   </mat-form-field>
+
   <app-upload-file [disabled]="!tasksGroup.controls.series.valid" formControlName="file"></app-upload-file>
-  <button type="submit">Submit</button>
+  <button class="upload-tasks-content__submit-btn" type="submit">Submit</button>
 </form>
-<textarea *ngIf="format$">
-  {{format$ | async}}
-</textarea>
+  <div *ngIf="format" class="upload-tasks-content__format">
+    <strong>Accepted Format</strong>
+    <pre class="upload-tasks-content__format-container">{{format}}</pre>
+  </div>
+
