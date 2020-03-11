@@ -1,4 +1,4 @@
-<div class="{{this.styleNamespace}} header" ...attributes>
+<div class="{{style-namespace "header"}} header" ...attributes>
   <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-4">
     <div class="flex items-center flex-shrink-0 text-white mr-8">
       {{#link-to
@@ -23,5 +23,9 @@
         {{/link-to}}
       </div>
     </div>
+
+    {{#if this.session.isAuthenticated}}
+      <button {{on 'click' this.logout}} data-test-logout-button class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Выход</button>
+    {{/if}}
   </nav>
 </div>
