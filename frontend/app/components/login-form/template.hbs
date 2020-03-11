@@ -1,5 +1,5 @@
 <div class="w-full max-w-xs mx-auto">
-  <form class="bg-white rounded px-8 pt-6 pb-8 mb-4" {{on 'submit' this.onSubmit}}>
+  <form class="bg-white rounded px-8 pt-6 pb-8 mb-4 shadow-lg" {{on 'submit' this.onSubmit}}>
     <div class="mb-4">
       <LoginForm::Input @label="Логин" @model={{this}} @name="login" />
     </div>
@@ -12,10 +12,12 @@
         <p class="text-red-500 text-xs italic" data-test-form-error>{{this.errorMessage}}</p>
       {{/if}}
     </div>
-    <div class="flex items-center justify-between">
-      <button data-test-submit-form class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+    <div class="flex mb-4">
+      <button data-test-submit-form class="bg-pink-500 hover:bg-pink-700 flex-grow text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
         Вход
       </button>
+    </div>
+    <div class="flex justify-end">
       <LinkTo @route="registration" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
         Регистрация
       </LinkTo>
