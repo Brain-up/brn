@@ -56,12 +56,12 @@ internal class AuthenticationBasicServiceImplTest {
     fun `should register new user`() {
         // GIVEN
         val email = "testUser"
-        val password = "testPassword"
+        val passw = "testPassword"
         val userAccountDto = mock(UserAccountDto::class.java)
         val savedUserAccountDto = mock(UserAccountDto::class.java)
         val authenticationMock = mock(Authentication::class.java)
         lenient().`when`(userAccountDto.email).thenReturn(email)
-        lenient().`when`(userAccountDto.password).thenReturn(password)
+        lenient().`when`(userAccountDto.password).thenReturn(passw)
         lenient().`when`(userAccountService.addUser(userAccountDto)).thenReturn(savedUserAccountDto)
         `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
         val basicHeader = Base64Utils.encodeToString("testUser:testPassword".toByteArray())
@@ -77,10 +77,10 @@ internal class AuthenticationBasicServiceImplTest {
     fun `should not register exist user`() {
         // GIVEN
         val email = "testUser"
-        val password = "testPassword"
+        val passw = "testPassword"
         val userAccountDto = mock(UserAccountDto::class.java)
         lenient().`when`(userAccountDto.email).thenReturn(email)
-        lenient().`when`(userAccountDto.password).thenReturn(password)
+        lenient().`when`(userAccountDto.password).thenReturn(passw)
         lenient().`when`(userAccountService.addUser(userAccountDto)).thenThrow(BadCredentialsException::class.java)
         // WHEN
         assertThrows(BadCredentialsException::class.java) { authenticationBasicServiceImpl.registration(userAccountDto) }
