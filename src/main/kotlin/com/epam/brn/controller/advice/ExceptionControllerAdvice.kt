@@ -19,7 +19,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponseDto> {
-        logger.error("Entity not found exception: ${e.message}", e)
+        logger.warn("Entity not found exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .contentType(MediaType.APPLICATION_JSON)
@@ -28,7 +28,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(FileFormatException::class)
     fun handleFileFormatException(e: FileFormatException): ResponseEntity<BaseResponseDto> {
-        logger.error("File format exception: ${e.message}", e)
+        logger.warn("File format exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -37,7 +37,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponseDto> {
-        logger.error("IllegalArgumentException: ${e.message}", e)
+        logger.warn("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -46,7 +46,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(BadCredentialsException::class)
     fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
-        logger.error("Forbidden: ${e.message}", e)
+        logger.warn("Forbidden: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .contentType(MediaType.APPLICATION_JSON)
