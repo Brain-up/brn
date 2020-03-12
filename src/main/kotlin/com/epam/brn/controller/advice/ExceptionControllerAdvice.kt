@@ -3,8 +3,6 @@ package com.epam.brn.controller.advice
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
-import java.io.IOException
-import java.lang.IllegalArgumentException
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.io.IOException
 
 @ControllerAdvice
 class ExceptionControllerAdvice {
@@ -71,11 +70,6 @@ class ExceptionControllerAdvice {
 
     fun makeInternalServerErrorResponseEntity(e: Throwable) = ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BaseResponseDto(errors = listOf(e.message.toString())))
-
-    fun makeForbiddenErrorResponseEntity(e: Throwable) = ResponseEntity
-        .status(HttpStatus.FORBIDDEN)
         .contentType(MediaType.APPLICATION_JSON)
         .body(BaseResponseDto(errors = listOf(e.message.toString())))
 
