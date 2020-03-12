@@ -1,4 +1,4 @@
-name: Java CI Build and Unit Tests
+name: Java CI Build, Unit and Integration Tests
 
 on:
   pull_request:
@@ -16,4 +16,4 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Unit Tests
-        run: ./gradlew build test
+        run: ./gradlew build test integrationTest
