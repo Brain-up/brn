@@ -27,47 +27,16 @@ import org.springframework.test.context.ActiveProfiles
 @Tag("integration-test")
 class CsvLoadingTestIT {
 
-    @TestConfiguration
-    class Config {
-        @Bean
-        fun handBookLoader(
-            resourceLoader: ResourceLoader,
-            exerciseGroupRepository: ExerciseGroupRepository,
-            eriesRepository: SeriesRepository,
-            exerciseRepository: ExerciseRepository,
-            taskRepository: TaskRepository,
-            userAccountRepository: UserAccountRepository,
-            csvMappingIteratorParser: CsvMappingIteratorParser,
-            passwordEncoder: PasswordEncoder,
-            authorityService: AuthorityService
-        ) = InitialDataLoader(
-            resourceLoader,
-            exerciseGroupRepository,
-            eriesRepository,
-            exerciseRepository,
-            taskRepository,
-            userAccountRepository,
-            csvMappingIteratorParser,
-            passwordEncoder,
-            authorityService
-        )
-    }
-
     @Autowired
     private lateinit var exerciseGroupRepository: ExerciseGroupRepository
-
     @Autowired
     private lateinit var userAccountRepository: UserAccountRepository
-
     @Autowired
     private lateinit var seriesRepository: SeriesRepository
-
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
-
     @Autowired
     private lateinit var taskRepository: TaskRepository
-
     @Autowired
     private lateinit var authorityRepository: AuthorityRepository
 
@@ -79,5 +48,34 @@ class CsvLoadingTestIT {
         taskRepository.findAll() shouldHaveSize 16
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
+    }
+
+    @TestConfiguration
+    class Config {
+        @SuppressWarnings("kotlin:S107") // TODO: delete this suppress, when InitialDataLoader is split
+        @Bean
+        fun handBookLoader(
+                resourceLoader: ResourceLoader,
+                exerciseGroupRepository: ExerciseGroupRepository,
+                eriesRepository: SeriesRepository,
+                exerciseRepository: ExerciseRepository,
+                taskRepository: TaskRepository,
+                userAccountRepository: UserAccountRepository,
+                csvMappingIteratorParser: CsvMappingIteratorParser,
+                passwordEncoder: PasswordEncoder,
+                authorityService: AuthorityService
+        ): InitialDataLoader {
+            return InitialDataLoader(
+                    resourceLoader,
+                    exerciseGroupRepository,
+                    eriesRepository,
+                    exerciseRepository,
+                    taskRepository,
+                    userAccountRepository,
+                    csvMappingIteratorParser,
+                    passwordEncoder,
+                    authorityService
+            )
+        }
     }
 }
