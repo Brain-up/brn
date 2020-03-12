@@ -1,11 +1,6 @@
 name: Java CI Unit Tests
 
 on:
-  push:
-    paths-ignore:
-      - 'frontend/**'
-      - 'frontend-angular/**'
-
   pull_request:
     paths-ignore:
       - 'frontend/**'
