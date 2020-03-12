@@ -16,7 +16,9 @@ jobs:
       - name: Install Chrome
         run: |
           wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+          cat << EOF | sudo tee -a /etc/apt/sources.list.d/google.list
+          deb http://dl.google.com/linux/chrome/deb/ stable main
+          EOF
           apt-get update
           apt-get -y install google-chrome-stable
       - name: Install dependencies
