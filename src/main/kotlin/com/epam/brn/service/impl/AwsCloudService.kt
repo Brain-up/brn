@@ -31,8 +31,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
     override fun bucketUrl(): String = awsConfig.bucketLink
 
     override fun uploadForm(filePath: String): Map<String, Any> {
-        val conditions = awsConfig.getConditions(filePath)
-        return signature(conditions)
+        return signature(awsConfig.getConditions(filePath))
     }
 
     override fun listBucket(): List<String> {
