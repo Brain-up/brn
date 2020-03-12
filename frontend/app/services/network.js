@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 export default class NetworkService extends Service {
   @service('session') session;
   @service('store') store;
-  prefix = 'api';
+  prefix = '/api';
   get _headers() {
     return Object.assign(
       {
