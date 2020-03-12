@@ -5,7 +5,8 @@ import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.services.s3.model.ListObjectsV2Result
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.epam.brn.config.AwsConfig
-import org.junit.jupiter.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.any
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 class AwsCloudServiceTest {
+
     @InjectMocks
     lateinit var awsCloudService: AwsCloudService
     @Mock
@@ -30,25 +32,25 @@ class AwsCloudServiceTest {
         Mockito.`when`(awsConfig.serviceName).thenReturn("s3")
         Mockito.`when`(awsConfig.bucketLink).thenReturn("http://somebucket.s3.amazonaws.com")
 
-        var conditions: AwsConfig.Conditions = Mockito.mock(AwsConfig.Conditions::class.java)
-        Mockito.`when`(conditions.date).thenReturn("20200130")
-        Mockito.`when`(conditions.bucket).thenReturn("bucket" to "somebucket")
-        Mockito.`when`(conditions.acl).thenReturn("acl" to "private")
-        Mockito.`when`(conditions.uuid).thenReturn("x-amz-meta-uuid" to "c49791b2-b27b-4edf-bac8-8734164c20e6")
-        Mockito.`when`(conditions.serverSideEncryption).thenReturn("x-amz-server-side-encryption" to "AES256")
-        Mockito.`when`(conditions.credential).thenReturn("x-amz-credential" to "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request")
-        Mockito.`when`(conditions.algorithm).thenReturn("x-amz-algorithm" to "AWS4-HMAC-SHA256")
-        Mockito.`when`(conditions.dateTime).thenReturn("x-amz-date" to "20200130T113917Z")
-        Mockito.`when`(conditions.expiration).thenReturn("expiration" to "2020-01-30T21:39:17.114Z")
-        Mockito.`when`(conditions.uploadKey).thenReturn("key" to "tasks/\${filename}")
-        Mockito.`when`(conditions.successActionRedirect).thenReturn("success_action_redirect" to "")
-        Mockito.`when`(conditions.contentTypeStartsWith).thenReturn("Content-Type" to "")
-        Mockito.`when`(conditions.metaTagStartsWith).thenReturn("x-amz-meta-tag" to "")
-        Mockito.`when`(awsConfig.getConditions(anyString())).thenReturn(conditions)
+        var conditions: AwsConfig.Conditions = AwsConfig.Conditions(
+            "20200130",
+            "somebucket",
+            "private",
+            "c49791b2-b27b-4edf-bac8-8734164c20e6",
+            "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request",
+            "20200130T113917Z",
+            "2020-01-30T21:39:17.114Z",
+            "tasks/\${filename}",
+            "", "", ""
+        )
+
+        Mockito.`when`(awsConfig.buildConditions(anyString())).thenReturn(conditions)
+
         // WHEN
-        val signature = awsCloudService.uploadForm("")
+        val actual = awsCloudService.uploadForm("")
+
         // THEN
-        val signatureExpected: Map<String, Any> = mapOf(
+        val expected: Map<String, Any> = mapOf(
             "action" to "http://somebucket.s3.amazonaws.com",
             "input" to listOf(
                 mapOf("policy" to "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="),
@@ -62,7 +64,7 @@ class AwsCloudServiceTest {
                 mapOf("x-amz-date" to "20200130T113917Z")
             )
         )
-        Assertions.assertEquals(signatureExpected, signature)
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
