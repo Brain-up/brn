@@ -70,6 +70,8 @@ class AwsCloudServiceTest {
     @Test
     fun `should convert to base64 string`() {
         // GIVEN
+        val expected = "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
+
         var conditions = hashMapOf(
             "expiration" to "2020-01-30T21:39:17.114Z",
             "conditions" to
@@ -86,9 +88,9 @@ class AwsCloudServiceTest {
         )
         // WHEN
         val base64 = awsCloudService.toJsonBase64(conditions)
+
         // THEN
-        val expected = "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
-        Assertions.assertEquals(expected, base64)
+        assertEquals(expected, base64)
     }
 
     @Test
@@ -102,11 +104,13 @@ class AwsCloudServiceTest {
         Mockito.`when`(awsConfig.amazonS3).thenReturn(mockS3)
         Mockito.`when`(awsConfig.bucketName).thenReturn("test")
         Mockito.`when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result)
+
         // WHEN
         val listBucket = awsCloudService.listBucket()
+
         // THEN
         val expected: List<String> = listOf("folder/", "folder/folder/")
-        Assertions.assertEquals(expected, listBucket)
+        assertEquals(expected, listBucket)
     }
 
     @Test
@@ -124,11 +128,13 @@ class AwsCloudServiceTest {
         Mockito.`when`(awsConfig.amazonS3).thenReturn(mockS3)
         Mockito.`when`(awsConfig.bucketName).thenReturn("test")
         Mockito.`when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result, result2)
+
         // WHEN
         val listBucket = awsCloudService.listBucket()
+
         // THEN
         val expected: List<String> = listOf("folder/", "folder/folder/", "folder3/", "folder3/folder3/")
-        Assertions.assertEquals(expected, listBucket)
+        assertEquals(expected, listBucket)
     }
 
     private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Result {
