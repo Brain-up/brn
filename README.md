@@ -42,10 +42,13 @@ https://kb.epam.com/pages/viewpage.action?pageId=885110636
 https://github.com/Brain-up/brn/wiki/Coding-Standards ||
 https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
+### DEVELOPMENT PREREQUISITES
+1. Install node v10 or above https://nodejs.org/en/download/
+2. Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install/#mac-stable
+3. In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
+4. Install Docker https://hub.docker.com/search/?type=edition&offering=community 
+
 ## FRONT END DEVELOPMENT
-### REQUISITES
-1. node v10 or above (https://nodejs.org/en/download/)
-2. yarn 1.19 or above (https://yarnpkg.com/lang/en/docs/install/#mac-stable)
 
 ### START YOUR FRONT END DEVELOPMENT SERVER
 Run following commands:
@@ -88,8 +91,6 @@ _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
 ## BACK END DEVELOPMENT 
-### REQUISITES
-1. Docker - https://hub.docker.com/search/?type=edition&offering=community 
 
 ### START BACKEND from IDEA
 just run Application.kt after launching database in docker.
