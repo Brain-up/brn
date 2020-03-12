@@ -1,23 +1,17 @@
-FROM node:13 as build-front
-
-COPY frontend/ /build_app/
-
-WORKDIR /build_app/
-
+FROM node:13 as build-frontend
+COPY frontend/ /src/
+WORKDIR /src
 RUN yarn
-
 RUN node node_modules/ember-cli/bin/ember deploy production
 
-COPY frontend-angular/ /build_app_angular/
-
-WORKDIR /build_app_angular/
-
-RUN npm install
-
+FROM node:13 as build-frontend-angular
+COPY frontend-angular/ /src/
+WORKDIR /src
+RUN npm ci
 RUN npm run build
 
 FROM nginx:alpine
 COPY default.conf /etc/nginx/conf.d/
-COPY --from=build-front /build_app/tmp/deploy-dist /usr/share/nginx/html/
-COPY --from=build-front /build_app_angular/dist/frontend-angular /usr/share/nginx/html/admin/
+COPY --from=build-frontend /src/tmp/deploy-dist /usr/share/nginx/html/
+COPY --from=build-frontend-angular /src/dist/frontend-angular /usr/share/nginx/html/admin/
 
