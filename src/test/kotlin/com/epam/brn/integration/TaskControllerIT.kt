@@ -43,7 +43,7 @@ class TaskControllerIT {
 
     @BeforeEach
     fun initBeforeEachTest() {
-        val group = ExerciseGroup(name = "речевые упражения", description = "речевые упражения")
+        val group = ExerciseGroup(name = "речевые упражнения", description = "речевые упражнения")
         val series1 =
             Series(name = "распознование слов", description = "распознование слов", exerciseGroup = group)
         val series2 = Series(
