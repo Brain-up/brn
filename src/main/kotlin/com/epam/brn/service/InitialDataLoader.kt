@@ -40,6 +40,8 @@ import org.springframework.core.io.ResourceLoader
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
+// TODO: this class smells like GOD-object anti-pattern, it should be split
+
 /**
  * This class is responsible for
  * loading seed data on startup.
