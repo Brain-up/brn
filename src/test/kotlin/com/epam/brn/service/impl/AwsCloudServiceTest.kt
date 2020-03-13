@@ -5,7 +5,8 @@ import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.services.s3.model.ListObjectsV2Result
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.epam.brn.config.AwsConfig
-import org.junit.jupiter.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.any
@@ -13,80 +14,114 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 class AwsCloudServiceTest {
+
+    companion object {
+        const val X_AMZ_SIGNATURE = "x-amz-signature"
+        const val X_AMZ_META_UUID = "x-amz-meta-uuid"
+        const val X_AMZ_SERVER_SIDE_ENCRYPTION = "x-amz-server-side-encryption"
+        const val X_AMZ_CREDENTIAL = "x-amz-credential"
+        const val X_AMZ_ALGORITHM = "x-amz-algorithm"
+        const val X_AMZ_DATE = "x-amz-date"
+        const val ACL = "acl"
+        const val BUCKET = "bucket"
+
+        const val TEST_ACCESS_RULE = "private"
+        const val TEST_BUCKET = "somebucket"
+        const val TEST_UUID = "c49791b2-b27b-4edf-bac8-8734164c20e6"
+        const val TEST_AMZ_DATE = "20200130T113917Z"
+        const val TEST_ENC_ALGORYTHM = "AES256"
+        const val TEST_HASH_ALGORYTHM = "AWS4-HMAC-SHA256"
+        const val TEST_EXPIRATION_DATE = "2020-01-30T21:39:17.114Z"
+        const val TEST_CREDENTIAL = "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request"
+        const val TEST_FILEPATH = "tasks/\${filename}"
+        const val TEST_DATE = "20200130"
+
+        const val FILE = "file"
+        const val FOLDER = "folder/"
+        const val SUBFILE = "folder/file"
+        const val SUBFOLDER = "folder/folder/"
+        const val ANOTHER_FILE = "file3"
+        const val ANOTHER_FOLDER = "folder3/"
+        const val ANOTHER_SUBFILE = "folder3/file3"
+        const val ANOTHER_SUBFOLDER = "folder3/folder3/"
+    }
+
     @InjectMocks
     lateinit var awsCloudService: AwsCloudService
+
     @Mock
     lateinit var awsConfig: AwsConfig
 
     @Test
     fun `should get correct signature for client upload`() {
         // GIVEN
-        Mockito.`when`(awsConfig.secretAccessKey).thenReturn("99999999999999999999999999999")
-        Mockito.`when`(awsConfig.region).thenReturn("us-east-2")
-        Mockito.`when`(awsConfig.serviceName).thenReturn("s3")
-        Mockito.`when`(awsConfig.bucketLink).thenReturn("http://somebucket.s3.amazonaws.com")
+        `when`(awsConfig.secretAccessKey).thenReturn("99999999999999999999999999999")
+        `when`(awsConfig.region).thenReturn("us-east-2")
+        `when`(awsConfig.serviceName).thenReturn("s3")
+        `when`(awsConfig.bucketLink).thenReturn("http://somebucket.s3.amazonaws.com")
 
-        var conditions: AwsConfig.Conditions = Mockito.mock(AwsConfig.Conditions::class.java)
-        Mockito.`when`(conditions.date).thenReturn("20200130")
-        Mockito.`when`(conditions.bucket).thenReturn("bucket" to "somebucket")
-        Mockito.`when`(conditions.acl).thenReturn("acl" to "private")
-        Mockito.`when`(conditions.uuid).thenReturn("x-amz-meta-uuid" to "c49791b2-b27b-4edf-bac8-8734164c20e6")
-        Mockito.`when`(conditions.serverSideEncryption).thenReturn("x-amz-server-side-encryption" to "AES256")
-        Mockito.`when`(conditions.credential).thenReturn("x-amz-credential" to "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request")
-        Mockito.`when`(conditions.algorithm).thenReturn("x-amz-algorithm" to "AWS4-HMAC-SHA256")
-        Mockito.`when`(conditions.dateTime).thenReturn("x-amz-date" to "20200130T113917Z")
-        Mockito.`when`(conditions.expiration).thenReturn("expiration" to "2020-01-30T21:39:17.114Z")
-        Mockito.`when`(conditions.uploadKey).thenReturn("key" to "tasks/\${filename}")
-        Mockito.`when`(conditions.successActionRedirect).thenReturn("success_action_redirect" to "")
-        Mockito.`when`(conditions.contentTypeStartsWith).thenReturn("Content-Type" to "")
-        Mockito.`when`(conditions.metaTagStartsWith).thenReturn("x-amz-meta-tag" to "")
-        Mockito.`when`(awsConfig.getConditions(anyString())).thenReturn(conditions)
+        var conditions: AwsConfig.Conditions = AwsConfig.Conditions(
+                TEST_DATE,
+                TEST_BUCKET, TEST_ACCESS_RULE,
+                TEST_UUID,
+                TEST_CREDENTIAL,
+                TEST_AMZ_DATE,
+                TEST_EXPIRATION_DATE,
+                TEST_FILEPATH,
+            "", "", ""
+        )
+        `when`(awsConfig.buildConditions(anyString())).thenReturn(conditions)
+
         // WHEN
-        val signature = awsCloudService.uploadForm("")
+        val actual = awsCloudService.uploadForm("")
+
         // THEN
-        val signatureExpected: Map<String, Any> = mapOf(
+        val expected: Map<String, Any> = mapOf(
             "action" to "http://somebucket.s3.amazonaws.com",
             "input" to listOf(
                 mapOf("policy" to "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="),
-                mapOf("x-amz-signature" to "4d39e2b2ac5833352544d379dadad1ffba3148d9936d814f36f50b7af2cd8e8e"),
-                mapOf("key" to "tasks/\${filename}"),
-                mapOf("acl" to "private"),
-                mapOf("x-amz-meta-uuid" to "c49791b2-b27b-4edf-bac8-8734164c20e6"),
-                mapOf("x-amz-server-side-encryption" to "AES256"),
-                mapOf("x-amz-credential" to "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request"),
-                mapOf("x-amz-algorithm" to "AWS4-HMAC-SHA256"),
-                mapOf("x-amz-date" to "20200130T113917Z")
+                mapOf(X_AMZ_SIGNATURE to "4d39e2b2ac5833352544d379dadad1ffba3148d9936d814f36f50b7af2cd8e8e"),
+                mapOf("key" to TEST_FILEPATH),
+                mapOf(ACL to TEST_ACCESS_RULE),
+                mapOf(X_AMZ_META_UUID to TEST_UUID),
+                mapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
+                mapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
+                mapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
+                mapOf(X_AMZ_DATE to TEST_AMZ_DATE)
             )
         )
-        Assertions.assertEquals(signatureExpected, signature)
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `should convert to base64 string`() {
         // GIVEN
+        val expected = "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
+
         var conditions = hashMapOf(
-            "expiration" to "2020-01-30T21:39:17.114Z",
+            "expiration" to TEST_EXPIRATION_DATE,
             "conditions" to
                     listOf(
-                        hashMapOf("bucket" to "somebucket"),
-                        hashMapOf("acl" to "private"),
-                        arrayOf("starts-with", "\$key", "tasks/\${filename}"),
-                        hashMapOf("x-amz-meta-uuid" to "c49791b2-b27b-4edf-bac8-8734164c20e6"),
-                        hashMapOf("x-amz-server-side-encryption" to "AES256"),
-                        hashMapOf("x-amz-credential" to "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request"),
-                        hashMapOf("x-amz-algorithm" to "AWS4-HMAC-SHA256"),
-                        hashMapOf("x-amz-date" to "20200130T113917Z")
+                        hashMapOf(BUCKET to TEST_BUCKET),
+                        hashMapOf(ACL to TEST_ACCESS_RULE),
+                        arrayOf("starts-with", "\$key", TEST_FILEPATH),
+                        hashMapOf(X_AMZ_META_UUID to TEST_UUID),
+                        hashMapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
+                        hashMapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
+                        hashMapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
+                        hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE)
                     )
         )
         // WHEN
         val base64 = awsCloudService.toJsonBase64(conditions)
+
         // THEN
-        val expected = "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
-        Assertions.assertEquals(expected, base64)
+        assertEquals(expected, base64)
     }
 
     @Test
@@ -94,17 +129,19 @@ class AwsCloudServiceTest {
         // GIVEN
         val mockS3: AmazonS3 = Mockito.mock(AmazonS3::class.java)
 
-        val result: ListObjectsV2Result = listObjectsV2Result(listOf("file", "folder/", "folder/file", "folder/folder/"))
-        Mockito.`when`(result.isTruncated).thenReturn(false)
+        val result: ListObjectsV2Result = listObjectsV2Result(listOf(FILE, FOLDER, SUBFILE, SUBFOLDER))
+        `when`(result.isTruncated).thenReturn(false)
 
-        Mockito.`when`(awsConfig.amazonS3).thenReturn(mockS3)
-        Mockito.`when`(awsConfig.bucketName).thenReturn("test")
-        Mockito.`when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result)
+        `when`(awsConfig.amazonS3).thenReturn(mockS3)
+        `when`(awsConfig.bucketName).thenReturn(TEST_BUCKET)
+        `when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result)
+
         // WHEN
         val listBucket = awsCloudService.listBucket()
+
         // THEN
-        val expected: List<String> = listOf("folder/", "folder/folder/")
-        Assertions.assertEquals(expected, listBucket)
+        val expected: List<String> = listOf(FOLDER, SUBFOLDER)
+        assertEquals(expected, listBucket)
     }
 
     @Test
@@ -112,32 +149,34 @@ class AwsCloudServiceTest {
         // GIVEN
         val mockS3: AmazonS3 = Mockito.mock(AmazonS3::class.java)
 
-        val result: ListObjectsV2Result = listObjectsV2Result(listOf("file", "folder/", "folder/file", "folder/folder/"))
-        Mockito.`when`(result.isTruncated).thenReturn(true)
-        Mockito.`when`(result.nextContinuationToken).thenReturn("asd")
+        val result: ListObjectsV2Result = listObjectsV2Result(listOf(FILE, FOLDER, SUBFILE, SUBFOLDER))
+        `when`(result.isTruncated).thenReturn(true)
+        `when`(result.nextContinuationToken).thenReturn("asd")
 
-        val result2: ListObjectsV2Result = listObjectsV2Result(listOf("file3", "folder3/", "folder3/file3", "folder3/folder3/"))
-        Mockito.`when`(result2.isTruncated).thenReturn(false)
+        val result2: ListObjectsV2Result = listObjectsV2Result(listOf(ANOTHER_FILE, ANOTHER_FOLDER, ANOTHER_SUBFILE, ANOTHER_SUBFOLDER))
+        `when`(result2.isTruncated).thenReturn(false)
 
-        Mockito.`when`(awsConfig.amazonS3).thenReturn(mockS3)
-        Mockito.`when`(awsConfig.bucketName).thenReturn("test")
-        Mockito.`when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result, result2)
+        `when`(awsConfig.amazonS3).thenReturn(mockS3)
+        `when`(awsConfig.bucketName).thenReturn(TEST_BUCKET)
+        `when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result, result2)
+
         // WHEN
         val listBucket = awsCloudService.listBucket()
+
         // THEN
-        val expected: List<String> = listOf("folder/", "folder/folder/", "folder3/", "folder3/folder3/")
-        Assertions.assertEquals(expected, listBucket)
+        val expected: List<String> = listOf(FOLDER, SUBFOLDER, ANOTHER_FOLDER, ANOTHER_SUBFOLDER)
+        assertEquals(expected, listBucket)
     }
 
     private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Result {
         val result: ListObjectsV2Result = Mockito.mock(ListObjectsV2Result::class.java)
-        val objectSummaries: List<S3ObjectSummary> =
-            getObjectSummaries(keys)
-        Mockito.`when`(result.objectSummaries).thenReturn(objectSummaries)
+        val objectSummaries: List<S3ObjectSummary> = toObjectSummaries(keys)
+
+        `when`(result.objectSummaries).thenReturn(objectSummaries)
         return result
     }
 
-    private fun getObjectSummaries(keys: List<String>): List<S3ObjectSummary> {
+    private fun toObjectSummaries(keys: List<String>): List<S3ObjectSummary> {
         val objectSummaries: ArrayList<S3ObjectSummary> = ArrayList()
         keys.forEach {
             val os = S3ObjectSummary()

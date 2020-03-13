@@ -30,10 +30,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
 
     override fun bucketUrl(): String = awsConfig.bucketLink
 
-    override fun uploadForm(filePath: String): Map<String, Any> {
-        val conditions = awsConfig.getConditions(filePath)
-        return signature(conditions)
-    }
+    override fun uploadForm(filePath: String): Map<String, Any> =
+        signature(awsConfig.buildConditions(filePath))
 
     override fun listBucket(): List<String> {
         val amazonS3 = awsConfig.amazonS3
@@ -107,8 +105,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         return toJsonBase64(policy)
     }
 
-    fun toJsonBase64(rawObject: Any) = base64Encoded(mapperIndented.writeValueAsBytes(rawObject))
-    private fun base64Encoded(bytes: ByteArray): String = Base64.encodeAsString(*bytes)
+    fun toJsonBase64(rawObject: Any): String = Base64.encodeAsString(*mapperIndented.writeValueAsBytes(rawObject))
 
     private fun sign(date: String, policy: String): String {
         val signature = getSignatureKey(awsConfig.secretAccessKey, date, awsConfig.region, awsConfig.serviceName)
