@@ -4,7 +4,6 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import java.io.IOException
-import java.lang.IllegalArgumentException
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,7 +19,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponseDto> {
-        logger.error("Entity not found exception: ${e.message}", e)
+        logger.warn("Entity not found exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .contentType(MediaType.APPLICATION_JSON)
@@ -29,7 +28,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(FileFormatException::class)
     fun handleFileFormatException(e: FileFormatException): ResponseEntity<BaseResponseDto> {
-        logger.error("File format exception: ${e.message}", e)
+        logger.warn("File format exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -38,49 +37,42 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponseDto> {
-        logger.error("IllegalArgumentException: ${e.message}", e)
+        logger.warn("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }
 
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
+        logger.warn("Forbidden: ${e.message}", e)
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+    }
+
     @ExceptionHandler(UninitializedPropertyAccessException::class)
     fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BaseResponseDto> {
-        logger.error("Internal exception: ${e.message}", e)
-        return makeInternalServerErrorResponseEntity(e)
+        return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(IOException::class)
     fun handleIOException(e: IOException): ResponseEntity<BaseResponseDto> {
-        logger.error("Internal exception: ${e.message}", e)
-        return makeInternalServerErrorResponseEntity(e)
-    }
-
-    @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
-        logger.error("Forbidden: ${e.message}", e)
-        return makeUnauthorizedErrorResponseEntity(e)
+        return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(Throwable::class)
     fun handleException(e: Throwable): ResponseEntity<BaseResponseDto> {
-        logger.error("Internal exception: ${e.message}", e)
-        return makeInternalServerErrorResponseEntity(e)
+        return createInternalErrorResponse(e)
     }
 
-    fun makeInternalServerErrorResponseEntity(e: Throwable) = ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BaseResponseDto(errors = listOf(e.message.toString())))
-
-    fun makeForbiddenErrorResponseEntity(e: Throwable) = ResponseEntity
-        .status(HttpStatus.FORBIDDEN)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BaseResponseDto(errors = listOf(e.message.toString())))
-
-    fun makeUnauthorizedErrorResponseEntity(e: Throwable) = ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BaseResponseDto(errors = listOf(e.message.toString())))
+    fun createInternalErrorResponse(e: Throwable): ResponseEntity<BaseResponseDto> {
+        logger.error("Internal exception: ${e.message}", e)
+        return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(BaseResponseDto(errors = listOf(e.message.toString())))
+    }
 }
