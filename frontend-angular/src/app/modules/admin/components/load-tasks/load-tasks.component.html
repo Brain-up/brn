@@ -14,7 +14,6 @@
     <mat-select formControlName="series" required >
       <mat-option *ngFor="let series of series$ | async" [value]="series">
         {{series.name}}
-        <!-- {{series.id}} -->
       </mat-option>
     </mat-select>
     <mat-error *ngIf="tasksGroup.controls.series.hasError('required')">Field must not be empty</mat-error>

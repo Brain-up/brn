@@ -17,13 +17,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FolderService } from './services/folders/folder.service';
 import { UploadService } from './services/upload/upload.service';
 import { FormatService } from './services/format/format.service';
+import { StoreModule } from '@ngrx/store';
+import * as fromAdminNgrx from './ngrx/reducers';
+import { AdminGuardService } from './services/admin-guard/admin-guard.service';
+import { AdminPageRoutingModule } from './admin-page-routing.module';
+
 
 @NgModule({
   declarations: [
     AdminPageComponent,
     LoadFileComponent,
     LoadTasksComponent,
-    HomeComponent
+    HomeComponent,
   ],
   exports: [AdminPageComponent],
   imports: [
@@ -31,46 +36,7 @@ import { FormatService } from './services/format/format.service';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: AdminPageComponent,
-        data: {
-          animation: 'Admin'
-        },
-        children: [
-          {
-            path: 'home',
-            component: HomeComponent,
-            children: [
-              {
-                path: 'file',
-                component: LoadFileComponent,
-                data: {
-                  animation: 'LoadAll'
-                }
-              },
-              {
-                path: 'tasks',
-                component: LoadTasksComponent,
-                data: {
-                  animation: 'LoadTasks'
-                }
-              },
-            ],
-            data: {
-              animation: 'Admin'
-            }
-          },
-          {
-            path: '',
-            redirectTo: '/home',
-            pathMatch: 'full'
-          }
-        ]
-      },
-
-    ]),
+    AdminPageRoutingModule,
     MatButtonModule,
     SharedModule,
     MatFormFieldModule,
@@ -79,11 +45,13 @@ import { FormatService } from './services/format/format.service';
     MatIconModule,
     MatSidenavModule,
     MatToolbarModule,
+    StoreModule.forFeature(fromAdminNgrx.adminFeatureKey, fromAdminNgrx.adminReducer)
   ],
   providers: [
     FolderService,
     FormatService,
-    UploadService
+    UploadService,
+    AdminGuardService
   ]
 })
 export class AdminModule {

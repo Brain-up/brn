@@ -1,17 +1,17 @@
-import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
-import {AdminService} from '../../services/admin.service';
-import {iif, Observable, of, EMPTY} from 'rxjs';
-import {Group, Series} from '../../model/model';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { iif, Observable, of, EMPTY } from 'rxjs';
+import { Group, Series } from '../../model/model';
 import { SeriesModel } from '../../model/series.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {switchMap, tap, pluck} from 'rxjs/operators';
-import {untilDestroyed} from 'ngx-take-until-destroy';
-import { UploadService  } from '../../services/upload/upload.service';
-import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { switchMap, tap, pluck } from 'rxjs/operators';
+import { untilDestroyed } from 'ngx-take-until-destroy';
+import { UploadService } from '../../services/upload/upload.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormatService } from '../../services/format/format.service';
 import { LoadTasksReturnData } from '../../model/load-tasks-return-data.model';
+import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
+import { AdminService } from '../../services/admin/admin.service';
 
 @Component({
   selector: 'app-load-tasks',
@@ -24,13 +24,14 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
   groups$: Observable<Group[]>;
   tasksGroup: FormGroup;
   series$: Observable<Series[]>;
-
-  constructor(private adminAPI: AdminService,
-              private fb: FormBuilder,
-              private uploadFileService: UploadService,
-              private router: Router,
-              private snackBarService: SnackBarService,
-              private formatService: FormatService) {
+  
+  constructor(
+    private adminAPI: AdminService,
+    private fb: FormBuilder,
+    private uploadFileService: UploadService,
+    private router: Router,
+    private snackBarService: SnackBarService,
+    private formatService: FormatService) {
   }
   onSubmit() {
     const formData = new FormData();
@@ -45,17 +46,17 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       this.snackBarService.showSadSnackbar(errorObj.errors[0]);
     });
   }
-  ngOnDestroy() {}
+  ngOnDestroy() { }
   ngOnInit() {
     this.tasksGroup = this.fb.group({
       group: ['', Validators.required],
-      series: [{value: '', disabled: true}, Validators.required],
+      series: [{ value: '', disabled: true }, Validators.required],
       file: [null, Validators.required]
     });
 
     this.groups$ = this.adminAPI.getGroups();
     this.series$ = this.tasksGroup.controls.group.valueChanges.pipe(
-      switchMap(({id}) => this.adminAPI.getSeriesByGroupId(id)),
+      switchMap(({ id }) => this.adminAPI.getSeriesByGroupId(id)),
     );
     this.tasksGroup.controls.series.valueChanges.pipe(
       switchMap((val: SeriesModel) => val ? this.formatService.getFormat(val.id) : EMPTY),
@@ -65,7 +66,7 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       switchMap(status => iif(() => status === 'VALID',
         of('').pipe(tap(_ => this.tasksGroup.controls.series.enable())),
         of('').pipe(tap(_ => this.tasksGroup.controls.series.disable())),
-        ),
+      ),
       ),
       untilDestroyed(this)
     ).subscribe();

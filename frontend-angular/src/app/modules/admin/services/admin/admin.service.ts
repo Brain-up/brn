@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {pluck} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {Group, Series} from '../model/model';
+import {Group, Series} from '../../model/model';
 
 @Injectable({
   providedIn: 'root'

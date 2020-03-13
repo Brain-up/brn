@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
 import { Observable} from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { SnackBarService } from 'src/app/shared/services/snack-bar/snack-bar.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FolderService } from '../../services/folders/folder.service';
 import { UploadService } from '../../services/upload/upload.service';
 import { Router } from '@angular/router';
+import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
 
 @Component({
   selector: 'app-load-file',
@@ -26,7 +26,6 @@ export class LoadFileComponent implements OnInit {
 
   ngOnInit() {
     this.folders$ = this.folderService.getFolders();
-
     this.uploadFileForm = new FormGroup({
       files: new FormControl(),
       folder: new FormControl(),
