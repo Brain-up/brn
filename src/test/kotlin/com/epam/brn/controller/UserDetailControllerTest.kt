@@ -76,19 +76,6 @@ internal class UserDetailControllerTest {
         }
 
         @Test
-        fun `should get user by userName`() {
-            // GIVEN
-            Mockito.`when`(userAccountService.findUserById(userId)).thenReturn(userAccountDto)
-            // WHEN
-            @Suppress("UNCHECKED_CAST")
-            val savedUserAccountDto = userDetailController.findUserById(userId).body?.data as List<UserAccountDto>
-            // THEN
-            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
-            verify(userAccountService).findUserById(userId)
-        }
-
-        @Test
         fun `should get logged in user from the current session`() {
             // GIVEN
             Mockito.`when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountDto)
