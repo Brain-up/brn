@@ -90,6 +90,9 @@ _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
+### CREATING BRANCHES
+Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
+
 ## BACK END DEVELOPMENT 
 
 ### START BACKEND from IDEA
