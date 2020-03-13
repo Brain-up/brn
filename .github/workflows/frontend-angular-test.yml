@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'Dockerfile_frontend'
-      - 'frontend/**'
+      - 'frontend-angular/**'
       - '.github/workflows/frontend-angular-test.yml'
 
 jobs:
