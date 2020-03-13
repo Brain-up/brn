@@ -55,7 +55,7 @@ internal class ExceptionControllerAdviceTest {
         // GIVEN
         val exception = Exception("some test exception")
         // WHEN
-        val responseEntity = exceptionControllerAdvice.makeInternalServerErrorResponseEntity(exception)
+        val responseEntity = exceptionControllerAdvice.createInternalErrorResponse(exception)
         // THEN
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some test exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)

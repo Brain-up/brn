@@ -37,7 +37,7 @@ class SeriesControllerIT {
     lateinit var mockMvc: MockMvc
 
     fun loadGroupWithExercises(): Long {
-        val group = ExerciseGroup(name = "речевые упражения тест", description = "речевые упражения тест")
+        val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
         val series1 =
             Series(name = "распознование слов тест", description = "descr1", exerciseGroup = group)
         val series2 =
