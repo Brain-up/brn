@@ -1,4 +1,9 @@
 package com.epam.brn.csv.converter
 
-interface Uploader<Csv, Entity> : EntityComparatorProvider<Entity>, CsvToEntityConverter<Csv, Entity>,
-    ObjectReaderProvider<Csv>, EntityPersister<Entity>
+import com.fasterxml.jackson.databind.ObjectReader
+
+interface Uploader<Csv, Entity> : CsvToEntityConverter<Csv, Entity>{
+    fun entityComparator(): (Entity) -> Int
+    fun persistEntity(entity: Entity)
+    fun objectReader(): ObjectReader
+}

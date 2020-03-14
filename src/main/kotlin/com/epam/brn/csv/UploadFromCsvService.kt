@@ -21,5 +21,5 @@ interface UploadFromCsvService {
      * @return failed csv-lines with errors
      */
     @Throws(FileFormatException::class)
-    fun loadTaskFile(file: File): Map<String, String>?
+    fun loadTaskFile(file: File): Map<String, String>
 }

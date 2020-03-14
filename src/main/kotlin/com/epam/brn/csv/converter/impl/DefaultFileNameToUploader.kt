@@ -19,7 +19,7 @@ class DefaultFileNameToUploader(
     seriesTwoUploader: SeriesTwoUploader
 ) : FileNameToUploader {
 
-    val fileNameToUploaders: Map<BrnInitFiles, Uploader<*, *>?> = mapOf(
+    val fileNameToUploaders: Map<BrnInitFiles, Uploader<out Any, out Any>?> = mapOf(
         BrnInitFiles.GROUPS to groupUploader,
         BrnInitFiles.EXERCISES to exerciseUploader,
         BrnInitFiles.SERIES to seriesUploader,
@@ -28,7 +28,7 @@ class DefaultFileNameToUploader(
         BrnInitFiles.SERIES_THREE to null
     )
 
-    override fun getUploaderFor(initFile: BrnInitFiles): Uploader<*, *>? {
+    override fun getUploaderFor(initFile: BrnInitFiles): Uploader<out Any, out Any>? {
         return fileNameToUploaders[initFile]
     }
 }

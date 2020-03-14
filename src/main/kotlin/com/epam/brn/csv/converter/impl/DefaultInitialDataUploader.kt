@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 class DefaultInitialDataUploader(val defaultEntityConverter: DefaultEntityConverter) {
 
     fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>) {
-        val entities = defaultEntityConverter.streamToEntity(inputStream, uploader, uploader)
+        val entities = defaultEntityConverter.streamToEntity(inputStream, uploader)
         val sorted = mapToList(entities, uploader.entityComparator())
         sorted.forEach { uploader.persistEntity(it!!) }
     }

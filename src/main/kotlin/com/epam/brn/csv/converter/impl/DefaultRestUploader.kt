@@ -10,7 +10,7 @@ class DefaultRestUploader(val defaultEntityConverter: DefaultEntityConverter) {
     private val log = logger()
 
     fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>): Map<String, String> {
-        val entities = defaultEntityConverter.streamToEntity(inputStream, uploader, uploader)
+        val entities = defaultEntityConverter.streamToEntity(inputStream, uploader)
         return save(entities, uploader)
     }
 

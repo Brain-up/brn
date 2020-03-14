@@ -1,8 +1,8 @@
 package com.epam.brn.csv.converter.impl
 
 import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.ObjectReaderProvider
 import com.epam.brn.csv.converter.StreamToEntityConverter
+import com.epam.brn.csv.converter.Uploader
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -14,19 +14,22 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class DefaultEntityConverter() : StreamToEntityConverter {
+class DefaultEntityConverter : StreamToEntityConverter {
 
     val log = logger()
 
     override fun <Csv, Entity> streamToEntity(
         inputStream: InputStream,
-        converter: CsvToEntityConverter<Csv, Entity>,
-        objectReaderProvider: ObjectReaderProvider<Csv>
+        uploader: Uploader<Csv, Entity>
     ): Map<String, Pair<Entity?, String?>> {
-        val csvMap = parseCsvFile(
-            inputStream,
-            objectReaderProvider
-        )
+        val csvMap = parseCsvFile(inputStream,uploader)
+        return extractEntityFromCsv(csvMap, uploader)
+    }
+
+    private fun <Csv, Entity> extractEntityFromCsv(
+        csvMap: Map<String, Pair<Csv?, String?>>,
+        converter: CsvToEntityConverter<Csv, Entity>
+    ): HashMap<String, Pair<Entity?, String?>> {
         val entityOrErrors = HashMap<String, Pair<Entity?, String?>>()
         for (csvEntry in csvMap) {
             var entityOrError: Pair<Entity?, String?>
@@ -42,21 +45,21 @@ class DefaultEntityConverter() : StreamToEntityConverter {
         return entityOrErrors
     }
 
-    private fun <Csv> parseCsvFile(
+    override fun <Csv, Entity> parseCsvFile(
         file: InputStream,
-        objectReaderProvider: ObjectReaderProvider<Csv>
+        uploader: Uploader<Csv,Entity>
     ): Map<String, Pair<Csv?, String?>> {
         ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-            return parseCsvFile(it, objectReaderProvider)
+            return parseCsvFileWithStream(it, uploader)
         }
     }
 
-    fun <Csv> parseCsvFile(
+    fun <Csv, Entity> parseCsvFileWithStream(
         file: ByteArrayInputStream,
-        objectReaderProvider: ObjectReaderProvider<Csv>
+        uploader: Uploader<Csv,Entity>
     ): Map<String, Pair<Csv?, String?>> {
         val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
-        val mappingIterator = objectReaderProvider.objectReader().readValues<Csv>(file)
+        val mappingIterator = uploader.objectReader().readValues<Csv>(file)
         val parsedValues = hashMapOf<String, Pair<Csv?, String?>>()
 
         while (mappingIterator.hasNextValue()) {

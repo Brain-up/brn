@@ -31,7 +31,7 @@ class UploadFromCsvServiceImpl(
     }
 
     @Throws(FileFormatException::class)
-    override fun loadTaskFile(file: File): Map<String, String>? =
+    override fun loadTaskFile(file: File): Map<String, String> =
         defaultRestUploader.saveEntities(file.inputStream(), seriesOneUploader)
 
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)

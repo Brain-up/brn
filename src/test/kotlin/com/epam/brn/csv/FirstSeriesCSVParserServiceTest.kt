@@ -39,7 +39,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
             fun task1Converter() = SeriesOneUploader(exerciseService, seriesService, taskService, resourceService, "")
             fun defaultEntityConverter() = DefaultEntityConverter()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile<TaskCsv>(it, task1Converter())
+                defaultEntityConverter().parseCsvFile(it, task1Converter())
             }.map { res -> res.value.first }.toList()
 
             result shouldContain TaskCsv(
@@ -65,7 +65,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
             fun exerciseCsvConverter() = ExerciseUploader(exerciseRepository, seriesService)
             fun defaultEntityConverter() = DefaultEntityConverter()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile<ExerciseCsv>(it, exerciseCsvConverter())
+                defaultEntityConverter().parseCsvFile(it, exerciseCsvConverter())
             }.map { res -> res.value.first }.toList()
 
             val name = "Однослоговые слова без шума"
@@ -85,7 +85,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
             fun groupConverter() = GroupUploader(exerciseGroupRepository)
             fun defaultEntityConverter() = DefaultEntityConverter()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile<GroupCsv>(it, groupConverter())
+                defaultEntityConverter().parseCsvFile(it, groupConverter())
             }.map { res -> res.value.first }.toList()
 
             result shouldContain GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения")
@@ -105,7 +105,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
             fun seriesCsvConverter() = SeriesUploader(seriesRepository, exerciseGroupsService)
             fun defaultEntityConverter() = DefaultEntityConverter()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile<SeriesCsv>(it, seriesCsvConverter())
+                defaultEntityConverter().parseCsvFile(it, seriesCsvConverter())
             }.map { res -> res.value.first }.toList()
 
             result shouldContain SeriesCsv(2, 1, "Распознование слов", "Распознование слов")
