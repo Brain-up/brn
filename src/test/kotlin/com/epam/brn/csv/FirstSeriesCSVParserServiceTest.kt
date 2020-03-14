@@ -1,6 +1,7 @@
 package com.epam.brn.csv
 
 import com.epam.brn.csv.converter.impl.DefaultEntityConverter
+import com.epam.brn.csv.converter.impl.StreamToStringMapper
 import com.epam.brn.csv.converter.impl.firstSeries.ExerciseUploader
 import com.epam.brn.csv.converter.impl.firstSeries.GroupUploader
 import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader
@@ -38,8 +39,9 @@ class FirstSeriesCSVParserServiceTest : Spek({
             val resourceService = Mockito.mock(ResourceService::class.java)
             fun task1Converter() = SeriesOneUploader(exerciseService, seriesService, taskService, resourceService, "")
             fun defaultEntityConverter() = DefaultEntityConverter()
+            fun streamToStringMapper() = StreamToStringMapper()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile(it, task1Converter())
+                defaultEntityConverter().parseCsvFile<TaskCsv>(streamToStringMapper().getCsvLineNumbersToValues(it), task1Converter().objectReader().readValues(it))
             }.map { res -> res.value.first }.toList()
 
             result shouldContain TaskCsv(
@@ -64,8 +66,9 @@ class FirstSeriesCSVParserServiceTest : Spek({
             var seriesService = Mockito.mock(SeriesService::class.java)
             fun exerciseCsvConverter() = ExerciseUploader(exerciseRepository, seriesService)
             fun defaultEntityConverter() = DefaultEntityConverter()
+            fun streamToStringMapper() = StreamToStringMapper()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile(it, exerciseCsvConverter())
+                defaultEntityConverter().parseCsvFile<ExerciseCsv>(streamToStringMapper().getCsvLineNumbersToValues(it), exerciseCsvConverter().objectReader().readValues(it))
             }.map { res -> res.value.first }.toList()
 
             val name = "Однослоговые слова без шума"
@@ -84,8 +87,9 @@ class FirstSeriesCSVParserServiceTest : Spek({
             val exerciseGroupRepository = Mockito.mock(ExerciseGroupRepository::class.java)
             fun groupConverter() = GroupUploader(exerciseGroupRepository)
             fun defaultEntityConverter() = DefaultEntityConverter()
+            fun streamToStringMapper() = StreamToStringMapper()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile(it, groupConverter())
+                defaultEntityConverter().parseCsvFile<GroupCsv>(streamToStringMapper().getCsvLineNumbersToValues(it), groupConverter().objectReader().readValues(it))
             }.map { res -> res.value.first }.toList()
 
             result shouldContain GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения")
@@ -104,8 +108,9 @@ class FirstSeriesCSVParserServiceTest : Spek({
             val exerciseGroupsService = Mockito.mock(ExerciseGroupsService::class.java)
             fun seriesCsvConverter() = SeriesUploader(seriesRepository, exerciseGroupsService)
             fun defaultEntityConverter() = DefaultEntityConverter()
+            fun streamToStringMapper() = StreamToStringMapper()
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                defaultEntityConverter().parseCsvFile(it, seriesCsvConverter())
+                defaultEntityConverter().parseCsvFile<SeriesCsv>(streamToStringMapper().getCsvLineNumbersToValues(it), seriesCsvConverter().objectReader().readValues(it))
             }.map { res -> res.value.first }.toList()
 
             result shouldContain SeriesCsv(2, 1, "Распознование слов", "Распознование слов")

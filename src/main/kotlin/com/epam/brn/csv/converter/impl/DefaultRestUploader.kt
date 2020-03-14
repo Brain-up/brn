@@ -1,20 +1,32 @@
 package com.epam.brn.csv.converter.impl
 
 import com.epam.brn.csv.converter.Uploader
+import java.io.ByteArrayInputStream
 import java.io.InputStream
+import org.apache.commons.io.IOUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class DefaultRestUploader(val defaultEntityConverter: DefaultEntityConverter) {
+class DefaultRestUploader(
+    val defaultEntityConverter: DefaultEntityConverter,
+    val streamToStringMapper: StreamToStringMapper
+) {
     private val log = logger()
 
     fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>): Map<String, String> {
-        val entities = defaultEntityConverter.streamToEntity(inputStream, uploader)
-        return save(entities, uploader)
+        ByteArrayInputStream(IOUtils.toByteArray(inputStream)).use {
+            val rawCsvByLine = streamToStringMapper.getCsvLineNumbersToValues(it)
+            val mappingIterator = uploader.objectReader().readValues<Csv>(it)
+            val entities = defaultEntityConverter.toEntity<Csv, Entity>(rawCsvByLine, mappingIterator, uploader)
+            return save(entities, uploader)
+        }
     }
 
-    private fun <Entity> save(entities: Map<String, Pair<Entity?, String?>>, uploader: Uploader<*, Entity>): Map<String, String> {
+    private fun <Entity> save(
+        entities: Map<String, Pair<Entity?, String?>>,
+        uploader: Uploader<*, Entity>
+    ): Map<String, String> {
         val notSavingEntities = mutableMapOf<String, String>()
 
         entities.forEach {

@@ -1,29 +1,23 @@
 package com.epam.brn.csv.converter.impl
 
 import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.StreamToEntityConverter
-import com.epam.brn.csv.converter.Uploader
-import java.io.BufferedReader
-import java.io.ByteArrayInputStream
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.util.stream.Collectors
-import org.apache.commons.io.IOUtils
-import org.apache.commons.lang3.math.NumberUtils
+import com.epam.brn.csv.converter.StringToEntityConverter
+import com.fasterxml.jackson.databind.MappingIterator
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class DefaultEntityConverter : StreamToEntityConverter {
+class DefaultEntityConverter : StringToEntityConverter {
 
     val log = logger()
 
-    override fun <Csv, Entity> streamToEntity(
-        inputStream: InputStream,
-        uploader: Uploader<Csv, Entity>
+    override fun <Csv, Entity> toEntity(
+        rawCsvByLine: Map<Int, String>,
+        mappingIterator: MappingIterator<Csv>,
+        converter: CsvToEntityConverter<Csv, Entity>
     ): Map<String, Pair<Entity?, String?>> {
-        val csvMap = parseCsvFile(inputStream,uploader)
-        return extractEntityFromCsv(csvMap, uploader)
+        val csvMap = parseCsvFile(rawCsvByLine, mappingIterator)
+        return extractEntityFromCsv(csvMap, converter)
     }
 
     private fun <Csv, Entity> extractEntityFromCsv(
@@ -45,57 +39,30 @@ class DefaultEntityConverter : StreamToEntityConverter {
         return entityOrErrors
     }
 
-    override fun <Csv, Entity> parseCsvFile(
-        file: InputStream,
-        uploader: Uploader<Csv,Entity>
+    override fun <Csv> parseCsvFile(
+        rawCsvByLine: Map<Int, String>,
+        mappingIterator: MappingIterator<Csv>
     ): Map<String, Pair<Csv?, String?>> {
-        ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-            return parseCsvFileWithStream(it, uploader)
-        }
-    }
-
-    fun <Csv, Entity> parseCsvFileWithStream(
-        file: ByteArrayInputStream,
-        uploader: Uploader<Csv,Entity>
-    ): Map<String, Pair<Csv?, String?>> {
-        val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
-        val mappingIterator = uploader.objectReader().readValues<Csv>(file)
         val parsedValues = hashMapOf<String, Pair<Csv?, String?>>()
 
         while (mappingIterator.hasNextValue()) {
             val lineNumber = mappingIterator.currentLocation.lineNr
-            try {
-                val line = mappingIterator.nextValue()
-                csvLineNumbersToValues[lineNumber]?.let {
-                    parsedValues[it] = Pair(line, null)
-                }
-
-                log.debug("Successfully parsed line with number $lineNumber")
-            } catch (e: Exception) {
-                csvLineNumbersToValues[lineNumber]?.let {
-                    parsedValues[it] = Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
-                }
-
-                log.error("Failed to parse line with number $lineNumber ", e)
+            rawCsvByLine[lineNumber]?.let {
+                parsedValues[it] = parseNextCsvValue(mappingIterator, lineNumber)
             }
         }
 
         return parsedValues
     }
 
-    fun getCsvLineNumbersToValues(file: InputStream): Map<Int, String> {
-        val reader = BufferedReader(InputStreamReader(file))
-
-        val result = mutableMapOf<Int, String>()
-        val listOfLinesWithoutHeader = reader
-            .lines()
-            .skip(NumberUtils.LONG_ONE)
-            .collect(Collectors.toList())
-        listOfLinesWithoutHeader.forEachIndexed { index, s ->
-            result[index + 2] = s
+    fun <Csv> parseNextCsvValue(iterator: MappingIterator<Csv>, lineNumber: Int): Pair<Csv?, String?> {
+        try {
+            val line = iterator.nextValue()
+            log.debug("Successfully parsed line with number $lineNumber")
+            return Pair(line, null)
+        } catch (e: Exception) {
+            log.error("Failed to parse line with number $lineNumber ", e)
+            return Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
         }
-
-        file.reset()
-        return result
     }
 }
