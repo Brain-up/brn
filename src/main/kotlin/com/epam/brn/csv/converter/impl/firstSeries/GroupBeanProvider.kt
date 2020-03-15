@@ -1,8 +1,8 @@
 package com.epam.brn.csv.converter.impl.firstSeries
 
 import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.ObjectReaderProvider
 import com.epam.brn.csv.converter.DataLoadingBeanProvider
+import com.epam.brn.csv.converter.ObjectReaderProvider
 import com.epam.brn.csv.dto.GroupCsv
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository

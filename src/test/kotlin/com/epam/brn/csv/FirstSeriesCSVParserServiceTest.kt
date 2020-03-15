@@ -1,29 +1,15 @@
 package com.epam.brn.csv
 
-import com.epam.brn.csv.converter.CsvToEntityConverter
-import com.epam.brn.csv.converter.impl.CsvToEntityConverterService
 import com.epam.brn.csv.converter.impl.DefaultEntityConverter
 import com.epam.brn.csv.converter.impl.ObjectReaderService
 import com.epam.brn.csv.converter.impl.StreamToStringMapper
-import com.epam.brn.csv.converter.impl.firstSeries.ExerciseBeanProvider
-import com.epam.brn.csv.converter.impl.firstSeries.GroupBeanProvider
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneBeanProvider
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesBeanProvider
 import com.epam.brn.csv.dto.ExerciseCsv
 import com.epam.brn.csv.dto.GroupCsv
 import com.epam.brn.csv.dto.SeriesCsv
 import com.epam.brn.csv.dto.TaskCsv
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.service.ExerciseGroupsService
-import com.epam.brn.service.ExerciseService
-import com.epam.brn.service.ResourceService
-import com.epam.brn.service.SeriesService
-import com.epam.brn.service.TaskService
 import java.nio.charset.StandardCharsets
 import kotlin.streams.toList
 import org.amshove.kluent.shouldContain
-import org.mockito.Mockito
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
