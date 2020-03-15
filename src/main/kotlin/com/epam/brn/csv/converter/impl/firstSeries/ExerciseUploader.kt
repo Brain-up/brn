@@ -10,18 +10,17 @@ import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import org.springframework.stereotype.Component
 
+// TODO: delete this class and exercises.csv, for now tests are breaking
 @Component
 class ExerciseUploader(
     private val exerciseRepository: ExerciseRepository,
     private val seriesService: SeriesService
 ) : Uploader<ExerciseCsv, Exercise> {
 
-    override fun persistEntity(entity: Exercise) {
-        exerciseRepository.save(entity)
-    }
+    override fun shouldProcess(fileName: String) = "exercises.csv" == fileName
 
-    override fun entityComparator(): (Exercise) -> Int {
-        return { it.id?.toInt()!! }
+    override fun save(entity: Exercise) {
+        exerciseRepository.save(entity)
     }
 
     override fun objectReader(): ObjectReader {

@@ -1,12 +1,10 @@
 package com.epam.brn.service
 
-import com.epam.brn.constant.BrnInitFiles
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.converter.FileNameToUploader
-import com.epam.brn.csv.converter.impl.DefaultInitialDataUploader
+import com.epam.brn.csv.converter.impl.DefaultCsvLoader
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -14,16 +12,15 @@ import com.epam.brn.model.Task
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
-import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
-import org.springframework.core.io.ResourceLoader
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -36,20 +33,16 @@ import org.springframework.stereotype.Service
 @Service
 @Profile("dev", "prod")
 class InitialDataLoader(
-    private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val userAccountRepository: UserAccountRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
-    private val defaultInitialDataUploader: DefaultInitialDataUploader
+    private val defaultCsvLoader: DefaultCsvLoader
 ) {
     private val log = logger()
 
     @Value("\${init.folder:#{null}}")
     var folder: Path? = null
-
-    @Autowired
-    lateinit var fileNameToUploader: FileNameToUploader
 
     @Autowired
     lateinit var exerciseService: ExerciseService
@@ -72,9 +65,11 @@ class InitialDataLoader(
 
         val isInitRequired = exerciseGroupRepository.count() == 0L
         log.debug("Is initialization required: $isInitRequired")
-        if (isInitRequired)
-            folder?.let { loadInitialDataFromFileSystem(it) }
-                ?: loadInitialDataFromClassPath()
+
+        if (isInitRequired) {
+            val folderOrDefault = folder ?: Paths.get(Thread.currentThread().contextClassLoader.getResource("initFiles").toURI())
+            loadInitialDataFromFileSystem(folderOrDefault)
+        }
     }
 
     private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
@@ -112,44 +107,15 @@ class InitialDataLoader(
         if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
 
-        val sources = BrnInitFiles.values()
-            .map { Pair(it, Files.newInputStream(folder.resolve(it.getFileName()))) }
-            .toMap()
-
-        try {
-            loadInitialDataToDb(sources)
-        } finally {
-            sources.onEach { (_, inputStream) ->
-                try {
-                    inputStream.close()
-                } catch (e: Exception) {
-                    log.error(e)
-                }
-            }
+        Files.newDirectoryStream(folder).use { dirStream ->
+            defaultCsvLoader.process(dirStream.asIterable())
         }
-    }
-
-    private fun loadInitialDataFromClassPath() {
-        log.debug("Loading data from classpath initFiles")
-        val sources = BrnInitFiles.values()
-            .map { Pair(it, resourceLoader.getResource("classpath:initFiles/${it.getFileName()}").inputStream) }
-            .toMap()
-        loadInitialDataToDb(sources)
-    }
-
-    private fun loadInitialDataToDb(sources: Map<BrnInitFiles, InputStream>) {
-        for (entry in sources) {
-            val uploader = fileNameToUploader.getUploaderFor(entry.key)
-            if (uploader != null)
-                defaultInitialDataUploader.saveEntities(entry.value, uploader)
-        }
-
-        loadTasksFor3Series(sources.getValue(BrnInitFiles.SERIES_THREE))
+        loadTasksFor3Series()
         log.debug("Initialization succeeded")
     }
 
     // todo: get data from file for 3 series
-    private fun loadTasksFor3Series(tasksInputStream: InputStream) {
+    private fun loadTasksFor3Series() {
         val resource1 = Resource(
             word = "девочкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),

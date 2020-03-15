@@ -2,7 +2,7 @@ package com.epam.brn.csv.impl
 
 import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.csv.UploadFromCsvService
-import com.epam.brn.csv.converter.impl.DefaultRestUploader
+import com.epam.brn.csv.converter.impl.DefaultCsvLoader
 import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader
 import com.epam.brn.csv.converter.impl.secondSeries.SeriesTwoUploader
 import com.epam.brn.exception.FileFormatException
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile
 class UploadFromCsvServiceImpl(
     val seriesOneUploader: SeriesOneUploader,
     val seriesTwoUploader: SeriesTwoUploader,
-    val defaultRestUploader: DefaultRestUploader
+    val defaultCsvLoader: DefaultCsvLoader
 ) : UploadFromCsvService {
 
     @Throws(FileFormatException::class)
@@ -24,15 +24,15 @@ class UploadFromCsvServiceImpl(
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException(CSV_FILE_FORMAT_ERROR)
         return when (seriesId.toInt()) {
-            1 -> defaultRestUploader.saveEntities(file.inputStream, seriesOneUploader)
-            2 -> defaultRestUploader.saveEntities(file.inputStream, seriesTwoUploader)
+            1 -> defaultCsvLoader.saveEntities(file, seriesOneUploader)
+            2 -> defaultCsvLoader.saveEntities(file, seriesTwoUploader)
             else -> throw IllegalArgumentException("There no one strategy yet for seriesId = $seriesId")
         }
     }
 
     @Throws(FileFormatException::class)
-    override fun loadTaskFile(file: File): Map<String, String> =
-        defaultRestUploader.saveEntities(file.inputStream(), seriesOneUploader)
+    override fun loadTaskFile(file: File) =
+        defaultCsvLoader.saveEntities(file, seriesOneUploader)
 
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
 }

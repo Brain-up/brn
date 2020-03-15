@@ -27,6 +27,8 @@ class SeriesOneUploader(
     @Value("\${brn.audio.file.default.path}") val defaultAudioFileUrl: String
 ) : Uploader<TaskCsv, Task> {
 
+    override fun shouldProcess(fileName: String) = "1_series.csv" == fileName
+
     private val log = logger()
 
     override fun convert(source: TaskCsv): Task {
@@ -55,11 +57,7 @@ class SeriesOneUploader(
                 .with(csvSchema)
     }
 
-    override fun entityComparator(): (Task) -> Int {
-        return { it -> it.exercise?.id?.toInt()!! }
-    }
-
-    override fun persistEntity(entity: Task) {
+    override fun save(entity: Task) {
         taskService.save(entity)
     }
 

@@ -3,22 +3,20 @@ package com.epam.brn.csv.converter.impl.firstSeries
 import com.epam.brn.csv.converter.Uploader
 import com.epam.brn.csv.dto.GroupCsv
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.service.ExerciseGroupsService
 import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import org.springframework.stereotype.Component
 
 @Component
 class GroupUploader(
-    private val exerciseGroupRepository: ExerciseGroupRepository
+    private val exerciseGroupsService: ExerciseGroupsService
 ) : Uploader<GroupCsv, ExerciseGroup> {
 
-    override fun persistEntity(entity: ExerciseGroup) {
-        exerciseGroupRepository.save(entity)
-    }
+    override fun shouldProcess(fileName: String) = "groups.csv" == fileName
 
-    override fun entityComparator(): (ExerciseGroup) -> Int {
-        return { it.id?.toInt()!! }
+    override fun save(entity: ExerciseGroup) {
+        exerciseGroupsService.save(entity)
     }
 
     override fun objectReader(): ObjectReader {

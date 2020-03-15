@@ -14,12 +14,11 @@ class SeriesUploader(
     private val seriesRepository: SeriesRepository,
     private val exerciseGroupsService: ExerciseGroupsService
 ) : Uploader<SeriesCsv, Series> {
-    override fun persistEntity(entity: Series) {
-        seriesRepository.save(entity)
-    }
 
-    override fun entityComparator(): (Series) -> Int {
-        return { it.id?.toInt()!! }
+    override fun shouldProcess(fileName: String) = "series.csv" == fileName
+
+    override fun save(entity: Series) {
+        seriesRepository.save(entity)
     }
 
     override fun objectReader(): ObjectReader {

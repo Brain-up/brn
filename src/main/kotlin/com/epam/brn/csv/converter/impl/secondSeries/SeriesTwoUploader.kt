@@ -35,12 +35,10 @@ class SeriesTwoUploader(
     val LEVEL = "level"
     val WORDS = "words"
 
-    override fun persistEntity(entity: Exercise) {
-        exerciseService.save(entity)
-    }
+    override fun shouldProcess(fileName: String) = "2_series.csv" == fileName
 
-    override fun entityComparator(): (Exercise) -> Int {
-        return { it.level!! }
+    override fun save(entity: Exercise) {
+        exerciseService.save(entity)
     }
 
     override fun objectReader(): ObjectReader {

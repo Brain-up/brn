@@ -4,22 +4,21 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.stream.Collectors
+import java.util.stream.Stream
 import org.apache.commons.lang3.math.NumberUtils
 import org.springframework.stereotype.Service
 
 @Service
 class StreamToStringMapper {
-    fun getCsvLineNumbersToValues(file: InputStream): Map<Int, String> {
+    fun getCsvLineNumbersToValues(file: InputStream): Stream<String> {
         val reader = BufferedReader(InputStreamReader(file))
 
-        val result = mutableMapOf<Int, String>()
+        // collect is necessary to eagerly collect all lines and reset file reader to initial position
         val listOfLinesWithoutHeader = reader
             .lines()
             .skip(NumberUtils.LONG_ONE)
             .collect(Collectors.toList())
-        listOfLinesWithoutHeader.forEachIndexed { index, s ->
-            result[index + 2] = s
-        }
+        val result = listOfLinesWithoutHeader.stream()
 
         file.reset()
         return result

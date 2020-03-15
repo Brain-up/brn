@@ -3,6 +3,8 @@ package com.epam.brn.csv.converter.impl
 import com.epam.brn.csv.converter.CsvToEntityConverter
 import com.epam.brn.csv.converter.StringToEntityConverter
 import com.fasterxml.jackson.databind.MappingIterator
+import java.util.Optional
+import java.util.stream.Stream
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
@@ -12,57 +14,63 @@ class DefaultEntityConverter : StringToEntityConverter {
     val log = logger()
 
     override fun <Csv, Entity> toEntity(
-        rawCsvByLine: Map<Int, String>,
+        rawCsvByLine: Stream<String>,
         mappingIterator: MappingIterator<Csv>,
         converter: CsvToEntityConverter<Csv, Entity>
-    ): Map<String, Pair<Entity?, String?>> {
-        val csvMap = parseCsvFile(rawCsvByLine, mappingIterator)
-        return extractEntityFromCsv(csvMap, converter)
+    ): Stream<DataConversionResult<Entity>> {
+        val csvConversionResults = parseCsvFile(rawCsvByLine, mappingIterator)
+        return extractEntityFromCsv(csvConversionResults, converter)
     }
 
     private fun <Csv, Entity> extractEntityFromCsv(
-        csvMap: Map<String, Pair<Csv?, String?>>,
+        csvConversions: Stream<DataConversionResult<Csv>>,
         converter: CsvToEntityConverter<Csv, Entity>
-    ): HashMap<String, Pair<Entity?, String?>> {
-        val entityOrErrors = HashMap<String, Pair<Entity?, String?>>()
-        for (csvEntry in csvMap) {
-            var entityOrError: Pair<Entity?, String?>
-            val csv = csvEntry.value.first
-            val error = csvEntry.value.second
-            if (csv != null) {
-                entityOrError = Pair(converter.convert(csv), null)
+    ): Stream<DataConversionResult<Entity>> {
+        return csvConversions.map {
+            if (it.error.isPresent) {
+                DataConversionResult(it.index, it.line, Optional.empty(), Optional.of(it.error.get()))
             } else {
-                entityOrError = Pair(null, error)
+                try {
+                    val entity = converter.convert(it.data.get())
+                    DataConversionResult(it.index, it.line, Optional.of(entity), Optional.empty())
+                } catch (exception: Exception) {
+                    log.error("Failed to convert entity from csv for data : $it ", exception)
+                    DataConversionResult<Entity>(it.index, it.line, Optional.empty(), Optional.of("Failed to convert entity from csv for data : $it"))
+                }
             }
-            entityOrErrors.put(csvEntry.key, entityOrError)
         }
-        return entityOrErrors
     }
 
     override fun <Csv> parseCsvFile(
-        rawCsvByLine: Map<Int, String>,
+        rawCsvByLine: Stream<String>,
         mappingIterator: MappingIterator<Csv>
-    ): Map<String, Pair<Csv?, String?>> {
-        val parsedValues = hashMapOf<String, Pair<Csv?, String?>>()
-
-        while (mappingIterator.hasNextValue()) {
+    ): Stream<DataConversionResult<Csv>> {
+        return rawCsvByLine.map {
             val lineNumber = mappingIterator.currentLocation.lineNr
-            rawCsvByLine[lineNumber]?.let {
-                parsedValues[it] = parseNextCsvValue(mappingIterator, lineNumber)
+            if (mappingIterator.hasNextValue()) {
+                parseNextCsvValue(it, mappingIterator, lineNumber)
+            } else {
+                log.error("Mapping iterator out of index for data : $it")
+                DataConversionResult(lineNumber, it, Optional.empty(), Optional.of("Mapping iterator out of index for data : $it"))
             }
         }
-
-        return parsedValues
     }
 
-    fun <Csv> parseNextCsvValue(iterator: MappingIterator<Csv>, lineNumber: Int): Pair<Csv?, String?> {
-        try {
-            val line = iterator.nextValue()
+    fun <Csv> parseNextCsvValue(line: String, iterator: MappingIterator<Csv>, lineNumber: Int): DataConversionResult<Csv> {
+        return try {
+            val csv = iterator.nextValue()
             log.debug("Successfully parsed line with number $lineNumber")
-            return Pair(line, null)
+            DataConversionResult(lineNumber, line, Optional.of(csv), Optional.empty())
         } catch (e: Exception) {
-            log.error("Failed to parse line with number $lineNumber ", e)
-            return Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
+            log.error("Failed to parse line with number $lineNumber, content: $line ", e)
+            DataConversionResult(lineNumber, line, Optional.empty(), Optional.of("Parse Exception - wrong format: ${e.localizedMessage}"))
         }
     }
+
+    data class DataConversionResult<Type>(
+        val index: Int,
+        val line: String,
+        val data: Optional<Type>,
+        val error: Optional<String>
+    )
 }
