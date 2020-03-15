@@ -1,6 +1,6 @@
 package com.epam.brn.csv.converter.impl
 
-import com.epam.brn.csv.converter.Uploader
+import com.epam.brn.csv.converter.DataLoadingBeanProvider
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.InputStream
@@ -15,37 +15,37 @@ import org.springframework.stereotype.Service
 class DefaultCsvLoader(
     val defaultEntityConverter: DefaultEntityConverter,
     val streamToStringMapper: StreamToStringMapper,
-    val uploaders: List<Uploader<out Any, out Any>>
+    val dataLoadingBeanProviders: List<DataLoadingBeanProvider<out Any, out Any>>
 ) {
     private val log = logger()
 
-    fun <Csv, Entity> saveEntities(inputStreamSource: InputStreamSource, uploader: Uploader<Csv, Entity>): Map<String, String> {
-        return saveEntities(inputStreamSource.inputStream, uploader)
+    fun <Csv, Entity> saveEntities(inputStreamSource: InputStreamSource, dataLoadingBeanProvider: DataLoadingBeanProvider<Csv, Entity>): Map<String, String> {
+        return saveEntities(inputStreamSource.inputStream, dataLoadingBeanProvider)
     }
 
-    fun <Csv, Entity> saveEntities(file: File, uploader: Uploader<Csv, Entity>): Map<String, String> {
-        return saveEntities(file.inputStream(), uploader)
+    fun <Csv, Entity> saveEntities(file: File, dataLoadingBeanProvider: DataLoadingBeanProvider<Csv, Entity>): Map<String, String> {
+        return saveEntities(file.inputStream(), dataLoadingBeanProvider)
     }
 
-    private fun <Csv, Entity> saveEntities(inputStream: InputStream, uploader: Uploader<Csv, Entity>): Map<String, String> {
+    private fun <Csv, Entity> saveEntities(inputStream: InputStream, dataLoadingBeanProvider: DataLoadingBeanProvider<Csv, Entity>): Map<String, String> {
         ByteArrayInputStream(IOUtils.toByteArray(inputStream)).use {
             val rawCsvByLine = streamToStringMapper.getCsvLineNumbersToValues(it)
-            val mappingIterator = uploader.objectReader().readValues<Csv>(it)
-            val entities = defaultEntityConverter.toEntity<Csv, Entity>(rawCsvByLine, mappingIterator, uploader)
-            return save(entities, uploader)
+            val mappingIterator = dataLoadingBeanProvider.objectReaderProvider().objectReader<Csv>().readValues<Csv>(it)
+            val entities = defaultEntityConverter.toEntity<Csv, Entity>(rawCsvByLine, mappingIterator, dataLoadingBeanProvider.converter())
+            return save(entities, dataLoadingBeanProvider)
         }
     }
 
     private fun <Entity> save(
         entities: Stream<DataConversionResult<Entity>>,
-        uploader: Uploader<*, Entity>
+        dataLoadingBeanProvider: DataLoadingBeanProvider<*, Entity>
     ): Map<String, String> {
         val notSavingEntities = mutableMapOf<String, String>()
 
         entities.forEach {
             try {
                 if (it.data.isPresent)
-                    uploader.save(it.data.get())
+                    dataLoadingBeanProvider.repository().save(it.data.get())
                 else
                     notSavingEntities[it.line] = it.toString()
             } catch (e: Exception) {
@@ -62,7 +62,7 @@ class DefaultCsvLoader(
         val pathsList = paths.toMutableList()
         pathsList.sortBy { priorities[it.fileName.toString()] ?: Integer.MAX_VALUE }
         pathsList.forEach { path ->
-            uploaders.stream()
+            dataLoadingBeanProviders.stream()
                 .filter { it.shouldProcess(path.fileName.toString()) }
                 .findFirst()
                 .ifPresent { uploader -> saveEntities(path.toFile(), uploader) }

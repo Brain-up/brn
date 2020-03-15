@@ -3,8 +3,8 @@ package com.epam.brn.csv.impl
 import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.csv.UploadFromCsvService
 import com.epam.brn.csv.converter.impl.DefaultCsvLoader
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneUploader
-import com.epam.brn.csv.converter.impl.secondSeries.SeriesTwoUploader
+import com.epam.brn.csv.converter.impl.firstSeries.SeriesOneBeanProvider
+import com.epam.brn.csv.converter.impl.secondSeries.SeriesTwoBeanProvider
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
 import java.io.File
@@ -14,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile
 
 @Component
 class UploadFromCsvServiceImpl(
-    val seriesOneUploader: SeriesOneUploader,
-    val seriesTwoUploader: SeriesTwoUploader,
+    val seriesOneUploader: SeriesOneBeanProvider,
+    val seriesTwoUploader: SeriesTwoBeanProvider,
     val defaultCsvLoader: DefaultCsvLoader
 ) : UploadFromCsvService {
 
