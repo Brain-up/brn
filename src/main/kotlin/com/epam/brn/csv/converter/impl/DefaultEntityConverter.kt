@@ -28,14 +28,29 @@ class DefaultEntityConverter : StringToEntityConverter {
     ): Stream<DataConversionResult<Entity>> {
         return csvConversions.map {
             if (it.error.isPresent) {
-                DataConversionResult(it.index, it.line, Optional.empty(), Optional.of(it.error.get()))
+                DataConversionResult(
+                    it.index,
+                    it.line,
+                    Optional.empty(),
+                    Optional.of(it.error.get())
+                )
             } else {
                 try {
                     val entity = converter.convert(it.data.get())
-                    DataConversionResult(it.index, it.line, Optional.of(entity), Optional.empty())
+                    DataConversionResult(
+                        it.index,
+                        it.line,
+                        Optional.of(entity),
+                        Optional.empty()
+                    )
                 } catch (exception: Exception) {
                     log.error("Failed to convert entity from csv for data : $it ", exception)
-                    DataConversionResult<Entity>(it.index, it.line, Optional.empty(), Optional.of("Failed to convert entity from csv for data : $it"))
+                    DataConversionResult<Entity>(
+                        it.index,
+                        it.line,
+                        Optional.empty(),
+                        Optional.of("Failed to convert entity from csv for data : $it")
+                    )
                 }
             }
         }
@@ -51,7 +66,12 @@ class DefaultEntityConverter : StringToEntityConverter {
                 parseNextCsvValue(it, mappingIterator, lineNumber)
             } else {
                 log.error("Mapping iterator out of index for data : $it")
-                DataConversionResult(lineNumber, it, Optional.empty(), Optional.of("Mapping iterator out of index for data : $it"))
+                DataConversionResult(
+                    lineNumber,
+                    it,
+                    Optional.empty(),
+                    Optional.of("Mapping iterator out of index for data : $it")
+                )
             }
         }
     }
@@ -63,14 +83,12 @@ class DefaultEntityConverter : StringToEntityConverter {
             DataConversionResult(lineNumber, line, Optional.of(csv), Optional.empty())
         } catch (e: Exception) {
             log.error("Failed to parse line with number $lineNumber, content: $line ", e)
-            DataConversionResult(lineNumber, line, Optional.empty(), Optional.of("Parse Exception - wrong format: ${e.localizedMessage}"))
+            DataConversionResult(
+                lineNumber,
+                line,
+                Optional.empty(),
+                Optional.of("Parse Exception - wrong format: ${e.localizedMessage}")
+            )
         }
     }
-
-    data class DataConversionResult<Type>(
-        val index: Int,
-        val line: String,
-        val data: Optional<Type>,
-        val error: Optional<String>
-    )
 }

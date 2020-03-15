@@ -1,6 +1,6 @@
 package com.epam.brn.csv.converter
 
-import com.epam.brn.csv.converter.impl.DefaultEntityConverter
+import com.epam.brn.csv.converter.impl.DataConversionResult
 import com.fasterxml.jackson.databind.MappingIterator
 import java.util.stream.Stream
 
@@ -10,10 +10,10 @@ interface StringToEntityConverter {
         rawCsvByLine: Stream<String>,
         mappingIterator: MappingIterator<Csv>,
         converter: CsvToEntityConverter<Csv, Entity>
-    ): Stream<DefaultEntityConverter.DataConversionResult<Entity>>
+    ): Stream<DataConversionResult<Entity>>
 
     fun <Csv> parseCsvFile(
         rawCsvByLine: Stream<String>,
         mappingIterator: MappingIterator<Csv>
-    ): Stream<DefaultEntityConverter.DataConversionResult<Csv>>
+    ): Stream<DataConversionResult<Csv>>
 }

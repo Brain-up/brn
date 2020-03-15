@@ -37,7 +37,7 @@ class DefaultCsvLoader(
     }
 
     private fun <Entity> save(
-        entities: Stream<DefaultEntityConverter.DataConversionResult<Entity>>,
+        entities: Stream<DataConversionResult<Entity>>,
         uploader: Uploader<*, Entity>
     ): Map<String, String> {
         val notSavingEntities = mutableMapOf<String, String>()
