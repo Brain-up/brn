@@ -22,16 +22,14 @@ class UploadFromCsv2SeriesStrategy(
     private val log = logger()
 
     override fun uploadFile(inputStream: InputStream): Map<String, String> {
-        val exercises = csvMappingIteratorParser.parseCsvFile(
-            inputStream,
-            exercise2SeriesConverter,
-            csvParser2SeriesService
-        )
+        val exercises = csvMappingIteratorParser
+            .parseCsvFile(inputStream, exercise2SeriesConverter, csvParser2SeriesService)
+        
         return saveExercises(exercises)
     }
 
     private fun saveExercises(exercises: Map<String, Pair<Exercise?, String?>>): Map<String, String> {
-        val notSavingExercises = mutableMapOf<String, String>()
+        val unsavedExercises = mutableMapOf<String, String>()
 
         exercises.forEach {
             val key = it.key
@@ -40,13 +38,13 @@ class UploadFromCsv2SeriesStrategy(
                 if (exercise != null)
                     exerciseService.save(exercise)
                 else
-                    it.value.second?.let { errorMessage -> notSavingExercises[key] = errorMessage }
+                    it.value.second?.let { errorMessage -> unsavedExercises[key] = errorMessage }
             } catch (e: Exception) {
-                notSavingExercises[key] = e.localizedMessage
+                unsavedExercises[key] = e.localizedMessage
                 log.warn("Failed to insert : $key ", e)
             }
             log.debug("Successfully inserted line: $key")
         }
-        return notSavingExercises
+        return unsavedExercises
     }
 }
