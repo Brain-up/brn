@@ -17,8 +17,10 @@ class UploadFromCsvServiceImpl(
 
     @Throws(FileFormatException::class)
     override fun loadTaskFile(file: MultipartFile, seriesId: Long): Map<String, String> {
+
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException(CSV_FILE_FORMAT_ERROR)
+
         return when (seriesId.toInt()) {
             1 -> uploadFromCsv1SeriesStrategy.uploadFile(file.inputStream)
             2 -> uploadFromCsv2SeriesStrategy.uploadFile(file.inputStream)

@@ -24,7 +24,7 @@ class UploadFromCsv2SeriesStrategy(
     override fun uploadFile(inputStream: InputStream): Map<String, String> {
         val exercises = csvMappingIteratorParser
             .parseCsvFile(inputStream, exercise2SeriesConverter, csvParser2SeriesService)
-        
+
         return saveExercises(exercises)
     }
 
