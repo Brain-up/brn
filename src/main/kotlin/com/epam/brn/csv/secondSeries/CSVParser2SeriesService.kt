@@ -24,6 +24,6 @@ class CSVParser2SeriesService : CsvParser<Map<String, Any>> {
         return csvMapper
             .readerFor(Map::class.java)
             .with(csvSchema)
-            .readValues<Map<String, Any>>(file)
+            .readValues(file)
     }
 }

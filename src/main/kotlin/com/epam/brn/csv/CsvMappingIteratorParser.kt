@@ -16,7 +16,12 @@ class CsvMappingIteratorParser {
 
     val log = logger()
 
-    final inline fun <reified Source, reified Target> parseCsvFile(file: InputStream, converter: Converter<Source, Target>, csvParser: CsvParser<Source>): Map<String, Pair<Target?, String?>> {
+    final inline fun <reified Source, reified Target> parseCsvFile(
+        file: InputStream,
+        converter: Converter<Source, Target>,
+        csvParser: CsvParser<Source>
+    ): Map<String, Pair<Target?, String?>> {
+
         ByteArrayInputStream(IOUtils.toByteArray(file)).use {
             return parseCsvFile(it, converter, csvParser)
         }
@@ -27,13 +32,13 @@ class CsvMappingIteratorParser {
         converter: Converter<Source, Target>,
         csvParser: CsvParser<Source>
     ): Map<String, Pair<Target?, String?>> {
-        val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
 
         val parsedValues = hashMapOf<String, Source>()
         val sourceToTarget = hashMapOf<String, Pair<Target?, String?>>()
 
-        val mappingIterator = csvParser.parseCsvFile(file)
+        val csvLineNumbersToValues = getCsvLineNumbersToValues(file)
 
+        val mappingIterator = csvParser.parseCsvFile(file)
         while (mappingIterator.hasNextValue()) {
             val lineNumber = mappingIterator.currentLocation.lineNr
             try {
@@ -60,16 +65,14 @@ class CsvMappingIteratorParser {
     }
 
     fun getCsvLineNumbersToValues(file: InputStream): Map<Int, String> {
-        val reader = BufferedReader(InputStreamReader(file))
 
-        val result = mutableMapOf<Int, String>()
-        val listOfLinesWithoutHeader = reader
+        val listOfLinesWithoutHeader = BufferedReader(InputStreamReader(file))
             .lines()
             .skip(NumberUtils.LONG_ONE)
             .collect(Collectors.toList())
-        listOfLinesWithoutHeader.forEachIndexed { index, s ->
-            result[index + 2] = s
-        }
+
+        val result = mutableMapOf<Int, String>()
+        listOfLinesWithoutHeader.forEachIndexed { index, s -> result[index + 2] = s }
 
         file.reset()
         return result

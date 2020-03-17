@@ -33,6 +33,6 @@ class TaskCSVParser1SeriesService : CsvParser<TaskCsv> {
         return csvMapper
             .readerWithTypedSchemaFor(TaskCsv::class.java)
             .with(csvSchema)
-            .readValues<TaskCsv>(file)
+            .readValues(file)
     }
 }
