@@ -35,6 +35,6 @@ class CommaSeparatedGroupCSVParserService : com.epam.brn.csv.CsvParser<GroupCsv>
         return csvMapper
             .readerWithTypedSchemaFor(GroupCsv::class.java)
             .with(csvSchema)
-            .readValues<GroupCsv>(file)
+            .readValues(file)
     }
 }

@@ -35,6 +35,6 @@ class CommaSeparatedSeriesCSVParserService : com.epam.brn.csv.CsvParser<SeriesCs
         return csvMapper
             .readerWithTypedSchemaFor(SeriesCsv::class.java)
             .with(csvSchema)
-            .readValues<SeriesCsv>(file)
+            .readValues(file)
     }
 }

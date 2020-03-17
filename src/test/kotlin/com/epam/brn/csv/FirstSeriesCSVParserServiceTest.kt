@@ -10,8 +10,6 @@ import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVPars
 import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedGroupCSVParserService
 import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
 import java.nio.charset.StandardCharsets
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldContain
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -41,7 +39,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<TaskCsv>(), taskCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter(), taskCSVParserService)
             }.map { res -> res.value.first }.toList()
 
             result shouldContain TaskCsv(
@@ -64,7 +62,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<ExerciseCsv>(), commaSeparatedExerciseCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter(), commaSeparatedExerciseCSVParserService)
             }.map { res -> res.value.first }.toList()
 
             val name = "Однослоговые слова без шума"
@@ -82,7 +80,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<GroupCsv>(), commaSeparatedExerciseGroupCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter(), commaSeparatedExerciseGroupCSVParserService)
             }.map { res -> res.value.first }.toList()
 
             result shouldContain GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения")
@@ -98,7 +96,7 @@ class FirstSeriesCSVParserServiceTest : Spek({
                 """.trimIndent()
 
             val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter<SeriesCsv>(), commaSeparatedSeriesCSVParserService)
+                csvMappintIteratorParser.parseCsvFile(it, makeIdentityConverter(), commaSeparatedSeriesCSVParserService)
             }.map { res -> res.value.first }.toList()
 
             result shouldContain SeriesCsv(2, 1, "Распознование слов", "Распознование слов")
