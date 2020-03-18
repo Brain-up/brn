@@ -34,11 +34,10 @@ class FirstSeriesCSVParserServiceTest {
                 level exerciseName orderNumber word audioFileName pictureFileName words wordType
                 1 name1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
                 2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
-                """.trimIndent()
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-            csvMappingIteratorParser.parseCsvFile(it, makeIdentityConverter(), taskCsvParserService)
-        }.map { res -> res.value.first }.toList()
+        val result = csvMappingIteratorParser.parseCsvFile(input, makeIdentityConverter(), taskCsvParserService)
+            .map { res -> res.value.first }.toList()
 
         assertThat(result).containsAll(
             listOf(
@@ -61,11 +60,10 @@ class FirstSeriesCSVParserServiceTest {
                 exerciseId, seriesId, level, name, description
                 1, 1, 1, Однослоговые слова без шума, Однослоговые слова без шума
                 2, 1, 2, Однослоговые слова без шума, Однослоговые слова без шума                
-                """.trimIndent()
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-            csvMappingIteratorParser.parseCsvFile(it, makeIdentityConverter(), exerciseCsvParserService)
-        }.map { res -> res.value.first }.toList()
+        val result = csvMappingIteratorParser.parseCsvFile(input, makeIdentityConverter(), exerciseCsvParserService)
+            .map { res -> res.value.first }.toList()
 
         val name = "Однослоговые слова без шума"
         assertThat(result).containsAll(
@@ -83,15 +81,10 @@ class FirstSeriesCSVParserServiceTest {
                 groupId, name, description
                 1, Неречевые упражнения, Неречевые упражнения
                 2, Речевые упражнения, Речевые упражнения              
-                """.trimIndent()
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-            csvMappingIteratorParser.parseCsvFile(
-                it,
-                makeIdentityConverter(),
-                groupCsvParserService
-            )
-        }.map { res -> res.value.first }.toList()
+        val result = csvMappingIteratorParser.parseCsvFile(input, makeIdentityConverter(), groupCsvParserService)
+            .map { res -> res.value.first }.toList()
 
         assertThat(result).containsAll(
             listOf(
@@ -107,11 +100,10 @@ class FirstSeriesCSVParserServiceTest {
                 groupId, seriesId, name, description
                 2, 1, Распознование слов, Распознование слов
                 2, 2, Составление предложений, Составление предложений         
-                """.trimIndent()
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = input.byteInputStream(StandardCharsets.UTF_8).use {
-            csvMappingIteratorParser.parseCsvFile(it, makeIdentityConverter(), seriesCsvParserService)
-        }.map { res -> res.value.first }.toList()
+        val result = csvMappingIteratorParser.parseCsvFile(input, makeIdentityConverter(), seriesCsvParserService)
+            .map { res -> res.value.first }.toList()
 
         assertThat(result).containsAll(
             listOf(
