@@ -144,7 +144,13 @@ class InitialDataLoader(
     private fun addAdminUser(adminAuthority: Authority): UserAccount {
         val password = passwordEncoder.encode("admin")
         val userAccount =
-            UserAccount(firstName = "admin", lastName = "admin", password = password, email = "admin@admin.com", active = true)
+            UserAccount(
+                firstName = "admin",
+                lastName = "admin",
+                password = password,
+                email = "admin@admin.com",
+                active = true
+            )
         userAccount.authoritySet.addAll(setOf(adminAuthority))
         return userAccount
     }
@@ -155,9 +161,10 @@ class InitialDataLoader(
         if (!Files.exists(folder))
             throw IllegalArgumentException("$folder with intial data does not exist")
 
-        val sources = listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
-            .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
-            .toMap()
+        val sources =
+            listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
+                .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
+                .toMap()
 
         try {
             loadInitialDataToDb(sources)
@@ -174,9 +181,10 @@ class InitialDataLoader(
 
     private fun loadInitialDataFromClassPath() {
         log.debug("Loading data from classpath initFiles")
-        val sources = listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
-            .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
-            .toMap()
+        val sources =
+            listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
+                .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
+                .toMap()
         loadInitialDataToDb(sources)
     }
 
@@ -192,10 +200,10 @@ class InitialDataLoader(
 
     private fun loadExerciseGroups(groupsInputStream: InputStream) {
         val groups = csvMappingIteratorParser.parseCsvFile(
-            groupsInputStream,
-            groupCsvConverter,
-            commaSeparatedGroupCSVParserService
-        )
+                groupsInputStream,
+                groupCsvConverter,
+                commaSeparatedGroupCSVParserService
+            )
             .map(Map.Entry<String, Pair<ExerciseGroup?, String?>>::value)
             .map(Pair<ExerciseGroup?, String?>::first)
             .sortedBy { it!!.id }
@@ -205,10 +213,10 @@ class InitialDataLoader(
 
     private fun loadSeries(seriesInputStream: InputStream) {
         val series = csvMappingIteratorParser.parseCsvFile(
-            seriesInputStream,
-            seriesCsvConverter,
-            commaSeparatedSeriesCSVParserService
-        )
+                seriesInputStream,
+                seriesCsvConverter,
+                commaSeparatedSeriesCSVParserService
+            )
             .map(Map.Entry<String, Pair<Series?, String?>>::value)
             .map(Pair<Series?, String?>::first)
             .sortedBy { it!!.id }
@@ -218,10 +226,10 @@ class InitialDataLoader(
 
     private fun loadExercises(exercisesInputStream: InputStream) {
         val exercises = csvMappingIteratorParser.parseCsvFile(
-            exercisesInputStream,
-            exerciseCsvConverter,
-            commaSeparatedExerciseCSVParserService
-        )
+                exercisesInputStream,
+                exerciseCsvConverter,
+                commaSeparatedExerciseCSVParserService
+            )
             .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
             .map(Pair<Exercise?, String?>::first)
             .sortedBy { it!!.id }
@@ -231,9 +239,10 @@ class InitialDataLoader(
 
     private fun loadTasksFor1Series(tasksInputStream: InputStream) {
         val tasks = csvMappingIteratorParser.parseCsvFile(
-            tasksInputStream,
-            taskCsv1SeriesConverter,
-            taskCSVParser1SeriesService)
+                tasksInputStream,
+                taskCsv1SeriesConverter,
+                taskCSVParser1SeriesService
+            )
             .map(Map.Entry<String, Pair<Task?, String?>>::value)
             .map(Pair<Task?, String?>::first)
             .sortedBy { it!!.exercise!!.id }
@@ -243,10 +252,10 @@ class InitialDataLoader(
 
     private fun loadTasksFor2Series(tasksInputStream: InputStream) {
         val exercises = csvMappingIteratorParser.parseCsvFile(
-            tasksInputStream,
-            exercise2SeriesConverter,
-            CSVParser2SeriesService
-        )
+                tasksInputStream,
+                exercise2SeriesConverter,
+                CSVParser2SeriesService
+            )
             .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
             .map(Pair<Exercise?, String?>::first)
             .sortedBy { it!!.level }
