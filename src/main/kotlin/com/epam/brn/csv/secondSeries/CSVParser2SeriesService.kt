@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import java.io.InputStream
-import org.springframework.stereotype.Service
 
-@Service
 class CSVParser2SeriesService : CsvParser<Map<String, Any>> {
 
     override fun parseCsvFile(file: InputStream): MappingIterator<Map<String, Any>> {

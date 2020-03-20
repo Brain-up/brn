@@ -83,21 +83,6 @@ class InitialDataLoader(
     @Autowired
     lateinit var resourceService: ResourceService
 
-    @Autowired
-    lateinit var commaSeparatedExerciseCSVParserService: CommaSeparatedExerciseCSVParserService
-
-    @Autowired
-    lateinit var commaSeparatedSeriesCSVParserService: CommaSeparatedSeriesCSVParserService
-
-    @Autowired
-    lateinit var commaSeparatedGroupCSVParserService: CommaSeparatedGroupCSVParserService
-
-    @Autowired
-    lateinit var csvParser2SeriesService: CSVParser2SeriesService
-
-    @Autowired
-    lateinit var taskCSVParser1SeriesService: TaskCSVParser1SeriesService
-
     companion object {
         fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
 
@@ -228,35 +213,35 @@ class InitialDataLoader(
 
     private fun loadExerciseGroups(inputStream: InputStream) {
         val groups = csvMappingIteratorParser
-            .parseCsvFile(inputStream, groupCsvConverter, commaSeparatedGroupCSVParserService)
+            .parseCsvFile(inputStream, groupCsvConverter, CommaSeparatedGroupCSVParserService())
 
         exerciseGroupRepository.saveAll(groups)
     }
 
     private fun loadSeries(inputStream: InputStream) {
         val series = csvMappingIteratorParser
-            .parseCsvFile(inputStream, seriesCsvConverter, commaSeparatedSeriesCSVParserService)
+            .parseCsvFile(inputStream, seriesCsvConverter, CommaSeparatedSeriesCSVParserService())
 
         seriesRepository.saveAll(series)
     }
 
     private fun loadExercises(inputStream: InputStream) {
         val exercises = csvMappingIteratorParser
-            .parseCsvFile(inputStream, exerciseCsvConverter, commaSeparatedExerciseCSVParserService)
+            .parseCsvFile(inputStream, exerciseCsvConverter, CommaSeparatedExerciseCSVParserService())
 
         exerciseRepository.saveAll(exercises)
     }
 
     private fun loadTasksFor1Series(tasksInputStream: InputStream) {
         val tasks = csvMappingIteratorParser
-            .parseCsvFile(tasksInputStream, taskCsv1SeriesConverter, taskCSVParser1SeriesService)
+            .parseCsvFile(tasksInputStream, taskCsv1SeriesConverter, TaskCSVParser1SeriesService())
 
         taskRepository.saveAll(tasks)
     }
 
     private fun loadTasksFor2Series(inputStream: InputStream) {
         val exercises = csvMappingIteratorParser
-            .parseCsvFile(inputStream, exercise2SeriesConverter, csvParser2SeriesService)
+            .parseCsvFile(inputStream, exercise2SeriesConverter, CSVParser2SeriesService())
 
         exerciseRepository.saveAll(exercises)
     }

@@ -13,14 +13,13 @@ import org.springframework.stereotype.Component
 class UploadFromCsv2SeriesStrategy(
     private val csvMappingIteratorParser: CsvMappingIteratorParser,
     private val exercise2SeriesConverter: Exercise2SeriesConverter,
-    private val csvParser2SeriesService: CSVParser2SeriesService,
     private val exerciseService: ExerciseService
 ) :
     UploadFromCsvStrategy {
 
     override fun uploadFile(inputStream: InputStream): List<Exercise> {
         val exercises = csvMappingIteratorParser
-            .parseCsvFile(inputStream, exercise2SeriesConverter, csvParser2SeriesService)
+            .parseCsvFile(inputStream, exercise2SeriesConverter, CSVParser2SeriesService())
 
         return exerciseService.save(exercises)
     }

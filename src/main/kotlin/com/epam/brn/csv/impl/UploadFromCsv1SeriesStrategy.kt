@@ -15,13 +15,12 @@ class UploadFromCsv1SeriesStrategy(
     private val csvMappingIteratorParser: CsvMappingIteratorParser,
     private val taskService: TaskService,
     private val taskCsv1SeriesConverter: TaskCsv1SeriesConverter,
-    private val seriesService: SeriesService,
-    private val taskCSVParser1SeriesService: TaskCSVParser1SeriesService
+    private val seriesService: SeriesService
 ) : UploadFromCsvStrategy {
 
     override fun uploadFile(inputStream: InputStream): List<Task> {
         val result = csvMappingIteratorParser
-            .parseCsvFile(inputStream, taskCsv1SeriesConverter, taskCSVParser1SeriesService)
+            .parseCsvFile(inputStream, taskCsv1SeriesConverter, TaskCSVParser1SeriesService())
 
         result.forEach { task -> setExerciseSeries(task) }
 

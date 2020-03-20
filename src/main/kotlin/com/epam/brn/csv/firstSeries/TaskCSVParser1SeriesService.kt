@@ -7,9 +7,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.stereotype.Service
 
-@Service
 class TaskCSVParser1SeriesService : CsvParser<TaskCsv> {
 
     val log = logger()
