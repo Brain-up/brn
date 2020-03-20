@@ -78,4 +78,8 @@ data class Exercise(
         result = 31 * result + (level ?: 0)
         return result
     }
+
+    fun addTask(task: Task) {
+        tasks.add(task)
+    }
 }

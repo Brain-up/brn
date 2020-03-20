@@ -78,9 +78,6 @@ class InitialDataLoader(
     lateinit var exercise2SeriesConverter: Exercise2SeriesConverter
 
     @Autowired
-    lateinit var exerciseService: ExerciseService
-
-    @Autowired
     lateinit var seriesService: SeriesService
 
     @Autowired
@@ -96,7 +93,7 @@ class InitialDataLoader(
     lateinit var commaSeparatedGroupCSVParserService: CommaSeparatedGroupCSVParserService
 
     @Autowired
-    lateinit var CSVParser2SeriesService: CSVParser2SeriesService
+    lateinit var csvParser2SeriesService: CSVParser2SeriesService
 
     @Autowired
     lateinit var taskCSVParser1SeriesService: TaskCSVParser1SeriesService
@@ -209,7 +206,7 @@ class InitialDataLoader(
         loadFromInputStream(sources.getValue(EXERCISES_FILE), ::loadExercises)
         loadFromInputStream(sources.getValue(fileNameForSeries(1)), ::loadTasksFor1Series)
         loadFromInputStream(sources.getValue(fileNameForSeries(2)), ::loadTasksFor2Series)
-        loadFromInputStream(sources.getValue(fileNameForSeries(3)), ::loadTasksFor3Series)
+        loadFromInputStream(sources.getValue(fileNameForSeries(3)), ::loadExercisesFor3Series)
         log.debug("Initialization succeeded")
     }
 
@@ -229,53 +226,72 @@ class InitialDataLoader(
         }
     }
 
-    private fun loadExerciseGroups(groupsInputStream: InputStream) {
-        val groups = csvMappingIteratorParser.parseCsvFile(
-            groupsInputStream,
-            groupCsvConverter,
-            commaSeparatedGroupCSVParserService
-        )
+    private fun loadExerciseGroups(inputStream: InputStream) {
+        val groups = csvMappingIteratorParser
+            .parseCsvFile(inputStream, groupCsvConverter, commaSeparatedGroupCSVParserService)
+
         exerciseGroupRepository.saveAll(groups)
     }
 
-    private fun loadSeries(seriesInputStream: InputStream) {
-        val series = csvMappingIteratorParser.parseCsvFile(
-            seriesInputStream,
-            seriesCsvConverter,
-            commaSeparatedSeriesCSVParserService
-        )
+    private fun loadSeries(inputStream: InputStream) {
+        val series = csvMappingIteratorParser
+            .parseCsvFile(inputStream, seriesCsvConverter, commaSeparatedSeriesCSVParserService)
+
         seriesRepository.saveAll(series)
     }
 
-    private fun loadExercises(exercisesInputStream: InputStream) {
-        val exercises = csvMappingIteratorParser.parseCsvFile(
-            exercisesInputStream,
-            exerciseCsvConverter,
-            commaSeparatedExerciseCSVParserService
-        )
+    private fun loadExercises(inputStream: InputStream) {
+        val exercises = csvMappingIteratorParser
+            .parseCsvFile(inputStream, exerciseCsvConverter, commaSeparatedExerciseCSVParserService)
+
         exerciseRepository.saveAll(exercises)
     }
 
     private fun loadTasksFor1Series(tasksInputStream: InputStream) {
-        val tasks = csvMappingIteratorParser.parseCsvFile(
-            tasksInputStream,
-            taskCsv1SeriesConverter,
-            taskCSVParser1SeriesService
-        )
+        val tasks = csvMappingIteratorParser
+            .parseCsvFile(tasksInputStream, taskCsv1SeriesConverter, taskCSVParser1SeriesService)
+
         taskRepository.saveAll(tasks)
     }
 
-    private fun loadTasksFor2Series(tasksInputStream: InputStream) {
-        val exercises = csvMappingIteratorParser.parseCsvFile(
-            tasksInputStream,
-            exercise2SeriesConverter,
-            CSVParser2SeriesService
-        )
+    private fun loadTasksFor2Series(inputStream: InputStream) {
+        val exercises = csvMappingIteratorParser
+            .parseCsvFile(inputStream, exercise2SeriesConverter, csvParser2SeriesService)
+
         exerciseRepository.saveAll(exercises)
     }
 
-    // todo: get data from file for 3 series
-    private fun loadTasksFor3Series(tasksInputStream: InputStream) {
+    private fun loadExercisesFor3Series(inputStream: InputStream) {
+        // todo: get data from file for 3 series
+        val exercises = createExercises()
+
+        exerciseRepository.saveAll(exercises)
+    }
+
+    private fun createExercises(): List<Exercise> {
+        val exercise = createExercise()
+        val task = createTask()
+
+        exercise.addTask(task)
+        task.exercise = exercise
+
+        seriesService.findSeriesWithExercisesForId(3L).exercises.add(exercise)
+
+        return listOf(exercise)
+    }
+
+    private fun createExercise(): Exercise {
+        return Exercise(
+            series = seriesService.findSeriesForId(3L),
+            name = "Распознование предложений из 2 слов",
+            description = "Распознование предложений из 2 слов",
+            template = "<OBJECT OBJECT_ACTION>",
+            exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
+            level = 1
+        )
+    }
+
+    private fun createTask(): Task {
         val resource1 = Resource(
             word = "девочкаTest",
             wordType = WordTypeEnum.OBJECT.toString(),
@@ -312,35 +328,24 @@ class InitialDataLoader(
             audioFileUrl = "series2/рисует.mp3",
             pictureFileUrl = "pictures/withWord/рисует.jpg"
         )
-        resourceService.saveAll(listOf(resource1, resource2, resource3, resource4, resource5, resource6))
 
-        // for 3 series
-        val resource7 = Resource(
+        val answerOptions =
+            mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
+
+        val correctAnswer = Resource(
             word = "девочка рисует",
             wordType = WordTypeEnum.SENTENCE.toString(),
             audioFileUrl = "series3/девочка_рисует.mp3"
         )
-        resourceService.save(resource7)
 
-        val task3 = Task(
+        resourceService.saveAll(answerOptions)
+        resourceService.save(correctAnswer)
+
+        return Task(
             serialNumber = 2,
-            answerOptions = mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6),
-            correctAnswer = resource7,
+            answerOptions = answerOptions,
+            correctAnswer = correctAnswer,
             answerParts = mutableMapOf(1 to resource1, 2 to resource6)
         )
-        val exercise3 = Exercise(
-            series = seriesService.findSeriesForId(3L),
-            name = "Распознование предложений из 2 слов",
-            description = "Распознование предложений из 2 слов",
-            template = "<OBJECT OBJECT_ACTION>",
-            exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
-            level = 1
-        )
-
-        task3.exercise = exercise3
-        exercise3.tasks.add(task3)
-        seriesService.findSeriesWithExercisesForId(3L).exercises.add(exercise3)
-
-        exerciseService.save(exercise3)
     }
 }
