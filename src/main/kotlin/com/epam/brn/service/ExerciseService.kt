@@ -9,6 +9,7 @@ import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ExerciseService(
@@ -49,6 +50,11 @@ class ExerciseService(
 
     fun save(exercise: Exercise): Exercise {
         return exerciseRepository.save(exercise)
+    }
+
+    @Transactional
+    fun save(exercises: List<Exercise>): List<Exercise> {
+        return exerciseRepository.saveAll(exercises)
     }
 
     fun createExercise(name: String): Exercise {

@@ -17,9 +17,7 @@ import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParser
 import com.epam.brn.csv.secondSeries.CSVParser2SeriesService
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
-import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -200,66 +198,46 @@ class InitialDataLoader(
 
     private fun loadExerciseGroups(groupsInputStream: InputStream) {
         val groups = csvMappingIteratorParser.parseCsvFile(
-                groupsInputStream,
-                groupCsvConverter,
-                commaSeparatedGroupCSVParserService
-            )
-            .map(Map.Entry<String, Pair<ExerciseGroup?, String?>>::value)
-            .map(Pair<ExerciseGroup?, String?>::first)
-            .sortedBy { it!!.id }
-            .toList()
+            groupsInputStream,
+            groupCsvConverter,
+            commaSeparatedGroupCSVParserService
+        )
         exerciseGroupRepository.saveAll(groups)
     }
 
     private fun loadSeries(seriesInputStream: InputStream) {
         val series = csvMappingIteratorParser.parseCsvFile(
-                seriesInputStream,
-                seriesCsvConverter,
-                commaSeparatedSeriesCSVParserService
-            )
-            .map(Map.Entry<String, Pair<Series?, String?>>::value)
-            .map(Pair<Series?, String?>::first)
-            .sortedBy { it!!.id }
-            .toList()
+            seriesInputStream,
+            seriesCsvConverter,
+            commaSeparatedSeriesCSVParserService
+        )
         seriesRepository.saveAll(series)
     }
 
     private fun loadExercises(exercisesInputStream: InputStream) {
         val exercises = csvMappingIteratorParser.parseCsvFile(
-                exercisesInputStream,
-                exerciseCsvConverter,
-                commaSeparatedExerciseCSVParserService
-            )
-            .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
-            .map(Pair<Exercise?, String?>::first)
-            .sortedBy { it!!.id }
-            .toList()
+            exercisesInputStream,
+            exerciseCsvConverter,
+            commaSeparatedExerciseCSVParserService
+        )
         exerciseRepository.saveAll(exercises)
     }
 
     private fun loadTasksFor1Series(tasksInputStream: InputStream) {
         val tasks = csvMappingIteratorParser.parseCsvFile(
-                tasksInputStream,
-                taskCsv1SeriesConverter,
-                taskCSVParser1SeriesService
-            )
-            .map(Map.Entry<String, Pair<Task?, String?>>::value)
-            .map(Pair<Task?, String?>::first)
-            .sortedBy { it!!.exercise!!.id }
-            .toList()
+            tasksInputStream,
+            taskCsv1SeriesConverter,
+            taskCSVParser1SeriesService
+        )
         taskRepository.saveAll(tasks)
     }
 
     private fun loadTasksFor2Series(tasksInputStream: InputStream) {
         val exercises = csvMappingIteratorParser.parseCsvFile(
-                tasksInputStream,
-                exercise2SeriesConverter,
-                CSVParser2SeriesService
-            )
-            .map(Map.Entry<String, Pair<Exercise?, String?>>::value)
-            .map(Pair<Exercise?, String?>::first)
-            .sortedBy { it!!.level }
-            .toList()
+            tasksInputStream,
+            exercise2SeriesConverter,
+            CSVParser2SeriesService
+        )
         exerciseRepository.saveAll(exercises)
     }
 

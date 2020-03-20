@@ -1,5 +1,6 @@
 package com.epam.brn.controller.advice
 
+import com.epam.brn.csv.exception.CsvFileParseException
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
@@ -33,6 +34,15 @@ class ExceptionControllerAdvice {
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
+    }
+
+    @ExceptionHandler(CsvFileParseException::class)
+    fun handleCsvFileParseException(e: CsvFileParseException): ResponseEntity<BaseResponseDto> {
+        logger.warn("Csv file parsing exception: ${e.message}", e)
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BaseResponseDto(errors = e.errors))
     }
 
     @ExceptionHandler(IllegalArgumentException::class)

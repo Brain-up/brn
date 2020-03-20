@@ -8,6 +8,7 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.TaskRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TaskService(
@@ -37,4 +38,9 @@ class TaskService(
     }
 
     fun save(task: Task): Task = taskRepository.save(task)
+
+    @Transactional
+    fun save(tasks: List<Task>): List<Task> {
+        return taskRepository.saveAll(tasks)
+    }
 }

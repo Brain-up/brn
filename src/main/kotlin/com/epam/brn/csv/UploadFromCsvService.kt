@@ -13,7 +13,7 @@ interface UploadFromCsvService {
      * @return failed csv-lines with errors
      */
     @Throws(FileFormatException::class)
-    fun loadTaskFile(file: MultipartFile, seriesId: Long): Map<String, String>
+    fun loadTaskFile(file: MultipartFile, seriesId: Long): List<Any>
 
     /**
      * @param file - csv task file with exercise and orderNumber which should be convert to model and saved
@@ -21,5 +21,5 @@ interface UploadFromCsvService {
      * @return failed csv-lines with errors
      */
     @Throws(FileFormatException::class)
-    fun loadTaskFile(file: File): Map<String, String>
+    fun loadTaskFile(file: File): List<Any>
 }

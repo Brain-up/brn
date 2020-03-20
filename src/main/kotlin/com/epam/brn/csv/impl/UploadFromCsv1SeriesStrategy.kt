@@ -8,7 +8,6 @@ import com.epam.brn.model.Task
 import com.epam.brn.service.SeriesService
 import com.epam.brn.service.TaskService
 import java.io.InputStream
-import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,38 +18,17 @@ class UploadFromCsv1SeriesStrategy(
     private val seriesService: SeriesService,
     private val taskCSVParser1SeriesService: TaskCSVParser1SeriesService
 ) : UploadFromCsvStrategy {
-    private val log = logger()
 
-    override fun uploadFile(inputStream: InputStream): Map<String, String> {
-        val tasks = csvMappingIteratorParser
+    override fun uploadFile(inputStream: InputStream): List<Task> {
+        val result = csvMappingIteratorParser
             .parseCsvFile(inputStream, taskCsv1SeriesConverter, taskCSVParser1SeriesService)
 
-        tasks.forEach { task -> setExerciseSeries(task.value.first) }
+        result.forEach { task -> setExerciseSeries(task) }
 
-        return saveTasks(tasks)
+        return taskService.save(result)
     }
 
     private fun setExerciseSeries(taskFile: Task?) {
         taskFile?.exercise?.series = seriesService.findSeriesForId(1)
-    }
-
-    private fun saveTasks(tasks: Map<String, Pair<Task?, String?>>): Map<String, String> {
-        val unsavedTasks = mutableMapOf<String, String>()
-
-        tasks.forEach {
-            val key = it.key
-            val task = it.value.first
-            try {
-                if (task != null)
-                    taskService.save(task)
-                else
-                    it.value.second?.let { errorMessage -> unsavedTasks[key] = errorMessage }
-            } catch (e: Exception) {
-                unsavedTasks[key] = e.localizedMessage
-                log.warn("Failed to insert : $key ", e)
-            }
-            log.debug("Successfully inserted line: $key")
-        }
-        return unsavedTasks
     }
 }

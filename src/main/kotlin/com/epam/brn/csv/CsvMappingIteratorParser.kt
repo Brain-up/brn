@@ -1,6 +1,7 @@
 package com.epam.brn.csv
 
 import com.epam.brn.csv.converter.Converter
+import com.epam.brn.csv.exception.CsvFileParseException
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -20,14 +21,13 @@ class CsvMappingIteratorParser {
     }
 
     final inline fun <reified ParsedType, reified ConvertedType> parseCsvFile(
-        file: InputStream,
+        inputStream: InputStream,
         converter: Converter<ParsedType, ConvertedType>,
         csvParser: CsvParser<ParsedType>
-    ): Map<String, Pair<ConvertedType?, String?>> {
-
-        ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-            val parsedValues = hashMapOf<String, ParsedType>()
-            val sourceToTarget = hashMapOf<String, Pair<ConvertedType?, String?>>()
+    ): List<ConvertedType> {
+        ByteArrayInputStream(IOUtils.toByteArray(inputStream)).use {
+            val parsed = mutableListOf<ParsedType>()
+            val errors = mutableListOf<String>()
 
             val originalLines = getOriginalLines(it)
 
@@ -37,20 +37,16 @@ class CsvMappingIteratorParser {
 
                 val originalValue = originalLines[lineNumberInFile + ARRAY_OFFSET]
                 try {
-                    parsedValues[originalValue] = parsingIterator.nextValue()
-                    log.debug("Successfully parsed line with number $lineNumberInFile")
+                    parsed.add(parsingIterator.nextValue())
+                    log.debug("Successfully parsed line $lineNumberInFile: '$originalValue'.")
                 } catch (e: Exception) {
-                    sourceToTarget[originalValue] =
-                        Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
-
-                    log.error("Failed to parse line with number $lineNumberInFile ", e)
+                    errors.add("Failed to parse line $lineNumberInFile: '$originalValue'. Error: ${e.localizedMessage}")
+                    log.debug("Failed to parse line $lineNumberInFile ", e)
                 }
             }
-            sourceToTarget.putAll(parsedValues
-                .map { parsedValue -> parsedValue.key to Pair(converter.convert(parsedValue.value), null) }
-                .toMap())
+            if (errors.isNotEmpty()) throw CsvFileParseException(errors)
 
-            return sourceToTarget
+            return parsed.map { parsedValue -> converter.convert(parsedValue) }
         }
     }
 

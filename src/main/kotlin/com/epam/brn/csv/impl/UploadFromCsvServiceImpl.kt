@@ -15,7 +15,7 @@ class UploadFromCsvServiceImpl(
 ) : UploadFromCsvService {
 
     @Throws(FileFormatException::class)
-    override fun loadTaskFile(file: MultipartFile, seriesId: Long): Map<String, String> {
+    override fun loadTaskFile(file: MultipartFile, seriesId: Long): List<Any> {
 
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException()
@@ -28,7 +28,7 @@ class UploadFromCsvServiceImpl(
     }
 
     @Throws(FileFormatException::class)
-    override fun loadTaskFile(file: File): Map<String, String> =
+    override fun loadTaskFile(file: File): List<Any> =
         uploadFromCsv1SeriesStrategy.uploadFile(file.inputStream())
 
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)

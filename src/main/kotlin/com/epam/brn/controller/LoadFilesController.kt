@@ -20,7 +20,7 @@ class LoadFilesController(private val uploadTaskFromCsvService: UploadFromCsvSer
         @RequestParam(value = TASK_FILE) taskFile: MultipartFile,
         @RequestParam(value = SERIES_ID) seriesId: Long
     ): ResponseEntity<BaseResponseDto> {
-        val notSavingTasks = uploadTaskFromCsvService.loadTaskFile(taskFile, seriesId)
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponseDto(listOf(notSavingTasks)))
+        val result = uploadTaskFromCsvService.loadTaskFile(taskFile, seriesId)
+        return ResponseEntity(BaseResponseDto(data = result), HttpStatus.CREATED)
     }
 }
