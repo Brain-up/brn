@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
 @Component
-class UploadFromCsvService(
+class CsvUploadService(
     private val uploadFromCsv1SeriesStrategy: UploadFromCsv1SeriesStrategy,
     private val uploadFromCsv2SeriesStrategy: UploadFromCsv2SeriesStrategy
 ) {

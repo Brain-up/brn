@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.csv.UploadFromCsvService
+import com.epam.brn.csv.CsvUploadService
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import java.io.File
@@ -19,7 +19,7 @@ internal class LoadFilesControllerTest {
     lateinit var loadFilesController: LoadFilesController
 
     @Mock
-    lateinit var uploadFromCsvService: UploadFromCsvService
+    lateinit var csvUploadService: CsvUploadService
 
     @Test
     fun `should upload tasks from task csv file for 1 series`() {
@@ -31,6 +31,6 @@ internal class LoadFilesControllerTest {
         // WHEN
         loadFilesController.loadTaskFile(taskFile, 1)
         // THEN
-        verify(uploadFromCsvService, times(1)).loadTaskFile(taskFile, 1)
+        verify(csvUploadService, times(1)).loadTaskFile(taskFile, 1)
     }
 }
