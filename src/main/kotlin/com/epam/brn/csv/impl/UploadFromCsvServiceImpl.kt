@@ -1,6 +1,5 @@
 package com.epam.brn.csv.impl
 
-import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.csv.UploadFromCsvService
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
@@ -19,7 +18,7 @@ class UploadFromCsvServiceImpl(
     override fun loadTaskFile(file: MultipartFile, seriesId: Long): Map<String, String> {
 
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
-            throw FileFormatException(CSV_FILE_FORMAT_ERROR)
+            throw FileFormatException()
 
         return when (seriesId.toInt()) {
             1 -> uploadFromCsv1SeriesStrategy.uploadFile(file.inputStream)
