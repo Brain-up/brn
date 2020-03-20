@@ -19,6 +19,6 @@ class SeriesCsvConverter : Converter<SeriesCsv, Series> {
             description = source.description,
             exerciseGroup = exerciseGroupsService.findGroupById(source.groupId),
             id = source.seriesId
-            )
+        )
     }
 }

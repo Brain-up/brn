@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service
 @Service
 class ResourceService(@Autowired val resourceRepository: ResourceRepository) {
 
-    fun findByWordLike(word: String): List<Resource> {
-        return resourceRepository.findByWordLike(word)
+    fun findFirstResourceByWordLike(word: String): Resource? {
+        val resources = resourceRepository.findByWordLike(word)
+        return if (resources.isNotEmpty()) resources.first() else null
     }
 
-    fun findByWordAndAudioFileUrlLike(word: String, audioFileUrl: String): List<Resource> {
-        return resourceRepository.findByWordAndAudioFileUrlLike(word, audioFileUrl)
+    fun findFirstByWordAndAudioFileUrlLike(word: String, audioFileName: String): Resource? {
+        val resources = resourceRepository.findByWordAndAudioFileUrlLike(word, audioFileName)
+        return if (resources.isNotEmpty()) resources.first() else null
     }
 
     fun save(resource: Resource): Resource {

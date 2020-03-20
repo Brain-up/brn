@@ -11,7 +11,6 @@ import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
-import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
@@ -105,13 +104,8 @@ class Exercise2SeriesConverter(
     }
 
     private fun getResourceByWord(word: String): Resource {
-        val resources = resourceService.findByWordLike(word)
-        return if (CollectionUtils.isEmpty(resources))
-            createAndGetResource(word, WordTypeEnum.UNKNOWN.toString())
-        else {
-            log.debug("Resource with word {$word} was already persisted")
-            resources.first()
-        }
+        return resourceService.findFirstResourceByWordLike(word)
+            ?: createAndGetResource(word, WordTypeEnum.UNKNOWN.toString())
     }
 
     private fun createAndGetResource(word: String, wordType: String): Resource {

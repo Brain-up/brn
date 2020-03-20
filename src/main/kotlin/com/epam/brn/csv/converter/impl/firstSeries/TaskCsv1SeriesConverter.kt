@@ -45,7 +45,7 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
     }
 
     private fun prepareCorrectAnswer(source: TaskCsv): Resource {
-        var resource = findFirstResourceBy(source.word, source.audioFileName)
+        var resource = resourceService.findFirstByWordAndAudioFileUrlLike(source.word, source.audioFileName)
         if (resource != null) {
             resource.wordType = source.wordType
             resource.pictureFileUrl = source.pictureFileName
@@ -60,11 +60,6 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
         return resourceService.save(resource)
     }
 
-    private fun findFirstResourceBy(word: String, audioFileName: String): Resource? {
-        val resources = resourceService.findByWordAndAudioFileUrlLike(word, audioFileName)
-        return if (resources.isNotEmpty()) resources.first() else null
-    }
-
     private fun prepareAnswerOptions(words: List<String>): MutableSet<Resource> {
         return CollectionUtils.emptyIfNull(words)
             .asSequence()
@@ -75,7 +70,7 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
     }
 
     private fun toAnswerOption(word: String): Resource {
-        return findFirstResourceBy(word)
+        return resourceService.findFirstResourceByWordLike(word)
             ?: resourceService.save(
                 Resource(
                     audioFileUrl = defaultAudioFileUrl.format(word),
@@ -84,10 +79,5 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
                     pictureFileUrl = null
                 )
             )
-    }
-
-    private fun findFirstResourceBy(word: String): Resource? {
-        val resources = resourceService.findByWordLike(word)
-        return if (resources.isNotEmpty()) resources.first() else null
     }
 }
