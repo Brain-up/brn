@@ -60,7 +60,7 @@ class InitialDataLoader(
     private val log = logger()
 
     @Value("\${init.folder:#{null}}")
-    var folder: Path? = null
+    var directoryPath: Path? = null
 
     @Autowired
     lateinit var groupCsvConverter: GroupCsvConverter
@@ -101,6 +101,23 @@ class InitialDataLoader(
     @Autowired
     lateinit var taskCSVParser1SeriesService: TaskCSVParser1SeriesService
 
+    companion object {
+        fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
+
+        private const val GROUPS_FILE = "groups.csv"
+        private const val SERIES_FILE = "series.csv"
+        private const val EXERCISES_FILE = "exercises.csv"
+
+        private val sourceFiles = listOf(
+            GROUPS_FILE,
+            SERIES_FILE,
+            EXERCISES_FILE,
+            fileNameForSeries(1),
+            fileNameForSeries(2),
+            fileNameForSeries(3)
+        )
+    }
+
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
         val adminAuthority = authorityService.save(Authority(authorityName = AUTH_ROLE_ADMIN))
@@ -111,11 +128,21 @@ class InitialDataLoader(
 
         userAccountRepository.saveAll(listOfUsers)
 
-        val isInitRequired = exerciseGroupRepository.count() == 0L
-        log.debug("Is initialization required: $isInitRequired")
-        if (isInitRequired)
-            folder?.let { loadInitialDataFromFileSystem(it) }
-                ?: loadInitialDataFromClassPath()
+        if (isInitRequired()) {
+            init()
+        }
+    }
+
+    private fun isInitRequired() = exerciseGroupRepository.count() == 0L
+
+    private fun init() {
+        log.debug("Initialization started")
+
+        if (directoryPath != null) {
+            initDataFromDirectory(directoryPath!!)
+        } else {
+            initDataFromClassPath()
+        }
     }
 
     private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
@@ -153,47 +180,53 @@ class InitialDataLoader(
         return userAccount
     }
 
-    private fun loadInitialDataFromFileSystem(folder: Path) {
-        log.debug("Loading data from file system $folder")
+    private fun initDataFromDirectory(directoryToScan: Path) {
+        log.debug("Loading data from $directoryToScan.")
 
-        if (!Files.exists(folder))
-            throw IllegalArgumentException("$folder with intial data does not exist")
+        if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath))
+            throw IllegalArgumentException("$directoryToScan with initial data does not exist")
 
-        val sources =
-            listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
-                .map { Pair(it, Files.newInputStream(folder.resolve(it))) }
-                .toMap()
+        val sources = sourceFiles
+            .map { Pair(it, Files.newInputStream(directoryToScan.resolve(it))) }
+            .toMap()
 
+        loadDataToDb(sources)
+    }
+
+    private fun initDataFromClassPath() {
+        log.debug("Loading data from classpath 'initFiles' directory.")
+
+        val sources = sourceFiles
+            .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
+            .toMap()
+
+        loadDataToDb(sources)
+    }
+
+    private fun loadDataToDb(sources: Map<String, InputStream>) {
+        loadFromInputStream(sources.getValue(GROUPS_FILE), ::loadExerciseGroups)
+        loadFromInputStream(sources.getValue(SERIES_FILE), ::loadSeries)
+        loadFromInputStream(sources.getValue(EXERCISES_FILE), ::loadExercises)
+        loadFromInputStream(sources.getValue(fileNameForSeries(1)), ::loadTasksFor1Series)
+        loadFromInputStream(sources.getValue(fileNameForSeries(2)), ::loadTasksFor2Series)
+        loadFromInputStream(sources.getValue(fileNameForSeries(3)), ::loadTasksFor3Series)
+        log.debug("Initialization succeeded")
+    }
+
+    private fun loadFromInputStream(inputStream: InputStream, load: (inputStream: InputStream) -> Unit) {
         try {
-            loadInitialDataToDb(sources)
+            load(inputStream)
         } finally {
-            sources.onEach { (_, inputStream) ->
-                try {
-                    inputStream.close()
-                } catch (e: Exception) {
-                    log.error(e)
-                }
-            }
+            closeSilently(inputStream)
         }
     }
 
-    private fun loadInitialDataFromClassPath() {
-        log.debug("Loading data from classpath initFiles")
-        val sources =
-            listOf(GROUPS, SERIES, EXERCISES, fileNameForSeries(1), fileNameForSeries(2), fileNameForSeries(3))
-                .map { Pair(it, resourceLoader.getResource("classpath:initFiles/$it").inputStream) }
-                .toMap()
-        loadInitialDataToDb(sources)
-    }
-
-    private fun loadInitialDataToDb(sources: Map<String, InputStream>) {
-        loadExerciseGroups(sources.getValue(GROUPS))
-        loadSeries(sources.getValue(SERIES))
-        loadExercises(sources.getValue(EXERCISES))
-        loadTasksFor1Series(sources.getValue(fileNameForSeries(1)))
-        loadTasksFor2Series(sources.getValue(fileNameForSeries(2)))
-        loadTasksFor3Series(sources.getValue(fileNameForSeries(3)))
-        log.debug("Initialization succeeded")
+    private fun closeSilently(inputStream: InputStream) {
+        try {
+            inputStream.close()
+        } catch (e: Exception) {
+            log.error(e)
+        }
     }
 
     private fun loadExerciseGroups(groupsInputStream: InputStream) {
@@ -309,12 +342,5 @@ class InitialDataLoader(
         seriesService.findSeriesWithExercisesForId(3L).exercises.add(exercise3)
 
         exerciseService.save(exercise3)
-    }
-
-    companion object {
-        fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
-        private const val SERIES = "series.csv"
-        private const val GROUPS = "groups.csv"
-        private const val EXERCISES = "exercises.csv"
     }
 }
