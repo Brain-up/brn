@@ -28,9 +28,9 @@ class CsvUploadService(
         }
     }
 
+    private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
+
     @Throws(FileFormatException::class)
     fun loadTasks(file: File): List<Any> =
         uploadFromCsv1SeriesStrategy.uploadFile(file.inputStream())
-
-    private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
 }
