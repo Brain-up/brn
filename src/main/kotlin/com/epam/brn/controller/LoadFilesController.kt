@@ -16,11 +16,11 @@ import org.springframework.web.multipart.MultipartFile
 class LoadFilesController(private val csvUploadService: CsvUploadService) {
 
     @PostMapping(LOAD_TASKS_FILE)
-    fun loadTaskFile(
-        @RequestParam(value = TASK_FILE) taskFile: MultipartFile,
-        @RequestParam(value = SERIES_ID) seriesId: Long
+    fun loadExercises(
+        @RequestParam(value = SERIES_ID) seriesId: Long,
+        @RequestParam(value = TASK_FILE) file: MultipartFile
     ): ResponseEntity<BaseResponseDto> {
-        val result = csvUploadService.loadTaskFile(taskFile, seriesId)
+        val result = csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(BaseResponseDto(data = result), HttpStatus.CREATED)
     }
 }

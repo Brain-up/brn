@@ -16,7 +16,7 @@ class CsvUploadService(
 ) {
 
     @Throws(FileFormatException::class)
-    fun loadTaskFile(file: MultipartFile, seriesId: Long): List<Any> {
+    fun loadExercises(seriesId: Long, file: MultipartFile): List<Any> {
 
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException()
@@ -29,7 +29,7 @@ class CsvUploadService(
     }
 
     @Throws(FileFormatException::class)
-    fun loadTaskFile(file: File): List<Any> =
+    fun loadTasks(file: File): List<Any> =
         uploadFromCsv1SeriesStrategy.uploadFile(file.inputStream())
 
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)

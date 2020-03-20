@@ -70,6 +70,6 @@ class UploadFileJobRunnerTest {
         uploadFileJobRunner.perform()
 
         // THEN
-        verify(csvUploadService, times(1)).loadTaskFile(anyOrNull<File>())
+        verify(csvUploadService, times(1)).loadTasks(anyOrNull<File>())
     }
 }

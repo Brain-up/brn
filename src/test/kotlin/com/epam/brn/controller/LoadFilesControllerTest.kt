@@ -29,8 +29,8 @@ internal class LoadFilesControllerTest {
             FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}1_series.csv")
         )
         // WHEN
-        loadFilesController.loadTaskFile(taskFile, 1)
+        loadFilesController.loadExercises(1, taskFile)
         // THEN
-        verify(csvUploadService, times(1)).loadTaskFile(taskFile, 1)
+        verify(csvUploadService, times(1)).loadExercises(1, taskFile)
     }
 }
