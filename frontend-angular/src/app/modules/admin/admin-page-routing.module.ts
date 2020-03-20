@@ -1,4 +1,4 @@
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule } from '@angular/router';
 import { AdminPageComponent } from './admin-page.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoadFileComponent } from './components/load-file/load-file.component';
@@ -45,9 +45,9 @@ const adminRoutes: Routes = [
         }
       ]
     },
-  ]
+  ];
 
-  @NgModule({
+@NgModule({
       imports: [
           RouterModule.forChild(adminRoutes)
       ],

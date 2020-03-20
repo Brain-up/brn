@@ -8,10 +8,10 @@ import { checkAuthStatusAction } from './modules/auth/ngrx/actions';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'frontend-angular';
   ngOnInit() {
     this.store.dispatch(checkAuthStatusAction());
   }
-  constructor(private store: Store<any>){}
+  constructor(private store: Store<any>) {}
 }

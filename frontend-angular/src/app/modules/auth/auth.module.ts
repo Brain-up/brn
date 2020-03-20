@@ -10,11 +10,13 @@ import { SessionService } from './services/session/session.service';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './ngrx/effects';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 
 const authRoutes: Routes = [
   {
     path: 'auth',
     component: HomeComponent,
+    canActivate: [AuthGuardService],
     children: [
       {
         path: 'login',
@@ -26,7 +28,7 @@ const authRoutes: Routes = [
       }
     ]
   }
-]
+];
 @NgModule({
   declarations: [
     LoginComponent,
@@ -42,7 +44,8 @@ const authRoutes: Routes = [
     EffectsModule.forFeature([AuthEffects])
   ],
   providers: [
-    SessionService
+    SessionService,
+    AuthGuardService
   ]
 })
 export class AuthModule { }

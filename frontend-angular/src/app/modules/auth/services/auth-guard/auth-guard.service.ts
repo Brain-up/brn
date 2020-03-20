@@ -7,12 +7,12 @@ import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class AdminGuardService implements CanActivate {
+export class AuthGuardService implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
         return this.store.pipe(
             select(selectAuthState),
             map(authState => {
-                return authState ? authState : this.router.createUrlTree(['/auth/']);
+                return authState ? this.router.createUrlTree(['/admin']) : !authState;
             })
         );
     }

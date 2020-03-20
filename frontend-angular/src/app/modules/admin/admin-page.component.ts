@@ -2,10 +2,13 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {LOAD_FILE_PATH, LOAD_TASKS_FILE} from '../shared/app-path';
 import {animate, group, query, style, transition, trigger} from '@angular/animations';
+import { Store } from '@ngrx/store';
+import { AppStateModel } from 'src/app/models/app-state.model';
+import { destroySessionRequestAction } from '../auth/ngrx/actions';
 
 export const slideInAnimation =
   trigger('routeAnimations', [
-    transition('LoadAll => *', [
+    transition('LoadAll <=> *', [
       query(':enter, :leave',
         style({position: 'fixed', width: '100%'}),
         {optional: true}),
@@ -22,7 +25,7 @@ export const slideInAnimation =
         ], {optional: true}),
       ])
     ]),
-    transition('Admin => *', [
+    transition('Admin <=> *', [
       query(':enter, :leave',
         style({position: 'fixed', width: '100%'}),
         {optional: true}),
@@ -84,9 +87,6 @@ export const slideInAnimation =
 })
 export class AdminPageComponent implements OnInit {
   opened = false;
-  constructor(private router: Router) {
-  }
-
   ngOnInit() {
 
   }
@@ -95,5 +95,10 @@ export class AdminPageComponent implements OnInit {
     this.router.navigate([path === 'file' ? LOAD_FILE_PATH : LOAD_TASKS_FILE]);
   }
 
+  logoutUser() {
+    this.store.dispatch(destroySessionRequestAction());
+  }
+
+  constructor(private router: Router, private store: Store<AppStateModel>) {}
 
 }

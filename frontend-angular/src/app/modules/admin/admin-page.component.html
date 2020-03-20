@@ -11,7 +11,18 @@
     <mat-sidenav #sideNav class="admin__sidenav" mode="side" opened>
       <nav class="admin__sidenav-container">
         <ul class="admin__sidenav-items">
-          <li class="admin__sidenav-item"><button class="admin__sidenav-item-btn" mat-button>Home</button></li>
+          <li class="admin__sidenav-item">
+            <button 
+              class="admin__sidenav-item-btn" 
+              mat-button
+              >Home</button>
+          </li>
+          <li class="admin__sidenav-item">
+            <button 
+              class="admin__sidenav-item-btn"
+              mat-button
+              (click)="logoutUser()">Logout</button>
+          </li>
         </ul>
       </nav>
     </mat-sidenav>

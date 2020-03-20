@@ -1,16 +1,15 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of, EMPTY} from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppStateModel } from 'src/app/models/app-state.model';
+import { map, mergeMap, withLatestFrom, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class BasicAuthInterceptor implements HttpInterceptor {
-
-  constructor() {
-  }
-
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let headers;
     const unAuthenticatedUrls = [
@@ -25,5 +24,8 @@ export class BasicAuthInterceptor implements HttpInterceptor {
       headers
     });
     return next.handle(authRequest);
+
+  }
+  constructor(private store: Store<AppStateModel>) {
   }
 }

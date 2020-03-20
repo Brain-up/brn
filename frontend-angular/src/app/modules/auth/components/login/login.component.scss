@@ -16,4 +16,13 @@
         padding: 10px 30px;
         align-self: flex-end;
     }
+    &__errors {
+        background: #ff6347;
+        padding: 10px;
+        text-align: center;
+        width: 100%;
+        color: white;
+        margin: 0 0 10px;
+        box-sizing: border-box;
+    }
 }

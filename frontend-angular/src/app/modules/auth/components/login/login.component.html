@@ -1,9 +1,10 @@
 <section class="login">
     <div class="login__container">
         <h1 class="login__header">Admin Login</h1>
+        <div class="login__errors" *ngIf="(loginError | async)">{{loginError | async}}</div>
         <form [formGroup]="loginForm" class="login__form" (ngSubmit)="onLogin()">
             <div class="form-group">
-                <label for="username">User Name</label>
+                <label for="username">User Name(Email)</label>
                 <input class="form-control" formControlName="username">
             </div>
             <div class="form-group">
@@ -11,10 +12,9 @@
                 <input class="form-control" type="password" formControlName="password">
             </div>
             <div class="form-group">
-                <!-- <label for="grant_type">Grant Type</label> -->
                 <input disabled="true" hidden class="form-control" type="string" value="Password">
             </div>
-            <button class="login__submit-btn" [disabled]="loginForm.invalid" type="submit">Login</button>
+            <button class="login__submit-btn" [disabled]="loginForm.invalid || (loginError | async)" type="submit">Login</button>
         </form>
     </div>
 </section>

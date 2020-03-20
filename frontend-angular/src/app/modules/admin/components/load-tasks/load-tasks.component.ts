@@ -24,7 +24,7 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
   groups$: Observable<Group[]>;
   tasksGroup: FormGroup;
   series$: Observable<Series[]>;
-  
+
   constructor(
     private adminAPI: AdminService,
     private fb: FormBuilder,

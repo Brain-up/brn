@@ -22,5 +22,18 @@ export const createSessionSuccessAction = createAction(
 );
 export const createSessionFailureAction = createAction(
     '[AuthEffects API] Create Session Failure Action',
-    props<LoginFailureModel>()
+    props<{errorObj: LoginFailureModel, statusCode: number}>()
+);
+export const clearErrorAction = createAction(
+    '[LoginComponent] ClearErrorAction'
+);
+export const redirectAction = createAction(
+    '[AuthEffects API] Redirect to Main Page',
+    props<{location: string}>()
+);
+export const destroySessionRequestAction = createAction(
+    '[AdminPageComponent] destroySessionAction'
+);
+export const destroySessionSuccessAction = createAction(
+    '[AuthEffects API] destroySessionSuccessAction'
 );
