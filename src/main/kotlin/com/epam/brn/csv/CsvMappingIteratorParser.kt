@@ -19,15 +19,15 @@ class CsvMappingIteratorParser {
         const val ARRAY_OFFSET = -1
     }
 
-    final inline fun <reified Source, reified Target> parseCsvFile(
+    final inline fun <reified ParsedType, reified ConvertedType> parseCsvFile(
         file: InputStream,
-        converter: Converter<Source, Target>,
-        csvParser: CsvParser<Source>
-    ): Map<String, Pair<Target?, String?>> {
+        converter: Converter<ParsedType, ConvertedType>,
+        csvParser: CsvParser<ParsedType>
+    ): Map<String, Pair<ConvertedType?, String?>> {
 
         ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-            val parsedValues = hashMapOf<String, Source>()
-            val sourceToTarget = hashMapOf<String, Pair<Target?, String?>>()
+            val parsedValues = hashMapOf<String, ParsedType>()
+            val sourceToTarget = hashMapOf<String, Pair<ConvertedType?, String?>>()
 
             val originalLines = getOriginalLines(it)
 
