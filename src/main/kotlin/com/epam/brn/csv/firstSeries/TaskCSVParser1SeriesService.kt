@@ -6,17 +6,9 @@ import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
-import org.apache.logging.log4j.kotlin.logger
 
 class TaskCSVParser1SeriesService : CsvParser<TaskCsv> {
 
-    val log = logger()
-
-    /**
-     * @param file - csv-file which should be convert to model
-     *
-     * @return csv-line to pair of model object and error. One pair values must be empty.
-     */
     override fun parseCsvFile(file: InputStream): MappingIterator<TaskCsv> {
         val csvMapper = CsvMapper()
 
