@@ -7,7 +7,6 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.stream.Collectors
 import org.apache.commons.io.IOUtils
-import org.apache.commons.lang3.math.NumberUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
@@ -16,6 +15,10 @@ class CsvMappingIteratorParser {
 
     val log = logger()
 
+    companion object {
+        const val ARRAY_OFFSET = -1
+    }
+
     final inline fun <reified Source, reified Target> parseCsvFile(
         file: InputStream,
         converter: Converter<Source, Target>,
@@ -23,26 +26,24 @@ class CsvMappingIteratorParser {
     ): Map<String, Pair<Target?, String?>> {
 
         ByteArrayInputStream(IOUtils.toByteArray(file)).use {
-
             val parsedValues = hashMapOf<String, Source>()
             val sourceToTarget = hashMapOf<String, Pair<Target?, String?>>()
-            val csvLineNumbersToValues = getCsvLineNumbersToValues(it)
-            val mappingIterator = csvParser.parseCsvFile(it)
-            while (mappingIterator.hasNextValue()) {
-                val lineNumber = mappingIterator.currentLocation.lineNr
+
+            val originalLines = getOriginalLines(it)
+
+            val parsingIterator = csvParser.parseCsvFile(it)
+            while (parsingIterator.hasNextValue()) {
+                val lineNumberInFile = parsingIterator.currentLocation.lineNr
+
+                val originalValue = originalLines[lineNumberInFile + ARRAY_OFFSET]
                 try {
-                    val line = mappingIterator.nextValue()
-                    csvLineNumbersToValues[lineNumber]?.let {
-                        parsedValues[it] = line
-                    }
-
-                    log.debug("Successfully parsed line with number $lineNumber")
+                    parsedValues[originalValue] = parsingIterator.nextValue()
+                    log.debug("Successfully parsed line with number $lineNumberInFile")
                 } catch (e: Exception) {
-                    csvLineNumbersToValues[lineNumber]?.let {
-                        sourceToTarget[it] = Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
-                    }
+                    sourceToTarget[originalValue] =
+                        Pair(null, "Parse Exception - wrong format: ${e.localizedMessage}")
 
-                    log.error("Failed to parse line with number $lineNumber ", e)
+                    log.error("Failed to parse line with number $lineNumberInFile ", e)
                 }
             }
             sourceToTarget.putAll(parsedValues
@@ -53,17 +54,9 @@ class CsvMappingIteratorParser {
         }
     }
 
-    fun getCsvLineNumbersToValues(file: InputStream): Map<Int, String> {
-
-        val listOfLinesWithoutHeader = BufferedReader(InputStreamReader(file))
-            .lines()
-            .skip(NumberUtils.LONG_ONE)
-            .collect(Collectors.toList())
-
-        val result = mutableMapOf<Int, String>()
-        listOfLinesWithoutHeader.forEachIndexed { index, s -> result[index + 2] = s }
-
-        file.reset()
-        return result
+    fun getOriginalLines(inputStream: InputStream): MutableList<String> {
+        val originalLines = BufferedReader(InputStreamReader(inputStream)).lines().collect(Collectors.toList())
+        inputStream.reset()
+        return originalLines
     }
 }
