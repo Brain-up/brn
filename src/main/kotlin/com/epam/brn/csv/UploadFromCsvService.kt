@@ -1,25 +1,36 @@
 package com.epam.brn.csv
 
+import com.epam.brn.csv.impl.UploadFromCsv1SeriesStrategy
+import com.epam.brn.csv.impl.UploadFromCsv2SeriesStrategy
 import com.epam.brn.exception.FileFormatException
+import com.epam.brn.job.CsvUtils
 import java.io.File
+import org.apache.commons.lang3.StringUtils
+import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
-interface UploadFromCsvService {
+@Component
+class UploadFromCsvService(
+    private val uploadFromCsv1SeriesStrategy: UploadFromCsv1SeriesStrategy,
+    private val uploadFromCsv2SeriesStrategy: UploadFromCsv2SeriesStrategy
+) {
 
-    /**
-     * @param file - csv task file with from multipart request which should be convert to task model and saved with series
-     * @param seriesId - series id
-     *
-     * @return failed csv-lines with errors
-     */
     @Throws(FileFormatException::class)
-    fun loadTaskFile(file: MultipartFile, seriesId: Long): List<Any>
+    fun loadTaskFile(file: MultipartFile, seriesId: Long): List<Any> {
 
-    /**
-     * @param file - csv task file with exercise and orderNumber which should be convert to model and saved
-     *
-     * @return failed csv-lines with errors
-     */
+        if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
+            throw FileFormatException()
+
+        return when (seriesId.toInt()) {
+            1 -> uploadFromCsv1SeriesStrategy.uploadFile(file.inputStream)
+            2 -> uploadFromCsv2SeriesStrategy.uploadFile(file.inputStream)
+            else -> throw IllegalArgumentException("There no one strategy yet for seriesId = $seriesId")
+        }
+    }
+
     @Throws(FileFormatException::class)
-    fun loadTaskFile(file: File): List<Any>
+    fun loadTaskFile(file: File): List<Any> =
+        uploadFromCsv1SeriesStrategy.uploadFile(file.inputStream())
+
+    private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
 }
