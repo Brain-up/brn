@@ -42,16 +42,12 @@ class InitialDataLoader(
 
     companion object {
         fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
-
-        private const val GROUPS_FILE = "groups.csv"
-        private const val SERIES_FILE = "series.csv"
-        private const val EXERCISES_FILE = "exercises.csv"
     }
 
     private val sourceFileLoaders = mapOf<String, (it: InputStream) -> Any>(
-        GROUPS_FILE to uploadService::loadExerciseGroups,
-        SERIES_FILE to uploadService::loadSeries,
-        EXERCISES_FILE to uploadService::loadExercises,
+        "groups.csv" to uploadService::loadExerciseGroups,
+        "series.csv" to uploadService::loadSeries,
+        "exercises.csv" to uploadService::loadExercises,
         fileNameForSeries(1) to uploadService::loadTasksFor1Series,
         fileNameForSeries(2) to uploadService::loadTasksFor2Series,
         fileNameForSeries(3) to uploadService::loadExercisesFor3Series
@@ -72,16 +68,18 @@ class InitialDataLoader(
         }
     }
 
-    private fun isInitRequired() = exerciseGroupRepository.count() == 0L
-
-    private fun init() {
-        log.debug("Initialization started")
-
-        if (directoryPath != null) {
-            initDataFromDirectory(directoryPath!!)
-        } else {
-            initDataFromClassPath()
-        }
+    private fun addAdminUser(adminAuthority: Authority): UserAccount {
+        val password = passwordEncoder.encode("admin")
+        val userAccount =
+            UserAccount(
+                firstName = "admin",
+                lastName = "admin",
+                password = password,
+                email = "admin@admin.com",
+                active = true
+            )
+        userAccount.authoritySet.addAll(setOf(adminAuthority))
+        return userAccount
     }
 
     private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
@@ -105,18 +103,16 @@ class InitialDataLoader(
         return mutableListOf(firstUser, secondUser)
     }
 
-    private fun addAdminUser(adminAuthority: Authority): UserAccount {
-        val password = passwordEncoder.encode("admin")
-        val userAccount =
-            UserAccount(
-                firstName = "admin",
-                lastName = "admin",
-                password = password,
-                email = "admin@admin.com",
-                active = true
-            )
-        userAccount.authoritySet.addAll(setOf(adminAuthority))
-        return userAccount
+    private fun isInitRequired() = exerciseGroupRepository.count() == 0L
+
+    private fun init() {
+        log.debug("Initialization started")
+
+        if (directoryPath != null) {
+            initDataFromDirectory(directoryPath!!)
+        } else {
+            initDataFromClassPath()
+        }
     }
 
     private fun initDataFromDirectory(directoryToScan: Path) {
