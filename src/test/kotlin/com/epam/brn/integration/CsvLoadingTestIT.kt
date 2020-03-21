@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.csv.CsvMappingIteratorParser
+import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
@@ -39,17 +40,15 @@ class CsvLoadingTestIT {
             userAccountRepository: UserAccountRepository,
             csvMappingIteratorParser: CsvMappingIteratorParser,
             passwordEncoder: PasswordEncoder,
-            authorityService: AuthorityService
+            authorityService: AuthorityService,
+            uploadService: CsvUploadService
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
-            eriesRepository,
-            exerciseRepository,
-            taskRepository,
             userAccountRepository,
-            csvMappingIteratorParser,
             passwordEncoder,
-            authorityService
+            authorityService,
+            uploadService
         )
     }
 
