@@ -7,6 +7,7 @@ import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
@@ -42,6 +43,17 @@ class InitialDataLoader(
 
     companion object {
         fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
+
+        fun getInputStreamFromSeriesInitFile(seriesId: Long): InputStream {
+            val inputStream = Thread.currentThread()
+                .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId)}")
+
+            if (inputStream == null) {
+                throw IOException("Can not get init file for $seriesId series.")
+            }
+
+            return inputStream
+        }
     }
 
     private val sourceFileLoaders = mapOf<String, (it: InputStream) -> Any>(

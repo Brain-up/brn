@@ -4,6 +4,7 @@ import com.epam.brn.constant.BrnParams.GROUP_ID
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.constant.BrnPath.SERIES_FILE_FORMAT
+import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.SeriesService
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(BrnPath.SERIES)
 @Api(value = "${BrnPath.SERIES}", description = "End points for working with series")
-class SeriesController(@Autowired val seriesService: SeriesService) {
+class SeriesController(@Autowired val seriesService: SeriesService, @Autowired val csvUploadService: CsvUploadService) {
 
     @GetMapping
     fun getSeriesForGroup(@RequestParam(value = GROUP_ID) groupId: Long): ResponseEntity<BaseResponseDto> {
@@ -34,9 +35,9 @@ class SeriesController(@Autowired val seriesService: SeriesService) {
     }
 
     @GetMapping("$SERIES_FILE_FORMAT/{$SERIES_ID}")
-    fun getSeriesUploadFileFormat(
+    fun getSampleStringForSeriesFile(
         @PathVariable(value = SERIES_ID) seriesId: Long
     ): ResponseEntity<BaseSingleObjectResponseDto> {
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = seriesService.getSeriesUploadFileFormat(seriesId)))
+        return ResponseEntity.ok(BaseSingleObjectResponseDto(csvUploadService.getSampleStringForSeriesFile(seriesId)))
     }
 }

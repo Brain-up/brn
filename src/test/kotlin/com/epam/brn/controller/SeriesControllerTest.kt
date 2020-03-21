@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.service.SeriesService
 import com.nhaarman.mockito_kotlin.verify
@@ -13,10 +14,15 @@ import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesControllerTest {
+
     @InjectMocks
     lateinit var seriesController: SeriesController
+
     @Mock
     lateinit var seriesService: SeriesService
+
+    @Mock
+    lateinit var csvUploadService: CsvUploadService
 
     @Test
     fun `should get series for group`() {
