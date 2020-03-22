@@ -1,12 +1,10 @@
 package com.epam.brn.upload.csv
 
 import com.epam.brn.upload.csv.converter.Converter
-import com.epam.brn.upload.csv.dto.ExerciseCsv
 import com.epam.brn.upload.csv.dto.GroupCsv
 import com.epam.brn.upload.csv.dto.SeriesCsv
 import com.epam.brn.upload.csv.dto.TaskCsv
 import com.epam.brn.upload.csv.exception.CsvFileParseException
-import com.epam.brn.upload.csv.iterator.impl.ExerciseMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
@@ -19,7 +17,6 @@ class FirstSeriesCSVParserServiceTest {
 
     private val parser = MappingIteratorCsvParser()
 
-    private val exerciseCsvParserService = ExerciseMappingIteratorProvider()
     private val taskCsvParserService = Series1TaskMappingIteratorProvider()
     private val groupCsvParserService = GroupMappingIteratorProvider()
     private val seriesCsvParserService = SeriesMappingIteratorProvider()
@@ -81,25 +78,6 @@ class FirstSeriesCSVParserServiceTest {
 
         assertThat(actual[0]).startsWith("Failed to parse line 2: 'incorrect string 1'. Error: ")
         assertThat(actual[1]).startsWith("Failed to parse line 3: 'incorrect string 2'. Error: ")
-    }
-
-    @Test
-    fun `should parse Exercises`() {
-        val input = """
-                exerciseId, seriesId, level, name, description
-                1, 1, 1, Однослоговые слова без шума, Однослоговые слова без шума
-                2, 1, 2, Однослоговые слова без шума, Однослоговые слова без шума                
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
-
-        val result = parser.parse(input, makeIdentityConverter(), exerciseCsvParserService)
-
-        val name = "Однослоговые слова без шума"
-        assertThat(result).containsAll(
-            listOf(
-                ExerciseCsv(1, 1, 1, name, name),
-                ExerciseCsv(2, 1, 2, name, name)
-            )
-        )
     }
 
     @Test

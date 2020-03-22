@@ -56,7 +56,6 @@ class InitialDataLoader(
     private val sourceFileLoaders = mapOf<String, (it: InputStream) -> Any>(
         "groups.csv" to uploadService::loadGroups,
         "series.csv" to uploadService::loadSeries,
-        "exercises.csv" to uploadService::loadExercises,
         fileNameForSeries(1) to uploadService::loadTasksFor1Series,
         fileNameForSeries(2) to uploadService::loadExercisesFor2Series,
         fileNameForSeries(3) to uploadService::loadExercisesFor3Series
