@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils
 
 class CommaSeparatedExerciseCSVParserService : com.epam.brn.csv.CsvParser<ExerciseCsv> {
 
-    override fun parseCsvFile(file: InputStream): MappingIterator<ExerciseCsv> {
+    override fun iterator(file: InputStream): MappingIterator<ExerciseCsv> {
         val csvMapper = CsvMapper().apply {
             enable(CsvParser.Feature.TRIM_SPACES)
         }

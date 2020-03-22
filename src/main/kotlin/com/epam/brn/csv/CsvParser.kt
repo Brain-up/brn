@@ -5,5 +5,5 @@ import java.io.InputStream
 
 interface CsvParser<Source> {
 
-    fun parseCsvFile(file: InputStream): MappingIterator<Source>
+    fun iterator(file: InputStream): MappingIterator<Source>
 }

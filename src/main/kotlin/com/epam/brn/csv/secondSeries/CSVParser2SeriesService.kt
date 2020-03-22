@@ -8,7 +8,7 @@ import java.io.InputStream
 
 class CSVParser2SeriesService : CsvParser<Map<String, Any>> {
 
-    override fun parseCsvFile(file: InputStream): MappingIterator<Map<String, Any>> {
+    override fun iterator(file: InputStream): MappingIterator<Map<String, Any>> {
         val csvMapper = CsvMapper()
 
         val csvSchema = CsvSchema

@@ -31,7 +31,7 @@ class CsvMappingIteratorParser {
 
             val originalLines = getOriginalLines(it)
 
-            val parsingIterator = csvParser.parseCsvFile(it)
+            val parsingIterator = csvParser.iterator(it)
             while (parsingIterator.hasNextValue()) {
                 val lineNumberInFile = parsingIterator.currentLocation.lineNr
 

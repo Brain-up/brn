@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils
 
 class TaskCSVParser1SeriesService : CsvParser<TaskCsv> {
 
-    override fun parseCsvFile(file: InputStream): MappingIterator<TaskCsv> {
+    override fun iterator(file: InputStream): MappingIterator<TaskCsv> {
         val csvMapper = CsvMapper()
 
         val csvSchema = csvMapper
