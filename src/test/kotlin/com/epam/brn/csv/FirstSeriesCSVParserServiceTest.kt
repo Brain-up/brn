@@ -38,7 +38,7 @@ class FirstSeriesCSVParserServiceTest {
                 2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseCsvFile(input, makeIdentityConverter(), taskCsvParserService)
+        val result = parser.parse(input, makeIdentityConverter(), taskCsvParserService)
 
         assertThat(result).containsAll(
             listOf(
@@ -63,7 +63,7 @@ class FirstSeriesCSVParserServiceTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         assertThrows<CsvFileParseException> {
-            parser.parseCsvFile(input, makeIdentityConverter(), taskCsvParserService)
+            parser.parse(input, makeIdentityConverter(), taskCsvParserService)
         }
     }
 
@@ -76,7 +76,7 @@ class FirstSeriesCSVParserServiceTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val actual = assertThrows<CsvFileParseException> {
-            parser.parseCsvFile(input, makeIdentityConverter(), taskCsvParserService)
+            parser.parse(input, makeIdentityConverter(), taskCsvParserService)
         }.errors
 
         assertThat(actual[0]).startsWith("Failed to parse line 2: 'incorrect string 1'. Error: ")
@@ -91,7 +91,7 @@ class FirstSeriesCSVParserServiceTest {
                 2, 1, 2, Однослоговые слова без шума, Однослоговые слова без шума                
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseCsvFile(input, makeIdentityConverter(), exerciseCsvParserService)
+        val result = parser.parse(input, makeIdentityConverter(), exerciseCsvParserService)
 
         val name = "Однослоговые слова без шума"
         assertThat(result).containsAll(
@@ -112,7 +112,7 @@ class FirstSeriesCSVParserServiceTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser
-            .parseCsvFile(input, makeIdentityConverter(), groupCsvParserService)
+            .parse(input, makeIdentityConverter(), groupCsvParserService)
 
         assertThat(result).containsAll(
             listOf(
@@ -130,7 +130,7 @@ class FirstSeriesCSVParserServiceTest {
                 2, 2, Составление предложений, Составление предложений         
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseCsvFile(input, makeIdentityConverter(), seriesCsvParserService)
+        val result = parser.parse(input, makeIdentityConverter(), seriesCsvParserService)
 
         assertThat(result).containsAll(
             listOf(

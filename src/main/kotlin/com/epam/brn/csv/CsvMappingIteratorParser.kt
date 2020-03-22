@@ -20,7 +20,7 @@ class CsvMappingIteratorParser {
         const val ARRAY_OFFSET = -1
     }
 
-    final inline fun <reified ParsedType, reified ConvertedType> parseCsvFile(
+    final inline fun <reified ParsedType, reified ConvertedType> parse(
         inputStream: InputStream,
         converter: Converter<ParsedType, ConvertedType>,
         csvParser: CsvParser<ParsedType>

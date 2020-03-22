@@ -38,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @Component
 class CsvUploadService(
-    private val csvMappingIteratorParser: CsvMappingIteratorParser,
+    private val csvParser: CsvMappingIteratorParser,
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val seriesRepository: SeriesRepository,
     private val exerciseRepository: ExerciseRepository,
@@ -88,36 +88,36 @@ class CsvUploadService(
     fun loadTasks(file: File): List<Task> = loadTasksFor1Series(file.inputStream())
 
     fun loadExerciseGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
-        val groups = csvMappingIteratorParser
-            .parseCsvFile(inputStream, groupCsvConverter, CommaSeparatedGroupCSVParserService())
+        val groups = csvParser
+            .parse(inputStream, groupCsvConverter, CommaSeparatedGroupCSVParserService())
 
         return exerciseGroupRepository.saveAll(groups)
     }
 
     fun loadSeries(inputStream: InputStream): MutableIterable<Series> {
-        val series = csvMappingIteratorParser
-            .parseCsvFile(inputStream, seriesCsvConverter, CommaSeparatedSeriesCSVParserService())
+        val series = csvParser
+            .parse(inputStream, seriesCsvConverter, CommaSeparatedSeriesCSVParserService())
 
         return seriesRepository.saveAll(series)
     }
 
     fun loadExercises(inputStream: InputStream): MutableList<Exercise> {
-        val exercises = csvMappingIteratorParser
-            .parseCsvFile(inputStream, exerciseCsvConverter, CommaSeparatedExerciseCSVParserService())
+        val exercises = csvParser
+            .parse(inputStream, exerciseCsvConverter, CommaSeparatedExerciseCSVParserService())
 
         return exerciseRepository.saveAll(exercises)
     }
 
     fun loadTasksFor1Series(inputStream: InputStream): MutableList<Task> {
-        val tasks = csvMappingIteratorParser
-            .parseCsvFile(inputStream, taskCsv1SeriesConverter, TaskCSVParser1SeriesService())
+        val tasks = csvParser
+            .parse(inputStream, taskCsv1SeriesConverter, TaskCSVParser1SeriesService())
 
         return taskRepository.saveAll(tasks)
     }
 
     fun loadTasksFor2Series(inputStream: InputStream): MutableList<Exercise> {
-        val exercises = csvMappingIteratorParser
-            .parseCsvFile(inputStream, exercise2SeriesConverter, CSVParser2SeriesService())
+        val exercises = csvParser
+            .parse(inputStream, exercise2SeriesConverter, CSVParser2SeriesService())
 
         return exerciseRepository.saveAll(exercises)
     }
