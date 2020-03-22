@@ -39,7 +39,7 @@ import org.springframework.web.multipart.MultipartFile
 @Component
 class CsvUploadService(
     private val csvParser: CsvMappingIteratorParser,
-    private val exerciseGroupRepository: ExerciseGroupRepository,
+    private val groupRepository: ExerciseGroupRepository,
     private val seriesRepository: SeriesRepository,
     private val exerciseRepository: ExerciseRepository,
     private val taskRepository: TaskRepository
@@ -49,16 +49,16 @@ class CsvUploadService(
     val dataFormatLinesCount = 5
 
     @Autowired
-    lateinit var groupCsvConverter: GroupCsvConverter
+    lateinit var groupConverter: GroupCsvConverter
 
     @Autowired
-    lateinit var exerciseCsvConverter: ExerciseCsvConverter
+    lateinit var exerciseConverter: ExerciseCsvConverter
 
     @Autowired
-    lateinit var seriesCsvConverter: SeriesCsvConverter
+    lateinit var seriesConverter: SeriesCsvConverter
 
     @Autowired
-    lateinit var taskCsv1SeriesConverter: TaskCsv1SeriesConverter
+    lateinit var task1SeriesConverter: TaskCsv1SeriesConverter
 
     @Autowired
     lateinit var exercise2SeriesConverter: Exercise2SeriesConverter
@@ -68,6 +68,20 @@ class CsvUploadService(
 
     @Autowired
     lateinit var resourceService: ResourceService
+
+    fun loadGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
+        val groups = csvParser
+            .parse(inputStream, groupConverter, CommaSeparatedGroupCSVParserService())
+
+        return groupRepository.saveAll(groups)
+    }
+
+    fun loadSeries(inputStream: InputStream): MutableIterable<Series> {
+        val series = csvParser
+            .parse(inputStream, seriesConverter, CommaSeparatedSeriesCSVParserService())
+
+        return seriesRepository.saveAll(series)
+    }
 
     @Throws(FileFormatException::class)
     fun loadExercises(seriesId: Long, file: MultipartFile): List<Any> {
@@ -84,33 +98,19 @@ class CsvUploadService(
 
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
 
-    @Throws(FileFormatException::class)
-    fun loadTasks(file: File): List<Task> = loadTasksFor1Series(file.inputStream())
-
-    fun loadExerciseGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
-        val groups = csvParser
-            .parse(inputStream, groupCsvConverter, CommaSeparatedGroupCSVParserService())
-
-        return exerciseGroupRepository.saveAll(groups)
-    }
-
-    fun loadSeries(inputStream: InputStream): MutableIterable<Series> {
-        val series = csvParser
-            .parse(inputStream, seriesCsvConverter, CommaSeparatedSeriesCSVParserService())
-
-        return seriesRepository.saveAll(series)
-    }
-
     fun loadExercises(inputStream: InputStream): MutableList<Exercise> {
         val exercises = csvParser
-            .parse(inputStream, exerciseCsvConverter, CommaSeparatedExerciseCSVParserService())
+            .parse(inputStream, exerciseConverter, CommaSeparatedExerciseCSVParserService())
 
         return exerciseRepository.saveAll(exercises)
     }
 
+    @Throws(FileFormatException::class)
+    fun loadTasks(file: File): List<Task> = loadTasksFor1Series(file.inputStream())
+
     fun loadTasksFor1Series(inputStream: InputStream): MutableList<Task> {
         val tasks = csvParser
-            .parse(inputStream, taskCsv1SeriesConverter, TaskCSVParser1SeriesService())
+            .parse(inputStream, task1SeriesConverter, TaskCSVParser1SeriesService())
 
         return taskRepository.saveAll(tasks)
     }
