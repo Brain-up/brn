@@ -136,8 +136,6 @@ class CsvUploadService(
         task.exercise = exercise
         exercise.addTask(task)
 
-        seriesService.findSeriesWithExercisesForId(3L).exercises.add(exercise)
-
         return listOf(exercise)
     }
 
