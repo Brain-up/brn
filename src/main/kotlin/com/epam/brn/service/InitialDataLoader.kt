@@ -61,7 +61,7 @@ class InitialDataLoader(
         "series.csv" to uploadService::loadSeries,
         "exercises.csv" to uploadService::loadExercises,
         fileNameForSeries(1) to uploadService::loadTasksFor1Series,
-        fileNameForSeries(2) to uploadService::loadTasksFor2Series,
+        fileNameForSeries(2) to uploadService::loadExercisesFor2Series,
         fileNameForSeries(3) to uploadService::loadExercisesFor3Series
     )
 

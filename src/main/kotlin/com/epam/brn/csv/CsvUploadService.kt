@@ -91,7 +91,7 @@ class CsvUploadService(
 
         return when (seriesId.toInt()) {
             1 -> loadTasksFor1Series(file.inputStream)
-            2 -> loadTasksFor2Series(file.inputStream)
+            2 -> loadExercisesFor2Series(file.inputStream)
             else -> throw IllegalArgumentException("There no one strategy yet for seriesId = $seriesId")
         }
     }
@@ -115,7 +115,7 @@ class CsvUploadService(
         return taskRepository.saveAll(tasks)
     }
 
-    fun loadTasksFor2Series(inputStream: InputStream): MutableList<Exercise> {
+    fun loadExercisesFor2Series(inputStream: InputStream): MutableList<Exercise> {
         val exercises = csvParser
             .parse(inputStream, exercise2SeriesConverter, CSVParser2SeriesService())
 
