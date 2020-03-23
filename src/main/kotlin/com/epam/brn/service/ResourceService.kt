@@ -21,8 +21,4 @@ class ResourceService(@Autowired val resourceRepository: ResourceRepository) {
     fun save(resource: Resource): Resource {
         return resourceRepository.save(resource)
     }
-
-    fun saveAll(resources: Set<Resource>): MutableIterable<Resource> {
-        return resourceRepository.saveAll(resources)
-    }
 }

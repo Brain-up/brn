@@ -13,8 +13,8 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
+import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.InitialDataLoader
-import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.csv.MappingIteratorCsvParser
 import com.epam.brn.upload.csv.converter.impl.Exercise2SeriesConverter
@@ -63,7 +63,7 @@ class CsvUploadService(
     lateinit var seriesService: SeriesService
 
     @Autowired
-    lateinit var resourceService: ResourceService
+    lateinit var exerciseService: ExerciseService
 
     fun loadGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
         val groups = csvParser
@@ -124,16 +124,12 @@ class CsvUploadService(
         // todo: get data from file for 3 series
         val exercises = createExercises()
 
-        return exerciseRepository.saveAll(exercises)
+        return exerciseService.save(exercises)
     }
 
     fun createExercises(): List<Exercise> {
-        val task = createTask()
         val exercise = createExercise()
-
-        task.exercise = exercise
-        exercise.addTask(task)
-
+        exercise.addTask(createTask())
         return listOf(exercise)
     }
 
@@ -194,9 +190,6 @@ class CsvUploadService(
             wordType = WordTypeEnum.SENTENCE.toString(),
             audioFileUrl = "series3/девочка_рисует.mp3"
         )
-
-        resourceService.saveAll(answerOptions)
-        resourceService.save(correctAnswer)
 
         return Task(
             serialNumber = 2,

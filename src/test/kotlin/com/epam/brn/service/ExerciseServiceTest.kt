@@ -23,10 +23,15 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class ExerciseServiceTest {
     @InjectMocks
     lateinit var exerciseService: ExerciseService
+
     @Mock
     lateinit var exerciseRepository: ExerciseRepository
+
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
+
+    @Mock
+    lateinit var taskService: TaskService
 
     @Test
     fun `should get exercises by user`() {

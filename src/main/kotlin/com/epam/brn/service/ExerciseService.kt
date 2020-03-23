@@ -9,11 +9,13 @@ import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ExerciseService(
     @Autowired val exerciseRepository: ExerciseRepository,
-    @Autowired val studyHistoryRepository: StudyHistoryRepository
+    @Autowired val studyHistoryRepository: StudyHistoryRepository,
+    private val taskService: TaskService
 ) {
     private val log = logger()
 
@@ -42,5 +44,16 @@ class ExerciseService(
         return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
     }
 
-    fun save(exercise: Exercise): Exercise = exerciseRepository.save(exercise)
+    @Transactional
+    fun save(exercise: Exercise): Exercise {
+        val result = exerciseRepository.save(exercise)
+        exercise.tasks.forEach {
+            it.exercise = result
+            taskService.save(it)
+        }
+        return result
+    }
+
+    @Transactional
+    fun save(exercises: List<Exercise>): List<Exercise> = exercises.map(this::save)
 }
