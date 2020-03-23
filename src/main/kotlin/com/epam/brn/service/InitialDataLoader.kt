@@ -46,9 +46,8 @@ class InitialDataLoader(
             val inputStream = Thread.currentThread()
                 .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId)}")
 
-            if (inputStream == null) {
+            if (inputStream == null)
                 throw IOException("Can not get init file for $seriesId series.")
-            }
 
             return inputStream
         }
