@@ -33,6 +33,11 @@ export function toMilliseconds(value) {
   return value * 1000;
 }
 
+export function createAudioContext() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  return new AudioContext();
+}
+
 export function createSource(context, buffer) {
   const source = context.createBufferSource();
   const gainNode = context.createGain
@@ -54,7 +59,6 @@ export function BufferLoader(context, urlList, callback) {
   this.urlList = urlList;
   this.onload = callback;
   this.bufferList = new Array();
-  this.loadCount = 0;
 }
 
 function arrayBufferRequest(url) {

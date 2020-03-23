@@ -6,14 +6,13 @@ import { inject as service } from '@ember/service';
 import { timeout, task } from 'ember-concurrency';
 import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
-import { BufferLoader, createSource, toSeconds, toMilliseconds, TIMINGS } from 'brn/utils/audio-api';
+import { BufferLoader, createSource, createAudioContext, toSeconds, toMilliseconds, TIMINGS } from 'brn/utils/audio-api';
 
 export default class AudioPlayerComponent extends Component {
   tagName = '';
   init() {
     super.init(...arguments);
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    this.context = new AudioContext();
+    this.context = createAudioContext();
     next(() => {
       this.audio.register(this);
     });
