@@ -10,7 +10,7 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.csv.converter.Converter
-import com.epam.brn.upload.csv.record.TaskCsv
+import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
@@ -21,12 +21,12 @@ class TaskCsv1SeriesConverter(
     var exerciseService: ExerciseService,
     var seriesService: SeriesService,
     var resourceService: ResourceService
-) : Converter<TaskCsv, Task> {
+) : Converter<SeriesOneTaskRecord, Task> {
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    override fun convert(source: TaskCsv): Task {
+    override fun convert(source: SeriesOneTaskRecord): Task {
         val result = Task()
         result.serialNumber = source.orderNumber
         result.exercise = prepareExercise(source)
@@ -35,7 +35,7 @@ class TaskCsv1SeriesConverter(
         return result
     }
 
-    private fun prepareExercise(source: TaskCsv): Exercise {
+    private fun prepareExercise(source: SeriesOneTaskRecord): Exercise {
         return try {
             exerciseService.findExerciseByNameAndLevel(source.exerciseName, source.level)
         } catch (e: EntityNotFoundException) {
@@ -49,7 +49,7 @@ class TaskCsv1SeriesConverter(
         }
     }
 
-    private fun prepareCorrectAnswer(source: TaskCsv): Resource {
+    private fun prepareCorrectAnswer(source: SeriesOneTaskRecord): Resource {
         var resource = resourceService.findFirstByWordAndAudioFileUrlLike(source.word, source.audioFileName)
         if (resource != null) {
             resource.wordType = source.wordType

@@ -1,29 +1,29 @@
 package com.epam.brn.upload.csv.iterator.impl
 
 import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
-import com.epam.brn.upload.csv.record.GroupCsv
+import com.epam.brn.upload.csv.record.GroupRecord
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
 
-class GroupMappingIteratorProvider : MappingIteratorProvider<GroupCsv> {
+class GroupMappingIteratorProvider : MappingIteratorProvider<GroupRecord> {
 
-    override fun iterator(file: InputStream): MappingIterator<GroupCsv> {
+    override fun iterator(file: InputStream): MappingIterator<GroupRecord> {
         val csvMapper = CsvMapper().apply {
             enable(CsvParser.Feature.TRIM_SPACES)
         }
 
         val csvSchema = csvMapper
-            .schemaFor(GroupCsv::class.java)
+            .schemaFor(GroupRecord::class.java)
             .withColumnSeparator(',')
             .withLineSeparator(StringUtils.SPACE)
             .withColumnReordering(true)
             .withHeader()
 
         return csvMapper
-            .readerWithTypedSchemaFor(GroupCsv::class.java)
+            .readerWithTypedSchemaFor(GroupRecord::class.java)
             .with(csvSchema)
             .readValues(file)
     }

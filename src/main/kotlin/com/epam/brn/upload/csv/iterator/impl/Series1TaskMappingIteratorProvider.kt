@@ -1,20 +1,20 @@
 package com.epam.brn.upload.csv.iterator.impl
 
 import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
-import com.epam.brn.upload.csv.record.TaskCsv
+import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
 
 class Series1TaskMappingIteratorProvider :
-    MappingIteratorProvider<TaskCsv> {
+    MappingIteratorProvider<SeriesOneTaskRecord> {
 
-    override fun iterator(file: InputStream): MappingIterator<TaskCsv> {
+    override fun iterator(file: InputStream): MappingIterator<SeriesOneTaskRecord> {
         val csvMapper = CsvMapper()
 
         val csvSchema = csvMapper
-            .schemaFor(TaskCsv::class.java)
+            .schemaFor(SeriesOneTaskRecord::class.java)
             .withColumnSeparator(' ')
             .withLineSeparator(StringUtils.SPACE)
             .withColumnReordering(true)
@@ -22,7 +22,7 @@ class Series1TaskMappingIteratorProvider :
             .withHeader()
 
         return csvMapper
-            .readerWithTypedSchemaFor(TaskCsv::class.java)
+            .readerWithTypedSchemaFor(SeriesOneTaskRecord::class.java)
             .with(csvSchema)
             .readValues(file)
     }

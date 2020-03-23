@@ -2,7 +2,7 @@ package com.epam.brn.upload.csv.record
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class TaskCsv(
+data class SeriesOneTaskRecord(
 
     @JsonProperty("level")
     val level: Int,

@@ -5,9 +5,9 @@ import com.epam.brn.upload.csv.exception.CsvFileParseException
 import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
-import com.epam.brn.upload.csv.record.GroupCsv
-import com.epam.brn.upload.csv.record.SeriesCsv
-import com.epam.brn.upload.csv.record.TaskCsv
+import com.epam.brn.upload.csv.record.GroupRecord
+import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
+import com.epam.brn.upload.csv.record.SeriesRecord
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -39,11 +39,11 @@ class FirstSeriesCSVParserServiceTest {
 
         assertThat(result).containsAll(
             listOf(
-                TaskCsv(
+                SeriesOneTaskRecord(
                     1, "name1", 1,
                     "бал", "no_noise/бал.mp3", "pictures/бал.jpg",
                     listOf("(бам", "сам", "дам", "зал", "бак)"), "OBJECT"
-                ), TaskCsv(
+                ), SeriesOneTaskRecord(
                     2, "name1", 3,
                     "foo", "no_noise/foo.mp3", "pictures/foo.jpg",
                     listOf("(foo", "bar", "baz)"), "OBJECT"
@@ -94,8 +94,8 @@ class FirstSeriesCSVParserServiceTest {
 
         assertThat(result).containsAll(
             listOf(
-                GroupCsv(1, "Неречевые упражнения", "Неречевые упражнения"),
-                GroupCsv(2, "Речевые упражнения", "Речевые упражнения")
+                GroupRecord(1, "Неречевые упражнения", "Неречевые упражнения"),
+                GroupRecord(2, "Речевые упражнения", "Речевые упражнения")
             )
         )
     }
@@ -112,8 +112,8 @@ class FirstSeriesCSVParserServiceTest {
 
         assertThat(result).containsAll(
             listOf(
-                SeriesCsv(2, 1, "Распознование слов", "Распознование слов"),
-                SeriesCsv(2, 2, "Составление предложений", "Составление предложений")
+                SeriesRecord(2, 1, "Распознование слов", "Распознование слов"),
+                SeriesRecord(2, 2, "Составление предложений", "Составление предложений")
             )
         )
     }
