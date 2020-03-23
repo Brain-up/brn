@@ -16,27 +16,12 @@ class ExerciseCsvConverter : Converter<ExerciseCsv, Exercise> {
 
     override fun convert(source: ExerciseCsv): Exercise {
         val target = Exercise()
-        convertSeries(source, target)
-        convertExerciseType(source, target)
+        target.series = seriesService.findSeriesForId(source.seriesId)
+        target.exerciseType = ExerciseTypeEnum.of(source.seriesId).toString()
         target.name = source.name
         target.level = source.level
         target.description = source.description
         target.id = source.exerciseId
         return target
-    }
-
-    private fun convertSeries(source: ExerciseCsv, target: Exercise) {
-        target.series = seriesService.findSeriesForId(source.seriesId)
-    }
-
-    private fun convertExerciseType(source: ExerciseCsv, target: Exercise) {
-        val exerciseType =
-            when (source.seriesId) {
-                1L -> ExerciseTypeEnum.SINGLE_WORDS
-                2L -> ExerciseTypeEnum.WORDS_SEQUENCES
-                3L -> ExerciseTypeEnum.SENTENCE
-                else -> throw IllegalArgumentException("There no ExerciseType for seriesId=${source.seriesId}")
-            }
-        target.exerciseType = exerciseType.toString()
     }
 }
