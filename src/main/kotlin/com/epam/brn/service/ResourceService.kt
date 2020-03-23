@@ -1,6 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,10 +24,5 @@ class ResourceService(@Autowired val resourceRepository: ResourceRepository) {
 
     fun saveAll(resources: Set<Resource>): MutableIterable<Resource> {
         return resourceRepository.saveAll(resources)
-    }
-
-    fun findById(id: Long): Resource {
-        return resourceRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("no resource was found for id=$id") }
     }
 }

@@ -31,12 +31,6 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
             .orElseThrow { EntityNotFoundException("no series was found for id=$seriesId") }
     }
 
-    fun findSeriesWithExercisesForId(seriesId: Long): Series {
-        log.debug("try to find series for seriesId=$seriesId")
-        return seriesRepository.findSeriesWithExercisesById(seriesId)
-            .orElseThrow { EntityNotFoundException("no series was found for id=$seriesId") }
-    }
-
     fun save(series: Series): Series {
         return seriesRepository.save(series)
     }

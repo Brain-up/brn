@@ -9,7 +9,6 @@ import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ExerciseService(
@@ -22,11 +21,6 @@ class ExerciseService(
         val exercise = exerciseRepository.findById(exerciseID)
         return exercise.map { e -> e.toDto() }
             .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
-    }
-
-    fun findExerciseEntityByName(name: String): Exercise {
-        return exerciseRepository.findExerciseByName(name)
-            .orElseThrow { EntityNotFoundException("Exercise entity was not found by name $name") }
     }
 
     fun findExerciseByNameAndLevel(name: String, level: Int): Exercise {
@@ -46,15 +40,6 @@ class ExerciseService(
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
         val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
         return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
-    }
-
-    fun save(exercise: Exercise): Exercise {
-        return exerciseRepository.save(exercise)
-    }
-
-    @Transactional
-    fun save(exercises: List<Exercise>): List<Exercise> {
-        return exerciseRepository.saveAll(exercises)
     }
 
     fun createExercise(name: String): Exercise {
