@@ -4,6 +4,7 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { timeout } from 'ember-concurrency';
 import pageObject from './page-object';
+import { TIMINGS } from 'brn/utils/audio-api';
 import customTimeout from 'brn/utils/custom-timeout';
 
 module('Integration | Component | audio-player', function(hooks) {
@@ -33,11 +34,11 @@ module('Integration | Component | audio-player', function(hooks) {
 
     pageObject.playAudio();
 
-    await timeout(5);
+    await timeout(TIMINGS.FAKE_AUDIO_STARTED);
 
     assert.dom('[data-test-play-audio-button]').isDisabled();
 
-    await timeout(20);
+    await timeout(TIMINGS.FAKE_AUDIO_FINISHED);
 
     assert.dom('[data-test-play-audio-button]').isNotDisabled();
   });

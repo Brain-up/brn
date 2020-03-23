@@ -6,7 +6,7 @@ import { inject as service } from '@ember/service';
 import { timeout, task } from 'ember-concurrency';
 import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
-import { BufferLoader, createSource, toSeconds, toMilliseconds } from 'brn/utils/audio-api';
+import { BufferLoader, createSource, toSeconds, toMilliseconds, TIMINGS } from 'brn/utils/audio-api';
 
 export default class AudioPlayerComponent extends Component {
   tagName = '';
@@ -86,7 +86,11 @@ export default class AudioPlayerComponent extends Component {
 
   @action
   async playAudio() {
-    this.playTask.perform();
+    if (!Ember.testing) {
+      this.playTask.perform();
+    } else {
+      this.fakePlayTask.perform();
+    }
   }
 
   getNoize(duration) {
@@ -108,17 +112,22 @@ export default class AudioPlayerComponent extends Component {
     return createSource(this.context, myArrayBuffer);
   }
 
+  createSources(context, buffers) {
+    return buffers.map((buffer)=>createSource(context, buffer));
+  }
+
+  calcDurationForSources(sources) {
+    return sources.reduce((result, item) => {
+      return result + toMilliseconds(item.source.buffer.duration);
+    }, 0);
+  }
+
   @(task(function* playAudio(noizeSeconds = 0) {
     let startedSources = [];
     const hasNoize = noizeSeconds !== 0;
     try {
-      this.sources = (this.buffers || []).map((buffer) =>
-        createSource(this.context, buffer),
-      );
-      this.totalDuration =
-        this.sources.reduce((result, item) => {
-          return result + toMilliseconds(item.source.buffer.duration);
-        }, toMilliseconds(noizeSeconds));
+      this.sources = this.createSources(this.context, this.buffers || []);
+      this.totalDuration = this.calcDurationForSources(this.sources) + toMilliseconds(noizeSeconds);
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
@@ -154,6 +163,16 @@ export default class AudioPlayerComponent extends Component {
     }
   }).enqueue())
   playTask;
+
+  @(task(function* fakePlayAudio() {
+    this.totalDuration = TIMINGS.FAKE_AUDIO;
+    this.isPlaying = true;
+    this.trackProgress.perform();
+    yield timeout(TIMINGS.FAKE_AUDIO);
+    this.isPlaying = false;
+    this.totalDuration = 0;
+  }).enqueue())
+  fakePlayTask;
 
   setProgress(progress) {
     window.requestAnimationFrame(() => {

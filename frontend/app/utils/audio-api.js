@@ -1,3 +1,27 @@
+import Ember from 'ember';
+
+export const TIMINGS = {
+  _step: 100,
+  
+  FAKE_AUDIO: 200,
+  get FAKE_AUDIO_STARTED() {
+    return this.FAKE_AUDIO - this._step;
+  },
+  get FAKE_AUDIO_FINISHED() {
+    return this._step * 2;
+  },
+
+  get SUCCESS_ANSWER_NOTIFICATION() {
+    return Ember.testing ? 200 : 3000;
+  },
+  get SUCCESS_ANSWER_NOTIFICATION_STARTED() {
+    return this.SUCCESS_ANSWER_NOTIFICATION - this._step;
+  },
+  get SUCCESS_ANSWER_NOTIFICATION_FINISHED() {
+    return this.SUCCESS_ANSWER_NOTIFICATION + this._step;
+  }
+}
+
 export default function audioApi() {
   return true;
 }
