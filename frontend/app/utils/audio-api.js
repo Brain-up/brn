@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export const TIMINGS = {
   _step: 100,
-  
+
   FAKE_AUDIO: 200,
   get FAKE_AUDIO_STARTED() {
     return this.FAKE_AUDIO - this._step;
@@ -19,8 +19,8 @@ export const TIMINGS = {
   },
   get SUCCESS_ANSWER_NOTIFICATION_FINISHED() {
     return this.SUCCESS_ANSWER_NOTIFICATION + this._step;
-  }
-}
+  },
+};
 
 export default function audioApi() {
   return true;
@@ -33,11 +33,11 @@ export function toMilliseconds(value) {
   return value * 1000;
 }
 
-var CrossfadeSample = {playing:false};
-
 export function createSource(context, buffer) {
-  var source = context.createBufferSource();
-  var gainNode = context.createGain ? context.createGain() : context.createGainNode();
+  const source = context.createBufferSource();
+  const gainNode = context.createGain
+    ? context.createGain()
+    : context.createGainNode();
   source.buffer = buffer;
   source.loop = false;
   source.connect(gainNode);
@@ -45,7 +45,7 @@ export function createSource(context, buffer) {
 
   return {
     source: source,
-    gainNode: gainNode
+    gainNode: gainNode,
   };
 }
 
@@ -57,41 +57,31 @@ export function BufferLoader(context, urlList, callback) {
   this.loadCount = 0;
 }
 
-BufferLoader.prototype.loadBuffer = function(url, index) {
-  // Load buffer asynchronously
-  var request = new XMLHttpRequest();
-  request.open("GET", url, true);
-  request.responseType = "arraybuffer";
-
-  var loader = this;
-
-  request.onload = function() {
-    // Asynchronously decode the audio file data in request.response
-    loader.context.decodeAudioData(
-      request.response,
-      function(buffer) {
-        if (!buffer) {
-          alert('error decoding file data: ' + url);
-          return;
-        }
-        loader.bufferList[index] = buffer;
-        if (++loader.loadCount == loader.urlList.length)
-          loader.onload(loader.bufferList);
-      },
-      function() {
-        //
-      }
-    );
-  }
-
-  request.onerror = function() {
-    alert('BufferLoader: XHR error');
-  }
-
-  request.send();
+function arrayBufferRequest(url) {
+  return new Promise((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+    request.onload = function() {
+      resolve(request.response);
+    };
+    request.onerror = function() {
+      reject(new Error('BufferLoader: XHR error'));
+    };
+    request.send();
+  });
 }
 
-BufferLoader.prototype.load = function() {
-  for (var i = 0; i < this.urlList.length; ++i)
-  this.loadBuffer(this.urlList[i], i);
-}
+BufferLoader.prototype.load = async function() {
+  const files = await Promise.all(
+    this.urlList.map((url) => arrayBufferRequest(url)),
+  );
+  const results = await Promise.all(
+    files.map((file) => {
+      return new Promise((resolve, reject) => {
+        this.context.decodeAudioData(file, resolve, reject);
+      });
+    }),
+  );
+  return this.onload(results);
+};
