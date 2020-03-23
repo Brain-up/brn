@@ -79,12 +79,18 @@ export function BufferLoader(context, urlList, callback) {
   this.bufferList = new Array();
 }
 
+const AudioCache = new Map();
+
 function arrayBufferRequest(url) {
   return new Promise((resolve, reject) => {
+    if (AudioCache.has(url)) {
+      return resolve(AudioCache.get(url).slice());
+    }
     const request = new XMLHttpRequest();
     request.open('GET', url, true);
     request.responseType = 'arraybuffer';
     request.onload = function() {
+      AudioCache.set(url, request.response.slice());
       resolve(request.response);
     };
     request.onerror = function() {

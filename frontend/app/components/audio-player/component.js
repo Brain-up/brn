@@ -52,6 +52,9 @@ export default class AudioPlayerComponent extends Component {
   @tracked audioFileUrl;
 
   async didReceiveAttrs() {
+    if (this.isPlaying) {
+      return;
+    }
     await this.setAudioElements();
     if (this.autoplay && this.previousPlayedUrls !== this.audioFileUrl) {
       await this.playAudio();
@@ -129,7 +132,7 @@ export default class AudioPlayerComponent extends Component {
       }
       yield timeout(10);
       this.isPlaying = false;
-      this.previousPlayedUrls = this.audioFileUr;
+      this.previousPlayedUrls = this.audioFileUrl;
     } catch (e) {
       //
     } finally {
