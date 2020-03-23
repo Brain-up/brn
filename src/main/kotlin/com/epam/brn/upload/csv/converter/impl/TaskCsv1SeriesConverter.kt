@@ -1,14 +1,14 @@
-package com.epam.brn.csv.converter.impl.firstSeries
+package com.epam.brn.upload.csv.converter.impl
 
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.converter.Converter
-import com.epam.brn.csv.dto.TaskCsv
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
+import com.epam.brn.upload.csv.converter.Converter
+import com.epam.brn.upload.csv.dto.TaskCsv
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,4 +1,4 @@
-package com.epam.brn.csv.converter
+package com.epam.brn.upload.csv.converter
 
 interface Converter<Source, Target> {
 

@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
-import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.service.SeriesService
+import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

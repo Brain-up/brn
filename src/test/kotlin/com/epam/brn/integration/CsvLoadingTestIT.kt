@@ -1,7 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.csv.CsvMappingIteratorParser
-import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
@@ -10,6 +8,8 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
+import com.epam.brn.upload.CsvUploadService
+import com.epam.brn.upload.csv.MappingIteratorCsvParser
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -38,7 +38,7 @@ class CsvLoadingTestIT {
             exerciseRepository: ExerciseRepository,
             taskRepository: TaskRepository,
             userAccountRepository: UserAccountRepository,
-            csvMappingIteratorParser: CsvMappingIteratorParser,
+            mappingIteratorCsvParser: MappingIteratorCsvParser,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
             uploadService: CsvUploadService

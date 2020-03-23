@@ -1,8 +1,8 @@
 package com.epam.brn.job.impl
 
-import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.job.CsvUtils
 import com.epam.brn.job.UploadFileJobRunner
+import com.epam.brn.upload.CsvUploadService
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path

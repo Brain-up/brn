@@ -1,7 +1,8 @@
-package com.epam.brn.csv
+package com.epam.brn.upload.csv
 
-import com.epam.brn.csv.converter.Converter
-import com.epam.brn.csv.exception.CsvFileParseException
+import com.epam.brn.upload.csv.converter.Converter
+import com.epam.brn.upload.csv.exception.CsvFileParseException
+import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -12,7 +13,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class CsvMappingIteratorParser {
+class MappingIteratorCsvParser {
 
     val log = logger()
 
@@ -23,7 +24,7 @@ class CsvMappingIteratorParser {
     final inline fun <reified ParsedType, reified ConvertedType> parse(
         inputStream: InputStream,
         converter: Converter<ParsedType, ConvertedType>,
-        csvParser: CsvParser<ParsedType>
+        mappingIteratorProvider: MappingIteratorProvider<ParsedType>
     ): List<ConvertedType> {
         ByteArrayInputStream(IOUtils.toByteArray(inputStream)).use {
             val parsed = mutableListOf<ParsedType>()
@@ -31,7 +32,7 @@ class CsvMappingIteratorParser {
 
             val originalLines = getOriginalLines(it)
 
-            val parsingIterator = csvParser.iterator(it)
+            val parsingIterator = mappingIteratorProvider.iterator(it)
             while (parsingIterator.hasNextValue()) {
                 val lineNumberInFile = parsingIterator.currentLocation.lineNr
 

@@ -1,28 +1,29 @@
-package com.epam.brn.csv.firstSeries.commaSeparated
+package com.epam.brn.upload.csv.iterator.impl
 
-import com.epam.brn.csv.dto.SeriesCsv
+import com.epam.brn.upload.csv.dto.ExerciseCsv
+import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
 
-class CommaSeparatedSeriesCSVParserService : com.epam.brn.csv.CsvParser<SeriesCsv> {
+class ExerciseMappingIteratorProvider : MappingIteratorProvider<ExerciseCsv> {
 
-    override fun iterator(file: InputStream): MappingIterator<SeriesCsv> {
+    override fun iterator(file: InputStream): MappingIterator<ExerciseCsv> {
         val csvMapper = CsvMapper().apply {
             enable(CsvParser.Feature.TRIM_SPACES)
         }
 
         val csvSchema = csvMapper
-            .schemaFor(SeriesCsv::class.java)
+            .schemaFor(ExerciseCsv::class.java)
             .withColumnSeparator(',')
             .withLineSeparator(StringUtils.SPACE)
             .withColumnReordering(true)
             .withHeader()
 
         return csvMapper
-            .readerWithTypedSchemaFor(SeriesCsv::class.java)
+            .readerWithTypedSchemaFor(ExerciseCsv::class.java)
             .with(csvSchema)
             .readValues(file)
     }

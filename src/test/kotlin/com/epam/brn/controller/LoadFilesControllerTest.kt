@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.csv.CsvUploadService
+import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import java.io.File

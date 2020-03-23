@@ -2,11 +2,11 @@ package com.epam.brn.service
 
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
 import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
-import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.upload.CsvUploadService
 import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Files

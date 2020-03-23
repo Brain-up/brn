@@ -1,9 +1,9 @@
-package com.epam.brn.csv.converter.impl.firstSeries
+package com.epam.brn.upload.csv.converter.impl
 
-import com.epam.brn.csv.converter.Converter
-import com.epam.brn.csv.dto.SeriesCsv
 import com.epam.brn.model.Series
 import com.epam.brn.service.ExerciseGroupsService
+import com.epam.brn.upload.csv.converter.Converter
+import com.epam.brn.upload.csv.dto.SeriesCsv
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

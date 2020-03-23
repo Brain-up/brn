@@ -4,10 +4,10 @@ import com.epam.brn.constant.BrnParams.GROUP_ID
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.constant.BrnPath.SERIES_FILE_FORMAT
-import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.SeriesService
+import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

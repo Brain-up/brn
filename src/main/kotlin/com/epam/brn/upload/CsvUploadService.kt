@@ -1,17 +1,7 @@
-package com.epam.brn.csv
+package com.epam.brn.upload
 
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.csv.converter.impl.firstSeries.ExerciseCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.GroupCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.SeriesCsvConverter
-import com.epam.brn.csv.converter.impl.firstSeries.TaskCsv1SeriesConverter
-import com.epam.brn.csv.converter.impl.secondSeries.Exercise2SeriesConverter
-import com.epam.brn.csv.firstSeries.TaskCSVParser1SeriesService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedGroupCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
-import com.epam.brn.csv.secondSeries.CSVParser2SeriesService
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
 import com.epam.brn.model.Exercise
@@ -26,6 +16,17 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
+import com.epam.brn.upload.csv.MappingIteratorCsvParser
+import com.epam.brn.upload.csv.converter.impl.Exercise2SeriesConverter
+import com.epam.brn.upload.csv.converter.impl.ExerciseCsvConverter
+import com.epam.brn.upload.csv.converter.impl.GroupCsvConverter
+import com.epam.brn.upload.csv.converter.impl.SeriesCsvConverter
+import com.epam.brn.upload.csv.converter.impl.TaskCsv1SeriesConverter
+import com.epam.brn.upload.csv.iterator.impl.ExerciseMappingIteratorProvider
+import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
+import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
+import com.epam.brn.upload.csv.iterator.impl.Series2ExerciseMappingIteratorProvider
+import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -38,7 +39,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @Component
 class CsvUploadService(
-    private val csvParser: CsvMappingIteratorParser,
+    private val csvParser: MappingIteratorCsvParser,
     private val groupRepository: ExerciseGroupRepository,
     private val seriesRepository: SeriesRepository,
     private val exerciseRepository: ExerciseRepository,
@@ -71,14 +72,18 @@ class CsvUploadService(
 
     fun loadGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
         val groups = csvParser
-            .parse(inputStream, groupConverter, CommaSeparatedGroupCSVParserService())
+            .parse(inputStream, groupConverter,
+                GroupMappingIteratorProvider()
+            )
 
         return groupRepository.saveAll(groups)
     }
 
     fun loadSeries(inputStream: InputStream): MutableIterable<Series> {
         val series = csvParser
-            .parse(inputStream, seriesConverter, CommaSeparatedSeriesCSVParserService())
+            .parse(inputStream, seriesConverter,
+                SeriesMappingIteratorProvider()
+            )
 
         return seriesRepository.saveAll(series)
     }
@@ -100,7 +105,7 @@ class CsvUploadService(
 
     fun loadExercises(inputStream: InputStream): MutableList<Exercise> {
         val exercises = csvParser
-            .parse(inputStream, exerciseConverter, CommaSeparatedExerciseCSVParserService())
+            .parse(inputStream, exerciseConverter, ExerciseMappingIteratorProvider())
 
         return exerciseRepository.saveAll(exercises)
     }
@@ -110,14 +115,16 @@ class CsvUploadService(
 
     fun loadTasksFor1Series(inputStream: InputStream): MutableList<Task> {
         val tasks = csvParser
-            .parse(inputStream, task1SeriesConverter, TaskCSVParser1SeriesService())
+            .parse(inputStream, task1SeriesConverter, Series1TaskMappingIteratorProvider())
 
         return taskRepository.saveAll(tasks)
     }
 
     fun loadExercisesFor2Series(inputStream: InputStream): MutableList<Exercise> {
         val exercises = csvParser
-            .parse(inputStream, exercise2SeriesConverter, CSVParser2SeriesService())
+            .parse(inputStream, exercise2SeriesConverter,
+                Series2ExerciseMappingIteratorProvider()
+            )
 
         return exerciseRepository.saveAll(exercises)
     }

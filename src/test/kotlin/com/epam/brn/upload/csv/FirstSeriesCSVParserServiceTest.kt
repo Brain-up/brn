@@ -1,15 +1,15 @@
-package com.epam.brn.csv
+package com.epam.brn.upload.csv
 
-import com.epam.brn.csv.converter.Converter
-import com.epam.brn.csv.dto.ExerciseCsv
-import com.epam.brn.csv.dto.GroupCsv
-import com.epam.brn.csv.dto.SeriesCsv
-import com.epam.brn.csv.dto.TaskCsv
-import com.epam.brn.csv.exception.CsvFileParseException
-import com.epam.brn.csv.firstSeries.TaskCSVParser1SeriesService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedExerciseCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedGroupCSVParserService
-import com.epam.brn.csv.firstSeries.commaSeparated.CommaSeparatedSeriesCSVParserService
+import com.epam.brn.upload.csv.converter.Converter
+import com.epam.brn.upload.csv.dto.ExerciseCsv
+import com.epam.brn.upload.csv.dto.GroupCsv
+import com.epam.brn.upload.csv.dto.SeriesCsv
+import com.epam.brn.upload.csv.dto.TaskCsv
+import com.epam.brn.upload.csv.exception.CsvFileParseException
+import com.epam.brn.upload.csv.iterator.impl.ExerciseMappingIteratorProvider
+import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
+import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
+import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,12 +17,12 @@ import org.junit.jupiter.api.assertThrows
 
 class FirstSeriesCSVParserServiceTest {
 
-    private val parser = CsvMappingIteratorParser()
+    private val parser = MappingIteratorCsvParser()
 
-    private val taskCsvParserService = TaskCSVParser1SeriesService()
-    private val exerciseCsvParserService = CommaSeparatedExerciseCSVParserService()
-    private val groupCsvParserService = CommaSeparatedGroupCSVParserService()
-    private val seriesCsvParserService = CommaSeparatedSeriesCSVParserService()
+    private val exerciseCsvParserService = ExerciseMappingIteratorProvider()
+    private val taskCsvParserService = Series1TaskMappingIteratorProvider()
+    private val groupCsvParserService = GroupMappingIteratorProvider()
+    private val seriesCsvParserService = SeriesMappingIteratorProvider()
 
     private inline fun <reified T> makeIdentityConverter(): Converter<T, T> {
         return object : Converter<T, T> {

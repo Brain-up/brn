@@ -3,8 +3,8 @@ package com.epam.brn.controller
 import com.epam.brn.constant.BrnParams.SERIES_ID
 import com.epam.brn.constant.BrnParams.TASK_FILE
 import com.epam.brn.constant.BrnPath.LOAD_TASKS_FILE
-import com.epam.brn.csv.CsvUploadService
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.upload.CsvUploadService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
