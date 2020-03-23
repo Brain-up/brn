@@ -39,11 +39,8 @@ export function createSource(context, buffer) {
   var source = context.createBufferSource();
   var gainNode = context.createGain ? context.createGain() : context.createGainNode();
   source.buffer = buffer;
-  // Turn off looping
   source.loop = false;
-  // Connect source to gain.
   source.connect(gainNode);
-  // Connect gain to destination.
   gainNode.connect(context.destination);
 
   return {
