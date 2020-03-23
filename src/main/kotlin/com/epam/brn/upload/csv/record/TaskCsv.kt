@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.dto
+package com.epam.brn.upload.csv.record
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

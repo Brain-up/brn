@@ -1,12 +1,15 @@
-package com.epam.brn.upload.csv.dto
+package com.epam.brn.upload.csv.record
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
-@JsonPropertyOrder(value = ["groupId", "name", "description"])
-data class GroupCsv(
+@JsonPropertyOrder(value = ["groupId", "seriesId", "name", "description"])
+data class SeriesCsv(
     @JsonProperty("groupId")
     val groupId: Long,
+
+    @JsonProperty("seriesId")
+    val seriesId: Long,
 
     @JsonProperty("name")
     val name: String,

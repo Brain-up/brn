@@ -2,7 +2,7 @@ package com.epam.brn.upload.csv.converter.impl
 
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.upload.csv.converter.Converter
-import com.epam.brn.upload.csv.dto.GroupCsv
+import com.epam.brn.upload.csv.record.GroupCsv
 import org.springframework.stereotype.Component
 
 @Component

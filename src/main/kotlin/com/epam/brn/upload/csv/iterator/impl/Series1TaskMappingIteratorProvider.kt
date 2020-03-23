@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.iterator.impl
 
-import com.epam.brn.upload.csv.dto.TaskCsv
 import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
+import com.epam.brn.upload.csv.record.TaskCsv
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import java.io.InputStream

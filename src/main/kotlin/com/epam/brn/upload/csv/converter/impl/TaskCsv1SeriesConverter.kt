@@ -10,7 +10,7 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.csv.converter.Converter
-import com.epam.brn.upload.csv.dto.TaskCsv
+import com.epam.brn.upload.csv.record.TaskCsv
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value

@@ -1,13 +1,13 @@
 package com.epam.brn.upload.csv
 
 import com.epam.brn.upload.csv.converter.Converter
-import com.epam.brn.upload.csv.dto.GroupCsv
-import com.epam.brn.upload.csv.dto.SeriesCsv
-import com.epam.brn.upload.csv.dto.TaskCsv
 import com.epam.brn.upload.csv.exception.CsvFileParseException
 import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
+import com.epam.brn.upload.csv.record.GroupCsv
+import com.epam.brn.upload.csv.record.SeriesCsv
+import com.epam.brn.upload.csv.record.TaskCsv
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
