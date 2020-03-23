@@ -26,9 +26,7 @@ export default class AudioPlayerComponent extends Component {
       this.startTime = Date.now();
       this.setProgress(0);
       while (this.isPlaying) {
-        this.setProgress(
-          (100 / this.totalDuration) * (Date.now() - this.startTime),
-        );
+        this.updatePlayingProgress();
         yield timeout(32);
       }
       yield timeout(100);
@@ -59,6 +57,12 @@ export default class AudioPlayerComponent extends Component {
     if (this.autoplay && this.previousPlayedUrls !== this.audioFileUrl) {
       await this.playAudio();
     }
+  }
+
+  updatePlayingProgress() {
+    this.setProgress(
+      (100 / this.totalDuration) * (Date.now() - this.startTime),
+    );
   }
 
   willDestroyElement() {
