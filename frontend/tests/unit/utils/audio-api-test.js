@@ -2,11 +2,12 @@ import audioApi, {
   BufferLoader,
   TIMINGS,
   toSeconds,
+  createSource,
   toMilliseconds,
+  createNoizeBuffer,
   createAudioContext,
 } from 'brn/utils/audio-api';
 import { module, test } from 'qunit';
-import { createSource } from '../../../app/utils/audio-api';
 
 module('Unit | Utility | audio-api', function() {
   // Replace this with your real tests.
@@ -15,7 +16,7 @@ module('Unit | Utility | audio-api', function() {
     assert.ok(result);
   });
 
-  test('TIMINGS', () => {
+  test('TIMINGS', (assert) => {
     assert.ok(TIMINGS.FAKE_AUDIO);
     assert.ok(TIMINGS.FAKE_AUDIO_STARTED);
     assert.ok(TIMINGS.FAKE_AUDIO_FINISHED);
@@ -24,23 +25,30 @@ module('Unit | Utility | audio-api', function() {
     assert.ok(TIMINGS.SUCCESS_ANSWER_NOTIFICATION_FINISHED);
   });
 
-  test('toSeconds', () => {
+  test('toSeconds', (assert) => {
     assert.equal(toSeconds(1000), 1);
   });
 
-  test('toMilliseconds', () => {
+  test('toMilliseconds', (assert) => {
     assert.equal(toMilliseconds(1), 1000);
   });
 
-  test('createSource', () => {
-    assert.ok(createSource(createAudioContext(), {}));
+  test('createSource', (assert) => {
+    assert.ok(createSource(createAudioContext(), new AudioBuffer({
+      length: 10,
+      sampleRate: 8000
+    })));
   });
 
-  test('createAudioContext', () => {
+  test('createNoizeBuffer', (assert) => {
+    assert.ok(createNoizeBuffer(createAudioContext(), 10));
+  });
+
+  test('createAudioContext', (assert) => {
     assert.ok(createAudioContext());
   });
 
-  test('BufferLoader', ()=> {
+  test('BufferLoader', (assert) => {
     assert.ok(new BufferLoader());
   });
 });

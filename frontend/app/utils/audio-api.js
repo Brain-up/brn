@@ -22,6 +22,24 @@ export const TIMINGS = {
   },
 };
 
+export function createNoizeBuffer(context, duration) {
+  let channels = 2;
+  let frameCount = context.sampleRate * duration;
+  let myArrayBuffer = context.createBuffer(
+    channels,
+    frameCount,
+    context.sampleRate,
+  );
+
+  for (let channel = 0; channel < channels; channel++) {
+    let nowBuffering = myArrayBuffer.getChannelData(channel);
+    for (let i = 0; i < frameCount; i++) {
+      nowBuffering[i] = (Math.random() * 2 - 1) * 0.01;
+    }
+  }
+  return myArrayBuffer;
+}
+
 export default function audioApi() {
   return true;
 }
@@ -73,6 +91,17 @@ function arrayBufferRequest(url) {
       reject(new Error('BufferLoader: XHR error'));
     };
     request.send();
+  });
+}
+
+export function loadAudioFiles(context, files) {
+  return new Promise((resolve) => {
+    let bufferLoader = new BufferLoader(
+      context,
+      [...files],
+      resolve,
+    );
+    bufferLoader.load();
   });
 }
 

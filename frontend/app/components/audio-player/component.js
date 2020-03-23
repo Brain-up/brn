@@ -6,7 +6,7 @@ import { inject as service } from '@ember/service';
 import { timeout, task } from 'ember-concurrency';
 import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
-import { BufferLoader, createSource, createAudioContext, toSeconds, toMilliseconds, TIMINGS } from 'brn/utils/audio-api';
+import { createSource, createNoizeBuffer, loadAudioFiles, createAudioContext, toSeconds, toMilliseconds, TIMINGS } from 'brn/utils/audio-api';
 
 export default class AudioPlayerComponent extends Component {
   tagName = '';
@@ -76,15 +76,7 @@ export default class AudioPlayerComponent extends Component {
       this.buffers = [];
       return;
     }
-    const buffers = await new Promise((resolve) => {
-      let bufferLoader = new BufferLoader(
-        this.context,
-        [...this.filesToPlay],
-        resolve,
-      );
-      bufferLoader.load();
-    });
-    this.buffers = buffers;
+    this.buffers = await loadAudioFiles(this.context, this.filesToPlay);
   }
 
   @action
@@ -97,22 +89,7 @@ export default class AudioPlayerComponent extends Component {
   }
 
   getNoize(duration) {
-    let channels = 2;
-    let frameCount = this.context.sampleRate * duration;
-    let myArrayBuffer = this.context.createBuffer(
-      channels,
-      frameCount,
-      this.context.sampleRate,
-    );
-
-    for (let channel = 0; channel < channels; channel++) {
-      let nowBuffering = myArrayBuffer.getChannelData(channel);
-      for (let i = 0; i < frameCount; i++) {
-        nowBuffering[i] = (Math.random() * 2 - 1) * 0.01;
-      }
-    }
-
-    return createSource(this.context, myArrayBuffer);
+    return createSource(this.context, createNoizeBuffer(this.context, duration));
   }
 
   createSources(context, buffers) {
