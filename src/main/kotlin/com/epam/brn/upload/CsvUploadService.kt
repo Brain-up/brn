@@ -113,14 +113,14 @@ class CsvUploadService(
     @Throws(FileFormatException::class)
     fun loadTasks(file: File): List<Task> = loadTasksFor1Series(file.inputStream())
 
-    fun loadTasksFor1Series(inputStream: InputStream): MutableList<Task> {
+    fun loadTasksFor1Series(inputStream: InputStream): List<Task> {
         val tasks = csvParser
             .parse(inputStream, task1SeriesConverter, Series1TaskMappingIteratorProvider())
 
         return taskRepository.saveAll(tasks)
     }
 
-    fun loadExercisesFor2Series(inputStream: InputStream): MutableList<Exercise> {
+    fun loadExercisesFor2Series(inputStream: InputStream): List<Exercise> {
         val exercises = csvParser
             .parse(inputStream, exercise2SeriesConverter,
                 Series2ExerciseMappingIteratorProvider()
@@ -129,7 +129,7 @@ class CsvUploadService(
         return exerciseRepository.saveAll(exercises)
     }
 
-    fun loadExercisesFor3Series(inputStream: InputStream): MutableList<Exercise> {
+    fun loadExercisesFor3Series(inputStream: InputStream): List<Exercise> {
         // todo: get data from file for 3 series
         val exercises = createExercises()
 
