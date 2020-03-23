@@ -42,11 +42,5 @@ class ExerciseService(
         return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
     }
 
-    fun createExercise(name: String): Exercise {
-        val exercise = Exercise()
-        exercise.name = name
-        exerciseRepository.save(exercise)
-
-        return exercise
-    }
+    fun save(exercise: Exercise): Exercise = exerciseRepository.save(exercise)
 }

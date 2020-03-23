@@ -40,7 +40,7 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
         return try {
             exerciseService.findExerciseByNameAndLevel(source.exerciseName, source.level)
         } catch (e: EntityNotFoundException) {
-            exerciseService.createExercise(source.exerciseName)
+            exerciseService.save(Exercise(name = source.exerciseName, level = source.level))
         }
     }
 
