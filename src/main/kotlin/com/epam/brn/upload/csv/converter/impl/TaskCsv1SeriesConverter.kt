@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.converter.impl
 
+import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -7,25 +8,23 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
+import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.csv.converter.Converter
 import com.epam.brn.upload.csv.dto.TaskCsv
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
+class TaskCsv1SeriesConverter(
+    var exerciseService: ExerciseService,
+    var seriesService: SeriesService,
+    var resourceService: ResourceService
+) : Converter<TaskCsv, Task> {
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
-
-    @Autowired
-    lateinit var exerciseService: ExerciseService
-
-    @Autowired
-    lateinit var resourceService: ResourceService
 
     override fun convert(source: TaskCsv): Task {
         val result = Task()
@@ -40,7 +39,13 @@ class TaskCsv1SeriesConverter : Converter<TaskCsv, Task> {
         return try {
             exerciseService.findExerciseByNameAndLevel(source.exerciseName, source.level)
         } catch (e: EntityNotFoundException) {
-            exerciseService.save(Exercise(name = source.exerciseName, level = source.level))
+            val newExercise = Exercise(
+                name = source.exerciseName,
+                level = source.level,
+                series = seriesService.findSeriesForId(1L),
+                exerciseType = ExerciseTypeEnum.of(1L).toString()
+            )
+            exerciseService.save(newExercise)
         }
     }
 
