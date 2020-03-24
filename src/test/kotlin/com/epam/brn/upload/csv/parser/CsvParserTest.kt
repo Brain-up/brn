@@ -1,8 +1,5 @@
 package com.epam.brn.upload.csv.parser
 
-import com.epam.brn.upload.csv.parser.iterator.impl.GroupMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.Series1TaskMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesMappingIteratorProvider
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
 import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
@@ -15,10 +12,6 @@ class CsvParserTest {
 
     private val parser = CsvParser()
 
-    private val taskCsvParserService = Series1TaskMappingIteratorProvider()
-    private val groupCsvParserService = GroupMappingIteratorProvider()
-    private val seriesCsvParserService = SeriesMappingIteratorProvider()
-
     @Test
     fun `should parse Tasks`() {
         val input = """
@@ -27,7 +20,7 @@ class CsvParserTest {
                 2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parse(input, taskCsvParserService)
+        val result = parser.parseSeriesOneExerciseRecords(input)
 
         assertThat(result).containsAll(
             listOf(
@@ -52,7 +45,7 @@ class CsvParserTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         assertThrows<CsvParser.ParseException> {
-            parser.parse(input, taskCsvParserService)
+            parser.parseSeriesOneExerciseRecords(input)
         }
     }
 
@@ -65,7 +58,7 @@ class CsvParserTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val actual = assertThrows<CsvParser.ParseException> {
-            parser.parse(input, taskCsvParserService)
+            parser.parseSeriesOneExerciseRecords(input)
         }.errors
 
         assertThat(actual[0]).startsWith("Failed to parse line 2: 'incorrect string 1'. Error: ")
@@ -81,8 +74,7 @@ class CsvParserTest {
                 2, Речевые упражнения, Речевые упражнения              
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser
-            .parse(input, groupCsvParserService)
+        val result = parser.parseGroupRecords(input)
 
         assertThat(result).containsAll(
             listOf(
@@ -100,7 +92,7 @@ class CsvParserTest {
                 2, 2, Составление предложений, Составление предложений         
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parse(input, seriesCsvParserService)
+        val result = parser.parseSeriesGenericRecords(input)
 
         assertThat(result).containsAll(
             listOf(
