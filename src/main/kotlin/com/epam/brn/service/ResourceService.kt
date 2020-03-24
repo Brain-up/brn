@@ -14,8 +14,9 @@ class ResourceService(@Autowired val resourceRepository: ResourceRepository) {
     }
 
     fun findFirstByWordAndAudioFileUrlLike(word: String, audioFileName: String): Resource? {
-        val resources = resourceRepository.findByWordAndAudioFileUrlLike(word, audioFileName)
-        return if (resources.isNotEmpty()) resources.first() else null
+        return resourceRepository
+            .findFirstByWordAndAudioFileUrlLike(word, audioFileName)
+            .orElse(null)
     }
 
     fun save(resource: Resource): Resource {
