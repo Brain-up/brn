@@ -1,6 +1,5 @@
 package com.epam.brn.upload.csv
 
-import com.epam.brn.upload.csv.converter.Converter
 import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
@@ -12,19 +11,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class FirstSeriesCSVParserServiceTest {
+class CsvParserTest {
 
     private val parser = CsvParser()
 
     private val taskCsvParserService = Series1TaskMappingIteratorProvider()
     private val groupCsvParserService = GroupMappingIteratorProvider()
     private val seriesCsvParserService = SeriesMappingIteratorProvider()
-
-    private inline fun <reified T> makeIdentityConverter(): Converter<T, T> {
-        return object : Converter<T, T> {
-            override fun convert(source: T) = source
-        }
-    }
 
     @Test
     fun `should parse Tasks`() {
@@ -34,7 +27,7 @@ class FirstSeriesCSVParserServiceTest {
                 2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parse(input, makeIdentityConverter(), taskCsvParserService)
+        val result = parser.parse(input, taskCsvParserService)
 
         assertThat(result).containsAll(
             listOf(
@@ -59,7 +52,7 @@ class FirstSeriesCSVParserServiceTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         assertThrows<CsvParser.ParseException> {
-            parser.parse(input, makeIdentityConverter(), taskCsvParserService)
+            parser.parse(input, taskCsvParserService)
         }
     }
 
@@ -72,7 +65,7 @@ class FirstSeriesCSVParserServiceTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val actual = assertThrows<CsvParser.ParseException> {
-            parser.parse(input, makeIdentityConverter(), taskCsvParserService)
+            parser.parse(input, taskCsvParserService)
         }.errors
 
         assertThat(actual[0]).startsWith("Failed to parse line 2: 'incorrect string 1'. Error: ")
@@ -89,7 +82,7 @@ class FirstSeriesCSVParserServiceTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser
-            .parse(input, makeIdentityConverter(), groupCsvParserService)
+            .parse(input, groupCsvParserService)
 
         assertThat(result).containsAll(
             listOf(
@@ -107,7 +100,7 @@ class FirstSeriesCSVParserServiceTest {
                 2, 2, Составление предложений, Составление предложений         
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parse(input, makeIdentityConverter(), seriesCsvParserService)
+        val result = parser.parse(input, seriesCsvParserService)
 
         assertThat(result).containsAll(
             listOf(

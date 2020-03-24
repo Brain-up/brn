@@ -66,23 +66,17 @@ class CsvUploadService(
     lateinit var exerciseService: ExerciseService
 
     fun loadGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
-        val groups = csvParser
-            .parse(
-                inputStream, groupConverter,
-                GroupMappingIteratorProvider()
-            )
+        val records = csvParser.parse(inputStream, GroupMappingIteratorProvider())
+        val result = records.map { parsedValue -> groupConverter.convert(parsedValue) }
 
-        return groupRepository.saveAll(groups)
+        return groupRepository.saveAll(result)
     }
 
     fun loadSeries(inputStream: InputStream): MutableIterable<Series> {
-        val series = csvParser
-            .parse(
-                inputStream, seriesConverter,
-                SeriesMappingIteratorProvider()
-            )
+        val records = csvParser.parse(inputStream, SeriesMappingIteratorProvider())
+        val result = records.map { parsedValue -> seriesConverter.convert(parsedValue) }
 
-        return seriesRepository.saveAll(series)
+        return seriesRepository.saveAll(result)
     }
 
     @Throws(FileFormatException::class)
@@ -104,20 +98,17 @@ class CsvUploadService(
     fun loadTasks(file: File): List<Task> = loadTasksFor1Series(file.inputStream())
 
     fun loadTasksFor1Series(inputStream: InputStream): List<Task> {
-        val tasks = csvParser
-            .parse(inputStream, task1SeriesConverter, Series1TaskMappingIteratorProvider())
+        val tasks = csvParser.parse(inputStream, Series1TaskMappingIteratorProvider())
+        val result = tasks.map { parsedValue -> task1SeriesConverter.convert(parsedValue) }
 
-        return taskRepository.saveAll(tasks)
+        return taskRepository.saveAll(result)
     }
 
     fun loadExercisesFor2Series(inputStream: InputStream): List<Exercise> {
-        val exercises = csvParser
-            .parse(
-                inputStream, exercise2SeriesConverter,
-                Series2ExerciseMappingIteratorProvider()
-            )
+        val exercises = csvParser.parse(inputStream, Series2ExerciseMappingIteratorProvider())
+        val result = exercises.map { parsedValue -> exercise2SeriesConverter.convert(parsedValue) }
 
-        return exerciseRepository.saveAll(exercises)
+        return exerciseRepository.saveAll(result)
     }
 
     fun loadExercisesFor3Series(inputStream: InputStream): List<Exercise> {

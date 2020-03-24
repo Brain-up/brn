@@ -1,6 +1,5 @@
 package com.epam.brn.upload.csv
 
-import com.epam.brn.upload.csv.converter.Converter
 import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
@@ -20,11 +19,10 @@ class CsvParser {
         const val ARRAY_OFFSET = -1
     }
 
-    final inline fun <reified ParsedType, reified ConvertedType> parse(
+    final inline fun <reified ParsedType> parse(
         inputStream: InputStream,
-        converter: Converter<ParsedType, ConvertedType>,
         mappingIteratorProvider: MappingIteratorProvider<ParsedType>
-    ): List<ConvertedType> {
+    ): MutableList<ParsedType> {
         ByteArrayInputStream(IOUtils.toByteArray(inputStream)).use {
             val parsed = mutableListOf<ParsedType>()
             val errors = mutableListOf<String>()
@@ -46,7 +44,7 @@ class CsvParser {
             }
             if (errors.isNotEmpty()) throw ParseException(errors)
 
-            return parsed.map { parsedValue -> converter.convert(parsedValue) }
+            return parsed
         }
     }
 
