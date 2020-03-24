@@ -3,8 +3,8 @@
   {
    "seriesId": 2,
    "id": 10,
-   "name": "Распознование последовательности слов",
-   "description": "Распознование последовательности слов",
+   "name": "Распознавание последовательности слов",
+   "description": "Распознавание последовательности слов",
    "level": 1,
    "exerciseType": "WORDS_SEQUENCES",
    "template": "<OBJECT OBJECT_ACTION>",

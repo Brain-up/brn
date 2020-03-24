@@ -26,7 +26,7 @@ abstract class BaseTest {
     fun init() {
         val group = ExerciseGroup(name = "речевые упражнения", description = "речевые упражнения")
         val series1 =
-            Series(name = "распознование слов", description = "распознование слов", exerciseGroup = group)
+            Series(name = "распознавание слов", description = "распознавание слов", exerciseGroup = group)
         val series2 = Series(
             name = "диахоничкеское слушание",
             description = "диахоничкеское слушание",
