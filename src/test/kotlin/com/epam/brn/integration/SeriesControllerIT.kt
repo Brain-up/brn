@@ -39,7 +39,7 @@ class SeriesControllerIT {
     fun loadGroupWithExercises(): Long {
         val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
         val series1 =
-            Series(name = "распознование слов тест", description = "descr1", exerciseGroup = group)
+            Series(name = "распознавание слов тест", description = "descr1", exerciseGroup = group)
         val series2 =
             Series(name = "диахоничкеское слушание тест", description = "descr2", exerciseGroup = group)
         group.series.addAll(setOf(series1, series2))
@@ -68,7 +68,7 @@ class SeriesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
-        Assertions.assertTrue(response.contains("распознование слов тест"))
+        Assertions.assertTrue(response.contains("распознавание слов тест"))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
         Assertions.assertTrue(response.contains("exercises"))
     }
@@ -77,7 +77,7 @@ class SeriesControllerIT {
     fun `test get series for seriesId`() {
         // GIVEN
         loadGroupWithExercises()
-        val seriesId = seriesRepository.findByNameLike("распознование слов тест")[0].id
+        val seriesId = seriesRepository.findByNameLike("распознавание слов тест")[0].id
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -89,7 +89,7 @@ class SeriesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
-        Assertions.assertTrue(response.contains("распознование слов тест"))
+        Assertions.assertTrue(response.contains("распознавание слов тест"))
         Assertions.assertTrue(response.contains("exercises"))
     }
 
