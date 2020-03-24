@@ -9,7 +9,6 @@ import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
-import com.epam.brn.upload.csv.converter.Converter
 import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
@@ -21,12 +20,12 @@ class TaskCsv1SeriesConverter(
     var exerciseService: ExerciseService,
     var seriesService: SeriesService,
     var resourceService: ResourceService
-) : Converter<SeriesOneTaskRecord, Task> {
+) {
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    override fun convert(source: SeriesOneTaskRecord): Task {
+    fun convert(source: SeriesOneTaskRecord): Task {
         val result = Task()
         result.serialNumber = source.orderNumber
         result.exercise = prepareExercise(source)

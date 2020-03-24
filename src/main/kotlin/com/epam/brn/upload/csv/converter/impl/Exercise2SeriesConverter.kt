@@ -10,7 +10,6 @@ import com.epam.brn.model.Task
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
-import com.epam.brn.upload.csv.converter.Converter
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
@@ -21,7 +20,7 @@ class Exercise2SeriesConverter(
     private val resourceService: ResourceService,
     private val seriesService: SeriesService,
     private val exerciseService: ExerciseService
-) : Converter<Map<String, Any>, Exercise> {
+) {
     private val log = logger()
 
     val EXERCISE_NAME = "exerciseName"
@@ -34,7 +33,7 @@ class Exercise2SeriesConverter(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureFileUrl: String
 
-    override fun convert(source: Map<String, Any>): Exercise {
+    fun convert(source: Map<String, Any>): Exercise {
         val target = createOrGetExercise(source)
         convertExercise(source, target)
         convertTask(target)
