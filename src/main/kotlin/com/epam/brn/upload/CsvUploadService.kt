@@ -16,7 +16,7 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.service.SeriesService
-import com.epam.brn.upload.csv.MappingIteratorCsvParser
+import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.converter.impl.Exercise2SeriesConverter
 import com.epam.brn.upload.csv.converter.impl.GroupCsvConverter
 import com.epam.brn.upload.csv.converter.impl.SeriesCsvConverter
@@ -37,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @Component
 class CsvUploadService(
-    private val csvParser: MappingIteratorCsvParser,
+    private val csvParser: CsvParser,
     private val groupRepository: ExerciseGroupRepository,
     private val seriesRepository: SeriesRepository,
     private val exerciseRepository: ExerciseRepository,

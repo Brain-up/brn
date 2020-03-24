@@ -1,10 +1,10 @@
-package com.epam.brn.upload.csv
+package com.epam.brn.upload
 
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
-import com.epam.brn.upload.CsvUploadService
+import com.epam.brn.upload.csv.CsvParser
 import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -21,7 +21,7 @@ internal class CsvUploadServiceTest {
     lateinit var uploadService: CsvUploadService
 
     @Mock
-    lateinit var mappingIteratorCsvParser: MappingIteratorCsvParser
+    lateinit var csvParser: CsvParser
 
     @Mock
     lateinit var exerciseGroupRepository: ExerciseGroupRepository

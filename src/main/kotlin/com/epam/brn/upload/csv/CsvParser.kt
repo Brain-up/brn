@@ -13,7 +13,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class MappingIteratorCsvParser {
+class CsvParser {
 
     val log = logger()
 

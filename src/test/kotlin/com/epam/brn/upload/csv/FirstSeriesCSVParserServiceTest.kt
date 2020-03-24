@@ -15,7 +15,7 @@ import org.junit.jupiter.api.assertThrows
 
 class FirstSeriesCSVParserServiceTest {
 
-    private val parser = MappingIteratorCsvParser()
+    private val parser = CsvParser()
 
     private val taskCsvParserService = Series1TaskMappingIteratorProvider()
     private val groupCsvParserService = GroupMappingIteratorProvider()
