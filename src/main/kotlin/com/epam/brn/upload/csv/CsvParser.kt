@@ -1,7 +1,6 @@
 package com.epam.brn.upload.csv
 
 import com.epam.brn.upload.csv.converter.Converter
-import com.epam.brn.upload.csv.exception.CsvFileParseException
 import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
@@ -45,7 +44,7 @@ class CsvParser {
                     log.debug("Failed to parse line $lineNumberInFile ", e)
                 }
             }
-            if (errors.isNotEmpty()) throw CsvFileParseException(errors)
+            if (errors.isNotEmpty()) throw ParseException(errors)
 
             return parsed.map { parsedValue -> converter.convert(parsedValue) }
         }
@@ -56,4 +55,7 @@ class CsvParser {
         inputStream.reset()
         return originalLines
     }
+
+    class ParseException(val errors: List<String>) :
+        RuntimeException("Parsing error. Please check csv file content format.")
 }

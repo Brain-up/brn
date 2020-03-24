@@ -1,7 +1,6 @@
 package com.epam.brn.upload.csv
 
 import com.epam.brn.upload.csv.converter.Converter
-import com.epam.brn.upload.csv.exception.CsvFileParseException
 import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
@@ -59,7 +58,7 @@ class FirstSeriesCSVParserServiceTest {
                 incorrect string
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        assertThrows<CsvFileParseException> {
+        assertThrows<CsvParser.ParseException> {
             parser.parse(input, makeIdentityConverter(), taskCsvParserService)
         }
     }
@@ -72,7 +71,7 @@ class FirstSeriesCSVParserServiceTest {
                 incorrect string 2
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val actual = assertThrows<CsvFileParseException> {
+        val actual = assertThrows<CsvParser.ParseException> {
             parser.parse(input, makeIdentityConverter(), taskCsvParserService)
         }.errors
 

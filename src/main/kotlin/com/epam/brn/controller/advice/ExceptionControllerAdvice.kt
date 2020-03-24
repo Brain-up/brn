@@ -3,7 +3,7 @@ package com.epam.brn.controller.advice
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
-import com.epam.brn.upload.csv.exception.CsvFileParseException
+import com.epam.brn.upload.csv.CsvParser
 import java.io.IOException
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
@@ -36,8 +36,8 @@ class ExceptionControllerAdvice {
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }
 
-    @ExceptionHandler(CsvFileParseException::class)
-    fun handleCsvFileParseException(e: CsvFileParseException): ResponseEntity<BaseResponseDto> {
+    @ExceptionHandler(CsvParser.ParseException::class)
+    fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<BaseResponseDto> {
         logger.warn("Csv file parsing exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
