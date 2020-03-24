@@ -38,7 +38,7 @@ class CsvParser {
     fun parseSeriesTwoExerciseRecords(inputStream: InputStream): MutableList<Map<String, Any>> =
         parse(inputStream, SeriesTwoRecordMappingIteratorProvider())
 
-    final inline fun <reified ParsedType> parse(
+    private final inline fun <reified ParsedType> parse(
         inputStream: InputStream,
         mappingIteratorProvider: MappingIteratorProvider<ParsedType>
     ): MutableList<ParsedType> {
