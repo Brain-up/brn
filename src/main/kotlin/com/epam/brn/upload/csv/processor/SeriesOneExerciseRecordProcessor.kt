@@ -10,7 +10,7 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
-import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
+import com.epam.brn.upload.csv.record.SeriesOneRecord
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
@@ -27,12 +27,12 @@ class SeriesOneExerciseRecordProcessor(
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    fun process(tasks: MutableList<SeriesOneTaskRecord>): List<Task> {
+    fun process(tasks: MutableList<SeriesOneRecord>): List<Task> {
         val result = tasks.map { parsedValue -> convert(parsedValue) }
         return taskRepository.saveAll(result)
     }
 
-    private fun convert(source: SeriesOneTaskRecord): Task {
+    private fun convert(source: SeriesOneRecord): Task {
         val result = Task()
         result.serialNumber = source.orderNumber
         result.exercise = prepareExercise(source)
@@ -41,7 +41,7 @@ class SeriesOneExerciseRecordProcessor(
         return result
     }
 
-    private fun prepareExercise(source: SeriesOneTaskRecord): Exercise {
+    private fun prepareExercise(source: SeriesOneRecord): Exercise {
         return try {
             exerciseService.findExerciseByNameAndLevel(source.exerciseName, source.level)
         } catch (e: EntityNotFoundException) {
@@ -55,7 +55,7 @@ class SeriesOneExerciseRecordProcessor(
         }
     }
 
-    private fun prepareCorrectAnswer(source: SeriesOneTaskRecord): Resource {
+    private fun prepareCorrectAnswer(source: SeriesOneRecord): Resource {
         var resource = resourceService.findFirstByWordAndAudioFileUrlLike(source.word, source.audioFileName)
         if (resource != null) {
             resource.wordType = source.wordType

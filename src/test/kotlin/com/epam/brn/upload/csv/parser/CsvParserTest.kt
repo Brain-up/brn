@@ -2,7 +2,7 @@ package com.epam.brn.upload.csv.parser
 
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
-import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
+import com.epam.brn.upload.csv.record.SeriesOneRecord
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,11 +24,11 @@ class CsvParserTest {
 
         assertThat(result).containsAll(
             listOf(
-                SeriesOneTaskRecord(
+                SeriesOneRecord(
                     1, "name1", 1,
                     "бал", "no_noise/бал.mp3", "pictures/бал.jpg",
                     listOf("(бам", "сам", "дам", "зал", "бак)"), "OBJECT"
-                ), SeriesOneTaskRecord(
+                ), SeriesOneRecord(
                     2, "name1", 3,
                     "foo", "no_noise/foo.mp3", "pictures/foo.jpg",
                     listOf("(foo", "bar", "baz)"), "OBJECT"

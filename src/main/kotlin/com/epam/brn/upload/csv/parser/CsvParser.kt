@@ -1,13 +1,13 @@
 package com.epam.brn.upload.csv.parser
 
 import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.GroupMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.Series1TaskMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.Series2ExerciseMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.GroupRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesGenericRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesOneRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
-import com.epam.brn.upload.csv.record.SeriesOneTaskRecord
+import com.epam.brn.upload.csv.record.SeriesOneRecord
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -27,16 +27,16 @@ class CsvParser {
     }
 
     fun parseGroupRecords(inputStream: InputStream): MutableList<GroupRecord> =
-        parse(inputStream, GroupMappingIteratorProvider())
+        parse(inputStream, GroupRecordMappingIteratorProvider())
 
     fun parseSeriesGenericRecords(inputStream: InputStream): MutableList<SeriesGenericRecord> =
-        parse(inputStream, SeriesMappingIteratorProvider())
+        parse(inputStream, SeriesGenericRecordMappingIteratorProvider())
 
-    fun parseSeriesOneExerciseRecords(inputStream: InputStream): MutableList<SeriesOneTaskRecord> =
-        parse(inputStream, Series1TaskMappingIteratorProvider())
+    fun parseSeriesOneExerciseRecords(inputStream: InputStream): MutableList<SeriesOneRecord> =
+        parse(inputStream, SeriesOneRecordMappingIteratorProvider())
 
     fun parseSeriesTwoExerciseRecords(inputStream: InputStream): MutableList<Map<String, Any>> =
-        parse(inputStream, Series2ExerciseMappingIteratorProvider())
+        parse(inputStream, SeriesTwoRecordMappingIteratorProvider())
 
     final inline fun <reified ParsedType> parse(
         inputStream: InputStream,

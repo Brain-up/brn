@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import java.io.InputStream
 
-class Series2ExerciseMappingIteratorProvider : MappingIteratorProvider<Map<String, Any>> {
+class SeriesTwoRecordMappingIteratorProvider : MappingIteratorProvider<Map<String, Any>> {
 
     override fun iterator(file: InputStream): MappingIterator<Map<String, Any>> {
         val csvMapper = CsvMapper()
