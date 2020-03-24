@@ -48,13 +48,13 @@ class CsvUploadService(
     val dataFormatLinesCount = 5
 
     @Autowired
-    lateinit var groupConverter: GroupRecordProcessor
+    lateinit var groupRecordProcessor: GroupRecordProcessor
 
     @Autowired
-    lateinit var seriesConverter: SeriesGenericRecordProcessor
+    lateinit var seriesGenericRecordProcessor: SeriesGenericRecordProcessor
 
     @Autowired
-    lateinit var task1SeriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor
+    lateinit var seriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor
 
     @Autowired
     lateinit var seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor
@@ -67,14 +67,14 @@ class CsvUploadService(
 
     fun loadGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
         val records = csvParser.parse(inputStream, GroupMappingIteratorProvider())
-        val result = records.map { parsedValue -> groupConverter.convert(parsedValue) }
+        val result = records.map { parsedValue -> groupRecordProcessor.convert(parsedValue) }
 
         return groupRepository.saveAll(result)
     }
 
     fun loadSeries(inputStream: InputStream): MutableIterable<Series> {
         val records = csvParser.parse(inputStream, SeriesMappingIteratorProvider())
-        val result = records.map { parsedValue -> seriesConverter.convert(parsedValue) }
+        val result = records.map { parsedValue -> seriesGenericRecordProcessor.convert(parsedValue) }
 
         return seriesRepository.saveAll(result)
     }
@@ -99,7 +99,7 @@ class CsvUploadService(
 
     fun loadTasksFor1Series(inputStream: InputStream): List<Task> {
         val tasks = csvParser.parse(inputStream, Series1TaskMappingIteratorProvider())
-        val result = tasks.map { parsedValue -> task1SeriesOneExerciseRecordProcessor.convert(parsedValue) }
+        val result = tasks.map { parsedValue -> seriesOneExerciseRecordProcessor.convert(parsedValue) }
 
         return taskRepository.saveAll(result)
     }
