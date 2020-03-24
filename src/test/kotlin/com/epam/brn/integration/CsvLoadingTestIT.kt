@@ -3,13 +3,13 @@ package com.epam.brn.integration
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
-import com.epam.brn.upload.csv.parser.CsvParser
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -34,11 +34,7 @@ class CsvLoadingTestIT {
         fun handBookLoader(
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
-            eriesRepository: SeriesRepository,
-            exerciseRepository: ExerciseRepository,
-            taskRepository: TaskRepository,
             userAccountRepository: UserAccountRepository,
-            csvParser: CsvParser,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
             uploadService: CsvUploadService
@@ -68,14 +64,18 @@ class CsvLoadingTestIT {
     private lateinit var taskRepository: TaskRepository
 
     @Autowired
+    private lateinit var resourceRepository: ResourceRepository
+
+    @Autowired
     private lateinit var authorityRepository: AuthorityRepository
 
     @Test
     fun `should load test data from classpath initFiles folder`() {
+        resourceRepository.findAll() shouldHaveSize 167
         exerciseGroupRepository.findAll() shouldHaveSize 2
         seriesRepository.findAll() shouldHaveSize 4
         exerciseRepository.findAll() shouldHaveSize 13
-        taskRepository.findAll() shouldHaveSize 61
+        taskRepository.findAll() shouldHaveSize 69
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
     }

@@ -4,7 +4,7 @@ import com.epam.brn.upload.csv.parser.CsvParser
 import com.epam.brn.upload.csv.processor.GroupRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesThreeExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesThreeRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesTwoExerciseRecordProcessor
 import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
@@ -37,7 +37,7 @@ internal class CsvUploadServiceTest {
     lateinit var seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor
 
     @Mock
-    lateinit var seriesThreeExerciseRecordProcessor: SeriesThreeExerciseRecordProcessor
+    lateinit var seriesThreeRecordProcessor: SeriesThreeRecordProcessor
 
     @Test
     fun `should get series file format`() {

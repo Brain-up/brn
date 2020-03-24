@@ -11,7 +11,7 @@ import com.epam.brn.upload.csv.parser.CsvParser
 import com.epam.brn.upload.csv.processor.GroupRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesThreeExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesThreeRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesTwoExerciseRecordProcessor
 import java.io.File
 import java.io.InputStream
@@ -29,7 +29,7 @@ class CsvUploadService(
     private val seriesGenericRecordProcessor: SeriesGenericRecordProcessor,
     private val seriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor,
     private val seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor,
-    private val seriesThreeExerciseRecordProcessor: SeriesThreeExerciseRecordProcessor
+    private val seriesThreeRecordProcessor: SeriesThreeRecordProcessor
 ) {
 
     @Value("\${brn.dataFormatNumLines}")
@@ -56,6 +56,7 @@ class CsvUploadService(
         return when (seriesId.toInt()) {
             1 -> loadTasksFor1Series(file.inputStream)
             2 -> loadExercisesFor2Series(file.inputStream)
+            3 -> loadExercisesFor3Series(file.inputStream)
             else -> throw IllegalArgumentException("There no one strategy yet for seriesId = $seriesId")
         }
     }
@@ -78,10 +79,9 @@ class CsvUploadService(
     }
 
     fun loadExercisesFor3Series(inputStream: InputStream): List<Exercise> {
-        // todo: get data from file for 3 series
-        val records = mutableListOf<Map<String, Any>>()
+        val records = csvParser.parseSeriesThreeExerciseRecords(inputStream)
 
-        return seriesThreeExerciseRecordProcessor.process(records)
+        return seriesThreeRecordProcessor.process(records)
     }
 
     fun getSampleStringForSeriesFile(seriesId: Long): String {
