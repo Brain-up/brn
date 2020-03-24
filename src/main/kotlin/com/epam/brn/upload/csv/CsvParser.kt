@@ -51,7 +51,9 @@ class CsvParser {
     }
 
     fun getOriginalLines(inputStream: InputStream): MutableList<String> {
-        val originalLines = BufferedReader(InputStreamReader(inputStream)).lines().collect(Collectors.toList())
+        val originalLines = BufferedReader(InputStreamReader(inputStream))
+            .lines()
+            .collect(Collectors.toList())
         inputStream.reset()
         return originalLines
     }
