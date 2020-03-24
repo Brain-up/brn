@@ -17,14 +17,14 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.csv.CsvParser
-import com.epam.brn.upload.csv.converter.impl.Exercise2SeriesConverter
-import com.epam.brn.upload.csv.converter.impl.GroupCsvConverter
-import com.epam.brn.upload.csv.converter.impl.SeriesCsvConverter
-import com.epam.brn.upload.csv.converter.impl.TaskCsv1SeriesConverter
 import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.Series2ExerciseMappingIteratorProvider
 import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
+import com.epam.brn.upload.csv.processor.GroupRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesTwoExerciseRecordProcessor
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -48,16 +48,16 @@ class CsvUploadService(
     val dataFormatLinesCount = 5
 
     @Autowired
-    lateinit var groupConverter: GroupCsvConverter
+    lateinit var groupConverter: GroupRecordProcessor
 
     @Autowired
-    lateinit var seriesConverter: SeriesCsvConverter
+    lateinit var seriesConverter: SeriesGenericRecordProcessor
 
     @Autowired
-    lateinit var task1SeriesConverter: TaskCsv1SeriesConverter
+    lateinit var task1SeriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor
 
     @Autowired
-    lateinit var exercise2SeriesConverter: Exercise2SeriesConverter
+    lateinit var seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor
 
     @Autowired
     lateinit var seriesService: SeriesService
@@ -99,14 +99,14 @@ class CsvUploadService(
 
     fun loadTasksFor1Series(inputStream: InputStream): List<Task> {
         val tasks = csvParser.parse(inputStream, Series1TaskMappingIteratorProvider())
-        val result = tasks.map { parsedValue -> task1SeriesConverter.convert(parsedValue) }
+        val result = tasks.map { parsedValue -> task1SeriesOneExerciseRecordProcessor.convert(parsedValue) }
 
         return taskRepository.saveAll(result)
     }
 
     fun loadExercisesFor2Series(inputStream: InputStream): List<Exercise> {
         val exercises = csvParser.parse(inputStream, Series2ExerciseMappingIteratorProvider())
-        val result = exercises.map { parsedValue -> exercise2SeriesConverter.convert(parsedValue) }
+        val result = exercises.map { parsedValue -> seriesTwoExerciseRecordProcessor.convert(parsedValue) }
 
         return exerciseRepository.saveAll(result)
     }

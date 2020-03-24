@@ -1,11 +1,11 @@
-package com.epam.brn.upload.csv.converter.impl
+package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.upload.csv.record.GroupRecord
 import org.springframework.stereotype.Component
 
 @Component
-class GroupCsvConverter {
+class GroupRecordProcessor {
 
     fun convert(source: GroupRecord) =
         ExerciseGroup(name = source.name, description = source.description, id = source.groupId)

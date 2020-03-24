@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
 @JsonPropertyOrder(value = ["groupId", "seriesId", "name", "description"])
-data class SeriesRecord(
+data class SeriesGenericRecord(
     @JsonProperty("groupId")
     val groupId: Long,
 

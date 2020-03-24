@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.converter.impl
+package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class TaskCsv1SeriesConverter(
+class SeriesOneExerciseRecordProcessor(
     var exerciseService: ExerciseService,
     var seriesService: SeriesService,
     var resourceService: ResourceService
