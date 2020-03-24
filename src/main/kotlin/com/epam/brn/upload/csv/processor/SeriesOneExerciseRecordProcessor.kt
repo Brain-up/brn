@@ -6,6 +6,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
+import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class SeriesOneExerciseRecordProcessor(
+    val taskRepository: TaskRepository,
     var exerciseService: ExerciseService,
     var seriesService: SeriesService,
     var resourceService: ResourceService
@@ -25,7 +27,12 @@ class SeriesOneExerciseRecordProcessor(
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    fun convert(source: SeriesOneTaskRecord): Task {
+    fun process(tasks: MutableList<SeriesOneTaskRecord>): List<Task> {
+        val result = tasks.map { parsedValue -> convert(parsedValue) }
+        return taskRepository.saveAll(result)
+    }
+
+    private fun convert(source: SeriesOneTaskRecord): Task {
         val result = Task()
         result.serialNumber = source.orderNumber
         result.exercise = prepareExercise(source)

@@ -1,21 +1,12 @@
 package com.epam.brn.upload
 
-import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.TaskRepository
-import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.InitialDataLoader
-import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.csv.parser.CsvParser
 import com.epam.brn.upload.csv.parser.iterator.impl.GroupMappingIteratorProvider
 import com.epam.brn.upload.csv.parser.iterator.impl.Series1TaskMappingIteratorProvider
@@ -24,13 +15,13 @@ import com.epam.brn.upload.csv.parser.iterator.impl.SeriesMappingIteratorProvide
 import com.epam.brn.upload.csv.processor.GroupRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesThreeExerciseRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesTwoExerciseRecordProcessor
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.LineNumberReader
 import org.apache.commons.lang3.StringUtils
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -38,45 +29,26 @@ import org.springframework.web.multipart.MultipartFile
 @Component
 class CsvUploadService(
     private val csvParser: CsvParser,
-    private val groupRepository: ExerciseGroupRepository,
-    private val seriesRepository: SeriesRepository,
-    private val exerciseRepository: ExerciseRepository,
-    private val taskRepository: TaskRepository
+    private val groupRecordProcessor: GroupRecordProcessor,
+    private val seriesGenericRecordProcessor: SeriesGenericRecordProcessor,
+    private val seriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor,
+    private val seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor,
+    private val seriesThreeExerciseRecordProcessor: SeriesThreeExerciseRecordProcessor
 ) {
 
     @Value("\${brn.dataFormatNumLines}")
     val dataFormatLinesCount = 5
 
-    @Autowired
-    lateinit var groupRecordProcessor: GroupRecordProcessor
-
-    @Autowired
-    lateinit var seriesGenericRecordProcessor: SeriesGenericRecordProcessor
-
-    @Autowired
-    lateinit var seriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor
-
-    @Autowired
-    lateinit var seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor
-
-    @Autowired
-    lateinit var seriesService: SeriesService
-
-    @Autowired
-    lateinit var exerciseService: ExerciseService
-
-    fun loadGroups(inputStream: InputStream): MutableIterable<ExerciseGroup> {
+    fun loadGroups(inputStream: InputStream): Iterable<ExerciseGroup> {
         val records = csvParser.parse(inputStream, GroupMappingIteratorProvider())
-        val result = records.map { parsedValue -> groupRecordProcessor.convert(parsedValue) }
 
-        return groupRepository.saveAll(result)
+        return groupRecordProcessor.process(records)
     }
 
-    fun loadSeries(inputStream: InputStream): MutableIterable<Series> {
+    fun loadSeries(inputStream: InputStream): Iterable<Series> {
         val records = csvParser.parse(inputStream, SeriesMappingIteratorProvider())
-        val result = records.map { parsedValue -> seriesGenericRecordProcessor.convert(parsedValue) }
 
-        return seriesRepository.saveAll(result)
+        return seriesGenericRecordProcessor.process(records)
     }
 
     @Throws(FileFormatException::class)
@@ -98,96 +70,22 @@ class CsvUploadService(
     fun loadTasks(file: File): List<Task> = loadTasksFor1Series(file.inputStream())
 
     fun loadTasksFor1Series(inputStream: InputStream): List<Task> {
-        val tasks = csvParser.parse(inputStream, Series1TaskMappingIteratorProvider())
-        val result = tasks.map { parsedValue -> seriesOneExerciseRecordProcessor.convert(parsedValue) }
+        val records = csvParser.parse(inputStream, Series1TaskMappingIteratorProvider())
 
-        return taskRepository.saveAll(result)
+        return seriesOneExerciseRecordProcessor.process(records)
     }
 
     fun loadExercisesFor2Series(inputStream: InputStream): List<Exercise> {
-        val exercises = csvParser.parse(inputStream, Series2ExerciseMappingIteratorProvider())
-        val result = exercises.map { parsedValue -> seriesTwoExerciseRecordProcessor.convert(parsedValue) }
+        val records = csvParser.parse(inputStream, Series2ExerciseMappingIteratorProvider())
 
-        return exerciseRepository.saveAll(result)
+        return seriesTwoExerciseRecordProcessor.process(records)
     }
 
     fun loadExercisesFor3Series(inputStream: InputStream): List<Exercise> {
         // todo: get data from file for 3 series
-        val exercises = createExercises()
+        val records = mutableListOf<Map<String, Any>>()
 
-        return exerciseService.save(exercises)
-    }
-
-    fun createExercises(): List<Exercise> {
-        val exercise = createExercise()
-        exercise.addTask(createTask())
-        return listOf(exercise)
-    }
-
-    private fun createExercise(): Exercise {
-        return Exercise(
-            series = seriesService.findSeriesForId(3L),
-            name = "Распознование предложений из 2 слов",
-            description = "Распознование предложений из 2 слов",
-            template = "<OBJECT OBJECT_ACTION>",
-            exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
-            level = 1
-        )
-    }
-
-    private fun createTask(): Task {
-        val resource1 = Resource(
-            word = "девочкаTest",
-            wordType = WordTypeEnum.OBJECT.toString(),
-            audioFileUrl = "series2/девочка.mp3",
-            pictureFileUrl = "pictures/withWord/девочка.jpg"
-        )
-        val resource2 = Resource(
-            word = "дедушкаTest",
-            wordType = WordTypeEnum.OBJECT.toString(),
-            audioFileUrl = "series2/дедушка.mp3",
-            pictureFileUrl = "pictures/withWord/дедушка.jpg"
-        )
-        val resource3 = Resource(
-            word = "бабушкаTest",
-            wordType = WordTypeEnum.OBJECT.toString(),
-            audioFileUrl = "series2/бабушка.mp3",
-            pictureFileUrl = "pictures/withWord/бабушка.jpg"
-        )
-        val resource4 = Resource(
-            word = "бросаетTest",
-            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/бросает.mp3",
-            pictureFileUrl = "pictures/withWord/бросает.jpg"
-        )
-        val resource5 = Resource(
-            word = "читаетTest",
-            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/читает.mp3",
-            pictureFileUrl = "pictures/withWord/читает.jpg"
-        )
-        val resource6 = Resource(
-            word = "рисуетTest",
-            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/рисует.mp3",
-            pictureFileUrl = "pictures/withWord/рисует.jpg"
-        )
-
-        val answerOptions =
-            mutableSetOf(resource1, resource2, resource3, resource4, resource5, resource6)
-
-        val correctAnswer = Resource(
-            word = "девочка рисует",
-            wordType = WordTypeEnum.SENTENCE.toString(),
-            audioFileUrl = "series3/девочка_рисует.mp3"
-        )
-
-        return Task(
-            serialNumber = 2,
-            answerOptions = answerOptions,
-            correctAnswer = correctAnswer,
-            answerParts = mutableMapOf(1 to resource1, 2 to resource6)
-        )
+        return seriesThreeExerciseRecordProcessor.process(records)
     }
 
     fun getSampleStringForSeriesFile(seriesId: Long): String {

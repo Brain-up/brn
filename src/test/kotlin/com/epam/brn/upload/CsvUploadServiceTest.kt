@@ -1,10 +1,11 @@
 package com.epam.brn.upload
 
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.TaskRepository
 import com.epam.brn.upload.csv.parser.CsvParser
+import com.epam.brn.upload.csv.processor.GroupRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesThreeExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesTwoExerciseRecordProcessor
 import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -24,16 +25,19 @@ internal class CsvUploadServiceTest {
     lateinit var csvParser: CsvParser
 
     @Mock
-    lateinit var exerciseGroupRepository: ExerciseGroupRepository
+    lateinit var groupRecordProcessor: GroupRecordProcessor
 
     @Mock
-    lateinit var seriesRepository: SeriesRepository
+    lateinit var seriesGenericRecordProcessor: SeriesGenericRecordProcessor
 
     @Mock
-    lateinit var exerciseRepository: ExerciseRepository
+    lateinit var seriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor
 
     @Mock
-    lateinit var taskRepository: TaskRepository
+    lateinit var seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor
+
+    @Mock
+    lateinit var seriesThreeExerciseRecordProcessor: SeriesThreeExerciseRecordProcessor
 
     @Test
     fun `should get series file format`() {

@@ -7,6 +7,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
+import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.SeriesService
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Component
 class SeriesTwoExerciseRecordProcessor(
     private val resourceService: ResourceService,
     private val seriesService: SeriesService,
-    private val exerciseService: ExerciseService
+    private val exerciseService: ExerciseService,
+    private val exerciseRepository: ExerciseRepository
 ) {
     private val log = logger()
 
@@ -33,7 +35,12 @@ class SeriesTwoExerciseRecordProcessor(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureFileUrl: String
 
-    fun convert(source: Map<String, Any>): Exercise {
+    fun process(exercises: MutableList<Map<String, Any>>): List<Exercise> {
+        val result = exercises.map { parsedValue -> convert(parsedValue) }
+        return exerciseRepository.saveAll(result)
+    }
+
+    private fun convert(source: Map<String, Any>): Exercise {
         val target = createOrGetExercise(source)
         convertExercise(source, target)
         convertTask(target)
