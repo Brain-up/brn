@@ -16,11 +16,11 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.service.SeriesService
-import com.epam.brn.upload.csv.CsvParser
-import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
-import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
-import com.epam.brn.upload.csv.iterator.impl.Series2ExerciseMappingIteratorProvider
-import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.CsvParser
+import com.epam.brn.upload.csv.parser.iterator.impl.GroupMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.Series1TaskMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.Series2ExerciseMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesMappingIteratorProvider
 import com.epam.brn.upload.csv.processor.GroupRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor

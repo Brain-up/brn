@@ -1,8 +1,8 @@
-package com.epam.brn.upload.csv
+package com.epam.brn.upload.csv.parser
 
-import com.epam.brn.upload.csv.iterator.impl.GroupMappingIteratorProvider
-import com.epam.brn.upload.csv.iterator.impl.Series1TaskMappingIteratorProvider
-import com.epam.brn.upload.csv.iterator.impl.SeriesMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.GroupMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.Series1TaskMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesMappingIteratorProvider
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
 import com.epam.brn.upload.csv.record.SeriesOneTaskRecord

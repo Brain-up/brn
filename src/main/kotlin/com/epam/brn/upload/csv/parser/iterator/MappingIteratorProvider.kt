@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.iterator
+package com.epam.brn.upload.csv.parser.iterator
 
 import com.fasterxml.jackson.databind.MappingIterator
 import java.io.InputStream

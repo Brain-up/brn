@@ -9,7 +9,7 @@ import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
-import com.epam.brn.upload.csv.CsvParser
+import com.epam.brn.upload.csv.parser.CsvParser
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

@@ -1,6 +1,6 @@
-package com.epam.brn.upload.csv
+package com.epam.brn.upload.csv.parser
 
-import com.epam.brn.upload.csv.iterator.MappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -42,7 +42,9 @@ class CsvParser {
                     log.debug("Failed to parse line $lineNumberInFile ", e)
                 }
             }
-            if (errors.isNotEmpty()) throw ParseException(errors)
+            if (errors.isNotEmpty()) throw ParseException(
+                errors
+            )
 
             return parsed
         }
