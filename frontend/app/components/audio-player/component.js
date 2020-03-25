@@ -158,15 +158,15 @@ export default class AudioPlayerComponent extends Component {
   fakePlayTask;
 
   setProgress(progress) {
+    this.audioPlayingProgress = progress;
+    if (progress !== 100 && (progress >= 99 || Ember.testing)) {
+      this.setProgress(100);
+      return;
+    }
     window.requestAnimationFrame(() => {
       if (this.buttonElement) {
         this.buttonElement.style.setProperty('--progress', `${progress}%`);
       }
     });
-    this.audioPlayingProgress = progress;
-
-    if (progress >= 99 || Ember.testing) {
-      this.setProgress(100);
-    }
   }
 }
