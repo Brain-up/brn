@@ -5,14 +5,15 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {AdminModule} from './admin/admin.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {BasicAuthInterceptor} from './shared/services/basic-auth.interceptor.service';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { EffectsModule } from '@ngrx/effects';
+import { AuthModule } from './modules/auth/auth.module';
+import { BasicAuthInterceptor } from './modules/shared/services/basic-auth.interceptor.service';
+import { AdminModule } from './modules/admin/admin.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { EffectsModule } from '@ngrx/effects';
     }),
     EffectsModule.forRoot([]),
     BrowserAnimationsModule,
+    AuthModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
