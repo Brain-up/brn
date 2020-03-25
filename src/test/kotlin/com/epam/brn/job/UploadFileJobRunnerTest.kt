@@ -1,7 +1,7 @@
 package com.epam.brn.job
 
-import com.epam.brn.csv.UploadFromCsvService
 import com.epam.brn.job.impl.UploadFileJobRunnerImpl
+import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.anyOrNull
 import java.io.File
 import java.nio.file.Files
@@ -36,10 +36,10 @@ class UploadFileJobRunnerTest {
     lateinit var uploadFileJobRunner: UploadFileJobRunnerImpl
 
     @Mock
-    lateinit var uploadTaskFromCsvService: UploadFromCsvService
+    lateinit var csvUploadService: CsvUploadService
 
     @Spy
-    var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvService> = LinkedHashMap()
+    var sourcesWithJobs: LinkedHashMap<String, CsvUploadService> = LinkedHashMap()
 
     @BeforeAll
     fun init() {
@@ -64,12 +64,12 @@ class UploadFileJobRunnerTest {
     @Test
     fun `should upload tasks from csv file during job`() {
         // GIVEN
-        sourcesWithJobs[pathToTaskFiles] = uploadTaskFromCsvService
+        sourcesWithJobs[pathToTaskFiles] = csvUploadService
 
         // WHEN
         uploadFileJobRunner.perform()
 
         // THEN
-        verify(uploadTaskFromCsvService, times(1)).loadTaskFile(anyOrNull<File>())
+        verify(csvUploadService, times(1)).loadTasks(anyOrNull<File>())
     }
 }

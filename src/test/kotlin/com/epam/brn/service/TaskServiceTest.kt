@@ -5,6 +5,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import java.util.Optional
 import kotlin.test.assertEquals
@@ -32,6 +33,9 @@ internal class TaskServiceTest {
 
     @Mock
     lateinit var exerciseRepository: ExerciseRepository
+
+    @Mock
+    lateinit var resourceRepository: ResourceRepository
 
     @InjectMocks
     lateinit var taskService: TaskService

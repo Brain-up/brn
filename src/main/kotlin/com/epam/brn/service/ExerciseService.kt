@@ -9,11 +9,13 @@ import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ExerciseService(
     @Autowired val exerciseRepository: ExerciseRepository,
-    @Autowired val studyHistoryRepository: StudyHistoryRepository
+    @Autowired val studyHistoryRepository: StudyHistoryRepository,
+    private val taskService: TaskService
 ) {
     private val log = logger()
 
@@ -21,11 +23,6 @@ class ExerciseService(
         val exercise = exerciseRepository.findById(exerciseID)
         return exercise.map { e -> e.toDto() }
             .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
-    }
-
-    fun findExerciseEntityByName(name: String): Exercise {
-        return exerciseRepository.findExerciseByName(name)
-            .orElseThrow { EntityNotFoundException("Exercise entity was not found by name $name") }
     }
 
     fun findExerciseByNameAndLevel(name: String, level: Int): Exercise {
@@ -47,15 +44,16 @@ class ExerciseService(
         return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
     }
 
+    @Transactional
     fun save(exercise: Exercise): Exercise {
-        return exerciseRepository.save(exercise)
+        val result = exerciseRepository.save(exercise)
+        exercise.tasks.forEach {
+            it.exercise = result
+            taskService.save(it)
+        }
+        return result
     }
 
-    fun createExercise(name: String): Exercise {
-        val exercise = Exercise()
-        exercise.name = name
-        exerciseRepository.save(exercise)
-
-        return exercise
-    }
+    @Transactional
+    fun save(exercises: List<Exercise>): List<Exercise> = exercises.map(this::save)
 }

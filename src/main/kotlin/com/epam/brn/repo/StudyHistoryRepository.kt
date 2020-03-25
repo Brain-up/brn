@@ -21,6 +21,6 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     )
 
     fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
-    fun findByUserAccountId(id: Long?): List<StudyHistory>
+
     fun findByUserAccountIdAndExerciseId(userId: Long?, exerciseId: Long?): Optional<StudyHistory>
 }

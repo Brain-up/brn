@@ -3,16 +3,20 @@ package com.epam.brn.service
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TaskService(
     private val taskRepository: TaskRepository,
-    private val exerciseRepository: ExerciseRepository
+    private val exerciseRepository: ExerciseRepository,
+    private val resourceRepository: ResourceRepository
 ) {
     private val log = logger()
 
@@ -36,5 +40,14 @@ class TaskService(
         }
     }
 
-    fun save(task: Task): Task = taskRepository.save(task)
+    @Transactional
+    fun save(task: Task): Task {
+        val resources = mutableSetOf<Resource>()
+        resources.addAll(task.answerOptions)
+        task.correctAnswer?.let { resources.add(it) }
+
+        resourceRepository.saveAll(resources)
+
+        return taskRepository.save(task)
+    }
 }
