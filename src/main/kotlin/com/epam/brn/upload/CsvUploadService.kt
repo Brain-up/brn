@@ -10,9 +10,9 @@ import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.csv.parser.CsvParser
 import com.epam.brn.upload.csv.processor.GroupRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesOneRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesThreeRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesTwoExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesTwoRecordProcessor
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -27,8 +27,8 @@ class CsvUploadService(
     private val csvParser: CsvParser,
     private val groupRecordProcessor: GroupRecordProcessor,
     private val seriesGenericRecordProcessor: SeriesGenericRecordProcessor,
-    private val seriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor,
-    private val seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor,
+    private val seriesOneRecordProcessor: SeriesOneRecordProcessor,
+    private val seriesTwoRecordProcessor: SeriesTwoRecordProcessor,
     private val seriesThreeRecordProcessor: SeriesThreeRecordProcessor
 ) {
 
@@ -69,13 +69,13 @@ class CsvUploadService(
     fun loadTasksFor1Series(inputStream: InputStream): List<Task> {
         val records = csvParser.parseSeriesOneExerciseRecords(inputStream)
 
-        return seriesOneExerciseRecordProcessor.process(records)
+        return seriesOneRecordProcessor.process(records)
     }
 
     fun loadExercisesFor2Series(inputStream: InputStream): List<Exercise> {
         val records = csvParser.parseSeriesTwoExerciseRecords(inputStream)
 
-        return seriesTwoExerciseRecordProcessor.process(records)
+        return seriesTwoRecordProcessor.process(records)
     }
 
     fun loadExercisesFor3Series(inputStream: InputStream): List<Exercise> {

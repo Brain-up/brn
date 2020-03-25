@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class SeriesTwoExerciseRecordProcessor(
+class SeriesTwoRecordProcessor(
     private val resourceService: ResourceService,
     private val seriesService: SeriesService,
     private val exerciseService: ExerciseService,

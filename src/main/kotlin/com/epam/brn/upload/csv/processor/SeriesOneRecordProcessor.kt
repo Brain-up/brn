@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class SeriesOneExerciseRecordProcessor(
+class SeriesOneRecordProcessor(
     val taskRepository: TaskRepository,
     var exerciseService: ExerciseService,
     var seriesService: SeriesService,
