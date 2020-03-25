@@ -31,7 +31,7 @@ export default class AudioPlayerComponent extends Component {
       yield timeout(100);
       this.setProgress(0);
     } catch (e) {
-      //
+      // NOP
     } finally {
       if (!this.isDestroyed && !this.isDestroying) {
         this.setProgress(0);
@@ -165,9 +165,7 @@ export default class AudioPlayerComponent extends Component {
     });
     this.audioPlayingProgress = progress;
 
-    if (progress === 100) {
-      //
-    } else if (progress >= 99 || Ember.testing) {
+    if (progress >= 99 || Ember.testing) {
       this.setProgress(100);
     }
   }
