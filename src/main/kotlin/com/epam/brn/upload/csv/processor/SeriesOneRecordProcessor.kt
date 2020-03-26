@@ -2,14 +2,13 @@ package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
-import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
+import com.epam.brn.model.Series
 import com.epam.brn.model.Task
-import com.epam.brn.repo.TaskRepository
-import com.epam.brn.service.ExerciseService
-import com.epam.brn.service.ResourceService
-import com.epam.brn.service.SeriesService
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.record.SeriesOneRecord
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
@@ -18,77 +17,67 @@ import org.springframework.stereotype.Component
 
 @Component
 class SeriesOneRecordProcessor(
-    var seriesService: SeriesService,
-    var resourceService: ResourceService,
-    var exerciseService: ExerciseService,
-    val taskRepository: TaskRepository
+    var seriesRepository: SeriesRepository,
+    var resourceRepository: ResourceRepository,
+    var exerciseRepository: ExerciseRepository
 ) {
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    fun process(tasks: List<SeriesOneRecord>): List<Exercise> {
-        val result = tasks.map { parsedValue -> convert(parsedValue) }
-        taskRepository.saveAll(result)
+    fun process(records: List<SeriesOneRecord>): List<Exercise> {
+        val exercises = mutableSetOf<Exercise>()
 
-        return result
-            .map { it.exercise!! }
-            .toSet().toList()
-    }
+        val series = seriesRepository.findById(1L).orElse(null)
+        records.forEach {
 
-    private fun convert(source: SeriesOneRecord): Task {
-        val result = Task()
-        result.serialNumber = source.orderNumber
-        result.exercise = prepareExercise(source)
-        result.correctAnswer = prepareCorrectAnswer(source)
-        result.answerOptions = prepareAnswerOptions(source.words)
-        return result
-    }
+            val correctAnswer = extractCorrectAnswer(it)
+            resourceRepository.save(correctAnswer)
 
-    private fun prepareExercise(source: SeriesOneRecord): Exercise {
-        return try {
-            exerciseService.findExerciseByNameAndLevel(source.exerciseName, source.level)
-        } catch (e: EntityNotFoundException) {
-            val newExercise = Exercise(
-                name = source.exerciseName,
-                level = source.level,
-                series = seriesService.findSeriesForId(1L),
-                exerciseType = ExerciseType.of(1L).toString()
-            )
-            exerciseService.save(newExercise)
-            newExercise
+            val answerOptions = extractAnswerOptions(it)
+            resourceRepository.saveAll(answerOptions)
+
+            val exercise = extractExercise(it, series)
+            exercise.addTask(extractTask(it, exercise, correctAnswer, answerOptions))
+
+            exerciseRepository.save(exercise)
+            exercises.add(exercise)
         }
+
+        return exercises.toList()
     }
 
-    private fun prepareCorrectAnswer(source: SeriesOneRecord): Resource {
-        var resource = resourceService.findFirstByWordAndAudioFileUrlLike(source.word, source.audioFileName)
-        if (resource != null) {
-            resource.wordType = source.wordType
-            resource.pictureFileUrl = source.pictureFileName
-        } else {
-            resource = Resource(
-                audioFileUrl = source.audioFileName,
-                word = source.word,
-                wordType = source.wordType,
-                pictureFileUrl = source.pictureFileName
+    private fun extractCorrectAnswer(record: SeriesOneRecord): Resource {
+        val resource = resourceRepository
+            .findFirstByWordAndAudioFileUrlLike(record.word, record.audioFileName)
+            .orElse(
+                Resource(
+                    audioFileUrl = record.audioFileName,
+                    word = record.word
+                )
             )
-        }
-        resourceService.save(resource)
+
+        resource.wordType = record.wordType
+        resource.pictureFileUrl = record.pictureFileName
+
         return resource
     }
 
-    private fun prepareAnswerOptions(words: List<String>): MutableSet<Resource> {
-        return CollectionUtils.emptyIfNull(words)
+    private fun extractAnswerOptions(record: SeriesOneRecord): MutableSet<Resource> {
+        return CollectionUtils.emptyIfNull(record.words)
             .asSequence()
+            .map { toStringWithoutBraces(it) }
             .filter { StringUtils.isNotEmpty(it) }
-            .map { word -> word.replace("[()]".toRegex(), "") }
-            .map { this.toAnswerOption(it) }
+            .map { toResource(it) }
             .toMutableSet()
     }
 
-    private fun toAnswerOption(word: String): Resource {
-        return resourceService.findFirstResourceByWordLike(word)
-            ?: resourceService.save(
+    private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
+
+    private fun toResource(word: String): Resource {
+        return resourceRepository
+            .findFirstByWordLike(word)
+            .orElse(
                 Resource(
                     audioFileUrl = defaultAudioFileUrl.format(word),
                     word = word,
@@ -96,5 +85,32 @@ class SeriesOneRecordProcessor(
                     pictureFileUrl = null
                 )
             )
+    }
+
+    private fun extractExercise(record: SeriesOneRecord, series: Series): Exercise {
+        return exerciseRepository
+            .findExerciseByNameAndLevel(record.exerciseName, record.level)
+            .orElse(
+                Exercise(
+                    name = record.exerciseName,
+                    level = record.level,
+                    series = series,
+                    exerciseType = ExerciseType.SINGLE_WORDS.toString()
+                )
+            )
+    }
+
+    private fun extractTask(
+        record: SeriesOneRecord,
+        exercise: Exercise,
+        correctAnswer: Resource,
+        answerOptions: MutableSet<Resource>
+    ): Task {
+        return Task(
+            serialNumber = record.orderNumber,
+            exercise = exercise,
+            correctAnswer = correctAnswer,
+            answerOptions = answerOptions
+        )
     }
 }

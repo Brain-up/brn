@@ -7,13 +7,13 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
-import com.epam.brn.repo.TaskRepository
-import com.epam.brn.service.ExerciseService
-import com.epam.brn.service.ResourceService
-import com.epam.brn.service.SeriesService
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.record.SeriesOneRecord
 import com.nhaarman.mockito_kotlin.verify
-import org.assertj.core.api.Assertions
+import java.util.Optional
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,10 +25,9 @@ import org.springframework.test.util.ReflectionTestUtils
 @ExtendWith(MockitoExtension::class)
 internal class SeriesOneRecordProcessorTest {
 
-    private val seriesRepositoryMock = Mockito.mock(SeriesService::class.java)
-    private val resourceRepositoryMock = Mockito.mock(ResourceService::class.java)
-    private val exerciseRepositoryMock = Mockito.mock(ExerciseService::class.java)
-    private val taskRepositoryMock = Mockito.mock(TaskRepository::class.java)
+    private val seriesRepositoryMock = Mockito.mock(SeriesRepository::class.java)
+    private val resourceRepositoryMock = Mockito.mock(ResourceRepository::class.java)
+    private val exerciseRepositoryMock = Mockito.mock(ExerciseRepository::class.java)
 
     private lateinit var test: SeriesOneRecordProcessor
 
@@ -48,15 +47,12 @@ internal class SeriesOneRecordProcessorTest {
         test = SeriesOneRecordProcessor(
             seriesRepositoryMock,
             resourceRepositoryMock,
-            exerciseRepositoryMock,
-            taskRepositoryMock
+            exerciseRepositoryMock
         )
 
         ReflectionTestUtils.setField(test, "defaultAudioFileUrl", "default/%s.mp3")
 
-        `when`(seriesRepositoryMock.findSeriesForId(1L)).thenReturn(series)
-        `when`(exerciseRepositoryMock.findExerciseByNameAndLevel(createExercise().name, createExercise().level!!))
-            .thenReturn(createExercise())
+        `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 
         mockFindResourceByWordLike("бал", resource_бал())
         mockFindResourceByWordLike("бам", resource_бам())
@@ -67,7 +63,7 @@ internal class SeriesOneRecordProcessorTest {
     }
 
     private fun mockFindResourceByWordLike(word: String, result: Resource) {
-        `when`(resourceRepositoryMock.findFirstResourceByWordLike(word)).thenReturn(result)
+        `when`(resourceRepositoryMock.findFirstByWordLike(word)).thenReturn(Optional.of(result))
     }
 
     @Test
@@ -89,7 +85,8 @@ internal class SeriesOneRecordProcessorTest {
             )
         ).first()
 
-        Assertions.assertThat(actual).isEqualTo(expected)
+        assertThat(actual).isEqualTo(expected)
+        verify(exerciseRepositoryMock).save(expected)
     }
 
     @Test
@@ -110,7 +107,7 @@ internal class SeriesOneRecordProcessorTest {
             )
         ).first().tasks.first()
 
-        Assertions.assertThat(actual).isEqualToIgnoringGivenFields(expected, "answerOptions")
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "answerOptions")
     }
 
     @Test
@@ -131,7 +128,7 @@ internal class SeriesOneRecordProcessorTest {
             )
         ).first().tasks.first().correctAnswer
 
-        Assertions.assertThat(actual).isEqualTo(expected)
+        assertThat(actual).isEqualTo(expected)
         verify(resourceRepositoryMock).save(expected)
     }
 
@@ -156,7 +153,8 @@ internal class SeriesOneRecordProcessorTest {
             )
         ).first().tasks.first().answerOptions
 
-        Assertions.assertThat(actual).containsExactlyElementsOf(expected)
+        assertThat(actual).containsExactlyElementsOf(expected)
+        verify(resourceRepositoryMock).saveAll(expected)
     }
 
     private fun createExercise(): Exercise {
@@ -166,16 +164,14 @@ internal class SeriesOneRecordProcessorTest {
             exerciseType = ExerciseType.SINGLE_WORDS.toString(),
             level = 1
         )
+        exercise.addTask(createTask(exercise))
 
-        val task = createTask(exercise)
-
-        exercise.addTask(task)
         return exercise
     }
 
     private fun createTask(exercise: Exercise): Task {
         return Task(
-            serialNumber = 2,
+            serialNumber = 1,
             exercise = exercise,
             answerOptions = mutableSetOf(
                 resource_бам(),
