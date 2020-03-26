@@ -134,7 +134,7 @@ export default class AudioPlayerComponent extends Component {
       this.isPlaying = false;
       this.previousPlayedUrls = this.audioFileUrl;
     } catch (e) {
-      //
+      // NOP
     } finally {
       startedSources.forEach(({ source }) => {
         source.stop(0);
