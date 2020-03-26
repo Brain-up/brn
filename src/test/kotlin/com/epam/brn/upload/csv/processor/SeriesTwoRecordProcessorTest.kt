@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.constant.WordType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
@@ -159,7 +159,7 @@ internal class SeriesTwoRecordProcessorTest {
     private fun resource_девочка(): Resource {
         return Resource(
             word = "девочка",
-            wordType = WordTypeEnum.OBJECT.toString(),
+            wordType = WordType.OBJECT.toString(),
             audioFileUrl = "series2/девочка.mp3",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
@@ -168,7 +168,7 @@ internal class SeriesTwoRecordProcessorTest {
     private fun resource_бабушка(): Resource {
         return Resource(
             word = "бабушка",
-            wordType = WordTypeEnum.OBJECT.toString(),
+            wordType = WordType.OBJECT.toString(),
             audioFileUrl = "series2/бабушка.mp3",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
@@ -177,7 +177,7 @@ internal class SeriesTwoRecordProcessorTest {
     private fun resource_дедушка(): Resource {
         return Resource(
             word = "дедушка",
-            wordType = WordTypeEnum.OBJECT.toString(),
+            wordType = WordType.OBJECT.toString(),
             audioFileUrl = "series2/дедушка.mp3",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
@@ -186,7 +186,7 @@ internal class SeriesTwoRecordProcessorTest {
     private fun resource_сидит(): Resource {
         return Resource(
             word = "сидит",
-            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
+            wordType = WordType.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/сидит.mp3",
             pictureFileUrl = "pictures/withWord/сидит.jpg"
         )
@@ -195,7 +195,7 @@ internal class SeriesTwoRecordProcessorTest {
     private fun resource_лежит(): Resource {
         return Resource(
             word = "лежит",
-            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
+            wordType = WordType.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/лежит.mp3",
             pictureFileUrl = "pictures/withWord/лежит.jpg"
         )
@@ -204,7 +204,7 @@ internal class SeriesTwoRecordProcessorTest {
     private fun resource_идет(): Resource {
         return Resource(
             word = "идет",
-            wordType = WordTypeEnum.OBJECT_ACTION.toString(),
+            wordType = WordType.OBJECT_ACTION.toString(),
             audioFileUrl = "series2/идет.mp3",
             pictureFileUrl = "pictures/withWord/идет.jpg"
         )

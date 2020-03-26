@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.constant.WordType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
@@ -55,19 +55,19 @@ class SeriesTwoRecordProcessor(
             .flatten().toMutableSet()
     }
 
-    private fun extractWordGroups(record: SeriesTwoRecord): Sequence<Pair<WordTypeEnum, String>> {
+    private fun extractWordGroups(record: SeriesTwoRecord): Sequence<Pair<WordType, String>> {
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .mapIndexed { wordGroupPosition, wordGroup ->
-                WordTypeEnum.of(wordGroupPosition) to wordGroup
+                WordType.of(wordGroupPosition) to wordGroup
             }
             .filter { StringUtils.isNotBlank(it.second) }
     }
 
     private fun splitOnWords(sentence: String): List<String> = sentence.split(' ').map { it.trim() }
 
-    private fun toResource(word: String, wordType: WordTypeEnum): Resource {
+    private fun toResource(word: String, wordType: WordType): Resource {
         val resource = resourceRepository.findFirstByWordLike(word)
             .orElse(
                 Resource(

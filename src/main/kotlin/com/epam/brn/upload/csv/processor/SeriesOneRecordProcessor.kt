@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.constant.WordType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -86,7 +86,7 @@ class SeriesOneRecordProcessor(
                 Resource(
                     audioFileUrl = defaultAudioFileUrl.format(word),
                     word = word,
-                    wordType = WordTypeEnum.UNKNOWN.toString(),
+                    wordType = WordType.UNKNOWN.toString(),
                     pictureFileUrl = null
                 )
             )

@@ -1,6 +1,6 @@
 package com.epam.brn.constant
 
-enum class WordTypeEnum {
+enum class WordType {
     OBJECT,
     OBJECT_ACTION,
     OBJECT_DESCRIPTION,
@@ -11,7 +11,7 @@ enum class WordTypeEnum {
     UNKNOWN;
 
     companion object {
-        fun of(wordGroupPosition: Int): WordTypeEnum {
+        fun of(wordGroupPosition: Int): WordType {
             return when (wordGroupPosition) {
                 0 -> COUNT
                 1 -> OBJECT_DESCRIPTION

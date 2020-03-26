@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.constant.WordType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
@@ -57,7 +57,7 @@ class SeriesThreeRecordProcessor(
             .orElse(
                 Resource(
                     word = answerWord,
-                    wordType = WordTypeEnum.SENTENCE.toString(),
+                    wordType = WordType.SENTENCE.toString(),
                     audioFileUrl = record.answerAudioFile
                 )
             )
@@ -75,17 +75,17 @@ class SeriesThreeRecordProcessor(
             .flatten().toMutableSet()
     }
 
-    private fun extractWordGroups(record: SeriesThreeRecord): Sequence<Pair<WordTypeEnum, String>> {
+    private fun extractWordGroups(record: SeriesThreeRecord): Sequence<Pair<WordType, String>> {
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .mapIndexed { wordGroupPosition, wordGroup ->
-                WordTypeEnum.of(wordGroupPosition) to wordGroup
+                WordType.of(wordGroupPosition) to wordGroup
             }
             .filter { StringUtils.isNotBlank(it.second) }
     }
 
-    private fun toResource(word: String, wordType: WordTypeEnum): Resource {
+    private fun toResource(word: String, wordType: WordType): Resource {
         return resourceRepository
             .findFirstByWordLike(word)
             .orElse(
