@@ -45,4 +45,4 @@ out/
 ### logs ###
 **/*.log
 **/*.log.*.gz
-
+brn.log.*
