@@ -37,7 +37,8 @@ class SeriesTwoRecordProcessor(
 
     fun process(exercises: MutableList<Map<String, Any>>): List<Exercise> {
         val result = exercises.map { parsedValue -> convert(parsedValue) }
-        return exerciseRepository.saveAll(result)
+        exerciseRepository.saveAll(result)
+        return result
     }
 
     private fun convert(source: Map<String, Any>): Exercise {
@@ -105,7 +106,10 @@ class SeriesTwoRecordProcessor(
             .filter { word -> StringUtils.isNotEmpty(word) }
             .map { word -> getResourceByWord(word) }
             .map { resource -> setWordType(resource, wordType) }
-            .map(resourceService::save)
+            .map {
+                resourceService.save(it)
+                it
+            }
             .toList()
     }
 
