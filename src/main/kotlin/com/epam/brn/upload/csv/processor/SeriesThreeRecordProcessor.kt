@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.processor
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -106,7 +106,7 @@ class SeriesThreeRecordProcessor(
                     name = record.exerciseName,
                     description = record.exerciseName,
                     template = calculateTemplate(record),
-                    exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
+                    exerciseType = ExerciseType.SENTENCE.toString(),
                     level = record.level
                 )
             )

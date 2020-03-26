@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.processor
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -132,7 +132,7 @@ internal class SeriesTwoRecordProcessorTest {
             name = "Шесть слов",
             description = "Шесть слов",
             template = "<OBJECT OBJECT_ACTION>",
-            exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString(),
+            exerciseType = ExerciseType.WORDS_SEQUENCES.toString(),
             level = 1
         )
 

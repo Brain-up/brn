@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -144,7 +144,7 @@ class TaskControllerIT {
                 series = series,
                 level = 0,
                 name = "exercise",
-                exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
+                exerciseType = ExerciseType.SINGLE_WORDS.toString()
             )
         )
     }

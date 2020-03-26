@@ -1,12 +1,12 @@
 package com.epam.brn.constant
 
-enum class ExerciseTypeEnum {
+enum class ExerciseType {
     SINGLE_WORDS,
     WORDS_SEQUENCES,
     SENTENCE;
 
     companion object {
-        fun of(seriesId: Long): ExerciseTypeEnum {
+        fun of(seriesId: Long): ExerciseType {
             return when (seriesId) {
                 1L -> SINGLE_WORDS
                 2L -> WORDS_SEQUENCES

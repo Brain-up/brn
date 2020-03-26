@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.processor
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -49,7 +49,7 @@ class SeriesOneRecordProcessor(
                 name = source.exerciseName,
                 level = source.level,
                 series = seriesService.findSeriesForId(1L),
-                exerciseType = ExerciseTypeEnum.of(1L).toString()
+                exerciseType = ExerciseType.of(1L).toString()
             )
             exerciseService.save(newExercise)
         }

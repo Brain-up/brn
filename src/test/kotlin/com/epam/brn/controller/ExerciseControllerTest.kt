@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.service.ExerciseService
 import com.nhaarman.mockito_kotlin.verify
@@ -25,7 +25,7 @@ internal class ExerciseControllerTest {
         // GIVEN
         val userId: Long = 1
         val seriesId: Long = 1
-        val exercise = ExerciseDto(1, 1, "name", "desc", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exercise = ExerciseDto(1, 1, "name", "desc", 1, ExerciseType.SINGLE_WORDS)
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)).thenReturn(listExercises)
         // WHEN
@@ -41,7 +41,7 @@ internal class ExerciseControllerTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseID: Long = 1
-        val exercise = ExerciseDto(1, 1, "exe", "desc", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exercise = ExerciseDto(1, 1, "exe", "desc", 1, ExerciseType.SINGLE_WORDS)
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
         @Suppress("UNCHECKED_CAST")

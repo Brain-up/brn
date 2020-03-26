@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType
@@ -44,7 +44,7 @@ data class Exercise(
         name = name,
         description = description,
         template = template,
-        exerciseType = ExerciseTypeEnum.valueOf(exerciseType),
+        exerciseType = ExerciseType.valueOf(exerciseType),
         level = level,
         available = available,
         tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()

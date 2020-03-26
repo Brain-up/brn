@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.processor
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -156,7 +156,7 @@ internal class SeriesThreeRecordProcessorTest {
             name = "Распознавание предложений из 2 слов",
             description = "Распознавание предложений из 2 слов",
             template = "<OBJECT OBJECT_ACTION>",
-            exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
+            exerciseType = ExerciseType.SENTENCE.toString(),
             level = 1
         )
 

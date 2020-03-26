@@ -1,13 +1,13 @@
 package com.epam.brn.dto
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.LinkedList
 
 data class TaskDtoForSentence(
     val id: Long? = null,
-    val exerciseType: ExerciseTypeEnum = ExerciseTypeEnum.SENTENCE,
+    val exerciseType: ExerciseType = ExerciseType.SENTENCE,
     @JsonIgnore
     val exerciseId: Long? = null,
     val name: String? = "",
