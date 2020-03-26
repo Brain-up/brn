@@ -5,7 +5,6 @@ import com.epam.brn.job.CsvUtils
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
-import com.epam.brn.model.Task
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.csv.parser.CsvParser
 import com.epam.brn.upload.csv.processor.GroupRecordProcessor
@@ -48,7 +47,7 @@ class CsvUploadService(
     }
 
     @Throws(FileFormatException::class)
-    fun loadExercises(seriesId: Long, file: MultipartFile): List<Any> {
+    fun loadExercises(seriesId: Long, file: MultipartFile): List<Exercise> {
 
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException()
@@ -64,9 +63,9 @@ class CsvUploadService(
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
 
     @Throws(FileFormatException::class)
-    fun loadTasks(file: File): List<Task> = loadTasksFor1Series(file.inputStream())
+    fun loadTasks(file: File): List<Exercise> = loadTasksFor1Series(file.inputStream())
 
-    fun loadTasksFor1Series(inputStream: InputStream): List<Task> {
+    fun loadTasksFor1Series(inputStream: InputStream): List<Exercise> {
         val records = csvParser.parseSeriesOneExerciseRecords(inputStream)
 
         return seriesOneRecordProcessor.process(records)

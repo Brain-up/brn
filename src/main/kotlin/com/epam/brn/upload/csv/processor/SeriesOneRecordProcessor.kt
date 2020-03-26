@@ -18,18 +18,22 @@ import org.springframework.stereotype.Component
 
 @Component
 class SeriesOneRecordProcessor(
-    val taskRepository: TaskRepository,
-    var exerciseService: ExerciseService,
     var seriesService: SeriesService,
-    var resourceService: ResourceService
+    var resourceService: ResourceService,
+    var exerciseService: ExerciseService,
+    val taskRepository: TaskRepository
 ) {
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    fun process(tasks: MutableList<SeriesOneRecord>): List<Task> {
+    fun process(tasks: List<SeriesOneRecord>): List<Exercise> {
         val result = tasks.map { parsedValue -> convert(parsedValue) }
-        return taskRepository.saveAll(result)
+        taskRepository.saveAll(result)
+
+        return result
+            .map { it.exercise!! }
+            .toSet().toList()
     }
 
     private fun convert(source: SeriesOneRecord): Task {
@@ -52,6 +56,7 @@ class SeriesOneRecordProcessor(
                 exerciseType = ExerciseType.of(1L).toString()
             )
             exerciseService.save(newExercise)
+            newExercise
         }
     }
 
@@ -68,7 +73,8 @@ class SeriesOneRecordProcessor(
                 pictureFileUrl = source.pictureFileName
             )
         }
-        return resourceService.save(resource)
+        resourceService.save(resource)
+        return resource
     }
 
     private fun prepareAnswerOptions(words: List<String>): MutableSet<Resource> {
