@@ -80,7 +80,7 @@ class SeriesThreeRecordProcessor(
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .mapIndexed { wordGroupPosition, wordGroup ->
-                calcWordTypeByWordGroupPosition(wordGroupPosition) to wordGroup
+                WordTypeEnum.of(wordGroupPosition) to wordGroup
             }
             .filter { StringUtils.isNotBlank(it.second) }
     }
@@ -96,18 +96,6 @@ class SeriesThreeRecordProcessor(
                     pictureFileUrl = pictureFileUrl
                 )
             )
-    }
-
-    private fun calcWordTypeByWordGroupPosition(wordPositionNumber: Int): WordTypeEnum {
-        return when (wordPositionNumber) {
-            0 -> WordTypeEnum.COUNT
-            1 -> WordTypeEnum.OBJECT_DESCRIPTION
-            2 -> WordTypeEnum.OBJECT
-            3 -> WordTypeEnum.OBJECT_ACTION
-            4 -> WordTypeEnum.ADDITION_OBJECT_DESCRIPTION
-            5 -> WordTypeEnum.ADDITION_OBJECT
-            else -> WordTypeEnum.UNKNOWN
-        }
     }
 
     private fun extractExercise(record: SeriesThreeRecord, series: Series): Exercise {

@@ -2,17 +2,17 @@ package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.service.ExerciseService
-import com.epam.brn.service.ResourceService
-import com.epam.brn.service.SeriesService
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.upload.csv.record.SeriesTwoRecord
 import com.nhaarman.mockito_kotlin.verify
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,10 +25,9 @@ import org.springframework.test.util.ReflectionTestUtils
 @ExtendWith(MockitoExtension::class)
 internal class SeriesTwoRecordProcessorTest {
 
-    private val resourceRepositoryMock = mock(ResourceService::class.java)
+    private val seriesRepositoryMock = mock(SeriesRepository::class.java)
+    private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
-    private val exerciseServiceMock = mock(ExerciseService::class.java)
-    private val seriesRepositoryMock = mock(SeriesService::class.java)
 
     private lateinit var test: SeriesTwoRecordProcessor
 
@@ -46,18 +45,15 @@ internal class SeriesTwoRecordProcessorTest {
     @BeforeEach
     internal fun setUp() {
         test = SeriesTwoRecordProcessor(
-            resourceRepositoryMock,
             seriesRepositoryMock,
-            exerciseServiceMock,
+            resourceRepositoryMock,
             exerciseRepositoryMock
         )
 
         ReflectionTestUtils.setField(test, "audioFileUrl", "series2/%s.mp3")
         ReflectionTestUtils.setField(test, "pictureFileUrl", "pictures/withWord/%s.jpg")
 
-        `when`(seriesRepositoryMock.findSeriesForId(2L)).thenReturn(series)
-        `when`(exerciseServiceMock.findExerciseByNameAndLevel("Шесть слов", 1))
-            .thenThrow(EntityNotFoundException::class.java)
+        `when`(seriesRepositoryMock.findById(2L)).thenReturn(Optional.of(series))
 
         mockFindResourceByWordLike("девочка", resource_девочка())
         mockFindResourceByWordLike("бабушка", resource_бабушка())
@@ -68,7 +64,7 @@ internal class SeriesTwoRecordProcessorTest {
     }
 
     private fun mockFindResourceByWordLike(word: String, result: Resource) {
-        `when`(resourceRepositoryMock.findFirstResourceByWordLike(word)).thenReturn(result)
+        `when`(resourceRepositoryMock.findFirstByWordLike(word)).thenReturn(Optional.of(result))
     }
 
     @Test
@@ -77,17 +73,17 @@ internal class SeriesTwoRecordProcessorTest {
 
         val actual = test.process(
             mutableListOf(
-                mutableMapOf(
-                    "level" to 1,
-                    "exerciseName" to "Шесть слов",
-                    "orderNumber" to 1,
-                    "words" to "(();();(девочка бабушка дедушка);(сидит лежит идет);();())"
+                SeriesTwoRecord(
+                    level = 1,
+                    exerciseName = "Шесть слов",
+                    orderNumber = 1,
+                    words = listOf("(()", "()", "(девочка бабушка дедушка)", "(сидит лежит идет)", "()", "())")
                 )
             )
         ).first()
 
         assertThat(actual).isEqualTo(expected)
-        verify(exerciseRepositoryMock).saveAll(listOf(expected))
+        verify(exerciseRepositoryMock).save(expected)
     }
 
     @Test
@@ -96,11 +92,11 @@ internal class SeriesTwoRecordProcessorTest {
 
         val actual = test.process(
             mutableListOf(
-                mutableMapOf(
-                    "level" to 1,
-                    "exerciseName" to "Шесть слов",
-                    "orderNumber" to 1,
-                    "words" to "(();();(девочка бабушка дедушка);(сидит лежит идет);();())"
+                SeriesTwoRecord(
+                    level = 1,
+                    exerciseName = "Шесть слов",
+                    orderNumber = 1,
+                    words = listOf("(()", "()", "(девочка бабушка дедушка)", "(сидит лежит идет)", "()", "())")
                 )
             )
         ).first().tasks.first()
@@ -117,17 +113,17 @@ internal class SeriesTwoRecordProcessorTest {
 
         val actual = test.process(
             mutableListOf(
-                mutableMapOf(
-                    "level" to 1,
-                    "exerciseName" to "Шесть слов",
-                    "orderNumber" to 1,
-                    "words" to "(();();(девочка бабушка дедушка);(сидит лежит идет);();())"
+                SeriesTwoRecord(
+                    level = 1,
+                    exerciseName = "Шесть слов",
+                    orderNumber = 1,
+                    words = listOf("(()", "()", "(девочка бабушка дедушка)", "(сидит лежит идет)", "()", "())")
                 )
             )
         ).first().tasks.first().answerOptions
 
-        assertThat(actual).containsOnlyElementsOf(expected)
-        expected.forEach { verify(resourceRepositoryMock).save(it) }
+        assertThat(actual).containsExactlyElementsOf(expected)
+        verify(resourceRepositoryMock).saveAll(expected)
     }
 
     private fun createExercise(): Exercise {

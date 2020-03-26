@@ -8,14 +8,19 @@ enum class WordTypeEnum {
     ADDITION_OBJECT_DESCRIPTION,
     COUNT,
     SENTENCE,
-    UNKNOWN
-}
+    UNKNOWN;
 
-val mapPositionToWordType = mapOf(
-    0 to WordTypeEnum.COUNT,
-    1 to WordTypeEnum.OBJECT_DESCRIPTION,
-    2 to WordTypeEnum.OBJECT,
-    3 to WordTypeEnum.OBJECT_ACTION,
-    4 to WordTypeEnum.ADDITION_OBJECT_DESCRIPTION,
-    5 to WordTypeEnum.ADDITION_OBJECT
-)
+    companion object {
+        fun of(wordGroupPosition: Int): WordTypeEnum {
+            return when (wordGroupPosition) {
+                0 -> COUNT
+                1 -> OBJECT_DESCRIPTION
+                2 -> OBJECT
+                3 -> OBJECT_ACTION
+                4 -> ADDITION_OBJECT_DESCRIPTION
+                5 -> ADDITION_OBJECT
+                else -> UNKNOWN
+            }
+        }
+    }
+}

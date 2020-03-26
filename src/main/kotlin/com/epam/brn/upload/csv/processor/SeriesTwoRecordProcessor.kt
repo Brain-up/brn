@@ -2,32 +2,24 @@ package com.epam.brn.upload.csv.processor
 
 import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.constant.WordTypeEnum
-import com.epam.brn.constant.mapPositionToWordType
-import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
+import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.service.ExerciseService
-import com.epam.brn.service.ResourceService
-import com.epam.brn.service.SeriesService
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.upload.csv.record.SeriesTwoRecord
 import org.apache.commons.lang3.StringUtils
-import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class SeriesTwoRecordProcessor(
-    private val resourceService: ResourceService,
-    private val seriesService: SeriesService,
-    private val exerciseService: ExerciseService,
+    private val seriesRepository: SeriesRepository,
+    private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository
 ) {
-    private val log = logger()
-
-    val EXERCISE_NAME = "exerciseName"
-    val LEVEL = "level"
-    val WORDS = "words"
 
     @Value(value = "\${brn.audio.file.second.series.path}")
     private lateinit var audioFileUrl: String
@@ -35,102 +27,86 @@ class SeriesTwoRecordProcessor(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureFileUrl: String
 
-    fun process(exercises: MutableList<Map<String, Any>>): List<Exercise> {
-        val result = exercises.map { parsedValue -> convert(parsedValue) }
-        exerciseRepository.saveAll(result)
-        return result
-    }
+    fun process(records: MutableList<SeriesTwoRecord>): List<Exercise> {
+        val exercises = mutableSetOf<Exercise>()
 
-    private fun convert(source: Map<String, Any>): Exercise {
-        val target = createOrGetExercise(source)
-        convertExercise(source, target)
-        convertTask(target)
-        convertResources(source, target)
+        val series = seriesRepository.findById(2L).orElse(null)
+        records.forEach {
+            val answerOptions = extractAnswerOptions(it)
+            resourceRepository.saveAll(answerOptions)
 
-        return target
-    }
+            val exercise = extractExercise(it, series)
+            exercise.addTask(extractTask(exercise, answerOptions))
 
-    private fun createOrGetExercise(source: Map<String, Any>): Exercise {
-        val name = source[EXERCISE_NAME].toString()
-        val level = source[LEVEL].toString().toInt()
-
-        return try {
-            val exercise = exerciseService.findExerciseByNameAndLevel(name, level)
-
-            log.debug("exercise with name {$name} and level {$level} is already persisted. Entity Will be updated")
-
-            exercise
-        } catch (e: EntityNotFoundException) {
-            Exercise(name = name, level = level)
+            exerciseRepository.save(exercise)
+            exercises.add(exercise)
         }
+
+        return exercises.toMutableList()
     }
 
-    private fun convertExercise(source: Map<String, Any>, target: Exercise) {
-        target.description = source[EXERCISE_NAME].toString()
-        target.exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString()
-        target.series = seriesService.findSeriesForId(2L)
-    }
-
-    private fun convertTask(target: Exercise) {
-        val task = Task()
-        task.serialNumber = 2
-        task.exercise = target
-        target.tasks.add(task)
-    }
-
-    private fun convertResources(source: Map<String, Any>, target: Exercise) {
-        val templateList = arrayListOf<String>()
-
-        source[WORDS]
-            .toString()
-            .split(";")
-            .mapIndexed { index, element ->
-                val wordType = mapPositionToWordType[index]
-                val resources = createOrGetResources(element, wordType)
-
-                if (resources.isNotEmpty()) {
-                    templateList.add(wordType.toString())
-                }
-
-                resources
-            }
-            .map { resource -> target.tasks.first().answerOptions.addAll(resource) }
-
-        target.template = templateList.joinToString(StringUtils.SPACE, "<", ">")
-    }
-
-    private fun createOrGetResources(words: String, wordType: WordTypeEnum?): List<Resource> {
-        return words.split(StringUtils.SPACE)
-            .asSequence()
-            .map { word -> word.replace("[()]".toRegex(), StringUtils.EMPTY) }
-            .filter { word -> StringUtils.isNotEmpty(word) }
-            .map { word -> getResourceByWord(word) }
-            .map { resource -> setWordType(resource, wordType) }
+    private fun extractAnswerOptions(record: SeriesTwoRecord): MutableSet<Resource> {
+        return extractWordGroups(record)
             .map {
-                resourceService.save(it)
-                it
+                splitOnWords(it.second).map { word: String ->
+                    toResource(word, it.first)
+                }
             }
-            .toList()
+            .flatten().toMutableSet()
     }
 
-    private fun getResourceByWord(word: String): Resource {
-        return resourceService.findFirstResourceByWordLike(word)
-            ?: createAndGetResource(word, WordTypeEnum.UNKNOWN.toString())
+    private fun extractWordGroups(record: SeriesTwoRecord): Sequence<Pair<WordTypeEnum, String>> {
+        return record.words
+            .asSequence()
+            .map { toStringWithoutBraces(it) }
+            .mapIndexed { wordGroupPosition, wordGroup ->
+                WordTypeEnum.of(wordGroupPosition) to wordGroup
+            }
+            .filter { StringUtils.isNotBlank(it.second) }
     }
 
-    private fun createAndGetResource(word: String, wordType: String): Resource {
-        val resource = Resource()
-        resource.word = word
-        resource.wordType = WordTypeEnum.valueOf(wordType).toString()
-        resource.audioFileUrl = audioFileUrl.format(word)
-        resource.pictureFileUrl = pictureFileUrl.format(word)
+    private fun splitOnWords(sentence: String): List<String> = sentence.split(' ').map { it.trim() }
 
+    private fun toResource(word: String, wordType: WordTypeEnum): Resource {
+        val resource = resourceRepository.findFirstByWordLike(word)
+            .orElse(
+                Resource(
+                    word = word,
+                    audioFileUrl = audioFileUrl.format(word),
+                    pictureFileUrl = pictureFileUrl.format(word)
+                )
+            )
+        resource.wordType = wordType.toString()
         return resource
     }
 
-    private fun setWordType(resource: Resource, wordType: WordTypeEnum?): Resource {
-        resource.wordType = wordType?.toString() ?: WordTypeEnum.UNKNOWN.toString()
-        log.debug("Word type for resource with id {${resource.id}} was updated to {${resource.wordType}}")
-        return resource
+    private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
+
+    private fun extractExercise(record: SeriesTwoRecord, series: Series): Exercise {
+        return exerciseRepository
+            .findExerciseByNameAndLevel(record.exerciseName, record.level)
+            .orElse(
+                Exercise(
+                    series = series,
+                    name = record.exerciseName,
+                    description = record.exerciseName,
+                    template = calculateTemplate(record),
+                    exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES.toString(),
+                    level = record.level
+                )
+            )
+    }
+
+    private fun calculateTemplate(record: SeriesTwoRecord): String {
+        return extractWordGroups(record)
+            .joinToString(StringUtils.SPACE, "<", ">") { it.first.toString() }
+    }
+
+    private fun extractTask(exercise: Exercise, answerOptions: MutableSet<Resource>): Task {
+        return Task(
+            serialNumber = 2,
+            answerOptions = answerOptions,
+            exercise = exercise
+        )
     }
 }
