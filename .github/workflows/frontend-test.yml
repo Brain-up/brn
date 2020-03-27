@@ -7,11 +7,11 @@ on:
       - 'frontend/**'
       - '.github/workflows/frontend-test.yml'
 
-jobs: 
-  test: 
+jobs:
+  test:
     name: Frontend tests
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@master
       - uses: rwjblue/setup-volta@v1
       - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
@@ -27,11 +27,14 @@ jobs:
       - name: Run tests
         working-directory: ./frontend
         run: yarn test
+      - name: Run test deploy
+        working-directory: ./frontend
+        run: node node_modules/ember-cli/bin/ember deploy production
 
   coverage:
     name: Test coverage changes
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v1
       - uses: rwjblue/setup-volta@v1
       - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - EPMLABSBRN-344
 
 jobs:
   build:
