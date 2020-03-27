@@ -31,22 +31,27 @@ class AuthorizationAuthenticationIT {
 
     @Autowired
     lateinit var mockMvc: MockMvc
+
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
+
     @Autowired
     lateinit var authorityRepository: AuthorityRepository
+
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
 
     internal val email: String = "admin@admin.com"
-    internal val password: String = "admin"
+    internal val passw: String = "admin"
 
     @BeforeEach
     fun initBeforeEachTest() {
         val authName = "ROLE_ADMIN"
-        authorityRepository.save(Authority(authorityName = authName))
-        val savedAuth = authorityRepository.findAuthorityByAuthorityName(authName)
-        val password = passwordEncoder.encode(password)
+        val authority = authorityRepository.findAuthorityByAuthorityName(authName)
+            ?: authorityRepository.save(Authority(authorityName = authName))
+
+        val password = passwordEncoder.encode(passw)
+
         val userAccount =
             UserAccount(
                 firstName = "testUserFirstName",
@@ -55,7 +60,8 @@ class AuthorizationAuthenticationIT {
                 email = email,
                 active = true
             )
-        userAccount.authoritySet.add(savedAuth!!)
+
+        userAccount.authoritySet.add(authority)
         userAccountRepository.save(userAccount)
     }
 
@@ -70,76 +76,78 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc.perform(
             get(BrnPath.GROUPS)
-                .with(user(this.email).password(this.password).roles("USER", "ADMIN"))
+                .with(user(this.email).password(this.passw).roles("USER", "ADMIN"))
         )
+
         // THEN
-        resultAction
-            .andExpect(status().isOk)
+        resultAction.andExpect(status().isOk)
     }
 
     @Test
     fun `test get groups with with no authorities`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(user(this.email).password(password).roles())
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(BrnPath.GROUPS).with(user(this.email).password(passw).roles())
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().`is`(403))
+        resultAction.andExpect(status().`is`(403))
     }
 
     @Test
     fun `test login with valid credentials`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(formLogin().user(this.email).password(this.password))
+        val resultAction = this.mockMvc
+            .perform(formLogin().user(this.email).password(this.passw))
+
         // THEN
-        resultAction
-            .andExpect(authenticated())
+        resultAction.andExpect(authenticated())
     }
 
     @Test
     fun `test login with invalid credentials`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(formLogin().user(this.email).password("wrong"))
+        val resultAction = this.mockMvc
+            .perform(formLogin().user(this.email).password("wrong"))
+
         // THEN
-        resultAction
-            .andExpect(unauthenticated())
+        resultAction.andExpect(unauthenticated())
     }
 
     @Test
     fun `test get groups with no authorities`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(user(this.email).password("wrong").roles())
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(BrnPath.GROUPS).with(user(this.email).password("wrong").roles())
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().`is`(403))
+        resultAction.andExpect(status().`is`(403))
     }
 
     @Test
     fun `test get groups basic authentication`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(httpBasic(this.email, this.password))
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(BrnPath.GROUPS).with(httpBasic(this.email, this.passw))
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().isOk)
+        resultAction.andExpect(status().isOk)
     }
 
     @Test
     fun `test get groups basic authentication invalid password`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(httpBasic(this.email, "wrong"))
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(BrnPath.GROUPS).with(httpBasic(this.email, "wrong"))
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().isUnauthorized)
+        resultAction.andExpect(status().isUnauthorized)
     }
 }
