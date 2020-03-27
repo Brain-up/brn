@@ -3,7 +3,7 @@ name: Docker Build and Push images
 on:
   push:
     branches:
-      - dev
+      - master
       - EPMLABSBRN-344
 
 jobs:
