@@ -1,18 +1,26 @@
-name: Docker Image CI
+name: Docker Build and Push images
 
 on:
   push:
     branches:
       - dev
+      - EPMLABSBRN-344
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Build the Docker image for backend
-      run: docker build . --file Dockerfile --tag brainup/brn-backend
-    - name: Build the Docker image for frontent
-      run: docker build . --file Dockerfile_frontend --tag brainup/brn-frontend
-    - name: List of docker images
-      run: docker images
+    - uses: actions/checkout@master
+    - name: Publish to Registry brainup/brn-backend
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-backend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Publish to Registry brainup/brn-frontend
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-frontend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile_frontend
