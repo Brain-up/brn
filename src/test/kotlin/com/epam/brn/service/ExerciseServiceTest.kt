@@ -30,9 +30,6 @@ internal class ExerciseServiceTest {
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
-    lateinit var taskService: TaskService
-
     @Test
     fun `should get exercises by user`() {
         // GIVEN
