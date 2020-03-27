@@ -41,8 +41,8 @@ class AuthorizationAuthenticationIT {
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
 
-    internal val email: String = "admin@admin.com"
-    internal val passw: String = "admin"
+    internal val email: String = "testAdmin@admin.com"
+    internal val passw: String = "testAdmin"
 
     @BeforeEach
     fun initBeforeEachTest() {
