@@ -90,10 +90,10 @@ internal class AuthenticationBasicServiceImplTest {
     fun `should create BasicHeader with Base64`() {
         // GIVEN
         val email = "admin@admin.com"
-        val password = "admin"
+        val passw = "admin"
         val basicHeader = "YWRtaW5AYWRtaW4uY29tOmFkbWlu"
         // WHEN
-        val actualResult = authenticationBasicServiceImpl.getBasicHeader(email, password)
+        val actualResult = authenticationBasicServiceImpl.getBasicHeader(email, passw)
         // THEN
         assertEquals(basicHeader, actualResult)
     }
