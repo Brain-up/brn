@@ -27,8 +27,8 @@ data class SeriesOneRecord(
 
     @JsonProperty("wordType")
     val wordType: String
-) : CsvRecord() {
+) {
     companion object {
-        const val HEADER = "level exerciseName orderNumber word audioFileName pictureFileName words wordType"
+        const val FORMAT = "level exerciseName orderNumber word audioFileName pictureFileName words wordType"
     }
 }

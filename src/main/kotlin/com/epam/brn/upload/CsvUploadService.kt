@@ -18,15 +18,23 @@ import org.springframework.web.multipart.MultipartFile
 @Component
 class CsvUploadService(
     private val csvParser: CsvParser,
-    private val recordProcessor: RecordProcessor
+    private val recordProcessors: List<RecordProcessor<out Any, out Any>>
 ) {
 
     @Value("\${brn.dataFormatNumLines}")
     val dataFormatLinesCount = 5
 
+    @Suppress("UNCHECKED_CAST")
     fun load(inputStream: InputStream): List<Any> {
         val records = csvParser.parse(inputStream)
-        return recordProcessor.process(records)
+
+        return recordProcessors.stream()
+            .filter { it.isApplicable(records.first()) }
+            .findFirst()
+            .orElseThrow {
+                RuntimeException("There is no applicable processor for type '${records.first().javaClass}'")
+            }
+            .process(records as List<Nothing>)
     }
 
     @Throws(FileFormatException::class)
@@ -38,7 +46,7 @@ class CsvUploadService(
         @Suppress("UNCHECKED_CAST")
         return when (seriesId.toInt()) {
             1, 2, 3 -> load(file.inputStream) as List<Exercise>
-            else -> throw IllegalArgumentException("There no one strategy yet for seriesId = $seriesId")
+            else -> throw IllegalArgumentException("Loading for seriesId = $seriesId is not supported yet.")
         }
     }
 

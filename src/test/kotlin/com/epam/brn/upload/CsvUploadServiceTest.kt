@@ -21,7 +21,7 @@ internal class CsvUploadServiceTest {
     lateinit var csvParser: CsvParser
 
     @Mock
-    lateinit var recordProcessor: RecordProcessor
+    lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
 
     @Test
     fun `should get series file format`() {

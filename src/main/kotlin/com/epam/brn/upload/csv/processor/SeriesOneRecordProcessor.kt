@@ -14,18 +14,24 @@ import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SeriesOneRecordProcessor(
     var seriesRepository: SeriesRepository,
     var resourceRepository: ResourceRepository,
     var exerciseRepository: ExerciseRepository
-) {
+) : RecordProcessor<SeriesOneRecord, Exercise> {
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    fun process(records: List<SeriesOneRecord>): List<Exercise> {
+    override fun isApplicable(record: Any): Boolean {
+        return record is SeriesOneRecord
+    }
+
+    @Transactional
+    override fun process(records: List<SeriesOneRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(1L).orElse(null)

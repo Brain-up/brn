@@ -7,7 +7,9 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
+import org.springframework.stereotype.Component
 
+@Component
 class GroupRecordMappingIteratorProvider : MappingIteratorProvider<GroupRecord> {
 
     override fun iterator(inputStream: InputStream): MappingIterator<GroupRecord> {
@@ -26,5 +28,9 @@ class GroupRecordMappingIteratorProvider : MappingIteratorProvider<GroupRecord> 
             .readerWithTypedSchemaFor(GroupRecord::class.java)
             .with(csvSchema)
             .readValues(inputStream)
+    }
+
+    override fun isApplicable(format: String): Boolean {
+        return GroupRecord.FORMAT == format
     }
 }

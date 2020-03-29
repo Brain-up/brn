@@ -1,5 +1,10 @@
 package com.epam.brn.upload.csv.parser
 
+import com.epam.brn.upload.csv.parser.iterator.impl.GroupRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesGenericRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesOneRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesThreeRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
 import com.epam.brn.upload.csv.record.SeriesOneRecord
@@ -11,7 +16,15 @@ import org.junit.jupiter.api.assertThrows
 
 class CsvParserTest {
 
-    private val parser = CsvParser()
+    private val parser = CsvParser(
+        listOf(
+            GroupRecordMappingIteratorProvider(),
+            SeriesGenericRecordMappingIteratorProvider(),
+            SeriesOneRecordMappingIteratorProvider(),
+            SeriesTwoRecordMappingIteratorProvider(),
+            SeriesThreeRecordMappingIteratorProvider()
+        )
+    )
 
     @Test
     fun `should parse Tasks`() {

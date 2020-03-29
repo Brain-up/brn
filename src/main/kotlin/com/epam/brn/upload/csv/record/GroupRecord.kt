@@ -13,8 +13,8 @@ data class GroupRecord(
 
     @JsonProperty("description")
     val description: String
-) : CsvRecord() {
+) {
     companion object {
-        const val HEADER = "groupId, name, description"
+        const val FORMAT = "groupId, name, description"
     }
 }

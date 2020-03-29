@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
+import org.springframework.stereotype.Component
 
+@Component
 class SeriesOneRecordMappingIteratorProvider :
     MappingIteratorProvider<SeriesOneRecord> {
 
@@ -25,5 +27,9 @@ class SeriesOneRecordMappingIteratorProvider :
             .readerWithTypedSchemaFor(SeriesOneRecord::class.java)
             .with(csvSchema)
             .readValues(inputStream)
+    }
+
+    override fun isApplicable(format: String): Boolean {
+        return SeriesOneRecord.FORMAT == format
     }
 }

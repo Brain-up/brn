@@ -16,8 +16,8 @@ data class SeriesGenericRecord(
 
     @JsonProperty("description")
     val description: String
-) : CsvRecord() {
+) {
     companion object {
-        const val HEADER = "groupId, seriesId, name, description"
+        const val FORMAT = "groupId, seriesId, name, description"
     }
 }

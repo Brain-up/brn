@@ -30,6 +30,7 @@ class GoogleCloudServiceTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should return correct folder structure`() {
         // GIVEN
         val resources: ArrayList<Blob> = ArrayList()

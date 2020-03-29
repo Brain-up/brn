@@ -1,17 +1,6 @@
 package com.epam.brn.upload.csv.parser
 
 import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.GroupRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesGenericRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesOneRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesThreeRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesTwoRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.record.CsvRecord
-import com.epam.brn.upload.csv.record.GroupRecord
-import com.epam.brn.upload.csv.record.SeriesGenericRecord
-import com.epam.brn.upload.csv.record.SeriesOneRecord
-import com.epam.brn.upload.csv.record.SeriesThreeRecord
-import com.epam.brn.upload.csv.record.SeriesTwoRecord
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -22,7 +11,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class CsvParser {
+class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {
 
     val log = logger()
 
@@ -30,9 +19,9 @@ class CsvParser {
         const val ARRAY_OFFSET = -1
     }
 
-    fun parse(inputStream: InputStream): List<CsvRecord> {
+    fun parse(inputStream: InputStream): List<Any> {
         ByteArrayInputStream(IOUtils.toByteArray(inputStream)).use {
-            val parsed = mutableListOf<CsvRecord>()
+            val parsed = mutableListOf<Any>()
             val errors = mutableListOf<String>()
 
             val originalLines = readOriginalLines(it)
@@ -51,9 +40,7 @@ class CsvParser {
                     log.debug("Failed to parse line $lineNumberInFile ", e)
                 }
             }
-            if (errors.isNotEmpty()) throw ParseException(
-                errors
-            )
+            if (errors.isNotEmpty()) throw ParseException(errors)
 
             return parsed
         }
@@ -67,18 +54,15 @@ class CsvParser {
         return originalLines
     }
 
-    private fun getProvider(header: String): MappingIteratorProvider<out CsvRecord> {
-        return when (header) {
-            GroupRecord.HEADER -> GroupRecordMappingIteratorProvider()
-            SeriesGenericRecord.HEADER -> SeriesGenericRecordMappingIteratorProvider()
-            SeriesOneRecord.HEADER -> SeriesOneRecordMappingIteratorProvider()
-            SeriesTwoRecord.HEADER -> SeriesTwoRecordMappingIteratorProvider()
-            SeriesThreeRecord.HEADER -> SeriesThreeRecordMappingIteratorProvider()
-            else -> throw ParseException()
-        }
+    private fun getProvider(header: String): MappingIteratorProvider<out Any> {
+        return iteratorProviders.stream()
+            .filter { it.isApplicable(header) }
+            .findFirst()
+            .orElseThrow { ParseException("There is no applicable iterator provider for format '$header'.") }
     }
 
-    class ParseException() : RuntimeException("Parsing error. Please check csv file content format.") {
+    class ParseException(message: String = "Parsing error. Please check csv file content format.") :
+        RuntimeException(message) {
 
         lateinit var errors: List<String>
 
