@@ -1,7 +1,5 @@
 package com.epam.brn.config
 
-import com.epam.brn.constant.BrnRoles.ADMIN
-import com.epam.brn.constant.BrnRoles.USER
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,6 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class WebSecurityBasicConfiguration(
     @Qualifier("brainUpUserDetailService") brainUpUserDetailService: UserDetailsService
 ) : WebSecurityConfigurerAdapter() {
+
+    companion object {
+        const val ADMIN = "ADMIN"
+        const val USER = "USER"
+    }
 
     private val userDetailsService: UserDetailsService = brainUpUserDetailService
 

@@ -1,7 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.constant.BrnRoles.AUTH_ROLE_ADMIN
-import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -62,8 +60,8 @@ class InitialDataLoader(
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        val adminAuthority = authorityService.save(Authority(authorityName = AUTH_ROLE_ADMIN))
-        val userAuthority = authorityService.save(Authority(authorityName = AUTH_ROLE_USER))
+        val adminAuthority = authorityService.save(Authority(authorityName = "ROLE_ADMIN"))
+        val userAuthority = authorityService.save(Authority(authorityName = "ROLE_USER"))
         val admin = addAdminUser(adminAuthority)
         val listOfUsers = addDefaultUsers(userAuthority)
         listOfUsers.add(admin)
