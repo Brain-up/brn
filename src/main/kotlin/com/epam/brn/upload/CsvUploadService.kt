@@ -1,7 +1,6 @@
 package com.epam.brn.upload
 
 import com.epam.brn.exception.FileFormatException
-import com.epam.brn.job.CsvUtils
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
@@ -9,7 +8,6 @@ import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.LineNumberReader
-import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -19,6 +17,24 @@ class CsvUploadService(
     private val csvParser: CsvParser,
     private val recordProcessors: List<RecordProcessor<out Any, out Any>>
 ) {
+    companion object {
+
+        private val csvContentTypes = listOf(
+            "text/csv",
+            "application/vnd.ms-excel",
+            "text/plain",
+            "text/tsv",
+            "application/octet-stream"
+        )
+
+        fun isCsvContentType(contentType: String?): Boolean {
+            return contentType != null && csvContentTypes.contains(contentType)
+        }
+
+        fun isNotCsvContentType(contentType: String?): Boolean {
+            return !isCsvContentType(contentType)
+        }
+    }
 
     @Value("\${brn.dataFormatNumLines}")
     val dataFormatLinesCount = 5
@@ -38,7 +54,7 @@ class CsvUploadService(
     @Throws(FileFormatException::class)
     fun loadExercises(seriesId: Long, file: MultipartFile) {
 
-        if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
+        if (isNotCsvContentType(file.contentType))
             throw FileFormatException()
 
         @Suppress("UNCHECKED_CAST")
@@ -48,11 +64,9 @@ class CsvUploadService(
         }
     }
 
-    private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
-
     @Suppress("UNCHECKED_CAST")
     @Throws(FileFormatException::class)
-    fun loadTasks(file: File) = load(file.inputStream())
+    fun load(file: File) = load(file.inputStream())
 
     fun getSampleStringForSeriesFile(seriesId: Long): String {
         return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(seriesId))
