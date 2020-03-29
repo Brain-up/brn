@@ -4,10 +4,12 @@ import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
 import com.epam.brn.upload.csv.parser.iterator.impl.GroupRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.parser.iterator.impl.SeriesGenericRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.parser.iterator.impl.SeriesOneRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.parser.iterator.impl.SeriesThreeRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.parser.iterator.impl.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
 import com.epam.brn.upload.csv.record.SeriesOneRecord
+import com.epam.brn.upload.csv.record.SeriesThreeRecord
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -37,6 +39,9 @@ class CsvParser {
 
     fun parseSeriesTwoExerciseRecords(inputStream: InputStream): MutableList<Map<String, Any>> =
         parse(inputStream, SeriesTwoRecordMappingIteratorProvider())
+
+    fun parseSeriesThreeExerciseRecords(inputStream: InputStream): MutableList<SeriesThreeRecord> =
+        parse(inputStream, SeriesThreeRecordMappingIteratorProvider())
 
     private final inline fun <reified ParsedType> parse(
         inputStream: InputStream,

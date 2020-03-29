@@ -3,6 +3,7 @@ package com.epam.brn.upload.csv.parser
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
 import com.epam.brn.upload.csv.record.SeriesOneRecord
+import com.epam.brn.upload.csv.record.SeriesThreeRecord
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -98,6 +99,47 @@ class CsvParserTest {
             listOf(
                 SeriesGenericRecord(2, 1, "Распознование слов", "Распознование слов"),
                 SeriesGenericRecord(2, 2, "Составление предложений", "Составление предложений")
+            )
+        )
+    }
+
+    @Test
+    fun `should parse exercise for Series 3`() {
+        val input = """
+                level,exerciseName,orderNumber,words,answerAudioFile,answerParts
+                1,Распознование предложений из 2 слов,1,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_бросает.mp3,(девочка бросает)
+                1,Распознование предложений из 2 слов,2,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_читает.mp3,(девочка читает)
+                1,Распознование предложений из 2 слов,3,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_рисует.mp3,(девочка рисует)
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+
+        val result = parser.parseSeriesThreeExerciseRecords(input)
+
+        assertThat(result).containsAll(
+            listOf(
+                SeriesThreeRecord(
+                    1,
+                    "Распознование предложений из 2 слов",
+                    1,
+                    mutableListOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
+                    "series3/девочка_бросает.mp3",
+                    "(девочка бросает)"
+                ),
+                SeriesThreeRecord(
+                    1,
+                    "Распознование предложений из 2 слов",
+                    2,
+                    mutableListOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
+                    "series3/девочка_читает.mp3",
+                    "(девочка читает)"
+                ),
+                SeriesThreeRecord(
+                    1,
+                    "Распознование предложений из 2 слов",
+                    3,
+                    mutableListOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
+                    "series3/девочка_рисует.mp3",
+                    "(девочка рисует)"
+                )
             )
         )
     }
