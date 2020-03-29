@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnParams.GROUP_ID
 import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
@@ -27,11 +26,10 @@ class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsServic
         return ResponseEntity.ok().body(BaseResponseDto(data = exerciseGroupsService.findAllGroups()))
     }
 
-    @GetMapping(value = ["/{$GROUP_ID}"])
+    @GetMapping(value = ["/{groupId}"])
     @ApiOperation("Get group by id")
-    fun getGroupById(
-        @PathVariable(GROUP_ID) groupId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = exerciseGroupsService.findGroupDtoById(groupId)))
+    fun getGroupById(@PathVariable("groupId") groupId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
+        return ResponseEntity.ok()
+            .body(BaseSingleObjectResponseDto(data = exerciseGroupsService.findGroupDtoById(groupId)))
     }
 }

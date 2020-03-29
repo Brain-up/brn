@@ -1,7 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnParams.SERIES_ID
-import com.epam.brn.constant.BrnParams.TASK_FILE
 import com.epam.brn.constant.BrnPath.LOAD_TASKS_FILE
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.upload.CsvUploadService
@@ -17,8 +15,8 @@ class LoadFilesController(private val csvUploadService: CsvUploadService) {
 
     @PostMapping(LOAD_TASKS_FILE)
     fun loadExercises(
-        @RequestParam(value = SERIES_ID) seriesId: Long,
-        @RequestParam(value = TASK_FILE) file: MultipartFile
+        @RequestParam(value = "seriesId") seriesId: Long,
+        @RequestParam(value = "taskFile") file: MultipartFile
     ): ResponseEntity<BaseResponseDto> {
         csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(HttpStatus.CREATED)
