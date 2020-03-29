@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
@@ -44,6 +43,8 @@ class AuthorizationAuthenticationIT {
     internal val email: String = "testAdmin@admin.com"
     internal val passw: String = "testAdmin"
 
+    private val baseUrl = "/groups"
+
     @BeforeEach
     fun initBeforeEachTest() {
         val authName = "ROLE_ADMIN"
@@ -75,7 +76,7 @@ class AuthorizationAuthenticationIT {
     fun `test get groups with valid credentials`() {
         // WHEN
         val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
+            get(baseUrl)
                 .with(user(this.email).password(this.passw).roles("USER", "ADMIN"))
         )
 
@@ -88,7 +89,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc
             .perform(
-                get(BrnPath.GROUPS).with(user(this.email).password(passw).roles())
+                get(baseUrl).with(user(this.email).password(passw).roles())
             )
 
         // THEN
@@ -120,7 +121,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc
             .perform(
-                get(BrnPath.GROUPS).with(user(this.email).password("wrong").roles())
+                get(baseUrl).with(user(this.email).password("wrong").roles())
             )
 
         // THEN
@@ -132,7 +133,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc
             .perform(
-                get(BrnPath.GROUPS).with(httpBasic(this.email, this.passw))
+                get(baseUrl).with(httpBasic(this.email, this.passw))
             )
 
         // THEN
@@ -144,7 +145,7 @@ class AuthorizationAuthenticationIT {
         // WHEN
         val resultAction = this.mockMvc
             .perform(
-                get(BrnPath.GROUPS).with(httpBasic(this.email, "wrong"))
+                get(baseUrl).with(httpBasic(this.email, "wrong"))
             )
 
         // THEN

@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -27,6 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @Tag("integration-test")
 @WithMockUser(username = "admin", roles = ["ADMIN"])
 class SeriesControllerIT {
+
+    private val baseUrl = "/series"
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
@@ -62,7 +63,7 @@ class SeriesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.SERIES)
+                .get(baseUrl)
                 .param("groupId", idGroup.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -84,7 +85,7 @@ class SeriesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.SERIES}/$seriesId")
+                .get("/series/$seriesId")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -102,7 +103,7 @@ class SeriesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.SERIES}/fileFormat/$seriesId")
+                .get("/series/fileFormat/$seriesId")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN

@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.constant.ExerciseType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -12,8 +11,6 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import java.time.LocalDate
-import java.time.LocalDateTime
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -30,6 +27,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,16 +37,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WithMockUser(username = "admin", roles = ["ADMIN"])
 class ExercisesControllerIT {
 
+    private val baseUrl = "/exercises"
+
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
+
     @Autowired
     lateinit var exerciseRepository: ExerciseRepository
+
     @Autowired
     lateinit var seriesRepository: SeriesRepository
+
     @Autowired
     lateinit var studyHistoryRepository: StudyHistoryRepository
+
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -71,7 +77,7 @@ class ExercisesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.EXERCISES)
+                .get(baseUrl)
                 .param("userId", existingUser.id.toString())
                 .param("seriesId", existingSeries.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +98,7 @@ class ExercisesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.EXERCISES + "/" + existingExercise.id)
+                .get(baseUrl + "/" + existingExercise.id)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN

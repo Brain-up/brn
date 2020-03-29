@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.ExerciseService
@@ -15,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.EXERCISES)
-@Api(value = BrnPath.EXERCISES, description = "Contains actions over exercises")
+@RequestMapping("/exercises")
+@Api(value = "/exercises", description = "Contains actions over exercises")
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping

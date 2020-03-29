@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnPath.LOAD_TASKS_FILE
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.upload.CsvUploadService
 import org.springframework.http.HttpStatus
@@ -13,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 class LoadFilesController(private val csvUploadService: CsvUploadService) {
 
-    @PostMapping(LOAD_TASKS_FILE)
+    @PostMapping("/loadTasksFile")
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile

@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.UserAccountService
@@ -20,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.USERS)
-@Api(value = BrnPath.USERS, description = "Contains actions over user details and accounts")
+@RequestMapping("/users")
+@Api(value = "/users", description = "Contains actions over user details and accounts")
 class UserDetailController(@Autowired val userAccountService: UserAccountService) {
 
     @PostMapping

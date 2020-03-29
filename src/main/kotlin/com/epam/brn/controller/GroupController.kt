@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.ExerciseGroupsService
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.GROUPS)
-@Api(value = BrnPath.GROUPS, description = "Contains actions over groups")
+@RequestMapping("/groups")
+@Api(value = "/groups", description = "Contains actions over groups")
 class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsService) {
 
     // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to

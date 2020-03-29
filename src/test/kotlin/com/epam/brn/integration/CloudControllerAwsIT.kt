@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,7 +29,7 @@ class CloudControllerAwsIT {
         val filePath = "tasks/\${filename}"
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.CLOUD}${BrnPath.UPLOAD}").queryParam("filePath", filePath)
+                .get("/cloud/upload").queryParam("filePath", filePath)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
