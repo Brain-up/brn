@@ -1,7 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseGroupDto
-import com.epam.brn.upload.csv.record.GroupRecord
+import com.epam.brn.upload.csv.group.GroupRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity

@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.processor
+package com.epam.brn.upload.csv
 
 interface RecordProcessor<Record, Entity> {
 

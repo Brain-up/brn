@@ -1,7 +1,6 @@
-package com.epam.brn.upload.csv.parser.iterator.impl
+package com.epam.brn.upload.csv.series1
 
-import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
-import com.epam.brn.upload.csv.record.SeriesOneRecord
+import com.epam.brn.upload.csv.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import java.io.InputStream

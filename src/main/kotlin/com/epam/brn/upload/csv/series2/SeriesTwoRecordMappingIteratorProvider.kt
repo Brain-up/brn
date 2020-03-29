@@ -1,7 +1,6 @@
-package com.epam.brn.upload.csv.parser.iterator.impl
+package com.epam.brn.upload.csv.series2
 
-import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
-import com.epam.brn.upload.csv.record.SeriesTwoRecord
+import com.epam.brn.upload.csv.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
@@ -9,7 +8,8 @@ import java.io.InputStream
 import org.springframework.stereotype.Component
 
 @Component
-class SeriesTwoRecordMappingIteratorProvider : MappingIteratorProvider<SeriesTwoRecord> {
+class SeriesTwoRecordMappingIteratorProvider :
+    MappingIteratorProvider<SeriesTwoRecord> {
 
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesTwoRecord> {
         val csvMapper = CsvMapper().apply {

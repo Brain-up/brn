@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.processor
+package com.epam.brn.upload.csv.series1
 
 import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
@@ -9,7 +9,7 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.upload.csv.record.SeriesOneRecord
+import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value

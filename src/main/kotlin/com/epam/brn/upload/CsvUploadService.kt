@@ -4,8 +4,8 @@ import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
 import com.epam.brn.model.Exercise
 import com.epam.brn.service.InitialDataLoader
-import com.epam.brn.upload.csv.parser.CsvParser
-import com.epam.brn.upload.csv.processor.RecordProcessor
+import com.epam.brn.upload.csv.CsvParser
+import com.epam.brn.upload.csv.RecordProcessor
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader

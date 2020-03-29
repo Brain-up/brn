@@ -1,6 +1,5 @@
-package com.epam.brn.upload.csv.parser
+package com.epam.brn.upload.csv
 
-import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream

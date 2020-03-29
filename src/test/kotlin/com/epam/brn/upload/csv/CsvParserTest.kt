@@ -1,14 +1,14 @@
-package com.epam.brn.upload.csv.parser
+package com.epam.brn.upload.csv
 
-import com.epam.brn.upload.csv.parser.iterator.impl.GroupRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesGenericRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesOneRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesThreeRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.parser.iterator.impl.SeriesTwoRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.record.GroupRecord
-import com.epam.brn.upload.csv.record.SeriesGenericRecord
-import com.epam.brn.upload.csv.record.SeriesOneRecord
-import com.epam.brn.upload.csv.record.SeriesThreeRecord
+import com.epam.brn.upload.csv.group.GroupRecord
+import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series.SeriesGenericRecord
+import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series1.SeriesOneRecord
+import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series3.SeriesThreeRecord
+import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -92,8 +92,16 @@ class CsvParserTest {
 
         assertThat(result).containsAll(
             listOf(
-                GroupRecord(1, "Неречевые упражнения", "Неречевые упражнения"),
-                GroupRecord(2, "Речевые упражнения", "Речевые упражнения")
+                GroupRecord(
+                    1,
+                    "Неречевые упражнения",
+                    "Неречевые упражнения"
+                ),
+                GroupRecord(
+                    2,
+                    "Речевые упражнения",
+                    "Речевые упражнения"
+                )
             )
         )
     }
@@ -110,8 +118,18 @@ class CsvParserTest {
 
         assertThat(result).containsAll(
             listOf(
-                SeriesGenericRecord(2, 1, "Распознавание слов", "Распознавание слов"),
-                SeriesGenericRecord(2, 2, "Составление предложений", "Составление предложений")
+                SeriesGenericRecord(
+                    2,
+                    1,
+                    "Распознавание слов",
+                    "Распознавание слов"
+                ),
+                SeriesGenericRecord(
+                    2,
+                    2,
+                    "Составление предложений",
+                    "Составление предложений"
+                )
             )
         )
     }

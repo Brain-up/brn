@@ -1,7 +1,7 @@
 package com.epam.brn.upload
 
-import com.epam.brn.upload.csv.parser.CsvParser
-import com.epam.brn.upload.csv.processor.RecordProcessor
+import com.epam.brn.upload.csv.CsvParser
+import com.epam.brn.upload.csv.RecordProcessor
 import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows

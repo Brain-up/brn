@@ -1,9 +1,9 @@
-package com.epam.brn.upload.csv.processor
+package com.epam.brn.upload.csv.series
 
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.ExerciseGroupsService
-import com.epam.brn.upload.csv.record.SeriesGenericRecord
+import com.epam.brn.upload.csv.RecordProcessor
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
