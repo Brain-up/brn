@@ -20,7 +20,7 @@ class LoadFilesController(private val csvUploadService: CsvUploadService) {
         @RequestParam(value = SERIES_ID) seriesId: Long,
         @RequestParam(value = TASK_FILE) file: MultipartFile
     ): ResponseEntity<BaseResponseDto> {
-        val result = csvUploadService.loadExercises(seriesId, file)
-        return ResponseEntity(BaseResponseDto(data = result), HttpStatus.CREATED)
+        csvUploadService.loadExercises(seriesId, file)
+        return ResponseEntity(HttpStatus.CREATED)
     }
 }

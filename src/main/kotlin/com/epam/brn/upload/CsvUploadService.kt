@@ -2,7 +2,6 @@ package com.epam.brn.upload
 
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
-import com.epam.brn.model.Exercise
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
@@ -25,12 +24,11 @@ class CsvUploadService(
     val dataFormatLinesCount = 5
 
     @Suppress("UNCHECKED_CAST")
-    fun load(inputStream: InputStream): List<Any> {
+    fun load(inputStream: InputStream) {
         val records = csvParser.parse(inputStream)
 
-        return recordProcessors.stream()
-            .filter { it.isApplicable(records.first()) }
-            .findFirst()
+        recordProcessors.stream()
+            .filter { it.isApplicable(records.first()) }.findFirst()
             .orElseThrow {
                 RuntimeException("There is no applicable processor for type '${records.first().javaClass}'")
             }
@@ -38,14 +36,14 @@ class CsvUploadService(
     }
 
     @Throws(FileFormatException::class)
-    fun loadExercises(seriesId: Long, file: MultipartFile): List<Exercise> {
+    fun loadExercises(seriesId: Long, file: MultipartFile) {
 
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException()
 
         @Suppress("UNCHECKED_CAST")
-        return when (seriesId.toInt()) {
-            1, 2, 3 -> load(file.inputStream) as List<Exercise>
+        when (seriesId.toInt()) {
+            1, 2, 3 -> load(file.inputStream)
             else -> throw IllegalArgumentException("Loading for seriesId = $seriesId is not supported yet.")
         }
     }
@@ -54,7 +52,7 @@ class CsvUploadService(
 
     @Suppress("UNCHECKED_CAST")
     @Throws(FileFormatException::class)
-    fun loadTasks(file: File): List<Exercise> = load(file.inputStream()) as List<Exercise>
+    fun loadTasks(file: File) = load(file.inputStream())
 
     fun getSampleStringForSeriesFile(seriesId: Long): String {
         return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(seriesId))

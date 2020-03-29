@@ -19,9 +19,9 @@ class SeriesGenericRecordProcessor(
 
     @Transactional
     override fun process(records: List<SeriesGenericRecord>): List<Series> {
-        val result = records
+        val series = records
             .map { Series(it, exerciseGroupsService.findGroupById(it.groupId)) }
 
-        return seriesRepository.saveAll(result).toList()
+        return seriesRepository.saveAll(series).toList()
     }
 }
