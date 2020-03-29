@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-import com.epam.brn.constant.ExerciseType
+import com.epam.brn.model.ExerciseType
 import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class TaskDtoForSingleWords(

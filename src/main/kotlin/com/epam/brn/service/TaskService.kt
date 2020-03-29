@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
-import com.epam.brn.constant.ExerciseType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
@@ -21,7 +21,8 @@ class TaskService(
     private val log = logger()
 
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
-        val exercise: Exercise = exerciseRepository.findById(exerciseId).orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
+        val exercise: Exercise = exerciseRepository.findById(exerciseId)
+            .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         return when (ExerciseType.valueOf(exercise.exerciseType)) {
             ExerciseType.SINGLE_WORDS -> tasks.map { task -> task.toSingleWordsDto() }
@@ -32,7 +33,8 @@ class TaskService(
 
     fun getTaskById(taskId: Long): Any {
         log.debug("Searching task with id=$taskId")
-        val task = taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
+        val task =
+            taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         return when (ExerciseType.valueOf(task.exercise!!.exerciseType)) {
             ExerciseType.SINGLE_WORDS -> task.toSingleWordsDto()
             ExerciseType.WORDS_SEQUENCES -> task.toSequenceWordsDto(task.exercise?.template)

@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.service.ExerciseService
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class ExerciseControllerTest {
     @InjectMocks
     lateinit var exerciseController: ExerciseController
+
     @Mock
     lateinit var exerciseService: ExerciseService
 

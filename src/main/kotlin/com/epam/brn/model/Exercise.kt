@@ -1,6 +1,5 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType

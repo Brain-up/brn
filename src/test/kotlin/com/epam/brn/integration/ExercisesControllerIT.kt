@@ -1,8 +1,8 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.ExerciseType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount

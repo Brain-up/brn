@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
-import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.nhaarman.mockito_kotlin.verify
