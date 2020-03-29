@@ -2,8 +2,8 @@
   "data": {
     "seriesId": 3,
     "id": 11,
-    "name": "Распознование предложений из 2 слов",
-    "description": "Распознование предложений из 2 слов",
+    "name": "Распознавание предложений из 2 слов",
+    "description": "Распознавание предложений из 2 слов",
     "level": 1,
     "exerciseType": "SENTENCE",
     "template": "<OBJECT OBJECT_ACTION>",

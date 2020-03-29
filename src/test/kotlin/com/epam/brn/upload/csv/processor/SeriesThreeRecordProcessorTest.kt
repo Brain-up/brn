@@ -33,8 +33,8 @@ internal class SeriesThreeRecordProcessorTest {
 
     private val series = Series(
         id = 3L,
-        name = "Распознование предложений",
-        description = "Распознование предложений",
+        name = "Распознавание предложений",
+        description = "Распознавание предложений",
         exerciseGroup = ExerciseGroup(
             id = 2L,
             name = "Речевые упражнения",
@@ -75,7 +75,7 @@ internal class SeriesThreeRecordProcessorTest {
             listOf(
                 SeriesThreeRecord(
                     level = 1,
-                    exerciseName = "Распознование предложений из 2 слов",
+                    exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "series3/девочка_бросает.mp3",
@@ -95,7 +95,7 @@ internal class SeriesThreeRecordProcessorTest {
             listOf(
                 SeriesThreeRecord(
                     level = 1,
-                    exerciseName = "Распознование предложений из 2 слов",
+                    exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "series3/девочка_бросает.mp3",
@@ -114,7 +114,7 @@ internal class SeriesThreeRecordProcessorTest {
             listOf(
                 SeriesThreeRecord(
                     level = 1,
-                    exerciseName = "Распознование предложений из 2 слов",
+                    exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "series3/девочка_бросает.mp3",
@@ -137,7 +137,7 @@ internal class SeriesThreeRecordProcessorTest {
             listOf(
                 SeriesThreeRecord(
                     level = 1,
-                    exerciseName = "Распознование предложений из 2 слов",
+                    exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "series3/девочка_бросает.mp3",
@@ -153,8 +153,8 @@ internal class SeriesThreeRecordProcessorTest {
     private fun createExercise(): Exercise {
         val exercise = Exercise(
             series = series,
-            name = "Распознование предложений из 2 слов",
-            description = "Распознование предложений из 2 слов",
+            name = "Распознавание предложений из 2 слов",
+            description = "Распознавание предложений из 2 слов",
             template = "<OBJECT OBJECT_ACTION>",
             exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
             level = 1
