@@ -5,5 +5,5 @@ import java.io.InputStream
 
 interface MappingIteratorProvider<ObjectType> {
 
-    fun iterator(file: InputStream): MappingIterator<ObjectType>
+    fun iterator(inputStream: InputStream): MappingIterator<ObjectType>
 }
