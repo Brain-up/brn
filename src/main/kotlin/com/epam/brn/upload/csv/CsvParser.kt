@@ -27,17 +27,24 @@ class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {
 
             val iteratorProvider = getProvider(originalLines.first())
             val parsingIterator = iteratorProvider.iterator(it)
-            while (parsingIterator.hasNextValue()) {
-                val lineNumberInFile = parsingIterator.currentLocation.lineNr
+            try {
+                while (parsingIterator.hasNextValue()) {
+                    val lineNumberInFile = parsingIterator.currentLocation.lineNr
 
-                val originalValue = originalLines[lineNumberInFile + ARRAY_OFFSET]
-                try {
-                    parsed.add(parsingIterator.nextValue())
-                    log.debug("Successfully parsed line $lineNumberInFile: '$originalValue'.")
-                } catch (e: Exception) {
-                    errors.add("Failed to parse line $lineNumberInFile: '$originalValue'. Error: ${e.localizedMessage}")
-                    log.debug("Failed to parse line $lineNumberInFile ", e)
+                    val originalValue = originalLines[lineNumberInFile + ARRAY_OFFSET]
+                    try {
+                        parsed.add(parsingIterator.nextValue())
+                        log.debug("Successfully parsed line $lineNumberInFile: '$originalValue'.")
+                    } catch (e: Exception) {
+                        errors.add(
+                            "Failed to parse line $lineNumberInFile: '$originalValue'. Error: ${e.localizedMessage}"
+                        )
+                        log.debug("Failed to parse line $lineNumberInFile", e)
+                    }
                 }
+            } catch (e: Exception) {
+                errors.add("Parse error: ${e.localizedMessage}")
+                log.debug(e)
             }
             if (errors.isNotEmpty()) throw ParseException(errors)
 
