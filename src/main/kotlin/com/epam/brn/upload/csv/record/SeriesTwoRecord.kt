@@ -11,4 +11,8 @@ data class SeriesTwoRecord(
     val orderNumber: Int,
     @JsonProperty("words")
     val words: List<String>
-)
+) : CsvRecord() {
+    companion object {
+        const val HEADER = "level,exerciseName,orderNumber,words"
+    }
+}

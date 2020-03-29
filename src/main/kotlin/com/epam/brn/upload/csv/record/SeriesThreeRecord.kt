@@ -15,4 +15,8 @@ data class SeriesThreeRecord(
     val answerAudioFile: String,
     @JsonProperty("answerParts")
     val answerParts: String
-)
+) : CsvRecord() {
+    companion object {
+        const val HEADER = "level,exerciseName,orderNumber,words,answerAudioFile,answerParts"
+    }
+}

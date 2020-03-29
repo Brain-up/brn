@@ -12,10 +12,10 @@ class SeriesGenericRecordProcessor(
     private val exerciseGroupsService: ExerciseGroupsService
 ) {
 
-    fun process(records: MutableList<SeriesGenericRecord>): Iterable<Series> {
+    fun process(records: List<SeriesGenericRecord>): List<Series> {
         val result = records
             .map { Series(it, exerciseGroupsService.findGroupById(it.groupId)) }
 
-        return seriesRepository.saveAll(result)
+        return seriesRepository.saveAll(result).toList()
     }
 }

@@ -6,6 +6,7 @@ import com.epam.brn.upload.csv.parser.iterator.impl.SeriesGenericRecordMappingIt
 import com.epam.brn.upload.csv.parser.iterator.impl.SeriesOneRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.parser.iterator.impl.SeriesThreeRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.parser.iterator.impl.SeriesTwoRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.record.CsvRecord
 import com.epam.brn.upload.csv.record.GroupRecord
 import com.epam.brn.upload.csv.record.SeriesGenericRecord
 import com.epam.brn.upload.csv.record.SeriesOneRecord
@@ -29,32 +30,15 @@ class CsvParser {
         const val ARRAY_OFFSET = -1
     }
 
-    fun parseGroupRecords(inputStream: InputStream): MutableList<GroupRecord> =
-        parse(inputStream, GroupRecordMappingIteratorProvider())
-
-    fun parseSeriesGenericRecords(inputStream: InputStream): MutableList<SeriesGenericRecord> =
-        parse(inputStream, SeriesGenericRecordMappingIteratorProvider())
-
-    fun parseSeriesOneExerciseRecords(inputStream: InputStream): MutableList<SeriesOneRecord> =
-        parse(inputStream, SeriesOneRecordMappingIteratorProvider())
-
-    fun parseSeriesTwoExerciseRecords(inputStream: InputStream): MutableList<SeriesTwoRecord> =
-        parse(inputStream, SeriesTwoRecordMappingIteratorProvider())
-
-    fun parseSeriesThreeExerciseRecords(inputStream: InputStream): MutableList<SeriesThreeRecord> =
-        parse(inputStream, SeriesThreeRecordMappingIteratorProvider())
-
-    private final inline fun <reified ParsedType> parse(
-        inputStream: InputStream,
-        mappingIteratorProvider: MappingIteratorProvider<ParsedType>
-    ): MutableList<ParsedType> {
+    fun parse(inputStream: InputStream): List<CsvRecord> {
         ByteArrayInputStream(IOUtils.toByteArray(inputStream)).use {
-            val parsed = mutableListOf<ParsedType>()
+            val parsed = mutableListOf<CsvRecord>()
             val errors = mutableListOf<String>()
 
-            val originalLines = getOriginalLines(it)
+            val originalLines = readOriginalLines(it)
 
-            val parsingIterator = mappingIteratorProvider.iterator(it)
+            val iteratorProvider = getProvider(originalLines.first())
+            val parsingIterator = iteratorProvider.iterator(it)
             while (parsingIterator.hasNextValue()) {
                 val lineNumberInFile = parsingIterator.currentLocation.lineNr
 
@@ -75,7 +59,7 @@ class CsvParser {
         }
     }
 
-    fun getOriginalLines(inputStream: InputStream): MutableList<String> {
+    fun readOriginalLines(inputStream: InputStream): MutableList<String> {
         val originalLines = BufferedReader(InputStreamReader(inputStream))
             .lines()
             .collect(Collectors.toList())
@@ -83,6 +67,23 @@ class CsvParser {
         return originalLines
     }
 
-    class ParseException(val errors: List<String>) :
-        RuntimeException("Parsing error. Please check csv file content format.")
+    private fun getProvider(header: String): MappingIteratorProvider<out CsvRecord> {
+        return when (header) {
+            GroupRecord.HEADER -> GroupRecordMappingIteratorProvider()
+            SeriesGenericRecord.HEADER -> SeriesGenericRecordMappingIteratorProvider()
+            SeriesOneRecord.HEADER -> SeriesOneRecordMappingIteratorProvider()
+            SeriesTwoRecord.HEADER -> SeriesTwoRecordMappingIteratorProvider()
+            SeriesThreeRecord.HEADER -> SeriesThreeRecordMappingIteratorProvider()
+            else -> throw ParseException()
+        }
+    }
+
+    class ParseException() : RuntimeException("Parsing error. Please check csv file content format.") {
+
+        lateinit var errors: List<String>
+
+        constructor(errors: List<String>) : this() {
+            this.errors = errors
+        }
+    }
 }

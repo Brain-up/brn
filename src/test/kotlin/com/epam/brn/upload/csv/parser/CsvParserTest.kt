@@ -21,7 +21,7 @@ class CsvParserTest {
                 2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseSeriesOneExerciseRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(
@@ -46,7 +46,7 @@ class CsvParserTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         assertThrows<CsvParser.ParseException> {
-            parser.parseSeriesOneExerciseRecords(input)
+            parser.parse(input)
         }
     }
 
@@ -59,7 +59,7 @@ class CsvParserTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val actual = assertThrows<CsvParser.ParseException> {
-            parser.parseSeriesOneExerciseRecords(input)
+            parser.parse(input)
         }.errors
 
         assertThat(actual[0]).startsWith("Failed to parse line 2: 'incorrect string 1'. Error: ")
@@ -75,7 +75,7 @@ class CsvParserTest {
                 2, Речевые упражнения, Речевые упражнения              
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseGroupRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(
@@ -93,7 +93,7 @@ class CsvParserTest {
                 2, 2, Составление предложений, Составление предложений         
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseSeriesGenericRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(
@@ -112,7 +112,7 @@ class CsvParserTest {
                 1,Распознавание предложений из 2 слов,3,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_рисует.mp3,(девочка рисует)
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseSeriesThreeExerciseRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(

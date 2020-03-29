@@ -27,7 +27,7 @@ class SeriesTwoRecordProcessor(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureFileUrl: String
 
-    fun process(records: MutableList<SeriesTwoRecord>): List<Exercise> {
+    fun process(records: List<SeriesTwoRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(2L).orElse(null)

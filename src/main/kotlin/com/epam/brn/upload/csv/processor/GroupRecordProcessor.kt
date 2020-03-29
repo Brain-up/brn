@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class GroupRecordProcessor(private val groupRepository: ExerciseGroupRepository) {
 
-    fun process(records: MutableList<GroupRecord>): Iterable<ExerciseGroup> {
-        return groupRepository.saveAll(records.map { ExerciseGroup(it) })
+    fun process(records: List<GroupRecord>): List<ExerciseGroup> {
+        return groupRepository.saveAll(records.map { ExerciseGroup(it) }).toList()
     }
 }
