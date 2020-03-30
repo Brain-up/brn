@@ -1,5 +1,5 @@
 package com.epam.brn.service
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -53,7 +53,7 @@ internal class TaskServiceTest {
                 .thenReturn(listOf(task1, task2))
             `when`(exerciseRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(exercise))
-            `when`(exercise.exerciseType).thenReturn(ExerciseTypeEnum.SINGLE_WORDS.toString())
+            `when`(exercise.exerciseType).thenReturn(ExerciseType.SINGLE_WORDS.toString())
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
             // THEN
@@ -70,7 +70,7 @@ internal class TaskServiceTest {
                 .thenReturn(Optional.of(task))
             `when`(task.exercise).thenReturn(exercise)
             `when`(task.toSingleWordsDto()).thenReturn(taskDto)
-            `when`(exercise.exerciseType).thenReturn(ExerciseTypeEnum.SINGLE_WORDS.toString())
+            `when`(exercise.exerciseType).thenReturn(ExerciseType.SINGLE_WORDS.toString())
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
             // THEN

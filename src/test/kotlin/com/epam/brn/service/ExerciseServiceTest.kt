@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
@@ -30,14 +30,11 @@ internal class ExerciseServiceTest {
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
-    lateinit var taskService: TaskService
-
     @Test
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
         val exerciseId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
@@ -55,7 +52,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user and series`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
         val exerciseId = 1L
         val seriesId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
@@ -74,7 +71,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
         `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN

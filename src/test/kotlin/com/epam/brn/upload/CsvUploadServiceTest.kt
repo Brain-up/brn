@@ -3,9 +3,9 @@ package com.epam.brn.upload
 import com.epam.brn.upload.csv.parser.CsvParser
 import com.epam.brn.upload.csv.processor.GroupRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesOneExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesOneRecordProcessor
 import com.epam.brn.upload.csv.processor.SeriesThreeRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesTwoExerciseRecordProcessor
+import com.epam.brn.upload.csv.processor.SeriesTwoRecordProcessor
 import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -31,10 +31,10 @@ internal class CsvUploadServiceTest {
     lateinit var seriesGenericRecordProcessor: SeriesGenericRecordProcessor
 
     @Mock
-    lateinit var seriesOneExerciseRecordProcessor: SeriesOneExerciseRecordProcessor
+    lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
 
     @Mock
-    lateinit var seriesTwoExerciseRecordProcessor: SeriesTwoExerciseRecordProcessor
+    lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
 
     @Mock
     lateinit var seriesThreeRecordProcessor: SeriesThreeRecordProcessor

@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils
 class SeriesOneRecordMappingIteratorProvider :
     MappingIteratorProvider<SeriesOneRecord> {
 
-    override fun iterator(file: InputStream): MappingIterator<SeriesOneRecord> {
+    override fun iterator(inputStream: InputStream): MappingIterator<SeriesOneRecord> {
         val csvMapper = CsvMapper()
 
         val csvSchema = csvMapper
@@ -24,6 +24,6 @@ class SeriesOneRecordMappingIteratorProvider :
         return csvMapper
             .readerWithTypedSchemaFor(SeriesOneRecord::class.java)
             .with(csvSchema)
-            .readValues(file)
+            .readValues(inputStream)
     }
 }

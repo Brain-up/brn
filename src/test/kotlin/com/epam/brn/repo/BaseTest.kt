@@ -1,6 +1,6 @@
 package com.epam.brn.repo
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
@@ -33,8 +33,8 @@ abstract class BaseTest {
             exerciseGroup = group
         )
         group.series.addAll(setOf(series1, series2))
-        val exercise = Exercise(name = "First", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
-        val secondExercise = Exercise(name = "Second", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
+        val exercise = Exercise(name = "First", description = "desc", level = 0, series = series1, exerciseType = ExerciseType.SINGLE_WORDS.toString())
+        val secondExercise = Exercise(name = "Second", description = "desc", level = 0, series = series1, exerciseType = ExerciseType.SINGLE_WORDS.toString())
         series1.exercises.addAll(listOf(exercise, secondExercise))
 
         val firstResource =

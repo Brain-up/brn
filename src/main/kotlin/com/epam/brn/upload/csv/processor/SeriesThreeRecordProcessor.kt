@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.processor
 
-import com.epam.brn.constant.ExerciseTypeEnum
-import com.epam.brn.constant.WordTypeEnum
+import com.epam.brn.constant.ExerciseType
+import com.epam.brn.constant.WordType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
@@ -57,7 +57,7 @@ class SeriesThreeRecordProcessor(
             .orElse(
                 Resource(
                     word = answerWord,
-                    wordType = WordTypeEnum.SENTENCE.toString(),
+                    wordType = WordType.SENTENCE.toString(),
                     audioFileUrl = record.answerAudioFile
                 )
             )
@@ -75,17 +75,17 @@ class SeriesThreeRecordProcessor(
             .flatten().toMutableSet()
     }
 
-    private fun extractWordGroups(record: SeriesThreeRecord): Sequence<Pair<WordTypeEnum, String>> {
+    private fun extractWordGroups(record: SeriesThreeRecord): Sequence<Pair<WordType, String>> {
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .mapIndexed { wordGroupPosition, wordGroup ->
-                calcWordTypeByWordGroupPosition(wordGroupPosition) to wordGroup
+                WordType.of(wordGroupPosition) to wordGroup
             }
             .filter { StringUtils.isNotBlank(it.second) }
     }
 
-    private fun toResource(word: String, wordType: WordTypeEnum): Resource {
+    private fun toResource(word: String, wordType: WordType): Resource {
         return resourceRepository
             .findFirstByWordLike(word)
             .orElse(
@@ -98,18 +98,6 @@ class SeriesThreeRecordProcessor(
             )
     }
 
-    private fun calcWordTypeByWordGroupPosition(wordPositionNumber: Int): WordTypeEnum {
-        return when (wordPositionNumber) {
-            0 -> WordTypeEnum.COUNT
-            1 -> WordTypeEnum.OBJECT_DESCRIPTION
-            2 -> WordTypeEnum.OBJECT
-            3 -> WordTypeEnum.OBJECT_ACTION
-            4 -> WordTypeEnum.ADDITION_OBJECT_DESCRIPTION
-            5 -> WordTypeEnum.ADDITION_OBJECT
-            else -> WordTypeEnum.UNKNOWN
-        }
-    }
-
     private fun extractExercise(record: SeriesThreeRecord, series: Series): Exercise {
         return exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             .orElse(
@@ -118,7 +106,7 @@ class SeriesThreeRecordProcessor(
                     name = record.exerciseName,
                     description = record.exerciseName,
                     template = calculateTemplate(record),
-                    exerciseType = ExerciseTypeEnum.SENTENCE.toString(),
+                    exerciseType = ExerciseType.SENTENCE.toString(),
                     level = record.level
                 )
             )

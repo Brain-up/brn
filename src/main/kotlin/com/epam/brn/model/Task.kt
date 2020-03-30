@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.TaskDtoForSentence
 import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.dto.TaskDtoForWordsSequences
@@ -52,7 +52,7 @@ data class Task(
 ) {
     fun toSingleWordsDto() = TaskDtoForSingleWords(
         id = id,
-        exerciseType = ExerciseTypeEnum.SINGLE_WORDS,
+        exerciseType = ExerciseType.SINGLE_WORDS,
         name = name,
         serialNumber = serialNumber,
         correctAnswer = correctAnswer?.toDto(),
@@ -61,7 +61,7 @@ data class Task(
 
     fun toSequenceWordsDto(template: String? = "") = TaskDtoForWordsSequences(
         id = id,
-        exerciseType = ExerciseTypeEnum.WORDS_SEQUENCES,
+        exerciseType = ExerciseType.WORDS_SEQUENCES,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
@@ -70,7 +70,7 @@ data class Task(
 
     fun toSentenceDto(template: String? = "") = TaskDtoForSentence(
         id = id,
-        exerciseType = ExerciseTypeEnum.SENTENCE,
+        exerciseType = ExerciseType.SENTENCE,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },

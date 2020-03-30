@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils
 
 class SeriesGenericRecordMappingIteratorProvider : MappingIteratorProvider<SeriesGenericRecord> {
 
-    override fun iterator(file: InputStream): MappingIterator<SeriesGenericRecord> {
+    override fun iterator(inputStream: InputStream): MappingIterator<SeriesGenericRecord> {
         val csvMapper = CsvMapper().apply {
             enable(CsvParser.Feature.TRIM_SPACES)
         }
@@ -25,6 +25,6 @@ class SeriesGenericRecordMappingIteratorProvider : MappingIteratorProvider<Serie
         return csvMapper
             .readerWithTypedSchemaFor(SeriesGenericRecord::class.java)
             .with(csvSchema)
-            .readValues(file)
+            .readValues(inputStream)
     }
 }
