@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.record
+package com.epam.brn.upload.csv.series1
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
@@ -27,4 +27,8 @@ data class SeriesOneRecord(
 
     @JsonProperty("wordType")
     val wordType: String
-)
+) {
+    companion object {
+        const val FORMAT = "level exerciseName orderNumber word audioFileName pictureFileName words wordType"
+    }
+}

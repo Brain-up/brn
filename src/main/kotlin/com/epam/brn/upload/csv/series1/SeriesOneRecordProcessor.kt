@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.processor
+package com.epam.brn.upload.csv.series1
 
 import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
@@ -9,23 +9,29 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.upload.csv.record.SeriesOneRecord
+import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SeriesOneRecordProcessor(
     var seriesRepository: SeriesRepository,
     var resourceRepository: ResourceRepository,
     var exerciseRepository: ExerciseRepository
-) {
+) : RecordProcessor<SeriesOneRecord, Exercise> {
 
     @Value(value = "\${brn.audio.file.default.path}")
     private lateinit var defaultAudioFileUrl: String
 
-    fun process(records: List<SeriesOneRecord>): List<Exercise> {
+    override fun isApplicable(record: Any): Boolean {
+        return record is SeriesOneRecord
+    }
+
+    @Transactional
+    override fun process(records: List<SeriesOneRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(1L).orElse(null)

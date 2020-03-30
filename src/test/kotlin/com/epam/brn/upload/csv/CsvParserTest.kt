@@ -1,9 +1,14 @@
-package com.epam.brn.upload.csv.parser
+package com.epam.brn.upload.csv
 
-import com.epam.brn.upload.csv.record.GroupRecord
-import com.epam.brn.upload.csv.record.SeriesGenericRecord
-import com.epam.brn.upload.csv.record.SeriesOneRecord
-import com.epam.brn.upload.csv.record.SeriesThreeRecord
+import com.epam.brn.upload.csv.group.GroupRecord
+import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series.SeriesGenericRecord
+import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series1.SeriesOneRecord
+import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series3.SeriesThreeRecord
+import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,7 +16,15 @@ import org.junit.jupiter.api.assertThrows
 
 class CsvParserTest {
 
-    private val parser = CsvParser()
+    private val parser = CsvParser(
+        listOf(
+            GroupRecordMappingIteratorProvider(),
+            SeriesGenericRecordMappingIteratorProvider(),
+            SeriesOneRecordMappingIteratorProvider(),
+            SeriesTwoRecordMappingIteratorProvider(),
+            SeriesThreeRecordMappingIteratorProvider()
+        )
+    )
 
     @Test
     fun `should parse Tasks`() {
@@ -21,7 +34,7 @@ class CsvParserTest {
                 2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseSeriesOneExerciseRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(
@@ -46,7 +59,7 @@ class CsvParserTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         assertThrows<CsvParser.ParseException> {
-            parser.parseSeriesOneExerciseRecords(input)
+            parser.parse(input)
         }
     }
 
@@ -59,7 +72,7 @@ class CsvParserTest {
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val actual = assertThrows<CsvParser.ParseException> {
-            parser.parseSeriesOneExerciseRecords(input)
+            parser.parse(input)
         }.errors
 
         assertThat(actual[0]).startsWith("Failed to parse line 2: 'incorrect string 1'. Error: ")
@@ -75,12 +88,20 @@ class CsvParserTest {
                 2, Речевые упражнения, Речевые упражнения              
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseGroupRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(
-                GroupRecord(1, "Неречевые упражнения", "Неречевые упражнения"),
-                GroupRecord(2, "Речевые упражнения", "Речевые упражнения")
+                GroupRecord(
+                    1,
+                    "Неречевые упражнения",
+                    "Неречевые упражнения"
+                ),
+                GroupRecord(
+                    2,
+                    "Речевые упражнения",
+                    "Речевые упражнения"
+                )
             )
         )
     }
@@ -93,12 +114,22 @@ class CsvParserTest {
                 2, 2, Составление предложений, Составление предложений         
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseSeriesGenericRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(
-                SeriesGenericRecord(2, 1, "Распознавание слов", "Распознавание слов"),
-                SeriesGenericRecord(2, 2, "Составление предложений", "Составление предложений")
+                SeriesGenericRecord(
+                    2,
+                    1,
+                    "Распознавание слов",
+                    "Распознавание слов"
+                ),
+                SeriesGenericRecord(
+                    2,
+                    2,
+                    "Составление предложений",
+                    "Составление предложений"
+                )
             )
         )
     }
@@ -112,7 +143,7 @@ class CsvParserTest {
                 1,Распознавание предложений из 2 слов,3,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_рисует.mp3,(девочка рисует)
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        val result = parser.parseSeriesThreeExerciseRecords(input)
+        val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(

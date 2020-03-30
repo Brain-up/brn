@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.processor
+package com.epam.brn.upload.csv.series2
 
 import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
@@ -10,7 +10,6 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.upload.csv.record.SeriesTwoRecord
 import com.nhaarman.mockito_kotlin.verify
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat

@@ -32,7 +32,7 @@ class InitialDataLoader(
     private val userAccountRepository: UserAccountRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
-    uploadService: CsvUploadService
+    private val uploadService: CsvUploadService
 ) {
     private val log = logger()
 
@@ -53,12 +53,11 @@ class InitialDataLoader(
         }
     }
 
-    private val sourceFileLoaders = mapOf<String, (it: InputStream) -> Any>(
-        "groups.csv" to uploadService::loadGroups,
-        "series.csv" to uploadService::loadSeries,
-        fileNameForSeries(1) to uploadService::loadTasksFor1Series,
-        fileNameForSeries(2) to uploadService::loadExercisesFor2Series,
-        fileNameForSeries(3) to uploadService::loadExercisesFor3Series
+    private val sourceFiles = listOf(
+        "groups.csv", "series.csv",
+        fileNameForSeries(1),
+        fileNameForSeries(2),
+        fileNameForSeries(3)
     )
 
     @EventListener(ApplicationReadyEvent::class)
@@ -129,10 +128,9 @@ class InitialDataLoader(
         if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath))
             throw IllegalArgumentException("$directoryToScan with initial data does not exist")
 
-        sourceFileLoaders.forEach {
+        sourceFiles.forEach {
             loadFromInputStream(
-                it.value,
-                Files.newInputStream(directoryToScan.resolve(it.key))
+                Files.newInputStream(directoryToScan.resolve(it))
             )
         }
     }
@@ -140,20 +138,16 @@ class InitialDataLoader(
     private fun initDataFromClassPath() {
         log.debug("Loading data from classpath 'initFiles' directory.")
 
-        sourceFileLoaders.forEach {
+        sourceFiles.forEach {
             loadFromInputStream(
-                it.value,
-                resourceLoader.getResource("classpath:initFiles/${it.key}").inputStream
+                resourceLoader.getResource("classpath:initFiles/$it").inputStream
             )
         }
     }
 
-    private fun loadFromInputStream(
-        load: (inputStream: InputStream) -> Any,
-        inputStream: InputStream
-    ) {
+    private fun loadFromInputStream(inputStream: InputStream) {
         try {
-            load(inputStream)
+            uploadService.load(inputStream)
         } finally {
             closeSilently(inputStream)
         }

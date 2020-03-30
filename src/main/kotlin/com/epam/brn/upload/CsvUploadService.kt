@@ -3,15 +3,9 @@ package com.epam.brn.upload
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.job.CsvUtils
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.Series
 import com.epam.brn.service.InitialDataLoader
-import com.epam.brn.upload.csv.parser.CsvParser
-import com.epam.brn.upload.csv.processor.GroupRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesGenericRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesOneRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesThreeRecordProcessor
-import com.epam.brn.upload.csv.processor.SeriesTwoRecordProcessor
+import com.epam.brn.upload.csv.CsvParser
+import com.epam.brn.upload.csv.RecordProcessor
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -24,26 +18,23 @@ import org.springframework.web.multipart.MultipartFile
 @Component
 class CsvUploadService(
     private val csvParser: CsvParser,
-    private val groupRecordProcessor: GroupRecordProcessor,
-    private val seriesGenericRecordProcessor: SeriesGenericRecordProcessor,
-    private val seriesOneRecordProcessor: SeriesOneRecordProcessor,
-    private val seriesTwoRecordProcessor: SeriesTwoRecordProcessor,
-    private val seriesThreeRecordProcessor: SeriesThreeRecordProcessor
+    private val recordProcessors: List<RecordProcessor<out Any, out Any>>
 ) {
 
     @Value("\${brn.dataFormatNumLines}")
     val dataFormatLinesCount = 5
 
-    fun loadGroups(inputStream: InputStream): Iterable<ExerciseGroup> {
-        val records = csvParser.parseGroupRecords(inputStream)
+    @Suppress("UNCHECKED_CAST")
+    fun load(inputStream: InputStream): List<Any> {
+        val records = csvParser.parse(inputStream)
 
-        return groupRecordProcessor.process(records)
-    }
-
-    fun loadSeries(inputStream: InputStream): Iterable<Series> {
-        val records = csvParser.parseSeriesGenericRecords(inputStream)
-
-        return seriesGenericRecordProcessor.process(records)
+        return recordProcessors.stream()
+            .filter { it.isApplicable(records.first()) }
+            .findFirst()
+            .orElseThrow {
+                RuntimeException("There is no applicable processor for type '${records.first().javaClass}'")
+            }
+            .process(records as List<Nothing>)
     }
 
     @Throws(FileFormatException::class)
@@ -52,36 +43,18 @@ class CsvUploadService(
         if (!isFileContentTypeCsv(file.contentType ?: StringUtils.EMPTY))
             throw FileFormatException()
 
+        @Suppress("UNCHECKED_CAST")
         return when (seriesId.toInt()) {
-            1 -> loadTasksFor1Series(file.inputStream)
-            2 -> loadExercisesFor2Series(file.inputStream)
-            3 -> loadExercisesFor3Series(file.inputStream)
-            else -> throw IllegalArgumentException("There no one strategy yet for seriesId = $seriesId")
+            1, 2, 3 -> load(file.inputStream) as List<Exercise>
+            else -> throw IllegalArgumentException("Loading for seriesId = $seriesId is not supported yet.")
         }
     }
 
     private fun isFileContentTypeCsv(contentType: String): Boolean = CsvUtils.isFileContentTypeCsv(contentType)
 
+    @Suppress("UNCHECKED_CAST")
     @Throws(FileFormatException::class)
-    fun loadTasks(file: File): List<Exercise> = loadTasksFor1Series(file.inputStream())
-
-    fun loadTasksFor1Series(inputStream: InputStream): List<Exercise> {
-        val records = csvParser.parseSeriesOneExerciseRecords(inputStream)
-
-        return seriesOneRecordProcessor.process(records)
-    }
-
-    fun loadExercisesFor2Series(inputStream: InputStream): List<Exercise> {
-        val records = csvParser.parseSeriesTwoExerciseRecords(inputStream)
-
-        return seriesTwoRecordProcessor.process(records)
-    }
-
-    fun loadExercisesFor3Series(inputStream: InputStream): List<Exercise> {
-        val records = csvParser.parseSeriesThreeExerciseRecords(inputStream)
-
-        return seriesThreeRecordProcessor.process(records)
-    }
+    fun loadTasks(file: File): List<Exercise> = load(file.inputStream()) as List<Exercise>
 
     fun getSampleStringForSeriesFile(seriesId: Long): String {
         return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(seriesId))

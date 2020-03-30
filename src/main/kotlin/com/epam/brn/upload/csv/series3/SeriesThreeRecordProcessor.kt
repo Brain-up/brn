@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.processor
+package com.epam.brn.upload.csv.series3
 
 import com.epam.brn.constant.ExerciseType
 import com.epam.brn.constant.WordType
@@ -9,7 +9,7 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.upload.csv.record.SeriesThreeRecord
+import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -20,7 +20,7 @@ class SeriesThreeRecordProcessor(
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
     private val seriesRepository: SeriesRepository
-) {
+) : RecordProcessor<SeriesThreeRecord, Exercise> {
 
     @Value(value = "\${brn.audio.file.second.series.path}")
     private lateinit var audioFileUrl: String
@@ -28,8 +28,12 @@ class SeriesThreeRecordProcessor(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureFileUrl: String
 
+    override fun isApplicable(record: Any): Boolean {
+        return record is SeriesThreeRecord
+    }
+
     @Transactional
-    fun process(records: List<SeriesThreeRecord>): List<Exercise> {
+    override fun process(records: List<SeriesThreeRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(3L).orElse(null)

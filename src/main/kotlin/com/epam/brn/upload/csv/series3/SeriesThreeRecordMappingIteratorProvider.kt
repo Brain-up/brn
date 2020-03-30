@@ -1,14 +1,16 @@
-package com.epam.brn.upload.csv.parser.iterator.impl
+package com.epam.brn.upload.csv.series3
 
-import com.epam.brn.upload.csv.parser.iterator.MappingIteratorProvider
-import com.epam.brn.upload.csv.record.SeriesThreeRecord
+import com.epam.brn.upload.csv.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
 import java.io.InputStream
 import org.apache.commons.lang3.StringUtils.SPACE
+import org.springframework.stereotype.Component
 
-class SeriesThreeRecordMappingIteratorProvider : MappingIteratorProvider<SeriesThreeRecord> {
+@Component
+class SeriesThreeRecordMappingIteratorProvider :
+    MappingIteratorProvider<SeriesThreeRecord> {
 
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesThreeRecord> {
         val csvMapper = CsvMapper().apply {
@@ -25,5 +27,9 @@ class SeriesThreeRecordMappingIteratorProvider : MappingIteratorProvider<SeriesT
             .readerWithTypedSchemaFor(SeriesThreeRecord::class.java)
             .with(csvSchema)
             .readValues(inputStream)
+    }
+
+    override fun isApplicable(format: String): Boolean {
+        return SeriesThreeRecord.FORMAT == format
     }
 }
