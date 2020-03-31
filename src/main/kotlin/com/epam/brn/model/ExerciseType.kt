@@ -1,4 +1,4 @@
-package com.epam.brn.constant
+package com.epam.brn.model
 
 enum class ExerciseType {
     SINGLE_WORDS,

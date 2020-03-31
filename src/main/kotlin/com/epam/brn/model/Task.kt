@@ -1,6 +1,5 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.ExerciseType
 import com.epam.brn.dto.TaskDtoForSentence
 import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.dto.TaskDtoForWordsSequences

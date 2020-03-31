@@ -1,6 +1,5 @@
 package com.epam.brn.job
 
-import com.epam.brn.job.impl.UploadFileJobRunnerImpl
 import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.anyOrNull
 import java.io.File
@@ -28,12 +27,13 @@ import org.springframework.test.util.ReflectionTestUtils
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UploadFileJobRunnerTest {
 
-    private val pathToTaskFiles = "src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks"
+    private val pathToTaskFiles =
+        "src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks"
 
     private val pathToProcessedTaskFiles = "$pathToTaskFiles\\processed"
 
     @InjectMocks
-    lateinit var uploadFileJobRunner: UploadFileJobRunnerImpl
+    lateinit var uploadFileJobRunner: UploadFileJobRunner
 
     @Mock
     lateinit var csvUploadService: CsvUploadService
@@ -70,6 +70,6 @@ class UploadFileJobRunnerTest {
         uploadFileJobRunner.perform()
 
         // THEN
-        verify(csvUploadService, times(1)).loadTasks(anyOrNull<File>())
+        verify(csvUploadService, times(1)).load(anyOrNull<File>())
     }
 }

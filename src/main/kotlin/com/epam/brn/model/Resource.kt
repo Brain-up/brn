@@ -1,6 +1,5 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.WordType
 import com.epam.brn.dto.ResourceDto
 import javax.persistence.CascadeType
 import javax.persistence.Column

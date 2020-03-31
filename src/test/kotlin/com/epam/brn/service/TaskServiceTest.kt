@@ -1,8 +1,9 @@
 package com.epam.brn.service
-import com.epam.brn.constant.ExerciseType
+
 import com.epam.brn.dto.TaskDtoForSingleWords
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository

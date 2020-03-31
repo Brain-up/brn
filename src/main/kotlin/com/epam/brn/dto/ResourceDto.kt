@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-import com.epam.brn.constant.WordType
+import com.epam.brn.model.WordType
 
 data class ResourceDto(
     var id: Long? = null,

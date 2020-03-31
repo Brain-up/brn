@@ -1,14 +1,9 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnPath
-import com.epam.brn.constant.BrnPath.BUCKET_URL
-import com.epam.brn.constant.BrnPath.FOLDERS
-import com.epam.brn.constant.BrnPath.UPLOAD
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.CloudService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import java.lang.IllegalArgumentException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.ResponseEntity
@@ -22,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController
  * Documentation https://github.com/Brain-up/brn/wiki/Cloud-file-resource-loading
  */
 @RestController
-@RequestMapping(BrnPath.CLOUD)
-@Api(value = BrnPath.CLOUD, description = "Contains actions for cloud upload and bucket listing")
+@RequestMapping("/cloud")
+@Api(value = "/cloud", description = "Contains actions for cloud upload and bucket listing")
 @ConditionalOnProperty(name = ["cloud.provider"])
 class CloudController(@Autowired private val cloudService: CloudService) {
 
-    @GetMapping(UPLOAD)
+    @GetMapping("/upload")
     @ApiOperation("Get upload form")
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BaseSingleObjectResponseDto> {
@@ -37,13 +32,15 @@ class CloudController(@Autowired private val cloudService: CloudService) {
         return ResponseEntity.ok(BaseSingleObjectResponseDto(signedForm))
     }
 
-    @GetMapping(BUCKET_URL)
+    @GetMapping("/url")
     @ApiOperation("Get bucket url")
     @Throws(Exception::class)
-    fun bucketUrl(): ResponseEntity<BaseSingleObjectResponseDto> = ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.bucketUrl()))
+    fun bucketUrl(): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.bucketUrl()))
 
-    @GetMapping(FOLDERS)
+    @GetMapping("/folders")
     @ApiOperation("Get folders in bucket")
     @Throws(Exception::class)
-    fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> = ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.listBucket()))
+    fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.listBucket()))
 }
