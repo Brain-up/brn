@@ -19,11 +19,18 @@ import org.springframework.web.bind.annotation.RestController
 class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
     @PostMapping
-    fun saveOrUpdateStudyHistory(
+    fun save(
         @Validated @RequestBody studyHistoryDto: StudyHistoryDto
     ): ResponseEntity<StudyHistoryDto> {
-        val studyHistoryResult = studyHistoryService.saveOrUpdateStudyHistory(studyHistoryDto)
-        return ResponseEntity.status(studyHistoryResult.responseCode!!).body(studyHistoryResult)
+
+        val existingHistory = studyHistoryService.findBy(studyHistoryDto.userId, studyHistoryDto.exerciseId)
+        if (existingHistory.isPresent) {
+            return ResponseEntity.ok()
+                .body(studyHistoryService.update(existingHistory.get(), studyHistoryDto))
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(studyHistoryService.create(studyHistoryDto))
     }
 
     @PatchMapping
