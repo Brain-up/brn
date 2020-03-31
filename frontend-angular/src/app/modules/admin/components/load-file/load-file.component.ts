@@ -6,6 +6,11 @@ import { FolderService } from '../../services/folders/folder.service';
 import { UploadService } from '../../services/upload/upload.service';
 import { Router } from '@angular/router';
 import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
+import { Store } from '@ngrx/store';
+import { AppStateModel } from 'src/app/models/app-state.model';
+import { fetchFoldersRequest } from '../../ngrx/actions';
+import { selectFolders } from '../../ngrx/reducers';
+import { AdminStateModel } from '../../model/admin-state.model';
 
 @Component({
   selector: 'app-load-file',
@@ -20,12 +25,14 @@ export class LoadFileComponent implements OnInit {
     private snackBarService: SnackBarService,
     private folderService: FolderService,
     private uploadService: UploadService,
-    private router: Router
+    private router: Router,
+    private store: Store<AdminStateModel>
   ) {
   }
 
   ngOnInit() {
-    this.folders$ = this.folderService.getFolders();
+    this.store.dispatch(fetchFoldersRequest());
+    this.folders$ = this.store.select(selectFolders);
     this.uploadFileForm = new FormGroup({
       files: new FormControl(),
       folder: new FormControl(),
