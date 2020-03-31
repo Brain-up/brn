@@ -61,7 +61,7 @@ export class AuthEffects {
 
     destroySessionRequest$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.destroySessionRequestAction),
-        mergeMap(_ => this.sessionService.destroySession().pipe(
+        mergeMap(action => this.sessionService.destroySession().pipe(
           tap(_ => {
             localStorage.removeItem('brnAuthState');
           }),

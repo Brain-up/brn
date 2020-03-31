@@ -21,6 +21,8 @@ import { StoreModule } from '@ngrx/store';
 import * as fromAdminNgrx from './ngrx/reducers';
 import { AdminGuardService } from './services/admin-guard/admin-guard.service';
 import { AdminPageRoutingModule } from './admin-page-routing.module';
+import { EffectsModule } from '@ngrx/effects';
+import { AdminEffects } from './ngrx/effects';
 
 
 @NgModule({
@@ -45,7 +47,8 @@ import { AdminPageRoutingModule } from './admin-page-routing.module';
     MatIconModule,
     MatSidenavModule,
     MatToolbarModule,
-    StoreModule.forFeature(fromAdminNgrx.adminFeatureKey, fromAdminNgrx.adminReducer)
+    StoreModule.forFeature(fromAdminNgrx.adminFeatureKey, fromAdminNgrx.adminReducer),
+    EffectsModule.forFeature([AdminEffects])
   ],
   providers: [
     FolderService,

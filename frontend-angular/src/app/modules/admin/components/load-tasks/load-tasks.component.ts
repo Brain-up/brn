@@ -12,6 +12,10 @@ import { FormatService } from '../../services/format/format.service';
 import { LoadTasksReturnData } from '../../model/load-tasks-return-data.model';
 import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
 import { AdminService } from '../../services/admin/admin.service';
+import { AdminStateModel } from '../../model/admin-state.model';
+import { Store } from '@ngrx/store';
+import { fetchGroupsRequest } from '../../ngrx/actions';
+import { selectGroups } from '../../ngrx/reducers';
 
 @Component({
   selector: 'app-load-tasks',
@@ -25,14 +29,6 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
   tasksGroup: FormGroup;
   series$: Observable<Series[]>;
 
-  constructor(
-    private adminAPI: AdminService,
-    private fb: FormBuilder,
-    private uploadFileService: UploadService,
-    private router: Router,
-    private snackBarService: SnackBarService,
-    private formatService: FormatService) {
-  }
   onSubmit() {
     const formData = new FormData();
     formData.append('taskFile', this.tasksGroup.get('file').value);
@@ -53,8 +49,8 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       series: [{ value: '', disabled: true }, Validators.required],
       file: [null, Validators.required]
     });
-
-    this.groups$ = this.adminAPI.getGroups();
+    this.store.dispatch(fetchGroupsRequest());
+    this.groups$ = this.store.select(selectGroups);
     this.series$ = this.tasksGroup.controls.group.valueChanges.pipe(
       switchMap(({ id }) => this.adminAPI.getSeriesByGroupId(id)),
     );
@@ -70,5 +66,15 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       ),
       untilDestroyed(this)
     ).subscribe();
+  }
+  constructor(
+    private adminAPI: AdminService,
+    private fb: FormBuilder,
+    private uploadFileService: UploadService,
+    private router: Router,
+    private snackBarService: SnackBarService,
+    private formatService: FormatService,
+    private store: Store<AdminStateModel>
+    ) {
   }
 }
