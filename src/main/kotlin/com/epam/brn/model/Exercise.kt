@@ -1,6 +1,5 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType
@@ -35,7 +34,7 @@ data class Exercise(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series? = null,
-    @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val tasks: MutableSet<Task> = LinkedHashSet()
 ) {
     fun toDto(available: Boolean = true) = ExerciseDto(
@@ -44,7 +43,7 @@ data class Exercise(
         name = name,
         description = description,
         template = template,
-        exerciseType = ExerciseTypeEnum.valueOf(exerciseType),
+        exerciseType = ExerciseType.valueOf(exerciseType),
         level = level,
         available = available,
         tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()

@@ -4,8 +4,10 @@ import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 import shuffleArray from 'brn/utils/shuffle-array';
 import customTimeout from 'brn/utils/custom-timeout';
-import { task } from 'ember-concurrency';
+import { task, timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
+import { TIMINGS } from 'brn/utils/audio-api';
+
 
 export default class TaskPlayerComponent extends Component {
   shuffledWords = null;
@@ -17,7 +19,7 @@ export default class TaskPlayerComponent extends Component {
   @service('audio') audio;
 
   @(task(function*() {
-    yield customTimeout(3000);
+    yield timeout(TIMINGS.SUCCESS_ANSWER_NOTIFICATION)
     this.onRightAnswer();
   }).restartable())
   runNextTaskTimer;
@@ -65,4 +67,4 @@ export default class TaskPlayerComponent extends Component {
     }
   }
 }
-({});
+

@@ -3,7 +3,7 @@ package com.epam.brn.controller.advice
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
-import com.epam.brn.upload.csv.parser.CsvParser
+import com.epam.brn.upload.csv.CsvParser
 import java.io.IOException
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus

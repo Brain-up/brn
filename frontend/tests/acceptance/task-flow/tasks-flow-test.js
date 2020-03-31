@@ -4,10 +4,12 @@ import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
 import { setupAfterPageVisit } from './test-support/helpers';
 import { getServerResponses, chooseAnswer } from '../general-helpers';
-import { settled } from '@ember/test-helpers';
+import { settled, waitFor } from '@ember/test-helpers';
+import { timeout } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
 import { getData } from './test-support/data-storage';
+import { TIMINGS } from 'brn/utils/audio-api';
 
 module('Acceptance | tasks flow', function(hooks) {
   setupApplicationTest(hooks);
@@ -64,13 +66,12 @@ module('Acceptance | tasks flow', function(hooks) {
 
     assert.dom('[data-test-right-answer-notification]').exists();
 
-    await customTimeout();
-
+    await waitFor('[data-test-task-id="2"]');
     assert.dom('[data-test-task-id="2"]').exists();
   });
 
   test('sends a POST request to "study-history" after exercise completed', async function(assert) {
-    assert.expect(4);
+    assert.expect(1);
 
     /* eslint-disable no-undef */
     server.post('/study-history', function(request) {
@@ -83,30 +84,12 @@ module('Acceptance | tasks flow', function(hooks) {
     let { targetTask } = setupAfterPageVisit();
 
     await pageObject.startTask();
-
-    chooseAnswer(targetTask.correctAnswer.word);
-
+    await chooseAnswer(targetTask.correctAnswer.word);
     await customTimeout();
-
-    assert.dom('[data-test-right-answer-notification]').exists();
-
-    await customTimeout();
-
     const targetTask2 = setupAfterPageVisit().targetTask;
-
-    await customTimeout();
-
-    chooseAnswer(targetTask2.correctAnswer.word);
-
-    await customTimeout();
-
-    assert.dom('[data-test-right-answer-notification]').exists();
-
-    await customTimeout();
-
-    assert
-      .dom('[data-test-answer-correctness-widget]')
-      .hasAttribute('data-test-is-correct');
+    await waitFor('[data-test-task-answer-option]');
+    await chooseAnswer(targetTask2.correctAnswer.word);
+    await customTimeout(); 
   });
 
   test('shows a complete victory widget after exercise completed and goes to series route', async function(assert) {
@@ -120,26 +103,20 @@ module('Acceptance | tasks flow', function(hooks) {
     await pageObject.startTask();
 
     chooseAnswer(targetTask.correctAnswer.word);
-
-    await customTimeout();
+    await timeout(TIMINGS.SUCCESS_ANSWER_NOTIFICATION_STARTED);
 
     assert.dom('[data-test-right-answer-notification]').exists();
 
-    await customTimeout();
-
+    await waitFor('[data-test-task-id="2"]');
     assert.dom('[data-test-task-id="2"]').exists();
 
     const targetTask2 = setupAfterPageVisit().targetTask;
 
-    await customTimeout();
-
+    await timeout(TIMINGS.FAKE_AUDIO_FINISHED);
     chooseAnswer(targetTask2.correctAnswer.word);
-
     await customTimeout();
-
     assert.dom('[data-test-right-answer-notification]').exists();
-
-    await customTimeout();
+    await waitFor('[data-test-answer-correctness-widget]');
 
     assert
       .dom('[data-test-answer-correctness-widget]')

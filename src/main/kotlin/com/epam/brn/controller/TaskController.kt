@@ -1,7 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnParams
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.TaskService
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.TASKS)
+@RequestMapping("/tasks")
 class TaskController(private val taskService: TaskService) {
 
     private val log = logger()
@@ -31,9 +29,9 @@ class TaskController(private val taskService: TaskService) {
             .body(BaseResponseDto(data = taskService.getTasksByExerciseId(exerciseId)))
     }
 
-    @GetMapping(value = ["/{${BrnParams.TASK_ID}}"])
+    @GetMapping(value = ["/{taskId}"])
     @ApiOperation("Get task by id")
-    fun getTaskById(@PathVariable(BrnParams.TASK_ID) taskId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
+    fun getTaskById(@PathVariable("taskId") taskId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
         return ResponseEntity.ok()
             .body(BaseSingleObjectResponseDto(data = taskService.getTaskById(taskId)))
     }

@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.AuthOutDto
 import com.epam.brn.dto.LoginDto
 import com.epam.brn.dto.UserAccountDto
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 @Api(description = "Contains login in actions")
 class AuthenticationController(val authenticationService: AuthenticationService) {
 
-    @PostMapping(BrnPath.REGISTRATION)
+    @PostMapping("/registration")
     @ApiOperation("New user registration")
     fun registration(@Validated @RequestBody userAccountDto: UserAccountDto): ResponseEntity<AuthOutDto> {
         val basicHeader = authenticationService.registration(userAccountDto)
@@ -29,7 +28,7 @@ class AuthenticationController(val authenticationService: AuthenticationService)
             .body(AuthOutDto(basicHeader))
     }
 
-    @PostMapping(BrnPath.LOGIN)
+    @PostMapping("/brnlogin")
     @ApiOperation("Exist user login")
     fun login(@Validated @RequestBody loginDto: LoginDto): ResponseEntity<AuthOutDto> {
         val basicHeader = authenticationService.login(loginDto)

@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -28,18 +27,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WithMockUser(username = "admin", roles = ["ADMIN"])
 class SeriesControllerIT {
 
+    private val baseUrl = "/series"
+
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @Autowired
     lateinit var seriesRepository: SeriesRepository
 
     @Autowired
     lateinit var mockMvc: MockMvc
 
+    private val seriesName = "распознавание слов тест"
+
     fun loadGroupWithExercises(): Long {
         val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
         val series1 =
-            Series(name = "распознование слов тест", description = "descr1", exerciseGroup = group)
+            Series(name = seriesName, description = "descr1", exerciseGroup = group)
         val series2 =
             Series(name = "диахоничкеское слушание тест", description = "descr2", exerciseGroup = group)
         group.series.addAll(setOf(series1, series2))
@@ -59,7 +63,7 @@ class SeriesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.SERIES)
+                .get(baseUrl)
                 .param("groupId", idGroup.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -68,7 +72,7 @@ class SeriesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
-        Assertions.assertTrue(response.contains("распознование слов тест"))
+        Assertions.assertTrue(response.contains(seriesName))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
         Assertions.assertTrue(response.contains("exercises"))
     }
@@ -77,11 +81,11 @@ class SeriesControllerIT {
     fun `test get series for seriesId`() {
         // GIVEN
         loadGroupWithExercises()
-        val seriesId = seriesRepository.findByNameLike("распознование слов тест")[0].id
+        val seriesId = seriesRepository.findByNameLike(seriesName)[0].id
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.SERIES}/$seriesId")
+                .get("/series/$seriesId")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -89,7 +93,7 @@ class SeriesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
-        Assertions.assertTrue(response.contains("распознование слов тест"))
+        Assertions.assertTrue(response.contains(seriesName))
         Assertions.assertTrue(response.contains("exercises"))
     }
 
@@ -99,7 +103,7 @@ class SeriesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.SERIES}/fileFormat/$seriesId")
+                .get("/series/fileFormat/$seriesId")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN

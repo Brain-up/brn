@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.model.ExerciseType
 
 data class ExerciseDto(
     var seriesId: Long?,
@@ -8,7 +8,7 @@ data class ExerciseDto(
     var name: String?,
     var description: String?,
     var level: Int? = 0,
-    var exerciseType: ExerciseTypeEnum,
+    var exerciseType: ExerciseType,
     var template: String? = "",
     var available: Boolean = true,
     var tasks: MutableSet<ShortTaskDto> = HashSet()

@@ -22,10 +22,13 @@ import org.springframework.util.Base64Utils
 
 @ExtendWith(MockitoExtension::class)
 internal class AuthenticationBasicServiceImplTest {
+
     @Mock
     lateinit var userAccountService: UserAccountService
+
     @Mock
     lateinit var authenticationManager: AuthenticationManager
+
     @InjectMocks
     lateinit var authenticationBasicServiceImpl: AuthenticationBasicServiceImpl
 
@@ -90,10 +93,10 @@ internal class AuthenticationBasicServiceImplTest {
     fun `should create BasicHeader with Base64`() {
         // GIVEN
         val email = "admin@admin.com"
-        val password = "admin"
+        val passw = "admin"
         val basicHeader = "YWRtaW5AYWRtaW4uY29tOmFkbWlu"
         // WHEN
-        val actualResult = authenticationBasicServiceImpl.getBasicHeader(email, password)
+        val actualResult = authenticationBasicServiceImpl.getBasicHeader(email, passw)
         // THEN
         assertEquals(basicHeader, actualResult)
     }
