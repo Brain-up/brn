@@ -1,0 +1,20 @@
+.logo-text,
+a.active {
+  color: #fff;
+}
+
+.fa-brain {
+  margin-right: 5px;
+}
+
+.logo-text {
+  display: flex;
+  align-items: center;
+  line-height: 18px;
+  font-size: 18px;
+}
+
+.logo-text svg {
+  font-size: 25px;
+  margin-right: 10px;
+}

@@ -1,0 +1,44 @@
+.task-player__options {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.task-player__option {
+  flex-basis: 33.33%;
+  padding: 0 10px 10px 0;
+  box-sizing: border-box;
+}
+
+.task-player__option-button {
+  height: 100px;
+  width: 100%;
+  display: block;
+  font-size: 40px;
+}
+
+.task-player__option-button:disabled {
+  opacity: 50%;
+  cursor: default;
+}
+
+.task-player__results {
+  text-align: center;
+  font-size: 32px;
+  color: rgb(44, 62, 80);
+  padding-right: 10px;
+}
+
+.task-player__results__answer {
+  white-space: nowrap;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

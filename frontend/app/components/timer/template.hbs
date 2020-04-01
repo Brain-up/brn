@@ -1,0 +1,20 @@
+<div class={{this.styleNamespace}} ...attributes>
+  <div
+    data-test-timer-wrapper
+    data-test-timer-is-paused={{this.isPaused}}
+    class="timer-wrapper font-semibold text-red-400"
+  >
+    <span data-test-timer-display-value>
+      {{this.displayValue}}
+    </span>
+    {{#unless @hideControls}}
+      <button {{on "click" this.studyingTimer.togglePause}}>
+        {{#if (or this.isPaused (not this.isStarted))}}
+          <FaIcon @icon="play-circle" />
+        {{else}}
+          <FaIcon @icon="pause-circle" />
+        {{/if}}
+      </button>
+    {{/unless}}
+  </div>
+</div>

@@ -1,37 +1,36 @@
 import Component from '@ember/component';
-import { A } from '@ember/array';
-import { inject } from '@ember/service';
+import { dasherize } from '@ember/string';
+import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
 export default class TaskPlayerComponent extends Component {
-  shuffledWords = null;
-  lastAnswer = null;
-
-  onFinished() {}
-
-  didReceiveAttrs() {
-    this.shuffle();
-    this.set('lastAnswer', null);
+  @service
+  audio;
+  @service
+  studyingTimer;
+  @tracked
+  justEnteredTask = true;
+  @tracked
+  task = null;
+  tagName = '';
+  get componentType() {
+    return `task-player/${dasherize(this.task.exerciseType)}`;
+  }
+  get disableAnswers() {
+    return this.audio.isPlaying || this.disableAudioPlayer;
   }
 
-  shuffle() {
-    this.set('shuffledWords', A(shuffleArray(this.task.words)));
-    this.notifyPropertyChange('shuffledWords')
+  get disableAudioPlayer() {
+    return (
+      this.task.pauseExecution ||
+      !this.studyingTimer.isStarted ||
+      this.justEnteredTask
+    );
   }
-
-  handleSubmit(word) {
-    this.set('lastAnswer', word);
-    if (word !== this.task.word) {
-      this.shuffle()
-    }
+  onRightAnswer() {}
+  async startTask() {
+    this.studyingTimer.runTimer();
+    this.task.exercise.content.trackTime('start');
+    this.set('justEnteredTask', false);
   }
-}({
-  router: inject(),
-});
-
-function shuffleArray(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
 }

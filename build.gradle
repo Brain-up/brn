@@ -1,78 +1,80 @@
-buildscript {
-    ext {
-        kotlin_version = '1.3.50' // Required for Kotlin integration
-        spring_boot_version = '2.1.8.RELEASE'
-        mockitoVersion = '3.0.0'
-        junitVersion = '5.3.1'
-//        flywayVersion = "5.2.4"
-    }
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
-        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
-    }
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.kotlin.plugin.spring"
+    id "org.jetbrains.kotlin.plugin.jpa"
+    id "org.jetbrains.kotlin.plugin.allopen"
+    id "org.jetbrains.kotlin.kapt"
 }
 
-apply plugin: 'kotlin' // Required for Kotlin integration
-apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: "kotlin-jpa"
-
-jar {
-    baseName = 'brn-service'
-    version = '0.1.0'
+allOpen {
+    annotation "javax.persistence.Entity"
+    annotation "javax.persistence.MappedSuperclass"
+    annotation "javax.persistence.Embeddable"
 }
 
 repositories {
     jcenter()
 }
 
-ext['mockito.version'] = "${mockitoVersion}"
+ext["mockito.version"] = "${mockitoVersion}"
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-batch"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.security:spring-security-test"
+    implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.postgresql:postgresql"
-//    implementation "org.flywaydb:flyway-core:$flywayVersion"
-    
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit', module: 'junit'
+    implementation "org.flywaydb:flyway-core:$flywayVersion"
+
+    implementation "com.auth0:java-jwt:3.10.1"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
+
+    testImplementation "org.jetbrains.kotlin:kotlin-test:1.3.71"
+    implementation "org.mapstruct:mapstruct:1.3.1.Final"
+    implementation "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
+    implementation "org.apache.commons:commons-lang3:3.10"
+    implementation "org.apache.commons:commons-collections4:4.4"
+    implementation "commons-io:commons-io:2.6"
+
+    implementation "io.springfox:springfox-swagger-ui:2.9.2"
+    implementation "io.springfox:springfox-swagger2:2.9.2"
+    testRuntimeOnly "com.h2database:h2"
+
+    implementation 'com.amazonaws:aws-java-sdk:1.11.754'
+    implementation 'com.google.cloud:google-cloud-storage:1.106.0'
+
+
+    def spek_version = '2.0.10'
+    testImplementation 'org.amshove.kluent:kluent:1.60'
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "junit"
+        exclude group: "org.mockito"
     }
-    testCompile("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    testCompile("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
-    testCompile('com.nhaarman:mockito-kotlin:1.6.0')
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
 
-    compile 'org.apache.logging.log4j:log4j-api-kotlin:1.0.0'
-    compile 'org.apache.logging.log4j:log4j-api:2.11.2'
-    compile 'org.apache.logging.log4j:log4j-core:2.11.2'
-
-    implementation("com.vaadin:vaadin-spring-boot-starter")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom 'com.vaadin:vaadin-bom:14.0.5'
-    }
+    kapt "org.mapstruct:mapstruct-processor:1.3.1.Final"
 }
 
 compileKotlin {
     kotlinOptions {
-        freeCompilerArgs = ['-Xjsr305=strict']
-        jvmTarget = '1.8'
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
     }
 }
 
 compileTestKotlin {
     kotlinOptions {
-        freeCompilerArgs = ['-Xjsr305=strict']
-        jvmTarget = '1.8'
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
     }
 }
 
@@ -80,21 +82,22 @@ compileTestKotlin {
 configurations {
     ktlint
 }
+
 dependencies {
-    ktlint "com.github.shyiko:ktlint:0.31.0"
+    ktlint "com.pinterest:ktlint:0.36.0"
 }
 
 task ktlintFormat(type: JavaExec, group: "formatting") {
     description = "Fix Kotlin code style deviations."
     classpath = configurations.ktlint
-    main = "com.github.shyiko.ktlint.Main"
+    main = "com.pinterest.ktlint.Main"
     args "-F", "src/**/*.kt"
 }
 
 project.task("ktlint", type: JavaExec) {
     group = "verification"
     description = "Runs ktlint."
-    main = "com.github.shyiko.ktlint.Main"
+    main = "com.pinterest.ktlint.Main"
     classpath = project.configurations.ktlint
     args = [
             "--reporter=plain",
@@ -102,37 +105,22 @@ project.task("ktlint", type: JavaExec) {
             "src/**/*.kt"
     ]
 }
+
+project.exec {
+    commandLine = "git config core.hooksPath .githooks".split(" ")
+}
+
 compileKotlin.dependsOn ktlint
 
-tasks.withType(Test) { Test task ->
-    task.useJUnitPlatform { JUnitPlatformOptions options ->
-        options.excludeTags 'integration-test'
+test {
+    useJUnitPlatform { options ->
+        options.excludeTags "integration-test"
     }
-    testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = 'full'
 }
 
-task integrationTest(type: Test) { Test task ->
+task integrationTest(type: Test) { task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
-        options.includeTags 'integration-test'
+        options.includeTags "integration-test"
     }
-    testLogging.showStandardStreams = true
-    testLogging.exceptionFormat = 'full'
-
-    task.systemProperties(System.properties)
-    println "Test task system properties: " + task.systemProperties
-    tasks.check.dependsOn task
     task.shouldRunAfter tasks.test
 }
-
-// --- Eclipse ---
-// see more at https://stackoverflow.com/questions/44266042/kotlin-setup-via-gradle-on-eclipse
-//apply plugin: 'eclipse'
-//eclipse.project {
-//    natures 'org.jetbrains.kotlin.core.kotlinNature'
-//}
-//eclipse {
-//    classpath {
-//        containers 'org.jetbrains.kotlin.core.KOTLIN_CONTAINER'
-//    }
-//}

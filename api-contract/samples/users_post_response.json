@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "id": 8,
+      "userName": "example_user",
+      "email": "example_user@user.ru",
+      "active": true,
+      "authorities": [
+        "ROLE_USER"
+      ]
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

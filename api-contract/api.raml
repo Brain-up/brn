@@ -1,0 +1,247 @@
+#%RAML 1.0
+title: BRN API
+version: v1
+baseUri: http://localhost:8081/api
+baseTestUri: http://10.66.216.143:8081/api
+mediaType:
+  - application/json
+
+# GROUP ----------------------------
+/groups:
+  get:
+    responses:
+      200:
+        body:
+          example: !include samples/groups.json
+  /{groupId}:
+    get:
+      responses:
+        200:
+          body:
+            example: !include samples/group.json
+
+# SERIES ----------------------------
+/series:
+  get:
+    queryParameters:
+      groupId:
+        description: "ID of the group series belongs to"
+        required: true
+        type: string
+        example: "42"
+    responses:
+      200:
+        body:
+          example: !include samples/series_by_group.json
+  /{seriesId}:
+    get:
+      responses:
+        200:
+          body:
+            example: !include samples/series.json
+  /fileFormat/{seriesId}:
+    get:
+      description: Get series file format by series id
+      responses:
+        200:
+          body:
+            example: !include samples/file_format.json
+
+# EXERCISE ----------------------------
+/exercises:
+  get:
+    queryParameters:
+      seriesId:
+        description: "ID of the series exercises belongs to"
+        required: true
+        type: string
+        example: "42"
+      userId:
+        description: "ID of the user for which we want to get done exercises"
+        required: false
+        type: string
+        example: "42"
+    responses:
+      200:
+        body:
+          example1: !include samples/exercises_for_sequence_words_series.json
+          example2: !include samples/exercises_for_single_words_series.json
+  /{exerciseId}:
+    get:
+      responses:
+        200:
+          body:
+            example1: !include samples/exercise_for_single_words_series.json
+            example2: !include samples/exercise_for_sequence_words_series.json
+            example3: !include samples/exercise_for_sentence_series.json
+
+# TASK ----------------------------
+/tasks:
+  get:
+    description: |
+    The tasks endpoint returns tasks assotiated with specified exercise id
+    queryParameters:
+      exerciseId:
+        description: "ID of the exercise tasks belongs to"
+        required: true
+        type: string
+        example: "3"
+    responses:
+      200:
+        body:
+          application/json:
+            example_for_single_words_series: !include samples/tasks_by_exercise_for_single_words_series.json
+            example_for_words_sequences_series: !include samples/tasks_by_exercise_for_words_sequences_series.json
+  /{taskId}:
+    get:
+      description: Get a task by id
+      responses:
+        200:
+          body:
+            application/json:
+              example_for_single_words_series: !include samples/task_by_id_for_single_words_series.json
+              example_for_words_sequences_series: !include samples/task_by_id_for_words_sequences_series.json
+              example_for_sentence_series: !include samples/task_by_id_for_sentence_series.json
+
+# STUDY_HISTORY ----------------------
+/study-history:
+  post:
+  description: Save history of exercises done by user
+    body:
+      application/json:
+        example: !include samples/study_history.json
+    responses:
+      201:
+        example: !include samples/study_history_response.json
+
+# USERS ----------------------
+/users:
+  post:
+  description: Add a new user to the system
+    body:
+      application/json:
+        example: !include samples/users_post_body.json
+    responses:
+      201:
+        example: !include samples/users_post_response.json
+  get:
+      description: Get the user by userName
+      queryParameters:
+        userName:
+          description: "Name of the user"
+          required: true
+          type: string
+          example: "user"
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+  /{userId}:
+    get:
+      description: Get a user by id
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+    delete:
+      description: delete a user
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+  /current:
+    get:
+      description: Get logged in user from the current session
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+
+# Auth ----------------------
+/brnlogin:
+  post:
+  description: Login for exist user
+    body:
+     application/json:
+        example: !include samples/login.json
+    responses:
+      200:
+        example: !include samples/authSuccessResponse.json
+      401 (Unauthorized):
+        example: !include samples/authBadCredResponse.json
+
+/registration:
+  post:
+  description: Registration for new user with login him
+    body:
+      application/json:
+        example: !include samples/registration.json
+    responses:
+      201 (Created):
+        example: !include samples/authSuccessResponse.json
+      400 (Bad Request):
+        example: !include samples/authSuchUserAlreadyExistErrorResponse.json
+
+/logout:
+  post:
+  description: Logout for logined user
+    responses:
+      204: No content
+
+# LOAD FILES ----------------------
+/loadTasksFile:
+  post:
+    body:
+      multipart/form-data:
+        properties:
+          seriesId:
+            description: "ID of the series created exercises belongs to"
+            required: true
+            type: string
+            example: "42"
+          taskFile:
+            description: "File with tasks to be uploaded"
+            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
+                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
+            formatForSeries2: "orderNumber words
+                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
+            required: true
+            type: file
+    responses:
+      201:
+
+/cloud:
+  /folders:
+    get:
+      description: Get cloud folder structure
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/cloud_folders.json
+  /upload:
+    get:
+      queryParameters:
+        filename:
+          description: "File name to be used for uploading"
+          required: true
+          type: string
+          example: "file1.jpg"
+      description: Get cloud upload form
+      responses:
+        200:
+          body:
+            application/json:
+              example_for_aws_upload_form: !include samples/example_for_aws_upload_form.json
+              example_for_google_upload_form: !include samples/example_for_google_upload_form.json
+  /url:
+    get:
+      description: Get cloud bucket url
+      responses:
+        200:
+          body:
+            example: "https://cloudprovider.bucket.com"

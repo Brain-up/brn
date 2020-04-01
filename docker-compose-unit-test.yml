@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+  sut:
+    command: gradle clean test --no-daemon
+    build:
+      context: .
+      dockerfile: Dockerfile_test
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      DB_URL: db
+      SPRING_PROFILE: dev
+    depends_on:
+      - db

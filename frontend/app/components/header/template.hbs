@@ -1,0 +1,45 @@
+<div class="{{style-namespace "header"}} header" ...attributes>
+  <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-4">
+    <div class="flex items-center flex-shrink-0 text-white mr-8">
+      <LinkTo
+        @route="index"
+        data-test-logo
+        class="font-semibold text-xl tracking-tight logo-text"
+      >
+        <FaIcon @icon="brain" />
+        <span class="logo-link__name">
+          Brain Up
+        </span>
+      </LinkTo>
+    </div>
+    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+      <div class="text-sm lg:flex-grow">
+        <LinkTo
+          @route="groups"
+          data-test-group-link
+          class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+        >
+          Группы
+        </LinkTo>
+      </div>
+    </div>
+    {{#if this.session.isAuthenticated}}
+      <div
+        data-test-user-email
+        class="inline-block text-sm px-4 mr-2 py-2 leading-none rounded text-white mt-4 lg:mt-0"
+        title="{{this.session.data.user.firstName}}
+
+          {{this.session.data.user.lastName}}"
+      >
+        {{this.session.data.user.email}}
+      </div>
+      <button
+        data-test-logout-button
+        class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+        {{on "click" this.logout}}
+      >
+        Выход
+      </button>
+    {{/if}}
+  </nav>
+</div>

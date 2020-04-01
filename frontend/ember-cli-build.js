@@ -1,9 +1,31 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const CssImport = require('postcss-import');
+const tailwindcss = require('tailwindcss');
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
+    'ember-test-selectors': {
+      strip: false
+    },
+    fingerprint: {
+      exclude: ['pictures/'],
+    },
+    postcssOptions: {
+      compile: {
+        enabled: true,
+        plugins: [
+          {
+            module: CssImport,
+            options: {
+              path: ['node_modules']
+            }
+          },
+          tailwindcss('./app/styles/tailwind.js')
+        ]
+      }
+    }
   });
 
   // Use `app.import` to add additional libraries to the generated
@@ -18,6 +40,8 @@ module.exports = function(defaults) {
   // modules that you would like to import into your application
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
+
+  app.import('node_modules/idle-js/dist/Idle.js');
 
   return app.toTree();
 };

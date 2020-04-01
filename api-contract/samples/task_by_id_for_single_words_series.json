@@ -1,0 +1,60 @@
+{
+  "data": {
+    "id": 57,
+    "exerciseType": "SINGLE_WORDS",
+    "name": "",
+    "correctAnswer": {
+      "id": 337,
+      "audioFileUrl": "noise_9db/ход.mp3",
+      "word": "ход",
+      "wordType": "OBJECT",
+      "pictureFileUrl": "pictures/ход.jpg",
+      "soundsCount": 1
+    },
+    "serialNumber": 36,
+    "answerOptions": [
+      {
+        "id": 340,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "рот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      },
+      {
+        "id": 339,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "пот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      },
+      {
+        "id": 342,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "кот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      },
+      {
+        "id": 341,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "сот",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      },
+      {
+        "id": 338,
+        "audioFileUrl": "noise_9db/ход.mp3",
+        "word": "сад",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ход.jpg",
+        "soundsCount": 1
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

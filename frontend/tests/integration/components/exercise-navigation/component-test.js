@@ -2,25 +2,63 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import pageObject from './test-support/page-object';
+import { createStubTasks } from 'brn/tests/test-support/general-helpers';
 
 module('Integration | Component | exercise-navigation', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  test('renders navigation according to passed tasks', async function(assert) {
+    const store = this.owner.lookup('service:store');
+    this.set(
+      'tasks',
+      createStubTasks(store, [
+        {
+          order: '1',
+          word: 'бал',
+        },
+        {
+          order: '2',
+          word: 'бум',
+        },
+        {
+          order: '3',
+          word: 'быль',
+        },
+      ]),
+    );
 
-    await render(hbs`<ExerciseNavigation />`);
+    await render(hbs`<ExerciseNavigation
+      @tasks={{this.tasks}}/>`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.equal(pageObject.navLinks.length, this.tasks.length);
+    assert.deepEqual(pageObject.navLinks.mapBy('linkNum'), ['3', '2', '1']);
+  });
 
-    // Template block usage:
-    await render(hbs`
-      <ExerciseNavigation>
-        template block text
-      </ExerciseNavigation>
-    `);
+  test('renders navigation according to passed tasks ( shuffled )', async function(assert) {
+    const store = this.owner.lookup('service:store');
+    this.set(
+      'tasks',
+      createStubTasks(store, [
+        {
+          order: '3',
+          word: 'быль',
+        },
+        {
+          order: '1',
+          word: 'бал',
+        },
+        {
+          order: '2',
+          word: 'бум',
+        },
+      ]),
+    );
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    await render(hbs`<ExerciseNavigation
+      @tasks={{this.tasks}}/>`);
+
+    assert.equal(pageObject.navLinks.length, 3);
+    assert.deepEqual(pageObject.navLinks.mapBy('linkNum'), ['3', '2', '1']);
   });
 });

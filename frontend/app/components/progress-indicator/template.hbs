@@ -1,0 +1,96 @@
+<div class={{style-namespace "progress-indicator"}} ...attributes>
+  {{! template-lint-configure no-inline-styles false }}
+  <div class="mb-3">
+    <nav
+      id="progressContainer"
+      class="c-pagination c-pagination--tasks mb-3"
+      {{offset-width this.setOffsetWidth}}
+    >
+      {{#if (and this.progressItems.length this.progressContainerWidth)}}
+        <ul
+          data-test-items-list
+          data-test-max-amount={{this.maxAmount}}
+          class="clearfix items-list"
+          style={{html-safe
+            (concat
+              "width: calc(36px*"
+              this.progressItems.length
+              ");"
+              (if
+                this.shouldHideExtraItems
+                (concat
+                  "right: calc(36px*(-"
+                  (sum
+                    this.itemsToHideCount this.negativeHiddenUncompletedCount
+                  )
+                  "))"
+                )
+              )
+            )
+          }}
+        >
+          {{#each (sort-by "order:desc" this.progressItems) as |item index|}}
+            <li
+              data-test-progress-indicator-item
+              data-test-progress-indicator-item-number={{item.order}}
+              class="tasks-pagination-item
+
+
+                {{if item.nextAttempt " tasks-pagination-item--next-attempt"}}"
+              style={{html-safe
+                (concat
+                  "width: calc((100% - 36px*"
+                  index
+                  ") + "
+                  (if this.shouldHideExtraItems this.betweenPadding -5)
+                  "px);"
+                  (if
+                    item.completedInCurrentCycle
+                    (concat
+                      "transform: translateX(calc(100% - 36px*"
+                      (subtract this.progressItems.length index)
+                      "));"
+                    )
+                  )
+                )
+              }}
+            >
+              {{#let
+                (not
+                  (or
+                    item.completedInCurrentCycle
+                    (eq index this.currentItemInProgress)
+                  )
+                ) as |shadeItem|
+              }}
+                <span
+                  data-test-shaded-progress-circle-element={{shadeItem}}
+                  class="inline-block {{if shadeItem "opacity-50"}}"
+                >
+                </span>
+              {{/let}}
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        Пока в этом упражнении нет задач 🤷‍♂️
+      {{/if}}
+    </nav>
+    {{#if this.shouldHideExtraItems}}
+      <div class="flex justify-between hidden-counter">
+        <span data-test-hidden-uncompleted>
+          {{if
+            this.positiveHiddenUncompletedCount
+            (concat "+" this.positiveHiddenUncompletedCount)
+          }}
+        </span>
+        <span data-test-hidden-completed>
+          {{if
+            this.hiddenCompletedCount
+            (concat "+" this.hiddenCompletedCount)
+          }}
+        </span>
+      </div>
+    {{/if}}
+  </div>
+</div>

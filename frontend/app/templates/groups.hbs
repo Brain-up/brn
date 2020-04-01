@@ -1,0 +1,9 @@
+<ol>
+  {{#each this.model as |group|}}
+    <li class="p-1">
+      {{#link-to "group" group}}
+        {{group.name}}
+      {{/link-to}}
+    </li>
+  {{/each}}
+</ol>

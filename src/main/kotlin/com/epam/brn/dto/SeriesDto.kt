@@ -1,3 +1,13 @@
 package com.epam.brn.dto
 
-data class SeriesDto(val id: String, val name: String)
+import javax.validation.constraints.NotBlank
+
+data class SeriesDto(
+    @NotBlank
+    val group: Long? = null,
+    val id: Long?,
+    @NotBlank
+    val name: String,
+    val description: String?,
+    val exercises: MutableSet<Long?> = HashSet()
+)
