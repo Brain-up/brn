@@ -1,29 +1,37 @@
-{{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
-  <div class="flex items-center mb-2 justify-between">
-    <div>
-      <FaIcon @icon="chevron-left" />
-      <LinkTo @route="group.series" @model={{this.model.series}}>
-        Назад
-      </LinkTo>
+{{#modal-dialog}}
+  <main
+    class="container rounded overflow-hidden shadow-lg flex-col mt-4 sm:w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 mx-auto"
+  >
+    <div class="series-page--canvas flex flex-col flex-grow">
+      {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
+        <div class="flex items-center mb-2 justify-between">
+          <div>
+            <FaIcon @icon="chevron-left" />
+            <LinkTo @route="group.series" @model={{this.model.series}}>
+              Назад
+            </LinkTo>
+          </div>
+          <Timer @paused={{true}} />
+        </div>
+      {{/if}}
+
+      <div class="exercise-container">
+        {{#if (not this.model.hideExerciseNavigation)}}
+          <ExerciseNavigation
+            class="exercise-navigation"
+            @tasks={{this.model.tasks}}
+          />
+        {{/if}}
+
+        {{#if this.exerciseIsCompletedInCurrentCycle}}
+          <AnswerCorrectnessWidget
+            @isCorrect={{true}}
+            {{did-insert (action this.afterCompleted)}}
+          />
+        {{else}}
+          {{outlet}}
+        {{/if}}
+      </div>
     </div>
-    <Timer @paused={{true}} />
-  </div>
-{{/if}}
-
-<div class="exercise-container">
-  {{#if (not this.model.hideExerciseNavigation)}}
-    <ExerciseNavigation
-      class="exercise-navigation"
-      @tasks={{this.model.tasks}}
-    />
-  {{/if}}
-
-  {{#if this.exerciseIsCompletedInCurrentCycle}}
-    <AnswerCorrectnessWidget
-      @isCorrect={{true}}
-      {{did-insert (action this.afterCompleted)}}
-    />
-  {{else}}
-    {{outlet}}
-  {{/if}}
-</div>
+  </main>
+{{/modal-dialog}}
