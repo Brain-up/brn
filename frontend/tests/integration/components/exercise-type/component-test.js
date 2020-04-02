@@ -12,7 +12,7 @@ module('Integration | Component | exercise-type', function(hooks) {
 
     await render(hbs`<ExerciseType />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.ok(this.element.textContent.trim(), '');
 
     // Template block usage:
     await render(hbs`
@@ -21,6 +21,6 @@ module('Integration | Component | exercise-type', function(hooks) {
       </ExerciseType>
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.ok(this.element.textContent.trim(), 'template block text');
   });
 });

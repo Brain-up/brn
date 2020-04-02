@@ -12,7 +12,7 @@ module('Integration | Component | progress-bar-circle', function(hooks) {
 
     await render(hbs`<ProgressBarCircle />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.ok(this.element.textContent.trim(), '');
 
     // Template block usage:
     await render(hbs`
@@ -21,6 +21,6 @@ module('Integration | Component | progress-bar-circle', function(hooks) {
       </ProgressBarCircle>
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.ok(this.element.textContent.trim(), 'template block text');
   });
 });
