@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.junit.jupiter.api.Tag
@@ -31,7 +30,7 @@ class CloudControllerGoogleIT {
     fun `should get correct URL for upload`() {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("${BrnPath.CLOUD}${BrnPath.UPLOAD}")
+                .get("/cloud/upload")
                 .queryParam("filePath", "fileNameOne")
                 .contentType(MediaType.APPLICATION_JSON)
         )

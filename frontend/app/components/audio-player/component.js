@@ -3,15 +3,16 @@ import Component from '@ember/component';
 import { isArray } from '@ember/array';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import customTimeout from '../../utils/custom-timeout';
 import { timeout, task } from 'ember-concurrency';
 import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
+import { createSource, createNoizeBuffer, loadAudioFiles, createAudioContext, toSeconds, toMilliseconds, TIMINGS } from 'brn/utils/audio-api';
 
 export default class AudioPlayerComponent extends Component {
   tagName = '';
   init() {
     super.init(...arguments);
+    this.context = createAudioContext();
     next(() => {
       this.audio.register(this);
     });
@@ -20,139 +21,152 @@ export default class AudioPlayerComponent extends Component {
   @service audio;
 
   @(task(function*() {
-    this.defineProgressValue(this);
-    yield timeout(16);
-
-    this.updateProgressTask.perform();
+    try {
+      this.startTime = Date.now();
+      this.setProgress(0);
+      while (this.isPlaying) {
+        this.updatePlayingProgress();
+        yield timeout(32);
+      }
+      yield timeout(100);
+      this.setProgress(0);
+    } catch (e) {
+      // NOP
+    } finally {
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.setProgress(0);
+        this.startTime = null;
+      }
+    }
   }).enqueue())
-  updateProgressTask;
-
-  @tracked audioElements = [];
+  trackProgress;
 
   @tracked autoplay = false;
 
   @tracked isPlaying = false;
+
+  @tracked audioPlayingProgress = 0;
 
   @tracked previousPlayedUrls;
 
   @tracked audioFileUrl;
 
   async didReceiveAttrs() {
+    if (this.isPlaying) {
+      return;
+    }
     await this.setAudioElements();
     if (this.autoplay && this.previousPlayedUrls !== this.audioFileUrl) {
       await this.playAudio();
     }
   }
+
+  updatePlayingProgress() {
+    this.setProgress(
+      (100 / this.totalDuration) * (Date.now() - this.startTime),
+    );
+  }
+
   willDestroyElement() {
-    this.audioElements = [];
     this.animationInterval && clearInterval(this.animationInterval);
   }
   get filesToPlay() {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
-  get audioElementsLength() {
-    return (this.audioElements || []).reduce((totalLenght, audioElement) => {
-      totalLenght = totalLenght + audioElement.duration;
-      return totalLenght;
-    }, 0);
-  }
-
   async setAudioElements() {
-    this.audioElements = this.filesToPlay.map((src) => {
-      const audio = new Audio(src);
-      audio.preload = 'metadata';
-      return audio;
-    });
-    await Promise.all(
-      this.audioElements.map(
-        (a) =>
-          new Promise((resolve) => {
-            a.oncanplaythrough = () => {
-              a.onplay = this.updateIsPlaying.bind(this, a);
-              a.onended = this.updateIsPlaying.bind(this, a);
-              resolve(true);
-            };
-          }),
-      ),
-    );
-  }
-
-  isPlayingElement(element) {
-    return (
-      !element.paused &&
-      element.currentTime < element.duration &&
-      !element.ended
-    );
-  }
-
-  updateIsPlaying(actionElement) {
-    if (!this.isDestroyed && !this.isDestroying) {
-      const playStatus =
-        this.audioElements.length &&
-        this.audioElements.reduce((result, element) => {
-          result =
-            result ||
-            this.isPlayingElement(element) ||
-            this.isPlayingElement(actionElement);
-          return result;
-        }, false);
-      this.isPlaying = playStatus;
-      if (!this.isPlaying && this.audioPlayingProgress === 100) {
-        this.audioElements.forEach((element) => (element.currentTime = 0));
-      }
+    if (Ember.testing) {
+      this.buffers = [];
+      return;
     }
+    this.buffers = await loadAudioFiles(this.context, this.filesToPlay);
   }
 
   @action
   async playAudio() {
-    this.updateProgressTask.perform();
-    /* eslint-disable no-unused-vars */
-    for (let audioElement of this.audioElements) {
-      if (!this.isDestroyed && !this.isDestroying) {
-        if (Ember.testing) {
-          this.isPlaying = true;
-        } else {
-          audioElement.play();
-        }
+    if (!Ember.testing) {
+      this.playTask.perform();
+    } else {
+      this.fakePlayTask.perform();
+    }
+  }
 
-        await customTimeout(audioElement.duration * 1000);
+  getNoize(duration) {
+    return createSource(this.context, createNoizeBuffer(this.context, duration));
+  }
+
+  createSources(context, buffers) {
+    return buffers.map((buffer)=>createSource(context, buffer));
+  }
+
+  calcDurationForSources(sources) {
+    return sources.reduce((result, item) => {
+      return result + toMilliseconds(item.source.buffer.duration);
+    }, 0);
+  }
+
+  @(task(function* playAudio(noizeSeconds = 0) {
+    let startedSources = [];
+    const hasNoize = noizeSeconds !== 0;
+    try {
+      this.sources = this.createSources(this.context, this.buffers || []);
+      this.totalDuration = this.calcDurationForSources(this.sources) + toMilliseconds(noizeSeconds);
+      this.isPlaying = true;
+      this.trackProgress.perform();
+      if (hasNoize) {
+        const noize = this.getNoize(
+          noizeSeconds ? toSeconds(this.totalDuration) : 0,
+        );
+        noize.source.start(0);
+        startedSources.push(noize);
+        yield timeout(toMilliseconds((noizeSeconds / 2)));
+      }
+      for (const item of this.sources) {
+        const duration = toMilliseconds(item.source.buffer.duration);
+        item.source.start(0);
+        startedSources.push(item);
+        yield timeout(duration);
+      }
+      if (hasNoize) {
+        yield timeout(toMilliseconds((noizeSeconds / 2)));
+      }
+      yield timeout(10);
+      this.isPlaying = false;
+      this.previousPlayedUrls = this.audioFileUrl;
+    } catch (e) {
+      // NOP
+    } finally {
+      startedSources.forEach(({ source }) => {
+        source.stop(0);
+      });
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.isPlaying = false;
+        this.totalDuration = 0;
       }
     }
+  }).enqueue())
+  playTask;
 
-    !this.isDestroyed && !this.isDestroying
-      ? this.set('previousPlayedUrls', this.audioFileUrl)
-      : '';
-    if (Ember.testing) {
-      this.isPlaying = false;
-    }
-  }
-
-  defineProgressValue() {
-    const playedTime = this.audioElements.reduce(
-      (currentPlayedTime, audioElement) => {
-        currentPlayedTime = currentPlayedTime + audioElement.currentTime;
-        return currentPlayedTime;
-      },
-      0,
-    );
-    !this.isDestroyed && !this.isDestroying
-      ? this.setProgress((playedTime * 100) / this.audioElementsLength)
-      : '';
-  }
+  @(task(function* fakePlayAudio() {
+    this.totalDuration = TIMINGS.FAKE_AUDIO;
+    this.isPlaying = true;
+    this.trackProgress.perform();
+    yield timeout(TIMINGS.FAKE_AUDIO);
+    this.isPlaying = false;
+    this.totalDuration = 0;
+  }).enqueue())
+  fakePlayTask;
 
   setProgress(progress) {
+    this.audioPlayingProgress = progress;
+    if (progress !== 100 && (progress >= 99 || Ember.testing)) {
+      this.setProgress(100);
+      return;
+    }
     window.requestAnimationFrame(() => {
       if (this.buttonElement) {
         this.buttonElement.style.setProperty('--progress', `${progress}%`);
       }
     });
-    this.set('audioPlayingProgress', progress);
-
-    if (progress === 100) {
-      this.updateProgressTask.cancelAll();
-    } else if (progress >= 99 || Ember.testing) {
-      this.setProgress(100);
-    }
   }
 }

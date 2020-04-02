@@ -4,8 +4,7 @@
 process.title = "commit msg";
 
 var commit_regex = /(EPMLABSBRN-[0-9]{1,4}|Merge|merge) .*/gi;
-var error_msg =
-  "Aborting commit. Your commit message is missing a JIRA issue name, see example: 'EPMLABSBRN-111'";
+
 var fs = require("fs");
 var cwd = process.cwd();
 var path = require("path");
@@ -14,8 +13,7 @@ var commitMsg = fs
   .trim();
 
 if (!commit_regex.test(commitMsg)) {
-  process.stderr.write(error_msg);
+  process.stderr.write("Aborting commit. Your commit message is missing valid header or description.\n");
+  process.stderr.write("Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999].\n");
   process.exit(1);
-} else {
-  process.exit(0);
 }

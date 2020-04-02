@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
-import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.nhaarman.mockito_kotlin.verify
@@ -23,8 +23,10 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class ExerciseServiceTest {
     @InjectMocks
     lateinit var exerciseService: ExerciseService
+
     @Mock
     lateinit var exerciseRepository: ExerciseRepository
+
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
@@ -32,7 +34,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
         val exerciseId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
@@ -50,7 +52,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user and series`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
         val exerciseId = 1L
         val seriesId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
@@ -69,7 +71,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseTypeEnum.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
         `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN

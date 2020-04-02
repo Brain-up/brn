@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
@@ -15,14 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.STUDY_HISTORIES)
-@Api(value = BrnPath.STUDY_HISTORIES, description = "Contains actions over the results of finished exercise")
+@RequestMapping("/study-history")
+@Api(value = "/study-history", description = "Contains actions over the results of finished exercise")
 class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
     @PostMapping
-    fun saveOrUpdateStudyHistory(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<StudyHistoryDto> {
-        val studyHistoryResult = studyHistoryService.saveOrUpdateStudyHistory(studyHistoryDto)
-        return ResponseEntity.status(studyHistoryResult.responseCode!!).body(studyHistoryResult)
+    fun save(
+        @Validated @RequestBody studyHistoryDto: StudyHistoryDto
+    ): ResponseEntity<StudyHistoryDto> {
+
+        val existingHistory = studyHistoryService.findBy(studyHistoryDto.userId, studyHistoryDto.exerciseId)
+        if (existingHistory.isPresent) {
+            return ResponseEntity.ok()
+                .body(studyHistoryService.update(existingHistory.get(), studyHistoryDto))
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(studyHistoryService.create(studyHistoryDto))
     }
 
     @PatchMapping

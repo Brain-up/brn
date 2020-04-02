@@ -1,7 +1,11 @@
 import Route from '@ember/routing/route';
-
-export default Route.extend({
+import { inject as service } from '@ember/service';
+export default class IndexRoute extends Route {
+  @service('network') network;
+  model() {
+    return this.network.loadCurrentUser();
+  }
   redirect() {
     this.transitionTo('groups');
-  },
-});
+  }
+};
