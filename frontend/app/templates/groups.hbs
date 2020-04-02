@@ -1,6 +1,6 @@
 <ol class="flex series-container items-center justify-center">
   <li class="mr-6 list-item">
-    {{#link-to "group" this.model.firstObject}}
+    <LinkTo @route="group" @model={{this.model.lastObject}}>
       <ExerciseType
         @progress={{100}}
         @completed={{48}}
@@ -8,10 +8,10 @@
         class="speech-exercise"
         @initial={{this.model.lastObject.name}}
       />
-    {{/link-to}}
+    </LinkTo>
   </li>
   <li class="list-item">
-    {{#link-to "group" this.model.lastObject}}
+    <LinkTo @route="group" @model={{this.model.firstObject}}>
       <ExerciseType
         @progress={{24.43}}
         @completed={{88}}
@@ -19,6 +19,6 @@
         class="non-speech-exercises"
         @initial={{this.model.firstObject.name}}
       />
-    {{/link-to}}
+    </LinkTo>
   </li>
 </ol>
