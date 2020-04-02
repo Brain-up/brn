@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
 import org.junit.jupiter.api.AfterEach
@@ -25,8 +24,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WithMockUser(username = "admin", roles = ["ADMIN"])
 class GroupControllerIT {
 
+    private val baseUrl = "/groups"
+
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -45,7 +47,7 @@ class GroupControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.GROUPS)
+                .get(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -65,7 +67,7 @@ class GroupControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.GROUPS + "/" + existingExerciseGroup.id)
+                .get(baseUrl + "/" + existingExerciseGroup.id)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN

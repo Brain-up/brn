@@ -11,7 +11,13 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked lastName;
   @tracked password;
   @tracked birthday;
-
+  get registrationInProgress() {
+    return (
+      this.loginInProgress ||
+      this.registrationTask.lastSuccessful ||
+      this.registrationTask.isRunning
+    );
+  }
   get login() {
     return this.email;
   }
@@ -29,6 +35,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     } else {
       const error = yield result.json();
       this.errorMessage = error.errors.pop();
+      this.registrationTask.cancelAll();
     }
   }).drop())
   registrationTask;

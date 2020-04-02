@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseGroupDto
+import com.epam.brn.upload.csv.group.GroupRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -27,6 +28,12 @@ data class ExerciseGroup(
     @OneToMany(mappedBy = "exerciseGroup", cascade = [(CascadeType.ALL)])
     val series: MutableSet<Series> = LinkedHashSet()
 ) {
+    constructor(record: GroupRecord) : this(
+        id = record.groupId,
+        name = record.name,
+        description = record.description
+    )
+
     fun toDto() = ExerciseGroupDto(
         id = id,
         name = name,

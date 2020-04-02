@@ -13,6 +13,9 @@ export default class LoginFormComponent extends Component {
 
   @tracked errorMessage = '';
 
+  get loginInProgress() {
+    return this.loginTask.lastSuccessful || this.loginTask.isRunning;
+  }
   get usernameError() {
     if (this.login === undefined) {
       return false;
@@ -36,6 +39,7 @@ export default class LoginFormComponent extends Component {
       } else {
         this.errorMessage = error.error || error;
       }
+      this.loginTask.cancelAll();
     }
 
     if (this.session.isAuthenticated) {

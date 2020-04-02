@@ -37,3 +37,14 @@ body {
   min-height: 100%;
   overflow: hidden;
 }
+
+.form-control {
+  width: 100%;
+  height: 30px;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}

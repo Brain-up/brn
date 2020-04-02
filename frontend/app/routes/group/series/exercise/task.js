@@ -8,25 +8,26 @@ export default Route.extend({
     let task = await this.store.findRecord(`task/${modelType}`, task_id);
     return task;
   },
-  afterModel(task, { to }) {
+  async afterModel(task, { to }) {
     if (
       !task.canInteract ||
       (to.parent.params.exercise_id &&
         task.exercise.content &&
         to.parent.params.exercise_id !== task.exercise.content.id)
     ) {
-      this.store
-        .findRecord('exercise', to.parent.params.exercise_id)
-        .then((exercise) => {
-          const series = exercise.get('series');
-          const firstTask = exercise.get('sortedTasks.firstObject');
-          this.transitionTo(
-            'group.series.exercise.task',
-            series.get('id'),
-            exercise.get('id'),
-            firstTask.get('id'),
-          );
-        });
+      const exercise = await this.store.findRecord(
+        'exercise',
+        to.parent.params.exercise_id,
+      );
+
+      const series = exercise.get('series');
+      const firstTask = exercise.get('sortedTasks.firstObject');
+      this.transitionTo(
+        'group.series.exercise.task',
+        series.get('id'),
+        exercise.get('id'),
+        firstTask.get('id'),
+      );
     }
 
     task.set('repetitionCount', 0);
