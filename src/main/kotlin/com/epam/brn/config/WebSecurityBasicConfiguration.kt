@@ -1,5 +1,9 @@
 package com.epam.brn.config
 
+import com.epam.brn.dto.JwtConfig
+import com.epam.brn.security.JwtTokenAuthenticationFilter
+import com.epam.brn.security.JwtUsernameAndPasswordAuthenticationFilter
+import javax.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -8,9 +12,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +41,13 @@ class WebSecurityBasicConfiguration(
     override fun configure(http: HttpSecurity) {
         http.csrf()
             .disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint { _, response, _ -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED) }
+            .and()
+            .addFilter(JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig()))
+            .addFilterAfter(JwtTokenAuthenticationFilter(jwtConfig()), UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
             .antMatchers("/brnlogin").permitAll()
             .antMatchers("/registration").permitAll()
@@ -44,8 +57,8 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/cloud/upload").hasRole(ADMIN)
             .antMatchers("/cloud/folders").hasRole(ADMIN)
             .antMatchers("/**").hasAnyRole(ADMIN, USER)
-            .and().formLogin()
-            .and().httpBasic()
+            .anyRequest()
+            .authenticated()
     }
 
     @Bean
@@ -53,4 +66,7 @@ class WebSecurityBasicConfiguration(
 
     @Bean
     fun brnAuthenticationManager(): AuthenticationManager = super.authenticationManagerBean()
+
+    @Bean
+    fun jwtConfig() = JwtConfig()
 }
