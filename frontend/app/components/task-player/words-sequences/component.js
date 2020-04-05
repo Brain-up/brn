@@ -113,6 +113,7 @@ export default class WordsSequencesComponent extends Component {
     this.updateLocalTasks();
     await customTimeout(1000);
     this.startTask();
+    this.onWrongAnswer();
   }
 
   async handleCorrectAnswer() {

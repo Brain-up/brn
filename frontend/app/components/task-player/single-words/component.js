@@ -28,6 +28,7 @@ export default class TaskPlayerComponent extends Component {
   @(task(function*() {
     yield customTimeout(2000);
     this.taskResultIsVisible = false;
+    this.onWrongAnswer();
   }).drop())
   showTaskResult;
 
@@ -55,7 +56,6 @@ export default class TaskPlayerComponent extends Component {
   handleSubmit(word) {
     this.lastAnswer = word;
     if (word !== this.task.word) {
-      debugger;
       const currentWordsOrder = Array.from(this.shuffledWords);
       this.task.set('repetitionCount', this.task.repetitionCount + 1);
       this.task.set('nextAttempt', true);

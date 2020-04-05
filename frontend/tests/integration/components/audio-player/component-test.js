@@ -18,7 +18,6 @@ module('Integration | Component | audio-player', function(hooks) {
     };
 
     this.set('audioElements', [{ ...fakeAudio }, { ...fakeAudio }]);
-    this.set('setAudioElements', () => {});
     this.set('emptyList', []);
   });
 
@@ -35,8 +34,6 @@ module('Integration | Component | audio-player', function(hooks) {
       hbs`
       <AudioPlayer
         @audioElements={{this.audioElements}}
-        @setAudioElements={{this.setAudioElements}}
-        @previousPlayedUrls={{this.emptyList}}
       />`,
     );
   });
@@ -45,8 +42,6 @@ module('Integration | Component | audio-player', function(hooks) {
     await render(
       hbs`<AudioPlayer
         @audioElements={{this.audioElements}}
-        @setAudioElements={{this.setAudioElements}}
-        @previousPlayedUrls={{this.emptyList}}
       />`,
     );
     assert.dom('[data-test-play-audio-button]').isNotDisabled();
@@ -66,8 +61,6 @@ module('Integration | Component | audio-player', function(hooks) {
     await render(
       hbs`<AudioPlayer
         @audioElements={{this.audioElements}}
-        @setAudioElements={{this.setAudioElements}}
-        @previousPlayedUrls={{this.emptyList}}
       />`,
     );
     pageObject.playAudio();

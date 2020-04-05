@@ -41,8 +41,16 @@ export default class TaskPlayerComponent extends Component {
       this.justEnteredTask
     );
   }
-  onRightAnswer() {}
 
+  // @action 
+  onRightAnswer() {
+    console.log('onRightAnswer');
+  }
+  
+  @action onWrongAnswer() {
+    this.taskModeTask.cancelAll();
+    this.audio.startPlayTask();
+  }
 
   @(task(function *() {
     try {
@@ -51,14 +59,14 @@ export default class TaskPlayerComponent extends Component {
       this.mode = 'listen';
       for (let option of this.task.answerOptions) {
         this.activeWord = option.word;
-        yield this.audio.player.setAudioElements(this.audio.player.context, [ option.audioFileUrl]);
-        yield this.audio.player.playAudio();
+        yield this.audio.setAudioElements([option.audioFileUrl]);
+        yield this.audio.playAudio();
         yield timeout(1500);
         this.activeWord = null;
       }
     } finally {
       this.activeWord = null;
-      this.audio.player.stop();
+      this.audio.stop();
     }
   }).keepLatest()) listenModeTask;
 
@@ -67,8 +75,7 @@ export default class TaskPlayerComponent extends Component {
       this.interactModeTask.cancelAll();
       this.listenModeTask.cancelAll();
       this.mode = 'task';
-      yield this.audio.player.setAudioElements(this.audio.player.context, this.audio.player.filesToPlay);
-      yield this.audio.player.playAudio();
+      yield this.audio.startPlayTask();
       this.studyingTimer.runTimer();
       this.task.exercise.content.trackTime('start');
     } finally {
@@ -86,15 +93,15 @@ export default class TaskPlayerComponent extends Component {
           this.activeWord = this.textToPlay;
           let option = this.task.answerOptions.find(({word})=>word === this.textToPlay);
           if (option) {
-            yield this.audio.player.setAudioElements(this.audio.player.context, [option.audioFileUrl]);
-            yield this.audio.player.playAudio();
+            yield this.audio.setAudioElements([option.audioFileUrl]);
+            yield this.audio.playAudio();
           }
         }
         yield timeout(1500);
         this.activeWord = null;
       }
     } finally {
-      this.audio.player.stop();
+      this.audio.stop();
       this.activeWord = null;
       this.textToPlay = null;
     }

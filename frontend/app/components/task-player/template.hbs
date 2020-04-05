@@ -5,13 +5,13 @@
   {{component
     this.componentType
     onRightAnswer=this.onRightAnswer
+    onWrongAnswer=this.onWrongAnswer
     task=@task
     disableAnswers=this.disableAnswers
     disableAudioPlayer=this.disableAudioPlayer
     activeWord=this.activeWord
     onPlayText=this.playText
     mode=this.mode
-    autoplay=(not this.disableAudioPlayer)
   }}
   {{#if this.justEnteredTask}}
     <StartTaskButton @startTask={{this.startTask}} />
