@@ -5,6 +5,11 @@ import { inject as service } from '@ember/service';
 export default class AudioPlayerComponent extends Component {
   @service audio;
   
+
+  willDestroy() {
+    this.audio.stop();
+  }
+
   get isPlaying() {
     return this.audio.isPlaying;
   }
