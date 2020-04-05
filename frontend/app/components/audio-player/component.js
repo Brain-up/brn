@@ -22,11 +22,11 @@ export default class AudioPlayerComponent extends Component {
     this.audio.playAudio();
   }
 
-  @action onUpdateSource(_, url) {
+  @action onUpdateSource(_, [url]) {
     this.audio.audioFileUrl = url;
   }
 
-  @action onUpdateProgress(_, progress) {
+  @action onUpdateProgress(_, [progress]) {
      window.requestAnimationFrame(() => {
       if (this.buttonElement) {
         this.buttonElement.style.setProperty('--progress', `${progress}%`);

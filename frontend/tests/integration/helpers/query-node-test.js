@@ -10,8 +10,8 @@ module('Integration | Helper | query-node', function(hooks) {
   test('it renders', async function(assert) {
     this.set('inputValue', '1234');
 
-    await render(hbs`{{query-node inputValue}}`);
+    await render(hbs`{{get (query-node "body") "className"}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    assert.ok(this.element.textContent.trim());
   });
 });
