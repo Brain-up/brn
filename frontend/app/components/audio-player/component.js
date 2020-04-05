@@ -10,9 +10,14 @@ import { createSource, createNoizeBuffer, loadAudioFiles, createAudioContext, to
 
 export default class AudioPlayerComponent extends Component {
   tagName = '';
+  context = createAudioContext();
   init() {
     super.init(...arguments);
-    this.context = createAudioContext();
+    this._attrs = {
+      audioFileUrl: this.audioFileUrl,
+      autoplay: this.autoplay,
+      disabled: this.disabled
+    }
     next(() => {
       this.audio.register(this);
     });
@@ -52,10 +57,28 @@ export default class AudioPlayerComponent extends Component {
   @tracked audioFileUrl;
 
   async didReceiveAttrs() {
+    console.log('didReceiveAttrs', [this.previousPlayedUrls, this.audioFileUrl]);
+
+    if (this._attrs.disabled !== this.disabled) {
+      console.log('changed: disabled', this.disabled);
+    }
+    if (this._attrs.autoplay !== this.autoplay) {
+      console.log('changed: autoplay', this.autoplay);
+    }
+    if (this._attrs.audioFileUrl !== this.audioFileUrl) {
+      console.log('changed: audioFileUrl', this.audioFileUrl);
+    }
+    
+    this._attrs = {
+      audioFileUrl: this.audioFileUrl,
+      autoplay: this.autoplay,
+      disabled: this.disabled
+    }
+    
     if (this.isPlaying) {
       return;
     }
-    await this.setAudioElements();
+    await this.setAudioElements(this.context, this.filesToPlay);
     if (this.autoplay && this.previousPlayedUrls !== this.audioFileUrl) {
       await this.playAudio();
     }
@@ -74,12 +97,12 @@ export default class AudioPlayerComponent extends Component {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
-  async setAudioElements() {
+  async setAudioElements(context, filesToPlay) {
     if (Ember.testing) {
       this.buffers = [];
       return;
     }
-    this.buffers = await loadAudioFiles(this.context, this.filesToPlay);
+    this.buffers = await loadAudioFiles(context, filesToPlay);
   }
 
   @action
@@ -88,6 +111,15 @@ export default class AudioPlayerComponent extends Component {
       this.playTask.perform();
     } else {
       this.fakePlayTask.perform();
+    }
+  }
+
+  @action
+  stop() {
+    if (!Ember.testing) {
+      this.playTask.cancelAll();
+    } else {
+      this.fakePlayTask.cancelAll();
     }
   }
 

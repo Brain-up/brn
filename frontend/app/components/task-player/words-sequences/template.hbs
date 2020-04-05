@@ -23,7 +23,7 @@
                 (get this.currentAnswerObject type)
                 answerOption.word
               }}
-              @clickAction={{fn this.checkMaybe answerOption}}
+              @clickAction={{if (eq @mode "interact") (fn @onPlayText answerOption.word) (fn this.checkMaybe answerOption)}}
               @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
               @word={{answerOption.word}}
             />

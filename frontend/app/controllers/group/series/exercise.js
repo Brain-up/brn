@@ -30,13 +30,6 @@ export default class GroupSeriesExerciseController extends Controller {
     yield customTimeout(waitingTime);
   }).drop()) runCorrectnessWidgetTimer;
 
-
-  @action
-  onStepChange() {
-    debugger;
-  }
-
-
   @action
   async afterCompleted() {
     this.saveExercise();

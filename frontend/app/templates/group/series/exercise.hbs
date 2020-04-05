@@ -6,7 +6,8 @@
         Назад
       </LinkTo>
     </div>
-    <ExerciseSteps @onClick={{this.onStepChange}} />
+    <div id="exercise-steps-slot">
+    </div>
     <Timer @paused={{true}} />
   </div>
 {{/if}}

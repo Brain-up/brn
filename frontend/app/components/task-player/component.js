@@ -2,7 +2,8 @@ import Component from '@ember/component';
 import { dasherize } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-
+import { action } from '@ember/object';
+import { timeout, task } from 'ember-concurrency';
 export default class TaskPlayerComponent extends Component {
   @service
   audio;
@@ -12,12 +13,25 @@ export default class TaskPlayerComponent extends Component {
   justEnteredTask = true;
   @tracked
   task = null;
+  @tracked
+  activeWord = null;
+  @tracked
+  textToPlay = null;
   tagName = '';
+  @tracked mode = ''; // listen, interact, task
   get componentType() {
     return `task-player/${dasherize(this.task.exerciseType)}`;
   }
   get disableAnswers() {
+    if (this.mode === "interact") {
+      return false;
+    }
     return this.audio.isPlaying || this.disableAudioPlayer;
+  }
+  didReceiveAttrs() {
+    if (this.justEnteredTask === false && this._task !== this.task) {
+      this.setMode('listen');
+    }
   }
 
   get disableAudioPlayer() {
@@ -28,9 +42,90 @@ export default class TaskPlayerComponent extends Component {
     );
   }
   onRightAnswer() {}
+
+
+  @(task(function *() {
+    try {
+      this.interactModeTask.cancelAll();
+      this.taskModeTask.cancelAll();
+      this.mode = 'listen';
+      for (let option of this.task.answerOptions) {
+        this.activeWord = option.word;
+        yield this.audio.player.setAudioElements(this.audio.player.context, [ option.audioFileUrl]);
+        yield this.audio.player.playAudio();
+        yield timeout(1500);
+        this.activeWord = null;
+      }
+    } finally {
+      this.activeWord = null;
+      this.audio.player.stop();
+    }
+  }).keepLatest()) listenModeTask;
+
+  @(task(function *() {
+    try {
+      this.interactModeTask.cancelAll();
+      this.listenModeTask.cancelAll();
+      this.mode = 'task';
+      yield this.audio.player.setAudioElements(this.audio.player.context, this.audio.player.filesToPlay);
+      yield this.audio.player.playAudio();
+      this.studyingTimer.runTimer();
+      this.task.exercise.content.trackTime('start');
+    } finally {
+      // EOL
+    }
+  }).keepLatest()) taskModeTask;
+  
+  @(task(function *() {
+    try {
+      this.taskModeTask.cancelAll();
+      this.listenModeTask.cancelAll();
+      this.mode = 'interact';
+      while (this.mode === 'interact') {
+        if (this.textToPlay) {
+          this.activeWord = this.textToPlay;
+          let option = this.task.answerOptions.find(({word})=>word === this.textToPlay);
+          if (option) {
+            yield this.audio.player.setAudioElements(this.audio.player.context, [option.audioFileUrl]);
+            yield this.audio.player.playAudio();
+          }
+        }
+        yield timeout(1500);
+        this.activeWord = null;
+      }
+    } finally {
+      this.audio.player.stop();
+      this.activeWord = null;
+      this.textToPlay = null;
+    }
+  }).keepLatest()) interactModeTask;
+
+
+  @action playText(text) {
+    this.textToPlay = text;
+  }
+  
+  
+  @action
+  onModeChange(mode) {
+    this.setMode(mode);
+  }
+
+  @action setMode(mode, ...args) {
+    if (mode === 'interact') {
+      return this.interactModeTask.perform(...args);
+    } else if (mode === 'task') {
+      return this.taskModeTask.perform(...args);
+    } else if (mode === 'listen') {
+      return this.listenModeTask.perform(...args);
+    }
+  }
+  
+  @action
   async startTask() {
-    this.studyingTimer.runTimer();
-    this.task.exercise.content.trackTime('start');
     this.justEnteredTask = false;
+    await this.setMode('listen');
+    // await this.setMode('interact');
+    // await this.setMode('task');
   }
 }

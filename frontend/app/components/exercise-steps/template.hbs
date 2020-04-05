@@ -1,5 +1,5 @@
 <ul class="flex">
-    <ExerciseSteps::Step @mode="active" {{on "click" (fn @onClick "listen")}}>Listen</ExerciseSteps::Step>
-    <ExerciseSteps::Step @mode="enabled" {{on "click" (fn @onClick "interact")}}>Interact</ExerciseSteps::Step>
-    <ExerciseSteps::Step @mode="disabled" {{on "click" (fn @onClick "task")}}>Task</ExerciseSteps::Step>
+    <ExerciseSteps::Step @mode={{if (eq @activeStep "listen") "active" "disabled"}} {{on "click" (fn @onClick "listen")}}>Listen</ExerciseSteps::Step>
+    <ExerciseSteps::Step @mode={{if (eq @activeStep "interact") "active" "disabled"}} {{on "click" (fn @onClick "interact")}}>Interact</ExerciseSteps::Step>
+    <ExerciseSteps::Step @mode={{if (eq @activeStep "task") "active" "disabled"}} {{on "click" (fn @onClick "task")}}>Task</ExerciseSteps::Step>
 </ul>

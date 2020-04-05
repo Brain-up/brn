@@ -6,6 +6,8 @@ import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
 import { tracked } from '@glimmer/tracking';
+import { urlForAudio } from 'brn/utils/file-url';
+
 
 function getEmptyTemplate(selectedItemsOrder = []) {
   return selectedItemsOrder.reduce((result, currentKey) => {
@@ -39,7 +41,7 @@ export default class WordsSequencesComponent extends Component {
     return (
       this.firstUncompletedTask &&
       this.firstUncompletedTask.answer.map(({ audioFileUrl }) => {
-        return `/audio/${audioFileUrl}`;
+        return urlForAudio(audioFileUrl);
       })
     );
   }

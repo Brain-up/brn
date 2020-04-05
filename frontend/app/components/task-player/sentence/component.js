@@ -4,6 +4,8 @@ import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { action } from '@ember/object';
+import { urlForAudio } from 'brn/utils/file-url';
+
 export default class SentenceComponent extends Component {
   @tracked exerciseResultIsVisible = false;
 
@@ -21,7 +23,7 @@ export default class SentenceComponent extends Component {
 
   get audioFiles() {
     return this.task.answerParts.map(({ audioFileUrl }) => {
-      return `/audio/${audioFileUrl}`;
+      return urlForAudio(audioFileUrl);
     });
   }
 

@@ -24,15 +24,14 @@
           data-test-task-answer
           data-test-task-answer-option={{word}}
           disabled={{@disableAnswers}}
-          class="task-player__option-button bg-transparent py-2 px-4 border border-blue-500 rounded text-blue-700
-
-
+          class="task-player__option-button bg-transparent py-2 px-4 rounded text-blue-700
+            {{if (eq @activeWord word) "border bg-blue-500"  "border border-blue-500"}}
             {{if
               @disableAnswers
               "opacity-50 cursor-default"
               "hover:bg-blue-500 hover:text-white hover:border-transparent"
             }}"
-          {{on "click" (fn this.handleSubmit word)}}
+          {{on "click" (if (eq @mode "interact") (fn @onPlayText word) (fn this.handleSubmit word))}}
         >
           {{word}}
         </button>
