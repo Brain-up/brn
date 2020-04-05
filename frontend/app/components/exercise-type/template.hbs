@@ -1,0 +1,22 @@
+<div class={{style-namespace "exercise-type"}} ...attributes>
+  <button class="card">
+    <span ...attributes></span>
+    <h4 class="card__title">
+      {{@initial}}
+    </h4>
+    <div class="progress">
+      <div class="svg-box">
+        <ProgressBarCircle @percent={{@progress}} />
+      </div>
+      <span class="progress__text">
+        Пройдено
+      </span>
+      <span class="progress__completed">
+        {{@completed}}
+      </span>
+      <span class="progress__total">
+        {{@total}}
+      </span>
+    </div>
+  </button>
+</div>
