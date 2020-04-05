@@ -1,33 +1,46 @@
 import Controller from '@ember/controller';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
-import { computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
 
-export default Controller.extend({
-  router: inject(),
-  tasksManager: inject(),
-  exerciseIsCompletedInCurrentCycle: computed(
-    'model.tasks.@each.completedInCurrentCycle',
-    function() {
-      return this.model.tasks.every((task) => task.completedInCurrentCycle);
-    },
-  ),
+export default class GroupSeriesExerciseController extends Controller {
+  @service router;
+  @service tasksManager;
+
+  @tracked correctnessWidgetIsShown = false;
+
+  get exerciseIsCompletedInCurrentCycle() {
+    return this.model.get('tasks').every((task) => task.get('completedInCurrentCycle'));
+  }
+
   goToSeries() {
     this.router.transitionTo('group.series.index', this.model.get('series.id'));
-  },
-  runCorrectnessWidgetTimer: task(function*(isCorrect = false) {
+  }
+
+  saveExercise() {
+    this.model.trackTime('end');
+    this.model.postHistory();
+  }
+
+  @(task(function*(isCorrect = false) {
     const waitingTime = isCorrect ? 3000 : 2000;
     this.set('correctnessWidgetIsShown', true);
     yield customTimeout(waitingTime);
-  }).drop(),
+  }).drop()) runCorrectnessWidgetTimer;
+
+
+  @action
+  onStepChange() {
+    debugger;
+  }
+
+
+  @action
   async afterCompleted() {
     this.saveExercise();
     await this.runCorrectnessWidgetTimer.perform();
     this.goToSeries();
-  },
-  saveExercise() {
-    this.model.trackTime('end');
-    this.model.postHistory();
-  },
-});
+  }
+}

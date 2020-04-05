@@ -31,6 +31,6 @@ export default class TaskPlayerComponent extends Component {
   async startTask() {
     this.studyingTimer.runTimer();
     this.task.exercise.content.trackTime('start');
-    this.set('justEnteredTask', false);
+    this.justEnteredTask = false;
   }
 }
