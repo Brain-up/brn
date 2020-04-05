@@ -12,15 +12,6 @@ module('Integration | Component | exercise-steps', function(hooks) {
 
     await render(hbs`<ExerciseSteps />`);
 
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <ExerciseSteps>
-        template block text
-      </ExerciseSteps>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('button').exists({count:3});
   });
 });

@@ -20,6 +20,8 @@ export default ApplicationSerializer.extend({
         opts = [...hash.answerOptions, hash.correctAnswer];
       }
       hash.normalizedAnswerOptions = shuffleArray(opts).map((el) => new AnswerOption(el));
+    } else {
+      hash.normalizedAnswerOptions = [];
     }
     return this._super(typeClass, hash);
   },

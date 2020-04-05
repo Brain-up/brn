@@ -1,15 +1,19 @@
 import Ember from 'ember';
-import Component from '@ember/component';
 import { isArray } from '@ember/array';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
 import { timeout, task } from 'ember-concurrency';
-import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
-import { createSource, createNoizeBuffer, loadAudioFiles, createAudioContext, toSeconds, toMilliseconds, TIMINGS } from 'brn/utils/audio-api';
+import {
+  createSource,
+  createNoizeBuffer,
+  loadAudioFiles,
+  createAudioContext,
+  toSeconds,
+  toMilliseconds,
+  TIMINGS,
+} from 'brn/utils/audio-api';
 import Service from '@ember/service';
 export default class AudioService extends Service {
-
   context = createAudioContext();
   @tracked
   player = null;
@@ -22,7 +26,7 @@ export default class AudioService extends Service {
   @tracked audioPlayingProgress = 0;
 
   @tracked audioFileUrl;
-  
+
   @(task(function*() {
     try {
       this.startTime = Date.now();
@@ -43,7 +47,6 @@ export default class AudioService extends Service {
     }
   }).enqueue())
   trackProgress;
-
 
   @action async startPlayTask() {
     if (this.isPlaying) {
@@ -91,11 +94,14 @@ export default class AudioService extends Service {
   }
 
   getNoize(duration) {
-    return createSource(this.context, createNoizeBuffer(this.context, duration));
+    return createSource(
+      this.context,
+      createNoizeBuffer(this.context, duration),
+    );
   }
 
   createSources(context, buffers) {
-    return buffers.map((buffer)=>createSource(context, buffer));
+    return buffers.map((buffer) => createSource(context, buffer));
   }
 
   calcDurationForSources(sources) {
@@ -109,7 +115,9 @@ export default class AudioService extends Service {
     const hasNoize = noizeSeconds !== 0;
     try {
       this.sources = this.createSources(this.context, this.buffers || []);
-      this.totalDuration = this.calcDurationForSources(this.sources) + toMilliseconds(noizeSeconds);
+      this.totalDuration =
+        this.calcDurationForSources(this.sources) +
+        toMilliseconds(noizeSeconds);
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
@@ -118,7 +126,7 @@ export default class AudioService extends Service {
         );
         noize.source.start(0);
         startedSources.push(noize);
-        yield timeout(toMilliseconds((noizeSeconds / 2)));
+        yield timeout(toMilliseconds(noizeSeconds / 2));
       }
       for (const item of this.sources) {
         const duration = toMilliseconds(item.source.buffer.duration);
@@ -127,7 +135,7 @@ export default class AudioService extends Service {
         yield timeout(duration);
       }
       if (hasNoize) {
-        yield timeout(toMilliseconds((noizeSeconds / 2)));
+        yield timeout(toMilliseconds(noizeSeconds / 2));
       }
       yield timeout(10);
       this.isPlaying = false;
@@ -142,7 +150,9 @@ export default class AudioService extends Service {
         this.totalDuration = 0;
       }
     }
-  }).keepLatest().maxConcurrency(1))
+  })
+    .keepLatest()
+    .maxConcurrency(1))
   playTask;
 
   @(task(function* fakePlayAudio() {
@@ -162,5 +172,4 @@ export default class AudioService extends Service {
       return;
     }
   }
-
 }

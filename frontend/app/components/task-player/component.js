@@ -5,7 +5,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { timeout, task } from 'ember-concurrency';
 import { MODES } from 'brn/utils/task-modes';
-
+import Ember from 'ember';
 export default class TaskPlayerComponent extends Component {
   @service
   audio;
@@ -32,7 +32,11 @@ export default class TaskPlayerComponent extends Component {
   }
   didReceiveAttrs() {
     if (this.justEnteredTask === false && this._task !== this.task) {
-      this.setMode(MODES.LISTEN);
+      if (Ember.testing) {
+        this.setMode(MODES.TASK);
+      } else {
+        this.setMode(MODES.LISTEN);
+      }
     }
   }
 
@@ -46,7 +50,7 @@ export default class TaskPlayerComponent extends Component {
 
   // @action
   onRightAnswer() {
-    console.log('onRightAnswer');
+    // EOL
   }
 
   @action onWrongAnswer() {
@@ -136,7 +140,11 @@ export default class TaskPlayerComponent extends Component {
   @action
   async startTask() {
     this.justEnteredTask = false;
-    await this.setMode(MODES.LISTEN);
+    if (Ember.testing) {
+      await this.setMode('task');
+    } else {
+      await this.setMode(MODES.LISTEN);
+    }
     // await this.setMode('interact');
     // await this.setMode('task');
   }

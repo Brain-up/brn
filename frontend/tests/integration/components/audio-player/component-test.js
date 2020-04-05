@@ -27,6 +27,9 @@ module('Integration | Component | audio-player', function(hooks) {
       register(ctx) {
         assert.ok(ctx);
       }
+      stop() {
+        assert.ok(true);
+      }
     }
     this.owner.register('service:audio', MockAudio);
 

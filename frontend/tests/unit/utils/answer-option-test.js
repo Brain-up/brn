@@ -1,4 +1,4 @@
-import { AnswerOption } from 'brn/utils/answer-option';
+import AnswerOption from 'brn/utils/answer-option';
 import { module, test } from 'qunit';
 
 module('Unit | Utility | answer-option', function() {

@@ -8,9 +8,8 @@ module('Integration | Helper | query-node', function(hooks) {
 
   // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
 
-    await render(hbs`{{get (query-node "body") "className"}}`);
+    await render(hbs`{{get (query-node "body") "textContent"}}`);
 
     assert.ok(this.element.textContent.trim());
   });
