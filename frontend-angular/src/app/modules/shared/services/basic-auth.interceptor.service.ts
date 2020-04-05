@@ -17,7 +17,8 @@ export class BasicAuthInterceptor implements HttpInterceptor {
       'https://s3.us-south.cloud-object-storage.appdomain.cloud/cloud-object-storage-gg-cos-standard-koy'
     ];
     if (unAuthenticatedUrls.indexOf(req.url) < 0) {
-      headers = req.headers.set('Authorization', 'Basic YWRtaW5AYWRtaW4uY29tOmFkbWlu');
+      // tslint:disable-next-line:max-line-length
+      headers = req.headers.set('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTU4NjA5ODc0MiwiZXhwIjoxNTg2MTg1MTQyfQ.VSdRDZcAx5-Pn0LgfBnMfUmlWgkFaEJdgxTt_OvALrIYdzNsRq6a1lCC5TeQjPeuNh54wPMwPH9YHRml1_383Q');
     }
 
     const authRequest = req.clone({

@@ -1,15 +1,13 @@
 HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
+target/
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+out
+.gradle
+brn.log
+*.gz
 
-credentials.properties
-local.properties
-yarn.lock
-src/main/resources/application-local.properties
-creds.txt
 ### STS ###
 .apt_generated
 .classpath
@@ -24,7 +22,6 @@ creds.txt
 *.iws
 *.iml
 *.ipr
-out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -32,17 +29,7 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+build/
 
 ### VS Code ###
 .vscode/
-/target/
-
-### Eclipse & Vaadin ###
-/bin/
-/node_modules/
-/webpack.generated.js
-
-### logs ###
-**/*.log
-**/*.log.*.gz
-brn.log.*
