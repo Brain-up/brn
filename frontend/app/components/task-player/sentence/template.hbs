@@ -20,10 +20,10 @@
               @checked={{this.answerCompleted}}
               @isCorrect={{this.isCorrect}}
               @disabled={{@disableAnswers}}
-              @isSelected={{eq
+              @isSelected={{or (eq @activeWord answerOption.word) (eq
                 (get this.currentAnswerObject type)
                 answerOption.word
-              }}
+              )}}
               @clickAction={{if (eq @mode "interact") (fn @onPlayText answerOption.word) (fn this.checkMaybe answerOption)}}
               @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
               @word={{answerOption.word}}

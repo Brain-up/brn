@@ -59,7 +59,7 @@ export default class TaskPlayerComponent extends Component {
       this.interactModeTask.cancelAll();
       this.taskModeTask.cancelAll();
       this.mode = MODES.LISTEN;
-      for (let option of this.task.answerOptions) {
+      for (let option of this.task.normalizedAnswerOptions) {
         this.activeWord = option.word;
         yield this.audio.setAudioElements([option.audioFileUrl]);
         yield this.audio.playAudio();
@@ -95,7 +95,7 @@ export default class TaskPlayerComponent extends Component {
       while (this.mode === MODES.INTERACT) {
         if (this.textToPlay) {
           this.activeWord = this.textToPlay;
-          let option = this.task.answerOptions.find(
+          let option = this.task.normalizedAnswerOptions.find(
             ({ word }) => word === this.textToPlay,
           );
           if (option) {

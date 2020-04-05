@@ -11,6 +11,7 @@ export default class Task extends CompletionDependent.extend({
   name: attr('string'),
   order: attr('number'),
   answerOptions: attr(),
+  normalizedAnswerOptions: attr(),
   exerciseType: attr('string'),
   exercise: belongsTo('exercise', {
     async: true,
