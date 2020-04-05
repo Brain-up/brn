@@ -1,6 +1,6 @@
 package com.epam.brn.security
 
-import com.epam.brn.dto.JwtConfig
+import com.epam.brn.config.JwtConfig
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import javax.servlet.FilterChain

@@ -34,6 +34,6 @@ module('Unit | Adapter | application', function(hooks) {
 
     this.owner.register('service:session', MockSession);
 
-    assert.deepEqual(adapter.headers, {'Authorization': 'Basic 42'});
+    assert.deepEqual(adapter.headers, {'Authorization': 'Bearer 42'});
   });
 });

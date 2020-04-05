@@ -1,9 +1,8 @@
 package com.epam.brn.config
 
-import com.epam.brn.dto.JwtConfig
 import com.epam.brn.security.JwtTokenAuthenticationFilter
 import com.epam.brn.security.JwtUsernameAndPasswordAuthenticationFilter
-import javax.servlet.http.HttpServletResponse
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,20 +15,21 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
 class WebSecurityBasicConfiguration(
-    @Qualifier("brainUpUserDetailService") brainUpUserDetailService: UserDetailsService
+    @Qualifier("brainUpUserDetailService") private val userDetailsService: UserDetailsService,
+    @Qualifier("kotlinObjectMapper") private val kotlinObjectMapper: ObjectMapper,
+    @Qualifier("restAuthenticationEntryPoint") private val restAuthenticationEntryPoint: AuthenticationEntryPoint
 ) : WebSecurityConfigurerAdapter() {
 
     companion object {
         const val ADMIN = "ADMIN"
         const val USER = "USER"
     }
-
-    private val userDetailsService: UserDetailsService = brainUpUserDetailService
 
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
@@ -44,9 +44,15 @@ class WebSecurityBasicConfiguration(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .exceptionHandling()
-            .authenticationEntryPoint { _, response, _ -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED) }
+            .authenticationEntryPoint(restAuthenticationEntryPoint)
             .and()
-            .addFilter(JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig()))
+            .addFilter(
+                JwtUsernameAndPasswordAuthenticationFilter(
+                    authenticationManager(),
+                    jwtConfig(),
+                    kotlinObjectMapper
+                )
+            )
             .addFilterAfter(JwtTokenAuthenticationFilter(jwtConfig()), UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
             .antMatchers("/brnlogin").permitAll()

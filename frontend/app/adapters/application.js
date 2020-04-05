@@ -8,7 +8,7 @@ export default DS.RESTAdapter.extend({
       return {};
     }
     return {
-      Authorization: `Basic ${this.session.data.authenticated.access_token}`,
+      Authorization: `Bearer ${this.session.data.authenticated.access_token}`,
     };
   },
   namespace: 'api',

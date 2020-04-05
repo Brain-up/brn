@@ -1,6 +1,8 @@
 package com.epam.brn.security
 
-import com.epam.brn.dto.JwtConfig
+import com.epam.brn.config.JwtConfig
+import com.epam.brn.dto.AuthOutDto
+import com.epam.brn.dto.LoginDto
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -18,7 +20,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 class JwtUsernameAndPasswordAuthenticationFilter(
     private val authManager: AuthenticationManager,
-    private val jwtConfig: JwtConfig
+    private val jwtConfig: JwtConfig,
+    private val kotlinObjectMapper: ObjectMapper
 ) : UsernamePasswordAuthenticationFilter() {
 
     init {
@@ -28,7 +31,7 @@ class JwtUsernameAndPasswordAuthenticationFilter(
     @Throws(AuthenticationException::class)
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
         return try {
-            val credentials = ObjectMapper().readValue(request.inputStream, UserCredentials::class.java)
+            val credentials = kotlinObjectMapper.readValue(request.inputStream, LoginDto::class.java)
             val authToken = UsernamePasswordAuthenticationToken(
                 credentials.username, credentials.password, emptyList()
             )
@@ -45,6 +48,7 @@ class JwtUsernameAndPasswordAuthenticationFilter(
         auth: Authentication
     ) {
         val now = System.currentTimeMillis()
+        val expirationDate = Date(now + jwtConfig.expiration * 1000)
         val token: String = Jwts.builder()
             .setSubject(auth.name)
             .claim(
@@ -52,14 +56,23 @@ class JwtUsernameAndPasswordAuthenticationFilter(
                     .mapNotNull { it.authority }
             )
             .setIssuedAt(Date(now))
-            .setExpiration(Date(now + jwtConfig.expiration * 1000))
+            .setExpiration(expirationDate)
             .signWith(SignatureAlgorithm.HS512, jwtConfig.secret.toByteArray())
             .compact()
+        setHeaderToResponse(response, token, jwtConfig.expiration)
         response.addHeader(jwtConfig.header, jwtConfig.prefix + token)
     }
 
-    private data class UserCredentials(
-        val username: String? = null,
-        val password: String? = null
-    )
+    private fun setHeaderToResponse(
+        response: HttpServletResponse,
+        token: String,
+        expiresIn: Long
+    ): HttpServletResponse {
+        response.contentType = "application/json"
+        response.characterEncoding = "UTF-8"
+        val authOutDto = AuthOutDto(token, "Bearer", expiresIn)
+        val responseBody = kotlinObjectMapper.writeValueAsString(authOutDto)
+        response.writer.write(responseBody)
+        return response
+    }
 }
