@@ -1,9 +1,24 @@
-<ol>
-  {{#each this.model as |group|}}
-    <li class="p-1">
-      {{#link-to "group" group}}
-        {{group.name}}
-      {{/link-to}}
-    </li>
-  {{/each}}
+<ol class="flex series-container items-center justify-center">
+  <li class="mr-6 list-item">
+    <LinkTo @route="group" @model={{this.model.lastObject}}>
+      <ExerciseType
+        @progress={{100}}
+        @completed={{48}}
+        @total={{100}}
+        class="speech-exercise"
+        @initial={{this.model.lastObject.name}}
+      />
+    </LinkTo>
+  </li>
+  <li class="list-item">
+    <LinkTo @route="group" @model={{this.model.firstObject}}>
+      <ExerciseType
+        @progress={{24.43}}
+        @completed={{88}}
+        @total={{150}}
+        class="non-speech-exercises"
+        @initial={{this.model.firstObject.name}}
+      />
+    </LinkTo>
+  </li>
 </ol>

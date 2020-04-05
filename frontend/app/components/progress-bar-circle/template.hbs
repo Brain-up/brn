@@ -1,0 +1,20 @@
+<div class={{style-namespace "progress-bar-circle"}}>
+  <svg viewBox="0 0 40 40" class="circular-chart blue">
+    <path
+      class="circle-bg"
+      d="M20 4.0845  
+            a 15.9155 15.9155 0 0 1 0 31.831
+            a 15.9155 15.9155 0 0 1 0 -31.831"
+    ></path>
+    <path
+      class="circle"
+      stroke-dasharray="{{this.dasharrayValue}} 100"
+      d="M20 4.0845  
+            a 15.9155 15.9155 0 0 1 0 31.831
+            a 15.9155 15.9155 0 0 1 0 -31.831"
+    ></path>
+    <text x="20" y="23.50" class="percentage">
+      {{this.dasharrayValue}}%
+    </text>
+  </svg>
+</div>
