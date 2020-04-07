@@ -4,7 +4,6 @@
   {{else}}
     <AudioPlayer
       @audioFileUrl={{this.audioFiles}}
-      @autoplay={{@autoplay}}
       @disabled={{@disableAudioPlayer}}
     />
     <div class="flex mt-4 justify-center">
@@ -21,11 +20,11 @@
               @checked={{this.answerCompleted}}
               @isCorrect={{this.isCorrect}}
               @disabled={{@disableAnswers}}
-              @isSelected={{eq
+              @isSelected={{or (eq @activeWord answerOption.word) (eq
                 (get this.currentAnswerObject type)
                 answerOption.word
-              }}
-              @clickAction={{fn this.checkMaybe answerOption}}
+              )}}
+              @clickAction={{if (eq @mode "interact") (fn @onPlayText answerOption.word) (fn this.checkMaybe answerOption)}}
               @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
               @word={{answerOption.word}}
             />
