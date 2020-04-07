@@ -4,6 +4,8 @@ import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { action } from '@ember/object';
+import { urlForAudio } from 'brn/utils/file-url';
+
 export default class SentenceComponent extends Component {
   @tracked exerciseResultIsVisible = false;
 
@@ -21,7 +23,7 @@ export default class SentenceComponent extends Component {
 
   get audioFiles() {
     return this.task.answerParts.map(({ audioFileUrl }) => {
-      return `/audio/${audioFileUrl}`;
+      return urlForAudio(audioFileUrl);
     });
   }
 
@@ -75,19 +77,19 @@ export default class SentenceComponent extends Component {
   }
 
   async runNextTaskTimer() {
-    this.args.onRightAnswer();
     await customTimeout(3000);
     if (this.task.isLastTask) {
       this.showExerciseResult();
       await customTimeout(3000);
     }
+    this.args.onRightAnswer();
   }
 
   async handleWrongAnswer() {
     await customTimeout(1000);
     this.task.set('repetitionCount', this.task.repetitionCount + 1);
-    this.audio.player.playAudio();
     this.currentAnswerObject = null;
+    this.args.onWrongAnswer();
   }
 
   async handleCorrectAnswer() {

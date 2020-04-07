@@ -7,6 +7,7 @@ export class TaskItem {
   @tracked completedInCurrentCycle;
   @tracked nextAttempt;
   @tracked answer = [];
+  @tracked normalizedAnswerOptions = [];
   constructor(params = {}) {
     Object.assign(this, params);
   }
@@ -16,6 +17,7 @@ export class TaskItem {
       canInteract: this.canInteract,
       order: this.order,
       completedInCurrentCycle: this.completedInCurrentCycle,
+      normalizedAnswerOptions: this.normalizedAnswerOptions,
       nextAttempt: this.nextAttempt,
       answer: this.answer.slice(0),
     };
