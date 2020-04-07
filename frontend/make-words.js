@@ -1,7 +1,6 @@
 const fs = require('fs');
 const request = require('request');
 const qs = require('querystring');
-const fs = require('fs');
 
 const words = `бам,сам,дам,зал,бум`;
 const token = '';
