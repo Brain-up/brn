@@ -2,4 +2,4 @@ package com.epam.brn.exception
 
 import java.lang.RuntimeException
 
-class FileFormatException(message: String) : RuntimeException(message)
+class FileFormatException : RuntimeException("Formatting error. Please upload file with csv extension.")

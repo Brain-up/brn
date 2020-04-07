@@ -1,11 +1,11 @@
 package com.epam.brn.dto
 
-import com.epam.brn.constant.ExerciseTypeEnum
+import com.epam.brn.model.ExerciseType
 import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class TaskDtoForSingleWords(
     val id: Long? = null,
-    val exerciseType: ExerciseTypeEnum = ExerciseTypeEnum.SINGLE_WORDS,
+    val exerciseType: ExerciseType = ExerciseType.SINGLE_WORDS,
     @JsonIgnore
     val exerciseId: Long? = null,
     val name: String? = "",

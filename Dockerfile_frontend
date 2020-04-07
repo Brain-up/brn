@@ -1,10 +1,10 @@
-FROM node:13 as build-frontend
+FROM node:12 as build-frontend
 COPY frontend/ /src/
 WORKDIR /src
 RUN yarn
 RUN node node_modules/ember-cli/bin/ember deploy production
 
-FROM node:13 as build-frontend-angular
+FROM node:12 as build-frontend-angular
 COPY frontend-angular/ /src/
 WORKDIR /src
 RUN npm ci

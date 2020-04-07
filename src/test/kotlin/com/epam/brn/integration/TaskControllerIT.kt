@@ -1,15 +1,17 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
-import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.TaskRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -20,96 +22,141 @@ import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
-@WithMockUser(username = "admin", roles = ["ADMIN"])
 @Tag("integration-test")
+@WithMockUser(username = "admin", roles = ["ADMIN"])
 class TaskControllerIT {
 
     @Autowired
+    lateinit var exerciseRepository: ExerciseRepository
+
+    @Autowired
+    lateinit var taskRepository: TaskRepository
+
+    @Autowired
+    lateinit var seriesRepository: SeriesRepository
+
+    @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @Autowired
     lateinit var mockMvc: MockMvc
 
-    lateinit var firstSavedTask: Task
-    lateinit var secondSavedTask: Task
-
-    lateinit var savedExercise: Exercise
+    lateinit var exercise: Exercise
 
     @BeforeEach
-    fun initBeforeEachTest() {
-        val group = ExerciseGroup(name = "речевые упражнения", description = "речевые упражнения")
-        val series1 =
-            Series(name = "распознование слов", description = "распознование слов", exerciseGroup = group)
-        val series2 = Series(
-            name = "диахоничкеское слушание",
-            description = "диахоничкеское слушание",
-            exerciseGroup = group
-        )
-        group.series.addAll(setOf(series1, series2))
-        savedExercise = Exercise(name = "First", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
-        val secondExercise = Exercise(name = "Second", description = "desc", level = 0, series = series1, exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString())
-        series1.exercises.addAll(listOf(savedExercise, secondExercise))
-        firstSavedTask = Task(
-            name = "firstTaskForExercise",
-            serialNumber = 1,
-            exercise = savedExercise
-        )
-        secondSavedTask = Task(
-            name = "secondTaskForSecondExercise",
-            serialNumber = 2,
-            exercise = secondExercise
-        )
-        savedExercise.tasks.add(firstSavedTask)
-        secondExercise.tasks.add(secondSavedTask)
-        exerciseGroupRepository.save(group)
+    fun setUp() {
+        val exerciseGroup = insertExerciseGroup()
+        val series = insertSeries(exerciseGroup)
+        exercise = insertExercise(series)
     }
 
     @AfterEach
-    fun deleteAfterTest() {
+    fun tearDown() {
+        exerciseRepository.deleteAll()
+        seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
     }
 
     @Test
-    fun `test get task by id`() {
+    fun `get task by id`() {
+        val task = insertTask(exercise)
+
         // WHEN
-        val pathInfo = "/${firstSavedTask.id}"
-        val resultAction = mockMvc.perform(
-            get(BrnPath.TASKS + pathInfo).secure(false)
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction = mockMvc
+            .perform(
+                MockMvcRequestBuilders.get("/tasks/${task.id}")
+                    .secure(false)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
-        val jsonDataObject = jsonResponse.getJSONObject("data")
-        assertEquals(firstSavedTask.name, jsonDataObject.get("name"))
-        assertEquals(firstSavedTask.id, jsonDataObject.getLong("id"))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+
+        val actual = JSONObject(resultAction.andReturn().response.contentAsString)
+            .getJSONObject("data")
+
+        Assertions.assertEquals(task.name, actual.get("name"))
+        Assertions.assertEquals(task.id, actual.getLong("id"))
     }
 
     @Test
-    fun `test tasks by exerciseId`() {
+    fun `get tasks by exerciseId`() {
+        val task = insertTask(exercise)
+
         // WHEN
-        val resultAction = mockMvc.perform(
-            get(BrnPath.TASKS)
-                .param("exerciseId", savedExercise.id.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction = mockMvc
+            .perform(
+                MockMvcRequestBuilders.get("/tasks")
+                    .param("exerciseId", exercise.id.toString())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
 
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
-        val jsonDataObject = jsonResponse.getJSONArray("data").getJSONObject(0)
-        assertEquals(firstSavedTask.name, jsonDataObject.get("name"))
-        assertEquals(firstSavedTask.id, jsonDataObject.getLong("id"))
-        assertEquals(1, jsonResponse.getJSONArray("data").length())
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+
+        val data = JSONObject(resultAction.andReturn().response.contentAsString)
+            .getJSONArray("data")
+        Assertions.assertEquals(1, data.length())
+
+        val actual = data.getJSONObject(0)
+
+        Assertions.assertEquals(task.name, actual.get("name"))
+        Assertions.assertEquals(task.id, actual.getLong("id"))
+    }
+
+    private fun insertExerciseGroup(): ExerciseGroup {
+        return exerciseGroupRepository.save(
+            ExerciseGroup(
+                id = 1,
+                description = "desc",
+                name = "group"
+            )
+        )
+    }
+
+    private fun insertSeries(exerciseGroup: ExerciseGroup): Series {
+        return seriesRepository.save(
+            Series(
+                id = 1,
+                description = "desc",
+                name = "series",
+                exerciseGroup = exerciseGroup
+            )
+        )
+    }
+
+    fun insertExercise(series: Series): Exercise {
+        return exerciseRepository.save(
+            Exercise(
+                id = 1,
+                description = toString(),
+                series = series,
+                level = 0,
+                name = "exercise",
+                exerciseType = ExerciseType.SINGLE_WORDS.toString()
+            )
+        )
+    }
+
+    private fun insertTask(exercise: Exercise): Task {
+        return taskRepository.save(
+            Task(
+                id = 1,
+                name = "${exercise.name} Task",
+                serialNumber = 1,
+                exercise = exercise
+            )
+        )
     }
 }

@@ -1,6 +1,5 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
@@ -41,13 +40,14 @@ internal class ExceptionControllerAdviceTest {
     @Test
     fun `should handle FileFormatException`() {
         // GIVEN
-        val exception = FileFormatException(CSV_FILE_FORMAT_ERROR)
+        val exception = FileFormatException()
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleFileFormatException(exception)
         // THEN
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
-        assertTrue((responseEntity.body as BaseResponseDto).errors.contains(CSV_FILE_FORMAT_ERROR))
+        assertTrue((responseEntity.body as BaseResponseDto).errors
+            .contains("Formatting error. Please upload file with csv extension."))
     }
 
     @Test

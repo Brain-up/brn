@@ -1,0 +1,33 @@
+.circular-chart {
+  height: 66px;
+  width: 66px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #8b8b8b;
+  stroke-width: 6.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 6.8;
+  /* stroke-linecap: round; */
+  animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+.circular-chart.blue .circle {
+  stroke: #12a8d8;
+}
+
+.percentage {
+  fill: #12a8d8;
+  font-size: 10px;
+  text-anchor: middle;
+}

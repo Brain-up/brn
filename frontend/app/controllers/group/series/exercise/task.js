@@ -1,9 +1,10 @@
 import Controller from '@ember/controller';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
 
-export default Controller.extend({
-  router: inject(),
-  nextTaskTransition() {
+export default class GroupSeriesExerciseController extends Controller {
+  @service router;
+  @action nextTaskTransition() {
     if (!this.model.isLastTask) {
       this.router.transitionTo(
         'group.series.exercise.task',
@@ -11,5 +12,5 @@ export default Controller.extend({
         this.model.get('nextTask.id'),
       );
     }
-  },
-});
+  }
+};

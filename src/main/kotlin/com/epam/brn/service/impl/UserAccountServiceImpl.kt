@@ -1,6 +1,5 @@
 package com.epam.brn.service.impl
 
-import com.epam.brn.constant.BrnRoles.AUTH_ROLE_USER
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
@@ -39,7 +38,9 @@ class UserAccountServiceImpl(
 
     override fun addUser(userAccountDto: UserAccountDto): UserAccountDto {
         val existUser = userAccountRepository.findUserAccountByEmail(userAccountDto.email)
-        existUser.ifPresent { throw IllegalArgumentException("User with email ${userAccountDto.email} is already exist!") }
+        existUser.ifPresent {
+            throw IllegalArgumentException("User with email ${userAccountDto.email} is already exist!")
+        }
 
         val setOfAuthorities = getTheAuthoritySet(userAccountDto)
         val hashedPassword = getHashedPassword(userAccountDto)
@@ -54,7 +55,7 @@ class UserAccountServiceImpl(
     private fun getTheAuthoritySet(userAccountDto: UserAccountDto): MutableSet<Authority> {
         var authorityNames = userAccountDto.authorities ?: mutableSetOf()
         if (authorityNames.isEmpty())
-            authorityNames = mutableSetOf(AUTH_ROLE_USER)
+            authorityNames = mutableSetOf("ROLE_USER")
 
         return authorityNames
             .filter(::isNotEmpty)

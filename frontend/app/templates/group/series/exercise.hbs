@@ -11,10 +11,11 @@
               Назад
             </LinkTo>
           </div>
+          <div id="exercise-steps-slot">
+          </div>
           <Timer @paused={{true}} />
         </div>
       {{/if}}
-
       <div class="exercise-container">
         {{#if (not this.model.hideExerciseNavigation)}}
           <ExerciseNavigation
@@ -34,4 +35,4 @@
       </div>
     </div>
   </main>
-</ModalDialog>
+  </ModalDialog>

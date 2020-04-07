@@ -2,12 +2,12 @@ package com.epam.brn.repo
 
 import com.epam.brn.model.Task
 import java.util.Optional
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface TaskRepository : CrudRepository<Task, Long> {
+interface TaskRepository : JpaRepository<Task, Long> {
 
     @Query("select DISTINCT t FROM Task t left JOIN FETCH t.answerOptions")
     fun findAllTasksWithJoinedAnswers(): List<Task>

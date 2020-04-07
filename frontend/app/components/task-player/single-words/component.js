@@ -4,27 +4,31 @@ import { inject as service } from '@ember/service';
 import deepEqual from 'brn/utils/deep-equal';
 import shuffleArray from 'brn/utils/shuffle-array';
 import customTimeout from 'brn/utils/custom-timeout';
-import { task } from 'ember-concurrency';
+import { task, timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
+import { TIMINGS } from 'brn/utils/audio-api';
+import { tracked } from '@glimmer/tracking';
+
 
 export default class TaskPlayerComponent extends Component {
-  shuffledWords = null;
-  lastAnswer = null;
-  exerciseResultIsVisible = false;
-  taskResultIsVisible = false;
-  previousTaskWords = null;
+  @tracked shuffledWords = null;
+  @tracked lastAnswer = null;
+  @tracked exerciseResultIsVisible = false;
+  @tracked taskResultIsVisible = false;
+  @tracked previousTaskWords = null;
 
   @service('audio') audio;
 
   @(task(function*() {
-    yield customTimeout(3000);
+    yield timeout(TIMINGS.SUCCESS_ANSWER_NOTIFICATION)
     this.onRightAnswer();
   }).restartable())
   runNextTaskTimer;
 
   @(task(function*() {
     yield customTimeout(2000);
-    this.set('taskResultIsVisible', false);
+    this.taskResultIsVisible = false;
+    this.onWrongAnswer();
   }).drop())
   showTaskResult;
 
@@ -38,25 +42,24 @@ export default class TaskPlayerComponent extends Component {
   didReceiveAttrs() {
     if (this.previousTaskWords !== this.task.words) {
       this.shuffle();
-      this.set('lastAnswer', null);
+      this.lastAnswer = null;
     }
-    this.set('previousTaskWords', this.task.words);
-    this.set('exerciseResultIsVisible', false);
+    this.previousTaskWords = this.task.words;
+    this.exerciseResultIsVisible = false;
   }
 
   shuffle() {
-    this.set('shuffledWords', A(shuffleArray(this.task.words)));
-    this.notifyPropertyChange('shuffledWords');
+    this.shuffledWords = A(shuffleArray(this.task.words));
   }
 
   @action
   handleSubmit(word) {
-    this.set('lastAnswer', word);
+    this.lastAnswer = word;
     if (word !== this.task.word) {
       const currentWordsOrder = Array.from(this.shuffledWords);
       this.task.set('repetitionCount', this.task.repetitionCount + 1);
       this.task.set('nextAttempt', true);
-      this.set('taskResultIsVisible', true);
+      this.taskResultIsVisible = true;
       while (deepEqual(currentWordsOrder, this.shuffledWords)) {
         this.shuffle();
       }
@@ -65,4 +68,4 @@ export default class TaskPlayerComponent extends Component {
     }
   }
 }
-({});
+

@@ -25,6 +25,15 @@ export default function() {
   */
   this.namespace = 'api'
   this.timing = 10;
+  this.get('/users/current', ()=>{
+    return {
+      data: {
+        firstName: 'First-Name',
+        lastName: 'Last-Name',
+        email: 'em@il'
+      }
+    }
+  });
   this.resource('groups');
   this.resource('series');
   this.resource('exercises');
