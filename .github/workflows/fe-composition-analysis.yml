@@ -31,8 +31,8 @@ jobs:
         working-directory: ./frontend
         run: yarn audit
       - name: install dependencies via npm
-        working-directory: ./frontend
+        working-directory: ./frontend-angular
         run: npm install
       - name: npm audit
-        working-directory: ./frontend
+        working-directory: ./frontend-angular
         run: npm audit
