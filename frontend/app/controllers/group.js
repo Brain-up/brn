@@ -1,13 +1,12 @@
 import Controller from '@ember/controller';
-import { inject } from '@ember/service';
-import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
-export default Controller.extend({
-  router: inject(),
-  headerAndNavShown: computed('router.currentURL', function() {
+export default class ApplicationController extends Controller {
+  @service router;
+  get headerAndNavShown() {
     return (
       this.router.currentURL.includes('task') ||
       this.router.currentURL.includes('loading')
     );
-  }),
-});
+  }
+}

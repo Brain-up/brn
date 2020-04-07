@@ -1,10 +1,22 @@
-<ModalDialog>
-  <main
-    class="container rounded overflow-hidden shadow-lg flex-col mt-4 sm:w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 mx-auto"
+<div class="flex items-center justify-center h-64">
+  <button
+    class="modal-button bg-teal-200 p-3 rounded-lg text-teal-900 hover:bg-teal-300"
+  >
+    Blast off
+  </button>
+</div>
+<div
+  class="modal absolute w-full h-full top-0 left-0 flex items-center justify-center"
+>
+  <div
+    class="modal-overlay absolute w-full h-full bg-black opacity-25 top-0 left-0 cursor-pointer"
+  ></div>
+  <div
+    class="container rounded absolute w-1/2 h-32 bg-white rounded-sm shadow-lg flex items-center justify-center text-2xl modal-body"
   >
     <div class="series-page--canvas flex flex-col flex-grow">
       {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
-        <div class="flex items-center mb-2 justify-between">
+        <div class="flex items-center justify-between">
           <div>
             <FaIcon @icon="chevron-left" />
             <LinkTo @route="group.series" @model={{this.model.series}}>
@@ -34,5 +46,5 @@
         {{/if}}
       </div>
     </div>
-  </main>
-  </ModalDialog>
+  </div>
+</div>
