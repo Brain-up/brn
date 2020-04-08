@@ -5,6 +5,7 @@ on:
     paths:
       - 'Dockerfile_frontend'
       - 'frontend/**'
+      - 'frontend-angular/**'
       - '.github/workflows/fe-composition-analysis.yml'
     branches:
       - master
@@ -12,6 +13,7 @@ on:
     paths:
       - 'Dockerfile_frontend'
       - 'frontend/**'
+      - 'frontend-angular/**'
       - '.github/workflows/fe-composition-analysis.yml'
     branches:
       - master
