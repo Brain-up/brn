@@ -1,0 +1,23 @@
+<ul class="flex" 
+    {{did-insert this.setLastMode @activeStep}}
+    {{did-update this.setLastMode @activeStep}}
+>
+    <ExerciseSteps::Step 
+        @mode={{this.modeForListen}} 
+        {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
+    >
+        Слушать
+    </ExerciseSteps::Step>
+    <ExerciseSteps::Step 
+        @mode={{this.modeForInteract}} 
+        {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
+    >
+        Взаимодейстовать
+    </ExerciseSteps::Step>
+    <ExerciseSteps::Step 
+        @mode={{this.modeForTask}} 
+        {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
+    >
+        Решать
+    </ExerciseSteps::Step>
+</ul>

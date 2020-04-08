@@ -1,14 +1,19 @@
-<div class={{this.styleNamespace}} ...attributes>
+{{#-in-element (query-node "#exercise-steps-slot")}}
+  <ExerciseSteps @activeStep={{this.mode}} @onClick={{this.onModeChange}} />
+{{/-in-element}}
+<div class={{style-namespace "task-player"}} ...attributes>
   {{component
     this.componentType
     onRightAnswer=this.onRightAnswer
-    afterCompleted=this.afterCompleted
+    onWrongAnswer=this.onWrongAnswer
     task=@task
     disableAnswers=this.disableAnswers
     disableAudioPlayer=this.disableAudioPlayer
-    autoplay=(not this.disableAudioPlayer)
+    activeWord=this.activeWord
+    onPlayText=this.playText
+    mode=this.mode
   }}
   {{#if this.justEnteredTask}}
-    <StartTaskButton @startTask={{action this.startTask}} />
+    <StartTaskButton @startTask={{this.startTask}} />
   {{/if}}
 </div>

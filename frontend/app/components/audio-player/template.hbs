@@ -1,6 +1,6 @@
-<div class={{this.styleNamespace}} ...attributes>
+<div class={{style-namespace "audio-player"}} ...attributes>
   {{! template-lint-configure no-invalid-interactive false }}
-  {{#let (or this.isPlaying @disabled) as |disablePlayButton|}}
+  {{#let this.isPlaying as |disablePlayButton|}}
     <button
       data-test-play-audio-button
       data-test-playing-progress={{this.audioPlayingProgress}}
@@ -10,6 +10,10 @@
         {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}}"
       disabled={{disablePlayButton}}
       {{on "click" this.playAudio}}
+      {{did-update this.onUpdateProgress this.audioPlayingProgress}}
+      {{did-insert this.onUpdateProgress this.audioPlayingProgress}}
+      {{did-update this.onUpdateSource @audioFileUrl}}
+      {{did-insert this.onUpdateSource @audioFileUrl}}
       {{ref this "buttonElement"}}
     >
       <FaIcon @icon="redo-alt" />
