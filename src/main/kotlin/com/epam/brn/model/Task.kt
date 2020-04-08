@@ -1,8 +1,9 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.TaskDtoForSentence
-import com.epam.brn.dto.TaskDtoForSingleWords
-import com.epam.brn.dto.TaskDtoForWordsSequences
+import com.epam.brn.dto.TaskDtoFor2Series
+import com.epam.brn.dto.TaskDtoFor3Series
+import com.epam.brn.dto.TaskDtoFor4Series
+import com.epam.brn.dto.`TaskDtoFor1Series`
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -49,7 +50,7 @@ data class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
-    fun toSingleWordsDto() = TaskDtoForSingleWords(
+    fun to1SeriesTaskDto() = `TaskDtoFor1Series`(
         id = id,
         exerciseType = ExerciseType.SINGLE_WORDS,
         name = name,
@@ -58,7 +59,7 @@ data class Task(
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toMutableSet()
     )
 
-    fun toSequenceWordsDto(template: String? = "") = TaskDtoForWordsSequences(
+    fun to2SeriesTaskDto(template: String? = "") = TaskDtoFor2Series(
         id = id,
         exerciseType = ExerciseType.WORDS_SEQUENCES,
         name = name,
@@ -67,7 +68,7 @@ data class Task(
         template = template
     )
 
-    fun toSentenceDto(template: String? = "") = TaskDtoForSentence(
+    fun to3SeriesTaskDto(template: String? = "") = TaskDtoFor3Series(
         id = id,
         exerciseType = ExerciseType.SENTENCE,
         name = name,
@@ -76,6 +77,14 @@ data class Task(
         template = template,
         answerParts = answerParts.values.map { part -> part.toDto() },
         correctAnswer = correctAnswer!!.toDto()
+    )
+
+    fun to4SeriesTaskDto() = TaskDtoFor4Series(
+        id = id,
+        exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"

@@ -1,0 +1,62 @@
+{
+  "data": {
+    "id": 62,
+    "exerciseType": "SINGLE_SIMPLE_WORDS",
+    "name": "",
+    "serialNumber": 4,
+    "answerOptions": {
+      "OBJECT": [
+        {
+          "id": 345,
+          "audioFileUrl": "series4/бал.mp3",
+          "word": "бал",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/бал.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 346,
+          "audioFileUrl": "series4/бум.mp3",
+          "word": "бум",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/бум.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 347,
+          "audioFileUrl": "series4/быль.mp3",
+          "word": "быль",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/быль.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 348,
+          "audioFileUrl": "series4/вить.mp3",
+          "word": "вить",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/вить.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 349,
+          "audioFileUrl": "series4/гад.mp3",
+          "word": "гад",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/гад.jpg",
+          "soundsCount": 0
+        },
+        {
+          "id": 349,
+          "audioFileUrl": "series4/дуб.mp3",
+          "word": "дуб",
+          "wordType": "OBJECT",
+          "pictureFileUrl": "pictures/дуб.jpg",
+          "soundsCount": 0
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "meta": []
+}

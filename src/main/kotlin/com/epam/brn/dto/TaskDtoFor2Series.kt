@@ -1,15 +1,16 @@
 package com.epam.brn.dto
 
 import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.WordType
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-data class TaskDtoForSingleWords(
+data class TaskDtoFor2Series(
     val id: Long? = null,
-    val exerciseType: ExerciseType = ExerciseType.SINGLE_WORDS,
+    val exerciseType: ExerciseType = ExerciseType.WORDS_SEQUENCES,
     @JsonIgnore
     val exerciseId: Long? = null,
     val name: String? = "",
-    val correctAnswer: ResourceDto? = null,
     val serialNumber: Int? = 0,
-    val answerOptions: MutableSet<ResourceDto> = HashSet()
+    val template: String? = "",
+    val answerOptions: Map<WordType?, List<ResourceDto>> = HashMap()
 )

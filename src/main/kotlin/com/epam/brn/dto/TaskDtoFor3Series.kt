@@ -5,7 +5,7 @@ import com.epam.brn.model.WordType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.LinkedList
 
-data class TaskDtoForSentence(
+data class TaskDtoFor3Series(
     val id: Long? = null,
     val exerciseType: ExerciseType = ExerciseType.SENTENCE,
     @JsonIgnore
