@@ -127,6 +127,10 @@ a[disabled] {
   position: relative;
 }
 
+.modal-fixed {
+  position: fixed;
+}
+
 .modal-body {
   height: 600px;
   width: 1200px;
