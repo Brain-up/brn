@@ -64,16 +64,16 @@ mediaType:
     responses:
       200:
         body:
-          example1: !include samples/exercises_for_sequence_words_series.json
-          example2: !include samples/exercises_for_single_words_series.json
+          example1: !include samples/exercises_for_1_series.json
+          example2: !include samples/exercises_for_2_series.json
   /{exerciseId}:
     get:
       responses:
         200:
           body:
-            example1: !include samples/exercise_for_single_words_series.json
-            example2: !include samples/exercise_for_sequence_words_series.json
-            example3: !include samples/exercise_for_sentence_series.json
+            example1: !include samples/exercise_1_series.json
+            example2: !include samples/exercise_for_2_series.json
+            example3: !include samples/exercise_for_3_series.json
 
 # TASK ----------------------------
 /tasks:
@@ -90,8 +90,8 @@ mediaType:
       200:
         body:
           application/json:
-            example_for_single_words_series: !include samples/tasks_by_exercise_for_single_words_series.json
-            example_for_words_sequences_series: !include samples/tasks_by_exercise_for_words_sequences_series.json
+            example_for_1_series: !include samples/tasks_by_exercise_for_1_series.json
+            example_for_2_series: !include samples/tasks_by_exercise_for_2_series.json
   /{taskId}:
     get:
       description: Get a task by id
@@ -99,9 +99,10 @@ mediaType:
         200:
           body:
             application/json:
-              example_for_single_words_series: !include samples/task_by_id_for_single_words_series.json
-              example_for_words_sequences_series: !include samples/task_by_id_for_words_sequences_series.json
-              example_for_sentence_series: !include samples/task_by_id_for_sentence_series.json
+              example_for_1_series: !include samples/task_by_id_for_1_series.json
+              example_for_2_series: !include samples/task_by_id_for_2_series.json
+              example_for_3_series: !include samples/task_by_id_for_3_series.json
+              example_for_4_series: !include samples/task_by_id_for_4_series.json
 
 # STUDY_HISTORY ----------------------
 /study-history:

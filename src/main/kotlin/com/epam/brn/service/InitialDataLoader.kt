@@ -39,14 +39,10 @@ class InitialDataLoader(
 
     companion object {
         fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
-
         fun getInputStreamFromSeriesInitFile(seriesId: Long): InputStream {
             val inputStream = Thread.currentThread()
                 .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId)}")
-
-            if (inputStream == null)
-                throw IOException("Can not get init file for $seriesId series.")
-
+                ?: throw IOException("Can not get init file for $seriesId series.")
             return inputStream
         }
     }
@@ -68,9 +64,8 @@ class InitialDataLoader(
 
         userAccountRepository.saveAll(listOfUsers)
 
-        if (isInitRequired()) {
+        if (isInitRequired())
             init()
-        }
     }
 
     private fun addAdminUser(adminAuthority: Authority): UserAccount {
@@ -112,20 +107,16 @@ class InitialDataLoader(
 
     private fun init() {
         log.debug("Initialization started")
-
-        if (directoryPath != null) {
+        if (directoryPath != null)
             initDataFromDirectory(directoryPath!!)
-        } else {
+        else
             initDataFromClassPath()
-        }
     }
 
     private fun initDataFromDirectory(directoryToScan: Path) {
         log.debug("Loading data from $directoryToScan.")
-
         if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath))
             throw IllegalArgumentException("$directoryToScan with initial data does not exist")
-
         sourceFiles.forEach {
             loadFromInputStream(
                 Files.newInputStream(directoryToScan.resolve(it))
@@ -135,7 +126,6 @@ class InitialDataLoader(
 
     private fun initDataFromClassPath() {
         log.debug("Loading data from classpath 'initFiles' directory.")
-
         sourceFiles.forEach {
             loadFromInputStream(
                 resourceLoader.getResource("classpath:initFiles/$it").inputStream
