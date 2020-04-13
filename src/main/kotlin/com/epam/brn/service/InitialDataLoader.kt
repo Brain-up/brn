@@ -55,7 +55,8 @@ class InitialDataLoader(
         "groups.csv", "series.csv",
         fileNameForSeries(1),
         fileNameForSeries(2),
-        fileNameForSeries(3)
+        fileNameForSeries(3),
+        fileNameForSeries(4)
     )
 
     @EventListener(ApplicationReadyEvent::class)

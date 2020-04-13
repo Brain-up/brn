@@ -81,4 +81,8 @@ data class Exercise(
     fun addTask(task: Task) {
         tasks.add(task)
     }
+
+    fun addTasks(tasks: List<Task>) {
+        this.tasks.addAll(tasks)
+    }
 }
