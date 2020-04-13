@@ -9,6 +9,8 @@ import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series3.SeriesThreeRecord
 import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series4.SeriesFourRecord
+import com.epam.brn.upload.csv.series4.SeriesFourRecordMappingIteratorProvider
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,7 +24,8 @@ class CsvParserTest {
             SeriesGenericRecordMappingIteratorProvider(),
             SeriesOneRecordMappingIteratorProvider(),
             SeriesTwoRecordMappingIteratorProvider(),
-            SeriesThreeRecordMappingIteratorProvider()
+            SeriesThreeRecordMappingIteratorProvider(),
+            SeriesFourRecordMappingIteratorProvider()
         )
     )
 
@@ -170,6 +173,34 @@ class CsvParserTest {
                     mutableListOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     "series3/девочка_рисует.mp3",
                     "(девочка рисует)"
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `should parse exercise for Series 4`() {
+        val input = """
+                level,exerciseName,words,noise
+                1,Слова без шума,(бал бум быль вить гад дуб),no_noise
+                2,Слова без шума,(линь лис моль пар пять раб),no_noise
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+
+        val result = parser.parse(input)
+
+        assertThat(result).containsAll(
+            listOf(
+                SeriesFourRecord(
+                    1,
+                    "Слова без шума",
+                    mutableListOf("(бал", "бум", "быль", "вить", "гад", "дуб)"),
+                    "no_noise"
+                ),
+                SeriesFourRecord(
+                    2,
+                    "Слова без шума",
+                    mutableListOf("(линь", "лис", "моль", "пар", "пять", "раб)"),
+                    "no_noise"
                 )
             )
         )
