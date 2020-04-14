@@ -30,6 +30,7 @@ export default class Exercise extends CompletionDependent.extend({
   isCompleted: computed(
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',
+    'tasksManager.completedTasks.[]',
     function() {
       const tasksIds = this.hasMany('tasks').ids();
       const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
