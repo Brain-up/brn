@@ -3,7 +3,7 @@
   data-test-task-id={{this.model.id}}
   data-test-task-exercise-id={{this.model.exercise.id}}
   @onRightAnswer={{queue
-    (action this.nextTaskTransition)
+    this.nextTaskTransition
     (bind this.model.savePassed this.model)
   }}
   @task={{this.model}}
