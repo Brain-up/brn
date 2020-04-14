@@ -25,6 +25,9 @@ export default Model.extend({
     'tasksManager.completedTasks.[]',
     'children.@each.isCompleted',
     function() {
+      if (this.tasksManager.completedTasks.length === 0) {
+        return false;
+      }
       return (
         this.get('children').length &&
         this.get('children').every((child) => child.isCompleted)

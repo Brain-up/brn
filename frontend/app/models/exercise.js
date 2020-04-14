@@ -31,11 +31,13 @@ export default class Exercise extends CompletionDependent.extend({
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',
     function() {
-      const tasksCompleted = this.get('tasks').every(
-        (task) => task.isCompleted,
+      const tasksIds = this.hasMany('tasks').ids();
+      const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
+      const tasksCompleted = tasksIds.every(
+        (taskId) => completedTaskIds.includes(taskId),
       );
       return (
-        (!this.tasks.length && (this.isFirst || this.canInteract)) ||
+        (!tasksIds.length && (this.isFirst || this.canInteract)) ||
         tasksCompleted
       );
     },

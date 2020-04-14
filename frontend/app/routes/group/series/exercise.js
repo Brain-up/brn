@@ -7,13 +7,11 @@ export default Route.extend({
   model({ exercise_id }) {
     return this.store.findRecord('exercise', exercise_id);
   },
-
-  async afterModel(exercise, { to }) {
+  redirect(exercise, { to }) {
     if (!exercise.canInteract) {
       this.transitionTo('group.series.exercise', exercise.get('series.id'));
       return;
     }
-
     if (
       to.name.endsWith('exercise.index') &&
       exercise.get('sortedTasks.firstObject') &&
