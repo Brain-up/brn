@@ -1,0 +1,11 @@
+{
+  "data": [
+    "folder1/",
+    "folder5/",
+    "folder5/folder2/",
+    "folder5/folder2/folder4/",
+    "folder5/folder3/"
+  ],
+  "errors": [],
+  "meta": []
+}

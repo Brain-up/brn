@@ -1,11 +1,13 @@
 import Component from '@ember/component';
-import { set } from '@ember/object';
+import { set, action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import deepCopy from 'brn/utils/deep-copy';
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
 import { tracked } from '@glimmer/tracking';
+import { urlForAudio } from 'brn/utils/file-url';
+
 
 function getEmptyTemplate(selectedItemsOrder = []) {
   return selectedItemsOrder.reduce((result, currentKey) => {
@@ -15,9 +17,10 @@ function getEmptyTemplate(selectedItemsOrder = []) {
 }
 
 export default class WordsSequencesComponent extends Component {
+  tagName = '';
   didInsertElement() {
     this.updateLocalTasks();
-	this.startTask();
+    this.startTask();
   }
   @service audio;
   @tracked
@@ -35,9 +38,12 @@ export default class WordsSequencesComponent extends Component {
     return this.uncompletedTasks.firstObject;
   }
   get audioFiles() {
-    return this.firstUncompletedTask.answer.map(({ audioFileUrl }) => {
-      return `/audio/${audioFileUrl}`;
-    });
+    return (
+      this.firstUncompletedTask &&
+      this.firstUncompletedTask.answer.map(({ audioFileUrl }) => {
+        return urlForAudio(audioFileUrl);
+      })
+    );
   }
   get answerCompleted() {
     return Object.values(this.currentAnswerObject).reduce(
@@ -79,6 +85,7 @@ export default class WordsSequencesComponent extends Component {
     });
     this.tasksCopy = tasksCopy;
   }
+  @action
   async checkMaybe(selectedData) {
     this.currentAnswerObject = {
       ...this.currentAnswerObject,
@@ -106,16 +113,15 @@ export default class WordsSequencesComponent extends Component {
     this.updateLocalTasks();
     await customTimeout(1000);
     this.startTask();
+    this.onWrongAnswer();
   }
 
   async handleCorrectAnswer() {
     await customTimeout(1000);
     this.startNewTask();
     if (!this.firstUncompletedTask) {
-      this.task.savePassed();
-      this.onRightAnswer();
       await customTimeout(3000);
-      this.afterCompleted();
+      this.onRightAnswer();
     }
   }
 }

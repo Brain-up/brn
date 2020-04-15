@@ -2,7 +2,6 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.exception.NoDataFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
@@ -21,15 +20,10 @@ class ExerciseService(
     fun findExerciseById(exerciseID: Long): ExerciseDto {
         val exercise = exerciseRepository.findById(exerciseID)
         return exercise.map { e -> e.toDto() }
-            .orElseThrow { NoDataFoundException("Could not find requested exerciseID=$exerciseID") }
+            .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
-    fun findExerciseEntityByName(name: String): Exercise {
-        return exerciseRepository.findExerciseByName(name)
-            .orElseThrow { EntityNotFoundException("Exercise entity was not found by name $name") }
-    }
-
-    fun findExerciseByNameAndLevel(name: String, level: Short): Exercise {
+    fun findExerciseByNameAndLevel(name: String, level: Int): Exercise {
         return exerciseRepository.findExerciseByNameAndLevel(name, level)
             .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
     }
@@ -46,17 +40,5 @@ class ExerciseService(
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
         val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
         return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
-    }
-
-    fun save(exercise: Exercise): Exercise {
-        return exerciseRepository.save(exercise)
-    }
-
-    fun createExercise(name: String): Exercise {
-        val exercise = Exercise()
-        exercise.name = name
-        exerciseRepository.save(exercise)
-
-        return exercise
     }
 }

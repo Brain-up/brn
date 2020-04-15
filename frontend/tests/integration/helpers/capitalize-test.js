@@ -10,7 +10,15 @@ module('Integration | Helper | capitalize', function(hooks) {
   test('it renders', async function(assert) {
     this.set('inputValue', '1234');
 
-    await render(hbs`{{capitalize inputValue}}`);
+    await render(hbs`{{capitalize this.inputValue}}`);
+
+    assert.equal(this.element.textContent.trim(), '1234');
+  });
+
+  test('it renders for value object with string prop', async function(assert) {
+    this.set('inputValue', {string: '1234'});
+
+    await render(hbs`{{capitalize this.inputValue}}`);
 
     assert.equal(this.element.textContent.trim(), '1234');
   });

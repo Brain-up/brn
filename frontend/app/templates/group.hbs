@@ -1,11 +1,11 @@
-{{#if (not (eq this.target.currentRouteName "group.series.exercise.task"))}}
+{{#if (not this.headerAndNavShown)}}
   <div class="flex items-center mb-2">
     <Breadcrumbs @group={{this.model}} />
     <Timer @paused={{true}} />
   </div>
 {{/if}}
 <div class="flex series-container">
-  {{#if (not (eq this.target.currentRouteName "group.series.exercise.task"))}}
+  {{#if (not this.headerAndNavShown)}}
     <aside class="series-page--aside shadow-md">
       <GroupNavigation @group={{this.model}} />
     </aside>

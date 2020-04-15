@@ -16,4 +16,7 @@ Router.map(function() {
     });
   });
   this.route('not-accessable');
+  this.route('login');
+  this.route('registration');
+  this.route('not-found', { path: '*wildcard_path' });
 });

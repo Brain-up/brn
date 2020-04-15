@@ -1,16 +1,15 @@
 import Route from '@ember/routing/route';
 
-export default Route.extend({
-  async model({ series_id }) {
-    const series = this.store.findRecord('series', series_id);
-    if (!series.group) {
-      await this.store.findAll('group');
-    }
-    return series;
-  },
+export default class GroupSeriesRoute extends Route {
+  model({ series_id }) {
+    return this.store.findRecord('series', series_id);
+  }
 
-  async afterModel(series, { to }) {
+  async afterModel(series) {
     await this.store.query('exercise', { seriesId: series.id });
+  }
+
+  redirect(series, { to }) {
     if (
       to.name === 'series.index' &&
       series.get('sortedExercises.firstObject')
@@ -21,5 +20,5 @@ export default Route.extend({
         series.get('sortedExercises.firstObject.id'),
       );
     }
-  },
-});
+  }
+}

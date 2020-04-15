@@ -20,6 +20,9 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       SPRING_PROFILE: prod
+      aws.credentialsPath: /run/secrets/aws-key
+    secrets:
+      - aws-key
     depends_on:
       - db_brn
   brn_fe:
@@ -29,3 +32,6 @@ services:
       - 80:80
     depends_on:
       - brn
+secrets:
+  aws-key:
+    file: aws-key.properties

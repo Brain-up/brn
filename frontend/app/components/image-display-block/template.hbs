@@ -1,0 +1,11 @@
+<div class="flex flex-wrap flex-1 mt-5">
+  {{#if @pictureFileUrl}}
+    {{! template-lint-configure no-inline-styles false }}
+    <div
+      data-test-image-block
+      aria-label={{html-safe (concat "изображение " @label)}}
+      class="image-block flex-1 rounded mx-auto"
+      role="img"
+    ></div>
+  {{/if}}
+</div>

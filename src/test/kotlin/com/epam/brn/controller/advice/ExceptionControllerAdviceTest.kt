@@ -1,10 +1,8 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.constant.BrnErrors.CSV_FILE_FORMAT_ERROR
 import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.ErrorResponse
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
-import com.epam.brn.exception.NoDataFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -16,11 +14,11 @@ internal class ExceptionControllerAdviceTest {
         ExceptionControllerAdvice()
 
     @Test
-    fun `should handle NoDataFoundException`() {
+    fun `should handle EntityNotFoundException`() {
         // GIVEN
-        val exception = NoDataFoundException("tasks were not found")
+        val exception = EntityNotFoundException("tasks were not found")
         // WHEN
-        val responseEntity = exceptionControllerAdvice.handleNoDataFoundException(exception)
+        val responseEntity = exceptionControllerAdvice.handleEntityNotFoundException(exception)
         // THEN
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("tasks were not found"))
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.statusCode)
@@ -42,13 +40,14 @@ internal class ExceptionControllerAdviceTest {
     @Test
     fun `should handle FileFormatException`() {
         // GIVEN
-        val exception = FileFormatException(CSV_FILE_FORMAT_ERROR)
+        val exception = FileFormatException()
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleFileFormatException(exception)
         // THEN
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
-        assertEquals(CSV_FILE_FORMAT_ERROR, (responseEntity.body as ErrorResponse).message)
+        assertTrue((responseEntity.body as BaseResponseDto).errors
+            .contains("Formatting error. Please upload file with csv extension."))
     }
 
     @Test
@@ -56,7 +55,7 @@ internal class ExceptionControllerAdviceTest {
         // GIVEN
         val exception = Exception("some test exception")
         // WHEN
-        val responseEntity = exceptionControllerAdvice.makeInternalServerErrorResponseEntity(exception)
+        val responseEntity = exceptionControllerAdvice.createInternalErrorResponse(exception)
         // THEN
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some test exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)

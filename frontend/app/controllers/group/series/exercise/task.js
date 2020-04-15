@@ -1,27 +1,16 @@
 import Controller from '@ember/controller';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
 
-export default Controller.extend({
-  router: inject(),
-  nextTaskTransition() {
-    !this.model.isLastTask
-      ? this.router.transitionTo(
-          'group.series.exercise.task',
-          this.model.get('nextTask.exercise.id'),
-          this.model.get('nextTask.id'),
-        )
-      : this.router.transitionTo(
-          'group.series.index',
-          this.model.get('exercise.series.id'),
-        );
-  },
-  saveExerciseMaybe() {
-    if (this.model.isLastTask && this.model.get('exercise.isCompleted')) {
-      this.saveExercise(this.model.get('exercise.content'));
+export default class GroupSeriesExerciseController extends Controller {
+  @service router;
+  @action nextTaskTransition() {
+    if (!this.model.isLastTask) {
+      this.router.transitionTo(
+        'group.series.exercise.task',
+        this.model.get('nextTask.exercise.id'),
+        this.model.get('nextTask.id'),
+      );
     }
-  },
-  saveExercise(exercise) {
-    exercise.trackTime('end');
-    exercise.postHistory();
-  },
-});
+  }
+};

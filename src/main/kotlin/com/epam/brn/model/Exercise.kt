@@ -1,6 +1,5 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType
@@ -35,7 +34,7 @@ data class Exercise(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series? = null,
-    @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val tasks: MutableSet<Task> = LinkedHashSet()
 ) {
     fun toDto(available: Boolean = true) = ExerciseDto(
@@ -44,23 +43,28 @@ data class Exercise(
         name = name,
         description = description,
         template = template,
-        exerciseType = ExerciseTypeEnum.valueOf(exerciseType),
+        exerciseType = ExerciseType.valueOf(exerciseType),
         level = level,
         available = available,
         tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()
     )
 
+    override fun toString() =
+        "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
+
         other as Exercise
+
         if (id != other.id) return false
         if (name != other.name) return false
         if (description != other.description) return false
-        if (level != other.level) return false
         if (template != other.template) return false
         if (exerciseType != other.exerciseType) return false
-        if (series != other.series) return false
+        if (level != other.level) return false
+
         return true
     }
 
@@ -68,13 +72,13 @@ data class Exercise(
         var result = id?.hashCode() ?: 0
         result = 31 * result + name.hashCode()
         result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + (level ?: 0)
         result = 31 * result + (template?.hashCode() ?: 0)
-        result = 31 * result + (exerciseType.hashCode())
-        result = 31 * result + series.hashCode()
+        result = 31 * result + exerciseType.hashCode()
+        result = 31 * result + (level ?: 0)
         return result
     }
 
-    override fun toString() =
-        "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
+    fun addTask(task: Task) {
+        tasks.add(task)
+    }
 }

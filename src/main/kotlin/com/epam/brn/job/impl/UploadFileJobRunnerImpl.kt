@@ -1,8 +1,7 @@
 package com.epam.brn.job.impl
 
-import com.epam.brn.job.CsvUtils
 import com.epam.brn.job.UploadFileJobRunner
-import com.epam.brn.job.csv.task.UploadFromCsvService
+import com.epam.brn.upload.CsvUploadService
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -25,7 +24,7 @@ class UploadFileJobRunnerImpl : UploadFileJobRunner {
     private lateinit var pathToProcessedResources: String
 
     @Autowired
-    private lateinit var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvService>
+    private lateinit var sourcesWithJobs: LinkedHashMap<String, CsvUploadService>
 
     @Scheduled(cron = "\${cron.expression.input.data.upload}")
     override fun perform() {
@@ -34,18 +33,22 @@ class UploadFileJobRunnerImpl : UploadFileJobRunner {
 
         sourcesWithJobs.forEach { (path, job) ->
             Files.walk(Paths.get(path))
-                .filter(this::isCsvFile)
+                .filter { isCsvFile(it) }
                 .forEach { loadFile(job, it, successfullyProcessedResources) }
         }
 
         moveSuccessfullyProcessedResources(successfullyProcessedResources, jobId)
     }
 
-    private fun loadFile(service: UploadFromCsvService, filePath: Path, successfullyProcessedResources: HashSet<File>) {
+    private fun loadFile(
+        uploadService: CsvUploadService,
+        filePath: Path,
+        successfullyProcessedResources: HashSet<File>
+    ) {
         val file = filePath.toFile()
 
         try {
-            service.loadTaskFile(file)
+            uploadService.load(file)
             successfullyProcessedResources.add(file)
         } catch (e: Exception) {
             log.error("Something went wrong while loading file ${file.name}", e)
@@ -68,10 +71,7 @@ class UploadFileJobRunnerImpl : UploadFileJobRunner {
     }
 
     private fun isCsvFile(filePath: Path): Boolean {
-        return Files.isRegularFile(filePath) && CsvUtils.isFileContentTypeCsv(
-            Files.probeContentType(
-                filePath
-            )
-        )
+        return Files.isRegularFile(filePath) &&
+                CsvUploadService.isCsvContentType(Files.probeContentType(filePath))
     }
 }

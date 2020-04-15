@@ -1,11 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env node
+"use strict";
 
-# regex to validate in commit msg
-commit_regex='^(EPMLABSBRN-[0-9]{1,3}|Merge|merge) .*$'
+process.title = "commit msg";
 
-error_msg="Aborting commit. Your commit message is missing a JIRA issue name, see example: 'EPMLABSBRN-111'"
+var commit_regex = /(EPMLABSBRN-[0-9]{1,4}|Merge|merge) .*/gi;
 
-if ! grep -E "$commit_regex" "$1"; then
-    echo -e "$error_msg" >&2
-    exit 1
-fi
+var fs = require("fs");
+var cwd = process.cwd();
+var path = require("path");
+var commitMsg = fs
+  .readFileSync(path.join(cwd, ".git", "COMMIT_EDITMSG"), "utf8")
+  .trim();
+
+if (!commit_regex.test(commitMsg)) {
+  process.stderr.write("Aborting commit. Your commit message is missing valid header or description.\n");
+  process.stderr.write("Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999].\n");
+  process.exit(1);
+}

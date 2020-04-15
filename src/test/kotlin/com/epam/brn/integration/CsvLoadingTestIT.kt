@@ -1,12 +1,15 @@
 package com.epam.brn.integration
 
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
-import com.epam.brn.service.parsers.csv.CSVParserService
+import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -32,9 +35,17 @@ class CsvLoadingTestIT {
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
-            csvParserService: CSVParserService,
-            passwordEncoder: PasswordEncoder
-        ) = InitialDataLoader(resourceLoader, exerciseGroupRepository, userAccountRepository, csvParserService, passwordEncoder)
+            passwordEncoder: PasswordEncoder,
+            authorityService: AuthorityService,
+            uploadService: CsvUploadService
+        ) = InitialDataLoader(
+            resourceLoader,
+            exerciseGroupRepository,
+            userAccountRepository,
+            passwordEncoder,
+            authorityService,
+            uploadService
+        )
     }
 
     @Autowired
@@ -52,12 +63,20 @@ class CsvLoadingTestIT {
     @Autowired
     private lateinit var taskRepository: TaskRepository
 
+    @Autowired
+    private lateinit var resourceRepository: ResourceRepository
+
+    @Autowired
+    private lateinit var authorityRepository: AuthorityRepository
+
     @Test
     fun `should load test data from classpath initFiles folder`() {
+        resourceRepository.findAll() shouldHaveSize 167
         exerciseGroupRepository.findAll() shouldHaveSize 2
-        seriesRepository.findAll() shouldHaveSize 3
-        exerciseRepository.findAll() shouldHaveSize 9
-        taskRepository.findAll() shouldHaveSize 57
-        userAccountRepository.findAll() shouldHaveSize 1
+        seriesRepository.findAll() shouldHaveSize 5
+        exerciseRepository.findAll() shouldHaveSize 13
+        taskRepository.findAll() shouldHaveSize 69
+        userAccountRepository.findAll() shouldHaveSize 3
+        authorityRepository.findAll() shouldHaveSize 2
     }
 }

@@ -1,7 +1,6 @@
 package com.epam.brn.job
 
-import com.epam.brn.job.csv.task.UploadFromCsvService
-import com.epam.brn.job.impl.UploadFileJobRunnerImpl
+import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.anyOrNull
 import java.io.File
 import java.nio.file.Files
@@ -28,18 +27,19 @@ import org.springframework.test.util.ReflectionTestUtils
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UploadFileJobRunnerTest {
 
-    private val pathToTaskFiles = "src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks"
+    private val pathToTaskFiles =
+        "src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks"
 
     private val pathToProcessedTaskFiles = "$pathToTaskFiles\\processed"
 
     @InjectMocks
-    lateinit var uploadFileJobRunner: UploadFileJobRunnerImpl
+    lateinit var uploadFileJobRunner: UploadFileJobRunner
 
     @Mock
-    lateinit var uploadTaskFromCsvService: UploadFromCsvService
+    lateinit var csvUploadService: CsvUploadService
 
     @Spy
-    var sourcesWithJobs: LinkedHashMap<String, UploadFromCsvService> = LinkedHashMap()
+    var sourcesWithJobs: LinkedHashMap<String, CsvUploadService> = LinkedHashMap()
 
     @BeforeAll
     fun init() {
@@ -57,19 +57,19 @@ class UploadFileJobRunnerTest {
 
         FileUtils.moveFile(
             oldFile,
-            FileUtils.getFile("$pathToTaskFiles\\tasks_for_single_words_series.csv")
+            FileUtils.getFile("$pathToTaskFiles\\1_series.csv")
         )
     }
 
     @Test
     fun `should upload tasks from csv file during job`() {
         // GIVEN
-        sourcesWithJobs[pathToTaskFiles] = uploadTaskFromCsvService
+        sourcesWithJobs[pathToTaskFiles] = csvUploadService
 
         // WHEN
         uploadFileJobRunner.perform()
 
         // THEN
-        verify(uploadTaskFromCsvService, times(1)).loadTaskFile(anyOrNull<File>())
+        verify(csvUploadService, times(1)).load(anyOrNull<File>())
     }
 }

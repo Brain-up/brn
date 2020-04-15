@@ -1,10 +1,13 @@
+/*! purgecss start ignore */
 @import 'pod-styles.css';
+/*! purgecss end ignore */
 @import 'tailwindcss/base';
 
 @import 'tailwindcss/components';
 
 @import 'tailwindcss/utilities';
 
+/*! purgecss start ignore */
 html {
   background: #efefef;
   margin: 0;
@@ -127,8 +130,19 @@ a[disabled] {
   position: relative;
 }
 
+.modal-fixed {
+  position: fixed;
+}
+
+.modal-body {
+  height: 600px;
+  width: 1200px;
+  padding: 25px 40px 40px;
+}
+
 @supports (backdrop-filter: blur()) {
   .start-task-button::after {
     backdrop-filter: blur(2px);
   }
 }
+/*! purgecss end ignore */

@@ -1,0 +1,5 @@
+{
+  "grant_type": "password",
+  "username": "admin@admin.com",
+  "password": "admin"
+}

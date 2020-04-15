@@ -1,8 +1,8 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -35,100 +35,120 @@ class AuthorizationAuthenticationIT {
     lateinit var userAccountRepository: UserAccountRepository
 
     @Autowired
+    lateinit var authorityRepository: AuthorityRepository
+
+    @Autowired
     lateinit var passwordEncoder: PasswordEncoder
 
-    internal val userName: String = "admin"
-    internal val password: String = "admin"
+    internal val email: String = "testAdmin@admin.com"
+    internal val passw: String = "testAdmin"
+
+    private val baseUrl = "/groups"
 
     @BeforeEach
     fun initBeforeEachTest() {
-        val password = passwordEncoder.encode(password)
+        val authName = "ROLE_ADMIN"
+        val authority = authorityRepository.findAuthorityByAuthorityName(authName)
+            ?: authorityRepository.save(Authority(authorityName = authName))
+
+        val password = passwordEncoder.encode(passw)
+
         val userAccount =
-            UserAccount(userName = userName, password = password, email = "admin@admin.com", active = true)
-        userAccount.authoritySet.addAll(setOf(Authority(authority = "ROLE_ADMIN", userAccount = userAccount)))
+            UserAccount(
+                firstName = "testUserFirstName",
+                lastName = "testUserLastName",
+                password = password,
+                email = email,
+                active = true
+            )
+
+        userAccount.authoritySet.add(authority)
         userAccountRepository.save(userAccount)
     }
 
     @AfterEach
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()
+        authorityRepository.deleteAll()
     }
 
     @Test
     fun `test get groups with valid credentials`() {
         // WHEN
         val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(user(this.userName).password(this.password).roles("USER", "ADMIN"))
+            get(baseUrl)
+                .with(user(this.email).password(this.passw).roles("USER", "ADMIN"))
         )
+
         // THEN
-        resultAction
-            .andExpect(status().isOk)
+        resultAction.andExpect(status().isOk)
     }
 
     @Test
     fun `test get groups with with no authorities`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(user(this.userName).password(password).roles())
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(baseUrl).with(user(this.email).password(passw).roles())
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().`is`(403))
+        resultAction.andExpect(status().`is`(403))
     }
 
     @Test
     fun `test login with valid credentials`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(formLogin().user(this.userName).password(this.password))
+        val resultAction = this.mockMvc
+            .perform(formLogin().user(this.email).password(this.passw))
+
         // THEN
-        resultAction
-            .andExpect(authenticated())
+        resultAction.andExpect(authenticated())
     }
 
     @Test
     fun `test login with invalid credentials`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(formLogin().user(this.userName).password("wrong"))
+        val resultAction = this.mockMvc
+            .perform(formLogin().user(this.email).password("wrong"))
+
         // THEN
-        resultAction
-            .andExpect(unauthenticated())
+        resultAction.andExpect(unauthenticated())
     }
 
     @Test
     fun `test get groups with no authorities`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(user(this.userName).password("wrong").roles())
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(baseUrl).with(user(this.email).password("wrong").roles())
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().`is`(403))
+        resultAction.andExpect(status().`is`(403))
     }
 
     @Test
     fun `test get groups basic authentication`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(httpBasic(this.userName, this.password))
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(baseUrl).with(httpBasic(this.email, this.passw))
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().isOk)
+        resultAction.andExpect(status().isOk)
     }
 
     @Test
     fun `test get groups basic authentication invalid password`() {
         // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(BrnPath.GROUPS)
-                .with(httpBasic(this.userName, "wrong"))
-        )
+        val resultAction = this.mockMvc
+            .perform(
+                get(baseUrl).with(httpBasic(this.email, "wrong"))
+            )
+
         // THEN
-        resultAction
-            .andExpect(status().isUnauthorized)
+        resultAction.andExpect(status().isUnauthorized)
     }
 }

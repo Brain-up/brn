@@ -1,7 +1,7 @@
 package com.epam.brn.model
 
-import com.epam.brn.constant.WordTypeEnum
 import com.epam.brn.dto.ResourceDto
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -31,7 +31,7 @@ data class Resource(
     var wordType: String = "",
     var pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
-    @ManyToMany(mappedBy = "answerOptions")
+    @ManyToMany(mappedBy = "answerOptions", cascade = [CascadeType.MERGE])
     var tasks: MutableSet<Task> = HashSet()
 ) {
     fun toDto() = ResourceDto(
@@ -40,8 +40,10 @@ data class Resource(
         word = word,
         pictureFileUrl = pictureFileUrl,
         soundsCount = soundsCount,
-        wordType = WordTypeEnum.valueOf(wordType)
+        wordType = WordType.valueOf(wordType)
     )
+
+    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word', pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -52,6 +54,7 @@ data class Resource(
         if (id != other.id) return false
         if (audioFileUrl != other.audioFileUrl) return false
         if (word != other.word) return false
+        if (wordType != other.wordType) return false
         if (pictureFileUrl != other.pictureFileUrl) return false
         if (soundsCount != other.soundsCount) return false
 
@@ -60,12 +63,11 @@ data class Resource(
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
-        result = 31 * result + audioFileUrl.hashCode()
-        result = 31 * result + word.hashCode()
-        result = 31 * result + pictureFileUrl.hashCode()
-        result = 31 * result + soundsCount.hashCode()
+        result = 31 * result + (audioFileUrl?.hashCode() ?: 0)
+        result = 31 * result + (word?.hashCode() ?: 0)
+        result = 31 * result + wordType.hashCode()
+        result = 31 * result + (pictureFileUrl?.hashCode() ?: 0)
+        result = 31 * result + (soundsCount ?: 0)
         return result
     }
-
-    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word', pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount)"
 }

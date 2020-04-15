@@ -1,12 +1,16 @@
 import DS from 'ember-data';
-import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default DS.RESTAdapter.extend({
-  headers: computed(function() {
+  session: service('session'),
+  get headers() {
+    if (!this.session.isAuthenticated) {
+      return {};
+    }
     return {
-      Authorization: 'Basic YWRtaW46YWRtaW4=',
+      Authorization: `Basic ${this.session.data.authenticated.access_token}`,
     };
-  }),
+  },
   namespace: 'api',
   coalesceFindRequests: false,
   shouldReloadRecord: () => false,
@@ -15,7 +19,8 @@ export default DS.RESTAdapter.extend({
     let actualModelName = modelName;
     if (
       modelName === 'task/single-words' ||
-      modelName === 'task/words-sequences'
+      modelName === 'task/words-sequences' ||
+      modelName === 'task/sentence'
     ) {
       actualModelName = 'tasks';
     }

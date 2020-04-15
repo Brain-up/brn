@@ -1,7 +1,8 @@
 #%RAML 1.0
 title: BRN API
 version: v1
-baseUri: http://localhost:8080/api
+baseUri: http://localhost:8081/api
+baseTestUri: http://10.66.216.143:8081/api
 mediaType:
   - application/json
 
@@ -38,6 +39,13 @@ mediaType:
         200:
           body:
             example: !include samples/series.json
+  /fileFormat/{seriesId}:
+    get:
+      description: Get series file format by series id
+      responses:
+        200:
+          body:
+            example: !include samples/file_format.json
 
 # EXERCISE ----------------------------
 /exercises:
@@ -56,18 +64,18 @@ mediaType:
     responses:
       200:
         body:
-          example1: !include samples/exercises_for_sequence_words_series.json
-          example2: !include samples/exercises_for_single_words_series.json
+          example1: !include samples/exercises_for_1_series.json
+          example2: !include samples/exercises_for_2_series.json
   /{exerciseId}:
     get:
       responses:
         200:
           body:
-            example1: !include samples/exercise_for_single_words_series.json
-            example2: !include samples/exercise_for_sequence_words_series.json
-            example3: !include samples/exercise_for_sentence_series.json
-# TASK ----------------------------
+            example1: !include samples/exercise_1_series.json
+            example2: !include samples/exercise_for_2_series.json
+            example3: !include samples/exercise_for_3_series.json
 
+# TASK ----------------------------
 /tasks:
   get:
     description: |
@@ -82,8 +90,8 @@ mediaType:
       200:
         body:
           application/json:
-            example_for_single_words_series: !include samples/tasks_by_exercise_for_single_words_series.json
-            example_for_words_sequences_series: !include samples/tasks_by_exercise_for_words_sequences_series.json
+            example_for_1_series: !include samples/tasks_by_exercise_for_1_series.json
+            example_for_2_series: !include samples/tasks_by_exercise_for_2_series.json
   /{taskId}:
     get:
       description: Get a task by id
@@ -91,9 +99,10 @@ mediaType:
         200:
           body:
             application/json:
-              example_for_single_words_series: !include samples/task_by_id_for_single_words_series.json
-              example_for_words_sequences_series: !include samples/task_by_id_for_words_sequences_series.json
-              example_for_sentence_series: !include samples/task_by_id_for_sentence_series.json
+              example_for_1_series: !include samples/task_by_id_for_1_series.json
+              example_for_2_series: !include samples/task_by_id_for_2_series.json
+              example_for_3_series: !include samples/task_by_id_for_3_series.json
+              example_for_4_series: !include samples/task_by_id_for_4_series.json
 
 # STUDY_HISTORY ----------------------
 /study-history:
@@ -104,24 +113,88 @@ mediaType:
         example: !include samples/study_history.json
     responses:
       201:
-        example: !include samples/study_history_response.json.json
+        example: !include samples/study_history_response.json
 
-# LOAD FILES ----------------------
-/admin/loadFile:
+# USERS ----------------------
+/users:
   post:
+  description: Add a new user to the system
     body:
-      multipart/form-data:
-        properties:
-          taskFile:
-            description: "File with tasks to be uploaded"
-            format: "exerciseId orderNumber word audioFileName pictureFileName words wordType
-                     1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
-            required: true
-            type: file
+      application/json:
+        example: !include samples/users_post_body.json
     responses:
       201:
+        example: !include samples/users_post_response.json
+  get:
+      description: Get the user by userName
+      queryParameters:
+        userName:
+          description: "Name of the user"
+          required: true
+          type: string
+          example: "user"
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+  /{userId}:
+    get:
+      description: Get a user by id
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+    delete:
+      description: delete a user
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
+  /current:
+    get:
+      description: Get logged in user from the current session
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/users_get_response.json
 
-/admin/loadTasksFile:
+# Auth ----------------------
+/brnlogin:
+  post:
+  description: Login for exist user
+    body:
+     application/json:
+        example: !include samples/login.json
+    responses:
+      200:
+        example: !include samples/authSuccessResponse.json
+      401 (Unauthorized):
+        example: !include samples/authBadCredResponse.json
+
+/registration:
+  post:
+  description: Registration for new user with login him
+    body:
+      application/json:
+        example: !include samples/registration.json
+    responses:
+      201 (Created):
+        example: !include samples/authSuccessResponse.json
+      400 (Bad Request):
+        example: !include samples/authSuchUserAlreadyExistErrorResponse.json
+
+/logout:
+  post:
+  description: Logout for logined user
+    responses:
+      204: No content
+
+# LOAD FILES ----------------------
+/loadTasksFile:
   post:
     body:
       multipart/form-data:
@@ -141,3 +214,35 @@ mediaType:
             type: file
     responses:
       201:
+
+/cloud:
+  /folders:
+    get:
+      description: Get cloud folder structure
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/cloud_folders.json
+  /upload:
+    get:
+      queryParameters:
+        filename:
+          description: "File name to be used for uploading"
+          required: true
+          type: string
+          example: "file1.jpg"
+      description: Get cloud upload form
+      responses:
+        200:
+          body:
+            application/json:
+              example_for_aws_upload_form: !include samples/example_for_aws_upload_form.json
+              example_for_google_upload_form: !include samples/example_for_google_upload_form.json
+  /url:
+    get:
+      description: Get cloud bucket url
+      responses:
+        200:
+          body:
+            example: "https://cloudprovider.bucket.com"

@@ -1,15 +1,16 @@
-<ProgressIndicator @progressItems={{this.tasksCopy}} />
-{{#if this.tasksCopy.length}}
-  {{#if this.uncompletedTasks.length}}
+<div class={{this.styleNamespace}} ...attributes>
+  <ProgressIndicator @progressItems={{this.tasksCopy}} />
+  {{#if this.tasksCopy.length}}
     <AudioPlayer
       @audioFileUrl={{this.audioFiles}}
-      @autoplay={{@autoplay}}
       @disabled={{@disableAudioPlayer}}
     />
     <div class="flex mt-4 justify-center">
       {{#each @task.selectedItemsOrder as |type|}}
         <div
           class="column flex-1 flex-col type-column
+
+
             {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
         >
           {{#each (get @task.answerOptions type) as |answerOption|}}
@@ -17,11 +18,11 @@
               @checked={{this.answerCompleted}}
               @isCorrect={{this.isCorrect}}
               @disabled={{@disableAnswers}}
-              @isSelected={{eq
+              @isSelected={{or (eq @activeWord answerOption.word) (eq
                 (get this.currentAnswerObject type)
                 answerOption.word
-              }}
-              @clickAction={{action this.checkMaybe answerOption}}
+              )}}
+              @clickAction={{if (eq @mode "interact") (fn @onPlayText answerOption.word) (fn this.checkMaybe answerOption)}}
               @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
               @word={{answerOption.word}}
             />
@@ -29,7 +30,5 @@
         </div>
       {{/each}}
     </div>
-  {{else}}
-    <AnswerCorrectnessWidget @isCorrect={{true}} />
   {{/if}}
-{{/if}}
+</div>

@@ -1,9 +1,11 @@
-<ul class="group-nav-list">
-  {{#each (sort-by "id" @group.series) as |series|}}
-    <li class="pt-1 pb-1">
-      {{#link-to "group.series" series}}
-        {{series.name}}
-      {{/link-to}}
-    </li>
-  {{/each}}
-</ul>
+<div ...attributes>
+  <ul class="group-nav-list">
+    {{#each (sort-by "id" @group.series) as |series|}}
+      <li class="pt-1 pb-1">
+        <LinkTo @route="group.series" @model={{series}}>
+          {{series.name}}
+        </LinkTo>
+      </li>
+    {{/each}}
+  </ul>
+</div>

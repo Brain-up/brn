@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.SeriesDto
-import com.epam.brn.exception.NoDataFoundException
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import org.apache.logging.log4j.kotlin.logger
@@ -21,14 +21,8 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
     fun findSeriesDtoForId(seriesId: Long): SeriesDto {
         log.debug("try to find series for seriesId=$seriesId")
         val series = seriesRepository.findById(seriesId)
-            .orElseThrow { NoDataFoundException("no series was found for id=$seriesId") }
+            .orElseThrow { EntityNotFoundException("no series was found for id=$seriesId") }
         return series.toDto()
-    }
-
-    fun findSeriesForId(seriesId: Long): Series {
-        log.debug("try to find series for seriesId=$seriesId")
-        return seriesRepository.findById(seriesId)
-            .orElseThrow { NoDataFoundException("no series was found for id=$seriesId") }
     }
 
     fun save(series: Series): Series {

@@ -44,7 +44,7 @@ internal class ExerciseGroupServiceTest {
         `when`(exerciseGroupMock.toDto()).thenReturn(exerciseGroupDtoMock)
         `when`(exerciseGroupRepository.findById(anyLong())).thenReturn(Optional.of(exerciseGroupMock))
         // WHEN
-        val actualResult: ExerciseGroupDto = exerciseGroupsService.findGroupById(groupId)
+        val actualResult: ExerciseGroupDto = exerciseGroupsService.findGroupDtoById(groupId)
         // THEN
         assertEquals(actualResult, exerciseGroupDtoMock)
     }

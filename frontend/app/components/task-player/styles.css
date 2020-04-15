@@ -34,18 +34,6 @@
   white-space: nowrap;
 }
 
-.task-player__image {
-  animation: fade-out 0.5s;
-  min-width: 350px;
-  min-height: 350px;
-  max-width: 100%;
-  max-height: 100%;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: var(--word-picture-url);
-}
-
 @keyframes fade-out {
   0% {
     opacity: 0;

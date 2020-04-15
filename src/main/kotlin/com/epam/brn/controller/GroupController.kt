@@ -1,7 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.constant.BrnParams.GROUP_ID
-import com.epam.brn.constant.BrnPath
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.ExerciseGroupsService
@@ -15,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(BrnPath.GROUPS)
-@Api(value = BrnPath.GROUPS, description = "Contains actions over groups")
+@RequestMapping("/groups")
+@Api(value = "/groups", description = "Contains actions over groups")
 class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsService) {
 
     // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to
@@ -27,11 +25,10 @@ class GroupController(@Autowired val exerciseGroupsService: ExerciseGroupsServic
         return ResponseEntity.ok().body(BaseResponseDto(data = exerciseGroupsService.findAllGroups()))
     }
 
-    @GetMapping(value = ["/{$GROUP_ID}"])
+    @GetMapping(value = ["/{groupId}"])
     @ApiOperation("Get group by id")
-    fun getGroupById(
-        @PathVariable(GROUP_ID) groupId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = exerciseGroupsService.findGroupById(groupId)))
+    fun getGroupById(@PathVariable("groupId") groupId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
+        return ResponseEntity.ok()
+            .body(BaseSingleObjectResponseDto(data = exerciseGroupsService.findGroupDtoById(groupId)))
     }
 }

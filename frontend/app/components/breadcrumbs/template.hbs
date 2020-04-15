@@ -1,21 +1,21 @@
-{{#let (if @group @group @series.group) as |group|}}
-  <ul aria-label="Breadcrumbs" class="list-none breadcrumbs">
-    <li>
-      {{#link-to "groups"}}
-        Группы
-      {{/link-to}}
-    </li>
-    <li data-test-group-breadcrumb>
-      {{#link-to "group" group}}
-        {{group.name}}
-      {{/link-to}}
-    </li>
-    {{#if @series}}
-      <li data-test-series-breadcrumb>
-        {{#link-to "group.series" group @series}}
-          {{@series.name}}
-        {{/link-to}}
+<div class="{{this.styleNamespace}} breadcrumbs-container" ...attributes>
+  {{#let (if @group @group @series.group) as |group|}}
+    <ul aria-label="Breadcrumbs" class="list-none breadcrumbs">
+      <li>
+        <LinkTo @route="groups">Группы</LinkTo>
       </li>
-    {{/if}}
-  </ul>
-{{/let}}
+      <li data-test-group-breadcrumb>
+        <LinkTo @route="group" @model={{group}}>
+          {{group.name}}
+        </LinkTo>
+      </li>
+      {{#if @series}}
+        <li data-test-series-breadcrumb>
+          <LinkTo @route="group.series" @models={{array group @series}}>
+            {{@series.name}}
+          </LinkTo>
+        </li>
+      {{/if}}
+    </ul>
+  {{/let}}
+</div>

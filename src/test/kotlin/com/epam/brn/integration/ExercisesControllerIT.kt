@@ -1,11 +1,8 @@
 package com.epam.brn.integration
 
-import com.epam.brn.constant.BrnParams.SERIES_ID
-import com.epam.brn.constant.BrnParams.USER_ID
-import com.epam.brn.constant.BrnPath
-import com.epam.brn.constant.ExerciseTypeEnum
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
@@ -40,16 +37,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WithMockUser(username = "admin", roles = ["ADMIN"])
 class ExercisesControllerIT {
 
+    private val baseUrl = "/exercises"
+
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
+
     @Autowired
     lateinit var exerciseRepository: ExerciseRepository
+
     @Autowired
     lateinit var seriesRepository: SeriesRepository
+
     @Autowired
     lateinit var studyHistoryRepository: StudyHistoryRepository
+
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -73,9 +77,9 @@ class ExercisesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.EXERCISES)
-                .param(USER_ID, existingUser.id.toString())
-                .param(SERIES_ID, existingSeries.id.toString())
+                .get(baseUrl)
+                .param("userId", existingUser.id.toString())
+                .param("seriesId", existingSeries.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -94,7 +98,7 @@ class ExercisesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(BrnPath.EXERCISES + "/" + existingExercise.id)
+                .get(baseUrl + "/" + existingExercise.id)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -127,8 +131,9 @@ class ExercisesControllerIT {
         return userAccountRepository.save(
             UserAccount(
                 id = 0,
-                userName = "manuel",
-                birthDate = LocalDate.now(),
+                firstName = "testUserFirstName",
+                lastName = "testUserLastName",
+                birthday = LocalDate.now(),
                 email = "123@123.asd",
                 password = "password",
                 active = true
@@ -162,7 +167,7 @@ class ExercisesControllerIT {
                 series = series,
                 level = 0,
                 name = exerciseName,
-                exerciseType = ExerciseTypeEnum.SINGLE_WORDS.toString()
+                exerciseType = ExerciseType.SINGLE_WORDS.toString()
             )
         )
     }

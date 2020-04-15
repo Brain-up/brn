@@ -1,39 +1,129 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.exception.EntityNotFoundException
+import com.epam.brn.model.Authority
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
-import org.junit.jupiter.api.Disabled
+import com.epam.brn.service.impl.UserAccountServiceImpl
+import java.util.Optional
+import kotlin.test.assertFailsWith
+import org.apache.commons.lang3.math.NumberUtils
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyString
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.security.crypto.password.PasswordEncoder
 
 @ExtendWith(MockitoExtension::class)
+@DisplayName("UserAccountService test using mockito")
 internal class UserAccountServiceTest {
 
     @InjectMocks
-    lateinit var userAccountService: UserAccountService
+    lateinit var userAccountService: UserAccountServiceImpl
 
     @Mock
     lateinit var userAccountRepository: UserAccountRepository
 
-    @Test
-    @Disabled
-    fun `should insert user`() {
-        // TODO write a test with new service methods
-/*        // GIVEN
-        val id = 1L
-        val name = "Name"
-        val email = "email@email.ru"
-        val phone = "+7911111111"
-        val userDetails = UserDetails(id, name, email, phone)
-        Mockito.`when`(userDetailsRepository.save(userDetails)).thenReturn(userDetails)
+    @Mock
+    lateinit var passwordEncoder: PasswordEncoder
 
-        // WHEN
-        val newUserId = userDetailsService.addUser(name, email, phone)
+    @Mock
+    lateinit var authorityService: AuthorityService
 
-        // THEN
-        verify(userDetailsRepository, times(1)).save(userDetails)
-        assertEquals(id, newUserId)*/
+    @Mock
+    lateinit var userAccount: UserAccount
+
+    @Mock
+    lateinit var userAccountDto: UserAccountDto
+
+    @Mock
+    lateinit var authority: Authority
+
+    @Nested
+    @DisplayName("Tests for getting users")
+    inner class GetUserAccounts {
+        @Test
+        fun `should find a user by id`() {
+            // GIVEN
+            val userName = "Tested"
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
+            `when`(userAccountDto.firstName).thenReturn(userName)
+            `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
+                .thenReturn(Optional.of(userAccount))
+            // WHEN
+            val userAccountDtoReturned = userAccountService.findUserById(NumberUtils.LONG_ONE)
+            // THEN
+            assertThat(userAccountDtoReturned.firstName).isEqualTo(userName)
+        }
+
+        @Test
+        fun `should find a user by name`() {
+            // GIVEN
+            val firstName = "Ivan"
+            val lastName = "Ivanov"
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
+            `when`(userAccountDto.firstName).thenReturn(firstName)
+            `when`(userAccountDto.lastName).thenReturn(lastName)
+            `when`(userAccountRepository.findUserAccountByFirstNameAndLastName(firstName, lastName))
+                .thenReturn(Optional.of(userAccount))
+            // WHEN
+            val userAccountDtoReturned = userAccountService.findUserByName(firstName, lastName)
+            // THEN
+            assertThat(userAccountDtoReturned.firstName).isEqualTo(firstName)
+            assertThat(userAccountDtoReturned.lastName).isEqualTo(lastName)
+        }
+
+        @Test
+        fun `should find a user by email`() {
+            // GIVEN
+            val email = "email"
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
+            `when`(userAccountDto.email).thenReturn(email)
+            `when`(userAccountRepository.findUserAccountByEmail(email))
+                .thenReturn(Optional.of(userAccount))
+            // WHEN
+            val userAccountDtoReturned = userAccountService.findUserByEmail(email)
+            // THEN
+            assertThat(userAccountDtoReturned.email).isEqualTo(email)
+        }
+
+        @Test
+        fun `should throw an exception when there is no user by specified id`() {
+            // THEN
+            assertFailsWith<EntityNotFoundException> {
+                userAccountService.findUserById(NumberUtils.LONG_ONE)
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests for creation of users")
+    inner class CreateUserAccounts {
+        @Test
+        fun `should create new user`() {
+            // GIVEN
+            val userName = "Tested"
+            `when`(userAccountDto.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
+            `when`(userAccountDto.firstName).thenReturn(userName)
+            `when`(userAccountRepository.save(userAccount))
+                .thenReturn(userAccount)
+            `when`(authorityService.findAuthorityByAuthorityName(anyString()))
+                .thenReturn(authority)
+            `when`(userAccountService.getHashedPassword(userAccountDto))
+                .thenReturn("password")
+            // WHEN
+            val userAccountDtoReturned = userAccountService.addUser(userAccountDto)
+            // THEN
+            assertThat(userAccountDtoReturned.firstName).isEqualTo(userName)
+        }
     }
 }

@@ -1,4 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import { Store } from '@ngrx/store';
+import { checkAuthStatusAction } from './modules/auth/ngrx/actions';
 
 
 @Component({
@@ -6,6 +8,10 @@ import {Component} from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'frontend-angular';
+  ngOnInit() {
+    this.store.dispatch(checkAuthStatusAction());
+  }
+  constructor(private store: Store<any>) {}
 }
