@@ -68,7 +68,7 @@ internal class StudyHistoryServiceTest {
         )
         val studyHistoryEntity = StudyHistory(
             id = 1L,
-            userAccount = userAccount,
+            userId = userAccount,
             exercise = exercise,
             startTime = now,
             endTime = now,
@@ -128,7 +128,7 @@ internal class StudyHistoryServiceTest {
         )
         val existingEntity = StudyHistory(
             id = 10,
-            userAccount = userAccountMock,
+            userId = userAccountMock,
             exercise = exerciseMock,
             endTime = LocalDateTime.now(),
             startTime = LocalDateTime.now(),
@@ -137,7 +137,7 @@ internal class StudyHistoryServiceTest {
         )
         val updatedEntity = StudyHistory(
             id = 10,
-            userAccount = userAccountMock,
+            userId = userAccountMock,
             exercise = exerciseMock,
             endTime = existingEntity.endTime,
             startTime = existingEntity.endTime,
@@ -148,7 +148,7 @@ internal class StudyHistoryServiceTest {
 
         doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
 
-        `when`(studyHistoryRepository.findByUserAccountIdAndExerciseId(dto.userId, dto.exerciseId))
+        `when`(studyHistoryRepository.findByUserIdAndExerciseId(dto.userId, dto.exerciseId))
             .thenReturn(Optional.of(existingEntity))
 
         // WHEN

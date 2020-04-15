@@ -5,6 +5,8 @@ import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import javax.servlet.http.HttpServletRequest
+import org.keycloak.KeycloakSecurityContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,9 +23,11 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @GetMapping
     @ApiOperation("Get done exercises for user")
     fun getExercises(
-        @RequestParam(value = "userId", defaultValue = "1") userId: Long,
+        request: HttpServletRequest,
         @RequestParam(value = "seriesId", required = true) seriesId: Long
     ): ResponseEntity<BaseResponseDto> {
+        val keycloakSecurityContext: KeycloakSecurityContext = request.getAttribute(KeycloakSecurityContext::class.java.name) as KeycloakSecurityContext
+        val userId = keycloakSecurityContext.token.subject
         return ResponseEntity.ok()
             .body(BaseResponseDto(data = exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)))
     }

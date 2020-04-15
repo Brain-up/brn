@@ -60,7 +60,7 @@ internal class StudyHistoryControllerTest {
             exerciseId = 1L
         )
         val studyHistory = StudyHistory(
-            userAccount = UserAccount(
+            userId = UserAccount(
                 firstName = "testUserFirstName",
                 lastName = "testUserLastName",
                 password = "test",

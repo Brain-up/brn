@@ -2,6 +2,7 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.StudyHistoryDto
 import java.time.LocalDateTime
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -29,9 +30,8 @@ data class StudyHistory(
     )
     val id: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    var userAccount: UserAccount,
+    @Column(name = "user_id", unique = true)
+    var userId: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
@@ -43,11 +43,11 @@ data class StudyHistory(
     var repetitionIndex: Float? = null
 ) {
     override fun toString() =
-        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
+        "StudyHistory(id=$id, userAccount=$userId, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
-        userId = this.userAccount.id,
+        userId = this.userId,
         exerciseId = this.exercise.id,
         startTime = this.startTime,
         endTime = this.endTime,

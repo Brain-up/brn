@@ -1,6 +1,5 @@
 package com.epam.brn.dto
 
-import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 import javax.validation.constraints.Email
@@ -12,6 +11,7 @@ data class UserAccountDto(
     val id: Long? = null,
     @field:NotBlank
     val firstName: String,
+    val username: String,
     @field:NotBlank
     val lastName: String,
     @field:NotBlank
@@ -24,13 +24,4 @@ data class UserAccountDto(
     var active: Boolean = true
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
-    fun toModel(hashedPassword: String) = UserAccount(
-        id = id,
-        firstName = firstName,
-        lastName = lastName,
-        email = email,
-        password = hashedPassword,
-        birthday = birthday,
-        active = active
-    )
 }

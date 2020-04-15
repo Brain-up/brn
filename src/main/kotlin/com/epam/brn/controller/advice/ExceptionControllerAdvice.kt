@@ -9,7 +9,6 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -50,15 +49,6 @@ class ExceptionControllerAdvice {
         logger.warn("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = listOf(e.message.toString())))
-    }
-
-    @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
-        logger.warn("Forbidden: ${e.message}", e)
-        return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
             .contentType(MediaType.APPLICATION_JSON)
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
     }

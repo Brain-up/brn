@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull
 data class StudyHistoryDto(
     var id: Long? = null,
     @NotNull
-    var userId: Long?,
+    var userId: String?,
     @NotNull
     var exerciseId: Long?,
     var startTime: LocalDateTime?,

@@ -5,10 +5,33 @@ services:
     restart: always
     ports:
       - 5432:5432
+    volumes:
+    - ./postgres_multiple_databases:/docker-entrypoint-initdb.d
     environment:
-      POSTGRES_DB: brn
+      POSTGRES_MULTIPLE_DATABASES: brn, keycloak
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+  keycloak:
+    image: jboss/keycloak
+    container_name: keycloak
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: db_brn
+      DB_DATABASE: keycloak
+      DB_USER: admin
+      DB_SCHEMA: public
+      DB_PASSWORD: admin
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+      #JDBC_PARAMS: "ssl=true"
+    volumes:
+    - ./keycloak_configs:/keycloak_configs
+    ports:
+      - 8089:8080
+    depends_on:
+      - db_brn
+
   brn:
     container_name: brn
     command: java -jar epam-brn.jar
@@ -21,9 +44,12 @@ services:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+      KC_URL: keycloak
+      KC_PORT: 8089
       SPRING_PROFILE: prod
     depends_on:
       - db_brn
+      - keycloak
   brn_fe:
     container_name: brn_fe
     build:

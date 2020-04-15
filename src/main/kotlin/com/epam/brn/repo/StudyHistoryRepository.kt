@@ -11,16 +11,16 @@ import org.springframework.stereotype.Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     @Query(
         value = "SELECT s.exercise.id FROM StudyHistory s " +
-                " WHERE s.exercise.series.id = :seriesId and s.userAccount.id = :userId"
+                " WHERE s.exercise.series.id = :seriesId and s.userId = :userId"
     )
-    fun getDoneExercisesIdList(@Param("seriesId") seriesId: Long, @Param("userId") userId: Long): List<Long>
+    fun getDoneExercisesIdList(@Param("seriesId") seriesId: Long, @Param("userId") userId: String): List<Long>
 
     @Query(
         value = "SELECT s.exercise.id FROM StudyHistory s " +
-                " WHERE s.userAccount.id = :userId"
+                " WHERE s.userId = :userId"
     )
 
-    fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
+    fun getDoneExercisesIdList(@Param("userId") userId: String): List<Long>
 
-    fun findByUserAccountIdAndExerciseId(userId: Long?, exerciseId: Long?): Optional<StudyHistory>
+    fun findByUserIdAndExerciseId(userId: String?, exerciseId: Long?): Optional<StudyHistory>
 }

@@ -24,7 +24,7 @@ internal class ExerciseControllerTest {
     @Test
     fun `should get exercises for user and series`() {
         // GIVEN
-        val userId: Long = 1
+        val userId = "1"
         val seriesId: Long = 1
         val exercise = ExerciseDto(1, 1, "name", "desc", 1, ExerciseType.SINGLE_WORDS)
         val listExercises = listOf(exercise)

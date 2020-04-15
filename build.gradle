@@ -16,6 +16,7 @@ allOpen {
 
 repositories {
     jcenter()
+    mavenCentral()
 }
 
 ext["mockito.version"] = "${mockitoVersion}"
@@ -25,11 +26,13 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-batch"
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.security:spring-security-test"
+//    implementation "org.springframework.boot:spring-boot-starter-security"
+//    implementation "org.springframework.security:spring-security-test"
     implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
+    implementation "org.keycloak:keycloak-spring-boot-starter"
+    implementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"
 
     implementation "com.auth0:java-jwt:3.10.1"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
@@ -62,6 +65,12 @@ dependencies {
     testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
 
     kapt "org.mapstruct:mapstruct-processor:1.3.1.Final"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+    }
 }
 
 compileKotlin {
