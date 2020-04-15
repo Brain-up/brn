@@ -32,7 +32,7 @@
         {{#if this.exerciseIsCompletedInCurrentCycle}}
           <AnswerCorrectnessWidget
             @isCorrect={{true}}
-            {{did-insert (action this.afterCompleted)}}
+            {{did-insert this.afterCompleted}}
           />
         {{else}}
           {{outlet}}

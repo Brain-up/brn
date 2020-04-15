@@ -2,9 +2,9 @@
   <ul class="group-nav-list">
     {{#each (sort-by "id" @group.series) as |series|}}
       <li class="pt-1 pb-1">
-        {{#link-to "group.series" series}}
+        <LinkTo @route="group.series" @model={{series}}>
           {{series.name}}
-        {{/link-to}}
+        </LinkTo>
       </li>
     {{/each}}
   </ul>
