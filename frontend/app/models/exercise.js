@@ -4,8 +4,10 @@ import CompletionDependent from './completion-dependent';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
+import { inject as service } from '@ember/service';
 
 export default class Exercise extends CompletionDependent.extend({
+  session: service('session'),
   name: attr('string'),
   description: attr('string'),
   level: attr('number'),
@@ -77,7 +79,7 @@ export default class Exercise extends CompletionDependent.extend({
         repetitionIndex,
         exerciseId: id,
         tasksCount: tasks.length,
-        userId: 2, //temporary
+        userId: this.get('session.data.user.id') || null
       }),
     });
   },
