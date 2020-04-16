@@ -1,0 +1,41 @@
+{{#let
+  (hash
+    positive="text-green-500" negative="text-red-500" neutral="text-gray-500"
+  )
+  (hash
+    positive="M20 15a1 1 0 002 0V7a1 1 0 00-1-1h-8a1 1 0 000 2h5.59L13 13.59l-3.3-3.3a1 1 0 00-1.4 0l-6 6a1 1 0 001.4 1.42L9 12.4l3.3 3.3a1 1 0 001.4 0L20 9.4V15z"
+    negative="M20 9a1 1 0 012 0v8a1 1 0 01-1 1h-8a1 1 0 010-2h5.59L13 10.41l-3.3 3.3a1 1 0 01-1.4 0l-6-6a1 1 0 011.4-1.42L9 11.6l3.3-3.3a1 1 0 011.4 0l6.3 6.3V9z"
+    neutral="M17 11a1 1 0 010 2H7a1 1 0 010-2h10z"
+  ) as |textColorClass svgPathForType|
+}}
+  <div
+    class="flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded sm:mt-0" ...attributes
+  >
+    <div>
+      <div>
+        <p
+          class="flex items-center justify-end
+            {{get textColorClass @type}}
+             text-md"
+        >
+          <span class="font-bold">
+            {{or @diff "@diff"}}
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 fill-current"
+            viewBox="0 0 24 24"
+          >
+            <path class="heroicon-ui" d={{get svgPathForType @type}}></path>
+          </svg>
+        </p>
+      </div>
+      <p class="text-3xl font-semibold text-center text-gray-800">
+        {{or @value "@value"}}
+      </p>
+      <p class="text-lg text-center text-gray-500">
+        {{or @label "@label"}}
+      </p>
+    </div>
+  </div>
+{{/let}}

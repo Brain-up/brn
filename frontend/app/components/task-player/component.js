@@ -120,7 +120,9 @@ export default class TaskPlayerComponent extends Component {
       this.mode = MODES.TASK;
       yield this.audio.startPlayTask();
       this.studyingTimer.runTimer();
-      this.task.exercise.content.trackTime('start');
+      if (!this.task.get('exercise.isStarted')) {
+        this.task.exercise.content.trackTime('start');
+      }
     } finally {
       // EOL
     }

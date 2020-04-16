@@ -1,0 +1,7 @@
+<div class="max-w-xl px-4 py-4 mx-auto" ...attributes>
+  <div class="sm:grid sm:h-32 sm:grid-flow-row sm:gap-4 sm:grid-cols-3">
+    <ExerciseStats::Panel @type="positive" @diff="10%" @label="Время" @value={{this.minutes}} />
+    <ExerciseStats::Panel @type="negative" @diff="10%" @label="Попытки" @value={{this.repetitionIndex}} />
+    <ExerciseStats::Panel @type="neutral" @diff="10%" @label="Задачи" @value={{@stats.tasksCount}} />
+  </div>
+</div>
