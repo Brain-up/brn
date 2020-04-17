@@ -80,7 +80,7 @@ class CsvUploadService(
         inputStream.use {
             val strings = mutableListOf<String>()
 
-            val reader = LineNumberReader(InputStreamReader(inputStream))
+            val reader = LineNumberReader(InputStreamReader(inputStream, Charsets.UTF_8))
             while (reader.lineNumber < linesCount) {
                 reader.readLine().let { strings.add(it) }
             }
