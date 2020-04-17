@@ -150,7 +150,7 @@ internal class SeriesTwoRecordProcessorTest {
                 resource_дедушка(),
                 resource_сидит(),
                 resource_лежит(),
-                resource_сидит()
+                resource_идет()
             )
         )
     }

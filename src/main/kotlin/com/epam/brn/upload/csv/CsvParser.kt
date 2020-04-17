@@ -53,7 +53,7 @@ class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {
     }
 
     fun readOriginalLines(inputStream: InputStream): MutableList<String> {
-        val originalLines = BufferedReader(InputStreamReader(inputStream))
+        val originalLines = BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
             .lines()
             .collect(Collectors.toList())
         inputStream.reset()

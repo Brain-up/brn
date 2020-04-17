@@ -59,7 +59,7 @@ class CsvUploadService(
 
         @Suppress("UNCHECKED_CAST")
         when (seriesId.toInt()) {
-            1, 2, 3 -> load(file.inputStream)
+            1, 2, 3, 4 -> load(file.inputStream)
             else -> throw IllegalArgumentException("Loading for seriesId = $seriesId is not supported yet.")
         }
     }
@@ -68,7 +68,7 @@ class CsvUploadService(
     @Throws(FileFormatException::class)
     fun load(file: File) = load(file.inputStream())
 
-    fun getSampleStringForSeriesFile(seriesId: Long): String {
+    fun getSampleStringForSeriesExerciseFile(seriesId: Long): String {
         return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(seriesId))
     }
 
@@ -80,7 +80,7 @@ class CsvUploadService(
         inputStream.use {
             val strings = mutableListOf<String>()
 
-            val reader = LineNumberReader(InputStreamReader(inputStream))
+            val reader = LineNumberReader(InputStreamReader(inputStream, Charsets.UTF_8))
             while (reader.lineNumber < linesCount) {
                 reader.readLine().let { strings.add(it) }
             }
