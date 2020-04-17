@@ -3,7 +3,7 @@
 
 process.title = "commit msg";
 
-var commit_regex = /(EPMLABSBRN-[0-9]{1,4}|Merge|merge) .*/gi;
+var commit_regex = /(EPMLABSBRN-[0-9]{1,4}|Merge|merge|config|feature|fix|refactor|test|chore|style|revert|perf|docs|ci): .*/gi;
 
 var fs = require("fs");
 var cwd = process.cwd();
@@ -13,7 +13,28 @@ var commitMsg = fs
   .trim();
 
 if (!commit_regex.test(commitMsg)) {
-  process.stderr.write("Aborting commit. Your commit message is missing valid header or description.\n");
-  process.stderr.write("Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999].\n");
+  process.stderr.write(
+    [
+      "Aborting. Commit message format is invalid.",
+      "",
+      "Use format: {tag}: {description},",
+      "where {tag} - predefined commit label, {description} - message in free form.",
+      "",
+      "If you have issue number use tag epmlabsbrn-# or EPMLABSBRN-#,",
+      "where # - unique number of issue in tracker",
+      "",
+      "In case you don't have issue number you can use predefined tags:",
+      "    ci - ci/cd changes",
+      "    config - repository or project configuration that is not related to ci/cd or documentation",
+      "    docs - documentation related changes",
+      "    feature - new feature or portion of code that didn't exist before",
+      "    fix - defect/bug fix",
+      "    merge, Merge - merge request",
+      "    refactor - code refactoring, design, style and format changes that doesn't affect external behavior",
+      "    revert - for reverting changes from one of the previous commits",
+      "    style - css style changes",
+      "    test - test code fixes, updates or implementation",
+    ].join("\n")
+  );
   process.exit(1);
 }
