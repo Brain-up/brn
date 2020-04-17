@@ -89,10 +89,9 @@ class SeriesFourRecordProcessor(
                 )
             )
     }
-    
-    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>): Task {
-        return Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
-    }
+
+    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
+        Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
 
     private fun generateTasks(exercise: Exercise, answerOptions: MutableSet<Resource>): MutableList<Task> {
         return generateCorrectAnswers(answerOptions)
