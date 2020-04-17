@@ -32,8 +32,8 @@ internal class SeriesOneRecordProcessorTest {
 
     private val series = Series(
         id = 1L,
-        name = "Распознование слов",
-        description = "Распознование слов",
+        name = "Распознавание слов",
+        description = "Распознавание слов",
         exerciseGroup = ExerciseGroup(
             id = 2L,
             name = "Речевые упражнения",

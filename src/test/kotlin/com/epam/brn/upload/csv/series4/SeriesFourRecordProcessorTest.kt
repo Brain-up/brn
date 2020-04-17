@@ -33,8 +33,8 @@ internal class SeriesFourRecordProcessorTest {
 
     private val series = Series(
         id = 4L,
-        name = "Распознование простых слов",
-        description = "Распознование простых слов",
+        name = "Распознавание простых слов",
+        description = "Распознавание простых слов",
         exerciseGroup = ExerciseGroup(
             id = 2L,
             name = "Речевые упражнения",
