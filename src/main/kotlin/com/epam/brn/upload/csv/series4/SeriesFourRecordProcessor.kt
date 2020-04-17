@@ -44,7 +44,7 @@ class SeriesFourRecordProcessor(
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
-            exercise.addTasks(generateTasks(exercise, answerOptions))
+            exercise.addTask(generateOneTask(exercise, answerOptions))
 
             exerciseRepository.save(exercise)
             exercises.add(exercise)
@@ -88,6 +88,10 @@ class SeriesFourRecordProcessor(
                     description = record.exerciseName
                 )
             )
+    }
+    
+    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>): Task {
+        return Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
     }
 
     private fun generateTasks(exercise: Exercise, answerOptions: MutableSet<Resource>): MutableList<Task> {
