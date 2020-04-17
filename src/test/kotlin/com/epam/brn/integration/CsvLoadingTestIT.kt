@@ -75,7 +75,7 @@ class CsvLoadingTestIT {
         exerciseGroupRepository.findAll() shouldHaveSize 2
         seriesRepository.findAll() shouldHaveSize 5
         exerciseRepository.findAll() shouldHaveSize 22
-        taskRepository.findAll() shouldHaveSize 177
+        taskRepository.findAll() shouldHaveSize 78
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
     }
