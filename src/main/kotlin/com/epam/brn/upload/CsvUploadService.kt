@@ -68,7 +68,7 @@ class CsvUploadService(
     @Throws(FileFormatException::class)
     fun load(file: File) = load(file.inputStream())
 
-    fun getSampleStringForSeriesFile(seriesId: Long): String {
+    fun getSampleStringForSeriesExerciseFile(seriesId: Long): String {
         return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(seriesId))
     }
 
