@@ -4,7 +4,7 @@ import { A } from '@ember/array';
 export default Service.extend({
   init() {
     this._super(...arguments);
-    this.set('completedTasks', A());
+    this.clearCompletedTasks();
     this.clearCurrentCycleTaks();
   },
   saveAsCompleted(task) {
@@ -16,6 +16,9 @@ export default Service.extend({
   },
   isCompletedInCurrentCycle(task) {
     return this.completedCycleTasks.includes(task);
+  },
+  clearCompletedTasks() {
+    this.set('completedTasks', A());
   },
   clearCurrentCycleTaks() {
     this.set('completedCycleTasks', A());

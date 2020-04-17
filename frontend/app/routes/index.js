@@ -8,4 +8,4 @@ export default class IndexRoute extends Route {
   redirect() {
     this.transitionTo('groups');
   }
-};
+}

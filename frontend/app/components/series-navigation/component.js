@@ -1,14 +1,14 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  tagName: '',
+export default class SeriesNavigationComponent extends Component {
 
-  sortedExercises: computed('exercises', function() {
-    return this.exercises.sortBy('id');
-  }),
 
-  exerciseHeaders: computed('sortedExercises', function() {
+  get sortedExercises() {
+    return this.args.exercises.sortBy('id');
+  }
+
+  get exerciseHeaders() {
     return this.sortedExercises.mapBy('name').uniq();
-  }),
-});
+  }
+ 
+}

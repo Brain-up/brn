@@ -68,7 +68,7 @@ class CsvUploadService(
     @Throws(FileFormatException::class)
     fun load(file: File) = load(file.inputStream())
 
-    fun getSampleStringForSeriesFile(seriesId: Long): String {
+    fun getSampleStringForSeriesExerciseFile(seriesId: Long): String {
         return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(seriesId))
     }
 
@@ -80,7 +80,7 @@ class CsvUploadService(
         inputStream.use {
             val strings = mutableListOf<String>()
 
-            val reader = LineNumberReader(InputStreamReader(inputStream))
+            val reader = LineNumberReader(InputStreamReader(inputStream, Charsets.UTF_8))
             while (reader.lineNumber < linesCount) {
                 reader.readLine().let { strings.add(it) }
             }

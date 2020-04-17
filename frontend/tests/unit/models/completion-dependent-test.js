@@ -14,6 +14,10 @@ module('Unit | Model | completion dependent', function(hooks) {
         isCompleted: true,
       },
     ];
+    let taskManager = this.owner.lookup('service:tasks-manager');
+
+    children.forEach((item) => taskManager.saveAsCompleted(item));
+    
     let model = store.createRecord('completion-dependent', { children });
     assert.ok(model.isCompleted, 'is true');
   });

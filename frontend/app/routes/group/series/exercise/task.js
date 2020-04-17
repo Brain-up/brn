@@ -1,13 +1,13 @@
 import Route from '@ember/routing/route';
 import { dasherize } from '@ember/string';
 
-export default Route.extend({
+export default class GroupSeriesExerciseTaskRoute extends Route {
   async model({ task_id }) {
     const defaultTask = await this.store.findRecord('task', task_id);
     const modelType = dasherize(defaultTask.exerciseType);
     let task = await this.store.findRecord(`task/${modelType}`, task_id);
     return task;
-  },
+  }
   async afterModel(task, { to }) {
     if (
       !task.canInteract ||
@@ -31,5 +31,5 @@ export default Route.extend({
     }
 
     task.set('repetitionCount', 0);
-  },
-});
+  }
+}
