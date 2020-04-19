@@ -30,6 +30,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
+    implementation "io.jsonwebtoken:jjwt:0.9.1"
 
     implementation "com.auth0:java-jwt:3.10.1"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
@@ -47,7 +48,7 @@ dependencies {
 
     implementation 'com.amazonaws:aws-java-sdk:1.11.754'
     implementation 'com.google.cloud:google-cloud-storage:1.106.0'
-
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.10.3'
 
     def spek_version = '2.0.10'
     testImplementation 'org.amshove.kluent:kluent:1.60'

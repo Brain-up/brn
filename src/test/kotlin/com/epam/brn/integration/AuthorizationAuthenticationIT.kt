@@ -13,9 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
-import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
@@ -97,16 +95,6 @@ class AuthorizationAuthenticationIT {
     }
 
     @Test
-    fun `test login with valid credentials`() {
-        // WHEN
-        val resultAction = this.mockMvc
-            .perform(formLogin().user(this.email).password(this.passw))
-
-        // THEN
-        resultAction.andExpect(authenticated())
-    }
-
-    @Test
     fun `test login with invalid credentials`() {
         // WHEN
         val resultAction = this.mockMvc
@@ -126,29 +114,5 @@ class AuthorizationAuthenticationIT {
 
         // THEN
         resultAction.andExpect(status().`is`(403))
-    }
-
-    @Test
-    fun `test get groups basic authentication`() {
-        // WHEN
-        val resultAction = this.mockMvc
-            .perform(
-                get(baseUrl).with(httpBasic(this.email, this.passw))
-            )
-
-        // THEN
-        resultAction.andExpect(status().isOk)
-    }
-
-    @Test
-    fun `test get groups basic authentication invalid password`() {
-        // WHEN
-        val resultAction = this.mockMvc
-            .perform(
-                get(baseUrl).with(httpBasic(this.email, "wrong"))
-            )
-
-        // THEN
-        resultAction.andExpect(status().isUnauthorized)
     }
 }

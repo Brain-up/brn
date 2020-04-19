@@ -1,5 +1,5 @@
 {
-  "access_token": "YWRtaW5AYWRtaW4uY29tOmFkbWlu",
+  "access_token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTU4NjA5ODc0MiwiZXhwIjoxNTg2MTg1MTQyfQ.VSdRDZcAx5-Pn0LgfBnMfUmlWgkFaEJdgxTt_OvALrIYdzNsRq6a1lCC5TeQjPeuNh54wPMwPH9YHRml1_383Q",
   "token_type": "bearer",
   "expires_in": 3600
 }

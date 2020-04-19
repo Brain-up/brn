@@ -1,5 +1,9 @@
 package com.epam.brn.config
 
+import com.epam.brn.security.CustomLogoutSuccessHandler
+import com.epam.brn.security.JwtTokenAuthenticationFilter
+import com.epam.brn.security.JwtUsernameAndPasswordAuthenticationFilter
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,19 +15,21 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
 class WebSecurityBasicConfiguration(
-    @Qualifier("brainUpUserDetailService") brainUpUserDetailService: UserDetailsService
+    @Qualifier("brainUpUserDetailService") private val userDetailsService: UserDetailsService,
+    @Qualifier("kotlinObjectMapper") private val kotlinObjectMapper: ObjectMapper,
+    @Qualifier("restAuthenticationEntryPoint") private val restAuthenticationEntryPoint: AuthenticationEntryPoint
 ) : WebSecurityConfigurerAdapter() {
 
     companion object {
         const val ADMIN = "ADMIN"
         const val USER = "USER"
     }
-
-    private val userDetailsService: UserDetailsService = brainUpUserDetailService
 
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
@@ -35,6 +41,17 @@ class WebSecurityBasicConfiguration(
     override fun configure(http: HttpSecurity) {
         http.csrf()
             .disable()
+            .exceptionHandling()
+            .authenticationEntryPoint(restAuthenticationEntryPoint)
+            .and()
+            .addFilter(
+                JwtUsernameAndPasswordAuthenticationFilter(
+                    authenticationManager(),
+                    jwtConfig(),
+                    kotlinObjectMapper
+                )
+            )
+            .addFilterAfter(JwtTokenAuthenticationFilter(jwtConfig()), UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
             .antMatchers("/brnlogin").permitAll()
             .antMatchers("/registration").permitAll()
@@ -44,8 +61,15 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/cloud/upload").hasRole(ADMIN)
             .antMatchers("/cloud/folders").hasRole(ADMIN)
             .antMatchers("/**").hasAnyRole(ADMIN, USER)
-            .and().formLogin()
-            .and().httpBasic()
+            .anyRequest()
+            .authenticated()
+            .and()
+            .logout()
+            .logoutUrl("/logout")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
+            .logoutSuccessHandler(CustomLogoutSuccessHandler())
+            .permitAll()
     }
 
     @Bean
@@ -53,4 +77,7 @@ class WebSecurityBasicConfiguration(
 
     @Bean
     fun brnAuthenticationManager(): AuthenticationManager = super.authenticationManagerBean()
+
+    @Bean
+    fun jwtConfig() = JwtConfig()
 }
