@@ -18,7 +18,7 @@ export default class SingleSimpleWordsComponent extends Component {
   @tracked
   tasksCopy = [];
   @tracked
-  currentAnswerObject = null;
+  currentAnswer = null;
   @tracked
   isCorrect = false;
   get uncompletedTasks() {
@@ -32,7 +32,7 @@ export default class SingleSimpleWordsComponent extends Component {
   get audioFileUrl() {
     return (
       this.firstUncompletedTask &&
-      urlForAudio(this.firstUncompletedTask.answer.audioFileUrl)
+      urlForAudio(this.firstUncompletedTask.audioFileUrl)
     );
   }
   // get answerCompleted() {
@@ -51,7 +51,6 @@ export default class SingleSimpleWordsComponent extends Component {
   }
   startTask() {
     this.isCorrect = false;
-    //   this.currentAnswerObject = getEmptyTemplate(this.task.selectedItemsOrder);
   }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
@@ -71,10 +70,10 @@ export default class SingleSimpleWordsComponent extends Component {
   }
   @action
   async checkMaybe(selectedData) {
-    this.currentAnswerObject = { ...selectedData };
+    this.currentAnswer = selectedData;
     const isCorrect = deepEqual(
-      this.currentAnswerObject.word,
-      this.firstUncompletedTask.answer.word,
+      this.currentAnswer,
+      this.firstUncompletedTask.word,
     );
 
     this.isCorrect = isCorrect;
