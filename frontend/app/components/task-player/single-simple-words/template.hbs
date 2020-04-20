@@ -10,16 +10,18 @@
         <li class="task-player__option">
           <button
             data-test-task-answer
-            data-test-task-answer-option={{word}}
+            data-test-task-answer-option={{@word}}
             disabled={{@disableAnswers}}
             type="button"
             class="task-player__option-button bg-transparent py-2 px-4 rounded text-blue-700
+
 
               {{if
                 (eq @activeWord answerOption.word)
                 "border bg-blue-500"
                 "border border-blue-500"
               }}
+
 
 
               {{if

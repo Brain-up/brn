@@ -13,7 +13,7 @@ export default class TaskSingleSimpleWordsModel extends BaseTask.extend({
       ...shuffleArray(this.answerOptions),
     ].map((item, index) => {
       return {
-        answer: item,
+        answer: [item],
         order: index,
       };
     });

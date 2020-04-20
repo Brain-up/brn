@@ -32,7 +32,7 @@ export default class SingleSimpleWordsComponent extends Component {
   get audioFileUrl() {
     return (
       this.firstUncompletedTask &&
-      urlForAudio(this.firstUncompletedTask.answer.audioFileUrl)
+      urlForAudio(this.firstUncompletedTask.answer[0].audioFileUrl)
     );
   }
 
@@ -71,7 +71,7 @@ export default class SingleSimpleWordsComponent extends Component {
     this.currentAnswer = selectedData;
     const isCorrect = deepEqual(
       this.currentAnswer,
-      this.firstUncompletedTask.answer.word,
+      this.firstUncompletedTask.answer[0].word,
     );
 
     this.isCorrect = isCorrect;
