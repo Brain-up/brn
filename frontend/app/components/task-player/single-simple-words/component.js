@@ -7,6 +7,7 @@ import { set, action } from '@ember/object';
 import { urlForAudio } from 'brn/utils/file-url';
 import deepCopy from 'brn/utils/deep-copy';
 import { TaskItem } from 'brn/utils/task-item';
+import { MODES } from 'brn/utils/task-modes';
 
 export default class SingleSimpleWordsComponent extends Component {
   tagName = '';
@@ -49,6 +50,9 @@ export default class SingleSimpleWordsComponent extends Component {
   }
   startTask() {
     this.isCorrect = false;
+    if (this.mode === MODES.TASK) {
+      this.audio.startPlayTask(this.audioFiles);
+    }
   }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
@@ -86,7 +90,7 @@ export default class SingleSimpleWordsComponent extends Component {
     this.updateLocalTasks();
     await customTimeout(1000);
     this.startTask();
-    this.onWrongAnswer();
+    this.onWrongAnswer({ skipRetry: true });
   }
 
   async handleCorrectAnswer() {
