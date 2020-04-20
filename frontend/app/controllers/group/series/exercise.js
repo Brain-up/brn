@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { task, timeout } from 'ember-concurrency';
+import { task } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';

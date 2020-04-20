@@ -10,17 +10,11 @@ module('Integration | Component | exercise-stats/panel', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<ExerciseStats::Panel />`);
+    await render(hbs`<ExerciseStats::Panel @type="positive" @label="Foo" @value="42" @diff="5" />`);
 
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <ExerciseStats::Panel>
-        template block text
-      </ExerciseStats::Panel>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('[data-test-type="positive"]').exists();
+    assert.dom('[data-test-label]').hasText('Foo');
+    assert.dom('[data-test-value]').hasText('42');
+    assert.dom('[data-test-diff]').hasText('5');
   });
 });

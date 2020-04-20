@@ -7,20 +7,18 @@ module('Integration | Component | exercise-stats', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<ExerciseStats />`);
+    this.set('stats', {
+      endTime: new Date(1000),
+      startTime: new Date(100),
+      repetitionIndex: 1.66
+    });
 
-    assert.equal(this.element.textContent.trim(), '');
+    await render(hbs`<ExerciseStats @stats={{this.stats}} />`);
 
-    // Template block usage:
-    await render(hbs`
-      <ExerciseStats>
-        template block text
-      </ExerciseStats>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('[data-test-exercise-stats]').exists();
+    assert.dom('[data-test-type="negative"]').exists();
+    assert.dom('[data-test-type="positive"]').exists();
+    assert.dom('[data-test-type="neutral"]').exists();
   });
 });

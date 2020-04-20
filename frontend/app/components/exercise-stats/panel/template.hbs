@@ -9,6 +9,7 @@
   ) as |textColorClass svgPathForType|
 }}
   <div
+    data-test-type={{@type}}
     class="flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded sm:mt-0" ...attributes
   >
     <div>
@@ -18,7 +19,7 @@
             {{get textColorClass @type}}
              text-md"
         >
-          <span class="font-bold">
+          <span class="font-bold" data-test-diff>
             {{or @diff "@diff"}}
           </span>
           <svg
@@ -30,10 +31,10 @@
           </svg>
         </p>
       </div>
-      <p class="text-3xl font-semibold text-center text-gray-800">
+      <p class="text-3xl font-semibold text-center text-gray-800" data-test-value>
         {{or @value "@value"}}
       </p>
-      <p class="text-lg text-center text-gray-500">
+      <p class="text-lg text-center text-gray-500" data-test-label>
         {{or @label "@label"}}
       </p>
     </div>

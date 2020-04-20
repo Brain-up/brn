@@ -115,15 +115,20 @@ module('Acceptance | tasks flow', function(hooks) {
     await timeout(TIMINGS.FAKE_AUDIO_FINISHED);
     chooseAnswer(targetTask2.correctAnswer.word);
     await customTimeout();
+
     assert.dom('[data-test-right-answer-notification]').exists();
     await waitFor('[data-test-answer-correctness-widget]');
+
 
     assert
       .dom('[data-test-answer-correctness-widget]')
       .hasAttribute('data-test-is-correct');
 
+    await waitFor('[data-test-exercise-stats]');
+
     await customTimeout();
     await customTimeout();
+
 
     assert.equal(currentURL(), '/groups/1/series/1');
   });
