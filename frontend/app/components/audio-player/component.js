@@ -20,10 +20,11 @@ export default class AudioPlayerComponent extends Component {
   }
 
   @action playAudio() {
-    this.audio.playAudio();
+    this.audio.startPlayTask();
   }
 
   @action onUpdateSource(_, [url]) {
+    // @to-do remove this source control logic
     this.audio.audioFileUrl = url;
   }
 

@@ -53,9 +53,11 @@ export default class TaskPlayerComponent extends Component {
     // EOL
   }
 
-  @action onWrongAnswer() {
+  @action onWrongAnswer({skipRetry}={skipRetry:false}) {
     this.taskModeTask.cancelAll();
-    this.audio.startPlayTask();
+    if (!skipRetry) {
+      this.audio.startPlayTask();
+    }
   }
 
   @action onShuffled(words) {
@@ -118,11 +120,11 @@ export default class TaskPlayerComponent extends Component {
       this.interactModeTask.cancelAll();
       this.listenModeTask.cancelAll();
       this.mode = MODES.TASK;
-      yield this.audio.startPlayTask();
       this.studyingTimer.runTimer();
       if (!this.task.get('exercise.isStarted')) {
         this.task.exercise.content.trackTime('start');
       }
+      yield this.audio.startPlayTask();
     } finally {
       // EOL
     }
@@ -166,6 +168,7 @@ export default class TaskPlayerComponent extends Component {
   }
 
   @action setMode(mode, ...args) {
+    this.audio.stop();
     if (mode === MODES.INTERACT) {
       return this.interactModeTask.perform(...args);
     } else if (mode === MODES.TASK) {
@@ -179,7 +182,7 @@ export default class TaskPlayerComponent extends Component {
   async startTask() {
     this.justEnteredTask = false;
     if (Ember.testing) {
-      await this.setMode('task');
+      await this.setMode(MODES.TASK);
     } else {
       await this.setMode(MODES.LISTEN);
     }
