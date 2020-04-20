@@ -5,6 +5,7 @@ import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { action } from '@ember/object';
 import { urlForAudio } from 'brn/utils/file-url';
+import { MODES } from 'brn/utils/task-modes';
 
 export default class SentenceComponent extends Component {
   @tracked exerciseResultIsVisible = false;
@@ -42,6 +43,14 @@ export default class SentenceComponent extends Component {
         },
         true,
       );
+    }
+  }
+
+
+  @action resetAnswerObject() {
+    this.currentAnswerObject = null;
+    if (this.args.mode === MODES.TASK) {
+      this.audio.startPlayTask(this.audioFiles);
     }
   }
 
