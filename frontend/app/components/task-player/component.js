@@ -35,7 +35,9 @@ export default class TaskPlayerComponent extends Component {
       if (Ember.testing) {
         this.setMode(MODES.TASK);
       } else {
-        this.setMode(MODES.LISTEN);
+        if (this.taskModelName !== 'task/sentence') {
+          this.setMode(MODES.LISTEN);
+        }
       }
     }
   }
@@ -67,7 +69,9 @@ export default class TaskPlayerComponent extends Component {
     });
     this.task.set('normalizedAnswerOptions', sortedWords);
   }
-
+  get taskModelName() {
+    return this.task.constructor.modelName;
+  }
   get orderedPlaylist() {
     const {
       answerOptions,

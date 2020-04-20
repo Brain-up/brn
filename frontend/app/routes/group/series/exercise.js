@@ -25,6 +25,12 @@ export default class GroupSeriesExerciseRoute extends Route {
       );
     }
   }
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.showExerciseStats = false;
+      controller.correctnessWidgetIsShown = false;
+    }
+  }
   deactivate() {
     this.tasksManager.clearCurrentCycleTaks();
   }
