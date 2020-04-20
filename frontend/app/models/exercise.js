@@ -21,7 +21,7 @@ export default class Exercise extends CompletionDependent.extend({
   endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
   hideExerciseNavigation: computed(function() {
-    return this.exerciseType === 'WORDS_SEQUENCES';
+    return this.exerciseType === 'WORDS_SEQUENCES' || 'SINGLE_SIMPLE_WORDS';
   }),
   previousSiblings: computed('series.groupedByNameExercises', function() {
     return arrayPreviousItems(
@@ -36,8 +36,8 @@ export default class Exercise extends CompletionDependent.extend({
     function() {
       const tasksIds = this.hasMany('tasks').ids();
       const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
-      const tasksCompleted = tasksIds.every(
-        (taskId) => completedTaskIds.includes(taskId),
+      const tasksCompleted = tasksIds.every((taskId) =>
+        completedTaskIds.includes(taskId),
       );
       return (
         (!tasksIds.length && (this.isFirst || this.canInteract)) ||
