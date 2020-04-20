@@ -48,11 +48,11 @@ export default class AudioService extends Service {
   }).enqueue())
   trackProgress;
 
-  @action async startPlayTask() {
+  @action async startPlayTask(filesToPlay = this.filesToPlay) {
     if (this.isPlaying) {
       return;
     }
-    await this.setAudioElements(this.filesToPlay);
+    await this.setAudioElements(filesToPlay);
     await this.playAudio();
   }
 
