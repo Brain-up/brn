@@ -29,9 +29,14 @@
           />
         {{/if}}
 
-        {{#if this.exerciseIsCompletedInCurrentCycle}}
+        {{#if (and this.exerciseIsCompletedInCurrentCycle (not this.showExerciseStats))}}
           <AnswerCorrectnessWidget
             @isCorrect={{true}}
+            {{did-insert this.greedOnCompletedExercise}}
+          />
+        {{else if this.showExerciseStats}}
+          <ExerciseStats
+            @stats={{this.model.stats}}
             {{did-insert this.afterCompleted}}
           />
         {{else}}
