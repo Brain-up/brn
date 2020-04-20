@@ -32,8 +32,8 @@ internal class SeriesTwoRecordProcessorTest {
 
     private val series = Series(
         id = 2L,
-        name = "Распознование последовательности слов",
-        description = "Распознование последовательности слов",
+        name = "Распознавание последовательности слов",
+        description = "Распознавание последовательности слов",
         exerciseGroup = ExerciseGroup(
             id = 2L,
             name = "Речевые упражнения",
@@ -150,7 +150,7 @@ internal class SeriesTwoRecordProcessorTest {
                 resource_дедушка(),
                 resource_сидит(),
                 resource_лежит(),
-                resource_сидит()
+                resource_идет()
             )
         )
     }

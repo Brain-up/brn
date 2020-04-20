@@ -2,7 +2,7 @@ export default function(server) {
 
   const series = server.create('series',{
     id: 1,
-    name: 'распознование слов',
+    name: 'распознавание слов',
     // description: 'A series of audio exercises',
   });
 

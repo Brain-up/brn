@@ -58,12 +58,48 @@ export default class TaskPlayerComponent extends Component {
     this.audio.startPlayTask();
   }
 
+  @action onShuffled(words) {
+    // we need this callback, because of singlw-words component shuffle logic
+    const sortedWords = this.task.normalizedAnswerOptions.sort((a, b) => {
+      return words.indexOf(a.word) - words.indexOf(b.word);
+    });
+    this.task.set('normalizedAnswerOptions', sortedWords);
+  }
+
+  get orderedPlaylist() {
+    const {
+      answerOptions,
+      selectedItemsOrder,
+      normalizedAnswerOptions,
+    } = this.task;
+    // for ordered tasks we need to align audio stream with object order;
+    const modelName = this.task.constructor.modelName;
+    if (modelName === 'task/single-words') {
+      return normalizedAnswerOptions;
+    }
+    if (modelName === 'task/words-sequences' || modelName === 'task/sentence') {
+      const sortedItems = [];
+      const length = answerOptions[selectedItemsOrder[0]].length;
+      for (let i = 0; i < length; i++) {
+        selectedItemsOrder.forEach((key) => {
+          sortedItems.push(
+            this.task.normalizedAnswerOptions.find(
+              ({ word }) => word === answerOptions[key][i].word,
+            ),
+          );
+        });
+      }
+      return sortedItems;
+    }
+    throw new Error(`Unknown task type - ${modelName}`);
+  }
+
   @(task(function*() {
     try {
       this.interactModeTask.cancelAll();
       this.taskModeTask.cancelAll();
       this.mode = MODES.LISTEN;
-      for (let option of this.task.normalizedAnswerOptions) {
+      for (let option of this.orderedPlaylist) {
         this.activeWord = option.word;
         yield this.audio.setAudioElements([option.audioFileUrl]);
         yield this.audio.playAudio();
@@ -84,7 +120,9 @@ export default class TaskPlayerComponent extends Component {
       this.mode = MODES.TASK;
       yield this.audio.startPlayTask();
       this.studyingTimer.runTimer();
-      this.task.exercise.content.trackTime('start');
+      if (!this.task.get('exercise.isStarted')) {
+        this.task.exercise.content.trackTime('start');
+      }
     } finally {
       // EOL
     }

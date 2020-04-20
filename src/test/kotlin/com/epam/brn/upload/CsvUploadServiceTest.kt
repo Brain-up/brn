@@ -24,7 +24,7 @@ internal class CsvUploadServiceTest {
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
 
     @Test
-    fun `should get series file format`() {
+    fun `should get exercise file format`() {
         val expected = """
             level exerciseName orderNumber word audioFileName pictureFileName words wordType
             1 "Однослоговые слова без шума" 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бум) OBJECT
@@ -33,7 +33,7 @@ internal class CsvUploadServiceTest {
             1 "Однослоговые слова без шума" 4 вить no_noise/вить.mp3 pictures/вить.jpg (бить,жить,мыль,выть,лить) OBJECT_ACTION
             """.trimIndent()
 
-        val actual = uploadService.getSampleStringForSeriesFile(1)
+        val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -41,6 +41,6 @@ internal class CsvUploadServiceTest {
     fun `should throw exception for missing series file`() {
         val invalidSeriesId: Long = Long.MAX_VALUE
 
-        assertThrows(IOException::class.java) { uploadService.getSampleStringForSeriesFile(invalidSeriesId) }
+        assertThrows(IOException::class.java) { uploadService.getSampleStringForSeriesExerciseFile(invalidSeriesId) }
     }
 }
