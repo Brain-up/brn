@@ -55,7 +55,7 @@ export default class TaskPlayerComponent extends Component {
     // EOL
   }
 
-  @action onWrongAnswer({skipRetry}={skipRetry:false}) {
+  @action onWrongAnswer({ skipRetry } = { skipRetry: false }) {
     this.taskModeTask.cancelAll();
     if (!skipRetry) {
       this.audio.startPlayTask();
@@ -79,8 +79,11 @@ export default class TaskPlayerComponent extends Component {
       normalizedAnswerOptions,
     } = this.task;
     // for ordered tasks we need to align audio stream with object order;
-    const modelName = this.taskModelName;
-    if (modelName === 'task/single-words') {
+    const modelName = this.task.constructor.modelName;
+    if (
+      modelName === 'task/single-words' ||
+      modelName === 'task/single-simple-words'
+    ) {
       return normalizedAnswerOptions;
     }
     if (modelName === 'task/words-sequences' || modelName === 'task/sentence') {
