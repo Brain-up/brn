@@ -6,7 +6,6 @@ import shuffleArray from 'brn/utils/shuffle-array';
 
 export default class TaskSingleSimpleWordsModel extends BaseTask.extend({
   answerOptions: attr(),
-  wrongAnswers: attr('array'),
   exerciseType: 'single-simple-words',
   tasksToSolve: computed('answerOptions.[]', function() {
     return [

@@ -82,7 +82,6 @@ export default class SingleSimpleWordsComponent extends Component {
   }
 
   async handleWrongAnswer() {
-    this.task.wrongAnswers.pushObject(this.firstUncompletedTask.serialize());
     this.markNextAttempt(this.firstUncompletedTask);
     this.updateLocalTasks();
     await customTimeout(1000);
