@@ -19,7 +19,7 @@ export class TaskItem {
       completedInCurrentCycle: this.completedInCurrentCycle,
       normalizedAnswerOptions: this.normalizedAnswerOptions,
       nextAttempt: this.nextAttempt,
-      answer: this.answer.slice(0),
+      answer: this.answer.length ? this.answer.slice(0) : this.answer,
     };
     Object.keys(this).forEach((key) => {
       obj[key] = typeof this[key] === 'object' ? { ...this[key] } : this[key];
