@@ -49,10 +49,8 @@ module('Acceptance | exercises availability', function(hooks) {
 
   test('marks available exercises withing a name group if previous is completed', async function(assert) {
     await pageObject.goToSeriesPage();
-
     await pageObject.goToFirstExercisePage();
     await pageObject.startTask();
-
     await chooseAnswer('test option');
 
     assert.dom('[data-test-exercise-level="1"]').exists({ count: 2 });
@@ -61,6 +59,7 @@ module('Acceptance | exercises availability', function(hooks) {
         '[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]',
       )
       .hasNoAttribute('disabled');
+    
     assert
       .dom(
         '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',

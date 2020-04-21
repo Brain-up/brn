@@ -11,15 +11,19 @@ export default ApplicationSerializer.extend({
     if (hash.answerOptions) {
       let opts = [];
       if (!Array.isArray(hash.answerOptions)) {
-        Object.keys(hash.answerOptions).forEach((key)=>{
+        Object.keys(hash.answerOptions).forEach((key) => {
           if (Array.isArray(hash.answerOptions[key])) {
             opts = [...opts, ...hash.answerOptions[key]];
           }
-        })
-      } else {
+        });
+      } else if (hash.correctAnswer) {
         opts = [...hash.answerOptions, hash.correctAnswer];
+      } else {
+        opts = [...hash.answerOptions];
       }
-      hash.normalizedAnswerOptions = shuffleArray(opts).map((el) => new AnswerOption(el));
+      hash.normalizedAnswerOptions = shuffleArray(opts).map(
+        (el) => new AnswerOption(el),
+      );
     } else {
       hash.normalizedAnswerOptions = [];
     }

@@ -7,12 +7,12 @@ module('Unit | Model | exercise', function(hooks) {
   // Replace this with your real tests.
   test('isCompleted when all tasks completed', function(assert) {
     let store = this.owner.lookup('service:store');
+    let taskManager = this.owner.lookup('service:tasks-manager');
     let model = store.createRecord('exercise', {});
 
-    [{ isCompleted: true }, { isCompleted: true }].map((data) =>
-      store.createRecord('task', { ...data, exercise: model }),
-    );
-
+    [1,2].map((id) =>
+      store.createRecord('task', { exercise: model, id }),
+    ).map((task)=>taskManager.saveAsCompleted(task));
     assert.ok(model.isCompleted, 'works fine');
   });
 

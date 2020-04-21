@@ -50,6 +50,9 @@ export default class TaskPlayerComponent extends Component {
 
   shuffle() {
     this.shuffledWords = A(shuffleArray(this.task.words));
+    if (typeof this.onShuffled === 'function') {
+      this.onShuffled(this.shuffledWords);
+    }
   }
 
   @action

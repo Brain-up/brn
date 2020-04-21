@@ -10,10 +10,13 @@ export default class TextImageButton extends Component {
       `url(${pictureFileUrl})`,
     );
   }
+  get button() {
+    return this.element && this.element.querySelector('button');
+  }
   @action addFrame(klass) {
-    this.element.querySelector('button').classList.add(klass);
+    this.button && this.button.classList.add(klass);
   }
   @action removeFrame(klass) {
-    this.element.querySelector('button').classList.remove(klass);
+    this.button && this.button.classList.remove(klass);
   }
 }

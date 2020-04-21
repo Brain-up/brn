@@ -39,10 +39,14 @@ class InitialDataLoader(
 
     companion object {
         fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
+
         fun getInputStreamFromSeriesInitFile(seriesId: Long): InputStream {
             val inputStream = Thread.currentThread()
                 .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId)}")
-                ?: throw IOException("Can not get init file for $seriesId series.")
+
+            if (inputStream == null)
+                throw IOException("Can not get init file for $seriesId series.")
+
             return inputStream
         }
     }
@@ -51,7 +55,8 @@ class InitialDataLoader(
         "groups.csv", "series.csv",
         fileNameForSeries(1),
         fileNameForSeries(2),
-        fileNameForSeries(3)
+        fileNameForSeries(3),
+        fileNameForSeries(4)
     )
 
     @EventListener(ApplicationReadyEvent::class)

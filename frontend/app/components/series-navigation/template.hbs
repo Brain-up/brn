@@ -1,4 +1,4 @@
-<div class={{this.styleNamespace}} ...attributes>
+<div class={{style-namespace "series-navigation"}} ...attributes>
   {{#each this.exerciseHeaders as |header|}}
     <h2 data-test-series-navigation-header>
       {{header}}
@@ -6,15 +6,15 @@
     <div data-test-exercises-name-group class="exercise-block__levels">
       {{#each this.sortedExercises as |exercise|}}
         {{#if (eq exercise.name header)}}
-          {{#link-to
-            "group.series.exercise"
-            exercise.id
+          <LinkTo 
+            @route="group.series.exercise" 
+            @model={{exercise.id}}
             data-test-series-navigation-list-link
-            data-test-exercise-level=exercise.level
-            data-test-exercise-name=exercise.name
+            data-test-exercise-level={{exercise.level}}
+            data-test-exercise-name={{exercise.name}}
             class="task-square-link shadow exercise-block__level"
-            disabled=(not exercise.canInteract)
-          }}
+            @disabled={{not exercise.canInteract}}
+          >
             <FaIcon
               @icon="check-circle"
               class={{if
@@ -26,7 +26,7 @@
             <div>
               Упражнение {{exercise.level}}
             </div>
-          {{/link-to}}
+          </LinkTo>
         {{/if}}
       {{/each}}
     </div>

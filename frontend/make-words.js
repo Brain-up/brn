@@ -1,3 +1,4 @@
+/* global require */
 const fs = require('fs');
 const request = require('request');
 const qs = require('querystring');

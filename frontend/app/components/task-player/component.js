@@ -35,7 +35,9 @@ export default class TaskPlayerComponent extends Component {
       if (Ember.testing) {
         this.setMode(MODES.TASK);
       } else {
-        this.setMode(MODES.LISTEN);
+        if (this.taskModelName !== 'task/sentence') {
+          this.setMode(MODES.LISTEN);
+        }
       }
     }
   }
@@ -53,9 +55,52 @@ export default class TaskPlayerComponent extends Component {
     // EOL
   }
 
-  @action onWrongAnswer() {
+  @action onWrongAnswer({ skipRetry } = { skipRetry: false }) {
     this.taskModeTask.cancelAll();
-    this.audio.startPlayTask();
+    if (!skipRetry) {
+      this.audio.startPlayTask();
+    }
+  }
+
+  @action onShuffled(words) {
+    // we need this callback, because of singlw-words component shuffle logic
+    const sortedWords = this.task.normalizedAnswerOptions.sort((a, b) => {
+      return words.indexOf(a.word) - words.indexOf(b.word);
+    });
+    this.task.set('normalizedAnswerOptions', sortedWords);
+  }
+  get taskModelName() {
+    return this.task.constructor.modelName;
+  }
+  get orderedPlaylist() {
+    const {
+      answerOptions,
+      selectedItemsOrder,
+      normalizedAnswerOptions,
+    } = this.task;
+    // for ordered tasks we need to align audio stream with object order;
+    const modelName = this.task.constructor.modelName;
+    if (
+      modelName === 'task/single-words' ||
+      modelName === 'task/single-simple-words'
+    ) {
+      return normalizedAnswerOptions;
+    }
+    if (modelName === 'task/words-sequences' || modelName === 'task/sentence') {
+      const sortedItems = [];
+      const length = answerOptions[selectedItemsOrder[0]].length;
+      for (let i = 0; i < length; i++) {
+        selectedItemsOrder.forEach((key) => {
+          sortedItems.push(
+            this.task.normalizedAnswerOptions.find(
+              ({ word }) => word === answerOptions[key][i].word,
+            ),
+          );
+        });
+      }
+      return sortedItems;
+    }
+    throw new Error(`Unknown task type - ${modelName}`);
   }
 
   @(task(function*() {
@@ -63,7 +108,7 @@ export default class TaskPlayerComponent extends Component {
       this.interactModeTask.cancelAll();
       this.taskModeTask.cancelAll();
       this.mode = MODES.LISTEN;
-      for (let option of this.task.normalizedAnswerOptions) {
+      for (let option of this.orderedPlaylist) {
         this.activeWord = option.word;
         yield this.audio.setAudioElements([option.audioFileUrl]);
         yield this.audio.playAudio();
@@ -82,9 +127,11 @@ export default class TaskPlayerComponent extends Component {
       this.interactModeTask.cancelAll();
       this.listenModeTask.cancelAll();
       this.mode = MODES.TASK;
-      yield this.audio.startPlayTask();
       this.studyingTimer.runTimer();
-      this.task.exercise.content.trackTime('start');
+      if (!this.task.get('exercise.isStarted')) {
+        this.task.exercise.content.trackTime('start');
+      }
+      yield this.audio.startPlayTask();
     } finally {
       // EOL
     }
@@ -128,6 +175,7 @@ export default class TaskPlayerComponent extends Component {
   }
 
   @action setMode(mode, ...args) {
+    this.audio.stop();
     if (mode === MODES.INTERACT) {
       return this.interactModeTask.perform(...args);
     } else if (mode === MODES.TASK) {
@@ -141,7 +189,7 @@ export default class TaskPlayerComponent extends Component {
   async startTask() {
     this.justEnteredTask = false;
     if (Ember.testing) {
-      await this.setMode('task');
+      await this.setMode(MODES.TASK);
     } else {
       await this.setMode(MODES.LISTEN);
     }
