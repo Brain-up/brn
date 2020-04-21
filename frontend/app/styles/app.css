@@ -7,6 +7,8 @@
 
 @import 'tailwindcss/utilities';
 
+@import "ember-modal-dialog/ember-modal-structure.css";
+@import "ember-modal-dialog/ember-modal-appearance.css";
 /*! purgecss start ignore */
 html {
   background: #efefef;
@@ -140,9 +142,17 @@ a[disabled] {
   padding: 25px 40px 40px;
 }
 
+.ember-modal-dialog-exercise {
+  min-height: 90%;
+  width: 70%;
+}
+
 @supports (backdrop-filter: blur()) {
   .start-task-button::after {
     backdrop-filter: blur(2px);
   }
 }
 /*! purgecss end ignore */
+
+"liquid-fire": "^0.31.0",
+"liquid-tether": "^2.0.7",
