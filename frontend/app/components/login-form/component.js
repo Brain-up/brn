@@ -4,6 +4,10 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 
+const ERRORS_MAP = {
+  'Bad credentials': 'Неправильный логин или пароль.'
+};
+
 export default class LoginFormComponent extends Component {
   @service('session') session;
   @service('router') router;
@@ -20,7 +24,7 @@ export default class LoginFormComponent extends Component {
     if (this.login === undefined) {
       return false;
     }
-    return (this.login || '').trim().length === 0;
+    return (this.login || '').trim().length === 0 || (this.login || '').trim().indexOf('@') === -1;
   }
   get passwordError() {
     if (this.password === undefined) {
@@ -34,11 +38,13 @@ export default class LoginFormComponent extends Component {
     try {
       yield this.session.authenticate('authenticator:oauth2', login, password);
     } catch (error) {
+      let key = ''
       if (error.responseJSON) {
-        this.errorMessage = error.responseJSON.errors.pop();
+        key = error.responseJSON.errors.pop();
       } else {
-        this.errorMessage = error.error || error;
+        key = error.error || error;
       }
+      this.errorMessage = ERRORS_MAP[key] || key;
       this.loginTask.cancelAll();
     }
 

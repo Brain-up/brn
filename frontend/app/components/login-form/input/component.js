@@ -8,4 +8,12 @@ export default class LoginFormInputComponent extends Component {
     }
     return (model[name] || '').trim().length === 0;
   }
+  get value() {
+    const { model, name } = this.args;
+    return model[name];
+  }
+  set value(value) {
+    const { model, name } = this.args;
+    model[name] = (value||'').trim();
+  }
 }
