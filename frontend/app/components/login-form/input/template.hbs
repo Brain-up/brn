@@ -1,4 +1,4 @@
 <label class="block text-gray-700 text-sm font-bold mb-2" for={{@name}}>
     {{@label}}
 </label>
-<Input maxlength="50" name={{@name}} @value={{this.value}} class="{{if this.hasError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  id={{@name}} type={{or @type "text"}} required="true" ...attributes />
+<Input maxlength={{this.maxlength}} name={{@name}} @value={{this.value}} class="{{if this.hasError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  id={{@name}} type={{or @type "text"}} required="true" ...attributes />

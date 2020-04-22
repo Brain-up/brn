@@ -35,4 +35,15 @@ module('Integration | Component | login-form/input', function(hooks) {
     await typeIn('input', ' hello ');
     assert.equal(this.model.foo, 'hello');
   });
+
+  test('it can accept only 50 symbols', async function(assert) {
+    this.set('model', { foo: '' });
+    this.set('name', 'foo');
+    let longText = new Array(49).fill('A').join('');
+    await render(
+      hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @model={{this.model}} @name={{this.name}} @type="text" @label="Foo" />`,
+    );
+    await typeIn('input', longText + longText);
+    assert.equal(this.model.foo, longText);
+  });
 });

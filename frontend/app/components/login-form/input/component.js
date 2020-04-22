@@ -8,6 +8,9 @@ export default class LoginFormInputComponent extends Component {
     }
     return (value || '').trim().length === 0;
   }
+  get maxlength() {
+    return 50;
+  }
   get value() {
     const { model, name } = this.args;
     if (!model) {
@@ -17,6 +20,6 @@ export default class LoginFormInputComponent extends Component {
   }
   set value(value) {
     const { model, name } = this.args;
-    model[name] = (value||'').trim();
+    model[name] = (value||'').trim().slice(0, this.maxlength - 1);
   }
 }
