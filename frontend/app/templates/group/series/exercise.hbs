@@ -1,43 +1,37 @@
 <ModalDialog
-  animatable={{true}}
-  @translucentOverlay={{true}}
-  @containerClass="ember-modal-dialog-exercise"
+  @overlayClass="p-16 z-50 min-h-full w-full absolute bg-teal-400 flex"
+  @containerClass="w-full bg-white p-4 rounded-lg"
 >
-  {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
-    <div class="flex items-center justify-between">
-      <div>
-        <FaIcon @icon="chevron-left" />
-        <LinkTo @route="group.series" @model={{this.model.series}}>
-          Назад
-        </LinkTo>
+  <div class="series-page--canvas flex flex-col flex-grow">
+    {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
+      <div class="flex items-center justify-between">
+        <div>
+          <FaIcon @icon="chevron-left" />
+          <LinkTo @route="group.series" @model={{this.model.series}}>
+            Назад
+          </LinkTo>
+        </div>
+        <div id="exercise-steps-slot">
+        </div>
+        <Timer @paused={{true}} />
       </div>
-      <div id="exercise-steps-slot">
-      </div>
-      <Timer @paused={{true}} />
-    </div>
-  {{/if}}
-  <div class="exercise-container">
-    {{#if (not this.model.hideExerciseNavigation)}}
-      <ExerciseNavigation
-        class="exercise-navigation"
-        @tasks={{this.model.tasks}}
-      />
     {{/if}}
+    <div class="exercise-container">
+      {{#if (not this.model.hideExerciseNavigation)}}
+        <ExerciseNavigation
+          class="exercise-navigation"
+          @tasks={{this.model.tasks}}
+        />
+      {{/if}}
 
-    {{#if
-      (and this.exerciseIsCompletedInCurrentCycle (not this.showExerciseStats))
-    }}
-      <AnswerCorrectnessWidget
-        @isCorrect={{true}}
-        {{did-insert this.greedOnCompletedExercise}}
-      />
-    {{else if this.showExerciseStats}}
-      <ExerciseStats
-        @stats={{this.model.stats}}
-        {{did-insert this.afterCompleted}}
-      />
-    {{else}}
-      {{outlet}}
-    {{/if}}
+      {{#if this.exerciseIsCompletedInCurrentCycle}}
+        <AnswerCorrectnessWidget
+          @isCorrect={{true}}
+          {{did-insert this.afterCompleted}}
+        />
+      {{else}}
+        {{outlet}}
+      {{/if}}
+    </div>
   </div>
 </ModalDialog>
