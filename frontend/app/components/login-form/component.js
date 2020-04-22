@@ -8,6 +8,11 @@ const ERRORS_MAP = {
   'Bad credentials': 'Неправильный логин или пароль.'
 };
 
+const BUTTON_STATES = {
+  ACTIVE: 'active',
+  DISABLED: 'disabled'
+};
+
 export default class LoginFormComponent extends Component {
   @service('session') session;
   @service('router') router;
@@ -20,17 +25,34 @@ export default class LoginFormComponent extends Component {
   get loginInProgress() {
     return this.loginTask.lastSuccessful || this.loginTask.isRunning;
   }
+
+  get buttonState() {
+    if (this.loginInProgress) {
+      return BUTTON_STATES.DISABLED;
+    }
+    if (this.usernameError || this.passwordError) {
+      return BUTTON_STATES.DISABLED;
+    }
+    return BUTTON_STATES.ACTIVE;
+  }
+
   get usernameError() {
-    if (this.login === undefined) {
+    const { login } = this;
+    if (login === undefined) {
       return false;
     }
-    return (this.login || '').trim().length === 0 || (this.login || '').trim().indexOf('@') === -1;
+    const trimmedLogin = this.trimmedValue(login);
+    return trimmedLogin.length === 0 || trimmedLogin.indexOf('@') === -1;
   }
   get passwordError() {
     if (this.password === undefined) {
       return false;
     }
-    return (this.password || '').trim().length === 0;
+    return this.trimmedValue(this.password).length === 0;
+  }
+
+  trimmedValue(value) {
+    return (value || '').trim();
   }
 
   @(task(function*() {
@@ -58,6 +80,9 @@ export default class LoginFormComponent extends Component {
   @action
   onSubmit(e) {
     e.preventDefault();
+    if (this.buttonState === BUTTON_STATES.DISABLED) {
+      return;
+    }
     this.loginTask.perform();
   }
 }

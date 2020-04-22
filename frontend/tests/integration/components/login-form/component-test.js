@@ -18,7 +18,6 @@ module('Integration | Component | login-form', function(hooks) {
     assert.dom('[name="login"]').hasAttribute('required');
     assert.dom('[name="password"]').hasAttribute('required');
     assert.dom('[data-test-form-warning]').doesNotExist();
-    
   });
 
   test('it showing warning on empty fields if edited', async function(assert) {
@@ -27,10 +26,10 @@ module('Integration | Component | login-form', function(hooks) {
 
     await render(hbs`<LoginForm />`);
     assert.dom('[data-test-form-warning]').doesNotExist();
-    
+
     await fillIn('[name="login"]', 'a');
     await fillIn('[name="password"]', 'b');
-    assert.dom('[data-test-form-warning]').doesNotExist();
+    assert.dom('[data-test-form-warning]').exists();
 
     await fillIn('[name="login"]', '');
     await fillIn('[name="password"]', 'b');
@@ -43,9 +42,14 @@ module('Integration | Component | login-form', function(hooks) {
     await fillIn('[name="login"]', '');
     await fillIn('[name="password"]', '');
     assert.dom('[data-test-form-warning]').exists();
-    
   });
 
+  test('it requires @ sign in email', async function(assert) {
+    await render(hbs`<LoginForm />`);
+    await fillIn('[name="login"]', 'a@b');
+    await fillIn('[name="password"]', 'b');
+    assert.dom('[data-test-form-warning]').doesNotExist();
+  });
 
   test('login button works as expected', async function(assert) {
     assert.expect(3);
@@ -59,60 +63,95 @@ module('Integration | Component | login-form', function(hooks) {
     this.owner.register('service:session', MockSession);
 
     await render(hbs`<LoginForm />`);
-    
-    await fillIn('[name="login"]', 'a');
+
+    await fillIn('[name="login"]', 'a@b');
     await fillIn('[name="password"]', 'b');
     await click('[data-test-submit-form]');
-  })
+  });
 
   test('incorrect login has feedback #1', async function(assert) {
     class MockSession extends Service {
       authenticate() {
         return Promise.reject({
           responseJSON: {
-            errors: ['foo']
-          }
-        })
+            errors: ['foo'],
+          },
+        });
       }
     }
     this.owner.register('service:session', MockSession);
     await render(hbs`<LoginForm />`);
-    
-    await fillIn('[name="login"]', 'a');
+
+    await fillIn('[name="login"]', 'a@b');
     await fillIn('[name="password"]', 'b');
     await click('[data-test-submit-form]');
     assert.dom('[data-test-form-error]').hasText('foo');
-  })
+  });
 
   test('incorrect login has feedback #2', async function(assert) {
     class MockSession extends Service {
       authenticate() {
         return Promise.reject({
-          error: 'boo'
-        })
+          error: 'boo',
+        });
       }
     }
     this.owner.register('service:session', MockSession);
     await render(hbs`<LoginForm />`);
-    
-    await fillIn('[name="login"]', 'a');
+
+    await fillIn('[name="login"]', 'a@b');
     await fillIn('[name="password"]', 'b');
     await click('[data-test-submit-form]');
     assert.dom('[data-test-form-error]').hasText('boo');
-  })
+  });
 
-  test('incorrect login has feedback #2', async function(assert) {
+  test('incorrect login has feedback #3', async function(assert) {
     class MockSession extends Service {
       authenticate() {
-        return Promise.reject('zoo')
+        return Promise.reject('zoo');
       }
     }
     this.owner.register('service:session', MockSession);
     await render(hbs`<LoginForm />`);
-    
-    await fillIn('[name="login"]', 'a');
+
+    await fillIn('[name="login"]', 'a@b');
     await fillIn('[name="password"]', 'b');
     await click('[data-test-submit-form]');
     assert.dom('[data-test-form-error]').hasText('zoo');
-  })
+  });
+
+  test('incorrect login has feedback with mapped local errors', async function(assert) {
+    class MockSession extends Service {
+      authenticate() {
+        return Promise.reject('Bad credentials');
+      }
+    }
+
+    this.owner.register('service:session', MockSession);
+    await render(hbs`<LoginForm />`);
+
+    await fillIn('[name="login"]', 'a@b');
+    await fillIn('[name="password"]', 'b');
+    await click('[data-test-submit-form]');
+    assert
+      .dom('[data-test-form-error]')
+      .hasText('Неправильный логин или пароль.');
+  });
+
+  test('incorrect form values does not invoke form submit', async function(assert) {
+    let isSubmitCalled = false;
+    class MockSession extends Service {
+      authenticate() {
+        isSubmitCalled = true;
+      }
+    }
+
+    this.owner.register('service:session', MockSession);
+    await render(hbs`<LoginForm />`);
+
+    await fillIn('[name="login"]', 'a');
+    await fillIn('[name="password"]', 'b');
+    await click('[data-test-submit-form]');
+    assert.equal(isSubmitCalled, false);
+  });
 });
