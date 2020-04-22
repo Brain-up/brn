@@ -134,6 +134,10 @@ a[disabled] {
   position: fixed;
 }
 
+.custom-modal-overlay {
+  min-height: 550px;
+}
+
 .modal-body {
   height: 600px;
   width: 1200px;
