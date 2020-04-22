@@ -1,48 +1,46 @@
-<div
-  class="modal absolute w-full h-full top-0 left-0 flex items-center justify-center modal-fixed"
+<ModalDialog
+  @overlayClass="p-16 z-50 min-h-full w-full absolute bg-teal-400 flex"
+  @containerClass="w-full bg-white p-8 rounded-lg text-2xl"
 >
-  <div
-    class="modal-overlay absolute w-full h-full bg-black opacity-25 top-0 left-0 cursor-pointer"
-  ></div>
-  <div
-    class="container rounded absolute w-1/2 h-32 bg-white rounded-sm shadow-lg flex items-center justify-center text-2xl modal-body"
-  >
-    <div class="series-page--canvas flex flex-col flex-grow">
-      {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
-        <div class="flex items-center justify-between">
-          <div>
-            <FaIcon @icon="chevron-left" />
-            <LinkTo @route="group.series" @model={{this.model.series}}>
-              Назад
-            </LinkTo>
-          </div>
-          <div id="exercise-steps-slot">
-          </div>
-          <Timer @paused={{true}} />
+  <div class="series-page--canvas flex flex-col flex-grow">
+    {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
+      <div class="flex items-center justify-between">
+        <div>
+          <FaIcon @icon="chevron-left" />
+          <LinkTo @route="group.series" @model={{this.model.series}}>
+            Назад
+          </LinkTo>
         </div>
-      {{/if}}
-      <div class="exercise-container">
-        {{#if (not this.model.hideExerciseNavigation)}}
-          <ExerciseNavigation
-            class="exercise-navigation"
-            @tasks={{this.model.tasks}}
-          />
-        {{/if}}
-
-        {{#if (and this.exerciseIsCompletedInCurrentCycle (not this.showExerciseStats))}}
-          <AnswerCorrectnessWidget
-            @isCorrect={{true}}
-            {{did-insert this.greedOnCompletedExercise}}
-          />
-        {{else if this.showExerciseStats}}
-          <ExerciseStats
-            @stats={{this.model.stats}}
-            {{did-insert this.afterCompleted}}
-          />
-        {{else}}
-          {{outlet}}
-        {{/if}}
+        <div id="exercise-steps-slot">
+        </div>
+        <Timer @paused={{true}} />
       </div>
+    {{/if}}
+    <div class="exercise-container">
+      {{#if (not this.model.hideExerciseNavigation)}}
+        <ExerciseNavigation
+          class="exercise-navigation"
+          @tasks={{this.model.tasks}}
+        />
+      {{/if}}
+
+      {{#if
+        (and
+          this.exerciseIsCompletedInCurrentCycle (not this.showExerciseStats)
+        )
+      }}
+        <AnswerCorrectnessWidget
+          @isCorrect={{true}}
+          {{did-insert this.greedOnCompletedExercise}}
+        />
+      {{else if this.showExerciseStats}}
+        <ExerciseStats
+          @stats={{this.model.stats}}
+          {{did-insert this.afterCompleted}}
+        />
+      {{else}}
+        {{outlet}}
+      {{/if}}
     </div>
   </div>
-</div>
+</ModalDialog>
