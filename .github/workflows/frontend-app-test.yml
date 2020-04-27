@@ -49,7 +49,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           message: "Frontend test coverage: {testCoverage}%"
 
- build:
+  build:
     name: App build
     runs-on: ubuntu-latest
     steps:
