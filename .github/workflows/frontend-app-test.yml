@@ -5,7 +5,12 @@ on:
     paths:
       - 'Dockerfile_frontend'
       - 'frontend/**'
-      - '.github/workflows/frontend-test.yml'
+      - '.github/workflows/frontend-app-test.yml'
+  push:
+    paths:
+      - 'Dockerfile_frontend'
+      - 'frontend/**'
+      - '.github/workflows/frontend-app-test.yml'
 
 jobs:
   test:
