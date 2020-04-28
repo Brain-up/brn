@@ -26,7 +26,7 @@ export default class TaskPlayerComponent extends Component {
   }
   get disableAnswers() {
     if (this.mode === MODES.INTERACT) {
-      return false;
+      return this.audio.isPlaying;
     }
     return this.audio.isPlaying || this.disableAudioPlayer;
   }
@@ -144,17 +144,19 @@ export default class TaskPlayerComponent extends Component {
       this.listenModeTask.cancelAll();
       this.mode = MODES.INTERACT;
       while (this.mode === MODES.INTERACT) {
-        if (this.textToPlay) {
-          this.activeWord = this.textToPlay;
+        const playText = this.textToPlay;
+        if (playText) {
+          this.activeWord = playText;
+          this.textToPlay = null;
           let option = this.task.normalizedAnswerOptions.find(
-            ({ word }) => word === this.textToPlay,
+            ({ word }) => word === playText,
           );
           if (option) {
             yield this.audio.setAudioElements([option.audioFileUrl]);
             yield this.audio.playAudio();
           }
         }
-        yield timeout(1500);
+        yield timeout(250);
         this.activeWord = null;
       }
     } finally {

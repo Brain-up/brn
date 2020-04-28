@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default class GroupRoute extends Route {
+export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
   model({ group_id }) {
     return this.store.findRecord('group', group_id);
   }

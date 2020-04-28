@@ -5,7 +5,12 @@ on:
     paths:
       - 'Dockerfile_frontend'
       - 'frontend/**'
-      - '.github/workflows/frontend-test.yml'
+      - '.github/workflows/frontend-app-test.yml'
+  push:
+    paths:
+      - 'Dockerfile_frontend'
+      - 'frontend/**'
+      - '.github/workflows/frontend-app-test.yml'
 
 jobs:
   test:
@@ -48,3 +53,15 @@ jobs:
           coverage-file: "./frontend/coverage/coverage-summary.json"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           message: "Frontend test coverage: {testCoverage}%"
+
+  build:
+    name: App build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2-beta
+      with:
+        fetch-depth: 0
+      working-directory: ./frontend
+    - uses: simplabs/ember-asset-size-action@v1
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
