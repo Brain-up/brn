@@ -10,12 +10,15 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
 import { getData } from './test-support/data-storage';
 import { TIMINGS } from 'brn/utils/audio-api';
+import { authenticateSession  } from 'ember-simple-auth/test-support';
+
 
 module('Acceptance | tasks flow', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
-  hooks.beforeEach(() => {
+  hooks.beforeEach(async () => {
+    await authenticateSession();
     getServerResponses(getData());
   });
 
@@ -89,7 +92,7 @@ module('Acceptance | tasks flow', function(hooks) {
     const targetTask2 = setupAfterPageVisit().targetTask;
     await waitFor('[data-test-task-answer-option]');
     await chooseAnswer(targetTask2.correctAnswer.word);
-    await customTimeout(); 
+    await customTimeout();
   });
 
   test('shows a complete victory widget after exercise completed and goes to series route', async function(assert) {
