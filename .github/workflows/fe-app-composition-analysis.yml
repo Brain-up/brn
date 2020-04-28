@@ -1,0 +1,34 @@
+name: Frontend App Composition Analysis
+
+on:
+  pull_request:
+    paths:
+      - 'Dockerfile_frontend'
+      - 'frontend/**'
+      - '.github/workflows/fe-app-composition-analysis.yml'
+    branches:
+      - master
+  push:
+    paths:
+      - 'Dockerfile_frontend'
+      - 'frontend/**'
+      - '.github/workflows/fe-app-composition-analysis.yml'
+    branches:
+      - master
+
+jobs:
+  yarn_audit_scan:
+    name: yarn audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2-beta
+        with:
+          fetch-depth: 0
+      - uses: rwjblue/setup-volta@v1
+      - name: Install dependencies via yarn
+        working-directory: ./frontend
+        run: yarn install
+      - name: yarn audit
+        working-directory: ./frontend
+        run: yarn audit
+
