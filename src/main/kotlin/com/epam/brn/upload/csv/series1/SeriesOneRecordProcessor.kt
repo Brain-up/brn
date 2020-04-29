@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series4
+package com.epam.brn.upload.csv.series1
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class SeriesFourRecordProcessor(
+class SeriesOneRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository
-) : RecordProcessor<SeriesFourRecord, Exercise> {
+) : RecordProcessor<SeriesOneRecord, Exercise> {
 
     @Value(value = "\${brn.img.resource.path}")
     private lateinit var imgResourcePath: String
@@ -31,14 +31,14 @@ class SeriesFourRecordProcessor(
     var random = Random()
 
     override fun isApplicable(record: Any): Boolean {
-        return record is SeriesFourRecord
+        return record is SeriesOneRecord
     }
 
     @Transactional
-    override fun process(records: List<SeriesFourRecord>): List<Exercise> {
+    override fun process(records: List<SeriesOneRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
-        val series = seriesRepository.findById(4L).orElse(null)
+        val series = seriesRepository.findById(1L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
             resourceRepository.saveAll(answerOptions)
@@ -53,7 +53,7 @@ class SeriesFourRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesFourRecord): MutableSet<Resource> {
+    private fun extractAnswerOptions(record: SeriesOneRecord): MutableSet<Resource> {
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
@@ -76,7 +76,7 @@ class SeriesFourRecordProcessor(
 
     private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun extractExercise(record: SeriesFourRecord, series: Series): Exercise {
+    private fun extractExercise(record: SeriesOneRecord, series: Series): Exercise {
         return exerciseRepository
             .findExerciseByNameAndLevel(record.exerciseName, record.level)
             .orElse(
@@ -84,7 +84,7 @@ class SeriesFourRecordProcessor(
                     series = series,
                     name = record.exerciseName,
                     level = record.level,
-                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
+                    exerciseType = ExerciseType.SINGLE_WORDS.toString(),
                     description = record.exerciseName
                 )
             )

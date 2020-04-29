@@ -53,9 +53,9 @@ class InitialDataLoader(
 
     private val sourceFiles = listOf(
         "groups.csv", "series.csv",
+        fileNameForSeries(1),
         fileNameForSeries(2),
-        fileNameForSeries(3),
-        fileNameForSeries(4)
+        fileNameForSeries(3)
     )
 
     @EventListener(ApplicationReadyEvent::class)

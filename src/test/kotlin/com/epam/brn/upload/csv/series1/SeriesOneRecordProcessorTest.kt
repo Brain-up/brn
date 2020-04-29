@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series4
+package com.epam.brn.upload.csv.series1
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -23,16 +23,16 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
 
 @ExtendWith(MockitoExtension::class)
-internal class SeriesFourRecordProcessorTest {
+internal class SeriesOneRecordProcessorTest {
 
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
 
-    private lateinit var test: SeriesFourRecordProcessor
+    private lateinit var test: SeriesOneRecordProcessor
 
     private val series = Series(
-        id = 4L,
+        id = 1L,
         name = "Распознавание простых слов",
         description = "Распознавание простых слов",
         exerciseGroup = ExerciseGroup(
@@ -48,7 +48,7 @@ internal class SeriesFourRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        test = SeriesFourRecordProcessor(
+        test = SeriesOneRecordProcessor(
             seriesRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock
@@ -56,7 +56,7 @@ internal class SeriesFourRecordProcessorTest {
 
         ReflectionTestUtils.setField(test, "imgResourcePath", "pictures/%s.jpg")
 
-        `when`(seriesRepositoryMock.findById(4L)).thenReturn(Optional.of(series))
+        `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 
         mockFindResourceByWordLike("бал", resource_бал())
         mockFindResourceByWordLike("бум", resource_бум())
@@ -76,7 +76,7 @@ internal class SeriesFourRecordProcessorTest {
 
         val actual = test.process(
             mutableListOf(
-                SeriesFourRecord(
+                SeriesOneRecord(
                     level = 1,
                     exerciseName = exerciseName,
                     words = words,
@@ -96,7 +96,7 @@ internal class SeriesFourRecordProcessorTest {
 
         val actual = test.process(
             mutableListOf(
-                SeriesFourRecord(
+                SeriesOneRecord(
                     level = 1,
                     exerciseName = exerciseName,
                     noise = noiseLevel,
@@ -116,7 +116,7 @@ internal class SeriesFourRecordProcessorTest {
         )
 
         val tasks = test
-            .process(mutableListOf(SeriesFourRecord(1, exerciseName, words, noiseLevel)))
+            .process(mutableListOf(SeriesOneRecord(1, exerciseName, words, noiseLevel)))
             .first().tasks
 
         tasks.forEach {
@@ -131,7 +131,7 @@ internal class SeriesFourRecordProcessorTest {
             series = series,
             name = exerciseName,
             description = exerciseName,
-            exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
+            exerciseType = ExerciseType.SINGLE_WORDS.toString(),
             level = 1
         )
 

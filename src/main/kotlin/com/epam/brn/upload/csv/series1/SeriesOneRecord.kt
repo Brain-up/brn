@@ -1,8 +1,8 @@
-package com.epam.brn.upload.csv.series4
+package com.epam.brn.upload.csv.series1
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class SeriesFourRecord(
+data class SeriesOneRecord(
     @JsonProperty("level")
     val level: Int,
     @JsonProperty("exerciseName")
