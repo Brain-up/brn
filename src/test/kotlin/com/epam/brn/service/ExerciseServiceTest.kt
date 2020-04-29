@@ -34,7 +34,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", "descr", 1, ExerciseType.WORDS_SEQUENCES)
         val exerciseId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
@@ -52,9 +52,9 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user and series`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", "descr", 1, ExerciseType.WORDS_SEQUENCES)
         val exerciseId = 1L
-        val seriesId = 1L
+        val seriesId = 2L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
         `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong(), anyLong())).thenReturn(listOf(exerciseId))
@@ -71,7 +71,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(1, 1, "name", "descr", 1, ExerciseType.SINGLE_WORDS)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", "descr", 1, ExerciseType.WORDS_SEQUENCES)
         `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN

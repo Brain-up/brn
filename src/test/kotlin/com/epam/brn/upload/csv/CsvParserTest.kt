@@ -4,8 +4,6 @@ import com.epam.brn.upload.csv.group.GroupRecord
 import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series.SeriesGenericRecord
 import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.series1.SeriesOneRecord
-import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series3.SeriesThreeRecord
 import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
@@ -22,65 +20,11 @@ class CsvParserTest {
         listOf(
             GroupRecordMappingIteratorProvider(),
             SeriesGenericRecordMappingIteratorProvider(),
-            SeriesOneRecordMappingIteratorProvider(),
             SeriesTwoRecordMappingIteratorProvider(),
             SeriesThreeRecordMappingIteratorProvider(),
             SeriesFourRecordMappingIteratorProvider()
         )
     )
-
-    @Test
-    fun `should parse Tasks`() {
-        val input = """
-                level exerciseName orderNumber word audioFileName pictureFileName words wordType
-                1 name1 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
-                2 name1 3 foo no_noise/foo.mp3 pictures/foo.jpg (foo,bar,baz) OBJECT
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
-
-        val result = parser.parse(input)
-
-        assertThat(result).containsAll(
-            listOf(
-                SeriesOneRecord(
-                    1, "name1", 1,
-                    "бал", "no_noise/бал.mp3", "pictures/бал.jpg",
-                    listOf("(бам", "сам", "дам", "зал", "бак)"), "OBJECT"
-                ), SeriesOneRecord(
-                    2, "name1", 3,
-                    "foo", "no_noise/foo.mp3", "pictures/foo.jpg",
-                    listOf("(foo", "bar", "baz)"), "OBJECT"
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `should throw parse exception`() {
-        val input = """
-                level exerciseName orderNumber word audioFileName pictureFileName words wordType
-                incorrect string
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
-
-        assertThrows<CsvParser.ParseException> {
-            parser.parse(input)
-        }
-    }
-
-    @Test
-    fun `should throw exception with parse errors`() {
-        val input = """
-                level exerciseName orderNumber word audioFileName pictureFileName words wordType
-                incorrect string 1
-                incorrect string 2
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
-
-        val actual = assertThrows<CsvParser.ParseException> {
-            parser.parse(input)
-        }.errors
-
-        assertThat(actual[0]).startsWith("Failed to parse line 2: 'incorrect string 1'. Error: ")
-        assertThat(actual[1]).startsWith("Failed to parse line 3: 'incorrect string 2'. Error: ")
-    }
 
     @Test
     fun `should parse Groups`() {
@@ -113,7 +57,6 @@ class CsvParserTest {
     fun `should parse Series`() {
         val input = """
                 groupId, seriesId, name, description
-                2, 1, Распознавание слов, Распознавание слов
                 2, 2, Составление предложений, Составление предложений         
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
@@ -121,12 +64,6 @@ class CsvParserTest {
 
         assertThat(result).containsAll(
             listOf(
-                SeriesGenericRecord(
-                    2,
-                    1,
-                    "Распознавание слов",
-                    "Распознавание слов"
-                ),
                 SeriesGenericRecord(
                     2,
                     2,
@@ -204,5 +141,17 @@ class CsvParserTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun `should throw parse exception`() {
+        val input = """
+                level exerciseName orderNumber word audioFileName pictureFileName words wordType
+                incorrect string
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+
+        assertThrows<CsvParser.ParseException> {
+            parser.parse(input)
+        }
     }
 }
