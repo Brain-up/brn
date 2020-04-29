@@ -3,7 +3,6 @@ package com.epam.brn.model
 import com.epam.brn.dto.TaskDtoFor2Series
 import com.epam.brn.dto.TaskDtoFor3Series
 import com.epam.brn.dto.TaskDtoFor4Series
-import com.epam.brn.dto.`TaskDtoFor1Series`
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -50,14 +49,6 @@ data class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
-    fun to1SeriesTaskDto() = `TaskDtoFor1Series`(
-        id = id,
-        exerciseType = ExerciseType.SINGLE_WORDS,
-        name = name,
-        serialNumber = serialNumber,
-        correctAnswer = correctAnswer?.toDto(),
-        answerOptions = answerOptions.map { answer -> answer.toDto() }.toMutableSet()
-    )
 
     fun to2SeriesTaskDto(template: String? = "") = TaskDtoFor2Series(
         id = id,
