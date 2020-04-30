@@ -11,7 +11,6 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
-import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 
 @Entity
@@ -30,8 +29,6 @@ data class UserAccount(
     val birthday: LocalDate? = null,
     val active: Boolean
 ) {
-    @OneToMany(cascade = [(CascadeType.ALL)])
-    val phoneNumbers: List<PhoneNumber>? = null
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
     val progress: Progress? = null

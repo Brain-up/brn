@@ -25,8 +25,8 @@ class SeriesThreeRecordProcessor(
     @Value(value = "\${brn.audio.file.second.series.path}")
     private lateinit var audioFileUrl: String
 
-    @Value(value = "\${brn.picture.file.default.path}")
-    private lateinit var pictureFileUrl: String
+    @Value(value = "\${brn.pictureWithWord.file.default.path}")
+    private lateinit var pictureWithWordFileUrl: String
 
     override fun isApplicable(record: Any): Boolean {
         return record is SeriesThreeRecord
@@ -97,7 +97,7 @@ class SeriesThreeRecordProcessor(
                     word = word,
                     wordType = wordType.toString(),
                     audioFileUrl = audioFileUrl,
-                    pictureFileUrl = pictureFileUrl
+                    pictureFileUrl = pictureWithWordFileUrl
                 )
             )
     }
