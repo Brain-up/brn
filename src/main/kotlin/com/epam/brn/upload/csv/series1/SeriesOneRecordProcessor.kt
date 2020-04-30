@@ -23,8 +23,8 @@ class SeriesOneRecordProcessor(
     private val exerciseRepository: ExerciseRepository
 ) : RecordProcessor<SeriesOneRecord, Exercise> {
 
-    @Value(value = "\${brn.img.resource.path}")
-    private lateinit var imgResourcePath: String
+    @Value(value = "\${brn.picture.file.default.path}")
+    private lateinit var pictureDefaultPath: String
 
     private val repeatCount = 2
 
@@ -67,7 +67,7 @@ class SeriesOneRecordProcessor(
                 Resource(
                     word = word,
                     audioFileUrl = "$noise/$word.mp3",
-                    pictureFileUrl = "$imgResourcePath/$word"
+                    pictureFileUrl = pictureDefaultPath.format(word)
                 )
             )
         resource.wordType = WordType.OBJECT.toString()
@@ -84,7 +84,7 @@ class SeriesOneRecordProcessor(
                     series = series,
                     name = record.exerciseName,
                     level = record.level,
-                    exerciseType = ExerciseType.SINGLE_WORDS.toString(),
+                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
                     description = record.exerciseName
                 )
             )
