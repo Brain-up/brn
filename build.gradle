@@ -46,7 +46,7 @@ dependencies {
     testRuntimeOnly "com.h2database:h2"
 
     implementation 'com.amazonaws:aws-java-sdk:1.11.754'
-    implementation 'com.google.cloud:google-cloud-storage:1.106.0'
+    implementation 'com.google.cloud:google-cloud-storage:1.107.0'
 
 
     def spek_version = '2.0.10'
