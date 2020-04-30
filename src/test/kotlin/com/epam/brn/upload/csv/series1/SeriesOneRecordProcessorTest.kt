@@ -29,7 +29,7 @@ internal class SeriesOneRecordProcessorTest {
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
 
-    private lateinit var test: SeriesOneRecordProcessor
+    private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
 
     private val series = Series(
         id = 1L,
@@ -48,13 +48,13 @@ internal class SeriesOneRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        test = SeriesOneRecordProcessor(
+        seriesOneRecordProcessor = SeriesOneRecordProcessor(
             seriesRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock
         )
 
-        ReflectionTestUtils.setField(test, "imgResourcePath", "pictures/%s.jpg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
 
         `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 
@@ -74,7 +74,7 @@ internal class SeriesOneRecordProcessorTest {
     fun `should create correct exercise`() {
         val expected = createExercise()
 
-        val actual = test.process(
+        val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
                     level = 1,
@@ -91,10 +91,10 @@ internal class SeriesOneRecordProcessorTest {
 
     // @Test
     fun `should create correct task`() {
-        test.random = Random(800)
+        seriesOneRecordProcessor.random = Random(800)
         val expected = createExercise().tasks.first()
 
-        val actual = test.process(
+        val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
                     level = 1,
@@ -115,7 +115,7 @@ internal class SeriesOneRecordProcessorTest {
             resource_вить(), resource_гад(), resource_дуб()
         )
 
-        val tasks = test
+        val tasks = seriesOneRecordProcessor
             .process(mutableListOf(SeriesOneRecord(1, exerciseName, words, noiseLevel)))
             .first().tasks
 
