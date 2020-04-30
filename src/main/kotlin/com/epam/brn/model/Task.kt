@@ -1,8 +1,8 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.TaskDtoFor1Series
 import com.epam.brn.dto.TaskDtoFor2Series
 import com.epam.brn.dto.TaskDtoFor3Series
-import com.epam.brn.dto.TaskDtoFor4Series
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -70,9 +70,9 @@ data class Task(
         correctAnswer = correctAnswer!!.toDto()
     )
 
-    fun to4SeriesTaskDto() = TaskDtoFor4Series(
+    fun to4SeriesTaskDto() = TaskDtoFor1Series(
         id = id,
-        exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
+        exerciseType = ExerciseType.SINGLE_WORDS,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()

@@ -31,7 +31,7 @@ internal class CsvUploadServiceTest {
 3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise
 4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db""".trimIndent()
 
-        val actual = uploadService.getSampleStringForSeriesExerciseFile(4)
+        val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
         assertThat(actual).isEqualTo(expected)
     }
 

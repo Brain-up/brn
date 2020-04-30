@@ -99,7 +99,7 @@ class SeriesControllerIT {
 
     @Test
     fun `test get file format for seriesId`() {
-        val seriesId = 4
+        val seriesId = 1
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders

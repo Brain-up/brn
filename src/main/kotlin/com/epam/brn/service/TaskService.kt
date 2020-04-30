@@ -27,7 +27,7 @@ class TaskService(
         return when (ExerciseType.valueOf(exercise.exerciseType)) {
             ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.to2SeriesTaskDto(task.exercise?.template) }
             ExerciseType.SENTENCE -> tasks.map { task -> task.to3SeriesTaskDto(task.exercise?.template) }
-            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.to4SeriesTaskDto() }
+            ExerciseType.SINGLE_WORDS -> tasks.map { task -> task.to4SeriesTaskDto() }
         }
     }
 
@@ -38,7 +38,7 @@ class TaskService(
         return when (ExerciseType.valueOf(task.exercise!!.exerciseType)) {
             ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)
-            ExerciseType.SINGLE_SIMPLE_WORDS -> task.to4SeriesTaskDto()
+            ExerciseType.SINGLE_WORDS -> task.to4SeriesTaskDto()
         }
     }
 

@@ -4,11 +4,11 @@ import com.epam.brn.upload.csv.group.GroupRecord
 import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series.SeriesGenericRecord
 import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series1.SeriesFourRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.series1.SeriesOneRecord
 import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series3.SeriesThreeRecord
 import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.series4.SeriesFourRecord
-import com.epam.brn.upload.csv.series4.SeriesFourRecordMappingIteratorProvider
 import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -116,7 +116,7 @@ class CsvParserTest {
     }
 
     @Test
-    fun `should parse exercise for Series 4`() {
+    fun `should parse exercise for Series 1`() {
         val input = """
                 level,exerciseName,words,noise
                 1,Слова без шума,(бал бум быль вить гад дуб),no_noise
@@ -127,13 +127,13 @@ class CsvParserTest {
 
         assertThat(result).containsAll(
             listOf(
-                SeriesFourRecord(
+                SeriesOneRecord(
                     1,
                     "Слова без шума",
                     mutableListOf("(бал", "бум", "быль", "вить", "гад", "дуб)"),
                     "no_noise"
                 ),
-                SeriesFourRecord(
+                SeriesOneRecord(
                     2,
                     "Слова без шума",
                     mutableListOf("(линь", "лис", "моль", "пар", "пять", "раб)"),
