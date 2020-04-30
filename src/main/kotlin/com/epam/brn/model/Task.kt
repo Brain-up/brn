@@ -72,7 +72,7 @@ data class Task(
 
     fun to4SeriesTaskDto() = TaskDtoFor1Series(
         id = id,
-        exerciseType = ExerciseType.SINGLE_WORDS,
+        exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
