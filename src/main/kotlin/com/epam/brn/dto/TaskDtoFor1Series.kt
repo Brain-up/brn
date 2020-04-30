@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class TaskDtoFor1Series(
     val id: Long? = null,
-    val exerciseType: ExerciseType = ExerciseType.SINGLE_WORDS,
+    val exerciseType: ExerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
     @JsonIgnore
     val exerciseId: Long? = null,
     val name: String? = "",

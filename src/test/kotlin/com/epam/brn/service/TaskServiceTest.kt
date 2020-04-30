@@ -71,7 +71,7 @@ internal class TaskServiceTest {
                 .thenReturn(Optional.of(task))
             `when`(task.exercise).thenReturn(exercise)
             `when`(task.to4SeriesTaskDto()).thenReturn(taskDto)
-            `when`(exercise.exerciseType).thenReturn(ExerciseType.SINGLE_WORDS.toString())
+            `when`(exercise.exerciseType).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.toString())
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
             // THEN

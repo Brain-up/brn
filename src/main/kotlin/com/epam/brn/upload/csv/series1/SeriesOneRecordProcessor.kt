@@ -84,7 +84,7 @@ class SeriesOneRecordProcessor(
                     series = series,
                     name = record.exerciseName,
                     level = record.level,
-                    exerciseType = ExerciseType.SINGLE_WORDS.toString(),
+                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
                     description = record.exerciseName
                 )
             )

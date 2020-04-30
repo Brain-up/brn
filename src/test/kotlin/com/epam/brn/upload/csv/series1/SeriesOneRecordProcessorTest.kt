@@ -131,7 +131,7 @@ internal class SeriesOneRecordProcessorTest {
             series = series,
             name = exerciseName,
             description = exerciseName,
-            exerciseType = ExerciseType.SINGLE_WORDS.toString(),
+            exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
             level = 1
         )
 
