@@ -9,7 +9,6 @@ data class TaskDtoFor1Series(
     @JsonIgnore
     val exerciseId: Long? = null,
     val name: String? = "",
-    val correctAnswer: ResourceDto? = null,
     val serialNumber: Int? = 0,
-    val answerOptions: MutableSet<ResourceDto> = HashSet()
+    val answerOptions: Set<ResourceDto> = HashSet()
 )
