@@ -70,7 +70,7 @@ data class Task(
         correctAnswer = correctAnswer!!.toDto()
     )
 
-    fun to4SeriesTaskDto() = TaskDtoFor1Series(
+    fun to1SeriesTaskDto() = TaskDtoFor1Series(
         id = id,
         exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
         name = name,

@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.repo.ExerciseRepository
@@ -30,6 +31,9 @@ internal class ExerciseServiceTest {
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
+    @Mock
+    lateinit var userAccountService: UserAccountService
+
     @Test
     fun `should get exercises by user`() {
         // GIVEN
@@ -41,7 +45,7 @@ internal class ExerciseServiceTest {
         `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong())).thenReturn(listOf(exerciseId))
         `when`(exerciseRepository.findAll()).thenReturn(listOf(exerciseMock))
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(exerciseId)
+        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(22L)
         // THEN
         assertEquals(actualResult, listOf(exerciseDtoMock))
         verify(exerciseRepository).findAll()
@@ -53,14 +57,17 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
         val exerciseDtoMock = ExerciseDto(2, 1, "name", "descr", 1, ExerciseType.WORDS_SEQUENCES)
+        val userMock = mock(UserAccountDto::class.java)
         val exerciseId = 1L
         val seriesId = 2L
+        val userId = 3L
+        `when`(userAccountService.findUserById(userId)).thenReturn(userMock)
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
         `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong(), anyLong())).thenReturn(listOf(exerciseId))
         `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exerciseMock))
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(exerciseId, seriesId)
+        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)
         // THEN
         assertEquals(actualResult, listOf(exerciseDtoMock))
         verify(exerciseRepository).findExercisesBySeriesId(seriesId)
