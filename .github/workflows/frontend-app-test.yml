@@ -58,10 +58,10 @@ jobs:
     name: App build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2-beta
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v2-beta
+        with:
+          fetch-depth: 0
       working-directory: ./frontend
-    - uses: simplabs/ember-asset-size-action@v1
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: simplabs/ember-asset-size-action@v1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
