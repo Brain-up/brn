@@ -6,11 +6,6 @@ on:
       - 'Dockerfile_frontend'
       - 'frontend-angular/**'
       - '.github/workflows/frontend-admin-test.yml'
-  push:
-    paths:
-      - 'Dockerfile_frontend'
-      - 'frontend-angular/**'
-      - '.github/workflows/frontend-admin-test.yml'
 
 jobs:
   test:
