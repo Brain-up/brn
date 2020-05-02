@@ -20,9 +20,6 @@ export default class Exercise extends CompletionDependent.extend({
   startTime: attr('date'),
   endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
-  hideExerciseNavigation: computed(function() {
-    return this.exerciseType === 'WORDS_SEQUENCES' || 'SINGLE_SIMPLE_WORDS';
-  }),
   previousSiblings: computed('series.groupedByNameExercises', function() {
     return arrayPreviousItems(
       this,
