@@ -1,7 +1,6 @@
+import { attr } from '@ember-data/model';
 import BaseTask from '../task';
 import { computed } from '@ember/object';
-import DS from 'ember-data';
-const { attr } = DS;
 import shuffleArray from 'brn/utils/shuffle-array';
 
 export default class TaskSingleSimpleWordsModel extends BaseTask.extend({

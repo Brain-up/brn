@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { attr } = DS;
+import { attr } from '@ember-data/model';
 import BaseTask from '../task';
 
 export default class SingleWordTask extends BaseTask.extend({
