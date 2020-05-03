@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { Model } = DS;
+import Model from '@ember-data/model';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import arrayPreviousItems from 'brn/utils/array-previous-items';

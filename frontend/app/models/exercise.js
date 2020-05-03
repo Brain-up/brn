@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { attr, hasMany, belongsTo } = DS;
+import { belongsTo, hasMany, attr } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';

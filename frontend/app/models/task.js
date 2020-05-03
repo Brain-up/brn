@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { attr, belongsTo } = DS;
+import { belongsTo, attr } from '@ember-data/model';
 import { isEmpty } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
