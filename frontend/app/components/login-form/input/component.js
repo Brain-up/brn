@@ -13,8 +13,8 @@ export default class LoginFormInputComponent extends Component {
     const { value } = this;
     const sumValue = (value || '').trim().length;
 
-    if (sumValue === this.maxlength - 1) {
-      return `"Max number(${this.maxlength}) of characters exceeded"`;
+    if (sumValue >= this.maxlength - 1) {
+      return `Максимальное количество символов - ${this.maxlength}`;
     }
     return this.args.warning || false;
   }
