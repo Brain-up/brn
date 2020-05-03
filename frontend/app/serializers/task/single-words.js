@@ -1,6 +1,7 @@
 import BaseTaskSerializer from '../task';
 import { urlForImage, urlForAudio } from 'brn/utils/file-url';
-export default BaseTaskSerializer.extend({
+
+export default class TaskSingleWordsSerializer extends BaseTaskSerializer {
   normalize(typeClass, hash) {
     const hashCopy = {
       ...hash,
@@ -9,6 +10,6 @@ export default BaseTaskSerializer.extend({
       audioFileUrl: urlForAudio(hash.correctAnswer.audioFileUrl),
       pictureFileUrl: urlForImage(hash.correctAnswer.pictureFileUrl),
     };
-    return this._super(typeClass, hashCopy);
-  },
-});
+    return super.normalize(typeClass, hashCopy);
+  }
+}
