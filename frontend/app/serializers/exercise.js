@@ -1,10 +1,10 @@
 import ApplicationSerializer from './application';
 
-export default ApplicationSerializer.extend({
-  ATTR_NAMES_MAP: Object.freeze({
+export default class ExerciseSerializer extends ApplicationSerializer {
+  ATTR_NAMES_MAP = Object.freeze({
     order: 'level',
-  }),
-  attrs: {
+  });
+  attrs = {
     tasks: { serialize: 'ids-and-types', deserialize: 'records' },
-  },
-});
+  };
+}
