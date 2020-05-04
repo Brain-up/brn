@@ -36,13 +36,17 @@ class ExerciseService(
         return emptyIfNull(history).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
     }
 
+    fun findExercisesBySeriesForCurrentUser(seriesId: Long): List<ExerciseDto> {
+        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        return findExercisesByUserIdAndSeries(currentUser.id!!, seriesId)
+    }
+
     fun findExercisesByUserIdAndSeries(userId: Long, seriesId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId with series=$seriesId")
-        val user = userAccountService.findUserById(userId)
-        val isAdmin = user.email == "admin@admin.com"
-        log.info("current user is admin: $isAdmin")
+        val isSupport = userId in (1..3)
+        log.info("current user is admin: $isSupport")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
         val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
-        return emptyIfNull(exercises).map { x -> x.toDto(exercisesIdList.contains(x.id) || isAdmin) }
+        return emptyIfNull(exercises).map { exercise -> exercise.toDto(exercisesIdList.contains(exercise.id) || isSupport) }
     }
 }

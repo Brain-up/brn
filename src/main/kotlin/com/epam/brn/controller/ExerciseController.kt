@@ -21,11 +21,10 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @GetMapping
     @ApiOperation("Get done exercises for user")
     fun getExercises(
-        @RequestParam(value = "userId", defaultValue = "1") userId: Long,
         @RequestParam(value = "seriesId", required = true) seriesId: Long
     ): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok()
-            .body(BaseResponseDto(data = exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)))
+            .body(BaseResponseDto(data = exerciseService.findExercisesBySeriesForCurrentUser(seriesId)))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
