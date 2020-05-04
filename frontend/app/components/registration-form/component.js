@@ -21,6 +21,23 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   get login() {
     return this.email;
   }
+
+  get getMinYear() {
+    let time = new Date()
+      .toISOString()
+      .split('T')[0]
+      .split('-');
+    let maxYear = time[0];
+    let minYear = maxYear - 100;
+    time.splice(0, 1, `${minYear}`);
+    let min = time.join('-');
+    return min;
+  }
+
+  get getMaxYear() {
+    return new Date().toISOString().split('T')[0];
+  }
+
   @(task(function*() {
     const user = {
       firstName: this.firstName,

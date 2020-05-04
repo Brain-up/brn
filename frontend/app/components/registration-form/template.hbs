@@ -2,6 +2,7 @@
   <form
     class="bg-white rounded px-8 pt-6 pb-8 mb-4
 
+
       {{if (not this.registrationInProgress) "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
@@ -20,6 +21,8 @@
           @model={{this}}
           @name="birthday"
           @type="date"
+          @minValue={{this.getMinYear}}
+          @maxValue={{this.getMaxYear}}
         />
       </div>
       <div class="mb-4">
