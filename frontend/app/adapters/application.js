@@ -1,8 +1,9 @@
-import DS from 'ember-data';
+import RESTAdapter from '@ember-data/adapter/rest';
 import { inject as service } from '@ember/service';
 
-export default DS.RESTAdapter.extend({
-  session: service('session'),
+export default class ApplicationAdapter extends RESTAdapter {
+  @service('session')
+  session;
   get headers() {
     if (!this.session.isAuthenticated) {
       return {};
@@ -10,11 +11,15 @@ export default DS.RESTAdapter.extend({
     return {
       Authorization: `Basic ${this.session.data.authenticated.access_token}`,
     };
-  },
-  namespace: 'api',
-  coalesceFindRequests: false,
-  shouldReloadRecord: () => false,
-  shouldBackgroundReloadRecord: () => false,
+  }
+  namespace = 'api';
+  coalesceFindRequests = false;
+  shouldReloadRecord() {
+    return false;
+  }
+  shouldBackgroundReloadRecord() {
+    return false;
+  }
   urlForFindRecord(id, modelName, snapshot) {
     let actualModelName = modelName;
     if (
@@ -25,6 +30,6 @@ export default DS.RESTAdapter.extend({
     ) {
       actualModelName = 'tasks';
     }
-    return this._super(id, actualModelName, snapshot);
-  },
-});
+    return super.urlForFindRecord(id, actualModelName, snapshot);
+  }
+}

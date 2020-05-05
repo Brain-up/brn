@@ -1,5 +1,5 @@
-<div class={{this.styleNamespace}} ...attributes>
-  <ProgressIndicator @progressItems={{this.tasksCopy}} />
+<div class={{style-namespace "words-sequences"}} ...attributes>
+  {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}
     <AudioPlayer
       @audioFileUrl={{this.audioFiles}}
@@ -18,11 +18,15 @@
               @checked={{this.answerCompleted}}
               @isCorrect={{this.isCorrect}}
               @disabled={{@disableAnswers}}
-              @isSelected={{or (eq @activeWord answerOption.word) (eq
-                (get this.currentAnswerObject type)
-                answerOption.word
-              )}}
-              @clickAction={{if (eq @mode "interact") (fn @onPlayText answerOption.word) (fn this.checkMaybe answerOption)}}
+              @isSelected={{or
+                (eq @activeWord answerOption.word)
+                (eq (get this.currentAnswerObject type) answerOption.word)
+              }}
+              @clickAction={{if
+                (eq @mode "interact")
+                (fn @onPlayText answerOption.word)
+                (fn this.checkMaybe answerOption)
+              }}
               @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
               @word={{answerOption.word}}
             />

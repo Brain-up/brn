@@ -1,5 +1,5 @@
 <div class={{this.styleNamespace}} ...attributes>
-  <ProgressIndicator @progressItems={{this.tasksCopy}} />
+  {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}
     <AudioPlayer
       @audioFileUrl={{this.audioFileUrl}}

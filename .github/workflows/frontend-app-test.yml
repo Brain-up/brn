@@ -1,12 +1,7 @@
-name: Frontend tests
+name: Frontend Application tests
 
 on:
   pull_request:
-    paths:
-      - 'Dockerfile_frontend'
-      - 'frontend/**'
-      - '.github/workflows/frontend-app-test.yml'
-  push:
     paths:
       - 'Dockerfile_frontend'
       - 'frontend/**'
@@ -54,14 +49,16 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           message: "Frontend test coverage: {testCoverage}%"
 
-  build:
-    name: App build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2-beta
-      with:
-        fetch-depth: 0
-      working-directory: ./frontend
-    - uses: simplabs/ember-asset-size-action@v1
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+#  build:
+#    name: App build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2-beta
+#        with:
+#          fetch-depth: 0
+#      - name: Change dir to frontend
+#        run: cd frontend
+#      - uses: simplabs/ember-asset-size-action@v1
+#        with:
+#          working-directory: ./frontend
+#          repo-token: "${{ secrets.GITHUB_TOKEN }}"

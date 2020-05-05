@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { attr, hasMany, belongsTo } = DS;
+import { belongsTo, hasMany, attr } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
@@ -20,9 +19,6 @@ export default class Exercise extends CompletionDependent.extend({
   startTime: attr('date'),
   endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
-  hideExerciseNavigation: computed(function() {
-    return this.exerciseType === 'WORDS_SEQUENCES' || 'SINGLE_SIMPLE_WORDS';
-  }),
   previousSiblings: computed('series.groupedByNameExercises', function() {
     return arrayPreviousItems(
       this,
@@ -76,7 +72,7 @@ export default class Exercise extends CompletionDependent.extend({
       endTime,
       repetitionIndex,
       exerciseId: id,
-      tasksCount: tasks.length
+      tasksCount: tasks.length,
     };
   },
   async postHistory() {
@@ -88,7 +84,7 @@ export default class Exercise extends CompletionDependent.extend({
       },
       body: JSON.stringify({
         ...stats,
-        userId: this.get('session.data.user.id') || null
+        userId: this.get('session.data.user.id') || null,
       }),
     });
   },

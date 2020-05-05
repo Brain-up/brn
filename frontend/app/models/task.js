@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { attr, belongsTo } = DS;
+import { belongsTo, attr } from '@ember-data/model';
 import { isEmpty } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -11,7 +10,11 @@ export default class Task extends CompletionDependent.extend({
   name: attr('string'),
   order: attr('number'),
   answerOptions: attr(),
-  normalizedAnswerOptions: attr('', { defaultValue() { return [];}}),
+  normalizedAnswerOptions: attr('', {
+    defaultValue() {
+      return [];
+    },
+  }),
   exerciseType: attr('string'),
   exercise: belongsTo('exercise', {
     async: true,

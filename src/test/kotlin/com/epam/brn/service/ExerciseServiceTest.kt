@@ -1,7 +1,6 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.repo.ExerciseRepository
@@ -57,14 +56,12 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
         val exerciseDtoMock = ExerciseDto(2, 1, "name", "descr", 1, ExerciseType.WORDS_SEQUENCES)
-        val userMock = mock(UserAccountDto::class.java)
         val exerciseId = 1L
         val seriesId = 2L
         val userId = 3L
-        `when`(userAccountService.findUserById(userId)).thenReturn(userMock)
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
-        `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong(), anyLong())).thenReturn(listOf(exerciseId))
+        `when`(studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)).thenReturn(listOf(exerciseId))
         `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exerciseMock))
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)
