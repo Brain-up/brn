@@ -11,6 +11,42 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked lastName;
   @tracked password;
   @tracked birthday;
+
+  getCurrentDateAndFormat(dateTime) {
+    let today = dateTime;
+    let dd = today.getDate();
+    let MM = today.getMonth() + 1;
+    let yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+
+    if (MM < 10) {
+      MM = '0' + MM;
+    }
+
+    today = yyyy + '-' + MM + '-' + dd;
+
+    return today;
+  }
+  
+
+  get getMinYear() {
+    let today = new Date();
+    today.setDate(today.getDate() - 365 * 100 - (100 / 4));
+    let minYear = this.getCurrentDateAndFormat(today);
+    
+    return minYear;
+  }
+
+  get getMaxYear() {
+    let today = new Date();
+    let maxYear = this.getCurrentDateAndFormat(today);
+    
+    return maxYear;
+  }
+
   get registrationInProgress() {
     return (
       this.loginInProgress ||
@@ -18,24 +54,45 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       this.registrationTask.isRunning
     );
   }
+
+
+
+  get value() {
+    const { model, name } = this.args;
+    if (!model) {
+      return undefined;
+    }
+    return model[name];
+  }
+
+  set value(value) {
+    const { model, name } = this.args;
+    model[name] = (value||'').trim().slice(0, this.maxlength - 1);
+  }
+
+  helper() {
+    this.getVal;
+  }
+
+  get getVal() {
+    let today = new Date();
+    let inputValue = birthday.value;
+    today = this.getCurrentDateAndFormat(today);
+
+    let maxValue = +today.replace(/-/g, "");
+    let userValue = +inputValue.replace(/-/g, "");
+    if (userValue <= maxValue ) {
+      return
+
+    } else {
+      birthday.value = ""
+      birthday.value = today;
+      console.log(userValue)
+    }
+  }
+
   get login() {
     return this.email;
-  }
-
-  get getMinYear() {
-    let time = new Date()
-      .toISOString()
-      .split('T')[0]
-      .split('-');
-    let maxYear = time[0];
-    let minYear = maxYear - 100;
-    time.splice(0, 1, `${minYear}`);
-    let min = time.join('-');
-    return min;
-  }
-
-  get getMaxYear() {
-    return new Date().toISOString().split('T')[0];
   }
 
   @(task(function*() {
@@ -45,6 +102,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       email: this.email,
       birthday: new Date(this.birthday).toISOString(),
       password: this.password,
+      date: this.date,
     };
     const result = yield this.network.createUser(user);
     if (result.ok) {
@@ -57,7 +115,10 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   }).drop())
   registrationTask;
 
-  @action
+  @action getValue() {
+    this.helper()
+  }
+  
   onSubmit(e) {
     e.preventDefault();
     this.registrationTask.perform();
