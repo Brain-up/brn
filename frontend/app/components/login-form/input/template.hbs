@@ -7,13 +7,13 @@
   @value={{this.value}}
   class="{{if this.hasError "border-red-500"}}
 
+
      shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
   id={{@name}}
   type={{or @type "text"}}
   required="true"
   ...attributes
 />
-
 {{#if this.warning}}
   <p data-test-warning-message>
     {{this.warning}}
