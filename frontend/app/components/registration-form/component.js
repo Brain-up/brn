@@ -32,9 +32,9 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     let maxString = now.toISOString().split('T')[0];
     now.setFullYear(now.getFullYear() - 100);
     let minString = now.toISOString().split('T')[0];
-    let maxNumberValid = +maxString.replace(/-/g, '');
-    let enterUserValue = +birthday.replace(/-/g, '');
-    let minNumberValid = +minString.replace(/-/g, '');
+    let maxNumberValid = parseInt(maxString.replace(/-/g, ''));
+    let enterUserValue = parseInt(birthday.replace(/-/g, ''));
+    let minNumberValid = parseInt(minString.replace(/-/g, ''));
     if (maxNumberValid < enterUserValue || minNumberValid > enterUserValue) {
       return 'Некорректная дата';
     }
