@@ -17,17 +17,14 @@
       </div>
       <div class="mb-4">
         <LoginForm::Input
-         {{on 'change' this.getValue}}
-         {{!-- {{on 'input' this.getValue}} --}}
-         
-          min={{this.getMinYear}} 
-          max={{this.getMaxYear}}
+          min={{this.minYearString}}
+          max={{this.maxYearString}}
           required
-          @value={{this.getVal}}
           @label="Дата рождения"
           @model={{this}}
+          @warning={{this.warningErrorDate}}
           @name="birthday"
-          @type="date" 
+          @type="date"
         />
       </div>
       <div class="mb-4">
