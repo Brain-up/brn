@@ -1,4 +1,5 @@
 import LoginFormComponent from './../login-form/component';
+import { action } from '@ember/object';
 import { task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
@@ -71,6 +72,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   }).drop())
   registrationTask;
 
+  @action
   onSubmit(e) {
     e.preventDefault();
     this.registrationTask.perform();
