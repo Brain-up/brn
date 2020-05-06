@@ -1,5 +1,4 @@
 import LoginFormComponent from './../login-form/component';
-import { action } from '@ember/object';
 import { task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
@@ -12,39 +11,33 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked password;
   @tracked birthday;
 
-  getCurrentDateAndFormat(dateTime) {
-    let today = dateTime;
-    let dd = today.getDate();
-    let MM = today.getMonth() + 1;
-    let yyyy = today.getFullYear();
-
-    if (dd < 10) {
-      dd = '0' + dd;
-    }
-
-    if (MM < 10) {
-      MM = '0' + MM;
-    }
-
-    today = yyyy + '-' + MM + '-' + dd;
-
-    return today;
-  }
-  
-
-  get getMinYear() {
-    let today = new Date();
-    today.setDate(today.getDate() - 365 * 100 - (100 / 4));
-    let minYear = this.getCurrentDateAndFormat(today);
-    
-    return minYear;
+  get minYearString() {
+    const now = new Date();
+    now.setFullYear(now.getFullYear() - 100);
+    return now.toISOString().split('T')[0];
   }
 
-  get getMaxYear() {
-    let today = new Date();
-    let maxYear = this.getCurrentDateAndFormat(today);
-    
-    return maxYear;
+  get maxYearString() {
+    const date = new Date();
+    return date.toISOString().split('T')[0];
+  }
+
+  get warningErrorDate() {
+    const { birthday } = this;
+    if (birthday === undefined) {
+      return false;
+    }
+    let now = new Date();
+    let maxString = now.toISOString().split('T')[0];
+    now.setFullYear(now.getFullYear() - 100);
+    let minString = now.toISOString().split('T')[0];
+    let maxNumberValid = +maxString.replace(/-/g, '');
+    let enterUserValue = +birthday.replace(/-/g, '');
+    let minNumberValid = +minString.replace(/-/g, '');
+    if (maxNumberValid < enterUserValue || minNumberValid > enterUserValue) {
+      return 'Некорректная дата';
+    }
+    return false;
   }
 
   get registrationInProgress() {
@@ -53,42 +46,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       this.registrationTask.lastSuccessful ||
       this.registrationTask.isRunning
     );
-  }
-
-
-
-  get value() {
-    const { model, name } = this.args;
-    if (!model) {
-      return undefined;
-    }
-    return model[name];
-  }
-
-  set value(value) {
-    const { model, name } = this.args;
-    model[name] = (value||'').trim().slice(0, this.maxlength - 1);
-  }
-
-  helper() {
-    this.getVal;
-  }
-
-  get getVal() {
-    let today = new Date();
-    let inputValue = birthday.value;
-    today = this.getCurrentDateAndFormat(today);
-
-    let maxValue = +today.replace(/-/g, "");
-    let userValue = +inputValue.replace(/-/g, "");
-    if (userValue <= maxValue ) {
-      return
-
-    } else {
-      birthday.value = ""
-      birthday.value = today;
-      console.log(userValue)
-    }
   }
 
   get login() {
@@ -102,7 +59,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       email: this.email,
       birthday: new Date(this.birthday).toISOString(),
       password: this.password,
-      date: this.date,
     };
     const result = yield this.network.createUser(user);
     if (result.ok) {
@@ -115,10 +71,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   }).drop())
   registrationTask;
 
-  @action getValue() {
-    this.helper()
-  }
-  
   onSubmit(e) {
     e.preventDefault();
     this.registrationTask.perform();

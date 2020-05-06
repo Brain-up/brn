@@ -15,7 +15,12 @@
   ...attributes
 />
 {{#if this.warning}}
-  <p data-test-warning-message>
+  <p
+    data-test-warning-message
+    warningMessage={{@warning}}
+    class="text-red-500 text-xs italic"
+    ...attributes
+  >
     {{this.warning}}
   </p>
 {{/if}}
