@@ -134,8 +134,6 @@ module('Integration | Component | login-form/input', function(hooks) {
       hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @name="warning" @warning="Foo" @type="text" @label="Foo" />`,
     );
 
-    // await this.pauseTest();
-
     assert.dom('[data-test-warning-message="warning"]').hasText('Foo');
   });
 });
