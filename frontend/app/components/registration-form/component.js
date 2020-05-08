@@ -17,17 +17,17 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   minDateString = this.minDate.toISOString().split('T')[0];
 
   get warningErrorDate() {
-    const { birthday, maxDateString, minDateString } = this;
+    const { birthday, maxDate, minDate } = this;
 
     if (birthday === undefined) {
       return false;
     }
 
-    const maxDate = new Date(maxDateString).getTime();
-    const minDate = new Date(minDateString).getTime();
+    const max = maxDate.getTime();
+    const min = minDate.getTime();
     const enterDateUser = new Date(birthday).getTime();
 
-    if (enterDateUser > maxDate || minDate > enterDateUser) {
+    if (enterDateUser > max || min > enterDateUser) {
       return 'Некорректная дата';
     }
     return false;
