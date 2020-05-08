@@ -101,7 +101,7 @@
     "ember-resolver": "^7.0.0",
     "ember-simple-auth": "^3.0.0",
     "ember-source": "~3.16.3",
-    "ember-test-selectors": "^3.0.0",
+    "ember-test-selectors": "^4.1.0",
     "ember-transition-helper": "^1.0.0",
     "ember-truth-helpers": "^2.1.0",
     "eslint-config-prettier": "^6.10.0",
