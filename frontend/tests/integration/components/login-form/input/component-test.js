@@ -131,9 +131,11 @@ module('Integration | Component | login-form/input', function(hooks) {
 
   test('if the attribute warning`s exists show warning', async function(assert) {
     await render(
-      hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @warning="Foo" @type="text" @label="Foo" />`,
+      hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @name="warning" @warning="Foo" @type="text" @label="Foo" />`,
     );
 
-    assert.dom('[data-test-warning-message]').hasText('Foo');
+    // await this.pauseTest();
+
+    assert.dom('[data-test-warning-message="warning"]').hasText('Foo');
   });
 });
