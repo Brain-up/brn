@@ -2,6 +2,7 @@
   <form
     class="bg-white rounded px-8 pt-6 pb-8 mb-4
 
+
       {{if (not this.registrationInProgress) "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
@@ -16,6 +17,10 @@
       </div>
       <div class="mb-4">
         <LoginForm::Input
+          min={{this.minDateString}}
+          max={{this.maxDateString}}
+          required
+          @warning={{this.warningErrorDate}}
           @label="Дата рождения"
           @model={{this}}
           @name="birthday"
