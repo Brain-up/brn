@@ -100,7 +100,7 @@ module('Integration | Component | registration-form', function(hooks) {
   test('do not show message when entering valid date', async function(assert) {
     await render(hbs`<RegistrationForm />`);
 
-    await fillIn('input[name="birthday"]', '2000-05-06');
+    await fillIn('input[name="birthday"]', getDate(0));
 
     assert.dom('[data-test-warning-message="birthday"]').doesNotExist();
   });
