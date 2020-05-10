@@ -50,7 +50,7 @@ dependencies {
 
 
     def spek_version = '2.0.10'
-    testImplementation 'org.amshove.kluent:kluent:1.60'
+    testImplementation 'org.amshove.kluent:kluent:1.61'
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "junit"
