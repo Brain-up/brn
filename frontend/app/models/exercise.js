@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { attr, hasMany, belongsTo } = DS;
+import { belongsTo, hasMany, attr } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
@@ -9,6 +8,7 @@ import { inject as service } from '@ember/service';
 export default class Exercise extends CompletionDependent.extend({
   session: service('session'),
   name: attr('string'),
+  available: attr('boolean'),
   description: attr('string'),
   level: attr('number'),
   order: attr('number'),
@@ -20,9 +20,6 @@ export default class Exercise extends CompletionDependent.extend({
   startTime: attr('date'),
   endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
-  hideExerciseNavigation: computed(function() {
-    return this.exerciseType === 'WORDS_SEQUENCES' || 'SINGLE_SIMPLE_WORDS';
-  }),
   previousSiblings: computed('series.groupedByNameExercises', function() {
     return arrayPreviousItems(
       this,

@@ -1,20 +1,18 @@
-name: Frontend Composition Analysis
+name: Frontend Admin Composition Analysis
 
 on:
   pull_request:
     paths:
       - 'Dockerfile_frontend'
-      - 'frontend/**'
       - 'frontend-angular/**'
-      - '.github/workflows/fe-composition-analysis.yml'
+      - '.github/workflows/fe-admin-composition-analysis.yml'
     branches:
       - master
   push:
     paths:
       - 'Dockerfile_frontend'
-      - 'frontend/**'
       - 'frontend-angular/**'
-      - '.github/workflows/fe-composition-analysis.yml'
+      - '.github/workflows/fe-admin-composition-analysis.yml'
     branches:
       - master
 
@@ -23,15 +21,10 @@ jobs:
     name: npm audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2-beta
+        with:
+          fetch-depth: 0
       - uses: rwjblue/setup-volta@v1
-      - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
-      - name: Install dependencies via yarn
-        working-directory: ./frontend
-        run: yarn install
-      - name: yarn audit
-        working-directory: ./frontend
-        run: yarn audit
       - name: install dependencies via npm
         working-directory: ./frontend-angular
         run: npm install

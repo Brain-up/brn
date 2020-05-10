@@ -17,13 +17,6 @@
       </div>
     {{/if}}
     <div class="exercise-container">
-      {{#if (not this.model.hideExerciseNavigation)}}
-        <ExerciseNavigation
-          class="exercise-navigation"
-          @tasks={{this.model.tasks}}
-        />
-      {{/if}}
-
       {{#if
         (and
           this.exerciseIsCompletedInCurrentCycle (not this.showExerciseStats)

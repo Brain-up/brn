@@ -112,7 +112,7 @@ class SeriesControllerIT {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
         val expectedResponse =
-            """{"data":"level exerciseName orderNumber word audioFileName pictureFileName words wordType\n1 \"Однослоговые слова без шума\" 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бум) OBJECT\n1 \"Однослоговые слова без шума\" 2 бум no_noise/бум.mp3 pictures/бум.jpg (зум,кум,шум,зуб,куб) OBJECT\n1 \"Однослоговые слова без шума\" 3 быль no_noise/быль.mp3 pictures/быль.jpg (пыль,соль,мыль,дыль,киль) OBJECT\n1 \"Однослоговые слова без шума\" 4 вить no_noise/вить.mp3 pictures/вить.jpg (бить,жить,мыль,выть,лить) OBJECT_ACTION","errors":[],"meta":[]}"""
+            """{"data":"level,exerciseName,words,noise\n1,Слова без шума,(бал бум быль вить гад дуб),no_noise\n2,Слова без шума,(линь лис моль пар пять раб),no_noise\n3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise\n4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db","errors":[],"meta":[]}"""
         Assertions.assertEquals(expectedResponse, response)
     }
 }

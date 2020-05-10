@@ -1,11 +1,11 @@
 import BaseTaskSerializer from '../task';
 
-export default BaseTaskSerializer.extend({
+export default class TaskSentenceSerializer extends BaseTaskSerializer {
   normalize(typeClass, hash) {
     const hashCopy = {
       ...hash,
       correctAnswer: hash.correctAnswer.word,
     };
-    return this._super(typeClass, hashCopy);
-  },
-});
+    return super.normalize(typeClass, hashCopy);
+  }
+}

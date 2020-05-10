@@ -25,12 +25,10 @@ class SeriesTwoRecordProcessor(
     @Value(value = "\${brn.audio.file.second.series.path}")
     private lateinit var audioFileUrl: String
 
-    @Value(value = "\${brn.picture.file.default.path}")
-    private lateinit var pictureFileUrl: String
+    @Value(value = "\${brn.pictureWithWord.file.default.path}")
+    private lateinit var pictureWithWordFileUrl: String
 
-    override fun isApplicable(record: Any): Boolean {
-        return record is SeriesTwoRecord
-    }
+    override fun isApplicable(record: Any): Boolean = record is SeriesTwoRecord
 
     @Transactional
     override fun process(records: List<SeriesTwoRecord>): List<Exercise> {
@@ -51,25 +49,23 @@ class SeriesTwoRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesTwoRecord): MutableSet<Resource> {
-        return extractWordGroups(record)
+    private fun extractAnswerOptions(record: SeriesTwoRecord): MutableSet<Resource> =
+        extractWordGroups(record)
             .map {
                 splitOnWords(it.second).map { word: String ->
                     toResource(word, it.first)
                 }
             }
             .flatten().toMutableSet()
-    }
 
-    private fun extractWordGroups(record: SeriesTwoRecord): Sequence<Pair<WordType, String>> {
-        return record.words
+    private fun extractWordGroups(record: SeriesTwoRecord): Sequence<Pair<WordType, String>> =
+        record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .mapIndexed { wordGroupPosition, wordGroup ->
                 WordType.of(wordGroupPosition) to wordGroup
             }
             .filter { StringUtils.isNotBlank(it.second) }
-    }
 
     private fun splitOnWords(sentence: String): List<String> = sentence.split(' ').map { it.trim() }
 
@@ -79,7 +75,7 @@ class SeriesTwoRecordProcessor(
                 Resource(
                     word = word,
                     audioFileUrl = audioFileUrl.format(word),
-                    pictureFileUrl = pictureFileUrl.format(word)
+                    pictureFileUrl = pictureWithWordFileUrl.format(word)
                 )
             )
         resource.wordType = wordType.toString()
@@ -88,8 +84,8 @@ class SeriesTwoRecordProcessor(
 
     private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun extractExercise(record: SeriesTwoRecord, series: Series): Exercise {
-        return exerciseRepository
+    private fun extractExercise(record: SeriesTwoRecord, series: Series): Exercise =
+        exerciseRepository
             .findExerciseByNameAndLevel(record.exerciseName, record.level)
             .orElse(
                 Exercise(
@@ -101,12 +97,10 @@ class SeriesTwoRecordProcessor(
                     level = record.level
                 )
             )
-    }
 
-    private fun calculateTemplate(record: SeriesTwoRecord): String {
-        return extractWordGroups(record)
+    private fun calculateTemplate(record: SeriesTwoRecord): String =
+        extractWordGroups(record)
             .joinToString(StringUtils.SPACE, "<", ">") { it.first.toString() }
-    }
 
     private fun extractTask(exercise: Exercise, answerOptions: MutableSet<Resource>): Task {
         return Task(
