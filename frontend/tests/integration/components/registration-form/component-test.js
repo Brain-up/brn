@@ -3,6 +3,13 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, fillIn, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
+
+function getDate(num) {
+  let date = new Date();
+  date.setFullYear(date.getFullYear() + num);
+  return date.toISOString().split('T')[0];
+}
+
 module('Integration | Component | registration-form', function(hooks) {
   setupRenderingTest(hooks);
 
@@ -25,7 +32,7 @@ module('Integration | Component | registration-form', function(hooks) {
       createUser(fields) {
         assert.ok(fields);
         return {
-          ok: true
+          ok: true,
         };
       }
     }
@@ -57,11 +64,9 @@ module('Integration | Component | registration-form', function(hooks) {
           json() {
             assert.ok(fields);
             return {
-              errors: [
-                'foo'
-              ]
-            }
-          }
+              errors: ['foo'],
+            };
+          },
         };
       }
     }
@@ -74,5 +79,29 @@ module('Integration | Component | registration-form', function(hooks) {
     await fillIn('[name="birthday"]', '1991-02-11');
     await click('[data-test-submit-form]');
     assert.dom('[data-test-form-error]').hasText('foo');
+  });
+
+  test('show message when entering date below acceptable', async function(assert) {
+    await render(hbs`<RegistrationForm />`);
+
+    await fillIn('input[name="birthday"]', '1911-05-06');
+
+    assert.dom('[data-test-warning-message="birthday"]').exists();
+  });
+
+  test('show message when entering date higher than allowed', async function(assert) {
+    await render(hbs`<RegistrationForm />`);
+
+    await fillIn('input[name="birthday"]', getDate(1));
+
+    assert.dom('[data-test-warning-message="birthday"]').exists();
+  });
+
+  test('do not show message when entering valid date', async function(assert) {
+    await render(hbs`<RegistrationForm />`);
+
+    await fillIn('input[name="birthday"]', getDate(0));
+
+    assert.dom('[data-test-warning-message="birthday"]').doesNotExist();
   });
 });
