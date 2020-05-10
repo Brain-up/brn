@@ -46,8 +46,7 @@ dependencies {
     testRuntimeOnly "com.h2database:h2"
 
     implementation 'com.amazonaws:aws-java-sdk:1.11.779'
-    implementation 'com.google.cloud:google-cloud-storage:1.106.0'
-
+    implementation 'com.google.cloud:google-cloud-storage:1.108.0'
 
     def spek_version = '2.0.10'
     testImplementation 'org.amshove.kluent:kluent:1.60'
