@@ -28,7 +28,7 @@ internal class SeriesTwoRecordProcessorTest {
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
 
-    private lateinit var test: SeriesTwoRecordProcessor
+    private lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
 
     private val series = Series(
         id = 2L,
@@ -43,14 +43,14 @@ internal class SeriesTwoRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        test = SeriesTwoRecordProcessor(
+        seriesTwoRecordProcessor = SeriesTwoRecordProcessor(
             seriesRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock
         )
 
-        ReflectionTestUtils.setField(test, "audioFileUrl", "series2/%s.mp3")
-        ReflectionTestUtils.setField(test, "pictureFileUrl", "pictures/withWord/%s.jpg")
+        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "audioFileUrl", "series2/%s.mp3")
+        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
 
         `when`(seriesRepositoryMock.findById(2L)).thenReturn(Optional.of(series))
 
@@ -70,7 +70,7 @@ internal class SeriesTwoRecordProcessorTest {
     fun `should create correct exercise`() {
         val expected = createExercise()
 
-        val actual = test.process(
+        val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
                 SeriesTwoRecord(
                     level = 1,
@@ -89,7 +89,7 @@ internal class SeriesTwoRecordProcessorTest {
     fun `should create correct task`() {
         val expected = createExercise().tasks.first()
 
-        val actual = test.process(
+        val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
                 SeriesTwoRecord(
                     level = 1,
@@ -110,7 +110,7 @@ internal class SeriesTwoRecordProcessorTest {
             resource_сидит(), resource_лежит(), resource_идет()
         )
 
-        val actual = test.process(
+        val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
                 SeriesTwoRecord(
                     level = 1,

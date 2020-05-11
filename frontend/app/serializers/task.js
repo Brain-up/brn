@@ -1,12 +1,11 @@
 import ApplicationSerializer from './application';
 import AnswerOption from 'brn/utils/answer-option';
-import shuffleArray from 'brn/utils/shuffle-array';
 
-export default ApplicationSerializer.extend({
-  ATTR_NAMES_MAP: Object.freeze({
+export default class TaskSerializer extends ApplicationSerializer {
+  ATTR_NAMES_MAP = Object.freeze({
     order: 'serialNumber',
     type: 'exerciseType',
-  }),
+  });
   normalize(typeClass, hash) {
     if (hash.answerOptions) {
       let opts = [];
@@ -21,12 +20,10 @@ export default ApplicationSerializer.extend({
       } else {
         opts = [...hash.answerOptions];
       }
-      hash.normalizedAnswerOptions = shuffleArray(opts).map(
-        (el) => new AnswerOption(el),
-      );
+      hash.normalizedAnswerOptions = opts.map((el) => new AnswerOption(el));
     } else {
       hash.normalizedAnswerOptions = [];
     }
-    return this._super(typeClass, hash);
-  },
-});
+    return super.normalize(typeClass, hash);
+  }
+}

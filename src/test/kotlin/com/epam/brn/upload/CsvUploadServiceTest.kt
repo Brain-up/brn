@@ -25,13 +25,11 @@ internal class CsvUploadServiceTest {
 
     @Test
     fun `should get exercise file format`() {
-        val expected = """
-            level exerciseName orderNumber word audioFileName pictureFileName words wordType
-            1 "Однослоговые слова без шума" 1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бум) OBJECT
-            1 "Однослоговые слова без шума" 2 бум no_noise/бум.mp3 pictures/бум.jpg (зум,кум,шум,зуб,куб) OBJECT
-            1 "Однослоговые слова без шума" 3 быль no_noise/быль.mp3 pictures/быль.jpg (пыль,соль,мыль,дыль,киль) OBJECT
-            1 "Однослоговые слова без шума" 4 вить no_noise/вить.mp3 pictures/вить.jpg (бить,жить,мыль,выть,лить) OBJECT_ACTION
-            """.trimIndent()
+        val expected = """level,exerciseName,words,noise
+1,Слова без шума,(бал бум быль вить гад дуб),no_noise
+2,Слова без шума,(линь лис моль пар пять раб),no_noise
+3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise
+4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db""".trimIndent()
 
         val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
         assertThat(actual).isEqualTo(expected)

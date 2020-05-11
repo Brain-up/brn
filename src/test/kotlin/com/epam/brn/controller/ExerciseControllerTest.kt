@@ -24,25 +24,24 @@ internal class ExerciseControllerTest {
     @Test
     fun `should get exercises for user and series`() {
         // GIVEN
-        val userId: Long = 1
-        val seriesId: Long = 1
-        val exercise = ExerciseDto(1, 1, "name", "desc", 1, ExerciseType.SINGLE_WORDS)
+        val seriesId: Long = 2
+        val exercise = ExerciseDto(seriesId, 1, "name", "desc", 1, ExerciseType.WORDS_SEQUENCES)
         val listExercises = listOf(exercise)
-        Mockito.`when`(exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)).thenReturn(listExercises)
+        Mockito.`when`(exerciseService.findExercisesBySeriesForCurrentUser(seriesId)).thenReturn(listExercises)
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
-            exerciseController.getExercises(userId, seriesId).body?.data as List<ExerciseDto>
+            exerciseController.getExercises(seriesId).body?.data as List<ExerciseDto>
         // THEN
         assertTrue(actualResultData.contains(exercise))
-        verify(exerciseService).findExercisesByUserIdAndSeries(userId, seriesId)
+        verify(exerciseService).findExercisesBySeriesForCurrentUser(seriesId)
     }
 
     @Test
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseID: Long = 1
-        val exercise = ExerciseDto(1, 1, "exe", "desc", 1, ExerciseType.SINGLE_WORDS)
+        val exercise = ExerciseDto(2, 1, "exe", "desc", 1, ExerciseType.WORDS_SEQUENCES)
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
         @Suppress("UNCHECKED_CAST")

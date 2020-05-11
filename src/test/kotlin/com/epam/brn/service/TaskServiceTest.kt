@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.`TaskDtoFor1Series`
+import com.epam.brn.dto.TaskDtoFor1Series
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
@@ -54,7 +54,7 @@ internal class TaskServiceTest {
                 .thenReturn(listOf(task1, task2))
             `when`(exerciseRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(exercise))
-            `when`(exercise.exerciseType).thenReturn(ExerciseType.SINGLE_WORDS.toString())
+            `when`(exercise.exerciseType).thenReturn(ExerciseType.WORDS_SEQUENCES.toString())
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
             // THEN
@@ -66,12 +66,12 @@ internal class TaskServiceTest {
             // GIVEN
             val task = mock(Task::class.java)
             val exercise = mock(Exercise::class.java)
-            val taskDto = `TaskDtoFor1Series`()
+            val taskDto = TaskDtoFor1Series()
             `when`(taskRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(task))
             `when`(task.exercise).thenReturn(exercise)
             `when`(task.to1SeriesTaskDto()).thenReturn(taskDto)
-            `when`(exercise.exerciseType).thenReturn(ExerciseType.SINGLE_WORDS.toString())
+            `when`(exercise.exerciseType).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.toString())
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
             // THEN

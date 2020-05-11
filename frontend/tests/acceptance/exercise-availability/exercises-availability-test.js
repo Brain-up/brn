@@ -4,12 +4,15 @@ import { getServerResponses, chooseAnswer } from '../general-helpers';
 import { getTestData } from './test-support/data-storage';
 import pageObject from './test-support/page-object';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { authenticateSession  } from 'ember-simple-auth/test-support';
+
 
 module('Acceptance | exercises availability', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(async function() {
+    await authenticateSession();
     getServerResponses(getTestData());
   });
 
@@ -59,7 +62,7 @@ module('Acceptance | exercises availability', function(hooks) {
         '[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]',
       )
       .hasNoAttribute('disabled');
-    
+
     assert
       .dom(
         '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',

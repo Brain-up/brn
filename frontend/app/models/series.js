@@ -1,9 +1,8 @@
-import DS from 'ember-data';
-const { attr, hasMany, belongsTo } = DS;
+import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 
-export default class Series extends DS.Model.extend({
+export default class Series extends Model.extend({
   name: attr('string'),
   description: attr('string'),
   group: belongsTo('group', { async: true }),
