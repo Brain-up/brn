@@ -2,7 +2,11 @@
   <ul class="group-nav-list">
     {{#each (sort-by "id" @group.series) as |series|}}
       <li class="pt-1 pb-1">
-        <LinkTo @route="group.series" @model={{series}}>
+        <LinkTo
+          @activeClass="active font-bold"
+          @route="group.series"
+          @model={{series}}
+        >
           {{series.name}}
         </LinkTo>
       </li>
