@@ -1,8 +1,10 @@
 {{#-in-element (query-node "#exercise-steps-slot")}}
-  <ExerciseSteps @activeStep={{this.mode}} @onClick={{this.onModeChange}} />
+  {{#unless this.justEnteredTask}}
+      <ExerciseSteps @activeStep={{this.mode}} @onClick={{this.onModeChange}} />
+  {{/unless}}
 {{/-in-element}}
 <div class={{style-namespace "task-player"}} ...attributes>
-  {{component
+  {{#component
     this.componentType
     onRightAnswer=this.onRightAnswer
     onWrongAnswer=this.onWrongAnswer
@@ -13,7 +15,11 @@
     activeWord=this.activeWord
     onPlayText=this.playText
     mode=this.mode
-  }}
+  as |context|}}
+    {{#if (eq this.mode "task")}}
+      <ProgressIndicator @progressItems={{context.tasks}} />
+    {{/if}}
+  {{/component}}
   {{#if this.justEnteredTask}}
     <StartTaskButton @startTask={{this.startTask}} />
   {{/if}}

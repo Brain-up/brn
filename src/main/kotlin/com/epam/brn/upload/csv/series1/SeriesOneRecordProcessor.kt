@@ -62,11 +62,12 @@ class SeriesOneRecordProcessor(
     }
 
     private fun toResource(word: String, noise: String): Resource {
-        val resource = resourceRepository.findFirstByWordLike(word)
+        val audioFile = "$noise/$word.mp3"
+        val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
             .orElse(
                 Resource(
                     word = word,
-                    audioFileUrl = "$noise/$word.mp3",
+                    audioFileUrl = audioFile,
                     pictureFileUrl = pictureDefaultPath.format(word)
                 )
             )

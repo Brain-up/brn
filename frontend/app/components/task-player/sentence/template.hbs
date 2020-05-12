@@ -1,4 +1,5 @@
 <div class={{style-namespace "task-player/sentence"}} {{did-update this.resetAnswerObject @task}}>
+  {{yield (hash tasks=@task.parent.tasks)}}
   {{#if (and this.exerciseResultIsVisible @task.isLastTask)}}
     <AnswerCorrectnessWidget @isCorrect={{true}} />
   {{else}}
