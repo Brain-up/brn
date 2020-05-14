@@ -7,9 +7,7 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 import pageObject from './test-suport/page-object';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
-module('Acceptance | series availability/series availability test', function(
-  hooks,
-) {
+module('Acceptance | active seria highlighting test', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
@@ -18,7 +16,7 @@ module('Acceptance | series availability/series availability test', function(
     getServerResponses(getTestData());
   });
 
-  test('visiting /series-availability/if link is active add class font-bold', async function(assert) {
+  test('visiting /groups/1/series/1 has highligted link for active seria', async function(assert) {
     await pageObject.goToSeriesPage();
 
     assert.dom('[data-test-active-link="link-1"]').hasClass('font-bold');
