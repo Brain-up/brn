@@ -13,16 +13,16 @@ module('Acceptance | series availability/series availability test', function(
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
-  hooks.beforeEach(async function() {
+  hooks.beforeEach(async () => {
     await authenticateSession();
     getServerResponses(getTestData());
   });
 
-  test('visiting /series-availability/if link is active add class font-bolder', async function(assert) {
+  test('visiting /series-availability/if link is active add class font-bold', async function(assert) {
     await pageObject.goToSeriesPage();
 
     assert.dom('[data-test-active-link="link-1"]').hasClass('font-bold');
-    assert.dom('[data-test-active-link="link-2"]').haNoClass('font-bold');
+    assert.dom('[data-test-active-link="link-2"]').hasNoClass('font-bold');
 
     await click('[data-test-active-link="link-2"]');
 
