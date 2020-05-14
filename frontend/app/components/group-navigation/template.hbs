@@ -3,6 +3,7 @@
     {{#each (sort-by "id" @group.series) as |series|}}
       <li class="pt-1 pb-1">
         <LinkTo
+          data-test-active-link={{series.name}}
           @activeClass="active font-bold"
           @route="group.series"
           @model={{series}}
