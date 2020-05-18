@@ -72,7 +72,9 @@ export default class SingleSimpleWordsComponent extends Component {
     this.tasksCopy = tasksCopy;
   }
 
-  @(task(function*() {
+  @(task(function*(selected) {
+    this.currentAnswer = selected;
+
     const isCorrect = deepEqual(
       this.currentAnswer,
       this.firstUncompletedTask.answer[0].word,
@@ -88,8 +90,7 @@ export default class SingleSimpleWordsComponent extends Component {
 
   @action
   async checkMaybe(selectedData) {
-    this.currentAnswer = selectedData;
-    this.showTaskResult.perform();
+    this.showTaskResult.perform(selectedData);
   }
 
   async handleWrongAnswer() {
