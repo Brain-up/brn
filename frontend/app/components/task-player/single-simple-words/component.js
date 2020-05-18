@@ -8,6 +8,7 @@ import { urlForAudio } from 'brn/utils/file-url';
 import deepCopy from 'brn/utils/deep-copy';
 import { TaskItem } from 'brn/utils/task-item';
 import { MODES } from 'brn/utils/task-modes';
+import { task } from 'ember-concurrency';
 
 export default class SingleSimpleWordsComponent extends Component {
   tagName = '';
@@ -70,6 +71,15 @@ export default class SingleSimpleWordsComponent extends Component {
     });
     this.tasksCopy = tasksCopy;
   }
+
+  @(task(function*() {
+    const isCorrect = this.isCorrect;
+    if (isCorrect) {
+      yield this.handleCorrectAnswer();
+    } else yield this.handleWrongAnswer();
+  }).drop())
+  showTaskResult;
+
   @action
   async checkMaybe(selectedData) {
     this.currentAnswer = selectedData;
@@ -79,10 +89,8 @@ export default class SingleSimpleWordsComponent extends Component {
     );
 
     this.isCorrect = isCorrect;
-
-    isCorrect
-      ? await this.handleCorrectAnswer()
-      : await this.handleWrongAnswer();
+    this.currentAnswer = selectedData;
+    this.showTaskResult.perform();
   }
 
   async handleWrongAnswer() {
