@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 
 export default class TextImageButton extends Component {
   element = null;
-  @action setStyle(element, pictureFileUrl) {
+  @action setStyle(element, [pictureFileUrl]) {
     this.element = element;
     element.style.setProperty(
       '--word-picture-url',
