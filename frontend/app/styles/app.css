@@ -32,7 +32,6 @@ main {
   display: flex;
   flex-wrap: wrap;
   background: white;
-  min-height: 80vh;
   padding: 25px 40px 40px;
   flex: 1;
   position: relative;
@@ -128,6 +127,8 @@ a[disabled] {
 
 .exercise-container {
   position: relative;
+  overflow: hidden;
+  max-height: 74vh;
 }
 
 .modal-fixed {
