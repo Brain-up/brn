@@ -1,6 +1,5 @@
 .type-column {
   display: flex;
-  min-height: calc(100vh - 330px);
-  max-width: 250px;
-  flex-direction: column;
+  max-width: 15%;
+  min-width: 200px;
 }
