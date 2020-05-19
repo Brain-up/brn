@@ -1,4 +1,4 @@
-<div class={{this.styleNamespace}} ...attributes>
+<div class="{{this.styleNamespace}} flex flex-grow flex-col" ...attributes>
   {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}
     <AudioPlayer
