@@ -6,6 +6,7 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { action } from '@ember/object';
 import { urlForAudio } from 'brn/utils/file-url';
 import { MODES } from 'brn/utils/task-modes';
+import { task } from 'ember-concurrency';
 
 export default class SentenceComponent extends Component {
   @tracked exerciseResultIsVisible = false;
@@ -46,19 +47,10 @@ export default class SentenceComponent extends Component {
     }
   }
 
-
-  @action resetAnswerObject() {
-    this.currentAnswerObject = null;
-    if (this.args.mode === MODES.TASK) {
-      this.audio.startPlayTask(this.audioFiles);
-    }
-  }
-
-  @action
-  async checkMaybe(selectedData) {
+  @(task(function*(selected) {
     this.currentAnswerObject = {
       ...this.currentAnswerObject,
-      [selectedData.wordType]: selectedData.word,
+      [selected.wordType]: selected.word,
     };
     if (this.answerCompleted) {
       const isCorrect = deepEqual(
@@ -74,11 +66,26 @@ export default class SentenceComponent extends Component {
         Object.keys(this.currentAnswerObject).length ===
         this.task.answerParts.length
       ) {
-        isCorrect
-          ? await this.handleCorrectAnswer()
-          : await this.handleWrongAnswer();
+        if (isCorrect) {
+          yield this.handleCorrectAnswer();
+        } else {
+          yield this.handleWrongAnswer();
+        }
       }
     }
+  }).drop())
+  showTaskResult;
+
+  @action resetAnswerObject() {
+    this.currentAnswerObject = null;
+    if (this.args.mode === MODES.TASK) {
+      this.audio.startPlayTask(this.audioFiles);
+    }
+  }
+
+  @action
+  async checkMaybe(selectedData) {
+    this.showTaskResult.perform(selectedData);
   }
 
   showExerciseResult() {
@@ -103,6 +110,6 @@ export default class SentenceComponent extends Component {
 
   async handleCorrectAnswer() {
     this.task.savePassed();
-    this.runNextTaskTimer();
+    await this.runNextTaskTimer();
   }
 }
