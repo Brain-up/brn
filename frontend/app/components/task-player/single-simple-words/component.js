@@ -74,7 +74,6 @@ export default class SingleSimpleWordsComponent extends Component {
 
   @(task(function*(selected) {
     this.currentAnswer = selected;
-
     const isCorrect = deepEqual(
       this.currentAnswer,
       this.firstUncompletedTask.answer[0].word,
@@ -84,7 +83,9 @@ export default class SingleSimpleWordsComponent extends Component {
 
     if (isCorrect) {
       yield this.handleCorrectAnswer();
-    } else yield this.handleWrongAnswer();
+    } else {
+      yield this.handleWrongAnswer();
+    }
   }).drop())
   showTaskResult;
 
