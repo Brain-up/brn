@@ -20,6 +20,8 @@ export default class TaskPlayerComponent extends Component {
   @tracked
   textToPlay = null;
   tagName = '';
+  activeTask = null;
+
   @tracked mode = ''; // listen, interact, task
   get componentType() {
     return `task-player/${dasherize(this.task.exerciseType)}`;
@@ -105,8 +107,6 @@ export default class TaskPlayerComponent extends Component {
 
   @(task(function*() {
     try {
-      this.interactModeTask.cancelAll();
-      this.taskModeTask.cancelAll();
       this.mode = MODES.LISTEN;
       for (let option of this.orderedPlaylist) {
         this.activeWord = option.word;
@@ -124,8 +124,6 @@ export default class TaskPlayerComponent extends Component {
 
   @(task(function*() {
     try {
-      this.interactModeTask.cancelAll();
-      this.listenModeTask.cancelAll();
       this.mode = MODES.TASK;
       this.studyingTimer.runTimer();
       if (!this.task.get('exercise.isStarted')) {
@@ -140,8 +138,6 @@ export default class TaskPlayerComponent extends Component {
 
   @(task(function*() {
     try {
-      this.taskModeTask.cancelAll();
-      this.listenModeTask.cancelAll();
       this.mode = MODES.INTERACT;
       while (this.mode === MODES.INTERACT) {
         const playText = this.textToPlay;
@@ -176,15 +172,24 @@ export default class TaskPlayerComponent extends Component {
     this.setMode(mode);
   }
 
-  @action setMode(mode, ...args) {
+  @action async setMode(mode, ...args) {
+    if (this.activeTask) {
+      try {
+        this.activeTask.cancel();
+        await this.activeTask;
+      } catch (e) {
+        // EOL
+      }
+    }
     this.audio.stop();
     if (mode === MODES.INTERACT) {
-      return this.interactModeTask.perform(...args);
+      this.activeTask = this.interactModeTask.perform(...args);
     } else if (mode === MODES.TASK) {
-      return this.taskModeTask.perform(...args);
+      this.activeTask = this.taskModeTask.perform(...args);
     } else if (mode === MODES.LISTEN) {
-      return this.listenModeTask.perform(...args);
+      this.activeTask = this.listenModeTask.perform(...args);
     }
+    return this.activeTask;
   }
 
   @action
