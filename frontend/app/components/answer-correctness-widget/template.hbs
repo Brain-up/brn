@@ -16,8 +16,8 @@
     data-test-answer-correctness-widget
     data-test-is-correct={{@isCorrect}}
     data-test-isnt-correct={{not @isCorrect}}
-    class="answer-correctness-widget flex-1 rounded mx-auto"
     aria-label={{html-safe (concat "правильный ответ")}}
+    class="answer-correctness-widget flex-1 mx-auto rounded"
     style={{html-safe
       (concat
         (concat "background-image: url('/pictures/" this.imagePath ".jpg')")

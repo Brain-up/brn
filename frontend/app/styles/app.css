@@ -41,12 +41,8 @@ main > * {
   width: 100%;
 }
 
-a.active {
-  color: #285e61;
-}
 
 a {
-  color: #319795;
   text-decoration: none;
 }
 
