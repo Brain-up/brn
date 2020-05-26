@@ -1,0 +1,17 @@
+/*! purgecss start ignore */
+
+.item-0 {
+  background-color: #b9def2;
+}
+.item-1 {
+  background-color: #dae1fc;
+}
+.item-2 {
+  background-color: #f7dafc;
+}
+
+/*! purgecss end ignore */
+
+.group-item {
+  min-height: 230px;
+}

@@ -26,22 +26,33 @@
 
 .exercise-block__levels {
   display: flex;
-  margin-bottom: 15px;
 }
 
 .exercise-block__level {
   flex-direction: initial;
   align-items: center;
+  background: #DAF0FC;
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.exercise-block__status-icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 .exercise-block__icon {
-  color: #4299e1;
+  color: #3DC8F4;
   margin-right: 20px;
   cursor: pointer;
 }
 
 .inactive-icon {
-  color: grey;
+  color: #8093B2;
   /* color: #fc8181; */
   cursor: not-allowed;
 }
