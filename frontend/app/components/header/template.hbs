@@ -29,10 +29,15 @@
         class="inline-block text-sm px-4 mr-2 py-2 leading-none rounded text-white mt-4 lg:mt-0"
         title="{{this.session.data.user.firstName}}
 
-
-
           {{this.session.data.user.lastName}}"
       >
+        <span
+          class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-white"
+        >
+          <span class="text-md font-bold leading-none text-blue-500">
+            TW
+          </span>
+        </span>
         {{this.session.data.user.email}}
       </div>
       <button

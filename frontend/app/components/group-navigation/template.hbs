@@ -1,15 +1,19 @@
 <div ...attributes>
   <ul class="group-nav-list">
     {{#each (sort-by "id" @group.series) as |series|}}
-      <li class="px-4 py-4 pt-6 pb-8 mb-4 bg-blue-200 rounded shadow-md">
-        <LinkTo
-          data-test-active-link={{series.name}}
-          @activeClass="active font-bold"
-          @route="group.series"
-          @model={{series}}
-        >
-          {{series.name}}
-        </LinkTo>
+      <li class="mb-4">
+        <div class="bg-blue-200 overflow-hidden shadow rounded-md">
+          <div class="px-4 py-6 sm:p-10">
+            <LinkTo
+              data-test-active-link={{series.name}}
+              @activeClass="active font-bold"
+              @route="group.series"
+              @model={{series}}
+            >
+              {{series.name}}
+            </LinkTo>
+          </div>
+        </div>
       </li>
     {{/each}}
   </ul>
