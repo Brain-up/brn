@@ -1,34 +1,55 @@
 <div class={{style-namespace "series-navigation"}} ...attributes>
   {{#each this.exerciseHeaders as |header|}}
-    <h2 data-test-series-navigation-header>
-      {{header}}
-    </h2>
-    <div data-test-exercises-name-group class="exercise-block__levels">
-      {{#each this.sortedExercises as |exercise|}}
-        {{#if (eq exercise.name header)}}
-          <LinkTo
-            @route="group.series.exercise"
-            @model={{exercise.id}}
-            data-test-series-navigation-list-link
-            data-test-exercise-level={{exercise.level}}
-            data-test-exercise-name={{exercise.name}}
-            class="task-square-link shadow exercise-block__level"
-            @disabled={{not exercise.canInteract}}
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div class="max-w-none mx-auto">
+        <div class="bg-white overflow-hidden sm:rounded-lg sm:shadow">
+          <div
+            class="bg-white px-4 py-5 border-b border-gray-200 bg-blue-200 sm:px-6"
           >
-            <FaIcon
-              @icon="check-circle"
-              class={{if
-                exercise.canInteract
-                "exercise-block__icon fa-3x"
-                "exercise-block__icon inactive-icon fa-3x"
-              }}
-            />
-            <div>
-              {{t "task_link.exercise"}} {{exercise.level}}
-            </div>
-          </LinkTo>
-        {{/if}}
-      {{/each}}
+            <h3
+              class="text-lg leading-3 font-bold text-blue-900"
+              data-test-series-navigation-header
+            >
+              {{header}}
+            </h3>
+          </div>
+          <ul>
+            <li>
+              <div
+                data-test-exercises-name-group
+                class="exercise-block__levels  ml-4 mt-4 mr-2"
+              >
+                {{#each this.sortedExercises as |exercise|}}
+                  {{#if (eq exercise.name header)}}
+                    <LinkTo
+                      @route="group.series.exercise"
+                      @model={{exercise.id}}
+                      data-test-series-navigation-list-link
+                      data-test-exercise-level={{exercise.level}}
+                      data-test-exercise-name={{exercise.name}}
+                      class="task-square-link exercise-block__level"
+                      @disabled={{not exercise.canInteract}}
+                    >
+                      <FaIcon
+                        @icon="check-circle"
+                        class={{if
+                          exercise.canInteract
+                          "exercise-block__icon fa-3x"
+                          "exercise-block__icon inactive-icon fa-3x"
+                        }}
+                      />
+                      <div>
+                        {{t "task_link.exercise"}}
+                        {{exercise.level}}
+                      </div>
+                    </LinkTo>
+                  {{/if}}
+                {{/each}}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   {{/each}}
 </div>
