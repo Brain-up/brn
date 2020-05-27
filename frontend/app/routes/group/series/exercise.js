@@ -2,8 +2,6 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 
 export default class GroupSeriesExerciseRoute extends Route {
-  @service('studying-timer')
-  studyingTimer;
   @service('tasks-manager')
   tasksManager;
 
@@ -27,8 +25,13 @@ export default class GroupSeriesExerciseRoute extends Route {
       );
     }
   }
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.showExerciseStats = false;
+      controller.correctnessWidgetIsShown = false;
+    }
+  }
   deactivate() {
-    this.studyingTimer.pause();
     this.tasksManager.clearCurrentCycleTaks();
   }
 }

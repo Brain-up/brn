@@ -1,6 +1,7 @@
 <div class="w-full max-w-xs mx-auto">
   <form
     class="bg-white rounded px-8 pt-6 pb-8 mb-4
+
       {{if (not this.loginInProgress) "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
@@ -29,16 +30,24 @@
         {{/if}}
       </div>
       <div class="flex mb-4">
-        <button
-          data-test-submit-form
-          class="bg-pink-500 hover:bg-pink-700 flex-grow text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
-        >
-          Вход
-        </button>
+        {{#let
+          (hash
+            active="bg-pink-500 hover:bg-pink-700 flex-grow text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            disabled="bg-pink-500 text-white font-bold flex-grow py-2 px-4 rounded opacity-50 cursor-not-allowed"
+          ) as |buttonState|
+        }}
+          <button
+            data-test-submit-form
+            class={{get buttonState this.buttonState}}
+            type="submit"
+          >
+            Вход
+          </button>
+        {{/let}}
       </div>
       <div class="flex justify-end">
         <LinkTo
+          data-test-registration-form
           @route="registration"
           class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
         >

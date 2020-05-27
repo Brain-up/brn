@@ -32,7 +32,6 @@ main {
   display: flex;
   flex-wrap: wrap;
   background: white;
-  min-height: 80vh;
   padding: 25px 40px 40px;
   flex: 1;
   position: relative;
@@ -127,11 +126,19 @@ a[disabled] {
 }
 
 .exercise-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
   position: relative;
 }
 
 .modal-fixed {
   position: fixed;
+}
+
+.custom-modal-overlay {
+  min-height: 550px;
 }
 
 .modal-body {

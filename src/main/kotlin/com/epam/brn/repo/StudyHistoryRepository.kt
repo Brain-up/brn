@@ -14,7 +14,6 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
                 " WHERE s.exercise.series.id = :seriesId and s.userAccount.id = :userId"
     )
     fun getDoneExercisesIdList(@Param("seriesId") seriesId: Long, @Param("userId") userId: Long): List<Long>
-
     @Query(
         value = "SELECT s.exercise.id FROM StudyHistory s " +
                 " WHERE s.userAccount.id = :userId"

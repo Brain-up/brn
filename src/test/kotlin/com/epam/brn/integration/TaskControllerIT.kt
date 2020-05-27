@@ -144,7 +144,7 @@ class TaskControllerIT {
                 series = series,
                 level = 0,
                 name = "exercise",
-                exerciseType = ExerciseType.SINGLE_WORDS.toString()
+                exerciseType = ExerciseType.WORDS_SEQUENCES.toString()
             )
         )
     }

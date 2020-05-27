@@ -10,7 +10,7 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.RecordProcessor
-import org.apache.commons.collections4.CollectionUtils
+import java.util.Random
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -18,13 +18,17 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SeriesOneRecordProcessor(
-    var seriesRepository: SeriesRepository,
-    var resourceRepository: ResourceRepository,
-    var exerciseRepository: ExerciseRepository
+    private val seriesRepository: SeriesRepository,
+    private val resourceRepository: ResourceRepository,
+    private val exerciseRepository: ExerciseRepository
 ) : RecordProcessor<SeriesOneRecord, Exercise> {
 
-    @Value(value = "\${brn.audio.file.default.path}")
-    private lateinit var defaultAudioFileUrl: String
+    @Value(value = "\${brn.picture.file.default.path}")
+    private lateinit var pictureDefaultPath: String
+
+    private val repeatCount = 2
+
+    var random = Random()
 
     override fun isApplicable(record: Any): Boolean {
         return record is SeriesOneRecord
@@ -36,87 +40,78 @@ class SeriesOneRecordProcessor(
 
         val series = seriesRepository.findById(1L).orElse(null)
         records.forEach {
-
-            val correctAnswer = extractCorrectAnswer(it)
-            resourceRepository.save(correctAnswer)
-
             val answerOptions = extractAnswerOptions(it)
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
-            exercise.addTask(extractTask(it, exercise, correctAnswer, answerOptions))
+            exercise.addTask(generateOneTask(exercise, answerOptions))
 
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
 
-        return exercises.toList()
-    }
-
-    private fun extractCorrectAnswer(record: SeriesOneRecord): Resource {
-        val resource = resourceRepository
-            .findFirstByWordAndAudioFileUrlLike(record.word, record.audioFileName)
-            .orElse(
-                Resource(
-                    audioFileUrl = record.audioFileName,
-                    word = record.word
-                )
-            )
-
-        resource.wordType = record.wordType
-        resource.pictureFileUrl = record.pictureFileName
-
-        return resource
+        return exercises.toMutableList()
     }
 
     private fun extractAnswerOptions(record: SeriesOneRecord): MutableSet<Resource> {
-        return CollectionUtils.emptyIfNull(record.words)
+        return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
-            .filter { StringUtils.isNotEmpty(it) }
-            .map { toResource(it) }
+            .map { toResource(it, record.noise) }
             .toMutableSet()
     }
 
-    private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
-
-    private fun toResource(word: String): Resource {
-        return resourceRepository
-            .findFirstByWordLike(word)
+    private fun toResource(word: String, noise: String): Resource {
+        val audioFile = "$noise/$word.mp3"
+        val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
             .orElse(
                 Resource(
-                    audioFileUrl = defaultAudioFileUrl.format(word),
                     word = word,
-                    wordType = WordType.UNKNOWN.toString(),
-                    pictureFileUrl = null
+                    audioFileUrl = audioFile,
+                    pictureFileUrl = pictureDefaultPath.format(word)
                 )
             )
+        resource.wordType = WordType.OBJECT.toString()
+        return resource
     }
+
+    private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
     private fun extractExercise(record: SeriesOneRecord, series: Series): Exercise {
         return exerciseRepository
             .findExerciseByNameAndLevel(record.exerciseName, record.level)
             .orElse(
                 Exercise(
+                    series = series,
                     name = record.exerciseName,
                     level = record.level,
-                    series = series,
-                    exerciseType = ExerciseType.SINGLE_WORDS.toString()
+                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
+                    description = record.exerciseName
                 )
             )
     }
 
-    private fun extractTask(
-        record: SeriesOneRecord,
-        exercise: Exercise,
-        correctAnswer: Resource,
-        answerOptions: MutableSet<Resource>
-    ): Task {
-        return Task(
-            serialNumber = record.orderNumber,
-            exercise = exercise,
-            correctAnswer = correctAnswer,
-            answerOptions = answerOptions
-        )
+    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
+        Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
+
+    private fun generateTasks(exercise: Exercise, answerOptions: MutableSet<Resource>): MutableList<Task> {
+        return generateCorrectAnswers(answerOptions)
+            .mapIndexed { serialNumber, correctAnswer ->
+                Task(
+                    exercise = exercise,
+                    serialNumber = serialNumber + 1,
+                    answerOptions = answerOptions,
+                    correctAnswer = correctAnswer
+                )
+            }.toMutableList()
+    }
+
+    private fun generateCorrectAnswers(answerOptions: MutableSet<Resource>): MutableList<Resource> {
+        val correctAnswers = mutableListOf<Resource>()
+        for (i in 1..repeatCount) {
+            correctAnswers.addAll(answerOptions)
+        }
+        correctAnswers.shuffle(random)
+        return correctAnswers
     }
 }

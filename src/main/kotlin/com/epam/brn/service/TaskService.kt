@@ -25,10 +25,9 @@ class TaskService(
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         return when (ExerciseType.valueOf(exercise.exerciseType)) {
-            ExerciseType.SINGLE_WORDS -> tasks.map { task -> task.to1SeriesTaskDto() }
             ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.to2SeriesTaskDto(task.exercise?.template) }
             ExerciseType.SENTENCE -> tasks.map { task -> task.to3SeriesTaskDto(task.exercise?.template) }
-            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.to4SeriesTaskDto() }
+            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.to1SeriesTaskDto() }
         }
     }
 
@@ -37,10 +36,9 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         return when (ExerciseType.valueOf(task.exercise!!.exerciseType)) {
-            ExerciseType.SINGLE_WORDS -> task.to1SeriesTaskDto()
             ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)
-            ExerciseType.SINGLE_SIMPLE_WORDS -> task.to4SeriesTaskDto()
+            ExerciseType.SINGLE_SIMPLE_WORDS -> task.to1SeriesTaskDto()
         }
     }
 

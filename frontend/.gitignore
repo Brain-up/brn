@@ -3,7 +3,7 @@
 # compiled output
 /dist/
 /tmp/
-
+/audio/
 # dependencies
 /bower_components/
 /node_modules/

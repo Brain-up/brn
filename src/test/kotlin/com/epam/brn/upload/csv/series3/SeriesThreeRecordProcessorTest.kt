@@ -28,7 +28,7 @@ internal class SeriesThreeRecordProcessorTest {
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
 
-    private lateinit var test: SeriesThreeRecordProcessor
+    private lateinit var seriesThreeRecordProcessor: SeriesThreeRecordProcessor
 
     private val series = Series(
         id = 3L,
@@ -43,14 +43,14 @@ internal class SeriesThreeRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        test = SeriesThreeRecordProcessor(
+        seriesThreeRecordProcessor = SeriesThreeRecordProcessor(
             resourceRepositoryMock,
             exerciseRepositoryMock,
             seriesRepositoryMock
         )
 
-        ReflectionTestUtils.setField(test, "audioFileUrl", "series2/%s.mp3")
-        ReflectionTestUtils.setField(test, "pictureFileUrl", "pictures/withWord/%s.jpg")
+        ReflectionTestUtils.setField(seriesThreeRecordProcessor, "audioFileUrl", "series2/%s.mp3")
+        ReflectionTestUtils.setField(seriesThreeRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
 
         `when`(seriesRepositoryMock.findById(3L)).thenReturn(Optional.of(series))
 
@@ -70,7 +70,7 @@ internal class SeriesThreeRecordProcessorTest {
     @Test
     fun `should create correct exercise`() {
         val expected = createExercise()
-        val actual = test.process(
+        val actual = seriesThreeRecordProcessor.process(
             listOf(
                 SeriesThreeRecord(
                     level = 1,
@@ -90,7 +90,7 @@ internal class SeriesThreeRecordProcessorTest {
     @Test
     fun `should create correct task`() {
         val expected = createExercise().tasks.first()
-        val actual = test.process(
+        val actual = seriesThreeRecordProcessor.process(
             listOf(
                 SeriesThreeRecord(
                     level = 1,
@@ -109,7 +109,7 @@ internal class SeriesThreeRecordProcessorTest {
     @Test
     fun `should create correct answer`() {
         val expected = resource_девочка_бросает()
-        val actual = test.process(
+        val actual = seriesThreeRecordProcessor.process(
             listOf(
                 SeriesThreeRecord(
                     level = 1,
@@ -132,7 +132,7 @@ internal class SeriesThreeRecordProcessorTest {
             resource_девочка(), resource_дедушка(), resource_бабушка(),
             resource_бросает(), resource_читает(), resource_рисует()
         )
-        val actual = test.process(
+        val actual = seriesThreeRecordProcessor.process(
             listOf(
                 SeriesThreeRecord(
                     level = 1,

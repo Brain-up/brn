@@ -7,7 +7,8 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
 import { tracked } from '@glimmer/tracking';
 import { urlForAudio } from 'brn/utils/file-url';
-
+import { MODES } from 'brn/utils/task-modes';
+import { task } from 'ember-concurrency';
 
 function getEmptyTemplate(selectedItemsOrder = []) {
   return selectedItemsOrder.reduce((result, currentKey) => {
@@ -68,6 +69,9 @@ export default class WordsSequencesComponent extends Component {
   startTask() {
     this.isCorrect = false;
     this.currentAnswerObject = getEmptyTemplate(this.task.selectedItemsOrder);
+    if (this.mode === MODES.TASK) {
+      this.audio.startPlayTask(this.audioFiles);
+    }
   }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
@@ -85,11 +89,11 @@ export default class WordsSequencesComponent extends Component {
     });
     this.tasksCopy = tasksCopy;
   }
-  @action
-  async checkMaybe(selectedData) {
+
+  @(task(function*(selected) {
     this.currentAnswerObject = {
       ...this.currentAnswerObject,
-      [selectedData.wordType]: selectedData.word,
+      [selected.wordType]: selected.word,
     };
     if (this.answerCompleted) {
       const isCorrect = deepEqual(
@@ -101,10 +105,18 @@ export default class WordsSequencesComponent extends Component {
 
       this.isCorrect = isCorrect;
 
-      isCorrect
-        ? await this.handleCorrectAnswer()
-        : await this.handleWrongAnswer();
+      if (isCorrect) {
+        yield this.handleCorrectAnswer();
+      } else {
+        yield this.handleWrongAnswer();
+      }
     }
+  }).drop())
+  showTaskResult;
+
+  @action
+  async checkMaybe(selectedData) {
+    this.showTaskResult.perform(selectedData);
   }
 
   async handleWrongAnswer() {
@@ -113,7 +125,7 @@ export default class WordsSequencesComponent extends Component {
     this.updateLocalTasks();
     await customTimeout(1000);
     this.startTask();
-    this.onWrongAnswer();
+    this.onWrongAnswer({ skipRetry: true });
   }
 
   async handleCorrectAnswer() {

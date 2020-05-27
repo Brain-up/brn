@@ -10,7 +10,7 @@ module('Integration | Component | answer-correctness-widget', function(hooks) {
     const host = window.location.origin;
 
     await render(
-      hbs`<AnswerCorrectnessWidget @isCorrect={{true}} @maxImagesNumber=1/>`,
+      hbs`<AnswerCorrectnessWidget @isCorrect={{true}} @maxImagesNumber={{1}}/>`,
     );
 
     assert.dom('[data-test-answer-correctness-widget]').hasStyle({
@@ -22,7 +22,7 @@ module('Integration | Component | answer-correctness-widget', function(hooks) {
     const host = window.location.origin;
 
     await render(
-      hbs`<AnswerCorrectnessWidget @isCorrect={{false}} @maxImagesNumber=1/>`,
+      hbs`<AnswerCorrectnessWidget @isCorrect={{false}} @maxImagesNumber={{1}} />`,
     );
 
     assert.dom('[data-test-answer-correctness-widget]').hasStyle({

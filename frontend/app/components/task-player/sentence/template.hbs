@@ -1,4 +1,8 @@
-<div class={{style-namespace "task-player/sentence"}}>
+<div
+  class="{{style-namespace "task-player/sentence"}} flex flex-col flex-1"
+  {{did-update this.resetAnswerObject @task}}
+>
+  {{yield (hash tasks=@task.parent.tasks)}}
   {{#if (and this.exerciseResultIsVisible @task.isLastTask)}}
     <AnswerCorrectnessWidget @isCorrect={{true}} />
   {{else}}
@@ -6,7 +10,7 @@
       @audioFileUrl={{this.audioFiles}}
       @disabled={{@disableAudioPlayer}}
     />
-    <div class="flex mt-4 justify-center">
+    <div class="flex mt-4 flex-grow justify-center">
       {{#each @task.selectedItemsOrder as |type|}}
         <div
           class="column flex-1 flex-col type-column
@@ -20,11 +24,15 @@
               @checked={{this.answerCompleted}}
               @isCorrect={{this.isCorrect}}
               @disabled={{@disableAnswers}}
-              @isSelected={{or (eq @activeWord answerOption.word) (eq
-                (get this.currentAnswerObject type)
-                answerOption.word
-              )}}
-              @clickAction={{if (eq @mode "interact") (fn @onPlayText answerOption.word) (fn this.checkMaybe answerOption)}}
+              @isSelected={{or
+                (eq @activeWord answerOption.word)
+                (eq (get this.currentAnswerObject type) answerOption.word)
+              }}
+              @clickAction={{if
+                (eq @mode "interact")
+                (fn @onPlayText answerOption.word)
+                (fn this.checkMaybe answerOption)
+              }}
               @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
               @word={{answerOption.word}}
             />

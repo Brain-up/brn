@@ -1,3 +1,5 @@
 .type-column {
-  max-width: 130px;
+  display: flex;
+  max-width: 15%;
+  min-width: 200px;
 }

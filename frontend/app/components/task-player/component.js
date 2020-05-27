@@ -20,13 +20,15 @@ export default class TaskPlayerComponent extends Component {
   @tracked
   textToPlay = null;
   tagName = '';
+  activeTask = null;
+
   @tracked mode = ''; // listen, interact, task
   get componentType() {
     return `task-player/${dasherize(this.task.exerciseType)}`;
   }
   get disableAnswers() {
     if (this.mode === MODES.INTERACT) {
-      return false;
+      return this.audio.isPlaying;
     }
     return this.audio.isPlaying || this.disableAudioPlayer;
   }
@@ -35,7 +37,9 @@ export default class TaskPlayerComponent extends Component {
       if (Ember.testing) {
         this.setMode(MODES.TASK);
       } else {
-        this.setMode(MODES.LISTEN);
+        if (this.taskModelName !== 'task/sentence') {
+          this.setMode(MODES.LISTEN);
+        }
       }
     }
   }
@@ -53,9 +57,11 @@ export default class TaskPlayerComponent extends Component {
     // EOL
   }
 
-  @action onWrongAnswer() {
+  @action onWrongAnswer({ skipRetry } = { skipRetry: false }) {
     this.taskModeTask.cancelAll();
-    this.audio.startPlayTask();
+    if (!skipRetry) {
+      this.audio.startPlayTask();
+    }
   }
 
   @action onShuffled(words) {
@@ -65,7 +71,9 @@ export default class TaskPlayerComponent extends Component {
     });
     this.task.set('normalizedAnswerOptions', sortedWords);
   }
-
+  get taskModelName() {
+    return this.task.constructor.modelName;
+  }
   get orderedPlaylist() {
     const {
       answerOptions,
@@ -74,7 +82,10 @@ export default class TaskPlayerComponent extends Component {
     } = this.task;
     // for ordered tasks we need to align audio stream with object order;
     const modelName = this.task.constructor.modelName;
-    if (modelName === 'task/single-words') {
+    if (
+      modelName === 'task/single-words' ||
+      modelName === 'task/single-simple-words'
+    ) {
       return normalizedAnswerOptions;
     }
     if (modelName === 'task/words-sequences' || modelName === 'task/sentence') {
@@ -96,8 +107,6 @@ export default class TaskPlayerComponent extends Component {
 
   @(task(function*() {
     try {
-      this.interactModeTask.cancelAll();
-      this.taskModeTask.cancelAll();
       this.mode = MODES.LISTEN;
       for (let option of this.orderedPlaylist) {
         this.activeWord = option.word;
@@ -115,12 +124,12 @@ export default class TaskPlayerComponent extends Component {
 
   @(task(function*() {
     try {
-      this.interactModeTask.cancelAll();
-      this.listenModeTask.cancelAll();
       this.mode = MODES.TASK;
-      yield this.audio.startPlayTask();
       this.studyingTimer.runTimer();
-      this.task.exercise.content.trackTime('start');
+      if (!this.task.get('exercise.isStarted')) {
+        this.task.exercise.content.trackTime('start');
+      }
+      yield this.audio.startPlayTask();
     } finally {
       // EOL
     }
@@ -129,21 +138,21 @@ export default class TaskPlayerComponent extends Component {
 
   @(task(function*() {
     try {
-      this.taskModeTask.cancelAll();
-      this.listenModeTask.cancelAll();
       this.mode = MODES.INTERACT;
       while (this.mode === MODES.INTERACT) {
-        if (this.textToPlay) {
-          this.activeWord = this.textToPlay;
+        const playText = this.textToPlay;
+        if (playText) {
+          this.activeWord = playText;
+          this.textToPlay = null;
           let option = this.task.normalizedAnswerOptions.find(
-            ({ word }) => word === this.textToPlay,
+            ({ word }) => word === playText,
           );
           if (option) {
             yield this.audio.setAudioElements([option.audioFileUrl]);
             yield this.audio.playAudio();
           }
         }
-        yield timeout(1500);
+        yield timeout(250);
         this.activeWord = null;
       }
     } finally {
@@ -163,21 +172,31 @@ export default class TaskPlayerComponent extends Component {
     this.setMode(mode);
   }
 
-  @action setMode(mode, ...args) {
-    if (mode === MODES.INTERACT) {
-      return this.interactModeTask.perform(...args);
-    } else if (mode === MODES.TASK) {
-      return this.taskModeTask.perform(...args);
-    } else if (mode === MODES.LISTEN) {
-      return this.listenModeTask.perform(...args);
+  @action async setMode(mode, ...args) {
+    if (this.activeTask) {
+      try {
+        this.activeTask.cancel();
+        await this.activeTask;
+      } catch (e) {
+        // EOL
+      }
     }
+    this.audio.stop();
+    if (mode === MODES.INTERACT) {
+      this.activeTask = this.interactModeTask.perform(...args);
+    } else if (mode === MODES.TASK) {
+      this.activeTask = this.taskModeTask.perform(...args);
+    } else if (mode === MODES.LISTEN) {
+      this.activeTask = this.listenModeTask.perform(...args);
+    }
+    return this.activeTask;
   }
 
   @action
   async startTask() {
     this.justEnteredTask = false;
     if (Ember.testing) {
-      await this.setMode('task');
+      await this.setMode(MODES.TASK);
     } else {
       await this.setMode(MODES.LISTEN);
     }

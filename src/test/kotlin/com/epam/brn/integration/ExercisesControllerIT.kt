@@ -169,7 +169,7 @@ class ExercisesControllerIT {
                 series = series,
                 level = 0,
                 name = exerciseName,
-                exerciseType = ExerciseType.SINGLE_WORDS.toString()
+                exerciseType = ExerciseType.WORDS_SEQUENCES.toString()
             )
         )
     }

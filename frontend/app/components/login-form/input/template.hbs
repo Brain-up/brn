@@ -1,4 +1,26 @@
 <label class="block text-gray-700 text-sm font-bold mb-2" for={{@name}}>
-    {{@label}}
+  {{@label}}
 </label>
-<Input name={{@name}} @value={{get @model @name}} class="{{if this.hasError 'border-red-500'}} shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  id={{@name}} type={{or @type "text"}} required="true" ...attributes />
+<Input
+  maxlength={{this.maxlength}}
+  name={{@name}}
+  @value={{this.value}}
+  class="{{if this.hasError "border-red-500"}}
+
+
+     shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+  id={{@name}}
+  type={{or @type "text"}}
+  required="true"
+  ...attributes
+/>
+
+{{#if this.warning}}
+  <p
+    data-test-warning-message={{@name}}
+    warningMessage={{@warning}}
+    class="text-red-500 text-xs italic"
+  >
+    {{this.warning}}
+  </p>
+{{/if}}

@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { Model } = DS;
+import Model from '@ember-data/model';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
@@ -7,10 +6,14 @@ import arrayPreviousItems from 'brn/utils/array-previous-items';
 export default Model.extend({
   tasksManager: service(),
   canInteract: computed(
+    'available',
     'previousSiblings.[]',
     'parent.children.@each.isCompleted',
     'tasksManager.completedTasks.[]',
     function() {
+      if (this.available) {
+        return true;
+      }
       return (
         !this.previousSiblings.length ||
         this.previousSiblings.every((sibling) => sibling.isCompleted)

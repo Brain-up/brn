@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { attr, hasMany, belongsTo } = DS;
+import { belongsTo, hasMany, attr } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
@@ -9,6 +8,7 @@ import { inject as service } from '@ember/service';
 export default class Exercise extends CompletionDependent.extend({
   session: service('session'),
   name: attr('string'),
+  available: attr('boolean'),
   description: attr('string'),
   level: attr('number'),
   order: attr('number'),
@@ -20,9 +20,6 @@ export default class Exercise extends CompletionDependent.extend({
   startTime: attr('date'),
   endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
-  hideExerciseNavigation: computed(function() {
-    return this.exerciseType === 'WORDS_SEQUENCES';
-  }),
   previousSiblings: computed('series.groupedByNameExercises', function() {
     return arrayPreviousItems(
       this,
@@ -36,8 +33,8 @@ export default class Exercise extends CompletionDependent.extend({
     function() {
       const tasksIds = this.hasMany('tasks').ids();
       const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
-      const tasksCompleted = tasksIds.every(
-        (taskId) => completedTaskIds.includes(taskId),
+      const tasksCompleted = tasksIds.every((taskId) =>
+        completedTaskIds.includes(taskId),
       );
       return (
         (!tasksIds.length && (this.isFirst || this.canInteract)) ||
@@ -51,12 +48,15 @@ export default class Exercise extends CompletionDependent.extend({
   nextSiblings: computed('siblingExercises.[]', function() {
     return this.siblingExercises.slice(this.siblingExercises.indexOf(this) + 1);
   }),
+  get isStarted() {
+    return this.startTime && !this.endTime;
+  },
   trackTime(type = 'start') {
     if (type === 'start' || type === 'end') {
       this.set(`${type}Time`, new Date());
     }
   },
-  async postHistory() {
+  get stats() {
     const { startTime, endTime, tasks, id } = this;
 
     const repetitionsCount = tasks.reduce((result, task) => {
@@ -68,17 +68,23 @@ export default class Exercise extends CompletionDependent.extend({
 
     const repetitionIndex = repetitionsCount / tasks.length;
 
+    return {
+      startTime,
+      endTime,
+      repetitionIndex,
+      exerciseId: id,
+      tasksCount: tasks.length
+    };
+  },
+  async postHistory() {
+    const { stats } = this;
     await fetch('/api/study-history', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        startTime,
-        endTime,
-        repetitionIndex,
-        exerciseId: id,
-        tasksCount: tasks.length,
+        ...stats,
         userId: this.get('session.data.user.id') || null
       }),
     });
