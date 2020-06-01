@@ -6,6 +6,7 @@ import { inject as service } from '@ember/service';
 
 export default class RegistrationFormComponent extends LoginFormComponent {
   @service('network') network;
+  @service('intl') intl;
   @tracked email;
   @tracked firstName;
   @tracked lastName;
@@ -15,6 +16,10 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   minDate = new Date(new Date().setFullYear(this.maxDate.getFullYear() - 100));
   maxDateString = this.maxDate.toISOString().split('T')[0];
   minDateString = this.minDate.toISOString().split('T')[0];
+
+  beforeModel() {
+    this.intl.setLocale(['ru-ru']);
+  }
 
   get warningErrorDate() {
     const { birthday, maxDate, minDate } = this;

@@ -10,10 +10,18 @@
       <LoadingSpinner />
     {{else}}
       <div class="mb-4">
-        <LoginForm::Input @label="Имя" @model={{this}} @name="firstName" />
+        <LoginForm::Input
+          @label={{t "rigistr_form.name"}}
+          @model={{this}}
+          @name="firstName"
+        />
       </div>
       <div class="mb-4">
-        <LoginForm::Input @label="Фамилия" @model={{this}} @name="lastName" />
+        <LoginForm::Input
+          @label={{t "rigistr_form.surname"}}
+          @model={{this}}
+          @name="lastName"
+        />
       </div>
       <div class="mb-4">
         <LoginForm::Input
@@ -21,7 +29,7 @@
           max={{this.maxDateString}}
           required
           @warning={{this.warningErrorDate}}
-          @label="Дата рождения"
+          @label={{t "rigistr_form.birthday"}}
           @model={{this}}
           @name="birthday"
           @type="date"
@@ -29,7 +37,7 @@
       </div>
       <div class="mb-4">
         <LoginForm::Input
-          @label="Почта"
+          @label={{t "rigistr_form.email"}}
           @model={{this}}
           @name="email"
           @type="email"
@@ -37,7 +45,7 @@
       </div>
       <div class="mb-6">
         <LoginForm::Input
-          @label="Пароль"
+          @label={{t "rigistr_form.password"}}
           @model={{this}}
           @name="password"
           @type="password"
@@ -45,6 +53,7 @@
         {{#if (or this.usernameError this.passwordError)}}
           <p class="text-red-500 text-xs italic" data-test-form-warning>
             Пожалуйста, введите логин и пароль.
+            {{t "rigistr_form.text_helper"}}
           </p>
         {{/if}}
         {{#if this.errorMessage}}
@@ -59,7 +68,7 @@
           class="bg-blue-500 hover:bg-blue-700 flex-grow text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
-          Регистрация
+          {{t "rigistr_form.sign_up"}}
         </button>
       </div>
       <div class="flex justify-end">
@@ -67,7 +76,7 @@
           @route="login"
           class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
         >
-          Вход
+          {{t "rigistr_form.sign_in"}}
         </LinkTo>
       </div>
     {{/if}}

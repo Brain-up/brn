@@ -1,0 +1,38 @@
+header:
+  groups: Groups
+  log-out: log out 
+    
+login_form:
+  login: Логин
+  password: Пароль 
+  sign_in: Вход
+  registration: Регистрация
+  text_helper: Пожалуйста, введите логин и пароль.
+  text_error: Неправильный логин или пароль.
+
+rigistr_form:
+  registration: Регистрация
+  birthday: Дата рождения
+  text_helper: Пожалуйста, введите логин и пароль.
+  email: Почта
+  name: Имя
+  password: Пароль 
+  sign_in: Вход
+  surname: Фамилия
+  error_message_type_1: Максимальное количество символов
+  error_message_type_2: Некорректная дата
+
+breadcrumbs:
+  name_page: Группы
+
+navigation:
+  name_view: Слова
+      
+card: 
+  name_type_1: Речевые упражнения
+  name_type_2: Неречевые упражнения
+  progres: Пройдено
+
+footer:
+  text_helper: и
+  text_about: При поддержке

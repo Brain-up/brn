@@ -1,0 +1,44 @@
+header:
+  groups: Groups
+  log-out: log out 
+      
+login_form:
+  login: Login
+  password: Password 
+  log_in: Log in
+  registration: Registration
+  text_helper: Please enter your login and password.
+  text_error: Incorrect login or password.
+
+rigistr_form:
+  registration: Registration
+  birthday: Birthday
+  text_helper: Please enter your login and password.
+  email: Email
+  name: Name
+  password: Password 
+  sign_up: Sign up
+  sign_in: Sign in
+  surname: Surname
+  error_message_type_1: Maximum number of characters
+  error_message_type_2: Lnvalid date
+
+breadcrumbs:
+  name_page: Groups
+
+navigation:
+  name_section: Words
+
+card: 
+  name_type_1: Speech exercises
+  name_type_2: Non-speech exercises
+  progres: Complete
+
+footer:
+  text_helper: and
+  text_about: With the support  
+
+
+
+
+    
