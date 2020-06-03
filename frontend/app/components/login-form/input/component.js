@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 
 export default class LoginFormInputComponent extends Component {
-  @service('network') network;
   @service('intl') intl;
 
   get hasError() {

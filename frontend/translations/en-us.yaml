@@ -5,7 +5,7 @@ header:
 rigistr_form:
   birthday: Birthday
   email: Email
-  invalid_date: Lnvalid date
+  invalid_date: Invalid date
   name: Name
   password: Password 
   registration: Registration
