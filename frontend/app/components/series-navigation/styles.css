@@ -67,3 +67,9 @@
 h2 {
   margin-bottom: 20px;
 }
+
+.check-container {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}

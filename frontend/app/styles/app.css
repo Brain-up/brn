@@ -31,7 +31,7 @@ body {
 main {
   display: flex;
   flex-wrap: wrap;
-  background: white;
+  background: transparent;
   padding: 25px 40px 40px;
   flex: 1;
   position: relative;
@@ -41,14 +41,18 @@ main > * {
   width: 100%;
 }
 
+.ember-modal-overlay {
+  background-color: #eeeeeee6;
+}
+
 
 body.route-groups  {
   background-image: url(/ui/groups-background.svg);
-  background-size: cover;
+  background-size: contain;
 }
 body.route-group  {
   background-image: url(/ui/group-background.svg);
-  background-size: cover;
+  background-size: contain;
 }
 
 a {
