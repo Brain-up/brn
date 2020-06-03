@@ -1,17 +1,28 @@
 /*! purgecss start ignore */
 
-.item-0 {
-  background-color: #b9def2;
+.active-group {
+  background-color: #fbedfe;
 }
-.item-1 {
-  background-color: #dae1fc;
+.not-active-group {
+  background-color: #daf0fc;
 }
-.item-2 {
-  background-color: #f7dafc;
-}
+
 
 /*! purgecss end ignore */
 
 .group-item {
   min-height: 230px;
+  width: 100%;
+  outline-color: #3F51B5;
+  outline-width: medium;
+}
+
+.group-name {
+  color: #001274;
+}
+
+.group-image {
+  width: 210px;
+  height: 140px;
+  background-color: aquamarine;
 }

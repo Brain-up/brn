@@ -31,7 +31,6 @@
 .exercise-block__level {
   flex-direction: initial;
   align-items: center;
-  background: #DAF0FC;
   position: relative;
   width: 140px;
   height: 140px;
@@ -43,6 +42,14 @@
   position: absolute;
   right: 10px;
   top: 10px;
+}
+
+.navigation-block {
+  background-color: #fbedfe;
+}
+
+.navigation-block__header {
+  color: #001274;
 }
 
 .exercise-block__icon {

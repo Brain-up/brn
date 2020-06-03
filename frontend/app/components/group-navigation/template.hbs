@@ -1,21 +1,32 @@
 <div ...attributes class={{style-namespace "group-navigation"}}>
   <ul class="group-nav-list">
-    {{#each (sort-by "id" @group.series) as |series index|}}
+    {{#each (take 3 (sort-by "id" @group.series)) as |series index|}}
       <li class="mb-4">
-        <div class="overflow-hidden group-item rounded-md shadow {{concat "item-" index}}
-          {{if (is-active "group.series" series) "border-gray-200"}}
-        ">
+        <LinkTo
+          @tagName="button"
+          type="button"
+          class="overflow-hidden group-item rounded-md shadow
+            {{concat "item-" index}}
+
+            {{if
+              (is-active "group.series" series.id)
+              "active-group"
+              "not-active-group"
+            }}"
+          data-test-active-link={{series.name}}
+          @activeClass="active"
+          @route="group.series"
+          @model={{series}}
+        >
           <div class="sm:p-10 px-4 py-6">
-            <LinkTo
-              data-test-active-link={{series.name}}
-              @activeClass="active font-bold"
-              @route="group.series"
-              @model={{series}}
-            >
+            <div class="group-image">
+
+            </div>
+            <h4 class="group-name mt-6 text-xl font-bold align-text-bottom">
               {{series.name}}
-            </LinkTo>
+            </h4>
           </div>
-        </div>
+        </LinkTo>
       </li>
     {{/each}}
   </ul>
