@@ -6,6 +6,7 @@ import { inject as service } from '@ember/service';
 
 export default class RegistrationFormComponent extends LoginFormComponent {
   @service('network') network;
+  @service('intl') intl;
   @tracked email;
   @tracked firstName;
   @tracked lastName;
@@ -28,8 +29,9 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     const enterDateUser = new Date(birthday).getTime();
 
     if (enterDateUser > max || min > enterDateUser) {
-      return 'Некорректная дата';
+      return this.intl.t('rigistr_form.invalid_date');
     }
+
     return false;
   }
 

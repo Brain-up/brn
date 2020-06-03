@@ -1,23 +1,24 @@
-<ul class="flex" 
-    {{did-insert this.setLastMode @activeStep}}
-    {{did-update this.setLastMode @activeStep}}
+<ul
+  class="flex"
+  {{did-insert this.setLastMode @activeStep}}
+  {{did-update this.setLastMode @activeStep}}
 >
-    <ExerciseSteps::Step 
-        @mode={{this.modeForListen}} 
-        {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
-    >
-        Слушать
-    </ExerciseSteps::Step>
-    <ExerciseSteps::Step 
-        @mode={{this.modeForInteract}} 
-        {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
-    >
-        Взаимодейстовать
-    </ExerciseSteps::Step>
-    <ExerciseSteps::Step 
-        @mode={{this.modeForTask}} 
-        {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
-    >
-        Решать
-    </ExerciseSteps::Step>
+  <ExerciseSteps::Step
+    @mode={{this.modeForListen}}
+    {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
+  >
+    {{t "control_exercises.listen"}}
+  </ExerciseSteps::Step>
+  <ExerciseSteps::Step
+    @mode={{this.modeForInteract}}
+    {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
+  >
+    {{t "control_exercises.interact"}}
+  </ExerciseSteps::Step>
+  <ExerciseSteps::Step
+    @mode={{this.modeForTask}}
+    {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
+  >
+    {{t "control_exercises.solve"}}
+  </ExerciseSteps::Step>
 </ul>
