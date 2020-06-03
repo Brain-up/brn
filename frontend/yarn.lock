@@ -5807,6 +5807,13 @@ ember-rfc176-data@^0.3.12:
   resolved "https://registry.yarnpkg.com/ember-rfc176-data/-/ember-rfc176-data-0.3.12.tgz#90d82878e69e2ac9a5438e8ce14d12c6031c5bd2"
   integrity sha512-g9HeZj/gU5bfIIrGXkP7MhS2b3Vu5DfNUrYr14hy99TgIvtZETO+96QF4WOEUXGjIJdfTRjerVnQlqngPQSv1g==
 
+ember-route-helpers@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ember-route-helpers/-/ember-route-helpers-2.1.2.tgz#1b7cd950d8f29857f2fd528582d333c427210af2"
+  integrity sha512-oGFjOTiZ+J3FpfWV1Fi9ceQ5t0QvoTai6pvVeKjH53FSzEgshiIQsQH8KfML0GwIlkKo0h/hdZUn403//mV51Q==
+  dependencies:
+    ember-cli-babel "^7.7.3"
+
 ember-router-generator@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ember-router-generator/-/ember-router-generator-2.0.0.tgz#d04abfed4ba8b42d166477bbce47fccc672dbde0"
