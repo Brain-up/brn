@@ -1,48 +1,40 @@
 header:
   groups: Groups
-  logout: log out 
-      
-login_form: 
-  login: Login
-  warning_enter_credentials: Please enter your login and password
-  error_bad_credentials: Incorrect login or password
-  password: Password 
-  registration: Registration
-  sign_in: Sign in
+  logout: logout 
 
 rigistr_form:
   birthday: Birthday
   email: Email
-  message_type_1: Maximum number of characters
-  message_type_2: Lnvalid date
-  message_type_3: Please enter your login and password
-  info_message: 
+  invalid_date: Lnvalid date
   name: Name
   password: Password 
   registration: Registration
   sign_in: Sign in
-  sign_up: Sign up
   surname: Surname
+  warning_enter_credentials: Please enter your login and password
+  warning_input_restriction: Maximum number of characters
+
+login_form: 
+  error_bad_credentials: Incorrect login or password
+  login: Login
+  password: Password 
+  registration: Registration
+  sign_in: Sign in
+  warning_enter_credentials: Please enter your login and password
 
 breadcrumbs:
-  name_page: Groups
+  groups: Groups
 
 navigation:
-  name_section: Words
-  back: Back
+  words: Words
+  come_back: Back
 
 exercise: 
-  # type_1: Speech exercises
-  # type_2: Non-speech exercises
-  progress: Complete
+  progress: complete
 
-footer:
-  info_about: With the support 
-  info_about_helper: and
-
-message:
-  exercise_successfully: Congratulations! Exercise successful!
-  exercise_unsuccessfully: Wrong. Try again!
+exercise_messages:
+  successfully: Congratulations! Exercise successful!
+  unsuccessfully: Wrong. Try again!
   answer_successfully: Correct answer
 
 statistics:
@@ -59,7 +51,8 @@ service_message:
 control_exercises:
   solve: Solve
   interact: Interact
-  listen: Listen
+  listen: Listen 
 
-    # Attempts/experience
-    # Tasks/exercise
+footer:
+  info_about: With the support 
+  info_about_helper: and

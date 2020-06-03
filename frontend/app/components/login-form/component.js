@@ -5,7 +5,7 @@ import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 
 const ERRORS_MAP = {
-  'Bad credentials': 'login_form.message_type_1',
+  'Bad credentials': 'login_form.warning_enter_credentials',
 };
 
 const BUTTON_STATES = {

@@ -29,7 +29,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     const enterDateUser = new Date(birthday).getTime();
 
     if (enterDateUser > max || min > enterDateUser) {
-      return this.intl.t('rigistr_form.message_type_2');
+      return this.intl.t('rigistr_form.invalid_date');
     }
 
     return false;

@@ -4,8 +4,8 @@ header:
     
 login_form: 
   login: Логин
-  message_type_1: Неправильный логин или пароль.
-  message_type_2: Пожалуйста, введите логин и пароль.
+  error_bad_credentials: Неправильный логин или пароль.
+  warning_enter_credentials: Пожалуйста, введите логин и пароль.
   password: Пароль 
   registration: Регистрация
   sign_in: Вход
@@ -13,9 +13,9 @@ login_form:
 rigistr_form:
   birthday: Дата рождения
   email: Почта
-  message_type_1: Максимальное количество символов
-  message_type_2: Некорректная дата
-  message_type_3: Пожалуйста, введите логин и пароль.
+  warning_input_restriction: Максимальное количество символов
+  invalid_date: Некорректная дата
+  warning_enter_credentials: Пожалуйста, введите логин и пароль.
   name: Имя
   password: Пароль 
   registration: Регистрация
@@ -26,19 +26,17 @@ breadcrumbs:
   groups: Группы
 
 navigation:
-  section: Слова
-  back: Назад
+  words: Слова
+  come_back: Назад
 
 exercise: 
-  # type_1: Речевые упражнения
-  # type_2: Неречевые упражнения
-  progress: Пройдено
+  progress: пройдено
 
 footer:
   info_about_helper: и
   info_about: При поддержке
 
-message:
+exercise_messages:
   successfully: Поздравляем! Упражнение выполнено!
   unsuccessfully: Неверно. Попробуйте ещё раз!
   answer_successfully: Правильный ответ

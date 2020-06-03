@@ -8,8 +8,8 @@
   <h3 class="mb-4">
     {{if
       @isCorrect
-      (t "message.exercise_successfully")
-      (t "message.exercise_unsuccessfully")
+      (t "exercise_messages.successfully")
+      (t "exercise_messages.unsuccessfully")
     }}
   </h3>
   {{! template-lint-configure no-inline-styles false }}
@@ -18,7 +18,7 @@
     data-test-is-correct={{@isCorrect}}
     data-test-isnt-correct={{not @isCorrect}}
     class="answer-correctness-widget flex-1 rounded mx-auto"
-    aria-label={{html-safe (concat (t "message.answer_successfully"))}}
+    aria-label={{html-safe (concat (t "exercise_messages.successfully"))}}
     style={{html-safe
       (concat
         (concat "background-image: url('/pictures/" this.imagePath ".jpg')")
