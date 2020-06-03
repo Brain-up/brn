@@ -5,7 +5,7 @@
   {{#let (or @group @series.group) as |group|}}
     <ul aria-label="Breadcrumbs" class="breadcrumbs list-none">
       <li class="font-bold text-red-500">
-        {{t "breadcrumbs.groups"}}
+        <LinkTo @route="groups">{{t "breadcrumbs.groups"}}</LinkTo>
       </li>
       <li class="font-bold text-blue-900" data-test-group-breadcrumb>
         <LinkTo @route="group" @model={{group}}>
