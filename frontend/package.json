@@ -66,6 +66,7 @@
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
     "cross-env": "^7.0.2",
+    "els-component-extraction-addon": "^0.1.11",
     "els-intl-addon": "^1.0.3",
     "ember-auto-import": "^1.5.3",
     "ember-awesome-macros": "^5.0.1",
@@ -82,9 +83,8 @@
     "ember-cli-inject-live-reload": "^2.0.2",
     "ember-cli-mirage": "^1.1.6",
     "ember-cli-page-object": "^1.16.1",
-    "ember-cli-postcss": "^5.0.0",
+    "ember-cli-postcss": "^6.0.1",
     "ember-cli-sri": "^2.1.1",
-    "ember-cli-stencil": "^1.0.0",
     "ember-cli-uglify": "^3.0.0",
     "ember-composable-helpers": "^3.1.0",
     "ember-concurrency": "^1.1.5",
@@ -126,8 +126,8 @@
     "edition": "octane"
   },
   "dependencies": {
-    "@tailwindcss/ui": "^0.3.0",
     "ember-component-css": "^0.7.4",
+    "ember-fast-cli": "^1.2.1",
     "eslint": "^7.0.0",
     "idle-js": "^1.2.0",
     "stylelint": "^13.1.0",
