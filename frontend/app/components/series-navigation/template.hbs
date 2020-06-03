@@ -1,14 +1,14 @@
 <div class={{style-namespace "series-navigation"}} ...attributes>
   {{#each this.exerciseHeaders as |header|}}
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="max-w-7xl sm:px-6 lg:px-8 py-6 mx-auto">
       <div class="max-w-none mx-auto">
-        <div class="bg-white overflow-hidden sm:rounded-lg sm:shadow">
+        <div class="sm:rounded-lg sm:shadow overflow-hidden bg-white">
           <div
-            class="bg-white px-4 py-5 border-b border-gray-200 bg-blue-200 sm:px-6"
+            class="sm:px-6 px-4 py-5 bg-white bg-blue-200 border-b border-gray-200"
           >
             <h3
-              class="text-lg leading-3 font-bold text-blue-900"
               data-test-series-navigation-header
+              class="text-lg font-bold leading-3 text-blue-900"
             >
               {{header}}
             </h3>
@@ -17,7 +17,7 @@
             <li>
               <div
                 data-test-exercises-name-group
-                class="exercise-block__levels flex ml-2 mt-4 mr-2"
+                class="exercise-block__levels flex mt-4 ml-2 mr-2"
               >
                 {{#each this.sortedExercises as |exercise|}}
                   {{#if (eq exercise.name header)}}
@@ -27,8 +27,8 @@
                       data-test-series-navigation-list-link
                       data-test-exercise-level={{exercise.level}}
                       data-test-exercise-name={{exercise.name}}
-                      class="task-square-link flex-1 mb-6 rounded-lg p-2 m-4 exercise-block__level"
                       @disabled={{not exercise.canInteract}}
+                      class="task-square-link exercise-block__level flex-1 p-2 m-4 mb-6 rounded-lg"
                     >
                       <FaIcon
                         @icon="headphones-alt"

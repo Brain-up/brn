@@ -2,7 +2,9 @@
   <ul class="group-nav-list">
     {{#each (sort-by "id" @group.series) as |series index|}}
       <li class="mb-4">
-        <div class="overflow-hidden group-item rounded-md shadow {{concat "item-" index}}">
+        <div class="overflow-hidden group-item rounded-md shadow {{concat "item-" index}}
+          {{if (is-active "group.series" series) "border-gray-200"}}
+        ">
           <div class="sm:p-10 px-4 py-6">
             <LinkTo
               data-test-active-link={{series.name}}
