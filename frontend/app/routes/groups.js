@@ -5,4 +5,8 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   model() {
     return this.store.findAll('group');
   }
+  redirect() {
+    document.body.classList.add('route-groups');
+    document.body.classList.remove('route-group');
+  }
 }
