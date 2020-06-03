@@ -5,17 +5,18 @@ import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 
 const ERRORS_MAP = {
-  'Bad credentials': 'Неправильный логин или пароль.'
+  'Bad credentials': 'login_form.message_type_1',
 };
 
 const BUTTON_STATES = {
   ACTIVE: 'active',
-  DISABLED: 'disabled'
+  DISABLED: 'disabled',
 };
 
 export default class LoginFormComponent extends Component {
   @service('session') session;
   @service('router') router;
+  @service('intl') intl;
 
   @tracked login = undefined;
   @tracked password = undefined;
@@ -60,13 +61,16 @@ export default class LoginFormComponent extends Component {
     try {
       yield this.session.authenticate('authenticator:oauth2', login, password);
     } catch (error) {
-      let key = ''
+      let key = '';
       if (error.responseJSON) {
         key = error.responseJSON.errors.pop();
       } else {
         key = error.error || error;
       }
-      this.errorMessage = ERRORS_MAP[key] || key;
+
+      this.errorMessage =
+        key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key]) : key;
+
       this.loginTask.cancelAll();
     }
 

@@ -17,10 +17,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   maxDateString = this.maxDate.toISOString().split('T')[0];
   minDateString = this.minDate.toISOString().split('T')[0];
 
-  beforeModel() {
-    this.intl.setLocale(['ru-ru']);
-  }
-
   get warningErrorDate() {
     const { birthday, maxDate, minDate } = this;
 
@@ -33,8 +29,9 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     const enterDateUser = new Date(birthday).getTime();
 
     if (enterDateUser > max || min > enterDateUser) {
-      return 'Некорректная дата';
+      return this.intl.t('rigistr_form.message_type_2');
     }
+
     return false;
   }
 

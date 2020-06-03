@@ -6,8 +6,8 @@
     <div data-test-exercises-name-group class="exercise-block__levels">
       {{#each this.sortedExercises as |exercise|}}
         {{#if (eq exercise.name header)}}
-          <LinkTo 
-            @route="group.series.exercise" 
+          <LinkTo
+            @route="group.series.exercise"
             @model={{exercise.id}}
             data-test-series-navigation-list-link
             data-test-exercise-level={{exercise.level}}
@@ -24,7 +24,7 @@
               }}
             />
             <div>
-              Упражнение {{exercise.level}}
+              {{t "task_link.exercise"}} {{exercise.level}}
             </div>
           </LinkTo>
         {{/if}}

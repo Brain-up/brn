@@ -1,38 +1,60 @@
 header:
-  groups: Groups
-  log-out: log out 
+  groups: Группы
+  logout: logout 
     
-login_form:
+login_form: 
   login: Логин
+  message_type_1: Неправильный логин или пароль.
+  message_type_2: Пожалуйста, введите логин и пароль.
   password: Пароль 
-  sign_in: Вход
   registration: Регистрация
-  text_helper: Пожалуйста, введите логин и пароль.
-  text_error: Неправильный логин или пароль.
+  sign_in: Вход
 
 rigistr_form:
-  registration: Регистрация
   birthday: Дата рождения
-  text_helper: Пожалуйста, введите логин и пароль.
   email: Почта
+  message_type_1: Максимальное количество символов
+  message_type_2: Некорректная дата
+  message_type_3: Пожалуйста, введите логин и пароль.
   name: Имя
   password: Пароль 
+  registration: Регистрация
   sign_in: Вход
   surname: Фамилия
-  error_message_type_1: Максимальное количество символов
-  error_message_type_2: Некорректная дата
 
 breadcrumbs:
-  name_page: Группы
+  groups: Группы
 
 navigation:
-  name_view: Слова
-      
-card: 
-  name_type_1: Речевые упражнения
-  name_type_2: Неречевые упражнения
-  progres: Пройдено
+  section: Слова
+  back: Назад
+
+exercise: 
+  # type_1: Речевые упражнения
+  # type_2: Неречевые упражнения
+  progress: Пройдено
 
 footer:
-  text_helper: и
-  text_about: При поддержке
+  info_about_helper: и
+  info_about: При поддержке
+
+message:
+  successfully: Поздравляем! Упражнение выполнено!
+  unsuccessfully: Неверно. Попробуйте ещё раз!
+  answer_successfully: Правильный ответ
+
+statistics:
+  attempts: Попытки
+  tasks: Задачи
+  time: Время
+
+task_link:
+  exercise: Упражнения
+
+service_message:
+  no_tasks:  Пока в этом упражнении нет задач 
+
+control_exercises:
+  solve: Решать
+  interact: Взаимодейстовать
+  listen: Слушать
