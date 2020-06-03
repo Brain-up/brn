@@ -1,7 +1,7 @@
 header:
   groups: Группы
-  logout: logout 
-    
+  logout: Выйти 
+     
 login_form: 
   login: Логин
   error_bad_credentials: Неправильный логин или пароль.
@@ -21,7 +21,7 @@ rigistr_form:
   registration: Регистрация
   sign_in: Вход
   surname: Фамилия
-
+ 
 breadcrumbs:
   groups: Группы
 
