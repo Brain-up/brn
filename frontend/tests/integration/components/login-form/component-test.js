@@ -135,7 +135,7 @@ module('Integration | Component | login-form', function(hooks) {
     await click('[data-test-submit-form]');
     assert
       .dom('[data-test-form-error]')
-      .hasText('Неправильный логин или пароль.');
+      .exists();
   });
 
   test('incorrect form values does not invoke form submit', async function(assert) {

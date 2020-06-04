@@ -1,23 +1,23 @@
 header:
   groups: Groups
-  logout: logout 
+  logout: Logout
 
 rigistr_form:
   birthday: Birthday
   email: Email
   invalid_date: Invalid date
   name: Name
-  password: Password 
+  password: Password
   registration: Registration
   sign_in: Sign in
   surname: Surname
   warning_enter_credentials: Please enter your login and password
   warning_input_restriction: Maximum number of characters
 
-login_form: 
+login_form:
   error_bad_credentials: Incorrect login or password
   login: Login
-  password: Password 
+  password: Password
   registration: Registration
   sign_in: Sign in
   warning_enter_credentials: Please enter your login and password
@@ -29,8 +29,8 @@ navigation:
   words: Words
   come_back: Back
 
-exercise: 
-  progress: complete
+exercise:
+  progress: completed
 
 exercise_messages:
   successfully: Congratulations! Exercise successful!
@@ -39,10 +39,10 @@ exercise_messages:
 
 statistics:
   attempts: Attempts
-  tasks: Tasks 
+  tasks: Tasks
   time: Time
 
-task_link: 
+task_link:
   exercise: Exercise
 
 service_message:
@@ -51,8 +51,8 @@ service_message:
 control_exercises:
   solve: Solve
   interact: Interact
-  listen: Listen 
+  listen: Listen
 
 footer:
-  info_about: With the support 
+  info_about: With the support
   info_about_helper: and

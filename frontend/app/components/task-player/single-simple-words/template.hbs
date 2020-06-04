@@ -1,3 +1,14 @@
+{{!--
+  interface Args {
+    word: string;
+    disableAudioPlayer: boolean;
+    disableAnswers: boolean;
+    activeWord: string;
+    onPlayText: () => {};
+    mode: string;
+  }
+ --}}
+
 <div class="{{this.styleNamespace}} flex flex-grow flex-col" ...attributes>
   {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}

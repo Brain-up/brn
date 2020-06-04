@@ -1,8 +1,16 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { inject as service } from '@ember/service';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
+  @service('intl') intl;
   model() {
-    return this.store.findAll('group');
+    return this.store.query('group', {
+      locale: this.intl.locale[0]
+    });
+  }
+  redirect() {
+    document.body.classList.add('route-groups');
+    document.body.classList.remove('route-group');
   }
 }

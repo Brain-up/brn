@@ -1,0 +1,44 @@
+/*! purgecss start ignore */
+
+.active-group {
+  background-color: #fbedfe;
+}
+.not-active-group {
+  background-color: #daf0fc;
+}
+
+
+/*! purgecss end ignore */
+
+.group-item {
+  min-height: 230px;
+  width: 100%;
+  outline-color: #3F51B5;
+  outline-width: medium;
+}
+
+.group-name {
+  color: #001274;
+}
+
+.group-image {
+  width: 210px;
+  height: 140px;
+  background-repeat: no-repeat;
+}
+
+.image-0 {
+  background-image: url(/ui/groups/card-one.svg);
+  background-position: center;
+}
+
+
+.image-1 {
+  background-image: url(/ui/groups/card-one.svg), url(/ui/groups/card-two.svg);
+  background-position: 30px center, 120px center;
+}
+
+.image-2 {
+  background-image:  url(/ui/groups/card-one.svg), url(/ui/groups/card-two.svg),url(/ui/groups/card-three.svg) ;
+  background-position: 8px center, 75px center, 142px center;
+}

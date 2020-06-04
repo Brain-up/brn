@@ -5,7 +5,7 @@
 
 .circle-bg {
   fill: none;
-  stroke: #8b8b8b;
+  stroke: #f06292;
   stroke-width: 6.8;
 }
 
@@ -27,7 +27,8 @@
 }
 
 .percentage {
-  fill: #12a8d8;
-  font-size: 10px;
+  fill: #0D47A1;
+  font-size: 8px;
+  font-weight: bold;
   text-anchor: middle;
 }

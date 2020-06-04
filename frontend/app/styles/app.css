@@ -31,7 +31,7 @@ body {
 main {
   display: flex;
   flex-wrap: wrap;
-  background: white;
+  background: transparent;
   padding: 25px 40px 40px;
   flex: 1;
   position: relative;
@@ -41,12 +41,21 @@ main > * {
   width: 100%;
 }
 
-a.active {
-  color: #285e61;
+.ember-modal-overlay {
+  background-color: #eeeeeee6;
+}
+
+
+body.route-groups  {
+  background-image: url(/ui/groups-background.svg);
+  background-size: contain;
+}
+body.route-group  {
+  background-image: url(/ui/group-background.svg);
+  background-size: contain;
 }
 
 a {
-  color: #319795;
   text-decoration: none;
 }
 
@@ -98,14 +107,7 @@ a[disabled] {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 9px 9px 0;
-  height: 70px;
   text-align: center;
-  padding: 10px;
-  font-size: 18px;
-  flex-basis: 32%;
-  border: 1px solid #eee;
-  border-radius: 3px;
 }
 
 .start-task-button::after,
