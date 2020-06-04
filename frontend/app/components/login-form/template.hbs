@@ -3,7 +3,7 @@
     class="bg-white rounded px-8 pt-6 pb-8 mb-4
 
 
-      {{if (not this.loginInProgress) "shadow-lg"}}"
+      {{unless this.loginInProgress "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
     {{#if this.loginInProgress}}
@@ -24,12 +24,12 @@
           @type="password"
         />
         {{#if (or this.usernameError this.passwordError)}}
-          <p class="text-red-500 text-xs italic" data-test-form-warning>
+          <p data-test-form-warning class="text-xs italic text-red-500">
             {{t "login_form.warning_enter_credentials"}}
           </p>
         {{/if}}
         {{#if this.errorMessage}}
-          <p class="text-red-500 text-xs italic" data-test-form-error>
+          <p data-test-form-error class="text-xs italic text-red-500">
             {{this.errorMessage}}
           </p>
         {{/if}}
@@ -54,7 +54,7 @@
         <LinkTo
           data-test-registration-form
           @route="registration"
-          class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+          class="hover:text-blue-800 inline-block text-sm font-bold text-blue-500 align-baseline"
         >
           {{t "login_form.registration"}}
         </LinkTo>

@@ -33,51 +33,6 @@
   background-image: url(/pictures/exercise-type/non-speech-exercises.svg);
 }
 
-.speech-exercise::before,
-.non-speech-exercises::before {
-  background-image: url(/pictures/exercise-type/speech-exercises-bg-1.svg);
-  background-repeat: no-repeat;
-  background-size: contain;
-  border-radius: 10px 0 0 0;
-  content: '';
-  display: block;
-  height: 118px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 170px;
-}
-
-.non-speech-exercises::before {
-  background-image: url(/pictures/exercise-type/non-speech-exercises-bg-1.svg);
-  height: 80px;
-  left: 0px;
-  top: 0px;
-  width: 70px;
-}
-
-.speech-exercise::after,
-.non-speech-exercises::after {
-  background-image: url(/pictures/exercise-type/speech-exercises-bg-2.svg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  bottom: 34px;
-  content: '';
-  display: block;
-  height: 24px;
-  position: absolute;
-  right: 24px;
-  width: 22px;
-}
-
-.non-speech-exercises::after {
-  background-image: url(/pictures/exercise-type/non-speech-exercises-bg-2.svg);
-  bottom: 0px;
-  height: 70px;
-  right: 0;
-  width: 76px;
-}
-
 .card__title {
   color: #000;
   font-size: 24px;

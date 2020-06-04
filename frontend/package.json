@@ -54,7 +54,8 @@
   "resolutions": {
     "ember-component-css/broccoli-replace/applause/lodash": "^4.17.12",
     "ember-cli/ember-cli-preprocess-registry/broccoli-clean-css/clean-css-promise/clean-css": "^4.1.11",
-    "ember-cli/bower-config/optimist/minimist": "^1.2.3"
+    "ember-cli/bower-config/optimist/minimist": "^1.2.3",
+    "ember-cli-page-object/jquery": "3.5.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^1.3.0",
@@ -82,7 +83,7 @@
     "ember-cli-htmlbars": "^5.1.2",
     "ember-cli-inject-live-reload": "^2.0.2",
     "ember-cli-mirage": "^1.1.6",
-    "ember-cli-page-object": "^1.16.1",
+    "ember-cli-page-object": "^1.17.2",
     "ember-cli-postcss": "^6.0.1",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-uglify": "^3.0.0",

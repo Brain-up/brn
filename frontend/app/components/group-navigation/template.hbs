@@ -1,7 +1,7 @@
 <div ...attributes class={{style-namespace "group-navigation"}}>
   <ul class="group-nav-list">
     {{#each (take 3 (sort-by "id" @group.series)) as |series index|}}
-      <li class="mb-4">
+      <li class="mb-10">
         <LinkTo
           @tagName="button"
           type="button"

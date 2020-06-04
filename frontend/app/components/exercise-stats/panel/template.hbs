@@ -10,7 +10,8 @@
 }}
   <div
     data-test-type={{@type}}
-    class="flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded sm:mt-0" ...attributes
+    ...attributes
+    class="sm:mt-0 flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded"
   >
     <div>
       <div>
@@ -19,22 +20,22 @@
             {{get textColorClass @type}}
              text-md"
         >
-          <span class="font-bold" data-test-diff>
+          <span data-test-diff class="font-bold">
             {{or @diff "@diff"}}
           </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 fill-current"
             viewBox="0 0 24 24"
+            class="w-5 h-5 fill-current"
           >
-            <path class="heroicon-ui" d={{get svgPathForType @type}}></path>
+            <path d={{get svgPathForType @type}} class="heroicon-ui"></path>
           </svg>
         </p>
       </div>
-      <p class="text-3xl font-semibold text-center text-gray-800" data-test-value>
+      <p data-test-value class="text-3xl font-semibold text-center text-gray-800">
         {{or @value "@value"}}
       </p>
-      <p class="text-lg text-center text-gray-500" data-test-label>
+      <p data-test-label class="text-lg text-center text-gray-500">
         {{or @label "@label"}}
       </p>
     </div>
