@@ -33,6 +33,7 @@ export default class NetworkService extends Service {
   }
   async loadCurrentUser() {
     const user = await this.getCurrentUser();
+    user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
     this.session.set('data.user', user);
   }
   createUser(user) {
