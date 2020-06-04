@@ -52,8 +52,9 @@ service_message:
 control_exercises:
   solve: Решать
   interact: Взаимодейстовать
-  listen: Слушать
+  listen: Слушать 
 
-  footer:
-  info_about_helper: и
+
+footer:
   info_about: При поддержке
+  info_about_helper: и
