@@ -2,6 +2,15 @@ header:
   groups: Groups
   logout: Logout
 
+login_form:
+  error_bad_credentials: Incorrect login or password
+  login: Login
+  password: Password
+  registration: Registration
+  sign_in: Sign in
+  warning_enter_credentials: Please enter your login and password
+  forgot_password: Forgot your password? 
+
 rigistr_form:
   birthday: Birthday
   email: Email
@@ -14,15 +23,7 @@ rigistr_form:
   warning_enter_credentials: Please enter your login and password
   warning_input_restriction: Maximum number of characters
 
-login_form:
-  error_bad_credentials: Incorrect login or password
-  login: Login
-  password: Password
-  registration: Registration
-  sign_in: Sign in
-  warning_enter_credentials: Please enter your login and password
-
-breadcrumbs:
+breadcrumbs: 
   groups: Groups
 
 navigation:

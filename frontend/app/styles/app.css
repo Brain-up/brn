@@ -32,7 +32,6 @@ main {
   display: flex;
   flex-wrap: wrap;
   background: transparent;
-  padding: 25px 40px 40px;
   flex: 1;
   position: relative;
 }
@@ -45,13 +44,28 @@ main > * {
   background-color: #eeeeeee6;
 }
 
+.background-form:after  {
+  background-image: url(/ui/form-background.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  content: "";
+  position: absolute; 
+  width: 100%;
+  top: -72px;
+  left: 0;
+  bottom: -50px;
+  z-index: 0;
+}
 
 body.route-groups  {
   background-image: url(/ui/groups-background.svg);
+  background-repeat: no-repeat;
   background-size: contain;
 }
 body.route-group  {
   background-image: url(/ui/group-background.svg);
+  background-repeat: no-repeat;
   background-size: contain;
 }
 

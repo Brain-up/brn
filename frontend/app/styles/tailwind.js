@@ -5,11 +5,12 @@ module.exports = {
       colors: {
         blue: {
           '500': '#81D5F9',
-          '900': '#001274'
-        }
-      }
-    }
+          '700': '#5E6EED',
+          '900': '#001274',
+        },
+      },
+    },
   },
   variants: {},
-  plugins: [ ]
-}
+  plugins: [],
+};

@@ -1,64 +1,73 @@
-<div class="w-full max-w-xs mx-auto">
-  <form
-    class="bg-white rounded px-8 pt-6 pb-8 mb-4
-
-
-      {{unless this.loginInProgress "shadow-lg"}}"
-    {{on "submit" this.onSubmit}}
-  >
-    {{#if this.loginInProgress}}
-      <LoadingSpinner />
-    {{else}}
-      <div class="mb-4">
-        <LoginForm::Input
-          @label={{t "login_form.login"}}
-          @model={{this}}
-          @name="login"
-        />
-      </div>
-      <div class="mb-6">
-        <LoginForm::Input
-          @label={{t "login_form.password"}}
-          @model={{this}}
-          @name="password"
-          @type="password"
-        />
-        {{#if (or this.usernameError this.passwordError)}}
-          <p data-test-form-warning class="text-xs italic text-red-500">
-            {{t "login_form.warning_enter_credentials"}}
-          </p>
-        {{/if}}
-        {{#if this.errorMessage}}
-          <p data-test-form-error class="text-xs italic text-red-500">
-            {{this.errorMessage}}
-          </p>
-        {{/if}}
-      </div>
-      <div class="flex mb-4">
-        {{#let
-          (hash
-            active="bg-pink-500 hover:bg-pink-700 flex-grow text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            disabled="bg-pink-500 text-white font-bold flex-grow py-2 px-4 rounded opacity-50 cursor-not-allowed"
-          ) as |buttonState|
-        }}
-          <button
-            data-test-submit-form
-            class={{get buttonState this.buttonState}}
-            type="submit"
+<form class="background-form" {{on "submit" this.onSubmit}}>
+  {{#if this.loginInProgress}}
+    <LoadingSpinner />
+  {{else}}
+    <div class="flex justify-end h-full bg-white">
+      <div
+        class="lg:flex-none sm:pr-20 lg:py-24 flex flex-col items-end flex-1 w-2/4 pt-4 pl-20 pr-40 bg-blue-500"
+      >
+        <div class="relative z-10 w-full max-w-xs">
+          <h2
+            class="title-form mb-8 text-base font-semibold leading-tight text-center text-blue-900 uppercase"
           >
             {{t "login_form.sign_in"}}
-          </button>
-        {{/let}}
+          </h2>
+
+          <div class="mb-4">
+            <LoginForm::Input
+              @placeholder={{t "login_form.login"}}
+              @model={{this}}
+              @name="login"
+            />
+          </div>
+
+          <div class="mb-4">
+            <LoginForm::Input
+              @placeholder={{t "login_form.password"}}
+              @model={{this}}
+              @name="password"
+              @type="password"
+            />
+            {{#if (or this.usernameError this.passwordError)}}
+              <p data-test-form-warning class="text-xs italic text-red-500">
+                {{t "login_form.warning_enter_credentials"}}
+              </p>
+            {{/if}}
+            {{#if this.errorMessage}}
+              <p data-test-form-error class="text-xs italic text-red-500">
+                {{this.errorMessage}}
+              </p>
+            {{/if}}
+          </div>
+          <div class="flex mb-4">
+            {{#let
+              (hash
+                active="bg-blue-700 hover:bg-blue-900 focus:outline-none focus:shadow-outline"
+                disabled="bg-blue-700 opacity-50  cursor-not-allowed"
+              ) as |buttonState|
+            }}
+              <button
+                data-test-submit-form
+                class="w-3/4 m-auto flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-full text-white bg-blue-700 hover:bg-blue-900 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue-700 transition duration-150 ease-in-out
+
+
+                  {{get buttonState this.buttonState}}"
+                type="submit"
+              >
+                {{t "login_form.sign_in"}}
+              </button>
+            {{/let}}
+          </div>
+          <div class="mt-4 text-sm leading-5 text-center">
+            <a
+              href="#"
+              class="hover:text-blue-900 focus:outline-none focus:underline font-medium text-blue-900 transition duration-150 ease-in-out"
+            >
+              {{t "login_form.forgot_password"}}
+            </a>
+          </div>
+        </div>
       </div>
-      <div class="flex justify-end">
-        <LinkTo
-          data-test-registration-form
-          @route="registration"
-          class="hover:text-blue-800 inline-block text-sm font-bold text-blue-500 align-baseline"
-        >
-          {{t "login_form.registration"}}
-        </LinkTo>
-      </div>
-    {{/if}}
-  </form>
-</div>
+    </div>
+  {{/if}}
+</form>
