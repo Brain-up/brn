@@ -13,6 +13,9 @@ export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
   redirect(group, { to }) {
     document.body.classList.remove('route-groups');
     document.body.classList.add('route-group');
+    if (!group.get('sortedSeries.firstObject')) {
+      this.transitionTo('groups');
+    }
     if (to.name === 'group.index' && group.get('sortedSeries.firstObject')) {
       this.transitionTo(
         'group.series.index',

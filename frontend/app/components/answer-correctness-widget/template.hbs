@@ -3,7 +3,7 @@
      flex flex-wrap flex-1 mt-5 flex-col text-center"
   ...attributes
 >
-  <h3 class="mb-6 mt-6">
+  <h3 class="mt-6 mb-6">
     {{if
       @isCorrect
       (t "exercise_messages.successfully")
@@ -11,9 +11,7 @@
     }}
   </h3>
   {{#if @isCorrect}}
-    <div class="object-center" data-test-answer-correctness-widget
-      data-test-is-correct={{@isCorrect}}
-      data-test-isnt-correct={{not @isCorrect}}>
+    <div data-test-answer-correctness-widget data-test-is-correct={{@isCorrect}} data-test-isnt-correct={{not @isCorrect}} class="object-center">
       <svg
         width="340"
         height="340"
@@ -170,7 +168,6 @@
       data-test-is-correct={{@isCorrect}}
       data-test-isnt-correct={{not @isCorrect}}
       aria-label={{html-safe (concat (t "exercise_messages.successfully"))}}
-      class="answer-correctness-widget flex-1 mx-auto rounded"
       style={{html-safe
         (concat
           (concat "background-image: url('/pictures/" this.imagePath ".jpg')")
@@ -182,6 +179,7 @@
           (concat "url('/pictures/" this.imagePath ".svg')")
         )
       }}
+      class="answer-correctness-widget flex-1 mx-auto rounded"
     ></div>
   {{/if}}
 </div>
