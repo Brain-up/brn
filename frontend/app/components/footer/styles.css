@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 footer {
   height: 50px;
   display: flex;
@@ -12,3 +14,5 @@ a {
   max-width: 70px;
   overflow: hidden;
 }
+
+/*! purgecss end ignore */

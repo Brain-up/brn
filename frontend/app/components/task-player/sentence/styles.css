@@ -1,5 +1,10 @@
+/*! purgecss start ignore */
+
 .type-column {
   display: flex;
   max-width: 15%;
   min-width: 200px;
 }
+
+
+/*! purgecss end ignore */

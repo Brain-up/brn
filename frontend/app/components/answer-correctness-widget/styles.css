@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 & {
   background-color: #EDF8FE;
   border-radius: 10px;
@@ -33,3 +35,6 @@ h3 {
     opacity: 1;
   }
 }
+
+
+/*! purgecss end ignore */

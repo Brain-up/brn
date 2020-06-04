@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 & {
   background-color: #daf0fc;
   border-radius: 10px;
@@ -68,3 +70,6 @@
 .svg-box {
   margin-right: 6px;
 }
+
+
+/*! purgecss end ignore */

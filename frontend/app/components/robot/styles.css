@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 svg#robot {
     display: block;
     position: relative;
@@ -10,7 +12,7 @@ svg#robot {
     -webkit-animation: move 2s ease infinite;
             animation: move 2s ease infinite;
   }
-  
+
   @-webkit-keyframes move {
     0%, 100% {
       -webkit-transform: rotate(0deg) translate3d(0px, 0px, 0px);
@@ -25,7 +27,7 @@ svg#robot {
               transform: rotate(-6deg) translate3d(-5px, 5px, 0px);
     }
   }
-  
+
   @keyframes move {
     0%, 100% {
       -webkit-transform: rotate(0deg) translate3d(0px, 0px, 0px);
@@ -52,7 +54,7 @@ svg#robot {
     -webkit-animation: color 350ms linear infinite;
             animation: color 350ms linear infinite;
   }
-  
+
   @-webkit-keyframes head {
     0%, 46%, 50%, 55%, 100% {
       -webkit-transform: rotate(0deg) translate3d(0px, 0px, 0px);
@@ -67,7 +69,7 @@ svg#robot {
               transform: rotate(-10deg) translate3d(0px, 0px, 0px);
     }
   }
-  
+
   @keyframes head {
     0%, 46%, 50%, 55%, 100% {
       -webkit-transform: rotate(0deg) translate3d(0px, 0px, 0px);
@@ -138,7 +140,7 @@ svg#robot {
     -webkit-animation: forearm 700ms 1s ease infinite;
             animation: forearm 700ms 1s ease infinite;
   }
-  
+
   @-webkit-keyframes torso {
     40%, 50%, 60% {
       -webkit-transform: rotate(0deg);
@@ -153,7 +155,7 @@ svg#robot {
               transform: rotate(-5deg);
     }
   }
-  
+
   @keyframes torso {
     40%, 50%, 60% {
       -webkit-transform: rotate(0deg);
@@ -228,7 +230,7 @@ svg#robot {
     -webkit-animation: lowerTrunk 1s ease infinite;
             animation: lowerTrunk 1s ease infinite;
   }
-  
+
   @-webkit-keyframes lowerTrunk {
     0%, 100% {
       -webkit-transform: rotate(0deg) translate3d(0px, 0px, 0px);
@@ -243,7 +245,7 @@ svg#robot {
               transform: rotate(-2deg) translate3d(-2px, 0px, 0px);
     }
   }
-  
+
   @keyframes lowerTrunk {
     0%, 100% {
       -webkit-transform: rotate(0deg) translate3d(0px, 0px, 0px);
@@ -274,7 +276,7 @@ svg#robot {
     -webkit-animation: lowerLeg 2s ease infinite;
             animation: lowerLeg 2s ease infinite;
   }
-  
+
   @-webkit-keyframes leftFoot {
     0%, 50% {
       -webkit-transform: rotate(0deg);
@@ -285,7 +287,7 @@ svg#robot {
               transform: rotate(70deg);
     }
   }
-  
+
   @keyframes leftFoot {
     0%, 50% {
       -webkit-transform: rotate(0deg);
@@ -340,7 +342,7 @@ svg#robot {
     -webkit-animation: lowerLegIz 2s ease infinite;
             animation: lowerLegIz 2s ease infinite;
   }
-  
+
   @-webkit-keyframes rightFoot {
     75% {
       -webkit-transform: rotate(-60deg);
@@ -351,7 +353,7 @@ svg#robot {
               transform: rotate(0deg);
     }
   }
-  
+
   @keyframes rightFoot {
     75% {
       -webkit-transform: rotate(-60deg);
@@ -395,19 +397,19 @@ svg#robot {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizelegibility;
   }
-  
+
   html,
   body {
     width: 100%;
     height: 100%;
     overflow: hidden;
   }
-  
+
   body {
     background: #404853;
     font-family: 'Roboto Condensed', sans-serif;
   }
-  
+
   .col {
     text-align: center;
   }
@@ -425,4 +427,6 @@ svg#robot {
     font-weight: 300;
     line-height: 7em;
   }
-  
+
+
+/*! purgecss end ignore */
