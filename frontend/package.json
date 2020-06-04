@@ -126,7 +126,6 @@
     "edition": "octane"
   },
   "dependencies": {
-    "@tailwindcss/ui": "^0.3.0",
     "ember-component-css": "^0.7.4",
     "ember-fast-cli": "^1.2.1",
     "eslint": "^7.0.0",
