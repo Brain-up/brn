@@ -11,7 +11,9 @@
     }}
   </h3>
   {{#if @isCorrect}}
-    <div class="object-center">
+    <div class="object-center" data-test-answer-correctness-widget
+      data-test-is-correct={{@isCorrect}}
+      data-test-isnt-correct={{not @isCorrect}}>
       <svg
         width="340"
         height="340"

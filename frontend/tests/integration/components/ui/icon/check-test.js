@@ -12,15 +12,15 @@ module('Integration | Component | ui/icon/check', function(hooks) {
 
     await render(hbs`<Ui::Icon::Check />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.dom('svg').doesNotExist();
 
-    // Template block usage:
-    await render(hbs`
-      <Ui::Icon::Check>
-        template block text
-      </Ui::Icon::Check>
-    `);
+    await render(hbs`<Ui::Icon::Check @isCompleted={{true}} />`);
+    assert.dom('svg').exists();
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    await render(hbs`<Ui::Icon::Check @isAvailable={{true}} />`);
+    assert.dom('svg').exists();
+
+    await render(hbs`<Ui::Icon::Check @isLocked={{true}} />`);
+    assert.dom('svg').exists();
   });
 });

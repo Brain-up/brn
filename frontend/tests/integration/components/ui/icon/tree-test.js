@@ -10,17 +10,8 @@ module('Integration | Component | ui/icon/tree', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<Ui::Icon::Tree />`);
+    await render(hbs`<Ui::Icon::Tree @enabled={{true}} @level={{1}} />`);
 
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <Ui::Icon::Tree>
-        template block text
-      </Ui::Icon::Tree>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('svg').exists();
   });
 });
