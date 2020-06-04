@@ -1,14 +1,15 @@
 <div
   class="{{style-namespace "answer-correctness-widget"}}
 
+
      flex flex-wrap flex-1 mt-5 flex-col text-center"
   ...attributes
 >
   <h3 class="mb-4">
     {{if
       @isCorrect
-      "Поздравляем! Упражнение выполнено!"
-      "Неверно. Попробуйте ещё раз!"
+      (t "exercise_messages.successfully")
+      (t "exercise_messages.unsuccessfully")
     }}
   </h3>
   {{! template-lint-configure no-inline-styles false }}
@@ -17,7 +18,7 @@
     data-test-is-correct={{@isCorrect}}
     data-test-isnt-correct={{not @isCorrect}}
     class="answer-correctness-widget flex-1 rounded mx-auto"
-    aria-label={{html-safe (concat "правильный ответ")}}
+    aria-label={{html-safe (concat (t "exercise_messages.successfully"))}}
     style={{html-safe
       (concat
         (concat "background-image: url('/pictures/" this.imagePath ".jpg')")

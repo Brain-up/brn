@@ -2,6 +2,7 @@
   <form
     class="bg-white rounded px-8 pt-6 pb-8 mb-4
 
+
       {{if (not this.loginInProgress) "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
@@ -9,18 +10,22 @@
       <LoadingSpinner />
     {{else}}
       <div class="mb-4">
-        <LoginForm::Input @label="Логин" @model={{this}} @name="login" />
+        <LoginForm::Input
+          @label={{t "login_form.login"}}
+          @model={{this}}
+          @name="login"
+        />
       </div>
       <div class="mb-6">
         <LoginForm::Input
-          @label="Пароль"
+          @label={{t "login_form.password"}}
           @model={{this}}
           @name="password"
           @type="password"
         />
         {{#if (or this.usernameError this.passwordError)}}
           <p class="text-red-500 text-xs italic" data-test-form-warning>
-            Пожалуйста, введите логин и пароль.
+            {{t "login_form.warning_enter_credentials"}}
           </p>
         {{/if}}
         {{#if this.errorMessage}}
@@ -41,7 +46,7 @@
             class={{get buttonState this.buttonState}}
             type="submit"
           >
-            Вход
+            {{t "login_form.sign_in"}}
           </button>
         {{/let}}
       </div>
@@ -51,7 +56,7 @@
           @route="registration"
           class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
         >
-          Регистрация
+          {{t "login_form.registration"}}
         </LinkTo>
       </div>
     {{/if}}

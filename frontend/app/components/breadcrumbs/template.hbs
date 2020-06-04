@@ -1,8 +1,13 @@
-<div class="{{style-namespace "breadcrumbs"}} breadcrumbs-container" ...attributes>
+<div
+  class="{{style-namespace "breadcrumbs"}} breadcrumbs-container"
+  ...attributes
+>
   {{#let (or @group @series.group) as |group|}}
     <ul aria-label="Breadcrumbs" class="list-none breadcrumbs">
       <li>
-        <LinkTo @route="groups">Группы</LinkTo>
+        <LinkTo @route="groups">
+          {{t "breadcrumbs.groups"}}
+        </LinkTo>
       </li>
       <li data-test-group-breadcrumb>
         <LinkTo @route="group" @model={{group}}>
