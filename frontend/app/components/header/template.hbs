@@ -25,16 +25,37 @@
             {{t "header.groups"}}
           </LinkTo>
         {{/if}}
+        <a
+          href="https://anywhere.epam.com/volunteer/pages-1/brainApp.html"
+          rel="noopener"
+          target="blank"
+          class="lg:inline-block lg:mt-0 hover:text-white block mt-4 mr-4 text-blue-200"
+        >
+          {{t "header.about"}}
+        </a>
         <button
           type="button"
-          class="hover:bg-blue-500 hover:text-white hover:border-transparent px-4 py-2 font-semibold text-blue-700 bg-transparent border border-blue-500 rounded"
+          class="hover:bg-blue-500 hover:text-white hover:border-transparent py-2
+            {{if
+              (eq this.activeLocale "ru-ru")
+              "text-blue-200 font-semibold"
+              "text-blue-700"
+            }}
+             bg-transparent border border-blue-500 rounded"
           {{on "click" (fn this.setLocale "ru")}}
         >
           RU
         </button>
+        /
         <button
           type="button"
-          class="hover:bg-blue-500 hover:text-white hover:border-transparent px-4 py-2 font-semibold text-blue-700 bg-transparent border border-blue-500 rounded"
+          class="hover:bg-blue-500 hover:text-white hover:border-transparent py-2
+            {{if
+              (eq this.activeLocale "en-us")
+              "text-blue-200 font-semibold"
+              "text-blue-700"
+            }}
+             bg-transparent border border-blue-500 rounded"
           {{on "click" (fn this.setLocale "en")}}
         >
           EN
@@ -42,23 +63,29 @@
       </div>
     </div>
     {{#if this.session.isAuthenticated}}
-      <div
-        data-test-user-email
-        title="{{this.session.data.user.firstName}}
-
-
-
-          {{this.session.data.user.lastName}}"
-        class="lg:mt-0 inline-block px-4 py-2 mt-4 mr-2 text-sm leading-none text-white rounded"
-      >
-        <span
-          class="inline-flex items-center justify-center w-10 h-10 bg-white rounded-full"
-        >
-          <span class="text-md font-bold leading-none text-blue-500">
-            TW
+      <div class="flex justify-end w-48 mr-6">
+        <div>
+          <span
+            title="{{this.user.email}}"
+            class="inline-flex items-center justify-center w-10 h-10 bg-white rounded-full"
+          >
+            <span class="text-md font-bold leading-none text-blue-500">
+              {{this.user.initials}}
+            </span>
           </span>
-        </span>
-        {{this.session.data.user.email}}
+        </div>
+        <div class="ml-3">
+          <p
+            class="group-hover:text-gray-700 text-sm font-medium leading-5 text-blue-200"
+          >
+            {{this.user.firstName}}
+          </p>
+          <p
+            class="group-hover:text-gray-700 text-sm font-medium leading-5 text-blue-200"
+          >
+            {{this.user.lastName}}
+          </p>
+        </div>
       </div>
       <button
         data-test-logout-button
