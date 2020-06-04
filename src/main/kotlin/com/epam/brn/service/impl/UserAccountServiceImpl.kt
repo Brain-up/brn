@@ -39,7 +39,7 @@ class UserAccountServiceImpl(
     override fun addUser(userAccountDto: UserAccountDto): UserAccountDto {
         val existUser = userAccountRepository.findUserAccountByEmail(userAccountDto.email)
         existUser.ifPresent {
-            throw IllegalArgumentException("User with email ${userAccountDto.email} is already exist!")
+            throw IllegalArgumentException("The user already exists!")
         }
 
         val setOfAuthorities = getTheAuthoritySet(userAccountDto)
