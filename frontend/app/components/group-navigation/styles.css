@@ -7,9 +7,6 @@
   background-color: #daf0fc;
 }
 
-
-/*! purgecss end ignore */
-
 .group-item {
   min-height: 230px;
   width: 100%;
@@ -42,3 +39,6 @@
   background-image:  url(/ui/groups/card-one.svg), url(/ui/groups/card-two.svg),url(/ui/groups/card-three.svg) ;
   background-position: 8px center, 75px center, 142px center;
 }
+
+
+/*! purgecss end ignore */

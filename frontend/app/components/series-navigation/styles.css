@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .series-nav__exercies-list {
   list-style: none;
   padding: 0;
@@ -73,3 +75,6 @@ h2 {
   right: -10px;
   top: -10px;
 }
+
+
+/*! purgecss end ignore */

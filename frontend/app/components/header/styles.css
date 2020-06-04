@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .logo-text,
 a.active {
   color: #001274;
@@ -18,3 +20,6 @@ a.active {
   font-size: 25px;
   margin-right: 10px;
 }
+
+
+/*! purgecss end ignore */
