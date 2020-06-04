@@ -1,6 +1,6 @@
 <div class={{style-namespace "series-navigation"}} ...attributes>
   {{#each this.exerciseHeaders as |header level|}}
-    <div class="max-w-7xl sm:px-6 lg:px-8 py-6 mx-auto">
+    <div class="max-w-7xl sm:px-6 lg:px-8 mx-auto mb-10" {{scroll-top (eq level 0)}}>
       <div class="max-w-none mx-auto">
         <div class="sm:rounded-lg sm:shadow navigation-block overflow-hidden">
           <div class="sm:px-6 px-4 py-5">
@@ -11,14 +11,14 @@
               {{header}}
             </h3>
           </div>
-          <ul>
-            <li>
-              <div
-                data-test-exercises-name-group
-                class="exercise-block__levels flex mt-4 ml-2 mr-2"
-              >
-                {{#each this.sortedExercises as |exercise|}}
-                  {{#if (eq exercise.name header)}}
+          <ul class="flex flex-row justify-around mb-5 ml-6 mr-6" data-test-exercises-name-group>
+            {{#each this.sortedExercises as |exercise|}}
+              {{#if (eq exercise.name header)}}
+                <li>
+                  <div
+
+                    class="exercise-block__levels flex mt-4 ml-2 mr-2"
+                  >
                     <LinkTo
                       @route="group.series.exercise"
                       @model={{exercise.id}}
@@ -26,22 +26,32 @@
                       data-test-exercise-level={{exercise.level}}
                       data-test-exercise-name={{exercise.name}}
                       @disabled={{not exercise.canInteract}}
-                      title={{concat (t "task_link.exercise") " " exercise.level}}
-                      class="task-square-link exercise-block__level flex-1 p-2 m-4 mb-6 bg-white rounded-lg shadow-lg"
+                      title={{concat (t "task_link.exercise") " " exercise.level
+                      }}
+                      class="task-square-link exercise-block__level flex-1 p-2 m-4 mb-6 bg-white rounded-lg shadow-lg hover:shadow-md"
                     >
-                      <Ui::Icon::Tree @level={{level}} @enabled={{exercise.canInteract}} />
+                      <Ui::Icon::Tree
+                        @level={{level}}
+                        @enabled={{exercise.canInteract}}
+                      />
                       <div class="check-container">
                         <Ui::Icon::Check
-                          @isAvailable={{and exercise.canInteract (not exercise.isCompleted)}}
+                          @isAvailable={{and
+                            exercise.canInteract
+                            (not exercise.isCompleted)
+                          }}
                           @isCompleted={{exercise.isCompleted}}
-                          @isLocked={{and (not exercise.canInteract) (not exercise.isCompleted)}}
+                          @isLocked={{and
+                            (not exercise.canInteract)
+                            (not exercise.isCompleted)
+                          }}
                         />
                       </div>
                     </LinkTo>
-                  {{/if}}
-                {{/each}}
-              </div>
-            </li>
+                  </div>
+                </li>
+              {{/if}}
+            {{/each}}
           </ul>
         </div>
       </div>
