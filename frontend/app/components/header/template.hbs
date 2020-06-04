@@ -1,6 +1,6 @@
 <div class="{{style-namespace "header"}} header" ...attributes>
   <nav class="flex flex-wrap items-center justify-between p-4 bg-blue-500">
-    <div class="flex items-center flex-shrink-0 mr-8 text-white">
+    <div class="relative z-10 flex items-center flex-shrink-0 mr-8 text-white">
       <LinkTo
         @route="index"
         data-test-logo
@@ -12,7 +12,9 @@
         </span>
       </LinkTo>
     </div>
-    <div class="lg:flex lg:items-center lg:w-auto flex-grow block w-full">
+    <div
+      class="lg:flex lg:items-center lg:w-auto relative z-10 flex-grow block"
+    >
       <div class="lg:flex-grow text-sm">
         {{#if this.session.isAuthenticated}}
           <LinkTo
@@ -44,6 +46,8 @@
         data-test-user-email
         title="{{this.session.data.user.firstName}}
 
+
+
           {{this.session.data.user.lastName}}"
         class="lg:mt-0 inline-block px-4 py-2 mt-4 mr-2 text-sm leading-none text-white rounded"
       >
@@ -64,6 +68,19 @@
       >
         {{t "header.logout"}}
       </button>
+    {{else}}
+      <div class="relative z-10 flex justify-end px-16">
+        <div class="flex">
+          <LinkTo
+            data-test-registration-form
+            @route="registration"
+            type="submit"
+            class="hover:bg-blue-900 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue-700 flex justify-center w-56 px-4 py-2 m-auto text-sm font-medium text-white transition duration-150 ease-in-out bg-blue-700 border border-transparent rounded-full"
+          >
+            {{t "login_form.registration"}}
+          </LinkTo>
+        </div>
+      </div>
     {{/if}}
   </nav>
 </div>

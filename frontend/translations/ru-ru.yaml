@@ -8,8 +8,9 @@ login_form:
   warning_enter_credentials: Пожалуйста, введите логин и пароль.
   password: Пароль 
   registration: Регистрация
-  sign_in: Вход
-
+  sign_in: Вход 
+  forgot_password: Забыли свой пароль? 
+   
 rigistr_form:
   birthday: Дата рождения
   email: Почта
@@ -32,10 +33,6 @@ navigation:
 exercise: 
   progress: пройдено
 
-footer:
-  info_about_helper: и
-  info_about: При поддержке
-
 exercise_messages:
   successfully: Поздравляем! Упражнение выполнено!
   unsuccessfully: Неверно. Попробуйте ещё раз!
@@ -56,3 +53,7 @@ control_exercises:
   solve: Решать
   interact: Взаимодейстовать
   listen: Слушать
+
+  footer:
+  info_about_helper: и
+  info_about: При поддержке
