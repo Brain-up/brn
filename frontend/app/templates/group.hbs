@@ -1,15 +1,15 @@
-{{#if (not this.headerAndNavShown)}}
+{{#unless this.headerAndNavShown}}
   <div class="flex items-center mb-2">
     <Breadcrumbs @group={{this.model}} />
     <Timer @paused={{true}} />
   </div>
-{{/if}}
-<div class="flex series-container">
-  {{#if (not this.headerAndNavShown)}}
+{{/unless}}
+<div class="series-container flex">
+  {{#unless this.headerAndNavShown}}
     <aside class="series-page--aside">
       <GroupNavigation @group={{this.model}} />
     </aside>
-  {{/if}}
+  {{/unless}}
   <div class="series-page--canvas flex flex-grow">
     {{outlet}}
   </div>

@@ -3,14 +3,13 @@
   <div class="mb-3">
     <nav
       id="progressContainer"
-      class="c-pagination c-pagination--tasks mb-3"
       {{offset-width this.setOffsetWidth}}
+      class="c-pagination c-pagination--tasks mb-3"
     >
       {{#if (and this.progressItems.length this.progressContainerWidth)}}
         <ul
           data-test-items-list
           data-test-max-amount={{this.maxAmount}}
-          class="clearfix items-list"
           style={{html-safe
             (concat
               "width: calc(36px*"
@@ -28,6 +27,7 @@
               )
             )
           }}
+          class="items-list clearfix"
         >
           {{#each (sort-by "order:desc" this.progressItems) as |item index|}}
             <li
@@ -77,7 +77,7 @@
       {{/if}}
     </nav>
     {{#if this.shouldHideExtraItems}}
-      <div class="flex justify-between hidden-counter">
+      <div class="hidden-counter flex justify-between">
         <span data-test-hidden-uncompleted>
           {{if
             this.positiveHiddenUncompletedCount
