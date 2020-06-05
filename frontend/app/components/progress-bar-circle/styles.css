@@ -1,3 +1,6 @@
+/*! purgecss start ignore */
+
+
 .circular-chart {
   height: 66px;
   width: 66px;
@@ -32,3 +35,5 @@
   font-weight: bold;
   text-anchor: middle;
 }
+
+/*! purgecss end ignore */
