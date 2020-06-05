@@ -11,18 +11,13 @@
   <div
     data-test-type={{@type}}
     ...attributes
-    class="sm:mt-0 flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded"
+    class="flex flex-col items-center justify-center flex-1 px-4 py-4 mt-4 bg-white"
   >
-    <div>
+    <div class="relative">
       <div>
         <p
-          class="flex items-center justify-end
-            {{get textColorClass @type}}
-             text-md"
+          class="absolute right-0 flex items-center justify-end p-1 mt-16 mr-16 bg-white border-2 border-yellow-500 rounded-full"
         >
-          <span data-test-diff class="font-bold">
-            {{or @diff "@diff"}}
-          </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -32,12 +27,19 @@
           </svg>
         </p>
       </div>
-      <p data-test-value class="text-3xl font-semibold text-center text-gray-800">
-        {{or @value "@value"}}
-      </p>
-      <p data-test-label class="text-lg text-center text-gray-500">
-        {{or @label "@label"}}
-      </p>
+      <div
+        class="flex flex-col justify-center w-64 h-64 bg-blue-300 rounded-full"
+      >
+        <p
+          data-test-value
+          class="mb-4 text-3xl text-4xl font-semibold text-center text-pink-500"
+        >
+          {{or @value "@value"}}
+        </p>
+        <p data-test-label class="text-lg font-bold text-center text-blue-900">
+          {{or @label "@label"}}
+        </p>
+      </div>
     </div>
   </div>
 {{/let}}

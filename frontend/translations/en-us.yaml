@@ -43,6 +43,7 @@ statistics:
   attempts: Attempts
   tasks: Tasks
   time: Time
+  scoring: School of Success
 
 task_link:
   exercise: Exercise

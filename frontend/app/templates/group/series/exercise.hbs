@@ -31,6 +31,10 @@
           @stats={{this.model.stats}}
           {{did-insert this.afterCompleted}}
         />
+
+        <div class="flex rounded-full">
+          {{t "statistics.scoring"}}
+        </div>
       {{else}}
         {{outlet}}
       {{/if}}

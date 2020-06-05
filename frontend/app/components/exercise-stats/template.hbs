@@ -1,20 +1,21 @@
-<div class="max-w-xl px-4 py-4 mx-auto" data-test-exercise-stats ...attributes>
-  <div class="sm:grid sm:h-32 sm:grid-flow-row sm:gap-4 sm:grid-cols-3">
+<div
+  data-test-exercise-stats
+  ...attributes
+  class="py-14 flex items-end w-full px-24 mx-auto"
+>
+  <div class="flex items-center justify-start w-full">
     <ExerciseStats::Panel
       @type="positive"
-      @diff="10%"
       @label={{t "statistics.time"}}
       @value={{this.minutes}}
     />
     <ExerciseStats::Panel
       @type="negative"
-      @diff="10%"
       @label={{t "statistics.attempts"}}
       @value={{this.repetitionIndex}}
     />
     <ExerciseStats::Panel
       @type="neutral"
-      @diff="10%"
       @label={{t "statistics.tasks"}}
       @value={{@stats.tasksCount}}
     />
