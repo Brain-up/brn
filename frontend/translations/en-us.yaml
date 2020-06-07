@@ -42,8 +42,10 @@ exercise_messages:
 statistics:
   attempts: Attempts
   tasks: Tasks
-  time: Time
-  scoring: School of Success
+  time_min: min
+  time_sec: sec
+  scoring: Indicator of the success
+  time_board: Time
 
 task_link:
   exercise: Exercise

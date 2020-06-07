@@ -1,9 +1,10 @@
 <div
   class="{{style-namespace "answer-correctness-widget"}}
-     flex flex-wrap flex-1 mt-5 flex-col text-center"
+
+     flex flex-wrap flex-1 flex-col text-center justify-evenly pb-0 items-center"
   ...attributes
 >
-  <h3 class="mt-6 mb-6">
+  <h3 class="mt-6 mb-6 text-2xl font-semibold">
     {{if
       @isCorrect
       (t "exercise_messages.successfully")
@@ -11,7 +12,12 @@
     }}
   </h3>
   {{#if @isCorrect}}
-    <div data-test-answer-correctness-widget data-test-is-correct={{@isCorrect}} data-test-isnt-correct={{not @isCorrect}} class="object-center">
+    <div
+      data-test-answer-correctness-widget
+      data-test-is-correct={{@isCorrect}}
+      data-test-isnt-correct={{not @isCorrect}}
+      class="object-center"
+    >
       <svg
         width="340"
         height="340"

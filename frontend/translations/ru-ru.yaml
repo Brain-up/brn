@@ -42,8 +42,10 @@ exercise_messages:
 statistics:
   attempts: Попытки
   tasks: Задачи
-  time: Время
-  scoring: School of Success
+  time_min: мин
+  time_sec: сек
+  scoring: Шкала успеха
+  time_board: Total time
 
 task_link:
   exercise: Упражнения
