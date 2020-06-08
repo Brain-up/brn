@@ -15,6 +15,7 @@ module.exports = {
         },
         pink: {
           ...colors.pink,
+          '200': '#FBEDFE',
           '500': '#FF6373',
         },
 
@@ -27,6 +28,14 @@ module.exports = {
           ...colors.purple,
           '700': '#2A165B',
         },
+
+        indigo: {
+          ...colors.indigo,
+          '200': '#EDF0FE',
+        },
+      },
+      borderRadius: {
+        large: '1.25rem',
       },
     },
   },

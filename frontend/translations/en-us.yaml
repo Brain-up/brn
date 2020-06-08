@@ -46,6 +46,7 @@ statistics:
   time_sec: sec
   scoring: Indicator of the success
   time_board: Time
+  info_about: Your BrainUp Image
 
 task_link:
   exercise: Exercise

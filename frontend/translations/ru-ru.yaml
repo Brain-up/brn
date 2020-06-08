@@ -46,6 +46,7 @@ statistics:
   time_sec: сек
   scoring: Шкала успеха
   time_board: Total time
+  info_about: Твой BrainUp образ
 
 task_link:
   exercise: Упражнения

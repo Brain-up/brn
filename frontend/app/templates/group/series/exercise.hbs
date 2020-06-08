@@ -27,24 +27,16 @@
           {{did-insert this.greedOnCompletedExercise}}
         />
       {{else if this.showExerciseStats}}
-        <h3 class="text-purple-2A165B mb-8 font-bold text-center">
-          Твой BrainUp образ
-        </h3>
         <div
-          class="column flex flex-col items-center justify-between justify-around w-full h-full"
+          class="rounded-large column background-statistics flex flex-col items-center justify-between justify-around w-full h-full bg-blue-300"
         >
+          <h3 class="text-purple-2A165B mt-6 mb-8 font-bold text-center">
+            {{t "statistics.info_about"}}
+          </h3>
           <ExerciseStats
             @stats={{this.model.stats}}
             {{did-insert this.afterCompleted}}
           />
-          <div
-            class="items-bottom flex-0 flex items-center px-10 py-8 mb-16 text-xl font-semibold text-blue-900 bg-blue-100 rounded-full"
-          >
-            {{t "statistics.scoring"}}
-            <span class="ml-4 text-4xl">
-              0.55
-            </span>
-          </div>
         </div>
       {{else}}
         {{outlet}}
