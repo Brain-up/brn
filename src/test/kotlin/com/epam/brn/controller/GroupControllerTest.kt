@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.service.ExerciseGroupsService
+import com.epam.brn.service.LocalePostprocessor
 import com.nhaarman.mockito_kotlin.verify
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -16,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class GroupControllerTest {
     @Mock
     lateinit var exerciseGroupsService: ExerciseGroupsService
+    @Mock
+    lateinit var localePostProcessor: LocalePostprocessor<ExerciseGroupDto>
     @InjectMocks
     lateinit var groupController: GroupController
 
@@ -25,6 +28,7 @@ internal class GroupControllerTest {
         val group = ExerciseGroupDto(1, "name", "desc")
         val listGroups = listOf(group)
         Mockito.`when`(exerciseGroupsService.findAllGroups()).thenReturn(listGroups)
+        Mockito.`when`(localePostProcessor.postprocess(group)).thenReturn(group)
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseGroupDto> =
@@ -40,6 +44,7 @@ internal class GroupControllerTest {
         val groupId = 1L
         val group = ExerciseGroupDto(1, "name", "desc")
         Mockito.`when`(exerciseGroupsService.findGroupDtoById(groupId)).thenReturn(group)
+
         // WHEN
         val actualResultData: ExerciseGroupDto =
             groupController.getGroupById(groupId).body?.data as ExerciseGroupDto

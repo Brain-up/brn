@@ -5,8 +5,8 @@ import javax.validation.constraints.NotBlank
 data class ExerciseGroupDto(
     val id: Long?,
     @NotBlank
-    val name: String?,
-    val description: String?,
+    var name: String?,
+    var description: String?,
     val series: MutableSet<Long?> = HashSet()
 ) {
     constructor() : this(null, null, null)
