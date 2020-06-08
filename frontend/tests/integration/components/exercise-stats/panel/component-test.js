@@ -10,11 +10,19 @@ module('Integration | Component | exercise-stats/panel', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<ExerciseStats::Panel @type="positive" @label="Foo" @value="42" @diff="5" />`);
+    await render(
+      hbs`<ExerciseStats::Panel @type="positive" @label="Foo" @value="42"/>`,
+    );
 
     assert.dom('[data-test-type="positive"]').exists();
     assert.dom('[data-test-label]').hasText('Foo');
     assert.dom('[data-test-value]').hasText('42');
-    assert.dom('[data-test-diff]').hasText('5');
+
+    await render(
+      hbs`<ExerciseStats::Panel @type="total" @label="Foo" @value="42"  @totalStat={{true}}/>`,
+    );
+    assert.dom('[data-test-type="total"]').exists();
+    assert.dom('[data-test-label]').hasText('Foo');
+    assert.dom('[data-test-value]').hasText('42');
   });
 });
