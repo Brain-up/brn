@@ -129,7 +129,7 @@
   "dependencies": {
     "ember-component-css": "^0.7.4",
     "ember-fast-cli": "^1.2.1",
-    "eslint": "^7.0.0",
+    "eslint": "^7.2.0",
     "idle-js": "^1.2.0",
     "stylelint": "^13.1.0",
     "stylelint-config-recommended": "^3.0.0",
