@@ -82,7 +82,7 @@
     "ember-cli-eslint": "^5.1.0",
     "ember-cli-htmlbars": "^5.1.2",
     "ember-cli-inject-live-reload": "^2.0.2",
-    "ember-cli-mirage": "^1.1.6",
+    "ember-cli-mirage": "^1.1.7",
     "ember-cli-page-object": "^1.17.2",
     "ember-cli-postcss": "^6.0.1",
     "ember-cli-sri": "^2.1.1",
