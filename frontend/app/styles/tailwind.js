@@ -37,6 +37,10 @@ module.exports = {
       borderRadius: {
         large: '1.25rem',
       },
+
+      justifyContent: {
+        evenly: 'space-evenly',
+      },
     },
   },
   variants: {},

@@ -15,7 +15,7 @@
     >
       <p
         data-test-label
-        class="mr-4 text-lg font-bold text-center text-blue-900"
+        class="mr-4 text-2xl font-bold text-center text-blue-900"
       >
         {{or @label "@label"}}
       </p>
@@ -30,7 +30,7 @@
     <div
       data-test-type={{@type}}
       ...attributes
-      class="relative flex flex-col items-center justify-center px-4 py-4 mt-4 bg-white"
+      class="relative flex flex-col items-center justify-center px-4 py-4 bg-white"
     >
       <p
         class="absolute top-0 right-0 flex items-center justify-end p-1 mt-12 mr-12 bg-white border-2 border-yellow-500 rounded-full"
@@ -44,7 +44,7 @@
         </svg>
       </p>
       <div class="{{if "flex-col" "flex-col"}} flex justify-center">
-        <p data-test-label class="text-lg font-bold text-center text-blue-900">
+        <p data-test-label class="text-2xl font-bold text-center text-blue-900">
           {{or @label "@label"}}
         </p>
         <p
