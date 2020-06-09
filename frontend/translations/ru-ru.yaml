@@ -42,7 +42,11 @@ exercise_messages:
 statistics:
   attempts: Попытки
   tasks: Задачи
-  time: Время
+  time_min: мин
+  time_sec: сек
+  scoring: Шкала успеха
+  time_board: Общее время
+  info_about: Твой BrainUp образ
 
 task_link:
   exercise: Упражнения

@@ -3,7 +3,7 @@
     class="bg-white rounded px-8 pt-6 pb-8 mb-4
 
 
-    {{unless this.registrationInProgress "shadow-lg"}}"
+      {{unless this.registrationInProgress "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
     {{#if this.registrationInProgress}}
@@ -37,6 +37,7 @@
       </div>
       <div class="mb-4">
         <LoginForm::Input
+          @totalStat={{true}}
           @label={{t "rigistr_form.email"}}
           @model={{this}}
           @name="email"

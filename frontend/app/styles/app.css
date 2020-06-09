@@ -51,11 +51,29 @@ main > * {
   background-size: cover;
   content: "";
   position: absolute; 
-  width: 100%;
-  top: -72px;
+  width: 30%;
+  top: 0;
   left: 0;
   bottom: -50px;
   z-index: 0;
+}
+
+.background-statistics {
+  position: relative;
+}
+
+.background-statistics:after  {
+  background-image: url(/ui/statistics-background.svg);
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: "";
+  height: 30%;
+  position: absolute; 
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 30%;
 }
 
 body.route-groups  {
@@ -86,6 +104,13 @@ a[disabled] {
 .not-accessable {
   text-align: center;
   width: 100%;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(-50% -50%);
 }
 
 .not-accessable > * {

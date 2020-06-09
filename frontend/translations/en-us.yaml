@@ -42,7 +42,11 @@ exercise_messages:
 statistics:
   attempts: Attempts
   tasks: Tasks
-  time: Time
+  time_min: min
+  time_sec: sec
+  scoring: Indicator of the success
+  time_board: Time
+  info_about: Your BrainUp Image
 
 task_link:
   exercise: Exercise
