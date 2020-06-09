@@ -1,49 +1,64 @@
 <div
-  data-test-exercise-stats
-  ...attributes
-  class="justify-evenly flex flex-col flex-1 w-full"
+  class="rounded-large column background-statistics flex flex-col items-center justify-between w-full h-full bg-blue-300"
 >
-  <div class="flex items-center justify-around w-full">
-    <ExerciseStats::Panel
-      @type="positive"
-      @label={{t "statistics.time_board"}}
-      class="flex-col w-64 h-64 bg-pink-200 rounded-full"
-    >
-      <span>{{this.timeStats.min}}</span>
-      <span class="text-2xl font-bold text-center text-blue-900">{{t 'statistics.time_min'}}</span>
-      <span>{{this.timeStats.sec}}</span>
-      <span class="text-2xl font-bold text-center text-blue-900">{{t 'statistics.time_sec'}}</span>
-    </ExerciseStats::Panel>
-    <ExerciseStats::Panel
-      @type="negative"
-      @label={{t "statistics.attempts"}}
-      @value={{this.repetitionIndex}}
-      class="flex-col w-64 h-64 bg-blue-100 rounded-full"
-    />
-    <ExerciseStats::Panel
-      @type="neutral"
-      @label={{t "statistics.tasks"}}
-      @value={{@stats.tasksCount}}
-      class="flex-col w-64 h-64 bg-indigo-200 rounded-full"
-    />
-  </div>
-  <div class="flex items-center justify-center">
-     <div
-      data-test-type="total"
-      class="items-bottom flex-0 justify-evenly flex items-center px-10 py-8 text-xl font-semibold text-blue-900 bg-blue-100 rounded-full"
-    >
-      <p
-        data-test-label
-        class="mr-4 text-2xl font-bold text-center text-blue-900"
+  <h3 class="mt-16 font-bold text-center text-purple-700">
+    {{t "statistics.info_about"}}
+  </h3>
+  <div
+    data-test-exercise-stats
+    ...attributes
+    class="justify-evenly flex flex-col flex-1 w-full"
+  >
+    <div class="flex items-center justify-around w-full">
+      <ExerciseStats::Panel
+        @type="positive"
+        @label={{t "statistics.time_board"}}
+        class="flex-col w-64 h-64 bg-pink-200 rounded-full"
       >
-        {{t "statistics.scoring"}}
-      </p>
-      <p
-        data-test-value
-        class="text-3xl text-4xl font-semibold text-center text-pink-500"
+        <span>
+          {{this.timeStats.min}}
+        </span>
+        <span class="text-2xl font-bold text-center text-blue-900">
+          {{t "statistics.time_min"}}
+        </span>
+        <span>
+          {{this.timeStats.sec}}
+        </span>
+        <span class="text-2xl font-bold text-center text-blue-900">
+          {{t "statistics.time_sec"}}
+        </span>
+      </ExerciseStats::Panel>
+      <ExerciseStats::Panel
+        @type="negative"
+        @label={{t "statistics.attempts"}}
+        @value={{this.repetitionIndex}}
+        class="flex-col w-64 h-64 bg-blue-100 rounded-full"
+      />
+      <ExerciseStats::Panel
+        @type="neutral"
+        @label={{t "statistics.tasks"}}
+        @value={{@stats.tasksCount}}
+        class="flex-col w-64 h-64 bg-indigo-200 rounded-full"
+      />
+    </div>
+    <div class="flex items-center justify-center">
+      <div
+        data-test-type="total"
+        class="items-bottom flex-0 justify-evenly flex items-center px-10 py-8 text-xl font-semibold text-blue-900 bg-blue-100 rounded-full"
       >
-        0.33
-      </p>
+        <p
+          data-test-label
+          class="mr-4 text-2xl font-bold text-center text-blue-900"
+        >
+          {{t "statistics.scoring"}}
+        </p>
+        <p
+          data-test-value
+          class="text-3xl text-4xl font-semibold text-center text-pink-500"
+        >
+          0.33
+        </p>
+      </div>
     </div>
   </div>
 </div>

@@ -29,6 +29,6 @@ export default class HeaderComponent extends Component {
     this.intl.setLocale([name]);
     this.selectedLocale = name;
     localStorage.setItem('locale', name);
-    this.router.transitionTo('groups.index', { queryParams: { reload: true } });
+    this.router.transitionTo('groups', { queryParams: { locale: name } });
   }
 }

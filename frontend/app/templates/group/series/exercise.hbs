@@ -27,17 +27,10 @@
           {{did-insert this.greedOnCompletedExercise}}
         />
       {{else if this.showExerciseStats}}
-        <div
-          class="rounded-large column background-statistics flex flex-col items-center justify-between w-full h-full bg-blue-300"
-        >
-          <h3 class="mt-16 font-bold text-center text-purple-700">
-            {{t "statistics.info_about"}}
-          </h3>
           <ExerciseStats
             @stats={{this.model.stats}}
             {{did-insert this.afterCompleted}}
           />
-        </div>
       {{else}}
         {{outlet}}
       {{/if}}
