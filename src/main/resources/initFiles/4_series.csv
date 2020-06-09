@@ -1,0 +1,10 @@
+level,exerciseName,words,noise
+1,Words without noise,(бал бум быль вить гад дуб),no_noise
+2,Words without noise,(линь лис моль пар пять раб),no_noise
+3,Words without noise,(рак рожь сеть топь ход шеф),no_noise
+4,Words with little noise,(бал бум быль вить гад дуб),noise_6db
+5,Words with little noise,(линь лис моль пар пять раб),noise_6db
+6,Words with little noise,(рак рожь сеть топь ход шеф),noise_6db
+7,Noisy words,(бал бум быль вить гад дуб),noise_9db
+8,Noisy words,(линь лис моль пар пять раб),noise_9db
+9,Noisy words,(рак рожь сеть топь ход шеф),noise_9db

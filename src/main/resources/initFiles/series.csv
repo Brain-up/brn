@@ -3,3 +3,7 @@ groupId, seriesId, name, description
 2, 2, Группа слов, Распознавание последовательности слов
 2, 3, Предложения, Распознавание предложений
 2, 4, Дихотическое слушание, Дихотическое слушание
+4, 5, Words, Word Recognition
+4, 6, Word Group, Word Sequence Recognition
+4, 7, Offers, Recognizing Offers
+4, 8, Dichotic Listening, Dichotic Listening
