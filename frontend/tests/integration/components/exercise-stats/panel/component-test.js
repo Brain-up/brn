@@ -25,4 +25,11 @@ module('Integration | Component | exercise-stats/panel', function(hooks) {
     assert.dom('[data-test-label]').hasText('Foo');
     assert.dom('[data-test-value]').hasText('42');
   });
+
+  test('it support bock invocation', async function(assert) {
+    await render(
+      hbs`<ExerciseStats::Panel @type="positive" @label="Foo">42</ExerciseStats::Panel>`,
+    );
+    assert.dom('[data-test-value]').hasText('42');
+  });
 });

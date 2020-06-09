@@ -7,9 +7,13 @@
     <ExerciseStats::Panel
       @type="positive"
       @label={{t "statistics.time_board"}}
-      @value={{this.minutes}}
       class="flex-col w-64 h-64 bg-pink-200 rounded-full"
-    />
+    >
+      <span>{{this.timeStats.min}}</span>
+      <span class="text-2xl font-bold text-center text-blue-900">{{t 'statistics.time_min'}}</span>
+      <span>{{this.timeStats.sec}}</span>
+      <span class="text-2xl font-bold text-center text-blue-900">{{t 'statistics.time_sec'}}</span>
+    </ExerciseStats::Panel>
     <ExerciseStats::Panel
       @type="negative"
       @label={{t "statistics.attempts"}}
@@ -24,12 +28,22 @@
     />
   </div>
   <div class="flex items-center justify-center">
-    <ExerciseStats::Panel
-      @totalStat={{true}}
-      @type="total"
-      @label={{t "statistics.scoring"}}
-      @value="0.33"
-      class="items-bottom flex-0 flex items-center px-10 py-8 mt-16 mb-16 text-xl font-semibold text-blue-900 bg-blue-100 rounded-full"
-    />
+     <div
+      data-test-type="total"
+      class="items-bottom flex-0 justify-evenly flex items-center px-10 py-8 text-xl font-semibold text-blue-900 bg-blue-100 rounded-full"
+    >
+      <p
+        data-test-label
+        class="mr-4 text-2xl font-bold text-center text-blue-900"
+      >
+        {{t "statistics.scoring"}}
+      </p>
+      <p
+        data-test-value
+        class="text-3xl text-4xl font-semibold text-center text-pink-500"
+      >
+        0.33
+      </p>
+    </div>
   </div>
 </div>

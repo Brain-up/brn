@@ -4,16 +4,13 @@ import { inject as service } from '@ember/service';
 export default class ExerciseStatsComponent extends Component {
   @service('intl') intl;
 
-  get minutes() {
+  get timeStats() {
     const { endTime, startTime } = this.args.stats;
-
-    this.ms = endTime.getTime() - startTime.getTime();
-    this.totalSec = Math.floor(this.ms / 1000);
-    this.sec = this.totalSec % 60;
-    this.min = Math.floor(this.totalSec / 60);
-    this.minText = this.intl.t('statistics.time_min');
-    this.secText = this.intl.t('statistics.time_sec');
-    return `${this.min} ${this.minText} ${this.sec} ${this.secText}`;
+    const ms = endTime.getTime() - startTime.getTime();
+    const totalSec = Math.floor(ms / 1000);
+    const sec = totalSec % 60;
+    const min = Math.floor(totalSec / 60);
+    return { min, sec };
   }
 
   get repetitionIndex() {
