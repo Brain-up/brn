@@ -97,13 +97,13 @@ export default class SingleSimpleWordsComponent extends Component {
   async handleWrongAnswer() {
     this.markNextAttempt(this.firstUncompletedTask);
     this.updateLocalTasks();
-    // await customTimeout(1000);
+    await customTimeout(1000);
     this.startTask();
     this.onWrongAnswer({ skipRetry: true });
   }
 
   async handleCorrectAnswer() {
-    // await customTimeout(1000);
+    await customTimeout(1000);
     this.startNewTask();
     if (!this.firstUncompletedTask) {
       await customTimeout(3000);
