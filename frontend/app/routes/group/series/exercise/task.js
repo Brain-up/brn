@@ -2,8 +2,10 @@ import Route from '@ember/routing/route';
 
 export default class GroupSeriesExerciseTaskRoute extends Route {
   async model({ task_id }) {
-    const tasks = await this.modelFor('group.series.exercise').hasMany('tasks').load();
-    return tasks.toArray().find(({id})=>task_id === id);
+    const tasks = await this.modelFor('group.series.exercise')
+      .hasMany('tasks')
+      .load();
+    return tasks.toArray().find(({ id }) => task_id === id);
   }
   async afterModel(task, { to }) {
     if (
