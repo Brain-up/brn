@@ -1,7 +1,4 @@
 <form class="background-form" {{on "submit" this.onSubmit}}>
-  {{#if this.loginInProgress}}
-    <LoadingSpinner />
-  {{else}}
     <div class="flex justify-end h-full bg-white">
       <div
         class="lg:flex-none sm:pr-20 lg:py-24 flex flex-col items-end flex-1 w-2/4 pt-4 pl-20 pr-40 bg-blue-500"
@@ -12,7 +9,9 @@
           >
             {{t "login_form.sign_in"}}
           </h2>
-
+          {{#if this.loginInProgress}}
+            <LoadingSpinner />
+          {{else}}
           <div class="mb-4">
             <LoginForm::Input
               @placeholder={{t "login_form.login"}}
@@ -20,7 +19,6 @@
               @name="login"
             />
           </div>
-
           <div class="mb-4">
             <LoginForm::Input
               @placeholder={{t "login_form.password"}}
@@ -34,7 +32,7 @@
               </p>
             {{/if}}
             {{#if this.errorMessage}}
-              <p data-test-form-error class="text-xs italic text-red-500">
+              <p data-test-form-error class="mt-2 text-xs italic text-red-500">
                 {{this.errorMessage}}
               </p>
             {{/if}}
@@ -66,8 +64,8 @@
               {{t "login_form.forgot_password"}}
             </a>
           </div>
+          {{/if}}
         </div>
       </div>
     </div>
-  {{/if}}
 </form>
