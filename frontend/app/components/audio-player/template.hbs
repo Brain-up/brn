@@ -13,7 +13,7 @@
       type="button"
       class="bg-blue-500 text-white font-bold rounded-full
         {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}}
-        {{if @transparent "visually-hidden"}}
+        {{if @transparent "invisible"}}
       "
       disabled={{disablePlayButton}}
       {{on "click" this.playAudio}}

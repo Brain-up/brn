@@ -15,8 +15,4 @@ button {
   transition: background 0.3s linear;
 }
 
-.visually-hidden {
-  visibility: hidden;
-}
-
 /*! purgecss end ignore */
