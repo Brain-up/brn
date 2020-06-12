@@ -12,7 +12,7 @@ login_form:
   sign_in: Вход
   forgot_password: Забыли свой пароль?
 
-rigistr_form:
+registration_form:
   birthday: Дата рождения
   email: Почта
   warning_input_restriction: Максимальное количество символов
@@ -23,6 +23,7 @@ rigistr_form:
   registration: Регистрация
   sign_in: Вход
   surname: Фамилия
+  email_exists: Пользователь с такой почтой уже зарегистрирован
 
 breadcrumbs:
   groups: Группы

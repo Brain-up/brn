@@ -12,7 +12,7 @@ login_form:
   warning_enter_credentials: Please enter your login and password
   forgot_password: Forgot your password?
 
-rigistr_form:
+registration_form:
   birthday: Birthday
   email: Email
   invalid_date: Invalid date
@@ -23,6 +23,7 @@ rigistr_form:
   surname: Surname
   warning_enter_credentials: Please enter your login and password
   warning_input_restriction: Maximum number of characters
+  email_exists: User with this Email already registered
 
 breadcrumbs:
   groups: Groups

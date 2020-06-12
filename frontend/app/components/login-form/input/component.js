@@ -17,7 +17,7 @@ export default class LoginFormInputComponent extends Component {
     const sumValue = (value || '').trim().length;
 
     if (sumValue >= this.maxlength - 1) {
-      return `${this.intl.t('rigistr_form.warning_input_restriction')} - ${
+      return `${this.intl.t('registration_form.warning_input_restriction')} - ${
         this.maxlength
       }`;
     }
