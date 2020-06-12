@@ -11,14 +11,14 @@
     {{else}}
       <div class="mb-4">
         <LoginForm::Input
-          @label={{t "rigistr_form.name"}}
+          @label={{t "registration_form.name"}}
           @model={{this}}
           @name="firstName"
         />
       </div>
       <div class="mb-4">
         <LoginForm::Input
-          @label={{t "rigistr_form.surname"}}
+          @label={{t "registration_form.surname"}}
           @model={{this}}
           @name="lastName"
         />
@@ -29,7 +29,7 @@
           max={{this.maxDateString}}
           required
           @warning={{this.warningErrorDate}}
-          @label={{t "rigistr_form.birthday"}}
+          @label={{t "registration_form.birthday"}}
           @model={{this}}
           @name="birthday"
           @type="date"
@@ -37,7 +37,7 @@
       </div>
       <div class="mb-4">
         <LoginForm::Input
-          @label={{t "rigistr_form.email"}}
+          @label={{t "registration_form.email"}}
           @model={{this}}
           @name="email"
           @type="email"
@@ -45,18 +45,18 @@
       </div>
       <div class="mb-6">
         <LoginForm::Input
-          @label={{t "rigistr_form.password"}}
+          @label={{t "registration_form.password"}}
           @model={{this}}
           @name="password"
           @type="password"
         />
         {{#if (or this.usernameError this.passwordError)}}
-          <p data-test-form-warning class="text-xs italic text-red-500">
-            {{t "rigistr_form.warning_enter_credentials"}}
+          <p data-test-form-warning class="mt-2 text-xs italic text-red-500">
+            {{t "registration_form.warning_enter_credentials"}}
           </p>
         {{/if}}
         {{#if this.errorMessage}}
-          <p data-test-form-error class="text-xs italic text-red-500">
+          <p data-test-form-error class="mt-2 text-xs italic text-red-500">
             {{this.errorMessage}}
           </p>
         {{/if}}
@@ -67,7 +67,7 @@
           type="submit"
           class="hover:bg-blue-700 focus:outline-none focus:shadow-outline flex-grow px-4 py-2 font-bold text-white bg-blue-500 rounded"
         >
-          {{t "rigistr_form.registration"}}
+          {{t "registration_form.registration"}}
         </button>
       </div>
       <div class="flex justify-end">
@@ -75,7 +75,7 @@
           @route="login"
           class="hover:text-blue-800 inline-block text-sm font-bold text-blue-500 align-baseline"
         >
-          {{t "rigistr_form.sign_in"}}
+          {{t "registration_form.sign_in"}}
         </LinkTo>
       </div>
     {{/if}}
