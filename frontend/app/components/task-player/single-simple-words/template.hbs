@@ -15,6 +15,7 @@
     <AudioPlayer
       @audioFileUrl={{this.audioFileUrl}}
       @disabled={{@disableAudioPlayer}}
+      @transparent={{not-eq @mode "task"}}
     />
     <ul class="task-player__options mt-5">
       {{#each this.task.answerOptions as |answerOption|}}
