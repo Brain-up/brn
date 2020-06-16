@@ -5725,14 +5725,14 @@ ember-component-css@^0.7.4:
     rsvp "^4.8.4"
     walk-sync "^1.0.1"
 
-ember-composable-helpers@^3.1.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/ember-composable-helpers/-/ember-composable-helpers-3.2.0.tgz#6eb03626cf21d7cdcec4b949ac202c0cef43f4c3"
-  integrity sha512-OBnwpDkeOnDBMGQ/96B7TUy3e3wR1dqmAJ8+zDQTEjWrrCztKFg2dNGzCJchN1AD1i4FS4B/9iloAnn1pPWw8w==
+ember-composable-helpers@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/ember-composable-helpers/-/ember-composable-helpers-4.2.1.tgz#2a123c96b8c40076fa560591dc384fe66d3ef2c4"
+  integrity sha512-kuRA1MuEb49Pe7OZiOT++KR9Yq10cMoE1FiRNxzn3ldeM1puG83VxWdKdHSvBMIbEjR4KAyT1SgXyaaShH2Nzw==
   dependencies:
     "@babel/core" "^7.0.0"
     broccoli-funnel "2.0.1"
-    ember-cli-babel "^7.1.0"
+    ember-cli-babel "^7.11.1"
     resolve "^1.10.0"
 
 ember-concurrency@^1.1.5:
