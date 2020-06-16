@@ -1,10 +1,10 @@
 <div class="{{style-namespace "header"}} header" ...attributes>
-  <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-4">
-    <div class="flex items-center flex-shrink-0 text-white mr-8">
+  <nav class="flex flex-wrap items-center justify-between p-4 bg-blue-500">
+    <div class="relative z-10 flex items-center flex-shrink-0 mr-8 text-white">
       <LinkTo
         @route="index"
         data-test-logo
-        class="font-semibold text-xl tracking-tight logo-text"
+        class="logo-text text-xl font-semibold tracking-tight"
       >
         <FaIcon @icon="brain" />
         <span class="logo-link__name">
@@ -12,37 +12,102 @@
         </span>
       </LinkTo>
     </div>
-    {{#if this.session.isAuthenticated}}
-      <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <div class="text-sm lg:flex-grow">
+    <div
+      class="lg:flex lg:items-center lg:w-auto relative z-10 flex-grow block"
+    >
+      <div class="lg:flex-grow text-sm">
+        {{#if this.session.isAuthenticated}}
           <LinkTo
             @route="groups"
             data-test-group-link
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+            class="lg:inline-block lg:mt-0 hover:text-white block mt-4 mr-4 text-blue-200"
           >
-            Группы
+            {{t "header.groups"}}
           </LinkTo>
-        </div>
+        {{/if}}
+        <a
+          href="https://anywhere.epam.com/volunteer/pages-1/brainApp.html"
+          rel="noopener"
+          target="blank"
+          class="lg:inline-block lg:mt-0 hover:text-white block mt-4 mr-4 text-blue-200"
+        >
+          {{t "header.about"}}
+        </a>
+        <button
+          type="button"
+          class="hover:bg-blue-500 hover:text-white hover:border-transparent py-2
+            {{if
+              (eq this.activeLocale "ru-ru")
+              "text-blue-200 font-semibold"
+              "text-blue-700"
+            }}
+             bg-transparent border border-blue-500 rounded"
+          {{on "click" (fn this.setLocale "ru")}}
+        >
+          RU
+        </button>
+        /
+        <button
+          type="button"
+          class="hover:bg-blue-500 hover:text-white hover:border-transparent py-2
+            {{if
+              (eq this.activeLocale "en-us")
+              "text-blue-200 font-semibold"
+              "text-blue-700"
+            }}
+             bg-transparent border border-blue-500 rounded"
+          {{on "click" (fn this.setLocale "en")}}
+        >
+          EN
+        </button>
       </div>
-      <div
-        data-test-user-email
-        class="inline-block text-sm px-4 mr-2 py-2 leading-none rounded text-white mt-4 lg:mt-0"
-        title="{{this.session.data.user.firstName}}
-
-
-
-          {{this.session.data.user.lastName}}"
-      >
-        {{this.session.data.user.email}}
+    </div>
+    {{#if this.session.isAuthenticated}}
+      <div class="flex justify-end w-48 mr-6">
+        <div>
+          <span
+            title="{{this.user.email}}"
+            class="inline-flex items-center justify-center w-10 h-10 bg-white rounded-full"
+          >
+            <span class="text-md font-bold leading-none text-blue-500">
+              {{this.user.initials}}
+            </span>
+          </span>
+        </div>
+        <div class="ml-3">
+          <p
+            class="group-hover:text-gray-700 text-sm font-medium leading-5 text-blue-200"
+          >
+            {{this.user.firstName}}
+          </p>
+          <p
+            class="group-hover:text-gray-700 text-sm font-medium leading-5 text-blue-200"
+          >
+            {{this.user.lastName}}
+          </p>
+        </div>
       </div>
       <button
         data-test-logout-button
         type="button"
-        class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+        class="hover:border-transparent hover:text-blue-500 hover:bg-white lg:mt-0 inline-block px-4 py-2 mt-4 text-sm leading-none text-white border border-white rounded"
         {{on "click" this.logout}}
       >
-        Выход
+        {{t "header.logout"}}
       </button>
+    {{else}}
+      <div class="relative z-10 flex justify-end px-16">
+        <div class="flex">
+          <LinkTo
+            data-test-registration-form
+            @route="registration"
+            type="submit"
+            class="hover:bg-blue-900 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue-700 flex justify-center w-56 px-4 py-2 m-auto text-sm font-medium text-white transition duration-150 ease-in-out bg-blue-700 border border-transparent rounded-full"
+          >
+            {{t "login_form.registration"}}
+          </LinkTo>
+        </div>
+      </div>
     {{/if}}
   </nav>
 </div>

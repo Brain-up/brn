@@ -1,3 +1,11 @@
+/*! purgecss start ignore */
+
 .type-column {
-  max-width: 210px;
+  display: flex;
+  max-width: 15%;
+  min-width: 200px;
+  flex-direction: column;
 }
+
+
+/*! purgecss end ignore */

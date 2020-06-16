@@ -1,3 +1,15 @@
+/*! purgecss start ignore */
+
+& {
+  background-color: #EDF8FE;
+  border-radius: 10px;
+  padding-bottom: 1.6rem;
+}
+
+svg {
+  margin-left: calc(50% - 170px);
+}
+
 .answer-correctness-widget {
   animation: fade-out 0.5s;
   min-width: 350px;
@@ -10,11 +22,6 @@
   background-repeat: no-repeat;
 }
 
-h3 {
-  font-size: 18px;
-  font-weight: 600;
-}
-
 @keyframes fade-in-out {
   0% {
     opacity: 0;
@@ -23,3 +30,6 @@ h3 {
     opacity: 1;
   }
 }
+
+
+/*! purgecss end ignore */

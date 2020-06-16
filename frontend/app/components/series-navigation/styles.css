@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .series-nav__exercies-list {
   list-style: none;
   padding: 0;
@@ -26,22 +28,40 @@
 
 .exercise-block__levels {
   display: flex;
-  margin-bottom: 15px;
 }
 
 .exercise-block__level {
   flex-direction: initial;
   align-items: center;
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.exercise-block__status-icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.navigation-block {
+  background-color: #fbedfe;
+}
+
+.navigation-block__header {
+  color: #001274;
 }
 
 .exercise-block__icon {
-  color: #319795;
+  color: #3DC8F4;
   margin-right: 20px;
   cursor: pointer;
 }
 
 .inactive-icon {
-  color: grey;
+  color: #8093B2;
   /* color: #fc8181; */
   cursor: not-allowed;
 }
@@ -49,3 +69,12 @@
 h2 {
   margin-bottom: 20px;
 }
+
+.check-container {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}
+
+
+/*! purgecss end ignore */

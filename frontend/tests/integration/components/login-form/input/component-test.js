@@ -23,6 +23,17 @@ module('Integration | Component | login-form/input', function(hooks) {
     assert.dom('label').exists();
   });
 
+  test('it renders without label', async function(assert) {
+    this.set('model', {});
+    this.set('name', 'foo');
+    await render(
+      hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @model={{this.model}} @name={{this.name}} @type="text" />`,
+    );
+
+    assert.dom('input').exists();
+    assert.dom('label').doesNotExist();
+  });
+
   test('it able to show error on empty fields', async function(assert) {
     this.set('model', { foo: '' });
     this.set('name', 'foo');
@@ -131,9 +142,9 @@ module('Integration | Component | login-form/input', function(hooks) {
 
   test('if the attribute warning`s exists show warning', async function(assert) {
     await render(
-      hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @warning="Foo" @type="text" @label="Foo" />`,
+      hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @name="warning" @warning="Foo" @type="text" @label="Foo" />`,
     );
 
-    assert.dom('[data-test-warning-message]').hasText('Foo');
+    assert.dom('[data-test-warning-message="warning"]').hasText('Foo');
   });
 });

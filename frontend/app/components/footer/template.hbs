@@ -1,7 +1,7 @@
 <div class={{style-namespace "footer"}} ...attributes>
-  <footer class="bg-teal-700 p-4 mt-4 text-white">
-    <span data-test-support-message class="mr-2 opacity-50">
-      При поддержке
+  <footer class="relative z-10 p-4 text-white">
+    <span data-test-support-message class="mr-2 text-blue-900 opacity-50">
+      {{t "footer.info_about"}}
     </span>
     <ul class="flex items-center">
       <li data-test-support-logo>
@@ -9,8 +9,8 @@
           <img src="/logos/selectel.png" alt="Selectel" />
         </a>
       </li>
-      <li class="opacity-50 mr-1 ml-1">
-        и
+      <li class="ml-1 mr-1 text-blue-900 opacity-50">
+        {{t "footer.info_about_helper"}}
       </li>
       <li data-test-support-logo class="realtive mt-1">
         <a href="https://epam.com/" target="blank" rel="noopener">

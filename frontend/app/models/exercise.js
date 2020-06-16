@@ -8,6 +8,7 @@ import { inject as service } from '@ember/service';
 export default class Exercise extends CompletionDependent.extend({
   session: service('session'),
   name: attr('string'),
+  available: attr('boolean'),
   description: attr('string'),
   level: attr('number'),
   order: attr('number'),

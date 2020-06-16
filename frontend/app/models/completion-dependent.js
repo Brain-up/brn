@@ -6,10 +6,14 @@ import arrayPreviousItems from 'brn/utils/array-previous-items';
 export default Model.extend({
   tasksManager: service(),
   canInteract: computed(
+    'available',
     'previousSiblings.[]',
     'parent.children.@each.isCompleted',
     'tasksManager.completedTasks.[]',
     function() {
+      if (this.available) {
+        return true;
+      }
       return (
         !this.previousSiblings.length ||
         this.previousSiblings.every((sibling) => sibling.isCompleted)

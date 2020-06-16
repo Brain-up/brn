@@ -4,6 +4,10 @@ import { task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
+const ERRORS_MAP = {
+  'The user already exists!': 'registration_form.email_exists',
+};
+
 export default class RegistrationFormComponent extends LoginFormComponent {
   @service('network') network;
   @tracked email;
@@ -11,6 +15,29 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked lastName;
   @tracked password;
   @tracked birthday;
+  maxDate = new Date();
+  minDate = new Date(new Date().setFullYear(this.maxDate.getFullYear() - 100));
+  maxDateString = this.maxDate.toISOString().split('T')[0];
+  minDateString = this.minDate.toISOString().split('T')[0];
+
+  get warningErrorDate() {
+    const { birthday, maxDate, minDate } = this;
+
+    if (birthday === undefined) {
+      return false;
+    }
+
+    const max = maxDate.getTime();
+    const min = minDate.getTime();
+    const enterDateUser = new Date(birthday).getTime();
+
+    if (enterDateUser > max || min > enterDateUser) {
+      return this.intl.t('registration_form.invalid_date');
+    }
+
+    return false;
+  }
+
   get registrationInProgress() {
     return (
       this.loginInProgress ||
@@ -34,7 +61,9 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       yield this.loginTask.perform();
     } else {
       const error = yield result.json();
-      this.errorMessage = error.errors.pop();
+      const key = error.errors.pop();
+      this.errorMessage =
+        key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key]) : key;
       this.registrationTask.cancelAll();
     }
   }).drop())

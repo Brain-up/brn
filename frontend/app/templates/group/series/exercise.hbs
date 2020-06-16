@@ -1,14 +1,14 @@
 <ModalDialog
-  @overlayClass="p-16 z-50 min-h-full w-full absolute bg-teal-400 flex"
-  @containerClass="w-full bg-white p-8 rounded-lg text-2xl"
+  @overlayClass="p-16 z-50 min-h-full w-full absolute bg-blue-400 flex"
+  @containerClass="w-full flex bg-white p-8 rounded-lg text-2xl"
 >
-  <div class="series-page--canvas flex flex-col flex-grow">
+  <div class="series-page--canvas flex flex flex-col flex-grow">
     {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
       <div class="flex items-center justify-between">
         <div>
           <FaIcon @icon="chevron-left" />
           <LinkTo @route="group.series" @model={{this.model.series}}>
-            Назад
+            {{t "navigation.come_back"}}
           </LinkTo>
         </div>
         <div id="exercise-steps-slot">
@@ -27,10 +27,10 @@
           {{did-insert this.greedOnCompletedExercise}}
         />
       {{else if this.showExerciseStats}}
-        <ExerciseStats
-          @stats={{this.model.stats}}
-          {{did-insert this.afterCompleted}}
-        />
+          <ExerciseStats
+            @stats={{this.model.stats}}
+            {{did-insert this.afterCompleted}}
+          />
       {{else}}
         {{outlet}}
       {{/if}}

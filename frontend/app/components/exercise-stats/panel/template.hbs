@@ -10,32 +10,33 @@
 }}
   <div
     data-test-type={{@type}}
-    class="flex flex-col justify-center px-4 py-4 mt-4 bg-white border border-gray-300 rounded sm:mt-0" ...attributes
+    ...attributes
+    class="relative flex flex-col items-center justify-center px-4 py-4 bg-white"
   >
-    <div>
-      <div>
-        <p
-          class="flex items-center justify-end
-            {{get textColorClass @type}}
-             text-md"
-        >
-          <span class="font-bold" data-test-diff>
-            {{or @diff "@diff"}}
-          </span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 fill-current"
-            viewBox="0 0 24 24"
-          >
-            <path class="heroicon-ui" d={{get svgPathForType @type}}></path>
-          </svg>
-        </p>
-      </div>
-      <p class="text-3xl font-semibold text-center text-gray-800" data-test-value>
-        {{or @value "@value"}}
-      </p>
-      <p class="text-lg text-center text-gray-500" data-test-label>
+    <p
+      class="absolute top-0 right-0 flex items-center justify-end p-1 mt-12 mr-12 bg-white border-2 border-yellow-500 rounded-full"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="w-5 h-5 fill-current"
+      >
+        <path d={{get svgPathForType @type}} class="heroicon-ui"></path>
+      </svg>
+    </p>
+    <div class="flex flex-col justify-center">
+      <p data-test-label class="text-2xl font-bold text-center text-blue-900">
         {{or @label "@label"}}
+      </p>
+      <p
+        data-test-value
+        class="text-3xl text-4xl font-semibold text-center text-pink-500"
+      >
+        {{#if (has-block)}}
+          {{yield}}
+        {{else}}
+          {{or @value "@value"}}
+        {{/if}}
       </p>
     </div>
   </div>
