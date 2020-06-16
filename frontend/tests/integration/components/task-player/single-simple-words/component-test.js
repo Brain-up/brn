@@ -10,18 +10,24 @@ module('Integration | Component | task-player/single-simple-words', function(
 ) {
   setupRenderingTest(hooks);
   let counter = 0;
+
   hooks.beforeEach(async function() {
     const store = this.owner.lookup('service:store');
     let model = store.createRecord('task/single-simple-words', data.task);
     this.set('model', model);
+
+    this.set('mockTimerService', {
+      isPaused: false,
+      isStarted: true,
+      runTimer() {},
+    });
   });
 
   test('it rende0rs', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
     await render(
       hbs`<TaskPlayer::SingleSimpleWords @task={{this.model}} @mode="task" />`,
     );
+
     assert.equal(this.element.textContent.trim(), '');
   });
 
@@ -39,9 +45,10 @@ module('Integration | Component | task-player/single-simple-words', function(
     this.owner.register('service:audio', MockAudio);
 
     await render(hbs`
-      <TaskPlayer::SingleSimpleWords @onRightAnswer={{this.onRightAnswer}} @task={{this.model}} @mode="task" />
+      <TaskPlayer::SingleSimpleWords @onRightAnswer={{this.onRightAnswer}} @task={{this.model}} @mode="task" @studyingTimer={{this.mockTimerService}}/>
     `);
-
+    // await pageObject.startTask();
     assert.equal(counter, 1);
+    counter = 0;
   });
 });
