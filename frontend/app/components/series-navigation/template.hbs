@@ -1,6 +1,9 @@
 <div class={{style-namespace "series-navigation"}} ...attributes>
   {{#each this.exerciseHeaders as |header level|}}
-    <div {{scroll-top (eq level 0)}} class="max-w-7xl sm:px-6 lg:px-8 mx-auto mb-10">
+    <div
+      class="max-w-7xl sm:px-6 lg:px-8 mx-auto mb-10"
+      {{scroll-top (eq level 0)}}
+    >
       <div class="max-w-none mx-auto">
         <div class="sm:rounded-lg sm:shadow navigation-block overflow-hidden">
           <div class="sm:px-6 px-4 py-5">
@@ -11,14 +14,18 @@
               {{header}}
             </h3>
           </div>
-          <ul data-test-exercises-name-group class="flex flex-row justify-around mb-5 ml-6 mr-6">
-            {{#each this.sortedExercises as |exercise|}}
-              {{#if (eq exercise.name header)}}
+          {{#each
+            (chunk
+              3 (filter-by "name" header this.sortedExercises)
+            ) as |exercises|
+          }}
+            <ul
+              data-test-exercises-name-group
+              class="flex flex-row justify-around mb-5 ml-6 mr-6"
+            >
+              {{#each exercises as |exercise|}}
                 <li>
-                  <div
-
-                    class="exercise-block__levels flex mt-4 ml-2 mr-2"
-                  >
+                  <div class="exercise-block__levels flex mt-4 ml-2 mr-2">
                     <LinkTo
                       @route="group.series.exercise"
                       @model={{exercise.id}}
@@ -50,9 +57,9 @@
                     </LinkTo>
                   </div>
                 </li>
-              {{/if}}
-            {{/each}}
-          </ul>
+              {{/each}}
+            </ul>
+          {{/each}}
         </div>
       </div>
     </div>
