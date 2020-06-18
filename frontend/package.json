@@ -131,7 +131,7 @@
     "ember-fast-cli": "^1.2.1",
     "eslint": "^7.0.0",
     "idle-js": "^1.2.0",
-    "stylelint": "^13.1.0",
+    "stylelint": "^13.6.1",
     "stylelint-config-recommended": "^3.0.0",
     "tailwindcss": "^1.2.0"
   }
