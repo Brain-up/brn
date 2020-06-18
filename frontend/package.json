@@ -114,7 +114,7 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.2.2",
-    "lint-staged": "^10.0.7",
+    "lint-staged": "^10.2.11",
     "loader.js": "^4.7.0",
     "postcss-import": "^12.0.1",
     "prettier": "^1.19.1",
