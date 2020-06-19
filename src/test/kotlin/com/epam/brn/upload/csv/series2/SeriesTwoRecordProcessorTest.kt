@@ -10,6 +10,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.ResourceCreationService
 import com.nhaarman.mockito_kotlin.verify
 import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
@@ -27,6 +28,7 @@ internal class SeriesTwoRecordProcessorTest {
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
+    private val resourceCreationServiceMock = mock(ResourceCreationService::class.java)
 
     private lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
 
@@ -46,7 +48,8 @@ internal class SeriesTwoRecordProcessorTest {
         seriesTwoRecordProcessor = SeriesTwoRecordProcessor(
             seriesRepositoryMock,
             resourceRepositoryMock,
-            exerciseRepositoryMock
+            exerciseRepositoryMock,
+            resourceCreationServiceMock
         )
 
         ReflectionTestUtils.setField(seriesTwoRecordProcessor, "audioFileUrl", "series2/%s.mp3")
