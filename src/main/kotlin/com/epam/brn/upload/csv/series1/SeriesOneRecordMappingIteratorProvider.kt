@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
 
 @Component
-class SeriesFourRecordMappingIteratorProvider :
+class SeriesOneRecordMappingIteratorProvider :
     MappingIteratorProvider<SeriesOneRecord> {
 
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesOneRecord> {

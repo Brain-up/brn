@@ -4,8 +4,8 @@ import com.epam.brn.upload.csv.group.GroupRecord
 import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series.SeriesGenericRecord
 import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.series1.SeriesFourRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series1.SeriesOneRecord
+import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series3.SeriesThreeRecord
 import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
@@ -22,7 +22,7 @@ class CsvParserTest {
             SeriesGenericRecordMappingIteratorProvider(),
             SeriesTwoRecordMappingIteratorProvider(),
             SeriesThreeRecordMappingIteratorProvider(),
-            SeriesFourRecordMappingIteratorProvider()
+            SeriesOneRecordMappingIteratorProvider()
         )
     )
 
