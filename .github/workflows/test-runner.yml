@@ -3,10 +3,15 @@ name: Test Self Hosted Runner
 on: push
 
 jobs:
-  build:
+  redeploy:
     runs-on: self-hosted
     steps:
-    - name: List of docker images
-      run: docker images
-    - name: List of docker containers
-      run: docker ps -a
+      - uses: actions/checkout@master
+      - name: add s3 key
+        run: echo S3_KEY > aws-key.properties
+      - name: Redeploy application
+        run: |
+          docker-compose -f docker-compose-run.yml pull
+          docker-compose -f docker-compose-run.yml up -d --no-deps brn
+          docker-compose -f docker-compose-run.yml up -d --no-deps brn_fe
+          docker image prune -af
