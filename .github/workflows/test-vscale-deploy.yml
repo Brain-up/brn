@@ -1,0 +1,15 @@
+name: Test deploy on vscale.io
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: test remote command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VSCALE_HOST }}
+        username: ${{ secrets.VSCALE_USERNAME }}
+        key: ${{ secrets.VSCALE_KEY }}
+        script: docker ps -a
