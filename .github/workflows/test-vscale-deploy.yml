@@ -12,4 +12,10 @@ jobs:
         host: ${{ secrets.VSCALE_HOST }}
         username: ${{ secrets.VSCALE_USERNAME }}
         key: ${{ secrets.VSCALE_KEY }}
-        script: docker ps -a
+        script_stop: true
+        script: |
+          docker ps -a
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af
