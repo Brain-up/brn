@@ -1,0 +1,12 @@
+name: Test Self Hosted Runner
+
+on: push
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - name: List of docker images
+      run: docker images
+    - name: List of docker containers
+      run: docker ps -a
