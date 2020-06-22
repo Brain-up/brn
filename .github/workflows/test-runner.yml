@@ -12,7 +12,7 @@ jobs:
       - name: Redeploy application
         run: |
           ls -l
-          docker-compose -f docker-compose-run.yml pull
-          docker-compose -f docker-compose-run.yml up -d --no-deps brn
-          docker-compose -f docker-compose-run.yml up -d --no-deps brn_fe
+          docker-compose pull -f docker-compose-run.yml
+          docker-compose up -d --no-deps brn -f docker-compose-run.yml
+          docker-compose up -d --no-deps brn_fe -f docker-compose-run.yml
           docker image prune -af
