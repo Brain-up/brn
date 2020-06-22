@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  build_and_push:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -23,6 +23,23 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: Dockerfile_frontend
+  redeploy_epam_instance:
+    needs: build_and_push
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@master
+      - name: add s3 key
+        run: echo S3_KEY > aws-key.properties
+      - name: Redeploy application
+        run: |
+          mv docker-compose-run.yml docker-compose.yml
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af
+  redeploy_vscaleio_instance:
+    needs: build_and_push
+    runs-on: ubuntu-latest
     - name: redeploy vscale.io
       uses: appleboy/ssh-action@master
       with:
