@@ -39,6 +39,7 @@ jobs:
           docker image prune -af
   redeploy_vscaleio_instance:
     needs: build_and_push
+    runs-on: ubuntu-latest
     - name: redeploy vscale.io
       uses: appleboy/ssh-action@master
       with:
