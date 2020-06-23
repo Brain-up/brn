@@ -4,6 +4,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import data from './test-support/data-storage';
 import AudioService from 'brn/services/audio';
+import { chooseAnswer } from './test-support/helper';
 
 module('Integration | Component | task-player/single-simple-words', function(
   hooks,
@@ -21,6 +22,7 @@ module('Integration | Component | task-player/single-simple-words', function(
       isStarted: true,
       runTimer() {},
     });
+    counter = 0;
   });
 
   test('it rende0rs', async function(assert) {
@@ -28,7 +30,9 @@ module('Integration | Component | task-player/single-simple-words', function(
       hbs`<TaskPlayer::SingleSimpleWords @task={{this.model}} @mode="task" />`,
     );
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.dom('[data-test-task-answer-option="вить"]').exists();
+    assert.dom('[data-test-task-answer-option="линь"]').exists();
+    assert.dom('[data-test-task-answer-option="дуб"]').exists();
   });
 
   test('the "startPlayTask" function should not be called if a task is the last and the answer is correct', async function(assert) {
@@ -47,8 +51,9 @@ module('Integration | Component | task-player/single-simple-words', function(
     await render(hbs`
       <TaskPlayer::SingleSimpleWords @onRightAnswer={{this.onRightAnswer}} @task={{this.model}} @mode="task" @studyingTimer={{this.mockTimerService}}/>
     `);
-    // await pageObject.startTask();
+
+    await chooseAnswer(this.model.correctAnswer);
+
     assert.equal(counter, 1);
-    counter = 0;
   });
 });
