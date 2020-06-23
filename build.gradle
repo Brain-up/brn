@@ -42,7 +42,7 @@ dependencies {
     implementation "commons-io:commons-io:2.6"
 
     implementation "io.springfox:springfox-swagger-ui:2.9.2"
-    implementation "io.springfox:springfox-swagger2:2.9.2"
+    implementation "io.springfox:springfox-swagger2:2.10.0"
     testRuntimeOnly "com.h2database:h2"
 
     implementation 'com.amazonaws:aws-java-sdk:1.11.788'
