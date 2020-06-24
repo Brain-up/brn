@@ -27,7 +27,7 @@ data class Resource(
     @Column(nullable = false)
     var audioFileUrl: String? = "",
     @Column(nullable = false)
-    var word: String? = "",
+    var word: String = "",
     var wordType: String = "",
     var pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
@@ -64,7 +64,7 @@ data class Resource(
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
         result = 31 * result + (audioFileUrl?.hashCode() ?: 0)
-        result = 31 * result + (word?.hashCode() ?: 0)
+        result = 31 * result + (word.hashCode())
         result = 31 * result + wordType.hashCode()
         result = 31 * result + (pictureFileUrl?.hashCode() ?: 0)
         result = 31 * result + (soundsCount ?: 0)

@@ -1,0 +1,55 @@
+name: Docker Build, Push images and redeploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry brainup/brn-backend
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-backend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Publish to Registry brainup/brn-frontend
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-frontend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile_frontend
+  redeploy_epam_instance:
+    needs: build_and_push
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@master
+      - name: add s3 key
+        run: echo S3_KEY > aws-key.properties
+      - name: Redeploy application
+        run: |
+          mv docker-compose-run.yml docker-compose.yml
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af
+  redeploy_vscaleio_instance:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+    - name: redeploy vscale.io
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VSCALE_HOST }}
+        username: ${{ secrets.VSCALE_USERNAME }}
+        key: ${{ secrets.VSCALE_KEY }}
+        script_stop: true
+        script: |
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af

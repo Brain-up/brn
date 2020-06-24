@@ -9,6 +9,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.ResourceCreationService
 import com.epam.brn.upload.csv.RecordProcessor
 import java.util.Random
 import org.apache.commons.lang3.StringUtils
@@ -20,7 +21,8 @@ import org.springframework.transaction.annotation.Transactional
 class SeriesOneRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
-    private val exerciseRepository: ExerciseRepository
+    private val exerciseRepository: ExerciseRepository,
+    private val resourceCreationService: ResourceCreationService
 ) : RecordProcessor<SeriesOneRecord, Exercise> {
 
     @Value(value = "\${brn.picture.file.default.path}")
@@ -36,11 +38,13 @@ class SeriesOneRecordProcessor(
 
     @Transactional
     override fun process(records: List<SeriesOneRecord>): List<Exercise> {
+        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(1L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
+            words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -49,7 +53,7 @@ class SeriesOneRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-
+        resourceCreationService.createFileWithWords(words, "words_series1.txt")
         return exercises.toMutableList()
     }
 

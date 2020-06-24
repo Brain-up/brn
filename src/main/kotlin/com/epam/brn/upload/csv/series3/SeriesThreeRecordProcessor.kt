@@ -140,7 +140,7 @@ class SeriesThreeRecordProcessor(
         answerOptions: MutableSet<Resource>
     ): MutableMap<Int, Resource> {
 
-        return splitOnWords(correctAnswer.word!!)
+        return splitOnWords(correctAnswer.word)
             .map { toFirstEqualResource(answerOptions, it) }
             .mapIndexed { index, resource -> index + 1 to resource }
             .toMap(mutableMapOf())

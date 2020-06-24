@@ -9,6 +9,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.ResourceCreationService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
@@ -19,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional
 class SeriesTwoRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
-    private val exerciseRepository: ExerciseRepository
+    private val exerciseRepository: ExerciseRepository,
+    private val resourceCreationService: ResourceCreationService
 ) : RecordProcessor<SeriesTwoRecord, Exercise> {
 
     @Value(value = "\${brn.audio.file.second.series.path}")
@@ -32,11 +34,13 @@ class SeriesTwoRecordProcessor(
 
     @Transactional
     override fun process(records: List<SeriesTwoRecord>): List<Exercise> {
+        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(2L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
+            words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -45,7 +49,7 @@ class SeriesTwoRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-
+        resourceCreationService.createFileWithWords(words, "words_series2.txt")
         return exercises.toMutableList()
     }
 
