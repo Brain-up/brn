@@ -9,10 +9,10 @@ import javax.validation.constraints.Size
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountDto(
-    val id: Long? = null,
-    @field:NotBlank
+    var id: Long? = null,
+    @field:NotBlank(message = "{invalid.firstName.check}")
     val firstName: String,
-    @field:NotBlank
+    @field:NotBlank(message = "{invalid.lastName.check}")
     val lastName: String,
     @field:NotBlank
     @field:Email

@@ -1,15 +1,19 @@
 package com.epam.brn.controller.advice
 
+import com.epam.brn.dto.ApiError
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
 import java.io.IOException
+import javax.servlet.http.HttpServletRequest
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -81,8 +85,23 @@ class ExceptionControllerAdvice {
     fun createInternalErrorResponse(e: Throwable): ResponseEntity<BaseResponseDto> {
         logger.error("Internal exception: ${e.message}", e)
         return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun methodArgumentNotValidExceptionHandler(
+        request: HttpServletRequest,
+        ex: MethodArgumentNotValidException
+    ): ResponseEntity<ApiError> {
+        val errors = HashMap<String, String>()
+        for (violation in ex.bindingResult.allErrors) {
+            if (violation is FieldError) {
+                violation.defaultMessage?.let { errors.put(violation.field, it) }
+            }
+        }
+        val apiError = ApiError(errors)
+        return ResponseEntity(apiError, HttpStatus.BAD_REQUEST)
     }
 }
