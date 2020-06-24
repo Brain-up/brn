@@ -54,6 +54,12 @@ module('Integration | Component | task-player/single-simple-words', function(
       <TaskPlayer::SingleSimpleWords @onWrongAnswer={{this.onWrongAnswer}} @onRightAnswer={{this.onRightAnswer}} @task={{this.model}} @mode="task" @studyingTimer={{this.mockTimerService}} />
     `);
 
+    assert.equal(counter, 1);
+
+    await chooseAnswer(this.model.correctAnswer);
+
+    assert.equal(counter, 2);
+
     await chooseAnswer(this.model.correctAnswer);
 
     assert.equal(counter, 2);
