@@ -51,7 +51,7 @@ export default class SingleSimpleWordsComponent extends Component {
   }
   startTask() {
     this.isCorrect = false;
-    if (this.mode === MODES.TASK) {
+    if (this.mode === MODES.TASK && this.uncompletedTasks.length > 0) {
       this.audio.startPlayTask(this.audioFiles);
     }
   }
