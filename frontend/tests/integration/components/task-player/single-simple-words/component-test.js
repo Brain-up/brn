@@ -25,19 +25,21 @@ module('Integration | Component | task-player/single-simple-words', function(
     counter = 0;
   });
 
-  test('it rende0rs', async function(assert) {
+  test('it renders', async function(assert) {
     await render(
       hbs`<TaskPlayer::SingleSimpleWords @task={{this.model}} @mode="task" />`,
     );
 
     assert.dom('[data-test-task-answer-option="вить"]').exists();
-    assert.dom('[data-test-task-answer-option="линь"]').exists();
-    assert.dom('[data-test-task-answer-option="дуб"]').exists();
   });
 
   test('the "startPlayTask" function should not be called if a task is the last and the answer is correct', async function(assert) {
     this.set('onRightAnswer', function() {
       assert.ok(true, 'calls onRightAnswer');
+    });
+
+    this.set('onWrongAnswer', function() {
+      assert.ok(true, 'calls onWrongAnswer');
     });
 
     class MockAudio extends AudioService {
@@ -49,11 +51,11 @@ module('Integration | Component | task-player/single-simple-words', function(
     this.owner.register('service:audio', MockAudio);
 
     await render(hbs`
-      <TaskPlayer::SingleSimpleWords @onRightAnswer={{this.onRightAnswer}} @task={{this.model}} @mode="task" @studyingTimer={{this.mockTimerService}}/>
+      <TaskPlayer::SingleSimpleWords @onWrongAnswer={{this.onWrongAnswer}} @onRightAnswer={{this.onRightAnswer}} @task={{this.model}} @mode="task" @studyingTimer={{this.mockTimerService}} />
     `);
 
     await chooseAnswer(this.model.correctAnswer);
 
-    assert.equal(counter, 1);
+    assert.equal(counter, 2);
   });
 });
