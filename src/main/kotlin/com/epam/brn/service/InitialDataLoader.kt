@@ -58,6 +58,7 @@ class InitialDataLoader(
         fileNameForSeries(3)
     )
 
+
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
         val adminAuthority = authorityService.save(Authority(authorityName = "ROLE_ADMIN"))
