@@ -1,7 +1,6 @@
 package com.epam.brn.config
 
 import java.util.Locale
-import javax.validation.Validator
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
@@ -28,10 +27,10 @@ class WebMvcBasicConfiguration : WebMvcConfigurer {
     }
 
     @Bean
-    fun validator(): Validator? {
-        val factory = LocalValidatorFactoryBean()
-        factory.setValidationMessageSource(messageSource())
-        return factory
+    override fun getValidator(): LocalValidatorFactoryBean {
+        val validatorBean = LocalValidatorFactoryBean()
+        validatorBean.setValidationMessageSource(messageSource())
+        return validatorBean
     }
 
     @Bean
@@ -39,7 +38,7 @@ class WebMvcBasicConfiguration : WebMvcConfigurer {
         val messageSource = ReloadableResourceBundleMessageSource()
         messageSource.setBasenames(
             "classpath:/messages",
-            "classpath:authErrorResponse"
+            "classpath:errorMessages"
         )
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name())
         return messageSource

@@ -8,8 +8,8 @@ import javax.validation.constraints.NotBlank
 data class LoginDto(
     val grant_type: String = "password",
     @field:NotBlank
-    @field:Email
+    @field:Email(message = "{group.validation.message.email}")
     val username: String,
-    @field:NotBlank
+    @field:NotBlank(message = "{group.validation.message.password}")
     var password: String
 )
