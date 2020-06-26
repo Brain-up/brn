@@ -80,7 +80,7 @@
     "ember-cli-deploy": "^1.0.2",
     "ember-cli-deploy-build": "^2.0.0",
     "ember-cli-eslint": "^5.1.0",
-    "ember-cli-htmlbars": "^5.1.2",
+    "ember-cli-htmlbars": "^5.2.0",
     "ember-cli-inject-live-reload": "^2.0.2",
     "ember-cli-mirage": "^1.1.6",
     "ember-cli-page-object": "^1.17.2",
