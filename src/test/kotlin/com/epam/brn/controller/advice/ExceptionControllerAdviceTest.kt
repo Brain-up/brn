@@ -16,7 +16,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.MethodArgumentNotValidException
-import java.util.*
+import java.util.Collections
 
 internal class ExceptionControllerAdviceTest {
     private val exceptionControllerAdvice: ExceptionControllerAdvice =
