@@ -5,8 +5,6 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
-import java.io.IOException
-import javax.servlet.http.HttpServletRequest
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -16,6 +14,7 @@ import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.io.IOException
 
 @ControllerAdvice
 class ExceptionControllerAdvice {
@@ -92,7 +91,6 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun methodArgumentNotValidExceptionHandler(
-        request: HttpServletRequest,
         ex: MethodArgumentNotValidException
     ): ResponseEntity<ApiError> {
         val errors = HashMap<String, String>()
@@ -102,6 +100,9 @@ class ExceptionControllerAdvice {
             }
         }
         val apiError = ApiError(errors)
-        return ResponseEntity(apiError, HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(apiError)
     }
 }

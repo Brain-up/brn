@@ -1,13 +1,22 @@
 package com.epam.brn.controller.advice
 
+import com.epam.brn.dto.ApiError
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.springframework.core.MethodParameter
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
+import org.springframework.validation.ObjectError
+import org.springframework.web.bind.MethodArgumentNotValidException
+import java.util.*
 
 internal class ExceptionControllerAdviceTest {
     private val exceptionControllerAdvice: ExceptionControllerAdvice =
@@ -46,8 +55,10 @@ internal class ExceptionControllerAdviceTest {
         // THEN
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
-        assertTrue((responseEntity.body as BaseResponseDto).errors
-            .contains("Formatting error. Please upload file with csv extension."))
+        assertTrue(
+            (responseEntity.body as BaseResponseDto).errors
+                .contains("Formatting error. Please upload file with csv extension.")
+        )
     }
 
     @Test
@@ -60,5 +71,28 @@ internal class ExceptionControllerAdviceTest {
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some test exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType())
-        }
+    }
+
+    @Test
+    fun `should make MethodArgumentNotValidException`() {
+        // GIVEN
+        val bindingResult = mock(BindingResult::class.java)
+        val parameter = mock(MethodParameter::class.java)
+        val exceptionMock = MethodArgumentNotValidException(parameter, bindingResult)
+        // WHEN
+        `when`(bindingResult.allErrors).thenReturn(
+            Collections.singletonList(
+                FieldError(
+                    "FieldError", "firstName", "TEST", true,
+                    arrayOf("firstName"), arrayOf("firstName"),
+                    "First Name must not be blank"
+                )
+            ) as List<ObjectError>
+        )
+        val responseEntity = exceptionControllerAdvice.methodArgumentNotValidExceptionHandler(exceptionMock)
+        // THEN
+        assertTrue((responseEntity.body as ApiError).errors.toString().contains("First Name must not be blank"))
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+    }
 }
