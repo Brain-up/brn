@@ -1,4 +1,4 @@
-{{!--
+{{!
   interface Args {
     word: string;
     disableAudioPlayer: boolean;
@@ -7,7 +7,7 @@
     onPlayText: () => {};
     mode: string;
   }
- --}}
+ }}
 
 <div class="{{this.styleNamespace}} flex flex-grow flex-col" ...attributes>
   {{yield (hash tasks=this.tasksCopy)}}
@@ -22,7 +22,7 @@
         <li class="task-player__option">
           <button
             data-test-task-answer
-            data-test-task-answer-option={{@word}}
+            data-test-task-answer-option={{answerOption.word}}
             disabled={{@disableAnswers}}
             type="button"
             class="task-player__option-button bg-transparent py-2 px-4 rounded text-blue-700
