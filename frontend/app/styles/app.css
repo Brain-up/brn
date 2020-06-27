@@ -49,12 +49,12 @@ main > * {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  bottom: 0;
   content: "";
-  position: absolute; 
-  width: 30%;
-  top: 0;
   left: 0;
-  bottom: -50px;
+  position: absolute; 
+  right: 0;
+  top: 0;
   z-index: 0;
 }
 
@@ -79,12 +79,12 @@ main > * {
 body.route-groups  {
   background-image: url(/ui/groups-background.svg);
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
 }
 body.route-group  {
   background-image: url(/ui/group-background.svg);
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
 }
 
 a {
