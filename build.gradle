@@ -41,12 +41,12 @@ dependencies {
     implementation "org.apache.commons:commons-collections4:4.4"
     implementation "commons-io:commons-io:2.6"
 
-    implementation "io.springfox:springfox-swagger-ui:2.9.2"
+    implementation "io.springfox:springfox-swagger-ui:2.10.5"
     implementation "io.springfox:springfox-swagger2:2.9.2"
     testRuntimeOnly "com.h2database:h2"
 
-    implementation 'com.amazonaws:aws-java-sdk:1.11.788'
-    implementation 'com.google.cloud:google-cloud-storage:1.108.0'
+    implementation 'com.amazonaws:aws-java-sdk:1.11.808'
+    implementation 'com.google.cloud:google-cloud-storage:1.110.0'
 
     def spek_version = '2.0.10'
     testImplementation 'org.amshove.kluent:kluent:1.61'
