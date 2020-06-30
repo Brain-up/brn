@@ -15,6 +15,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.io.IOException
+import java.util.ArrayList
+import kotlin.collections.HashMap
 
 @ControllerAdvice
 class ExceptionControllerAdvice {
@@ -93,12 +95,19 @@ class ExceptionControllerAdvice {
     fun methodArgumentNotValidExceptionHandler(
         ex: MethodArgumentNotValidException
     ): ResponseEntity<ApiError> {
-        val errors = HashMap<String, String>()
+        val errors = HashMap<String, ArrayList<String>>()
+        val listName = ArrayList<String>()
+        val listPath = ArrayList<String>()
         for (violation in ex.bindingResult.allErrors) {
             if (violation is FieldError) {
-                violation.defaultMessage?.let { errors.put(violation.field, it) }
+                violation.defaultMessage?.let {
+                    listName.add(it)
+                    listPath.add(violation.field)
+                }
             }
         }
+        errors["name"] = listName
+        errors["path"] = listPath
         val apiError = ApiError(errors)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
