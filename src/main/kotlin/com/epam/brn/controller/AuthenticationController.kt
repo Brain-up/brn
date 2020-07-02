@@ -21,7 +21,9 @@ class AuthenticationController(val authenticationService: AuthenticationService)
 
     @PostMapping("/registration")
     @ApiOperation("New user registration")
-    fun registration(@Validated @RequestBody userAccountDto: UserAccountDto): ResponseEntity<AuthOutDto> {
+    fun registration(
+        @Validated @RequestBody userAccountDto: UserAccountDto
+    ): ResponseEntity<AuthOutDto> {
         val basicHeader = authenticationService.registration(userAccountDto)
         return ResponseEntity
             .status(HttpStatus.CREATED)

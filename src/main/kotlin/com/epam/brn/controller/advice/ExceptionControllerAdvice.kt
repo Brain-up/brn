@@ -4,14 +4,17 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
-import java.io.IOException
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.validation.FieldError
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.io.IOException
+import java.util.ArrayList
 
 @ControllerAdvice
 class ExceptionControllerAdvice {
@@ -81,8 +84,24 @@ class ExceptionControllerAdvice {
     fun createInternalErrorResponse(e: Throwable): ResponseEntity<BaseResponseDto> {
         logger.error("Internal exception: ${e.message}", e)
         return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValidException(
+        ex: MethodArgumentNotValidException
+    ): ResponseEntity<BaseResponseDto> {
+        logger.warn("MethodArgumentNotValidException: ", ex)
+        val errors = ArrayList<String>()
+        for (violation in ex.bindingResult.allErrors) {
+            if (violation is FieldError)
+                violation.defaultMessage?.let { errors.add(it) }
+        }
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BaseResponseDto(errors = errors))
     }
 }

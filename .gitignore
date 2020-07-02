@@ -10,6 +10,8 @@ local.properties
 yarn.lock
 src/main/resources/application-local.properties
 creds.txt
+words_series1.txt
+words_series2.txt
 ### STS ###
 .apt_generated
 .classpath
