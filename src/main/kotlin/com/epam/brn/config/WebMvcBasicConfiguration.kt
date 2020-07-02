@@ -30,12 +30,12 @@ class WebMvcBasicConfiguration : WebMvcConfigurer {
     @Bean
     fun validator(): Validator? {
         val factory = LocalValidatorFactoryBean()
-        factory.setValidationMessageSource(messageSource()!!)
+        factory.setValidationMessageSource(messageSource())
         return factory
     }
 
     @Bean
-    fun messageSource(): ReloadableResourceBundleMessageSource? {
+    fun messageSource(): ReloadableResourceBundleMessageSource {
         val messageSource = ReloadableResourceBundleMessageSource()
         messageSource.setBasenames(
             "classpath:/messages",
