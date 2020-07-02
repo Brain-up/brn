@@ -14,4 +14,4 @@ data class BaseSingleObjectResponseDto(
     val meta: List<Any> = emptyList()
 )
 
-data class ApiError(val errors: HashMap<String, ArrayList<String>>)
+data class ApiError(val errors: ArrayList<String>)

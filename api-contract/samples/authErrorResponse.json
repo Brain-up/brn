@@ -1,0 +1,9 @@
+{
+  "data": [],
+  "errors": [
+    "FIRST_NAME_MUST_NOT_HAVE_SPACES",
+    "LAST_NAME_MUST_NOT_HAVE_SPACES",
+    "EMAIL_MUST_NOT_HAVE_SPACES"
+  ],
+  "meta": []
+}

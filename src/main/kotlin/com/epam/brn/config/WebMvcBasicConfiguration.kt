@@ -36,7 +36,11 @@ class WebMvcBasicConfiguration : WebMvcConfigurer {
     @Bean
     fun messageSource(): ReloadableResourceBundleMessageSource? {
         val messageSource = ReloadableResourceBundleMessageSource()
-        messageSource.setBasename("classpath:/messages")
+        messageSource.setBasenames(
+            "classpath:/messages",
+            "classpath:authErrorResponse"
+        )
+        messageSource.setDefaultEncoding("UTF-8")
         return messageSource
     }
 }

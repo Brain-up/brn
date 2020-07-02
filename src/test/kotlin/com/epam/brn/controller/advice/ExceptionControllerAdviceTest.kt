@@ -85,13 +85,13 @@ internal class ExceptionControllerAdviceTest {
                 FieldError(
                     "FieldError", "firstName", "TEST", true,
                     arrayOf("firstName"), arrayOf("firstName"),
-                    "First Name must not be blank"
+                    "FIRST_NAME_MUST_NOT_HAVE_SPACES"
                 )
             ) as List<ObjectError>
         )
         val responseEntity = exceptionControllerAdvice.methodArgumentNotValidExceptionHandler(exceptionMock)
         // THEN
-        assertTrue((responseEntity.body as ApiError).errors.toString().contains("First Name must not be blank"))
+        assertTrue((responseEntity.body as ApiError).errors.toString().contains("FIRST_NAME_MUST_NOT_HAVE_SPACES"))
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
