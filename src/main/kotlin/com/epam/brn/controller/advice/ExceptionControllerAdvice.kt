@@ -1,6 +1,5 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.dto.ApiError
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
@@ -91,21 +90,18 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun methodArgumentNotValidExceptionHandler(
+    fun handleMethodArgumentNotValidException(
         ex: MethodArgumentNotValidException
-    ): ResponseEntity<ApiError> {
+    ): ResponseEntity<BaseResponseDto> {
+        logger.warn("MethodArgumentNotValidException: ${ex.message}", ex)
         val errors = ArrayList<String>()
         for (violation in ex.bindingResult.allErrors) {
-            if (violation is FieldError) {
-                violation.defaultMessage?.let {
-                    errors.add(it)
-                }
-            }
+            if (violation is FieldError)
+                violation.defaultMessage?.let { errors.add(it) }
         }
-        val apiError = ApiError(errors)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(apiError)
+            .body(BaseResponseDto(errors = errors))
     }
 }

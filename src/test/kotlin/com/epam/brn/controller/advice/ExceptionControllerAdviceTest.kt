@@ -1,6 +1,5 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.dto.ApiError
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
@@ -74,7 +73,7 @@ internal class ExceptionControllerAdviceTest {
     }
 
     @Test
-    fun `should make MethodArgumentNotValidException`() {
+    fun `should handle MethodArgumentNotValidException`() {
         // GIVEN
         val bindingResult = mock(BindingResult::class.java)
         val parameter = mock(MethodParameter::class.java)
@@ -89,9 +88,9 @@ internal class ExceptionControllerAdviceTest {
                 )
             ) as List<ObjectError>
         )
-        val responseEntity = exceptionControllerAdvice.methodArgumentNotValidExceptionHandler(exceptionMock)
+        val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exceptionMock)
         // THEN
-        assertTrue((responseEntity.body as ApiError).errors.toString().contains("FIRST_NAME_MUST_NOT_HAVE_SPACES"))
+        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("FIRST_NAME_MUST_NOT_HAVE_SPACES"))
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
+import java.nio.charset.StandardCharsets
 
 @Configuration
 class WebMvcBasicConfiguration : WebMvcConfigurer {
@@ -40,7 +41,7 @@ class WebMvcBasicConfiguration : WebMvcConfigurer {
             "classpath:/messages",
             "classpath:authErrorResponse"
         )
-        messageSource.setDefaultEncoding("UTF-8")
+        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name())
         return messageSource
     }
 }
