@@ -77,7 +77,7 @@ internal class ExceptionControllerAdviceTest {
         // GIVEN
         val bindingResult = mock(BindingResult::class.java)
         val parameter = mock(MethodParameter::class.java)
-        val exceptionMock = MethodArgumentNotValidException(parameter, bindingResult)
+        val exception = MethodArgumentNotValidException(parameter, bindingResult)
         // WHEN
         `when`(bindingResult.allErrors).thenReturn(
             Collections.singletonList(
@@ -88,7 +88,7 @@ internal class ExceptionControllerAdviceTest {
                 )
             ) as List<ObjectError>
         )
-        val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exceptionMock)
+        val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exception)
         // THEN
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("FIRST_NAME_MUST_NOT_HAVE_SPACES"))
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)

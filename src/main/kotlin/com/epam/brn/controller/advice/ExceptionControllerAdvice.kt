@@ -93,7 +93,7 @@ class ExceptionControllerAdvice {
     fun handleMethodArgumentNotValidException(
         ex: MethodArgumentNotValidException
     ): ResponseEntity<BaseResponseDto> {
-        logger.warn("MethodArgumentNotValidException: ${ex.message}", ex)
+        logger.warn("MethodArgumentNotValidException: ", ex)
         val errors = ArrayList<String>()
         for (violation in ex.bindingResult.allErrors) {
             if (violation is FieldError)
