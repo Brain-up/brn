@@ -7,9 +7,9 @@ import javax.validation.constraints.NotBlank
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class LoginDto(
     val grant_type: String = "password",
-    @field:NotBlank
-    @field:Email(message = "{group.validation.message.email}")
+    @field:NotBlank(message = "{validation.field.email.blank}")
+    @field:Email(message = "{validation.field.email.invalid-format}")
     val username: String,
-    @field:NotBlank(message = "{group.validation.message.password}")
+    @field:NotBlank(message = "{validation.field.password.blank}")
     var password: String
 )
