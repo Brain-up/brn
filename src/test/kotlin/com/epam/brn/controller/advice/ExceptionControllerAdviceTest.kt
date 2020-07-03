@@ -13,9 +13,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
-import org.springframework.validation.ObjectError
 import org.springframework.web.bind.MethodArgumentNotValidException
-import java.util.Collections
+import java.lang.reflect.Method
 
 internal class ExceptionControllerAdviceTest {
     private val exceptionControllerAdvice: ExceptionControllerAdvice =
@@ -31,6 +30,37 @@ internal class ExceptionControllerAdviceTest {
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("tasks were not found"))
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType())
+    }
+
+    @Test
+    fun `should handle MethodArgumentNotValidException`() {
+
+        // GIVEN
+        val bindingResult = mock(BindingResult::class.java)
+        val methodParameter = MethodParameter(mock(Method::class.java), -1)
+        val exception = MethodArgumentNotValidException(methodParameter, bindingResult)
+
+        `when`(bindingResult.fieldErrors).thenReturn(
+            listOf(
+                FieldError("TestEntity", "field1", "INCORRECT_FIELD_FORMAT"),
+                FieldError("TestEntity", "firstName", "FIRST_NAME_MUST_NOT_HAVE_SPACES")
+            )
+        )
+
+        // WHEN
+        val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exception)
+
+        // THEN
+        assertTrue(
+            (responseEntity.body as BaseResponseDto).errors.containsAll(
+                listOf(
+                    "INCORRECT_FIELD_FORMAT",
+                    "FIRST_NAME_MUST_NOT_HAVE_SPACES"
+                )
+            )
+        )
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
 
     @Test
@@ -70,28 +100,5 @@ internal class ExceptionControllerAdviceTest {
         assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some test exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.getHeaders().getContentType())
-    }
-
-    @Test
-    fun `should handle MethodArgumentNotValidException`() {
-        // GIVEN
-        val bindingResult = mock(BindingResult::class.java)
-        val parameter = mock(MethodParameter::class.java)
-        val exception = MethodArgumentNotValidException(parameter, bindingResult)
-        // WHEN
-        `when`(bindingResult.allErrors).thenReturn(
-            Collections.singletonList(
-                FieldError(
-                    "FieldError", "firstName", "TEST", true,
-                    arrayOf("firstName"), arrayOf("firstName"),
-                    "FIRST_NAME_MUST_NOT_HAVE_SPACES"
-                )
-            ) as List<ObjectError>
-        )
-        val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exception)
-        // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("FIRST_NAME_MUST_NOT_HAVE_SPACES"))
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
 }

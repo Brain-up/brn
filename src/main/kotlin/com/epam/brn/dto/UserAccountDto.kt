@@ -10,15 +10,15 @@ import javax.validation.constraints.Size
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountDto(
     val id: Long? = null,
-    @field:NotBlank(message = "{first.name.without.spaces}")
+    @field:NotBlank(message = "{validation.field.first-name.no-spaces}")
     val firstName: String,
-    @field:NotBlank(message = "{last.name.without.spaces}")
+    @field:NotBlank(message = "{validation.field.last-name.no-spaces}")
     val lastName: String,
-    @field:NotBlank
-    @field:Email
+    @field:NotBlank(message = "{validation.field.email.blank}")
+    @field:Email(message = "{validation.field.email.invalid-format}")
     val email: String,
-    @field:NotBlank
-    @field:Size(min = 4)
+    @field:NotBlank(message = "{validation.field.password.blank}")
+    @field:Size(min = 4, message = "{validation.field.password.invalid-format}")
     var password: String,
     val birthday: LocalDate? = null,
     var active: Boolean = true

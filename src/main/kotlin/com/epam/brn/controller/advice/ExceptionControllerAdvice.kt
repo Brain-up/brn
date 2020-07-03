@@ -14,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.io.IOException
-import java.util.ArrayList
 
 @ControllerAdvice
 class ExceptionControllerAdvice {
@@ -51,6 +50,7 @@ class ExceptionControllerAdvice {
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponseDto> {
         logger.warn("IllegalArgumentException: ${e.message}", e)
+
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -71,6 +71,20 @@ class ExceptionControllerAdvice {
         return createInternalErrorResponse(e)
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BaseResponseDto> {
+        logger.warn("Argument Validation Error: ${e.message}", e)
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BaseResponseDto(errors = processValidationErrors(e.bindingResult.fieldErrors)))
+    }
+
+    private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> {
+        return fieldErrors.mapNotNull { fieldError -> fieldError.defaultMessage }.toList()
+    }
+
     @ExceptionHandler(IOException::class)
     fun handleIOException(e: IOException): ResponseEntity<BaseResponseDto> {
         return createInternalErrorResponse(e)
@@ -87,21 +101,5 @@ class ExceptionControllerAdvice {
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
             .body(BaseResponseDto(errors = listOf(e.message.toString())))
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleMethodArgumentNotValidException(
-        ex: MethodArgumentNotValidException
-    ): ResponseEntity<BaseResponseDto> {
-        logger.warn("MethodArgumentNotValidException: ", ex)
-        val errors = ArrayList<String>()
-        for (violation in ex.bindingResult.allErrors) {
-            if (violation is FieldError)
-                violation.defaultMessage?.let { errors.add(it) }
-        }
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = errors))
     }
 }
