@@ -48,6 +48,8 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk:1.11.808'
     implementation 'com.google.cloud:google-cloud-storage:1.110.0'
 
+    implementation 'net.sf.sociaal:freetts:1.2.2'
+
     def spek_version = '2.0.10'
     testImplementation 'org.amshove.kluent:kluent:1.61'
 
