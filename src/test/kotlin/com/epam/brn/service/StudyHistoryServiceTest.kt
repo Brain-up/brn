@@ -12,8 +12,6 @@ import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
-import java.time.LocalDateTime
-import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,6 +21,8 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.LocalDateTime
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryServiceTest {

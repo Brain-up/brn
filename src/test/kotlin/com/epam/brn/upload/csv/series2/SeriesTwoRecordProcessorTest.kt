@@ -12,7 +12,6 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.ResourceCreationService
 import com.nhaarman.mockito_kotlin.verify
-import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,6 +20,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesTwoRecordProcessorTest {

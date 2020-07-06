@@ -1,4 +1,4 @@
-package com.epam.brn.service
+package com.epam.brn.auth
 
 import com.epam.brn.model.Authority
 

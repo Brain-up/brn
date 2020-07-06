@@ -11,11 +11,11 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.ResourceCreationService
 import com.epam.brn.upload.csv.RecordProcessor
-import java.util.Random
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.util.Random
 
 @Component
 class SeriesOneRecordProcessor(

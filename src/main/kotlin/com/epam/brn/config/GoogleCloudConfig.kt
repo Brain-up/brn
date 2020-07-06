@@ -4,12 +4,12 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageOptions
 import com.google.common.collect.Lists
-import java.io.FileInputStream
-import java.time.Duration
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
+import java.io.FileInputStream
+import java.time.Duration
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "google")
 @Configuration

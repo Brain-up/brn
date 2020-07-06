@@ -4,13 +4,13 @@ import com.epam.brn.exception.FileFormatException
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
+import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.LineNumberReader
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
-import org.springframework.web.multipart.MultipartFile
 
 @Component
 class CsvUploadService(

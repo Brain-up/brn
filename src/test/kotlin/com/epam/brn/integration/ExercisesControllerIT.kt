@@ -11,8 +11,6 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import java.time.LocalDate
-import java.time.LocalDateTime
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -30,6 +28,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Disabled
 @SpringBootTest

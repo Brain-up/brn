@@ -9,10 +9,10 @@ import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series3.SeriesThreeRecord
 import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
-import java.nio.charset.StandardCharsets
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.nio.charset.StandardCharsets
 
 class CsvParserTest {
 

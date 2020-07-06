@@ -4,7 +4,6 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
-import java.nio.charset.Charset
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Tag
@@ -19,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.nio.charset.Charset
 
 @SpringBootTest
 @AutoConfigureMockMvc

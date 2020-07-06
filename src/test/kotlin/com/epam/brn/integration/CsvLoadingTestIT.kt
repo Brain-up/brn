@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
@@ -7,7 +8,6 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.AuthorityService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize

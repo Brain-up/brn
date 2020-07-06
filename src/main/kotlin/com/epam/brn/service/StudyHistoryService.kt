@@ -9,10 +9,10 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import java.security.InvalidParameterException
-import java.util.Optional
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
+import java.security.InvalidParameterException
+import java.util.Optional
 
 @Service
 class StudyHistoryService(

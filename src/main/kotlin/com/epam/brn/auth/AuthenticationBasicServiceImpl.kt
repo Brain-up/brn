@@ -1,8 +1,7 @@
-package com.epam.brn.service.impl
+package com.epam.brn.auth
 
 import com.epam.brn.dto.LoginDto
 import com.epam.brn.dto.UserAccountDto
-import com.epam.brn.service.AuthenticationService
 import com.epam.brn.service.UserAccountService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.security.authentication.AuthenticationManager

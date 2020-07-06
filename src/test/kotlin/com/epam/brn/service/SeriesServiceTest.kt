@@ -4,7 +4,6 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.nhaarman.mockito_kotlin.verify
-import java.util.Optional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -14,6 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesServiceTest {

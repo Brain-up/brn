@@ -1,20 +1,19 @@
-package com.epam.brn.service.impl
+package com.epam.brn.cloud
 
 import com.amazonaws.services.s3.model.ListObjectsV2Request
 import com.amazonaws.util.Base64
 import com.epam.brn.config.AwsConfig
-import com.epam.brn.service.CloudService
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
-import java.io.Serializable
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
+import java.io.Serializable
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
