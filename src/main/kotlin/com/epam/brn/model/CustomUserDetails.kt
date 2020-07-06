@@ -1,9 +1,9 @@
 package com.epam.brn.model
 
-import java.lang.Boolean.TRUE
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.lang.Boolean.TRUE
 
 class CustomUserDetails(userAccount: UserAccount) : UserDetails {
 

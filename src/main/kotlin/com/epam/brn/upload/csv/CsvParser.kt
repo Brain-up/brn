@@ -1,13 +1,13 @@
 package com.epam.brn.upload.csv
 
+import org.apache.commons.io.IOUtils
+import org.apache.logging.log4j.kotlin.logger
+import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.stream.Collectors
-import org.apache.commons.io.IOUtils
-import org.apache.logging.log4j.kotlin.logger
-import org.springframework.stereotype.Service
 
 @Service
 class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {

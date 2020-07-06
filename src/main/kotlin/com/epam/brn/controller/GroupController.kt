@@ -3,8 +3,8 @@ package com.epam.brn.controller
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.ExerciseGroupDto
+import com.epam.brn.localization.LocalePostprocessor
 import com.epam.brn.service.ExerciseGroupsService
-import com.epam.brn.service.LocalePostprocessor
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.ResponseEntity

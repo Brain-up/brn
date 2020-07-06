@@ -4,9 +4,9 @@ import com.epam.brn.upload.csv.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
-import java.io.InputStream
 import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
+import java.io.InputStream
 
 @Component
 class SeriesGenericRecordMappingIteratorProvider :

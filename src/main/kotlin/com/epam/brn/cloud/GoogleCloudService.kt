@@ -1,17 +1,16 @@
-package com.epam.brn.service.impl
+package com.epam.brn.cloud
 
 import com.epam.brn.config.GoogleCloudConfig
-import com.epam.brn.service.CloudService
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.HttpMethod
 import com.google.cloud.storage.Storage
-import java.net.URL
-import java.util.TreeSet
-import java.util.concurrent.TimeUnit
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
+import java.net.URL
+import java.util.TreeSet
+import java.util.concurrent.TimeUnit
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "google")
 @Service

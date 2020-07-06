@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
-import java.io.File
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class ResourceCreationService {

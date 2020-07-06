@@ -1,13 +1,12 @@
 package com.epam.brn.service
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
-import java.util.Optional
-import kotlin.test.assertFailsWith
 import org.apache.commons.lang3.math.NumberUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -21,6 +20,8 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyString
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.util.Optional
+import kotlin.test.assertFailsWith
 
 @ExtendWith(MockitoExtension::class)
 @DisplayName("UserAccountService test using mockito")

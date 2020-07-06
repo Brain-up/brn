@@ -1,10 +1,10 @@
 package com.epam.brn.service.impl
 
+import com.epam.brn.auth.AuthenticationBasicServiceImpl
 import com.epam.brn.dto.LoginDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
-import kotlin.test.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.util.Base64Utils
+import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class AuthenticationBasicServiceImplTest {

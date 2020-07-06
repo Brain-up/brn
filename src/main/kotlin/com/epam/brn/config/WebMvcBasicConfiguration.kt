@@ -1,6 +1,5 @@
 package com.epam.brn.config
 
-import java.util.Locale
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
@@ -11,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import java.nio.charset.StandardCharsets
+import java.util.Locale
 
 @Configuration
 class WebMvcBasicConfiguration : WebMvcConfigurer {

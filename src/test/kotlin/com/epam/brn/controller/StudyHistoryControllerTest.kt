@@ -6,9 +6,6 @@ import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.service.StudyHistoryService
 import com.nhaarman.mockito_kotlin.verify
-import java.time.LocalDateTime
-import java.util.Optional
-import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -16,6 +13,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.http.HttpStatus
+import java.time.LocalDateTime
+import java.util.Optional
+import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryControllerTest {

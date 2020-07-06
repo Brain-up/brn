@@ -1,4 +1,4 @@
-package com.epam.brn.service
+package com.epam.brn.localization
 
 import com.epam.brn.dto.ExerciseGroupDto
 import org.springframework.context.MessageSource
@@ -6,7 +6,8 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Component
 
 @Component
-class GroupLocalePostprocessorImpl(private val messageSource: MessageSource) : LocalePostprocessor<ExerciseGroupDto> {
+class GroupLocalePostprocessorImpl(private val messageSource: MessageSource) :
+    LocalePostprocessor<ExerciseGroupDto> {
 
     private val mapOfMessages: Map<String, Pair<String, String>> = mapOf(
         "Неречевые упражнения" to Pair("group.first.name", "group.first.description"),
