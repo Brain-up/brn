@@ -5,7 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
+
+const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
+    "(^\\s+$)|([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)"
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountDto(
@@ -16,6 +20,10 @@ data class UserAccountDto(
     val lastName: String,
     @field:NotBlank(message = "{validation.field.email.blank}")
     @field:Email(message = "{validation.field.email.invalid-format}")
+    @field:Pattern(
+        regexp = VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE,
+        message = "{validation.field.email.invalid-format.cyrillic.not.allowed}"
+    )
     val email: String,
     @field:NotBlank(message = "{validation.field.password.blank}")
     @field:Size(min = 4, message = "{validation.field.password.invalid-format}")
