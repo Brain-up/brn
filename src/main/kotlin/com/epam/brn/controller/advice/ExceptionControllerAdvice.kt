@@ -81,6 +81,26 @@ class ExceptionControllerAdvice {
             .body(BaseResponseDto(errors = processValidationErrors(e.bindingResult.fieldErrors)))
     }
 
+    // @ExceptionHandler(InvalidFormatException::class)
+    // fun handleInvalidFormatException(e: InvalidFormatException): ResponseEntity<BaseResponseDto> {
+    //     logger.warn("Argument Validation Error: ${e.message}", e)
+    //
+    //     return ResponseEntity
+    //         .status(HttpStatus.BAD_REQUEST)
+    //         .contentType(MediaType.APPLICATION_JSON)
+    //         .body(BaseResponseDto(errors = e.localizedMessage.toString().toList()))
+    // }
+    //
+    // @ExceptionHandler(HttpMessageNotReadableException::class)
+    // fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<BaseResponseDto> {
+    //     logger.warn("Argument Validation Error: ${e.message}", e)
+    //
+    //     return ResponseEntity
+    //         .status(HttpStatus.BAD_REQUEST)
+    //         .contentType(MediaType.APPLICATION_JSON)
+    //         .body(BaseResponseDto(errors = e.localizedMessage.toString().toList()))
+    // }
+
     private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> {
         return fieldErrors.mapNotNull { fieldError -> fieldError.defaultMessage }.toList()
     }

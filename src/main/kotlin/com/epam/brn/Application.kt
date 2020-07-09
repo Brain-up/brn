@@ -11,5 +11,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 class Application
 
 fun main(args: Array<String>) {
+    // val mapper = ObjectMapper().registerModule(KotlinModule())
     SpringApplication.run(Application::class.java, *args)
 }
