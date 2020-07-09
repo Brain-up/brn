@@ -6,6 +6,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.jpa"
     id "org.jetbrains.kotlin.plugin.allopen"
     id "org.jetbrains.kotlin.kapt"
+    id "jacoco"
 }
 
 allOpen {
@@ -122,4 +123,20 @@ task integrationTest(type: Test) { task ->
         options.includeTags "integration-test"
     }
     task.shouldRunAfter tasks.test
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        xml.enabled true
+        html.enabled true
+        xml.destination = file(getBuildDir().toString() + File.separator.toString() + "jacoco" + File.separator.toString() + "coverage.xml")
+        csv.enabled false
+        html.destination = file(getBuildDir().toString() + File.separator.toString() + "jacoco" + File.separator.toString() + "html")
+    }
+    getExecutionData().setFrom("$buildDir/jacoco/test.exec")
 }
