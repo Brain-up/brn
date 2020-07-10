@@ -10,7 +10,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.service.ResourceCreationService
+import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -29,7 +29,7 @@ internal class SeriesOneRecordProcessorTest {
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
-    private val resourceCreationService = mock(ResourceCreationService::class.java)
+    private val resourceCreationService = mock(WordsService::class.java)
 
     private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
 
@@ -58,6 +58,7 @@ internal class SeriesOneRecordProcessorTest {
         )
 
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "series1WordsFileName", "words_series1.txt")
 
         `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 

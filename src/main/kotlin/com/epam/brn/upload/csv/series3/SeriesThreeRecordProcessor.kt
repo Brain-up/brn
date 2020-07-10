@@ -9,6 +9,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
@@ -19,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional
 class SeriesThreeRecordProcessor(
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val seriesRepository: SeriesRepository
+    private val seriesRepository: SeriesRepository,
+    private val wordsService: WordsService
 ) : RecordProcessor<SeriesThreeRecord, Exercise> {
 
     @Value(value = "\${brn.audio.file.second.series.path}")
@@ -28,20 +30,26 @@ class SeriesThreeRecordProcessor(
     @Value(value = "\${brn.pictureWithWord.file.default.path}")
     private lateinit var pictureWithWordFileUrl: String
 
+    @Value(value = "\${series3WordsFileName}")
+    private lateinit var series3WordsFileName: String
+
     override fun isApplicable(record: Any): Boolean {
         return record is SeriesThreeRecord
     }
 
     @Transactional
     override fun process(records: List<SeriesThreeRecord>): List<Exercise> {
+        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(3L).orElse(null)
         records.forEach {
             val correctAnswer = extractCorrectAnswer(it)
+            words.add(correctAnswer.word)
             resourceRepository.save(correctAnswer)
 
             val answerOptions = extractAnswerOptions(it)
+            words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -50,7 +58,7 @@ class SeriesThreeRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-
+        wordsService.createFileWithWords(words, series3WordsFileName)
         return exercises.toMutableList()
     }
 

@@ -10,6 +10,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -27,6 +28,7 @@ internal class SeriesThreeRecordProcessorTest {
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
+    private val wordsServiceMock = mock(WordsService::class.java)
 
     private lateinit var seriesThreeRecordProcessor: SeriesThreeRecordProcessor
 
@@ -46,11 +48,13 @@ internal class SeriesThreeRecordProcessorTest {
         seriesThreeRecordProcessor = SeriesThreeRecordProcessor(
             resourceRepositoryMock,
             exerciseRepositoryMock,
-            seriesRepositoryMock
+            seriesRepositoryMock,
+            wordsServiceMock
         )
 
         ReflectionTestUtils.setField(seriesThreeRecordProcessor, "audioFileUrl", "series2/%s.mp3")
         ReflectionTestUtils.setField(seriesThreeRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
+        ReflectionTestUtils.setField(seriesThreeRecordProcessor, "series3WordsFileName", "words_series3.txt")
 
         `when`(seriesRepositoryMock.findById(3L)).thenReturn(Optional.of(series))
 
