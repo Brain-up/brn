@@ -21,6 +21,7 @@ export default class StudyingTimerService extends Service {
   }
   @action
   register(timer) {
+    this.countedSeconds = 0;
     this.timerInstance = timer;
     this.startIdleWatcher();
   }
@@ -30,8 +31,8 @@ export default class StudyingTimerService extends Service {
     return this.timerInstance.runTimer();
   }
   @action
-  setTime(seconds) {
-    this.countedSeconds = seconds;
+  addTime(seconds) {
+    this.countedSeconds += seconds;
   }
   @action
   togglePause() {
