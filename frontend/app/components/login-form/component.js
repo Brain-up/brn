@@ -4,10 +4,6 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 
-const ERRORS_MAP = {
-  'Bad credentials': 'login_form.warning_enter_credentials',
-};
-
 const BUTTON_STATES = {
   ACTIVE: 'active',
   DISABLED: 'disabled',
@@ -68,8 +64,11 @@ export default class LoginFormComponent extends Component {
         key = error.error || error;
       }
 
-      this.errorMessage =
-        key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key]) : key;
+      if (this.intl.exists(`msg.validation.${key}`)) {
+        this.errorMessage = this.intl.t(`msg.validation.${key}`);
+      } else {
+        this.errorMessage = key;
+      }
 
       this.loginTask.cancelAll();
     }
