@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import java.time.ZonedDateTime
 
-// @ConditionalOnProperty(name = ["withAudioFilesGeneration"], havingValue = "true")
 @Service
 class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
@@ -100,6 +99,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
     fun generateAudioFile(word: String, voice: String): File {
         val token = getYandexIamTokenForAudioGeneration()
+//        val token = "CggVAgAAABoBMxKABCiWPkIYtpKEMLH5iFg7HaG4zkrcY7PJTKDXMFtxyLmKUksznKL1e-HTNRdlKZqJynhVtW1qPRVg3LmqHu07ETK0f9oGtdFqqCSWKYArgJo4xW6Yr32eGy7AzhO5DuqEARO7GwOjDEkHGzx0SMuME2vBGK0TIPwTE04P8X6rhi3DvsuabaX9P-qAMDj4a92IXP3E6KPYEvF0iPkpyXdQgrvJx7iIvCtx8lB-uunacITdoSpy8RmB-ghZJd_f1zLnMeIs2xSx4O5Nx2aAfoQDqE_iscAk8VXaK4zWzzJCZr4IRD6kpI681A_CI3pAgQ-wqPAvYLpQluTkSXEt2orpFOzVcBdIy3k7_IiP0z-nkuFYH2dJfu9PyHxMLe0Q_VEtVQfLuoyMu5fha0vY7ExoueFmp-N_r76iYj2mLwqFZXNim77YQQtFrFsmixeDyFL8rZl8HJcIAo4tuJQeOFIvuusUL5uEKxoLYZ3TaSUAW8gGiYIz9AqDef6LOjgfeIWyqGXiqJr5nZBGcViO-sgTa0c8M7JZj9Im24Si0-6zOwqpIGn2LrwHwh85q_01j9s2uj2714J8xrVg4HUWAs8NAiJAQcEeROaeHYHunUbQDkY_LmQ2MiXk0YbdLUlv6KDsyox1uz22VxPrntutF5NCEbYNG2aaoFiOK7NX9DikMDvUGiQQkcqw-AUY0Zuz-AUiFgoUYWplOXJ0bThxc3NiMGNscGFpOWk="
         val parameters = ArrayList<NameValuePair>()
         parameters.add(BasicNameValuePair("folderId", folderId))
         parameters.add(BasicNameValuePair("lang", lang))
@@ -121,18 +121,24 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
             throw YandexServiceException("Yandex cloud does not provide audio file, httpStatus={$statusCode}")
         val httpEntity = response.entity
         val inputStream = httpEntity.content
-        val file = File("$word.ogg")
-        FileUtils.copyInputStreamToFile(inputStream, file)
+        val fileOgg = File("$word.ogg")
+        FileUtils.copyInputStreamToFile(inputStream, fileOgg)
 
-        convertOggFileToMp3(file, voice)
-        return file
+        convertOggFileToMp3(fileOgg, voice)
+
+        val targetOggFile = File("audio/ogg/${fileOgg.name}")
+        fileOgg.let { sourceFile ->
+            sourceFile.copyTo(targetOggFile, true)
+            sourceFile.delete()
+        }
+        return targetOggFile
     }
 
-    fun convertOggFileToMp3(fileOGG: File, voice: String) {
-        val mp3FileName = "${fileOGG.nameWithoutExtension}.mp3"
+    fun convertOggFileToMp3(fileOgg: File, voice: String) {
+        val mp3FileName = "${fileOgg.nameWithoutExtension}.mp3"
         try {
             val builder = FFmpegBuilder()
-                .setInput(fileOGG.getAbsolutePath())
+                .setInput(fileOgg.getAbsolutePath())
                 .overrideOutputFiles(true)
                 .addOutput(mp3FileName)
                 .setAudioCodec("libmp3lame")

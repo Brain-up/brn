@@ -26,26 +26,32 @@ internal class AudioFilesGenerationServiceIT {
     @Test
     fun `should get iam token from yandex cloud`() {
         // WHEN
-        val iamToken = audioFilesGenerationService.getYandexIamTokenForAudioGeneration()
+        val iamToken1 = audioFilesGenerationService.getYandexIamTokenForAudioGeneration()
         val iamToken2 = audioFilesGenerationService.getYandexIamTokenForAudioGeneration()
         // THEN
-        assertNotNull(iamToken)
-        assertSame(iamToken, iamToken2)
+        assertNotNull(iamToken1)
+        assertSame(iamToken1, iamToken2)
     }
 
     @Test
-    fun `should generate ogg audio file and then convert in to mp3 file`() {
+    fun `should generate ogg audio file and then convert it into mp3 file`() {
         val voice = "alena"
-        val resultFile1 = File("audio/$voice/бабушкааа.mp3")
-        val resultFile2 = File("audio/$voice/доктор моет чёрные грушиии.mp3")
+        val resultFile1Ogg = File("audio/ogg/бабушкааа.ogg")
+        val resultFile1Mp3 = File("audio/$voice/бабушкааа.mp3")
+        val resultFile2Ogg = File("audio/ogg/доктор моет чёрные грушиии.ogg")
+        val resultFile2Mp3 = File("audio/$voice/доктор моет чёрные грушиии.mp3")
         // WHEN
         audioFilesGenerationService.generateAudioFile("бабушкааа", voice)
         audioFilesGenerationService.generateAudioFile("доктор моет чёрные грушиии", voice)
         // THEN
-        assertTrue(resultFile1.exists())
-        assertTrue(resultFile2.exists())
-        resultFile1.deleteOnExit()
-        resultFile2.deleteOnExit()
+        assertTrue(resultFile1Ogg.exists())
+        assertTrue(resultFile1Mp3.exists())
+        assertTrue(resultFile2Ogg.exists())
+        assertTrue(resultFile2Mp3.exists())
+        resultFile1Ogg.deleteOnExit()
+        resultFile1Mp3.deleteOnExit()
+        resultFile2Ogg.deleteOnExit()
+        resultFile2Mp3.deleteOnExit()
     }
 
     @Test
