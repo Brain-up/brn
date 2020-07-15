@@ -36,10 +36,10 @@ internal class AudioFilesGenerationServiceIT {
     @Test
     fun `should generate ogg audio file and then convert it into mp3 file`() {
         val voice = "alena"
-        val resultFile1Ogg = File("audio/ogg/бабушкааа.ogg")
-        val resultFile1Mp3 = File("audio/$voice/бабушкааа.mp3")
-        val resultFile2Ogg = File("audio/ogg/доктор моет чёрные грушиии.ogg")
-        val resultFile2Mp3 = File("audio/$voice/доктор моет чёрные грушиии.mp3")
+        val resultFile1Ogg = File("audioTest/ogg/бабушкааа.ogg")
+        val resultFile1Mp3 = File("audioTest/$voice/бабушкааа.mp3")
+        val resultFile2Ogg = File("audioTest/ogg/доктор моет чёрные грушиии.ogg")
+        val resultFile2Mp3 = File("audioTest/$voice/доктор моет чёрные грушиии.mp3")
         // WHEN
         audioFilesGenerationService.generateAudioFile("бабушкааа", voice)
         audioFilesGenerationService.generateAudioFile("доктор моет чёрные грушиии", voice)
@@ -57,8 +57,8 @@ internal class AudioFilesGenerationServiceIT {
     @Test
     fun `convert ogg file to mp3`() {
         val voice = "alena"
-        val resultFile1 = File("audio/$voice/тест_привет.mp3")
-        val resultFile2 = File("audio/$voice/тест_бабушка.mp3")
+        val resultFile1 = File("audioTest/$voice/тест_привет.mp3")
+        val resultFile2 = File("audioTest/$voice/тест_бабушка.mp3")
         // WHEN
         audioFilesGenerationService.convertOggFileToMp3(File("testAudioFiles/тест_привет.ogg"), voice)
         audioFilesGenerationService.convertOggFileToMp3(File("testAudioFiles/тест_бабушка.ogg"), voice)
