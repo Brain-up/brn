@@ -8,6 +8,7 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.AudioFilesGenerationService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
@@ -37,14 +38,16 @@ class CsvLoadingTestIT {
             userAccountRepository: UserAccountRepository,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
-            uploadService: CsvUploadService
+            uploadService: CsvUploadService,
+            audioFilesGenerationService: AudioFilesGenerationService
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
             userAccountRepository,
             passwordEncoder,
             authorityService,
-            uploadService
+            uploadService,
+            audioFilesGenerationService
         )
     }
 

@@ -112,7 +112,7 @@ class SeriesControllerIT {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
         val expectedResponse =
-            """{"data":"level,exerciseName,words,noise\n1,Слова без шума,(бал бум быль вить гад дуб),no_noise\n2,Слова без шума,(линь лис моль пар пять раб),no_noise\n3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise\n4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db","errors":[],"meta":[]}"""
+            """{"data":"level,exerciseName,words,noise\n1,Слова без шума,(бал бум быль вить гад дуб),no_noise\n2,Слова без шума,(линь лис моль пар пять раб),no_noise\n3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise\n1,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db","errors":[],"meta":[]}"""
         Assertions.assertEquals(expectedResponse, response)
     }
 }
