@@ -7,6 +7,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen"
     id "org.jetbrains.kotlin.kapt"
     id "jacoco"
+    id "org.sonarqube" version "3.0"
 }
 
 allOpen {
@@ -31,7 +32,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
-
+    compile group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.0'
     implementation "com.auth0:java-jwt:3.10.3"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 
@@ -139,4 +140,32 @@ tasks.jacocoTestReport {
         html.destination = file(getBuildDir().toString() + File.separator.toString() + "jacoco" + File.separator.toString() + "html")
     }
     getExecutionData().setFrom("$buildDir/jacoco/test.exec")
+}
+
+sonarqube {
+    properties {
+        // Root project information
+        property 'sonar.projectKey', 'Brain-up_brn'
+        property 'sonar.organization', 'brain-up' 
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.login', '$SONAR_TOKEN_SIESTA'
+
+        // Some properties that will be inherited by the modules
+        property 'sonar.sources', 'src/main/kotlin/com/epam/brn'
+        property 'sonar.sourceEncoding', 'UTF-8'
+//        property 'sonar.exclusions', '**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG,**/io/ionic*,**/io/ionic**,**/io/ionic**/*.java,**/org/*,**/org/**,**/org/**/*.java,**/cordova/*,**/cordova/**,**/cordova/**/*.java,**/android/*,**/android/**,**/android/**/*.java,**/apache/commons/**'
+        property 'sonar.scm.provider', 'git'
+        property 'sonar.java.source', '1.8'
+//        property 'sonar.tests', ["src/test/java"]
+        property 'sonar.java.coveragePlugin', "jacoco"
+//        property 'sonar.coverage.exclusions', '**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG,**/io/ionic*,**/io/ionic**,**/io/ionic**/*.java,**/org/*,**/org/**,**/org/**/*.java,**/cordova/*,**/cordova/**,**/cordova/**/*.java,**/android/*,**/android/**,**/android/**/*.java,**/apache/commons/**'
+        // Below property needs to be use very soon
+        property 'sonar.coverage.jacoco.xmlReportPaths', "$buildDir/jacoco/coverage.xml"
+        property 'sonar.jacoco.reportPaths', "$buildDir/jacoco/test.exec"
+//        property 'sonar.junit.reportsPath', "$buildDir/test-results/testDevReleaseUnitTest"
+//
+//        property 'sonar.java.binaries', "$buildDir/intermediates/javac/devRelease/compileDevReleaseJavaWithJavac/classes/com/visualogyx"
+//        property 'sonar.projectVersion', getFlavorVersionCode()
+
+    }
 }
