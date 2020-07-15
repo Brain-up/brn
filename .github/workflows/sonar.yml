@@ -1,15 +1,17 @@
 name: SonarCloud
 on:
   pull_request:
-    paths:
-      - '.github/workflows/sonar.yml'
+    paths-ignore:
+      - 'frontend/**'
+      - 'frontend-angular/**'
     branches:
       - master
-    push:
-      paths:
-        - '.github/workflows/sonar.yml'
-      branches:
-        - master
+  push:
+    paths-ignore:
+      - 'frontend/**'
+      - 'frontend-angular/**'
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,9 +20,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: '11'
       - name: Analyze with SonarCloud
-        run: gradle jacocoTestReport -Dsonar.projectKey=Brain-up_brn -Dsonar.organization=brain-up -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        run: gradle sonarqube -Dsonar.projectKey=Brain-up_brn -Dsonar.coverage.jacoco.xmlReportPaths=$(find "$(pwd)" -path '*coverage.xml' | sed 's/.*/&/' | tr '\n' ',') -Dsonar.organization=brain-up -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN_SIESTA
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_SIESTA }}

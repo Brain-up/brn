@@ -7,6 +7,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen"
     id "org.jetbrains.kotlin.kapt"
     id "jacoco"
+    id "org.sonarqube" version "3.0"
 }
 
 allOpen {
@@ -31,7 +32,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
-
+    compile group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.0'
     implementation "com.auth0:java-jwt:3.10.3"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 
