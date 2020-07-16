@@ -72,12 +72,13 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
         if (words.isEmpty())
             log.error("There are no any cached words.")
         log.info("Start generating audio files in yandex cloud for $wordsSize words.")
-        val counter = 1
+        var counter = 1
         words.asSequence().forEach { word ->
             run {
                 log.info("Generated $counter word from $wordsSize words.")
                 generateAudioFile(word, voiceAlena)
                 generateAudioFile(word, voiceFilipp)
+                counter += 1
             }
         }
         log.info("Audio files for all words (${words.size}) was created successfully!")
@@ -106,8 +107,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     }
 
     fun generateAudioFile(word: String, voice: String): File {
-//        val token = getYandexIamTokenForAudioGeneration()
-        val token = "CggVAgAAABoBMxKABEA80s__SgCSu6Bs6Q7eXuLtN84OAI8lFzS9H-3tysfrtdwdvTJHPSLRez5dunDjN8Ej4cMLeMcIaLpcxcbvviUNsMI8PCQF6rl0rpMrKAHxvrvmI-MMV8KSRZATxZPnJ646xUFKqxxj2ZfnRyFBDV3762RY9tvpLL7mRBCM9iTLTERRexygNq0T2yoQF-LNiP2HTW8bqtaLjwa9Y8A0SJEjeQwSQCp2bD5c1v4a3Wwk6PG7rL6ELEKWJL0Bau4t0zf2ZfjUYficNX6ormgE8cLAQSMt74u-_piZrld1_MAD1Fel2JimZJQm3Eq0PZeUiEAWGQlV17ku9Hi4w9w7xfRxXBgfkYiPqY6js4x0mgiX09vHs-TR9S1dMiPmvAuAblYLsHCuUew7And_BL7b7cLinmyQ638_cYR5ASpmcjOoQEEQgp66cqLzu1v9-RrIRQ5jiCXR4jxvs2WWbThrd0XrPrvIqKRzborBBMipXk046phtD6CdOqKhCn0HksDV8taHQXClv4i2OgKTS4MMO6BkWhwYPi0cfrbBLaMrR8S_mSipqFvtb9HSMbLwvA2bJNXgb-37KfYcdSb9uASTVE-m0FsKVi8wHoI9o9iMTOLPob0VIWw2V_XzVKbRt-lzAy3X1J6VmyTYy0L8kLRqrdpA-GNles2Aa-UgPCER4b8FGiQQqv29-AUY6s7A-AUiFgoUYWplOXJ0bThxc3NiMGNscGFpOWk="
+        val token = getYandexIamTokenForAudioGeneration()
         val parameters = ArrayList<NameValuePair>()
         parameters.add(BasicNameValuePair("folderId", folderId))
         parameters.add(BasicNameValuePair("lang", lang))
