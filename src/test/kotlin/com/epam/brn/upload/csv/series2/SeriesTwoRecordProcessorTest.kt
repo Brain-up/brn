@@ -52,7 +52,7 @@ internal class SeriesTwoRecordProcessorTest {
             resourceCreationServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "audioFileUrl", "series2/%s.mp3")
+        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "audioPath", "audio/ogg/filipp/%s.ogg")
         ReflectionTestUtils.setField(seriesTwoRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
         ReflectionTestUtils.setField(seriesTwoRecordProcessor, "series2WordsFileName", "words_series2.txt")
 
@@ -163,7 +163,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "девочка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/девочка.mp3",
+            audioFileUrl = "audio/ogg/filipp/девочка.ogg",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
     }
@@ -172,7 +172,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "бабушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/бабушка.mp3",
+            audioFileUrl = "audio/ogg/filipp/бабушка.ogg",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
     }
@@ -181,7 +181,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "дедушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/дедушка.mp3",
+            audioFileUrl = "audio/ogg/filipp/дедушка.ogg",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
     }
@@ -190,7 +190,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "сидит",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/сидит.mp3",
+            audioFileUrl = "audio/ogg/filipp/сидит.ogg",
             pictureFileUrl = "pictures/withWord/сидит.jpg"
         )
     }
@@ -199,7 +199,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "лежит",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/лежит.mp3",
+            audioFileUrl = "audio/ogg/filipp/лежит.ogg",
             pictureFileUrl = "pictures/withWord/лежит.jpg"
         )
     }
@@ -208,7 +208,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "идет",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/идет.mp3",
+            audioFileUrl = "audio/ogg/filipp/идет.ogg",
             pictureFileUrl = "pictures/withWord/идет.jpg"
         )
     }
