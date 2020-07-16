@@ -135,7 +135,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
         convertOggFileToMp3(fileOgg, voice)
 
-        val targetOggFile = File("$folderForFiles/ogg/${fileOgg.name}")
+        val targetOggFile = File("$folderForFiles/ogg/$voice/${fileOgg.name}")
         fileOgg.let { sourceFile ->
             sourceFile.copyTo(targetOggFile, true)
             sourceFile.delete()
