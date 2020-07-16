@@ -57,6 +57,9 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     @Value(value = "\${series1WordsFileName}")
     private lateinit var series1WordsFileName: String
 
+    @Value(value = "\${yandex.folderForFiles}")
+    private lateinit var folderForFiles: String
+
     var iamToken: String = ""
     var iamTokenExpiresTime = ZonedDateTime.now()
 
@@ -125,7 +128,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
         convertOggFileToMp3(fileOgg, voice)
 
-        val targetOggFile = File("audio/ogg/${fileOgg.name}")
+        val targetOggFile = File("$folderForFiles/ogg/${fileOgg.name}")
         fileOgg.let { sourceFile ->
             sourceFile.copyTo(targetOggFile, true)
             sourceFile.delete()
@@ -153,7 +156,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
             // Run a one-pass encode
             executor.createJob(builder).run()
 
-            val targetMp3FilePath = "audio/$voice/$mp3FileName"
+            val targetMp3FilePath = "$folderForFiles/$voice/$mp3FileName"
             File(mp3FileName).let { sourceFile ->
                 sourceFile.copyTo(File(targetMp3FilePath), true)
                 sourceFile.delete()
