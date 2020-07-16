@@ -7,6 +7,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen"
     id "org.jetbrains.kotlin.kapt"
     id "jacoco"
+    id 'org.sonarqube' version "3.0"
 }
 
 allOpen {
@@ -139,4 +140,24 @@ tasks.jacocoTestReport {
         html.destination = file(getBuildDir().toString() + File.separator.toString() + "jacoco" + File.separator.toString() + "html")
     }
     getExecutionData().setFrom("$buildDir/jacoco/test.exec")
+}
+
+sonarqube {
+    properties {
+        // Root project information
+        property 'sonar.projectKey', 'Brain-up_brn'
+        property 'sonar.organization', 'brain-up'
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        // Some properties that will be inherited by the modules
+        property 'sonar.sources', 'src/main/kotlin/com/epam/brn'
+        property 'sonar.sourceEncoding', 'UTF-8'
+        property 'sonar.exclusions', '**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG'
+        property 'sonar.scm.provider', 'git'
+        property 'sonar.java.source', '1.8'
+        property 'sonar.tests', ["src/test/kotlin"]
+        property 'sonar.java.coveragePlugin', "jacoco"
+        property 'sonar.coverage.exclusions', '**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG'
+        // Below property needs to be use very soon
+        property 'sonar.coverage.jacoco.xmlReportPaths', "$buildDir/jacoco/coverage.xml"
+    }
 }
