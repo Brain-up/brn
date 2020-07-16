@@ -26,7 +26,7 @@ data class UserAccountDto(
     )
     val email: String,
     @field:NotBlank(message = "{validation.field.password.blank}")
-    @field:Size(min = 4, max = 2147483647, message = "{validation.field.password.invalid-format}")
+    @field:Size(min = 4, max = 20, message = "{validation.field.password.invalid-format}")
     var password: String,
     val birthday: LocalDate? = null,
     var active: Boolean = true
