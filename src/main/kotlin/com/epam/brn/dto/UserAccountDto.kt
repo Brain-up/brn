@@ -1,15 +1,12 @@
 package com.epam.brn.dto
 
 import com.epam.brn.model.UserAccount
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Past
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
@@ -33,11 +30,8 @@ data class UserAccountDto(
     @field:NotBlank(message = "{validation.field.password.blank}")
     @field:Size(min = 4, message = "{validation.field.password.invalid-format}")
     var password: String,
-    @field:JsonDeserialize(using = LocalDateDeserializer::class)
-    @field:JsonSerialize(using = LocalDateSerializer::class)
-    @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    // @field:JsonProperty("last_charge_date")
-    // @field:DateTimeFormat(pattern = "yyyy-MM-dd")
+    @field:NotNull(message = "{validation.field.birthday.notNull}")
+    @field:Past(message = "{validation.field.birthday.past}")
     val birthday: LocalDate? = null,
     var active: Boolean = true
 ) {

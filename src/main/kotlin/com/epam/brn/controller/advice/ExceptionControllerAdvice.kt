@@ -5,20 +5,28 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.PropertySource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.io.IOException
+import java.time.format.DateTimeParseException
 
 @ControllerAdvice
+@PropertySource("classpath:errorMessages.properties")
 class ExceptionControllerAdvice {
 
     private val logger = logger()
+
+    @Value("\${validation.field.birthday.invalid-format}")
+    private val birthdayProperty: String? = null
 
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponseDto> {
@@ -81,25 +89,24 @@ class ExceptionControllerAdvice {
             .body(BaseResponseDto(errors = processValidationErrors(e.bindingResult.fieldErrors)))
     }
 
-    // @ExceptionHandler(InvalidFormatException::class)
-    // fun handleInvalidFormatException(e: InvalidFormatException): ResponseEntity<BaseResponseDto> {
-    //     logger.warn("Argument Validation Error: ${e.message}", e)
-    //
-    //     return ResponseEntity
-    //         .status(HttpStatus.BAD_REQUEST)
-    //         .contentType(MediaType.APPLICATION_JSON)
-    //         .body(BaseResponseDto(errors = e.localizedMessage.toString().toList()))
-    // }
-    //
-    // @ExceptionHandler(HttpMessageNotReadableException::class)
-    // fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<BaseResponseDto> {
-    //     logger.warn("Argument Validation Error: ${e.message}", e)
-    //
-    //     return ResponseEntity
-    //         .status(HttpStatus.BAD_REQUEST)
-    //         .contentType(MediaType.APPLICATION_JSON)
-    //         .body(BaseResponseDto(errors = e.localizedMessage.toString().toList()))
-    // }
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadableException(
+        e: HttpMessageNotReadableException
+    ): ResponseEntity<BaseResponseDto> {
+        logger.warn("Argument Validation Error: ${e.message}", e)
+        val rootCause: Throwable? = e.rootCause
+        if (rootCause is DateTimeParseException) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BaseResponseDto(errors = listOf(birthdayProperty.toString())))
+        }
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+    }
 
     private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> {
         return fieldErrors.mapNotNull { fieldError -> fieldError.defaultMessage }.toList()

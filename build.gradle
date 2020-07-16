@@ -30,6 +30,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1"
 
     implementation "com.auth0:java-jwt:3.10.3"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
