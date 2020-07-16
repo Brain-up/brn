@@ -24,14 +24,14 @@ class SeriesTwoRecordProcessor(
     private val wordsService: WordsService
 ) : RecordProcessor<SeriesTwoRecord, Exercise> {
 
-    @Value(value = "\${brn.audio.file.second.series.path}")
-    private lateinit var audioFileUrl: String
-
     @Value(value = "\${brn.pictureWithWord.file.default.path}")
     private lateinit var pictureWithWordFileUrl: String
 
     @Value(value = "\${series2WordsFileName}")
     private lateinit var series2WordsFileName: String
+
+    @Value(value = "\${audioPath}")
+    private lateinit var audioPath: String
 
     override fun isApplicable(record: Any): Boolean = record is SeriesTwoRecord
 
@@ -81,7 +81,7 @@ class SeriesTwoRecordProcessor(
             .orElse(
                 Resource(
                     word = word,
-                    audioFileUrl = audioFileUrl.format(word),
+                    audioFileUrl = audioPath.format(word),
                     pictureFileUrl = pictureWithWordFileUrl.format(word)
                 )
             )

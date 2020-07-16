@@ -67,12 +67,18 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
     fun generateAudioFiles() {
         val words = wordsService.wordsSet
+        val wordsSize = words.size
+        words.remove("")
         if (words.isEmpty())
             log.error("There are no any cached words.")
+        log.info("Start generating audio files in yandex cloud for $wordsSize words.")
+        var counter = 1
         words.asSequence().forEach { word ->
             run {
+                log.info("Generated $counter word from $wordsSize words.")
                 generateAudioFile(word, voiceAlena)
                 generateAudioFile(word, voiceFilipp)
+                counter += 1
             }
         }
         log.info("Audio files for all words (${words.size}) was created successfully!")
@@ -120,7 +126,8 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
         val response = httpClient.execute(postRequest)
         val statusCode = response.statusLine.statusCode
         if (statusCode != HttpStatus.OK.value())
-            throw YandexServiceException("Yandex cloud does not provide audio file, httpStatus={$statusCode}")
+            throw YandexServiceException("Yandex cloud does not provide audio file for word `$word`, httpStatus={$statusCode}")
+        log.info("Ogg audio file for Word `$word` was successfully generated.")
         val httpEntity = response.entity
         val inputStream = httpEntity.content
         val fileOgg = File("$word.ogg")
@@ -128,7 +135,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
         convertOggFileToMp3(fileOgg, voice)
 
-        val targetOggFile = File("$folderForFiles/ogg/${fileOgg.name}")
+        val targetOggFile = File("$folderForFiles/ogg/$voice/${fileOgg.name}")
         fileOgg.let { sourceFile ->
             sourceFile.copyTo(targetOggFile, true)
             sourceFile.delete()

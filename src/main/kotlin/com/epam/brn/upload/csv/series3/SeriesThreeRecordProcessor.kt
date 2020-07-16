@@ -24,14 +24,14 @@ class SeriesThreeRecordProcessor(
     private val wordsService: WordsService
 ) : RecordProcessor<SeriesThreeRecord, Exercise> {
 
-    @Value(value = "\${brn.audio.file.second.series.path}")
-    private lateinit var audioFileUrl: String
-
     @Value(value = "\${brn.pictureWithWord.file.default.path}")
     private lateinit var pictureWithWordFileUrl: String
 
     @Value(value = "\${series3WordsFileName}")
     private lateinit var series3WordsFileName: String
+
+    @Value(value = "\${audioPath}")
+    private lateinit var audioPath: String
 
     override fun isApplicable(record: Any): Boolean {
         return record is SeriesThreeRecord
@@ -104,7 +104,7 @@ class SeriesThreeRecordProcessor(
                 Resource(
                     word = word,
                     wordType = wordType.toString(),
-                    audioFileUrl = audioFileUrl,
+                    audioFileUrl = audioPath.format(word),
                     pictureFileUrl = pictureWithWordFileUrl
                 )
             )

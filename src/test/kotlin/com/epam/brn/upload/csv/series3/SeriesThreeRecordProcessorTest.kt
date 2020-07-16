@@ -52,7 +52,7 @@ internal class SeriesThreeRecordProcessorTest {
             wordsServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesThreeRecordProcessor, "audioFileUrl", "series2/%s.mp3")
+        ReflectionTestUtils.setField(seriesThreeRecordProcessor, "audioPath", "audio/ogg/filipp/%s.ogg")
         ReflectionTestUtils.setField(seriesThreeRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
         ReflectionTestUtils.setField(seriesThreeRecordProcessor, "series3WordsFileName", "words_series3.txt")
 
@@ -81,7 +81,7 @@ internal class SeriesThreeRecordProcessorTest {
                     exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
-                    answerAudioFile = "series3/девочка_бросает.mp3",
+                    answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
                 )
             )
@@ -101,7 +101,7 @@ internal class SeriesThreeRecordProcessorTest {
                     exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
-                    answerAudioFile = "series3/девочка_бросает.mp3",
+                    answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
                 )
             )
@@ -120,7 +120,7 @@ internal class SeriesThreeRecordProcessorTest {
                     exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
-                    answerAudioFile = "series3/девочка_бросает.mp3",
+                    answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
                 )
             )
@@ -143,7 +143,7 @@ internal class SeriesThreeRecordProcessorTest {
                     exerciseName = "Распознавание предложений из 2 слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
-                    answerAudioFile = "series3/девочка_бросает.mp3",
+                    answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
                 )
             )
@@ -193,7 +193,7 @@ internal class SeriesThreeRecordProcessorTest {
         return Resource(
             word = "девочка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/девочка.mp3",
+            audioFileUrl = "audio/ogg/filipp/девочка.ogg",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
     }
@@ -202,7 +202,7 @@ internal class SeriesThreeRecordProcessorTest {
         return Resource(
             word = "дедушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/дедушка.mp3",
+            audioFileUrl = "audio/ogg/filipp/дедушка.ogg",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
     }
@@ -211,7 +211,7 @@ internal class SeriesThreeRecordProcessorTest {
         return Resource(
             word = "бабушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/бабушка.mp3",
+            audioFileUrl = "audio/ogg/filipp/бабушка.ogg",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
     }
@@ -220,7 +220,7 @@ internal class SeriesThreeRecordProcessorTest {
         return Resource(
             word = "бросает",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/бросает.mp3",
+            audioFileUrl = "audio/ogg/filipp/бросает.ogg",
             pictureFileUrl = "pictures/withWord/бросает.jpg"
         )
     }
@@ -229,7 +229,7 @@ internal class SeriesThreeRecordProcessorTest {
         return Resource(
             word = "читает",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/читает.mp3",
+            audioFileUrl = "audio/ogg/filipp/читает.ogg",
             pictureFileUrl = "pictures/withWord/читает.jpg"
         )
     }
@@ -238,7 +238,7 @@ internal class SeriesThreeRecordProcessorTest {
         return Resource(
             word = "рисует",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/рисует.mp3",
+            audioFileUrl = "series2/рисует.ogg",
             pictureFileUrl = "pictures/withWord/рисует.jpg"
         )
     }
@@ -247,7 +247,7 @@ internal class SeriesThreeRecordProcessorTest {
         return Resource(
             word = "девочка бросает",
             wordType = WordType.SENTENCE.toString(),
-            audioFileUrl = "series3/девочка_бросает.mp3"
+            audioFileUrl = "audio/ogg/filipp/девочка_бросает.ogg"
         )
     }
 }
