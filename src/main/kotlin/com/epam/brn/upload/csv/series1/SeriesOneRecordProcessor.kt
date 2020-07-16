@@ -31,6 +31,9 @@ class SeriesOneRecordProcessor(
     @Value(value = "\${series1WordsFileName}")
     private lateinit var series1WordsFileName: String
 
+    @Value(value = "\${audioPath}")
+    private lateinit var audioPath: String
+
     private val repeatCount = 2
 
     var random = Random()
@@ -69,7 +72,7 @@ class SeriesOneRecordProcessor(
     }
 
     private fun toResource(word: String, noise: String): Resource {
-        val audioFile = "$noise/$word.mp3"
+        val audioFile = audioPath.format(word)
         val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
             .orElse(
                 Resource(
