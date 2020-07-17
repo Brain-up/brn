@@ -5,24 +5,35 @@ on:
       - 'frontend/**'
       - 'frontend-angular/**'
     branches:
-      - master
-  push:
-    paths-ignore:
-      - 'frontend/**'
-      - 'frontend-angular/**'
-    branches:
-      - master
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - run: npm install typescript@">=3.2.1 <3.8.0"
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '11'
       - name: Analyze with SonarCloud
-        run: gradle build jacocoTestReport sonarqube -Dsonar.login=$SONAR_TOKEN_SIESTA
+        run: gradle clean build jacocoTestReport sonarqube
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=brain-up
+          -Dsonar.projectKey=Brain-up_brn
+          -Dsonar.coverage.jacoco.xmlReportPaths=build/jacoco/coverage.xml
+          -Dsonar.login=$SONAR_TOKEN_SIESTA
+          -Dsonar.java.coveragePlugin=jacoco
+          -Dsonar.tests=src/test/kotlin
+          -Dsonar.sources=src/main/kotlin
+          -Dsonar.test.inclusions=**/*Test*/**
+          -Dsonar.exclusions=**/*Test*/**
+          -Dsonar.java.source=11
+          -Dsonar.exclusions=**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG
+          -Dsonar.coverage.exclusions=**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG
+          -Dsonar.java.binaries=.
+          -Dsonar.tsql.file.suffixes=sql,tsql
+          -Dsonar.plsql.file.suffixes=pks,pkb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_SIESTA }}
