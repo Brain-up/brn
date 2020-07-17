@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Past
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
@@ -28,6 +30,8 @@ data class UserAccountDto(
     @field:NotBlank(message = "{validation.field.password.blank}")
     @field:Size(min = 4, message = "{validation.field.password.invalid-format}")
     var password: String,
+    @field:NotNull(message = "{validation.field.birthday.notNull}")
+    @field:Past(message = "{validation.field.birthday.past}")
     val birthday: LocalDate? = null,
     var active: Boolean = true
 ) {
