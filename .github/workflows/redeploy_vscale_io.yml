@@ -1,0 +1,21 @@
+name: Docker Build, Push images and redeploy
+
+on:
+  push:
+    branches:
+      - EPMLABSBRN-558
+
+jobs:
+  redeploy_vscaleio_instance:
+    runs-on: vscale
+    steps:
+      - uses: actions/checkout@master
+      - name: add s3 key
+        run: echo S3_KEY > aws-key.properties
+      - name: Redeploy application
+        run: |
+          mv docker-compose-run.yml docker-compose.yml
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af
