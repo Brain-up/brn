@@ -30,6 +30,8 @@ jobs:
       - uses: actions/checkout@master
       - name: add s3 key
         run: echo "$S3_KEY"|base64 -d > aws-key.properties
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
       - name: Redeploy application
         run: |
           mv docker-compose-run.yml docker-compose.yml
@@ -39,16 +41,16 @@ jobs:
           docker image prune -af
   redeploy_vscaleio_instance:
     needs: build_and_push
-    runs-on: ubuntu-latest
+    runs-on: vscale
     steps:
-    - name: redeploy vscale.io
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VSCALE_HOST }}
-        username: ${{ secrets.VSCALE_USERNAME }}
-        key: ${{ secrets.VSCALE_KEY }}
-        script_stop: true
-        script: |
+      - uses: actions/checkout@master
+      - name: add s3 key
+        run: echo "$S3_KEY"|base64 -d > aws-key.properties
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+      - name: Redeploy application
+        run: |
+          mv docker-compose-run.yml docker-compose.yml
           docker-compose pull
           docker-compose up -d --no-deps brn
           docker-compose up -d --no-deps brn_fe
