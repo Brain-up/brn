@@ -1,4 +1,4 @@
-name: Docker Build, Push images and redeploy
+name: Redeploy vscale.io instance
 
 on:
   push:
