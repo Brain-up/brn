@@ -26,7 +26,7 @@ jobs:
   redeploy_epam_instance:
     needs: build_and_push
     runs-on: epam
-    steps: &redeploy
+    steps:
       - uses: actions/checkout@master
       - name: add s3 key
         run: echo "$S3_KEY"|base64 -d > aws-key.properties
@@ -42,4 +42,16 @@ jobs:
   redeploy_vscaleio_instance:
     needs: build_and_push
     runs-on: vscale
-    steps: *redeploy
+    steps:
+      - uses: actions/checkout@master
+      - name: add s3 key
+        run: echo "$S3_KEY"|base64 -d > aws-key.properties
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+      - name: Redeploy application
+        run: |
+          mv docker-compose-run.yml docker-compose.yml
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af
