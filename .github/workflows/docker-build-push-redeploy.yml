@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: add s3 key
-        run: echo S3_KEY > aws-key.properties
+        run: echo "$S3_KEY"|base64 -d > aws-key.properties
       - name: Redeploy application
         run: |
           mv docker-compose-run.yml docker-compose.yml
