@@ -25,7 +25,7 @@ jobs:
         dockerfile: Dockerfile_frontend
   redeploy_epam_instance:
     needs: build_and_push
-    runs-on: self-hosted
+    runs-on: epam
     steps:
       - uses: actions/checkout@master
       - name: add s3 key
