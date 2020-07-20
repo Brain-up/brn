@@ -31,12 +31,16 @@ class InitialDataLoader(
     private val userAccountRepository: UserAccountRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
-    private val uploadService: CsvUploadService
+    private val uploadService: CsvUploadService,
+    private val audioFilesGenerationService: AudioFilesGenerationService
 ) {
     private val log = logger()
 
     @Value("\${init.folder:#{null}}")
     var directoryPath: Path? = null
+
+    @Value("\${withAudioFilesGeneration}")
+    var withAudioFilesGeneration: Boolean = false
 
     companion object {
         fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
@@ -71,6 +75,9 @@ class InitialDataLoader(
 
         if (isInitRequired())
             init()
+
+        if (withAudioFilesGeneration)
+            audioFilesGenerationService.generateAudioFiles()
     }
 
     private fun addAdminUser(adminAuthority: Authority): UserAccount {

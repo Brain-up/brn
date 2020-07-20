@@ -9,7 +9,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.service.ResourceCreationService
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
@@ -21,14 +21,17 @@ class SeriesTwoRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val resourceCreationService: ResourceCreationService
+    private val wordsService: WordsService
 ) : RecordProcessor<SeriesTwoRecord, Exercise> {
-
-    @Value(value = "\${brn.audio.file.second.series.path}")
-    private lateinit var audioFileUrl: String
 
     @Value(value = "\${brn.pictureWithWord.file.default.path}")
     private lateinit var pictureWithWordFileUrl: String
+
+    @Value(value = "\${series2WordsFileName}")
+    private lateinit var series2WordsFileName: String
+
+    @Value(value = "\${audioPath}")
+    private lateinit var audioPath: String
 
     override fun isApplicable(record: Any): Boolean = record is SeriesTwoRecord
 
@@ -49,7 +52,7 @@ class SeriesTwoRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        resourceCreationService.createFileWithWords(words, "words_series2.txt")
+        wordsService.createFileWithWords(words, series2WordsFileName)
         return exercises.toMutableList()
     }
 
@@ -78,7 +81,7 @@ class SeriesTwoRecordProcessor(
             .orElse(
                 Resource(
                     word = word,
-                    audioFileUrl = audioFileUrl.format(word),
+                    audioFileUrl = audioPath.format(word),
                     pictureFileUrl = pictureWithWordFileUrl.format(word)
                 )
             )
