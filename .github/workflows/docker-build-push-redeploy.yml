@@ -28,17 +28,18 @@ jobs:
     runs-on: epam
     steps:
       - uses: actions/checkout@master
-      - name: add s3 key
-        run: echo "$S3_KEY"|base64 -d > aws-key.properties
+      - name: configure secrets
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          mv docker-compose-run.yml docker-compose.yml
+          sed -i -e 's/_YANDEX_AUTH_TOKEN_/$YANDEX_AUTH_TOKEN/' docker-compose.yml
+          sed -i -e 's/_YANDEX_FOLDER_ID_/$YANDEX_FOLDER_ID/' docker-compose.yml
         env:
           S3_KEY: ${{ secrets.S3_KEY }}
           YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
       - name: Redeploy application
         run: |
-          mv docker-compose-run.yml docker-compose.yml
-          sed -i -e 's/_YANDEX_AUTH_TOKEN_/$YANDEX_AUTH_TOKEN/' docker-compose.yml
-          sed -i -e 's/_YANDEX_FOLDER_ID_/$YANDEX_FOLDER_ID/' docker-compose.yml
           docker-compose pull
           docker-compose up -d --no-deps brn
           docker-compose up -d --no-deps brn_fe
@@ -48,17 +49,18 @@ jobs:
     runs-on: vscale
     steps:
       - uses: actions/checkout@master
-      - name: add s3 key
-        run: echo "$S3_KEY"|base64 -d > aws-key.properties
+      - name: configure secrets
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          mv docker-compose-run.yml docker-compose.yml
+          sed -i -e 's/_YANDEX_AUTH_TOKEN_/$YANDEX_AUTH_TOKEN/' docker-compose.yml
+          sed -i -e 's/_YANDEX_FOLDER_ID_/$YANDEX_FOLDER_ID/' docker-compose.yml
         env:
           S3_KEY: ${{ secrets.S3_KEY }}
           YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
       - name: Redeploy application
         run: |
-          mv docker-compose-run.yml docker-compose.yml
-          sed -i -e 's/_YANDEX_AUTH_TOKEN_/$YANDEX_AUTH_TOKEN/' docker-compose.yml
-          sed -i -e 's/_YANDEX_FOLDER_ID_/$YANDEX_FOLDER_ID/' docker-compose.yml
           docker-compose pull
           docker-compose up -d --no-deps brn
           docker-compose up -d --no-deps brn_fe
