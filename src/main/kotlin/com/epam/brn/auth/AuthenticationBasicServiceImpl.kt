@@ -22,14 +22,14 @@ class AuthenticationBasicServiceImpl(
         userAccountDto.active = true
         val newUser = userAccountService.addUser(userAccountDto)
         log.info("created new user id=${newUser.id}")
-        return login(LoginDto(username = userAccountDto.email, password = userAccountDto.password))
+        return login(LoginDto(username = userAccountDto.email.toLowerCase(), password = userAccountDto.password))
     }
 
     override fun login(loginDto: LoginDto): String {
-        val token = UsernamePasswordAuthenticationToken(loginDto.username, loginDto.password)
+        val token = UsernamePasswordAuthenticationToken(loginDto.username.toLowerCase(), loginDto.password)
         val auth: Authentication = authenticationManager.authenticate(token)
         SecurityContextHolder.getContext().authentication = auth
-        return getBasicHeader(loginDto.username, loginDto.password)
+        return getBasicHeader(loginDto.username.toLowerCase(), loginDto.password)
     }
 
     fun getBasicHeader(userName: String, password: String) =
