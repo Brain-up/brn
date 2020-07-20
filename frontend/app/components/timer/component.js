@@ -36,10 +36,7 @@ export default Component.extend({
 
   updateSecondsCount() {
     if (!this.isPaused) {
-      const secondsPassed = Math.floor(
-        (new Date().getTime() - this.timeStart) / 1000,
-      );
-      this.studyingTimer.setTime(secondsPassed);
+      this.studyingTimer.addTime(1);
     }
     this.set('timerId', later(this, this.updateSecondsCount, 1000));
   },
@@ -48,7 +45,6 @@ export default Component.extend({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    this.set('timeStart', new Date().getTime() - this.countedSeconds * 1000);
   },
 
   startTimer() {

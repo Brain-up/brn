@@ -55,7 +55,8 @@
     "ember-component-css/broccoli-replace/applause/lodash": "^4.17.12",
     "ember-cli/ember-cli-preprocess-registry/broccoli-clean-css/clean-css-promise/clean-css": "^4.1.11",
     "ember-cli/bower-config/optimist/minimist": "^1.2.3",
-    "ember-cli-page-object/jquery": "3.5.0"
+    "ember-cli-page-object/jquery": "3.5.0",
+    "*/@babel/types/lodash": ">=4.17.19"
   },
   "devDependencies": {
     "@ember/optional-features": "^1.3.0",
