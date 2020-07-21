@@ -23,17 +23,6 @@ jobs:
           -Dsonar.projectKey=Brain-up_brn
           -Dsonar.coverage.jacoco.xmlReportPaths=build/jacoco/coverage.xml
           -Dsonar.login=$SONAR_TOKEN_SIESTA
-          -Dsonar.java.coveragePlugin=jacoco
-          -Dsonar.tests=src/test/kotlin
-          -Dsonar.sources=src/main/kotlin
-          -Dsonar.test.inclusions=**/*Test*/**
-          -Dsonar.exclusions=**/*Test*/**
-          -Dsonar.java.source=11
-          -Dsonar.exclusions=**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG
-          -Dsonar.coverage.exclusions=**/*.html,**/*.css,**/*.png,**/*.jpg,**/*.JPG
-          -Dsonar.java.binaries=.
-          -Dsonar.tsql.file.suffixes=sql,tsql
-          -Dsonar.plsql.file.suffixes=pks,pkb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_SIESTA }}
