@@ -25,30 +25,42 @@ jobs:
         dockerfile: Dockerfile_frontend
   redeploy_epam_instance:
     needs: build_and_push
-    runs-on: self-hosted
+    runs-on: epam
     steps:
       - uses: actions/checkout@master
-      - name: add s3 key
-        run: echo S3_KEY > aws-key.properties
+      - name: Configure secrets
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          mv docker-compose-run.yml docker-compose.yml
+          sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
+          sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+          YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
+          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
       - name: Redeploy application
         run: |
-          mv docker-compose-run.yml docker-compose.yml
           docker-compose pull
           docker-compose up -d --no-deps brn
           docker-compose up -d --no-deps brn_fe
           docker image prune -af
   redeploy_vscaleio_instance:
     needs: build_and_push
-    runs-on: ubuntu-latest
+    runs-on: vscale
     steps:
-    - name: redeploy vscale.io
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VSCALE_HOST }}
-        username: ${{ secrets.VSCALE_USERNAME }}
-        key: ${{ secrets.VSCALE_KEY }}
-        script_stop: true
-        script: |
+      - uses: actions/checkout@master
+      - name: Configure secrets
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          mv docker-compose-run.yml docker-compose.yml
+          sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
+          sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+          YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
+          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+      - name: Redeploy application
+        run: |
           docker-compose pull
           docker-compose up -d --no-deps brn
           docker-compose up -d --no-deps brn_fe

@@ -9,7 +9,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.service.ResourceCreationService
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
@@ -22,11 +22,17 @@ class SeriesOneRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val resourceCreationService: ResourceCreationService
+    private val wordsService: WordsService
 ) : RecordProcessor<SeriesOneRecord, Exercise> {
 
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
+
+    @Value(value = "\${series1WordsFileName}")
+    private lateinit var series1WordsFileName: String
+
+    @Value(value = "\${audioPath}")
+    private lateinit var audioPath: String
 
     private val repeatCount = 2
 
@@ -53,7 +59,7 @@ class SeriesOneRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        resourceCreationService.createFileWithWords(words, "words_series1.txt")
+        wordsService.createFileWithWords(words, series1WordsFileName)
         return exercises.toMutableList()
     }
 
@@ -66,7 +72,7 @@ class SeriesOneRecordProcessor(
     }
 
     private fun toResource(word: String, noise: String): Resource {
-        val audioFile = "$noise/$word.mp3"
+        val audioFile = audioPath.format(word)
         val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
             .orElse(
                 Resource(
