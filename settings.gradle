@@ -7,7 +7,16 @@ pluginManagement {
         id "org.jetbrains.kotlin.plugin.jpa" version "$kotlinVersion"
         id "org.jetbrains.kotlin.plugin.allopen" version "$kotlinVersion"
         id "org.jetbrains.kotlin.kapt" version "$kotlinVersion"
+        id("com.gradle.enterprise").version("3.3.4")
     }
 }
 
 rootProject.name = 'epam-brn'
+
+gradle.settingsEvaluated { settings ->
+    settings.plugins.withId("com.gradle.enterprise") {
+        settings.gradleEnterprise.buildScan {
+            termsOfServiceUrl = "https://gradle.com/terms-of-service"; termsOfServiceAgree = "yes"
+        }
+    }
+}
