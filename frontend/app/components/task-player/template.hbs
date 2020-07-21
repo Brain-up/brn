@@ -3,6 +3,9 @@
     <ExerciseSteps @activeStep={{this.mode}} @onClick={{this.onModeChange}} />
   {{/unless}}
 {{/-in-element}}
+{{#-in-element (query-node "#exercise-timer-slot")}}
+  <Timer @paused={{true}} @hideControls={{this.justEnteredTask}} />
+{{/-in-element}}
 <div
   class="{{style-namespace "task-player"}}
 
