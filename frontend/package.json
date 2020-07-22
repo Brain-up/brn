@@ -68,7 +68,7 @@
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
     "cross-env": "^7.0.2",
-    "els-component-extraction-addon": "^0.1.11",
+    "els-component-extraction-addon": "^0.1.12",
     "els-intl-addon": "^1.0.3",
     "ember-auto-import": "^1.6.0",
     "ember-awesome-macros": "^5.0.1",
