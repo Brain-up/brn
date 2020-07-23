@@ -17,12 +17,13 @@ jobs:
         with:
           java-version: '11'
       - name: Analyze with SonarCloud
-        run: gradle clean build jacocoTestReport sonarqube
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.organization=brain-up
-          -Dsonar.projectKey=Brain-up_brn
-          -Dsonar.coverage.jacoco.xmlReportPaths=build/jacoco/coverage.xml
+        run: ./gradlew --debug --stacktrace clean build sonarqube
+          -Dsonar.pullrequest.key=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          -Dsonar.pullrequest.branch=${PULL_REQUEST_BRANCH}
+          -Dsonar.pullrequest.base=${BASE_BRANCH}
           -Dsonar.login=$SONAR_TOKEN_SIESTA
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_SIESTA }}
+          PULL_REQUEST_BRANCH: ${{ github.head_ref }}
+          BASE_BRANCH: ${{ github.base_ref }}
