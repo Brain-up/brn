@@ -64,7 +64,7 @@
     "@fortawesome/ember-fontawesome": "^0.2.1",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fullhuman/postcss-purgecss": "^2.1.0",
-    "@glimmer/component": "^1.0.0",
+    "@glimmer/component": "^1.0.1",
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
     "cross-env": "^7.0.2",
