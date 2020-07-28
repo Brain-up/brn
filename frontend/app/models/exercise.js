@@ -20,12 +20,15 @@ export default class Exercise extends CompletionDependent.extend({
   startTime: attr('date'),
   endTime: attr('date'),
   sortedTasks: reads('sortedChildren'),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   previousSiblings: computed('series.groupedByNameExercises', function() {
     return arrayPreviousItems(
       this,
+      // eslint-disable-next-line ember/no-get
       this.get('series.groupedByNameExercises')[this.name],
     );
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   isCompleted: computed(
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',
@@ -95,6 +98,7 @@ export default class Exercise extends CompletionDependent.extend({
       },
       body: JSON.stringify({
         ...stats,
+        // eslint-disable-next-line ember/no-get
         userId: this.get('session.data.user.id') || null
       }),
     });

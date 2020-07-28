@@ -26,6 +26,7 @@ export default class Task extends CompletionDependent.extend({
   isCompleted: computed('tasksManager.completedTasks.[]', function() {
     return this.tasksManager.isCompleted(this);
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   completedInCurrentCycle: computed('tasksManager.completedCycleTasks.[]', {
     get() {
       return (
@@ -38,6 +39,7 @@ export default class Task extends CompletionDependent.extend({
       return true;
     },
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   nextTask: computed('exercise.tasks.[]', function() {
     return arrayNext(this, this.exercise.content.get('sortedChildren'));
   }),
