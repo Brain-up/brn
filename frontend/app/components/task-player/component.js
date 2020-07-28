@@ -191,6 +191,9 @@ export default class TaskPlayerComponent extends Component {
     } else if (mode === MODES.LISTEN) {
       this.activeTask = this.listenModeTask.perform(...args);
     }
+    this.activeTask.catch(()=>{
+      // EOL
+    });
     return this.activeTask;
   }
 

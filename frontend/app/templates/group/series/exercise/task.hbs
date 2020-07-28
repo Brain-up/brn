@@ -1,10 +1,10 @@
 <TaskPlayer
   data-test-task-player
-  data-test-task-id={{this.model.id}}
-  data-test-task-exercise-id={{this.model.exercise.id}}
+  data-test-task-id={{@model.id}}
+  data-test-task-exercise-id={{@model.exercise.id}}
   @onRightAnswer={{queue
     this.nextTaskTransition
-    (bind this.model.savePassed this.model)
+    @model.savePassed
   }}
-  @task={{this.model}}
+  @task={{@model}}
 />
