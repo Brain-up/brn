@@ -36,6 +36,7 @@ export default class WordsSequences extends BaseTask.extend({
       .split('>')[0]
       .split(' ');
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   possibleTasks: computed('answerOptions.[]', function() {
     const taskPartsOptions = this.selectedItemsOrder.map(
       (orderItemName) => this.answerOptions[orderItemName],
