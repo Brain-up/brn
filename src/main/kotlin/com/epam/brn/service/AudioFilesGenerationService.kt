@@ -192,8 +192,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     }
 
     fun generateOggFile(word: String, voice: String): File {
-        val token = "CggVAgAAABoBMxKABDQegxTcmdaj-OOylqyYw8-QVOQBv7OFbn6VpvN3mrAhyx2yGiqOKIctbno0_WINnJRjAdyXo50R3HG-YUyCL98Ds36n8-2bm6rev2zM710FgnH12L5c5NHAZdtyUuaxr3PFQdoP6viD6j_xljrZqtKrvgY1jXbADYMi9_U3J3FYhEOQQDp0sXHHpxGxTYTJ15qT-dM2HeVzhcu2xq6iwoWPZZuC1RqS3aAzf0cIxD-mHt50GSoXJYVywBcm6aUKDuFIx_xtj3bwy2swpbj7rDCXvXr32hXKvqwvtlwyuxwpB-cp6zFLEfIIeONisIsHq_7HkGHJwG_VJ2DLrV9xaebaeMq-x4_aQr_rUtLEyAJECwNgU8HC7r8QjpHLZZq2h1fsTi6hPpv0m16s7GP1ScQRDVf4xji1D54knVweSD0ZFjEHJVQhx0UGo-Wf3tSyFgvb70EoYQrzOji15SHxz3zGMRaUEWsbj-kVmHrrvD5wr-KzBLCaURbBijvTg9C1jXy4mGCSIl9ail3bYwyH4Y4Dq5st6_0fOf0xjY3_F4-o5wbYagGpYVNpTvAyU3a_JNXWJZVZvHxiFYPKcgXXosJIcyaFAR97E5bS1FtM_Jc2k0gMY963-T2jjSjykg_2H6o17pEZAAb6BVS-5WsaRWF571viur2IU6SQZYLgaeUUGiQQrPeZ-QUY7Mic-QUiFgoUYWplOXJ0bThxc3NiMGNscGFpOWk="
-
+        val token = getYandexIamTokenForAudioGeneration()
         val restTemplate = RestTemplate()
         val parameters = ArrayList<NameValuePair>()
         parameters.add(BasicNameValuePair("folderId", folderId))
