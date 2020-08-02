@@ -67,11 +67,11 @@ class SeriesOneRecordProcessor(
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
-            .map { toResource(it, record.noise) }
+            .map { toResource(it) }
             .toMutableSet()
     }
 
-    private fun toResource(word: String, noise: String): Resource {
+    private fun toResource(word: String): Resource {
         val audioFile = audioPath.format(word)
         val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
             .orElse(
