@@ -87,8 +87,7 @@ _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_
 
 ### GET THE BACKEND PROJECT RUNNING
 1. Run command 'gradle build' from main project folder to build project with tests.
-2. Use --spring.profiles.active=dev when running spring project, in command line or change it in application.properties.
-3. Application.kt is the main class to run application.
+2. Application.kt is the main class to run application.
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
