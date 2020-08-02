@@ -3,336 +3,34 @@
   {
    "seriesId": 1,
    "id": 1,
-   "name": "Однослоговые слова без шума",
-   "description": "Однослоговые слова без шума",
+   "name": "Семья",
+   "description": "Семья",
    "level": 1,
-   "exerciseType": "SINGLE_WORDS",
+   "noise": "0db",
+   "exerciseType": "SINGLE_SIMPLE_WORDS",
    "template": "",
    "available": true,
    "tasks": [
     {
-     "id": 2,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 4,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 5,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 6,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
      "id": 1,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 3,
-     "type": "task/SINGLE_WORDS"
+     "type": "task/SINGLE_SIMPLE_WORDS"
     }
    ]
   },
   {
    "seriesId": 1,
    "id": 2,
-   "name": "Однослоговые слова без шума",
-   "description": "Однослоговые слова без шума",
+   "name": "Семья",
+   "description": "Семья",
    "level": 2,
-   "exerciseType": "SINGLE_WORDS",
+   "noise": "0db",
+   "exerciseType": "SINGLE_SIMPLE_WORDS",
    "template": "",
    "available": true,
    "tasks": [
     {
-     "id": 7,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 10,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 11,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 9,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 8,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 12,
-     "type": "task/SINGLE_WORDS"
-    }
-   ]
-  },
-  {
-   "seriesId": 1,
-   "id": 3,
-   "name": "Однослоговые слова без шума",
-   "description": "Однослоговые слова без шума",
-   "level": 3,
-   "exerciseType": "SINGLE_WORDS",
-   "template": "",
-   "available": true,
-   "tasks": [
-    {
-     "id": 16,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 14,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 18,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 15,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 19,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 17,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 13,
-     "type": "task/SINGLE_WORDS"
-    }
-   ]
-  },
-  {
-   "seriesId": 1,
-   "id": 4,
-   "name": "Однослоговые слова малым шумом",
-   "description": "Однослоговые слова c малым шумом",
-   "level": 4,
-   "exerciseType": "SINGLE_WORDS",
-   "template": "",
-   "available": true,
-   "tasks": [
-    {
-     "id": 21,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 23,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 20,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 22,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 24,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 25,
-     "type": "task/SINGLE_WORDS"
-    }
-   ]
-  },
-  {
-   "seriesId": 1,
-   "id": 5,
-   "name": "Однослоговые слова малым шумом",
-   "description": "Однослоговые слова c малым шумом",
-   "level": 5,
-   "exerciseType": "SINGLE_WORDS",
-   "template": "",
-   "available": true,
-   "tasks": [
-    {
-     "id": 28,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 31,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 30,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 27,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 29,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 26,
-     "type": "task/SINGLE_WORDS"
-    }
-   ]
-  },
-  {
-   "seriesId": 1,
-   "id": 6,
-   "name": "Однослоговые слова малым шумом",
-   "description": "Однослоговые слова c малым шумом",
-   "level": 6,
-   "exerciseType": "SINGLE_WORDS",
-   "template": "",
-   "available": true,
-   "tasks": [
-    {
-     "id": 36,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 35,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 38,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 37,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 33,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 34,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 32,
-     "type": "task/SINGLE_WORDS"
-    }
-   ]
-  },
-  {
-   "seriesId": 1,
-   "id": 7,
-   "name": "Однослоговые слова c сильным шумом",
-   "description": "Однослоговые слова c сильным шумом",
-   "level": 7,
-   "exerciseType": "SINGLE_WORDS",
-   "template": "",
-   "available": true,
-   "tasks": [
-    {
-     "id": 39,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 41,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 44,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 42,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 40,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 43,
-     "type": "task/SINGLE_WORDS"
-    }
-   ]
-  },
-  {
-   "seriesId": 1,
-   "id": 8,
-   "name": "Однослоговые слова c сильным шумом",
-   "description": "Однослоговые слова c сильным шумом",
-   "level": 8,
-   "exerciseType": "SINGLE_WORDS",
-   "template": "",
-   "available": false,
-   "tasks": [
-    {
-     "id": 49,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 45,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 50,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 46,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 47,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 48,
-     "type": "task/SINGLE_WORDS"
-    }
-   ]
-  },
-  {
-   "seriesId": 1,
-   "id": 9,
-   "name": "Однослоговые слова c сильным шумом",
-   "description": "Однослоговые слова c сильным шумом",
-   "level": 9,
-   "exerciseType": "SINGLE_WORDS",
-   "template": "",
-   "available": false,
-   "tasks": [
-    {
-     "id": 54,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 55,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 53,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 51,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 56,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 57,
-     "type": "task/SINGLE_WORDS"
-    },
-    {
-     "id": 52,
-     "type": "task/SINGLE_WORDS"
+     "id": 2,
+     "type": "task/SINGLE_SIMPLE_WORDS"
     }
    ]
   }
