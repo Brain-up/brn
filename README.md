@@ -21,9 +21,9 @@ Most importantly being an open source project you can show your work in it to an
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
-- Back-end: KOTLIN/java + Spring boot. Rest api as integration layer.
+- Back-end: KOTLIN + Spring boot. Rest api as integration layer.
 - Front-end : TBD - Ember, Angular.
-- DB: Postgres in production, H2 for testing.
+- DB: Postgres.
 
 ## HOW TO JOIN?
 1. for epam developers: Just click on “JOIN TEAM” button in https://contribute.epam.com/products/143 and we will get in touch with you shortly. 
@@ -46,7 +46,7 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ### DEVELOPMENT PREREQUISITES
 1. Install node v10 or above https://nodejs.org/en/download/
-2. Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install/#mac-stable
+2. Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
 3. In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
 4. Install Docker https://hub.docker.com/search/?type=edition&offering=community 
 
