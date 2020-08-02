@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.service.AudioFilesGenerationService
-// import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +17,7 @@ import kotlin.test.assertTrue
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Tag("integration-test")
-// @Disabled
+@Disabled
 internal class AudioFilesGenerationServiceIT {
 
     @Autowired
@@ -41,8 +41,6 @@ internal class AudioFilesGenerationServiceIT {
         val resultFile2Ogg = File("audioTest/ogg/$voice/доктор моет чёрные грушиии.ogg")
         val resultFile2Mp3 = File("audioTest/$voice/доктор моет чёрные грушиии.mp3")
         // WHEN
-//        audioFilesGenerationService.generateOgg("babushka", voice)
-//        audioFilesGenerationService.generateAudioFile("babushka", voice)
         audioFilesGenerationService.generateAudioFiles("бабушкааа", voice)
         audioFilesGenerationService.generateAudioFiles("доктор моет чёрные грушиии", voice)
         // THEN
