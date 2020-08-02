@@ -52,7 +52,7 @@ class SeriesTwoRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        wordsService.createFileWithWords(words, series2WordsFileName)
+        wordsService.createTxtFileWithExerciseWords(words, series2WordsFileName)
         return exercises.toMutableList()
     }
 

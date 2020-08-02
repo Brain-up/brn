@@ -16,10 +16,10 @@ internal class WordsServiceTest {
     @Test
     fun `should create file with words`() {
         // GIVEN
-        val words = setOf("girl", "boy", "man")
+        val words = hashSetOf<String>("girl", "boy", "man")
         val fileName = "testWordsFile.txt"
         // WHEN
-        val file = wordsService.createFileWithWords(words, fileName)
+        val file = wordsService.createTxtFileWithExerciseWords(words, fileName)
         // THAN
         assertTrue(file.exists())
         assertEquals("girl,boy,man", file.readText())

@@ -21,7 +21,7 @@ import java.util.Properties
 import java.util.UUID
 
 @Configuration
-@Profile("!integration-tests")
+@Profile("!test")
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 class AwsConfig(
     @Value("\${cloud.expireAfterDuration}") var expireAfterDuration: String,

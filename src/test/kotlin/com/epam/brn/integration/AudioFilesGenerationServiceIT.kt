@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.service.AudioFilesGenerationService
-import org.junit.jupiter.api.Disabled
+// import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,9 +15,9 @@ import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
+@ActiveProfiles("test")
 @Tag("integration-test")
-@Disabled
+// @Disabled
 internal class AudioFilesGenerationServiceIT {
 
     @Autowired
@@ -36,13 +36,15 @@ internal class AudioFilesGenerationServiceIT {
     @Test
     fun `should generate ogg audio file and then convert it into mp3 file`() {
         val voice = "alena"
-        val resultFile1Ogg = File("audioTest/ogg/бабушкааа.ogg")
+        val resultFile1Ogg = File("audioTest/ogg/$voice/бабушкааа.ogg")
         val resultFile1Mp3 = File("audioTest/$voice/бабушкааа.mp3")
-        val resultFile2Ogg = File("audioTest/ogg/доктор моет чёрные грушиии.ogg")
+        val resultFile2Ogg = File("audioTest/ogg/$voice/доктор моет чёрные грушиии.ogg")
         val resultFile2Mp3 = File("audioTest/$voice/доктор моет чёрные грушиии.mp3")
         // WHEN
-        audioFilesGenerationService.generateAudioFile("бабушкааа", voice)
-        audioFilesGenerationService.generateAudioFile("доктор моет чёрные грушиии", voice)
+//        audioFilesGenerationService.generateOgg("babushka", voice)
+//        audioFilesGenerationService.generateAudioFile("babushka", voice)
+        audioFilesGenerationService.generateAudioFiles("бабушкааа", voice)
+        audioFilesGenerationService.generateAudioFiles("доктор моет чёрные грушиии", voice)
         // THEN
         assertTrue(resultFile1Ogg.exists())
         assertTrue(resultFile1Mp3.exists())
