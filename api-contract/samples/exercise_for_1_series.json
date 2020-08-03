@@ -2,10 +2,13 @@
   "data": {
     "seriesId": 1,
     "id": 41,
-    "name": "Семья 6Дб",
-    "description": "Семья 6Дб",
+    "name": "Семья /3Дб/",
+    "description": "Семья /3Дб/",
     "level": 1,
-    "noise": "6db",
+    "noise": {
+      "level": 0,
+      "url": null
+    },
     "exerciseType": "SINGLE_SIMPLE_WORDS",
     "template": "",
     "available": true,

@@ -6,7 +6,10 @@
    "name": "Семья",
    "description": "Семья",
    "level": 1,
-   "noise": "0db",
+   "noise": {
+    "level": 0,
+    "url": null
+   },
    "exerciseType": "SINGLE_SIMPLE_WORDS",
    "template": "",
    "available": true,
@@ -23,7 +26,10 @@
    "name": "Семья",
    "description": "Семья",
    "level": 2,
-   "noise": "0db",
+   "noise": {
+    "level": 0,
+    "url": null
+   },
    "exerciseType": "SINGLE_SIMPLE_WORDS",
    "template": "",
    "available": true,
