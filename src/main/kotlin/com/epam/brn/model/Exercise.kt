@@ -32,7 +32,7 @@ data class Exercise(
     var template: String? = "",
     var exerciseType: String = "",
     var level: Int? = 0,
-    var noise: String = "0db",
+    var noise: Int = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series? = null,
@@ -47,7 +47,7 @@ data class Exercise(
         template = template,
         exerciseType = ExerciseType.valueOf(exerciseType),
         level = level,
-        noise = NoiseDto(0),
+        noise = NoiseDto(noise),
         available = available,
         tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()
     )
