@@ -45,7 +45,7 @@ internal class SeriesOneRecordProcessorTest {
     )
 
     private val exerciseName = "Однослоговые слова без шума"
-    private val noiseLevel = "0db"
+    private val noiseLevel = 0
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
 
     @BeforeEach
