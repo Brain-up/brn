@@ -131,13 +131,13 @@ class CsvParserTest {
                     1,
                     "Слова без шума",
                     mutableListOf("(бал", "бум", "быль", "вить", "гад", "дуб)"),
-                    "no_noise"
+                    0
                 ),
                 SeriesOneRecord(
                     2,
                     "Слова без шума",
                     mutableListOf("(линь", "лис", "моль", "пар", "пять", "раб)"),
-                    "no_noise"
+                    0
                 )
             )
         )
