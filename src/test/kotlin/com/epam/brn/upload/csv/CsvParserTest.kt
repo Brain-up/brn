@@ -119,8 +119,8 @@ class CsvParserTest {
     fun `should parse exercise for Series 1`() {
         val input = """
                 level,exerciseName,words,noise
-                1,Слова без шума,(бал бум быль вить гад дуб),no_noise
-                2,Слова без шума,(линь лис моль пар пять раб),no_noise
+                1,Слова без шума,(бал бум быль вить гад дуб),0
+                2,Слова без шума,(линь лис моль пар пять раб),0
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
