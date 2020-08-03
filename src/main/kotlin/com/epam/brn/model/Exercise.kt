@@ -31,6 +31,7 @@ data class Exercise(
     var template: String? = "",
     var exerciseType: String = "",
     var level: Int? = 0,
+    var noise: String = "0db",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series? = null,
@@ -45,12 +46,13 @@ data class Exercise(
         template = template,
         exerciseType = ExerciseType.valueOf(exerciseType),
         level = level,
+        noise = noise,
         available = available,
         tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()
     )
 
     override fun toString() =
-        "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
+        "Exercise(id=$id, name='$name', description=$description, level=$level, noise=$noise, template=$template, exerciseType=$exerciseType)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -64,6 +66,7 @@ data class Exercise(
         if (template != other.template) return false
         if (exerciseType != other.exerciseType) return false
         if (level != other.level) return false
+        if (noise != other.noise) return false
 
         return true
     }
