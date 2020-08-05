@@ -19,6 +19,10 @@ export default class Exercise extends CompletionDependent.extend({
   parent: reads('series'),
   startTime: attr('date'),
   endTime: attr('date'),
+  noise: attr(''),
+  get noiseLevel() {
+    return this.noise?.level || 0;
+  },
   sortedTasks: reads('sortedChildren'),
   // eslint-disable-next-line ember/require-computed-property-dependencies
   previousSiblings: computed('series.groupedByNameExercises', function() {

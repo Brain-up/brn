@@ -22,7 +22,7 @@ export const TIMINGS = {
   },
 };
 
-export function createNoizeBuffer(context, duration) {
+export function createNoizeBuffer(context, duration, level) {
   let channels = 2;
   let frameCount = context.sampleRate * duration;
   let myArrayBuffer = context.createBuffer(
@@ -34,7 +34,7 @@ export function createNoizeBuffer(context, duration) {
   for (let channel = 0; channel < channels; channel++) {
     let nowBuffering = myArrayBuffer.getChannelData(channel);
     for (let i = 0; i < frameCount; i++) {
-      nowBuffering[i] = (Math.random() * 2 - 1) * 0.01;
+      nowBuffering[i] = (Math.random() * 2 - 1) * level * 0.01;
     }
   }
   return myArrayBuffer;
