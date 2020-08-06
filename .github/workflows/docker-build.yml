@@ -3,12 +3,18 @@ name: Docker Build Images
 on: pull_request
 
 jobs:
-  build:
+  build_backend:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: Build the Docker image for backend
       run: docker build . --file Dockerfile --tag brainup/brn-backend
+    - name: List of docker images
+      run: docker images
+  build_frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
     - name: Build the Docker image for frontent
       run: docker build . --file Dockerfile_frontend --tag brainup/brn-frontend
     - name: List of docker images
