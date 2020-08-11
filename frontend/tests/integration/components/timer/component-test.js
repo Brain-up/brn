@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import customTimeout from 'brn/utils/custom-timeout';
+import { timeout } from 'ember-concurrency';
 
 module('Integration | Component | timer', function(hooks) {
   setupRenderingTest(hooks);
@@ -42,13 +42,13 @@ module('Integration | Component | timer', function(hooks) {
   });
 
   test('pauses on idle', async function(assert) {
-    await render(hbs`<Timer @idleTimeout={{2}}/>`);
+    await render(hbs`<Timer @idleTimeout={{2000}}/>`);
 
     assert
       .dom('[data-test-timer-wrapper]')
       .hasNoAttribute('data-test-timer-is-paused');
 
-    await customTimeout();
+    await timeout(3000);
 
     assert
       .dom('[data-test-timer-wrapper]')

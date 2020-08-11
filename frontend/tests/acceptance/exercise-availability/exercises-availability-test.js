@@ -42,12 +42,12 @@ module('Acceptance | exercises availability', function(hooks) {
       .dom(
         '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',
       )
-      .hasAttribute('disabled', 'disabled');
+      .hasAttribute('disabled');
     assert
       .dom(
         '[data-test-exercise-level="2"][data-test-exercise-name="exercise 2"]',
       )
-      .hasAttribute('disabled', 'disabled');
+      .hasAttribute('disabled');
   });
 
   test('marks available exercises withing a name group if previous is completed', async function(assert) {
