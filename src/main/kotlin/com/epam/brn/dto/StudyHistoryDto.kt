@@ -12,7 +12,9 @@ data class StudyHistoryDto(
     var startTime: LocalDateTime?,
     var endTime: LocalDateTime?,
     var tasksCount: Short?,
-    var repetitionIndex: Float?
+    var repetitionIndex: Float?,
+    var listeningsCount: Int? = null,
+    var rightAnswersCount: Int? = null
 ) {
     override fun toString(): String {
         return "StudyHistoryDto(" +
@@ -21,6 +23,8 @@ data class StudyHistoryDto(
                 "startTime=$startTime, " +
                 "endTime=$endTime, " +
                 "doneTasksCount=$tasksCount, " +
-                "repetitionIndex=$repetitionIndex)"
+                "repetitionIndex=$repetitionIndex)" +
+                "listeningsCount=$listeningsCount)" +
+                "rightAnswersCount=$rightAnswersCount)"
     }
 }

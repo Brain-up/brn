@@ -2,7 +2,9 @@
  "tasksCount": 1,
  "endTime": "2019-12-18T13:53:06.366Z",
  "exerciseId": 2,
- "repetitionIndex": 1,
+ "repetitionIndex": 0.75,
+ "listeningsCount": 15,
+ "rightAnswersCount": 8,
  "startTime": "2019-12-18T13:53:06.366Z",
  "userId": 2
 }
