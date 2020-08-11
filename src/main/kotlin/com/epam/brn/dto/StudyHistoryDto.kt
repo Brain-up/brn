@@ -11,11 +11,12 @@ data class StudyHistoryDto(
     var exerciseId: Long?,
     var startTime: LocalDateTime?,
     var endTime: LocalDateTime?,
-    var tasksCount: Short?,
-    var repetitionIndex: Float?,
-    var listeningsCount: Int? = null,
-    var rightAnswersCount: Int? = null,
-    var executionSeconds: Int? = null
+    var executionSeconds: Int? = null,
+    var tasksCount: Short,
+    var listeningsCount: Int? = null, // -- count of all user listenings. >=tasksCount --
+    var repetitionIndex: Float?, // repetitionIndex=tasksCount/listeningsCount
+    var rightAnswersCount: Int? = null, // -- right answers from 1 time <=tasksCount --
+    var rightAnswersIndex: Float? // rightAnswersIndex=rightAnswersCount/tasksCount
 ) {
     override fun toString(): String {
         return "StudyHistoryDto(" +
@@ -23,10 +24,11 @@ data class StudyHistoryDto(
                 "exerciseId=$exerciseId, " +
                 "startTime=$startTime, " +
                 "endTime=$endTime, " +
+                "executionSeconds=$executionSeconds," +
                 "doneTasksCount=$tasksCount, " +
-                "repetitionIndex=$repetitionIndex)" +
-                "listeningsCount=$listeningsCount)" +
-                "rightAnswersCount=$rightAnswersCount)" +
-                "executionSeconds=$executionSeconds)"
+                "repetitionIndex=$repetitionIndex," +
+                "listeningsCount=$listeningsCount," +
+                "rightAnswersCount=$rightAnswersCount," +
+                "rightAnswersIndex=$rightAnswersIndex)"
     }
 }
