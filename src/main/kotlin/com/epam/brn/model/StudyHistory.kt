@@ -42,7 +42,8 @@ data class StudyHistory(
     var tasksCount: Short? = null,
     var repetitionIndex: Float? = null,
     var listeningsCount: Int? = null,
-    var rightAnswersCount: Int? = null
+    var rightAnswersCount: Int? = null,
+    var executionSeconds: Int? = null
 ) {
     override fun toString() =
         "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"

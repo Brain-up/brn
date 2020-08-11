@@ -1,10 +1,11 @@
 {
  "tasksCount": 1,
- "endTime": "2019-12-18T13:53:06.366Z",
+ "startTime": "2019-12-18T13:53:06.366Z",
+ "endTime": "2019-12-18T13:55:06.366Z",
+ "executionSeconds": 120,
  "exerciseId": 2,
  "repetitionIndex": 0.75,
  "listeningsCount": 15,
  "rightAnswersCount": 8,
- "startTime": "2019-12-18T13:53:06.366Z",
  "userId": 2
 }
