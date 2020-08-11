@@ -74,7 +74,8 @@ internal class StudyHistoryServiceTest {
             startTime = now,
             endTime = now,
             tasksCount = 1,
-            repetitionIndex = 1f
+            repetitionIndex = 1f,
+            rightAnswersIndex = 0.75f
         )
 
         `when`(userAccountRepository.findUserAccountById(dto.userId!!)).thenReturn(Optional.of(userAccount))
