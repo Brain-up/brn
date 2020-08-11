@@ -35,7 +35,8 @@ internal class StudyHistoryControllerTest {
             tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
-            exerciseId = 1L
+            exerciseId = 1L,
+            rightAnswersIndex = 0.75f
         )
         `when`(studyHistoryService.findBy(dto.userId, dto.exerciseId)).thenReturn(Optional.empty())
         `when`(studyHistoryService.create(dto)).thenReturn(dto)
@@ -57,7 +58,8 @@ internal class StudyHistoryControllerTest {
             tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
-            exerciseId = 1L
+            exerciseId = 1L,
+            rightAnswersIndex = 0.75f
         )
         val studyHistory = StudyHistory(
             userAccount = UserAccount(
@@ -92,7 +94,8 @@ internal class StudyHistoryControllerTest {
             tasksCount = null,
             startTime = null,
             endTime = null,
-            exerciseId = 1L
+            exerciseId = 1L,
+            rightAnswersIndex = 0.75f
         )
         `when`(studyHistoryService.patchStudyHistory(dto)).thenReturn(dto)
         // WHEN

@@ -12,7 +12,7 @@ data class StudyHistoryDto(
     var startTime: LocalDateTime?,
     var endTime: LocalDateTime?,
     var executionSeconds: Int? = null,
-    var tasksCount: Short,
+    var tasksCount: Short?,
     var listeningsCount: Int? = null, // -- count of all user listenings. >=tasksCount --
     var repetitionIndex: Float?, // repetitionIndex=tasksCount/listeningsCount
     var rightAnswersCount: Int? = null, // -- right answers from 1 time <=tasksCount --
