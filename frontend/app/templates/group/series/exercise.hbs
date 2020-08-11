@@ -6,8 +6,8 @@
     {{#if (eq this.target.currentRouteName "group.series.exercise.task")}}
       <div class="flex items-center justify-between">
         <div>
-          <FaIcon @icon="chevron-left" />
-          <LinkTo @route="group.series" @model={{this.model.series}}>
+          <LinkTo @route="group.series" @model={{@model.series}}>
+            <FaIcon @icon="chevron-left" />
             {{t "navigation.come_back"}}
           </LinkTo>
         </div>
@@ -30,7 +30,7 @@
         />
       {{else if this.showExerciseStats}}
           <ExerciseStats
-            @stats={{this.model.stats}}
+            @stats={{@model.stats}}
             {{did-insert this.afterCompleted}}
           />
       {{else}}

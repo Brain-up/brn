@@ -38,6 +38,10 @@
   height: 140px;
 }
 
+.exercise-block__level[disabled] {
+  pointer-events: none;
+}
+
 .exercise-block__status-icon {
   width: 20px;
   height: 20px;
