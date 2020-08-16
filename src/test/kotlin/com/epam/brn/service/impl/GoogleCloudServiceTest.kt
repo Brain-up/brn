@@ -1,5 +1,6 @@
 package com.epam.brn.service.impl
 
+import com.epam.brn.cloud.GoogleCloudService
 import com.epam.brn.config.GoogleCloudConfig
 import com.google.api.gax.paging.Page
 import com.google.cloud.storage.Blob

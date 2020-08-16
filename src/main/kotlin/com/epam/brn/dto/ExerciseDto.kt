@@ -8,6 +8,7 @@ data class ExerciseDto(
     var name: String?,
     var description: String?,
     var level: Int? = 0,
+    var noise: NoiseDto,
     var exerciseType: ExerciseType,
     var template: String? = "",
     var available: Boolean = true,

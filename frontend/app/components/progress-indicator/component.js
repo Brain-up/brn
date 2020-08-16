@@ -38,7 +38,7 @@ export default class ProgressIndicatorComponent extends Component {
     return completedToHide >= 0 ? completedToHide : 0;
   }
   get hiddenUncompletedCount() {
-    const amount = this.itemsLength - this.itemsToHideCount - this.maxAmount;
+    const amount = this.itemsLength - this.itemsToHideCount - this.maxAmount - this.completedItems.length;
     return amount;
   }
   get negativeHiddenUncompletedCount() {

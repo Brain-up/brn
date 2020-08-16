@@ -1,14 +1,11 @@
 package com.epam.brn.service
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.upload.CsvUploadService
-import java.io.IOException
-import java.io.InputStream
-import java.nio.file.Files
-import java.nio.file.Path
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -17,6 +14,10 @@ import org.springframework.context.event.EventListener
 import org.springframework.core.io.ResourceLoader
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.io.IOException
+import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * This class is responsible for
@@ -30,12 +31,16 @@ class InitialDataLoader(
     private val userAccountRepository: UserAccountRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
-    private val uploadService: CsvUploadService
+    private val uploadService: CsvUploadService,
+    private val audioFilesGenerationService: AudioFilesGenerationService
 ) {
     private val log = logger()
 
     @Value("\${init.folder:#{null}}")
     var directoryPath: Path? = null
+
+    @Value("\${withAudioFilesGeneration}")
+    var withAudioFilesGeneration: Boolean = false
 
     companion object {
         fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
@@ -70,6 +75,9 @@ class InitialDataLoader(
 
         if (isInitRequired())
             init()
+
+        if (withAudioFilesGeneration)
+            audioFilesGenerationService.generateAudioFiles()
     }
 
     private fun addAdminUser(adminAuthority: Authority): UserAccount {

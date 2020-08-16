@@ -5,6 +5,11 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.glacier.model.CannedACL
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import org.apache.logging.log4j.kotlin.logger
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import java.io.FileInputStream
 import java.io.IOException
 import java.time.Duration
@@ -14,11 +19,6 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Properties
 import java.util.UUID
-import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 
 @Configuration
 @Profile("!integration-tests")

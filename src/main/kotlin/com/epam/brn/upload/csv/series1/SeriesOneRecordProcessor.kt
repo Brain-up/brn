@@ -9,22 +9,30 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
-import java.util.Random
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.util.Random
 
 @Component
 class SeriesOneRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
-    private val exerciseRepository: ExerciseRepository
+    private val exerciseRepository: ExerciseRepository,
+    private val wordsService: WordsService
 ) : RecordProcessor<SeriesOneRecord, Exercise> {
 
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
+
+    @Value(value = "\${series1WordsFileName}")
+    private lateinit var series1WordsFileName: String
+
+    @Value(value = "\${audioPath}")
+    private lateinit var audioPath: String
 
     private val repeatCount = 2
 
@@ -36,11 +44,13 @@ class SeriesOneRecordProcessor(
 
     @Transactional
     override fun process(records: List<SeriesOneRecord>): List<Exercise> {
+        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(1L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
+            words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -49,7 +59,7 @@ class SeriesOneRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-
+        wordsService.createFileWithWords(words, series1WordsFileName)
         return exercises.toMutableList()
     }
 
@@ -57,12 +67,12 @@ class SeriesOneRecordProcessor(
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
-            .map { toResource(it, record.noise) }
+            .map { toResource(it) }
             .toMutableSet()
     }
 
-    private fun toResource(word: String, noise: String): Resource {
-        val audioFile = "$noise/$word.mp3"
+    private fun toResource(word: String): Resource {
+        val audioFile = audioPath.format(word)
         val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
             .orElse(
                 Resource(
@@ -85,6 +95,7 @@ class SeriesOneRecordProcessor(
                     series = series,
                     name = record.exerciseName,
                     level = record.level,
+                    noise = record.noise,
                     exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
                     description = record.exerciseName
                 )

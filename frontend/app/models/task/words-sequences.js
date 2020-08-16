@@ -4,19 +4,25 @@ import { computed } from '@ember/object';
 import shuffleArray from 'brn/utils/shuffle-array';
 import deepCopy from '../../utils/deep-copy';
 
-function createTasks(firstTaskPart, ...restPartsOptions) {
-  let result = [];
-  firstTaskPart.forEach((firstPartItem) => {
-    result = result.concat(
-      restPartsOptions[0].map((nextTaskPart) => {
-        return [firstPartItem, nextTaskPart];
-      }),
-    );
+function createTasks([first, ...tail], acc = []) {
+
+  const results = [];
+  const finalResults = [];
+
+  first.forEach((i)=>{
+    results.push([i]);
   });
-  if (restPartsOptions.length > 1) {
-    result = result.concat(createTasks(...restPartsOptions));
+
+  acc.forEach((row)=>{
+    results.forEach((result)=>{
+      finalResults.push(row.concat(result));
+    })
+  });
+  if (tail.length) {
+    return createTasks(tail, acc.length ? finalResults : results);
   }
-  return result;
+
+  return acc.length ? finalResults : results;
 }
 
 export default class WordsSequences extends BaseTask.extend({
@@ -30,11 +36,12 @@ export default class WordsSequences extends BaseTask.extend({
       .split('>')[0]
       .split(' ');
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   possibleTasks: computed('answerOptions.[]', function() {
     const taskPartsOptions = this.selectedItemsOrder.map(
       (orderItemName) => this.answerOptions[orderItemName],
     );
-    return createTasks(...taskPartsOptions);
+    return shuffleArray(createTasks(taskPartsOptions));
   }),
   doubledTasks: computed('possibleTasks.[]', function() {
     return [].concat(

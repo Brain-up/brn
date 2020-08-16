@@ -4,6 +4,10 @@ import { task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
+const ERRORS_MAP = {
+  'The user already exists!': 'registration_form.email_exists',
+};
+
 export default class RegistrationFormComponent extends LoginFormComponent {
   @service('network') network;
   @tracked email;
@@ -28,8 +32,9 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     const enterDateUser = new Date(birthday).getTime();
 
     if (enterDateUser > max || min > enterDateUser) {
-      return 'Некорректная дата';
+      return this.intl.t('registration_form.invalid_date');
     }
+
     return false;
   }
 
@@ -56,7 +61,13 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       yield this.loginTask.perform();
     } else {
       const error = yield result.json();
-      this.errorMessage = error.errors.pop();
+      const key = error.errors.pop();
+      if (this.intl.exists(`msg.validation.${key}`)) {
+        this.errorMessage = this.intl.t(`msg.validation.${key}`);
+      } else {
+        this.errorMessage =
+          key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key]) : key;
+      }
       this.registrationTask.cancelAll();
     }
   }).drop())

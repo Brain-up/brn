@@ -14,15 +14,15 @@ export default class ExerciseStepsComponent extends Component {
     MODES = MODES
     get modeForListen() {
         if (this.args.activeStep === MODES.LISTEN) {
-            return BUTTONS.ACTIVE;
+          return BUTTONS.ACTIVE;
         }
-        return this.args.activeStep !== MODES.TASK ? BUTTONS.ENABLED: BUTTONS.DISABLED;
+        return BUTTONS.ENABLED;
     }
     get modeForInteract() {
         if (this.args.activeStep === MODES.INTERACT) {
             return BUTTONS.ACTIVE;
         }
-        return this.args.activeStep !== MODES.TASK ? BUTTONS.ENABLED: BUTTONS.DISABLED;
+        return BUTTONS.ENABLED;
     }
     get modeForTask() {
         if (this.args.activeStep === MODES.TASK) {

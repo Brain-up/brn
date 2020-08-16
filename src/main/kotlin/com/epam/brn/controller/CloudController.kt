@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
+import com.epam.brn.cloud.CloudService
 import com.epam.brn.dto.BaseSingleObjectResponseDto
-import com.epam.brn.service.CloudService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired

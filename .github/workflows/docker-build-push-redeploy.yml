@@ -1,0 +1,71 @@
+name: Docker Build, Push images and redeploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_publish_backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry brainup/brn-backend
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-backend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+  build_and_publish_frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry brainup/brn-frontend
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-frontend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile_frontend
+  redeploy_epam_instance:
+    needs: [ build_and_publish_backend, build_and_publish_frontend ]
+    runs-on: epam
+    steps:
+      - uses: actions/checkout@master
+      - name: Configure secrets
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          mv docker-compose-run.yml docker-compose.yml
+          sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
+          sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+          YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
+          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+      - name: Redeploy application
+        run: |
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af
+  redeploy_vscaleio_instance:
+    needs: [ build_and_publish_backend, build_and_publish_frontend ]
+    runs-on: vscale
+    steps:
+      - uses: actions/checkout@master
+      - name: Configure secrets
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          mv docker-compose-run.yml docker-compose.yml
+          sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
+          sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+          YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
+          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+      - name: Redeploy application
+        run: |
+          docker-compose pull
+          docker-compose up -d --no-deps brn
+          docker-compose up -d --no-deps brn_fe
+          docker image prune -af

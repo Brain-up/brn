@@ -1,6 +1,8 @@
 # Brain Up! 
 This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
-It is projected to contain several series of media exercises, which should be added incrementally. The tool structure and usage could be organized in the same way as other tools like www.uchi.ru .
+It is projected to contain several series of media exercises, which should be added incrementally. The tool structure and usage could be organized in the same way as other tools like www.uchi.ru.
+
+Our current domain : http://audibly.ru && http://31.184.253.199/
 
 ## SCIENTIFIC SOURCES
  - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit   
@@ -19,9 +21,9 @@ Most importantly being an open source project you can show your work in it to an
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
-- Back-end: KOTLIN/java + Spring boot. Rest api as integration layer.
+- Back-end: KOTLIN + Spring boot. Rest api as integration layer.
 - Front-end : TBD - Ember, Angular.
-- DB: Postgres in production, H2 for testing.
+- DB: Postgres.
 
 ## HOW TO JOIN?
 1. for epam developers: Just click on “JOIN TEAM” button in https://contribute.epam.com/products/143 and we will get in touch with you shortly. 
@@ -44,7 +46,7 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ### DEVELOPMENT PREREQUISITES
 1. Install node v10 or above https://nodejs.org/en/download/
-2. Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install/#mac-stable
+2. Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
 3. In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
 4. Install Docker https://hub.docker.com/search/?type=edition&offering=community 
 
@@ -85,8 +87,7 @@ _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_
 
 ### GET THE BACKEND PROJECT RUNNING
 1. Run command 'gradle build' from main project folder to build project with tests.
-2. Use --spring.profiles.active=dev when running spring project, in command line or change it in application.properties.
-3. Application.kt is the main class to run application.
+2. Application.kt is the main class to run application.
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 

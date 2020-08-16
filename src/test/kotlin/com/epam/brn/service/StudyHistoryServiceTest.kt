@@ -12,8 +12,6 @@ import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
-import java.time.LocalDateTime
-import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,6 +21,8 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.LocalDateTime
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryServiceTest {
@@ -53,7 +53,8 @@ internal class StudyHistoryServiceTest {
             tasksCount = 1,
             startTime = now,
             endTime = now,
-            exerciseId = 1L
+            exerciseId = 1L,
+            rightAnswersIndex = 0.75f
         )
         val userAccount = UserAccount(
             id = 1L,
@@ -73,7 +74,8 @@ internal class StudyHistoryServiceTest {
             startTime = now,
             endTime = now,
             tasksCount = 1,
-            repetitionIndex = 1f
+            repetitionIndex = 1f,
+            rightAnswersIndex = 0.75f
         )
 
         `when`(userAccountRepository.findUserAccountById(dto.userId!!)).thenReturn(Optional.of(userAccount))
@@ -99,7 +101,8 @@ internal class StudyHistoryServiceTest {
             tasksCount = 1,
             startTime = LocalDateTime.now(),
             endTime = LocalDateTime.now(),
-            exerciseId = 1L
+            exerciseId = 1L,
+            rightAnswersIndex = 0.75f
         )
         val existingStudyHistory = Mockito.mock(StudyHistory::class.java)
 
@@ -124,7 +127,8 @@ internal class StudyHistoryServiceTest {
             tasksCount = 5,
             startTime = null,
             endTime = null,
-            exerciseId = 1L
+            exerciseId = 1L,
+            rightAnswersIndex = 0.75f
         )
         val existingEntity = StudyHistory(
             id = 10,

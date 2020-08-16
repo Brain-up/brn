@@ -4,7 +4,6 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
-import java.nio.charset.Charset
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Tag
@@ -19,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.nio.charset.Charset
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -112,7 +112,7 @@ class SeriesControllerIT {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
         val expectedResponse =
-            """{"data":"level,exerciseName,words,noise\n1,Слова без шума,(бал бум быль вить гад дуб),no_noise\n2,Слова без шума,(линь лис моль пар пять раб),no_noise\n3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise\n4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db","errors":[],"meta":[]}"""
+            """{"data":"level,exerciseName,words,noise\n1,Семья,(сын ребенок родители дочь мама папа),0\n2,Семья,(отец мать сестра брат дядя дедушка),0\n3,Семья,(бабушка муж жена внучка внук внуки),0\n4,Семья,(семья тётя дядя племянник племянница родня),0","errors":[],"meta":[]}"""
         Assertions.assertEquals(expectedResponse, response)
     }
 }

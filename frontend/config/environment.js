@@ -22,6 +22,7 @@ module.exports = function(environment) {
     fontawesome: {
       icons: {
         'free-solid-svg-icons': [
+          'headphones-alt',
           'brain',
           'bookmark',
           'redo-alt',

@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .image-block {
   animation: fade-out 0.5s;
   min-width: 350px;
@@ -9,3 +11,5 @@
   background-repeat: no-repeat;
   background-image: var(--word-picture-url);
 }
+
+/*! purgecss end ignore */

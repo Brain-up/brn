@@ -1,10 +1,10 @@
 package com.epam.brn.service.impl
 
+import com.epam.brn.auth.AuthenticationBasicServiceImpl
 import com.epam.brn.dto.LoginDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
-import kotlin.test.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.util.Base64Utils
+import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class AuthenticationBasicServiceImplTest {
@@ -37,8 +38,8 @@ internal class AuthenticationBasicServiceImplTest {
         // GIVEN
         val authenticationMock = mock(Authentication::class.java)
         `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
-        val loginDto = LoginDto(username = "testUser", password = "testPassword")
-        val basicHeader = Base64Utils.encodeToString("testUser:testPassword".toByteArray())
+        val loginDto = LoginDto(username = "testUser".toLowerCase(), password = "testPassword")
+        val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
         // WHEN
         val actualResult = authenticationBasicServiceImpl.login(loginDto)
         // THEN
@@ -49,8 +50,10 @@ internal class AuthenticationBasicServiceImplTest {
     @Test
     fun `should not login not exist user`() {
         // GIVEN
+        val authenticationMock = mock(Authentication::class.java)
+        `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
+        val loginDto = LoginDto("test", "test", "test")
         `when`(authenticationManager.authenticate(any())).thenThrow(BadCredentialsException("BadCredentialsException"))
-        val loginDto = mock(LoginDto::class.java)
         // WHEN
         assertThrows(BadCredentialsException::class.java) { authenticationBasicServiceImpl.login(loginDto) }
     }
@@ -58,7 +61,7 @@ internal class AuthenticationBasicServiceImplTest {
     @Test
     fun `should register new user`() {
         // GIVEN
-        val email = "testUser"
+        val email = "testUser".toLowerCase()
         val passw = "testPassword"
         val userAccountDto = mock(UserAccountDto::class.java)
         val savedUserAccountDto = mock(UserAccountDto::class.java)
@@ -67,7 +70,7 @@ internal class AuthenticationBasicServiceImplTest {
         lenient().`when`(userAccountDto.password).thenReturn(passw)
         lenient().`when`(userAccountService.addUser(userAccountDto)).thenReturn(savedUserAccountDto)
         `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
-        val basicHeader = Base64Utils.encodeToString("testUser:testPassword".toByteArray())
+        val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
         // WHEN
         val actualResult = authenticationBasicServiceImpl.registration(userAccountDto)
         // THEN
@@ -79,7 +82,7 @@ internal class AuthenticationBasicServiceImplTest {
     @Test
     fun `should not register exist user`() {
         // GIVEN
-        val email = "testUser"
+        val email = "testUser".toLowerCase()
         val passw = "testPassword"
         val userAccountDto = mock(UserAccountDto::class.java)
         lenient().`when`(userAccountDto.email).thenReturn(email)

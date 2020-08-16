@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
@@ -7,7 +8,7 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.AuthorityService
+import com.epam.brn.service.AudioFilesGenerationService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
@@ -37,14 +38,16 @@ class CsvLoadingTestIT {
             userAccountRepository: UserAccountRepository,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
-            uploadService: CsvUploadService
+            uploadService: CsvUploadService,
+            audioFilesGenerationService: AudioFilesGenerationService
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
             userAccountRepository,
             passwordEncoder,
             authorityService,
-            uploadService
+            uploadService,
+            audioFilesGenerationService
         )
     }
 
@@ -73,9 +76,9 @@ class CsvLoadingTestIT {
     fun `should load test data from classpath initFiles folder`() {
         exerciseGroupRepository.findAll() shouldHaveSize 2
         seriesRepository.findAll() shouldHaveSize 4
-        exerciseRepository.findAll() shouldHaveSize 14
-        taskRepository.findAll() shouldHaveSize 29
-        resourceRepository.findAll() shouldHaveSize 133
+        exerciseRepository.findAll() shouldHaveSize 99
+        taskRepository.findAll() shouldHaveSize 107
+        resourceRepository.findAll() shouldHaveSize 399
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
     }

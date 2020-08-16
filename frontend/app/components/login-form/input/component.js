@@ -1,6 +1,9 @@
 import Component from '@glimmer/component';
+import { inject as service } from '@ember/service';
 
 export default class LoginFormInputComponent extends Component {
+  @service('intl') intl;
+
   get hasError() {
     const { value } = this;
     if (value === undefined) {
@@ -14,7 +17,9 @@ export default class LoginFormInputComponent extends Component {
     const sumValue = (value || '').trim().length;
 
     if (sumValue >= this.maxlength - 1) {
-      return `Максимальное количество символов - ${this.maxlength}`;
+      return `${this.intl.t('registration_form.warning_input_restriction')} - ${
+        this.maxlength
+      }`;
     }
     return this.args.warning || false;
   }

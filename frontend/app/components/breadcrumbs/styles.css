@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .breadcrumbs li {
   display: inline-block;
   margin-right: 6px;
@@ -8,3 +10,5 @@
   content: '/';
   margin-right: 6px;
 }
+
+/*! purgecss end ignore */

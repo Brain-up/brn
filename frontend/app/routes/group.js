@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+// eslint-disable-next-line ember/no-mixins
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
 export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
@@ -11,6 +12,11 @@ export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
   }
 
   redirect(group, { to }) {
+    document.body.classList.remove('route-groups');
+    document.body.classList.add('route-group');
+    if (!group.get('sortedSeries.firstObject')) {
+      this.transitionTo('groups');
+    }
     if (to.name === 'group.index' && group.get('sortedSeries.firstObject')) {
       this.transitionTo(
         'group.series.index',

@@ -10,8 +10,8 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
-import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,6 +20,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesTwoRecordProcessorTest {
@@ -27,6 +28,7 @@ internal class SeriesTwoRecordProcessorTest {
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
+    private val resourceCreationServiceMock = mock(WordsService::class.java)
 
     private lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
 
@@ -46,11 +48,13 @@ internal class SeriesTwoRecordProcessorTest {
         seriesTwoRecordProcessor = SeriesTwoRecordProcessor(
             seriesRepositoryMock,
             resourceRepositoryMock,
-            exerciseRepositoryMock
+            exerciseRepositoryMock,
+            resourceCreationServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "audioFileUrl", "series2/%s.mp3")
+        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "audioPath", "audio/ogg/filipp/%s.ogg")
         ReflectionTestUtils.setField(seriesTwoRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
+        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "series2WordsFileName", "words_series2.txt")
 
         `when`(seriesRepositoryMock.findById(2L)).thenReturn(Optional.of(series))
 
@@ -159,7 +163,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "девочка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/девочка.mp3",
+            audioFileUrl = "audio/ogg/filipp/девочка.ogg",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
     }
@@ -168,7 +172,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "бабушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/бабушка.mp3",
+            audioFileUrl = "audio/ogg/filipp/бабушка.ogg",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
     }
@@ -177,7 +181,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "дедушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "series2/дедушка.mp3",
+            audioFileUrl = "audio/ogg/filipp/дедушка.ogg",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
     }
@@ -186,7 +190,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "сидит",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/сидит.mp3",
+            audioFileUrl = "audio/ogg/filipp/сидит.ogg",
             pictureFileUrl = "pictures/withWord/сидит.jpg"
         )
     }
@@ -195,7 +199,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "лежит",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/лежит.mp3",
+            audioFileUrl = "audio/ogg/filipp/лежит.ogg",
             pictureFileUrl = "pictures/withWord/лежит.jpg"
         )
     }
@@ -204,7 +208,7 @@ internal class SeriesTwoRecordProcessorTest {
         return Resource(
             word = "идет",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "series2/идет.mp3",
+            audioFileUrl = "audio/ogg/filipp/идет.ogg",
             pictureFileUrl = "pictures/withWord/идет.jpg"
         )
     }

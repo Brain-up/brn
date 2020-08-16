@@ -122,13 +122,15 @@ export default class TaskPlayerComponent extends Component {
   }).keepLatest())
   listenModeTask;
 
+  maybeStartExercise() {
+    if (!this.task.get('exercise.isStarted')) {
+      this.task.exercise.content.trackTime('start');
+    }
+  }
+
   @(task(function*() {
     try {
       this.mode = MODES.TASK;
-      this.studyingTimer.runTimer();
-      if (!this.task.get('exercise.isStarted')) {
-        this.task.exercise.content.trackTime('start');
-      }
       yield this.audio.startPlayTask();
     } finally {
       // EOL
@@ -189,12 +191,17 @@ export default class TaskPlayerComponent extends Component {
     } else if (mode === MODES.LISTEN) {
       this.activeTask = this.listenModeTask.perform(...args);
     }
+    this.activeTask.catch(()=>{
+      // EOL
+    });
     return this.activeTask;
   }
 
   @action
   async startTask() {
     this.justEnteredTask = false;
+    this.maybeStartExercise();
+    this.studyingTimer.runTimer();
     if (Ember.testing) {
       await this.setMode(MODES.TASK);
     } else {

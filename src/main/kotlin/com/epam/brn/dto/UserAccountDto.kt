@@ -5,21 +5,33 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Past
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
+
+const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
+    "(^\\s+$)|([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)"
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountDto(
     val id: Long? = null,
-    @field:NotBlank
+    @field:NotBlank(message = "{validation.field.first-name.no-spaces}")
     val firstName: String,
-    @field:NotBlank
+    @field:NotBlank(message = "{validation.field.last-name.no-spaces}")
     val lastName: String,
-    @field:NotBlank
-    @field:Email
+    @field:NotBlank(message = "{validation.field.email.blank}")
+    @field:Email(message = "{validation.field.email.invalid-format}")
+    @field:Pattern(
+        regexp = VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE,
+        message = "{validation.field.email.invalid-format.cyrillic.not.allowed}"
+    )
     val email: String,
-    @field:NotBlank
-    @field:Size(min = 4)
+    @field:NotBlank(message = "{validation.field.password.blank}")
+    @field:Size(min = 4, max = 20, message = "{validation.field.password.invalid-format}")
     var password: String,
+    @field:NotNull(message = "{validation.field.birthday.notNull}")
+    @field:Past(message = "{validation.field.birthday.past}")
     val birthday: LocalDate? = null,
     var active: Boolean = true
 ) {

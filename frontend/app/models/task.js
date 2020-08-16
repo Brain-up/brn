@@ -1,6 +1,6 @@
 import { belongsTo, attr } from '@ember-data/model';
-import { isEmpty } from 'ember-awesome-macros';
-import { computed } from '@ember/object';
+import { isEmpty } from '@ember/utils';
+import { computed, action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import CompletionDependent from './completion-dependent';
 import arrayNext from 'brn/utils/array-next';
@@ -26,6 +26,7 @@ export default class Task extends CompletionDependent.extend({
   isCompleted: computed('tasksManager.completedTasks.[]', function() {
     return this.tasksManager.isCompleted(this);
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   completedInCurrentCycle: computed('tasksManager.completedCycleTasks.[]', {
     get() {
       return (
@@ -38,15 +39,18 @@ export default class Task extends CompletionDependent.extend({
       return true;
     },
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   nextTask: computed('exercise.tasks.[]', function() {
     return arrayNext(this, this.exercise.content.get('sortedChildren'));
   }),
 
-  isLastTask: isEmpty('nextTask'),
+  isLastTask: computed('nextTask', function() {
+    return isEmpty(this.nextTask);
+  }),
 
   nextAttempt: false,
 
-  savePassed() {
+  savePassed: action(function() {
     return this.tasksManager.saveAsCompleted(this);
-  },
+  }),
 }) {}

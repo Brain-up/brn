@@ -1,0 +1,76 @@
+header:
+  groups: Группы
+  logout: Выйти
+  about: Описание
+
+login_form:
+  login: Логин
+  error_bad_credentials: Неправильный логин или пароль.
+  warning_enter_credentials: Пожалуйста, введите логин и пароль.
+  password: Пароль
+  registration: Регистрация
+  sign_in: Вход
+  forgot_password: Забыли свой пароль?
+
+registration_form:
+  birthday: Дата рождения
+  email: Почта
+  warning_input_restriction: Максимальное количество символов
+  invalid_date: Некорректная дата
+  warning_enter_credentials: Пожалуйста, введите логин и пароль.
+  name: Имя
+  password: Пароль
+  registration: Регистрация
+  sign_in: Вход
+  surname: Фамилия
+  email_exists: Пользователь с такой почтой уже зарегистрирован
+
+breadcrumbs:
+  groups: Группы
+
+navigation:
+  words: Слова
+  come_back: Назад
+
+exercise:
+  progress: пройдено
+
+exercise_messages:
+  successfully: Поздравляем! Упражнение выполнено!
+  unsuccessfully: Неверно. Попробуйте ещё раз!
+  answer_successfully: Правильный ответ
+
+statistics:
+  attempts: Попытки
+  tasks: Задачи
+  time_min: мин
+  time_sec: сек
+  scoring: Шкала успеха
+  time_board: Общее время
+  info_about: Твой BrainUp образ
+
+task_link:
+  exercise: Упражнения
+
+service_message:
+  no_tasks:  Пока в этом упражнении нет задач
+
+control_exercises:
+  solve: Решать
+  interact: Взаимодейстовать
+  listen: Слушать
+
+
+footer:
+  info_about: При поддержке
+  info_about_helper: и
+
+msg:
+  validation:
+    FIRST_NAME_MUST_NOT_HAVE_SPACES: Имя не может содержать пробелы
+    LAST_NAME_MUST_NOT_HAVE_SPACES: Фамилия не может содержать пробелы
+    EMAIL_MUST_NOT_BE_BLANK: Почта не может быть пустой
+    INVALID_EMAIL_FORMAT: Неверный формат почты
+    INVALID_EMAIL_FORMAT_CYRILLIC_NOT_ALLOWED: Кириллическая почта не поддерживается
+    PASSWORD_MUST_NOT_BE_BLANK: Пароль не может быть пустым
+    PASSWORD_MUST_BE_GREATER_THAN_FOUR_CHARACTERS_LONG: Пароль должен быть длиннее 4 символов

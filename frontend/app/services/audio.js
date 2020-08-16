@@ -3,6 +3,8 @@ import { isArray } from '@ember/array';
 import { action } from '@ember/object';
 import { timeout, task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
+import { getOwner } from '@ember/application';
+
 import {
   createSource,
   createNoizeBuffer,
@@ -56,6 +58,18 @@ export default class AudioService extends Service {
     await this.playAudio();
   }
 
+  get currentExerciseNoiseLevel() {
+    if (Ember.testing) {
+      return 0;
+    }
+    const owner = getOwner(this);
+    const model = owner.lookup('route:application').modelFor('group.series.exercise');
+    if (!model) {
+      return 0;
+    }
+    return model.noiseLevel;
+  }
+
   updatePlayingProgress() {
     this.setProgress(
       (100 / this.totalDuration) * (Date.now() - this.startTime),
@@ -93,10 +107,10 @@ export default class AudioService extends Service {
     }
   }
 
-  getNoize(duration) {
+  getNoize(duration, level) {
     return createSource(
       this.context,
-      createNoizeBuffer(this.context, duration),
+      createNoizeBuffer(this.context, duration, level),
     );
   }
 
@@ -112,7 +126,10 @@ export default class AudioService extends Service {
 
   @(task(function* playAudio(noizeSeconds = 0) {
     let startedSources = [];
-    const hasNoize = noizeSeconds !== 0;
+    const hasNoize = this.currentExerciseNoiseLevel !== 0;
+    if (hasNoize) {
+      noizeSeconds = 0.3;
+    }
     try {
       this.sources = this.createSources(this.context, this.buffers || []);
       this.totalDuration =
@@ -123,6 +140,7 @@ export default class AudioService extends Service {
       if (hasNoize) {
         const noize = this.getNoize(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
+          this.currentExerciseNoiseLevel
         );
         noize.source.start(0);
         startedSources.push(noize);

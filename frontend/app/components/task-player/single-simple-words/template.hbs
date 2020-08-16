@@ -1,16 +1,28 @@
+{{!
+  interface Args {
+    word: string;
+    disableAudioPlayer: boolean;
+    disableAnswers: boolean;
+    activeWord: string;
+    onPlayText: () => {};
+    mode: string;
+  }
+ }}
+
 <div class="{{this.styleNamespace}} flex flex-grow flex-col" ...attributes>
   {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}
     <AudioPlayer
       @audioFileUrl={{this.audioFileUrl}}
       @disabled={{@disableAudioPlayer}}
+      @transparent={{not-eq @mode "task"}}
     />
     <ul class="task-player__options mt-5">
       {{#each this.task.answerOptions as |answerOption|}}
         <li class="task-player__option">
           <button
             data-test-task-answer
-            data-test-task-answer-option={{@word}}
+            data-test-task-answer-option={{answerOption.word}}
             disabled={{@disableAnswers}}
             type="button"
             class="task-player__option-button bg-transparent py-2 px-4 rounded text-blue-700

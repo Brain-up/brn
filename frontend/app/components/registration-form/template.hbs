@@ -3,17 +3,25 @@
     class="bg-white rounded px-8 pt-6 pb-8 mb-4
 
 
-      {{if (not this.registrationInProgress) "shadow-lg"}}"
+      {{unless this.registrationInProgress "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
     {{#if this.registrationInProgress}}
       <LoadingSpinner />
     {{else}}
       <div class="mb-4">
-        <LoginForm::Input @label="Имя" @model={{this}} @name="firstName" />
+        <LoginForm::Input
+          @label={{t "registration_form.name"}}
+          @model={{this}}
+          @name="firstName"
+        />
       </div>
       <div class="mb-4">
-        <LoginForm::Input @label="Фамилия" @model={{this}} @name="lastName" />
+        <LoginForm::Input
+          @label={{t "registration_form.surname"}}
+          @model={{this}}
+          @name="lastName"
+        />
       </div>
       <div class="mb-4">
         <LoginForm::Input
@@ -21,7 +29,7 @@
           max={{this.maxDateString}}
           required
           @warning={{this.warningErrorDate}}
-          @label="Дата рождения"
+          @label={{t "registration_form.birthday"}}
           @model={{this}}
           @name="birthday"
           @type="date"
@@ -29,7 +37,7 @@
       </div>
       <div class="mb-4">
         <LoginForm::Input
-          @label="Почта"
+          @label={{t "registration_form.email"}}
           @model={{this}}
           @name="email"
           @type="email"
@@ -37,18 +45,18 @@
       </div>
       <div class="mb-6">
         <LoginForm::Input
-          @label="Пароль"
+          @label={{t "registration_form.password"}}
           @model={{this}}
           @name="password"
           @type="password"
         />
         {{#if (or this.usernameError this.passwordError)}}
-          <p class="text-red-500 text-xs italic" data-test-form-warning>
-            Пожалуйста, введите логин и пароль.
+          <p data-test-form-warning class="mt-2 text-xs italic text-red-500">
+            {{t "registration_form.warning_enter_credentials"}}
           </p>
         {{/if}}
         {{#if this.errorMessage}}
-          <p class="text-red-500 text-xs italic" data-test-form-error>
+          <p data-test-form-error class="mt-2 text-xs italic text-red-500">
             {{this.errorMessage}}
           </p>
         {{/if}}
@@ -56,18 +64,18 @@
       <div class="flex mb-4">
         <button
           data-test-submit-form
-          class="bg-blue-500 hover:bg-blue-700 flex-grow text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
+          class="hover:bg-blue-700 focus:outline-none focus:shadow-outline flex-grow px-4 py-2 font-bold text-white bg-blue-500 rounded"
         >
-          Регистрация
+          {{t "registration_form.registration"}}
         </button>
       </div>
       <div class="flex justify-end">
         <LinkTo
           @route="login"
-          class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+          class="hover:text-blue-800 inline-block text-sm font-bold text-blue-500 align-baseline"
         >
-          Вход
+          {{t "registration_form.sign_in"}}
         </LinkTo>
       </div>
     {{/if}}

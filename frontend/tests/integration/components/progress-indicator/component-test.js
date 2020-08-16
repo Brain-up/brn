@@ -107,7 +107,7 @@ module('Integration | Component | progress-indicator', function(hooks) {
     await customTimeout(100);
     assert
       .dom('[data-test-hidden-uncompleted]')
-      .hasText(`+${100 - pageObject.maxItemsAmount}`);
+      .hasText(`+${100 - pageObject.maxItemsAmount - 7}`);
     assert.dom('[data-test-hidden-completed]').hasText('');
     for (let index = 8; index <= pageObject.maxItemsAmount / 2 + 1; index++) {
       completeByOrder(this.longList, index);

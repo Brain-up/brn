@@ -10,9 +10,8 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
-import java.util.Optional
-import java.util.Random
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,6 +20,8 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
+import java.util.Optional
+import java.util.Random
 
 @ExtendWith(MockitoExtension::class)
 internal class SeriesOneRecordProcessorTest {
@@ -28,6 +29,7 @@ internal class SeriesOneRecordProcessorTest {
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
+    private val resourceCreationService = mock(WordsService::class.java)
 
     private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
 
@@ -43,7 +45,7 @@ internal class SeriesOneRecordProcessorTest {
     )
 
     private val exerciseName = "Однослоговые слова без шума"
-    private val noiseLevel = "no_noise"
+    private val noiseLevel = 0
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
 
     @BeforeEach
@@ -51,10 +53,13 @@ internal class SeriesOneRecordProcessorTest {
         seriesOneRecordProcessor = SeriesOneRecordProcessor(
             seriesRepositoryMock,
             resourceRepositoryMock,
-            exerciseRepositoryMock
+            exerciseRepositoryMock,
+            resourceCreationService
         )
 
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "series1WordsFileName", "words_series1.txt")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPath", "audio/ogg/filipp/%s.ogg")
 
         `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 
@@ -180,7 +185,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "бал",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/бал.mp3",
+            audioFileUrl = "audio/ogg/filipp/бал.ogg",
             pictureFileUrl = "pictures/бал.jpg"
         )
     }
@@ -189,7 +194,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "бум",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/бум.mp3",
+            audioFileUrl = "audio/ogg/filipp/бум.ogg",
             pictureFileUrl = "pictures/бум.jpg"
         )
     }
@@ -198,7 +203,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "быль",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/быль.mp3",
+            audioFileUrl = "audio/ogg/filipp/быль.ogg",
             pictureFileUrl = "pictures/быль.jpg"
         )
     }
@@ -207,7 +212,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "вить",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/вить.mp3",
+            audioFileUrl = "audio/ogg/filipp/вить.ogg",
             pictureFileUrl = "pictures/вить.jpg"
         )
     }
@@ -216,7 +221,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "гад",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/гад.mp3",
+            audioFileUrl = "audio/ogg/filipp/гад.ogg",
             pictureFileUrl = "pictures/гад.jpg"
         )
     }
@@ -225,7 +230,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/дуб.mp3",
+            audioFileUrl = "audio/ogg/filipp/дуб.ogg",
             pictureFileUrl = "pictures/дуб.jpg"
         )
     }

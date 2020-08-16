@@ -9,6 +9,7 @@ module('Integration | Component | group-navigation', function(hooks) {
 
   test('it renders', async function(assert) {
     const store = this.owner.lookup('service:store');
+    this.owner.setupRouter();
     const group = run(() => {
       const group = store.createRecord('group');
       store.createRecord('series', { group, name: 1 });
@@ -20,6 +21,6 @@ module('Integration | Component | group-navigation', function(hooks) {
 
     await render(hbs`<GroupNavigation @group={{this.group}}/>`);
 
-    assert.equal(this.element.querySelectorAll('a').length, 3, '3 links');
+    assert.equal(this.element.querySelectorAll('button').length, 3, '3 buttons');
   });
 });

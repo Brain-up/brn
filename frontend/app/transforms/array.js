@@ -1,4 +1,4 @@
-import DS from 'ember-data';
+import Transform from '@ember-data/serializer/transform';
 import { A, isArray } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 
@@ -9,7 +9,7 @@ function transformToArray(target) {
   return isArray(target) ? A(target) : A([target]);
 }
 
-export default DS.Transform.extend({
+export default Transform.extend({
   deserialize(serialized) {
     return transformToArray(serialized);
   },

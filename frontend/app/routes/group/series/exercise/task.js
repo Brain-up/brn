@@ -1,12 +1,11 @@
 import Route from '@ember/routing/route';
-import { dasherize } from '@ember/string';
 
 export default class GroupSeriesExerciseTaskRoute extends Route {
   async model({ task_id }) {
-    const defaultTask = await this.store.findRecord('task', task_id);
-    const modelType = dasherize(defaultTask.exerciseType);
-    let task = await this.store.findRecord(`task/${modelType}`, task_id);
-    return task;
+    const tasks = await this.modelFor('group.series.exercise')
+      .hasMany('tasks')
+      .load();
+    return tasks.toArray().find(({ id }) => task_id === id);
   }
   async afterModel(task, { to }) {
     if (

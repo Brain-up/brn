@@ -19,13 +19,20 @@ export default class Exercise extends CompletionDependent.extend({
   parent: reads('series'),
   startTime: attr('date'),
   endTime: attr('date'),
+  noise: attr(''),
+  get noiseLevel() {
+    return this.noise?.level || 0;
+  },
   sortedTasks: reads('sortedChildren'),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   previousSiblings: computed('series.groupedByNameExercises', function() {
     return arrayPreviousItems(
       this,
+      // eslint-disable-next-line ember/no-get
       this.get('series.groupedByNameExercises')[this.name],
     );
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   isCompleted: computed(
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',
@@ -58,22 +65,32 @@ export default class Exercise extends CompletionDependent.extend({
   },
   get stats() {
     const { startTime, endTime, tasks, id } = this;
+    const items = tasks.toArray();
 
-    const repetitionsCount = tasks.reduce((result, task) => {
+    const repetitionsCount = items.reduce((result, task) => {
       if (task.repetitionCount) {
         result += task.repetitionCount;
       }
       return result;
     }, 0);
 
-    const repetitionIndex = repetitionsCount / tasks.length;
+    const tasksCount = items.reduce((result, task) => {
+      if (task.tasksToSolve) {
+        return result + task.tasksToSolve.length;
+      } else {
+        return result + 1;
+      }
+    }, 0);
+
+    const repetitionRatio = repetitionsCount / tasksCount;
+    const repetitionIndex =  !isFinite(repetitionRatio) || isNaN(repetitionRatio) ? 0 : repetitionRatio.toFixed(2);
 
     return {
       startTime,
       endTime,
       repetitionIndex,
       exerciseId: id,
-      tasksCount: tasks.length
+      tasksCount
     };
   },
   async postHistory() {
@@ -85,6 +102,7 @@ export default class Exercise extends CompletionDependent.extend({
       },
       body: JSON.stringify({
         ...stats,
+        // eslint-disable-next-line ember/no-get
         userId: this.get('session.data.user.id') || null
       }),
     });

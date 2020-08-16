@@ -9,8 +9,9 @@
     <AudioPlayer
       @audioFileUrl={{this.audioFiles}}
       @disabled={{@disableAudioPlayer}}
+      @transparent={{not-eq @mode "task"}}
     />
-    <div class="flex mt-4 flex-grow justify-center">
+    <div class="flex justify-center flex-grow mt-4">
       {{#each @task.selectedItemsOrder as |type|}}
         <div
           class="column flex-1 flex-col type-column

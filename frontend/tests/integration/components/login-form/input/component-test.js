@@ -23,6 +23,17 @@ module('Integration | Component | login-form/input', function(hooks) {
     assert.dom('label').exists();
   });
 
+  test('it renders without label', async function(assert) {
+    this.set('model', {});
+    this.set('name', 'foo');
+    await render(
+      hbs`{{!-- @ts-nocheck --}}<LoginForm::Input @model={{this.model}} @name={{this.name}} @type="text" />`,
+    );
+
+    assert.dom('input').exists();
+    assert.dom('label').doesNotExist();
+  });
+
   test('it able to show error on empty fields', async function(assert) {
     this.set('model', { foo: '' });
     this.set('name', 'foo');

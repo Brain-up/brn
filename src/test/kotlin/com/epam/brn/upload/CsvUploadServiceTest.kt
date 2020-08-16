@@ -2,7 +2,6 @@ package com.epam.brn.upload
 
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
-import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import java.io.IOException
 
 @ExtendWith(MockitoExtension::class)
 internal class CsvUploadServiceTest {
@@ -26,10 +26,10 @@ internal class CsvUploadServiceTest {
     @Test
     fun `should get exercise file format`() {
         val expected = """level,exerciseName,words,noise
-1,Слова без шума,(бал бум быль вить гад дуб),no_noise
-2,Слова без шума,(линь лис моль пар пять раб),no_noise
-3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise
-4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db""".trimIndent()
+1,Семья,(сын ребенок родители дочь мама папа),0
+2,Семья,(отец мать сестра брат дядя дедушка),0
+3,Семья,(бабушка муж жена внучка внук внуки),0
+4,Семья,(семья тётя дядя племянник племянница родня),0""".trimIndent()
 
         val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
         assertThat(actual).isEqualTo(expected)

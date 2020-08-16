@@ -1,12 +1,12 @@
 package com.epam.brn.integration.configuration
 
 import com.epam.brn.config.AwsConfig
-import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 @Configuration
 class AwsTestConfig {
