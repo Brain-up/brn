@@ -16,7 +16,7 @@
           </div>
           {{#each
             (chunk
-              3 (filter-by "name" header this.sortedExercises)
+              3 (sort-by "level" (filter-by "name" header this.sortedExercises))
             ) as |exercises|
           }}
             <ul
@@ -26,15 +26,13 @@
               {{#each exercises as |exercise|}}
                 <li>
                   <div class="exercise-block__levels flex mt-4 ml-2 mr-2">
-                    <LinkTo
-                      @route="group.series.exercise"
-                      @model={{exercise.id}}
+                    <a
                       data-test-series-navigation-list-link
                       data-test-exercise-level={{exercise.level}}
                       data-test-exercise-name={{exercise.name}}
-                      @disabled={{not exercise.canInteract}}
-                      title={{concat (t "task_link.exercise") " " exercise.level
-                      }}
+                      disabled={{not exercise.canInteract}}
+                      href={{href-to "group.series.exercise" exercise.id}}
+                      title={{concat (t "task_link.exercise") " " exercise.level}}
                       class="task-square-link exercise-block__level hover:shadow-md flex-1 p-2 m-4 mb-6 bg-white rounded-lg shadow-lg"
                     >
                       <Ui::Icon::Tree
@@ -54,7 +52,7 @@
                           }}
                         />
                       </div>
-                    </LinkTo>
+                    </a>
                   </div>
                 </li>
               {{/each}}
