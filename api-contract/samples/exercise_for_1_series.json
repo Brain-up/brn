@@ -1,37 +1,21 @@
 {
   "data": {
     "seriesId": 1,
-    "id": 8,
-    "name": "Однослоговые слова c сильным шумом",
-    "description": "Однослоговые слова c сильным шумом",
-    "level": 8,
-    "exerciseType": "SINGLE_WORDS",
+    "id": 41,
+    "name": "Семья /3Дб/",
+    "description": "Семья /3Дб/",
+    "level": 1,
+    "noise": {
+      "level": 0,
+      "url": null
+    },
+    "exerciseType": "SINGLE_SIMPLE_WORDS",
     "template": "",
     "available": true,
     "tasks": [
       {
-        "id": 49,
-        "type": "task/SINGLE_WORDS"
-      },
-      {
-        "id": 45,
-        "type": "task/SINGLE_WORDS"
-      },
-      {
-        "id": 50,
-        "type": "task/SINGLE_WORDS"
-      },
-      {
-        "id": 46,
-        "type": "task/SINGLE_WORDS"
-      },
-      {
-        "id": 47,
-        "type": "task/SINGLE_WORDS"
-      },
-      {
-        "id": 48,
-        "type": "task/SINGLE_WORDS"
+        "id": 41,
+        "type": "task/SINGLE_SIMPLE_WORDS"
       }
     ]
   },
