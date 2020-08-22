@@ -25,4 +25,6 @@ class AuthorityServiceImpl(private val authorityRepository: AuthorityRepository)
     }
 
     override fun save(authority: Authority) = authorityRepository.save(authority)
+
+    override fun findAll(): List<Authority> = authorityRepository.findAll()
 }
