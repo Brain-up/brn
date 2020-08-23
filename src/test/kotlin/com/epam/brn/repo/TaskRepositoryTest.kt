@@ -4,7 +4,6 @@ import com.epam.brn.model.Task
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_TWO
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -17,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DisplayName("TaskRepository tests")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Disabled
 class TaskRepositoryTest : BaseTest() {
 
     @Autowired
