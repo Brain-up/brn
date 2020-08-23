@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -71,7 +71,7 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
+        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         Assertions.assertTrue(response.contains(seriesName))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
         Assertions.assertTrue(response.contains("exercises"))
@@ -92,7 +92,7 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
+        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         Assertions.assertTrue(response.contains(seriesName))
         Assertions.assertTrue(response.contains("exercises"))
     }
@@ -110,9 +110,10 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
+        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val expectedResponse =
-            """{"data":"level,exerciseName,words,noise\n1,Семья,(сын ребенок родители дочь мама папа),0\n2,Семья,(отец мать сестра брат дядя дедушка),0\n3,Семья,(бабушка муж жена внучка внук внуки),0\n4,Семья,(семья тётя дядя племянник племянница родня),0","errors":[],"meta":[]}"""
+            """{"data":"level,exerciseName,words,noise\n1,Семья,(сын ребёнок родители дочь мама папа),0\n2,Семья,(отец мать сестра брат дядя дедушка),0\n3,Семья,(бабушка муж жена внучка внук внуки),0\n4,Семья,(семья тётя дядя племянник племянница родня),0","errors":[],"meta":[]}"""
+        Assertions.assertTrue(response.contains("1,Семья,(сын ребёнок родители дочь мама папа),0"))
         Assertions.assertEquals(expectedResponse, response)
     }
 }
