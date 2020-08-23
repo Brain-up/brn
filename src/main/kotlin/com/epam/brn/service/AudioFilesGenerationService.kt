@@ -2,26 +2,31 @@ package com.epam.brn.service
 
 import com.epam.brn.exception.ConversionOggToMp3Exception
 import com.epam.brn.exception.YandexServiceException
+import net.bramp.ffmpeg.FFmpeg
+import net.bramp.ffmpeg.FFmpegExecutor
+import net.bramp.ffmpeg.FFprobe
+import net.bramp.ffmpeg.builder.FFmpegBuilder
 import org.apache.commons.io.FileUtils
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Service
-import java.io.File
+import org.apache.http.NameValuePair
+import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpPost
+import org.apache.http.client.utils.URIBuilder
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
-import org.apache.http.NameValuePair
-import java.util.ArrayList
-import org.apache.http.client.utils.URIBuilder
-import net.bramp.ffmpeg.FFmpegExecutor
-import net.bramp.ffmpeg.builder.FFmpegBuilder
-import net.bramp.ffmpeg.FFprobe
-import net.bramp.ffmpeg.FFmpeg
-import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.util.EntityUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+
+import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
+import java.io.File
 import java.time.ZonedDateTime
 
 @Service
@@ -54,9 +59,6 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     @Value("\${yandex.emotion}")
     lateinit var emotion: String
 
-    @Value(value = "\${series1WordsFileName}")
-    private lateinit var series1WordsFileName: String
-
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForFiles: String
 
@@ -66,18 +68,19 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     private val log = logger()
 
     fun generateAudioFiles() {
-        val words = wordsService.wordsSet
+        val words = wordsService.wordsWithoutAudioResourceSet
         val wordsSize = words.size
-        words.remove("")
-        if (words.isEmpty())
-            log.error("There are no any cached words.")
+        if (words.isEmpty()) {
+            log.info("There are no any words without audio ogg file.")
+            return
+        }
         log.info("Start generating audio files in yandex cloud for $wordsSize words.")
         var counter = 1
         words.asSequence().forEach { word ->
             run {
                 log.info("Generated $counter word from $wordsSize words.")
-                generateAudioFile(word, voiceAlena)
-                generateAudioFile(word, voiceFilipp)
+                generateAudioFiles(word, voiceAlena)
+                generateAudioFiles(word, voiceFilipp)
                 counter += 1
             }
         }
@@ -106,7 +109,16 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
         return iamToken
     }
 
-    fun generateAudioFile(word: String, voice: String): File {
+    /**
+     * Generate .ogg audio file from yandex cloud and convert it into .mp3 file and save both of them
+     */
+    fun generateAudioFiles(word: String, voice: String): File {
+        val fileOgg = File("$word.ogg")
+        val targetOggFile = File("$folderForFiles/ogg/$voice/${fileOgg.name}")
+        if (targetOggFile.exists()) {
+            log.info("${fileOgg.name} is already exist, it was not generated, it was skipped.")
+            return targetOggFile
+        }
         val token = getYandexIamTokenForAudioGeneration()
         val parameters = ArrayList<NameValuePair>()
         parameters.add(BasicNameValuePair("folderId", folderId))
@@ -130,12 +142,10 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
         log.info("Ogg audio file for Word `$word` was successfully generated.")
         val httpEntity = response.entity
         val inputStream = httpEntity.content
-        val fileOgg = File("$word.ogg")
         FileUtils.copyInputStreamToFile(inputStream, fileOgg)
 
         convertOggFileToMp3(fileOgg, voice)
 
-        val targetOggFile = File("$folderForFiles/ogg/$voice/${fileOgg.name}")
         fileOgg.let { sourceFile ->
             sourceFile.copyTo(targetOggFile, true)
             sourceFile.delete()
@@ -145,16 +155,23 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
     fun convertOggFileToMp3(fileOgg: File, voice: String) {
         val mp3FileName = "${fileOgg.nameWithoutExtension}.mp3"
+        val targetMp3FilePath = "$folderForFiles/$voice/$mp3FileName"
+        val fileMp3 = File(targetMp3FilePath)
+        if (fileMp3.exists()) {
+            log.info("$mp3FileName is already exist, it was not rewrited, it was skipped.")
+            return
+        }
+
         try {
             val builder = FFmpegBuilder()
-                .setInput(fileOgg.getAbsolutePath())
-                .overrideOutputFiles(true)
-                .addOutput(mp3FileName)
-                .setAudioCodec("libmp3lame")
-                .setAudioChannels(FFmpeg.AUDIO_MONO)
-                .setAudioBitRate(48000)
-                .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
-                .done()
+                    .setInput(fileOgg.getAbsolutePath())
+                    .overrideOutputFiles(true)
+                    .addOutput(mp3FileName)
+                    .setAudioCodec("libmp3lame")
+                    .setAudioChannels(FFmpeg.AUDIO_MONO)
+                    .setAudioBitRate(48000)
+                    .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
+                    .done()
 
             val ffmpeg = FFmpeg("ffmpeg/bin/ffmpeg.exe")
             val ffprobe = FFprobe("ffmpeg/bin/ffprobe.exe")
@@ -163,7 +180,6 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
             // Run a one-pass encode
             executor.createJob(builder).run()
 
-            val targetMp3FilePath = "$folderForFiles/$voice/$mp3FileName"
             File(mp3FileName).let { sourceFile ->
                 sourceFile.copyTo(File(targetMp3FilePath), true)
                 sourceFile.delete()
@@ -173,5 +189,35 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
         }
         // Or run a two-pass encode (which is better quality at the cost of being slower)
         // executor.createTwoPassJob(builder).run()
+    }
+
+    fun generateOggFile(word: String, voice: String): File {
+        val token = getYandexIamTokenForAudioGeneration()
+        val restTemplate = RestTemplate()
+        val parameters = ArrayList<NameValuePair>()
+        parameters.add(BasicNameValuePair("folderId", folderId))
+        parameters.add(BasicNameValuePair("lang", lang))
+        parameters.add(BasicNameValuePair("format", format))
+        parameters.add(BasicNameValuePair("voice", voice))
+        parameters.add(BasicNameValuePair("emotion", emotion))
+        parameters.add(BasicNameValuePair("text", word))
+        val uriBuilder = URIBuilder(uriGenerationAudioFile)
+        uriBuilder.addParameters(parameters)
+
+        val headers = HttpHeaders()
+        headers.setBearerAuth("$token")
+
+        val request = HttpEntity(null, headers)
+
+        val response: ResponseEntity<ByteArray> = restTemplate
+                .exchange(uriBuilder.build(), HttpMethod.POST, request, ByteArray::class.java)
+        if (response.statusCode != HttpStatus.OK)
+            throw YandexServiceException("Yandex cloud does not provide audio file for word `$word`, httpStatus={${response.statusCode}}")
+        log.info("Ogg audio file for Word `$word` was successfully generated.")
+
+        val byteArray = response.body!!
+        val fileOgg = File("$word.ogg")
+        FileUtils.writeByteArrayToFile(fileOgg, byteArray)
+        return fileOgg
     }
 }

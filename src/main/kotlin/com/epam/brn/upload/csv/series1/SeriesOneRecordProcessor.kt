@@ -59,7 +59,7 @@ class SeriesOneRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        wordsService.createFileWithWords(words, series1WordsFileName)
+        wordsService.createTxtFileWithExerciseWords(words, series1WordsFileName)
         return exercises.toMutableList()
     }
 

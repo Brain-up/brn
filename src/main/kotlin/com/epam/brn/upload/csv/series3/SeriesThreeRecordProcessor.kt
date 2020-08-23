@@ -58,7 +58,7 @@ class SeriesThreeRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        wordsService.createFileWithWords(words, series3WordsFileName)
+        wordsService.createTxtFileWithExerciseWords(words, series3WordsFileName)
         return exercises.toMutableList()
     }
 

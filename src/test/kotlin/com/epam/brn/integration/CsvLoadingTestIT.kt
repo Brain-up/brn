@@ -10,6 +10,7 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
 import com.epam.brn.service.InitialDataLoader
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.Tag
@@ -39,7 +40,8 @@ class CsvLoadingTestIT {
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
             uploadService: CsvUploadService,
-            audioFilesGenerationService: AudioFilesGenerationService
+            audioFilesGenerationService: AudioFilesGenerationService,
+            wordsService: WordsService
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
@@ -47,7 +49,8 @@ class CsvLoadingTestIT {
             passwordEncoder,
             authorityService,
             uploadService,
-            audioFilesGenerationService
+            audioFilesGenerationService,
+            wordsService
         )
     }
 
@@ -78,7 +81,7 @@ class CsvLoadingTestIT {
         seriesRepository.findAll() shouldHaveSize 4
         exerciseRepository.findAll() shouldHaveSize 99
         taskRepository.findAll() shouldHaveSize 107
-        resourceRepository.findAll() shouldHaveSize 399
+        resourceRepository.findAll() shouldHaveSize 400
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
     }
