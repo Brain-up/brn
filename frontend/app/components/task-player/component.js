@@ -21,6 +21,9 @@ export default class TaskPlayerComponent extends Component {
   textToPlay = null;
   tagName = '';
   activeTask = null;
+  willDestroyElement() {
+    this.audio.stopNoise();
+  }
 
   @tracked mode = ''; // listen, interact, task
   get componentType() {
@@ -126,6 +129,7 @@ export default class TaskPlayerComponent extends Component {
     if (!this.task.get('exercise.isStarted')) {
       this.task.exercise.content.trackTime('start');
     }
+    this.audio.startNoise();
   }
 
   @(task(function*() {
