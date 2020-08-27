@@ -151,7 +151,7 @@ export default class AudioService extends Service {
       if (!this.currentExerciseNoiseLevel) {
         return;
       }
-      const noise = this.getNoise(timeInSeconds,
+      noise = this.getNoise(timeInSeconds,
         this.currentExerciseNoiseLevel
       );
       noise.source.start(0);
@@ -159,7 +159,9 @@ export default class AudioService extends Service {
       yield timeout(toMilliseconds(timeInSeconds) - 3);
       this.startNoise();
     } finally {
-      noise.source.stop();
+      if (noise) {
+        noise.source.stop();
+      }
     }
   })) startNoiseTask;
 
