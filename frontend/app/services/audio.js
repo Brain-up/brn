@@ -103,7 +103,9 @@ export default class AudioService extends Service {
     } catch(e) {
       // EOL
     }
-    this.noiseTaskInstance.cancel();
+    if (this.noiseTaskInstance) {
+      this.noiseTaskInstance.cancel();
+    }
   }
 
   @action
