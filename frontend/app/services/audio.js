@@ -96,7 +96,14 @@ export default class AudioService extends Service {
 
   @action
   stopNoise() {
-    this.startNoiseTask.cancelAll();
+    try {
+      if (this.noiseNode) {
+        this.noiseNode.source.stop();
+      }
+    } catch(e) {
+      // EOL
+    }
+    this.noiseTaskInstance.cancel();
   }
 
   @action
@@ -135,6 +142,7 @@ export default class AudioService extends Service {
   }
 
   noiseTaskInstance = null;
+  noiseNode = null;
 
   @(task(function* playNoise(){
     let noise = null;
@@ -147,7 +155,8 @@ export default class AudioService extends Service {
         this.currentExerciseNoiseLevel
       );
       noise.source.start(0);
-      yield timeout(toMilliseconds(timeInSeconds) - 1);
+      this.noiseNode = noise;
+      yield timeout(toMilliseconds(timeInSeconds) - 3);
       this.startNoise();
     } finally {
       noise.source.stop();
