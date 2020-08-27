@@ -90,6 +90,25 @@ export default class AudioService extends Service {
   }
 
   @action
+  startNoise() {
+    this.noiseTaskInstance = this.startNoiseTask.perform();
+  }
+
+  @action
+  stopNoise() {
+    try {
+      if (this.noiseNode) {
+        this.noiseNode.source.stop();
+      }
+    } catch(e) {
+      // EOL
+    }
+    if (this.noiseTaskInstance) {
+      this.noiseTaskInstance.cancel();
+    }
+  }
+
+  @action
   async playAudio() {
     if (!Ember.testing) {
       await this.playTask.perform();
@@ -107,7 +126,7 @@ export default class AudioService extends Service {
     }
   }
 
-  getNoize(duration, level) {
+  getNoise(duration, level) {
     return createSource(
       this.context,
       createNoizeBuffer(this.context, duration, level),
@@ -124,9 +143,33 @@ export default class AudioService extends Service {
     }, 0);
   }
 
+  noiseTaskInstance = null;
+  noiseNode = null;
+
+  @(task(function* playNoise(){
+    let noise = null;
+    let timeInSeconds = 10;
+    try {
+      if (!this.currentExerciseNoiseLevel) {
+        return;
+      }
+      noise = this.getNoise(timeInSeconds,
+        this.currentExerciseNoiseLevel
+      );
+      noise.source.start(0);
+      this.noiseNode = noise;
+      yield timeout(toMilliseconds(timeInSeconds) - 3);
+      this.startNoise();
+    } finally {
+      if (noise) {
+        noise.source.stop();
+      }
+    }
+  })) startNoiseTask;
+
   @(task(function* playAudio(noizeSeconds = 0) {
     let startedSources = [];
-    const hasNoize = this.currentExerciseNoiseLevel !== 0;
+    const hasNoize = false;
     if (hasNoize) {
       noizeSeconds = 0.3;
     }
@@ -138,7 +181,7 @@ export default class AudioService extends Service {
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
-        const noize = this.getNoize(
+        const noize = this.getNoise(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
           this.currentExerciseNoiseLevel
         );
