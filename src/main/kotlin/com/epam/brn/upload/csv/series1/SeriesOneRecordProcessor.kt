@@ -95,7 +95,8 @@ class SeriesOneRecordProcessor(
                     series = series,
                     name = record.exerciseName,
                     level = record.level,
-                    noise = record.noise,
+                    noiseLevel = record.noiseLevel,
+                    noiseUrl = record.noiseUrl,
                     exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
                     description = record.exerciseName
                 )
