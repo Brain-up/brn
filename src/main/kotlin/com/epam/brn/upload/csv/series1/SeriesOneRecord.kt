@@ -9,10 +9,12 @@ data class SeriesOneRecord(
     val exerciseName: String,
     @JsonProperty("words")
     val words: List<String>,
-    @JsonProperty("noise")
-    val noise: Int
+    @JsonProperty("noiseLevel")
+    val noiseLevel: Int,
+    @JsonProperty("noiseUrl")
+    val noiseUrl: String
 ) {
     companion object {
-        const val FORMAT = "level,exerciseName,words,noise"
+        const val FORMAT = "level,exerciseName,words,noiseLevel,noiseUrl"
     }
 }

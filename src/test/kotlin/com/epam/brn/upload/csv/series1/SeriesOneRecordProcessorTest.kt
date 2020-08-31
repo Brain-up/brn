@@ -45,7 +45,8 @@ internal class SeriesOneRecordProcessorTest {
     )
 
     private val exerciseName = "Однослоговые слова без шума"
-    private val noiseLevel = 0
+    private val noiseLevel = 1
+    private val noiseUrl = "url"
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
 
     @BeforeEach
@@ -85,7 +86,8 @@ internal class SeriesOneRecordProcessorTest {
                     level = 1,
                     exerciseName = exerciseName,
                     words = words,
-                    noise = noiseLevel
+                    noiseLevel = noiseLevel,
+                    noiseUrl = noiseUrl
                 )
             )
         ).first()
@@ -104,7 +106,8 @@ internal class SeriesOneRecordProcessorTest {
                 SeriesOneRecord(
                     level = 1,
                     exerciseName = exerciseName,
-                    noise = noiseLevel,
+                    noiseLevel = noiseLevel,
+                    noiseUrl = noiseUrl,
                     words = listOf("(бал", "бум", "быль)")
                 )
             )
@@ -121,7 +124,7 @@ internal class SeriesOneRecordProcessorTest {
         )
 
         val tasks = seriesOneRecordProcessor
-            .process(mutableListOf(SeriesOneRecord(1, exerciseName, words, noiseLevel)))
+            .process(mutableListOf(SeriesOneRecord(1, exerciseName, words, noiseLevel, noiseUrl)))
             .first().tasks
 
         tasks.forEach {
@@ -137,6 +140,8 @@ internal class SeriesOneRecordProcessorTest {
             name = exerciseName,
             description = exerciseName,
             exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
+            noiseLevel = 1,
+            noiseUrl = "url",
             level = 1
         )
 
