@@ -4,7 +4,6 @@ import { action } from '@ember/object';
 import { timeout, task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
-
 import {
   createSource,
   createNoizeBuffer,
@@ -14,8 +13,9 @@ import {
   toMilliseconds,
   TIMINGS,
 } from 'brn/utils/audio-api';
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 export default class AudioService extends Service {
+  @service('network') network;
   context = createAudioContext();
   @tracked
   player = null;
@@ -58,6 +58,17 @@ export default class AudioService extends Service {
     await this.playAudio();
   }
 
+  get currentExerciseNoiseUrl() {
+    if (Ember.testing) {
+      return 0;
+    }
+    const owner = getOwner(this);
+    const model = owner.lookup('route:application').modelFor('group.series.exercise');
+    if (!model) {
+      return 0;
+    }
+    return model.noiseUrl;
+  }
   get currentExerciseNoiseLevel() {
     if (Ember.testing) {
       return 0;
@@ -126,11 +137,22 @@ export default class AudioService extends Service {
     }
   }
 
-  getNoise(duration, level) {
-    return createSource(
-      this.context,
-      createNoizeBuffer(this.context, duration, level),
-    );
+  async getNoise(duration, level, url = null) {
+    if (url) {
+      const noiseContext = createAudioContext();
+      // const base = await this.network.cloudUrl();
+      // console.log(`${base}/audio/${url}`);
+      const noiseBuffers = await loadAudioFiles(noiseContext, [`/audio/${url}`]);
+      const source = createSource(noiseContext, noiseBuffers[0]);
+      source.source.loop = true;
+      source.gainNode.gain.value = level * 0.01;
+      return source;
+    } else {
+      return createSource(
+        this.context,
+        createNoizeBuffer(this.context, duration, level),
+      );
+    }
   }
 
   createSources(context, buffers) {
@@ -150,16 +172,21 @@ export default class AudioService extends Service {
     let noise = null;
     let timeInSeconds = 10;
     try {
-      if (!this.currentExerciseNoiseLevel) {
+      const [ level, url ] = [this.currentExerciseNoiseLevel, this.currentExerciseNoiseUrl];
+      if (!level) {
         return;
       }
-      noise = this.getNoise(timeInSeconds,
-        this.currentExerciseNoiseLevel
+      noise = yield this.getNoise(timeInSeconds,
+        level, url
       );
       noise.source.start(0);
       this.noiseNode = noise;
-      yield timeout(toMilliseconds(timeInSeconds) - 3);
-      this.startNoise();
+      if (url) {
+        yield timeout(toMilliseconds(6000));
+      } else {
+        yield timeout(toMilliseconds(timeInSeconds) - 3);
+        this.startNoise();
+      }
     } finally {
       if (noise) {
         noise.source.stop();
@@ -181,7 +208,7 @@ export default class AudioService extends Service {
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
-        const noize = this.getNoise(
+        const noize = yield this.getNoise(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
           this.currentExerciseNoiseLevel
         );

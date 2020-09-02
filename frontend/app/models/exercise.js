@@ -23,6 +23,9 @@ export default class Exercise extends CompletionDependent.extend({
   get noiseLevel() {
     return this.noise?.level || 0;
   },
+  get noiseUrl() {
+    return this.noise?.url || null;
+  },
   sortedTasks: reads('sortedChildren'),
   // eslint-disable-next-line ember/require-computed-property-dependencies
   previousSiblings: computed('series.groupedByNameExercises', function() {
