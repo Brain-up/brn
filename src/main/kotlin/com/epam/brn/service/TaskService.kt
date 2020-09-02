@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.TaskDtoFor1Series
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
@@ -16,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 class TaskService(
     private val taskRepository: TaskRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val resourceRepository: ResourceRepository
+    private val resourceRepository: ResourceRepository,
+    private val urlConversionService: UrlConversionService
 ) {
     private val log = logger()
 
@@ -25,10 +27,19 @@ class TaskService(
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         return when (ExerciseType.valueOf(exercise.exerciseType)) {
+            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task ->
+                convertAudioFileUrl(task.to1SeriesTaskDto())
+            }
             ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.to2SeriesTaskDto(task.exercise?.template) }
             ExerciseType.SENTENCE -> tasks.map { task -> task.to3SeriesTaskDto(task.exercise?.template) }
-            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.to1SeriesTaskDto() }
         }
+    }
+
+    fun convertAudioFileUrl(taskDtoFor1Series: TaskDtoFor1Series): TaskDtoFor1Series {
+        taskDtoFor1Series.answerOptions.forEach { a ->
+            a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl)
+        }
+        return taskDtoFor1Series
     }
 
     fun getTaskById(taskId: Long): Any {
@@ -36,9 +47,9 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         return when (ExerciseType.valueOf(task.exercise!!.exerciseType)) {
+            ExerciseType.SINGLE_SIMPLE_WORDS -> convertAudioFileUrl(task.to1SeriesTaskDto())
             ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)
-            ExerciseType.SINGLE_SIMPLE_WORDS -> task.to1SeriesTaskDto()
         }
     }
 

@@ -14,13 +14,14 @@ import org.springframework.stereotype.Service
 class ExerciseService(
     @Autowired val exerciseRepository: ExerciseRepository,
     @Autowired val studyHistoryRepository: StudyHistoryRepository,
-    @Autowired val userAccountService: UserAccountService
+    @Autowired val userAccountService: UserAccountService,
+    @Autowired val urlConversionService: UrlConversionService
 ) {
     private val log = logger()
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
         val exercise = exerciseRepository.findById(exerciseID)
-        return exercise.map { e -> e.toDto() }
+        return exercise.map { e -> updateNoiseUrl(e.toDto()) }
             .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
@@ -33,7 +34,7 @@ class ExerciseService(
         log.info("Searching available exercises for user=$userId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
         val history = exerciseRepository.findAll()
-        return emptyIfNull(history).map { x -> x.toDto(exercisesIdList.contains(x.id)) }
+        return emptyIfNull(history).map { x -> updateNoiseUrl(x.toDto(exercisesIdList.contains(x.id))) }
     }
 
     fun findExercisesBySeriesForCurrentUser(seriesId: Long): List<ExerciseDto> {
@@ -47,6 +48,13 @@ class ExerciseService(
         log.info("current user is admin: $isSupport")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
         val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
-        return emptyIfNull(exercises).map { exercise -> exercise.toDto(exercisesIdList.contains(exercise.id) || isSupport) }
+        return emptyIfNull(exercises).map { exercise ->
+            updateNoiseUrl(exercise.toDto(exercisesIdList.contains(exercise.id) || isSupport))
+        }
+    }
+
+    fun updateNoiseUrl(exerciseDto: ExerciseDto): ExerciseDto {
+        exerciseDto.noise.url = urlConversionService.makeFullUrl(exerciseDto.noise.url)
+        return exerciseDto
     }
 }
