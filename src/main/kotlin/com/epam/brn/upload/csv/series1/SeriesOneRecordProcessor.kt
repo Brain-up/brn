@@ -32,7 +32,13 @@ class SeriesOneRecordProcessor(
     private lateinit var series1WordsFileName: String
 
     @Value(value = "\${audioPath}")
-    private lateinit var audioPath: String
+    private lateinit var audioPathFilipp: String
+
+    @Value(value = "\${audioPathAlena}")
+    private lateinit var audioPathAlena: String
+
+    @Value(value = "\${fonAudioPath}")
+    private lateinit var fonAudioPath: String
 
     private val repeatCount = 2
 
@@ -64,14 +70,17 @@ class SeriesOneRecordProcessor(
     }
 
     private fun extractAnswerOptions(record: SeriesOneRecord): MutableSet<Resource> {
+        var audioPath = audioPathFilipp
+        if (record.exerciseName.startsWith("М"))
+            audioPath = audioPathAlena
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
-            .map { toResource(it) }
+            .map { toResource(it, audioPath) }
             .toMutableSet()
     }
 
-    private fun toResource(word: String): Resource {
+    private fun toResource(word: String, audioPath: String): Resource {
         val audioFile = audioPath.format(word)
         val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
             .orElse(
@@ -96,7 +105,7 @@ class SeriesOneRecordProcessor(
                     name = record.exerciseName,
                     level = record.level,
                     noiseLevel = record.noiseLevel,
-                    noiseUrl = record.noiseUrl,
+                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else "",
                     exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
                     description = record.exerciseName
                 )
