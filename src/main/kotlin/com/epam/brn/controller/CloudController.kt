@@ -38,6 +38,12 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     fun bucketUrl(): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.bucketUrl()))
 
+    @GetMapping("/baseFileUrl")
+    @ApiOperation("Get base file Url")
+    @Throws(Exception::class)
+    fun baseFileUrl(): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.baseFileUrl()))
+
     @GetMapping("/folders")
     @ApiOperation("Get folders in bucket")
     @Throws(Exception::class)

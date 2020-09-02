@@ -6,6 +6,7 @@ import net.bramp.ffmpeg.FFmpeg
 import net.bramp.ffmpeg.FFmpegExecutor
 import net.bramp.ffmpeg.FFprobe
 import net.bramp.ffmpeg.builder.FFmpegBuilder
+import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.http.NameValuePair
 import org.apache.http.client.methods.CloseableHttpResponse
@@ -62,6 +63,9 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForFiles: String
 
+    @Value(value = "\${yandex.folderForRusFiles}")
+    private lateinit var folderForRusFiles: String
+
     var iamToken: String = ""
     var iamTokenExpiresTime = ZonedDateTime.now()
 
@@ -113,7 +117,9 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
      * Generate .ogg audio file from yandex cloud and convert it into .mp3 file and save both of them
      */
     fun generateAudioFiles(word: String, voice: String): File {
-        val fileOgg = File("$word.ogg")
+        val md5Hash = DigestUtils.md5Hex(word)
+        log.info("For word `$word` is created audio file with name `$md5Hash.ogg`")
+        val fileOgg = File("$md5Hash.ogg")
         val targetOggFile = File("$folderForFiles/ogg/$voice/${fileOgg.name}")
         if (targetOggFile.exists()) {
             log.info("${fileOgg.name} is already exist, it was not generated, it was skipped.")
