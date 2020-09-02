@@ -6,6 +6,7 @@ import net.bramp.ffmpeg.FFmpeg
 import net.bramp.ffmpeg.FFmpegExecutor
 import net.bramp.ffmpeg.FFprobe
 import net.bramp.ffmpeg.builder.FFmpegBuilder
+import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.http.NameValuePair
 import org.apache.http.client.methods.CloseableHttpResponse
@@ -62,6 +63,9 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForFiles: String
 
+    @Value(value = "\${yandex.folderForRusFiles}")
+    private lateinit var folderForRusFiles: String
+
     var iamToken: String = ""
     var iamTokenExpiresTime = ZonedDateTime.now()
 
@@ -113,13 +117,16 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
      * Generate .ogg audio file from yandex cloud and convert it into .mp3 file and save both of them
      */
     fun generateAudioFiles(word: String, voice: String): File {
-        val fileOgg = File("$word.ogg")
+        val md5Hash = DigestUtils.md5Hex(word)
+        log.info("For word `$word` is created audio file with name `$md5Hash.ogg`")
+        val fileOgg = File("$md5Hash.ogg")
         val targetOggFile = File("$folderForFiles/ogg/$voice/${fileOgg.name}")
         if (targetOggFile.exists()) {
             log.info("${fileOgg.name} is already exist, it was not generated, it was skipped.")
             return targetOggFile
         }
-        val token = getYandexIamTokenForAudioGeneration()
+//        val token = getYandexIamTokenForAudioGeneration()
+        val token = "CggVAgAAABoBMxKABGn0MLd3MNa4FSgwfuoOaq5tJHBVXAo59XgefQzM75_ZjlofxnBShs7e9mHhHO3WWysXRFJtRIJqcMjsamV4idzC-IKQNDlbOsXNocmKlcfYJi_PSSNhNoDV0jEK1RfvD8YH-ClxK-m3oLO-VO5wqXWodPSe-gFx8kTDE36upoKjYplg5t2OXpleGWdBhIOvT7eJcQGeGpxL7x1aCDEhBOlu-aw_GkYwi19epSH8VZWIZDeSf0PVNfImIF8UPu5t8jqaz4So64S6b8jzMs5yWe6fyvMOVcAgB7wzZhQtmAqVLLbyI3NDVb8sMoHF3lYmpftNLUUtEuCAO0lSb8xUn3oybC9a8MBhY84wzRjY5vFipjHT4ndRdTEfMfqanYsRMNTKTaXfqwD2sYD5IcKhkHtPYqj4a6mf_XOTCyFSjUFuh-YZcZ48l-fE-fy3o4vEOUhIIOX1BzZAkAFYIkLsQkgON-bCtmBuBMXA8Q8cSX6Qiealg2cbf1WBeTp65p-gyQA6v3smwf0G4uRn3I4QerxjZ5PIdimbUxHv8Jz-MBgSgOftiTAPfkzktkL3fSP7mU2nBHFh2Da1PvqwgOZxq6EiRxQgGvUFft2zQO00LROYyslRARuzZlFuoKbZRZaudoPWYNwFPlKwVxz3KP76bMUQkxFzHiyLXAPBpXWlPRIGGiQQs8i--gUY85nB-gUiFgoUYWplOXJ0bThxc3NiMGNscGFpOWk="
         val parameters = ArrayList<NameValuePair>()
         parameters.add(BasicNameValuePair("folderId", folderId))
         parameters.add(BasicNameValuePair("lang", lang))

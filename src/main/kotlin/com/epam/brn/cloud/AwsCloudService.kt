@@ -29,6 +29,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
 
     override fun bucketUrl(): String = awsConfig.bucketLink
 
+    override fun baseFileUrl(): String = awsConfig.baseFileUrl
+
     override fun uploadForm(filePath: String): Map<String, Any> =
         signature(awsConfig.buildConditions(filePath))
 

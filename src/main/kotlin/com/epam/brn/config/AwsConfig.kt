@@ -56,6 +56,9 @@ class AwsConfig(
     @Value("\${aws.bucketLink}")
     val bucketLink: String = ""
 
+    @Value("\${aws.baseFileUrl}")
+    val baseFileUrl: String = ""
+
     fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
     fun uuid(): String = UUID.randomUUID().toString()
 

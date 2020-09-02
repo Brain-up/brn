@@ -60,7 +60,9 @@ internal class SeriesOneRecordProcessorTest {
 
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "series1WordsFileName", "words_series1.txt")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPath", "audio/ogg/filipp/%s.ogg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathFilipp", "audio/ogg/filipp/%s.ogg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathAlena", "audio/ogg/alena/%s.ogg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "fonAudioPath", "fon/%s.ogg")
 
         `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 
@@ -141,7 +143,7 @@ internal class SeriesOneRecordProcessorTest {
             description = exerciseName,
             exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
             noiseLevel = 1,
-            noiseUrl = "url",
+            noiseUrl = "fon/url.ogg",
             level = 1
         )
 
