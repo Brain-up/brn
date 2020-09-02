@@ -24,16 +24,16 @@ export default class SentenceComponent extends Component {
   @tracked currentAnswerObject = null;
 
   get audioFiles() {
-    return this.task.answerParts.map(({ audioFileUrl }) => {
+    return this.task?.answerParts.map(({ audioFileUrl }) => {
       return urlForAudio(audioFileUrl);
-    });
+    }) || [];
   }
 
   get answerCompleted() {
     if (
       !this.currentAnswerObject ||
       Object.keys(this.currentAnswerObject).length <
-        this.task.answerParts.length
+        (this.task?.answerParts.length || 0)
     ) {
       return false;
     } else {
@@ -57,14 +57,14 @@ export default class SentenceComponent extends Component {
         this.task.selectedItemsOrder.map(
           (orderName) => this.currentAnswerObject[orderName],
         ),
-        this.task.answerParts.mapBy('word'),
+        this.task?.answerParts.mapBy('word') || [],
       );
 
       this.isCorrect = isCorrect;
 
       if (
         Object.keys(this.currentAnswerObject).length ===
-        this.task.answerParts.length
+        (this.task?.answerParts.length || 0)
       ) {
         if (isCorrect) {
           yield this.handleCorrectAnswer();
