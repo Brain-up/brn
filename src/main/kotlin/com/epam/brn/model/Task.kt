@@ -49,7 +49,13 @@ data class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
-
+    fun to1SeriesTaskDto() = TaskDtoFor1Series(
+        id = id,
+        exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
+    )
     fun to2SeriesTaskDto(template: String? = "") = TaskDtoFor2Series(
         id = id,
         exerciseType = ExerciseType.WORDS_SEQUENCES,
@@ -68,14 +74,6 @@ data class Task(
         template = template,
         answerParts = answerParts.values.map { part -> part.toDto() },
         correctAnswer = correctAnswer!!.toDto()
-    )
-
-    fun to1SeriesTaskDto() = TaskDtoFor1Series(
-        id = id,
-        exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"

@@ -11,6 +11,7 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
+import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -98,13 +99,15 @@ class SeriesThreeRecordProcessor(
     }
 
     private fun toResource(word: String, wordType: WordType): Resource {
+        val hashWord = DigestUtils.md5Hex(word)
+        val audioFileUrl = audioPath.format(hashWord)
         return resourceRepository
             .findFirstByWordLike(word)
             .orElse(
                 Resource(
                     word = word,
                     wordType = wordType.toString(),
-                    audioFileUrl = audioPath.format(word),
+                    audioFileUrl = audioFileUrl,
                     pictureFileUrl = pictureWithWordFileUrl
                 )
             )

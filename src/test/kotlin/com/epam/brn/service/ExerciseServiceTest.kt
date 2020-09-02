@@ -34,6 +34,9 @@ internal class ExerciseServiceTest {
     @Mock
     lateinit var userAccountService: UserAccountService
 
+    @Mock
+    lateinit var urlConversionService: UrlConversionService
+
     @Test
     fun `should get exercises by user`() {
         // GIVEN

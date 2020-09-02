@@ -38,6 +38,9 @@ internal class TaskServiceTest {
     @Mock
     lateinit var resourceRepository: ResourceRepository
 
+    @Mock
+    lateinit var urlConversionService: UrlConversionService
+
     @InjectMocks
     lateinit var taskService: TaskService
 
