@@ -140,9 +140,7 @@ export default class AudioService extends Service {
   async getNoise(duration, level, url = null) {
     if (url) {
       const noiseContext = createAudioContext();
-      // const base = await this.network.cloudUrl();
-      // console.log(`${base}/audio/${url}`);
-      const noiseBuffers = await loadAudioFiles(noiseContext, [`/audio/${url}`]);
+      const noiseBuffers = await loadAudioFiles(noiseContext, [url]);
       const source = createSource(noiseContext, noiseBuffers[0]);
       source.source.loop = true;
       source.gainNode.gain.value = level * 0.01;
