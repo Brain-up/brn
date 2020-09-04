@@ -57,7 +57,7 @@ service_message:
 
 control_exercises:
   solve: Решать
-  interact: Взаимодейстовать
+  interact: Повторить
   listen: Слушать
 
 

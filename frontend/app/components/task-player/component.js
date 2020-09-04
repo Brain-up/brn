@@ -209,9 +209,13 @@ export default class TaskPlayerComponent extends Component {
     if (Ember.testing) {
       await this.setMode(MODES.TASK);
     } else {
-      await this.setMode(MODES.LISTEN);
+      try {
+        await this.setMode(MODES.LISTEN);
+        // Let's switch to interact right after listen if not stopped
+        await this.setMode(MODES.INTERACT);
+      } catch(e) {
+        // EOL
+      }
     }
-    // await this.setMode('interact');
-    // await this.setMode('task');
   }
 }
