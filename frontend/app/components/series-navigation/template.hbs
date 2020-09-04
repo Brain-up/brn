@@ -5,7 +5,7 @@
       {{scroll-top (eq level 0)}}
     >
       <div class="max-w-none mx-auto">
-        <div class="sm:rounded-lg sm:shadow navigation-block overflow-hidden">
+        <div class="sm:rounded-lg sm:shadow navigation-block pb-4 overflow-hidden">
           <div class="sm:px-6 px-4 py-5">
             <h3
               data-test-series-navigation-header
@@ -16,16 +16,16 @@
           </div>
           {{#each
             (chunk
-              3 (sort-by "level" (filter-by "name" header this.sortedExercises))
+              5 (sort-by "level" (filter-by "name" header this.sortedExercises))
             ) as |exercises|
           }}
             <ul
               data-test-exercises-name-group
-              class="flex flex-row justify-around mb-5 ml-6 mr-6"
+              class="flex flex-row justify-around ml-6 mr-6"
             >
               {{#each exercises as |exercise|}}
                 <li>
-                  <div class="exercise-block__levels flex mt-4 ml-2 mr-2">
+                  <div class="exercise-block__levels flex mt-2 ml-2 mr-2">
                     <a
                       data-test-series-navigation-list-link
                       data-test-exercise-level={{exercise.level}}
@@ -33,7 +33,7 @@
                       disabled={{not exercise.canInteract}}
                       href={{href-to "group.series.exercise" exercise.id}}
                       title={{concat (t "task_link.exercise") " " exercise.level}}
-                      class="task-square-link exercise-block__level hover:shadow-md flex-1 p-2 m-4 mb-6 bg-white rounded-lg shadow-lg"
+                      class="task-square-link exercise-block__level hover:shadow-md flex-1 p-2 m-4 mb-4 bg-white rounded-lg shadow-lg"
                     >
                       <Ui::Icon::Tree
                         @level={{level}}
