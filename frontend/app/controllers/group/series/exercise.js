@@ -36,7 +36,7 @@ export default class GroupSeriesExerciseController extends Controller {
   }).drop()) runCorrectnessWidgetTimer;
 
 
-  @action 
+  @action
   async greedOnCompletedExercise() {
     this.saveExercise();
     await this.runCorrectnessWidgetTimer.perform(true);
@@ -48,5 +48,15 @@ export default class GroupSeriesExerciseController extends Controller {
     await customTimeout(5000);
     this.showExerciseStats = false;
     this.goToSeries();
+  }
+
+  @action
+  disableBodyScroll() {
+    document.body.style.overflow = 'hidden';
+  }
+
+  @action
+  enableBodyScroll() {
+    document.body.style.overflow = 'scroll';
   }
 }
