@@ -80,5 +80,15 @@ h2 {
   top: -10px;
 }
 
+.number-container {
+  position: absolute;
+  left: -2px;
+  bottom: -2px;
+  border-radius: 100%;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  background-color: #feb2b2;
+}
 
 /*! purgecss end ignore */

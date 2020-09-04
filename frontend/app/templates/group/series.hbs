@@ -1,6 +1,7 @@
 {{#if (not (eq this.target.currentRouteName "group.series.exercise.task"))}}
-  <div class="series-page--canvas flex flex-col flex-grow">
-    <SeriesNavigation @exercises={{this.model.exercises}} />
-  </div>
+
 {{/if}}
+<div class="series-page--canvas flex flex-col flex-grow">
+    <SeriesNavigation @exercises={{@model.exercises}} />
+</div>
 {{outlet}}
