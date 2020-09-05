@@ -41,6 +41,8 @@ class SeriesOneRecordProcessor(
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
 
+    val words = mutableMapOf<String, String>()
+
     private val repeatCount = 2
 
     var random = Random()
@@ -51,13 +53,11 @@ class SeriesOneRecordProcessor(
 
     @Transactional
     override fun process(records: List<SeriesOneRecord>): List<Exercise> {
-        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(1L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
-            words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -66,7 +66,7 @@ class SeriesOneRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        wordsService.createTxtFileWithExerciseWords(words, series1WordsFileName)
+        wordsService.createTxtFileWithExerciseWordsMap(words, series1WordsFileName)
         return exercises.toMutableList()
     }
 
@@ -83,6 +83,7 @@ class SeriesOneRecordProcessor(
 
     private fun toResource(word: String, audioPath: String): Resource {
         val hashWord = DigestUtils.md5Hex(word)
+        words.put(word, hashWord)
         val audioFileUrl = audioPath.format(hashWord)
         val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFileUrl)
             .orElse(

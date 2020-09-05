@@ -21,6 +21,14 @@ class WordsService {
         return file
     }
 
+    fun createTxtFileWithExerciseWordsMap(words: MutableMap<String, String>, fileName: String): File {
+        words.remove("")
+        fullWordsSet.addAll(words.keys)
+        val file = File(fileName)
+        File(fileName).writeText(words.toString())
+        return file
+    }
+
     fun fillWordsWithoutAudioOggFile() {
         wordsWithoutAudioResourceSet.addAll(fullWordsSet)
         val fileNames = HashSet<String>()
