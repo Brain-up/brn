@@ -26,6 +26,11 @@ export default class NetworkService extends Service {
       method: 'GET',
     });
   }
+  async cloudUrl() {
+    let result = await this.request('cloud/baseFileUrl');
+    let { data } = await result.json();
+    return data;
+  }
   async getCurrentUser() {
     let result = await this.request('users/current');
     let { data } = await result.json();
