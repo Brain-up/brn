@@ -55,13 +55,15 @@ module('Integration | Component | timer', function(hooks) {
   });
 
   test('pauses on idle', async function(assert) {
-    await render(hbs`<Timer @idleTimeout={{2000}}/>`);
-
-    assert
-      .dom('[data-test-timer-wrapper]')
-      .hasNoAttribute('data-test-timer-is-paused');
-
-    await timeout(3000);
+    mockService(this.owner, 'studying-timer', {
+      countedSeconds: 3705,
+      pause() {},
+      isPaused: true,
+      register() {},
+      unregister() {},
+      togglePause() {},
+    });
+    await render(hbs`<Timer />`);
 
     assert
       .dom('[data-test-timer-wrapper]')
