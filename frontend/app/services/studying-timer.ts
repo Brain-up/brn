@@ -27,6 +27,13 @@ export default class StudyingTimerService extends Service {
     this.startIdleWatcher();
   }
   @action
+  unregister(timer: any) {
+    if (this.timerInstance === timer) {
+      this.timerInstance = null;
+      this.countedSeconds = 0;
+    }
+  }
+  @action
   runTimer() {
     this.resume();
     return this.timerInstance.runTimer();
