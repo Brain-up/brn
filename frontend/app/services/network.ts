@@ -45,3 +45,11 @@ export default class NetworkService extends Service {
     return this.postRequest('registration', user);
   }
 }
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your services.
+declare module '@ember/service' {
+  interface Registry {
+    'network': NetworkService;
+  }
+}

@@ -88,10 +88,26 @@ export default class Exercise extends CompletionDependent.extend({
     const repetitionRatio = repetitionsCount / tasksCount;
     const repetitionIndex =  !isFinite(repetitionRatio) || isNaN(repetitionRatio) ? 0 : repetitionRatio.toFixed(2);
 
+
+    // {
+    //   "exerciseId": 2,
+    //   "startTime": "2019-12-18T13:53:06.366Z",
+    //   "endTime": "2019-12-18T13:55:06.366Z",
+    //   "executionSeconds": 120,
+    //   "tasksCount": 12,
+    //   "listeningsCount": 16,
+    //   "repetitionIndex": 0.75,
+    //   "rightAnswersCount": 6,
+    //   "rightAnswersIndex": 0.5
+    // }
+
     return {
       startTime,
       endTime,
       repetitionIndex,
+      rightAnswersCount: tasksCount,
+      rightAnswersIndex: 1,
+      listeningsCount: tasksCount,
       exerciseId: id,
       tasksCount
     };

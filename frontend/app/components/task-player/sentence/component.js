@@ -9,6 +9,7 @@ import { MODES } from 'brn/utils/task-modes';
 import { task } from 'ember-concurrency';
 
 export default class SentenceComponent extends Component {
+  @service('stats') stats;
   @tracked exerciseResultIsVisible = false;
 
   get task() {
@@ -102,6 +103,7 @@ export default class SentenceComponent extends Component {
   }
 
   async handleWrongAnswer() {
+    this.stats.addEvent('wrongAnswer');
     await customTimeout(1000);
     this.task.set('repetitionCount', this.task.repetitionCount + 1);
     this.currentAnswerObject = null;
@@ -109,6 +111,7 @@ export default class SentenceComponent extends Component {
   }
 
   async handleCorrectAnswer() {
+    this.stats.addEvent('rightAnswer');
     this.task.savePassed();
     await this.runNextTaskTimer();
   }

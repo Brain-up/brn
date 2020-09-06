@@ -1,5 +1,26 @@
 /*! purgecss start ignore */
 
+&::after {
+  backdrop-filter: blur(2px);
+}
+
+&::after,
+& {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+&::after {
+  content: '';
+  z-index: 0;
+}
+
 button {
   padding: 90px 95px 90px 105px;
   line-height: 90px;

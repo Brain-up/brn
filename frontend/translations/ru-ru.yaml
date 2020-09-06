@@ -65,6 +65,10 @@ footer:
   info_about: При поддержке
   info_about_helper: и
 
+
+start_task_button:
+  label: Начать выполнение упражнения
+
 msg:
   validation:
     FIRST_NAME_MUST_NOT_HAVE_SPACES: Имя не может содержать пробелы

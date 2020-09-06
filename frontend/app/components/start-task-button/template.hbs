@@ -1,9 +1,9 @@
-<div class="{{this.styleNamespace}} start-task-button" ...attributes>
+<div class={{style-namespace "start-task-button"}} ...attributes>
   <button
     data-test-start-task-button
-    aria-label="Начать выполнение упражнения"
+    aria-label={{t "start_task_button.label"}}
     type="button"
-    {{on "click" this.startTask}}
+    {{on "click" @startTask}}
   >
     <FaIcon class="play-button-icon" @icon="play" />
   </button>
