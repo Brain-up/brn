@@ -8,6 +8,10 @@ Our current domain : http://audibly.ru && http://31.184.253.199/
  - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit   
  - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ 
  
+## Published ARTICLES about our project
+- https://anywhere.epam.com/volunteer/pages-1/brainApp.html 
+- https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html
+ 
 ## WHY JOIN OUR PROJECT AS A DEVELOPER?
 We use latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. We will review your code, give you advice to improve it and listen to your suggestions. 
 Most importantly being an open source project you can show your work in it to any person interested, proving your development expertise with actual examples of your work flow and code samples in a live application. 
@@ -88,6 +92,9 @@ _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_
 ### GET THE BACKEND PROJECT RUNNING
 1. Run command 'gradle build' from main project folder to build project with tests.
 2. Application.kt is the main class to run application.
+3. http://localhost:8081/api/brnlogin use admin@admin.com / admin 
+then you can call all other end-points like
+http://localhost:8081/api/exercises/142
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
