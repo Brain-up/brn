@@ -18,7 +18,8 @@
      "id": 1,
      "type": "task/SINGLE_SIMPLE_WORDS"
     }
-   ]
+   ],
+   "signals": []
   },
   {
    "seriesId": 1,
@@ -38,7 +39,8 @@
      "id": 2,
      "type": "task/SINGLE_SIMPLE_WORDS"
     }
-   ]
+   ],
+   "signals": []
   }
  ],
  "errors": [],
