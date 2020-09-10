@@ -17,7 +17,8 @@
         "id": 41,
         "type": "task/SINGLE_SIMPLE_WORDS"
       }
-    ]
+    ],
+    "signals": []
   },
   "errors": [],
   "meta": []

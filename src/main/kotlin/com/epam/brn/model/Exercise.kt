@@ -38,7 +38,9 @@ data class Exercise(
     @JoinColumn(name = "exercise_series_id")
     var series: Series? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val tasks: MutableSet<Task> = LinkedHashSet()
+    val tasks: MutableSet<Task> = LinkedHashSet(),
+    @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    val signals: MutableSet<Signal> = LinkedHashSet()
 ) {
     fun toDto(available: Boolean = true) = ExerciseDto(
         seriesId = series?.id,
@@ -50,7 +52,8 @@ data class Exercise(
         level = level,
         noise = NoiseDto(noiseLevel, noiseUrl),
         available = available,
-        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()
+        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet(),
+        signals = signals.map { signal -> signal.toSignalDto() }.toMutableSet()
     )
 
     override fun toString() =
@@ -90,5 +93,9 @@ data class Exercise(
 
     fun addTasks(tasks: List<Task>) {
         this.tasks.addAll(tasks)
+    }
+
+    fun addSignals(signals: List<Signal>) {
+        this.signals.addAll(signals)
     }
 }
