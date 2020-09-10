@@ -138,49 +138,50 @@ class InitialDataLoader(
     }
 
     private fun create1SeriesNonSpeechGroup() {
-        val series = seriesRepository.findByNameLike("Длительность сигналов")[0]
-        val exercise1 = Exercise(series = series, name = "По 2 сигнала разной длительности.", level = 1,
+        val seriesLength = seriesRepository.findByNameLike("Длительность сигналов")[0]
+        val seriesFrequency = seriesRepository.findByNameLike("Частота сигналов")[0]
+        val exercise1 = Exercise(series = seriesLength, name = "По 2 сигнала разной длительности.", level = 1,
             exerciseType = ExerciseType.TWO_DIFFERENT_LENGTH_SIGNAL.name)
         val signalOne1 = Signal(frequency = 50, length = 60, exercise = exercise1)
         val signalTwo1 = Signal(frequency = 50, length = 120, exercise = exercise1)
         exercise1.addSignals(listOf(signalOne1, signalTwo1))
-        val exercise2 = Exercise(series = series, name = "По 2 сигнала разной длительности.", level = 2,
+        val exercise2 = Exercise(series = seriesLength, name = "По 2 сигнала разной длительности.", level = 2,
             exerciseType = ExerciseType.TWO_DIFFERENT_LENGTH_SIGNAL.name)
         val signalOne2 = Signal(frequency = 50, length = 40, exercise = exercise2)
         val signalTwo2 = Signal(frequency = 50, length = 100, exercise = exercise2)
         exercise2.addSignals(listOf(signalOne2, signalTwo2))
 
-        val exercise3 = Exercise(series = series, name = "По 2 сигнала разной частоты.", level = 1,
+        val exercise3 = Exercise(series = seriesFrequency, name = "По 2 сигнала разной частоты.", level = 1,
             exerciseType = ExerciseType.THREE_DIFFERENT_FREQUENCY_SIGNAL.name)
         val signalOne3 = Signal(frequency = 50, length = 120, exercise = exercise3)
         val signalTwo3 = Signal(frequency = 150, length = 120, exercise = exercise3)
         exercise3.addSignals(listOf(signalOne3, signalTwo3))
-        val exercise4 = Exercise(series = series, name = "По 2 сигнала разной частоты.", level = 2,
+        val exercise4 = Exercise(series = seriesFrequency, name = "По 2 сигнала разной частоты.", level = 2,
             exerciseType = ExerciseType.THREE_DIFFERENT_FREQUENCY_SIGNAL.name)
         val signalOne4 = Signal(frequency = 50, length = 120, exercise = exercise4)
         val signalTwo4 = Signal(frequency = 150, length = 120, exercise = exercise4)
         exercise4.addSignals(listOf(signalOne4, signalTwo4))
 
-        val exercise5 = Exercise(series = series, name = "По 3 сигнала разной длительности.", level = 1,
+        val exercise5 = Exercise(series = seriesLength, name = "По 3 сигнала разной длительности.", level = 1,
             exerciseType = ExerciseType.THREE_DIFFERENT_LENGTH_SIGNAL.name)
         val signalOne5 = Signal(frequency = 50, length = 40, exercise = exercise5)
         val signalTwo5 = Signal(frequency = 50, length = 90, exercise = exercise5)
         val signalThree5 = Signal(frequency = 50, length = 130, exercise = exercise5)
         exercise5.addSignals(listOf(signalOne5, signalTwo5, signalThree5))
-        val exercise6 = Exercise(series = series, name = "По 3 сигнала разной длительности.", level = 2,
+        val exercise6 = Exercise(series = seriesLength, name = "По 3 сигнала разной длительности.", level = 2,
             exerciseType = ExerciseType.THREE_DIFFERENT_LENGTH_SIGNAL.name)
         val signalOne6 = Signal(frequency = 50, length = 20, exercise = exercise2)
         val signalTwo6 = Signal(frequency = 50, length = 60, exercise = exercise2)
         val signalThree6 = Signal(frequency = 50, length = 120, exercise = exercise2)
         exercise6.addSignals(listOf(signalOne6, signalTwo6, signalThree6))
 
-        val exercise7 = Exercise(series = series, name = "По 3 сигнала разной частоты.", level = 1,
+        val exercise7 = Exercise(series = seriesFrequency, name = "По 3 сигнала разной частоты.", level = 1,
             exerciseType = ExerciseType.THREE_DIFFERENT_FREQUENCY_SIGNAL.name)
         val signalOne7 = Signal(frequency = 50, length = 120, exercise = exercise7)
         val signalTwo7 = Signal(frequency = 150, length = 120, exercise = exercise7)
         val signalThree7 = Signal(frequency = 200, length = 120, exercise = exercise7)
         exercise7.addSignals(listOf(signalOne7, signalTwo7, signalThree7))
-        val exercise8 = Exercise(series = series, name = "По 3 сигнала разной частоты.", level = 2,
+        val exercise8 = Exercise(series = seriesFrequency, name = "По 3 сигнала разной частоты.", level = 2,
             exerciseType = ExerciseType.THREE_DIFFERENT_FREQUENCY_SIGNAL.name)
         val signalOne8 = Signal(frequency = 20, length = 120, exercise = exercise8)
         val signalTwo8 = Signal(frequency = 60, length = 120, exercise = exercise8)
