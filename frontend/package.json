@@ -132,7 +132,7 @@
     "ember-component-css": "^0.7.4",
     "ember-fast-cli": "^1.3.0",
     "idle-js": "^1.2.0",
-    "stylelint": "^13.6.1",
+    "stylelint": "^13.7.1",
     "stylelint-config-recommended": "^3.0.0",
     "tailwindcss": "^1.5.2"
   }
