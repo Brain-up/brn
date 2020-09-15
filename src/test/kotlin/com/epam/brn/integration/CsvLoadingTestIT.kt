@@ -33,9 +33,11 @@ class CsvLoadingTestIT {
     @TestConfiguration
     class Config {
         @Bean
-        fun handBookLoader(
+        fun initialDataLoader(
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
+            seriesRepository: SeriesRepository,
+            exerciseRepository: ExerciseRepository,
             userAccountRepository: UserAccountRepository,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
@@ -45,6 +47,8 @@ class CsvLoadingTestIT {
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
+            seriesRepository,
+            exerciseRepository,
             userAccountRepository,
             passwordEncoder,
             authorityService,
@@ -78,10 +82,10 @@ class CsvLoadingTestIT {
     @Test
     fun `should load test data from classpath initFiles folder`() {
         exerciseGroupRepository.findAll() shouldHaveSize 2
-        seriesRepository.findAll() shouldHaveSize 4
-        exerciseRepository.findAll() shouldHaveSize 169
-        taskRepository.findAll() shouldHaveSize 177
-        resourceRepository.findAll() shouldHaveSize 810
+        seriesRepository.findAll() shouldHaveSize 7
+        exerciseRepository.findAll() shouldHaveSize 188
+        taskRepository.findAll() shouldHaveSize 188
+        resourceRepository.findAll() shouldHaveSize 881
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
     }
