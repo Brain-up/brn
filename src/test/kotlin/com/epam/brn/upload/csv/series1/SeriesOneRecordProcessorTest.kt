@@ -63,6 +63,7 @@ internal class SeriesOneRecordProcessorTest {
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathFilipp", "/audio/filipp/%s.ogg")
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathAlena", "/audio/alena/%s.ogg")
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
 
         `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 
@@ -85,7 +86,7 @@ internal class SeriesOneRecordProcessorTest {
         val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
-                    level = 1,
+                    level = 1, pictureUrl = "pictureUrl",
                     exerciseName = exerciseName,
                     words = words,
                     noiseLevel = noiseLevel,
@@ -106,7 +107,7 @@ internal class SeriesOneRecordProcessorTest {
         val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
-                    level = 1,
+                    level = 1, pictureUrl = "pictureUrl",
                     exerciseName = exerciseName,
                     noiseLevel = noiseLevel,
                     noiseUrl = noiseUrl,
@@ -126,7 +127,7 @@ internal class SeriesOneRecordProcessorTest {
         )
 
         val tasks = seriesOneRecordProcessor
-            .process(mutableListOf(SeriesOneRecord(1, exerciseName, words, noiseLevel, noiseUrl)))
+            .process(mutableListOf(SeriesOneRecord(1, "pictureUrl", exerciseName, words, noiseLevel, noiseUrl)))
             .first().tasks
 
         tasks.forEach {
@@ -144,6 +145,7 @@ internal class SeriesOneRecordProcessorTest {
             exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
             noiseLevel = 1,
             noiseUrl = "/fon/url.ogg",
+            pictureUrl = "/picturesTheme/pictureUrl.jpg",
             level = 1
         )
 

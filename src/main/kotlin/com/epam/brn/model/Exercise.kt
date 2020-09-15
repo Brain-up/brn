@@ -28,6 +28,7 @@ data class Exercise(
     )
     var id: Long? = null,
     var name: String = "",
+    var pictureUrl: String = "",
     var description: String? = "",
     var template: String? = "",
     var exerciseType: String = "",
@@ -44,6 +45,7 @@ data class Exercise(
         seriesId = series?.id,
         id = id,
         name = name,
+        pictureUrl = pictureUrl,
         description = description,
         template = template,
         exerciseType = ExerciseType.valueOf(exerciseType),
@@ -54,7 +56,8 @@ data class Exercise(
     )
 
     override fun toString() =
-        "Exercise(id=$id, name='$name', description=$description, level=$level, noiseLevel=$noiseLevel, noiseUrl=$noiseUrl, template=$template, exerciseType=$exerciseType)"
+        "Exercise(id=$id, name='$name', pictureUrl='$pictureUrl', description=$description, level=$level, noiseLevel=$noiseLevel, " +
+                "noiseUrl=$noiseUrl, template=$template, exerciseType=$exerciseType)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -64,6 +67,7 @@ data class Exercise(
 
         if (id != other.id) return false
         if (name != other.name) return false
+        if (pictureUrl != other.pictureUrl) return false
         if (description != other.description) return false
         if (template != other.template) return false
         if (exerciseType != other.exerciseType) return false
