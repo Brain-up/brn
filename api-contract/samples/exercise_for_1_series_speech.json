@@ -2,12 +2,13 @@
   "data": {
     "seriesId": 1,
     "id": 41,
-    "name": "Семья /3Дб/",
-    "description": "Семья /3Дб/",
+    "name": "В школе",
+    "pictureUrl": "pictures/theme/school.jpg",
+    "description": "В школе",
     "level": 1,
     "noise": {
       "level": 0,
-      "url": null
+      "url": ""
     },
     "exerciseType": "SINGLE_SIMPLE_WORDS",
     "template": "",
@@ -17,8 +18,7 @@
         "id": 41,
         "type": "task/SINGLE_SIMPLE_WORDS"
       }
-    ],
-    "signals": []
+    ]
   },
   "errors": [],
   "meta": []
