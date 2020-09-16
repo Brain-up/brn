@@ -11,6 +11,7 @@ export default class Exercise extends CompletionDependent.extend({
   available: attr('boolean'),
   description: attr('string'),
   level: attr('number'),
+  pictureUrl: attr('string'),
   order: attr('number'),
   exerciseType: attr('string'),
   series: belongsTo('series', { async: true }),
