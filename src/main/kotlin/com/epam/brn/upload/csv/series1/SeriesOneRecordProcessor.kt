@@ -29,6 +29,9 @@ class SeriesOneRecordProcessor(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
 
+    @Value(value = "\${brn.picture.theme.path}")
+    private lateinit var pictureTheme: String
+
     @Value(value = "\${series1WordsFileName}")
     private lateinit var series1WordsFileName: String
 
@@ -106,6 +109,7 @@ class SeriesOneRecordProcessor(
                 Exercise(
                     series = series,
                     name = record.exerciseName,
+                    pictureUrl = if (!record.pictureUrl.isNullOrEmpty()) String.format(pictureTheme, record.pictureUrl) else "",
                     level = record.level,
                     noiseLevel = record.noiseLevel,
                     noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else "",

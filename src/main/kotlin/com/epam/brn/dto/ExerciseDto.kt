@@ -6,6 +6,7 @@ data class ExerciseDto(
     var seriesId: Long?,
     var id: Long?,
     var name: String?,
+    var pictureUrl: String?,
     var description: String?,
     var level: Int? = 0,
     var noise: NoiseDto,

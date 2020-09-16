@@ -4,6 +4,7 @@
    "seriesId": 1,
    "id": 1,
    "name": "Семья",
+   "pictureUrl": "pictures/theme/school.jpg",
    "description": "Семья",
    "level": 1,
    "noise": {
@@ -25,6 +26,7 @@
    "seriesId": 1,
    "id": 2,
    "name": "Семья",
+   "pictureUrl": "pictures/theme/school.jpg",
    "description": "Семья",
    "level": 2,
    "noise": {
