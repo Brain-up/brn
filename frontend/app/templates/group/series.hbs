@@ -1,4 +1,16 @@
 <div class="series-page--canvas flex flex-col flex-grow">
-    <SeriesNavigation @exercises={{@model.exercises}} />
+  {{#if this.exerciseName}}
+    <SeriesNavigation
+      @exercises={{filter-by "name" this.exerciseName @model.exercises}}
+    />
+  {{else}}
+    <div class="grid-cols-2 gap-5 mt-3">
+      {{#each this.exerciseGroups as |group|}}
+        <ExerciseGroup
+          @group={{group}}
+        />
+      {{/each}}
+    </div>
+  {{/if}}
 </div>
 {{outlet}}
