@@ -4,6 +4,20 @@ import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { inject as service } from '@ember/service';
+import { IStatsExerciseStats } from "brn/services/stats";
+
+interface IStatsObject {
+  countedSeconds: 61,
+  endTime: "2020-09-17T12:33:48.649Z",
+  exerciseId: "110",
+  listeningsCount: 15,
+  repetitionIndex: 33.33333333333333,
+  rightAnswersCount: 12,
+  rightAnswersIndex: 100,
+  startTime: "2020-09-17T12:32:39.192Z",
+  tasksCount: 9,
+  userId: 3
+}
 
 export default class Exercise extends CompletionDependent.extend({
   session: service('session'),
@@ -29,7 +43,7 @@ export default class Exercise extends CompletionDependent.extend({
   },
   sortedTasks: reads('sortedChildren'),
   // eslint-disable-next-line ember/require-computed-property-dependencies
-  previousSiblings: computed('series.groupedByNameExercises', function() {
+  previousSiblings: computed('series.groupedByNameExercises', function () {
     return arrayPreviousItems(
       this,
       // eslint-disable-next-line ember/no-get
@@ -41,7 +55,7 @@ export default class Exercise extends CompletionDependent.extend({
     'tasks.@each.isCompleted',
     'previousSiblings.@each.isCompleted',
     'tasksManager.completedTasks.[]',
-    function() {
+    function () {
       const tasksIds = this.hasMany('tasks').ids();
       const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
       const tasksCompleted = tasksIds.every((taskId) =>
@@ -53,10 +67,10 @@ export default class Exercise extends CompletionDependent.extend({
       );
     },
   ),
-  siblingExercises: computed('series.sortedExercises.[]', function() {
+  siblingExercises: computed('series.sortedExercises.[]', function () {
     return this.series.get('sortedExercises') || [];
   }),
-  nextSiblings: computed('siblingExercises.[]', function() {
+  nextSiblings: computed('siblingExercises.[]', function () {
     return this.siblingExercises.slice(this.siblingExercises.indexOf(this) + 1);
   }),
   get isStarted() {
@@ -68,54 +82,38 @@ export default class Exercise extends CompletionDependent.extend({
     }
   },
   get stats() {
-    const { startTime, endTime, tasks, id } = this;
-    const items = tasks.toArray();
-
-    const repetitionsCount = items.reduce((result, task) => {
-      if (task.repetitionCount) {
-        result += task.repetitionCount;
-      }
-      return result;
-    }, 0);
-
-    const tasksCount = items.reduce((result, task) => {
-      if (task.tasksToSolve) {
-        return result + task.tasksToSolve.length;
-      } else {
-        return result + 1;
-      }
-    }, 0);
-
-    const repetitionRatio = repetitionsCount / tasksCount;
-    const repetitionIndex =  !isFinite(repetitionRatio) || isNaN(repetitionRatio) ? 0 : repetitionRatio.toFixed(2);
-
-
-    // {
-    //   "exerciseId": 2,
-    //   "startTime": "2019-12-18T13:53:06.366Z",
-    //   "endTime": "2019-12-18T13:55:06.366Z",
-    //   "executionSeconds": 120,
-    //   "tasksCount": 12,
-    //   "listeningsCount": 16,
-    //   "repetitionIndex": 0.75,
-    //   "rightAnswersCount": 6,
-    //   "rightAnswersIndex": 0.5
-    // }
+    const { startTime, endTime, id } = this;
 
     return {
       startTime,
       endTime,
-      repetitionIndex,
-      rightAnswersCount: tasksCount,
-      rightAnswersIndex: 1,
-      listeningsCount: tasksCount,
-      exerciseId: id,
-      tasksCount
+      exerciseId: id
     };
   },
-  async postHistory(data) {
-    debugger;
+  calcStats(data: IStatsExerciseStats): IStatsObject {
     const { stats } = this;
+    stats.tasksCount = data.rightAnswersCount - data.repeatsCount;
+    stats.rightAnswersCount = data.rightAnswersCount;
+    stats.listeningsCount = data.playsCount;
+    stats.countedSeconds = data.countedSeconds;
+    stats.repetitionIndex = (data.repeatsCount / stats.tasksCount) * 100;
+    if (isNaN(stats.repetitionIndex)) {
+      stats.repetitionIndex = 0;
+    } else {
+      stats.repetitionIndex = Number(stats.repetitionIndex.toFixed(2));
+    }
+    stats.rightAnswersIndex = ((data.rightAnswersCount - data.repeatsCount) / stats.tasksCount) * 100;
+    if (isNaN(stats.rightAnswersIndex)) {
+      stats.rightAnswersIndex = 0;
+    } else {
+      stats.rightAnswersIndex = Number(stats.rightAnswersIndex.toFixed(2)) - stats.repetitionIndex;
+    }
+
+    return stats;
+  },
+  async postHistory(data: IStatsExerciseStats) {
+    const stats: IStatsObject = this.calcStats(data);
+
     await fetch('/api/study-history', {
       method: 'POST',
       headers: {
@@ -128,4 +126,4 @@ export default class Exercise extends CompletionDependent.extend({
       }),
     });
   },
-}) {}
+}) { }

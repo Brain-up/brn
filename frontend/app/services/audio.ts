@@ -16,8 +16,10 @@ import {
 import Service, { inject as service } from '@ember/service';
 import TimerComponent from 'brn/components/timer/component';
 import NetworkService from './network';
+import StatsService, { StatEvents } from './stats';
 export default class AudioService extends Service {
   @service('network') network!: NetworkService;
+  @service('stats') stats!: StatsService;
   context = createAudioContext();
   @tracked
   player: null | TimerComponent = null;
@@ -61,6 +63,7 @@ export default class AudioService extends Service {
     if (this.isPlaying) {
       return;
     }
+    this.stats.addEvent(StatEvents.PlayAudio);
     await this.setAudioElements(filesToPlay as string[]);
     await this.playAudio();
   }
