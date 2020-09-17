@@ -113,7 +113,8 @@ export default class Exercise extends CompletionDependent.extend({
       tasksCount
     };
   },
-  async postHistory() {
+  async postHistory(data) {
+    debugger;
     const { stats } = this;
     await fetch('/api/study-history', {
       method: 'POST',

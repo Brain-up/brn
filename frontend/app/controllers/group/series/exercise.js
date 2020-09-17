@@ -23,10 +23,14 @@ export default class GroupSeriesExerciseController extends Controller {
     this.router.transitionTo('group.series.index', this.model.get('series.id'));
   }
 
+  get modelStats() {
+    return this.stats.statsFor(this.model);
+  }
+
   saveExercise() {
     this.studyingTimer.pause();
     this.model.trackTime('end');
-    this.model.postHistory();
+    this.model.postHistory(this.modelStats);
   }
 
   @(task(function*(isCorrect = false) {

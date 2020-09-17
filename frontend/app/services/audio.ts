@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { isArray } from '@ember/array';
 import { action } from '@ember/object';
-import { timeout, task } from 'ember-concurrency';
+import { task, timeout, Task as TaskGenerator, TaskInstance } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 import {
@@ -14,22 +14,29 @@ import {
   TIMINGS,
 } from 'brn/utils/audio-api';
 import Service, { inject as service } from '@ember/service';
+import TimerComponent from 'brn/components/timer/component';
+import NetworkService from './network';
 export default class AudioService extends Service {
-  @service('network') network;
+  @service('network') network!: NetworkService;
   context = createAudioContext();
   @tracked
-  player = null;
-  register(player) {
+  player: null | TimerComponent = null;
+  register(player: TimerComponent) {
     this.player = player;
   }
-
+  buffers: any[] = [];
+  startTime: null | number = 0;
+  totalDuration = 0;
+  noiseNode!: any;
+  sources!: any[];
+  noiseTaskInstance!: TaskInstance<any>;
   @tracked isPlaying = false;
 
   @tracked audioPlayingProgress = 0;
 
-  @tracked audioFileUrl;
+  @tracked audioFileUrl: null | string | string[] = null;
 
-  @(task(function*() {
+  @(task(function*(this: AudioService) {
     try {
       this.startTime = Date.now();
       this.setProgress(0);
@@ -48,13 +55,13 @@ export default class AudioService extends Service {
       }
     }
   }).enqueue())
-  trackProgress;
+  trackProgress!: TaskGenerator<any,any>
 
   @action async startPlayTask(filesToPlay = this.filesToPlay) {
     if (this.isPlaying) {
       return;
     }
-    await this.setAudioElements(filesToPlay);
+    await this.setAudioElements(filesToPlay as string[]);
     await this.playAudio();
   }
 
@@ -83,7 +90,7 @@ export default class AudioService extends Service {
 
   updatePlayingProgress() {
     this.setProgress(
-      (100 / this.totalDuration) * (Date.now() - this.startTime),
+      (100 / this.totalDuration) * (Date.now() - (this.startTime as number)),
     );
   }
 
@@ -91,7 +98,7 @@ export default class AudioService extends Service {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
-  async setAudioElements(filesToPlay) {
+  async setAudioElements(filesToPlay: string[]) {
     this.context = createAudioContext();
     if (Ember.testing) {
       this.buffers = [];
@@ -137,7 +144,7 @@ export default class AudioService extends Service {
     }
   }
 
-  async getNoise(duration, level, url = null) {
+  async getNoise(duration: number, level: number, url = null) {
     if (url) {
       const noiseContext = createAudioContext();
       const noiseBuffers = await loadAudioFiles(noiseContext, [url]);
@@ -153,20 +160,17 @@ export default class AudioService extends Service {
     }
   }
 
-  createSources(context, buffers) {
+  createSources(context: AudioContext, buffers: AudioBuffer[]) {
     return buffers.map((buffer) => createSource(context, buffer));
   }
 
-  calcDurationForSources(sources) {
+  calcDurationForSources(sources: any[]) {
     return sources.reduce((result, item) => {
       return result + toMilliseconds(item.source.buffer.duration);
     }, 0);
   }
 
-  noiseTaskInstance = null;
-  noiseNode = null;
-
-  @(task(function* playNoise(){
+  @(task(function* playNoise(this: AudioService){
     let noise = null;
     let timeInSeconds = 10;
     try {
@@ -190,9 +194,9 @@ export default class AudioService extends Service {
         noise.source.stop();
       }
     }
-  })) startNoiseTask;
+  })) startNoiseTask!: TaskGenerator<any,any>
 
-  @(task(function* playAudio(noizeSeconds = 0) {
+  @(task(function* playAudio(this: AudioService, noizeSeconds = 0) {
     let startedSources = [];
     const hasNoize = false;
     if (hasNoize) {
@@ -239,9 +243,9 @@ export default class AudioService extends Service {
   })
     .keepLatest()
     .maxConcurrency(1))
-  playTask;
+  playTask!: TaskGenerator<any, any>
 
-  @(task(function* fakePlayAudio() {
+  @(task(function* fakePlayAudio(this: AudioService) {
     this.totalDuration = TIMINGS.FAKE_AUDIO;
     this.isPlaying = true;
     this.trackProgress.perform();
@@ -249,9 +253,9 @@ export default class AudioService extends Service {
     this.isPlaying = false;
     this.totalDuration = 0;
   }).enqueue())
-  fakePlayTask;
+  fakePlayTask!: TaskGenerator<any, any>
 
-  setProgress(progress) {
+  setProgress(progress: number) {
     this.audioPlayingProgress = progress;
     if (progress !== 100 && (progress >= 99 || Ember.testing)) {
       this.setProgress(100);

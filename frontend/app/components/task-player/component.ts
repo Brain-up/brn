@@ -9,13 +9,14 @@ import Ember from 'ember';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
+import TaskModel from 'brn/models/task';
 
 export default class TaskPlayerComponent extends Component {
   @service('audio') audio!: AudioService;
   @service("stats")  stats!: StatsService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
   @tracked justEnteredTask = true;
-  @tracked task: any = null;
+  @tracked task!: TaskModel;
   _task = undefined;
   @tracked
   activeWord: string | null = null;
