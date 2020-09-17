@@ -18,23 +18,7 @@ module.exports = function(environment) {
       },
     },
 
-    APP: {},
-    fontawesome: {
-      icons: {
-        'free-solid-svg-icons': [
-          'headphones-alt',
-          'brain',
-          'bookmark',
-          'redo-alt',
-          'pause-circle',
-          'play',
-          'play-circle',
-          'times-circle',
-          'check-circle',
-          'chevron-left',
-        ],
-      },
-    },
+    APP: {}
   };
 
   if (environment === 'development') {
