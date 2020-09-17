@@ -19,7 +19,6 @@ export default class GroupSeriesController extends Controller {
       }
       items[el.name].count++;
     });
-    console.log( Object.values(items));
     return Object.values(items);
   }
 }

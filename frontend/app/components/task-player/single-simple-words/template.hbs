@@ -1,15 +1,4 @@
-{{!
-  interface Args {
-    word: string;
-    disableAudioPlayer: boolean;
-    disableAnswers: boolean;
-    activeWord: string;
-    onPlayText: () => {};
-    mode: string;
-  }
- }}
-
-<div class="{{this.styleNamespace}} flex flex-grow flex-col" ...attributes>
+<div class="{{style-namespace "task-player/single-simple-words"}} flex flex-grow flex-col" ...attributes   {{did-insert this.onInsert}}>
   {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}
     <AudioPlayer
