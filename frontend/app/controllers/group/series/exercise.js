@@ -10,6 +10,7 @@ export default class GroupSeriesExerciseController extends Controller {
   @service tasksManager;
   @service('studying-timer')
   studyingTimer;
+  @service('stats') stats;
 
   @tracked correctnessWidgetIsShown = false;
   @tracked showExerciseStats = false;
@@ -43,6 +44,14 @@ export default class GroupSeriesExerciseController extends Controller {
     this.showExerciseStats = true;
   }
 
+  @action startStatsTracking(_, [model]) {
+    this.stats.registerModel(model);
+  }
+
+  @action stopStatsTracking(_, [model]) {
+    this.stats.unregisterModel(model);
+  }
+
   @action
   async afterCompleted() {
     await customTimeout(5000);
@@ -50,13 +59,17 @@ export default class GroupSeriesExerciseController extends Controller {
     this.goToSeries();
   }
 
+  get bodyStyleNode() {
+    return document.body.style;
+  }
+
   @action
   disableBodyScroll() {
-    document.body.style.overflow = 'hidden';
+    this.bodyStyleNode.overflow = 'hidden';
   }
 
   @action
   enableBodyScroll() {
-    document.body.style.overflow = 'scroll';
+    this.bodyStyleNode.overflow = 'scroll';
   }
 }

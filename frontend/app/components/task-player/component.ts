@@ -11,13 +11,11 @@ import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
 
 export default class TaskPlayerComponent extends Component {
-  @service("audio") audio!: AudioService;
+  @service('audio') audio!: AudioService;
   @service("stats")  stats!: StatsService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
-  @tracked
-  justEnteredTask = true;
-  @tracked
-  task: any = null;
+  @tracked justEnteredTask = true;
+  @tracked task: any = null;
   _task = undefined;
   @tracked
   activeWord: string | null = null;
@@ -131,7 +129,6 @@ export default class TaskPlayerComponent extends Component {
 
   maybeStartExercise() {
     if (!this.task.get('exercise.isStarted')) {
-      this.stats.registerModel(this.task.exercise.content);
       this.stats.addEvent(StatEvents.Start);
       this.task.exercise.content.trackTime('start');
     }

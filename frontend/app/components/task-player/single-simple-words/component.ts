@@ -7,6 +7,7 @@ import deepCopy from 'brn/utils/deep-copy';
 import { TaskItem } from 'brn/utils/task-item';
 import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
+import { StatEvents } from 'brn/services/stats';
 
 export default class SingleSimpleWordsComponent extends Component {
   @tracked currentAnswer = null;
@@ -49,8 +50,11 @@ export default class SingleSimpleWordsComponent extends Component {
     this.isCorrect = isCorrect;
 
     if (isCorrect) {
+      this.stats.addEvent(StatEvents.RightAnswer);
       yield this.handleCorrectAnswer();
     } else {
+      this.stats.addEvent(StatEvents.Repeat);
+      this.stats.addEvent(StatEvents.WrongAnswer);
       yield this.handleWrongAnswer();
     }
   }).drop())

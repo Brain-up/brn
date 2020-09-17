@@ -28,6 +28,9 @@ export default class StatsService extends Service {
     this.stats.set(model, this.emptyStats());
     this.lastModel = model;
   }
+  unregisterModel(model: Exercise) {
+    this.stats.set(model, this.emptyStats());
+  }
   addEvent(eventName: StatEvents) {
     if (this.lastModel === null) {
       return;
