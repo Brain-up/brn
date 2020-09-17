@@ -6,7 +6,7 @@ import { action } from '@ember/object';
 import { timeout, task } from 'ember-concurrency';
 import { MODES } from 'brn/utils/task-modes';
 import Ember from 'ember';
-import StatsService from 'brn/services/stats';
+import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
 export default class TaskPlayerComponent extends Component {
@@ -131,7 +131,7 @@ export default class TaskPlayerComponent extends Component {
   maybeStartExercise() {
     if (!this.task.get('exercise.isStarted')) {
       this.stats.registerModel(this.task.exercise.content);
-      this.stats.addEvent('start');
+      this.stats.addEvent(StatEvents.Start);
       this.task.exercise.content.trackTime('start');
     }
     this.audio.startNoise();

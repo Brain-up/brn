@@ -1,8 +1,16 @@
 import Service from '@ember/service';
-
+import Exercise from 'brn/models/exercise';
+export enum  StatEvents {
+  Start = 'start',
+  Finish = 'finish',
+  WrongAnswer = 'wrongAnswer',
+  Task = 'task',
+  Repeat  = 'repeat',
+  RightAnswer = 'rightAnswer'
+}
 export default class StatsService extends Service {
   stats = new WeakMap();
-  lastModel = null;
+  lastModel: Exercise | null = null;
   emptyStats() {
     return {
       startTime: null,
@@ -13,29 +21,29 @@ export default class StatsService extends Service {
       tasksCount: 0
     }
   }
-  statsFor(model) {
+  statsFor(model: Exercise) {
     return this.stats.get(model);
   }
-  registerModel(model) {
+  registerModel(model: Exercise) {
     this.stats.set(model, this.emptyStats());
     this.lastModel = model;
   }
-  addEvent(eventName) {
-    const item = this.statsFor(this.lastModel);
-    if (!item) {
+  addEvent(eventName: StatEvents) {
+    if (this.lastModel === null) {
       return;
     }
-    if (eventName === 'start') {
+    const item = this.statsFor(this.lastModel);
+    if (eventName === StatEvents.Start) {
       item.startTime = new Date();
-    } else if (eventName === 'finish') {
+    } else if (eventName === StatEvents.Finish) {
       item.endTime = new Date();
-    } else if (eventName === 'wrongAnswer') {
+    } else if (eventName === StatEvents.WrongAnswer) {
       item.wrongAnswersCount++;
-    } else if (eventName === 'task') {
+    } else if (eventName === StatEvents.Task) {
       item.tasksCount++;
-    } else if (eventName === 'repeat') {
+    } else if (eventName === StatEvents.Repeat) {
       item.repeatsCount++;
-    } else if (eventName === 'rightAnswer') {
+    } else if (eventName === StatEvents.RightAnswer) {
       item.rightAnswersCount++;
     }
   }
