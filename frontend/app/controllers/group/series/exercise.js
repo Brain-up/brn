@@ -14,6 +14,7 @@ export default class GroupSeriesExerciseController extends Controller {
 
   @tracked correctnessWidgetIsShown = false;
   @tracked showExerciseStats = false;
+  @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
     return this.model.get('tasks').every((task) => task.get('completedInCurrentCycle'));
@@ -31,6 +32,7 @@ export default class GroupSeriesExerciseController extends Controller {
     this.studyingTimer.pause();
     this.model.trackTime('end');
     this.model.postHistory(this.modelStats);
+    return this.model.calcStats(this.modelStats);
   }
 
   @(task(function*(isCorrect = false) {
@@ -43,9 +45,10 @@ export default class GroupSeriesExerciseController extends Controller {
 
   @action
   async greedOnCompletedExercise() {
-    this.saveExercise();
+    const stats = this.saveExercise();
     await this.runCorrectnessWidgetTimer.perform(true);
     this.showExerciseStats = true;
+    this.exerciseStats = stats;
   }
 
   @action startStatsTracking(_, [model]) {

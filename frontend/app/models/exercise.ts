@@ -6,15 +6,15 @@ import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { inject as service } from '@ember/service';
 import { IStatsExerciseStats } from "brn/services/stats";
 
-interface IStatsObject {
+export interface IStatsObject {
   countedSeconds: 61,
-  endTime: "2020-09-17T12:33:48.649Z",
+  endTime: Date,
   exerciseId: "110",
   listeningsCount: 15,
   repetitionIndex: 33.33333333333333,
   rightAnswersCount: 12,
   rightAnswersIndex: 100,
-  startTime: "2020-09-17T12:32:39.192Z",
+  startTime: Date,
   tasksCount: 9,
   userId: 3
 }

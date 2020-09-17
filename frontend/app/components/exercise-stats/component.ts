@@ -1,6 +1,10 @@
 import Component from '@glimmer/component';
+import { IStatsObject } from 'brn/models/exercise';
 
-export default class ExerciseStatsComponent extends Component {
+interface IExerciseStatsComponentArgs {
+  stats: IStatsObject
+}
+export default class ExerciseStatsComponent extends Component<IExerciseStatsComponentArgs> {
   get stats() {
     return this.args.stats || {};
   }
