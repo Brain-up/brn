@@ -1,5 +1,8 @@
-{{yield (hash tasks=@task.parent.tasks)}}
-<br />
+<div class="flex flex-col flex-1" data-test-task-id={{@task.id}} data-test-task-exercise-id={{@task.exercise.id}}
+  {{did-insert this.updateWords @task.words}}
+  {{did-update this.updateWords @task.words}}
+>
+  {{yield (hash tasks=@task.parent.tasks)}}
 {{#if (eq this.lastAnswer @task.word)}}
   <ImageDisplayBlock
     data-test-right-answer-notification
@@ -41,3 +44,4 @@
     {{/each}}
   </ul>
 {{/if}}
+</div>

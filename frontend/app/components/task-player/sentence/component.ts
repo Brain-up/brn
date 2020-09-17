@@ -133,6 +133,7 @@ export default class SentenceComponent extends Component<ISentenceComponentArgs>
 
   async handleWrongAnswer() {
     this.stats.addEvent(StatEvents.WrongAnswer);
+    this.stats.addEvent(StatEvents.Repeat);
     await customTimeout(1000);
     this.task.set('repetitionCount', this.task.repetitionCount + 1);
     this.currentAnswerObject = null;
