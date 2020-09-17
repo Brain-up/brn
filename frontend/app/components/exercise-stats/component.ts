@@ -1,9 +1,10 @@
 import Component from '@glimmer/component';
-import { inject as service } from '@ember/service';
+import { IStatsObject } from 'brn/models/exercise';
 
-export default class ExerciseStatsComponent extends Component {
-  @service('intl') intl;
-
+interface IExerciseStatsComponentArgs {
+  stats: IStatsObject
+}
+export default class ExerciseStatsComponent extends Component<IExerciseStatsComponentArgs> {
   get stats() {
     return this.args.stats || {};
   }
@@ -15,6 +16,10 @@ export default class ExerciseStatsComponent extends Component {
     const sec = totalSec % 60;
     const min = Math.floor(totalSec / 60);
     return { min, sec };
+  }
+
+  get attemptsCount() {
+    return this.stats.listeningsCount;
   }
 
   get repetitionIndex() {

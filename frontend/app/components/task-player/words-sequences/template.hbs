@@ -3,6 +3,7 @@
 
      flex-1 flex flex-col"
   ...attributes
+  {{did-insert this.onInsert}}
 >
   {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}

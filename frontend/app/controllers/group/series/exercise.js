@@ -10,9 +10,11 @@ export default class GroupSeriesExerciseController extends Controller {
   @service tasksManager;
   @service('studying-timer')
   studyingTimer;
+  @service('stats') stats;
 
   @tracked correctnessWidgetIsShown = false;
   @tracked showExerciseStats = false;
+  @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
     return this.model.get('tasks').every((task) => task.get('completedInCurrentCycle'));
@@ -22,10 +24,15 @@ export default class GroupSeriesExerciseController extends Controller {
     this.router.transitionTo('group.series.index', this.model.get('series.id'));
   }
 
+  get modelStats() {
+    return this.stats.statsFor(this.model);
+  }
+
   saveExercise() {
     this.studyingTimer.pause();
     this.model.trackTime('end');
-    this.model.postHistory();
+    this.model.postHistory(this.modelStats);
+    return this.model.calcStats(this.modelStats);
   }
 
   @(task(function*(isCorrect = false) {
@@ -38,9 +45,18 @@ export default class GroupSeriesExerciseController extends Controller {
 
   @action
   async greedOnCompletedExercise() {
-    this.saveExercise();
+    const stats = this.saveExercise();
     await this.runCorrectnessWidgetTimer.perform(true);
     this.showExerciseStats = true;
+    this.exerciseStats = stats;
+  }
+
+  @action startStatsTracking(_, [model]) {
+    this.stats.registerModel(model);
+  }
+
+  @action stopStatsTracking(_, [model]) {
+    this.stats.unregisterModel(model);
   }
 
   @action
@@ -50,13 +66,17 @@ export default class GroupSeriesExerciseController extends Controller {
     this.goToSeries();
   }
 
+  get bodyStyleNode() {
+    return document.body.style;
+  }
+
   @action
   disableBodyScroll() {
-    document.body.style.overflow = 'hidden';
+    this.bodyStyleNode.overflow = 'hidden';
   }
 
   @action
   enableBodyScroll() {
-    document.body.style.overflow = 'scroll';
+    this.bodyStyleNode.overflow = 'scroll';
   }
 }

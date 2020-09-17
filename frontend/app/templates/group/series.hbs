@@ -1,4 +1,16 @@
 <div class="series-page--canvas flex flex-col flex-grow">
-    <SeriesNavigation @exercises={{@model.exercises}} />
+  {{#if this.exerciseName}}
+    <SeriesNavigation
+      @exercises={{filter-by "name" this.exerciseName @model.exercises}}
+    />
+  {{else}}
+    {{#each (chunk 2 (sort-by "name" this.exerciseGroups)) as |groups|}}
+      <div class="flex mb-4 -mx-2">
+        {{#each groups as |group|}}
+          <ExerciseGroup @group={{group}} />
+        {{/each}}
+      </div>
+    {{/each}}
+  {{/if}}
 </div>
 {{outlet}}

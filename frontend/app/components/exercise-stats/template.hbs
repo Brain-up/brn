@@ -31,7 +31,7 @@
       <ExerciseStats::Panel
         @type="negative"
         @label={{t "statistics.attempts"}}
-        @value={{this.repetitionIndex}}
+        @value={{this.attemptsCount}}
         class="flex-col w-64 h-64 bg-blue-100 rounded-full"
       />
       <ExerciseStats::Panel
@@ -56,7 +56,7 @@
           data-test-value
           class="text-3xl text-4xl font-semibold text-center text-pink-500"
         >
-          0.33
+          {{this.repetitionIndex}}
         </p>
       </div>
     </div>

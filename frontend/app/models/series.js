@@ -1,19 +1,23 @@
 import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
-import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
 
-export default class Series extends Model.extend({
-  name: attr('string'),
-  description: attr('string'),
-  group: belongsTo('group', { async: true }),
-  exercises: hasMany('exercise', { async: true }),
-  children: reads('exercises'),
-  parent: reads('group'),
-  sortedExercises: computed('exercises.{[],@each.order}', function() {
+export default class Series extends Model {
+  @attr('string') name;
+  @attr('string') description;
+  @belongsTo('group', { async: true } ) group;
+  @hasMany('exercise', { async: true } ) exercises;
+  get children() {
+    return this.exercises;
+  }
+  get parent() {
+    return this.group;
+  }
+  get sortedExercises() {
     return this.exercises.sortBy('order');
-  }),
-  sortedChildren: reads('sortedExercises'),
-  groupedByNameExercises: computed('exercises.{[],@each.name}', function() {
+  }
+  get sortedChildren() {
+    return this.sortedExercises;
+  }
+  get groupedByNameExercises() {
     return this.exercises.reduce((resultObj, currentExercise) => {
       const { name } = currentExercise;
       const targetGroup = resultObj[name];
@@ -23,5 +27,5 @@ export default class Series extends Model.extend({
 
       return resultObj;
     }, {});
-  }),
-}) {}
+  }
+}

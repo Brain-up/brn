@@ -6,9 +6,39 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { action } from '@ember/object';
 import { urlForAudio } from 'brn/utils/file-url';
 import { MODES } from 'brn/utils/task-modes';
-import { task } from 'ember-concurrency';
+import { task, Task as TaskGenerator } from 'ember-concurrency';
+import StatsService, { StatEvents } from 'brn/services/stats';
+import Task from 'brn/models/task';
+import AudioService from 'brn/services/audio';
 
-export default class SentenceComponent extends Component {
+interface ISentenceTaskFields {
+  answerParts: any[],
+  selectedItemsOrder: any[] & { firstObject: any, lastObject: any },
+  isLastTask: boolean,
+  savePassed(): void,
+  answerOptions: any,
+  repetitionCount: number,
+  set(key: string, value: number): void,
+  parent: {
+    tasks: Task[]
+  }
+}
+
+interface ISentenceComponentArgs {
+  task: Task & ISentenceTaskFields,
+  mode: keyof (typeof MODES),
+  disableAnswers: boolean,
+  activeWord: string,
+  disableAudioPlayer: boolean,
+  onPlayText(): void,
+  onRightAnswer(): void,
+  onWrongAnswer(): void
+}
+
+interface SentenceAnswer { };
+
+export default class SentenceComponent extends Component<ISentenceComponentArgs> {
+  @service('stats') stats!: StatsService
   @tracked exerciseResultIsVisible = false;
 
   get task() {
@@ -17,11 +47,11 @@ export default class SentenceComponent extends Component {
 
   @tracked wrongAnswerParts = [];
 
-  @service('audio') audio;
+  @service('audio') audio!: AudioService
 
   @tracked isCorrect = false;
 
-  @tracked currentAnswerObject = null;
+  @tracked currentAnswerObject: Record<string, unknown> | null = null;
 
   get audioFiles() {
     return this.task?.answerParts.map(({ audioFileUrl }) => {
@@ -33,7 +63,7 @@ export default class SentenceComponent extends Component {
     if (
       !this.currentAnswerObject ||
       Object.keys(this.currentAnswerObject).length <
-        (this.task?.answerParts.length || 0)
+      (this.task?.answerParts.length || 0)
     ) {
       return false;
     } else {
@@ -47,15 +77,15 @@ export default class SentenceComponent extends Component {
     }
   }
 
-  @(task(function*(selected) {
+  @(task(function* (this: SentenceComponent, selected) {
     this.currentAnswerObject = {
       ...this.currentAnswerObject,
       [selected.wordType]: selected.word,
     };
-    if (this.answerCompleted) {
+    if (this.answerCompleted && this.currentAnswerObject !== null) {
       const isCorrect = deepEqual(
         this.task.selectedItemsOrder.map(
-          (orderName) => this.currentAnswerObject[orderName],
+          (orderName) => (this.currentAnswerObject as any)[orderName],
         ),
         this.task?.answerParts.mapBy('word') || [],
       );
@@ -74,7 +104,7 @@ export default class SentenceComponent extends Component {
       }
     }
   }).drop())
-  showTaskResult;
+  showTaskResult!: TaskGenerator<any, any>;
 
   @action resetAnswerObject() {
     this.currentAnswerObject = null;
@@ -84,7 +114,7 @@ export default class SentenceComponent extends Component {
   }
 
   @action
-  async checkMaybe(selectedData) {
+  async checkMaybe(selectedData: SentenceAnswer) {
     this.showTaskResult.perform(selectedData);
   }
 
@@ -102,6 +132,8 @@ export default class SentenceComponent extends Component {
   }
 
   async handleWrongAnswer() {
+    this.stats.addEvent(StatEvents.WrongAnswer);
+    this.stats.addEvent(StatEvents.Repeat);
     await customTimeout(1000);
     this.task.set('repetitionCount', this.task.repetitionCount + 1);
     this.currentAnswerObject = null;
@@ -109,6 +141,7 @@ export default class SentenceComponent extends Component {
   }
 
   async handleCorrectAnswer() {
+    this.stats.addEvent(StatEvents.RightAnswer);
     this.task.savePassed();
     await this.runNextTaskTimer();
   }

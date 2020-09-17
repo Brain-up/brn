@@ -2,6 +2,7 @@ import Service from '@ember/service';
 import { action } from '@ember/object';
 import config from 'brn/config/environment';
 import { tracked } from '@glimmer/tracking';
+import IdleJs from 'idle-js';
 
 export default class StudyingTimerService extends Service {
   willDestroy() {
@@ -9,21 +10,28 @@ export default class StudyingTimerService extends Service {
     this.idleWatcher && this.idleWatcher.stop();
   }
   @tracked
-  idleWatcher = null;
+  idleWatcher: any = null;
   @tracked
   countedSeconds = 0;
   @tracked
   isPaused = false;
   @tracked
-  timerInstance = null;
+  timerInstance: any = null;
   get isStarted() {
     return this.timerInstance && this.timerInstance.isStarted;
   }
   @action
-  register(timer) {
+  register(timer: any) {
     this.countedSeconds = 0;
     this.timerInstance = timer;
     this.startIdleWatcher();
+  }
+  @action
+  unregister(timer: any) {
+    if (this.timerInstance === timer) {
+      this.timerInstance = null;
+      this.countedSeconds = 0;
+    }
   }
   @action
   runTimer() {
@@ -31,7 +39,7 @@ export default class StudyingTimerService extends Service {
     return this.timerInstance.runTimer();
   }
   @action
-  addTime(seconds) {
+  addTime(seconds: number) {
     this.countedSeconds += seconds;
   }
   @action
@@ -67,5 +75,13 @@ export default class StudyingTimerService extends Service {
       },
     });
     this.idleWatcher.start();
+  }
+}
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your services.
+declare module '@ember/service' {
+  interface Registry {
+    'studying-timer': StudyingTimerService;
   }
 }

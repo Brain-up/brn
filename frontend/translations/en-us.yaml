@@ -64,6 +64,8 @@ footer:
   info_about: With the support
   info_about_helper: and
 
+start_task_button:
+  label: Start exercise
 
 msg:
   validation:

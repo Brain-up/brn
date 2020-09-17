@@ -3,24 +3,27 @@ import { dasherize } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { timeout, task } from 'ember-concurrency';
+import { timeout, task, TaskInstance  } from 'ember-concurrency';
 import { MODES } from 'brn/utils/task-modes';
 import Ember from 'ember';
+import StatsService, { StatEvents } from 'brn/services/stats';
+import AudioService from 'brn/services/audio';
+import StudyingTimerService from 'brn/services/studying-timer';
+import TaskModel from 'brn/models/task';
+
 export default class TaskPlayerComponent extends Component {
-  @service
-  audio;
-  @service
-  studyingTimer;
+  @service('audio') audio!: AudioService;
+  @service("stats")  stats!: StatsService;
+  @service('studying-timer') studyingTimer!: StudyingTimerService;
+  @tracked justEnteredTask = true;
+  @tracked task!: TaskModel;
+  _task = undefined;
   @tracked
-  justEnteredTask = true;
+  activeWord: string | null = null;
   @tracked
-  task = null;
-  @tracked
-  activeWord = null;
-  @tracked
-  textToPlay = null;
+  textToPlay: string | null = null;
   tagName = '';
-  activeTask = null;
+  activeTask: null | TaskInstance<any> = null;
   willDestroyElement() {
     this.audio.stopNoise();
   }
@@ -67,9 +70,9 @@ export default class TaskPlayerComponent extends Component {
     }
   }
 
-  @action onShuffled(words) {
+  @action onShuffled(words: any) {
     // we need this callback, because of singlw-words component shuffle logic
-    const sortedWords = this.task.normalizedAnswerOptions.sort((a, b) => {
+    const sortedWords = this.task.normalizedAnswerOptions.sort((a: any, b: any) => {
       return words.indexOf(a.word) - words.indexOf(b.word);
     });
     this.task.set('normalizedAnswerOptions', sortedWords);
@@ -92,13 +95,13 @@ export default class TaskPlayerComponent extends Component {
       return normalizedAnswerOptions;
     }
     if (modelName === 'task/words-sequences' || modelName === 'task/sentence') {
-      const sortedItems = [];
+      const sortedItems: any[] = [];
       const length = answerOptions[selectedItemsOrder[0]].length;
       for (let i = 0; i < length; i++) {
-        selectedItemsOrder.forEach((key) => {
+        selectedItemsOrder.forEach((key: string) => {
           sortedItems.push(
             this.task.normalizedAnswerOptions.find(
-              ({ word }) => word === answerOptions[key][i].word,
+              ({ word }: any) => word === answerOptions[key][i].word,
             ),
           );
         });
@@ -108,7 +111,7 @@ export default class TaskPlayerComponent extends Component {
     throw new Error(`Unknown task type - ${modelName}`);
   }
 
-  @(task(function*() {
+  @(task(function*(this: TaskPlayerComponent) {
     try {
       this.mode = MODES.LISTEN;
       for (let option of this.orderedPlaylist) {
@@ -123,16 +126,17 @@ export default class TaskPlayerComponent extends Component {
       this.audio.stop();
     }
   }).keepLatest())
-  listenModeTask;
+  listenModeTask!: any;
 
   maybeStartExercise() {
     if (!this.task.get('exercise.isStarted')) {
+      this.stats.addEvent(StatEvents.Start);
       this.task.exercise.content.trackTime('start');
     }
     this.audio.startNoise();
   }
 
-  @(task(function*() {
+  @(task(function*(this: TaskPlayerComponent) {
     try {
       this.mode = MODES.TASK;
       yield this.audio.startPlayTask();
@@ -140,9 +144,9 @@ export default class TaskPlayerComponent extends Component {
       // EOL
     }
   }).keepLatest())
-  taskModeTask;
+  taskModeTask!: any;
 
-  @(task(function*() {
+  @(task(function*(this: TaskPlayerComponent) {
     try {
       this.mode = MODES.INTERACT;
       while (this.mode === MODES.INTERACT) {
@@ -151,7 +155,7 @@ export default class TaskPlayerComponent extends Component {
           this.activeWord = playText;
           this.textToPlay = null;
           let option = this.task.normalizedAnswerOptions.find(
-            ({ word }) => word === playText,
+            ({ word } : any) => word === playText,
           );
           if (option) {
             yield this.audio.setAudioElements([option.audioFileUrl]);
@@ -167,18 +171,18 @@ export default class TaskPlayerComponent extends Component {
       this.textToPlay = null;
     }
   }).keepLatest())
-  interactModeTask;
+  interactModeTask!: any;
 
-  @action playText(text) {
+  @action playText(text: string) {
     this.textToPlay = text;
   }
 
   @action
-  onModeChange(mode) {
+  onModeChange(mode: any) {
     this.setMode(mode);
   }
 
-  @action async setMode(mode, ...args) {
+  @action async setMode(mode: string, ...args: any) {
     if (this.activeTask) {
       try {
         this.activeTask.cancel();
@@ -195,7 +199,7 @@ export default class TaskPlayerComponent extends Component {
     } else if (mode === MODES.LISTEN) {
       this.activeTask = this.listenModeTask.perform(...args);
     }
-    this.activeTask.catch(()=>{
+    (this.activeTask as any).catch(()=>{
       // EOL
     });
     return this.activeTask;

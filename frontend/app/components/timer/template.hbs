@@ -1,4 +1,4 @@
-<div class={{this.styleNamespace}} ...attributes>
+<div class={{style-namespace "timer"}} ...attributes {{did-insert this.onInsert}} {{will-destroy this.onDestroy}}>
   <div
     data-test-timer-wrapper
     data-test-timer-is-paused={{this.isPaused}}
