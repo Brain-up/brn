@@ -58,7 +58,9 @@
     "ember-cli/ember-cli-preprocess-registry/broccoli-clean-css/clean-css-promise/clean-css": "^4.1.11",
     "ember-cli/bower-config/optimist/minimist": "^1.2.3",
     "ember-cli-page-object/jquery": "3.5.0",
-    "*/@babel/types/lodash": ">=4.17.19"
+    "*/@babel/types/lodash": ">=4.17.19",
+    "*/elliptic": "^6.5.3",
+    "*/node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
