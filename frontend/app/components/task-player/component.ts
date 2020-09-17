@@ -3,12 +3,13 @@ import { dasherize } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { timeout, task } from 'ember-concurrency';
+import { timeout, task, TaskInstance  } from 'ember-concurrency';
 import { MODES } from 'brn/utils/task-modes';
 import Ember from 'ember';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
+
 export default class TaskPlayerComponent extends Component {
   @service("audio") audio!: AudioService;
   @service("stats")  stats!: StatsService;
@@ -23,7 +24,7 @@ export default class TaskPlayerComponent extends Component {
   @tracked
   textToPlay: string | null = null;
   tagName = '';
-  activeTask: null | Promise<any> & { cancel(): void } = null;
+  activeTask: null | TaskInstance<any> = null;
   willDestroyElement() {
     this.audio.stopNoise();
   }
@@ -183,7 +184,7 @@ export default class TaskPlayerComponent extends Component {
     this.setMode(mode);
   }
 
-  @action async setMode(mode: any, ...args: any) {
+  @action async setMode(mode: string, ...args: any) {
     if (this.activeTask) {
       try {
         this.activeTask.cancel();
