@@ -10,6 +10,7 @@ import { urlForAudio } from 'brn/utils/file-url';
 import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
+import StatsService, { StatEvents } from 'brn/services/stats';
 
 function getEmptyTemplate(selectedItemsOrder = []): any {
   return selectedItemsOrder.reduce((result, currentKey) => {
@@ -35,6 +36,7 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     this.startTask();
   }
   @service audio!: AudioService;
+  @service stats!: StatsService;
   @tracked tasksCopy = [];
   @tracked currentAnswerObject: null | Record<string,string> = null;
   @tracked isCorrect = false;
@@ -126,8 +128,11 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
       this.isCorrect = isCorrect;
 
       if (isCorrect) {
+        this.stats.addEvent(StatEvents.RightAnswer);
         yield this.handleCorrectAnswer();
       } else {
+        this.stats.addEvent(StatEvents.WrongAnswer);
+        this.stats.addEvent(StatEvents.Repeat);
         yield this.handleWrongAnswer();
       }
     }
