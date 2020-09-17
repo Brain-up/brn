@@ -133,6 +133,6 @@ module('Acceptance | tasks flow', function(hooks) {
     await customTimeout();
 
 
-    assert.equal(currentURL(), '/groups/1/series/1');
+    assert.equal(currentURL(), '/groups/1/series/1?name=');
   });
 });
