@@ -68,7 +68,7 @@
     "@fortawesome/ember-fontawesome": "^0.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fullhuman/postcss-purgecss": "^2.3.0",
-    "@glimmer/component": "^1.0.1",
+    "@glimmer/component": "^1.0.2",
     "@glimmer/tracking": "^1.0.1",
     "@types/ember": "^3.16.0",
     "@types/ember-data": "^3.16.4",
