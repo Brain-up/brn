@@ -19,14 +19,14 @@
         "name": "",
         "url": "",
         "frequency": 50,
-        "length": 1
+        "length": 100
       },
       {
         "id": 2,
         "name": "",
         "url": "",
         "frequency": 50,
-        "length": 2
+        "length": 200
       }
     ]
   },
