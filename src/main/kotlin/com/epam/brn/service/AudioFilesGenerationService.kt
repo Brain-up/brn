@@ -60,6 +60,9 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     @Value("\${yandex.emotion}")
     lateinit var emotion: String
 
+    @Value("\${yandex.speed}")
+    lateinit var speed: String
+
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForFiles: String
 
@@ -126,13 +129,15 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
             return targetOggFile
         }
         val token = getYandexIamTokenForAudioGeneration()
-        val parameters = ArrayList<NameValuePair>()
-        parameters.add(BasicNameValuePair("folderId", folderId))
-        parameters.add(BasicNameValuePair("lang", lang))
-        parameters.add(BasicNameValuePair("format", format))
-        parameters.add(BasicNameValuePair("voice", voice))
-        parameters.add(BasicNameValuePair("emotion", emotion))
-        parameters.add(BasicNameValuePair("text", word))
+        val parameters = ArrayList<NameValuePair>().apply {
+            add(BasicNameValuePair("folderId", folderId))
+            add(BasicNameValuePair("lang", lang))
+            add(BasicNameValuePair("format", format))
+            add(BasicNameValuePair("voice", voice))
+            add(BasicNameValuePair("emotion", emotion))
+            add(BasicNameValuePair("speed", speed))
+            add(BasicNameValuePair("text", word))
+        }
 
         val uriBuilder = URIBuilder(uriGenerationAudioFile)
         uriBuilder.addParameters(parameters)
