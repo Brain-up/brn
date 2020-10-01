@@ -29,6 +29,7 @@ export default class Exercise extends CompletionDependent.extend({
   order: attr('number'),
   exerciseType: attr('string'),
   series: belongsTo('series', { async: true }),
+  signals: hasMany('signal', { async: false }),
   tasks: hasMany('task', { async: true }),
   children: reads('tasks'),
   parent: reads('series'),
