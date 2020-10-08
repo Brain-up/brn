@@ -12516,14 +12516,14 @@ stagehand@^1.0.0:
   dependencies:
     debug "^4.1.0"
 
-standardized-audio-context@^25.0.4:
-  version "25.1.0"
-  resolved "https://registry.yarnpkg.com/standardized-audio-context/-/standardized-audio-context-25.1.0.tgz#579fac078aae179bd595752e5228af9791f63c9b"
-  integrity sha512-Gc49nrsYjatbDYrhT0/rAbpi6JuQKz0j2GOnqtfFguHTmajtOgjm1uRZe3SblhmEnT48XNvF/oJ+pLsk5r455A==
+standardized-audio-context@^25.1.0:
+  version "25.1.2"
+  resolved "https://registry.yarnpkg.com/standardized-audio-context/-/standardized-audio-context-25.1.2.tgz#cb3e97c530a209f0cdc5fb12e57b055c6de9adbe"
+  integrity sha512-1CgekALBjY84btmKAFpietU9GzewPtPUmv2AHkwauXCbi/YXaIhChWffkirZ/GYBMIxWBupTes4y5YDk9O8ySw==
   dependencies:
     "@babel/runtime" "^7.11.2"
     automation-events "^3.0.0"
-    tslib "^2.0.1"
+    tslib "^2.0.2"
 
 state-toggle@^1.0.0:
   version "1.0.3"
@@ -13200,12 +13200,12 @@ toidentifier@1.0.0:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
-tone@^14.7.60:
-  version "14.7.60"
-  resolved "https://registry.yarnpkg.com/tone/-/tone-14.7.60.tgz#a08644ee9640842e423bb91a57a62fa042ef7512"
-  integrity sha512-hd1GWC2kZR3RuUpZ3u24okOeBkMh7EOUwhPMw1Vditfa3jc8c1QBb8sNuTQ8QF2BW20xyGJb0php0hlsGSSFhw==
+tone@^14.7.61:
+  version "14.7.61"
+  resolved "https://registry.yarnpkg.com/tone/-/tone-14.7.61.tgz#f8b21826cf297def20d62e37f7dad1fe30bc1a36"
+  integrity sha512-zpUvpc/68JOieU7JybPG8IQB6xivw5Xu/wlEiCwawRUS2yZNLDGxHBuW2D9ROBQ4gNfA/KQdSzW+qyML5fmGwA==
   dependencies:
-    standardized-audio-context "^25.0.4"
+    standardized-audio-context "^25.1.0"
     tslib "^2.0.1"
 
 tough-cookie@^2.3.3, tough-cookie@^2.4.3, tough-cookie@~2.5.0:
@@ -13293,10 +13293,10 @@ tslib@^1.10.0, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
-tslib@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
-  integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
+tslib@^2.0.1, tslib@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.2.tgz#462295631185db44b21b1ea3615b63cd1c038242"
+  integrity sha512-wAH28hcEKwna96/UacuWaVspVLkg4x1aDM9JlzqaQTOFczCktkVAb5fmXChgandR1EraDPs2w8P+ozM+oafwxg==
 
 tty-browserify@0.0.0:
   version "0.0.0"
