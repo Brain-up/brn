@@ -17,6 +17,9 @@ import Service, { inject as service } from '@ember/service';
 import TimerComponent from 'brn/components/timer/component';
 import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
+import { ToneObject } from 'brn/components/audio-player/component';
+import SignalModel from 'brn/models/signal';
+import * as Tone from 'tone';
 export default class AudioService extends Service {
   @service('network') network!: NetworkService;
   @service('stats') stats!: StatsService;
@@ -36,7 +39,7 @@ export default class AudioService extends Service {
 
   @tracked audioPlayingProgress = 0;
 
-  @tracked audioFileUrl: null | string | string[] = null;
+  @tracked audioFileUrl: null | string | string[] | ToneObject = null;
 
   @(task(function*(this: AudioService) {
     try {
@@ -101,13 +104,18 @@ export default class AudioService extends Service {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
-  async setAudioElements(filesToPlay: string[]) {
+  async setAudioElements(filesToPlay: Array<string|ToneObject>) {
+    console.log('setAudioElements', filesToPlay);
     this.context = createAudioContext();
     if (Ember.testing) {
       this.buffers = [];
       return;
     }
-    this.buffers = await loadAudioFiles(this.context, filesToPlay);
+    if (filesToPlay.filter((el)=> typeof el === 'string').length) {
+      this.buffers = await loadAudioFiles(this.context, filesToPlay);
+    } else {
+      this.buffers = filesToPlay;
+    }
   }
 
   @action
@@ -163,8 +171,32 @@ export default class AudioService extends Service {
     }
   }
 
+  createToneSources(items: SignalModel[]) {
+    return items.map(el => {
+      const { duration, frequency } = el;
+      return {
+        source: {
+          instance: new Tone.PolySynth(Tone.Synth).toDestination(),
+          buffer: {
+            duration: duration / 100
+          },
+          start() {
+            this.instance.triggerAttack(frequency, Tone.now(), 0.5);
+          },
+          stop() {
+            this.instance.dispose();
+          }
+        }
+      }
+    });
+  }
+
   createSources(context: AudioContext, buffers: AudioBuffer[]) {
-    return buffers.map((buffer) => createSource(context, buffer));
+    if (buffers.filter(el => el instanceof AudioBuffer).length) {
+      return buffers.map((buffer) => createSource(context, buffer));
+    } else {
+      return this.createToneSources(((buffers as unknown) as SignalModel[]));
+    }
   }
 
   calcDurationForSources(sources: any[]) {

@@ -3,8 +3,12 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import AudioService from 'brn/services/audio';
 
+export interface ToneObject {
+  duration: number,
+  frequency: number
+}
 interface IAudioPlayerArguments {
-  audioFileUrl: string;
+  audioFileUrl: string | ToneObject
   transparent: boolean;
 }
 
@@ -31,7 +35,7 @@ export default class AudioPlayerComponent extends Component<IAudioPlayerArgument
     this.audio.startPlayTask();
   }
 
-  @action onUpdateSource(_: HTMLElement, [url]: string[]) {
+  @action onUpdateSource(_: HTMLElement, [url]: string | ToneObject[]) {
     // @to-do remove this source control logic
     this.audio.audioFileUrl = url;
   }
