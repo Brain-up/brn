@@ -8,27 +8,29 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     tasks: { serialize: 'ids-and-types', deserialize: 'records' },
     signals: { serialize: 'ids-and-types', deserialize: 'records' },
   };
-  normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+  normalizeSignal(store, payloadItem) {
     const included = [];
-    payload?.data?.map((el) => {
-      if (el.signals) {
-        el.signals = el.signals.map((el) => {
-          el.duration = el.length;
-          included.push({
-            id: el.id,
-            type: 'signal',
-            attributes: { ...el }
-          });
-          return {
-            id: el.id,
-            type: 'signal',
-          }
-        })
-      }
+    const signalSerializer = store.serializerFor('signal');
+    const taskSignalSerializer = store.serializerFor('task/signal');
+    payloadItem.signals = payloadItem.signals.map((el) => {
+      const normalizedSignal = signalSerializer.normalize(store.modelFor('signal'), el);
+      included.push(normalizedSignal);
+      included.push(taskSignalSerializer.normalize(store.modelFor('task/signal'), normalizedSignal, payloadItem));
+      return signalSerializer.payloadToTypeId(el);
+    })
+    payloadItem.tasks = payloadItem.signals.map((el)=> {
+      return taskSignalSerializer.payloadToTypeId(el);
     });
     if (included.length) {
       store.push({ data: included });
     }
+  }
+  normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+    payload?.data?.map((el) => {
+      if (el.signals) {
+        this.normalizeSignal(store, el);
+      }
+    });
     return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
   }
 }

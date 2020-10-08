@@ -91,7 +91,10 @@ export default class Exercise extends CompletionDependent.extend({
       exerciseId: id
     };
   },
-  calcStats(data: IStatsExerciseStats): IStatsObject {
+  calcStats(data: IStatsExerciseStats | undefined): IStatsObject {
+    if (!data) {
+      throw new Error('unable calculate exercise stats');
+    }
     const { stats } = this;
     stats.tasksCount = data.rightAnswersCount - data.repeatsCount;
     stats.rightAnswersCount = data.rightAnswersCount;
