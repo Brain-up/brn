@@ -24,7 +24,7 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
   @service('stats') stats !: StatsService;
   @service('audio') audio !: AudioService;
   get tasksCopy() {
-    return this.task.get('parent').get('tasks').toArray();
+    return this.task?.get('parent').get('tasks').toArray() || [];
   }
 
   get onWrongAnswer() {
