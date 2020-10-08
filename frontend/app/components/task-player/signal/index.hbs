@@ -7,7 +7,7 @@
       @transparent={{not-eq @mode "task"}}
     />
     <ul class="task-player__options mt-5">
-      {{#each this.task.answerOptions as |answerOption|}}
+      {{#each @task.answerOptions as |answerOption|}}
         <li class="task-player__option">
           <button
             data-test-task-answer
@@ -35,7 +35,7 @@
               (if
                 (eq @mode "interact")
                 (fn @onPlayText answerOption.word)
-                (fn this.checkMaybe answerOption.word)
+                (fn this.checkMaybe answerOption)
               )
             }}
           >
