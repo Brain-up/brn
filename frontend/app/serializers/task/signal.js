@@ -12,6 +12,12 @@ export default class TaskSignalSerializer extends BaseTaskSerializer {
       type,
       attributes: attrs,
       relationships: {
+        signal: {
+          data: {
+            id: hash.id,
+            type: 'signal'
+          }
+        },
         exercise: {
           data: {
             id: parent.id,

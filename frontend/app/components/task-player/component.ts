@@ -88,6 +88,9 @@ export default class TaskPlayerComponent extends Component {
     } = this.task;
     // for ordered tasks we need to align audio stream with object order;
     const modelName = this.task.constructor.modelName;
+    if (modelName === 'task/signal') {
+      return answerOptions;
+    }
     if (
       modelName === 'task/single-words' ||
       modelName === 'task/single-simple-words'
