@@ -4,7 +4,7 @@ import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
 import { setupAfterPageVisit } from './test-support/helpers';
 import { getServerResponses, chooseAnswer } from '../general-helpers';
-import { settled, waitFor } from '@ember/test-helpers';
+import { click, settled, waitFor } from '@ember/test-helpers';
 import { timeout } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
@@ -128,6 +128,8 @@ module('Acceptance | tasks flow', function(hooks) {
       .hasAttribute('data-test-is-correct');
 
     await waitFor('[data-test-exercise-stats]');
+
+    await click('[data-test-continue]');
 
     await customTimeout();
     await customTimeout();
