@@ -36,7 +36,7 @@
       {{else if this.showExerciseStats}}
           <ExerciseStats
             @stats={{this.exerciseStats}}
-            {{did-insert this.afterCompleted}}
+            @onComplete={{this.afterCompleted}}
           />
       {{else}}
         {{outlet}}
