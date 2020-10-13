@@ -80,7 +80,8 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
     // this.updateLocalTasks();
     // await customTimeout(1000);
     // this.startTask();
-    this.onWrongAnswer({ skipRetry: true });
+    // { skipRetry: true }
+    this.onWrongAnswer();
   }
 
   get task() {
@@ -88,7 +89,7 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
   }
 
   get audioFileUrl() {
-    return this.task.signal;
+    return this.task?.signal;
   }
 
   @action onInsert() {

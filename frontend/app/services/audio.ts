@@ -105,7 +105,6 @@ export default class AudioService extends Service {
   }
 
   async setAudioElements(filesToPlay: Array<string|ToneObject>) {
-    console.log('setAudioElements', filesToPlay);
     this.context = createAudioContext();
     if (Ember.testing) {
       this.buffers = [];

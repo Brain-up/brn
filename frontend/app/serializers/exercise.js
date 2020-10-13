@@ -26,11 +26,14 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     }
   }
   normalizeResponse(store, primaryModelClass, payload, id, requestType) {
-    payload?.data?.map((el) => {
-      if (el.signals) {
-        this.normalizeSignal(store, el);
-      }
-    });
+    const data = payload?.data;
+    if (Array.isArray(data)) {
+      data.map((el) => {
+        if (el.signals) {
+          this.normalizeSignal(store, el);
+        }
+      });
+    }
     return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
   }
 }

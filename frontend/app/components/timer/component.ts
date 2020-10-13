@@ -7,7 +7,7 @@ import StudyingTimerService from 'brn/services/studying-timer';
 import { tracked } from '@glimmer/tracking';
 
 interface ITimerComponentArgs {
-  hideControls: boolean
+  hideControls?: boolean
 }
 
 export default class TimerComponent extends Component<ITimerComponentArgs> {
