@@ -50,7 +50,7 @@ statistics:
   info_about: Твой BrainUp образ
 
 task_link:
-  exercise: Упражнения
+  exercise: Упражнение
 
 service_message:
   no_tasks:  Пока в этом упражнении нет задач

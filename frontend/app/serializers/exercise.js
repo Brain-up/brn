@@ -29,7 +29,7 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     const data = payload?.data;
     if (Array.isArray(data)) {
       data.map((el) => {
-        if (el.signals) {
+        if (el.signals && el.signals.length) {
           this.normalizeSignal(store, el);
         }
       });
