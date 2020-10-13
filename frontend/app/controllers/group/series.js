@@ -14,9 +14,11 @@ export default class GroupSeriesController extends Controller {
     const exercises = this.model.exercises.toArray();
     exercises.forEach((el)=>{
       if (!(el.name in items)) {
+        const detail = el.name.indexOf('/') > 0 ? el.name.slice(el.name.indexOf('/'), el.name.length): '-';
         items[el.name] = {
           count: 0,
-          name: el.name,
+          name: el.name.replace(detail, '').trim(),
+          detail: detail.trim(),
           picture: `/${el.pictureUrl}`
         }
       }
