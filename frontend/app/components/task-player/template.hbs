@@ -11,7 +11,7 @@
 {{#let (query-node "#exercise-timer-slot") as |node|}}
   {{#if node}}
     {{#in-element node}}
-      <Timer @paused={{true}} @hideControls={{this.justEnteredTask}} />
+      <Timer @hideControls={{this.justEnteredTask}} />
     {{/in-element}}
   {{/if}}
 {{/let}}
