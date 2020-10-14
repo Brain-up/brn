@@ -23,7 +23,7 @@ class StudyHistoryService(
 ) {
     private val log = logger()
 
-    fun findBy(userId: Long?, exerciseId: Long?): Optional<StudyHistory> {
+    fun findBy(userId: Long, exerciseId: Long): Optional<StudyHistory> {
         return studyHistoryRepository.findByUserAccountIdAndExerciseId(userId, exerciseId)
     }
 
@@ -63,8 +63,8 @@ class StudyHistoryService(
         log.debug("Patching $studyHistoryDto")
         return studyHistoryRepository
             .findByUserAccountIdAndExerciseId(
-                studyHistoryDto.userId,
-                studyHistoryDto.exerciseId
+                studyHistoryDto.userId!!,
+                studyHistoryDto.exerciseId!!
             ).map { studyHistoryEntity ->
                 studyHistoryConverter.updateStudyHistoryWhereNotNull(studyHistoryDto, studyHistoryEntity)
                 studyHistoryRepository.save(studyHistoryEntity).toDto()

@@ -50,8 +50,8 @@ data class StudyHistory(
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
-        userId = this.userAccount.id,
-        exerciseId = this.exercise.id,
+        userId = this.userAccount.id!!,
+        exerciseId = this.exercise.id!!,
         startTime = this.startTime,
         endTime = this.endTime,
         tasksCount = this.tasksCount,

@@ -170,9 +170,9 @@ class InitialDataLoader(
         exercise5.addSignals(listOf(signalOne5, signalTwo5, signalThree5))
         val exercise6 = Exercise(series = seriesLength, name = "По 3 сигнала разной длительности.", level = 2,
             exerciseType = ExerciseType.THREE_DIFFERENT_LENGTH_SIGNAL.name)
-        val signalOne6 = Signal(frequency = 1000, length = 20, exercise = exercise2)
-        val signalTwo6 = Signal(frequency = 1000, length = 60, exercise = exercise2)
-        val signalThree6 = Signal(frequency = 1000, length = 120, exercise = exercise2)
+        val signalOne6 = Signal(frequency = 1000, length = 20, exercise = exercise6)
+        val signalTwo6 = Signal(frequency = 1000, length = 60, exercise = exercise6)
+        val signalThree6 = Signal(frequency = 1000, length = 120, exercise = exercise6)
         exercise6.addSignals(listOf(signalOne6, signalTwo6, signalThree6))
 
         val exercise7 = Exercise(series = seriesFrequency, name = "По 3 сигнала разной частоты.", level = 1,

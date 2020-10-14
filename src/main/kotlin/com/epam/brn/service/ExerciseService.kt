@@ -8,6 +8,7 @@ import com.epam.brn.repo.StudyHistoryRepository
 import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,6 +18,13 @@ class ExerciseService(
     @Autowired val userAccountService: UserAccountService,
     @Autowired val urlConversionService: UrlConversionService
 ) {
+
+    @Value(value = "\${minRepetitionIndex}")
+    private lateinit var minRepetitionIndex: Number
+
+    @Value(value = "\${minRightAnswersIndex}")
+    private lateinit var minRightAnswersIndex: Number
+
     private val log = logger()
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
@@ -46,11 +54,32 @@ class ExerciseService(
         log.info("Searching available exercises for user=$userId with series=$seriesId")
         val isSupport = userId in (1..3)
         log.info("current user is admin: $isSupport")
-        val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
-        val exercises = exerciseRepository.findExercisesBySeriesId(seriesId)
-        return emptyIfNull(exercises).map { exercise ->
-            updateNoiseUrl(exercise.toDto(exercisesIdList.contains(exercise.id) || isSupport))
+        val doneExercises = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
+        val allExercises = exerciseRepository.findExercisesBySeriesId(seriesId)
+        // val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
+        return emptyIfNull(allExercises).map { exercise ->
+            updateNoiseUrl(exercise.toDto(true))
+            // todo: avaliability  updateNoiseUrl(exercise.toDto(doneExercises.contains(exercise.id) || isSupport))
         }
+    }
+
+    fun getAvailableExercises(doneExercisesIds: List<Long>, allExercises: List<Exercise>, userId: Long): List<Long> {
+        if (doneExercisesIds.size == allExercises.size)
+            return doneExercisesIds
+        val lastDoneId = doneExercisesIds.last()
+        val lastStudyHistory = studyHistoryRepository.findByUserAccountIdAndExerciseId(userId, lastDoneId).get()
+        if (lastStudyHistory != null) {
+            val repetitionIndex = lastStudyHistory.tasksCount!!.toFloat() / lastStudyHistory.listeningsCount!!
+            val rightAnswersIndex = lastStudyHistory.rightAnswersCount!!.toFloat() / lastStudyHistory.tasksCount!!
+            if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat())
+                return doneExercisesIds
+        }
+        val mapName = allExercises.groupBy({ it.name }, { it })
+        val unavailableExercises = allExercises.map { e -> e.id }.minus(doneExercisesIds)
+        val nextAvailable = unavailableExercises[0]!!
+        val mutableList = doneExercisesIds.toMutableList()
+        mutableList.add(nextAvailable)
+        return mutableList
     }
 
     fun updateNoiseUrl(exerciseDto: ExerciseDto): ExerciseDto {

@@ -4,6 +4,8 @@ import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.nhaarman.mockito_kotlin.verify
@@ -18,7 +20,9 @@ import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
+import kotlin.test.assertTrue
 
 @ExtendWith(MockitoExtension::class)
 internal class ExerciseServiceTest {
@@ -64,7 +68,7 @@ internal class ExerciseServiceTest {
         val seriesId = 2L
         val userId = 3L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
-        `when`(exerciseMock.id).thenReturn(exerciseId)
+        // `when`(exerciseMock.id).thenReturn(exerciseId)
         `when`(studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)).thenReturn(listOf(exerciseId))
         `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exerciseMock))
         // WHEN
@@ -99,5 +103,35 @@ internal class ExerciseServiceTest {
         // THEN
         assertEquals(actualResult, exerciseMock)
         verify(exerciseRepository).findExerciseByNameAndLevel(anyString(), anyInt())
+    }
+
+    @Test
+    fun `should return availableExercises`() {
+        // GIVEN
+        val ex1 = Exercise(id = 1, name = "pets")
+        val ex2 = Exercise(id = 2, name = "pets")
+        val ex3 = Exercise(id = 3, name = "pets")
+        val ex4 = Exercise(id = 4, name = "pets")
+        val ex11 = Exercise(id = 5, name = "food")
+        val ex12 = Exercise(id = 6, name = "food")
+        val ex13 = Exercise(id = 7, name = "food")
+        val ex21 = Exercise(id = 7, name = "some")
+        val listAll = listOf(ex1, ex2, ex3, ex4, ex11, ex12, ex13, ex21)
+        val listDone = listOf(1L, 2)
+        val studyHistory = StudyHistory(exercise = ex2,
+            userAccount = mock(UserAccount::class.java),
+            listeningsCount = 12,
+            rightAnswersCount = 8,
+            tasksCount = 10)
+        `when`(studyHistoryRepository.findByUserAccountIdAndExerciseId(1, 2))
+            .thenReturn(Optional.of(studyHistory))
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.75)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.75)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+        // THEN
+        assertEquals(3, actualResult.size)
+        assertTrue(actualResult.containsAll(listOf(1L, 2L, 3L)))
     }
 }
