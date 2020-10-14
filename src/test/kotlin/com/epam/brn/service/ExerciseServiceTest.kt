@@ -45,7 +45,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, 0, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
         val exerciseId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
@@ -63,12 +63,12 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user and series`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, 0, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
         val exerciseId = 1L
         val seriesId = 2L
         val userId = 3L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
-        `when`(exerciseMock.id).thenReturn(exerciseId)
+        // `when`(exerciseMock.id).thenReturn(exerciseId)
         `when`(studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)).thenReturn(listOf(exerciseId))
         `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exerciseMock))
         // WHEN
@@ -83,7 +83,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, 0, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
         `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN
@@ -106,7 +106,7 @@ internal class ExerciseServiceTest {
     }
 
     @Test
-    fun `should return unavailableExercises`() {
+    fun `should return availableExercises`() {
         // GIVEN
         val ex1 = Exercise(id = 1, name = "pets")
         val ex2 = Exercise(id = 2, name = "pets")

@@ -21,6 +21,7 @@ class ExerciseService(
 
     @Value(value = "\${minRepetitionIndex}")
     private lateinit var minRepetitionIndex: Number
+
     @Value(value = "\${minRightAnswersIndex}")
     private lateinit var minRightAnswersIndex: Number
 
@@ -55,9 +56,10 @@ class ExerciseService(
         log.info("current user is admin: $isSupport")
         val doneExercises = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
         val allExercises = exerciseRepository.findExercisesBySeriesId(seriesId)
-        val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
+        // val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
         return emptyIfNull(allExercises).map { exercise ->
-            updateNoiseUrl(exercise.toDto(doneExercises.contains(exercise.id) || isSupport))
+            updateNoiseUrl(exercise.toDto(true))
+            // todo: avaliability  updateNoiseUrl(exercise.toDto(doneExercises.contains(exercise.id) || isSupport))
         }
     }
 
@@ -72,7 +74,7 @@ class ExerciseService(
             if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat())
                 return doneExercisesIds
         }
-
+        val mapName = allExercises.groupBy({ it.name }, { it })
         val unavailableExercises = allExercises.map { e -> e.id }.minus(doneExercisesIds)
         val nextAvailable = unavailableExercises[0]!!
         val mutableList = doneExercisesIds.toMutableList()
