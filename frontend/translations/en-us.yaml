@@ -48,6 +48,7 @@ statistics:
   scoring: Indicator of the success
   time_board: Time
   info_about: Your BrainUp Image
+  continue: Continue
 
 task_link:
   exercise: Exercise

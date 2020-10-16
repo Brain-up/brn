@@ -29,6 +29,7 @@ export default class Exercise extends CompletionDependent.extend({
   order: attr('number'),
   exerciseType: attr('string'),
   series: belongsTo('series', { async: true }),
+  signals: hasMany('signal', { async: false }),
   tasks: hasMany('task', { async: true }),
   children: reads('tasks'),
   parent: reads('series'),
@@ -90,7 +91,10 @@ export default class Exercise extends CompletionDependent.extend({
       exerciseId: id
     };
   },
-  calcStats(data: IStatsExerciseStats): IStatsObject {
+  calcStats(data: IStatsExerciseStats | undefined): IStatsObject {
+    if (!data) {
+      throw new Error('unable calculate exercise stats');
+    }
     const { stats } = this;
     stats.tasksCount = data.rightAnswersCount - data.repeatsCount;
     stats.rightAnswersCount = data.rightAnswersCount;
