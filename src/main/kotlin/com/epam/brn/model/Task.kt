@@ -75,6 +75,13 @@ data class Task(
         answerParts = answerParts.values.map { part -> part.toDto() },
         correctAnswer = correctAnswer!!.toDto()
     )
+    fun to4SeriesTaskDto() = TaskDtoFor1Series(
+        id = id,
+        exerciseType = ExerciseType.PHRASES,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
+    )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
 

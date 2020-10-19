@@ -1,0 +1,26 @@
+{
+  "data": {
+    "seriesId": 4,
+    "id": 21,
+    "name": "Фразы разной длительности",
+    "pictureUrl": "pictures/theme/longShortPhrases.svg",
+    "description": "Фразы разной длительности",
+    "level": 1,
+    "noise": {
+      "level": 0,
+      "url": ""
+    },
+    "exerciseType": "PHRASES",
+    "template": "",
+    "available": true,
+    "tasks": [
+      {
+        "id": 29,
+        "type": "task/PHRASES"
+      }
+    ],
+    "signals": []
+  },
+  "errors": [],
+  "meta": []
+}
