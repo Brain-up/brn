@@ -32,6 +32,9 @@ class TaskService(
             }
             ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.to2SeriesTaskDto(task.exercise?.template) }
             ExerciseType.SENTENCE -> tasks.map { task -> task.to3SeriesTaskDto(task.exercise?.template) }
+            ExerciseType.PHRASES -> tasks.map { task ->
+                convertAudioFileUrl(task.to4SeriesTaskDto())
+            }
             else -> throw EntityNotFoundException("No tasks for this signal exercise type")
         }
     }
@@ -51,7 +54,8 @@ class TaskService(
             ExerciseType.SINGLE_SIMPLE_WORDS -> convertAudioFileUrl(task.to1SeriesTaskDto())
             ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)
-            else -> throw EntityNotFoundException("No tasks for this signal exercise type")
+            ExerciseType.PHRASES -> convertAudioFileUrl(task.to4SeriesTaskDto())
+            else -> throw EntityNotFoundException("No tasks for this exercise type")
         }
     }
 

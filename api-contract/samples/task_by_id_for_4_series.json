@@ -1,61 +1,27 @@
 {
   "data": {
-    "id": 62,
-    "exerciseType": "SINGLE_SIMPLE_WORDS",
+    "id": 29,
+    "exerciseType": "PHRASES",
     "name": "",
-    "serialNumber": 4,
-    "answerOptions": {
-      "OBJECT": [
-        {
-          "id": 345,
-          "audioFileUrl": "series4/бал.mp3",
-          "word": "бал",
-          "wordType": "OBJECT",
-          "pictureFileUrl": "pictures/бал.jpg",
-          "soundsCount": 0
-        },
-        {
-          "id": 346,
-          "audioFileUrl": "series4/бум.mp3",
-          "word": "бум",
-          "wordType": "OBJECT",
-          "pictureFileUrl": "pictures/бум.jpg",
-          "soundsCount": 0
-        },
-        {
-          "id": 347,
-          "audioFileUrl": "series4/быль.mp3",
-          "word": "быль",
-          "wordType": "OBJECT",
-          "pictureFileUrl": "pictures/быль.jpg",
-          "soundsCount": 0
-        },
-        {
-          "id": 348,
-          "audioFileUrl": "series4/вить.mp3",
-          "word": "вить",
-          "wordType": "OBJECT",
-          "pictureFileUrl": "pictures/вить.jpg",
-          "soundsCount": 0
-        },
-        {
-          "id": 349,
-          "audioFileUrl": "series4/гад.mp3",
-          "word": "гад",
-          "wordType": "OBJECT",
-          "pictureFileUrl": "pictures/гад.jpg",
-          "soundsCount": 0
-        },
-        {
-          "id": 349,
-          "audioFileUrl": "series4/дуб.mp3",
-          "word": "дуб",
-          "wordType": "OBJECT",
-          "pictureFileUrl": "pictures/дуб.jpg",
-          "soundsCount": 0
-        }
-      ]
-    }
+    "serialNumber": 1,
+    "answerOptions": [
+      {
+        "id": 160,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/abbed565fd2198a34245f7d2a443bb2c.ogg",
+        "word": "Мамочка быстро идёт в магазин",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0
+      },
+      {
+        "id": 159,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/716d83ff90d4776d2c1848413a40ef15.ogg",
+        "word": "Мамочка идёт",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0
+      }
+    ]
   },
   "errors": [],
   "meta": []
