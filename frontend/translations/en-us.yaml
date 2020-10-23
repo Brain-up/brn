@@ -43,6 +43,7 @@ exercise_messages:
 statistics:
   attempts: Attempts
   tasks: Tasks
+  listenings: Listenings
   time_min: min
   time_sec: sec
   scoring: Indicator of the success

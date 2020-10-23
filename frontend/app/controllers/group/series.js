@@ -18,6 +18,7 @@ export default class GroupSeriesController extends Controller {
         items[el.name] = {
           count: 0,
           name: el.name.replace(detail, '').trim(),
+          fullName: el.name,
           detail: detail.trim(),
           picture: `/${el.pictureUrl}`
         }

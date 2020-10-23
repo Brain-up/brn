@@ -1,4 +1,4 @@
-<div class="w-1/2 px-2">
+<a href={{href-to "group.series" (query-params name=@group.fullName)}} class="w-1/2 px-2">
   <div class="flex max-w-md overflow-hidden bg-white rounded-lg shadow-lg">
     {{!-- template-lint-disable no-inline-styles style-concatenation --}}
     <div
@@ -13,14 +13,11 @@
         {{@group.detail}}
       </p>
       <div class="item-center flex justify-between mt-3">
-        <a
-          href={{href-to "group.series" (query-params name=@group.name)}}
-          class="px-3 py-2 text-xs font-bold text-white uppercase bg-gray-800 rounded"
-          type="button"
+        <div class="px-3 py-2 text-xs font-bold text-white uppercase bg-gray-800 rounded"
         >
           {{t "control_exercises.solve"}} ({{@group.count}})
-        </a>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</a>

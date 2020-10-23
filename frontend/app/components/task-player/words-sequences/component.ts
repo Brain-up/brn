@@ -132,7 +132,6 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
         yield this.handleCorrectAnswer();
       } else {
         this.stats.addEvent(StatEvents.WrongAnswer);
-        this.stats.addEvent(StatEvents.Repeat);
         yield this.handleWrongAnswer();
       }
     }

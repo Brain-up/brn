@@ -67,7 +67,6 @@ export default class TaskPlayerSingleWordsComponent extends Component<ITaskPlaye
     this.lastAnswer = word;
     if (word !== this.task.word) {
       this.stats.addEvent(StatEvents.WrongAnswer);
-      this.stats.addEvent(StatEvents.Repeat);
       const currentWordsOrder = Array.from(this.shuffledWords || []);
       this.task.set('repetitionCount', this.task.repetitionCount + 1);
       this.task.set('nextAttempt', true);

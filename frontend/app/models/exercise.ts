@@ -7,16 +7,16 @@ import { inject as service } from '@ember/service';
 import { IStatsExerciseStats } from "brn/services/stats";
 
 export interface IStatsObject {
-  countedSeconds: 61,
+  countedSeconds: number,
   endTime: Date,
   exerciseId: "110",
-  listeningsCount: 15,
-  repetitionIndex: 33.33333333333333,
-  rightAnswersCount: 12,
-  rightAnswersIndex: 100,
+  listeningsCount: number,
+  repetitionIndex: number,
+  rightAnswersCount: number,
+  rightAnswersIndex: number,
   startTime: Date,
-  tasksCount: 9,
-  userId: 3
+  tasksCount: number,
+  userId: number
 }
 
 export default class Exercise extends CompletionDependent.extend({

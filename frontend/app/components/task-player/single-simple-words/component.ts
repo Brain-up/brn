@@ -53,7 +53,6 @@ export default class SingleSimpleWordsComponent extends Component {
       this.stats.addEvent(StatEvents.RightAnswer);
       yield this.handleCorrectAnswer();
     } else {
-      this.stats.addEvent(StatEvents.Repeat);
       this.stats.addEvent(StatEvents.WrongAnswer);
       yield this.handleWrongAnswer();
     }

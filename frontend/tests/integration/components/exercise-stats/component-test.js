@@ -20,7 +20,6 @@ module('Integration | Component | exercise-stats', function(hooks) {
     await render(hbs`<ExerciseStats @stats={{this.stats}} @onComplete={{this.onComplete}} />`);
 
     assert.dom('[data-test-exercise-stats]').exists();
-    assert.dom('[data-test-type="negative"]').exists();
     assert.dom('[data-test-type="positive"]').exists();
     assert.dom('[data-test-type="neutral"]').exists();
     assert.dom('[data-test-continue]').exists();
