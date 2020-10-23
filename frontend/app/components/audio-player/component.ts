@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import AudioService from 'brn/services/audio';
+import StatsService, { StatEvents } from '../../services/stats';
 
 export interface ToneObject {
   duration: number,
@@ -18,6 +19,7 @@ export default class AudioPlayerComponent extends Component<IAudioPlayerArgument
   buttonElement!: HTMLElement;
 
   @service('audio') audio!: AudioService;
+  @service('stats') stats!: StatsService;
 
   willDestroy() {
     this.audio.stop();
@@ -33,6 +35,7 @@ export default class AudioPlayerComponent extends Component<IAudioPlayerArgument
 
   @action playAudio() {
     this.audio.startPlayTask();
+    this.stats.addEvent(StatEvents.Repeat);
   }
 
   @action onUpdateSource(_: HTMLElement, [url]: string | ToneObject[]) {

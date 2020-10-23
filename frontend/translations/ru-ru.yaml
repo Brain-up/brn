@@ -43,6 +43,7 @@ exercise_messages:
 statistics:
   attempts: Попытки
   tasks: Задачи
+  listenings: Прослушивания
   time_min: мин
   time_sec: сек
   scoring: Шкала успеха
