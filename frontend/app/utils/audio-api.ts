@@ -22,7 +22,7 @@ export const TIMINGS = {
   },
 };
 
-export function createNoizeBuffer(context, duration, level) {
+export function createNoizeBuffer(context: BaseAudioContext, duration: number, level: number) {
   let channels = 2;
   let frameCount = context.sampleRate * duration;
   let myArrayBuffer = context.createBuffer(
@@ -44,23 +44,23 @@ export default function audioApi() {
   return true;
 }
 
-export function toSeconds(value) {
+export function toSeconds(value: number) {
   return value / 1000;
 }
-export function toMilliseconds(value) {
+export function toMilliseconds(value: number) {
   return value * 1000;
 }
 
 export function createAudioContext() {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
   return new AudioContext();
 }
 
-export function createSource(context, buffer) {
+export function createSource(context: BaseAudioContext, buffer: AudioBuffer) {
   const source = context.createBufferSource();
-  const gainNode = context.createGain
+  const gainNode: GainNode = context.createGain
     ? context.createGain()
-    : context.createGainNode();
+    : (context as any).createGainNode();
   source.buffer = buffer;
   source.loop = false;
   source.connect(gainNode);
@@ -72,16 +72,39 @@ export function createSource(context, buffer) {
   };
 }
 
-export function BufferLoader(context, urlList, callback) {
-  this.context = context;
-  this.urlList = urlList;
-  this.onload = callback;
-  this.bufferList = new Array();
+export class BufferLoader {
+  context !: BaseAudioContext;
+  urlList !: string[];
+  onload !: (results: AudioBuffer[]) => void;
+  bufferList = [];
+  constructor(context: BaseAudioContext, urlList: string[], callback: (results: AudioBuffer[]) => void) {
+    this.context = context;
+    this.urlList = urlList;
+    this.onload = callback;
+  }
+  async load() {
+    const files = await Promise.all(
+      this.urlList.map((url) => arrayBufferRequest(url)),
+    );
+    try {
+      const results: AudioBuffer[] = await Promise.all(
+        files.map((file) => {
+          return new Promise((resolve, reject) => {
+            this.context.decodeAudioData(file as ArrayBuffer, resolve, reject);
+          }) as Promise<AudioBuffer>
+        }),
+      );
+      return this.onload(results);
+    } catch(e) {
+      console.error(e, files, this.urlList);
+      return [];
+    }
+  };
 }
 
 const AudioCache = new Map();
 
-function arrayBufferRequest(url) {
+function arrayBufferRequest(url: string) {
   return new Promise((resolve, reject) => {
     if (AudioCache.has(url)) {
       return resolve(AudioCache.get(url).slice());
@@ -100,9 +123,9 @@ function arrayBufferRequest(url) {
   });
 }
 
-export function loadAudioFiles(context, files) {
+export function loadAudioFiles(context: BaseAudioContext, files: string[]) {
   return new Promise((resolve) => {
-    let bufferLoader = new BufferLoader(
+    const bufferLoader = new BufferLoader(
       context,
       [...files],
       resolve,
@@ -110,17 +133,3 @@ export function loadAudioFiles(context, files) {
     bufferLoader.load();
   });
 }
-
-BufferLoader.prototype.load = async function() {
-  const files = await Promise.all(
-    this.urlList.map((url) => arrayBufferRequest(url)),
-  );
-  const results = await Promise.all(
-    files.map((file) => {
-      return new Promise((resolve, reject) => {
-        this.context.decodeAudioData(file, resolve, reject);
-      });
-    }),
-  );
-  return this.onload(results);
-};
