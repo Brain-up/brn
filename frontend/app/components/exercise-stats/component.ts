@@ -2,7 +2,8 @@ import Component from '@glimmer/component';
 import { IStatsObject } from 'brn/models/exercise';
 
 interface IExerciseStatsComponentArgs {
-  stats: IStatsObject
+  stats: IStatsObject,
+  onComplete: () => void;
 }
 
 enum TrendTypes {

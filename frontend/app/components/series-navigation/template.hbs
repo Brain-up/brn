@@ -7,8 +7,7 @@
         <div class="sm:rounded-lg sm:shadow navigation-block pb-4 overflow-hidden">
           <div class="sm:px-6 px-4 py-5">
             <h3
-              data-test-series-navigation-header
-              class="navigation-block__header text-lg font-bold leading-3"
+              data-test-series-navigation-header class="navigation-block__header text-lg font-bold leading-3"
             >
               {{header}}
             </h3>
@@ -19,8 +18,7 @@
             ) as |exercises|
           }}
             <ul
-              data-test-exercises-name-group
-              class="flex flex-row justify-around ml-6 mr-6"
+              data-test-exercises-name-group class="flex flex-row justify-around ml-6 mr-6"
             >
               {{#each exercises as |exercise|}}
                 <li>
@@ -32,7 +30,7 @@
                       disabled={{not exercise.canInteract}}
                       href={{href-to "group.series.exercise" exercise.id}}
                       title={{concat (t "task_link.exercise") " " exercise.level}}
-                      class="task-square-link exercise-block__level hover:shadow-md flex-1 p-2 m-4 mb-4 bg-white rounded-lg shadow-lg"
+                      class="task-square-link exercise-block__level hover:shadow-outline hover:shadow-md flex-1 p-2 m-4 mb-4 bg-white rounded-lg shadow-lg"
                     >
                       <Ui::Icon::Tree
                         @level={{level}}
