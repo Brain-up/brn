@@ -1,9 +1,8 @@
 <a href={{href-to "group.series" (query-params name=@group.fullName)}} class="w-1/2 px-2">
-  <div class="flex max-w-md overflow-hidden bg-white rounded-lg shadow-lg">
+  <div class="hover:shadow-outline flex max-w-md overflow-hidden bg-white rounded-lg shadow-lg">
     {{!-- template-lint-disable no-inline-styles style-concatenation --}}
     <div
-      style="background-image: url('{{html-safe @group.picture}}');"
-      class="w-1/3 bg-cover"
+      style="background-image: url('{{html-safe @group.picture}}');" class="w-1/3 bg-cover"
     ></div>
     <div class="w-2/3 p-4">
       <h1 class="text-gray-900 truncate">

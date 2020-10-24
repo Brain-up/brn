@@ -61,7 +61,6 @@ export default class GroupSeriesExerciseController extends Controller {
 
   @action
   async afterCompleted() {
-    await customTimeout(5000);
     this.showExerciseStats = false;
     this.goToSeries();
   }

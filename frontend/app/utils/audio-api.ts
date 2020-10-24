@@ -123,7 +123,7 @@ function arrayBufferRequest(url: string) {
   });
 }
 
-export function loadAudioFiles(context: BaseAudioContext, files: string[]) {
+export function loadAudioFiles(context: BaseAudioContext, files: string[]): Promise<AudioBuffer[]> {
   return new Promise((resolve) => {
     const bufferLoader = new BufferLoader(
       context,

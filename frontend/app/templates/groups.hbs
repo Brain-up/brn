@@ -1,22 +1,22 @@
 <ol class="series-container flex items-center justify-center">
   <li class="list-item mr-6">
-    <LinkTo @route="group" @model={{this.model.lastObject}}>
+    <LinkTo @route="group" @model={{@model.lastObject}}>
       <ExerciseType
         @progress={{100}}
         @completed={{48}}
         @total={{100}}
-        @initial={{this.model.lastObject.name}}
+        @initial={{@model.lastObject.name}}
         class="speech-exercise"
       />
     </LinkTo>
   </li>
   <li class="list-item">
-    <LinkTo @route="group" @model={{this.model.firstObject}}>
+    <LinkTo @route="group" @model={{@model.firstObject}}>
       <ExerciseType
         @progress={{24.43}}
         @completed={{88}}
         @total={{150}}
-        @initial={{this.model.firstObject.name}}
+        @initial={{@model.firstObject.name}}
         class="non-speech-exercises"
       />
     </LinkTo>

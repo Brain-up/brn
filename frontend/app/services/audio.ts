@@ -19,7 +19,6 @@ import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
 import { ToneObject } from 'brn/components/audio-player/component';
 import SignalModel from 'brn/models/signal';
-import * as Tone from 'tone';
 export default class AudioService extends Service {
   @service('network') network!: NetworkService;
   @service('stats') stats!: StatsService;
@@ -111,7 +110,7 @@ export default class AudioService extends Service {
       return;
     }
     if (filesToPlay.filter((el)=> typeof el === 'string').length) {
-      this.buffers = await loadAudioFiles(this.context, filesToPlay);
+      this.buffers = await loadAudioFiles(this.context, filesToPlay as string[]);
     } else {
       this.buffers = filesToPlay;
     }
@@ -154,23 +153,24 @@ export default class AudioService extends Service {
     }
   }
 
-  async getNoise(duration: number, level: number, url = null) {
-    if (url) {
+  async getNoise(duration: number, level: number, url: null | string = null) {
+    if (url !== null) {
       const noiseContext = createAudioContext();
       const noiseBuffers = await loadAudioFiles(noiseContext, [url]);
-      const source = createSource(noiseContext, noiseBuffers[0]);
+      const source = await createSource(noiseContext, noiseBuffers[0]);
       source.source.loop = true;
       source.gainNode.gain.value = level * 0.01;
       return source;
     } else {
-      return createSource(
+      return await createSource(
         this.context,
         createNoizeBuffer(this.context, duration, level),
       );
     }
   }
 
-  createToneSources(items: SignalModel[]) {
+  async createToneSources(items: SignalModel[]) {
+    const Tone = await import('tone');
     return items.map(el => {
       const { duration, frequency } = el;
       return {
@@ -190,11 +190,11 @@ export default class AudioService extends Service {
     });
   }
 
-  createSources(context: AudioContext, buffers: AudioBuffer[]) {
+  async createSources(context: AudioContext, buffers: AudioBuffer[]) {
     if (buffers.filter(el => el instanceof AudioBuffer).length) {
       return buffers.map((buffer) => createSource(context, buffer));
     } else {
-      return this.createToneSources(((buffers as unknown) as SignalModel[]));
+      return await this.createToneSources(((buffers as unknown) as SignalModel[]));
     }
   }
 
@@ -237,14 +237,14 @@ export default class AudioService extends Service {
       noizeSeconds = 0.3;
     }
     try {
-      this.sources = this.createSources(this.context, this.buffers || []);
+      this.sources = yield this.createSources(this.context, this.buffers || []);
       this.totalDuration =
         this.calcDurationForSources(this.sources) +
         toMilliseconds(noizeSeconds);
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
-        const noize = yield this.getNoise(
+        const noize: any = yield this.getNoise(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
           this.currentExerciseNoiseLevel
         );
@@ -264,6 +264,7 @@ export default class AudioService extends Service {
       yield timeout(10);
       this.isPlaying = false;
     } catch (e) {
+      console.error(e);
       // NOP
     } finally {
       startedSources.forEach(({ source }) => {

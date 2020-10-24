@@ -3,6 +3,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from '../../services/stats';
+import { ref } from 'ember-ref-bucket';
 
 export interface ToneObject {
   duration: number,
@@ -14,10 +15,10 @@ interface IAudioPlayerArguments {
 }
 
 export default class AudioPlayerComponent extends Component<IAudioPlayerArguments> {
+
   animationId: number = 0;
 
-  buttonElement!: HTMLElement;
-
+  @ref('buttonElement') buttonElement!: HTMLElement;
   @service('audio') audio!: AudioService;
   @service('stats') stats!: StatsService;
 

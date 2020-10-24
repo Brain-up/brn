@@ -2,7 +2,6 @@ import Service from '@ember/service';
 import { action } from '@ember/object';
 import config from 'brn/config/environment';
 import { tracked } from '@glimmer/tracking';
-import IdleJs from 'idle-js';
 
 export default class StudyingTimerService extends Service {
   willDestroy() {
@@ -55,9 +54,10 @@ export default class StudyingTimerService extends Service {
     this.isPaused = false;
   }
   @action
-  startIdleWatcher() {
+  async startIdleWatcher() {
     const player = this;
     const { timerInstance } = player;
+    const { default: IdleJs } = await import('idle-js');
     /* eslint-disable no-undef */
     this.idleWatcher = new IdleJs({
       idle: timerInstance.idleTimeout || config.idleTimeout,
