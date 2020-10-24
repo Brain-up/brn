@@ -1481,6 +1481,15 @@
   dependencies:
     "@types/node" "*"
 
+"@types/ember-data@*":
+  version "3.16.6"
+  resolved "https://registry.yarnpkg.com/@types/ember-data/-/ember-data-3.16.6.tgz#209bfa9b6979be32c3ed4a3abf04c274a37be04c"
+  integrity sha512-gx73u5XhJxlui1PP6grft5i6jpfTpcORk35pVBlPGkhQVWjez44iq2B/e7iVXomw9FkGVpp+htDsCmfo4nzDzA==
+  dependencies:
+    "@types/ember" "*"
+    "@types/ember__object" "*"
+    "@types/rsvp" "*"
+
 "@types/ember-data@^3.16.4":
   version "3.16.4"
   resolved "https://registry.yarnpkg.com/@types/ember-data/-/ember-data-3.16.4.tgz#a55d48e37ccfb3574b79376338fb35f94629d008"
@@ -1489,6 +1498,13 @@
     "@types/ember" "*"
     "@types/ember__object" "*"
     "@types/rsvp" "*"
+
+"@types/ember-data__model@^3.16.1":
+  version "3.16.1"
+  resolved "https://registry.yarnpkg.com/@types/ember-data__model/-/ember-data__model-3.16.1.tgz#54c1e88cf52f08bafcd0701a266a85feb5ae2950"
+  integrity sha512-RJMpKpq8jkLuUl/+E45PegE7fCXIzGlN854oJx6TwnOskZYx0CNe/dXeuicNuFbKRSPtfSqb9rmIXb5ApEUC2w==
+  dependencies:
+    "@types/ember-data" "*"
 
 "@types/ember-qunit@^3.4.9":
   version "3.4.9"
@@ -6081,6 +6097,15 @@ ember-data@~3.21.0:
     ember-cli-typescript "^3.1.3"
     ember-inflector "^3.0.1"
 
+ember-destroyable-polyfill@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/ember-destroyable-polyfill/-/ember-destroyable-polyfill-2.0.2.tgz#2cc7532bd3c00e351b4da9b7fc683f4daff79671"
+  integrity sha512-9t+ya+9c+FkNM5IAyJIv6ETG8jfZQaUnFCO5SeLlV0wkSw7TOexyb61jh5GVee0KmknfRhrRGGAyT4Y0TwkZ+w==
+  dependencies:
+    ember-cli-babel "^7.22.1"
+    ember-cli-version-checker "^5.1.1"
+    ember-compatibility-helpers "^1.2.1"
+
 ember-export-application-global@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/ember-export-application-global/-/ember-export-application-global-2.0.1.tgz#b120a70e322ab208defc9e2daebe8d0dfc2dcd46"
@@ -6236,7 +6261,7 @@ ember-modal-dialog@^3.0.1:
     ember-ignore-children-helper "^1.0.1"
     ember-wormhole "^0.5.5"
 
-ember-modifier-manager-polyfill@^1.0.1, ember-modifier-manager-polyfill@^1.1.0, ember-modifier-manager-polyfill@^1.2.0:
+ember-modifier-manager-polyfill@^1.1.0, ember-modifier-manager-polyfill@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ember-modifier-manager-polyfill/-/ember-modifier-manager-polyfill-1.2.0.tgz#cf4444e11a42ac84f5c8badd85e635df57565dda"
   integrity sha512-bnaKF1LLKMkBNeDoetvIJ4vhwRPKIIumWr6dbVuW6W6p4QV8ZiO+GdF8J7mxDNlog9CeL9Z/7wam4YS86G8BYA==
@@ -6254,6 +6279,18 @@ ember-modifier@^1.0.3:
     ember-cli-is-package-missing "^1.0.0"
     ember-cli-normalize-entity-name "^1.0.0"
     ember-cli-string-utils "^1.1.0"
+    ember-modifier-manager-polyfill "^1.2.0"
+
+ember-modifier@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ember-modifier/-/ember-modifier-2.1.1.tgz#aa3a12e2d6cf1622f774f3f1eab4880982a43fa9"
+  integrity sha512-g9mcpFWgw5lgNU40YNf0USNWqoGTJ+EqjDQKjm7556gaRNDeGnLylFKqx9O3opwLHEt6ZODnRDy9U0S5YEMREg==
+  dependencies:
+    ember-cli-babel "^7.22.1"
+    ember-cli-normalize-entity-name "^1.0.0"
+    ember-cli-string-utils "^1.1.0"
+    ember-cli-typescript "^3.1.3"
+    ember-destroyable-polyfill "^2.0.2"
     ember-modifier-manager-polyfill "^1.2.0"
 
 ember-native-dom-helpers@^0.6.3:
@@ -6277,13 +6314,15 @@ ember-qunit@^4.6.0:
     ember-cli-test-loader "^2.2.0"
     qunit "^2.9.3"
 
-ember-ref-modifier@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/ember-ref-modifier/-/ember-ref-modifier-0.1.3.tgz#ae7eb9825ebf5a9a291677fa188a2c0eaf94f38d"
-  integrity sha512-ebZE8/DvDp7JktUXDZ4T3aACYMRsoLvKx8QhXCDTKgZu5hJIGBoq2nIuYstJHBQVBU0su0T5QZb4Bcz2GZI3yQ==
+ember-ref-bucket@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/ember-ref-bucket/-/ember-ref-bucket-1.2.1.tgz#75fd2795ab044c07b57c56836c8176d4dc5420bd"
+  integrity sha512-wjGdB1Y5bc5DsmM2xBBuS1jx7GTHklQGf6bAQnJxwT0ItiSDhKC9dvy19ItqOiKGiHJP8ZVCaxc45ABNUo6XCw==
   dependencies:
-    ember-cli-babel "^7.10.0"
-    ember-modifier-manager-polyfill "^1.0.1"
+    ember-cli-babel "^7.22.1"
+    ember-cli-htmlbars "^5.3.1"
+    ember-destroyable-polyfill "^2.0.2"
+    ember-modifier "^2.1.1"
 
 ember-resolver@^8.0.2:
   version "8.0.2"
