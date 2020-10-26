@@ -54,32 +54,54 @@ class ExerciseService(
         log.info("Searching available exercises for user=$userId with series=$seriesId")
         val isSupport = userId in (1..3)
         log.info("current user is admin: $isSupport")
-        val doneExercises = studyHistoryRepository.getDoneExercisesIdList(seriesId, userId)
+        val doneExercises = studyHistoryRepository.getDoneExercises(seriesId, userId)
         val allExercises = exerciseRepository.findExercisesBySeriesId(seriesId)
-        // val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
+        val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
         return emptyIfNull(allExercises).map { exercise ->
-            updateNoiseUrl(exercise.toDto(true))
-            // todo: avaliability  updateNoiseUrl(exercise.toDto(doneExercises.contains(exercise.id) || isSupport))
+            updateNoiseUrl(exercise.toDto(openExercises.contains(exercise) || isSupport))
         }
     }
 
-    fun getAvailableExercises(doneExercisesIds: List<Long>, allExercises: List<Exercise>, userId: Long): List<Long> {
-        if (doneExercisesIds.size == allExercises.size)
-            return doneExercisesIds
-        val lastDoneId = doneExercisesIds.last()
-        val lastStudyHistory = studyHistoryRepository.findByUserAccountIdAndExerciseId(userId, lastDoneId).get()
-        if (lastStudyHistory != null) {
-            val repetitionIndex = lastStudyHistory.tasksCount!!.toFloat() / lastStudyHistory.listeningsCount!!
-            val rightAnswersIndex = lastStudyHistory.rightAnswersCount!!.toFloat() / lastStudyHistory.tasksCount!!
-            if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat())
-                return doneExercisesIds
-        }
-        val mapName = allExercises.groupBy({ it.name }, { it })
-        val unavailableExercises = allExercises.map { e -> e.id }.minus(doneExercisesIds)
-        val nextAvailable = unavailableExercises[0]!!
-        val mutableList = doneExercisesIds.toMutableList()
-        mutableList.add(nextAvailable)
-        return mutableList
+    fun getAvailableExercises(
+        doneExercises: List<Exercise>,
+        allExercises: List<Exercise>,
+        userId: Long
+    ): Set<Exercise> {
+        if (doneExercises.size == allExercises.size)
+            return doneExercises.toSet()
+        val mapDone = doneExercises.groupBy({ it.name }, { it })
+        val available = mutableSetOf<Exercise>()
+        allExercises
+            .groupBy({ it.name }, { it })
+            .forEach { (name, currentNameExercises) ->
+                run {
+                    available.add(currentNameExercises[0])
+                    val currentDone = mapDone[name]
+                    if (currentDone.isNullOrEmpty()) {
+                        available.add(currentNameExercises[0])
+                        return@forEach
+                    }
+                    val lastDone = currentDone?.last()
+                    val lastHistoryOptional =
+                        studyHistoryRepository.findByUserAccountIdAndExerciseId(userId, lastDone.id!!)
+                    if (!lastHistoryOptional.isPresent) {
+                        available.addAll(currentDone)
+                        return@forEach
+                    }
+                    val lastHistory = lastHistoryOptional.get()
+                    val repetitionIndex = lastHistory.tasksCount!!.toFloat() / lastHistory.listeningsCount!!
+                    val rightAnswersIndex = lastHistory.rightAnswersCount!!.toFloat() / lastHistory.tasksCount!!
+                    if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat()) {
+                        available.addAll(currentDone)
+                        return@forEach
+                    }
+                    available.addAll(currentDone)
+                    val closed = currentNameExercises.minus(doneExercises)
+                    if (closed.isNotEmpty())
+                        available.add(closed.first())
+                }
+            }
+        return available
     }
 
     fun updateNoiseUrl(exerciseDto: ExerciseDto): ExerciseDto {
