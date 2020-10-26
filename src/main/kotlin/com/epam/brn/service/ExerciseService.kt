@@ -84,7 +84,7 @@ class ExerciseService(
                     val lastDone = currentDone?.last()
                     val lastHistoryOptional =
                         studyHistoryRepository.findByUserAccountIdAndExerciseId(userId, lastDone.id!!)
-                    if (lastHistoryOptional.isEmpty) {
+                    if (lastHistoryOptional.isEmpty()) {
                         available.addAll(currentDone)
                         return@forEach
                     }
