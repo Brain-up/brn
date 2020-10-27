@@ -14,7 +14,6 @@ import com.epam.brn.repo.UserAccountRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,13 +29,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.test.assertEquals
 
-@Disabled
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
-@WithMockUser(username = "admin", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 class ExercisesControllerIT {
 
     private val baseUrl = "/exercises"
@@ -112,13 +111,60 @@ class ExercisesControllerIT {
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
     }
 
+    @Test
+    fun `test get last study histories for user`() {
+        // GIVEN
+        val exerciseFirstName = "FirstName"
+        val exerciseSecondName = "SecondName"
+        val existingSeries = insertSeries()
+        val existingUser = insertUser()
+        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val historyOne = StudyHistory(
+            userAccount = existingUser,
+            exercise = existingExerciseFirst,
+            startTime = LocalDateTime.now().minusHours(1),
+            endTime = LocalDateTime.now().minusHours(1),
+            tasksCount = 2,
+            repetitionIndex = 1f
+        )
+        val historyTwo = StudyHistory(
+            userAccount = existingUser,
+            exercise = existingExerciseFirst,
+            startTime = LocalDateTime.now(),
+            endTime = LocalDateTime.now(),
+            tasksCount = 2,
+            repetitionIndex = 5f
+        )
+        val historyOneSecondExercise = StudyHistory(
+            userAccount = existingUser,
+            exercise = existingExerciseSecond,
+            startTime = LocalDateTime.now().minusHours(1),
+            endTime = LocalDateTime.now().minusHours(1),
+            tasksCount = 2,
+            repetitionIndex = 1f
+        )
+        val historyTwoSecondExercise = StudyHistory(
+            userAccount = existingUser,
+            exercise = existingExerciseSecond,
+            startTime = LocalDateTime.now(),
+            endTime = LocalDateTime.now(),
+            tasksCount = 2,
+            repetitionIndex = 5f
+        )
+        studyHistoryRepository.saveAll(listOf(historyOne, historyTwo, historyOneSecondExercise, historyTwoSecondExercise))
+        // WHEN
+        val result = existingUser.id?.let { studyHistoryRepository.findLastByUserAccountId(it) }
+        // THEN
+        assertEquals(2, result?.size)
+    }
+
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise
     ): StudyHistory {
         return studyHistoryRepository.save(
             StudyHistory(
-                id = 0,
                 userAccount = existingUser,
                 exercise = existingExercise,
                 endTime = LocalDateTime.now(),
@@ -132,11 +178,10 @@ class ExercisesControllerIT {
     private fun insertUser(): UserAccount {
         return userAccountRepository.save(
             UserAccount(
-                id = 0,
                 firstName = "testUserFirstName",
                 lastName = "testUserLastName",
                 birthday = LocalDate.now(),
-                email = "123@123.asd",
+                email = "test@test.test",
                 password = "password",
                 active = true
             )
@@ -146,14 +191,12 @@ class ExercisesControllerIT {
     private fun insertSeries(): Series {
         val exerciseGroup = exerciseGroupRepository.save(
             ExerciseGroup(
-                id = 0,
                 description = "desc",
                 name = "group"
             )
         )
         return seriesRepository.save(
             Series(
-                id = 0,
                 description = "desc",
                 name = "series",
                 exerciseGroup = exerciseGroup
@@ -164,7 +207,6 @@ class ExercisesControllerIT {
     fun insertExercise(exerciseName: String, series: Series): Exercise {
         return exerciseRepository.save(
             Exercise(
-                id = 0,
                 description = toString(),
                 series = series,
                 level = 0,

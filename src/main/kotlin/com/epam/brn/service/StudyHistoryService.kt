@@ -11,8 +11,6 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
-import java.security.InvalidParameterException
-import java.util.Optional
 
 @Service
 class StudyHistoryService(
@@ -23,25 +21,25 @@ class StudyHistoryService(
 ) {
     private val log = logger()
 
-    fun findBy(userId: Long, exerciseId: Long): Optional<StudyHistory> {
-        return studyHistoryRepository.findByUserAccountIdAndExerciseId(userId, exerciseId)
+    fun save(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
+        return create(studyHistoryDto)
     }
 
-    fun update(studyHistory: StudyHistory, studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
+    private fun update(studyHistory: StudyHistory, studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
         studyHistoryConverter.updateStudyHistory(studyHistoryDto, studyHistory)
         studyHistoryRepository.save(studyHistory)
         return studyHistory.toDto()
     }
 
-    fun create(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
+    private fun create(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
         val userAccount = findUserAccount(studyHistoryDto.userId!!)
         val exercise = findExercise(studyHistoryDto.exerciseId!!)
 
         val newStudyHistory = StudyHistory(userAccount = userAccount, exercise = exercise)
         val studyHistory = studyHistoryConverter.updateStudyHistory(studyHistoryDto, newStudyHistory)
-        studyHistoryRepository.save(studyHistory)
+        val savedEntity = studyHistoryRepository.save(studyHistory)
 
-        return studyHistory.toDto()
+        return savedEntity.toDto()
     }
 
     private fun findUserAccount(id: Long): UserAccount {
@@ -55,21 +53,6 @@ class StudyHistoryService(
             .findById(exerciseId)
             .orElseThrow {
                 EntityNotFoundException("Exercise with exerciseId '$exerciseId' doesn't exist.")
-            }
-    }
-
-    @Throws(InvalidParameterException::class)
-    fun patchStudyHistory(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
-        log.debug("Patching $studyHistoryDto")
-        return studyHistoryRepository
-            .findByUserAccountIdAndExerciseId(
-                studyHistoryDto.userId!!,
-                studyHistoryDto.exerciseId!!
-            ).map { studyHistoryEntity ->
-                studyHistoryConverter.updateStudyHistoryWhereNotNull(studyHistoryDto, studyHistoryEntity)
-                studyHistoryRepository.save(studyHistoryEntity).toDto()
-            }.orElseThrow {
-                EntityNotFoundException("Could not find requested study history with id=${studyHistoryDto.id}")
             }
     }
 }

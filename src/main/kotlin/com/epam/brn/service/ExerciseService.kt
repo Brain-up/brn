@@ -52,7 +52,7 @@ class ExerciseService(
 
     fun findExercisesByUserIdAndSeries(userId: Long, seriesId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId with series=$seriesId")
-        val isSupport = userId in (1..3)
+        val isSupport = userId == 1L
         log.info("current user is admin: $isSupport")
         val doneExercises = studyHistoryRepository.getDoneExercises(seriesId, userId)
         val allExercises = exerciseRepository.findExercisesBySeriesId(seriesId)
@@ -71,6 +71,8 @@ class ExerciseService(
             return doneExercises.toSet()
         val mapDone = doneExercises.groupBy({ it.name }, { it })
         val available = mutableSetOf<Exercise>()
+        val lastHistoryMap = studyHistoryRepository.findLastByUserAccountId(userId)
+            .groupBy({ it.exercise }, { it })
         allExercises
             .groupBy({ it.name }, { it })
             .forEach { (name, currentNameExercises) ->
@@ -82,15 +84,13 @@ class ExerciseService(
                         return@forEach
                     }
                     val lastDone = currentDone?.last()
-                    val lastHistoryOptional =
-                        studyHistoryRepository.findByUserAccountIdAndExerciseId(userId, lastDone.id!!)
-                    if (!lastHistoryOptional.isPresent) {
+                    val lastHistory = lastHistoryMap[lastDone]
+                    if (lastHistory.isNullOrEmpty()) {
                         available.addAll(currentDone)
                         return@forEach
                     }
-                    val lastHistory = lastHistoryOptional.get()
-                    val repetitionIndex = lastHistory.tasksCount!!.toFloat() / lastHistory.listeningsCount!!
-                    val rightAnswersIndex = lastHistory.rightAnswersCount!!.toFloat() / lastHistory.tasksCount!!
+                    val repetitionIndex = lastHistory[0].tasksCount!!.toFloat() / lastHistory[0].listeningsCount!!
+                    val rightAnswersIndex = lastHistory[0].rightAnswersCount!!.toFloat() / lastHistory[0].tasksCount!!
                     if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat()) {
                         available.addAll(currentDone)
                         return@forEach

@@ -65,7 +65,7 @@ internal class ExerciseServiceTest {
         val exerciseMock: Exercise = mock(Exercise::class.java)
         val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
         val seriesId = 2L
-        val userId = 3L
+        val userId = 1L
         val ex1 = Exercise(id = 1, name = "pets")
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         // `when`(exerciseMock.id).thenReturn(exerciseId)
@@ -131,12 +131,8 @@ internal class ExerciseServiceTest {
             listeningsCount = 17,
             rightAnswersCount = 5,
             tasksCount = 10)
-        `when`(studyHistoryRepository.findByUserAccountIdAndExerciseId(1, 2))
-            .thenReturn(Optional.of(studyHistory2))
-        `when`(studyHistoryRepository.findByUserAccountIdAndExerciseId(1, 11))
-            .thenReturn(Optional.of(studyHistory11))
-        `when`(studyHistoryRepository.findByUserAccountIdAndExerciseId(1, 21))
-            .thenReturn(Optional.empty())
+        `when`(studyHistoryRepository.findLastByUserAccountId(1))
+            .thenReturn(listOf(studyHistory2, studyHistory11))
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.75)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.75)
 

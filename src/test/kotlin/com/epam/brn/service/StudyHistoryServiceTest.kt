@@ -9,7 +9,6 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.nhaarman.mockito_kotlin.anyOrNull
-import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoExtension
@@ -78,86 +76,18 @@ internal class StudyHistoryServiceTest {
             rightAnswersIndex = 0.75f
         )
 
-        `when`(userAccountRepository.findUserAccountById(dto.userId!!)).thenReturn(Optional.of(userAccount))
-        `when`(exerciseRepository.findById(dto.exerciseId!!)).thenReturn(Optional.of(exercise))
+        `when`(userAccountRepository.findUserAccountById(dto.userId)).thenReturn(Optional.of(userAccount))
+        `when`(exerciseRepository.findById(dto.exerciseId)).thenReturn(Optional.of(exercise))
         `when`(studyHistoryConverter.updateStudyHistory(eq(dto), anyOrNull()))
             .thenReturn(studyHistoryEntity)
+        `when`(studyHistoryRepository.save(studyHistoryEntity)).thenReturn(studyHistoryEntity)
 
         // WHEN
-        val result = studyHistoryService.create(dto)
+        val result = studyHistoryService.save(dto)
 
         // THEN
         assertThat(result).isEqualToIgnoringGivenFields(dto, "id")
         verify(studyHistoryConverter).updateStudyHistory(eq(dto), anyOrNull())
         verify(studyHistoryRepository).save(any(StudyHistory::class.java))
-    }
-
-    @Test
-    fun `should update existing studyHistory`() {
-        // GIVEN
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionIndex = 2f,
-            tasksCount = 1,
-            startTime = LocalDateTime.now(),
-            endTime = LocalDateTime.now(),
-            exerciseId = 1L,
-            rightAnswersIndex = 0.75f
-        )
-        val existingStudyHistory = Mockito.mock(StudyHistory::class.java)
-
-        `when`(existingStudyHistory.toDto()).thenReturn(dto)
-
-        // WHEN
-        studyHistoryService.update(existingStudyHistory, dto)
-
-        // THEN
-        verify(studyHistoryConverter).updateStudyHistory(dto, existingStudyHistory)
-        verify(studyHistoryRepository).save(any(StudyHistory::class.java))
-    }
-
-    @Test
-    fun `should update study history only with not null elements`() {
-        // GIVEN
-        val exerciseMock = Mockito.mock(Exercise::class.java)
-        val userAccountMock = Mockito.mock(UserAccount::class.java)
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionIndex = null,
-            tasksCount = 5,
-            startTime = null,
-            endTime = null,
-            exerciseId = 1L,
-            rightAnswersIndex = 0.75f
-        )
-        val existingEntity = StudyHistory(
-            id = 10,
-            userAccount = userAccountMock,
-            exercise = exerciseMock,
-            endTime = LocalDateTime.now(),
-            startTime = LocalDateTime.now(),
-            tasksCount = 0,
-            repetitionIndex = 1f
-        )
-        val updatedEntity = StudyHistory(
-            id = 10,
-            userAccount = userAccountMock,
-            exercise = exerciseMock,
-            endTime = existingEntity.endTime,
-            startTime = existingEntity.endTime,
-            tasksCount = 5,
-            repetitionIndex = 1f
-        )
-        `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
-
-        doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
-
-        `when`(studyHistoryRepository.findByUserAccountIdAndExerciseId(dto.userId, dto.exerciseId))
-            .thenReturn(Optional.of(existingEntity))
-
-        // WHEN
-        studyHistoryService.patchStudyHistory(dto)
-        // THEN
-        verify(studyHistoryRepository).save(any())
     }
 }
