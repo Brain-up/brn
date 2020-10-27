@@ -65,7 +65,7 @@ internal class ExerciseServiceTest {
         val exerciseMock: Exercise = mock(Exercise::class.java)
         val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
         val seriesId = 2L
-        val userId = 3L
+        val userId = 1L
         val ex1 = Exercise(id = 1, name = "pets")
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         // `when`(exerciseMock.id).thenReturn(exerciseId)

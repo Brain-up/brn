@@ -76,8 +76,8 @@ internal class StudyHistoryServiceTest {
             rightAnswersIndex = 0.75f
         )
 
-        `when`(userAccountRepository.findUserAccountById(dto.userId!!)).thenReturn(Optional.of(userAccount))
-        `when`(exerciseRepository.findById(dto.exerciseId!!)).thenReturn(Optional.of(exercise))
+        `when`(userAccountRepository.findUserAccountById(dto.userId)).thenReturn(Optional.of(userAccount))
+        `when`(exerciseRepository.findById(dto.exerciseId)).thenReturn(Optional.of(exercise))
         `when`(studyHistoryConverter.updateStudyHistory(eq(dto), anyOrNull()))
             .thenReturn(studyHistoryEntity)
         `when`(studyHistoryRepository.save(studyHistoryEntity)).thenReturn(studyHistoryEntity)
