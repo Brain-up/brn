@@ -52,7 +52,7 @@ class ExerciseService(
 
     fun findExercisesByUserIdAndSeries(userId: Long, seriesId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId with series=$seriesId")
-        val isSupport = userId in (1..3)
+        val isSupport = userId == 1L
         log.info("current user is admin: $isSupport")
         val doneExercises = studyHistoryRepository.getDoneExercises(seriesId, userId)
         val allExercises = exerciseRepository.findExercisesBySeriesId(seriesId)
