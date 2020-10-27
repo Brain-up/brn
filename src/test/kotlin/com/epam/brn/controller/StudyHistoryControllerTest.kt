@@ -1,8 +1,5 @@
 package com.epam.brn.controller
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.model.Exercise
-import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.UserAccount
 import com.epam.brn.service.StudyHistoryService
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Test
@@ -36,7 +33,6 @@ internal class StudyHistoryControllerTest {
             exerciseId = 1L,
             rightAnswersIndex = 0.75f
         )
-//        `when`(studyHistoryService.findBy(dto.userId, dto.exerciseId)).thenReturn(Optional.empty())
         `when`(studyHistoryService.save(dto)).thenReturn(dto)
 
         // WHEN
@@ -44,42 +40,6 @@ internal class StudyHistoryControllerTest {
 
         // THEN
         verify(studyHistoryService).save(dto)
-        assertEquals(HttpStatus.OK, result.statusCode)
-    }
-
-    @Test
-    fun `should update existing study history`() {
-        // GIVEN
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionIndex = 1f,
-            tasksCount = 1,
-            startTime = LocalDateTime.now(),
-            endTime = LocalDateTime.now(),
-            exerciseId = 1L,
-            rightAnswersIndex = 0.75f
-        )
-        val studyHistory = StudyHistory(
-            userAccount = UserAccount(
-                firstName = "testUserFirstName",
-                lastName = "testUserLastName",
-                password = "test",
-                email = "test@gmail.com",
-                active = true
-            ),
-            exercise = Exercise(
-                id = 1L
-            )
-        )
-
-//        `when`(studyHistoryService.findBy(dto.userId, dto.exerciseId)).thenReturn(Optional.of(studyHistory))
-//        `when`(studyHistoryService.update(studyHistory, dto)).thenReturn(dto)
-
-        // WHEN
-        val result = studyHistoryController.save(dto)
-
-        // THEN
-//        verify(studyHistoryService).update(studyHistory, dto)
         assertEquals(HttpStatus.OK, result.statusCode)
     }
 }
