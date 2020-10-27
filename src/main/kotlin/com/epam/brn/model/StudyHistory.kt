@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "exercise_id"])],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "exercise_id", "startTime"])],
     indexes = [Index(name = "study_history_ix_user_exercise", columnList = "user_id,exercise_id")]
 )
 data class StudyHistory(
