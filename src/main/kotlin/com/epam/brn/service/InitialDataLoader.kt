@@ -78,8 +78,8 @@ class InitialDataLoader(
             val adminAuthority = authorityService.save(Authority(authorityName = "ROLE_ADMIN"))
             val userAuthority = authorityService.save(Authority(authorityName = "ROLE_USER"))
             val admin = addAdminUser(adminAuthority)
-            val listOfUsers = addDefaultUsers(userAuthority)
-            listOfUsers.add(admin)
+            val listOfUsers = mutableListOf(admin)
+            listOfUsers.addAll(addDefaultUsers(userAuthority))
             userAccountRepository.saveAll(listOfUsers)
         }
 
