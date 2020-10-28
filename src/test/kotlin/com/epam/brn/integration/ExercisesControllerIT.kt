@@ -75,8 +75,8 @@ class ExercisesControllerIT {
         val existingSeries = insertSeries()
         val existingUser = insertUser()
         val existingExercise = insertExercise(exerciseName, existingSeries)
-        val history1 = insertStudyHistory(existingUser, existingExercise, LocalDateTime.now().minusHours(1))
-        val history2 = insertStudyHistory(existingUser, existingExercise, LocalDateTime.now())
+        insertStudyHistory(existingUser, existingExercise, LocalDateTime.now().minusHours(1))
+        insertStudyHistory(existingUser, existingExercise, LocalDateTime.now())
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -100,7 +100,7 @@ class ExercisesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(baseUrl + "/" + existingExercise.id)
+                .get("$baseUrl/${existingExercise.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -115,14 +115,14 @@ class ExercisesControllerIT {
     @Test
     fun `test get exercises by name`() {
         // GIVEN
-        val existingUser = insertUser()
+        insertUser()
         val exerciseName = "SOMENAME"
         val existingSeries = insertSeries()
-        val existingExercise = insertExercise(exerciseName, existingSeries)
+        insertExercise(exerciseName, existingSeries)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(baseUrl + "/byName")
+                .get("$baseUrl/byName")
                 .param("name", exerciseName)
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -131,7 +131,7 @@ class ExercisesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
-        val jsonDataObject = jsonResponse.getJSONObject("data[0]")
+        val jsonDataObject = jsonResponse.getJSONArray("data").get(0) as JSONObject
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
     }
 
