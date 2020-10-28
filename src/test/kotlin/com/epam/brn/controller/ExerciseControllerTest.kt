@@ -29,14 +29,14 @@ internal class ExerciseControllerTest {
         val exercise =
             ExerciseDto(seriesId, 1, "name", "pictureUrl", "desc", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
         val listExercises = listOf(exercise)
-        Mockito.`when`(exerciseService.findExercisesBySeriesForCurrentUser(seriesId)).thenReturn(listExercises)
+        Mockito.`when`(exerciseService.findAllExercisesBySeriesForCurrentUser(seriesId, true)).thenReturn(listExercises)
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
-            exerciseController.getExercises(seriesId).body?.data as List<ExerciseDto>
+            exerciseController.getExercises(seriesId, true).body?.data as List<ExerciseDto>
         // THEN
         assertTrue(actualResultData.contains(exercise))
-        verify(exerciseService).findExercisesBySeriesForCurrentUser(seriesId)
+        verify(exerciseService).findAllExercisesBySeriesForCurrentUser(seriesId, true)
     }
 
     @Test
