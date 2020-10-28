@@ -62,19 +62,16 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get exercises by user and series`() {
         // GIVEN
-        val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
         val seriesId = 2L
-        val userId = 1L
-        val ex1 = Exercise(id = 1, name = "pets")
-        `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
-        // `when`(exerciseMock.id).thenReturn(exerciseId)
-        `when`(studyHistoryRepository.getDoneExercises(seriesId, userId)).thenReturn(listOf(ex1))
-        `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exerciseMock))
+        val userId = 2L
+        val exercise1 = Exercise(id = 1, name = "pets", exerciseType = ExerciseType.WORDS_SEQUENCES.toString())
+        val exercise2 = Exercise(id = 2, name = "pets", exerciseType = ExerciseType.WORDS_SEQUENCES.toString())
+        `when`(studyHistoryRepository.getDoneExercises(seriesId, userId)).thenReturn(listOf(exercise1))
+        `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exercise1, exercise2))
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(userId, seriesId)
+        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(userId, seriesId, true)
         // THEN
-        assertEquals(actualResult, listOf(exerciseDtoMock))
+        assertEquals(actualResult.size, 2)
         verify(exerciseRepository).findExercisesBySeriesId(seriesId)
         verify(studyHistoryRepository).getDoneExercises(anyLong(), anyLong())
     }

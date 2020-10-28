@@ -19,16 +19,26 @@ import org.springframework.web.bind.annotation.RestController
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
-    @ApiOperation("Get done exercises for user")
+    @ApiOperation("Get exercises for current user with avvailability calculation.")
     fun getExercises(
-        @RequestParam(value = "seriesId", required = true) seriesId: Long
+        @RequestParam(value = "seriesId", required = true) seriesId: Long,
+        @RequestParam(value = "withAvailability", required = false, defaultValue = true.toString()) withAvailability: Boolean
     ): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok()
-            .body(BaseResponseDto(data = exerciseService.findExercisesBySeriesForCurrentUser(seriesId)))
+            .body(BaseResponseDto(data = exerciseService.findAllExercisesBySeriesForCurrentUser(seriesId, withAvailability)))
+    }
+
+    @GetMapping(value = ["/byName"])
+    @ApiOperation("Get exercises for current user by exercise name.")
+    fun getExercisesByName(
+        @RequestParam(value = "name", required = true) name: String
+    ): ResponseEntity<BaseResponseDto> {
+        return ResponseEntity.ok()
+            .body(BaseResponseDto(data = exerciseService.findExercisesByNameForCurrentUser(name)))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
-    @ApiOperation("Get exercise by id")
+    @ApiOperation("Get exercise by id.")
     fun getExercisesByID(
         @PathVariable("exerciseId") exerciseId: Long
     ): ResponseEntity<BaseSingleObjectResponseDto> {

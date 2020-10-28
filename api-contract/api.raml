@@ -56,17 +56,28 @@ mediaType:
         required: true
         type: string
         example: "42"
-      userId:
-        description: "ID of the user for which we want to get done exercises"
+      withAvailability:
+        description: "with or without availability calculation to reduce calculation volume"
         required: false
-        type: string
-        example: "42"
+        default: true
+        type: boolean
+        example: false
     responses:
       200:
         body:
           example1: !include samples/exercises_for_1_series.json
           example2: !include samples/exercises_for_2_series.json
   /{exerciseId}:
+    get:
+      responses:
+        200:
+          body:
+            example1: !include samples/exercise_1_series_signal.json
+            example1: !include samples/exercise_1_series_speech.json
+            example2: !include samples/exercise_for_2_series.json
+            example3: !include samples/exercise_for_3_series.json
+  /byName:
+    description: return exercises by name with availability calculation
     get:
       responses:
         200:
