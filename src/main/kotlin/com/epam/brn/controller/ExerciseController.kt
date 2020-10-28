@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
-    @ApiOperation("Get exercises for current user with avvailability calculation.")
+    @ApiOperation("Get exercises for current user with availability calculation.")
     fun getExercises(
         @RequestParam(value = "seriesId", required = true) seriesId: Long,
         @RequestParam(value = "withAvailability", required = false, defaultValue = true.toString()) withAvailability: Boolean
