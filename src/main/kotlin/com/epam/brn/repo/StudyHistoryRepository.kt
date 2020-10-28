@@ -39,7 +39,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
                 " WHERE (s.userAccount.id, s.startTime) " +
                 " IN (SELECT userAccount.id, max(startTime) " +
                 "       FROM StudyHistory " +
-                "       GROUP BY exercise.id " +
+                "       GROUP BY exercise.id, userAccount.id " +
                 "       HAVING userAccount.id = :userId)"
     )
     fun findLastByUserAccountId(userId: Long): List<StudyHistory>
