@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   db_brn:
-    image: postgres
+    image: postgres:13
     restart: always
     ports:
       - 5432:5432
@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+      volumes:
+        - dbdata:/var/lib/postgresql/data
   brn:
     container_name: brn
     image: brainup/brn-backend
@@ -37,3 +39,5 @@ services:
 secrets:
   aws-key:
     file: aws-key.properties
+volumes:
+  dbdata:
