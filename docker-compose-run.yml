@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       volumes:
-        - dbdata:/var/lib/postgresql/data
+        - "dbdata:/var/lib/postgresql/data"
   brn:
     container_name: brn
     image: brainup/brn-backend
