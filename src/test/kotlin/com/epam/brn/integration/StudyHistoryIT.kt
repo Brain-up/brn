@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import kotlin.test.assertEquals
 
 @SpringBootTest
@@ -118,17 +119,17 @@ class StudyHistoryIT {
         val existingUser = insertUser()
         val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
         val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
-        val now = LocalDateTime.now()
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.minusHours(1))
+        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
         val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
         studyHistoryRepository
             .saveAll(listOf(historyFirstExerciseOne, historyFirstExerciseTwo, historySecondExerciseOne, historySecondExerciseTwo))
         // WHEN
         val result = existingUser.id?.let { studyHistoryRepository.getDayTimer(it, LocalDate.now()) }
         // THEN
-        assertEquals(8, result)
+        assertEquals(480, result)
     }
 
     @Test
@@ -140,10 +141,10 @@ class StudyHistoryIT {
         val existingUser = insertUser()
         val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
         val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
-        val now = LocalDateTime.now()
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.minusHours(1))
+        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
         val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
         studyHistoryRepository
             .saveAll(listOf(historyFirstExerciseOne, historyFirstExerciseTwo, historySecondExerciseOne, historySecondExerciseTwo))
@@ -157,7 +158,7 @@ class StudyHistoryIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data").value(8))
+            .andExpect(jsonPath("$.data").value(480))
     }
 
     private fun insertStudyHistory(
@@ -171,6 +172,7 @@ class StudyHistoryIT {
                 exercise = existingExercise,
                 endTime = startTime.plusMinutes(2),
                 startTime = startTime,
+                executionSeconds = 120,
                 tasksCount = 2,
                 repetitionIndex = 1f
             )

@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
@@ -23,7 +24,7 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     }
 
     @GetMapping("/todayTimer")
-    fun getTodayWorkDurationInSeconds(): ResponseEntity<Int> {
-        return ResponseEntity.ok().body(studyHistoryService.getTodayTimer())
+    fun getTodayWorkDurationInSeconds(): ResponseEntity<BaseSingleObjectResponseDto> {
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = studyHistoryService.getTodayTimer()))
     }
 }

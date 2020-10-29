@@ -41,8 +41,8 @@ class StudyHistoryService(
     }
 
     private fun create(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
-        val userAccount = findUserAccount(studyHistoryDto.userId!!)
-        val exercise = findExercise(studyHistoryDto.exerciseId!!)
+        val userAccount = findUserAccount(studyHistoryDto.userId)
+        val exercise = findExercise(studyHistoryDto.exerciseId)
 
         val newStudyHistory = StudyHistory(userAccount = userAccount, exercise = exercise)
         val studyHistory = studyHistoryConverter.updateStudyHistory(studyHistoryDto, newStudyHistory)
