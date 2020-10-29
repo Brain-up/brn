@@ -12,6 +12,8 @@ import com.epam.brn.repo.UserAccountRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 @Service
 class StudyHistoryService(
@@ -44,9 +46,14 @@ class StudyHistoryService(
 
         val newStudyHistory = StudyHistory(userAccount = userAccount, exercise = exercise)
         val studyHistory = studyHistoryConverter.updateStudyHistory(studyHistoryDto, newStudyHistory)
+        studyHistory.executionSeconds = calculateDiffInSeconds(studyHistoryDto.startTime!!, studyHistoryDto.endTime!!)
         val savedEntity = studyHistoryRepository.save(studyHistory)
 
         return savedEntity.toDto()
+    }
+
+    fun calculateDiffInSeconds(start: LocalDateTime, end: LocalDateTime): Int {
+        return ChronoUnit.SECONDS.between(start, end).toInt()
     }
 
     private fun findUserAccount(id: Long): UserAccount {

@@ -21,6 +21,7 @@ import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.util.Optional
+import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryServiceTest {
@@ -88,5 +89,12 @@ internal class StudyHistoryServiceTest {
         assertThat(result).isEqualToIgnoringGivenFields(dto, "id")
         verify(studyHistoryConverter).updateStudyHistory(eq(dto), anyOrNull())
         verify(studyHistoryRepository).save(any(StudyHistory::class.java))
+    }
+
+    @Test
+    fun `should calculate diff in seconds between start and end time`() {
+        val now = LocalDateTime.now()
+        val result = studyHistoryService.calculateDiffInSeconds(now, now.plusMinutes(1))
+        assertEquals(60, result)
     }
 }
