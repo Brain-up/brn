@@ -30,7 +30,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.random.Random
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -133,50 +132,6 @@ class ExercisesControllerIT {
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONArray("data").get(0) as JSONObject
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
-    }
-
-    @Test
-    fun `test get last study histories for user`() {
-        // GIVEN
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
-        val now = LocalDateTime.now()
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.minusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        studyHistoryRepository
-            .saveAll(listOf(historyFirstExerciseOne, historyFirstExerciseTwo, historySecondExerciseOne, historySecondExerciseTwo))
-        // WHEN
-        val result = existingUser.id?.let { studyHistoryRepository.findLastByUserAccountId(it) }
-        // THEN
-        assertEquals(2, result?.size)
-    }
-
-    @Test
-    fun `test get last study histories for user and exercises`() {
-        // GIVEN
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
-        val now = LocalDateTime.now()
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.minusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        studyHistoryRepository
-            .saveAll(listOf(historyFirstExerciseOne, historyFirstExerciseTwo, historySecondExerciseOne, historySecondExerciseTwo))
-        // WHEN
-        val result = existingUser.id?.let { studyHistoryRepository.findLastByUserAccountIdAndExercises(it, listOf(existingExerciseFirst.id!!)) }
-        // THEN
-        assertEquals(1, result?.size)
     }
 
     private fun insertStudyHistory(

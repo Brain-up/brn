@@ -101,7 +101,7 @@ class ExerciseService(
                         available.add(currentNameExercises[0])
                         return@forEach
                     }
-                    val lastDone = currentDone?.last()
+                    val lastDone = currentDone.last()
                     val lastHistory = lastHistoryMap[lastDone]
                     if (lastHistory.isNullOrEmpty()) {
                         available.addAll(currentDone)
