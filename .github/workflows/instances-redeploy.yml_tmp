@@ -1,0 +1,30 @@
+name: Instances redeploy with db
+
+on:
+  push:
+    branches:
+      - devops/EPMLABSBRN-541
+
+jobs:
+  redeploy_instance:
+    runs-on: ${{ matrix.runners }}
+    strategy:
+      matrix:
+        runners: [ epam, vscale ]
+    steps:
+      - uses: actions/checkout@master
+      - name: Configure secrets
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          mv docker-compose-run.yml docker-compose.yml
+          sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
+          sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+          YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
+          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+      - name: Redeploy application
+        run: |
+          docker-compose pull
+          docker-compose down
+          docker-compose up -d

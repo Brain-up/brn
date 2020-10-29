@@ -6,6 +6,7 @@ build/
 !**/src/test/**
 
 credentials.properties
+aws-key.properties
 local.properties
 yarn.lock
 src/main/resources/application-local.properties
