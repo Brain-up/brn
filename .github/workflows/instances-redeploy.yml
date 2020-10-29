@@ -1,4 +1,4 @@
-name: Instances redeploy
+name: Instances redeploy with db
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   redeploy_instance:
-    runs-on: [ epam ]
+    runs-on: [ epam, vscale ]
     steps:
       - uses: actions/checkout@master
       - name: Configure secrets
