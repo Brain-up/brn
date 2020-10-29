@@ -1,4 +1,4 @@
-name: Docker Build, Push images and redeploy
+name: Docker Build, Push images and redeploy instances
 
 on:
   push:
@@ -29,7 +29,10 @@ jobs:
         dockerfile: Dockerfile_frontend
   redeploy_instance:
     needs: [ build_and_publish_backend, build_and_publish_frontend ]
-    runs-on: [ epam, vscale ]
+    runs-on: ${{ matrix.runners }}
+    strategy:
+      matrix:
+        runners: [ epam, vscale ]
     steps:
       - uses: actions/checkout@master
       - name: Configure secrets
