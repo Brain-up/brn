@@ -27,15 +27,14 @@ internal class StudyHistoryServiceTest {
 
     @Mock
     lateinit var userAccountRepository: UserAccountRepository
-
     @Mock
     lateinit var exerciseRepository: ExerciseRepository
-
     @Mock
     lateinit var studyHistoryRepository: StudyHistoryRepository
-
     @Mock
     lateinit var studyHistoryConverter: StudyHistoryConverter
+    @Mock
+    lateinit var userAccountService: UserAccountService
 
     @InjectMocks
     lateinit var studyHistoryService: StudyHistoryService

@@ -11,15 +11,22 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class StudyHistoryService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountRepository: UserAccountRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val studyHistoryConverter: StudyHistoryConverter
+    private val studyHistoryConverter: StudyHistoryConverter,
+    private val userAccountService: UserAccountService
 ) {
     private val log = logger()
+
+    fun getTodayTimer(): Int {
+        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        return studyHistoryRepository.getDayTimer(currentUser.id!!, LocalDate.now())
+    }
 
     fun save(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
         return create(studyHistoryDto)

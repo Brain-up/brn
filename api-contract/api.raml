@@ -126,6 +126,14 @@ mediaType:
     responses:
       201:
         example: !include samples/study_history_response.json
+  /todayTimer:
+    get:
+      description: get today current user work time in seconds
+      responses:
+        200:
+          body:
+            application/json:
+              example: 890
 
 # USERS ----------------------
 /users:
