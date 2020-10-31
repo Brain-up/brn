@@ -50,9 +50,15 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     )
     fun findLastByUserAccountIdAndExercises(userId: Long, exerciseIds: List<Long>): List<StudyHistory>
 
-    @Query("SELECT sum(COALESCE(s.executionSeconds, 0)) FROM StudyHistory s " +
-            " WHERE date_trunc('day', s.startTime) = date_trunc('day', :day) " +
+    @Query("SELECT COALESCE(sum(COALESCE(s.executionSeconds, 0)), 0) FROM StudyHistory s " +
+            " WHERE date_trunc('day', :day) = date_trunc('day', s.startTime)" +
             " AND s.userAccount.id = :userId"
     )
     fun getDayTimer(userId: Long, day: LocalDate): Int
+
+    @Query("SELECT COALESCE(sum(COALESCE(s.executionSeconds, 0)), 0) FROM StudyHistory s " +
+            " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime)" +
+            " AND s.userAccount.id = :userId"
+    )
+    fun getTodayDayTimer(userId: Long): Int
 }
