@@ -156,7 +156,7 @@ class StudyHistoryIT {
         // WHEN
         val result = existingUser.id?.let { studyHistoryRepository.getDayTimer(it, LocalDate.now()) }
         // THEN
-        assertEquals(480, result)
+        assertEquals(488, result)
     }
 
     @Test
@@ -192,7 +192,7 @@ class StudyHistoryIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data").value(480))
+            .andExpect(jsonPath("$.data").value(488))
     }
 
     @Test
