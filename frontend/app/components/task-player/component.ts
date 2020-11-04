@@ -93,7 +93,8 @@ export default class TaskPlayerComponent extends Component {
     }
     if (
       modelName === 'task/single-words' ||
-      modelName === 'task/single-simple-words'
+      modelName === 'task/single-simple-words' ||
+      modelName === 'task/phrase'
     ) {
       return normalizedAnswerOptions;
     }
