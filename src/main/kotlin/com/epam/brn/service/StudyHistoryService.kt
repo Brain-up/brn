@@ -1,11 +1,7 @@
 package com.epam.brn.service
 
-import com.epam.brn.converter.StudyHistoryConverter
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Exercise
-import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -19,7 +15,6 @@ class StudyHistoryService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountRepository: UserAccountRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val studyHistoryConverter: StudyHistoryConverter,
     private val userAccountService: UserAccountService
 ) {
     private val log = logger()
@@ -30,42 +25,21 @@ class StudyHistoryService(
     }
 
     fun save(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
-        return create(studyHistoryDto)
-    }
+        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        val userAccount = userAccountRepository
+            .findUserAccountById(currentUser.id!!)
+            .orElseThrow { EntityNotFoundException("UserAccount with userId '${currentUser.id}' doesn't exist.") }
+        val exercise = exerciseRepository
+            .findById(studyHistoryDto.exerciseId)
+            .orElseThrow { EntityNotFoundException("Exercise with exerciseId '${studyHistoryDto.exerciseId}' doesn't exist.") }
+        val newStudyHistory = studyHistoryDto.toEntity(userAccount, exercise)
+        // newStudyHistory.executionSeconds = calculateDiffInSeconds(studyHistoryDto.startTime, studyHistoryDto.endTime!!)
+        val savedStudyHistory = studyHistoryRepository.save(newStudyHistory)
 
-    private fun update(studyHistory: StudyHistory, studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
-        studyHistoryConverter.updateStudyHistory(studyHistoryDto, studyHistory)
-        studyHistoryRepository.save(studyHistory)
-        return studyHistory.toDto()
-    }
-
-    private fun create(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
-        val userAccount = findUserAccount(studyHistoryDto.userId)
-        val exercise = findExercise(studyHistoryDto.exerciseId)
-
-        val newStudyHistory = StudyHistory(userAccount = userAccount, exercise = exercise)
-        val studyHistory = studyHistoryConverter.updateStudyHistory(studyHistoryDto, newStudyHistory)
-        studyHistory.executionSeconds = calculateDiffInSeconds(studyHistoryDto.startTime!!, studyHistoryDto.endTime!!)
-        val savedEntity = studyHistoryRepository.save(studyHistory)
-
-        return savedEntity.toDto()
+        return savedStudyHistory.toDto()
     }
 
     fun calculateDiffInSeconds(start: LocalDateTime, end: LocalDateTime): Int {
         return ChronoUnit.SECONDS.between(start, end).toInt()
-    }
-
-    private fun findUserAccount(id: Long): UserAccount {
-        return userAccountRepository
-            .findUserAccountById(id)
-            .orElseThrow { EntityNotFoundException("UserAccount with userId '$id' doesn't exist.") }
-    }
-
-    private fun findExercise(exerciseId: Long): Exercise {
-        return exerciseRepository
-            .findById(exerciseId)
-            .orElseThrow {
-                EntityNotFoundException("Exercise with exerciseId '$exerciseId' doesn't exist.")
-            }
     }
 }

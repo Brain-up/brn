@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import kotlin.random.Random
 import kotlin.test.assertEquals
 
 @SpringBootTest
@@ -230,11 +231,12 @@ class StudyHistoryIT {
             StudyHistory(
                 userAccount = existingUser,
                 exercise = existingExercise,
-                endTime = startTime.plusMinutes(2),
+                endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
                 startTime = startTime,
-                executionSeconds = 120,
-                tasksCount = 2,
-                repetitionIndex = 1f
+                executionSeconds = 122,
+                tasksCount = 12,
+                rightAnswersCount = 10,
+                replaysCount = 4
             )
         )
     }

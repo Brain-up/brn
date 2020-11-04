@@ -1,11 +1,9 @@
 {
  "exerciseId": 2,
  "startTime": "2019-12-18T13:53:06.366Z",
- "endTime": "2019-12-18T13:55:06.366Z",
+ "endTime": "2019-12-18T13:57:06.366Z",
  "executionSeconds": 120,
  "tasksCount": 12,
- "listeningsCount": 16,
- "repetitionIndex": 0.75,
- "rightAnswersCount": 6,
- "rightAnswersIndex": 0.5
+ "replaysCount": 4,
+ "rightAnswersCount": 10
 }

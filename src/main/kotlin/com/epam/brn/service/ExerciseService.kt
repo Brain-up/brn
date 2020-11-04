@@ -107,8 +107,8 @@ class ExerciseService(
                         available.addAll(currentDone)
                         return@forEach
                     }
-                    val repetitionIndex = lastHistory[0].tasksCount!!.toFloat() / lastHistory[0].listeningsCount!!
-                    val rightAnswersIndex = lastHistory[0].rightAnswersCount!!.toFloat() / lastHistory[0].tasksCount!!
+                    val repetitionIndex = lastHistory[0].tasksCount.toFloat() / (lastHistory[0].replaysCount + lastHistory[0].tasksCount)
+                    val rightAnswersIndex = lastHistory[0].rightAnswersCount.toFloat() / lastHistory[0].tasksCount
                     if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat()) {
                         available.addAll(currentDone)
                         return@forEach

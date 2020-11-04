@@ -145,8 +145,10 @@ class ExercisesControllerIT {
                 exercise = existingExercise,
                 endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
                 startTime = startTime,
-                tasksCount = 2,
-                repetitionIndex = 1f
+                executionSeconds = 122,
+                tasksCount = 12,
+                rightAnswersCount = 10,
+                replaysCount = 4
             )
         )
     }

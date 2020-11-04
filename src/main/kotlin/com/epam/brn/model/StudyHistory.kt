@@ -36,28 +36,27 @@ data class StudyHistory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise,
-    var startTime: LocalDateTime? = null,
+    var startTime: LocalDateTime,
     var endTime: LocalDateTime? = null,
-    var tasksCount: Short? = null,
-    var listeningsCount: Int? = null,
+    var executionSeconds: Int,
+    var tasksCount: Short,
+    var rightAnswersCount: Int,
+    var replaysCount: Int,
     var repetitionIndex: Float? = null,
-    var rightAnswersCount: Int? = null,
-    var rightAnswersIndex: Float? = null,
-    var executionSeconds: Int? = null
+    var rightAnswersIndex: Float? = null
+
 ) {
     override fun toString() =
         "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
-        userId = this.userAccount.id!!,
         exerciseId = this.exercise.id!!,
         startTime = this.startTime,
         endTime = this.endTime,
+        executionSeconds = this.executionSeconds,
         tasksCount = this.tasksCount,
-        repetitionIndex = this.repetitionIndex,
-        listeningsCount = this.listeningsCount,
         rightAnswersCount = this.rightAnswersCount,
-        rightAnswersIndex = this.rightAnswersIndex
+        replaysCount = this.replaysCount
     )
 }
