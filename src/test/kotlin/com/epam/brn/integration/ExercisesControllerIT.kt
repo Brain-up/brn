@@ -176,7 +176,7 @@ class ExercisesControllerIT {
         return seriesRepository.save(
             Series(
                 description = "desc",
-                name = "series",
+                name = "series for ExercisesControllerIT",
                 exerciseGroup = exerciseGroup
             )
         )
