@@ -21,6 +21,7 @@ import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
+import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertTrue
 
@@ -120,14 +121,18 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex2, ex11, ex21)
         val studyHistory2 = StudyHistory(exercise = ex2,
             userAccount = mock(UserAccount::class.java),
-            listeningsCount = 12,
-            rightAnswersCount = 8,
-            tasksCount = 10)
+            startTime = LocalDateTime.now(),
+            executionSeconds = 122,
+            tasksCount = 12,
+            rightAnswersCount = 9,
+            replaysCount = 4)
         val studyHistory11 = StudyHistory(exercise = ex11,
             userAccount = mock(UserAccount::class.java),
-            listeningsCount = 17,
-            rightAnswersCount = 5,
-            tasksCount = 10)
+            startTime = LocalDateTime.now(),
+            executionSeconds = 122,
+            tasksCount = 12,
+            rightAnswersCount = 6,
+            replaysCount = 4)
         `when`(studyHistoryRepository.findLastByUserAccountId(1))
             .thenReturn(listOf(studyHistory2, studyHistory11))
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.75)

@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import kotlin.random.Random
 import kotlin.test.assertEquals
 
 @SpringBootTest
@@ -155,7 +156,7 @@ class StudyHistoryIT {
         // WHEN
         val result = existingUser.id?.let { studyHistoryRepository.getDayTimer(it, LocalDate.now()) }
         // THEN
-        assertEquals(480, result)
+        assertEquals(488, result)
     }
 
     @Test
@@ -191,7 +192,7 @@ class StudyHistoryIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data").value(480))
+            .andExpect(jsonPath("$.data").value(488))
     }
 
     @Test
@@ -230,11 +231,12 @@ class StudyHistoryIT {
             StudyHistory(
                 userAccount = existingUser,
                 exercise = existingExercise,
-                endTime = startTime.plusMinutes(2),
+                endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
                 startTime = startTime,
-                executionSeconds = 120,
-                tasksCount = 2,
-                repetitionIndex = 1f
+                executionSeconds = 122,
+                tasksCount = 12,
+                rightAnswersCount = 10,
+                replaysCount = 4
             )
         )
     }

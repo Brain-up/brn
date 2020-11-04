@@ -19,6 +19,15 @@ export interface IStatsObject {
   userId: number
 }
 
+interface IStatsSaveDTO {
+  exerciseId: number,
+  startTime: Date,
+  endTime: Date,
+  executionSeconds: number,
+  tasksCount: number,
+  replaysCount: number,
+  rightAnswersCount: number
+}
 export default class Exercise extends CompletionDependent.extend({
   session: service('session'),
   name: attr('string'),
@@ -117,6 +126,15 @@ export default class Exercise extends CompletionDependent.extend({
   },
   async postHistory(data: IStatsExerciseStats) {
     const stats: IStatsObject = this.calcStats(data);
+    const newStats: IStatsSaveDTO = {
+      endTime: stats.endTime,
+      startTime: stats.startTime,
+      executionSeconds: stats.countedSeconds,
+      exerciseId: parseInt(this.id, 10),
+      replaysCount: data.repeatsCount,
+      rightAnswersCount: data.rightAnswersCount,
+      tasksCount: data.tasksCount
+    }
 
     await fetch('/api/study-history', {
       method: 'POST',
@@ -124,7 +142,7 @@ export default class Exercise extends CompletionDependent.extend({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...stats,
+        ...newStats,
         // eslint-disable-next-line ember/no-get
         userId: this.get('session.data.user.id') || null
       }),
