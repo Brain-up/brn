@@ -6,6 +6,6 @@
  "tasksCount": 12,
  "replaysCount": 4,
  "repetitionIndex": 0.75,
- "rightAnswersCount": 6,
+ "wrongAnswers": 6,
  "rightAnswersIndex": 0.5
 }
