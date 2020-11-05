@@ -13,6 +13,7 @@ import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -88,5 +89,13 @@ class CsvLoadingTestIT {
 //        resourceRepository.findAll() shouldHaveSize 881
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
+    }
+
+    @AfterEach
+    fun deleteAfterTest() {
+        exerciseRepository.deleteAll()
+        seriesRepository.deleteAll()
+        exerciseGroupRepository.deleteAll()
+        userAccountRepository.deleteAll()
     }
 }
