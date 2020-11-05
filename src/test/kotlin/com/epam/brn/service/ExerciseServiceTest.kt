@@ -124,14 +124,14 @@ internal class ExerciseServiceTest {
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
-            rightAnswersCount = 9,
+            wrongAnswers = 3,
             replaysCount = 4)
         val studyHistory11 = StudyHistory(exercise = ex11,
             userAccount = mock(UserAccount::class.java),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
-            rightAnswersCount = 6,
+            wrongAnswers = 6,
             replaysCount = 4)
         `when`(studyHistoryRepository.findLastByUserAccountId(1))
             .thenReturn(listOf(studyHistory2, studyHistory11))
