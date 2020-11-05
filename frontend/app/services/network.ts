@@ -13,14 +13,14 @@ export default class NetworkService extends Service {
       this.store.adapterFor('application').headers,
     );
   }
-  postRequest(entry, data) {
+  postRequest(entry: string, data: unknown) {
     return fetch(`${this.prefix}/${entry}`, {
       body: JSON.stringify(data),
       headers: this._headers,
       method: 'POST',
     });
   }
-  request(entry) {
+  request(entry: string) {
     return fetch(`${this.prefix}/${entry}`, {
       headers: this._headers,
       method: 'GET',

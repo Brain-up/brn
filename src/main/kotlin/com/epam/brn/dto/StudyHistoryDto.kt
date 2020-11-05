@@ -1,34 +1,43 @@
 package com.epam.brn.dto
 
+import com.epam.brn.model.Exercise
+import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.UserAccount
 import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 
 data class StudyHistoryDto(
     var id: Long? = null,
     @NotNull
-    var userId: Long,
-    @NotNull
     var exerciseId: Long,
-    var startTime: LocalDateTime?,
+    @NotNull
+    var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
-    var executionSeconds: Int? = null,
-    var tasksCount: Short?,
-    var listeningsCount: Int? = null, // -- count of all user listenings. >=tasksCount --
-    var repetitionIndex: Float?, // repetitionIndex=tasksCount/listeningsCount
-    var rightAnswersCount: Int? = null, // -- right answers from 1 time <=tasksCount --
-    var rightAnswersIndex: Float? // rightAnswersIndex=rightAnswersCount/tasksCount
+    @NotNull
+    var executionSeconds: Int,
+    @NotNull
+    var tasksCount: Short,
+    @NotNull
+    var replaysCount: Int, // -- count of replays.  --
+    @NotNull
+    var rightAnswersCount: Int // -- right answers from 1 time <=tasksCount --
 ) {
-    override fun toString(): String {
-        return "StudyHistoryDto(" +
-                "userId=$userId, " +
+    override fun toString(): String = "StudyHistoryDto(" +
                 "exerciseId=$exerciseId, " +
                 "startTime=$startTime, " +
                 "endTime=$endTime, " +
                 "executionSeconds=$executionSeconds," +
-                "doneTasksCount=$tasksCount, " +
-                "repetitionIndex=$repetitionIndex," +
-                "listeningsCount=$listeningsCount," +
-                "rightAnswersCount=$rightAnswersCount," +
-                "rightAnswersIndex=$rightAnswersIndex)"
-    }
+                "tasksCount=$tasksCount, " +
+                "rightAnswersCount=$rightAnswersCount)"
+
+    fun toEntity(userAccount: UserAccount, exercise: Exercise): StudyHistory = StudyHistory(
+            userAccount = userAccount,
+            exercise = exercise,
+            startTime = this.startTime,
+            endTime = this.endTime,
+            executionSeconds = this.executionSeconds,
+            tasksCount = this.tasksCount,
+            rightAnswersCount = this.rightAnswersCount,
+            replaysCount = this.replaysCount
+        )
 }
