@@ -68,7 +68,7 @@ class StudyHistoryIT {
     }
 
     @Test
-    fun `test get last study histories for user`() {
+    fun `test repo get last study histories for user`() {
         // GIVEN
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
@@ -97,7 +97,7 @@ class StudyHistoryIT {
     }
 
     @Test
-    fun `test get last study histories for user and exercises`() {
+    fun `test repo get last study histories for user and exercises`() {
         // GIVEN
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
