@@ -25,13 +25,13 @@ internal class StudyHistoryControllerTest {
     fun `should create new study history`() {
         // GIVEN
         val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionIndex = 1f,
-            tasksCount = 1,
-            startTime = LocalDateTime.now(),
-            endTime = LocalDateTime.now(),
             exerciseId = 1L,
-            rightAnswersIndex = 0.75f
+            startTime = LocalDateTime.now().minusMinutes(1),
+            endTime = LocalDateTime.now(),
+            executionSeconds = 60,
+            tasksCount = 1,
+            replaysCount = 4,
+            rightAnswersCount = 10
         )
         `when`(studyHistoryService.save(dto)).thenReturn(dto)
 

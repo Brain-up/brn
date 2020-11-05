@@ -64,6 +64,7 @@
     </div>
     {{#if this.session.isAuthenticated}}
       <div class="flex justify-end w-48 mr-6">
+        <GlobalTimer />
         <div>
           <span
             title="{{this.user.email}}"

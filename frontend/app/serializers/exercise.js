@@ -8,6 +8,12 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     tasks: { serialize: 'ids-and-types', deserialize: 'records' },
     signals: { serialize: 'ids-and-types', deserialize: 'records' },
   };
+  modelNameFromPayloadKey(key) {
+    if (key === 'task/PHRASES') {
+      return 'task/phrase';
+    }
+    return super.modelNameFromPayloadKey(key);
+  }
   normalizeSignal(store, payloadItem) {
     const included = [];
     const signalSerializer = store.serializerFor('signal');

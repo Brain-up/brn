@@ -40,5 +40,14 @@
   background-position: 8px center, 75px center, 142px center;
 }
 
+.image-3 {
+  background-image:  url(/ui/groups/card-two.svg), url(/ui/groups/card-two.svg),url(/ui/groups/card-three.svg) ;
+  background-position: 8px center, 75px center, 142px center;
+}
+
+.image-4 {
+  background-image:  url(/ui/groups/card-two.svg),url(/ui/groups/card-three.svg),url(/ui/groups/card-three.svg) ;
+  background-position: 8px center, 75px center, 142px center;
+}
 
 /*! purgecss end ignore */
