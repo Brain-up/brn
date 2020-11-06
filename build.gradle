@@ -46,7 +46,7 @@ dependencies {
     testRuntimeOnly "com.h2database:h2"
 
     implementation 'com.amazonaws:aws-java-sdk:1.11.808'
-    implementation 'com.google.cloud:google-cloud-storage:1.110.0'
+    implementation 'com.google.cloud:google-cloud-storage:1.113.2'
 
     implementation 'khttp:khttp:1.0.0'
     implementation 'net.bramp.ffmpeg:ffmpeg:0.6.2'
