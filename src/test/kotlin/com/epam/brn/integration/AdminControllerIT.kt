@@ -222,10 +222,10 @@ class AdminControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data[0].id").value(3))
-            .andExpect(jsonPath("$.data[1].id").value(4))
-            .andExpect(jsonPath("$.data[2].id").value(5))
-            .andExpect(jsonPath("$.data[3].id").value(6))
+            .andExpect(jsonPath("$.data[0].id").value(historyFirstExerciseOne.id!!))
+            .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
+            .andExpect(jsonPath("$.data[2].id").value(historySecondExerciseOne.id!!))
+            .andExpect(jsonPath("$.data[3].id").value(historySecondExerciseTwo.id!!))
     }
 
     private fun insertStudyHistory(
