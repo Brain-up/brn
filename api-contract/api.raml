@@ -303,6 +303,12 @@ mediaType:
 
 # ADMIN  ----------------------
 /admin
+    /users
+        get:
+            description: get all users
+        responses:
+            200:
+              example:
     /histories:
         get:
             description: get histories for user by period from <= startTime < to

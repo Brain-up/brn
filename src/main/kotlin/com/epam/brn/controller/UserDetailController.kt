@@ -55,9 +55,4 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
         @RequestParam("lastName", required = true) lastName: String
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = listOf(userAccountService.findUserByName(firstName, lastName))))
-
-    @GetMapping("/users")
-    @ApiOperation("Get users")
-    fun getUsers() = ResponseEntity.ok()
-        .body(BaseResponseDto(data = userAccountService.getUsers()))
 }

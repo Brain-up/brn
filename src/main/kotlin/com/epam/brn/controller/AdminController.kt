@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.service.StudyHistoryService
+import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +17,13 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/admin")
 @Api(value = "/admin", description = "Contains actions for admin")
-class AdminController(@Autowired val studyHistoryService: StudyHistoryService) {
+class AdminController(@Autowired val studyHistoryService: StudyHistoryService,
+                      @Autowired val userAccountService: UserAccountService) {
+
+    @GetMapping("/users")
+    @ApiOperation("Get users")
+    fun getUsers() = ResponseEntity.ok()
+        .body(BaseResponseDto(data = userAccountService.getUsers()))
 
     @GetMapping("/histories")
     @ApiOperation("Get user's study histories for period")
