@@ -23,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
@@ -31,15 +30,16 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-class StudyHistoryIT {
+class AdminControllerIT {
 
-    private val baseUrl = "/study-history"
+    private val baseUrl = "/admin"
 
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
@@ -69,7 +69,7 @@ class StudyHistoryIT {
     }
 
     @Test
-    fun `test get last study histories for user`() {
+    fun `test repo get histories for user by period`() {
         // GIVEN
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
@@ -77,62 +77,51 @@ class StudyHistoryIT {
         val existingUser = insertUser()
         val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
         val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
-        val now = LocalDateTime.now()
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
+        val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
+        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.minusHours(1))
+        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
         val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
+        val historyTomorrowOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusDays(1))
+        val historyTomorrowTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.plusDays(1))
         studyHistoryRepository
             .saveAll(
                 listOf(
+                    historyYesterdayOne,
+                    historyYesterdayTwo,
                     historyFirstExerciseOne,
                     historyFirstExerciseTwo,
                     historySecondExerciseOne,
-                    historySecondExerciseTwo
+                    historySecondExerciseTwo,
+                    historyTomorrowOne,
+                    historyTomorrowTwo
                 )
             )
         // WHEN
-        val result = existingUser.id?.let { studyHistoryRepository.findLastByUserAccountId(it) }
+        val result = studyHistoryRepository.getHistories(existingUser.id!!,
+            java.sql.Date.valueOf(now.toLocalDate()),
+            java.sql.Date.valueOf(now.toLocalDate().plusDays(1)))
         // THEN
-        assertEquals(2, result?.size)
+        assertEquals(4, result.size)
+        result.map { it.id }.containsAll(listOf(historyFirstExerciseOne.id, historyFirstExerciseTwo.id, historySecondExerciseOne.id, historySecondExerciseTwo.id))
     }
 
     @Test
-    fun `test get last study histories for user and exercises`() {
+    fun `test repo get histories for user by period without histories`() {
         // GIVEN
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
         val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
-        val now = LocalDateTime.now()
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.minusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        studyHistoryRepository
-            .saveAll(
-                listOf(
-                    historyFirstExerciseOne,
-                    historyFirstExerciseTwo,
-                    historySecondExerciseOne,
-                    historySecondExerciseTwo
-                )
-            )
         // WHEN
-        val result = existingUser.id?.let {
-            studyHistoryRepository.findLastByUserAccountIdAndExercises(
-                it,
-                listOf(existingExerciseFirst.id!!)
-            )
-        }
+        val result = studyHistoryRepository.getHistories(existingUser.id!!,
+            java.sql.Date.valueOf(LocalDate.now()),
+            java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
         // THEN
-        assertEquals(1, result?.size)
+        assertEquals(0, result.size)
     }
 
     @Test
-    fun `test today timer for current user`() {
+    fun `test repo get month histories for user`() {
         // GIVEN
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
@@ -155,13 +144,14 @@ class StudyHistoryIT {
                 )
             )
         // WHEN
-        val result = existingUser.id?.let { studyHistoryRepository.getDayTimer(it, LocalDate.now()) }
+        val result = studyHistoryRepository.getMonthHistories(existingUser.id!!, LocalDate.now().monthValue, LocalDate.now().year)
         // THEN
-        assertEquals(488, result)
+        assertEquals(4, result.size)
+        assertTrue(result.map { it.id }.containsAll(listOf(historyFirstExerciseOne.id, historyFirstExerciseTwo.id, historySecondExerciseOne.id, historySecondExerciseTwo.id)))
     }
 
     @Test
-    fun `test get day timer for current user`() {
+    fun `test repo get today histories for user`() {
         // GIVEN
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
@@ -184,47 +174,14 @@ class StudyHistoryIT {
                 )
             )
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/todayTimer")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val result = studyHistoryRepository.getTodayHistories(existingUser.id!!)
         // THEN
-        resultAction
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data").value(488))
+        assertEquals(4, result.size)
+        assertTrue(result.map { it.id }.containsAll(listOf(historyFirstExerciseOne.id, historyFirstExerciseTwo.id, historySecondExerciseOne.id, historySecondExerciseTwo.id)))
     }
 
     @Test
-    fun `test get today timer for current user without study history records`() {
-        // GIVEN
-        insertUser()
-        // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/todayTimer")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-        // THEN
-        resultAction
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data").value(0))
-    }
-
-    @Test
-    fun `test repo get today timer for current user without study history records`() {
-        // GIVEN
-        val user = insertUser()
-        // WHEN
-        val result = studyHistoryRepository.getTodayDayTimer(user.id!!)
-        // THEN
-        assertEquals(0, result)
-    }
-
-    @Test
-    fun `test get histories for current user by period`() {
+    fun `test get histories for user by period`() {
         // GIVEN
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
@@ -258,17 +215,17 @@ class StudyHistoryIT {
         val today = LocalDate.now()
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("$baseUrl/histories?from=$today&to=${today.plusDays(1)}")
+                .get("$baseUrl/histories?userId=${existingUser.id}&from=$today&to=${today.plusDays(1)}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data[0].id").value(historyFirstExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
-            .andExpect(jsonPath("$.data[2].id").value(historySecondExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[3].id").value(historySecondExerciseTwo.id!!))
+            .andExpect(jsonPath("$.data[0].id").value(3))
+            .andExpect(jsonPath("$.data[1].id").value(4))
+            .andExpect(jsonPath("$.data[2].id").value(5))
+            .andExpect(jsonPath("$.data[3].id").value(6))
     }
 
     private fun insertStudyHistory(

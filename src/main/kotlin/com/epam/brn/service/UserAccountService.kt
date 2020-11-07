@@ -10,4 +10,5 @@ interface UserAccountService {
     fun findUserById(id: Long): UserAccountDto
     fun getUserFromTheCurrentSession(): UserAccountDto
     fun removeUserWithId(id: Long): Any
+    fun getUsers(): List<UserAccountDto>
 }
