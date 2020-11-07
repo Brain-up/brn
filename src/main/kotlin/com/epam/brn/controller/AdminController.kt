@@ -17,8 +17,7 @@ import java.time.LocalDate
 @RestController
 @RequestMapping("/admin")
 @Api(value = "/admin", description = "Contains actions for admin")
-class AdminController(@Autowired val studyHistoryService: StudyHistoryService,
-                      @Autowired val userAccountService: UserAccountService) {
+class AdminController(@Autowired val studyHistoryService: StudyHistoryService, @Autowired val userAccountService: UserAccountService) {
 
     @GetMapping("/users")
     @ApiOperation("Get users")
