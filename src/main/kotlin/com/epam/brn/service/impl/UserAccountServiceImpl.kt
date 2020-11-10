@@ -87,6 +87,9 @@ class UserAccountServiceImpl(
         userAccountRepository.deleteById(id)
     }
 
+    override fun getUsers(): List<UserAccountDto> =
+        userAccountRepository.findAll().map { it.toDto() }
+
     private fun getNameFromPrincipals(authentication: Authentication): String {
         val principal = authentication.principal
         if (principal is UserDetails)

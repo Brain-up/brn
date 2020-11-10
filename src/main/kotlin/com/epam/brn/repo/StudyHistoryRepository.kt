@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.sql.Date
 import java.time.LocalDate
 
 @Repository
@@ -61,4 +62,24 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " AND s.userAccount.id = :userId"
     )
     fun getTodayDayTimer(userId: Long): Int
+
+    @Query("SELECT s FROM StudyHistory s " +
+            " WHERE date_trunc('day', s.startTime) >= :from " +
+            " AND date_trunc('day', s.startTime) < :to " +
+            " AND s.userAccount.id = :userId"
+    )
+    fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
+
+    @Query("SELECT s FROM StudyHistory s " +
+            " WHERE EXTRACT(MONTH FROM s.startTime) = :month " +
+            " AND EXTRACT(YEAR FROM s.startTime) = :year " +
+            " AND s.userAccount.id = :userId"
+    )
+    fun getMonthHistories(userId: Long, month: Int, year: Int): List<StudyHistory>
+
+    @Query("SELECT s FROM StudyHistory s " +
+            " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime) " +
+            " AND s.userAccount.id = :userId"
+    )
+    fun getTodayHistories(userId: Long): List<StudyHistory>
 }

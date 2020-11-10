@@ -1,0 +1,26 @@
+{
+ "data": [
+  {
+   "id": 1,
+   "exerciseId": 504,
+   "startTime": "2020-11-05T12:04:50.861",
+   "endTime": "2020-11-05T12:05:51.434",
+   "executionSeconds": 56,
+   "tasksCount": 0,
+   "replaysCount": 4,
+   "rightAnswersCount": 12
+  },
+  {
+   "id": 2,
+   "exerciseId": 505,
+   "startTime": "2020-11-05T12:19:51.227",
+   "endTime": "2020-11-05T12:20:45.121",
+   "executionSeconds": 49,
+   "tasksCount": 0,
+   "replaysCount": 5,
+   "rightAnswersCount": 12
+  }
+ ],
+ "errors": [],
+ "meta": []
+}
