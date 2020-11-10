@@ -10,12 +10,13 @@ export default class GroupSeriesRoute extends Route {
   }
 
   redirect(series, { to }) {
+    // to-do fixit to `group.series.index`
     if (
       to.name === 'series.index' &&
       series.get('sortedExercises.firstObject')
     ) {
       this.transitionTo(
-        'route.index',
+        'group.series.exercise',
         series.id,
         series.get('sortedExercises.firstObject.id'),
       );
