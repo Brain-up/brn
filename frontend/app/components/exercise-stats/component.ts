@@ -1,8 +1,8 @@
 import Component from '@glimmer/component';
-import { IStatsObject } from 'brn/models/exercise';
+import { IStatsExerciseStats } from 'brn/services/stats';
 
 interface IExerciseStatsComponentArgs {
-  stats: IStatsObject,
+  stats: IStatsExerciseStats,
   onComplete: () => void;
 }
 
@@ -13,15 +13,12 @@ enum TrendTypes {
 }
 
 export default class ExerciseStatsComponent extends Component<IExerciseStatsComponentArgs> {
-  get stats() {
+  get stats(): IStatsExerciseStats {
     return this.args.stats || {};
   }
 
-  get listeningsTrend() {
-    const { listeningsCount, tasksCount } = this.stats;
-    if (listeningsCount === tasksCount) {
-      return TrendTypes.neutral;
-    } else if (listeningsCount > tasksCount) {
+  get repeatsTrend() {
+    if (this.stats.repeatsCount > 0) {
       return TrendTypes.negative;
     } else {
       return TrendTypes.positive;
@@ -29,9 +26,8 @@ export default class ExerciseStatsComponent extends Component<IExerciseStatsComp
   }
 
   get attemptsTrend() {
-    const { tasksCount } = this.stats;
-    const { attemptsCount } = this;
-    if (attemptsCount > tasksCount) {
+    const { wrongAnswersCount } = this.stats;
+    if (wrongAnswersCount > 0) {
       return TrendTypes.negative;
     } else {
       return TrendTypes.positive;
@@ -39,19 +35,11 @@ export default class ExerciseStatsComponent extends Component<IExerciseStatsComp
   }
 
   get timeStats() {
-    const { endTime, startTime } = this.stats;
-    const ms = endTime.getTime() - startTime.getTime();
+    const { countedSeconds } = this.stats;
+    const ms = countedSeconds * 1000;
     const totalSec = Math.floor(ms / 1000);
     const sec = totalSec % 60;
     const min = Math.floor(totalSec / 60);
     return { min, sec };
-  }
-
-  get attemptsCount() {
-    return this.stats.listeningsCount;
-  }
-
-  get repetitionIndex() {
-    return Number((this.stats.repetitionIndex || 0)).toFixed(2);
   }
 }
