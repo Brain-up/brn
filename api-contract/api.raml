@@ -138,6 +138,36 @@ mediaType:
                            "errors": [],
                            "meta": []
                        }
+  /histories:
+    get:
+        description: get histories for current user by period from <= startTime < to
+        queryParameters:
+              from:
+                    required: true
+                    type: date
+                    example: "2020-11-05"
+              to:
+                    required: true
+                    type: date
+                    example: "2020-11-06"
+        responses:
+              200:
+                example: !include samples/study_histories_dto_response.json
+  /monthHistories:
+      get:
+          description: get histories for current user by month and year
+          queryParameters:
+                month:
+                      required: true
+                      type: integer
+                      example: 11
+                year:
+                      required: true
+                      type: integer
+                      example: 2020
+          responses:
+                200:
+                  example: !include samples/study_histories_dto_response.json
 
 # USERS ----------------------
 /users:
@@ -270,3 +300,50 @@ mediaType:
         200:
           body:
             example: "https://cloudprovider.bucket.com"
+
+# ADMIN  ----------------------
+/admin
+    /users
+        get:
+            description: get all users
+        responses:
+            200:
+              example: !include samples/users_get_response.json
+    /histories:
+        get:
+            description: get histories for user by period from <= startTime < to
+            queryParameters:
+                userId:
+                    required: true
+                    type: integer
+                    example: 1
+                from:
+                    required: true
+                    type: date
+                    example: "2020-11-05"
+                to:
+                    required: true
+                    type: date
+                    example: "2020-11-06"
+        responses:
+              200:
+                example: !include samples/study_histories_dto_response.json
+  /monthHistories:
+      get:
+          description: get histories for user by month and year
+          queryParameters:
+                userId:
+                      required: true
+                      type: integer
+                      example: 1
+                month:
+                      required: true
+                      type: integer
+                      example: 11
+                year:
+                      required: true
+                      type: integer
+                      example: 2020
+          responses:
+                200:
+                  example: !include samples/study_histories_dto_response.json

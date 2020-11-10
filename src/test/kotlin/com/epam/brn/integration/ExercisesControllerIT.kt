@@ -170,7 +170,7 @@ class ExercisesControllerIT {
         val exerciseGroup = exerciseGroupRepository.save(
             ExerciseGroup(
                 description = "desc",
-                name = "group"
+                name = "group ExercisesControllerIT"
             )
         )
         return seriesRepository.save(
