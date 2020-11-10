@@ -4,12 +4,12 @@ import { task } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { IStatsExerciseStats } from 'brn/services/stats';
 
 export default class GroupSeriesExerciseController extends Controller {
   @service router;
   @service tasksManager;
-  @service('studying-timer')
-  studyingTimer;
+  @service('studying-timer') studyingTimer;
   @service('stats') stats;
 
   @tracked correctnessWidgetIsShown = false;
@@ -17,14 +17,14 @@ export default class GroupSeriesExerciseController extends Controller {
   @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
-    return this.model.get('tasks').every((task) => task.get('completedInCurrentCycle'));
+    return this.model.get('tasks').every((task: any) => task.get('completedInCurrentCycle'));
   }
 
   goToSeries() {
     this.router.transitionTo('group.series.index', this.model.get('series.id'));
   }
 
-  get modelStats() {
+  get modelStats(): IStatsExerciseStats {
     return this.stats.statsFor(this.model);
   }
 
@@ -32,10 +32,10 @@ export default class GroupSeriesExerciseController extends Controller {
     this.studyingTimer.pause();
     this.model.trackTime('end');
     this.model.postHistory(this.modelStats);
-    return this.model.calcStats(this.modelStats);
+    return this.modelStats;
   }
 
-  @(task(function*(isCorrect = false) {
+  @(task(function*(this: GroupSeriesExerciseController, isCorrect = false) {
     const waitingTime = isCorrect ? 3000 : 2000;
     this.correctnessWidgetIsShown = true;
     yield customTimeout(waitingTime);

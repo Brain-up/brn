@@ -41,9 +41,9 @@ exercise_messages:
   answer_successfully: Правильный ответ
 
 statistics:
-  attempts: Попытки
+  wrong_answers: Ошибки
   tasks: Задачи
-  listenings: Прослушивания
+  repeats: Повторения
   time_min: мин
   time_sec: сек
   scoring: Шкала успеха

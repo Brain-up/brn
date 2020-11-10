@@ -147,13 +147,13 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     this.task.wrongAnswers.pushObject(this.firstUncompletedTask.serialize());
     this.markNextAttempt(this.firstUncompletedTask);
     this.updateLocalTasks();
-    await customTimeout(1000);
+    await customTimeout(300);
     this.startTask();
     this.onWrongAnswer({ skipRetry: true });
   }
 
   async handleCorrectAnswer() {
-    await customTimeout(1000);
+    await customTimeout(300);
     this.startNewTask();
     if (!this.firstUncompletedTask) {
       await customTimeout(3000);
