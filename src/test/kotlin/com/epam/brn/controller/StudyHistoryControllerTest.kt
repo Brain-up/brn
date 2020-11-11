@@ -31,7 +31,7 @@ internal class StudyHistoryControllerTest {
             executionSeconds = 60,
             tasksCount = 1,
             replaysCount = 4,
-            rightAnswersCount = 10
+            wrongAnswers = 3
         )
         `when`(studyHistoryService.save(dto)).thenReturn(dto)
 

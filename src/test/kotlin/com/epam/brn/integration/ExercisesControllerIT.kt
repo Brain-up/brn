@@ -147,7 +147,7 @@ class ExercisesControllerIT {
                 startTime = startTime,
                 executionSeconds = 122,
                 tasksCount = 12,
-                rightAnswersCount = 10,
+                wrongAnswers = 3,
                 replaysCount = 4
             )
         )

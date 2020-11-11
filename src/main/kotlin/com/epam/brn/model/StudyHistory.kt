@@ -40,14 +40,14 @@ data class StudyHistory(
     var endTime: LocalDateTime? = null,
     var executionSeconds: Int,
     var tasksCount: Short,
-    var rightAnswersCount: Int,
+    var wrongAnswers: Int,
     var replaysCount: Int,
     var repetitionIndex: Float? = null,
     var rightAnswersIndex: Float? = null
 
 ) {
     override fun toString() =
-        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, repetitionIndex=$repetitionIndex)"
+        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, wrongAnswers=$wrongAnswers)"
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
@@ -56,7 +56,7 @@ data class StudyHistory(
         endTime = this.endTime,
         executionSeconds = this.executionSeconds,
         tasksCount = this.tasksCount,
-        rightAnswersCount = this.rightAnswersCount,
+        wrongAnswers = this.wrongAnswers,
         replaysCount = this.replaysCount
     )
 }

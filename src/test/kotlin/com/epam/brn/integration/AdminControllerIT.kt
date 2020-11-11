@@ -241,7 +241,7 @@ class AdminControllerIT {
                 startTime = startTime,
                 executionSeconds = 122,
                 tasksCount = 12,
-                rightAnswersCount = 10,
+                wrongAnswers = 2,
                 replaysCount = 4
             )
         )

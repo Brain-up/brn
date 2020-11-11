@@ -124,19 +124,19 @@ internal class ExerciseServiceTest {
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
-            rightAnswersCount = 9,
-            replaysCount = 4)
+            wrongAnswers = 2,
+            replaysCount = 2)
         val studyHistory11 = StudyHistory(exercise = ex11,
             userAccount = mock(UserAccount::class.java),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
-            rightAnswersCount = 6,
+            wrongAnswers = 6,
             replaysCount = 4)
         `when`(studyHistoryRepository.findLastByUserAccountId(1))
             .thenReturn(listOf(studyHistory2, studyHistory11))
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.75)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.75)
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)

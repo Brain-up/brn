@@ -30,14 +30,14 @@
       </ExerciseStats::Panel>
       <ExerciseStats::Panel
         @type={{this.attemptsTrend}}
-        @label={{t "statistics.attempts"}}
-        @value={{concat this.attemptsCount ' / ' @stats.tasksCount}}
+        @label={{t "statistics.wrong_answers"}}
+        @value={{this.stats.wrongAnswersCount}}
         class="flex-col w-64 h-64 bg-blue-100 rounded-full"
       />
       <ExerciseStats::Panel
-        @type={{this.listeningsTrend}}
-        @label={{t "statistics.listenings"}}
-        @value={{@stats.listeningsCount}}
+        @type={{this.repeatsTrend}}
+        @label={{t "statistics.repeats"}}
+        @value={{this.stats.repeatsCount}}
         class="flex-col w-64 h-64 bg-indigo-200 rounded-full"
       />
     </div>

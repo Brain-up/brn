@@ -21,7 +21,6 @@ module('Integration | Component | exercise-stats', function(hooks) {
 
     assert.dom('[data-test-exercise-stats]').exists();
     assert.dom('[data-test-type="positive"]').exists();
-    assert.dom('[data-test-type="neutral"]').exists();
     assert.dom('[data-test-continue]').exists();
     await click('[data-test-continue]');
   });

@@ -63,7 +63,7 @@ internal class StudyHistoryServiceTest {
             startTime = now,
             executionSeconds = 122,
             tasksCount = 12,
-            rightAnswersCount = 11,
+            wrongAnswers = 3,
             replaysCount = 3
         )
         val studyHistorySaved = StudyHistory(
@@ -73,7 +73,7 @@ internal class StudyHistoryServiceTest {
             startTime = now,
             executionSeconds = 122,
             tasksCount = 12,
-            rightAnswersCount = 11,
+            wrongAnswers = 3,
             replaysCount = 3
         )
         `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(

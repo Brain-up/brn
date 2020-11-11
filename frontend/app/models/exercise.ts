@@ -26,7 +26,7 @@ interface IStatsSaveDTO {
   executionSeconds: number,
   tasksCount: number,
   replaysCount: number,
-  rightAnswersCount: number
+  wrongAnswers: number
 }
 export default class Exercise extends CompletionDependent.extend({
   session: service('session'),
@@ -132,8 +132,8 @@ export default class Exercise extends CompletionDependent.extend({
       executionSeconds: stats.countedSeconds,
       exerciseId: parseInt(this.id, 10),
       replaysCount: data.repeatsCount,
-      rightAnswersCount: data.rightAnswersCount,
-      tasksCount: data.tasksCount
+      wrongAnswers: data.wrongAnswersCount,
+      tasksCount: data.rightAnswersCount
     }
 
     await fetch('/api/study-history', {

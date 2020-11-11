@@ -41,9 +41,9 @@ exercise_messages:
   answer_successfully: Correct answer
 
 statistics:
-  attempts: Attempts
+  wrong_answers: Wrong Answers
   tasks: Tasks
-  listenings: Listenings
+  repeats: Repeats
   time_min: min
   time_sec: sec
   scoring: Indicator of the success
