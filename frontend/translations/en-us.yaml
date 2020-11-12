@@ -78,3 +78,6 @@ msg:
     INVALID_EMAIL_FORMAT_CYRILLIC_NOT_ALLOWED: Cyrillic emails not allowed
     PASSWORD_MUST_NOT_BE_BLANK: Password must not be blank
     PASSWORD_MUST_BE_GREATER_THAN_FOUR_CHARACTERS_LONG: Password must be grater than four characters long
+
+groups:
+  exercise_selection: "Let's choose what exercises we do today?"

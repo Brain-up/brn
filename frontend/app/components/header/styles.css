@@ -1,12 +1,7 @@
 /*! purgecss start ignore */
 
-.logo-text,
 a.active {
-  color: #001274;
-}
-
-.fa-brain {
-  margin-right: 5px;
+  opacity: 0.95;
 }
 
 .logo-text {
@@ -19,6 +14,10 @@ a.active {
 .logo-text svg {
   font-size: 25px;
   margin-right: 10px;
+}
+
+.gradient-background {
+  background-image: linear-gradient(92.58deg, #428DFC 49.26%, rgba(103, 66, 252, 0.72) 85.77%);
 }
 
 

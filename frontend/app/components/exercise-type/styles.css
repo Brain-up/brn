@@ -13,7 +13,7 @@
   height: 350px;
   overflow: hidden;
   position: relative;
-  width: 456px;
+  width: 410px;
 }
 
 .card:focus {
@@ -26,19 +26,12 @@
   background-repeat: no-repeat;
   background-size: contain;
   display: block;
-  height: 140px;
-  margin-top: 34px;
-  width: 216px;
+  height: 230px;
+  width: 410px;
 }
 
 .non-speech-exercises {
   background-image: url(/pictures/exercise-type/non-speech-exercises.svg);
-}
-
-.card__title {
-  color: #000;
-  font-size: 24px;
-  font-weight: bold;
 }
 
 .progress {
