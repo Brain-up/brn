@@ -3,9 +3,6 @@
   <li class="list-item mr-6">
     <LinkTo @route="group" @model={{@model.lastObject}}>
       <ExerciseType
-        @progress={{100}}
-        @completed={{48}}
-        @total={{100}}
         @initial={{@model.lastObject.name}}
         class="speech-exercise"
       />
@@ -14,9 +11,6 @@
   <li class="list-item">
     <LinkTo @route="group" @model={{@model.firstObject}}>
       <ExerciseType
-        @progress={{24.43}}
-        @completed={{88}}
-        @total={{150}}
         @initial={{@model.firstObject.name}}
         class="non-speech-exercises"
       />
