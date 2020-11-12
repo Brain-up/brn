@@ -165,7 +165,7 @@ create table if not exists study_history
     execution_seconds   integer  not null,
     repetition_index    real,
     replays_count       integer  not null,
-    right_answers_count integer  not null,
+    wrongAnswers        integer  not null,
     right_answers_index real,
     start_time          timestamp,
     tasks_count         smallint not null,

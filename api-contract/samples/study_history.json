@@ -5,5 +5,5 @@
  "executionSeconds": 120,
  "tasksCount": 12,
  "replaysCount": 4,
- "rightAnswersCount": 10
+ "wrongAnswers": 2
 }

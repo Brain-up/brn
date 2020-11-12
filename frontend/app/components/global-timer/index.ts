@@ -25,6 +25,8 @@ export default class GlobalTimerComponent extends Component {
             const response = yield this.network.request('study-history/todayTimer');
             const { data } = yield response.json();
             this.seconds = data;
+          } else {
+            break;
           }
           yield timeout(10000);
         } catch {

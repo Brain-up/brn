@@ -20,7 +20,7 @@ data class StudyHistoryDto(
     @NotNull
     var replaysCount: Int, // -- count of replays.  --
     @NotNull
-    var rightAnswersCount: Int // -- right answers from 1 time <=tasksCount --
+    var wrongAnswers: Int // -- wrong answers count --
 ) {
     override fun toString(): String = "StudyHistoryDto(" +
                 "exerciseId=$exerciseId, " +
@@ -28,7 +28,7 @@ data class StudyHistoryDto(
                 "endTime=$endTime, " +
                 "executionSeconds=$executionSeconds," +
                 "tasksCount=$tasksCount, " +
-                "rightAnswersCount=$rightAnswersCount)"
+                "wrongAnswers=$wrongAnswers)"
 
     fun toEntity(userAccount: UserAccount, exercise: Exercise): StudyHistory = StudyHistory(
             userAccount = userAccount,
@@ -37,7 +37,7 @@ data class StudyHistoryDto(
             endTime = this.endTime,
             executionSeconds = this.executionSeconds,
             tasksCount = this.tasksCount,
-            rightAnswersCount = this.rightAnswersCount,
+            wrongAnswers = this.wrongAnswers,
             replaysCount = this.replaysCount
         )
 }
