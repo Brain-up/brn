@@ -76,17 +76,6 @@ main > * {
   width: 30%;
 }
 
-body.route-groups  {
-  background-image: url(/ui/groups-background.svg);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-body.route-group  {
-  background-image: url(/ui/group-background.svg);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
 a {
   text-decoration: none;
 }
