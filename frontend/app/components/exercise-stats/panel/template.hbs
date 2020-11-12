@@ -44,9 +44,10 @@
         {{#if (has-block)}}
           {{yield}}
         {{else}}
-          {{or @value "@value"}}
+          {{if (or @value (eq @value 0)) @value "@value"}}
         {{/if}}
       </p>
     </div>
   </div>
 {{/let}}
+
