@@ -78,23 +78,27 @@ class AudioFilesGenerationService(
     private val log = logger()
 
     fun generateAudioFiles() {
-        val words = wordsService.wordsWithoutAudioResourceSet
-        val wordsSize = words.size
-        if (words.isEmpty()) {
-            log.info("There are no any words without audio ogg file.")
+        val allWords = wordsService.fullWordsSet
+        val existsHashWords = wordsService.existsFileNames
+        val wordsSize = allWords.size
+        if (allWords.isEmpty()) {
+            log.info("There are no any words.")
             return
         }
-        log.info("Start generating audio files in yandex cloud for $wordsSize words.")
+        log.info("Start generating audio files in yandex cloud for $wordsSize words. exists=${existsHashWords.size}")
         var counter = 1
-        words.asSequence().forEach { word ->
+        allWords.asSequence().forEach { word ->
             run {
-                log.info("Generated $counter word from $wordsSize words.")
-                generateAudioFiles(word, voiceAlena)
-                generateAudioFiles(word, voiceFilipp)
-                counter += 1
+                val md5Hash = DigestUtils.md5Hex(word)
+                if (!existsHashWords.contains(md5Hash)) {
+                    log.info("Generated $counter word from $wordsSize words.")
+                    generateAudioFiles(word, voiceAlena)
+                    generateAudioFiles(word, voiceFilipp)
+                    counter += 1
+                }
             }
         }
-        log.info("Audio files for all words (${words.size}) was created successfully!")
+        log.info("Audio files for all words (${allWords.size}) was created successfully!")
     }
 
     fun getYandexIamTokenForAudioGeneration(): String {

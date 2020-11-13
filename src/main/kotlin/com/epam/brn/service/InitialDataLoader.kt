@@ -133,7 +133,7 @@ class InitialDataLoader(
             initDataFromDirectory(directoryPath!!)
         else
             initDataFromClassPath()
-        wordsService.fillWordsWithoutAudioOggFile()
+        wordsService.fillWordsWithAudioOggFile()
 
         create1SeriesNonSpeechGroup()
     }
