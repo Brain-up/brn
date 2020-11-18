@@ -1,6 +1,6 @@
 package com.epam.brn.auth
 
-import com.epam.brn.dto.LoginDto
+import com.epam.brn.dto.request.LoginDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.UserAccountService
 import org.apache.logging.log4j.kotlin.logger
@@ -22,7 +22,12 @@ class AuthenticationBasicServiceImpl(
         userAccountDto.active = true
         val newUser = userAccountService.addUser(userAccountDto)
         log.info("created new user id=${newUser.id}")
-        return login(LoginDto(username = userAccountDto.email.toLowerCase(), password = userAccountDto.password))
+        return login(
+            LoginDto(
+                username = userAccountDto.email.toLowerCase(),
+                password = userAccountDto.password
+            )
+        )
     }
 
     override fun login(loginDto: LoginDto): String {

@@ -2,13 +2,16 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.service.ExerciseService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -19,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
-    @ApiOperation("Get exercises for current user with availability calculation.")
+    @ApiOperation("Get all series exercises for current user with availability calculation if withAvailability = true.")
     fun getExercises(
         @RequestParam(value = "seriesId", required = true) seriesId: Long,
         @RequestParam(value = "withAvailability", required = false, defaultValue = true.toString()) withAvailability: Boolean
@@ -35,6 +38,15 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     ): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok()
             .body(BaseResponseDto(data = exerciseService.findExercisesByNameForCurrentUser(name)))
+    }
+
+    @GetMapping(value = ["/byIds"])
+    @ApiOperation("Get exercises for current user by ids which have same name.")
+    fun getExercisesByIds(
+        @Validated @RequestBody exerciseRequest: ExerciseRequest
+    ): ResponseEntity<BaseResponseDto> {
+        return ResponseEntity.ok()
+            .body(BaseResponseDto(data = exerciseService.getExercisesByIds(exerciseRequest.ids)))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
