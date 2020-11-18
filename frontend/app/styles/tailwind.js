@@ -45,6 +45,10 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
+    textColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
+    gradientColorStops: ['responsive', 'hover', 'focus', 'disabled', 'active'],
+  },
   plugins: [],
 };
