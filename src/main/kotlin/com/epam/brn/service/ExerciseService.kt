@@ -58,7 +58,7 @@ class ExerciseService(
     fun getExercisesByIds(exerciseIds: List<Long>): List<ExerciseDto> {
         if (exerciseIds.isEmpty()) return emptyList()
         val exercise = exerciseRepository.findById(exerciseIds[0])
-        if (exercise.isEmpty()) throw EntityNotFoundException("There is no one exercise with id = ${exerciseIds[0]}")
+        if (!exercise.isPresent) throw EntityNotFoundException("There is no one exercise with id = ${exerciseIds[0]}")
         return findExercisesByNameForCurrentUser(exercise.get().name)
     }
 
