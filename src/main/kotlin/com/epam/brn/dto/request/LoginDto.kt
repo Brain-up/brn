@@ -1,4 +1,4 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.request
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import javax.validation.constraints.Email
