@@ -3,6 +3,9 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
+import Router from '@ember/routing/router-service';
+import Session from 'ember-simple-auth/services/session';
+import IntlService from 'ember-intl/services/intl';
 
 const BUTTON_STATES = {
   ACTIVE: 'active',
@@ -10,12 +13,12 @@ const BUTTON_STATES = {
 };
 
 export default class LoginFormComponent extends Component {
-  @service('session') session;
-  @service('router') router;
-  @service('intl') intl;
+  @service('session') session!: Session;
+  @service('router') router!: Router;
+  @service('intl') intl!: IntlService;
 
-  @tracked login = undefined;
-  @tracked password = undefined;
+  @tracked login: string | undefined = undefined;
+  @tracked password: string | undefined  = undefined;
 
   @tracked errorMessage = '';
 
@@ -48,11 +51,11 @@ export default class LoginFormComponent extends Component {
     return this.trimmedValue(this.password).length === 0;
   }
 
-  trimmedValue(value) {
+  trimmedValue(value: string) {
     return (value || '').trim();
   }
 
-  @(task(function*() {
+  @(task(function*(this: LoginFormComponent) {
     let { login, password } = this;
     try {
       yield this.session.authenticate('authenticator:oauth2', login, password);
@@ -81,7 +84,7 @@ export default class LoginFormComponent extends Component {
   loginTask;
 
   @action
-  onSubmit(e) {
+  onSubmit(e: Event) {
     e.preventDefault();
     if (this.buttonState === BUTTON_STATES.DISABLED) {
       return;
