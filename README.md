@@ -56,7 +56,7 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
 
-### START YOUR FRONT ADMIN PART on Angular
+### START YOUR FRONT Angular Part - admin application
 go to location where the project is download for example C:\brn\brn\frontend-angular
 1. run first time
 `npm install`
@@ -65,7 +65,7 @@ go to location where the project is download for example C:\brn\brn\frontend-ang
 3. run to start angular part
 `npm run start`
 
-### START YOUR FRONT END DEVELOPMENT SERVER
+### START YOUR FRONT END EMBER PART - user application
 Run following commands:
 linux/mac:
 ``` 
@@ -78,6 +78,7 @@ for windows:
 FE dev server now accessible at http://localhost:4200/
 
 ### GET DATABASE RUNNING
+Install docker to your machine.
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
 To install docker:
@@ -107,22 +108,12 @@ http://localhost:8081/api/exercises/142
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
-### CREATING BRANCHES
-Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
-
 ## BACK END DEVELOPMENT 
 
 ### START BACKEND from IDEA
-just run Application.kt after launching database in docker.
+1 case: just run Application.kt from Idea after launching database in docker.
 
-### Code style
-- Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
-- Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
-- Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
-- It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
-- Please note that if `gradlew ktlint` task fails, project build will fail also.
-
-## DEPLOY USING DOCKER COMPOSE
+## DEPLOY Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE
 1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
 2. From console, from project's folder, execute:
 ```bash
@@ -146,7 +137,16 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. 
-# 7. check that build job on jenkins passes successfully.
+7. check that build job on jenkins passes successfully.
+
+### Code style
+- Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
+- Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
+- Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
+- It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
+- Please note that if `gradlew ktlint` task fails, project build will fail also.
+### CREATING BRANCHES
+Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
 
 ### Thank you very much for your support!
 
