@@ -11,7 +11,6 @@ module('Integration | Component | ui/button', function(hooks) {
     // Handle any actions with this.set('myAction', function(val) { ... });
 
     await render(hbs`<Ui::Button @title="foo"/>`);
-    await this.pauseTest();
 
     assert.equal(this.element.textContent.trim(), 'foo');
 
