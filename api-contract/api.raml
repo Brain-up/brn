@@ -88,7 +88,7 @@ mediaType:
             example3: !include samples/exercise_for_3_series.json
   /byIds:
       description: return exercises by ids with availability calculation
-      get:
+      post:
         body: {"ids": [1,2]}
         responses:
           200:
