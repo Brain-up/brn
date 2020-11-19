@@ -1,3 +1,7 @@
-<button type="button" class={{get this.classOptions @kind}} ...attributes>
-  {{yield}} {{@title}}
+<button type="button" class={{this.classes}} ...attributes>
+  {{#if (has-block)}}
+    {{yield}}
+  {{else}}
+    {{@title}}
+  {{/if}}
 </button>

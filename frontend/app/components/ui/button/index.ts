@@ -1,6 +1,21 @@
 import Component from '@glimmer/component';
 
-export default class UiButtonComponent extends Component {
+enum ButtonKind {
+  primary = 'primary',
+  secondary = 'secondary'
+}
+
+enum ButtonSize {
+  small = 'small'
+}
+
+interface IUiButtonComponentArguments {
+  kind?: ButtonKind,
+  size?: ButtonSize,
+  title?: string
+}
+
+export default class UiButtonComponent extends Component<IUiButtonComponentArguments> {
   optionsForEveryButton =
     'focus:outline-none font-bold uppercase rounded-md m-1';
   optionsPrimarySize = 'w-1/4 h-12';
@@ -12,9 +27,17 @@ export default class UiButtonComponent extends Component {
   secondaryButton = `${this.optionsForEveryButton} ${this.optionsPrimarySize} ${this.primaryHoverOptions} bg-gradient-to-r from-gray-300 to-gray-300 border-2 border-blue-light text-white disabled:text-gray-500 disabled:from-gray-300 disabled:to-gray-300 active:from-blue-dark`;
   primarySmallButton = `${this.primaryButton} ${this.optionsSmallSize}`;
 
-  classOptions = {
-    primaryBig: this.primaryButton,
-    secondary: this.secondaryButton,
-    primarySmall: this.primarySmallButton,
-  };
+  get classes() {
+    if (!this.args.kind) {
+      return this.primaryButton;
+    } else if (this.args.kind === ButtonKind.primary) {
+      if (this.args.size === ButtonSize.small) {
+        return this.primarySmallButton;
+      } else {
+        return this.primaryButton;;
+      }
+    } else {
+      return this.secondaryButton;
+    }
+  }
 }
