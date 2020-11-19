@@ -4,13 +4,17 @@ import { task } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { IStatsExerciseStats } from 'brn/services/stats';
+import StatsService, { IStatsExerciseStats } from 'brn/services/stats';
+import Router from '@ember/routing/router-service';
+import TasksManagerService from 'brn/services/tasks-manager';
+import StudyingTimerService from 'brn/services/studying-timer';
+import Exercise from 'brn/models/exercise';
 
 export default class GroupSeriesExerciseController extends Controller {
-  @service router;
-  @service tasksManager;
-  @service('studying-timer') studyingTimer;
-  @service('stats') stats;
+  @service('router') router!: Router;
+  @service('tasks-manager') tasksManager!: TasksManagerService;
+  @service('studying-timer') studyingTimer!: StudyingTimerService;
+  @service('stats') stats!: StatsService;
 
   @tracked correctnessWidgetIsShown = false;
   @tracked showExerciseStats = false;
@@ -59,9 +63,25 @@ export default class GroupSeriesExerciseController extends Controller {
     this.stats.unregisterModel(model);
   }
 
+
+  enableNextExercise(model: Exercise) {
+    // to-do add integration test for it
+    const children = model.get('parent.groupedByNameExercises')[this.model.name];
+    const index = children.indexOf(this.model);
+    const nextIndex = index + 1;
+    this.model.set('isManuallyCompleted', true);
+
+    if (children[nextIndex]) {
+      children[nextIndex].set('available', true);
+    }
+  }
+
   @action
   async afterCompleted() {
     this.showExerciseStats = false;
+
+    this.enableNextExercise(this.model as Exercise);
+
     this.goToSeries();
   }
 

@@ -2,13 +2,16 @@ import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import Router from '@ember/routing/router-service';
+import Session from 'ember-simple-auth/services/session';
+import IntlService from 'ember-intl/services/intl';
 
 export default class HeaderComponent extends Component {
-  @service('session') session;
-  @service('router') router;
-  @service('intl') intl;
+  @service('session') session!: Session;
+  @service('router') router!: Router;
+  @service('intl') intl!: IntlService;
 
-  @tracked selectedLocale = null;
+  @tracked selectedLocale: string | null = null;
 
   @action logout() {
     this.session.invalidate().then(() => {
@@ -24,7 +27,7 @@ export default class HeaderComponent extends Component {
     return this.selectedLocale || this.intl.primaryLocale;
   }
 
-  @action setLocale(localeName) {
+  @action setLocale(localeName: string) {
     const name = localeName === 'ru' ? 'ru-ru': 'en-us';
     this.intl.setLocale([name]);
     this.selectedLocale = name;
