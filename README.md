@@ -56,6 +56,15 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
 
+### START YOUR FRONT ADMIN PART on Angular
+go to location where the project is download for example C:\brn\brn\frontend-angular
+1. run first time
+`npm install`
+2. update proxy: open file proxy.conf.json and change target for local development. Do not commit this changes
+"http://localhost:8081" -> "http://audibly.ru"
+3. run to start angular part
+`npm run start`
+
 ### START YOUR FRONT END DEVELOPMENT SERVER
 Run following commands:
 linux/mac:
