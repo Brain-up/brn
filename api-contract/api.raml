@@ -87,17 +87,17 @@ mediaType:
             example2: !include samples/exercise_for_2_series.json
             example3: !include samples/exercise_for_3_series.json
   /byIds:
-      description: return exercises by ids with availability calculation
-      get:
-        body: {"ids": [1,2]}
+      description: return only available exercise ids by input exercise ids with same name
+      post:
+        body: {"ids": [1,2,3,4]}
         responses:
           200:
             body:
-              example1: !include samples/exercise_1_series_signal.json
-              example1: !include samples/exercise_1_series_speech.json
-              example2: !include samples/exercise_for_2_series.json
-              example3: !include samples/exercise_for_3_series.json
-
+              {
+                  "data": [1],
+                  "errors": [],
+                  "meta": []
+              }
 # TASK ----------------------------
 /tasks:
   get:

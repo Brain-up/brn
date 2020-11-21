@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -40,8 +41,8 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
             .body(BaseResponseDto(data = exerciseService.findExercisesByNameForCurrentUser(name)))
     }
 
-    @GetMapping(value = ["/byIds"])
-    @ApiOperation("Get exercises for current user by ids which have same name.")
+    @PostMapping(value = ["/byIds"])
+    @ApiOperation("Get available exercise ids for current user by ids which have same name.")
     fun getExercisesByIds(
         @Validated @RequestBody exerciseRequest: ExerciseRequest
     ): ResponseEntity<BaseResponseDto> {

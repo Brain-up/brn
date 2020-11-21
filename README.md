@@ -81,10 +81,10 @@ FE dev server now accessible at http://localhost:4200/
 1. Install docker to your machine.
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
-To install docker:
+To install docker use:
 * [on windows](https://docs.docker.com/docker-for-windows/install/)
 * [on mac](https://docs.docker.com/docker-for-mac/install/)
-* [oubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [on ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 * [debian](https://docs.docker.com/install/linux/docker-ce/debian/)
 * [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
 
@@ -93,7 +93,6 @@ To install docker:
 `docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 * on windows: 
 `docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
-
 _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
 
