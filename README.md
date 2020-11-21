@@ -78,7 +78,7 @@ for windows:
 FE dev server now accessible at http://localhost:4200/
 
 ### GET DATABASE RUNNING
-Install docker to your machine.
+1. Install docker to your machine.
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
 To install docker:
@@ -88,7 +88,7 @@ To install docker:
 * [debian](https://docs.docker.com/install/linux/docker-ce/debian/)
 * [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
 
-To run docker use the following command:
+2.1 To run docker db image use the following command:
 *  on linux:
 `docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 * on windows: 
@@ -96,22 +96,26 @@ To run docker use the following command:
 
 _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
-Alternatively, you can just replace the variables by "admin", the default user and password for development:
+2.2 Alternatively, you can just replace the variables by "admin", the default user and password for development:
 _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11_
 
 ### GET THE BACKEND PROJECT RUNNING
 1. Run command 'gradle build' from main project folder to build project with tests.
-2. Application.kt is the main class to run application.
-3. http://localhost:8081/api/brnlogin use admin@admin.com / admin 
-then you can call all other end-points like
-http://localhost:8081/api/exercises/142
+2. Application.kt is the main class to run application from Idea for example.
+3. on first running in application.properties set `spring.jpa.hibernate.ddl-auto=create`
+it would create db first time. and if you would not delete db image - structure will saved on second run with `spring.jpa.hibernate.ddl-auto=validate`
+4. post http://localhost:8081/api/brnlogin use in body
+{
+  "grant_type": "password",
+  "username": "admin@admin.com",
+  "password": "admin"
+}
+5. then you can call all other end-points like
+http://localhost:8081/api/exercises/142 
+end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
+6. for logout use http://localhost:8081/api/logout
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
-
-## BACK END DEVELOPMENT 
-
-### START BACKEND from IDEA
-1 case: just run Application.kt from Idea after launching database in docker.
 
 ## DEPLOY Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE
 1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
