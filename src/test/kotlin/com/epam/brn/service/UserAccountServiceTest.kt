@@ -56,13 +56,13 @@ internal class UserAccountServiceTest {
             // GIVEN
             val userName = "Tested"
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.fullName).thenReturn(userName)
+            `when`(userAccountDto.name).thenReturn(userName)
             `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserById(NumberUtils.LONG_ONE)
             // THEN
-            assertThat(userAccountDtoReturned.fullName).isEqualTo(userName)
+            assertThat(userAccountDtoReturned.name).isEqualTo(userName)
         }
 
         @Test
@@ -70,13 +70,13 @@ internal class UserAccountServiceTest {
             // GIVEN
             val fullName = "Ivan"
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.fullName).thenReturn(fullName)
+            `when`(userAccountDto.name).thenReturn(fullName)
             `when`(userAccountRepository.findUserAccountByName(fullName))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByName(fullName)
             // THEN
-            assertThat(userAccountDtoReturned.fullName).isEqualTo(fullName)
+            assertThat(userAccountDtoReturned.name).isEqualTo(fullName)
         }
 
         @Test
@@ -111,7 +111,7 @@ internal class UserAccountServiceTest {
             val userName = "Tested"
             `when`(userAccountDto.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.fullName).thenReturn(userName)
+            `when`(userAccountDto.name).thenReturn(userName)
             `when`(userAccountRepository.save(userAccount))
                 .thenReturn(userAccount)
             `when`(authorityService.findAuthorityByAuthorityName(anyString()))
@@ -121,7 +121,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val userAccountDtoReturned = userAccountService.addUser(userAccountDto)
             // THEN
-            assertThat(userAccountDtoReturned.fullName).isEqualTo(userName)
+            assertThat(userAccountDtoReturned.name).isEqualTo(userName)
         }
     }
 }

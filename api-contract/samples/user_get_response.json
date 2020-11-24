@@ -1,0 +1,17 @@
+{
+  "data":
+    {
+      "authorities": [
+        "ROLE_ADMIN"
+      ],
+      "id": 1,
+      "name": "admin",
+      "email": "admin@admin.com",
+      "password": "this.password",
+      "gender": "MALE",
+      "bornYear": 2000,
+      "active": true
+    },
+  "errors": [],
+  "meta": []
+}

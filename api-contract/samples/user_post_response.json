@@ -4,6 +4,8 @@
       "id": 8,
       "userName": "example_user",
       "email": "example_user@user.ru",
+      "gender": "MALE",
+      "bornYear": 2000,
       "active": true,
       "authorities": [
         "ROLE_USER"

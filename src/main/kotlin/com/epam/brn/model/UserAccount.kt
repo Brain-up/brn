@@ -45,7 +45,7 @@ data class UserAccount(
     fun toDto(): UserAccountDto {
         val userAccountDto = UserAccountDto(
             id = this.id,
-            fullName = this.fullName,
+            name = this.fullName,
             active = this.active,
             email = this.email,
             bornYear = this.bornYear,

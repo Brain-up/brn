@@ -17,7 +17,7 @@ const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
 data class UserAccountDto(
     val id: Long? = null,
     @field:NotEmpty(message = "{validation.field.fullName.empty}")
-    val fullName: String,
+    val name: String,
     @field:NotBlank(message = "{validation.field.email.blank}")
     @field:Email(message = "{validation.field.email.invalid-format}")
     @field:Pattern(
@@ -37,7 +37,7 @@ data class UserAccountDto(
     var authorities: MutableSet<String>? = mutableSetOf()
     fun toModel(hashedPassword: String) = UserAccount(
         id = id,
-        fullName = fullName,
+        fullName = name,
         email = email,
         password = hashedPassword,
         bornYear = bornYear,

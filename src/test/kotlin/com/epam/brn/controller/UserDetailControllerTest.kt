@@ -34,7 +34,7 @@ internal class UserDetailControllerTest {
     fun initBeforeEachTest() {
         userAccountDto = UserAccountDto(
             id = userId,
-            fullName = "testUserFirstName",
+            name = "testUserFirstName",
             email = "unittest@test.ru",
             active = true,
             gender = Gender.MALE,

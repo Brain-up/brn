@@ -182,14 +182,6 @@ mediaType:
 
 # USERS ----------------------
 /users:
-  post:
-  description: Add a new user to the system
-    body:
-      application/json:
-        example: !include samples/users_post_body.json
-    responses:
-      201:
-        example: !include samples/users_post_response.json
   get:
       description: Get the user by userName
       queryParameters:
@@ -197,27 +189,12 @@ mediaType:
           description: "Name of the user"
           required: true
           type: string
-          example: "user"
+          example: "userName"
       responses:
         200:
           body:
             application/json:
-              example: !include samples/users_get_response.json
-  /{userId}:
-    get:
-      description: Get a user by id
-      responses:
-        200:
-          body:
-            application/json:
-              example: !include samples/users_get_response.json
-    delete:
-      description: delete a user
-      responses:
-        200:
-          body:
-            application/json:
-              example: !include samples/users_get_response.json
+              example: !include samples/user_get_response.json
   /current:
     get:
       description: Get logged in user from the current session
@@ -225,7 +202,7 @@ mediaType:
         200:
           body:
             application/json:
-              example: !include samples/users_get_response.json
+              example: !include samples/user_get_response.json
 
 # Auth ----------------------
 /brnlogin:
