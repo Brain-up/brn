@@ -1,6 +1,8 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.UserAccountDto
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -25,7 +27,11 @@ data class UserAccount(
     val password: String,
     val bornYear: Int,
     val gender: Gender,
-    val active: Boolean
+    val active: Boolean,
+    @Column(nullable = false)
+    var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    @Column(nullable = false)
+    val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
 ) {
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
@@ -50,7 +56,9 @@ data class UserAccount(
             email = this.email,
             bornYear = this.bornYear,
             gender = gender,
-            password = "this.password"
+            password = "this.password",
+            created = created,
+            changed = changed
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)

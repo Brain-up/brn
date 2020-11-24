@@ -3,6 +3,8 @@ package com.epam.brn.dto
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
@@ -32,7 +34,9 @@ data class UserAccountDto(
     val bornYear: Int,
     @field:NotNull(message = "{validation.field.gender.notNull}")
     val gender: Gender,
-    var active: Boolean = true
+    var active: Boolean = true,
+    val created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
     fun toModel(hashedPassword: String) = UserAccount(
@@ -42,6 +46,8 @@ data class UserAccountDto(
         password = hashedPassword,
         bornYear = bornYear,
         gender = gender,
-        active = active
+        active = active,
+        created = created,
+        changed = changed
     )
 }
