@@ -7,5 +7,6 @@ alter table user_account add column born_year integer not null default 2000;
 alter table user_account add column created timestamp not null default current_timestamp;
 alter table user_account add column changed timestamp not null default current_timestamp;
 alter table user_account add column gender varchar(8) not null default 'MALE';
+alter table user_account add column avatar varchar(255);
 
 alter table user_account add check (gender in ('MALE', 'FEMALE'));

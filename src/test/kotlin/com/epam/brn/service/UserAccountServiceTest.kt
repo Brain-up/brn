@@ -1,7 +1,8 @@
 package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.UserAccountRequest
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
@@ -43,7 +44,10 @@ internal class UserAccountServiceTest {
     lateinit var userAccount: UserAccount
 
     @Mock
-    lateinit var userAccountDto: UserAccountDto
+    lateinit var userAccountResponse: UserAccountResponse
+
+    @Mock
+    lateinit var userAccountRequest: UserAccountRequest
 
     @Mock
     lateinit var authority: Authority
@@ -55,8 +59,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by id`() {
             // GIVEN
             val userName = "Tested"
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.name).thenReturn(userName)
+            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
+            `when`(userAccountResponse.name).thenReturn(userName)
             `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
@@ -69,8 +73,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by name`() {
             // GIVEN
             val fullName = "Ivan"
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.name).thenReturn(fullName)
+            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
+            `when`(userAccountResponse.name).thenReturn(fullName)
             `when`(userAccountRepository.findUserAccountByName(fullName))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
@@ -83,8 +87,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by email`() {
             // GIVEN
             val email = "email"
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.email).thenReturn(email)
+            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
+            `when`(userAccountResponse.email).thenReturn(email)
             `when`(userAccountRepository.findUserAccountByEmail(email))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
@@ -109,17 +113,17 @@ internal class UserAccountServiceTest {
         fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
-            `when`(userAccountDto.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.name).thenReturn(userName)
+            `when`(userAccountRequest.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
+            `when`(userAccountResponse.name).thenReturn("Tested")
+            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
             `when`(userAccountRepository.save(userAccount))
                 .thenReturn(userAccount)
             `when`(authorityService.findAuthorityByAuthorityName(anyString()))
                 .thenReturn(authority)
-            `when`(userAccountService.getHashedPassword(userAccountDto))
+            `when`(userAccountService.getHashedPassword(userAccountRequest))
                 .thenReturn("password")
             // WHEN
-            val userAccountDtoReturned = userAccountService.addUser(userAccountDto)
+            val userAccountDtoReturned = userAccountService.addUser(userAccountRequest)
             // THEN
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
         }

@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
@@ -79,11 +79,10 @@ internal class StudyHistoryServiceTest {
             replaysCount = 3
         )
         `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(
-            UserAccountDto(
+            UserAccountResponse(
                 1L,
                 "ivan",
                 "mail",
-                "pass",
                 2000,
                 Gender.MALE,
                 true

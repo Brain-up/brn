@@ -1,8 +1,8 @@
 {
   "name": "Name",
   "email": "default@default.ru",
-  "active": true,
   "password": "password",
   "gender": "MALE",
-  "bornYear": 2000
+  "bornYear": 2000,
+  "avatar": "girl"
 }
