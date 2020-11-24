@@ -254,7 +254,7 @@ class AdminControllerIT {
                 fullName = "testUserFirstName",
                 email = "test@test.test",
                 password = "password",
-                gender = Gender.MALE,
+                gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 active = true
             )

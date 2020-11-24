@@ -59,7 +59,7 @@ class AuthorizationAuthenticationIT {
                 fullName = "testUserFirstName",
                 password = password,
                 email = email,
-                gender = Gender.MALE,
+                gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 active = true
             )
