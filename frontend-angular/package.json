@@ -25,7 +25,7 @@
     "@angular/platform-browser": "9.0.0",
     "@angular/platform-browser-dynamic": "9.0.0",
     "@angular/router": "9.0.0",
-    "fp-ts": "^2.5.3",
+    "fp-ts": "^2.9.0",
     "ngx-take-until-destroy": "^5.4.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.11.1",
