@@ -100,7 +100,7 @@ class InitialDataLoader(
                 email = "admin@admin.com",
                 active = true,
                 bornYear = 1999,
-                gender = Gender.MALE
+                gender = Gender.MALE.toString()
             )
         userAccount.authoritySet.addAll(setOf(adminAuthority))
         return userAccount
@@ -113,7 +113,7 @@ class InitialDataLoader(
             email = "default@default.ru",
             active = true,
             bornYear = 1999,
-            gender = Gender.MALE,
+            gender = Gender.MALE.toString(),
             password = password
         )
         val secondUser = UserAccount(
@@ -121,7 +121,7 @@ class InitialDataLoader(
             email = "default2@default.ru",
             active = true,
             bornYear = 1999,
-            gender = Gender.FEMALE,
+            gender = Gender.FEMALE.toString(),
             password = password
         )
         firstUser.authoritySet.addAll(setOf(userAuthority))

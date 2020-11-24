@@ -45,7 +45,7 @@ data class UserAccountDto(
         email = email,
         password = hashedPassword,
         bornYear = bornYear,
-        gender = gender,
+        gender = gender.toString(),
         active = active,
         created = created,
         changed = changed

@@ -26,7 +26,7 @@ data class UserAccount(
     @Column(nullable = false)
     val password: String,
     val bornYear: Int,
-    val gender: Gender,
+    val gender: String,
     val active: Boolean,
     @Column(nullable = false)
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
@@ -55,7 +55,7 @@ data class UserAccount(
             active = this.active,
             email = this.email,
             bornYear = this.bornYear,
-            gender = gender,
+            gender = Gender.valueOf(gender),
             password = "this.password",
             created = created,
             changed = changed
