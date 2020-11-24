@@ -16,8 +16,4 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
       locale: this.intl.locale[0]
     });
   }
-  redirect() {
-    document.body.classList.add('route-groups');
-    document.body.classList.remove('route-group');
-  }
 }

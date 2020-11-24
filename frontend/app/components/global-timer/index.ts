@@ -20,18 +20,18 @@ export default class GlobalTimerComponent extends Component {
   }
   @(task(function*(this: GlobalTimerComponent) {
     do {
-        try {
-          if (!Ember.testing) {
-            const response = yield this.network.request('study-history/todayTimer');
-            const { data } = yield response.json();
-            this.seconds = data;
-          } else {
-            break;
-          }
-          yield timeout(10000);
-        } catch {
-          // ok
+      try {
+        if (!Ember.testing) {
+          const response = yield this.network.request('study-history/todayTimer');
+          const { data } = yield response.json();
+          this.seconds = data;
+        } else {
+          break;
         }
+      } catch {
+        // ok
+      }
+      yield timeout(10000);
     } while (true)
 
   }).keepLatest())

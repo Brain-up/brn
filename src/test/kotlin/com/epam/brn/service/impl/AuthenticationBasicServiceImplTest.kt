@@ -1,7 +1,7 @@
 package com.epam.brn.service.impl
 
 import com.epam.brn.auth.AuthenticationBasicServiceImpl
-import com.epam.brn.dto.LoginDto
+import com.epam.brn.dto.request.LoginDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
@@ -38,7 +38,10 @@ internal class AuthenticationBasicServiceImplTest {
         // GIVEN
         val authenticationMock = mock(Authentication::class.java)
         `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
-        val loginDto = LoginDto(username = "testUser".toLowerCase(), password = "testPassword")
+        val loginDto = LoginDto(
+            username = "testUser".toLowerCase(),
+            password = "testPassword"
+        )
         val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
         // WHEN
         val actualResult = authenticationBasicServiceImpl.login(loginDto)

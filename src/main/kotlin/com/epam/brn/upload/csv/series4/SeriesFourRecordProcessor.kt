@@ -32,8 +32,8 @@ class SeriesFourRecordProcessor(
     @Value(value = "\${brn.picture.theme.path}")
     private lateinit var pictureTheme: String
 
-    @Value(value = "\${series1WordsFileName}")
-    private lateinit var series1WordsFileName: String
+    @Value(value = "\${series4WordsFileName}")
+    private lateinit var series4WordsFileName: String
 
     @Value(value = "\${audioPath}")
     private lateinit var audioPathFilipp: String
@@ -69,7 +69,7 @@ class SeriesFourRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        wordsService.createTxtFileWithExerciseWordsMap(words, series1WordsFileName)
+        wordsService.createTxtFileWithExerciseWordsMap(words, series4WordsFileName)
         return exercises.toMutableList()
     }
 

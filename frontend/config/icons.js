@@ -2,7 +2,6 @@ module.exports = function() {
   return {
     'free-solid-svg-icons': [
       'headphones-alt',
-      'brain',
       'bookmark',
       'redo-alt',
       'pause-circle',

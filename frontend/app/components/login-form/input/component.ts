@@ -1,8 +1,18 @@
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
+import IntlService from 'ember-intl/services/intl';
 
-export default class LoginFormInputComponent extends Component {
-  @service('intl') intl;
+interface FormModel {
+  [field: string]: string;
+}
+
+interface ILoginFormInputComponentArgs {
+  model: FormModel;
+  name: keyof FormModel;
+  warning: string;
+}
+export default class LoginFormInputComponent extends Component<ILoginFormInputComponentArgs> {
+  @service('intl') intl!: IntlService;
 
   get hasError() {
     const { value } = this;

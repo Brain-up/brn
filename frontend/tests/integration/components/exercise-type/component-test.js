@@ -10,17 +10,9 @@ module('Integration | Component | exercise-type', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<ExerciseType />`);
+    await render(hbs`<ExerciseType @initial="foo" />`);
 
-    assert.ok(this.element.textContent.trim(), '');
+    assert.ok(this.element.textContent.trim(), 'foo');
 
-    // Template block usage:
-    await render(hbs`
-      <ExerciseType>
-        template block text
-      </ExerciseType>
-    `);
-
-    assert.ok(this.element.textContent.trim(), 'template block text');
   });
 });

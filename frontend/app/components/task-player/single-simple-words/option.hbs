@@ -2,7 +2,7 @@
   <button
     data-test-task-answer
     data-test-task-answer-option={{@answerOption.word}}
-    disabled={{@disableAnswers}}
+    disabled={{this.isDisabled}}
     type="button"
     {{did-update this.handleAnswer @isCorrect}}
     class="task-player__option-button bg-transparent py-2 px-4 rounded text-blue-700

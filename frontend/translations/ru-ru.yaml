@@ -80,3 +80,8 @@ msg:
     INVALID_EMAIL_FORMAT_CYRILLIC_NOT_ALLOWED: Кириллическая почта не поддерживается
     PASSWORD_MUST_NOT_BE_BLANK: Пароль не может быть пустым
     PASSWORD_MUST_BE_GREATER_THAN_FOUR_CHARACTERS_LONG: Пароль должен быть длиннее 4 символов
+
+
+groups:
+  exercise_selection: "Давайте выберем, какие упражнения будем делать сегодня?"
+
