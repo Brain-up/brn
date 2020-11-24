@@ -1,12 +1,12 @@
 package com.epam.brn.dto
 
+import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
-import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Past
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
@@ -16,10 +16,8 @@ const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountDto(
     val id: Long? = null,
-    @field:NotBlank(message = "{validation.field.first-name.no-spaces}")
-    val firstName: String,
-    @field:NotBlank(message = "{validation.field.last-name.no-spaces}")
-    val lastName: String,
+    @field:NotEmpty(message = "{validation.field.fullName.empty}")
+    val fullName: String,
     @field:NotBlank(message = "{validation.field.email.blank}")
     @field:Email(message = "{validation.field.email.invalid-format}")
     @field:Pattern(
@@ -30,19 +28,20 @@ data class UserAccountDto(
     @field:NotBlank(message = "{validation.field.password.blank}")
     @field:Size(min = 4, max = 20, message = "{validation.field.password.invalid-format}")
     var password: String,
-    @field:NotNull(message = "{validation.field.birthday.notNull}")
-    @field:Past(message = "{validation.field.birthday.past}")
-    val birthday: LocalDate? = null,
+    @field:NotNull(message = "{validation.field.bornYear.notNull}")
+    val bornYear: Int,
+    @field:NotNull(message = "{validation.field.gender.notNull}")
+    val gender: Gender,
     var active: Boolean = true
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
     fun toModel(hashedPassword: String) = UserAccount(
         id = id,
-        firstName = firstName,
-        lastName = lastName,
+        fullName = fullName,
         email = email,
         password = hashedPassword,
-        birthday = birthday,
+        bornYear = bornYear,
+        gender = gender,
         active = active
     )
 }

@@ -26,13 +26,13 @@ class UserAccountServiceImpl(
 
     private val log = logger()
 
-    override fun findUserByName(firstName: String, lastName: String): UserAccountDto {
+    override fun findUserByName(name: String): UserAccountDto {
         return userAccountRepository
-            .findUserAccountByFirstNameAndLastName(firstName, lastName)
+            .findUserAccountByName(name)
             .map(UserAccount::toDto)
             .orElseThrow {
-                log.warn("User $firstName $lastName is not found")
-                UsernameNotFoundException("User: $firstName $lastName is not found")
+                log.warn("User with `$name` is not found")
+                UsernameNotFoundException("User: `$name` is not found")
             }
     }
 

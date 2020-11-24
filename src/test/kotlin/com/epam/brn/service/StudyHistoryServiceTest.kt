@@ -3,6 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
@@ -48,8 +49,9 @@ internal class StudyHistoryServiceTest {
         val studyHistoryDtoMock = mock(StudyHistoryDto::class.java)
         val userAccount = UserAccount(
             id = 1L,
-            firstName = "testUserFirstName",
-            lastName = "testUserLastName",
+            fullName = "testUserFirstName",
+            gender = Gender.MALE,
+            bornYear = 2000,
             password = "test",
             email = "test@gmail.com",
             active = true
@@ -80,9 +82,11 @@ internal class StudyHistoryServiceTest {
             UserAccountDto(
                 1L,
                 "ivan",
-                "ivanov",
                 "mail",
-                "pass"
+                "pass",
+                2000,
+                Gender.MALE,
+                true
             )
         )
         `when`(userAccountRepository.findUserAccountById(1L)).thenReturn(Optional.of(userAccount))

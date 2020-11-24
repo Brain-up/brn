@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.Gender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
@@ -27,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.random.Random
 
@@ -156,9 +156,9 @@ class ExercisesControllerIT {
     private fun insertUser(): UserAccount {
         return userAccountRepository.save(
             UserAccount(
-                firstName = "testUserFirstName",
-                lastName = "testUserLastName",
-                birthday = LocalDate.now(),
+                fullName = "testUserFirstName",
+                gender = Gender.MALE,
+                bornYear = 2000,
                 email = "test@test.test",
                 password = "password",
                 active = true

@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -33,29 +34,13 @@ internal class UserDetailControllerTest {
     fun initBeforeEachTest() {
         userAccountDto = UserAccountDto(
             id = userId,
-            firstName = "testUserFirstName",
-            lastName = "testUserLastName",
+            fullName = "testUserFirstName",
             email = "unittest@test.ru",
             active = true,
+            gender = Gender.MALE,
+            bornYear = 2000,
             password = "pwd"
         )
-    }
-
-    @Nested
-    @DisplayName("Tests for creation of user accounts")
-    inner class CreateUserAccounts {
-        @Test
-        fun `should insert user`() {
-            // GIVEN
-            Mockito.`when`(userAccountService.addUser(userAccountDto)).thenReturn(userAccountDto)
-            // WHEN
-            @Suppress("UNCHECKED_CAST")
-            val savedUserAccountDto = userDetailController.addUser(userAccountDto).body?.data as List<UserAccountDto>
-            // THEN
-            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
-            verify(userAccountService).addUser(userAccountDto)
-        }
     }
 
     @Nested

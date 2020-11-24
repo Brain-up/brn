@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.model.Authority
+import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -55,10 +56,11 @@ class AuthorizationAuthenticationIT {
 
         val userAccount =
             UserAccount(
-                firstName = "testUserFirstName",
-                lastName = "testUserLastName",
+                fullName = "testUserFirstName",
                 password = password,
                 email = email,
+                gender = Gender.MALE,
+                bornYear = 2000,
                 active = true
             )
 

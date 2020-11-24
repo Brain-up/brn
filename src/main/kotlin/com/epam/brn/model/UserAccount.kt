@@ -1,7 +1,6 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.UserAccountDto
-import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -19,14 +18,13 @@ data class UserAccount(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
-    val firstName: String,
-    @Column(nullable = true)
-    val lastName: String,
+    val fullName: String,
     @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
     val password: String,
-    val birthday: LocalDate? = null,
+    val bornYear: Int,
+    val gender: Gender,
     val active: Boolean
 ) {
     @OneToOne(cascade = [(CascadeType.ALL)])
@@ -41,17 +39,17 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, firstName='$firstName', lastName='$lastName', email='$email', birthday=$birthday, progress=$progress)"
+        return "UserAccount(id=$id, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender,  progress=$progress)"
     }
 
     fun toDto(): UserAccountDto {
         val userAccountDto = UserAccountDto(
             id = this.id,
-            firstName = this.firstName,
-            lastName = this.lastName,
+            fullName = this.fullName,
             active = this.active,
             email = this.email,
-            birthday = this.birthday,
+            bornYear = this.bornYear,
+            gender = gender,
             password = "this.password"
         )
         userAccountDto.authorities = this.authoritySet

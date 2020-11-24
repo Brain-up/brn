@@ -56,30 +56,27 @@ internal class UserAccountServiceTest {
             // GIVEN
             val userName = "Tested"
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.firstName).thenReturn(userName)
+            `when`(userAccountDto.fullName).thenReturn(userName)
             `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserById(NumberUtils.LONG_ONE)
             // THEN
-            assertThat(userAccountDtoReturned.firstName).isEqualTo(userName)
+            assertThat(userAccountDtoReturned.fullName).isEqualTo(userName)
         }
 
         @Test
         fun `should find a user by name`() {
             // GIVEN
-            val firstName = "Ivan"
-            val lastName = "Ivanov"
+            val fullName = "Ivan"
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.firstName).thenReturn(firstName)
-            `when`(userAccountDto.lastName).thenReturn(lastName)
-            `when`(userAccountRepository.findUserAccountByFirstNameAndLastName(firstName, lastName))
+            `when`(userAccountDto.fullName).thenReturn(fullName)
+            `when`(userAccountRepository.findUserAccountByName(fullName))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
-            val userAccountDtoReturned = userAccountService.findUserByName(firstName, lastName)
+            val userAccountDtoReturned = userAccountService.findUserByName(fullName)
             // THEN
-            assertThat(userAccountDtoReturned.firstName).isEqualTo(firstName)
-            assertThat(userAccountDtoReturned.lastName).isEqualTo(lastName)
+            assertThat(userAccountDtoReturned.fullName).isEqualTo(fullName)
         }
 
         @Test
@@ -114,7 +111,7 @@ internal class UserAccountServiceTest {
             val userName = "Tested"
             `when`(userAccountDto.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.firstName).thenReturn(userName)
+            `when`(userAccountDto.fullName).thenReturn(userName)
             `when`(userAccountRepository.save(userAccount))
                 .thenReturn(userAccount)
             `when`(authorityService.findAuthorityByAuthorityName(anyString()))
@@ -124,7 +121,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val userAccountDtoReturned = userAccountService.addUser(userAccountDto)
             // THEN
-            assertThat(userAccountDtoReturned.firstName).isEqualTo(userName)
+            assertThat(userAccountDtoReturned.fullName).isEqualTo(userName)
         }
     }
 }
