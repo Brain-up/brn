@@ -1,6 +1,6 @@
 {
-  "name": "example_user",
-  "email": "example_user@user.ru",
+  "name": "Name",
+  "email": "default@default.ru",
   "active": true,
   "password": "password",
   "gender": "MALE",
