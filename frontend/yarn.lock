@@ -4273,7 +4273,7 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30001043, caniuse-lite@^1.0.30001061, caniuse-lite@^1.0.30001109:
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30001043, caniuse-lite@^1.0.30001109:
   version "1.0.30001161"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001161.tgz#64f7ffe79ee780b8c92843ff34feb36cea4651e0"
   integrity sha512-JharrCDxOqPLBULF9/SPa6yMcBRTjZARJ6sc3cuKrPfyIk64JN6kuMINWqA99Xc8uElMFcROliwtz0n9pYej+g==
@@ -6306,6 +6306,13 @@ ember-native-dom-helpers@^0.6.3:
   dependencies:
     broccoli-funnel "^1.1.0"
     ember-cli-babel "^6.6.0"
+
+ember-page-title@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/ember-page-title/-/ember-page-title-6.0.3.tgz#6f2f26428ae81262d31520c65c1ce8b336f34839"
+  integrity sha512-sXT+XrWWYkqCpwOXj1nGRdxDE4J1SbPcA9lSwtQEP0qDGenhp/GNTcLN8v3cpeyao75jAPxjgYN3YzFtvUB01Q==
+  dependencies:
+    ember-cli-babel "^7.22.1"
 
 ember-qunit@^4.6.0:
   version "4.6.0"
@@ -8886,12 +8893,12 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-jquery@3.5.0:
+jquery@3.5.0, jquery@^3.4.1:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.0.tgz#9980b97d9e4194611c36530e7dc46a58d7340fc9"
   integrity sha512-Xb7SVYMvygPxbFMpTFQiHh1J7HClEaThguL15N/Gg37Lri/qKyhRGZYzHRyLH8Stq3Aow0LsHO2O2ci86fCrNQ==
 
-jquery@^3.4.1, jquery@^3.5.0:
+jquery@^3.5.0:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
   integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
@@ -11125,7 +11132,7 @@ postcss@^6.0.9:
     source-map "^0.6.1"
     supports-color "^5.4.0"
 
-postcss@^7.0.0, postcss@^7.0.11, postcss@^7.0.14, postcss@^7.0.18, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.26, postcss@^7.0.30, postcss@^7.0.32, postcss@^7.0.6, postcss@^7.0.7:
+postcss@^7.0.0, postcss@^7.0.11, postcss@^7.0.14, postcss@^7.0.18, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.26, postcss@^7.0.32, postcss@^7.0.6, postcss@^7.0.7:
   version "7.0.35"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.35.tgz#d2be00b998f7f211d8a276974079f2e92b970e24"
   integrity sha512-3QT8bBJeX/S5zKTTjTCIjRF3If4avAT6kqxcASlTWEtAFCb9NH0OUxNDfgZSWdP5fJnBYCMEWkIFfWeugjzYMg==
