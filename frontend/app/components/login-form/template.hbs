@@ -44,7 +44,7 @@
                 disabled="bg-blue-700 opacity-50  cursor-not-allowed"
               ) as |buttonState|
             }}
-              <Ui::Button data-test-submit-form class="{{get buttonState this.buttonState}} w-full" @title={{t "login_form.sign_in"}} />
+              <Ui::Button @size="small" data-test-submit-form class="{{get buttonState this.buttonState}} w-full" @title={{t "login_form.sign_in"}} />
             {{/let}}
           </div>
           <div class="mt-4 text-sm leading-5 text-center">
