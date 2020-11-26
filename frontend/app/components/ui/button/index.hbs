@@ -1,4 +1,4 @@
-<button type="button" class={{this.classes}} ...attributes>
+<button type={{or @type 'submit'}} class={{this.classes}} ...attributes>
   {{#if (has-block)}}
     {{yield}}
   {{else}}

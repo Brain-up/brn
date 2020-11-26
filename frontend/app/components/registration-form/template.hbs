@@ -62,13 +62,7 @@
         {{/if}}
       </div>
       <div class="flex mb-4">
-        <button
-          data-test-submit-form
-          type="submit"
-          class="hover:bg-blue-700 focus:outline-none focus:shadow-outline flex-grow px-4 py-2 font-bold text-white bg-blue-500 rounded"
-        >
-          {{t "registration_form.registration"}}
-        </button>
+        <Ui::Button @type="submit" class="w-full" data-test-submit-form @title={{t "registration_form.registration"}} />
       </div>
       <div class="flex justify-end">
         <LinkTo

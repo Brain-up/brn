@@ -12,7 +12,8 @@ enum ButtonSize {
 interface IUiButtonComponentArguments {
   kind?: ButtonKind,
   size?: ButtonSize,
-  title?: string
+  title?: string,
+  type?: 'submit' | 'button'
 }
 
 export default class UiButtonComponent extends Component<IUiButtonComponentArguments> {
