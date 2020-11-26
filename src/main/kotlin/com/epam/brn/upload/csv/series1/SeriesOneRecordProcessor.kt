@@ -9,8 +9,9 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.service.ResourceCreationService
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
+import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -22,11 +23,28 @@ class SeriesOneRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val resourceCreationService: ResourceCreationService
+    private val wordsService: WordsService
 ) : RecordProcessor<SeriesOneRecord, Exercise> {
 
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
+
+    @Value(value = "\${brn.picture.theme.path}")
+    private lateinit var pictureTheme: String
+
+    @Value(value = "\${series1WordsFileName}")
+    private lateinit var series1WordsFileName: String
+
+    @Value(value = "\${audioPath}")
+    private lateinit var audioPathFilipp: String
+
+    @Value(value = "\${audioPathAlena}")
+    private lateinit var audioPathAlena: String
+
+    @Value(value = "\${fonAudioPath}")
+    private lateinit var fonAudioPath: String
+
+    val words = mutableMapOf<String, String>()
 
     private val repeatCount = 2
 
@@ -38,13 +56,11 @@ class SeriesOneRecordProcessor(
 
     @Transactional
     override fun process(records: List<SeriesOneRecord>): List<Exercise> {
-        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(1L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
-            words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -53,25 +69,30 @@ class SeriesOneRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        resourceCreationService.createFileWithWords(words, "words_series1.txt")
+        wordsService.createTxtFileWithExerciseWordsMap(words, series1WordsFileName)
         return exercises.toMutableList()
     }
 
     private fun extractAnswerOptions(record: SeriesOneRecord): MutableSet<Resource> {
+        var audioPath = audioPathFilipp
+        if (record.exerciseName.startsWith("М"))
+            audioPath = audioPathAlena
         return record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
-            .map { toResource(it, record.noise) }
+            .map { toResource(it, audioPath) }
             .toMutableSet()
     }
 
-    private fun toResource(word: String, noise: String): Resource {
-        val audioFile = "$noise/$word.mp3"
-        val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFile)
+    private fun toResource(word: String, audioPath: String): Resource {
+        val hashWord = DigestUtils.md5Hex(word)
+        words.put(word, hashWord)
+        val audioFileUrl = audioPath.format(hashWord)
+        val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFileUrl)
             .orElse(
                 Resource(
                     word = word,
-                    audioFileUrl = audioFile,
+                    audioFileUrl = audioFileUrl,
                     pictureFileUrl = pictureDefaultPath.format(word)
                 )
             )
@@ -88,7 +109,10 @@ class SeriesOneRecordProcessor(
                 Exercise(
                     series = series,
                     name = record.exerciseName,
+                    pictureUrl = if (!record.pictureUrl.isNullOrEmpty()) String.format(pictureTheme, record.pictureUrl) else "",
                     level = record.level,
+                    noiseLevel = record.noiseLevel,
+                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else "",
                     exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
                     description = record.exerciseName
                 )

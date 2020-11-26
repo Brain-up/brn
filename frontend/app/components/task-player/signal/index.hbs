@@ -1,0 +1,48 @@
+<div class="{{style-namespace "task-player/single-simple-words"}} flex flex-grow flex-col" ...attributes   {{did-insert this.onInsert}}>
+  {{yield (hash tasks=this.tasksCopy)}}
+  {{#if this.tasksCopy.length}}
+    <ul class="task-player__options mt-5">
+      {{#each @task.answerOptions as |answerOption|}}
+        <li class="task-player__option">
+          <button
+            data-test-task-answer
+            data-test-task-answer-option={{answerOption.word}}
+            disabled={{@disableAnswers}}
+            type="button"
+            class="task-player__option-button bg-transparent py-2 px-4 rounded text-blue-700
+
+
+              {{if
+                (eq @activeWord answerOption.word)
+                "border bg-blue-500"
+                "border border-blue-500"
+              }}
+
+
+
+              {{if
+                @disableAnswers
+                "opacity-50 cursor-default"
+                "hover:bg-blue-500 hover:text-white hover:border-transparent"
+              }}"
+            {{on
+              "click"
+              (if
+                (eq @mode "interact")
+                (fn @onPlayText answerOption.word)
+                (fn this.checkMaybe answerOption)
+              )
+            }}
+          >
+            {{answerOption.word}}
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+    <AudioPlayer
+      @audioFileUrl={{this.audioFileUrl}}
+      @disabled={{@disableAudioPlayer}}
+      @transparent={{not-eq @mode "task"}}
+    />
+  {{/if}}
+</div>

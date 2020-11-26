@@ -10,6 +10,11 @@ export default class GroupSeriesExerciseRoute extends Route {
   }
 
   redirect(exercise, { to }) {
+    if (exercise.hasMany('tasks').ids().length === 0) {
+      alert(`Unable to find tasks for exercise ${exercise.get('id')}`);
+      this.transitionTo('group.series', exercise.get('series.id'));
+      return;
+    }
     if (!exercise.canInteract) {
       this.transitionTo('group.series.exercise', exercise.get('series.id'));
       return;

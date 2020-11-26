@@ -3,14 +3,10 @@
 
      flex-1 flex flex-col"
   ...attributes
+  {{did-insert this.onInsert}}
 >
   {{yield (hash tasks=this.tasksCopy)}}
   {{#if this.tasksCopy.length}}
-    <AudioPlayer
-      @audioFileUrl={{this.audioFiles}}
-      @disabled={{@disableAudioPlayer}}
-      @transparent={{not-eq @mode "task"}}
-    />
     <div class="flex justify-center flex-grow mt-4">
       {{#each @task.selectedItemsOrder as |type|}}
         <div
@@ -40,5 +36,10 @@
         </div>
       {{/each}}
     </div>
+    <AudioPlayer
+      @audioFileUrl={{this.audioFiles}}
+      @disabled={{@disableAudioPlayer}}
+      @transparent={{not-eq @mode "task"}}
+    />
   {{/if}}
 </div>

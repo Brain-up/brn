@@ -34,8 +34,12 @@
   flex-direction: initial;
   align-items: center;
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 90px;
+  height: 90px;
+}
+
+.exercise-block__level[disabled] {
+  pointer-events: none;
 }
 
 .exercise-block__status-icon {
@@ -76,5 +80,16 @@ h2 {
   top: -10px;
 }
 
+.number-container {
+  position: absolute;
+  left: -8px;
+  bottom: -8px;
+  font-size: 14px;
+  border-radius: 25%;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  background-color: #feb2b2;
+}
 
 /*! purgecss end ignore */

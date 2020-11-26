@@ -1,0 +1,23 @@
+<div class="{{style-namespace "task-player/phrase"}} flex flex-grow flex-col" ...attributes   {{did-insert this.onInsert}}>
+  {{yield (hash tasks=this.tasksCopy)}}
+  {{#if this.tasksCopy.length}}
+    <ul class="task-player__options mt-5">
+      {{#each this.task.answerOptions key="word" as |answerOption|}}
+        <TaskPlayer::SingleSimpleWords::Option
+          @activeWord={{@activeWord}}
+          @answerOption={{answerOption}}
+          @checkMaybe={{this.checkMaybe}}
+          @disableAnswers={{@disableAnswers}}
+          @mode={{@mode}}
+          @isCorrect={{this.isCorrect}}
+          @onPlayText={{@onPlayText}}
+        />
+      {{/each}}
+    </ul>
+    <AudioPlayer
+      @audioFileUrl={{this.audioFileUrl}}
+      @disabled={{@disableAudioPlayer}}
+      @transparent={{not-eq @mode "task"}}
+    />
+  {{/if}}
+</div>

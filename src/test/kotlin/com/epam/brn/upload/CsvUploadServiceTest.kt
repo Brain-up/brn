@@ -25,11 +25,11 @@ internal class CsvUploadServiceTest {
 
     @Test
     fun `should get exercise file format`() {
-        val expected = """level,exerciseName,words,noise
-1,Слова без шума,(бал бум быль вить гад дуб),no_noise
-2,Слова без шума,(линь лис моль пар пять раб),no_noise
-3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise
-4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db""".trimIndent()
+        val expected = """level,pictureUrl,exerciseName,words,noiseLevel,noiseUrl
+1,family,Семья,(сын ребёнок мама),0,
+2,family,Семья,(отец брат дедушка),0,
+3,family,Семья,(бабушка муж внучка),0,
+4,family,Семья,(сын ребёнок родители дочь мама папа),0,""".trimIndent()
 
         val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
         assertThat(actual).isEqualTo(expected)

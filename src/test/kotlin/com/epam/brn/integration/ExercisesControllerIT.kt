@@ -14,7 +14,6 @@ import com.epam.brn.repo.UserAccountRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,13 +29,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.random.Random
 
-@Disabled
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
-@WithMockUser(username = "admin", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 class ExercisesControllerIT {
 
     private val baseUrl = "/exercises"
@@ -69,18 +68,18 @@ class ExercisesControllerIT {
     }
 
     @Test
-    fun `test get done exercises by userId and seriesId`() {
+    fun `test get exercises by seriesId`() {
         // GIVEN
         val exerciseName = "SOMENAME"
         val existingSeries = insertSeries()
         val existingUser = insertUser()
         val existingExercise = insertExercise(exerciseName, existingSeries)
-        insertStudyHistory(existingUser, existingExercise)
+        insertStudyHistory(existingUser, existingExercise, LocalDateTime.now().minusHours(1))
+        insertStudyHistory(existingUser, existingExercise, LocalDateTime.now())
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(baseUrl)
-                .param("userId", existingUser.id.toString())
                 .param("seriesId", existingSeries.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -92,7 +91,7 @@ class ExercisesControllerIT {
     }
 
     @Test
-    fun `test get exercises by exerciseId`() {
+    fun `test get exercise by exerciseId`() {
         // GIVEN
         val exerciseName = "SOMENAME"
         val existingSeries = insertSeries()
@@ -100,7 +99,7 @@ class ExercisesControllerIT {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get(baseUrl + "/" + existingExercise.id)
+                .get("$baseUrl/${existingExercise.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -112,19 +111,44 @@ class ExercisesControllerIT {
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
     }
 
+    @Test
+    fun `test get exercises by name`() {
+        // GIVEN
+        insertUser()
+        val exerciseName = "SOMENAME"
+        val existingSeries = insertSeries()
+        insertExercise(exerciseName, existingSeries)
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("$baseUrl/byName")
+                .param("name", exerciseName)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
+        val jsonDataObject = jsonResponse.getJSONArray("data").get(0) as JSONObject
+        Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
+    }
+
     private fun insertStudyHistory(
         existingUser: UserAccount,
-        existingExercise: Exercise
+        existingExercise: Exercise,
+        startTime: LocalDateTime
     ): StudyHistory {
         return studyHistoryRepository.save(
             StudyHistory(
-                id = 0,
                 userAccount = existingUser,
                 exercise = existingExercise,
-                endTime = LocalDateTime.now(),
-                startTime = LocalDateTime.now(),
-                tasksCount = 2,
-                repetitionIndex = 1f
+                endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
+                startTime = startTime,
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 3,
+                replaysCount = 4
             )
         )
     }
@@ -132,11 +156,10 @@ class ExercisesControllerIT {
     private fun insertUser(): UserAccount {
         return userAccountRepository.save(
             UserAccount(
-                id = 0,
                 firstName = "testUserFirstName",
                 lastName = "testUserLastName",
                 birthday = LocalDate.now(),
-                email = "123@123.asd",
+                email = "test@test.test",
                 password = "password",
                 active = true
             )
@@ -146,16 +169,14 @@ class ExercisesControllerIT {
     private fun insertSeries(): Series {
         val exerciseGroup = exerciseGroupRepository.save(
             ExerciseGroup(
-                id = 0,
                 description = "desc",
-                name = "group"
+                name = "group ExercisesControllerIT"
             )
         )
         return seriesRepository.save(
             Series(
-                id = 0,
                 description = "desc",
-                name = "series",
+                name = "series for ExercisesControllerIT",
                 exerciseGroup = exerciseGroup
             )
         )
@@ -164,7 +185,6 @@ class ExercisesControllerIT {
     fun insertExercise(exerciseName: String, series: Series): Exercise {
         return exerciseRepository.save(
             Exercise(
-                id = 0,
                 description = toString(),
                 series = series,
                 level = 0,

@@ -8,9 +8,12 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.AudioFilesGenerationService
 import com.epam.brn.service.InitialDataLoader
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,20 +34,28 @@ class CsvLoadingTestIT {
     @TestConfiguration
     class Config {
         @Bean
-        fun handBookLoader(
+        fun initialDataLoader(
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
+            seriesRepository: SeriesRepository,
+            exerciseRepository: ExerciseRepository,
             userAccountRepository: UserAccountRepository,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
-            uploadService: CsvUploadService
+            uploadService: CsvUploadService,
+            audioFilesGenerationService: AudioFilesGenerationService,
+            wordsService: WordsService
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
+            seriesRepository,
+            exerciseRepository,
             userAccountRepository,
             passwordEncoder,
             authorityService,
-            uploadService
+            uploadService,
+            audioFilesGenerationService,
+            wordsService
         )
     }
 
@@ -72,11 +83,19 @@ class CsvLoadingTestIT {
     @Test
     fun `should load test data from classpath initFiles folder`() {
         exerciseGroupRepository.findAll() shouldHaveSize 2
-        seriesRepository.findAll() shouldHaveSize 4
-        exerciseRepository.findAll() shouldHaveSize 28
-        taskRepository.findAll() shouldHaveSize 36
-        resourceRepository.findAll() shouldHaveSize 205
+        seriesRepository.findAll() shouldHaveSize 7
+//        exerciseRepository.findAll() shouldHaveSize 188
+//        taskRepository.findAll() shouldHaveSize 188
+//        resourceRepository.findAll() shouldHaveSize 881
         userAccountRepository.findAll() shouldHaveSize 3
         authorityRepository.findAll() shouldHaveSize 2
+    }
+
+    @AfterEach
+    fun deleteAfterTest() {
+        exerciseRepository.deleteAll()
+        seriesRepository.deleteAll()
+        exerciseGroupRepository.deleteAll()
+        userAccountRepository.deleteAll()
     }
 }

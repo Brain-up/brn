@@ -3,6 +3,15 @@ header:
   logout: Logout
   about: About
 
+login:
+  title: Login
+
+registration:
+  title: Registration
+
+audio_player:
+  listen: Listen one more time
+
 login_form:
   error_bad_credentials: Incorrect login or password
   login: Login
@@ -41,13 +50,15 @@ exercise_messages:
   answer_successfully: Correct answer
 
 statistics:
-  attempts: Attempts
+  wrong_answers: Wrong Answers
   tasks: Tasks
+  repeats: Repeats
   time_min: min
   time_sec: sec
   scoring: Indicator of the success
   time_board: Time
   info_about: Your BrainUp Image
+  continue: Continue
 
 task_link:
   exercise: Exercise
@@ -63,3 +74,20 @@ control_exercises:
 footer:
   info_about: With the support
   info_about_helper: and
+
+start_task_button:
+  label: Start exercise
+
+msg:
+  validation:
+    FIRST_NAME_MUST_NOT_HAVE_SPACES: First name must not have spaces
+    LAST_NAME_MUST_NOT_HAVE_SPACES: Last name must not have spaces
+    EMAIL_MUST_NOT_BE_BLANK: Email must not be blank
+    INVALID_EMAIL_FORMAT: Invalid email format
+    INVALID_EMAIL_FORMAT_CYRILLIC_NOT_ALLOWED: Cyrillic emails not allowed
+    PASSWORD_MUST_NOT_BE_BLANK: Password must not be blank
+    PASSWORD_MUST_BE_GREATER_THAN_FOUR_CHARACTERS_LONG: Password must be grater than four characters long
+
+groups:
+  exercise_selection: "Let's choose what exercises we do today?"
+  title: Groups

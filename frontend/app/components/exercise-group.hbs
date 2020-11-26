@@ -1,0 +1,22 @@
+<a href={{href-to "group.series" (query-params name=@group.fullName)}} class="w-1/2 px-2">
+  <div class="hover:shadow-outline flex max-w-md overflow-hidden bg-white rounded-lg shadow-lg">
+    {{!-- template-lint-disable no-inline-styles style-concatenation --}}
+    <div
+      style={{html-safe (concat 'background-image: url(' @group.picture ');')}} class="w-1/3 bg-center bg-no-repeat bg-contain"
+    ></div>
+    <div class="w-2/3 p-4">
+      <h1 class="text-gray-900 truncate">
+        {{@group.name}}
+      </h1>
+      <p class="mt-2 text-sm text-gray-600 truncate">
+        {{@group.detail}}
+      </p>
+      <div class="item-center flex justify-between mt-3">
+        <div class="px-3 py-2 text-xs font-bold text-white uppercase bg-gray-800 rounded"
+        >
+          {{t "control_exercises.solve"}} ({{@group.count}})
+        </div>
+      </div>
+    </div>
+  </div>
+</a>

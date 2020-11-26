@@ -18,6 +18,11 @@
   width: 100%;
   display: block;
   font-size: 40px;
+  transition: all .5s ease;
+}
+
+.task-player__option-button:active {
+  font-size: 60px;
 }
 
 .task-player__option-button:disabled {

@@ -1,11 +1,11 @@
 <div ...attributes class={{style-namespace "group-navigation"}}>
   <ul class="group-nav-list">
-    {{#each (take 3 (sort-by "id" @group.series)) as |series index|}}
+    {{#each (take 5 (sort-by "id" @group.series)) as |series index|}}
       <li class="mb-10">
         <LinkTo
           @tagName="button"
           type="button"
-          class="overflow-hidden group-item rounded-md shadow
+          class="overflow-hidden group-item rounded-md shadow hover:shadow-outline
             {{concat "item-" index}}
 
             {{if
@@ -17,6 +17,7 @@
           @activeClass="active"
           @route="group.series"
           @model={{series}}
+          @query={{hash name=''}}
         >
           <div class="sm:p-10 px-4 py-6">
             <div class="group-image {{concat "image-" index}} ">

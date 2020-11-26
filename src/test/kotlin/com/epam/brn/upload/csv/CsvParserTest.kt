@@ -118,9 +118,9 @@ class CsvParserTest {
     @Test
     fun `should parse exercise for Series 1`() {
         val input = """
-                level,exerciseName,words,noise
-                1,Слова без шума,(бал бум быль вить гад дуб),no_noise
-                2,Слова без шума,(линь лис моль пар пять раб),no_noise
+                level,pictureUrl,exerciseName,words,noiseLevel,noiseUrl
+                1,pictureUrl,Слова без шума,(бал бум быль вить гад дуб),0,
+                2,pictureUrl,Слова без шума,(линь лис моль пар пять раб),0,
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
@@ -128,16 +128,18 @@ class CsvParserTest {
         assertThat(result).containsAll(
             listOf(
                 SeriesOneRecord(
-                    1,
+                    1, "pictureUrl",
                     "Слова без шума",
                     mutableListOf("(бал", "бум", "быль", "вить", "гад", "дуб)"),
-                    "no_noise"
+                    0,
+                    ""
                 ),
                 SeriesOneRecord(
-                    2,
+                    2, "pictureUrl",
                     "Слова без шума",
                     mutableListOf("(линь", "лис", "моль", "пар", "пять", "раб)"),
-                    "no_noise"
+                    0,
+                    ""
                 )
             )
         )
@@ -146,7 +148,7 @@ class CsvParserTest {
     @Test
     fun `should throw parse exception`() {
         val input = """
-                level exerciseName orderNumber word audioFileName pictureFileName words wordType
+                level pictureUrl exerciseName orderNumber word audioFileName pictureFileName words wordType
                 incorrect string
                 """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 

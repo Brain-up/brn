@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -71,7 +71,7 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
+        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         Assertions.assertTrue(response.contains(seriesName))
         Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
         Assertions.assertTrue(response.contains("exercises"))
@@ -92,7 +92,7 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
+        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         Assertions.assertTrue(response.contains(seriesName))
         Assertions.assertTrue(response.contains("exercises"))
     }
@@ -110,9 +110,10 @@ class SeriesControllerIT {
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(Charset.defaultCharset())
+        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val expectedResponse =
-            """{"data":"level,exerciseName,words,noise\n1,Слова без шума,(бал бум быль вить гад дуб),no_noise\n2,Слова без шума,(линь лис моль пар пять раб),no_noise\n3,Слова без шума,(рак рожь сеть топь ход шеф),no_noise\n4,Слова с малым шумом,(бал бум быль вить гад дуб),noise_6db","errors":[],"meta":[]}"""
+            """{"data":"level,pictureUrl,exerciseName,words,noiseLevel,noiseUrl\n1,family,Семья,(сын ребёнок мама),0,\n2,family,Семья,(отец брат дедушка),0,\n3,family,Семья,(бабушка муж внучка),0,\n4,family,Семья,(сын ребёнок родители дочь мама папа),0,","errors":[],"meta":[]}"""
+        Assertions.assertTrue(response.contains("1,family,Семья,(сын ребёнок мама),0,"))
         Assertions.assertEquals(expectedResponse, response)
     }
 }

@@ -1,8 +1,21 @@
-{{#-in-element (query-node "#exercise-steps-slot")}}
-  {{#unless this.justEnteredTask}}
-    <ExerciseSteps @activeStep={{this.mode}} @onClick={{this.onModeChange}} />
-  {{/unless}}
-{{/-in-element}}
+{{#let (query-node "#exercise-steps-slot") as |node|}}
+  {{#if node}}
+    {{#in-element node}}
+      {{#unless this.justEnteredTask}}
+        <ExerciseSteps @activeStep={{this.mode}} @onClick={{this.onModeChange}} />
+      {{/unless}}
+    {{/in-element}}
+  {{/if}}
+{{/let}}
+
+{{#let (query-node "#exercise-timer-slot") as |node|}}
+  {{#if node}}
+    {{#in-element node}}
+      <Timer @hideControls={{this.justEnteredTask}} />
+    {{/in-element}}
+  {{/if}}
+{{/let}}
+
 <div
   class="{{style-namespace "task-player"}}
 

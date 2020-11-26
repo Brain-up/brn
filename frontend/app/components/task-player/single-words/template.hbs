@@ -1,5 +1,8 @@
-{{yield (hash tasks=@task.parent.tasks)}}
-<br />
+<div class="flex flex-col flex-1" data-test-task-id={{@task.id}} data-test-task-exercise-id={{@task.exercise.id}}
+  {{did-insert this.updateWords @task.words}}
+  {{did-update this.updateWords @task.words}}
+>
+  {{yield (hash tasks=@task.parent.tasks)}}
 {{#if (eq this.lastAnswer @task.word)}}
   <ImageDisplayBlock
     data-test-right-answer-notification
@@ -13,11 +16,6 @@
     {{did-insert (perform this.showTaskResult)}}
   />
 {{else}}
-  <AudioPlayer
-    @audioFileUrl={{@task.audioFileUrl}}
-    @disabled={{@disableAudioPlayer}}
-    @transparent={{not-eq @mode "task"}}
-  />
   <ul class="task-player__options mt-5">
     {{#each this.shuffledWords as |word|}}
       <li class="task-player__option">
@@ -40,4 +38,10 @@
       </li>
     {{/each}}
   </ul>
+  <AudioPlayer
+    @audioFileUrl={{@task.audioFileUrl}}
+    @disabled={{@disableAudioPlayer}}
+    @transparent={{not-eq @mode "task"}}
+  />
 {{/if}}
+</div>

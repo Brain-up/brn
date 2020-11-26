@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+// eslint-disable-next-line ember/no-mixins
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
 
@@ -14,9 +15,5 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
     return this.store.query('group', {
       locale: this.intl.locale[0]
     });
-  }
-  redirect() {
-    document.body.classList.add('route-groups');
-    document.body.classList.remove('route-group');
   }
 }

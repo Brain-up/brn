@@ -13,6 +13,8 @@ const purgeCSS = {
       './app/index.html',
       './app/templates/**/*.hbs',
       './app/components/**/*.hbs',
+      './app/components/**/*.ts',
+      './app/components/**/*.js',
       './app/components/**/*.css'
     ],
     defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || content.match(/[\w-/.:]+(?<!:)/g) || []
@@ -22,11 +24,17 @@ const purgeCSS = {
 
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
+    babel: {
+      plugins: [ require.resolve('ember-auto-import/babel-plugin') ]
+    },
     'ember-test-selectors': {
       strip: false
     },
     fingerprint: {
       exclude: ['pictures/'],
+    },
+    'ember-cli-babel': {
+      enableTypeScriptTransform: true
     },
     postcssOptions: {
       compile: {
@@ -39,7 +47,7 @@ module.exports = function (defaults) {
             }
           },
           tailwindcss('./app/styles/tailwind.js'),
-          ...isProduction ? [purgeCSS] : []
+          ... isProduction ? [purgeCSS] : []
         ]
       }
     }
@@ -57,8 +65,5 @@ module.exports = function (defaults) {
   // modules that you would like to import into your application
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
-
-  app.import('node_modules/idle-js/dist/Idle.js');
-
   return app.toTree();
 };

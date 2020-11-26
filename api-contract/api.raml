@@ -56,11 +56,12 @@ mediaType:
         required: true
         type: string
         example: "42"
-      userId:
-        description: "ID of the user for which we want to get done exercises"
+      withAvailability:
+        description: "with or without availability calculation to reduce calculation volume"
         required: false
-        type: string
-        example: "42"
+        default: true
+        type: boolean
+        example: false
     responses:
       200:
         body:
@@ -71,10 +72,32 @@ mediaType:
       responses:
         200:
           body:
-            example1: !include samples/exercise_1_series.json
+            example1: !include samples/exercise_1_series_signal.json
+            example1: !include samples/exercise_1_series_speech.json
             example2: !include samples/exercise_for_2_series.json
             example3: !include samples/exercise_for_3_series.json
-
+  /byName:
+    description: return exercises by name with availability calculation
+    get:
+      responses:
+        200:
+          body:
+            example1: !include samples/exercise_1_series_signal.json
+            example1: !include samples/exercise_1_series_speech.json
+            example2: !include samples/exercise_for_2_series.json
+            example3: !include samples/exercise_for_3_series.json
+  /byIds:
+      description: return only available exercise ids by input exercise ids with same name
+      post:
+        body: {"ids": [1,2,3,4]}
+        responses:
+          200:
+            body:
+              {
+                  "data": [1],
+                  "errors": [],
+                  "meta": []
+              }
 # TASK ----------------------------
 /tasks:
   get:
@@ -114,6 +137,48 @@ mediaType:
     responses:
       201:
         example: !include samples/study_history_response.json
+  /todayTimer:
+    get:
+      description: get today current user work time in seconds
+      responses:
+        200:
+          body:
+            application/json:
+              example: {
+                           "data": 60,
+                           "errors": [],
+                           "meta": []
+                       }
+  /histories:
+    get:
+        description: get histories for current user by period from <= startTime < to
+        queryParameters:
+              from:
+                    required: true
+                    type: date
+                    example: "2020-11-05"
+              to:
+                    required: true
+                    type: date
+                    example: "2020-11-06"
+        responses:
+              200:
+                example: !include samples/study_histories_dto_response.json
+  /monthHistories:
+      get:
+          description: get histories for current user by month and year
+          queryParameters:
+                month:
+                      required: true
+                      type: integer
+                      example: 11
+                year:
+                      required: true
+                      type: integer
+                      example: 2020
+          responses:
+                200:
+                  example: !include samples/study_histories_dto_response.json
 
 # USERS ----------------------
 /users:
@@ -246,3 +311,50 @@ mediaType:
         200:
           body:
             example: "https://cloudprovider.bucket.com"
+
+# ADMIN  ----------------------
+/admin
+    /users
+        get:
+            description: get all users
+        responses:
+            200:
+              example: !include samples/users_get_response.json
+    /histories:
+        get:
+            description: get histories for user by period from <= startTime < to
+            queryParameters:
+                userId:
+                    required: true
+                    type: integer
+                    example: 1
+                from:
+                    required: true
+                    type: date
+                    example: "2020-11-05"
+                to:
+                    required: true
+                    type: date
+                    example: "2020-11-06"
+        responses:
+              200:
+                example: !include samples/study_histories_dto_response.json
+  /monthHistories:
+      get:
+          description: get histories for user by month and year
+          queryParameters:
+                userId:
+                      required: true
+                      type: integer
+                      example: 1
+                month:
+                      required: true
+                      type: integer
+                      example: 11
+                year:
+                      required: true
+                      type: integer
+                      example: 2020
+          responses:
+                200:
+                  example: !include samples/study_histories_dto_response.json

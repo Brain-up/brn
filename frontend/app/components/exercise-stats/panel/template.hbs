@@ -1,3 +1,12 @@
+{{!--
+  <script @typedef>
+    interface Args {
+      type: 'negative' | 'positive' | 'neutral';
+      label?: string;
+      value?: string | number;
+    }
+  </script>
+ --}}
 {{#let
   (hash
     positive="text-green-500" negative="text-red-500" neutral="text-gray-500"
@@ -35,9 +44,10 @@
         {{#if (has-block)}}
           {{yield}}
         {{else}}
-          {{or @value "@value"}}
+          {{if (or @value (eq @value 0)) @value "@value"}}
         {{/if}}
       </p>
     </div>
   </div>
 {{/let}}
+

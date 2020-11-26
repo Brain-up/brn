@@ -3,6 +3,16 @@ header:
   logout: Выйти
   about: Описание
 
+login:
+  title: Логин
+
+registration:
+  title: Регистрация
+
+audio_player:
+  listen: Прослушать ещё раз
+
+
 login_form:
   login: Логин
   error_bad_credentials: Неправильный логин или пароль.
@@ -41,26 +51,48 @@ exercise_messages:
   answer_successfully: Правильный ответ
 
 statistics:
-  attempts: Попытки
+  wrong_answers: Ошибки
   tasks: Задачи
+  repeats: Повторения
   time_min: мин
   time_sec: сек
   scoring: Шкала успеха
   time_board: Общее время
-  info_about: Твой BrainUp образ
+  info_about: Статистика упражнения
+  continue: Продолжить
 
 task_link:
-  exercise: Упражнения
+  exercise: Упражнение
 
 service_message:
   no_tasks:  Пока в этом упражнении нет задач
 
 control_exercises:
   solve: Решать
-  interact: Взаимодейстовать
+  interact: Повторить
   listen: Слушать
 
 
 footer:
   info_about: При поддержке
   info_about_helper: и
+
+
+start_task_button:
+  label: Начать выполнение упражнения
+
+msg:
+  validation:
+    FIRST_NAME_MUST_NOT_HAVE_SPACES: Имя не может содержать пробелы
+    LAST_NAME_MUST_NOT_HAVE_SPACES: Фамилия не может содержать пробелы
+    EMAIL_MUST_NOT_BE_BLANK: Почта не может быть пустой
+    INVALID_EMAIL_FORMAT: Неверный формат почты
+    INVALID_EMAIL_FORMAT_CYRILLIC_NOT_ALLOWED: Кириллическая почта не поддерживается
+    PASSWORD_MUST_NOT_BE_BLANK: Пароль не может быть пустым
+    PASSWORD_MUST_BE_GREATER_THAN_FOUR_CHARACTERS_LONG: Пароль должен быть длиннее 4 символов
+
+
+groups:
+  exercise_selection: "Давайте выберем, какие упражнения будем делать сегодня?"
+  title: Группы
+

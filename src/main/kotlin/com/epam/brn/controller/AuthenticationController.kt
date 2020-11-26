@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.auth.AuthenticationService
 import com.epam.brn.dto.AuthOutDto
-import com.epam.brn.dto.LoginDto
+import com.epam.brn.dto.request.LoginDto
 import com.epam.brn.dto.UserAccountDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation

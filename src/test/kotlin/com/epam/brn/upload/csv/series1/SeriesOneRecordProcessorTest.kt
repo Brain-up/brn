@@ -10,7 +10,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.service.ResourceCreationService
+import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -29,7 +29,7 @@ internal class SeriesOneRecordProcessorTest {
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
-    private val resourceCreationService = mock(ResourceCreationService::class.java)
+    private val resourceCreationService = mock(WordsService::class.java)
 
     private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
 
@@ -45,7 +45,8 @@ internal class SeriesOneRecordProcessorTest {
     )
 
     private val exerciseName = "Однослоговые слова без шума"
-    private val noiseLevel = "no_noise"
+    private val noiseLevel = 1
+    private val noiseUrl = "url"
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
 
     @BeforeEach
@@ -58,6 +59,11 @@ internal class SeriesOneRecordProcessorTest {
         )
 
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "series1WordsFileName", "words_series1.txt")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathFilipp", "/audio/filipp/%s.ogg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathAlena", "/audio/alena/%s.ogg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
+        ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
 
         `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
 
@@ -80,10 +86,11 @@ internal class SeriesOneRecordProcessorTest {
         val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
-                    level = 1,
+                    level = 1, pictureUrl = "pictureUrl",
                     exerciseName = exerciseName,
                     words = words,
-                    noise = noiseLevel
+                    noiseLevel = noiseLevel,
+                    noiseUrl = noiseUrl
                 )
             )
         ).first()
@@ -100,9 +107,10 @@ internal class SeriesOneRecordProcessorTest {
         val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
-                    level = 1,
+                    level = 1, pictureUrl = "pictureUrl",
                     exerciseName = exerciseName,
-                    noise = noiseLevel,
+                    noiseLevel = noiseLevel,
+                    noiseUrl = noiseUrl,
                     words = listOf("(бал", "бум", "быль)")
                 )
             )
@@ -119,7 +127,7 @@ internal class SeriesOneRecordProcessorTest {
         )
 
         val tasks = seriesOneRecordProcessor
-            .process(mutableListOf(SeriesOneRecord(1, exerciseName, words, noiseLevel)))
+            .process(mutableListOf(SeriesOneRecord(1, "pictureUrl", exerciseName, words, noiseLevel, noiseUrl)))
             .first().tasks
 
         tasks.forEach {
@@ -135,6 +143,9 @@ internal class SeriesOneRecordProcessorTest {
             name = exerciseName,
             description = exerciseName,
             exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
+            noiseLevel = 1,
+            noiseUrl = "/fon/url.ogg",
+            pictureUrl = "/picturesTheme/pictureUrl.jpg",
             level = 1
         )
 
@@ -183,7 +194,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "бал",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/бал.mp3",
+            audioFileUrl = "/audio/filipp/518d3c4523afcd59e2feae1093870f5f.ogg",
             pictureFileUrl = "pictures/бал.jpg"
         )
     }
@@ -192,7 +203,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "бум",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/бум.mp3",
+            audioFileUrl = "/audio/filipp/8e3cba18a3a6a3aa51e160a3d1e1ebcc.ogg",
             pictureFileUrl = "pictures/бум.jpg"
         )
     }
@@ -201,7 +212,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "быль",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/быль.mp3",
+            audioFileUrl = "/audio/filipp/4df3cdbbe2abf27f91f673032c95141e.ogg",
             pictureFileUrl = "pictures/быль.jpg"
         )
     }
@@ -210,7 +221,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "вить",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/вить.mp3",
+            audioFileUrl = "/audio/filipp/77ebaea90791bb15d4f758191aae5930.ogg",
             pictureFileUrl = "pictures/вить.jpg"
         )
     }
@@ -219,7 +230,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "гад",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/гад.mp3",
+            audioFileUrl = "/audio/filipp/2e0b56e224fe469866e1aaa81caaafcc.ogg",
             pictureFileUrl = "pictures/гад.jpg"
         )
     }
@@ -228,7 +239,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "no_noise/дуб.mp3",
+            audioFileUrl = "/audio/filipp/494d676049e14da7fd3a9182955287ab.ogg",
             pictureFileUrl = "pictures/дуб.jpg"
         )
     }

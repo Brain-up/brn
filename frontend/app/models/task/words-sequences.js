@@ -5,7 +5,6 @@ import shuffleArray from 'brn/utils/shuffle-array';
 import deepCopy from '../../utils/deep-copy';
 
 function createTasks([first, ...tail], acc = []) {
-
   const results = [];
   const finalResults = [];
 
@@ -36,9 +35,11 @@ export default class WordsSequences extends BaseTask.extend({
       .split('>')[0]
       .split(' ');
   }),
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   possibleTasks: computed('answerOptions.[]', function() {
-    const taskPartsOptions = this.selectedItemsOrder.map(
-      (orderItemName) => this.answerOptions[orderItemName],
+    const options = Object.keys(this.answerOptions);
+    const taskPartsOptions = this.selectedItemsOrder.filter((key)=>options.includes(key)).map(
+      (orderItemName) => this.answerOptions[orderItemName] || [],
     );
     return shuffleArray(createTasks(taskPartsOptions));
   }),

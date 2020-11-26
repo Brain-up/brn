@@ -14,5 +14,7 @@ interface CloudService {
      */
     fun bucketUrl(): String
 
+    fun baseFileUrl(): String
+
     fun listBucket(): List<String>
 }

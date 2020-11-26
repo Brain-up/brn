@@ -1,28 +1,26 @@
 package com.epam.brn.service
 
-import com.epam.brn.converter.StudyHistoryConverter
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.nhaarman.mockito_kotlin.anyOrNull
-import com.nhaarman.mockito_kotlin.doNothing
-import com.nhaarman.mockito_kotlin.eq
+import org.mockito.Mockito.mock
 import com.nhaarman.mockito_kotlin.verify
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.util.Optional
+import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryServiceTest {
@@ -37,7 +35,7 @@ internal class StudyHistoryServiceTest {
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
     @Mock
-    lateinit var studyHistoryConverter: StudyHistoryConverter
+    lateinit var userAccountService: UserAccountService
 
     @InjectMocks
     lateinit var studyHistoryService: StudyHistoryService
@@ -47,14 +45,7 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val now = LocalDateTime.now()
 
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionIndex = 1f,
-            tasksCount = 1,
-            startTime = now,
-            endTime = now,
-            exerciseId = 1L
-        )
+        val studyHistoryDtoMock = mock(StudyHistoryDto::class.java)
         val userAccount = UserAccount(
             id = 1L,
             firstName = "testUserFirstName",
@@ -66,94 +57,53 @@ internal class StudyHistoryServiceTest {
         val exercise = Exercise(
             id = 1L
         )
-        val studyHistoryEntity = StudyHistory(
+        val studyHistoryNew = StudyHistory(
+            userAccount = userAccount,
+            exercise = exercise,
+            startTime = now,
+            executionSeconds = 122,
+            tasksCount = 12,
+            wrongAnswers = 3,
+            replaysCount = 3
+        )
+        val studyHistorySaved = StudyHistory(
             id = 1L,
             userAccount = userAccount,
             exercise = exercise,
             startTime = now,
-            endTime = now,
-            tasksCount = 1,
-            repetitionIndex = 1f
+            executionSeconds = 122,
+            tasksCount = 12,
+            wrongAnswers = 3,
+            replaysCount = 3
         )
+        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(
+            UserAccountDto(
+                1L,
+                "ivan",
+                "ivanov",
+                "mail",
+                "pass"
+            )
+        )
+        `when`(userAccountRepository.findUserAccountById(1L)).thenReturn(Optional.of(userAccount))
+        `when`(studyHistoryDtoMock.toEntity(userAccount, exercise)).thenReturn(studyHistoryNew)
+        `when`(studyHistoryDtoMock.exerciseId).thenReturn(2L)
 
-        `when`(userAccountRepository.findUserAccountById(dto.userId!!)).thenReturn(Optional.of(userAccount))
-        `when`(exerciseRepository.findById(dto.exerciseId!!)).thenReturn(Optional.of(exercise))
-        `when`(studyHistoryConverter.updateStudyHistory(eq(dto), anyOrNull()))
-            .thenReturn(studyHistoryEntity)
+        `when`(exerciseRepository.findById(2L)).thenReturn(Optional.of(exercise))
+        `when`(studyHistoryRepository.save(studyHistoryNew)).thenReturn(studyHistorySaved)
 
         // WHEN
-        val result = studyHistoryService.create(dto)
+        val result = studyHistoryService.save(studyHistoryDtoMock)
 
         // THEN
-        assertThat(result).isEqualToIgnoringGivenFields(dto, "id")
-        verify(studyHistoryConverter).updateStudyHistory(eq(dto), anyOrNull())
+        Assertions.assertThat(result).isEqualToIgnoringGivenFields(studyHistorySaved, "id", "exerciseId")
         verify(studyHistoryRepository).save(any(StudyHistory::class.java))
     }
 
     @Test
-    fun `should update existing studyHistory`() {
-        // GIVEN
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionIndex = 2f,
-            tasksCount = 1,
-            startTime = LocalDateTime.now(),
-            endTime = LocalDateTime.now(),
-            exerciseId = 1L
-        )
-        val existingStudyHistory = Mockito.mock(StudyHistory::class.java)
-
-        `when`(existingStudyHistory.toDto()).thenReturn(dto)
-
-        // WHEN
-        studyHistoryService.update(existingStudyHistory, dto)
-
-        // THEN
-        verify(studyHistoryConverter).updateStudyHistory(dto, existingStudyHistory)
-        verify(studyHistoryRepository).save(any(StudyHistory::class.java))
-    }
-
-    @Test
-    fun `should update study history only with not null elements`() {
-        // GIVEN
-        val exerciseMock = Mockito.mock(Exercise::class.java)
-        val userAccountMock = Mockito.mock(UserAccount::class.java)
-        val dto = StudyHistoryDto(
-            userId = 1L,
-            repetitionIndex = null,
-            tasksCount = 5,
-            startTime = null,
-            endTime = null,
-            exerciseId = 1L
-        )
-        val existingEntity = StudyHistory(
-            id = 10,
-            userAccount = userAccountMock,
-            exercise = exerciseMock,
-            endTime = LocalDateTime.now(),
-            startTime = LocalDateTime.now(),
-            tasksCount = 0,
-            repetitionIndex = 1f
-        )
-        val updatedEntity = StudyHistory(
-            id = 10,
-            userAccount = userAccountMock,
-            exercise = exerciseMock,
-            endTime = existingEntity.endTime,
-            startTime = existingEntity.endTime,
-            tasksCount = 5,
-            repetitionIndex = 1f
-        )
-        `when`(studyHistoryRepository.save(any(StudyHistory::class.java))).thenReturn(updatedEntity)
-
-        doNothing().`when`(studyHistoryConverter).updateStudyHistoryWhereNotNull(dto, existingEntity)
-
-        `when`(studyHistoryRepository.findByUserAccountIdAndExerciseId(dto.userId, dto.exerciseId))
-            .thenReturn(Optional.of(existingEntity))
-
-        // WHEN
-        studyHistoryService.patchStudyHistory(dto)
-        // THEN
-        verify(studyHistoryRepository).save(any())
+    fun `should calculate diff in seconds between start and end time`() {
+        val now = LocalDateTime.now()
+        val result = studyHistoryService.calculateDiffInSeconds(now, now.plusMinutes(1))
+        assertEquals(60, result)
     }
 }

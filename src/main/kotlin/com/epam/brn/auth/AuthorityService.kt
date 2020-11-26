@@ -6,5 +6,6 @@ interface AuthorityService {
 
     fun findAuthorityById(authorityId: Long): Authority
     fun findAuthorityByAuthorityName(authorityName: String): Authority
+    fun findAll(): List<Authority>
     fun save(authority: Authority): Authority
 }

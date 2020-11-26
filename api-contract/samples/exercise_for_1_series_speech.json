@@ -1,0 +1,25 @@
+{
+  "data": {
+    "seriesId": 1,
+    "id": 41,
+    "name": "В школе",
+    "pictureUrl": "pictures/theme/school.jpg",
+    "description": "В школе",
+    "level": 1,
+    "noise": {
+      "level": 0,
+      "url": ""
+    },
+    "exerciseType": "SINGLE_SIMPLE_WORDS",
+    "template": "",
+    "available": true,
+    "tasks": [
+      {
+        "id": 41,
+        "type": "task/SINGLE_SIMPLE_WORDS"
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

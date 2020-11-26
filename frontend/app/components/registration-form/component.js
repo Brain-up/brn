@@ -62,8 +62,12 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     } else {
       const error = yield result.json();
       const key = error.errors.pop();
-      this.errorMessage =
-        key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key]) : key;
+      if (this.intl.exists(`msg.validation.${key}`)) {
+        this.errorMessage = this.intl.t(`msg.validation.${key}`);
+      } else {
+        this.errorMessage =
+          key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key]) : key;
+      }
       this.registrationTask.cancelAll();
     }
   }).drop())

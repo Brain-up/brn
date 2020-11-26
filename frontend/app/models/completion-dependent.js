@@ -21,23 +21,32 @@ export default Model.extend({
     },
   ),
   sortChildrenBy: 'order',
+  // eslint-disable-next-line ember/require-computed-property-dependencies
   sortedChildren: computed('children.{[],@each.order}', function() {
     return this.children ? this.children.sortBy(this.sortChildrenBy) : null;
   }),
+  isManuallyCompleted: false,
   isCompleted: computed(
+    'isManuallyCompleted',
     'tasksManager.completedTasks.[]',
     'children.@each.isCompleted',
     function() {
+      if (this.isManuallyCompleted) {
+        return true;
+      }
       if (this.tasksManager.completedTasks.length === 0) {
         return false;
       }
+      // eslint-disable-next-line ember/no-get
+      const children = this.get('children');
       return (
-        this.get('children').length &&
-        this.get('children').every((child) => child.isCompleted)
+        children.length &&
+        children.every((child) => child.isCompleted)
       );
     },
   ),
-  isFirst: computed(function() {
+  // eslint-disable-next-line ember/require-computed-macros
+  isFirst: computed('previousSiblings.length', function() {
     return !this.previousSiblings.length;
   }),
   allSiblings: computed('parent.sortedChildren.[]', function() {

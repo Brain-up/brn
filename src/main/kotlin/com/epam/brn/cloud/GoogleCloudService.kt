@@ -43,4 +43,6 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
     }
 
     override fun bucketUrl(): String = cloudConfig.bucketLink
+
+    override fun baseFileUrl(): String = ""
 }

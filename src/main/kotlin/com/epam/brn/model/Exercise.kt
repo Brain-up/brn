@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -27,30 +28,39 @@ data class Exercise(
     )
     var id: Long? = null,
     var name: String = "",
+    var pictureUrl: String = "",
     var description: String? = "",
     var template: String? = "",
     var exerciseType: String = "",
     var level: Int? = 0,
+    var noiseLevel: Int = 0,
+    var noiseUrl: String = "",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val tasks: MutableSet<Task> = LinkedHashSet()
+    val tasks: MutableSet<Task> = LinkedHashSet(),
+    @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    val signals: MutableSet<Signal> = LinkedHashSet()
 ) {
     fun toDto(available: Boolean = true) = ExerciseDto(
         seriesId = series?.id,
         id = id,
         name = name,
+        pictureUrl = pictureUrl,
         description = description,
         template = template,
         exerciseType = ExerciseType.valueOf(exerciseType),
         level = level,
+        noise = NoiseDto(noiseLevel, noiseUrl),
         available = available,
-        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet()
+        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet(),
+        signals = signals.map { signal -> signal.toSignalDto() }.toMutableSet()
     )
 
     override fun toString() =
-        "Exercise(id=$id, name='$name', description=$description, level=$level, template=$template, exerciseType=$exerciseType)"
+        "Exercise(id=$id, name='$name', pictureUrl='$pictureUrl', description=$description, level=$level, noiseLevel=$noiseLevel, " +
+                "noiseUrl=$noiseUrl, template=$template, exerciseType=$exerciseType)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -60,10 +70,13 @@ data class Exercise(
 
         if (id != other.id) return false
         if (name != other.name) return false
+        if (pictureUrl != other.pictureUrl) return false
         if (description != other.description) return false
         if (template != other.template) return false
         if (exerciseType != other.exerciseType) return false
         if (level != other.level) return false
+        if (noiseLevel != other.noiseLevel) return false
+        if (noiseUrl != other.noiseUrl) return false
 
         return true
     }
@@ -84,5 +97,9 @@ data class Exercise(
 
     fun addTasks(tasks: List<Task>) {
         this.tasks.addAll(tasks)
+    }
+
+    fun addSignals(signals: List<Signal>) {
+        this.signals.addAll(signals)
     }
 }
