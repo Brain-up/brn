@@ -12,6 +12,9 @@ module.exports = {
           '500': '#81D5F9',
           '700': '#5E6EED',
           '900': '#001274',
+          light: '#428DFC',
+          dark: '#5A6BFF',
+          '1100': '#428DFC',
         },
         pink: {
           ...colors.pink,
@@ -43,6 +46,10 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
+    textColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
+    gradientColorStops: ['responsive', 'hover', 'focus', 'disabled', 'active'],
+  },
   plugins: [],
 };

@@ -9,6 +9,11 @@ export default class GroupSeriesRoute extends Route {
     await this.store.query('exercise', { seriesId: series.id });
   }
 
+  setupController(controller, model, transition) {
+    super.setupController(controller, model, transition);
+    controller.exerciseAvailabilityCalculationTask.perform();
+  }
+
   redirect(series, { to }) {
     // to-do fixit to `group.series.index`
     if (

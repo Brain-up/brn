@@ -3,6 +3,12 @@ header:
   logout: Logout
   about: About
 
+login:
+  title: Login
+
+registration:
+  title: Registration
+
 login_form:
   error_bad_credentials: Incorrect login or password
   login: Login
@@ -81,3 +87,4 @@ msg:
 
 groups:
   exercise_selection: "Let's choose what exercises we do today?"
+  title: Groups
