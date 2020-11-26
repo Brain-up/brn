@@ -38,9 +38,10 @@
                       />
                       <div class="check-container">
                         <Ui::Icon::Check
-                          @isAvailable={{and
+                          @isAvailable={{or (and
                             exercise.canInteract
-                            (not exercise.isCompleted)
+                            (not exercise.isCompleted))
+                            (contains exercise.id (or @available (array)))
                           }}
                           @isCompleted={{exercise.isCompleted}}
                           @isLocked={{and

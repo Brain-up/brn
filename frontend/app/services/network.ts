@@ -55,8 +55,11 @@ export default class NetworkService extends Service {
     return this.postRequest('registration', user);
   }
   async availableExercises(ids: string[]) {
-    const result = await this.request(`exercises/byIds?ids=${ids.join(',')}`);
-    console.log(result);
+    const result = await this.postRequest(`exercises/byIds`, {
+      ids: ids.map((el)=>parseInt(el, 10))
+    });
+    const { data } = await result.json();
+    return data.map((el: number)=>String(el));
   }
 }
 
