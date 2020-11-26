@@ -9,6 +9,10 @@ login:
 registration:
   title: Регистрация
 
+audio_player:
+  listen: Прослушать ещё раз
+
+
 login_form:
   login: Логин
   error_bad_credentials: Неправильный логин или пароль.
