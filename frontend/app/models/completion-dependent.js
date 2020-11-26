@@ -25,10 +25,15 @@ export default Model.extend({
   sortedChildren: computed('children.{[],@each.order}', function() {
     return this.children ? this.children.sortBy(this.sortChildrenBy) : null;
   }),
+  isManuallyCompleted: false,
   isCompleted: computed(
+    'isManuallyCompleted',
     'tasksManager.completedTasks.[]',
     'children.@each.isCompleted',
     function() {
+      if (this.isManuallyCompleted) {
+        return true;
+      }
       if (this.tasksManager.completedTasks.length === 0) {
         return false;
       }

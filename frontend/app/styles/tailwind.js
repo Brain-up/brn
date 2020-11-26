@@ -14,6 +14,7 @@ module.exports = {
           '900': '#001274',
           light: '#428DFC',
           dark: '#5A6BFF',
+          '1100': '#428DFC',
         },
         pink: {
           ...colors.pink,

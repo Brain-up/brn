@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.config.AwsConfig
 import com.epam.brn.exception.ConversionOggToMp3Exception
 import com.epam.brn.exception.YandexServiceException
 import net.bramp.ffmpeg.FFmpeg
@@ -24,14 +25,16 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.time.ZonedDateTime
 
 @Service
-class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
+class AudioFilesGenerationService(
+    @Autowired val wordsService: WordsService,
+    @Autowired val awsConfig: AwsConfig
+) {
 
     @Value("\${yandex.getTokenLink}")
     lateinit var uriGetIamToken: String
@@ -75,23 +78,27 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
     private val log = logger()
 
     fun generateAudioFiles() {
-        val words = wordsService.wordsWithoutAudioResourceSet
-        val wordsSize = words.size
-        if (words.isEmpty()) {
-            log.info("There are no any words without audio ogg file.")
+        val allWords = wordsService.fullWordsSet
+        val existsHashWords = wordsService.existsFileNames
+        val wordsSize = allWords.size
+        if (allWords.isEmpty()) {
+            log.info("There are no any words.")
             return
         }
-        log.info("Start generating audio files in yandex cloud for $wordsSize words.")
+        log.info("Start generating audio files in yandex cloud for $wordsSize words. exists=${existsHashWords.size}")
         var counter = 1
-        words.asSequence().forEach { word ->
+        allWords.asSequence().forEach { word ->
             run {
-                log.info("Generated $counter word from $wordsSize words.")
-                generateAudioFiles(word, voiceAlena)
-                generateAudioFiles(word, voiceFilipp)
-                counter += 1
+                val md5Hash = DigestUtils.md5Hex(word)
+                if (!existsHashWords.contains(md5Hash)) {
+                    log.info("Generated $counter word from $wordsSize words.")
+                    generateAudioFiles(word, voiceAlena)
+                    generateAudioFiles(word, voiceFilipp)
+                    counter += 1
+                }
             }
         }
-        log.info("Audio files for all words (${words.size}) was created successfully!")
+        log.info("Audio files for all words (${allWords.size}) was created successfully!")
     }
 
     fun getYandexIamTokenForAudioGeneration(): String {
@@ -155,6 +162,9 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
         val inputStream = httpEntity.content
         FileUtils.copyInputStreamToFile(inputStream, fileOgg)
 
+        awsConfig.amazonS3.putObject(awsConfig.bucketName + "/audio/$voice", fileOgg.name, fileOgg)
+        log.info("Ogg audio file `${fileOgg.name}` was successfully save in S3 ${awsConfig.bucketName + "/audio/$voice/" + fileOgg.name}.")
+
         convertOggFileToMp3(fileOgg, voice)
 
         fileOgg.let { sourceFile ->
@@ -175,14 +185,14 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
 
         try {
             val builder = FFmpegBuilder()
-                    .setInput(fileOgg.getAbsolutePath())
-                    .overrideOutputFiles(true)
-                    .addOutput(mp3FileName)
-                    .setAudioCodec("libmp3lame")
-                    .setAudioChannels(FFmpeg.AUDIO_MONO)
-                    .setAudioBitRate(48000)
-                    .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
-                    .done()
+                .setInput(fileOgg.getAbsolutePath())
+                .overrideOutputFiles(true)
+                .addOutput(mp3FileName)
+                .setAudioCodec("libmp3lame")
+                .setAudioChannels(FFmpeg.AUDIO_MONO)
+                .setAudioBitRate(48000)
+                .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
+                .done()
 
             val ffmpeg = FFmpeg("ffmpeg/bin/ffmpeg.exe")
             val ffprobe = FFprobe("ffmpeg/bin/ffprobe.exe")
@@ -221,7 +231,7 @@ class AudioFilesGenerationService(@Autowired val wordsService: WordsService) {
         val request = HttpEntity(null, headers)
 
         val response: ResponseEntity<ByteArray> = restTemplate
-                .exchange(uriBuilder.build(), HttpMethod.POST, request, ByteArray::class.java)
+            .exchange(uriBuilder.build(), HttpMethod.POST, request, ByteArray::class.java)
         if (response.statusCode != HttpStatus.OK)
             throw YandexServiceException("Yandex cloud does not provide audio file for word `$word`, httpStatus={${response.statusCode}}")
         log.info("Ogg audio file for Word `$word` was successfully generated.")
