@@ -9,6 +9,9 @@ login:
 registration:
   title: Registration
 
+audio_player:
+  listen: Listen one more time
+
 login_form:
   error_bad_credentials: Incorrect login or password
   login: Login
