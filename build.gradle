@@ -83,7 +83,7 @@ compileTestKotlin {
 
 // Integration Tests on TestContainers
 sourceSets {
-    integrationTest {
+    integrationTestNew {
         java.srcDir file('src/integration-test/kotlin')
         resources.srcDir file('src/integration-test/resources')
         compileClasspath += sourceSets.main.output + sourceSets.test.output + configurations.testCompile
@@ -91,16 +91,16 @@ sourceSets {
     }
 }
 
-task integrationTest(type: Test) {
+task integrationTestNew(type: Test) {
     group 'Verification'
     description 'Run the new integration tests on TestContainers.'
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    testClassesDirs = sourceSets.integrationTestNew.output.classesDirs
+    classpath = sourceSets.integrationTestNew.runtimeClasspath
 }
 
-// check.dependsOn integrationTest
+// check.dependsOn integrationTestNew
 
-integrationTest {
+integrationTestNew {
     useJUnitPlatform()
 }
 
@@ -144,7 +144,7 @@ test {
     }
 }
 
-task integrationTestOld(type: Test) { task ->
+task integrationTest(type: Test) { task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
         options.includeTags "integration-test"
     }
