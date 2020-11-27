@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: test
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+#    url: jdbc:tc:postgresql:///integration-db
+    url: jdbc:tc:postgresql:11-alpine://localhost:5432/databasename
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  batch:
+    initialize-schema: always

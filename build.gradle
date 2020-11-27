@@ -5,7 +5,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.spring"
     id "org.jetbrains.kotlin.plugin.jpa"
     id "org.jetbrains.kotlin.plugin.allopen"
-    id "org.jetbrains.kotlin.kapt"
     id "jacoco"
 }
 
@@ -17,6 +16,12 @@ allOpen {
 
 repositories {
     jcenter()
+}
+
+// Integration Tests
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 ext["mockito.version"] = "${mockitoVersion}"
@@ -63,6 +68,9 @@ dependencies {
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
 
+    testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+    testImplementation "org.testcontainers:postgresql:$testContainersVersion"
+    testImplementation "org.testcontainers:mockserver:$testContainersVersion"
 }
 
 compileKotlin {
@@ -77,6 +85,29 @@ compileTestKotlin {
         freeCompilerArgs = ["-Xjsr305=strict"]
         jvmTarget = "1.8"
     }
+}
+
+// Integration Tests on TestContainers
+sourceSets {
+    integrationTest {
+        java.srcDir file('src/integration-test/kotlin')
+        resources.srcDir file('src/integration-test/resources')
+        compileClasspath += sourceSets.main.output + sourceSets.test.output + configurations.testCompile
+        runtimeClasspath += sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
+    }
+}
+
+task integrationTest(type: Test) {
+    group 'Verification'
+    description 'Run the new integration tests on TestContainers.'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+// check.dependsOn integrationTest
+
+integrationTest {
+    useJUnitPlatform()
 }
 
 // --- ktlint - kotlin code style plugin ---
@@ -119,10 +150,11 @@ test {
     }
 }
 
-task integrationTest(type: Test) { task ->
+task integrationTestOld(type: Test) { task ->
     task.useJUnitPlatform { JUnitPlatformOptions options ->
         options.includeTags "integration-test"
     }
+    group 'Verification'
     task.shouldRunAfter tasks.test
 }
 
