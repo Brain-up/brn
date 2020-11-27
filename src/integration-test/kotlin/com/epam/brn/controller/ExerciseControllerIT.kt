@@ -8,14 +8,13 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import com.epam.brn.BaseIT
 import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 @ActiveProfiles("integration-tests")
-class ExerciseControllerIT : BaseIT() {
+class ExerciseControllerIT {
 
     @Autowired
     lateinit var mockMvc: MockMvc
