@@ -8,10 +8,9 @@ module('Integration | Helper | model-for-route', function(hooks) {
 
   // TODO: Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
 
-    await render(hbs`{{model-for-route inputValue}}`);
+    await render(hbs`{{model-for-route 'foo-bar'}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    assert.equal(this.element.textContent.trim(), '');
   });
 });
