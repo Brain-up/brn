@@ -18,12 +18,6 @@ repositories {
     jcenter()
 }
 
-// Integration Tests
-configurations {
-    integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
-}
-
 ext["mockito.version"] = "${mockitoVersion}"
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
