@@ -6,6 +6,7 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Signal
+import com.epam.brn.model.Gender
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
@@ -94,11 +95,12 @@ class InitialDataLoader(
         val password = passwordEncoder.encode("admin")
         val userAccount =
             UserAccount(
-                firstName = "admin",
-                lastName = "admin",
+                fullName = "admin",
                 password = password,
                 email = "admin@admin.com",
-                active = true
+                active = true,
+                bornYear = 1999,
+                gender = Gender.MALE.toString()
             )
         userAccount.authoritySet.addAll(setOf(adminAuthority))
         return userAccount
@@ -107,17 +109,19 @@ class InitialDataLoader(
     private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
         val password = passwordEncoder.encode("password")
         val firstUser = UserAccount(
-            firstName = "firstName",
-            lastName = "lastName",
+            fullName = "Name1",
             email = "default@default.ru",
             active = true,
+            bornYear = 1999,
+            gender = Gender.MALE.toString(),
             password = password
         )
         val secondUser = UserAccount(
-            firstName = "firstName2",
-            lastName = "lastName2",
+            fullName = "Name2",
             email = "default2@default.ru",
             active = true,
+            bornYear = 1999,
+            gender = Gender.FEMALE.toString(),
             password = password
         )
         firstUser.authoritySet.addAll(setOf(userAuthority))

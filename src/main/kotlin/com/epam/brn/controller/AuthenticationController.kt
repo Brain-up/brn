@@ -3,7 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.auth.AuthenticationService
 import com.epam.brn.dto.AuthOutDto
 import com.epam.brn.dto.request.LoginDto
-import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.UserAccountRequest
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
@@ -22,9 +22,9 @@ class AuthenticationController(val authenticationService: AuthenticationService)
     @PostMapping("/registration")
     @ApiOperation("New user registration")
     fun registration(
-        @Validated @RequestBody userAccountDto: UserAccountDto
+        @Validated @RequestBody userAccountRequest: UserAccountRequest
     ): ResponseEntity<AuthOutDto> {
-        val basicHeader = authenticationService.registration(userAccountDto)
+        val basicHeader = authenticationService.registration(userAccountRequest)
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(AuthOutDto(basicHeader))
