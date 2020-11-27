@@ -1,12 +1,12 @@
 import { attr } from '@ember-data/model';
 import BaseTask from '../task';
-import { computed } from '@ember/object';
 import shuffleArray from 'brn/utils/shuffle-array';
 import deepCopy from '../../utils/deep-copy';
+import { cached } from 'tracked-toolbox';
 
-function createTasks([first, ...tail], acc = []) {
-  const results = [];
-  const finalResults = [];
+function createTasks([first, ...tail]: Array<string[]>, acc: Array<string[]> = []): Array<string[]> {
+  const results: Array<string[]> = [];
+  const finalResults: Array<string[]> = [];
 
   first.forEach((i)=>{
     results.push([i]);
@@ -24,47 +24,51 @@ function createTasks([first, ...tail], acc = []) {
   return acc.length ? finalResults : results;
 }
 
-export default class WordsSequences extends BaseTask.extend({
-  template: attr('string'),
-  answerOptions: attr(),
-  wrongAnswers: attr('array'),
-  exerciseType: 'words-sequences',
-  selectedItemsOrder: computed('template', function() {
+export default class WordsSequences extends BaseTask {
+  @attr('string') template!: string;
+  @attr() answerOptions!: string;
+  @attr('array') wrongAnswers!: any;
+  exerciseType = 'words-sequences';
+  @cached
+  get selectedItemsOrder() {
     return this.template
       .split('<')[1]
       .split('>')[0]
       .split(' ');
-  }),
-  // eslint-disable-next-line ember/require-computed-property-dependencies
-  possibleTasks: computed('answerOptions.[]', function() {
+  };
+  @cached
+  get possibleTasks() {
     const options = Object.keys(this.answerOptions);
     const taskPartsOptions = this.selectedItemsOrder.filter((key)=>options.includes(key)).map(
       (orderItemName) => this.answerOptions[orderItemName] || [],
     );
     return shuffleArray(createTasks(taskPartsOptions));
-  }),
-  doubledTasks: computed('possibleTasks.[]', function() {
+  }
+  @cached
+  get doubledTasks() {
     return [].concat(
       deepCopy(this.possibleTasks),
       deepCopy(this.possibleTasks),
     );
-  }),
-  tasksSequence: computed('doubledTasks.[]', function() {
+  }
+  @cached
+  get tasksSequence() {
     return shuffleArray(this.doubledTasks).map((item, index) => {
       return {
         answer: [...item],
         order: index,
       };
     });
-  }),
-  tasksToSolve: computed('wrongAnswers.[]', 'tasksSequence.[]', function() {
+  }
+  @cached
+  get tasksToSolve() {
     return this.tasksSequence.concat(
-      this.wrongAnswers.map((wrongAnswer, index) => {
+      this.wrongAnswers.map((wrongAnswer: any, index: number) => {
         return {
           ...wrongAnswer,
           order: this.tasksSequence.length + index,
         };
       }),
     );
-  }),
-}) {}
+  }
+}
