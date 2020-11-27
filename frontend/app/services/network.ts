@@ -35,9 +35,10 @@ function toLatestUserDto(user: UserDTO): LatestUserDTO {
 }
 
 function fromLatestUserDto(user: LatestUserDTO): UserDTO {
+  const [ firstName = '', lastName = '']  = (user.name || '').split(' ');
   return {
-    firstName: user.name.split(' ')[0],
-    lastName: user.name.split(' ')[1],
+    firstName: firstName || '',
+    lastName: lastName || '',
     email: user.email,
     birthday: new Date().setFullYear(user.bornYear).toString(),
     id: user.id as string
