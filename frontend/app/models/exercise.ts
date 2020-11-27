@@ -52,6 +52,9 @@ export default class Exercise extends CompletionDependent  {
   get parent() {
     return this.series;
   }
+  set parent(value) {
+    this.set('series', value);
+  }
   @attr('date') startTime!: Date;
   @attr('date') endTime!: Date;
   @attr() noise!: {

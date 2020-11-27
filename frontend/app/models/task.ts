@@ -37,6 +37,9 @@ export default class Task extends CompletionDependent {
   get parent() {
     return this.exercise;
   }
+  set parent(value) {
+    this.set('exercise', value);
+  }
   get pauseExecution() {
     return this.studyingTimer.isPaused;
   }

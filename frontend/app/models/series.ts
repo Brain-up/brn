@@ -13,6 +13,9 @@ export default class Series extends Model {
   get parent() {
     return this.group;
   }
+  set parent(value) {
+    this.set('group', value);
+  }
   get sortedExercises() {
     return this.exercises.sortBy('order');
   }
