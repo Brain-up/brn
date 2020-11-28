@@ -6,6 +6,7 @@ import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
 import Exercise from 'brn/models/exercise';
 import Ember from 'ember';
+
 export default class GroupSeriesController extends Controller {
   @service('network') network!: NetworkService;
   queryParams = ['name']

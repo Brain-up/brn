@@ -12,14 +12,14 @@ export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
   }
 
   redirect(group: GroupModel, { to } : { to: { name: string}}) {
-    if (!group.get('sortedSeries.firstObject')) {
+    if (!group.sortedSeries?.length) {
       this.transitionTo('groups');
     }
-    if (to.name === 'group.index' && group.get('sortedSeries.firstObject')) {
+    if (to.name === 'group.index' && group.sortedSeries?.length) {
       this.transitionTo(
         'group.series.index',
         group.id,
-        group.get('sortedSeries.firstObject.id'),
+        group.sortedSeries[0].id,
       );
     }
   }
