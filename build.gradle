@@ -63,7 +63,6 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:postgresql:$testContainersVersion"
-//    testImplementation "org.testcontainers:mockserver:$testContainersVersion"
 }
 
 compileKotlin {
