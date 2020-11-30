@@ -13,15 +13,10 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -29,16 +24,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
+import java.util.Date
 import kotlin.random.Random
 import kotlin.test.assertEquals
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
-@Tag("integration-test")
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-class StudyHistoryIT {
+class StudyHistoryIT : BaseIT() {
 
     private val baseUrl = "/study-history"
 
@@ -56,9 +49,6 @@ class StudyHistoryIT {
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
 
     @AfterEach
     fun deleteAfterTest() {
@@ -133,7 +123,7 @@ class StudyHistoryIT {
     }
 
     @Test
-    fun `test today timer for current user`() {
+    fun `test repo day timer for user`() {
         // GIVEN
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
@@ -156,7 +146,8 @@ class StudyHistoryIT {
                 )
             )
         // WHEN
-        val result = existingUser.id?.let { studyHistoryRepository.getDayTimer(it, LocalDate.now()) }
+        val result = existingUser.id?.let { studyHistoryRepository
+            .getDayTimer(it, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())) }
         // THEN
         assertEquals(488, result)
     }

@@ -4,35 +4,21 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@Disabled
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
-@Tag("integration-test")
-@WithMockUser(username = "admin", roles = ["ADMIN"])
-class GroupControllerIT {
+@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+class GroupControllerIT : BaseIT() {
 
     private val baseUrl = "/groups"
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
 
     @AfterEach
     fun deleteAfterTest() {
@@ -42,9 +28,9 @@ class GroupControllerIT {
     @Test
     fun `test get all groups`() {
         // GIVEN
-        val exerciseGroupName1 = "SOMEGROUPNAME1"
+        val exerciseGroupName1 = "GroupName1"
         val existingExerciseGroup1 = insertExerciseGroup(exerciseGroupName1)
-        val exerciseGroupName2 = "SOMEGROUPNAME2"
+        val exerciseGroupName2 = "GroupName2"
         val existingExerciseGroup2 = insertExerciseGroup(exerciseGroupName2)
         // WHEN
         val resultAction = mockMvc.perform(
@@ -64,7 +50,7 @@ class GroupControllerIT {
     @Test
     fun `test get group by Id`() {
         // GIVEN
-        val exerciseGroupName = "SOMEGROUPNAME"
+        val exerciseGroupName = "GroupName"
         val existingExerciseGroup = insertExerciseGroup(exerciseGroupName)
         // WHEN
         val resultAction = mockMvc.perform(
@@ -80,7 +66,7 @@ class GroupControllerIT {
         assertTrue(response.contains(existingExerciseGroup.name))
     }
 
-    fun insertExerciseGroup(exerciseGroupName: String): ExerciseGroup {
+    private fun insertExerciseGroup(exerciseGroupName: String): ExerciseGroup {
         return exerciseGroupRepository.save(
             ExerciseGroup(
                 id = 0,
