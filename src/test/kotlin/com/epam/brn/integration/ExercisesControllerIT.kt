@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.Gender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
@@ -14,29 +15,19 @@ import com.epam.brn.repo.UserAccountRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.random.Random
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
-@Tag("integration-test")
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-class ExercisesControllerIT {
+class ExercisesControllerIT : BaseIT() {
 
     private val baseUrl = "/exercises"
 
@@ -54,9 +45,6 @@ class ExercisesControllerIT {
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
 
     @AfterEach
     fun deleteAfterTest() {
@@ -156,9 +144,9 @@ class ExercisesControllerIT {
     private fun insertUser(): UserAccount {
         return userAccountRepository.save(
             UserAccount(
-                firstName = "testUserFirstName",
-                lastName = "testUserLastName",
-                birthday = LocalDate.now(),
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
                 email = "test@test.test",
                 password = "password",
                 active = true

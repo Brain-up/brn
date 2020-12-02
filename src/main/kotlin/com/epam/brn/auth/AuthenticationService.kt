@@ -1,9 +1,9 @@
 package com.epam.brn.auth
 
-import com.epam.brn.dto.LoginDto
-import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.LoginDto
+import com.epam.brn.dto.request.UserAccountRequest
 
 interface AuthenticationService {
     fun login(loginDto: LoginDto): String
-    fun registration(userAccountDto: UserAccountDto): String
+    fun registration(userAccountRequest: UserAccountRequest): String
 }

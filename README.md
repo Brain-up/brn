@@ -56,7 +56,16 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ## FRONT END DEVELOPMENT
 
-### START YOUR FRONT END DEVELOPMENT SERVER
+### START YOUR FRONT Angular Part - admin application
+go to location where the project is download for example C:\brn\brn\frontend-angular
+1. run first time
+`npm install`
+2. update proxy: open file proxy.conf.json and change target for local development. Do not commit this changes
+"http://localhost:8081" -> "http://audibly.ru"
+3. run to start angular part
+`npm run start`
+
+### START YOUR FRONT END EMBER PART - user application
 Run following commands:
 linux/mac:
 ``` 
@@ -69,51 +78,46 @@ for windows:
 FE dev server now accessible at http://localhost:4200/
 
 ### GET DATABASE RUNNING
+1. Install docker to your machine.
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
-To install docker:
+To install docker use:
 * [on windows](https://docs.docker.com/docker-for-windows/install/)
 * [on mac](https://docs.docker.com/docker-for-mac/install/)
-* [oubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [on ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 * [debian](https://docs.docker.com/install/linux/docker-ce/debian/)
 * [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
 
-To run docker use the following command:
+2.1 To run docker db image use the following command:
 *  on linux:
 `docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
 * on windows: 
 `docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
-
 _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
-Alternatively, you can just replace the variables by "admin", the default user and password for development:
+
+2.2 Alternatively, you can just replace the variables by "admin", the default user and password for development:
 _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11_
 
 ### GET THE BACKEND PROJECT RUNNING
 1. Run command 'gradle build' from main project folder to build project with tests.
-2. Application.kt is the main class to run application.
-3. http://localhost:8081/api/brnlogin use admin@admin.com / admin 
-then you can call all other end-points like
-http://localhost:8081/api/exercises/142
+2. Application.kt is the main class to run application from Idea for example.
+3. on first running in application.properties set `spring.jpa.hibernate.ddl-auto=create`
+it would create db first time. and if you would not delete db image - structure will saved on second run with `spring.jpa.hibernate.ddl-auto=validate`
+4. post http://localhost:8081/api/brnlogin use in body
+{
+  "grant_type": "password",
+  "username": "admin@admin.com",
+  "password": "admin"
+}
+5. then you can call all other end-points like
+http://localhost:8081/api/exercises/142 
+end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
+6. for logout use http://localhost:8081/api/logout
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
-### CREATING BRANCHES
-Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
-
-## BACK END DEVELOPMENT 
-
-### START BACKEND from IDEA
-just run Application.kt after launching database in docker.
-
-### Code style
-- Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
-- Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
-- Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
-- It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
-- Please note that if `gradlew ktlint` task fails, project build will fail also.
-
-## DEPLOY USING DOCKER COMPOSE
+## DEPLOY Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE
 1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
 2. From console, from project's folder, execute:
 ```bash
@@ -137,7 +141,16 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project mantainer. 
-# 7. check that build job on jenkins passes successfully.
+7. check that build job on jenkins passes successfully.
+
+### Code style
+- Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
+- Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
+- Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
+- It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
+- Please note that if `gradlew ktlint` task fails, project build will fail also.
+### CREATING BRANCHES
+Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
 
 ### Thank you very much for your support!
 

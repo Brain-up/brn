@@ -1,10 +1,13 @@
 import { belongsTo, hasMany, attr } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
-import { reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { inject as service } from '@ember/service';
 import { IStatsExerciseStats } from "brn/services/stats";
+import Session from 'ember-simple-auth/services/session';
+import SeriesModel from './series';
+import SignalModel from './signal';
+import TaskModel from 'brn/models/task';
+import { cached } from 'tracked-toolbox';
 
 export interface IStatsObject {
   countedSeconds: number,
@@ -28,69 +31,75 @@ interface IStatsSaveDTO {
   replaysCount: number,
   wrongAnswers: number
 }
-export default class Exercise extends CompletionDependent.extend({
-  session: service('session'),
-  name: attr('string'),
-  available: attr('boolean'),
-  description: attr('string'),
-  level: attr('number'),
-  pictureUrl: attr('string'),
-  order: attr('number'),
-  exerciseType: attr('string'),
-  series: belongsTo('series', { async: true }),
-  signals: hasMany('signal', { async: false }),
-  tasks: hasMany('task', { async: true }),
-  children: reads('tasks'),
-  parent: reads('series'),
-  startTime: attr('date'),
-  endTime: attr('date'),
-  noise: attr(''),
+export default class Exercise extends CompletionDependent  {
+  @service('session') session!: Session;
+  @attr('string') name!: string;
+  @attr('boolean') available!: boolean;
+  @attr('string') description!: string;
+  @attr('number') level!: number;
+  @attr('string') pictureUrl!: string;
+  @attr('number') order!: number;
+  // @todo - add enum
+  @attr('string') exerciseType!: string;
+  @belongsTo('series', { async: true }) series!: SeriesModel;
+  @hasMany('signal', { async: false }) signals!: SignalModel[];
+  @hasMany('task', { async: true }) tasks!: TaskModel[];
+  // @ts-ignore
+  get children() {
+    return this.tasks;
+  }
+  // @ts-ignore
+  get parent() {
+    return this.series;
+  }
+  set parent(value) {
+    this.set('series', value);
+  }
+  @attr('date') startTime!: Date;
+  @attr('date') endTime!: Date;
+  @attr() noise!: {
+    level?: number,
+    url?: string
+  }
   get noiseLevel() {
     return this.noise?.level || 0;
-  },
+  }
   get noiseUrl() {
     return this.noise?.url || null;
-  },
-  sortedTasks: reads('sortedChildren'),
-  // eslint-disable-next-line ember/require-computed-property-dependencies
-  previousSiblings: computed('series.groupedByNameExercises', function () {
+  }
+  get sortedTasks() {
+    return this.sortedChildren;
+  }
+  @cached
+  get previousSiblings() {
     return arrayPreviousItems(
       this,
-      // eslint-disable-next-line ember/no-get
+      // @ts-ignore
       this.get('series.groupedByNameExercises')[this.name],
     );
-  }),
-  // eslint-disable-next-line ember/require-computed-property-dependencies
-  isCompleted: computed(
-    'tasks.@each.isCompleted',
-    'previousSiblings.@each.isCompleted',
-    'tasksManager.completedTasks.[]',
-    function () {
-      const tasksIds = this.hasMany('tasks').ids();
-      const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
-      const tasksCompleted = tasksIds.every((taskId) =>
-        completedTaskIds.includes(taskId),
-      );
-      return (
-        (!tasksIds.length && (this.isFirst || this.canInteract)) ||
-        tasksCompleted
-      );
-    },
-  ),
-  siblingExercises: computed('series.sortedExercises.[]', function () {
+  }
+  @cached
+  get isCompleted() {
+    // @ts-ignore
+    const tasksIds = this.hasMany('tasks').ids();
+    const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
+    const tasksCompleted = tasksIds.every((taskId) =>
+      completedTaskIds.includes(taskId),
+    );
+    return (
+      (!tasksIds.length && (this.isFirst || this.canInteract)) ||
+      tasksCompleted
+    );
+  }
+  get siblingExercises() {
     return this.series.get('sortedExercises') || [];
-  }),
-  nextSiblings: computed('siblingExercises.[]', function () {
+  };
+  get nextSiblings() {
     return this.siblingExercises.slice(this.siblingExercises.indexOf(this) + 1);
-  }),
+  };
   get isStarted() {
     return this.startTime && !this.endTime;
-  },
-  trackTime(type = 'start') {
-    if (type === 'start' || type === 'end') {
-      this.set(`${type}Time`, new Date());
-    }
-  },
+  };
   get stats() {
     const { startTime, endTime, id } = this;
 
@@ -99,12 +108,18 @@ export default class Exercise extends CompletionDependent.extend({
       endTime,
       exerciseId: id
     };
-  },
+  }
+  trackTime(type = 'start') {
+    if (type === 'start' || type === 'end') {
+      // @ts-expect-error
+      this.set(`${type}Time`, new Date());
+    }
+  }
   calcStats(data: IStatsExerciseStats | undefined): IStatsObject {
     if (!data) {
       throw new Error('unable calculate exercise stats');
     }
-    const { stats } = this;
+    const { stats }: { stats: any } = this;
     stats.tasksCount = data.rightAnswersCount - data.repeatsCount;
     stats.rightAnswersCount = data.rightAnswersCount;
     stats.listeningsCount = data.playsCount;
@@ -123,7 +138,7 @@ export default class Exercise extends CompletionDependent.extend({
     }
 
     return stats;
-  },
+  }
   async postHistory(data: IStatsExerciseStats) {
     const stats: IStatsObject = this.calcStats(data);
     const newStats: IStatsSaveDTO = {
@@ -143,9 +158,11 @@ export default class Exercise extends CompletionDependent.extend({
       },
       body: JSON.stringify({
         ...newStats,
-        // eslint-disable-next-line ember/no-get
+        // @ts-expect-error
         userId: this.get('session.data.user.id') || null
       }),
     });
-  },
-}) { }
+  }
+}
+
+

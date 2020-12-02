@@ -17,7 +17,7 @@ import kotlin.test.assertTrue
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Tag("integration-test")
-@Disabled
+@Disabled("as it is write only for testing locally")
 internal class AudioFilesGenerationServiceIT {
 
     @Autowired

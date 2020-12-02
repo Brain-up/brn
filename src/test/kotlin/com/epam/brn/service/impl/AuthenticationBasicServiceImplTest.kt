@@ -1,8 +1,9 @@
 package com.epam.brn.service.impl
 
 import com.epam.brn.auth.AuthenticationBasicServiceImpl
-import com.epam.brn.dto.LoginDto
-import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.LoginDto
+import com.epam.brn.dto.request.UserAccountRequest
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -38,7 +39,10 @@ internal class AuthenticationBasicServiceImplTest {
         // GIVEN
         val authenticationMock = mock(Authentication::class.java)
         `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
-        val loginDto = LoginDto(username = "testUser".toLowerCase(), password = "testPassword")
+        val loginDto = LoginDto(
+            username = "testUser".toLowerCase(),
+            password = "testPassword"
+        )
         val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
         // WHEN
         val actualResult = authenticationBasicServiceImpl.login(loginDto)
@@ -63,8 +67,8 @@ internal class AuthenticationBasicServiceImplTest {
         // GIVEN
         val email = "testUser".toLowerCase()
         val passw = "testPassword"
-        val userAccountDto = mock(UserAccountDto::class.java)
-        val savedUserAccountDto = mock(UserAccountDto::class.java)
+        val userAccountDto = mock(UserAccountRequest::class.java)
+        val savedUserAccountDto = mock(UserAccountResponse::class.java)
         val authenticationMock = mock(Authentication::class.java)
         lenient().`when`(userAccountDto.email).thenReturn(email)
         lenient().`when`(userAccountDto.password).thenReturn(passw)
@@ -84,7 +88,7 @@ internal class AuthenticationBasicServiceImplTest {
         // GIVEN
         val email = "testUser".toLowerCase()
         val passw = "testPassword"
-        val userAccountDto = mock(UserAccountDto::class.java)
+        val userAccountDto = mock(UserAccountRequest::class.java)
         lenient().`when`(userAccountDto.email).thenReturn(email)
         lenient().`when`(userAccountDto.password).thenReturn(passw)
         lenient().`when`(userAccountService.addUser(userAccountDto)).thenThrow(BadCredentialsException::class.java)

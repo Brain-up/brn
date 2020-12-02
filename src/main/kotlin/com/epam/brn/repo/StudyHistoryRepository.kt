@@ -7,7 +7,6 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.sql.Date
-import java.time.LocalDate
 
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
@@ -46,16 +45,16 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " WHERE (s.userAccount.id, s.exercise.id, s.startTime) " +
             " IN (SELECT userAccount.id, exercise.id, max(startTime) " +
             "       FROM StudyHistory " +
-            "       GROUP BY exercise.id " +
+            "       GROUP BY exercise.id, userAccount.id " +
             "       HAVING userAccount.id = :userId and exercise.id in (:exerciseIds))"
     )
     fun findLastByUserAccountIdAndExercises(userId: Long, exerciseIds: List<Long>): List<StudyHistory>
 
-    @Query("SELECT COALESCE(sum(COALESCE(s.executionSeconds, 0)), 0) FROM StudyHistory s " +
-            " WHERE date_trunc('day', :day) = date_trunc('day', s.startTime)" +
+    @Query("SELECT COALESCE(sum(s.executionSeconds), 0) FROM StudyHistory s " +
+            " WHERE date_trunc('day', s.startTime) = :day" +
             " AND s.userAccount.id = :userId"
     )
-    fun getDayTimer(userId: Long, day: LocalDate): Int
+    fun getDayTimer(userId: Long, day: java.util.Date): Int
 
     @Query("SELECT COALESCE(sum(COALESCE(s.executionSeconds, 0)), 0) FROM StudyHistory s " +
             " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime)" +

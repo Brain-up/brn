@@ -8,16 +8,17 @@ module('Unit | Model | completion dependent', function(hooks) {
     let store = this.owner.lookup('service:store');
     const children = [
       {
+        isManuallyCompleted: true,
         isCompleted: true,
       },
       {
-        isCompleted: true,
+        isManuallyCompleted: true,
+        isCompleted: true
       },
     ];
     let taskManager = this.owner.lookup('service:tasks-manager');
-
     children.forEach((item) => taskManager.saveAsCompleted(item));
-    
+
     let model = store.createRecord('completion-dependent', { children });
     assert.ok(model.isCompleted, 'is true');
   });
@@ -27,13 +28,13 @@ module('Unit | Model | completion dependent', function(hooks) {
     let parent = store.createRecord('completion-dependent', {});
     const children = [
       {
-        isCompleted: true,
+        isManuallyCompleted: true,
       },
       {
-        isCompleted: false,
+        isManuallyCompleted: false,
       },
       {
-        isCompleted: false,
+        isManuallyCompleted: false,
       },
     ].map((childData) =>
       store.createRecord('completion-dependent', { ...childData, parent }),
@@ -56,15 +57,15 @@ module('Unit | Model | completion dependent', function(hooks) {
     let parent = store.createRecord('completion-dependent');
     const children = [
       {
-        isCompleted: true,
+        isManuallyCompleted: true,
         order: 1,
       },
       {
-        isCompleted: false,
+        isManuallyCompleted: false,
         order: 2,
       },
       {
-        isCompleted: false,
+        isManuallyCompleted: false,
         order: 3,
       },
     ].map((childData) =>

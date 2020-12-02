@@ -5,7 +5,6 @@ plugins {
     id "org.jetbrains.kotlin.plugin.spring"
     id "org.jetbrains.kotlin.plugin.jpa"
     id "org.jetbrains.kotlin.plugin.allopen"
-    id "org.jetbrains.kotlin.kapt"
     id "jacoco"
 }
 
@@ -43,7 +42,6 @@ dependencies {
 
     implementation "io.springfox:springfox-swagger-ui:2.10.5"
     implementation "io.springfox:springfox-swagger2:2.9.2"
-    testRuntimeOnly "com.h2database:h2"
 
     implementation 'com.amazonaws:aws-java-sdk:1.11.808'
     implementation 'com.google.cloud:google-cloud-storage:1.110.0'
@@ -51,7 +49,6 @@ dependencies {
     implementation 'khttp:khttp:1.0.0'
     implementation 'net.bramp.ffmpeg:ffmpeg:0.6.2'
 
-    def spek_version = '2.0.10'
     testImplementation 'org.amshove.kluent:kluent:1.61'
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -63,6 +60,9 @@ dependencies {
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
 
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+    testImplementation "org.testcontainers:postgresql:$testContainersVersion"
 }
 
 compileKotlin {
@@ -119,16 +119,10 @@ test {
     }
 }
 
-task integrationTest(type: Test) { task ->
-    task.useJUnitPlatform { JUnitPlatformOptions options ->
-        options.includeTags "integration-test"
-    }
-    task.shouldRunAfter tasks.test
-}
-
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
 
@@ -140,4 +134,13 @@ tasks.jacocoTestReport {
         html.destination = file(getBuildDir().toString() + File.separator.toString() + "jacoco" + File.separator.toString() + "html")
     }
     getExecutionData().setFrom("$buildDir/jacoco/test.exec")
+}
+
+task integrationTest(type: Test) { task ->
+    task.useJUnitPlatform { JUnitPlatformOptions options ->
+        options.includeTags "integration-test"
+    }
+    task.shouldRunAfter tasks.test
+    group 'Verification'
+    description 'Runs the integration tests on Postgres Test Container.'
 }

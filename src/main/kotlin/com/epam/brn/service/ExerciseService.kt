@@ -50,11 +50,6 @@ class ExerciseService(
         return findExercisesByUserIdAndSeries(currentUser.id!!, seriesId, withAvailability)
     }
 
-    fun findExercisesByNameForCurrentUser(exerciseName: String): List<ExerciseDto> {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
-        return findExercisesByNameAndUserId(currentUser.id!!, exerciseName)
-    }
-
     fun findExercisesByUserIdAndSeries(userId: Long, seriesId: Long, withAvailability: Boolean): List<ExerciseDto> {
         log.info("Searching exercises for user=$userId with series=$seriesId, withAvailability=$withAvailability")
         val allExercises = exerciseRepository.findExercisesBySeriesId(seriesId)
@@ -66,6 +61,20 @@ class ExerciseService(
         return emptyIfNull(allExercises).map { exercise ->
             updateNoiseUrl(exercise.toDto(openExercises.contains(exercise)))
         }
+    }
+
+    fun getExercisesByIds(exerciseIds: List<Long>): List<Long> {
+        if (exerciseIds.isEmpty()) return emptyList()
+        val exercise = exerciseRepository.findById(exerciseIds[0])
+        if (!exercise.isPresent) throw EntityNotFoundException("There is no one exercise with id = ${exerciseIds[0]}")
+        return findExercisesByNameForCurrentUser(exercise.get().name)
+            .filter(ExerciseDto::available)
+            .map { e -> e.id!! }
+    }
+
+    fun findExercisesByNameForCurrentUser(exerciseName: String): List<ExerciseDto> {
+        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        return findExercisesByNameAndUserId(currentUser.id!!, exerciseName)
     }
 
     fun findExercisesByNameAndUserId(userId: Long, exerciseName: String): List<ExerciseDto> {
@@ -107,7 +116,8 @@ class ExerciseService(
                         available.addAll(currentDone)
                         return@forEach
                     }
-                    val repetitionIndex = lastHistory[0].tasksCount.toFloat() / (lastHistory[0].replaysCount + lastHistory[0].tasksCount)
+                    val repetitionIndex =
+                        lastHistory[0].tasksCount.toFloat() / (lastHistory[0].replaysCount + lastHistory[0].tasksCount)
                     val rightAnswersIndex = 1F - lastHistory[0].wrongAnswers.toFloat() / lastHistory[0].tasksCount
                     if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat()) {
                         available.addAll(currentDone)

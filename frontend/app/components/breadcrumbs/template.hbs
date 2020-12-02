@@ -12,12 +12,21 @@
           {{group.name}}
         </LinkTo>
       </li>
-      {{#if @series}}
-        <li class="font-bold text-blue-900" data-test-series-breadcrumb>
-          <LinkTo @route="group.series" @models={{array group @series}}>
-            {{@series.name}}
-          </LinkTo>
-        </li>
+      {{#if (is-active "group.series")}}
+        {{#let (model-for-route "group.series") as |series|}}
+          <li class="font-bold text-blue-900" data-test-series-breadcrumb>
+            <LinkTo @route="group.series" @models={{array group series}} @query={{hash name=""}}>
+              {{series.name}}
+            </LinkTo>
+          </li>
+          {{#if this.groupSubname}}
+            <li class="font-bold text-blue-900" data-test-series-breadcrumb>
+              <LinkTo @route="group.series" @models={{array group series}}>
+                {{this.groupSubname}}
+              </LinkTo>
+            </li>
+          {{/if}}
+        {{/let}}
       {{/if}}
     </ul>
   {{/let}}

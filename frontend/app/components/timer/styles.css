@@ -1,8 +1,11 @@
 /*! purgecss start ignore */
 
 .timer-wrapper {
-   margin-top: -10px;
-}
+ display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 20px;
+ }
 
 .clock-svg {
   min-width: 40px; 

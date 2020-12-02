@@ -14,22 +14,14 @@ import com.epam.brn.service.WordsService
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
-@Tag("integration-test")
-class CsvLoadingTestIT {
+class CsvLoadingTestIT : BaseIT() {
 
     @TestConfiguration
     class Config {
