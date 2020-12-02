@@ -13,15 +13,25 @@ login_form:
   forgot_password: Забыли свой пароль?
 
 registration_form:
-  birthday: Дата рождения
+  birthday: Год рождения
+  birthday_placeholder: ГГГГ
   email: Почта
+  email_placeholder: Name@name.com
   warning_input_restriction: Максимальное количество символов
   invalid_date: Некорректная дата
   warning_enter_credentials: Пожалуйста, введите логин и пароль.
+  gender: Пол
+  gender_female: Женский
+  gender_male: Мужской
   name: Имя
+  name_placeholder: Мария
   password: Пароль
-  registration: Регистрация
-  sign_in: Вход
+  password_placeholder: Не менее 8 символов
+  registration_hover: РЕГИСТРАЦИЯ
+  registration: ЗАРЕГИСТРИРОВАТЬСЯ
+  agreement_part1: Я принимаю условия
+  agreement_part2: пользовательского соглашения
+  sign_in: ВОЙТИ
   surname: Фамилия
   email_exists: Пользователь с такой почтой уже зарегистрирован
 

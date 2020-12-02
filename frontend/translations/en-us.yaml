@@ -7,19 +7,29 @@ login_form:
   error_bad_credentials: Incorrect login or password
   login: Login
   password: Password
-  registration: Registration
+  registration:  Registration
   sign_in: Sign in
   warning_enter_credentials: Please enter your login and password
   forgot_password: Forgot your password?
 
 registration_form:
-  birthday: Birthday
+  birthday: Year of birth
+  birthday_placeholder: YYYY
   email: Email
+  email_placeholder: Name@name.com
   invalid_date: Invalid date
+  gender: Gender
+  gender_female: Female
+  gender_male: Male
   name: Name
+  name_placeholder: Mary
   password: Password
-  registration: Registration
-  sign_in: Sign in
+  password_placeholder: At least 8 characters
+  registration_hover: REGISTRATION
+  registration: REGISTRATION
+  agreement_part1: I accept the terms
+  agreement_part2: of the user agreement
+  sign_in: SIGN IN
   surname: Surname
   warning_enter_credentials: Please enter your login and password
   warning_input_restriction: Maximum number of characters
