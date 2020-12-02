@@ -1,14 +1,49 @@
-<div class={{style-namespace "timer"}} ...attributes {{did-insert this.onInsert}} {{will-destroy this.onDestroy}}>
+<div
+  class={{style-namespace "timer"}}
+  ...attributes
+  {{did-insert this.onInsert}}
+  {{will-destroy this.onDestroy}}
+>
   <div
+    class="timer-wrapper"
     data-test-timer-wrapper
     data-test-timer-is-paused={{this.isPaused}}
-    class="timer-wrapper font-semibold text-red-400"
   >
-    <span data-test-timer-display-value>
+    <svg
+      class="clock-svg"
+      width="40"
+      version="1.1"
+      id="Layer_1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      x="0px"
+      y="0px"
+      viewBox="0 0 512 512"
+      xml:space="preserve"
+    >
+      <style type="text/css">
+        .st0{fill:#F9C900;}
+	.st1{fill:#FFFFFF;}
+      </style>
+      <path
+        class="st0"
+        d="M256,512C114.8,512,0,397.2,0,256S114.8,0,256,0s256,114.8,256,256S397.2,512,256,512z"
+      ></path>
+      <path
+        class="st1"
+        d="M364,384.7c-4.1,0-8.2-1.6-11.3-4.7l-112-112c-3-3-4.7-7.1-4.7-11.3V107.3c0-8.8,7.2-16,16-16s16,7.2,16,16V250
+	l107.3,107.3c6.3,6.3,6.3,16.4,0,22.6C372.2,383.1,368.1,384.7,364,384.7z"
+      ></path>
+    </svg>
+    <span class="timer font-bold" data-test-timer-display-value>
       {{this.displayValue}}
     </span>
     {{#unless @hideControls}}
-      <button {{on "click" this.studyingTimer.togglePause}} type="button">
+      <button
+        class="block ml-16"
+        type="button"
+        {{on "click" this.studyingTimer.togglePause}}
+      >
         {{#if (or this.isPaused (not this.isStarted))}}
           <FaIcon @icon="play-circle" />
         {{else}}
