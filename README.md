@@ -14,7 +14,7 @@ Our current domain : http://brainup.ru && http://31.184.253.199/  (test user def
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
 - https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html (only for epamers)
-- https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html  
+- https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html (only for epamers)
  
 ## WHY JOIN OUR PROJECT AS A DEVELOPER?
 We use latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. We will review your code, give you advice to improve it and listen to your suggestions. 
