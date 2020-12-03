@@ -1,4 +1,4 @@
-package com.epam.brn.repo
+package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Task
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE

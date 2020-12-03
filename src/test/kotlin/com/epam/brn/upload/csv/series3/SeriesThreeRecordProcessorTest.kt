@@ -5,11 +5,13 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -27,6 +29,7 @@ internal class SeriesThreeRecordProcessorTest {
 
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
+    private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val wordsServiceMock = mock(WordsService::class.java)
 
@@ -34,6 +37,8 @@ internal class SeriesThreeRecordProcessorTest {
 
     private val series = Series(
         id = 3L,
+        type = "type",
+        level = 1,
         name = "Распознавание предложений",
         description = "Распознавание предложений",
         exerciseGroup = ExerciseGroup(
@@ -43,12 +48,19 @@ internal class SeriesThreeRecordProcessorTest {
         )
     )
 
+    private val subGroup = SubGroup(
+        series = series,
+        level = 1,
+        code = "code",
+        name = "subGroup name"
+    )
+
     @BeforeEach
     internal fun setUp() {
         seriesThreeRecordProcessor = SeriesThreeRecordProcessor(
             resourceRepositoryMock,
             exerciseRepositoryMock,
-            seriesRepositoryMock,
+            subGroupRepositoryMock,
             wordsServiceMock
         )
 
@@ -79,7 +91,7 @@ internal class SeriesThreeRecordProcessorTest {
                 SeriesThreeRecord(
                     level = 1,
                     exerciseName = "Распознавание предложений из 2 слов",
-                    orderNumber = 1,
+                    code = "code",
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
@@ -99,7 +111,7 @@ internal class SeriesThreeRecordProcessorTest {
                 SeriesThreeRecord(
                     level = 1,
                     exerciseName = "Распознавание предложений из 2 слов",
-                    orderNumber = 1,
+                    code = "code",
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
@@ -118,7 +130,7 @@ internal class SeriesThreeRecordProcessorTest {
                 SeriesThreeRecord(
                     level = 1,
                     exerciseName = "Распознавание предложений из 2 слов",
-                    orderNumber = 1,
+                    code = "code",
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
@@ -141,7 +153,7 @@ internal class SeriesThreeRecordProcessorTest {
                 SeriesThreeRecord(
                     level = 1,
                     exerciseName = "Распознавание предложений из 2 слов",
-                    orderNumber = 1,
+                    code = "code",
                     words = listOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
                     answerAudioFile = "audio/ogg/filipp/девочка_бросает.ogg",
                     answerParts = "(девочка бросает)"
@@ -155,7 +167,7 @@ internal class SeriesThreeRecordProcessorTest {
 
     private fun createExercise(): Exercise {
         val exercise = Exercise(
-            series = series,
+            subGroup = subGroup,
             name = "Распознавание предложений из 2 слов",
             description = "Распознавание предложений из 2 слов",
             template = "<OBJECT OBJECT_ACTION>",

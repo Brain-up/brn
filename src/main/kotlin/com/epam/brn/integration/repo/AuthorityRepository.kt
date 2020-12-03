@@ -1,4 +1,4 @@
-package com.epam.brn.repo
+package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Authority
 import org.springframework.data.jpa.repository.JpaRepository

@@ -25,7 +25,7 @@ internal class CsvUploadServiceTest {
 
     @Test
     fun `should get exercise file format`() {
-        val expected = """level,pictureUrl,exerciseName,words,noiseLevel,noiseUrl
+        val expected = """level,code,exerciseName,words,noiseLevel,noiseUrl
 1,family,Семья,(сын ребёнок мама),0,
 2,family,Семья,(отец брат дедушка),0,
 3,family,Семья,(бабушка муж внучка),0,

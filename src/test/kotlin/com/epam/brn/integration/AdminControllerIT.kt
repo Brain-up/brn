@@ -6,12 +6,14 @@ import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.integration.repo.ExerciseGroupRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.StudyHistoryRepository
+import com.epam.brn.integration.repo.SubGroupRepository
+import com.epam.brn.integration.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,6 +42,9 @@ class AdminControllerIT : BaseIT() {
     lateinit var exerciseRepository: ExerciseRepository
 
     @Autowired
+    lateinit var subGroupRepository: SubGroupRepository
+
+    @Autowired
     lateinit var seriesRepository: SeriesRepository
 
     @Autowired
@@ -52,6 +57,7 @@ class AdminControllerIT : BaseIT() {
     fun deleteAfterTest() {
         studyHistoryRepository.deleteAll()
         exerciseRepository.deleteAll()
+        subGroupRepository.deleteAll()
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
@@ -60,12 +66,13 @@ class AdminControllerIT : BaseIT() {
     @Test
     fun `test repo get histories for user by period`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
         val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
         val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
@@ -89,12 +96,21 @@ class AdminControllerIT : BaseIT() {
                 )
             )
         // WHEN
-        val result = studyHistoryRepository.getHistories(existingUser.id!!,
+        val result = studyHistoryRepository.getHistories(
+            existingUser.id!!,
             java.sql.Date.valueOf(now.toLocalDate()),
-            java.sql.Date.valueOf(now.toLocalDate().plusDays(1)))
+            java.sql.Date.valueOf(now.toLocalDate().plusDays(1))
+        )
         // THEN
         assertEquals(4, result.size)
-        result.map { it.id }.containsAll(listOf(historyFirstExerciseOne.id, historyFirstExerciseTwo.id, historySecondExerciseOne.id, historySecondExerciseTwo.id))
+        result.map { it.id }.containsAll(
+            listOf(
+                historyFirstExerciseOne.id,
+                historyFirstExerciseTwo.id,
+                historySecondExerciseOne.id,
+                historySecondExerciseTwo.id
+            )
+        )
     }
 
     @Test
@@ -102,9 +118,11 @@ class AdminControllerIT : BaseIT() {
         // GIVEN
         val existingUser = insertUser()
         // WHEN
-        val result = studyHistoryRepository.getHistories(existingUser.id!!,
+        val result = studyHistoryRepository.getHistories(
+            existingUser.id!!,
             java.sql.Date.valueOf(LocalDate.now()),
-            java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
+            java.sql.Date.valueOf(LocalDate.now().plusDays(1))
+        )
         // THEN
         assertEquals(0, result.size)
     }
@@ -112,12 +130,13 @@ class AdminControllerIT : BaseIT() {
     @Test
     fun `test repo get month histories for user`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
         val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
@@ -133,21 +152,35 @@ class AdminControllerIT : BaseIT() {
                 )
             )
         // WHEN
-        val result = studyHistoryRepository.getMonthHistories(existingUser.id!!, LocalDate.now().monthValue, LocalDate.now().year)
+        val result = studyHistoryRepository.getMonthHistories(
+            existingUser.id!!,
+            LocalDate.now().monthValue,
+            LocalDate.now().year
+        )
         // THEN
         assertEquals(4, result.size)
-        assertTrue(result.map { it.id }.containsAll(listOf(historyFirstExerciseOne.id, historyFirstExerciseTwo.id, historySecondExerciseOne.id, historySecondExerciseTwo.id)))
+        assertTrue(
+            result.map { it.id }.containsAll(
+                listOf(
+                    historyFirstExerciseOne.id,
+                    historyFirstExerciseTwo.id,
+                    historySecondExerciseOne.id,
+                    historySecondExerciseTwo.id
+                )
+            )
+        )
     }
 
     @Test
     fun `test repo get today histories for user`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
         val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
@@ -166,18 +199,28 @@ class AdminControllerIT : BaseIT() {
         val result = studyHistoryRepository.getTodayHistories(existingUser.id!!)
         // THEN
         assertEquals(4, result.size)
-        assertTrue(result.map { it.id }.containsAll(listOf(historyFirstExerciseOne.id, historyFirstExerciseTwo.id, historySecondExerciseOne.id, historySecondExerciseTwo.id)))
+        assertTrue(
+            result.map { it.id }.containsAll(
+                listOf(
+                    historyFirstExerciseOne.id,
+                    historyFirstExerciseTwo.id,
+                    historySecondExerciseOne.id,
+                    historySecondExerciseTwo.id
+                )
+            )
+        )
     }
 
     @Test
     fun `test get histories for user by period`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
         val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
         val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
@@ -258,18 +301,24 @@ class AdminControllerIT : BaseIT() {
         )
         return seriesRepository.save(
             Series(
-                description = "desc",
+                type = "type",
+                level = 1,
                 name = "series",
-                exerciseGroup = exerciseGroup
+                exerciseGroup = exerciseGroup,
+                description = "desc"
             )
         )
     }
 
-    private fun insertExercise(exerciseName: String, series: Series): Exercise {
+    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
+        SubGroup(series = series, level = 1, code = "code", name = "subGroup name")
+    )
+
+    private fun insertExercise(exerciseName: String, subGroup: SubGroup): Exercise {
         return exerciseRepository.save(
             Exercise(
                 description = toString(),
-                series = series,
+                subGroup = subGroup,
                 level = 0,
                 name = exerciseName,
                 exerciseType = ExerciseType.WORDS_SEQUENCES.toString()

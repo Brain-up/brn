@@ -3,12 +3,12 @@ package com.epam.brn.upload.csv.series4
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
-import com.epam.brn.model.Series
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -20,7 +20,7 @@ import java.util.Random
 
 @Component
 class SeriesFourRecordProcessor(
-    private val seriesRepository: SeriesRepository,
+    private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
     private val wordsService: WordsService
@@ -58,12 +58,12 @@ class SeriesFourRecordProcessor(
     override fun process(records: List<SeriesFourRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
-        val series = seriesRepository.findById(4L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
             resourceRepository.saveAll(answerOptions)
 
-            val exercise = extractExercise(it, series)
+            val subGroup = subGroupRepository.findByCode(it.code)
+            val exercise = extractExercise(it, subGroup)
             exercise.addTask(generateOneTask(exercise, answerOptions))
 
             exerciseRepository.save(exercise)
@@ -104,14 +104,14 @@ class SeriesFourRecordProcessor(
 
     private fun toPhrasesWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun extractExercise(record: SeriesFourRecord, series: Series): Exercise {
+    private fun extractExercise(record: SeriesFourRecord, subGroup: SubGroup): Exercise {
         return exerciseRepository
             .findExerciseByNameAndLevel(record.exerciseName, record.level)
             .orElse(
                 Exercise(
-                    series = series,
+                    subGroup = subGroup,
                     name = record.exerciseName,
-                    pictureUrl = if (!record.pictureUrl.isNullOrEmpty()) String.format(pictureTheme, record.pictureUrl) else "",
+                    pictureUrl = if (!record.code.isNullOrEmpty()) String.format(pictureTheme, record.code) else "",
                     level = record.level,
                     noiseLevel = record.noiseLevel,
                     noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else "",

@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.integration.repo.SeriesRepository
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows

@@ -6,12 +6,14 @@ import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.integration.repo.ExerciseGroupRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.StudyHistoryRepository
+import com.epam.brn.integration.repo.SubGroupRepository
+import com.epam.brn.integration.repo.UserAccountRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -38,6 +40,9 @@ class ExercisesControllerIT : BaseIT() {
     lateinit var exerciseRepository: ExerciseRepository
 
     @Autowired
+    lateinit var subGroupRepository: SubGroupRepository
+
+    @Autowired
     lateinit var seriesRepository: SeriesRepository
 
     @Autowired
@@ -50,25 +55,27 @@ class ExercisesControllerIT : BaseIT() {
     fun deleteAfterTest() {
         studyHistoryRepository.deleteAll()
         exerciseRepository.deleteAll()
+        subGroupRepository.deleteAll()
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
     }
 
     @Test
-    fun `test get exercises by seriesId`() {
+    fun `test get exercises by subGroupId`() {
         // GIVEN
-        val exerciseName = "SOMENAME"
-        val existingSeries = insertSeries()
         val existingUser = insertUser()
-        val existingExercise = insertExercise(exerciseName, existingSeries)
+        val exerciseName = "ExerciseNameTest"
+        val existingSeries = insertSeries()
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExercise = insertExercise(exerciseName, subGroup)
         insertStudyHistory(existingUser, existingExercise, LocalDateTime.now().minusHours(1))
         insertStudyHistory(existingUser, existingExercise, LocalDateTime.now())
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(baseUrl)
-                .param("seriesId", existingSeries.id.toString())
+                .param("subGroupId", subGroup.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -81,9 +88,10 @@ class ExercisesControllerIT : BaseIT() {
     @Test
     fun `test get exercise by exerciseId`() {
         // GIVEN
-        val exerciseName = "SOMENAME"
+        val exerciseName = "ExerciseNameTest"
         val existingSeries = insertSeries()
-        val existingExercise = insertExercise(exerciseName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExercise = insertExercise(exerciseName, subGroup)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -103,9 +111,10 @@ class ExercisesControllerIT : BaseIT() {
     fun `test get exercises by name`() {
         // GIVEN
         insertUser()
-        val exerciseName = "SOMENAME"
+        val exerciseName = "ExerciseNameTest"
         val existingSeries = insertSeries()
-        insertExercise(exerciseName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        insertExercise(exerciseName, subGroup)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -165,16 +174,22 @@ class ExercisesControllerIT : BaseIT() {
             Series(
                 description = "desc",
                 name = "series for ExercisesControllerIT",
-                exerciseGroup = exerciseGroup
+                exerciseGroup = exerciseGroup,
+                type = "type",
+                level = 1
             )
         )
     }
 
-    fun insertExercise(exerciseName: String, series: Series): Exercise {
+    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
+        SubGroup(series = series, level = 1, code = "code", name = "subGroup name")
+    )
+
+    fun insertExercise(exerciseName: String, subGroup: SubGroup): Exercise {
         return exerciseRepository.save(
             Exercise(
                 description = toString(),
-                series = series,
+                subGroup = subGroup,
                 level = 0,
                 name = exerciseName,
                 exerciseType = ExerciseType.WORDS_SEQUENCES.toString()

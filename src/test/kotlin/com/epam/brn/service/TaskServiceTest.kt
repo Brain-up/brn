@@ -5,9 +5,9 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Task
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.TaskRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.TaskRepository
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

@@ -3,12 +3,12 @@ package com.epam.brn.upload.csv.series3
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
-import com.epam.brn.model.Series
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class SeriesThreeRecordProcessor(
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val seriesRepository: SeriesRepository,
+    private val subGroupRepository: SubGroupRepository,
     private val wordsService: WordsService
 ) : RecordProcessor<SeriesThreeRecord, Exercise> {
 
@@ -43,7 +43,6 @@ class SeriesThreeRecordProcessor(
         val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
-        val series = seriesRepository.findById(3L).orElse(null)
         records.forEach {
             val correctAnswer = extractCorrectAnswer(it)
             words.add(correctAnswer.word)
@@ -53,7 +52,8 @@ class SeriesThreeRecordProcessor(
             words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
-            val exercise = extractExercise(it, series)
+            val subGroup = subGroupRepository.findByCode(it.code)
+            val exercise = extractExercise(it, subGroup)
             exercise.addTask(createTask(exercise, correctAnswer, answerOptions))
 
             exerciseRepository.save(exercise)
@@ -113,11 +113,11 @@ class SeriesThreeRecordProcessor(
             )
     }
 
-    private fun extractExercise(record: SeriesThreeRecord, series: Series): Exercise {
+    private fun extractExercise(record: SeriesThreeRecord, subGroup: SubGroup): Exercise {
         return exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             .orElse(
                 Exercise(
-                    series = series,
+                    subGroup = subGroup,
                     name = record.exerciseName,
                     description = record.exerciseName,
                     template = calculateTemplate(record),

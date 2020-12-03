@@ -1,4 +1,4 @@
-package com.epam.brn.repo
+package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Resource
 import org.springframework.data.repository.CrudRepository

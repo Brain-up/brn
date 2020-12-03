@@ -3,12 +3,12 @@ package com.epam.brn.upload.csv.series2
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
-import com.epam.brn.model.Series
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SeriesTwoRecordProcessor(
-    private val seriesRepository: SeriesRepository,
+    private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
     private val wordsService: WordsService
@@ -41,13 +41,13 @@ class SeriesTwoRecordProcessor(
         val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
-        val series = seriesRepository.findById(2L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
             words.addAll(answerOptions.map { r -> r.word }.toSet())
             resourceRepository.saveAll(answerOptions)
 
-            val exercise = extractExercise(it, series)
+            val subGroup = subGroupRepository.findByCode(it.code)
+            val exercise = extractExercise(it, subGroup)
             exercise.addTask(extractTask(exercise, answerOptions))
 
             exerciseRepository.save(exercise)
@@ -94,12 +94,12 @@ class SeriesTwoRecordProcessor(
 
     private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun extractExercise(record: SeriesTwoRecord, series: Series): Exercise =
+    private fun extractExercise(record: SeriesTwoRecord, subGroup: SubGroup): Exercise =
         exerciseRepository
             .findExerciseByNameAndLevel(record.exerciseName, record.level)
             .orElse(
                 Exercise(
-                    series = series,
+                    subGroup = subGroup,
                     name = record.exerciseName,
                     description = record.exerciseName,
                     template = calculateTemplate(record),

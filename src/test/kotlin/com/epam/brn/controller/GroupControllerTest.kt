@@ -17,15 +17,17 @@ import kotlin.test.assertEquals
 internal class GroupControllerTest {
     @Mock
     lateinit var exerciseGroupsService: ExerciseGroupsService
+
     @Mock
     lateinit var localePostProcessor: LocalePostprocessor<ExerciseGroupDto>
+
     @InjectMocks
     lateinit var groupController: GroupController
 
     @Test
     fun `should get all groups`() {
         // GIVEN
-        val group = ExerciseGroupDto(1, "name", "desc")
+        val group = ExerciseGroupDto(1, "en", "name", "desc")
         val listGroups = listOf(group)
         Mockito.`when`(exerciseGroupsService.findAllGroups()).thenReturn(listGroups)
         Mockito.`when`(localePostProcessor.postprocess(group)).thenReturn(group)
@@ -42,7 +44,7 @@ internal class GroupControllerTest {
     fun `should get group by id`() {
         // GIVEN
         val groupId = 1L
-        val group = ExerciseGroupDto(1, "name", "desc")
+        val group = ExerciseGroupDto(1, "en", "name", "desc")
         Mockito.`when`(exerciseGroupsService.findGroupDtoById(groupId)).thenReturn(group)
 
         // WHEN

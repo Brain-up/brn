@@ -2,7 +2,7 @@ package com.epam.brn.auth
 
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
-import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.integration.repo.AuthorityRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 

@@ -24,33 +24,38 @@ data class Series(
         allocationSize = 50
     )
     var id: Long? = null,
+    var type: String,
     @Column(nullable = false, unique = true)
     var name: String,
     @Column
+    var level: Int,
     var description: String? = "",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_group_id")
     var exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val exercises: MutableSet<Exercise> = LinkedHashSet()
+    val subGroups: MutableSet<SubGroup> = LinkedHashSet()
 ) {
 
     constructor(record: SeriesGenericRecord, exerciseGroup: ExerciseGroup) : this(
-        id = record.seriesId,
+        exerciseGroup = exerciseGroup,
+        level = record.level,
+        type = record.type,
         name = record.name,
-        description = record.description,
-        exerciseGroup = exerciseGroup
+        description = record.description
     )
 
     fun toDto() = SeriesDto(
         group = exerciseGroup.id,
         id = id,
+        level = level,
         name = name,
+        type = type,
         description = description,
-        exercises = exercises.map { exercise -> exercise.id }.toMutableSet()
+        subGroups = subGroups.map { subGroup -> subGroup.id }.toMutableSet()
     )
 
-    override fun toString() = "Series(id=$id, name='$name', description='$description')"
+    override fun toString() = "Series(id=$id, type=$type, level=$level, name='$name', description='$description')"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

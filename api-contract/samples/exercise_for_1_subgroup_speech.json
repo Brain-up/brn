@@ -1,0 +1,622 @@
+{
+  "data": [
+    {
+      "seriesId": 1,
+      "id": 1,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": true,
+      "tasks": [
+        {
+          "id": 1,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 2,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 2,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 3,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 3,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 3,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 4,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 4,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 4,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 5,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 5,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 5,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 6,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 6,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 6,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 7,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 7,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 7,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 8,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 8,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 8,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 9,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 9,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 9,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 10,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 10,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 10,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 11,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 11,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 11,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 12,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 12,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 12,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 13,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 13,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 13,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 14,
+      "name": "Семья",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья",
+      "level": 14,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 14,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 15,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 15,
+      "noise": {
+        "level": 0,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": true,
+      "tasks": [
+        {
+          "id": 15,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 16,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 16,
+      "noise": {
+        "level": 0,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 16,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 17,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 17,
+      "noise": {
+        "level": 0,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 17,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 18,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 18,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 18,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 19,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 19,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 19,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 20,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 20,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 20,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 21,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 21,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 21,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 22,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 22,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 22,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 23,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 23,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 23,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 24,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 24,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 24,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 25,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 25,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 25,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 26,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 26,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 26,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 27,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 27,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 27,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 28,
+      "name": "Семья /+голоса/",
+      "pictureUrl": "pictures/theme/family.svg",
+      "description": "Семья /+голоса/",
+      "level": 28,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "exerciseType": "SINGLE_SIMPLE_WORDS",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 28,
+          "type": "task/SINGLE_SIMPLE_WORDS"
+        }
+      ],
+      "signals": []
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

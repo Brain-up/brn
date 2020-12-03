@@ -5,11 +5,13 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -26,14 +28,17 @@ import java.util.Optional
 internal class SeriesTwoRecordProcessorTest {
 
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
-    private val resourceRepositoryMock = mock(ResourceRepository::class.java)
+    private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
+    private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val resourceCreationServiceMock = mock(WordsService::class.java)
 
     private lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
 
     private val series = Series(
         id = 2L,
+        level = 1,
+        type = "type",
         name = "Распознавание последовательности слов",
         description = "Распознавание последовательности слов",
         exerciseGroup = ExerciseGroup(
@@ -43,10 +48,17 @@ internal class SeriesTwoRecordProcessorTest {
         )
     )
 
+    private val subGroup = SubGroup(
+        series = series,
+        level = 1,
+        code = "code",
+        name = "subGroup name"
+    )
+
     @BeforeEach
     internal fun setUp() {
         seriesTwoRecordProcessor = SeriesTwoRecordProcessor(
-            seriesRepositoryMock,
+            subGroupRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock,
             resourceCreationServiceMock
@@ -78,6 +90,7 @@ internal class SeriesTwoRecordProcessorTest {
             mutableListOf(
                 SeriesTwoRecord(
                     level = 1,
+                    code = "code",
                     exerciseName = "Шесть слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка бабушка дедушка)", "(сидит лежит идет)", "()", "())")
@@ -97,6 +110,7 @@ internal class SeriesTwoRecordProcessorTest {
             mutableListOf(
                 SeriesTwoRecord(
                     level = 1,
+                    code = "code",
                     exerciseName = "Шесть слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка бабушка дедушка)", "(сидит лежит идет)", "()", "())")
@@ -118,6 +132,7 @@ internal class SeriesTwoRecordProcessorTest {
             mutableListOf(
                 SeriesTwoRecord(
                     level = 1,
+                    code = "code",
                     exerciseName = "Шесть слов",
                     orderNumber = 1,
                     words = listOf("(()", "()", "(девочка бабушка дедушка)", "(сидит лежит идет)", "()", "())")
@@ -131,7 +146,7 @@ internal class SeriesTwoRecordProcessorTest {
 
     private fun createExercise(): Exercise {
         val exercise = Exercise(
-            series = series,
+            subGroup = subGroup,
             name = "Шесть слов",
             description = "Шесть слов",
             template = "<OBJECT OBJECT_ACTION>",

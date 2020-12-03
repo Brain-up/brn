@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.group
 
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.integration.repo.ExerciseGroupRepository
 import com.epam.brn.upload.csv.RecordProcessor
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional

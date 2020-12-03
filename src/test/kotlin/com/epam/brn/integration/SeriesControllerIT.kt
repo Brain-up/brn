@@ -2,8 +2,8 @@ package com.epam.brn.integration
 
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.integration.repo.ExerciseGroupRepository
+import com.epam.brn.integration.repo.SeriesRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -36,9 +36,9 @@ class SeriesControllerIT : BaseIT() {
     private fun loadGroupWith2Series(): Long {
         val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
         val series1 =
-            Series(name = series1Name, description = "descr1", exerciseGroup = group)
+            Series(name = series1Name, description = "descr1", exerciseGroup = group, level = 1, type = "type")
         val series2 =
-            Series(name = series2Name, description = "descr2", exerciseGroup = group)
+            Series(name = series2Name, description = "descr2", exerciseGroup = group, level = 2, type = "type")
         group.series.addAll(setOf(series1, series2))
         val savedGroup = exerciseGroupRepository.save(group)
         return savedGroup.id ?: 1
@@ -62,7 +62,7 @@ class SeriesControllerIT : BaseIT() {
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         Assertions.assertTrue(response.contains(series1Name))
         Assertions.assertTrue(response.contains(series2Name))
-        Assertions.assertTrue(response.contains("exercises"))
+        Assertions.assertTrue(response.contains("subGroups"))
     }
 
     @Test
@@ -82,7 +82,7 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         Assertions.assertTrue(response.contains(series1Name))
-        Assertions.assertTrue(response.contains("exercises"))
+        Assertions.assertTrue(response.contains("subGroups"))
     }
 
     @Test
@@ -100,7 +100,7 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val expectedResponse =
-            """{"data":"level,pictureUrl,exerciseName,words,noiseLevel,noiseUrl\n1,family,Семья,(сын ребёнок мама),0,\n2,family,Семья,(отец брат дедушка),0,\n3,family,Семья,(бабушка муж внучка),0,\n4,family,Семья,(сын ребёнок родители дочь мама папа),0,","errors":[],"meta":[]}"""
+            """{"data":"level,code,exerciseName,words,noiseLevel,noiseUrl\n1,family,Семья,(сын ребёнок мама),0,\n2,family,Семья,(отец брат дедушка),0,\n3,family,Семья,(бабушка муж внучка),0,\n4,family,Семья,(сын ребёнок родители дочь мама папа),0,","errors":[],"meta":[]}"""
         Assertions.assertTrue(response.contains("1,family,Семья,(сын ребёнок мама),0,"))
         Assertions.assertEquals(expectedResponse, response)
     }

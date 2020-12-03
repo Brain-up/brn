@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseGroupDto
+import com.epam.brn.integration.repo.ExerciseGroupRepository
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.repo.ExerciseGroupRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -19,6 +19,7 @@ import java.util.Optional
 internal class ExerciseGroupServiceTest {
     @Mock
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @InjectMocks
     lateinit var exerciseGroupsService: ExerciseGroupsService
 
@@ -26,7 +27,7 @@ internal class ExerciseGroupServiceTest {
     fun `should get all groups`() {
         // GIVEN
         val exerciseGroupMock: ExerciseGroup = mock(ExerciseGroup::class.java)
-        val exerciseGroupDtoMock = ExerciseGroupDto()
+        val exerciseGroupDtoMock = ExerciseGroupDto(id = 1, locale = "en", name = "name", description = "descr")
         `when`(exerciseGroupMock.toDto()).thenReturn(exerciseGroupDtoMock)
         `when`(exerciseGroupRepository.findAll()).thenReturn(listOf(exerciseGroupMock))
         // WHEN
@@ -40,7 +41,7 @@ internal class ExerciseGroupServiceTest {
         // GIVEN
         val groupId = 1L
         val exerciseGroupMock: ExerciseGroup = mock(ExerciseGroup::class.java)
-        val exerciseGroupDtoMock = ExerciseGroupDto()
+        val exerciseGroupDtoMock = ExerciseGroupDto(id = 1, locale = "en", name = "name", description = "descr")
         `when`(exerciseGroupMock.toDto()).thenReturn(exerciseGroupDtoMock)
         `when`(exerciseGroupRepository.findById(anyLong())).thenReturn(Optional.of(exerciseGroupMock))
         // WHEN

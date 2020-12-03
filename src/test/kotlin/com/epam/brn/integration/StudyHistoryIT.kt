@@ -6,12 +6,14 @@ import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.integration.repo.ExerciseGroupRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.StudyHistoryRepository
+import com.epam.brn.integration.repo.SubGroupRepository
+import com.epam.brn.integration.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,6 +44,9 @@ class StudyHistoryIT : BaseIT() {
     lateinit var exerciseRepository: ExerciseRepository
 
     @Autowired
+    lateinit var subGroupRepository: SubGroupRepository
+
+    @Autowired
     lateinit var seriesRepository: SeriesRepository
 
     @Autowired
@@ -54,6 +59,7 @@ class StudyHistoryIT : BaseIT() {
     fun deleteAfterTest() {
         studyHistoryRepository.deleteAll()
         exerciseRepository.deleteAll()
+        subGroupRepository.deleteAll()
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
@@ -62,12 +68,13 @@ class StudyHistoryIT : BaseIT() {
     @Test
     fun `test repo get last study histories for user`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now()
         val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
@@ -91,12 +98,13 @@ class StudyHistoryIT : BaseIT() {
     @Test
     fun `test repo get last study histories for user and exercises`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now()
         val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
@@ -125,12 +133,13 @@ class StudyHistoryIT : BaseIT() {
     @Test
     fun `test repo day timer for user`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
         val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
@@ -155,12 +164,13 @@ class StudyHistoryIT : BaseIT() {
     @Test
     fun `test get day timer for current user`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
         val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
         val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
@@ -218,12 +228,13 @@ class StudyHistoryIT : BaseIT() {
     @Test
     fun `test get histories for current user by period`() {
         // GIVEN
+        val existingUser = insertUser()
         val exerciseFirstName = "FirstName"
         val exerciseSecondName = "SecondName"
         val existingSeries = insertSeries()
-        val existingUser = insertUser()
-        val existingExerciseFirst = insertExercise(exerciseFirstName, existingSeries)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, existingSeries)
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
         val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
         val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
         val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
@@ -306,16 +317,22 @@ class StudyHistoryIT : BaseIT() {
             Series(
                 description = "desc",
                 name = "series",
-                exerciseGroup = exerciseGroup
+                exerciseGroup = exerciseGroup,
+                level = 1,
+                type = "type"
             )
         )
     }
 
-    fun insertExercise(exerciseName: String, series: Series): Exercise {
+    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
+        SubGroup(series = series, level = 1, code = "code", name = "subGroup name")
+    )
+
+    fun insertExercise(exerciseName: String, subGroup: SubGroup): Exercise {
         return exerciseRepository.save(
             Exercise(
                 description = toString(),
-                series = series,
+                subGroup = subGroup,
                 level = 0,
                 name = exerciseName,
                 exerciseType = ExerciseType.WORDS_SEQUENCES.toString()

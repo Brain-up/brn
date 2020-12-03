@@ -1,4 +1,4 @@
-package com.epam.brn.repo
+package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
@@ -10,15 +10,15 @@ import java.sql.Date
 
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
-    @Query("SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
-                " WHERE s.exercise.series.id = :seriesId and s.userAccount.id = :userId"
-    )
-    fun getDoneExercisesIdList(@Param("seriesId") seriesId: Long, @Param("userId") userId: Long): List<Long>
+//    @Query("SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
+//                " WHERE s.exercise.series.id = :seriesId and s.userAccount.id = :userId"
+//    )
+//    fun getDoneExercisesIdList(@Param("seriesId") seriesId: Long, @Param("userId") userId: Long): List<Long>
 
     @Query("SELECT DISTINCT s.exercise FROM StudyHistory s " +
-                " WHERE s.exercise.series.id = :seriesId and s.userAccount.id = :userId"
+                " WHERE s.exercise.subGroup.id = :subGroupId and s.userAccount.id = :userId"
     )
-    fun getDoneExercises(@Param("seriesId") seriesId: Long, @Param("userId") userId: Long): List<Exercise>
+    fun getDoneExercises(@Param("subGroupId") subGroupId: Long, @Param("userId") userId: Long): List<Exercise>
 
     @Query("SELECT DISTINCT s.exercise FROM StudyHistory s " +
                 " WHERE s.exercise.name = :name and s.userAccount.id = :userId"

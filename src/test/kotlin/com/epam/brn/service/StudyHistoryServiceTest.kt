@@ -6,9 +6,9 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.StudyHistoryRepository
+import com.epam.brn.integration.repo.UserAccountRepository
 import org.mockito.Mockito.mock
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions

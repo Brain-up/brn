@@ -2,9 +2,9 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.StudyHistoryRepository
+import com.epam.brn.integration.repo.UserAccountRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 import java.time.LocalDate

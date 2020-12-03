@@ -8,8 +8,11 @@ data class SeriesGenericRecord(
     @JsonProperty("groupId")
     val groupId: Long,
 
-    @JsonProperty("seriesId")
-    val seriesId: Long,
+    @JsonProperty("level")
+    val level: Int,
+
+    @JsonProperty("type")
+    val type: String,
 
     @JsonProperty("name")
     val name: String,
@@ -18,6 +21,6 @@ data class SeriesGenericRecord(
     val description: String
 ) {
     companion object {
-        const val FORMAT = "groupId, seriesId, name, description"
+        const val FORMAT = "groupId, level, type, name, description"
     }
 }

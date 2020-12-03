@@ -3,7 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.integration.repo.ExerciseGroupRepository
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired

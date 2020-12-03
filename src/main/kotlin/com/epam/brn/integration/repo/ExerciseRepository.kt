@@ -1,4 +1,4 @@
-package com.epam.brn.repo
+package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Exercise
 import org.springframework.data.jpa.repository.JpaRepository
@@ -8,7 +8,7 @@ import java.util.Optional
 @Repository
 interface ExerciseRepository : JpaRepository<Exercise, Long> {
 
-    fun findExercisesBySeriesId(seriesId: Long): List<Exercise>
+    fun findExercisesBySubGroupId(subGroupId: Long): List<Exercise>
 
     fun findExercisesByName(name: String): List<Exercise>
 

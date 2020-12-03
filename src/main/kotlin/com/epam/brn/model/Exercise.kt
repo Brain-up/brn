@@ -36,15 +36,15 @@ data class Exercise(
     var noiseLevel: Int = 0,
     var noiseUrl: String = "",
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exercise_series_id")
-    var series: Series? = null,
+    @JoinColumn(name = "sub_group_id")
+    var subGroup: SubGroup? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val tasks: MutableSet<Task> = LinkedHashSet(),
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val signals: MutableSet<Signal> = LinkedHashSet()
 ) {
     fun toDto(available: Boolean = true) = ExerciseDto(
-        seriesId = series?.id,
+        seriesId = subGroup?.id,
         id = id,
         name = name,
         pictureUrl = pictureUrl,
@@ -54,8 +54,8 @@ data class Exercise(
         level = level,
         noise = NoiseDto(noiseLevel, noiseUrl),
         available = available,
-        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableSet(),
-        signals = signals.map { signal -> signal.toSignalDto() }.toMutableSet()
+        tasks = tasks.map { task -> ShortTaskDto(task.id, "task/$exerciseType") }.toMutableList(),
+        signals = signals.map { signal -> signal.toSignalDto() }.toMutableList()
     )
 
     override fun toString() =

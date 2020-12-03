@@ -6,7 +6,7 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.integration.repo.UserAccountRepository
 import com.epam.brn.service.UserAccountService
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import org.apache.logging.log4j.kotlin.logger

@@ -7,7 +7,10 @@ data class SeriesDto(
     val group: Long? = null,
     val id: Long?,
     @NotBlank
+    val type: String,
+    @NotBlank
     val name: String,
-    val description: String?,
-    val exercises: MutableSet<Long?> = HashSet()
+    val level: Int,
+    val description: String? = "",
+    val subGroups: MutableSet<Long?> = HashSet()
 )

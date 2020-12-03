@@ -13,6 +13,6 @@ data class ExerciseDto(
     var exerciseType: ExerciseType,
     var template: String? = "",
     var available: Boolean = true,
-    var tasks: MutableSet<ShortTaskDto> = HashSet(),
-    var signals: MutableSet<SignalDto> = HashSet()
+    var tasks: MutableList<ShortTaskDto> = mutableListOf(),
+    var signals: MutableList<SignalDto> = mutableListOf()
 )
