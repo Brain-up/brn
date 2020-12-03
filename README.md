@@ -116,7 +116,7 @@ it would create db first time. and if you would not delete db image - structure 
   "username": "admin@admin.com",
   "password": "admin"
 }
-5. then you can call all other end-points like
+5. then you can call all other end-points from Postman collection https://app.getpostman.com/join-team?invite_code=a0b5da8aaf3fe3f5b7f157db5023e834 like
 http://localhost:8081/api/exercises/142 
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
 6. for logout use http://localhost:8081/api/logout
