@@ -6,7 +6,7 @@ create table if not exists sub_group
     exercise_type      varchar(255),
     level              integer,
     name               varchar(255),
-    code               varchar(255),
+    picture            varchar(255),
     template           varchar(255),
     description        varchar(255),
     exercise_series_id bigint

@@ -1,14 +1,13 @@
 package com.epam.brn.upload.csv.series1
 
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.ResourceRepository
-import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -108,14 +107,9 @@ class SeriesOneRecordProcessor(
                 Exercise(
                     subGroup = subGroup,
                     name = record.exerciseName,
-                    // todo remove
-                    pictureUrl = if (!record.code.isNullOrEmpty()) String.format(pictureTheme, record.code) else "",
                     level = record.level,
                     noiseLevel = record.noiseLevel,
-                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else "",
-                    // todo remove
-                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
-                    description = record.exerciseName
+                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else ""
                 )
             )
     }

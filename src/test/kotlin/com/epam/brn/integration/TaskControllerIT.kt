@@ -1,16 +1,16 @@
 package com.epam.brn.integration
 
+import com.epam.brn.integration.repo.ExerciseGroupRepository
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.SubGroupRepository
+import com.epam.brn.integration.repo.TaskRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.integration.repo.ExerciseGroupRepository
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.SeriesRepository
-import com.epam.brn.integration.repo.SubGroupRepository
-import com.epam.brn.integration.repo.TaskRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -124,7 +124,7 @@ class TaskControllerIT : BaseIT() {
                 name = "series",
                 exerciseGroup = exerciseGroup,
                 level = 1,
-                type = "type"
+                type = ExerciseType.SINGLE_SIMPLE_WORDS.name
             )
         )
     }
@@ -137,11 +137,9 @@ class TaskControllerIT : BaseIT() {
         return exerciseRepository.save(
             Exercise(
                 id = 1,
-                description = toString(),
                 subGroup = subGroup,
                 level = 0,
-                name = "exercise",
-                exerciseType = ExerciseType.WORDS_SEQUENCES.toString()
+                name = "exercise"
             )
         )
     }

@@ -3,20 +3,16 @@
     "seriesId": 1,
     "id": 1,
     "name": "Семья",
-    "pictureUrl": "pictures/theme/family.svg",
-    "description": "Семья",
     "level": 1,
     "noise": {
       "level": 0,
       "url": ""
     },
-    "exerciseType": "SINGLE_SIMPLE_WORDS",
     "template": "",
     "available": true,
     "tasks": [
       {
-        "id": 1,
-        "type": "task/SINGLE_SIMPLE_WORDS"
+        "id": 1
       }
     ],
     "signals": []

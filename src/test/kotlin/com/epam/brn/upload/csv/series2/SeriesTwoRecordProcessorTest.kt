@@ -1,17 +1,16 @@
 package com.epam.brn.upload.csv.series2
 
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.ResourceRepository
-import com.epam.brn.integration.repo.SeriesRepository
-import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -148,9 +147,7 @@ internal class SeriesTwoRecordProcessorTest {
         val exercise = Exercise(
             subGroup = subGroup,
             name = "Шесть слов",
-            description = "Шесть слов",
             template = "<OBJECT OBJECT_ACTION>",
-            exerciseType = ExerciseType.WORDS_SEQUENCES.toString(),
             level = 1
         )
 

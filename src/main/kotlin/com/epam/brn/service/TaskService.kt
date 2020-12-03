@@ -26,7 +26,7 @@ class TaskService(
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
-        return when (ExerciseType.valueOf(exercise.exerciseType)) {
+        return when (ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task ->
                 convertAudioFileUrl(task.to1SeriesTaskDto())
             }
@@ -50,7 +50,7 @@ class TaskService(
         log.debug("Searching task with id=$taskId")
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
-        return when (ExerciseType.valueOf(task.exercise!!.exerciseType)) {
+        return when (ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS -> convertAudioFileUrl(task.to1SeriesTaskDto())
             ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)

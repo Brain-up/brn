@@ -28,7 +28,7 @@ data class SubGroup(
     )
     var id: Long? = null,
     var name: String,
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     var code: String,
     var level: Int,
     var description: String? = "",
@@ -47,7 +47,7 @@ data class SubGroup(
         description = record.description
     )
 
-    fun toDto(available: Boolean = true) = SubGroupDto(
+    fun toDto() = SubGroupDto(
         seriesId = series.id!!,
         id = id!!,
         name = name,
@@ -58,7 +58,7 @@ data class SubGroup(
     )
 
     override fun toString() =
-        "SubGroup(id=$id, name='$name', pictureUrl='$code', description=$description, level=$level "
+        "SubGroup(id=$id, name='$name', code='$code', description=$description, level=$level "
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

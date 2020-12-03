@@ -1,17 +1,16 @@
 package com.epam.brn.upload.csv.series1
 
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.ResourceRepository
-import com.epam.brn.integration.repo.SeriesRepository
-import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -154,11 +153,8 @@ internal class SeriesOneRecordProcessorTest {
     private fun createExercise(): Exercise {
         val exercise = Exercise(
             name = exerciseName,
-            description = exerciseName,
-            exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
             noiseLevel = 1,
             noiseUrl = "/fon/url.ogg",
-            pictureUrl = "/picturesTheme/pictureUrl.jpg",
             level = 1
         )
 

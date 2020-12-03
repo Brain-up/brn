@@ -2,14 +2,13 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.StudyHistoryRepository
+import com.epam.brn.integration.repo.UserAccountRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.StudyHistoryRepository
-import com.epam.brn.integration.repo.UserAccountRepository
-import org.mockito.Mockito.mock
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -18,6 +17,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.any
+import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.util.Optional

@@ -2,7 +2,6 @@ package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
@@ -40,17 +39,13 @@ abstract class BaseTest {
 
         val exercise1 = Exercise(
             name = "First",
-            description = "desc",
             level = 0,
-            subGroup = subGroup1,
-            exerciseType = ExerciseType.WORDS_SEQUENCES.toString()
+            subGroup = subGroup1
         )
         val exercise2 = Exercise(
             name = "Second",
-            description = "desc",
             level = 0,
-            subGroup = subGroup2,
-            exerciseType = ExerciseType.WORDS_SEQUENCES.toString()
+            subGroup = subGroup2
         )
         subGroup1.exercises.addAll(listOf(exercise1, exercise2))
 

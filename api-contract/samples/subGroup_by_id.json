@@ -4,7 +4,7 @@
   "id": 1,
   "level": 1,
   "name": "Семья",
-  "pictureUrl": "family",
+  "pictureUrl": "pictures/theme/family.svg",
   "description": "Слова про семью",
   "exercises": [
    1,

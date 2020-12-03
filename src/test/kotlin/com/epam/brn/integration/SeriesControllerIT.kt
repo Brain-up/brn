@@ -1,9 +1,10 @@
 package com.epam.brn.integration
 
-import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.Series
 import com.epam.brn.integration.repo.ExerciseGroupRepository
 import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.Series
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -36,9 +37,9 @@ class SeriesControllerIT : BaseIT() {
     private fun loadGroupWith2Series(): Long {
         val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
         val series1 =
-            Series(name = series1Name, description = "descr1", exerciseGroup = group, level = 1, type = "type")
+            Series(name = series1Name, description = "descr1", exerciseGroup = group, level = 1, type = ExerciseType.SINGLE_SIMPLE_WORDS.name)
         val series2 =
-            Series(name = series2Name, description = "descr2", exerciseGroup = group, level = 2, type = "type")
+            Series(name = series2Name, description = "descr2", exerciseGroup = group, level = 2, type = ExerciseType.SINGLE_SIMPLE_WORDS.name)
         group.series.addAll(setOf(series1, series2))
         val savedGroup = exerciseGroupRepository.save(group)
         return savedGroup.id ?: 1

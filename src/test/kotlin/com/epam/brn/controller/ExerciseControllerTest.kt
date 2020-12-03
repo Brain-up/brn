@@ -2,7 +2,6 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.service.ExerciseService
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,7 +26,7 @@ internal class ExerciseControllerTest {
         // GIVEN
         val subGroupId: Long = 2
         val exercise =
-            ExerciseDto(subGroupId, 1, "name", "pictureUrl", "desc", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+            ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
         val listExercises = listOf(exercise)
         Mockito.`when`(exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)).thenReturn(listExercises)
         // WHEN
@@ -43,7 +42,7 @@ internal class ExerciseControllerTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseID: Long = 1
-        val exercise = ExerciseDto(2, 1, "exe", "pictureUrl", "desc", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+        val exercise = ExerciseDto(2, 1, "exe", 1, NoiseDto(0, ""))
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
         @Suppress("UNCHECKED_CAST")

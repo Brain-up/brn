@@ -1,19 +1,18 @@
 package com.epam.brn.integration
 
-import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
-import com.epam.brn.model.Gender
-import com.epam.brn.model.Series
-import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.SubGroup
-import com.epam.brn.model.UserAccount
 import com.epam.brn.integration.repo.ExerciseGroupRepository
 import com.epam.brn.integration.repo.ExerciseRepository
 import com.epam.brn.integration.repo.SeriesRepository
 import com.epam.brn.integration.repo.StudyHistoryRepository
 import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.integration.repo.UserAccountRepository
+import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.Gender
+import com.epam.brn.model.Series
+import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.SubGroup
+import com.epam.brn.model.UserAccount
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -188,11 +187,9 @@ class ExercisesControllerIT : BaseIT() {
     fun insertExercise(exerciseName: String, subGroup: SubGroup): Exercise {
         return exerciseRepository.save(
             Exercise(
-                description = toString(),
                 subGroup = subGroup,
                 level = 0,
-                name = exerciseName,
-                exerciseType = ExerciseType.WORDS_SEQUENCES.toString()
+                name = exerciseName
             )
         )
     }

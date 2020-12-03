@@ -40,7 +40,7 @@ data class Series(
     constructor(record: SeriesGenericRecord, exerciseGroup: ExerciseGroup) : this(
         exerciseGroup = exerciseGroup,
         level = record.level,
-        type = record.type,
+        type = ExerciseType.valueOf(record.type).toString(),
         name = record.name,
         description = record.description
     )
@@ -50,7 +50,7 @@ data class Series(
         id = id,
         level = level,
         name = name,
-        type = type,
+        type = ExerciseType.valueOf(type),
         description = description,
         subGroups = subGroups.map { subGroup -> subGroup.id }.toMutableSet()
     )
@@ -65,6 +65,7 @@ data class Series(
 
         if (id != other.id) return false
         if (name != other.name) return false
+        if (type != other.type) return false
         if (description != other.description) return false
         if (exerciseGroup != other.exerciseGroup) return false
 

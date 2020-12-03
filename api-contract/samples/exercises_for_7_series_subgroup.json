@@ -4,14 +4,11 @@
       "seriesId": 34,
       "id": 979,
       "name": "По 2 сигнала разной частоты.",
-      "pictureUrl": "",
-      "description": "",
       "level": 1,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
       "template": "",
       "available": true,
       "tasks": [],
@@ -36,14 +33,11 @@
       "seriesId": 34,
       "id": 980,
       "name": "По 2 сигнала разной частоты.",
-      "pictureUrl": "",
-      "description": "",
       "level": 2,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
       "template": "",
       "available": false,
       "tasks": [],
@@ -68,14 +62,11 @@
       "seriesId": 34,
       "id": 983,
       "name": "По 3 сигнала разной частоты.",
-      "pictureUrl": "",
-      "description": "",
       "level": 1,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
       "template": "",
       "available": true,
       "tasks": [],
@@ -107,14 +98,11 @@
       "seriesId": 34,
       "id": 984,
       "name": "По 3 сигнала разной частоты.",
-      "pictureUrl": "",
-      "description": "",
       "level": 2,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
       "template": "",
       "available": false,
       "tasks": [],

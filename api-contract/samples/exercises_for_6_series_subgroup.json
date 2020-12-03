@@ -4,14 +4,11 @@
       "seriesId": 33,
       "id": 977,
       "name": "По 2 сигнала разной длительности.",
-      "pictureUrl": "",
-      "description": "",
       "level": 1,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "TWO_DIFFERENT_LENGTH_SIGNAL",
       "template": "",
       "available": true,
       "tasks": [],
@@ -36,14 +33,11 @@
       "seriesId": 33,
       "id": 978,
       "name": "По 2 сигнала разной длительности.",
-      "pictureUrl": "",
-      "description": "",
       "level": 2,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "TWO_DIFFERENT_LENGTH_SIGNAL",
       "template": "",
       "available": false,
       "tasks": [],
@@ -68,14 +62,11 @@
       "seriesId": 33,
       "id": 981,
       "name": "По 3 сигнала разной длительности.",
-      "pictureUrl": "",
-      "description": "",
       "level": 1,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "THREE_DIFFERENT_LENGTH_SIGNAL",
       "template": "",
       "available": true,
       "tasks": [],
@@ -107,14 +98,11 @@
       "seriesId": 33,
       "id": 982,
       "name": "По 3 сигнала разной длительности.",
-      "pictureUrl": "",
-      "description": "",
       "level": 2,
       "noise": {
         "level": 0,
         "url": ""
       },
-      "exerciseType": "THREE_DIFFERENT_LENGTH_SIGNAL",
       "template": "",
       "available": false,
       "tasks": [],

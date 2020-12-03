@@ -1,14 +1,13 @@
 package com.epam.brn.upload.csv.series3
 
+import com.epam.brn.integration.repo.ExerciseRepository
+import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.ResourceRepository
-import com.epam.brn.integration.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -119,9 +118,7 @@ class SeriesThreeRecordProcessor(
                 Exercise(
                     subGroup = subGroup,
                     name = record.exerciseName,
-                    description = record.exerciseName,
                     template = calculateTemplate(record),
-                    exerciseType = ExerciseType.SENTENCE.toString(),
                     level = record.level
                 )
             )

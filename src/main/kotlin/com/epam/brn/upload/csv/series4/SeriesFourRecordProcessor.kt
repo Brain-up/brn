@@ -1,7 +1,6 @@
 package com.epam.brn.upload.csv.series4
 
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
@@ -28,9 +27,6 @@ class SeriesFourRecordProcessor(
 
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
-
-    @Value(value = "\${brn.picture.theme.path}")
-    private lateinit var pictureTheme: String
 
     @Value(value = "\${series4WordsFileName}")
     private lateinit var series4WordsFileName: String
@@ -111,30 +107,15 @@ class SeriesFourRecordProcessor(
                 Exercise(
                     subGroup = subGroup,
                     name = record.exerciseName,
-                    pictureUrl = if (!record.code.isNullOrEmpty()) String.format(pictureTheme, record.code) else "",
                     level = record.level,
                     noiseLevel = record.noiseLevel,
-                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else "",
-                    exerciseType = ExerciseType.PHRASES.toString(),
-                    description = record.exerciseName
+                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else ""
                 )
             )
     }
 
     private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
         Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
-
-    private fun generateTasks(exercise: Exercise, answerOptions: MutableSet<Resource>): MutableList<Task> {
-        return generateCorrectAnswers(answerOptions)
-            .mapIndexed { serialNumber, correctAnswer ->
-                Task(
-                    exercise = exercise,
-                    serialNumber = serialNumber + 1,
-                    answerOptions = answerOptions,
-                    correctAnswer = correctAnswer
-                )
-            }.toMutableList()
-    }
 
     private fun generateCorrectAnswers(answerOptions: MutableSet<Resource>): MutableList<Resource> {
         val correctAnswers = mutableListOf<Resource>()

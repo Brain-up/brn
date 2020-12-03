@@ -1,5 +1,6 @@
 package com.epam.brn.dto
 
+import com.epam.brn.model.ExerciseType
 import javax.validation.constraints.NotBlank
 
 data class SeriesDto(
@@ -7,7 +8,7 @@ data class SeriesDto(
     val group: Long? = null,
     val id: Long?,
     @NotBlank
-    val type: String,
+    val type: ExerciseType,
     @NotBlank
     val name: String,
     val level: Int,
