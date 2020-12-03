@@ -92,7 +92,8 @@ export default class NetworkService extends Service {
     const result = await this.postRequest(`exercises/byIds`, {
       ids: ids.map((el)=>parseInt(el, 10))
     });
-    const { data } = await result.json();
+    const json = await result.json();
+    const { data } = json;
     return data.map((el: number)=>String(el));
   }
 }
