@@ -1,0 +1,148 @@
+{
+  "data": [
+    {
+      "seriesId": 33,
+      "id": 977,
+      "name": "По 2 сигнала разной длительности.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "TWO_DIFFERENT_LENGTH_SIGNAL",
+      "template": "",
+      "available": true,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 1,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 60
+        },
+        {
+          "id": 2,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 120
+        }
+      ]
+    },
+    {
+      "seriesId": 33,
+      "id": 978,
+      "name": "По 2 сигнала разной длительности.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "TWO_DIFFERENT_LENGTH_SIGNAL",
+      "template": "",
+      "available": false,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 4,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 100
+        },
+        {
+          "id": 3,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 40
+        }
+      ]
+    },
+    {
+      "seriesId": 33,
+      "id": 981,
+      "name": "По 3 сигнала разной длительности.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "THREE_DIFFERENT_LENGTH_SIGNAL",
+      "template": "",
+      "available": true,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 10,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 90
+        },
+        {
+          "id": 9,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 40
+        },
+        {
+          "id": 11,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 130
+        }
+      ]
+    },
+    {
+      "seriesId": 33,
+      "id": 982,
+      "name": "По 3 сигнала разной длительности.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "THREE_DIFFERENT_LENGTH_SIGNAL",
+      "template": "",
+      "available": false,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 12,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 20
+        },
+        {
+          "id": 13,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 60
+        },
+        {
+          "id": 14,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 120
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

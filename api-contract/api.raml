@@ -47,57 +47,50 @@ mediaType:
           body:
             example: !include samples/file_format.json
 
+# SUBGROUP ----------------------------
+/subgroups:
+  get:
+    queryParameters:
+      seriesId:
+        description: "ID of the series belongs to"
+        required: true
+        type: string
+        example: "42"
+    responses:
+      200:
+        body:
+          example: !include samples/subgroup_by_series.json
+  /{subGroupId}:
+    get:
+      responses:
+        200:
+          body:
+            example: !include samples/subgroup_by_id.json
+
+
 # EXERCISE ----------------------------
 /exercises:
   get:
     queryParameters:
-      seriesId:
-        description: "ID of the series exercises belongs to"
+      subGroupId:
+        description: "ID of the subgroup exercises belongs to"
         required: true
         type: string
         example: "42"
-      withAvailability:
-        description: "with or without availability calculation to reduce calculation volume"
-        required: false
-        default: true
-        type: boolean
-        example: false
     responses:
       200:
         body:
-          example1: !include samples/exercises_for_1_series.json
-          example2: !include samples/exercises_for_2_series.json
+          example1: !include samples/exercises_for_1_series_subgroup.json
+          example2: !include samples/exercises_for_2_series_subgroup.json
+          example2: !include samples/exercises_for_3_series_subgroup.json
+          example2: !include samples/exercises_for_4_series_subgroup.json
   /{exerciseId}:
     get:
       responses:
         200:
           body:
             example1: !include samples/exercise_1_series_signal.json
-            example1: !include samples/exercise_1_series_speech.json
-            example2: !include samples/exercise_for_2_series.json
-            example3: !include samples/exercise_for_3_series.json
-  /byName:
-    description: return exercises by name with availability calculation
-    get:
-      responses:
-        200:
-          body:
-            example1: !include samples/exercise_1_series_signal.json
-            example1: !include samples/exercise_1_series_speech.json
-            example2: !include samples/exercise_for_2_series.json
-            example3: !include samples/exercise_for_3_series.json
-  /byIds:
-      description: return only available exercise ids by input exercise ids with same name
-      post:
-        body: {"ids": [1,2,3,4]}
-        responses:
-          200:
-            body:
-              {
-                  "data": [1],
-                  "errors": [],
-                  "meta": []
-              }
+
 # TASK ----------------------------
 /tasks:
   get:

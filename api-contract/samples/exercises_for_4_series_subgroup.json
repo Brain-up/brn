@@ -1,0 +1,1106 @@
+{
+  "data": [
+    {
+      "seriesId": 27,
+      "id": 676,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": true,
+      "tasks": [
+        {
+          "id": 676,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 677,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 677,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 678,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 3,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 678,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 679,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 4,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 679,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 680,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 5,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 680,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 681,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 6,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 681,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 682,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 7,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 682,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 683,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 8,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 683,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 684,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 9,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 684,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 685,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 10,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 685,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 686,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 11,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 686,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 687,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 12,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 687,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 688,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 13,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 688,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 689,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 14,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 689,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 690,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 15,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 690,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 691,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 16,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 691,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 692,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 17,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 692,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 693,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 18,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 693,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 694,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 19,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 694,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 695,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 20,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 695,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 696,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 21,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 696,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 697,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 22,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 697,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 698,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 23,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 698,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 699,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 24,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 699,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 700,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 25,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 700,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 701,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 26,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 701,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 702,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 27,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 702,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 703,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 28,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 703,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 704,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 29,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 704,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 705,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 30,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 705,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 706,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 31,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 706,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 707,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 32,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 707,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 708,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 33,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 708,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 709,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 34,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 709,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 710,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 35,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 710,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 711,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 36,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 711,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 712,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 37,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 712,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 713,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 38,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 713,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 714,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 39,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 714,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 715,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 40,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 715,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 716,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 41,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 716,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 717,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 42,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 717,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 718,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 43,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 718,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 719,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 44,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 719,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 720,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 45,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 720,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 721,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 46,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 721,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 722,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 47,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 722,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 723,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 48,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 723,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 724,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 49,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 724,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 27,
+      "id": 725,
+      "name": "Фразы разной длительности",
+      "pictureUrl": "pictures/theme/longShortPhrases.svg",
+      "description": "Фразы разной длительности",
+      "level": 50,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "PHRASES",
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 725,
+          "type": "task/PHRASES"
+        }
+      ],
+      "signals": []
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

@@ -1,0 +1,138 @@
+{
+  "data": [
+    {
+      "seriesId": 21,
+      "id": 649,
+      "name": "Шесть слов (на 2 столбца)",
+      "pictureUrl": "",
+      "description": "Шесть слов (на 2 столбца)",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "WORDS_SEQUENCES",
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": true,
+      "tasks": [
+        {
+          "id": 649,
+          "type": "task/WORDS_SEQUENCES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 21,
+      "id": 650,
+      "name": "Шесть слов (на 2 столбца)",
+      "pictureUrl": "",
+      "description": "Шесть слов (на 2 столбца)",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "WORDS_SEQUENCES",
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 650,
+          "type": "task/WORDS_SEQUENCES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 21,
+      "id": 651,
+      "name": "Шесть слов (на 2 столбца)",
+      "pictureUrl": "",
+      "description": "Шесть слов (на 2 столбца)",
+      "level": 3,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "WORDS_SEQUENCES",
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 651,
+          "type": "task/WORDS_SEQUENCES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 21,
+      "id": 652,
+      "name": "Шесть слов (на 3 столбца)",
+      "pictureUrl": "",
+      "description": "Шесть слов (на 3 столбца)",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "WORDS_SEQUENCES",
+      "template": "<COUNT OBJECT OBJECT_ACTION>",
+      "available": true,
+      "tasks": [
+        {
+          "id": 652,
+          "type": "task/WORDS_SEQUENCES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 21,
+      "id": 653,
+      "name": "Шесть слов (на 3 столбца)",
+      "pictureUrl": "",
+      "description": "Шесть слов (на 3 столбца)",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "WORDS_SEQUENCES",
+      "template": "<COUNT OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 653,
+          "type": "task/WORDS_SEQUENCES"
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 21,
+      "id": 654,
+      "name": "Шесть слов (на 3 столбца)",
+      "pictureUrl": "",
+      "description": "Шесть слов (на 3 столбца)",
+      "level": 3,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "WORDS_SEQUENCES",
+      "template": "<OBJECT_DESCRIPTION OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 654,
+          "type": "task/WORDS_SEQUENCES"
+        }
+      ],
+      "signals": []
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

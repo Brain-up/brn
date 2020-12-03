@@ -1,0 +1,148 @@
+{
+  "data": [
+    {
+      "seriesId": 34,
+      "id": 979,
+      "name": "По 2 сигнала разной частоты.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
+      "template": "",
+      "available": true,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 6,
+          "name": "",
+          "url": "",
+          "frequency": 1500,
+          "length": 120
+        },
+        {
+          "id": 5,
+          "name": "",
+          "url": "",
+          "frequency": 500,
+          "length": 120
+        }
+      ]
+    },
+    {
+      "seriesId": 34,
+      "id": 980,
+      "name": "По 2 сигнала разной частоты.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
+      "template": "",
+      "available": false,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 8,
+          "name": "",
+          "url": "",
+          "frequency": 2000,
+          "length": 120
+        },
+        {
+          "id": 7,
+          "name": "",
+          "url": "",
+          "frequency": 1000,
+          "length": 120
+        }
+      ]
+    },
+    {
+      "seriesId": 34,
+      "id": 983,
+      "name": "По 3 сигнала разной частоты.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
+      "template": "",
+      "available": true,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 15,
+          "name": "",
+          "url": "",
+          "frequency": 500,
+          "length": 120
+        },
+        {
+          "id": 17,
+          "name": "",
+          "url": "",
+          "frequency": 2000,
+          "length": 120
+        },
+        {
+          "id": 16,
+          "name": "",
+          "url": "",
+          "frequency": 1050,
+          "length": 120
+        }
+      ]
+    },
+    {
+      "seriesId": 34,
+      "id": 984,
+      "name": "По 3 сигнала разной частоты.",
+      "pictureUrl": "",
+      "description": "",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "exerciseType": "THREE_DIFFERENT_FREQUENCY_SIGNAL",
+      "template": "",
+      "available": false,
+      "tasks": [],
+      "signals": [
+        {
+          "id": 20,
+          "name": "",
+          "url": "",
+          "frequency": 2000,
+          "length": 120
+        },
+        {
+          "id": 18,
+          "name": "",
+          "url": "",
+          "frequency": 200,
+          "length": 120
+        },
+        {
+          "id": 19,
+          "name": "",
+          "url": "",
+          "frequency": 600,
+          "length": 120
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "meta": []
+}
