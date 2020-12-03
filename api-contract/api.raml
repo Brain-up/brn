@@ -203,6 +203,34 @@ mediaType:
           body:
             application/json:
               example: !include samples/user_get_response.json
+    /avatar:
+      is: [Forbidden, NotFound]
+      get:
+        description: Get a user avatar.
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include samples/avatar_get_response.json
+
+      post:
+        description: Create user avatar.
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include samples/avatar_get_response.json.json
+
+      put:
+        is: [Forbidden, NotFound]
+        desctiprion: Update user avatar.
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include samples/avatar_get_response.json
+
+
 
 # Auth ----------------------
 /brnlogin:

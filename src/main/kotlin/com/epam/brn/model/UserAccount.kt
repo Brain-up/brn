@@ -32,7 +32,7 @@ data class UserAccount(
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     @Column(nullable = false)
     val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    val avatar: String? = null
+    var avatar: String? = null
 ) {
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
