@@ -2,15 +2,19 @@
 This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
 It is projected to contain several series of media exercises, which should be added incrementally. The tool structure and usage could be organized in the same way as other tools like www.uchi.ru.
 
-Our current domain : http://audibly.ru && http://31.184.253.199/  (test user default@default.ru password)
+Our current domain : http://brainup.ru && http://31.184.253.199/  (test user default@default.ru password)
 
 ## SCIENTIFIC SOURCES
  - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit   
  - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ 
+ - https://youtu.be/BMNrFENZ4Rw 
+ - https://youtu.be/QUoBMSKq7zg
  
 ## Published ARTICLES about our project
-- https://anywhere.epam.com/volunteer/pages-1/brainApp.html 
-- https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html
+- https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
+- https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
+- https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html (only for epamers)
+- https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html (only for epamers)
  
 ## WHY JOIN OUR PROJECT AS A DEVELOPER?
 We use latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. We will review your code, give you advice to improve it and listen to your suggestions. 
@@ -21,13 +25,15 @@ Most importantly being an open source project you can show your work in it to an
 2. Server-side developers: Kotlin and Java. Components, REST and algorithms.
 3. DevOps: Continuous integration and delivery.
 4. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
+5. Paintest: for creation pictures for exercises. 
 
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
 - Back-end: KOTLIN + Spring boot. Rest api as integration layer.
 - Front-end : TBD - Ember, Angular.
-- DB: Postgres.
+- DB: Postgres13.
+- TestContainers for running integration tests.
 
 ## HOW TO JOIN?
 1. for epam developers: Just click on “JOIN TEAM” button in https://contribute.epam.com/products/143 and we will get in touch with you shortly. 
@@ -110,7 +116,7 @@ it would create db first time. and if you would not delete db image - structure 
   "username": "admin@admin.com",
   "password": "admin"
 }
-5. then you can call all other end-points like
+5. then you can call all other end-points from Postman collection https://app.getpostman.com/join-team?invite_code=a0b5da8aaf3fe3f5b7f157db5023e834 like
 http://localhost:8081/api/exercises/142 
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
 6. for logout use http://localhost:8081/api/logout
