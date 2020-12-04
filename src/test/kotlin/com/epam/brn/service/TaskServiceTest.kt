@@ -11,9 +11,6 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.TaskRepository
 import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
 import org.junit.jupiter.api.DisplayName
