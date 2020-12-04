@@ -11,6 +11,7 @@ import javax.persistence.Id
 import javax.persistence.OneToMany
 import javax.persistence.SequenceGenerator
 
+// The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to group being a reserved word in db.
 @Entity
 data class ExerciseGroup(
     @Id
@@ -64,5 +65,5 @@ data class ExerciseGroup(
         return result
     }
 
-    override fun toString() = "ExerciseGroup(id=$id, name='$name', description=$description)"
+    override fun toString() = "ExerciseGroup(id=$id, name='$name', locale = $locale, description=$description)"
 }

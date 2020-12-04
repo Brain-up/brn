@@ -9,6 +9,11 @@ mediaType:
 # GROUP ----------------------------
 /groups:
   get:
+    queryParameters:
+      locale:
+       required: false
+       type: string
+       example: "ru"
     responses:
       200:
         body:
