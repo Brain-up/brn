@@ -25,7 +25,7 @@ class SubGroupService(private val subGroupRepository: SubGroupRepository) {
     fun findById(subGroupId: Long): SubGroupDto {
         log.debug("try to find SubGroup by Id=$subGroupId")
         val subGroup = subGroupRepository.findById(subGroupId)
-            .orElseThrow { EntityNotFoundException("No subGroup was found by id=$subGroupId") }
+            .orElseThrow { EntityNotFoundException("No subGroup was found by id=$subGroupId.") }
         return subGroup.toDto(pictureTheme)
     }
 }
