@@ -204,23 +204,6 @@ mediaType:
             application/json:
               example: !include samples/user_get_response.json
     /avatar:
-      is: [Forbidden, NotFound]
-      get:
-        description: Get a user avatar.
-        responses:
-          200:
-            body:
-              application/json:
-                example: !include samples/avatar_get_response.json
-
-      post:
-        description: Create user avatar.
-        responses:
-          200:
-            body:
-              application/json:
-                example: !include samples/avatar_get_response.json.json
-
       put:
         is: [Forbidden, NotFound]
         desctiprion: Update user avatar.
@@ -228,7 +211,7 @@ mediaType:
           avatarUrl:
               required: true
               type: string
-              example: {schema}://{host}/api/users/current/avatar?avatarUrl=lime.xml
+              example: {schema}://{host}/api/users/current/avatar?avatarUrl="/pictures/avatar/girl.cvg"
         responses:
           200:
             body:
