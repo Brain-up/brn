@@ -4,10 +4,12 @@ import com.epam.brn.dto.TaskDtoFor1Series
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
+import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -23,9 +25,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertSame
 
-@ExtendWith(
-    MockitoExtension::class
-)
+@ExtendWith(MockitoExtension::class)
 @DisplayName("TaskService test using mockito")
 internal class TaskServiceTest {
 
@@ -53,15 +53,22 @@ internal class TaskServiceTest {
             val exercise = mock(Exercise::class.java)
             val task1 = mock(Task::class.java)
             val task2 = mock(Task::class.java)
-            `when`(taskRepository.findTasksByExerciseIdWithJoinedAnswers(LONG_ONE))
-                .thenReturn(listOf(task1, task2))
+            val answer = mock(Resource::class.java)
             `when`(exerciseRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(exercise))
+            `when`(taskRepository.findTasksByExerciseIdWithJoinedAnswers(LONG_ONE))
+                .thenReturn(listOf(task1, task2))
+
             `when`(exercise.exerciseType).thenReturn(ExerciseType.WORDS_SEQUENCES.toString())
+            `when`(task1.answerOptions).thenReturn(mutableSetOf(answer))
+            `when`(answer.audioFileUrl).thenReturn("url")
+
+            `when`(urlConversionService.makeFullUrl("url")).thenReturn("fullUrl")
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
             // THEN
             assertEquals(2, foundTasks.size)
+            verify(urlConversionService).makeFullUrl("url")
         }
 
         @Test
