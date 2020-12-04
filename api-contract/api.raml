@@ -183,18 +183,18 @@ mediaType:
 # USERS ----------------------
 /users:
   get:
-      description: Get the user by userName
-      queryParameters:
-        userName:
-          description: "Name of the user"
-          required: true
-          type: string
-          example: "userName"
-      responses:
-        200:
-          body:
-            application/json:
-              example: !include samples/user_get_response.json
+    description: Get the user by userName
+    queryParameters:
+      userName:
+        description: "Name of the user"
+        required: true
+        type: string
+        example: "userName"
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include samples/user_get_response.json
   /current:
     get:
       description: Get logged in user from the current session
@@ -224,6 +224,11 @@ mediaType:
       put:
         is: [Forbidden, NotFound]
         desctiprion: Update user avatar.
+        queryParameters:
+          avatarUrl:
+              required: true
+              type: string
+              example: {schema}://{host}/api/users/current/avatar?avatarUrl=lime.xml
         responses:
           200:
             body:
