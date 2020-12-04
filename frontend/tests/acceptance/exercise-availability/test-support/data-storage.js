@@ -76,5 +76,5 @@ export function getTestData() {
     { order: 1, id: 1, name: 'default', description: '123', series: [1] },
   ];
 
-  return { tasks, exercises, series, groups };
+  return { tasks, exercises, series, groups, availableExercises: ['1','3'] };
 }

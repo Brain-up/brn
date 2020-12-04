@@ -5,7 +5,6 @@ import { task, Task } from 'ember-concurrency';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
 import Exercise from 'brn/models/exercise';
-import Ember from 'ember';
 
 export default class GroupSeriesController extends Controller {
   @service('network') network!: NetworkService;
@@ -21,9 +20,6 @@ export default class GroupSeriesController extends Controller {
   @tracked
   availableExercises = [];
   @(task(function*(this: GroupSeriesController) {
-    if (Ember.testing) {
-      return;
-    }
     if (!this.model) {
       return;
     }

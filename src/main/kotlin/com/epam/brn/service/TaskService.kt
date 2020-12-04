@@ -1,6 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.TaskDtoFor1Series
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
@@ -26,35 +25,29 @@ class TaskService(
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
+        tasks.forEach { task ->
+            task.answerOptions
+                .forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
+        }
         return when (ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task ->
-                convertAudioFileUrl(task.to1SeriesTaskDto())
-            }
+            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.to1SeriesTaskDto() }
             ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.to2SeriesTaskDto(task.exercise?.template) }
             ExerciseType.SENTENCE -> tasks.map { task -> task.to3SeriesTaskDto(task.exercise?.template) }
-            ExerciseType.PHRASES -> tasks.map { task ->
-                convertAudioFileUrl(task.to4SeriesTaskDto())
-            }
+            ExerciseType.PHRASES -> tasks.map { task -> task.to4SeriesTaskDto() }
             else -> throw EntityNotFoundException("No tasks for this signal exercise type")
         }
-    }
-
-    fun convertAudioFileUrl(taskDtoFor1Series: TaskDtoFor1Series): TaskDtoFor1Series {
-        taskDtoFor1Series.answerOptions.forEach { a ->
-            a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl)
-        }
-        return taskDtoFor1Series
     }
 
     fun getTaskById(taskId: Long): Any {
         log.debug("Searching task with id=$taskId")
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
+        task.answerOptions.forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
         return when (ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS -> convertAudioFileUrl(task.to1SeriesTaskDto())
+            ExerciseType.SINGLE_SIMPLE_WORDS -> task.to1SeriesTaskDto()
             ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)
-            ExerciseType.PHRASES -> convertAudioFileUrl(task.to4SeriesTaskDto())
+            ExerciseType.PHRASES -> task.to4SeriesTaskDto()
             else -> throw EntityNotFoundException("No tasks for this exercise type")
         }
     }

@@ -1,6 +1,6 @@
 import { click } from '@ember/test-helpers';
 
-export function getServerResponses({ tasks, series, groups, exercises }) {
+export function getServerResponses({ tasks, series, groups, exercises, availableExercises  }) {
   /* eslint-disable no-undef */
   server.get('groups', () => {
     return { data: groups };
@@ -36,6 +36,10 @@ export function getServerResponses({ tasks, series, groups, exercises }) {
 
   server.get('exercises/:id', (schema, request) => {
     return { data: exercises.findBy('id', Number(request.params.id)) };
+  });
+
+  server.post('exercises/byIds', () => {
+    return { data: availableExercises ? availableExercises : [] };
   });
 
   server.post('study-history', () => {

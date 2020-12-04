@@ -7,9 +7,14 @@ import com.epam.brn.integration.repo.ResourceRepository
 import com.epam.brn.integration.repo.TaskRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.TaskRepository
+import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -25,9 +30,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertSame
 
-@ExtendWith(
-    MockitoExtension::class
-)
+@ExtendWith(MockitoExtension::class)
 @DisplayName("TaskService test using mockito")
 internal class TaskServiceTest {
 
@@ -55,6 +58,7 @@ internal class TaskServiceTest {
             val task1 = mock(Task::class.java)
             val taskDto1 = mock(TaskDtoFor1Series::class.java)
             val task2 = mock(Task::class.java)
+            val answer = mock(Resource::class.java)
             val taskDto2 = mock(TaskDtoFor1Series::class.java)
             val exercise = mock(Exercise::class.java)
             val subGroup = mock(SubGroup::class.java)
@@ -63,15 +67,23 @@ internal class TaskServiceTest {
                 .thenReturn(listOf(task1, task2))
             `when`(exerciseRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(exercise))
+            `when`(taskRepository.findTasksByExerciseIdWithJoinedAnswers(LONG_ONE))
+                .thenReturn(listOf(task1, task2))
+
             `when`(exercise.subGroup).thenReturn(subGroup)
             `when`(subGroup.series).thenReturn(series)
             `when`(series.type).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.name)
             `when`(task1.to1SeriesTaskDto()).thenReturn(taskDto1)
             `when`(task2.to1SeriesTaskDto()).thenReturn(taskDto2)
+            `when`(task1.answerOptions).thenReturn(mutableSetOf(answer))
+            `when`(answer.audioFileUrl).thenReturn("url")
+
+            `when`(urlConversionService.makeFullUrl("url")).thenReturn("fullUrl")
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
             // THEN
             assertEquals(2, foundTasks.size)
+            verify(urlConversionService).makeFullUrl("url")
         }
 
         @Test
