@@ -20,6 +20,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyString
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.Optional
 import kotlin.test.assertFailsWith
@@ -51,6 +52,9 @@ internal class UserAccountServiceTest {
 
     @Mock
     lateinit var authority: Authority
+
+    @Mock
+    lateinit var authentication: Authentication
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -128,4 +132,35 @@ internal class UserAccountServiceTest {
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
         }
     }
+
+//    @Nested
+//    @DisplayName("Test for update current user")
+//    inner class UpdateUserAccount {
+//
+//        @Test
+//        fun `should update avatar current session user`() {
+//            // GIVEN
+//            val avatarUrl = "new/avatar"
+//            val authentication = Mockito.mock(
+//                Authentication::class.java
+//            )
+//            val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
+//
+//            // todo Can't pass autentication.principle
+//            //  for com.epam.brn.service.impl.UserAccountServiceImpl.getNameFromPrincipals
+//
+//            `when`(securityContext.authentication).thenReturn(authentication)
+//            SecurityContextHolder.setContext(securityContext)
+//            `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountResponse)
+//            `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
+//                .thenReturn(Optional.of(userAccount))
+//            `when`(userAccountRepository.save(userAccount))
+//                .thenReturn(userAccount)
+//            `when`(userAccountService.updateAvatarCurrentUser(avatarUrl)).thenReturn(userAccountResponse)
+//            // WHEN
+//            val updatedUserAccountRS = userAccountService.updateAvatarCurrentUser(avatarUrl)
+//            // THEN
+//            assertThat(updatedUserAccountRS.avatar).isEqualTo(avatarUrl)
+//        }
+//    }
 }

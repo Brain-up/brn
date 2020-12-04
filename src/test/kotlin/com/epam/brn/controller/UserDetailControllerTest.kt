@@ -5,8 +5,10 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
+import org.amshove.kluent.internal.assertSame
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
+import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -71,6 +73,24 @@ internal class UserDetailControllerTest {
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
             assertThat(savedUserAccountDto[0]).isEqualTo(userAccountResponse)
             verify(userAccountService).getUserFromTheCurrentSession()
+        }
+
+        @Test
+        fun `should update avatar for current user`() {
+            // GIVEN
+            val avatarUrl = "xxx/www/eee"
+            val userAccountRS = UserAccountResponse(
+                id = LONG_ONE, avatar = "xxx/www/eee", name = "testName",
+                email = "email", active = true, gender = Gender.FEMALE, bornYear = 2000
+            )
+            Mockito.`when`(userAccountService.updateAvatarCurrentUser(avatarUrl)).thenReturn(userAccountRS)
+            // WHEN
+            val updatedUserAccountRS =
+                userDetailController.updateAvatarCurrentUser(avatarUrl).body?.data as List<UserAccountResponse>
+
+            // THEN
+            assertSame(userAccountRS, updatedUserAccountRS[0])
+            verify(userAccountService).updateAvatarCurrentUser(avatarUrl)
         }
     }
 }
