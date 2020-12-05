@@ -47,7 +47,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,
-      birthday: new Date(this.birthday).toISOString(),
+      birthday: this.birthday,
       password: this.password,
     };
     const result = yield this.network.createUser(user);
