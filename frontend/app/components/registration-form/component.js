@@ -17,8 +17,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked birthday;
   maxDate = new Date().getFullYear();
   minDate = new Date().getFullYear() - 100;
-  //maxDateString = this.maxDate.toISOString().split('T')[0];
-  //minDateString = this.minDate.toISOString().split('T')[0];
 
   get warningErrorDate() {
     const { birthday, maxDate, minDate } = this;
@@ -26,10 +24,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     if (birthday === undefined) {
       return false;
     }
-
-    // const max = maxDate.getTime();
-    // const min = minDate.getTime();
-    // const enterDateUser = new Date(birthday).getTime();
 
     if (birthday > maxDate || minDate > birthday) {
       return this.intl.t('registration_form.invalid_date');
