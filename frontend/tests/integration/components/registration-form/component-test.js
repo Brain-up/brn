@@ -6,8 +6,7 @@ import Service from '@ember/service';
 
 function getDate(num) {
   let date = new Date();
-  date.setFullYear(date.getFullYear() + num);
-  return date.toISOString().split('T')[0];
+  return date.getFullYear() + num;
 }
 
 module('Integration | Component | registration-form', function(hooks) {
@@ -21,7 +20,6 @@ module('Integration | Component | registration-form', function(hooks) {
 
     assert.dom('form').exists();
     assert.dom('[data-test-submit-form]').hasTagName('button');
-    assert.dom('[name="lastName"]').hasAttribute('required');
     assert.dom('[name="firstName"]').hasAttribute('required');
     assert.dom('[data-test-form-warning]').doesNotExist();
   });
@@ -46,11 +44,10 @@ module('Integration | Component | registration-form', function(hooks) {
     this.owner.register('service:session', MockSession);
     this.owner.register('service:network', Network);
     await render(hbs`<RegistrationForm />`);
-    await fillIn('[name="lastName"]', 'a');
     await fillIn('[name="firstName"]', 'b');
     await fillIn('[name="email"]', 'c@name.com');
     await fillIn('[name="password"]', 'd');
-    await fillIn('[name="birthday"]', '1991-02-11');
+    await fillIn('[name="birthday"]', '1991');
     await click('[data-test-submit-form]');
   });
 
@@ -72,11 +69,10 @@ module('Integration | Component | registration-form', function(hooks) {
     }
     this.owner.register('service:network', Network);
     await render(hbs`<RegistrationForm />`);
-    await fillIn('[name="lastName"]', 'a');
     await fillIn('[name="firstName"]', 'b');
     await fillIn('[name="email"]', 'c@name.com');
     await fillIn('[name="password"]', 'd');
-    await fillIn('[name="birthday"]', '1991-02-11');
+    await fillIn('[name="birthday"]', '1991');
     await click('[data-test-submit-form]');
     assert.dom('[data-test-form-error]').hasText('foo');
   });
@@ -84,7 +80,7 @@ module('Integration | Component | registration-form', function(hooks) {
   test('show message when entering date below acceptable', async function(assert) {
     await render(hbs`<RegistrationForm />`);
 
-    await fillIn('input[name="birthday"]', '1911-05-06');
+    await fillIn('input[name="birthday"]', '1911');
 
     assert.dom('[data-test-warning-message="birthday"]').exists();
   });

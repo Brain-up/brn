@@ -2,6 +2,7 @@
   <form
     class="bg-white rounded px-12 pt-6 pb-8 mb-6
 
+
       {{unless this.registrationInProgress "shadow-lg"}}"
     {{on "submit" this.onSubmit}}
   >
@@ -39,6 +40,7 @@
           @placeholder={{t "registration_form.birthday_placeholder"}}
           @model={{this}}
           @name="birthday"
+          @type="number"
         />
       </div>
       <div class="mb-4">
@@ -47,7 +49,6 @@
         </p>
         <Input
           @id="female"
-          @model={{this}}
           @name="female"
           @type="checkbox"
           @checked={{this.female}}
@@ -58,7 +59,6 @@
         </label>
         <Input
           @id="male"
-          @model={{this}}
           @name="male"
           @type="checkbox"
           @checked={{this.male}}
@@ -99,7 +99,6 @@
       <div class="flex mb-6 leading-none">
         <Input
           @id="agreement"
-          @model={{this}}
           @name="agreement"
           @type="checkbox"
           @checked={{this.agreed}}
