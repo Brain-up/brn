@@ -6,6 +6,7 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import org.apache.commons.lang3.math.NumberUtils
@@ -140,10 +141,13 @@ internal class UserAccountServiceTest {
 //        @Test
 //        fun `should update avatar current session user`() {
 //            // GIVEN
+//            val authName = "ROLE_ADMIN"
 //            val avatarUrl = "new/avatar"
 //            val authentication = Mockito.mock(
 //                Authentication::class.java
 //            )
+//            val authority = authorityRepository.findAuthorityByAuthorityName(authName)
+//                ?: authorityRepository.save(Authority(authorityName = authName))
 //            val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
 //
 //            // todo Can't pass autentication.principle
