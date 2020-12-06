@@ -72,8 +72,7 @@
         <div>
           <button
             type="button"
-            title="{{this.user.email}}" style={{html-safe (concat "background-image: url('" this.avatarUrl "');")}} class="gradient-background inline-flex items-center justify-center w-10 h-10 bg-cover border border-gray-400 rounded-full"
-            {{on "click" this.onShowAvatars}}
+            title="{{this.user.email}}" style={{html-safe (concat "background-image: url('" this.avatarUrl "');")}} {{on "click" this.onShowAvatars}} class="gradient-background inline-flex items-center justify-center w-10 h-10 bg-center bg-cover border border-gray-400 rounded-full"
           >
 
           </button>
