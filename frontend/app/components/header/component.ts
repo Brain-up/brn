@@ -11,12 +11,40 @@ export default class HeaderComponent extends Component {
   @service('router') router!: Router;
   @service('intl') intl!: IntlService;
 
+  @tracked _selectedAvatarId = localStorage.getItem('user:avatar_id') || 1;
+
+  get avatarUrl() {
+    return `pictures/avatars/avatar ${this.selectedAvatarId}.png`;
+  }
+
+  get selectedAvatarId() {
+    return this._selectedAvatarId;
+  }
+  set selectedAvatarId(value) {
+    localStorage.setItem('user:avatar_id', value.toString());
+    this._selectedAvatarId = value;
+  }
+
+  @tracked showAvatarsModal = false;
+
   @tracked selectedLocale: string | null = null;
 
   @action logout() {
     this.session.invalidate().then(() => {
       window.location.reload();
     });
+  }
+
+  @action onAvatarSelect(id: number) {
+    if (!id) {
+      return;
+    }
+    this.selectedAvatarId = id;
+    this.showAvatarsModal = false;
+  }
+
+  @action onShowAvatars() {
+    this.showAvatarsModal = true;
   }
 
   get user() {
