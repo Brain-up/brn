@@ -27,6 +27,7 @@ registration_form:
   email: Email
   email_placeholder: Name@name.com
   invalid_date: Invalid date
+  empty_gender: Empty gender
   gender: Gender
   gender_female: Female
   gender_male: Male

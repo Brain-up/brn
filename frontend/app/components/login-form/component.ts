@@ -6,6 +6,7 @@ import { task } from 'ember-concurrency';
 import Router from '@ember/routing/router-service';
 import Session from 'ember-simple-auth/services/session';
 import IntlService from 'ember-intl/services/intl';
+import NetworkService from 'brn/services/network';
 
 const BUTTON_STATES = {
   ACTIVE: 'active',
@@ -15,6 +16,7 @@ const BUTTON_STATES = {
 export default class LoginFormComponent extends Component {
   @service('session') session!: Session;
   @service('router') router!: Router;
+  @service('network') network!: NetworkService;
   @service('intl') intl!: IntlService;
 
   @tracked login: string | undefined = undefined;
@@ -59,6 +61,7 @@ export default class LoginFormComponent extends Component {
     let { login, password } = this;
     try {
       yield this.session.authenticate('authenticator:oauth2', login, password);
+      yield this.network.loadCurrentUser();
     } catch (error) {
       let key = '';
       if (error.responseJSON) {

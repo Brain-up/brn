@@ -29,6 +29,7 @@ registration_form:
   email_placeholder: Name@name.com
   warning_input_restriction: Максимальное количество символов
   invalid_date: Некорректная дата
+  empty_gender: Пол не указан
   warning_enter_credentials: Пожалуйста, введите логин и пароль.
   gender: Пол
   gender_female: Женский

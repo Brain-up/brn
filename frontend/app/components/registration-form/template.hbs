@@ -47,26 +47,37 @@
         <p class="mb-2 text-sm font-bold text-gray-700">
           {{t "registration_form.gender"}}
         </p>
-        <Input
-          @id="female"
-          @name="female"
-          @type="checkbox"
-          @checked={{this.female}}
+        <input
+          name="gender"
+          value="FEMALE"
+          type="radio"
           class="w-3 h-3 border-gray-300"
-        />
+          id="female"
+          {{on "change" this.setGender}}
+        >
         <label class="ml-1 text-sm text-gray-500" for="female">
           {{t "registration_form.gender_female"}}
         </label>
-        <Input
-          @id="male"
-          @name="male"
-          @type="checkbox"
-          @checked={{this.male}}
+        <input
+          name="gender"
+          type="radio"
+          value="MALE"
           class="w-3 h-3 ml-4"
-        />
+          id="male"
+          {{on "change" this.setGender}}
+        >
         <label class="ml-1 text-sm text-gray-500" for="male">
           {{t "registration_form.gender_male"}}
         </label>
+
+        {{#if this.warningGender}}
+          <p
+            data-test-warning-message="gender"
+            class="mt-2 text-xs italic text-red-500"
+          >
+            {{this.warningGender}}
+          </p>
+        {{/if}}
       </div>
       <div class="mb-4">
         <LoginForm::Input
@@ -97,11 +108,11 @@
         {{/if}}
       </div>
       <div class="flex mb-6 leading-none">
-        <Input
-          @id="agreement"
-          @name="agreement"
-          @type="checkbox"
-          @checked={{this.agreed}}
+        <input
+          id="agreement"
+          name="agreement"
+          type="checkbox"
+          {{on 'change' this.setAgreedStatus}}
         />
         <label class="block ml-2 text-xs align-top" for="agreement">
           {{t "registration_form.agreement_part1"}}
@@ -114,7 +125,7 @@
         </label>
       </div>
       <div class="flex mb-4">
-        <Ui::Button @type="submit" class="w-full" data-test-submit-form @title={{t "registration_form.registration"}} />
+        <Ui::Button @type="submit" class="w-full" disabled={{not this.agreed}} data-test-submit-form @title={{t "registration_form.registration"}} />
       </div>
     {{/if}}
   </form>
