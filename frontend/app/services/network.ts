@@ -22,18 +22,6 @@ interface LatestUserDTO {
   id?: string;
 }
 
-// @todo create user model and serializer for it
-function toLatestUserDto(user: UserDTO): LatestUserDTO {
-  return {
-    name: `${user.firstName} ${user.lastName}`,
-    email: user.email,
-    password: user.password as string,
-    gender: "MALE",
-    bornYear: new Date(user.birthday).getFullYear(),
-    avatar: ''
-  };
-}
-
 function fromLatestUserDto(user: LatestUserDTO): UserDTO {
   const [ firstName = '', lastName = '']  = (user.name || '').split(' ');
   return {
@@ -85,8 +73,8 @@ export default class NetworkService extends Service {
     user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
     this.session.set('data.user', user);
   }
-  createUser(user: UserDTO) {
-    return this.postRequest('registration', toLatestUserDto(user));
+  createUser(user: LatestUserDTO) {
+    return this.postRequest('registration', user);
   }
   async availableExercises(ids: string[]) {
     const result = await this.postRequest(`exercises/byIds`, {

@@ -10,6 +10,9 @@ interface ILoginFormInputComponentArgs {
   model: FormModel;
   name: keyof FormModel;
   warning: string;
+  type?: string;
+  label?: string;
+  placeholder?: string
 }
 export default class LoginFormInputComponent extends Component<ILoginFormInputComponentArgs> {
   @service('intl') intl!: IntlService;
