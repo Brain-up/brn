@@ -63,16 +63,15 @@
         <GlobalTimer />
         <div>
           <span
-            title="{{this.user.email}}" class="gradient-background inline-flex items-center justify-center w-10 h-10 rounded-full"
+            title="{{this.user.email}}" style={{html-safe "background-image: url('pictures/avatars/avatar 1.png');"}} class="gradient-background border-gray-400 inline-flex items-center justify-center w-10 h-10 bg-cover border rounded-full"
           >
-            <span class="text-md font-bold leading-none text-blue-500">
-              {{this.user.initials}}
-            </span>
+
           </span>
         </div>
         <div class="ml-3">
           <p
             class="hover:text-gray-900 font-small text-sm leading-5 text-gray-800 uppercase"
+
           >
             {{this.user.firstName}}
           </p>
