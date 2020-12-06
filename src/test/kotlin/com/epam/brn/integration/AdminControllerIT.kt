@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.Gender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
@@ -12,15 +13,10 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -32,12 +28,8 @@ import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
-@Tag("integration-test")
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-class AdminControllerIT {
+class AdminControllerIT : BaseIT() {
 
     private val baseUrl = "/admin"
 
@@ -55,9 +47,6 @@ class AdminControllerIT {
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
 
     @AfterEach
     fun deleteAfterTest() {
@@ -250,11 +239,11 @@ class AdminControllerIT {
     private fun insertUser(): UserAccount {
         return userAccountRepository.save(
             UserAccount(
-                firstName = "testUserFirstName",
-                lastName = "testUserLastName",
-                birthday = LocalDate.now(),
+                fullName = "testUserFirstName",
                 email = "test@test.test",
                 password = "password",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
                 active = true
             )
         )
@@ -276,7 +265,7 @@ class AdminControllerIT {
         )
     }
 
-    fun insertExercise(exerciseName: String, series: Series): Exercise {
+    private fun insertExercise(exerciseName: String, series: Series): Exercise {
         return exerciseRepository.save(
             Exercise(
                 description = toString(),

@@ -1,10 +1,22 @@
 /*! purgecss start ignore */
 
 .timer-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-size: 20px;
+  margin-bottom: 10px;
  }
+
+.clock-svg {
+  min-width: 40px; 
+  margin-left: -28px;
+  margin-top: -2px;
+  position: absolute;
+  enable-background:new 0 0 512 512;
+}
+
+.timer {
+  padding: 5px 10px 5px 50px; 
+  border: 1px solid #bdbbbb; 
+  border-radius: 15px; 
+  margin-left: -16px; 
+}
 
 /*! purgecss end ignore */

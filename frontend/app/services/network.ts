@@ -8,7 +8,41 @@ interface UserDTO {
   lastName: string;
   email: string;
   birthday: string;
+  password?: string;
+  id?: string;
+}
+
+interface LatestUserDTO {
+  name: string;
+  email: string;
   password: string;
+  gender: "MALE" | "FEMALE";
+  bornYear: number;
+  avatar: string;
+  id?: string;
+}
+
+// @todo create user model and serializer for it
+function toLatestUserDto(user: UserDTO): LatestUserDTO {
+  return {
+    name: `${user.firstName} ${user.lastName}`,
+    email: user.email,
+    password: user.password as string,
+    gender: "MALE",
+    bornYear: new Date(user.birthday).getFullYear(),
+    avatar: ''
+  };
+}
+
+function fromLatestUserDto(user: LatestUserDTO): UserDTO {
+  const [ firstName = '', lastName = '']  = (user.name || '').split(' ');
+  return {
+    firstName: firstName || '',
+    lastName: lastName || '',
+    email: user.email,
+    birthday: new Date().setFullYear(user.bornYear).toString(),
+    id: user.id as string
+  }
 }
 
 export default class NetworkService extends Service {
@@ -44,19 +78,23 @@ export default class NetworkService extends Service {
   async getCurrentUser() {
     let result = await this.request('users/current');
     let { data } = await result.json();
-    return Array.isArray(data) ? data[0] : data;
+    return fromLatestUserDto(Array.isArray(data) ? data[0] : data);
   }
   async loadCurrentUser() {
-    const user = await this.getCurrentUser();
+    const user: any = await this.getCurrentUser();
     user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
     this.session.set('data.user', user);
   }
   createUser(user: UserDTO) {
-    return this.postRequest('registration', user);
+    return this.postRequest('registration', toLatestUserDto(user));
   }
   async availableExercises(ids: string[]) {
-    const result = await this.request(`exercises/byIds?ids=${ids.join(',')}`);
-    console.log(result);
+    const result = await this.postRequest(`exercises/byIds`, {
+      ids: ids.map((el)=>parseInt(el, 10))
+    });
+    const json = await result.json();
+    const { data } = json;
+    return data.map((el: number)=>String(el));
   }
 }
 

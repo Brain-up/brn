@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "authorities": [
+        "ROLE_USER"
+      ],
+      "id": 2,
+      "name": "firstName",
+      "email": "default@default.ru",
+      "bornYear": 2000,
+      "gender": "MALE",
+      "active": true,
+      "created": "2020-11-24T11:48:38.503511+03:00",
+      "changed": "2020-11-24T11:48:38.503511+03:00",
+      "avatar": "girl"
+
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

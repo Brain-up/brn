@@ -1,7 +1,8 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.UserAccountDto
-import java.time.LocalDate
+import com.epam.brn.dto.response.UserAccountResponse
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -19,15 +20,19 @@ data class UserAccount(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
-    val firstName: String,
-    @Column(nullable = true)
-    val lastName: String,
+    val fullName: String,
     @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
     val password: String,
-    val birthday: LocalDate? = null,
-    val active: Boolean
+    val bornYear: Int,
+    val gender: String,
+    val active: Boolean = true,
+    @Column(nullable = false)
+    var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    @Column(nullable = false)
+    val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    val avatar: String? = null
 ) {
     @OneToOne(cascade = [(CascadeType.ALL)])
     @JoinColumn(name = "progress_id")
@@ -41,18 +46,20 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, firstName='$firstName', lastName='$lastName', email='$email', birthday=$birthday, progress=$progress)"
+        return "UserAccount(id=$id, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender,  progress=$progress)"
     }
 
-    fun toDto(): UserAccountDto {
-        val userAccountDto = UserAccountDto(
+    fun toDto(): UserAccountResponse {
+        val userAccountDto = UserAccountResponse(
             id = this.id,
-            firstName = this.firstName,
-            lastName = this.lastName,
+            name = this.fullName,
             active = this.active,
             email = this.email,
-            birthday = this.birthday,
-            password = "this.password"
+            bornYear = this.bornYear,
+            gender = Gender.valueOf(gender),
+            created = created,
+            changed = changed,
+            avatar = avatar
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)

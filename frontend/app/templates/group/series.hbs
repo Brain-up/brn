@@ -1,9 +1,12 @@
 <div class="series-page--canvas flex flex-col flex-grow">
   {{#if this.exerciseName}}
+    {{page-title (concat @model.name ": " this.exerciseName)}}
     <SeriesNavigation
       @exercises={{filter-by "name" this.exerciseName @model.exercises}}
+      @available={{this.availableExercises}}
     />
   {{else}}
+    {{page-title @model.name}}
     {{#each (chunk 2 (sort-by "name" this.exerciseGroups)) as |groups|}}
       <div class="flex mb-4 -mx-2">
         {{#each groups as |group|}}

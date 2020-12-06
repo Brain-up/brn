@@ -13,6 +13,8 @@ const purgeCSS = {
       './app/index.html',
       './app/templates/**/*.hbs',
       './app/components/**/*.hbs',
+      './app/components/**/*.ts',
+      './app/components/**/*.js',
       './app/components/**/*.css'
     ],
     defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || content.match(/[\w-/.:]+(?<!:)/g) || []
@@ -45,7 +47,7 @@ module.exports = function (defaults) {
             }
           },
           tailwindcss('./app/styles/tailwind.js'),
-          ...isProduction ? [purgeCSS] : []
+          ... isProduction ? [purgeCSS] : []
         ]
       }
     }

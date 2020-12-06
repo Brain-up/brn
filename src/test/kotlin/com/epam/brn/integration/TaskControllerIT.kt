@@ -13,25 +13,16 @@ import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
-@Tag("integration-test")
-@WithMockUser(username = "admin", roles = ["ADMIN"])
-class TaskControllerIT {
+@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+class TaskControllerIT : BaseIT() {
 
     @Autowired
     lateinit var exerciseRepository: ExerciseRepository
@@ -44,9 +35,6 @@ class TaskControllerIT {
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
 
     lateinit var exercise: Exercise
 
@@ -136,7 +124,7 @@ class TaskControllerIT {
         )
     }
 
-    fun insertExercise(series: Series): Exercise {
+    private fun insertExercise(series: Series): Exercise {
         return exerciseRepository.save(
             Exercise(
                 id = 1,

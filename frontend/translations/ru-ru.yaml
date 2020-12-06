@@ -3,6 +3,16 @@ header:
   logout: Выйти
   about: Описание
 
+login:
+  title: Логин
+
+registration:
+  title: Регистрация
+
+audio_player:
+  listen: Прослушать ещё раз
+
+
 login_form:
   login: Логин
   error_bad_credentials: Неправильный логин или пароль.
@@ -94,4 +104,5 @@ msg:
 
 groups:
   exercise_selection: "Давайте выберем, какие упражнения будем делать сегодня?"
+  title: Группы
 

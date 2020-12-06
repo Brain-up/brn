@@ -1,12 +1,13 @@
 import { attr } from '@ember-data/model';
 import BaseTask from '../task';
-import { computed } from '@ember/object';
 import shuffleArray from 'brn/utils/shuffle-array';
+import { cached } from 'tracked-toolbox';
 
-export default class TaskSingleSimpleWordsModel extends BaseTask.extend({
-  answerOptions: attr(),
-  exerciseType: 'single-simple-words',
-  tasksToSolve: computed('answerOptions.[]', function() {
+export default class TaskSingleSimpleWordsModel extends BaseTask {
+  @attr() answerOptions!: any;
+  exerciseType = 'single-simple-words';
+  @cached
+  get tasksToSolve() {
     return [
       ...shuffleArray(this.answerOptions),
       ...shuffleArray(this.answerOptions),
@@ -16,5 +17,5 @@ export default class TaskSingleSimpleWordsModel extends BaseTask.extend({
         order: index,
       };
     });
-  }),
-}) {}
+  }
+}

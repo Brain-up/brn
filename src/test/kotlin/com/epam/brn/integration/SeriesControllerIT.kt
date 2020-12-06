@@ -6,28 +6,17 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("integration-tests")
-@Tag("integration-test")
-@WithMockUser(username = "admin", roles = ["ADMIN"])
-class SeriesControllerIT {
-
-    private val baseUrl = "/series"
+@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+class SeriesControllerIT : BaseIT() {
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
@@ -35,31 +24,30 @@ class SeriesControllerIT {
     @Autowired
     lateinit var seriesRepository: SeriesRepository
 
-    @Autowired
-    lateinit var mockMvc: MockMvc
-
-    private val seriesName = "распознавание слов тест"
-
-    fun loadGroupWithExercises(): Long {
-        val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
-        val series1 =
-            Series(name = seriesName, description = "descr1", exerciseGroup = group)
-        val series2 =
-            Series(name = "диахоничкеское слушание тест", description = "descr2", exerciseGroup = group)
-        group.series.addAll(setOf(series1, series2))
-        val savedGroup = exerciseGroupRepository.save(group)
-        return savedGroup.id ?: 1
-    }
+    private val baseUrl = "/series"
+    private val series1Name = "серия 1 тест"
+    private val series2Name = "серия 2 тест"
 
     @AfterEach
     fun deleteAfterTest() {
         exerciseGroupRepository.deleteAll()
     }
 
+    private fun loadGroupWith2Series(): Long {
+        val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
+        val series1 =
+            Series(name = series1Name, description = "descr1", exerciseGroup = group)
+        val series2 =
+            Series(name = series2Name, description = "descr2", exerciseGroup = group)
+        group.series.addAll(setOf(series1, series2))
+        val savedGroup = exerciseGroupRepository.save(group)
+        return savedGroup.id ?: 1
+    }
+
     @Test
     fun `test get series for group`() {
         // GIVEN
-        val idGroup = loadGroupWithExercises()
+        val idGroup = loadGroupWith2Series()
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -72,16 +60,16 @@ class SeriesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        Assertions.assertTrue(response.contains(seriesName))
-        Assertions.assertTrue(response.contains("диахоничкеское слушание тест"))
+        Assertions.assertTrue(response.contains(series1Name))
+        Assertions.assertTrue(response.contains(series2Name))
         Assertions.assertTrue(response.contains("exercises"))
     }
 
     @Test
     fun `test get series for seriesId`() {
         // GIVEN
-        loadGroupWithExercises()
-        val seriesId = seriesRepository.findByNameLike(seriesName)[0].id
+        loadGroupWith2Series()
+        val seriesId = seriesRepository.findByNameLike(series1Name)[0].id
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -93,7 +81,7 @@ class SeriesControllerIT {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        Assertions.assertTrue(response.contains(seriesName))
+        Assertions.assertTrue(response.contains(series1Name))
         Assertions.assertTrue(response.contains("exercises"))
     }
 

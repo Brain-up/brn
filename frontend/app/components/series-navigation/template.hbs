@@ -21,32 +21,30 @@
               data-test-exercises-name-group class="flex flex-row justify-around ml-6 mr-6"
             >
               {{#each exercises as |exercise|}}
+                {{#let (contains exercise.id (or @available (array))) as |isAvailable|}}
                 <li>
                   <div class="exercise-block__levels flex mt-2 ml-2 mr-2">
                     <a
                       data-test-series-navigation-list-link
                       data-test-exercise-level={{exercise.level}}
                       data-test-exercise-name={{exercise.name}}
-                      disabled={{not exercise.canInteract}}
+                      disabled={{not isAvailable}}
                       href={{href-to "group.series.exercise" exercise.id}}
                       title={{concat (t "task_link.exercise") " " exercise.level}}
                       class="task-square-link exercise-block__level hover:shadow-outline hover:shadow-md flex-1 p-2 m-4 mb-4 bg-white rounded-lg shadow-lg"
                     >
                       <Ui::Icon::Tree
                         @level={{level}}
-                        @enabled={{exercise.canInteract}}
+                        @enabled={{isAvailable}}
                       />
                       <div class="check-container">
                         <Ui::Icon::Check
-                          @isAvailable={{and
-                            exercise.canInteract
-                            (not exercise.isCompleted)
+                          @isAvailable={{or (and
+                            (not exercise.isCompleted))
+                            isAvailable
                           }}
                           @isCompleted={{exercise.isCompleted}}
-                          @isLocked={{and
-                            (not exercise.canInteract)
-                            (not exercise.isCompleted)
-                          }}
+                          @isLocked={{not isAvailable}}
                         />
                       </div>
                       <div class="number-container">
@@ -55,6 +53,7 @@
                     </a>
                   </div>
                 </li>
+                 {{/let}}
               {{/each}}
             </ul>
           {{/each}}

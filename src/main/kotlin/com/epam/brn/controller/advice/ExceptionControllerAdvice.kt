@@ -25,8 +25,8 @@ class ExceptionControllerAdvice {
 
     private val logger = logger()
 
-    @Value("\${validation.field.birthday.invalid-format}")
-    private val birthdayProperty: String? = null
+    @Value("\${validation.field.bornYear.notNull}")
+    private val bornYearProperty: String? = null
 
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponseDto> {
@@ -89,9 +89,8 @@ class ExceptionControllerAdvice {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BaseResponseDto(errors = listOf(birthdayProperty.toString())))
+                .body(BaseResponseDto(errors = listOf(bornYearProperty.toString())))
         }
-
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)

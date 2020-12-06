@@ -1,7 +1,8 @@
 package com.epam.brn.service.impl
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.UserAccountRequest
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
@@ -26,34 +27,34 @@ class UserAccountServiceImpl(
 
     private val log = logger()
 
-    override fun findUserByName(firstName: String, lastName: String): UserAccountDto {
+    override fun findUserByName(name: String): UserAccountResponse {
         return userAccountRepository
-            .findUserAccountByFirstNameAndLastName(firstName, lastName)
+            .findUserAccountByName(name)
             .map(UserAccount::toDto)
             .orElseThrow {
-                log.warn("User $firstName $lastName is not found")
-                UsernameNotFoundException("User: $firstName $lastName is not found")
+                log.warn("User with `$name` is not found")
+                UsernameNotFoundException("User: `$name` is not found")
             }
     }
 
-    override fun addUser(userAccountDto: UserAccountDto): UserAccountDto {
-        val existUser = userAccountRepository.findUserAccountByEmail(userAccountDto.email)
+    override fun addUser(userAccountRequest: UserAccountRequest): UserAccountResponse {
+        val existUser = userAccountRepository.findUserAccountByEmail(userAccountRequest.email)
         existUser.ifPresent {
             throw IllegalArgumentException("The user already exists!")
         }
 
-        val setOfAuthorities = getTheAuthoritySet(userAccountDto)
-        val hashedPassword = getHashedPassword(userAccountDto)
+        val setOfAuthorities = getTheAuthoritySet(userAccountRequest)
+        val hashedPassword = getHashedPassword(userAccountRequest)
 
-        val userAccount = userAccountDto.toModel(hashedPassword)
+        val userAccount = userAccountRequest.toModel(hashedPassword)
         userAccount.authoritySet = setOfAuthorities
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    fun getHashedPassword(userAccountDto: UserAccountDto) = passwordEncoder.encode(userAccountDto.password)
+    fun getHashedPassword(userAccountRequest: UserAccountRequest) = passwordEncoder.encode(userAccountRequest.password)
 
-    private fun getTheAuthoritySet(userAccountDto: UserAccountDto): MutableSet<Authority> {
-        var authorityNames = userAccountDto.authorities ?: mutableSetOf()
+    private fun getTheAuthoritySet(userAccountRequest: UserAccountRequest): MutableSet<Authority> {
+        var authorityNames = userAccountRequest.authorities ?: mutableSetOf()
         if (authorityNames.isEmpty())
             authorityNames = mutableSetOf("ROLE_USER")
 
@@ -64,19 +65,19 @@ class UserAccountServiceImpl(
             }
     }
 
-    override fun save(userAccountDto: UserAccountDto): UserAccountDto {
-        val hashedPassword = getHashedPassword(userAccountDto)
-        val userAccountModel = userAccountDto.toModel(hashedPassword)
+    override fun save(userAccountRequest: UserAccountRequest): UserAccountResponse {
+        val hashedPassword = getHashedPassword(userAccountRequest)
+        val userAccountModel = userAccountRequest.toModel(hashedPassword)
         return userAccountRepository.save(userAccountModel).toDto()
     }
 
-    override fun findUserById(id: Long): UserAccountDto {
+    override fun findUserById(id: Long): UserAccountResponse {
         return userAccountRepository.findUserAccountById(id)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
     }
 
-    override fun getUserFromTheCurrentSession(): UserAccountDto {
+    override fun getUserFromTheCurrentSession(): UserAccountResponse {
         val authentication = SecurityContextHolder.getContext().authentication
         val email = authentication.name ?: getNameFromPrincipals(authentication)
         return findUserByEmail(email)
@@ -87,7 +88,7 @@ class UserAccountServiceImpl(
         userAccountRepository.deleteById(id)
     }
 
-    override fun getUsers(): List<UserAccountDto> =
+    override fun getUsers(): List<UserAccountResponse> =
         userAccountRepository.findAll().map { it.toDto() }
 
     private fun getNameFromPrincipals(authentication: Authentication): String {
@@ -100,7 +101,7 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    override fun findUserByEmail(email: String): UserAccountDto {
+    override fun findUserByEmail(email: String): UserAccountResponse {
         return userAccountRepository.findUserAccountByEmail(email)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
