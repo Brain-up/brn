@@ -1,6 +1,6 @@
 import LoginFormComponent from './../login-form/component';
 import { action } from '@ember/object';
-import { task } from 'ember-concurrency';
+import { task, Task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 
 const ERRORS_MAP = {
@@ -89,7 +89,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       this.registrationTask.cancelAll();
     }
   }).drop())
-  registrationTask!: any;
+  registrationTask!: Task<any, any>;
 
   @action
   onSubmit(e: DocumentEvent & any) {
