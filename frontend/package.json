@@ -148,6 +148,6 @@
     "stylelint": "^13.6.1",
     "stylelint-config-recommended": "^3.0.0",
     "tailwindcss": "^1.9.6",
-    "tone": "^14.7.60"
+    "tone": "^14.7.71"
   }
 }
