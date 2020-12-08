@@ -43,7 +43,7 @@ class SeriesControllerIT : BaseIT() {
     }
 
     private fun insertSeries(group: ExerciseGroup, name: String): Series {
-        val series = Series(name = name, description = "descr", exerciseGroup = group)
+        val series = Series(name = name, description = "description", exerciseGroup = group)
         return seriesRepository.save(series)
     }
 
