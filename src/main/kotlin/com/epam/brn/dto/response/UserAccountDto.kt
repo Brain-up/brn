@@ -6,7 +6,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class UserAccountResponse(
+data class UserAccountDto(
     val id: Long? = null,
     val name: String,
     val email: String,
@@ -15,7 +15,7 @@ data class UserAccountResponse(
     var active: Boolean,
     val created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    val avatar: String? = null
+    var avatar: String? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }
