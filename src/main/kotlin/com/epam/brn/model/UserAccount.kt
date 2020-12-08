@@ -31,7 +31,7 @@ data class UserAccount(
     @Column(nullable = false)
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     @Column(nullable = false)
-    val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     var avatar: String? = null
 ) {
     @OneToOne(cascade = [(CascadeType.ALL)])

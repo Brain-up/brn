@@ -208,10 +208,10 @@ mediaType:
         is: [Forbidden, NotFound]
         desctiprion: Update user avatar.
         queryParameters:
-          avatarUrl:
+          avatar:
               required: true
               type: string
-              example: {schema}://{host}/api/users/current/avatar?avatarUrl="/pictures/avatar/girl.cvg"
+              example: "/pictures/avatar/girl.cvg"
         responses:
           200:
             body:

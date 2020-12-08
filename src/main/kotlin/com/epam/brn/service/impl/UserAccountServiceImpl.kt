@@ -7,6 +7,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import org.apache.logging.log4j.kotlin.logger
@@ -22,7 +23,8 @@ import java.security.Principal
 class UserAccountServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val authorityService: AuthorityService,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val timeService: TimeService
 ) : UserAccountService {
 
     private val log = logger()
@@ -95,6 +97,7 @@ class UserAccountServiceImpl(
         val currentUser = getUserFromTheCurrentSession()
         val currentUserAccount = (userAccountRepository.findUserAccountById(currentUser.id!!)).get()
         currentUserAccount.avatar = avatarUrl
+        currentUserAccount.changed = timeService.now()
         return userAccountRepository.save(currentUserAccount).toDto()
     }
 

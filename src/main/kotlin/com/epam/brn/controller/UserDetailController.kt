@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -40,7 +41,7 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     @PutMapping(value = ["/current/avatar"])
     @ApiOperation("Update avatar current user")
     fun updateAvatarCurrentUser(
-        @RequestParam("avatarUrl", required = true) avatarUrl: String
+        @RequestParam("avatar", required = true) avatar: String
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = listOf(userAccountService.updateAvatarCurrentUser(avatarUrl))))
+        .body(BaseSingleObjectResponseDto(data = userAccountService.updateAvatarCurrentUser(avatar)))
 }

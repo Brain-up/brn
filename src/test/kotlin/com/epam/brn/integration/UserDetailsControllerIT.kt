@@ -1,27 +1,23 @@
 package com.epam.brn.integration
 
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.UserAccountService
+import com.google.gson.Gson
+import org.amshove.kluent.internal.assertNotSame
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.nio.charset.StandardCharsets
+import kotlin.test.assertEquals
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-@Disabled("need work.")
 class UserDetailsControllerIT : BaseIT() {
 
     @Autowired
@@ -30,48 +26,30 @@ class UserDetailsControllerIT : BaseIT() {
     @Autowired
     lateinit var authorityRepository: AuthorityRepository
 
-    @Autowired
-    lateinit var passwordEncoder: PasswordEncoder
-
-    @Mock
-    lateinit var userAccountService: UserAccountService
-
-    internal val email: String = "testAdmin@admin.com"
-    internal val password: String = "testAdmin"
-    private val baseUrl = "users"
+    internal val email: String = "test@test.test"
+    internal val password: String = "test"
+    private val baseUrl = "/users"
     private val currentUserBaseUrl = "$baseUrl/current"
-
-    @BeforeEach
-    fun initBeforeEachTest() {
-        val authName = "ROLE_ADMIN"
-        val authority = authorityRepository.findAuthorityByAuthorityName(authName)
-            ?: authorityRepository.save(Authority(authorityName = authName))
-
-        val password = passwordEncoder.encode(password)
-        val userAccount =
-            UserAccount(
-                fullName = "testUserFirstName",
-                password = password,
-                email = email,
-                gender = Gender.MALE.toString(),
-                bornYear = 2000,
-                active = true
-            )
-        userAccount.authoritySet.add(authority)
-        userAccountRepository.save(userAccount)
-        val userAccountResponse = mock(UserAccountResponse::class.java)
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountResponse)
-    }
 
     @Test
     fun `update avatar for current user`() {
+        // GIVEN
+        val user = insertUser()
         // WHEN
-        val resultAction = this.mockMvc.perform(
+        val resultAction = mockMvc.perform(
             put("$currentUserBaseUrl/avatar")
-                .queryParam("avatar", "test")
+                .queryParam("avatar", "/pictures/testAvatar")
         )
         // THEN
         resultAction.andExpect(status().isOk)
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val resultUser: UserAccountResponse =
+            objectMapper.readValue(Gson().toJson(baseResponseDto.data), UserAccountResponse::class.java)
+        assertEquals(user.id, resultUser.id)
+        assertEquals(user.fullName, resultUser.name)
+        assertEquals("/pictures/testAvatar", resultUser.avatar)
+        assertNotSame(user.changed, resultUser.changed)
     }
 
     @AfterEach
@@ -79,4 +57,15 @@ class UserDetailsControllerIT : BaseIT() {
         userAccountRepository.deleteAll()
         authorityRepository.deleteAll()
     }
+
+    private fun insertUser(): UserAccount =
+        userAccountRepository.save(
+            UserAccount(
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                email = email,
+                password = password
+            )
+        )
 }
