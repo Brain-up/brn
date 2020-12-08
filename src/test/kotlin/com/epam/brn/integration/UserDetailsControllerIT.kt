@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-@Disabled("need work")
+@Disabled("need work.")
 class UserDetailsControllerIT : BaseIT() {
 
     @Autowired
