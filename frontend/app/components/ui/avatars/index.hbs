@@ -2,7 +2,7 @@
   {{#each this.avatars as |avatar index|}}
       <div style={{html-safe "width: 130px;"}} class="flex m-2 text-center bg-white rounded-lg shadow-lg">
         <button title="Select Avatar" class="mb-4" type="button" {{on "click" (fn (optional @onSelect) (inc index))}}>
-          <img src={{avatar}} alt="Avatar Upload" class="object-cover object-center w-auto mx-auto rounded-full" />
+          <img src={{avatar}} alt="Avatar Upload" class="object-cover object-center w-auto mx-auto" />
         </button>
       </div>
   {{/each}}
