@@ -8,9 +8,7 @@ import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -18,7 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class UserDetailControllerTest {
@@ -75,24 +75,26 @@ internal class UserDetailControllerTest {
             verify(userAccountService).getUserFromTheCurrentSession()
         }
 
-        @Suppress("UNCHECKED_CAST")
-        @Disabled
         @Test
         fun `should update avatar for current user`() {
             // GIVEN
             val avatarUrl = "xxx/www/eee"
-            val userAccountRS = UserAccountDto(
-                id = NumberUtils.LONG_ONE, avatar = "xxx/www/eee", name = "testName",
-                email = "email", active = true, gender = Gender.FEMALE, bornYear = 2000
+            val userAccountDto = UserAccountDto(
+                id = NumberUtils.LONG_ONE,
+                avatar = null,
+                name = "testName",
+                email = "email",
+                active = true,
+                gender = Gender.FEMALE,
+                bornYear = 2000
             )
-            Mockito.`when`(userAccountService.updateAvatarCurrentUser(avatarUrl)).thenReturn(userAccountRS)
+            `when`(userAccountService.updateAvatarForCurrentUser(avatarUrl)).thenReturn(userAccountDto)
             // WHEN
-            val updatedUserAccountRS =
-                userDetailController.updateAvatarCurrentUser(avatarUrl).body?.data as List<UserAccountDto>
-
+            val response = userDetailController.updateAvatarCurrentUser(avatarUrl).body?.data as UserAccountDto
             // THEN
-            assertSame(userAccountRS, updatedUserAccountRS[0])
-            verify(userAccountService).updateAvatarCurrentUser(avatarUrl)
+            userAccountDto.avatar = avatarUrl
+            assertEquals(userAccountDto, response)
+            verify(userAccountService).updateAvatarForCurrentUser(avatarUrl)
         }
     }
 }

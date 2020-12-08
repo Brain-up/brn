@@ -177,7 +177,7 @@ internal class UserAccountServiceTest {
             `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
                 .thenReturn(userAccountUpdated)
             // WHEN
-            userAccountService.updateAvatarCurrentUser(avatarUrl)
+            userAccountService.updateAvatarForCurrentUser(avatarUrl)
             // THEN
             verify(userAccountRepository).findUserAccountByEmail(email)
             verify(timeService).now()

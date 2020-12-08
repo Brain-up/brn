@@ -43,5 +43,5 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     fun updateAvatarCurrentUser(
         @RequestParam("avatar", required = true) avatar: String
     ) = ResponseEntity.ok()
-        .body(BaseSingleObjectResponseDto(data = userAccountService.updateAvatarCurrentUser(avatar)))
+        .body(BaseSingleObjectResponseDto(data = userAccountService.updateAvatarForCurrentUser(avatar)))
 }

@@ -15,7 +15,7 @@ data class UserAccountDto(
     var active: Boolean,
     val created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    val avatar: String? = null
+    var avatar: String? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }

@@ -94,7 +94,7 @@ class UserAccountServiceImpl(
     override fun getUsers(): List<UserAccountDto> =
         userAccountRepository.findAll().map { it.toDto() }
 
-    override fun updateAvatarCurrentUser(avatarUrl: String): UserAccountDto {
+    override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {
         val currentUserAccount = getCurrentUser()
         currentUserAccount.avatar = avatarUrl
         currentUserAccount.changed = timeService.now()
