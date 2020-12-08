@@ -7,18 +7,21 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.UserAccountService
-import org.junit.Ignore
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
+@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@Disabled("need work")
 class UserDetailsControllerIT : BaseIT() {
 
     @Autowired
@@ -60,7 +63,7 @@ class UserDetailsControllerIT : BaseIT() {
         `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountResponse)
     }
 
-    @Test @Ignore
+    @Test
     fun `update avatar for current user`() {
         // WHEN
         val resultAction = this.mockMvc.perform(
