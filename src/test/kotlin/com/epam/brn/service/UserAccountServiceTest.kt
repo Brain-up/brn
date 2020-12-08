@@ -2,16 +2,15 @@ package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.request.UserAccountRequest
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
+import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import org.apache.commons.lang3.math.NumberUtils
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -27,6 +26,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.time.ZonedDateTime
 import java.util.Optional
 import kotlin.test.assertFailsWith
 
@@ -41,7 +41,7 @@ internal class UserAccountServiceTest {
     lateinit var userAccountRepository: UserAccountRepository
 
     @Mock
-    lateinit var authorityRepository: AuthorityRepository
+    lateinit var timeService: TimeService
 
     @Mock
     lateinit var passwordEncoder: PasswordEncoder
@@ -53,7 +53,7 @@ internal class UserAccountServiceTest {
     lateinit var userAccount: UserAccount
 
     @Mock
-    lateinit var userAccountResponse: UserAccountResponse
+    lateinit var userAccountDto: UserAccountDto
 
     @Mock
     lateinit var userAccountRequest: UserAccountRequest
@@ -68,8 +68,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by id`() {
             // GIVEN
             val userName = "Tested"
-            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
-            `when`(userAccountResponse.name).thenReturn(userName)
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
+            `when`(userAccountDto.name).thenReturn(userName)
             `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
@@ -82,8 +82,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by name`() {
             // GIVEN
             val fullName = "Ivan"
-            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
-            `when`(userAccountResponse.name).thenReturn(fullName)
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
+            `when`(userAccountDto.name).thenReturn(fullName)
             `when`(userAccountRepository.findUserAccountByName(fullName))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
@@ -96,8 +96,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by email`() {
             // GIVEN
             val email = "email"
-            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
-            `when`(userAccountResponse.email).thenReturn(email)
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
+            `when`(userAccountDto.email).thenReturn(email)
             `when`(userAccountRepository.findUserAccountByEmail(email))
                 .thenReturn(Optional.of(userAccount))
             // WHEN
@@ -116,20 +116,20 @@ internal class UserAccountServiceTest {
     }
 
     @Nested
-    @DisplayName("Tests for creation of users")
+    @DisplayName("Tests for user creation")
     inner class CreateUserAccounts {
         @Test
         fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
             `when`(userAccountRequest.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
-            `when`(userAccountResponse.name).thenReturn("Tested")
-            `when`(userAccount.toDto()).thenReturn(userAccountResponse)
+            `when`(userAccountDto.name).thenReturn("Tested")
+            `when`(userAccount.toDto()).thenReturn(userAccountDto)
             `when`(userAccountRepository.save(userAccount))
                 .thenReturn(userAccount)
             `when`(authorityService.findAuthorityByAuthorityName(anyString()))
                 .thenReturn(authority)
-            `when`(userAccountService.getHashedPassword(userAccountRequest))
+            `when`(passwordEncoder.encode(userAccountRequest.password))
                 .thenReturn("password")
             // WHEN
             val userAccountDtoReturned = userAccountService.addUser(userAccountRequest)
@@ -142,30 +142,32 @@ internal class UserAccountServiceTest {
     @DisplayName("Test for update current user")
     inner class UpdateUserAccount {
 
-        @Disabled("need work")
         @Test
         fun `should update avatar current session user`() {
             // GIVEN
-//            val authName = "ROLE_ADMIN"
-            val avatarUrl = "new/avatar"
-            val authentication = Mockito.mock(
-                Authentication::class.java
-            )
-//            val authority = authorityRepository.findAuthorityByAuthorityName(authName)
-//                ?: authorityRepository.save(Authority(authorityName = authName))
+            val avatarUrl = "test/avatar"
+            val authentication = Mockito.mock(Authentication::class.java)
             val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                email = "test@test.ru",
+                password = "password",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                avatar = null
+            )
+            val userAccountUpdated = userAccount.copy()
+            userAccountUpdated.avatar = avatarUrl
 
-            // todo Can't pass autentication.principle
-            //  for com.epam.brn.service.impl.UserAccountServiceImpl.getNameFromPrincipals
-
-            `when`(securityContext.authentication).thenReturn(authentication)
             SecurityContextHolder.setContext(securityContext)
-            `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountResponse)
-            `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
+            `when`(securityContext.authentication).thenReturn(authentication)
+            `when`(authentication.name).thenReturn("test@test.ru")
+            `when`(userAccountRepository.findUserAccountByEmail("test@test.ru"))
                 .thenReturn(Optional.of(userAccount))
-            `when`(userAccountRepository.save(userAccount))
-                .thenReturn(userAccount)
-            `when`(userAccountService.updateAvatarCurrentUser(avatarUrl)).thenReturn(userAccountResponse)
+            `when`(timeService.now()).thenReturn(ZonedDateTime.now())
+            `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
+                .thenReturn(userAccountUpdated)
             // WHEN
             val updatedUserAccountRS = userAccountService.updateAvatarCurrentUser(avatarUrl)
             // THEN

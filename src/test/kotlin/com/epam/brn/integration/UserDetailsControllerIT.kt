@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.BaseSingleObjectResponseDto
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
@@ -44,8 +44,8 @@ class UserDetailsControllerIT : BaseIT() {
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
-        val resultUser: UserAccountResponse =
-            objectMapper.readValue(Gson().toJson(baseResponseDto.data), UserAccountResponse::class.java)
+        val resultUser: UserAccountDto =
+            objectMapper.readValue(Gson().toJson(baseResponseDto.data), UserAccountDto::class.java)
         assertEquals(user.id, resultUser.id)
         assertEquals(user.fullName, resultUser.name)
         assertEquals("/pictures/testAvatar", resultUser.avatar)
