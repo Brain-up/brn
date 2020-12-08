@@ -6,10 +6,12 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import org.apache.commons.lang3.math.NumberUtils
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -17,9 +19,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyString
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.Optional
 import kotlin.test.assertFailsWith
@@ -33,6 +39,9 @@ internal class UserAccountServiceTest {
 
     @Mock
     lateinit var userAccountRepository: UserAccountRepository
+
+    @Mock
+    lateinit var authorityRepository: AuthorityRepository
 
     @Mock
     lateinit var passwordEncoder: PasswordEncoder
@@ -126,6 +135,41 @@ internal class UserAccountServiceTest {
             val userAccountDtoReturned = userAccountService.addUser(userAccountRequest)
             // THEN
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
+        }
+    }
+
+    @Nested
+    @DisplayName("Test for update current user")
+    inner class UpdateUserAccount {
+
+        @Disabled("need work")
+        @Test
+        fun `should update avatar current session user`() {
+            // GIVEN
+//            val authName = "ROLE_ADMIN"
+            val avatarUrl = "new/avatar"
+            val authentication = Mockito.mock(
+                Authentication::class.java
+            )
+//            val authority = authorityRepository.findAuthorityByAuthorityName(authName)
+//                ?: authorityRepository.save(Authority(authorityName = authName))
+            val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
+
+            // todo Can't pass autentication.principle
+            //  for com.epam.brn.service.impl.UserAccountServiceImpl.getNameFromPrincipals
+
+            `when`(securityContext.authentication).thenReturn(authentication)
+            SecurityContextHolder.setContext(securityContext)
+            `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountResponse)
+            `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
+                .thenReturn(Optional.of(userAccount))
+            `when`(userAccountRepository.save(userAccount))
+                .thenReturn(userAccount)
+            `when`(userAccountService.updateAvatarCurrentUser(avatarUrl)).thenReturn(userAccountResponse)
+            // WHEN
+            val updatedUserAccountRS = userAccountService.updateAvatarCurrentUser(avatarUrl)
+            // THEN
+            assertThat(updatedUserAccountRS.avatar).isEqualTo(avatarUrl)
         }
     }
 }

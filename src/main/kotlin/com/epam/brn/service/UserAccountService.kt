@@ -12,4 +12,5 @@ interface UserAccountService {
     fun getUserFromTheCurrentSession(): UserAccountResponse
     fun removeUserWithId(id: Long): Any
     fun getUsers(): List<UserAccountResponse>
+    fun updateAvatarCurrentUser(avatarUrl: String): UserAccountResponse
 }

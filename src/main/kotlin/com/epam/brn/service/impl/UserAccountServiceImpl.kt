@@ -91,6 +91,13 @@ class UserAccountServiceImpl(
     override fun getUsers(): List<UserAccountResponse> =
         userAccountRepository.findAll().map { it.toDto() }
 
+    override fun updateAvatarCurrentUser(avatarUrl: String): UserAccountResponse {
+        val currentUser = getUserFromTheCurrentSession()
+        val currentUserAccount = (userAccountRepository.findUserAccountById(currentUser.id!!)).get()
+        currentUserAccount.avatar = avatarUrl
+        return userAccountRepository.save(currentUserAccount).toDto()
+    }
+
     private fun getNameFromPrincipals(authentication: Authentication): String {
         val principal = authentication.principal
         if (principal is UserDetails)
