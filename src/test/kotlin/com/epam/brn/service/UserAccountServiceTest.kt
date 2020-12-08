@@ -16,7 +16,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
+import org.mockito.Captor
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -61,6 +63,9 @@ internal class UserAccountServiceTest {
 
     @Mock
     lateinit var authority: Authority
+
+    @Captor
+    lateinit var userArgumentCaptor: ArgumentCaptor<UserAccount>
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -157,6 +162,7 @@ internal class UserAccountServiceTest {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
+                changed = ZonedDateTime.now().minusMinutes(5),
                 avatar = null
             )
             val userAccountUpdated = userAccount.copy()
@@ -171,12 +177,15 @@ internal class UserAccountServiceTest {
             `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
                 .thenReturn(userAccountUpdated)
             // WHEN
-            val resultUserAccountDto = userAccountService.updateAvatarCurrentUser(avatarUrl)
+            userAccountService.updateAvatarCurrentUser(avatarUrl)
             // THEN
             verify(userAccountRepository).findUserAccountByEmail(email)
             verify(timeService).now()
-            verify(userAccountRepository).save(Mockito.any(UserAccount::class.java))
-            assertThat(resultUserAccountDto.avatar).isEqualTo(avatarUrl)
+            verify(userAccountRepository).save(userArgumentCaptor.capture())
+            val userForSave = userArgumentCaptor.value
+            assertThat(userForSave.avatar).isEqualTo(avatarUrl)
+            assertThat(userForSave.id).isEqualTo(userAccount.id)
+            assertThat(userForSave.fullName).isEqualTo(userAccount.fullName)
         }
     }
 }

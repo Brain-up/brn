@@ -50,6 +50,8 @@ class UserAccountServiceImpl(
 
         val userAccount = userAccountRequest.toModel(hashedPassword)
         userAccount.authoritySet = setOfAuthorities
+        userAccount.created = timeService.now()
+        userAccount.changed = timeService.now()
         return userAccountRepository.save(userAccount).toDto()
     }
 
@@ -70,6 +72,7 @@ class UserAccountServiceImpl(
     override fun save(userAccountRequest: UserAccountRequest): UserAccountDto {
         val hashedPassword = getHashedPassword(userAccountRequest)
         val userAccountModel = userAccountRequest.toModel(hashedPassword)
+        userAccountModel.changed = timeService.now()
         return userAccountRepository.save(userAccountModel).toDto()
     }
 
@@ -86,11 +89,6 @@ class UserAccountServiceImpl(
         val email = authentication.name ?: getNameFromPrincipals(authentication)
         return userAccountRepository.findUserAccountByEmail(email)
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
-    }
-
-    override fun removeUserWithId(id: Long) {
-        findUserById(id)
-        userAccountRepository.deleteById(id)
     }
 
     override fun getUsers(): List<UserAccountDto> =
