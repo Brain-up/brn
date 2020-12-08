@@ -9,6 +9,7 @@ import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -146,12 +147,13 @@ internal class UserAccountServiceTest {
         fun `should update avatar current session user`() {
             // GIVEN
             val avatarUrl = "test/avatar"
+            val email = "test@test.ru"
             val authentication = Mockito.mock(Authentication::class.java)
             val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
-                email = "test@test.ru",
+                email = email,
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
@@ -162,16 +164,19 @@ internal class UserAccountServiceTest {
 
             SecurityContextHolder.setContext(securityContext)
             `when`(securityContext.authentication).thenReturn(authentication)
-            `when`(authentication.name).thenReturn("test@test.ru")
-            `when`(userAccountRepository.findUserAccountByEmail("test@test.ru"))
+            `when`(authentication.name).thenReturn(email)
+            `when`(userAccountRepository.findUserAccountByEmail(email))
                 .thenReturn(Optional.of(userAccount))
             `when`(timeService.now()).thenReturn(ZonedDateTime.now())
             `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
                 .thenReturn(userAccountUpdated)
             // WHEN
-            val updatedUserAccountRS = userAccountService.updateAvatarCurrentUser(avatarUrl)
+            val resultUserAccountDto = userAccountService.updateAvatarCurrentUser(avatarUrl)
             // THEN
-            assertThat(updatedUserAccountRS.avatar).isEqualTo(avatarUrl)
+            verify(userAccountRepository).findUserAccountByEmail(email)
+            verify(timeService).now()
+            verify(userAccountRepository).save(Mockito.any(UserAccount::class.java))
+            assertThat(resultUserAccountDto.avatar).isEqualTo(avatarUrl)
         }
     }
 }
