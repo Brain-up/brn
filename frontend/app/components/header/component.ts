@@ -20,7 +20,7 @@ export default class HeaderComponent extends Component {
   @tracked _selectedAvatarId = localStorage.getItem(this.keyForAvatar) || 1;
 
   get avatarUrl() {
-    return `pictures/avatars/avatar ${this.selectedAvatarId}.png`;
+    return `/pictures/avatars/avatar ${this.selectedAvatarId}.png`;
   }
 
   get selectedAvatarId() {
