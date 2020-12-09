@@ -13,5 +13,5 @@ interface UserAccountService {
     fun getUserFromTheCurrentSession(): UserAccountDto
     fun getUsers(): List<UserAccountDto>
     fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto
-    fun updateCurrentUser(userAccountChangeRequest: UserAccountChangeRequest): UserAccountDto
+    fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto
 }

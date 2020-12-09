@@ -3,10 +3,10 @@ package com.epam.brn.integration
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.model.Gender
-import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.model.Gender
+import com.epam.brn.model.UserAccount
 import com.google.gson.Gson
 import org.amshove.kluent.internal.assertNotSame
 import org.junit.jupiter.api.AfterEach

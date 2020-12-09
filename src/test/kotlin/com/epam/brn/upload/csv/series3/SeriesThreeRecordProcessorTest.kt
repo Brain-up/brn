@@ -1,9 +1,9 @@
 package com.epam.brn.upload.csv.series3
 
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.ResourceRepository
-import com.epam.brn.integration.repo.SeriesRepository
-import com.epam.brn.integration.repo.SubGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource

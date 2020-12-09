@@ -1,4 +1,4 @@
-package com.epam.brn.integration.repo
+package com.epam.brn.repo
 
 import com.epam.brn.model.UserAccount
 import org.springframework.data.jpa.repository.JpaRepository

@@ -1,14 +1,14 @@
 package com.epam.brn.integration
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.integration.repo.AuthorityRepository
-import com.epam.brn.integration.repo.ExerciseGroupRepository
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.ResourceRepository
-import com.epam.brn.integration.repo.SeriesRepository
-import com.epam.brn.integration.repo.SubGroupRepository
-import com.epam.brn.integration.repo.TaskRepository
-import com.epam.brn.integration.repo.UserAccountRepository
+import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.TaskRepository
+import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.service.WordsService

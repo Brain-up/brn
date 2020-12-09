@@ -1,10 +1,9 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.StudyHistoryRepository
-import com.epam.brn.integration.repo.UserAccountRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender

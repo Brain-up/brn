@@ -2,8 +2,8 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.StudyHistoryRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount

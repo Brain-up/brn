@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.model.CustomUserDetails
-import com.epam.brn.integration.repo.UserAccountRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

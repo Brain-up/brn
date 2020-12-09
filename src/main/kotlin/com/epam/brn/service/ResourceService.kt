@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.model.Resource
-import com.epam.brn.integration.repo.ResourceRepository
+import com.epam.brn.repo.ResourceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

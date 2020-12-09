@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.SubGroupDto
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.integration.repo.SubGroupRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.SubGroup
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value

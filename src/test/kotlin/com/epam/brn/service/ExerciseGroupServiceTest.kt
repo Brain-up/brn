@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseGroupDto
-import com.epam.brn.integration.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.model.ExerciseGroup
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

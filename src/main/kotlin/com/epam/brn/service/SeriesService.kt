@@ -3,7 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
-import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.repo.SeriesRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 

@@ -1,10 +1,10 @@
 package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.integration.repo.ExerciseGroupRepository
-import com.epam.brn.integration.repo.ExerciseRepository
-import com.epam.brn.integration.repo.SubGroupRepository
-import com.epam.brn.integration.repo.UserAccountRepository
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender

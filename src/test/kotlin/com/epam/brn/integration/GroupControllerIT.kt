@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.enum.Locale
-import com.epam.brn.integration.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.model.ExerciseGroup
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue

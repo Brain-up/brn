@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.subgroup
 
-import com.epam.brn.integration.repo.SeriesRepository
-import com.epam.brn.integration.repo.SubGroupRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.SubGroup
 import com.epam.brn.upload.csv.RecordProcessor
 import org.springframework.stereotype.Component
