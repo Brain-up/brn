@@ -1,7 +1,8 @@
 package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.request.UserAccountRequest
+import com.epam.brn.dto.request.UserAccountChangeRequest
+import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
@@ -59,7 +60,7 @@ internal class UserAccountServiceTest {
     lateinit var userAccountDto: UserAccountDto
 
     @Mock
-    lateinit var userAccountRequest: UserAccountRequest
+    lateinit var userAccountCreateRequest: UserAccountCreateRequest
 
     @Mock
     lateinit var authority: Authority
@@ -128,17 +129,17 @@ internal class UserAccountServiceTest {
         fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
-            `when`(userAccountRequest.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
+            `when`(userAccountCreateRequest.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
             `when`(userAccountDto.name).thenReturn("Tested")
             `when`(userAccount.toDto()).thenReturn(userAccountDto)
             `when`(userAccountRepository.save(userAccount))
                 .thenReturn(userAccount)
             `when`(authorityService.findAuthorityByAuthorityName(anyString()))
                 .thenReturn(authority)
-            `when`(passwordEncoder.encode(userAccountRequest.password))
+            `when`(passwordEncoder.encode(userAccountCreateRequest.password))
                 .thenReturn("password")
             // WHEN
-            val userAccountDtoReturned = userAccountService.addUser(userAccountRequest)
+            val userAccountDtoReturned = userAccountService.addUser(userAccountCreateRequest)
             // THEN
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
         }
@@ -186,6 +187,48 @@ internal class UserAccountServiceTest {
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
             assertThat(userForSave.id).isEqualTo(userAccount.id)
             assertThat(userForSave.fullName).isEqualTo(userAccount.fullName)
+        }
+
+        @Test
+        fun `should update current session user`() {
+            // GIVEN
+            val avatarUrl = "test/avatar"
+            val email = "test@test.ru"
+            val authentication = Mockito.mock(Authentication::class.java)
+            val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                email = email,
+                password = "password",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                changed = ZonedDateTime.now().minusMinutes(5),
+                avatar = null
+            )
+            val userAccountChangeRequest = UserAccountChangeRequest(avatar = avatarUrl, name = "newName")
+            val userAccountUpdated = userAccount.copy()
+            userAccountUpdated.avatar = avatarUrl
+            userAccountUpdated.fullName = "newName"
+
+            SecurityContextHolder.setContext(securityContext)
+            `when`(securityContext.authentication).thenReturn(authentication)
+            `when`(authentication.name).thenReturn(email)
+            `when`(userAccountRepository.findUserAccountByEmail(email))
+                .thenReturn(Optional.of(userAccount))
+            `when`(timeService.now()).thenReturn(ZonedDateTime.now())
+            `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
+                .thenReturn(userAccountUpdated)
+            // WHEN
+            userAccountService.updateCurrentUser(userAccountChangeRequest)
+            // THEN
+            verify(userAccountRepository).findUserAccountByEmail(email)
+            verify(timeService).now()
+            verify(userAccountRepository).save(userArgumentCaptor.capture())
+            val userForSave = userArgumentCaptor.value
+            assertThat(userForSave.avatar).isEqualTo(avatarUrl)
+            assertThat(userForSave.fullName).isEqualTo("newName")
+            assertThat(userForSave.id).isEqualTo(userAccount.id)
         }
     }
 }

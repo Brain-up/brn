@@ -2,14 +2,18 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -30,6 +34,11 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     @ApiOperation("Get current logged in user")
     fun getCurrentUser() = ResponseEntity.ok()
         .body(BaseResponseDto(data = listOf(userAccountService.getUserFromTheCurrentSession())))
+
+    @PatchMapping(value = ["/current"])
+    @ApiOperation("Update current logged in user")
+    fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) = ResponseEntity.ok()
+        .body(BaseSingleObjectResponseDto(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
 
     @GetMapping
     @ApiOperation("Get user by name")

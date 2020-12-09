@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
@@ -49,6 +51,30 @@ class UserDetailsControllerIT : BaseIT() {
         assertEquals(user.id, resultUser.id)
         assertEquals(user.fullName, resultUser.name)
         assertEquals("/pictures/testAvatar", resultUser.avatar)
+        assertNotSame(user.changed, resultUser.changed)
+    }
+
+    @Test
+    fun `update current user`() {
+        // GIVEN
+        val user = insertUser()
+        // WHEN
+        val body = objectMapper.writeValueAsString(UserAccountChangeRequest(name = "newName", bornYear = 1950))
+        val resultAction = mockMvc.perform(
+            patch("$currentUserBaseUrl")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        resultAction.andExpect(status().isOk)
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val resultUser: UserAccountDto =
+            objectMapper.readValue(Gson().toJson(baseResponseDto.data), UserAccountDto::class.java)
+        assertEquals(user.id, resultUser.id)
+        assertEquals("newName", resultUser.name)
+        assertEquals(1950, resultUser.bornYear)
+        assertEquals(user.avatar, resultUser.avatar)
         assertNotSame(user.changed, resultUser.changed)
     }
 

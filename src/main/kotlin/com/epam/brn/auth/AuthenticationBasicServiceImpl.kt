@@ -1,7 +1,7 @@
 package com.epam.brn.auth
 
 import com.epam.brn.dto.request.LoginDto
-import com.epam.brn.dto.request.UserAccountRequest
+import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.service.UserAccountService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.security.authentication.AuthenticationManager
@@ -18,13 +18,13 @@ class AuthenticationBasicServiceImpl(
 ) : AuthenticationService {
     private val log = logger()
 
-    override fun registration(userAccountRequest: UserAccountRequest): String {
-        val newUser = userAccountService.addUser(userAccountRequest)
+    override fun registration(userAccountCreateRequest: UserAccountCreateRequest): String {
+        val newUser = userAccountService.addUser(userAccountCreateRequest)
         log.info("created new user id=${newUser.id}")
         return login(
             LoginDto(
-                username = userAccountRequest.email.toLowerCase(),
-                password = userAccountRequest.password
+                username = userAccountCreateRequest.email.toLowerCase(),
+                password = userAccountCreateRequest.password
             )
         )
     }
