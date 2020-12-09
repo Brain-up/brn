@@ -20,14 +20,14 @@ data class UserAccount(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
-    val fullName: String,
+    var fullName: String,
     @Column(nullable = false, unique = true)
     val email: String,
     @Column(nullable = false)
     val password: String,
-    val bornYear: Int,
-    val gender: String,
-    val active: Boolean = true,
+    var bornYear: Int,
+    var gender: String,
+    var active: Boolean = true,
     @Column(nullable = false)
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     @Column(nullable = false)

@@ -1,7 +1,8 @@
 package com.epam.brn.service.impl
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.request.UserAccountRequest
+import com.epam.brn.dto.request.UserAccountChangeRequest
+import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
@@ -39,26 +40,27 @@ class UserAccountServiceImpl(
             }
     }
 
-    override fun addUser(userAccountRequest: UserAccountRequest): UserAccountDto {
-        val existUser = userAccountRepository.findUserAccountByEmail(userAccountRequest.email)
+    override fun addUser(userAccountCreateRequest: UserAccountCreateRequest): UserAccountDto {
+        val existUser = userAccountRepository.findUserAccountByEmail(userAccountCreateRequest.email)
         existUser.ifPresent {
             throw IllegalArgumentException("The user already exists!")
         }
 
-        val setOfAuthorities = getTheAuthoritySet(userAccountRequest)
-        val hashedPassword = getHashedPassword(userAccountRequest)
+        val setOfAuthorities = getTheAuthoritySet(userAccountCreateRequest)
+        val hashedPassword = getHashedPassword(userAccountCreateRequest)
 
-        val userAccount = userAccountRequest.toModel(hashedPassword)
+        val userAccount = userAccountCreateRequest.toModel(hashedPassword)
         userAccount.authoritySet = setOfAuthorities
         userAccount.created = timeService.now()
         userAccount.changed = timeService.now()
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    fun getHashedPassword(userAccountRequest: UserAccountRequest): String = passwordEncoder.encode(userAccountRequest.password)
+    fun getHashedPassword(userAccountCreateRequest: UserAccountCreateRequest): String =
+        passwordEncoder.encode(userAccountCreateRequest.password)
 
-    private fun getTheAuthoritySet(userAccountRequest: UserAccountRequest): MutableSet<Authority> {
-        var authorityNames = userAccountRequest.authorities ?: mutableSetOf()
+    private fun getTheAuthoritySet(userAccountCreateRequest: UserAccountCreateRequest): MutableSet<Authority> {
+        var authorityNames = userAccountCreateRequest.authorities ?: mutableSetOf()
         if (authorityNames.isEmpty())
             authorityNames = mutableSetOf("ROLE_USER")
 
@@ -69,9 +71,9 @@ class UserAccountServiceImpl(
             }
     }
 
-    override fun save(userAccountRequest: UserAccountRequest): UserAccountDto {
-        val hashedPassword = getHashedPassword(userAccountRequest)
-        val userAccountModel = userAccountRequest.toModel(hashedPassword)
+    override fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountDto {
+        val hashedPassword = getHashedPassword(userAccountCreateRequest)
+        val userAccountModel = userAccountCreateRequest.toModel(hashedPassword)
         userAccountModel.changed = timeService.now()
         return userAccountRepository.save(userAccountModel).toDto()
     }
@@ -99,6 +101,32 @@ class UserAccountServiceImpl(
         currentUserAccount.avatar = avatarUrl
         currentUserAccount.changed = timeService.now()
         return userAccountRepository.save(currentUserAccount).toDto()
+    }
+
+    override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto {
+        val currentUserAccount = getCurrentUser()
+        var changed = false
+        if (!userChangeRequest.name.isNullOrEmpty()) {
+            currentUserAccount.fullName = userChangeRequest.name
+            changed = true
+        }
+        if (userChangeRequest.bornYear != null) {
+            currentUserAccount.bornYear = userChangeRequest.bornYear
+            changed = true
+        }
+        if (userChangeRequest.gender != null) {
+            currentUserAccount.gender = userChangeRequest.gender.toString()
+            changed = true
+        }
+        if (userChangeRequest.avatar != null) {
+            currentUserAccount.avatar = userChangeRequest.avatar
+            changed = true
+        }
+        return if (changed) {
+            currentUserAccount.changed = timeService.now()
+            userAccountRepository.save(currentUserAccount).toDto()
+        } else
+            currentUserAccount.toDto()
     }
 
     private fun getNameFromPrincipals(authentication: Authentication): String {

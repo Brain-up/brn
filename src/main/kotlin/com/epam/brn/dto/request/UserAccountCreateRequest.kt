@@ -14,7 +14,7 @@ const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
     "(^\\s+$)|([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)"
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class UserAccountRequest(
+data class UserAccountCreateRequest(
     @field:NotEmpty(message = "{validation.field.fullName.empty}")
     val name: String,
     @field:NotBlank(message = "{validation.field.email.blank}")

@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.request.UserAccountRequest
+import com.epam.brn.dto.request.UserAccountChangeRequest
+import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
@@ -55,7 +56,8 @@ internal class UserDetailControllerTest {
             // WHEN
 
             @Suppress("UNCHECKED_CAST")
-            val savedUserAccountDto = userDetailController.findUserById(userId).body?.data as List<UserAccountRequest>
+            val savedUserAccountDto =
+                userDetailController.findUserById(userId).body?.data as List<UserAccountCreateRequest>
             // THEN
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
             assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
@@ -68,7 +70,7 @@ internal class UserDetailControllerTest {
             Mockito.`when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountDto)
             // WHEN
             @Suppress("UNCHECKED_CAST")
-            val savedUserAccountDto = userDetailController.getCurrentUser().body?.data as List<UserAccountRequest>
+            val savedUserAccountDto = userDetailController.getCurrentUser().body?.data as List<UserAccountCreateRequest>
             // THEN
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
             assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
@@ -95,6 +97,31 @@ internal class UserDetailControllerTest {
             userAccountDto.avatar = avatarUrl
             assertEquals(userAccountDto, response)
             verify(userAccountService).updateAvatarForCurrentUser(avatarUrl)
+        }
+
+        @Test
+        fun `should update current user`() {
+            // GIVEN
+            val changeRequest = UserAccountChangeRequest(
+                name = "testNewName",
+                gender = Gender.FEMALE,
+                bornYear = 2000
+            )
+            val userAccountDto = UserAccountDto(
+                id = NumberUtils.LONG_ONE,
+                avatar = null,
+                name = "testName",
+                email = "email",
+                gender = Gender.FEMALE,
+                active = true,
+                bornYear = 2000
+            )
+            `when`(userAccountService.updateCurrentUser(changeRequest)).thenReturn(userAccountDto)
+            // WHEN
+            val response = userDetailController.updateCurrentUser(changeRequest).body?.data as UserAccountDto
+            // THEN
+            assertEquals(userAccountDto, response)
+            verify(userAccountService).updateCurrentUser(changeRequest)
         }
     }
 }
