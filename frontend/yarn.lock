@@ -5419,10 +5419,10 @@ els-component-extraction-addon@^0.1.12:
     vscode-languageserver "^6.1.1"
     vscode-uri "^2.1.1"
 
-els-intl-addon@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/els-intl-addon/-/els-intl-addon-1.0.3.tgz#96fae5c99a93bd547029a7ca395f27c60c667c50"
-  integrity sha512-YPld8GFYP7Vi8mbzDuIP10hgpVNaBiPTHYdQQub9NZRV8nzcqUyIapnx3iGecJsxta/+ROq8cNcSK1jNdOVHKg==
+els-intl-addon@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/els-intl-addon/-/els-intl-addon-1.0.4.tgz#c9a7f453e38246aeb5cd407c9a056174f3b55938"
+  integrity sha512-51ameqD5SS8KxXL1mQtFh7nScZLTXJ6UsNUPqFxXwXXPSbMfrI7Z3zeCCcjwJdNMJnN0npow09blzxBIdW66Kw==
   dependencies:
     flat "^5.0.0"
     js-yaml "^3.14.0"

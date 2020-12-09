@@ -82,7 +82,7 @@
     "broccoli-asset-rev": "^3.0.0",
     "cross-env": "^7.0.2",
     "els-component-extraction-addon": "^0.1.12",
-    "els-intl-addon": "^1.0.3",
+    "els-intl-addon": "^1.0.4",
     "ember-auto-import": "^1.6.0",
     "ember-cli": "~3.21.2",
     "ember-cli-app-version": "^3.2.0",
