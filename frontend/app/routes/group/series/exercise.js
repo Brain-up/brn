@@ -15,10 +15,10 @@ export default class GroupSeriesExerciseRoute extends Route {
       this.transitionTo('group.series', exercise.get('series.id'));
       return;
     }
-    if (!exercise.canInteract) {
-      this.transitionTo('group.series.exercise', exercise.get('series.id'));
-      return;
-    }
+    // if (!exercise.canInteract) {
+    //   this.transitionTo('group.series.exercise', exercise.get('series.id'));
+    //   return;
+    // }
     if (
       to.name.endsWith('exercise.index') &&
       exercise.get('sortedTasks.firstObject') &&

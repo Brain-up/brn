@@ -10,6 +10,28 @@ export default class HeaderComponent extends Component {
   @service('session') session!: Session;
   @service('router') router!: Router;
   @service('intl') intl!: IntlService;
+  get userId() {
+    return this.session.data?.user.id;
+  }
+  get keyForAvatar() {
+    return `user:${this.userId}:avatar_id`;
+  }
+
+  @tracked _selectedAvatarId = localStorage.getItem(this.keyForAvatar) || 1;
+
+  get avatarUrl() {
+    return `/pictures/avatars/avatar ${this.selectedAvatarId}.png`;
+  }
+
+  get selectedAvatarId() {
+    return this._selectedAvatarId;
+  }
+  set selectedAvatarId(value) {
+    localStorage.setItem(this.keyForAvatar, value.toString());
+    this._selectedAvatarId = value;
+  }
+
+  @tracked showAvatarsModal = false;
 
   @tracked selectedLocale: string | null = null;
 
@@ -17,6 +39,18 @@ export default class HeaderComponent extends Component {
     this.session.invalidate().then(() => {
       window.location.reload();
     });
+  }
+
+  @action onAvatarSelect(id: number) {
+    if (!id) {
+      return;
+    }
+    this.selectedAvatarId = id;
+    this.showAvatarsModal = false;
+  }
+
+  @action onShowAvatars() {
+    this.showAvatarsModal = true;
   }
 
   get user() {

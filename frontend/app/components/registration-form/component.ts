@@ -1,24 +1,34 @@
 import LoginFormComponent from './../login-form/component';
 import { action } from '@ember/object';
-import { task } from 'ember-concurrency';
+import { task, Task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
 
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
 };
 
+interface LatestUserDTO {
+  name: string;
+  email: string;
+  password: string;
+  gender: "MALE" | "FEMALE";
+  bornYear: number;
+  avatar: string;
+  id?: string;
+}
+
+
 export default class RegistrationFormComponent extends LoginFormComponent {
-  @service('network') network;
-  @tracked email;
-  @tracked firstName;
-  @tracked lastName;
-  @tracked password;
-  @tracked birthday;
-  maxDate = new Date();
-  minDate = new Date(new Date().setFullYear(this.maxDate.getFullYear() - 100));
-  maxDateString = this.maxDate.toISOString().split('T')[0];
-  minDateString = this.minDate.toISOString().split('T')[0];
+  @tracked email!: string;
+  @tracked firstName!: string;
+  @tracked lastName!: string;
+  @tracked password!: string;
+  @tracked birthday!: string;
+  @tracked gender!: "MALE" | "FEMALE";
+  @tracked agreed = false;
+
+  maxDate = new Date().getFullYear();
+  minDate = new Date().getFullYear() - 100;
 
   get warningErrorDate() {
     const { birthday, maxDate, minDate } = this;
@@ -27,14 +37,18 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       return false;
     }
 
-    const max = maxDate.getTime();
-    const min = minDate.getTime();
-    const enterDateUser = new Date(birthday).getTime();
-
-    if (enterDateUser > max || min > enterDateUser) {
+    if (parseInt(birthday, 10) > maxDate || minDate > parseInt(birthday, 10)) {
       return this.intl.t('registration_form.invalid_date');
     }
 
+
+    return false;
+  }
+
+  get warningGender() {
+    if (!this.gender) {
+      return this.intl.t('registration_form.empty_gender');
+    }
     return false;
   }
 
@@ -48,12 +62,16 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   get login() {
     return this.email;
   }
-  @(task(function*() {
-    const user = {
-      firstName: this.firstName,
-      lastName: this.lastName,
+  set login(value) {
+    this.email = value;
+  }
+  @(task(function*(this: RegistrationFormComponent) {
+    const user: LatestUserDTO = {
+      name: this.firstName,
       email: this.email,
-      birthday: new Date(this.birthday).toISOString(),
+      gender: this.gender,
+      avatar: '',
+      bornYear: parseInt(this.birthday, 10),
       password: this.password,
     };
     const result = yield this.network.createUser(user);
@@ -66,16 +84,26 @@ export default class RegistrationFormComponent extends LoginFormComponent {
         this.errorMessage = this.intl.t(`msg.validation.${key}`);
       } else {
         this.errorMessage =
-          key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key]) : key;
+          key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key as (keyof typeof ERRORS_MAP)]) : key;
       }
       this.registrationTask.cancelAll();
     }
   }).drop())
-  registrationTask;
+  registrationTask!: Task<any, any>;
 
   @action
-  onSubmit(e) {
+  onSubmit(e: DocumentEvent & any) {
     e.preventDefault();
     this.registrationTask.perform();
+  }
+
+  @action
+  setGender(e: DocumentEvent & any) {
+    this.gender = e.target.value;
+  }
+
+  @action
+  setAgreedStatus(e: Document & any) {
+    this.agreed = e.target.checked;
   }
 }

@@ -5,6 +5,7 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.integration.repo.ExerciseRepository
 import com.epam.brn.integration.repo.StudyHistoryRepository
 import com.epam.brn.integration.repo.UserAccountRepository
+import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
@@ -79,7 +80,7 @@ internal class StudyHistoryServiceTest {
             replaysCount = 3
         )
         `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(
-            UserAccountResponse(
+            UserAccountDto(
                 1L,
                 "ivan",
                 "mail",

@@ -2,9 +2,15 @@ package com.epam.brn.integration
 
 import com.epam.brn.integration.repo.ExerciseGroupRepository
 import com.epam.brn.integration.repo.SeriesRepository
+import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.SeriesDto
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.SeriesRepository
+import com.fasterxml.jackson.core.type.TypeReference
+import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -26,64 +32,70 @@ class SeriesControllerIT : BaseIT() {
     lateinit var seriesRepository: SeriesRepository
 
     private val baseUrl = "/series"
-    private val series1Name = "серия 1 тест"
-    private val series2Name = "серия 2 тест"
+    private val series1Name = "series1Name"
+    private val series2Name = "series2Name"
 
     @AfterEach
     fun deleteAfterTest() {
         exerciseGroupRepository.deleteAll()
     }
 
-    private fun loadGroupWith2Series(): Long {
-        val group = ExerciseGroup(name = "речевые упражнения тест", description = "речевые упражнения тест")
-        val series1 =
-            Series(name = series1Name, description = "descr1", exerciseGroup = group, level = 1, type = ExerciseType.SINGLE_SIMPLE_WORDS.name)
-        val series2 =
-            Series(name = series2Name, description = "descr2", exerciseGroup = group, level = 2, type = ExerciseType.SINGLE_SIMPLE_WORDS.name)
-        group.series.addAll(setOf(series1, series2))
-        val savedGroup = exerciseGroupRepository.save(group)
-        return savedGroup.id ?: 1
+    private fun insertGroup(): ExerciseGroup {
+        val group = ExerciseGroup(name = "GroupName", description = "GroupDescription SeriesControllerIT")
+        return exerciseGroupRepository.save(group)
+    }
+
+    private fun insertSeries(group: ExerciseGroup, name: String): Series {
+        val series = Series(name = name, description = "description", exerciseGroup = group, level = 1, type = ExerciseType.SINGLE_SIMPLE_WORDS.name)
+        return seriesRepository.save(series)
     }
 
     @Test
     fun `test get series for group`() {
         // GIVEN
-        val idGroup = loadGroupWith2Series()
+        val group = insertGroup()
+        val series1 = insertSeries(group, series1Name)
+        val series2 = insertSeries(group, series2Name)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(baseUrl)
-                .param("groupId", idGroup.toString())
+                .param("groupId", group.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        Assertions.assertTrue(response.contains(series1Name))
-        Assertions.assertTrue(response.contains(series2Name))
-        Assertions.assertTrue(response.contains("subGroups"))
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val seriesJson = Gson().toJson(baseResponseDto.data)
+        val resultSeries: List<SeriesDto> =
+            objectMapper.readValue(seriesJson, object : TypeReference<List<SeriesDto>>() {})
+        Assertions.assertEquals(2, resultSeries.size)
+        Assertions.assertEquals(series1.toDto(), resultSeries[0])
+        Assertions.assertEquals(series2.toDto(), resultSeries[1])
     }
 
     @Test
     fun `test get series for seriesId`() {
         // GIVEN
-        loadGroupWith2Series()
-        val seriesId = seriesRepository.findByNameLike(series1Name)[0].id
+        val group = insertGroup()
+        val series = insertSeries(group, "series")
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/series/$seriesId")
+                .get("/series/${series.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        Assertions.assertTrue(response.contains(series1Name))
-        Assertions.assertTrue(response.contains("subGroups"))
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val resultSeries: SeriesDto = objectMapper.readValue(Gson().toJson(baseResponseDto.data), SeriesDto::class.java)
+        Assertions.assertEquals(series.toDto(), resultSeries)
     }
 
     @Test

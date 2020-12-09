@@ -1,5 +1,9 @@
 /* eslint-disable */
-const { colors } = require('tailwindcss/defaultTheme');
+const {
+  colors,
+  borderRadius,
+  justifyContent,
+} = require('tailwindcss/defaultTheme');
 
 module.exports = {
   theme: {
@@ -35,13 +39,15 @@ module.exports = {
         indigo: {
           ...colors.indigo,
           '200': '#EDF0FE',
+          '500': '#63BBEB',
         },
       },
       borderRadius: {
+        ...borderRadius,
         large: '1.25rem',
       },
-
       justifyContent: {
+        ...justifyContent,
         evenly: 'space-evenly',
       },
     },
