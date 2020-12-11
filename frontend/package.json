@@ -69,7 +69,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fullhuman/postcss-purgecss": "^3.0.0",
     "@glimmer/component": "^1.0.2",
-    "@glimmer/tracking": "^1.0.2",
+    "@glimmer/tracking": "^1.0.3",
     "@types/ember": "^3.16.1",
     "@types/ember-data": "^3.16.6",
     "@types/ember-data__model": "^3.16.1",
