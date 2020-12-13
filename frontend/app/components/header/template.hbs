@@ -100,14 +100,13 @@
     {{else}}
       <div class="relative z-10 flex justify-end px-16">
         <div class="flex">
-          <LinkTo
+          <Ui::Button
             data-test-registration-form
+            class="w-full pl-2 pr-2"
+            style={{html-safe "line-height: 2.8;"}}
             @route="registration"
-            type="submit"
-            class="hover:bg-blue-900 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue-700 flex justify-center w-56 px-4 py-2 m-auto text-sm font-medium text-white transition duration-150 ease-in-out bg-blue-700 border border-transparent rounded-full"
-          >
-            {{t "login_form.registration"}}
-          </LinkTo>
+            @title={{t "login_form.registration"}}
+          />
         </div>
       </div>
     {{/if}}

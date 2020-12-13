@@ -11,7 +11,7 @@ export default class HeaderComponent extends Component {
   @service('router') router!: Router;
   @service('intl') intl!: IntlService;
   get userId() {
-    return this.session.data?.user.id;
+    return this.session?.data?.user?.id;
   }
   get keyForAvatar() {
     return `user:${this.userId}:avatar_id`;

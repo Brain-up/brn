@@ -1,7 +1,35 @@
-<button type={{or @type 'submit'}} class={{this.classes}} ...attributes>
-  {{#if (has-block)}}
-    {{yield}}
+{{#if @route}}
+  {{#if @model}}
+    <LinkTo  class={{this.classes}} @route={{@route}} @model={{@model}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{@title}}
+    {{/if}}
+    </LinkTo>
+  {{else if @models}}
+    <LinkTo  class={{this.classes}} @route={{@route}} @models={{@models}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{@title}}
+    {{/if}}
+    </LinkTo>
   {{else}}
-    {{@title}}
+    <LinkTo  class={{this.classes}} @route={{@route}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{@title}}
+    {{/if}}
+    </LinkTo>
   {{/if}}
-</button>
+{{else}}
+  <button type={{or @type 'submit'}} class={{this.classes}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{@title}}
+    {{/if}}
+  </button>
+{{/if}}

@@ -28,12 +28,15 @@ registration_form:
   email_placeholder: Name@name.com
   invalid_date: Invalid date
   empty_gender: Empty gender
+  empty_lastname: Empty LastName
   gender: Gender
   gender_female: Female
   gender_male: Male
-  name: Name
-  name_placeholder: Mary
+  name: LastName and FirstName
+  name_placeholder: Ivan Ivanov
   password: Password
+  repeat_password: Repeat password
+  passwords_should_match: Passwords should match
   password_placeholder: At least 8 characters
   registration_hover: REGISTRATION
   registration: REGISTRATION
@@ -43,6 +46,7 @@ registration_form:
   surname: Surname
   warning_enter_credentials: Please enter your login and password
   warning_input_restriction: Maximum number of characters
+  password_length: Password should be from 4 to 20 characters
   email_exists: User with this Email already registered
 
 breadcrumbs:
