@@ -13,7 +13,10 @@ interface IUiButtonComponentArguments {
   kind?: ButtonKind,
   size?: ButtonSize,
   title?: string,
-  type?: 'submit' | 'button'
+  type?: 'submit' | 'button',
+  route?: string;
+  model?: unknown;
+  models?: unknown[];
 }
 
 export default class UiButtonComponent extends Component<IUiButtonComponentArguments> {

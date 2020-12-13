@@ -30,13 +30,16 @@ registration_form:
   warning_input_restriction: Максимальное количество символов
   invalid_date: Некорректная дата
   empty_gender: Пол не указан
+  empty_lastname: Фамилия не Указана
   warning_enter_credentials: Пожалуйста, введите логин и пароль.
   gender: Пол
   gender_female: Женский
   gender_male: Мужской
-  name: Имя
-  name_placeholder: Мария
+  name: Имя и Фамилия
+  name_placeholder: Иван Иванов
   password: Пароль
+  repeat_password: Повторите пароль
+  passwords_should_match: Пароли должны совпадать
   password_placeholder: Не менее 8 символов
   registration_hover: РЕГИСТРАЦИЯ
   registration: ЗАРЕГИСТРИРОВАТЬСЯ
@@ -44,6 +47,7 @@ registration_form:
   agreement_part2: пользовательского соглашения
   sign_in: ВОЙТИ
   surname: Фамилия
+  password_length: Длина пароля должна составлять от 4 до 20 символов
   email_exists: Пользователь с такой почтой уже зарегистрирован
 
 breadcrumbs:

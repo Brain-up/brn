@@ -42,10 +42,16 @@ export default class StatsService extends Service {
     return this.stats.get(model);
   }
   registerModel(model: Exercise) {
+    if (!model) {
+      return;
+    }
     this.stats.set(model, this.emptyStats());
     this.lastModel = model;
   }
   unregisterModel(model: Exercise) {
+    if (!model) {
+      return;
+    }
     this.stats.set(model, this.emptyStats());
   }
   addEvent(eventName: StatEvents) {
