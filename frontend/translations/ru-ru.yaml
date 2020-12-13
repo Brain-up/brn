@@ -35,7 +35,7 @@ registration_form:
   gender_female: Женский
   gender_male: Мужской
   name: Имя
-  name_placeholder: Мария
+  name_placeholder: Иван Иванович Петров
   password: Пароль
   password_placeholder: Не менее 8 символов
   registration_hover: РЕГИСТРАЦИЯ

@@ -32,7 +32,7 @@ registration_form:
   gender_female: Female
   gender_male: Male
   name: Name
-  name_placeholder: Mary
+  name_placeholder: Ivan Ivanovich Petrov
   password: Password
   password_placeholder: At least 8 characters
   registration_hover: REGISTRATION
