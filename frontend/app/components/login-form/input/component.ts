@@ -12,7 +12,8 @@ interface ILoginFormInputComponentArgs {
   warning: string;
   type?: string;
   label?: string;
-  placeholder?: string
+  placeholder?: string;
+  trimRight?: boolean;
 }
 export default class LoginFormInputComponent extends Component<ILoginFormInputComponentArgs> {
   @service('intl') intl!: IntlService;
@@ -51,6 +52,13 @@ export default class LoginFormInputComponent extends Component<ILoginFormInputCo
 
   set value(value) {
     const { model, name } = this.args;
-    model[name] = (value || '').trim().slice(0, this.maxlength - 1);
+    const safeValue = (value || '');
+    let normalizedValue = '';
+    if (this.args.trimRight === false) {
+      normalizedValue = safeValue.trimStart();
+    } else {
+      normalizedValue = safeValue.trim();
+    }
+    model[name] = normalizedValue.slice(0, this.maxlength - 1);
   }
 }

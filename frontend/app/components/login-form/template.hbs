@@ -48,11 +48,9 @@
             {{/let}}
           </div>
           <div class="mt-4 text-sm leading-5 text-center">
-            <a
-              href="#" class="hover:text-blue-900 focus:outline-none focus:underline font-medium text-blue-900 transition duration-150 ease-in-out"
-            >
-              {{t "login_form.forgot_password"}}
-            </a>
+            <LinkTo @route="password-recovery" class="hover:text-blue-900 focus:outline-none focus:underline font-medium text-blue-900 transition duration-150 ease-in-out">
+                {{t "login_form.forgot_password"}}
+            </LinkTo>
           </div>
           {{/if}}
         </div>
