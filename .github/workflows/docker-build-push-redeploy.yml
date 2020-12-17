@@ -41,6 +41,7 @@ jobs:
           mv docker-compose-run.yml docker-compose.yml
           sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
           sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+          sed -i -e "s/_POSTGRES_PASSWORD_/\\$POSTGRES_PASSWORD/" docker-compose.yml
         env:
           S3_KEY: ${{ secrets.S3_KEY }}
           YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
