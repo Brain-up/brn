@@ -5,13 +5,16 @@ import { tracked } from '@glimmer/tracking';
 import Router from '@ember/routing/router-service';
 import Session from 'ember-simple-auth/services/session';
 import IntlService from 'ember-intl/services/intl';
+import NetworkService, { LatestUserDTO } from 'brn/services/network';
 
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;
   @service('router') router!: Router;
+  @service('network') network!: NetworkService;
   @service('intl') intl!: IntlService;
+
   get userId() {
-    return this.session?.data?.user?.id;
+    return this.session.data?.user?.id;
   }
   get keyForAvatar() {
     return `user:${this.userId}:avatar_id`;
@@ -24,10 +27,13 @@ export default class HeaderComponent extends Component {
   }
 
   get selectedAvatarId() {
-    return this._selectedAvatarId;
+    return this.session.data?.user?.avatar ||  this._selectedAvatarId;
   }
   set selectedAvatarId(value) {
     localStorage.setItem(this.keyForAvatar, value.toString());
+    this.network.patchUserInfo({
+      avatar: value.toString()
+    } as LatestUserDTO)
     this._selectedAvatarId = value;
   }
 
