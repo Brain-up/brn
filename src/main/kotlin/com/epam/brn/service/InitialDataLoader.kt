@@ -68,7 +68,7 @@ class InitialDataLoader(
         fileNameForSeries(2),
         fileNameForSeries(3),
         fileNameForSeries(4),
-        "non_speech.csv"
+        "signal_exercises.csv"
     )
 
     @EventListener(ApplicationReadyEvent::class)

@@ -3,7 +3,7 @@ package com.epam.brn.upload.csv.nonspeech
 import com.epam.brn.model.ExerciseType
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class NonSpeechRecord(
+data class SignalSeriesRecord(
     @JsonProperty("series")
     val series: String,
     @JsonProperty("level")

@@ -9,15 +9,15 @@ import com.epam.brn.upload.csv.RecordProcessor
 import org.springframework.stereotype.Component
 
 @Component
-class NonSpeechRecordProcessor(
+class SignalSeriesRecordProcessor(
     private val exerciseRepository: ExerciseRepository,
     private val seriesRepository: SeriesRepository
-) : RecordProcessor<NonSpeechRecord, Exercise> {
+) : RecordProcessor<SignalSeriesRecord, Exercise> {
     override fun isApplicable(record: Any): Boolean {
-        return record is NonSpeechRecord
+        return record is SignalSeriesRecord
     }
 
-    override fun process(records: List<NonSpeechRecord>): List<Exercise> {
+    override fun process(records: List<SignalSeriesRecord>): List<Exercise> {
         val seriesList = records.map { it.series }.distinct()
         val seriesMap = seriesRepository.findByNameIn(seriesList).associateBy { it.name }
         val exercises = records.map { record ->

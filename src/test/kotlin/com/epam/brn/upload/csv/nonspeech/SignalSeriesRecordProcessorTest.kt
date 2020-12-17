@@ -17,11 +17,11 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class NonSpeechRecordProcessorTest {
+internal class SignalSeriesRecordProcessorTest {
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
 
-    private lateinit var nonSpeechRecordProcessor: NonSpeechRecordProcessor
+    private lateinit var signalSeriesRecordProcessor: SignalSeriesRecordProcessor
 
     private val exerciseGroup = ExerciseGroup(
         id = 1L,
@@ -47,7 +47,7 @@ internal class NonSpeechRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        nonSpeechRecordProcessor = NonSpeechRecordProcessor(
+        signalSeriesRecordProcessor = SignalSeriesRecordProcessor(
             exerciseRepositoryMock,
             seriesRepositoryMock
         )
@@ -64,9 +64,9 @@ internal class NonSpeechRecordProcessorTest {
         val expected = listOf(createExercise(frequencySeries))
         given(exerciseRepositoryMock.saveAll(expected))
             .willReturn(expected)
-        val actual = nonSpeechRecordProcessor.process(
+        val actual = signalSeriesRecordProcessor.process(
             listOf(
-                NonSpeechRecord(
+                SignalSeriesRecord(
                     exerciseName = "По 2 сигнала разной длительности.",
                     exerciseType = ExerciseType.TWO_DIFFERENT_LENGTH_SIGNAL,
                     level = 1,
@@ -91,16 +91,16 @@ internal class NonSpeechRecordProcessorTest {
         val expected = listOf(createExercise(lengthSeries), createExercise(frequencySeries))
         given(exerciseRepositoryMock.saveAll(expected))
             .willReturn(expected)
-        val actual = nonSpeechRecordProcessor.process(
+        val actual = signalSeriesRecordProcessor.process(
             listOf(
-                NonSpeechRecord(
+                SignalSeriesRecord(
                     exerciseName = "По 2 сигнала разной длительности.",
                     exerciseType = ExerciseType.TWO_DIFFERENT_LENGTH_SIGNAL,
                     level = 1,
                     series = lengthSeries.name,
                     signals = emptyList()
                 ),
-                NonSpeechRecord(
+                SignalSeriesRecord(
                     exerciseName = "По 2 сигнала разной длительности.",
                     exerciseType = ExerciseType.TWO_DIFFERENT_LENGTH_SIGNAL,
                     level = 1,
@@ -125,9 +125,9 @@ internal class NonSpeechRecordProcessorTest {
         val expected = listOf(createExerciseWithSignals(frequencySeries))
         given(exerciseRepositoryMock.saveAll(expected))
             .willReturn(expected)
-        val actual = nonSpeechRecordProcessor.process(
+        val actual = signalSeriesRecordProcessor.process(
             listOf(
-                NonSpeechRecord(
+                SignalSeriesRecord(
                     exerciseName = "По 2 сигнала разной длительности.",
                     exerciseType = ExerciseType.TWO_DIFFERENT_LENGTH_SIGNAL,
                     level = 1,

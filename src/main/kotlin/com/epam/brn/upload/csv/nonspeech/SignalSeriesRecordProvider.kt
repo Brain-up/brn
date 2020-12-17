@@ -8,25 +8,25 @@ import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class NonSpeechRecordProvider : MappingIteratorProvider<NonSpeechRecord> {
-    override fun iterator(inputStream: InputStream): MappingIterator<NonSpeechRecord> {
+class SignalSeriesRecordProvider : MappingIteratorProvider<SignalSeriesRecord> {
+    override fun iterator(inputStream: InputStream): MappingIterator<SignalSeriesRecord> {
         val csvMapper = CsvMapper().apply {
             enable(CsvParser.Feature.TRIM_SPACES)
         }
 
         val csvSchema = csvMapper
-            .schemaFor(NonSpeechRecord::class.java)
+            .schemaFor(SignalSeriesRecord::class.java)
             .withColumnReordering(true)
             .withArrayElementSeparator(";")
             .withHeader()
 
         return csvMapper
-            .readerFor(NonSpeechRecord::class.java)
+            .readerFor(SignalSeriesRecord::class.java)
             .with(csvSchema)
             .readValues(inputStream)
     }
 
     override fun isApplicable(format: String): Boolean {
-        return NonSpeechRecord.FORMAT == format
+        return SignalSeriesRecord.FORMAT == format
     }
 }

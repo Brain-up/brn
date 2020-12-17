@@ -3,8 +3,8 @@ package com.epam.brn.upload.csv
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.upload.csv.group.GroupRecord
 import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.nonspeech.NonSpeechRecord
-import com.epam.brn.upload.csv.nonspeech.NonSpeechRecordProvider
+import com.epam.brn.upload.csv.nonspeech.SignalSeriesRecord
+import com.epam.brn.upload.csv.nonspeech.SignalSeriesRecordProvider
 import com.epam.brn.upload.csv.series.SeriesGenericRecord
 import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series1.SeriesOneRecord
@@ -26,7 +26,7 @@ class CsvParserTest {
             SeriesTwoRecordMappingIteratorProvider(),
             SeriesThreeRecordMappingIteratorProvider(),
             SeriesOneRecordMappingIteratorProvider(),
-            NonSpeechRecordProvider()
+            SignalSeriesRecordProvider()
         )
     )
 
@@ -161,14 +161,14 @@ class CsvParserTest {
 
         assertThat(result).containsAll(
             listOf(
-                NonSpeechRecord(
+                SignalSeriesRecord(
                     series = "Частота сигналов",
                     level = 5,
                     exerciseName = "По 5 сигналов разной частоты.",
                     exerciseType = ExerciseType.TWO_DIFFERENT_FREQUENCY_SIGNAL,
                     signals = listOf("1000 120", "1200 120", "1500 120", "1700 120", "2000 120")
                 ),
-                NonSpeechRecord(
+                SignalSeriesRecord(
                     series = "Длительность сигналов",
                     level = 4,
                     exerciseName = "По 4 сигнала разной длительности.",
