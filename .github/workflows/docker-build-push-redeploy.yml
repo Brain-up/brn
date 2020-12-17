@@ -46,6 +46,7 @@ jobs:
           S3_KEY: ${{ secrets.S3_KEY }}
           YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       - name: Redeploy application
         run: |
           docker-compose pull
