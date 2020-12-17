@@ -3,7 +3,7 @@ name: Instances redeploy with db
 on:
   push:
     branches:
-      - devops/EPMLABSBRN-541
+      - devops/redeploy_with_db
 
 jobs:
   redeploy_instance:
