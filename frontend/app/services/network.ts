@@ -7,12 +7,13 @@ interface UserDTO {
   firstName: string;
   lastName: string;
   email: string;
+  avatar: string;
   birthday: string;
   password?: string;
   id?: string;
 }
 
-interface LatestUserDTO {
+export interface LatestUserDTO {
   name: string;
   email: string;
   password: string;
@@ -27,6 +28,7 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
   return {
     firstName: firstName || '',
     lastName: lastName || '',
+    avatar: user.avatar,
     email: user.email,
     birthday: new Date().setFullYear(user.bornYear).toString(),
     id: user.id as string
@@ -58,6 +60,13 @@ export default class NetworkService extends Service {
       method: 'GET',
     });
   }
+  patch(entry: string, data: unknown) {
+    return fetch(`${this.prefix}/${entry}`, {
+      headers: this._headers,
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  }
   async cloudUrl() {
     let result = await this.request('cloud/baseFileUrl');
     let { data } = await result.json();
@@ -67,6 +76,11 @@ export default class NetworkService extends Service {
     let result = await this.request('users/current');
     let { data } = await result.json();
     return fromLatestUserDto(Array.isArray(data) ? data[0] : data);
+  }
+  async patchUserInfo(userInfo: LatestUserDTO): Promise<LatestUserDTO> {
+    let result = await this.patch('users/current', userInfo);
+    let { data } = await result.json();
+    return data;
   }
   async loadCurrentUser() {
     const user: any = await this.getCurrentUser();
