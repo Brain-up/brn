@@ -9,19 +9,20 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
 @Component
 class SeriesTwoRecordProcessor(
     private val seriesRepository: SeriesRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
+    private val taskRepository: TaskRepository,
     private val wordsService: WordsService
 ) : RecordProcessor<SeriesTwoRecord, Exercise> {
 
@@ -36,7 +37,6 @@ class SeriesTwoRecordProcessor(
 
     override fun isApplicable(record: Any): Boolean = record is SeriesTwoRecord
 
-    @Transactional
     override fun process(records: List<SeriesTwoRecord>): List<Exercise> {
         val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
@@ -45,13 +45,13 @@ class SeriesTwoRecordProcessor(
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
             words.addAll(answerOptions.map { r -> r.word }.toSet())
-            resourceRepository.saveAll(answerOptions)
+            val savedResources = resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
-            exercise.addTask(extractTask(exercise, answerOptions))
+            val savedExercise = exerciseRepository.save(exercise)
 
-            exerciseRepository.save(exercise)
-            exercises.add(exercise)
+            taskRepository.save(extractTask(savedExercise, savedResources.toMutableSet()))
+            exercises.add(savedExercise)
         }
         wordsService.createTxtFileWithExerciseWords(words, series2WordsFileName)
         return exercises.toMutableList()
@@ -80,7 +80,7 @@ class SeriesTwoRecordProcessor(
     private fun toResource(word: String, wordType: WordType): Resource {
         val hashWord = DigestUtils.md5Hex(word)
         val audioFileUrl = audioPath.format(hashWord)
-        val resource = resourceRepository.findFirstByWordLike(word)
+        val resource = resourceRepository.findFirstByWordAndWordType(word, wordType.name)
             .orElse(
                 Resource(
                     word = word,
@@ -88,7 +88,7 @@ class SeriesTwoRecordProcessor(
                     pictureFileUrl = pictureWithWordFileUrl.format(word)
                 )
             )
-        resource.wordType = wordType.toString()
+        resource.wordType = wordType.name
         return resource
     }
 
