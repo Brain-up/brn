@@ -59,7 +59,7 @@ class CsvUploadService(
 
         @Suppress("UNCHECKED_CAST")
         when (seriesId.toInt()) {
-            2, 3, 4 -> load(file.inputStream)
+            1, 2, 3, 4 -> load(file.inputStream)
             else -> throw IllegalArgumentException("Loading for seriesId = $seriesId is not supported yet.")
         }
     }

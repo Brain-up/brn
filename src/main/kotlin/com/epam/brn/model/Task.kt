@@ -34,7 +34,7 @@ data class Task(
     @OneToOne(cascade = [(CascadeType.MERGE)], optional = true)
     @JoinColumn(name = "resource_id")
     var correctAnswer: Resource? = null,
-    @ManyToMany(cascade = [(CascadeType.MERGE)])
+    @ManyToMany(cascade = [CascadeType.MERGE, CascadeType.REFRESH])
     @JoinTable(
         name = "task_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],

@@ -10,6 +10,7 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -28,6 +29,7 @@ internal class SeriesTwoRecordProcessorTest {
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
+    private val taskRepositoryMock = mock(TaskRepository::class.java)
     private val resourceCreationServiceMock = mock(WordsService::class.java)
 
     private lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
@@ -49,6 +51,7 @@ internal class SeriesTwoRecordProcessorTest {
             seriesRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock,
+            taskRepositoryMock,
             resourceCreationServiceMock
         )
 
@@ -73,6 +76,7 @@ internal class SeriesTwoRecordProcessorTest {
     @Test
     fun `should create correct exercise`() {
         val expected = createExercise()
+        `when`(exerciseRepositoryMock.save(expected)).thenReturn(expected)
 
         val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
@@ -91,7 +95,9 @@ internal class SeriesTwoRecordProcessorTest {
 
     @Test
     fun `should create correct task`() {
-        val expected = createExercise().tasks.first()
+        val exercise = createExercise()
+        val expectedTask = exercise.tasks.first()
+        `when`(exerciseRepositoryMock.save(exercise)).thenReturn(exercise)
 
         val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
@@ -104,16 +110,18 @@ internal class SeriesTwoRecordProcessorTest {
             )
         ).first().tasks.first()
 
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "answerOptions")
+        assertThat(actual).isEqualToIgnoringGivenFields(expectedTask, "answerOptions")
     }
 
     @Test
     fun `should create correct answer options`() {
-        val expected = setOf(
+        val exercise = createExercise()
+
+        `when`(exerciseRepositoryMock.save(exercise)).thenReturn(exercise)
+        val expectedResources = setOf(
             resource_девочка(), resource_бабушка(), resource_дедушка(),
             resource_сидит(), resource_лежит(), resource_идет()
         )
-
         val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
                 SeriesTwoRecord(
@@ -125,8 +133,7 @@ internal class SeriesTwoRecordProcessorTest {
             )
         ).first().tasks.first().answerOptions
 
-        assertThat(actual).containsExactlyElementsOf(expected)
-        verify(resourceRepositoryMock).saveAll(expected)
+        assertThat(actual).containsExactlyElementsOf(expectedResources)
     }
 
     private fun createExercise(): Exercise {
