@@ -1,6 +1,9 @@
 name: Java CI Build, Unit and Integration Tests
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     paths-ignore:
       - 'frontend/**'
