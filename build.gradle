@@ -6,6 +6,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.jpa"
     id "org.jetbrains.kotlin.plugin.allopen"
     id "jacoco"
+    id 'org.sonarqube' version "3.0"
 }
 
 allOpen {
@@ -133,6 +134,17 @@ tasks.jacocoTestReport {
         csv.enabled false
         html.destination = file(getBuildDir().toString() + File.separator.toString() + "jacoco" + File.separator.toString() + "html")
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'com/epam/brn/dto/**',
+                    'com/epam/brn/model/**',
+                    'com/epam/brn/config/**',
+                    'com/epam/brn/exception/**',
+                    'com/epam/brn/Application*'
+            ])
+        }))
+    }
     getExecutionData().setFrom("$buildDir/jacoco/test.exec")
 }
 
@@ -143,4 +155,19 @@ task integrationTest(type: Test) { task ->
     task.shouldRunAfter tasks.test
     group 'Verification'
     description 'Runs the integration tests on Postgres Test Container.'
+}
+
+sonarqube {
+    properties {
+        // Root project information
+        property 'sonar.projectKey', 'Brain-up_brn'
+        property 'sonar.organization', 'brain-up'
+        property 'sonar.host.url', 'https://sonarcloud.io'
+
+        property 'sonar.coverage.jacoco.xmlReportPaths', "./build/jacoco/coverage.xml"
+        property 'sonar.language','kotlin'
+        property "sonar.java.coveragePlugin", "jacoco"
+        property 'sonar.working.directory', "./build/sonar"
+        property 'sonar.coverage.exclusions', "**/com/epam/brn/dto/**,**/com/epam/brn/model/**,**/com/epam/brn/config/**,**/com/epam/brn/exception/**,**/com/epam/brn/Application*"
+    }
 }
