@@ -1,4 +1,4 @@
-package com.lifescience.brn.config
+package com.epam.brn.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
