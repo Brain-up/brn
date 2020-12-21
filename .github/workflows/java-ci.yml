@@ -19,4 +19,4 @@ jobs:
         with:
           java-version: 11
       - name: Build, Unit and Integration Tests
-        run: ./gradlew build test integrationTest jacocoTestReport sonarqube --info
+        run: ./gradlew build test integrationTest jacocoTestReport sonarqube
