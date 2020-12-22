@@ -55,13 +55,14 @@ https://kb.epam.com/pages/viewpage.action?pageId=885110636
 https://github.com/Brain-up/brn/wiki/Coding-Standards ||
 https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
-### DEVELOPMENT PREREQUISITES
-1. Install node v10 or above https://nodejs.org/en/download/
-2. Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
-3. In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
-4. Install Docker https://hub.docker.com/search/?type=edition&offering=community 
+## Development
 
-## FRONT END DEVELOPMENT
+### DEVELOPMENT PREREQUISITES
+1. FrontEnd: Install node v10 or above https://nodejs.org/en/download/
+2. FrontEnd: Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
+3. FrontEnd: In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
+4. BackEnd: Install Docker https://hub.docker.com/search/?type=edition&offering=community 
+5. BackEnd: Idea
 
 ### START YOUR FRONT Angular Part - admin application
 go to location where the project is download for example C:\brn\brn\frontend-angular
@@ -114,8 +115,8 @@ it would create db first time. and if you would not delete db image - structure 
 4. post http://localhost:8081/api/brnlogin use in body
 {
   "grant_type": "password",
-  "username": "admin@admin.com",
-  "password": "admin"
+  "username": "default@default.ru",
+  "password": "password"
 }
 5. then you can call all other end-points from Postman collection https://app.getpostman.com/join-team?invite_code=a0b5da8aaf3fe3f5b7f157db5023e834 like
 http://localhost:8081/api/exercises/142 
@@ -124,7 +125,7 @@ end-point specification is here: https://github.com/Brain-up/brn/blob/master/api
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
-## DEPLOY Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE
+### DEPLOY Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE
 1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
 2. From console, from project's folder, execute:
 ```bash
@@ -151,13 +152,22 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 7. check that build job on jenkins passes successfully.
 
 ### Code style
-- Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
-- Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
-- Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
-- It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
-- Please note that if `gradlew ktlint` task fails, project build will fail also.
+1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
+2. Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
+3. Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
+4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
+5. Please note that if `gradlew ktlint` task fails, project build will fail also.
+
 ### CREATING BRANCHES
 Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
+
+### Sonar
+1. https://sonarcloud.io/code?id=Brain-up_brn our project sonar cloud.
+2 To view test coveradge locally  
+ 2.1 use jacoco gradle task locally `jacocoTestReport` 
+ 2.2 command line: `gradle jacocoTestReport`
+3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
+
 
 ### Thank you very much for your support!
 
