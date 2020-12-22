@@ -42,29 +42,29 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 our project skype chat: https://join.skype.com/jxSiWkgwT2x1
 
 # GETTING STARTED!
-## RESOURCES
-### DOCUMENTATION
+## Resources:
+### Documentation
 https://github.com/Brain-up/brn/wiki ||
 https://kb.epam.com/display/EPMLABSBRN/Brn+project+documentation
-### JIRA/ISSUSES
+### Jira
 https://github.com/Brain-up/brn/issues ||
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
-### JENKINS (only for epamers now)
+### Jenkins (only for epamers now)
 https://kb.epam.com/pages/viewpage.action?pageId=885110636
-### CODING STANDARDS
+### Coding standarts
 https://github.com/Brain-up/brn/wiki/Coding-Standards ||
 https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
-## Development
+## Development:
 
-### DEVELOPMENT PREREQUISITES
+### Development prerequisites
 1. FrontEnd: Install node v10 or above https://nodejs.org/en/download/
 2. FrontEnd: Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
 3. FrontEnd: In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
 4. BackEnd: Install Docker https://hub.docker.com/search/?type=edition&offering=community 
 5. BackEnd: Idea
 
-### START YOUR FRONT Angular Part - admin application
+### Start Front Angular Part - admin application
 go to location where the project is download for example C:\brn\brn\frontend-angular
 1. run first time
 `npm install`
@@ -73,7 +73,7 @@ go to location where the project is download for example C:\brn\brn\frontend-ang
 3. run to start angular part
 `npm run start`
 
-### START YOUR FRONT END EMBER PART - user application
+### Start Front Ember Part - user application
 Run following commands:
 linux/mac:
 ``` 
@@ -85,7 +85,7 @@ for windows:
 ```
 FE dev server now accessible at http://localhost:4200/
 
-### GET DATABASE RUNNING
+### Database running:
 1. Install docker to your machine.
 The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
@@ -107,7 +107,7 @@ _$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced d
 2.2 Alternatively, you can just replace the variables by "admin", the default user and password for development:
 _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11_
 
-### GET THE BACKEND PROJECT RUNNING
+### Back end Kotlin Part:
 1. Run command 'gradle build' from main project folder to build project with tests.
 2. Application.kt is the main class to run application from Idea for example.
 3. on first running in application.properties set `spring.jpa.hibernate.ddl-auto=create`
@@ -125,7 +125,7 @@ end-point specification is here: https://github.com/Brain-up/brn/blob/master/api
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
-### DEPLOY Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE
+### Deploy Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE:
 1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
 2. From console, from project's folder, execute:
 ```bash
@@ -142,7 +142,7 @@ docker ps -a -q for show all containers
 docker stop idContainer for stop running container
 docker rm $(docker ps -a -q) Remove all stopped containers
 
-## DEVELOPMENT PROCESS
+## Development tips:
 1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused with @ElenaSpb.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
@@ -151,17 +151,17 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 6. The task gets merged by a project mantainer. 
 7. check that build job on jenkins passes successfully.
 
-### Code style
+### Code style:
 1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
 2. Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
 3. Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
 4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 5. Please note that if `gradlew ktlint` task fails, project build will fail also.
 
-### CREATING BRANCHES
+### Branches:
 Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
 
-### Sonar
+### Sonar:
 1. https://sonarcloud.io/code?id=Brain-up_brn our project sonar cloud.
 2 To view test coveradge locally  
  2.1 use jacoco gradle task locally `jacocoTestReport` 
