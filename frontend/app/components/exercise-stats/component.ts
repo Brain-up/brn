@@ -6,32 +6,9 @@ interface IExerciseStatsComponentArgs {
   onComplete: () => void;
 }
 
-enum TrendTypes {
-  positive = 'positive',
-  negative = 'negative',
-  neutral = 'neutral'
-}
-
 export default class ExerciseStatsComponent extends Component<IExerciseStatsComponentArgs> {
   get stats(): IStatsExerciseStats {
     return this.args.stats || {};
-  }
-
-  get repeatsTrend() {
-    if (this.stats.repeatsCount > 0) {
-      return TrendTypes.negative;
-    } else {
-      return TrendTypes.positive;
-    }
-  }
-
-  get attemptsTrend() {
-    const { wrongAnswersCount } = this.stats;
-    if (wrongAnswersCount > 0) {
-      return TrendTypes.negative;
-    } else {
-      return TrendTypes.positive;
-    }
   }
 
   get timeStats() {
