@@ -66,12 +66,14 @@ exercise_messages:
   answer_successfully: Правильный ответ
 
 statistics:
-  wrong_answers: Неправильных ответов
-  tasks: Всего заданий
-  repeats: Повторений
+  wrong_answers: Ошибки
+  tasks: Задачи
+  repeats: Повторения
   time_min: мин
   time_sec: сек
-  time_board: Время
+  scoring: Шкала успеха
+  time_board: Общее время
+  info_about: Статистика упражнения
   continue: Продолжить
 
 task_link:
