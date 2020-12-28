@@ -16,4 +16,8 @@
     {{/each}}
   {{/if}}
 </div>
+{{#if (is-active "group.series.index")}}
+  <span {{did-insert (perform this.exerciseAvailabilityCalculationTask)}}></span>
+{{/if}}
+
 {{outlet}}
