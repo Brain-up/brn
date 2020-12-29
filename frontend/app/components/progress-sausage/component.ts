@@ -1,23 +1,28 @@
 import Component from '@glimmer/component';
 
 interface IProgressSausageComponentArgs {
-  progressItems: { completedInCurrentCycle: boolean }[]
+  progressItems: { completedInCurrentCycle: boolean }[];
 }
 
-export default class ProgressSausageComponent extends Component<IProgressSausageComponentArgs> {
+export default class ProgressSausageComponent extends Component<
+  IProgressSausageComponentArgs
+> {
   get progressItems() {
     return this.args.progressItems ?? [];
   }
 
   get progressWidth() {
-    return `width: ${this.progress * 100}%`;
+    return `width:${Math.round(this.progress * 100)}%;`;
   }
 
   get progress() {
+    const items = this.progressItems;
+    if (!items.length) {
+      return 0;
+    }
     return (
-      this.progressItems.filter(
-        ({ completedInCurrentCycle }) => completedInCurrentCycle,
-      ).length / this.progressItems.length
+      items.filter(({ completedInCurrentCycle }) => completedInCurrentCycle)
+        .length / items.length
     );
   }
 }
