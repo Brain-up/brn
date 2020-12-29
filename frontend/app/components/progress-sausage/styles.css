@@ -1,0 +1,14 @@
+.progress-bar {
+  width: 100%;
+  height: 2px;
+  background-color: grey;
+  margin-top: 8px;
+}
+
+.progress-bar__value {
+  height: 16px;
+  border-radius: 8px;
+  background-color: red;
+  transform: translate(0, -50%);
+  width: 1%;
+}

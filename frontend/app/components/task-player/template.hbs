@@ -1,8 +1,11 @@
 {{#let (query-node "#exercise-steps-slot") as |node|}}
   {{#if node}}
-    {{#in-element node}}
+    {{#in-element node guid="%cursor:0%" insertBefore=undefined}}
       {{#unless this.justEnteredTask}}
-        <ExerciseSteps @activeStep={{this.mode}} @onClick={{this.onModeChange}} />
+        <ExerciseSteps
+          @activeStep={{this.mode}}
+          @onClick={{this.onModeChange}}
+        />
       {{/unless}}
     {{/in-element}}
   {{/if}}
@@ -10,7 +13,7 @@
 
 {{#let (query-node "#exercise-timer-slot") as |node|}}
   {{#if node}}
-    {{#in-element node}}
+    {{#in-element node guid="%cursor:0%" insertBefore=undefined}}
       <Timer @hideControls={{this.justEnteredTask}} />
     {{/in-element}}
   {{/if}}
@@ -18,6 +21,7 @@
 
 <div
   class="{{style-namespace "task-player"}}
+
 
      flex flex-1"
   ...attributes
@@ -35,7 +39,7 @@
     mode=this.mode as |context|
   }}
     {{#if (eq this.mode "task")}}
-      <ProgressIndicator @progressItems={{context.tasks}} />
+      <ProgressSausage @progressItems={{context.tasks}} />
     {{/if}}
   {{/component}}
   {{#if this.justEnteredTask}}
