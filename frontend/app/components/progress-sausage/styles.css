@@ -10,5 +10,7 @@
   border-radius: 8px;
   background-color: red;
   transform: translate(0, -50%);
+  transition: width .5s;
+  transition-timing-function: ease-in-out;
   width: 1%;
 }
