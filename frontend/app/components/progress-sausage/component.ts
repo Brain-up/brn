@@ -1,6 +1,10 @@
 import Component from '@glimmer/component';
 
-export default class ProgressSausageComponent extends Component {
+interface IProgressSausageComponentArgs {
+  progressItems: { completedInCurrentCycle: boolean }[]
+}
+
+export default class ProgressSausageComponent extends Component<IProgressSausageComponentArgs> {
   get progressItems() {
     return this.args.progressItems ?? [];
   }
