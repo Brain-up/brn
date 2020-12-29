@@ -1,6 +1,6 @@
 {{#let (query-node "#exercise-steps-slot") as |node|}}
   {{#if node}}
-    {{#in-element node guid="%cursor:0%" insertBefore=undefined}}
+    {{#in-element node}}
       {{#unless this.justEnteredTask}}
         <ExerciseSteps
           @activeStep={{this.mode}}
@@ -13,7 +13,7 @@
 
 {{#let (query-node "#exercise-timer-slot") as |node|}}
   {{#if node}}
-    {{#in-element node guid="%cursor:0%" insertBefore=undefined}}
+    {{#in-element node}}
       <Timer @hideControls={{this.justEnteredTask}} />
     {{/in-element}}
   {{/if}}
