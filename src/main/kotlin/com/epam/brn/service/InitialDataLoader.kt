@@ -8,11 +8,6 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.model.Authority
-import com.epam.brn.model.Exercise
-import com.epam.brn.model.Gender
-import com.epam.brn.model.Signal
-import com.epam.brn.model.UserAccount
 import com.epam.brn.upload.CsvUploadService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value

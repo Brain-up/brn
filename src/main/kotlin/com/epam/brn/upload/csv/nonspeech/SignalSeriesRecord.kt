@@ -4,10 +4,10 @@ import com.epam.brn.model.ExerciseType
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class SignalSeriesRecord(
-    @JsonProperty("series")
-    val series: String,
     @JsonProperty("level")
     val level: Int,
+    @JsonProperty("code")
+    val code: String,
     @JsonProperty("exerciseName")
     val exerciseName: String,
     @JsonProperty("exerciseType")
@@ -16,6 +16,6 @@ data class SignalSeriesRecord(
     val signals: List<String>
 ) {
     companion object {
-        const val FORMAT = "series,level,exerciseName,exerciseType,signals"
+        const val FORMAT = "level,code,exerciseName,exerciseType,signals"
     }
 }
