@@ -43,10 +43,12 @@ jobs:
           mv docker-compose-run-659.yml docker-compose.yml
           sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
           sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+          sed -i -e "s/_POSTGRES_PASSWORD_/\\$POSTGRES_PASSWORD/" docker-compose.yml
         env:
           S3_KEY: ${{ secrets.S3_KEY }}
           YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       - name: Redeploy application
         run: |
           docker-compose pull
