@@ -16,13 +16,13 @@ internal class WordsServiceTest {
     @Test
     fun `should create file with words`() {
         // GIVEN
-        val words = hashSetOf<String>("girl", "boy", "man")
+        val words = hashMapOf("girl" to "girlHex", "boy" to "boyHex", "man" to "manHex")
         val fileName = "testWordsFile.txt"
         // WHEN
-        val file = wordsService.createTxtFileWithExerciseWords(words, fileName)
+        val fileResult = wordsService.createTxtFileWithExerciseWordsMap(words, fileName)
         // THAN
-        assertTrue(file.exists())
-        assertEquals("girl,boy,man", file.readText())
-        file.deleteOnExit()
+        assertTrue(fileResult.exists())
+        assertEquals("{girl=girlHex, boy=boyHex, man=manHex}", fileResult.readText())
+        fileResult.deleteOnExit()
     }
 }

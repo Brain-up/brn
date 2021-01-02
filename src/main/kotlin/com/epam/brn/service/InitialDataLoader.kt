@@ -37,8 +37,7 @@ class InitialDataLoader(
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
     private val uploadService: CsvUploadService,
-    private val audioFilesGenerationService: AudioFilesGenerationService,
-    private val wordsService: WordsService
+    private val audioFilesGenerationService: AudioFilesGenerationService
 ) {
     private val log = logger()
 
@@ -135,7 +134,6 @@ class InitialDataLoader(
             initDataFromDirectory(directoryPath!!)
         else
             initDataFromClassPath()
-        wordsService.fillWordsWithAudioOggFile()
     }
 
     private fun initDataFromDirectory(directoryToScan: Path) {
