@@ -70,13 +70,14 @@ class AudioFilesGenerationService(
     /**
      * Generate .ogg audio file from yandex cloud and optionally convert it into .mp3 file and save both of them
      */
-    fun processWord(word: String, voice: String, speed: String) {
+    fun processWord(word: String, voice: String, speed: String): File {
         val fileOgg = yandexSpeechKitService.generateAudioOggFile(word, voice, speed)
         if (withSavingToS3)
             awsConfig.amazonS3.putObject(awsConfig.bucketName + "/audio/$voice", fileOgg.name, fileOgg)
         log.info("Ogg audio file `${fileOgg.name}` was successfully save in S3 ${awsConfig.bucketName + "/audio/$voice/" + fileOgg.name}.")
         if (withMp3Conversion)
             convertOggFileToMp3(fileOgg, voice)
+        return fileOgg
     }
 
     fun convertOggFileToMp3(fileOgg: File, voice: String) {
