@@ -35,16 +35,17 @@ class SeriesTwoRecordProcessor(
     @Value(value = "\${audioPath}")
     private lateinit var audioPath: String
 
+    val words = mutableMapOf<String, String>()
+
     override fun isApplicable(record: Any): Boolean = record is SeriesTwoRecord
 
     override fun process(records: List<SeriesTwoRecord>): List<Exercise> {
-        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(2L).orElse(null)
         records.forEach {
             val answerOptions = extractAnswerOptions(it)
-            words.addAll(answerOptions.map { r -> r.word }.toSet())
+            words.putAll(answerOptions.associate { r -> Pair(r.word, DigestUtils.md5Hex(r.word)) })
             val savedResources = resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -53,7 +54,7 @@ class SeriesTwoRecordProcessor(
             taskRepository.save(extractTask(savedExercise, savedResources.toMutableSet()))
             exercises.add(savedExercise)
         }
-        wordsService.createTxtFileWithExerciseWords(words, series2WordsFileName)
+        wordsService.createTxtFileWithExerciseWordsMap(words, series2WordsFileName)
         return exercises.toMutableList()
     }
 
@@ -79,6 +80,7 @@ class SeriesTwoRecordProcessor(
 
     private fun toResource(word: String, wordType: WordType): Resource {
         val hashWord = DigestUtils.md5Hex(word)
+        words[word] = hashWord
         val audioFileUrl = audioPath.format(hashWord)
         val resource = resourceRepository.findFirstByWordAndWordType(word, wordType.name)
             .orElse(
