@@ -1,6 +1,6 @@
-<div class="w-full max-w-sm mx-auto">
+<div class="w-full max-w-lg mx-auto">
   <form
-    class="bg-white rounded px-12 pt-6 pb-8 mb-6
+    class="bg-white rounded px-16 pt-16 pb-16 pr-16 mb-6
 
 
       {{unless this.registrationInProgress "shadow-lg"}}"
@@ -24,6 +24,9 @@
     {{else}}
       <div class="mb-4">
         <LoginForm::Input
+          required
+          @trimRight={{false}}
+          @warning={{this.warningName}}
           @label={{t "registration_form.name"}}
           @model={{this}}
           @name="firstName"
@@ -32,15 +35,15 @@
       </div>
       <div class="mb-4">
         <LoginForm::Input
-          min={{this.minDateString}}
-          max={{this.maxDateString}}
           required
+          minlength="4"
+          maxlength="4"
+          pattern="[0-9]{4}"
           @warning={{this.warningErrorDate}}
           @label={{t "registration_form.birthday"}}
           @placeholder={{t "registration_form.birthday_placeholder"}}
           @model={{this}}
           @name="birthday"
-          @type="number"
         />
       </div>
       <div class="mb-4">
@@ -48,6 +51,7 @@
           {{t "registration_form.gender"}}
         </p>
         <input
+          required
           name="gender"
           value="FEMALE"
           type="radio"
@@ -59,6 +63,7 @@
           {{t "registration_form.gender_female"}}
         </label>
         <input
+          required
           name="gender"
           type="radio"
           value="MALE"
@@ -73,7 +78,7 @@
         {{#if this.warningGender}}
           <p
             data-test-warning-message="gender"
-            class="mt-2 text-xs italic text-red-500"
+            class="mt-2 text-xs text-red-500"
           >
             {{this.warningGender}}
           </p>
@@ -88,7 +93,7 @@
           @type="email"
         />
       </div>
-      <div class="mb-6">
+      <div class="mb-4">
         <LoginForm::Input
           @label={{t "registration_form.password"}}
           @placeholder={{t "registration_form.password_placeholder"}}
@@ -96,13 +101,23 @@
           @name="password"
           @type="password"
         />
+      </div>
+      <div class="mb-6">
+        <LoginForm::Input
+          @label={{t "registration_form.repeat_password"}}
+          @placeholder={{t "registration_form.password_placeholder"}}
+          @model={{this}}
+          @warning={{this.warningPasswordsEquality}}
+          @name="repeatPassword"
+          @type="password"
+        />
         {{#if (or this.usernameError this.passwordError)}}
-          <p data-test-form-warning class="mt-2 text-xs italic text-red-500">
+          <p data-test-form-warning class="mt-2 text-xs text-red-500">
             {{t "registration_form.warning_enter_credentials"}}
           </p>
         {{/if}}
         {{#if this.errorMessage}}
-          <p data-test-form-error class="mt-2 text-xs italic text-red-500">
+          <p data-test-form-error class="mt-2 text-xs text-red-500">
             {{this.errorMessage}}
           </p>
         {{/if}}
@@ -123,6 +138,9 @@
             {{t "registration_form.agreement_part2"}}
           </LinkTo>
         </label>
+      </div>
+      <div class="flex mb-4">
+        <p class="text-xs">Уважаемый пользователь, в настоящее время функционал смены, напоминания пароля в разработке и не доступен для использования, поэтому просьба запомнить пароль удобным для Вас способом.</p>
       </div>
       <div class="flex mb-4">
         <Ui::Button @type="submit" class="w-full" disabled={{not this.agreed}} data-test-submit-form @title={{t "registration_form.registration"}} />

@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_PASSWORD: _POSTGRES_PASSWORD_
     volumes:
       - dbdata:/var/lib/postgresql/data
   brn:
@@ -20,7 +20,7 @@ services:
     environment:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_PASSWORD: _POSTGRES_PASSWORD_
       SPRING_PROFILE: prod
       aws.credentialsPath: /run/secrets/aws-key
       YANDEX_AUTH_TOKEN: _YANDEX_AUTH_TOKEN_

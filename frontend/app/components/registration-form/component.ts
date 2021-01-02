@@ -5,6 +5,7 @@ import { tracked } from '@glimmer/tracking';
 
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
+  'PASSWORD_MUST_BE_BETWEEN_4_AND_20_CHARACTERS_LONG': 'registration_form.password_length'
 };
 
 interface LatestUserDTO {
@@ -24,11 +25,28 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked lastName!: string;
   @tracked password!: string;
   @tracked birthday!: string;
+  @tracked repeatPassword!: string;
   @tracked gender!: "MALE" | "FEMALE";
   @tracked agreed = false;
 
   maxDate = new Date().getFullYear();
   minDate = new Date().getFullYear() - 100;
+
+
+  get warningPasswordsEquality() {
+
+    if (this.repeatPassword === undefined) {
+      return false;
+    }
+
+    const isPasswordsEqual = this.password && this.password === this.repeatPassword;
+
+    if (!isPasswordsEqual) {
+      return this.intl.t('registration_form.passwords_should_match');
+    }
+
+    return false;
+  }
 
   get warningErrorDate() {
     const { birthday, maxDate, minDate } = this;
@@ -45,7 +63,20 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     return false;
   }
 
+  get warningName() {
+    if (this.firstName === undefined) {
+      return false;
+    }
+    if (this.firstName.trim().split(' ').length === 1) {
+      return this.intl.t('registration_form.empty_lastname');
+    }
+    return false;
+  }
+
   get warningGender() {
+    if (!this.birthday || !this.firstName) {
+      return false;
+    }
     if (!this.gender) {
       return this.intl.t('registration_form.empty_gender');
     }
@@ -67,7 +98,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   }
   @(task(function*(this: RegistrationFormComponent) {
     const user: LatestUserDTO = {
-      name: this.firstName,
+      name: this.firstName.trim(),
       email: this.email,
       gender: this.gender,
       avatar: '',

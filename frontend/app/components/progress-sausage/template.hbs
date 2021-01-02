@@ -1,0 +1,10 @@
+<div class={{style-namespace "progress-sausage"}} ...attributes>
+  <div class="progress-bar">
+    {{! template-lint-disable no-inline-styles style-concatenation }}
+    <div
+      class="progress-bar__value"
+      style={{html-safe this.progressWidth}}
+      data-test-progress-sausage
+    ></div>
+  </div>
+</div>

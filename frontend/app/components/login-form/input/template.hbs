@@ -9,7 +9,7 @@
   @value={{this.value}}
   class="{{if this.hasError "border-red-500"}}
 
-     appearance-none border-b-2  w-full px-2 text-sm leading-tight focus:outline-none focus:shadow-outline"
+     appearance-none border-b-2  w-full text-sm leading-tight focus:outline-none focus:shadow-outline"
   id={{@name}}
   type={{or @type "text"}}
   placeholder={{or @placeholder ""}}
@@ -20,7 +20,7 @@
   <p
     data-test-warning-message={{@name}}
     warningMessage={{@warning}}
-    class="mt-2 text-xs italic text-red-500"
+    class="mt-2 text-xs text-red-500"
   >
     {{this.warning}}
   </p>

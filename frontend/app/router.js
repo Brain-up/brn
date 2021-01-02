@@ -19,4 +19,5 @@ Router.map(function() {
   this.route('login');
   this.route('registration');
   this.route('not-found', { path: '*wildcard_path' });
+  this.route('password-recovery');
 });

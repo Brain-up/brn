@@ -1,7 +1,10 @@
 package com.epam.brn.upload.csv
 
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.upload.csv.group.GroupRecord
 import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.nonspeech.SignalSeriesRecord
+import com.epam.brn.upload.csv.nonspeech.SignalSeriesRecordProvider
 import com.epam.brn.upload.csv.series.SeriesGenericRecord
 import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series1.SeriesOneRecord
@@ -27,7 +30,8 @@ class CsvParserTest {
             SeriesOneRecordMappingIteratorProvider(),
             SeriesTwoRecordMappingIteratorProvider(),
             SeriesThreeRecordMappingIteratorProvider(),
-            SeriesFourRecordMappingIteratorProvider()
+            SeriesFourRecordMappingIteratorProvider(),
+            SignalSeriesRecordProvider()
         )
     )
 
@@ -169,6 +173,36 @@ class CsvParserTest {
                     mutableListOf("(Мамочка", "идёт.", "Мамочка", "быстро", "идёт", "в", "магазин.)"),
                     0,
                     ""
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `should parse exercise for non speech Series`() {
+        val input = """
+                series,level,exerciseName,exerciseType,signals
+                Частота сигналов,5,По 5 сигналов разной частоты.,TWO_DIFFERENT_FREQUENCY_SIGNAL,1000 120; 1200 120; 1500 120; 1700 120; 2000 120
+                Длительность сигналов,4,По 4 сигнала разной длительности.,TWO_DIFFERENT_LENGTH_SIGNAL,1000 60; 1000 120; 1000 200; 1000 220
+                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+
+        val result = parser.parse(input)
+
+        assertThat(result).containsAll(
+            listOf(
+                SignalSeriesRecord(
+                    series = "Частота сигналов",
+                    level = 5,
+                    exerciseName = "По 5 сигналов разной частоты.",
+                    exerciseType = ExerciseType.TWO_DIFFERENT_FREQUENCY_SIGNAL,
+                    signals = listOf("1000 120", "1200 120", "1500 120", "1700 120", "2000 120")
+                ),
+                SignalSeriesRecord(
+                    series = "Длительность сигналов",
+                    level = 4,
+                    exerciseName = "По 4 сигнала разной длительности.",
+                    exerciseType = ExerciseType.TWO_DIFFERENT_LENGTH_SIGNAL,
+                    signals = listOf("1000 60", "1000 120", "1000 200", "1000 220")
                 )
             )
         )

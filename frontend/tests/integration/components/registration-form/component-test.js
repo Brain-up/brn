@@ -47,8 +47,10 @@ module('Integration | Component | registration-form', function(hooks) {
     await fillIn('[name="firstName"]', 'b');
     await fillIn('[name="email"]', 'c@name.com');
     await fillIn('[name="password"]', 'd');
+    await fillIn('[name="repeatPassword"]', 'd');
     await fillIn('[name="birthday"]', '1991');
     await click('[name="agreement"]');
+    await click('[id="male"]');
     await click('[data-test-submit-form]');
   });
 
@@ -73,8 +75,10 @@ module('Integration | Component | registration-form', function(hooks) {
     await fillIn('[name="firstName"]', 'b');
     await fillIn('[name="email"]', 'c@name.com');
     await fillIn('[name="password"]', 'd');
+    await fillIn('[name="repeatPassword"]', 'd');
     await fillIn('[name="birthday"]', '1991');
     await click('[name="agreement"]')
+    await click('[id="male"]');
     await click('[data-test-submit-form]');
     assert.dom('[data-test-form-error]').hasText('foo');
   });

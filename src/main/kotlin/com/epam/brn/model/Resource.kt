@@ -14,9 +14,9 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    uniqueConstraints = [UniqueConstraint(columnNames = ["word", "audioFileUrl"])],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["word", "audioFileUrl", "wordType"])],
     indexes = [
-        Index(name = "word_audio_file_idx", columnList = "word, audioFileUrl"),
+        Index(name = "word_audio_file_idx", columnList = "word, audioFileUrl, wordType"),
         Index(name = "audio_file_idx", columnList = "audioFileUrl")
     ]
 )

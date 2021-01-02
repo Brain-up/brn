@@ -11,7 +11,7 @@
 html {
   background: #efefef;
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 html,
@@ -56,24 +56,6 @@ main > * {
   right: 0;
   top: 0;
   z-index: 0;
-}
-
-.background-statistics {
-  position: relative;
-}
-
-.background-statistics:after  {
-  background-image: url(/ui/statistics-background.svg);
-  background-position: top;
-  background-repeat: no-repeat;
-  background-size: contain;
-  content: "";
-  height: 30%;
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  width: 30%;
 }
 
 a {

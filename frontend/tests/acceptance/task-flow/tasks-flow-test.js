@@ -89,9 +89,11 @@ module('Acceptance | tasks flow', function(hooks) {
     await pageObject.startTask();
     await chooseAnswer(targetTask.correctAnswer.word);
     await customTimeout();
-    const targetTask2 = setupAfterPageVisit().targetTask;
-    await waitFor('[data-test-task-answer-option]');
-    await chooseAnswer(targetTask2.correctAnswer.word);
+    await click('[data-test-continue]');
+
+    // const targetTask2 = setupAfterPageVisit().targetTask;
+    // await waitFor('[data-test-task-answer-option]');
+    // await chooseAnswer(targetTask2.correctAnswer.word);
     await customTimeout();
   });
 
