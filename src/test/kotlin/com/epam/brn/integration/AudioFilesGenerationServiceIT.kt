@@ -2,6 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.service.AudioFilesGenerationService
 import org.apache.commons.codec.digest.DigestUtils
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +17,7 @@ import kotlin.test.assertTrue
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
-// @Disabled("as it is write only for testing locally")
+@Disabled("as it is write only for testing locally")
 internal class AudioFilesGenerationServiceIT {
 
     @Autowired
