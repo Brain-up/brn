@@ -86,7 +86,7 @@ class SeriesOneRecordProcessor(
 
     private fun toResource(word: String, audioPath: String): Resource {
         val hashWord = DigestUtils.md5Hex(word)
-        words.put(word, hashWord)
+        words[word] = hashWord
         val audioFileUrl = audioPath.format(hashWord)
         val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFileUrl)
             .orElse(

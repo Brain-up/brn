@@ -34,23 +34,24 @@ class SeriesThreeRecordProcessor(
     @Value(value = "\${audioPath}")
     private lateinit var audioPath: String
 
+    val words = mutableMapOf<String, String>()
+
     override fun isApplicable(record: Any): Boolean {
         return record is SeriesThreeRecord
     }
 
     @Transactional
     override fun process(records: List<SeriesThreeRecord>): List<Exercise> {
-        val words = mutableSetOf<String>()
         val exercises = mutableSetOf<Exercise>()
 
         val series = seriesRepository.findById(3L).orElse(null)
         records.forEach {
             val correctAnswer = extractCorrectAnswer(it)
-            words.add(correctAnswer.word)
+            words[correctAnswer.word] = DigestUtils.md5Hex(correctAnswer.word)
             resourceRepository.save(correctAnswer)
 
             val answerOptions = extractAnswerOptions(it)
-            words.addAll(answerOptions.map { r -> r.word }.toSet())
+            words.putAll(answerOptions.associate { r -> Pair(r.word, DigestUtils.md5Hex(r.word)) })
             resourceRepository.saveAll(answerOptions)
 
             val exercise = extractExercise(it, series)
@@ -59,7 +60,7 @@ class SeriesThreeRecordProcessor(
             exerciseRepository.save(exercise)
             exercises.add(exercise)
         }
-        wordsService.createTxtFileWithExerciseWords(words, series3WordsFileName)
+        wordsService.createTxtFileWithExerciseWordsMap(words, series3WordsFileName)
         return exercises.toMutableList()
     }
 

@@ -11,15 +11,6 @@ class WordsService {
     private lateinit var folderForFiles: String
 
     val fullWordsSet = HashSet<String>()
-    val existsFileNames = HashSet<String>()
-
-    fun createTxtFileWithExerciseWords(words: MutableSet<String>, fileName: String): File {
-        words.remove("")
-        fullWordsSet.addAll(words)
-        val file = File(fileName)
-        File(fileName).writeText(words.joinToString(","))
-        return file
-    }
 
     fun createTxtFileWithExerciseWordsMap(words: MutableMap<String, String>, fileName: String): File {
         words.remove("")
@@ -29,7 +20,9 @@ class WordsService {
         return file
     }
 
-    fun fillWordsWithAudioOggFile() {
+    fun getExistWordFiles(): HashSet<String> {
+        val existsFileNames = HashSet<String>()
         File(folderForFiles).walkTopDown().forEach { f -> existsFileNames.add(f.nameWithoutExtension) }
+        return existsFileNames
     }
 }
