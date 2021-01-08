@@ -69,9 +69,6 @@ class AudioFilesGenerationService(
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForFiles: String
 
-    @Value(value = "\${yandex.folderForRusFiles}")
-    private lateinit var folderForRusFiles: String
-
     var iamToken: String = ""
     var iamTokenExpiresTime = ZonedDateTime.now()
 
