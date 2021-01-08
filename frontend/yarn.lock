@@ -6124,15 +6124,15 @@ ember-factory-for-polyfill@^1.3.1:
   dependencies:
     ember-cli-version-checker "^2.1.0"
 
-ember-fast-cli@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/ember-fast-cli/-/ember-fast-cli-1.3.0.tgz#60fd43e9f3215c2f5a3530d8bf0a02c3cccc2aee"
-  integrity sha512-IlI+l4NSXnq1+5GTTnucEM5Xwxly2luYudZRIptdLw+/6rcIi+suotv7za/nqrAC/jFkQJ36J/eW/Vb1/iIgUg==
+ember-fast-cli@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/ember-fast-cli/-/ember-fast-cli-1.3.1.tgz#564370712654b8232cffa5093ac8fc8572725ace"
+  integrity sha512-5mnGMhtofHwrjwIS7X78Jfxd+eEDqPlnaaAkffWfumomhZCb5xSmWDRSwyQUrt8OPAbVBfOlyuLlqnQud2a9UQ==
   dependencies:
-    ember-cli-babel "^7.21.0"
-    ember-cli-htmlbars "^5.2.0"
+    ember-cli-babel "^7.23.0"
+    ember-cli-htmlbars "^5.3.1"
     express "*"
-    node-fetch "^2.6.0"
+    node-fetch "^2.6.1"
     xterm "^4.3.0"
 
 ember-fetch@^8.0.2:
