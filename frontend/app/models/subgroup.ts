@@ -1,4 +1,4 @@
-import Model, { attr, hasMany, SyncHasMany } from '@ember-data/model';
+import Model, { attr, hasMany, AsyncHasMany } from '@ember-data/model';
 import Exercise from './exercise';
 
 export default class SubgroupModel extends Model {
@@ -6,5 +6,5 @@ export default class SubgroupModel extends Model {
   @attr('number') level!: number;
   @attr('string') pictureUrl!: string;
   @attr('string') description!: string;
-  @hasMany('exercise') exercises!: SyncHasMany<Exercise>
+  @hasMany('exercise') exercises!: AsyncHasMany<Exercise>
 }

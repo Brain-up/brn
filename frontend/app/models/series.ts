@@ -2,12 +2,14 @@ import Model, { belongsTo, hasMany, attr, AsyncHasMany, AsyncBelongsTo } from '@
 import Exercise from './exercise';
 import Group from './group';
 import { cached } from 'tracked-toolbox';
+import SubgroupModel from './subgroup';
 export default class Series extends Model {
   @attr('string') name!: string;
   @attr('string') description!: string;
   @attr('number') level!: number;
   @attr('string') kind!: string;
   @belongsTo('group', { async: true } ) group?: AsyncBelongsTo<Group>;
+  @hasMany('subgroup', { async: true }) subGroups!:  AsyncHasMany<SubgroupModel>;
   @hasMany('exercise', { async: true } ) exercises!: AsyncHasMany<Exercise>;
   get children() {
     return this.exercises;
