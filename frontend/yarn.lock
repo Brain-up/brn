@@ -1485,19 +1485,19 @@
   dependencies:
     "@types/node" "*"
 
-"@types/ember-data@*", "@types/ember-data@^3.16.6":
-  version "3.16.6"
-  resolved "https://registry.yarnpkg.com/@types/ember-data/-/ember-data-3.16.6.tgz#209bfa9b6979be32c3ed4a3abf04c274a37be04c"
-  integrity sha512-gx73u5XhJxlui1PP6grft5i6jpfTpcORk35pVBlPGkhQVWjez44iq2B/e7iVXomw9FkGVpp+htDsCmfo4nzDzA==
+"@types/ember-data@*", "@types/ember-data@^3.16.8":
+  version "3.16.8"
+  resolved "https://registry.yarnpkg.com/@types/ember-data/-/ember-data-3.16.8.tgz#59a58478546f7fac5edf776d207f905989c012bf"
+  integrity sha512-4AB1R+AN3kFZMWn9cCrV2Ty1tRbasMmZ22zsQncK5axGWx0LXcJOnypuODWM2tNGvNt2mL2p7LLZQA396cFA1g==
   dependencies:
     "@types/ember" "*"
     "@types/ember__object" "*"
     "@types/rsvp" "*"
 
-"@types/ember-data__model@^3.16.1":
-  version "3.16.1"
-  resolved "https://registry.yarnpkg.com/@types/ember-data__model/-/ember-data__model-3.16.1.tgz#54c1e88cf52f08bafcd0701a266a85feb5ae2950"
-  integrity sha512-RJMpKpq8jkLuUl/+E45PegE7fCXIzGlN854oJx6TwnOskZYx0CNe/dXeuicNuFbKRSPtfSqb9rmIXb5ApEUC2w==
+"@types/ember-data__model@^3.16.2":
+  version "3.16.2"
+  resolved "https://registry.yarnpkg.com/@types/ember-data__model/-/ember-data__model-3.16.2.tgz#12b692835afa6cd7eeab99357e4b6c5a5ce8c2d4"
+  integrity sha512-M5q4I7qsTRPl4hIA0htVj+1jyVJRsScucPUlNuxi36MxXsRj4v1y1nxywt8PRxlsz5umL+yJSrBpL3z3jBPwbA==
   dependencies:
     "@types/ember-data" "*"
 
@@ -1533,10 +1533,10 @@
     "@types/jquery" "*"
     "@types/rsvp" "*"
 
-"@types/ember@*", "@types/ember@^3.16.1":
-  version "3.16.1"
-  resolved "https://registry.yarnpkg.com/@types/ember/-/ember-3.16.1.tgz#8423ad68a74e8c8f9c694631ea25a72d2678b95c"
-  integrity sha512-lp+dbTu43c8E5E5lOMSmFxZ47yAvQpjY7JtUVg+CcAjnTBFv65qeTJ2lRrppQLyYnyV/igZ6jeDaC04l/S3kiw==
+"@types/ember@*", "@types/ember@^3.16.2":
+  version "3.16.2"
+  resolved "https://registry.yarnpkg.com/@types/ember/-/ember-3.16.2.tgz#95d58f42de8d8eb043496fca2aaef3cf62832a13"
+  integrity sha512-00Rh+wDTua6H57wegaU7OWRf6tUNkDOCuxLqdqRDUQTag9W64G1Qgeo6jpT7PiZfoB0T559lziFVgHoKnyBQfQ==
   dependencies:
     "@types/ember__application" "*"
     "@types/ember__array" "*"
