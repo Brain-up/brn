@@ -1,12 +1,12 @@
-import Model, { belongsTo, hasMany, attr } from '@ember-data/model';
+import Model, { belongsTo, hasMany, attr, AsyncHasMany, AsyncBelongsTo } from '@ember-data/model';
 import Exercise from './exercise';
 import Group from './group';
 import { cached } from 'tracked-toolbox';
 export default class Series extends Model {
   @attr('string') name!: string;
   @attr('string') description!: string;
-  @belongsTo('group', { async: true } ) group?: Group;
-  @hasMany('exercise', { async: true } ) exercises!: Exercise[];
+  @belongsTo('group', { async: true } ) group?: AsyncBelongsTo<Group>;
+  @hasMany('exercise', { async: true } ) exercises!: AsyncHasMany<Exercise>;
   get children() {
     return this.exercises;
   }
