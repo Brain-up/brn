@@ -5,6 +5,8 @@ import { cached } from 'tracked-toolbox';
 export default class Series extends Model {
   @attr('string') name!: string;
   @attr('string') description!: string;
+  @attr('number') level!: number;
+  @attr('string') kind!: string;
   @belongsTo('group', { async: true } ) group?: AsyncBelongsTo<Group>;
   @hasMany('exercise', { async: true } ) exercises!: AsyncHasMany<Exercise>;
   get children() {
