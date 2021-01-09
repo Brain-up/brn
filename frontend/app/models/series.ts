@@ -28,17 +28,15 @@ export default class Series extends Model {
   }
 
   @cached
-  get groupedByNameExercises() {
+  get groupedByNameExercises(): Record<string, Exercise[]>  {
     return this.exercises.reduce((resultObj, currentExercise) => {
       const { name } = currentExercise;
-      // @ts-expect-error
       const targetGroup = resultObj[name];
-      // @ts-expect-error
       resultObj[name] = targetGroup
         ? targetGroup.concat([currentExercise]).sortBy('order')
         : [currentExercise];
 
       return resultObj;
-    }, {});
+    }, {} as Record<string, Exercise[] | undefined>) as Record<string, Exercise[]>;
   }
 }
