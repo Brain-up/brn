@@ -8,9 +8,10 @@ export default class Group extends CompletionDependent {
 
   @attr('string') name!: string;
   @attr('string') description!: string;
+  @attr('string') locale!: string;
   @hasMany('series', { async: false }) series!: SyncHasMany<SeriesModel>;
 
-  get children() {
+  get children(): SeriesModel[] {
     return this.series.toArray();
   }
   get sortedSeries() {
