@@ -2,5 +2,5 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: ./gradlew build && java -jar epam-brn.jar
+  - init: ./gradlew clean bootJar -x test && java -jar build/libs/epam-brn.jar
   - init: cd frontend && yarn install && yarn local
