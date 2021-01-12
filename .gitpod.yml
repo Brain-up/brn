@@ -1,3 +1,7 @@
+ports:
+  - port: 4200
+    onOpen: open-preview
+
 image:
   file: .gitpod.Dockerfile
 
