@@ -5,5 +5,11 @@
 
     Setting `disableAnalytics` to true will prevent any data from being sent.
   */
-  "disableAnalytics": false
+  "disableAnalytics": false,
+  "liveReloadJsUrl": "https://4200-e3ceb530-01dd-412f-bd77-671d6eb72ec9.ws-eu03.gitpod.io/_lr/livereload.js",
+    "liveReloadOptions": {
+    "port": 443,
+    "https": true,
+    "host": "4200-e3ceb530-01dd-412f-bd77-671d6eb72ec9.ws-eu03.gitpod.io"
+  }
 }
