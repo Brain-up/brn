@@ -49,3 +49,6 @@ out/
 **/*.log
 **/*.log.*.gz
 brn.log.*
+
+### gitpod ###
+/.ember-cli
