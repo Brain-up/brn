@@ -4,9 +4,10 @@ ports:
   - port: 5432
     onOpen: ignore
 
-image:
-  file: .gitpod.Dockerfile
+image: gitpod/workspace-postgres
 
 tasks:
-  - init: ./gradlew clean bootJar -x test && java -jar build/libs/epam-brn.jar
+  - init: ./gradlew clean bootJar -x test
+    command: java -jar build/libs/epam-brn.jar
   - init: cd frontend && yarn install && yarn local
+    command: cd frontend && yarn local
