@@ -3,6 +3,7 @@ ports:
     onOpen: open-preview
   - port: 5432
     onOpen: ignore
+    visibility: private
 
 image: gitpod/workspace-postgres
 
