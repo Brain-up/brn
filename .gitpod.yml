@@ -9,5 +9,5 @@ image: gitpod/workspace-postgres
 tasks:
   - init: ./gradlew clean bootJar -x test
     command: java -jar build/libs/epam-brn.jar
-  - init: cd frontend && yarn install && yarn local
+  - init: cd frontend && yarn install
     command: cd frontend && yarn local
