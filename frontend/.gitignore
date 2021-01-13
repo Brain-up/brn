@@ -28,4 +28,4 @@
 jsconfig.json
 
 #gitpod
-.ember-cli
+/.ember-cli
