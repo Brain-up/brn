@@ -17,4 +17,7 @@ tasks:
       export POSTGRES_USER=gitpod &&
       java -jar build/libs/epam-brn.jar -Dspring.jpa.hibernate.ddl-auto=create
   - init: cd frontend && yarn install
-    command: yarn local
+    command: >
+      export GITPODURLHOST=$(gp url 4200|cut -d\/ -f3) &&
+      sed -i -e "s/_GITPODURLHOST_/$GITPODURLHOST/" .ember-cli &&
+      yarn local
