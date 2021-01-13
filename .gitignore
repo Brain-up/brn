@@ -51,4 +51,4 @@ out/
 brn.log.*
 
 ### gitpod ###
-/.ember-cli
+/frontend/.ember-cli
