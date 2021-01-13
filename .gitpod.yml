@@ -8,6 +8,9 @@ image: gitpod/workspace-postgres
 
 tasks:
   - init: ./gradlew clean bootJar -x test
-    command: java -jar build/libs/epam-brn.jar
+    command: >
+      export POSTGRES_DB=$PGDATABASE
+      export POSTGRES_USER=gitpod
+      java -jar build/libs/epam-brn.jar -Dspring.jpa.hibernate.ddl-auto=create
   - init: cd frontend && yarn install
     command: yarn local
