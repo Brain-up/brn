@@ -1,6 +1,8 @@
 ports:
   - port: 4200
     onOpen: open-preview
+  - port: 5432
+    onOpen: ignore
 
 image:
   file: .gitpod.Dockerfile
