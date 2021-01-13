@@ -4,6 +4,9 @@ ports:
   - port: 5432
     onOpen: ignore
     visibility: private
+  - port: 8081
+    onOpen: ignore
+    visibility: private
 
 image: gitpod/workspace-postgres
 
