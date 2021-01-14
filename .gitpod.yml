@@ -21,3 +21,8 @@ tasks:
       export GITPODURLHOST=$(gp url 4200|cut -d\/ -f3) &&
       cd /workspace/brn/frontend && 
       yarn local
+
+github:
+  prebuilds:
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true
