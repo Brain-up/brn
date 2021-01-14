@@ -14,9 +14,12 @@ export default class ApplicationRoute extends Route {
     this.intl.setLocale([locale]);
   }
 
-  redirect() {
+  redirect(_: unknown, { to } : { to: { name: string }}) {
     if (Ember.testing) {
       // skip testing bahavour for now
+      return;
+    }
+    if (to.name === 'user-agreement') {
       return;
     }
     if (!this.session.isAuthenticated) {
