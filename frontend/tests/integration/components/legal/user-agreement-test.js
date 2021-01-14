@@ -12,15 +12,6 @@ module('Integration | Component | legal/user-agreement', function(hooks) {
 
     await render(hbs`<Legal::UserAgreement />`);
 
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <Legal::UserAgreement>
-        template block text
-      </Legal::UserAgreement>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('div').exists();
   });
 });
