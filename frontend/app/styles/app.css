@@ -141,4 +141,41 @@ a[disabled] {
   padding: 25px 40px 40px;
 }
 
+.border-gradient {
+  box-sizing: border-box;
+  background: linear-gradient(white, white),
+    linear-gradient(to right, #428dfc, #ba75f1);
+  border: 2px solid transparent;
+  background-repeat: no-repeat;
+  background-origin: padding-box, border-box;
+}
+
+/* .border-gray {
+  border: rgb(192, 191, 191) solid 2px;
+} */
+
+.button-options {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-options:active {
+  background:#ebf4ff;
+}
+
+.button-options:hover:enabled {
+  font-weight: bold;
+}
+
+.button-disabled {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(128, 127, 127);
+  border: rgb(199, 199, 199) solid 2px;
+  font-weight: bold;  
+}
 /*! purgecss end ignore */

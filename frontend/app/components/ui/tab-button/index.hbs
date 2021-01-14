@@ -1,0 +1,35 @@
+{{#if @route}}
+  {{#if @model}}
+    <LinkTo  class={{this.classes}} @route={{@route}} @model={{@model}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{@title}}
+    {{/if}}
+    </LinkTo>
+  {{else if @models}}
+    <LinkTo  class={{this.classes}} @route={{@route}} @models={{@models}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{@title}}
+    {{/if}}
+    </LinkTo>
+  {{else}}
+    <LinkTo  class={{this.classes}} @route={{@route}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{@title}}
+    {{/if}}
+    </LinkTo>
+{{/if}}
+{{else}}
+  <button class={{this.classes}} ...attributes>
+    {{#if (has-block)}}
+      {{yield}}
+{{else}}
+      {{@title}}
+    {{/if}}
+  </button>
+{{/if}}
