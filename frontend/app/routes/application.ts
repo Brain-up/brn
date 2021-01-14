@@ -19,7 +19,7 @@ export default class ApplicationRoute extends Route {
       // skip testing bahavour for now
       return;
     }
-    if (to.name === 'user-agreement') {
+    if (['user-agreement', 'description'].includes(to.name)) {
       return;
     }
     if (!this.session.isAuthenticated) {
