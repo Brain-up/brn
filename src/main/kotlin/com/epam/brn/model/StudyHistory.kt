@@ -25,7 +25,7 @@ data class StudyHistory(
     @SequenceGenerator(
         name = "study_history_id_seq",
         sequenceName = "study_history_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     val id: Long? = null,
 

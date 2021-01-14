@@ -21,7 +21,7 @@ data class Series(
     @SequenceGenerator(
         name = "series_id_seq",
         sequenceName = "series_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     var id: Long? = null,
     @Column(nullable = false, unique = true)

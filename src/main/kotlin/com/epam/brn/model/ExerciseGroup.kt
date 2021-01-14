@@ -18,7 +18,7 @@ data class ExerciseGroup(
     @SequenceGenerator(
         name = "exercise_group_id_seq",
         sequenceName = "exercise_group_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     val id: Long? = null,
     @Column(nullable = false, unique = true)
