@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
 
 interface UiTabButtonComponentArguments {
-    route?: string,
     title?: string,
     disabled?: boolean   
 }

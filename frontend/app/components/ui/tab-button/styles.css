@@ -8,12 +8,6 @@
     background-origin: padding-box, border-box;
   }
   
-  .button-options {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
   
   .button-options:active {
     background:#ebf4ff;
@@ -24,10 +18,6 @@
   }
   
   .button-disabled {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: rgb(128, 127, 127);
     border: rgb(199, 199, 199) solid 2px;
     font-weight: bold;  
