@@ -1,10 +1,8 @@
-<div class={{style-namespace "ui/tab-button"}}>
-<button type="button" class={{this.classes}} ...attributes>
+<button type="button" class="{{style-namespace "ui/tab-button"}} {{this.classes}}" ...attributes>
   {{#if (has-block)}}
   {{yield}}
     {{else}}
     {{@title}}
   {{/if}}
 </button>
-</div>
 

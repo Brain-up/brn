@@ -1,5 +1,5 @@
 /*! purgecss start ignore */
-.border-gradient {
+& {
     box-sizing: border-box;
     background: linear-gradient(white, white),
       linear-gradient(to right, #428dfc, #ba75f1);
@@ -9,15 +9,15 @@
   }
   
   
-  .button-options:active {
+  &:active {
     background:#ebf4ff;
   }
   
-  .button-options:hover:enabled {
+  &:hover:enabled {
     font-weight: bold;
   }
   
-  .button-disabled {
+  &:disabled {
     color: rgb(128, 127, 127);
     border: rgb(199, 199, 199) solid 2px;
     font-weight: bold;  
