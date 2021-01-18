@@ -1,0 +1,28 @@
+ports:
+  - port: 4200
+    onOpen: open-preview
+  - port: 5432
+    onOpen: ignore
+    visibility: private
+  - port: 8081
+    onOpen: ignore
+    visibility: private
+
+image: gitpod/workspace-postgres
+
+tasks:
+  - init: ./gradlew clean bootJar -x test
+    command: >
+      export POSTGRES_DB=$PGDATABASE &&
+      export POSTGRES_USER=gitpod &&
+      java -Dspring.jpa.hibernate.ddl-auto=create -jar build/libs/epam-brn.jar
+  - init: cd frontend && yarn install
+    command: >
+      export GITPODURLHOST=$(gp url 4200|cut -d\/ -f3) &&
+      cd /workspace/brn/frontend && 
+      yarn local
+
+github:
+  prebuilds:
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true

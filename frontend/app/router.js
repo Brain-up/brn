@@ -20,4 +20,6 @@ Router.map(function() {
   this.route('registration');
   this.route('not-found', { path: '*wildcard_path' });
   this.route('password-recovery');
+  this.route('user-agreement');
+  this.route('description');
 });
