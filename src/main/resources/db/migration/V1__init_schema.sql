@@ -51,6 +51,10 @@ create table if not exists resource
     constraint uk7rqvk7iml0lvslr33ujqrbneu
         unique (word, audio_file_url)
 );
+create sequence resource_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create index if not exists word_audio_file_idx
     on resource (word, audio_file_url);
@@ -179,6 +183,10 @@ create table if not exists user_account
         constraint fkcr5eonbalqc6icwdje9ekcdhm
             references progress
 );
+create sequence user_account_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists study_history
 (
