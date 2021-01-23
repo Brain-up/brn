@@ -62,7 +62,9 @@ class InitialDataLoader(
     }
 
     private val sourceFiles = listOf(
-        "groups.csv", "series.csv", "subgroups.csv",
+        "groups.csv",
+        "series.csv",
+        "subgroups.csv",
         fileNameForSeries(1),
         fileNameForSeries(2),
         fileNameForSeries(3),

@@ -2,6 +2,8 @@ package com.epam.brn.service
 
 import com.epam.brn.config.AwsConfig
 import com.epam.brn.exception.ConversionOggToMp3Exception
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.bramp.ffmpeg.FFmpeg
 import net.bramp.ffmpeg.FFmpegExecutor
 import net.bramp.ffmpeg.FFprobe
@@ -54,12 +56,12 @@ class AudioFilesGenerationService(
                 val md5Hash = DigestUtils.md5Hex(word)
                 if (!existsHashWords.contains(md5Hash)) {
                     log.info("Generated $counter word `$word` $speed from $wordsSize words.")
-                    processWord(word, womanVoice, "1")
-                    processWord(word, womanVoice, "0.8")
-                    processWord(word, womanVoice, "1.2")
-                    processWord(word, manVoice, "1")
-                    processWord(word, manVoice, "0.8")
-                    processWord(word, manVoice, "1.2")
+                    GlobalScope.launch { processWord(word, womanVoice, "1") }
+                    GlobalScope.launch { processWord(word, womanVoice, "0.8") }
+                    GlobalScope.launch { processWord(word, womanVoice, "1.2") }
+                    GlobalScope.launch { processWord(word, manVoice, "1") }
+                    GlobalScope.launch { processWord(word, manVoice, "0.8") }
+                    GlobalScope.launch { processWord(word, manVoice, "1.2") }
                     counter += 1
                 }
             }

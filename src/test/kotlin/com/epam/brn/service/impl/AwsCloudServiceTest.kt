@@ -67,13 +67,13 @@ class AwsCloudServiceTest {
         `when`(awsConfig.bucketLink).thenReturn("http://somebucket.s3.amazonaws.com")
 
         var conditions: AwsConfig.Conditions = AwsConfig.Conditions(
-                TEST_DATE,
-                TEST_BUCKET, TEST_ACCESS_RULE,
-                TEST_UUID,
-                TEST_CREDENTIAL,
-                TEST_AMZ_DATE,
-                TEST_EXPIRATION_DATE,
-                TEST_FILEPATH,
+            TEST_DATE,
+            TEST_BUCKET, TEST_ACCESS_RULE,
+            TEST_UUID,
+            TEST_CREDENTIAL,
+            TEST_AMZ_DATE,
+            TEST_EXPIRATION_DATE,
+            TEST_FILEPATH,
             "", "", ""
         )
         `when`(awsConfig.buildConditions(anyString())).thenReturn(conditions)
@@ -107,16 +107,16 @@ class AwsCloudServiceTest {
         var conditions = hashMapOf(
             "expiration" to TEST_EXPIRATION_DATE,
             "conditions" to
-                    listOf(
-                        hashMapOf(BUCKET to TEST_BUCKET),
-                        hashMapOf(ACL to TEST_ACCESS_RULE),
-                        arrayOf("starts-with", "\$key", TEST_FILEPATH),
-                        hashMapOf(X_AMZ_META_UUID to TEST_UUID),
-                        hashMapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
-                        hashMapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
-                        hashMapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
-                        hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE)
-                    )
+                listOf(
+                    hashMapOf(BUCKET to TEST_BUCKET),
+                    hashMapOf(ACL to TEST_ACCESS_RULE),
+                    arrayOf("starts-with", "\$key", TEST_FILEPATH),
+                    hashMapOf(X_AMZ_META_UUID to TEST_UUID),
+                    hashMapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
+                    hashMapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
+                    hashMapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
+                    hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE)
+                )
         )
         // WHEN
         val base64 = awsCloudService.toJsonBase64(conditions)

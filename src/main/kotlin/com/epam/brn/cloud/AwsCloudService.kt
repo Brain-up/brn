@@ -59,18 +59,20 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         val signature = sign(conditions.date, policy)
 
         val inputs = arrayListOf(mapOf("policy" to policy), mapOf("x-amz-signature" to signature))
-        for (condition in listOf(
-            conditions.uploadKey,
-            conditions.acl,
-            conditions.uuid,
-            conditions.serverSideEncryption,
-            conditions.credential,
-            conditions.algorithm,
-            conditions.dateTime,
-            conditions.successActionRedirect,
-            conditions.contentTypeStartsWith,
-            conditions.metaTagStartsWith
-        )) {
+        for (
+            condition in listOf(
+                conditions.uploadKey,
+                conditions.acl,
+                conditions.uuid,
+                conditions.serverSideEncryption,
+                conditions.credential,
+                conditions.algorithm,
+                conditions.dateTime,
+                conditions.successActionRedirect,
+                conditions.contentTypeStartsWith,
+                conditions.metaTagStartsWith
+            )
+        ) {
             if (condition.second.isNotEmpty())
                 inputs.add(mapOf(condition))
         }
@@ -79,19 +81,21 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
 
     private fun policy(conditions: AwsConfig.Conditions): String {
         val includedFields: ArrayList<Any> = ArrayList()
-        for (condition in listOf(
-            conditions.bucket,
-            conditions.acl,
-            conditions.uploadKey,
-            conditions.uuid,
-            conditions.serverSideEncryption,
-            conditions.credential,
-            conditions.algorithm,
-            conditions.dateTime,
-            conditions.successActionRedirect,
-            conditions.contentTypeStartsWith,
-            conditions.metaTagStartsWith
-        )) {
+        for (
+            condition in listOf(
+                conditions.bucket,
+                conditions.acl,
+                conditions.uploadKey,
+                conditions.uuid,
+                conditions.serverSideEncryption,
+                conditions.credential,
+                conditions.algorithm,
+                conditions.dateTime,
+                conditions.successActionRedirect,
+                conditions.contentTypeStartsWith,
+                conditions.metaTagStartsWith
+            )
+        ) {
             if (condition.second.isNotEmpty()) {
                 if (condition in arrayOf(conditions.uploadKey, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
                     includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))

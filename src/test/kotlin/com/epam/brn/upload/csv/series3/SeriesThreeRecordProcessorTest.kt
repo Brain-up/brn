@@ -144,8 +144,12 @@ internal class SeriesThreeRecordProcessorTest {
     @Test
     fun `should create correct answer options`() {
         val expected = setOf(
-            resource_девочка(), resource_дедушка(), resource_бабушка(),
-            resource_бросает(), resource_читает(), resource_рисует()
+            resource_девочка(),
+            resource_дедушка(),
+            resource_бабушка(),
+            resource_бросает(),
+            resource_читает(),
+            resource_рисует()
         )
         val actual = seriesThreeRecordProcessor.process(
             listOf(
