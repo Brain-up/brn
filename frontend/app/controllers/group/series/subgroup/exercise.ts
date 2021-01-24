@@ -25,7 +25,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   }
 
   goToSeries() {
-    this.router.transitionTo('group.series.index', this.model.get('series.id'));
+    this.router.transitionTo('group.series.subgroup', this.model.parent.id);
   }
 
   get modelStats(): IStatsExerciseStats {
@@ -66,10 +66,10 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   enableNextExercise(model: Exercise) {
     // to-do add integration test for it
-    const children = model.get('parent.groupedByNameExercises')[this.model.name];
+    const children = model.parent.exercises.toArray();
     const index = children.indexOf(this.model);
     const nextIndex = index + 1;
-    this.model.set('isManuallyCompleted', true);
+    model.set('isManuallyCompleted', true);
 
     if (children[nextIndex]) {
       children[nextIndex].set('available', true);
