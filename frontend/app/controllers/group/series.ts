@@ -4,7 +4,6 @@ import { cached } from 'tracked-toolbox';
 import { task, Task } from 'ember-concurrency';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
-import Exercise from 'brn/models/exercise';
 
 export default class GroupSeriesController extends Controller {
   @service('network') network!: NetworkService;
@@ -27,7 +26,8 @@ export default class GroupSeriesController extends Controller {
     if (!this.exerciseName) {
       return;
     }
-    const exercises = this.model.exercises.toArray();
+    // @todo - fix;
+    const exercises = this.model.toArray();
     const targets = exercises.filterBy('name', this.exerciseName).mapBy('id');
     const results = yield this.network.availableExercises(targets);
     this.availableExercises = results;
@@ -36,24 +36,8 @@ export default class GroupSeriesController extends Controller {
     return this.name;
   }
   @cached
-  get exerciseGroups() {
-    const items: {
-      [key: string]: any
-    } = {};
+  get exerciseSubGroups() {
     const exercises = this.model.toArray();
-    exercises.forEach((el: Exercise & { name: string })=>{
-      if (!(el.name in items)) {
-        const detail = el.name.indexOf('/') > 0 ? el.name.slice(el.name.indexOf('/'), el.name.length): '-';
-        items[el.name] = {
-          count: 0,
-          name: el.name.replace(detail, '').trim(),
-          fullName: el.name,
-          detail: detail.trim(),
-          picture: `/${el.pictureUrl}`
-        }
-      }
-      items[el.name].count++;
-    });
-    return Object.values(items);
+    return exercises;
   }
 }

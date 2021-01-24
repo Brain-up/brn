@@ -1,11 +1,22 @@
 import Model, { attr, hasMany, AsyncHasMany } from '@ember-data/model';
 import Exercise from './exercise';
+import { cached } from 'tracked-toolbox';
 
 export default class SubgroupModel extends Model {
   @attr('string') seriesId!: string;
   @attr('string') name!: string;
   @attr('number') level!: number;
   @attr('string') pictureUrl!: string;
+  get picture() {
+    return `/${this.pictureUrl}`;
+  }
   @attr('string') description!: string;
-  @hasMany('exercise') exercises!: AsyncHasMany<Exercise>
+  @hasMany('exercise') exercises!: AsyncHasMany<Exercise>;
+  get count() {
+    return this.exercisesIds.length;
+  }
+  @cached
+  get exercisesIds() {
+    return this.hasMany('exercises').ids();
+  }
 }
