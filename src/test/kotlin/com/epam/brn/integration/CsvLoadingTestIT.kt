@@ -77,7 +77,7 @@ class CsvLoadingTestIT : BaseIT() {
     fun `should load test data from classpath initFiles folder`() {
         exerciseGroupRepository.findAll() shouldHaveSize 4
         seriesRepository.findAll() shouldHaveSize 7
-        subGroupRepository.findAll() shouldHaveSize 34
+        subGroupRepository.findAll() shouldHaveSize 37
 //        exerciseRepository.findAll() shouldHaveSize 188
 //        taskRepository.findAll() shouldHaveSize 188
 //        resourceRepository.findAll() shouldHaveSize 881
