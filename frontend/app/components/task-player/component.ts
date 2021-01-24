@@ -193,31 +193,35 @@ export default class TaskPlayerComponent extends Component {
   }
 
   @action async setMode(mode: string, ...args: any) {
-    if (this.activeTask) {
-      try {
-        this.activeTask.cancel();
-      } catch (e) {
-        // EOL
-      } finally {
+    try {
+      if (this.activeTask) {
         try {
-          await this.activeTask;
-        } catch(e) {
+          this.activeTask.cancel();
+        } catch (e) {
           // EOL
+        } finally {
+          try {
+            await this.activeTask;
+          } catch(e) {
+            // EOL
+          }
         }
       }
+      this.audio.stop();
+      if (mode === MODES.INTERACT) {
+        this.activeTask = this.interactModeTask.perform(...args);
+      } else if (mode === MODES.TASK) {
+        this.activeTask = this.taskModeTask.perform(...args);
+      } else if (mode === MODES.LISTEN) {
+        this.activeTask = this.listenModeTask.perform(...args);
+      }
+      (this.activeTask as any).catch(()=>{
+        // EOL
+      });
+      return this.activeTask;
+    } catch(e) {
+      // EOLS
     }
-    this.audio.stop();
-    if (mode === MODES.INTERACT) {
-      this.activeTask = this.interactModeTask.perform(...args);
-    } else if (mode === MODES.TASK) {
-      this.activeTask = this.taskModeTask.perform(...args);
-    } else if (mode === MODES.LISTEN) {
-      this.activeTask = this.listenModeTask.perform(...args);
-    }
-    (this.activeTask as any).catch(()=>{
-      // EOL
-    });
-    return this.activeTask;
   }
 
   @action
