@@ -137,10 +137,14 @@ export default class AudioService extends Service {
 
   @action
   async playAudio() {
-    if (!Ember.testing) {
-      await this.playTask.perform();
-    } else {
-      await this.fakePlayTask.perform();
+    try {
+      if (!Ember.testing) {
+        await this.playTask.perform();
+      } else {
+        await this.fakePlayTask.perform();
+      }
+    } catch(e) {
+      // EOL
     }
   }
 
