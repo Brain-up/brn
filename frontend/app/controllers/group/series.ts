@@ -19,6 +19,7 @@ export default class GroupSeriesController extends Controller {
   }
   @tracked
   availableExercises = [];
+  // eslint-disable-next-line no-unused-vars
   @(task(function*(this: GroupSeriesController) {
     if (!this.model) {
       return;
@@ -39,7 +40,7 @@ export default class GroupSeriesController extends Controller {
     const items: {
       [key: string]: any
     } = {};
-    const exercises = this.model.exercises.toArray();
+    const exercises = this.model.toArray();
     exercises.forEach((el: Exercise & { name: string })=>{
       if (!(el.name in items)) {
         const detail = el.name.indexOf('/') > 0 ? el.name.slice(el.name.indexOf('/'), el.name.length): '-';
