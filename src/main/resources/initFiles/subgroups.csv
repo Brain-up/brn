@@ -19,11 +19,14 @@ SINGLE_SIMPLE_WORDS,17,game,Развлечения,Слова из нашей ж
 SINGLE_SIMPLE_WORDS,18,adventure,Путешествия,Слова из мира путешествий
 SINGLE_SIMPLE_WORDS,19,hospital,В больнице,Слова медицинские
 SINGLE_SIMPLE_WORDS,20,feelings,Что я чувствую,Слова о чувствах и эмоциях
-WORDS_SEQUENCES,1,matrix_2_3,Группа слов 2 на 3, Матрица слов 2 столбца на 3 строки
-WORDS_SEQUENCES,2,matrix_3_3,Группа слов 3 на 3, Матрица слов 3 столбца на 3 строки
-WORDS_SEQUENCES,3,matrix_4_3,Группа слов 4 на 3, Матрица слов 4 столбца на 3 строки
-WORDS_SEQUENCES,4,matrix_4_4,Группа слов 4 на 4, Матрица слов 4 столбца на 4 строки
-WORDS_SEQUENCES,5,matrix_5_3,Группа слов 5 на 3, Матрица слов 5 столбцов на 3 строки
+WORDS_SEQUENCES,1,words_2_from_6,По 2 слова из 6, Матрица слов 2 столбца на 3 строки
+WORDS_SEQUENCES,2,words_3_from_6,По 3 слова из 6, Матрица слов 2 столбца на 3 строки
+WORDS_SEQUENCES,3,words_3_from_9,По 3 слова из 9, Матрица слов 3 столбца на 3 строки
+WORDS_SEQUENCES,4,words_3_from_12,По 3 слова из 12, Матрица слов 3 столбца на 4 строки
+WORDS_SEQUENCES,5,words_4_from_12,По 4 слова из 12, Матрица слов 4 столбца на 3 строки
+WORDS_SEQUENCES,6,words_4_from_16,По 4 слова из 16, Матрица слов 4 столбца на 4 строки
+WORDS_SEQUENCES,7,words_5_from_15,По 5 слов из 15, Матрица слов 5 столбцов на 3 строки
+WORDS_SEQUENCES,8,words_6_from_18,По 6 слов из 18, Матрица слов 6 столбцов на 3 строки
 SENTENCE,1,sentence_2,Пойми предложение из 2 слов,Распознавание предложений из 2 слов из матрицы
 PHRASES,1,longShortPhrases,Фразы разной длительности,
 PHRASES,2,noPhrases,Фразы с частицей Не,
