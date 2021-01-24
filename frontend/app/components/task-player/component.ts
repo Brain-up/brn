@@ -135,7 +135,7 @@ export default class TaskPlayerComponent extends Component {
   maybeStartExercise() {
     if (!this.task.get('exercise.isStarted')) {
       this.stats.addEvent(StatEvents.Start);
-      this.task.exercise.content.trackTime('start');
+      this.task.exercise.trackTime('start');
     }
     this.audio.startNoise();
   }

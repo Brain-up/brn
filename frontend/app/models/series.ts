@@ -8,9 +8,9 @@ export default class Series extends Model {
   @attr('string') description!: string;
   @attr('number') level!: number;
   @attr('string') kind!: string;
-  @belongsTo('group', { async: true } ) group?: AsyncBelongsTo<Group>;
-  @hasMany('subgroup', { async: true }) subGroups!:  AsyncHasMany<SubgroupModel>;
-  @hasMany('exercise', { async: true } ) exercises!: AsyncHasMany<Exercise>;
+  @belongsTo('group', { async: false } ) group?: AsyncBelongsTo<Group>;
+  @hasMany('subgroup', { async: false }) subGroups!:  AsyncHasMany<SubgroupModel>;
+  @hasMany('exercise', { async: false } ) exercises!: AsyncHasMany<Exercise>;
   get children() {
     return this.exercises;
   }

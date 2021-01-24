@@ -9,6 +9,10 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
     return this.store.findRecord('exercise', exercise_id);
   }
 
+  async afterModel(exercise) {
+    await exercise.hasMany('tasks').load();
+  }
+
   redirect(exercise, { to }) {
     if (exercise.hasMany('tasks').ids().length === 0) {
       alert(`Unable to find tasks for exercise ${exercise.get('id')}`);

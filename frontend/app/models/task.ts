@@ -23,7 +23,7 @@ export default class Task extends CompletionDependent {
   @attr('', { defaultValue() { return [];}}) normalizedAnswerOptions!: any;
 
   @belongsTo('exercise', {
-    async: true,
+    async: false,
     inverse: 'tasks',
     polymorphic: true,
   }) exercise!: AsyncBelongsTo<Exercise>;

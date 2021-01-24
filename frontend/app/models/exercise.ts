@@ -41,7 +41,7 @@ export default class Exercise extends CompletionDependent  {
   @attr('number') order!: number;
   // @todo - add enum
   @attr('string') exerciseType!: string;
-  @belongsTo('series', { async: true }) series!: SeriesModel;
+  @belongsTo('series', { async: false }) series!: SeriesModel;
   @hasMany('signal', { async: false }) signals!: SignalModel[];
   @hasMany('task', { async: true }) tasks!: TaskModel[];
   // @ts-ignore
