@@ -11,7 +11,7 @@ export default class SubgroupModel extends Model {
     return `/${this.pictureUrl}`;
   }
   @attr('string') description!: string;
-  @hasMany('exercise') exercises!: AsyncHasMany<Exercise>;
+  @hasMany('exercise', { async: false, inverse: 'parent' }) exercises!: AsyncHasMany<Exercise>;
   get count() {
     return this.exercisesIds.length;
   }
