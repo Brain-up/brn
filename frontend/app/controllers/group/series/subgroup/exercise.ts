@@ -10,7 +10,7 @@ import TasksManagerService from 'brn/services/tasks-manager';
 import StudyingTimerService from 'brn/services/studying-timer';
 import Exercise from 'brn/models/exercise';
 
-export default class GroupSeriesExerciseController extends Controller {
+export default class GroupSeriesSubgroupExerciseController extends Controller {
   @service('router') router!: Router;
   @service('tasks-manager') tasksManager!: TasksManagerService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
