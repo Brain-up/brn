@@ -55,7 +55,7 @@ export default class Task extends CompletionDependent {
   }
   get nextTask() {
     // @ts-ignore
-    return arrayNext(this, this.exercise.get('content').get('sortedChildren'));
+    return arrayNext(this, this.exercise.sortedChildren);
   }
 
   get isLastTask() {
