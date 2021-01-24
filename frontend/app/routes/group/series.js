@@ -6,11 +6,6 @@ export default class GroupSeriesRoute extends Route {
     return this.store.query('subgroup', { seriesId: seria.id });
   }
 
-  setupController(controller, model, transition) {
-    super.setupController(controller, model, transition);
-    controller.exerciseAvailabilityCalculationTask.perform();
-  }
-
   // redirect(series, { to }) {
     // to-do fixit to `group.series.index`
     // if (
@@ -18,7 +13,7 @@ export default class GroupSeriesRoute extends Route {
     //   series.get('sortedExercises.firstObject')
     // ) {
     //   this.transitionTo(
-    //     'group.series.exercise',
+    //     'group.series.subgroup.exercise',
     //     series.id,
     //     series.get('sortedExercises.firstObject.id'),
     //   );

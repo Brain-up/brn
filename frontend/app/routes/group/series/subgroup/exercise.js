@@ -16,7 +16,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
       return;
     }
     // if (!exercise.canInteract) {
-    //   this.transitionTo('group.series.exercise', exercise.get('series.id'));
+    //   this.transitionTo('group.series.subgroup.exercise', exercise.get('series.id'));
     //   return;
     // }
     if (
@@ -25,7 +25,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
       !to.paramNames.includes('task_id')
     ) {
       this.transitionTo(
-        'group.series.exercise.task',
+        'group.series.subgroup.exercise.task',
         exercise.get('sortedTasks.firstObject.id'),
       );
     }
