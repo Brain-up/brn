@@ -30,13 +30,7 @@
             {{t "header.groups"}}
           </LinkTo>
         {{/if}}
-        <a
-          href="https://habr.com/ru/company/epam_systems/blog/530824/"
-          rel="noopener"
-          target="blank" class="lg:inline-block lg:mt-0 hover:text-gray-700 block mt-4 mr-4 font-bold tracking-wider text-gray-600 uppercase"
-        >
-          {{t "header.about"}}
-        </a>
+        <LinkTo @route="description" class="lg:inline-block lg:mt-0 hover:text-gray-700 block mt-4 mr-4 font-bold tracking-wider text-gray-600 uppercase">{{t "header.about"}}</LinkTo>
         <button
           type="button"
           class="hover:text-gray-700 py-2
