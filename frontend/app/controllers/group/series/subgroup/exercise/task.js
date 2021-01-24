@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 // import { getOwner } from '@ember/application';
 
-export default class GroupSeriesExerciseController extends Controller {
+export default class GroupSeriesSubgroupExerciseTaskController extends Controller {
   @service router;
   @action nextTaskTransition() {
     // getOwner(this).lookup(`controller:group.series`).exerciseAvailabilityCalculationTask.perform();

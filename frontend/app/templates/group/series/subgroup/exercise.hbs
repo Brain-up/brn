@@ -1,1 +1,46 @@
-{{outlet}}
+<ModalDialog
+  @overlayClass="p-16 z-50 min-h-full w-full fixed bg-blue-400 flex"
+  @containerClass="w-full flex bg-white p-8 rounded-lg text-2xl"
+>
+  <div class="series-page--canvas flex flex flex-col flex-grow"
+    {{did-insert this.disableBodyScroll}}
+    {{will-destroy this.enableBodyScroll}}
+    {{did-insert this.startStatsTracking @model}}
+    {{will-destroy this.stopStatsTracking @model}}
+  >
+    {{#if (eq this.target.currentRouteName "group.series.subgroup.exercise.task")}}
+      <div class="flex items-center justify-between">
+        <div>
+          <LinkTo @route="group.series">
+            <FaIcon @icon="chevron-left" />
+            {{t "navigation.come_back"}}
+          </LinkTo>
+        </div>
+        <div id="exercise-steps-slot">
+        </div>
+        <div id="exercise-timer-slot">
+
+        </div>
+      </div>
+    {{/if}}
+    <div class="exercise-container">
+      {{#if
+        (and
+          this.exerciseIsCompletedInCurrentCycle (not this.showExerciseStats)
+        )
+      }}
+        <AnswerCorrectnessWidget
+          @isCorrect={{true}}
+          {{did-insert this.greedOnCompletedExercise}}
+        />
+      {{else if this.showExerciseStats}}
+          <ExerciseStats
+            @stats={{this.modelStats}}
+            @onComplete={{this.afterCompleted}}
+          />
+      {{else}}
+        {{outlet}}
+      {{/if}}
+    </div>
+  </div>
+</ModalDialog>
