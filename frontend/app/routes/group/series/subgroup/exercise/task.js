@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 
-export default class GroupSeriesExerciseTaskRoute extends Route {
+export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
   async model({ task_id }) {
     const tasks = await this.modelFor('group.series.exercise')
       .hasMany('tasks')

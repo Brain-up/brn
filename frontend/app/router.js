@@ -10,8 +10,10 @@ Router.map(function() {
   this.route('groups', function() {});
   this.route('group', { path: 'groups/:group_id' }, function() {
     this.route('series', { path: 'series/:series_id' }, function() {
-      this.route('exercise', { path: 'exercise/:exercise_id' }, function() {
-        this.route('task', { path: 'task/:task_id' });
+      this.route('subgroup',  { path: 'subgroup/:subgroup_id' },  function() {
+        this.route('exercise', { path: 'exercise/:exercise_id' }, function() {
+          this.route('task', { path: 'task/:task_id' });
+        });
       });
     });
   });

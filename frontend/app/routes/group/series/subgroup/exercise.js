@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 
-export default class GroupSeriesExerciseRoute extends Route {
+export default class GroupSeriesSubgroupExerciseRoute extends Route {
   @service('tasks-manager')
   tasksManager;
 
