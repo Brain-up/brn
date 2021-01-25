@@ -74,7 +74,7 @@
     "@glimmer/component": "^1.0.2",
     "@glimmer/tracking": "^1.0.2",
     "@types/ember": "^3.16.2",
-    "@types/ember-data": "^3.16.8",
+    "@types/ember-data": "^3.16.9",
     "@types/ember-data__model": "^3.16.2",
     "@types/ember-data__store": "^3.16.1",
     "@types/ember-data__serializer": "^3.16.1",
