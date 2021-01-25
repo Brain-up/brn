@@ -1,0 +1,26 @@
+/*! purgecss start ignore */
+& {
+    box-sizing: border-box;
+    background: linear-gradient(white, white),
+      linear-gradient(to right, #428dfc, #ba75f1);
+    border: 2px solid transparent;
+    background-repeat: no-repeat;
+    background-origin: padding-box, border-box;
+  }
+  
+  
+  &:active {
+    background:#ebf4ff;
+  }
+  
+  &:hover:enabled {
+    font-weight: bold;
+  }
+  
+  &:disabled {
+    color: rgb(128, 127, 127);
+    border: rgb(199, 199, 199) solid 2px;
+    font-weight: bold;  
+  }
+
+/*! purgecss end ignore */
