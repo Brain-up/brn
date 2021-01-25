@@ -87,7 +87,9 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await pageObject.startTask();
     await chooseAnswer(targetTask.correctAnswer.word);
+
     await customTimeout();
+
     await click('[data-test-continue]');
 
     // const targetTask2 = setupAfterPageVisit().targetTask;
@@ -136,6 +138,6 @@ module('Acceptance | tasks flow', function(hooks) {
     await customTimeout();
 
 
-    assert.equal(currentURL(), '/groups/1/series/1/subgroup/1/');
+    assert.equal(currentURL(), '/groups/1/series/1/subgroup/1');
   });
 });

@@ -1,12 +1,12 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-// import { getOwner } from '@ember/application';
+import { getOwner } from '@ember/application';
 
 export default class GroupSeriesSubgroupExerciseTaskController extends Controller {
   @service router;
   @action nextTaskTransition() {
-    // getOwner(this).lookup(`controller:group.series`).exerciseAvailabilityCalculationTask.perform();
+    getOwner(this).lookup(`controller:group.series.subgroup`).exerciseAvailabilityCalculationTask.perform();
 
     if (!this.model.isLastTask) {
       this.router.transitionTo(
