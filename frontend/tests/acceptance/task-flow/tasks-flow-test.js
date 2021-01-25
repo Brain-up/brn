@@ -24,7 +24,6 @@ module('Acceptance | tasks flow', function(hooks) {
 
   test('has a start task button if the task is not started yet', async function(assert) {
     await pageObject.goToFirstTask();
-
     assert.dom('[data-test-start-task-button]').exists();
 
     await pageObject.startTask();
@@ -137,6 +136,6 @@ module('Acceptance | tasks flow', function(hooks) {
     await customTimeout();
 
 
-    assert.equal(currentURL(), '/groups/1/series/1?name=');
+    assert.equal(currentURL(), '/groups/1/series/1/subgroup/1/');
   });
 });

@@ -1,9 +1,13 @@
 import { click } from '@ember/test-helpers';
 
-export function getServerResponses({ tasks, series, groups, exercises, availableExercises  }) {
+export function getServerResponses({ tasks, series, groups, subgroups, exercises, availableExercises  }) {
   /* eslint-disable no-undef */
   server.get('groups', () => {
     return { data: groups };
+  });
+
+  server.get('subgroups', () => {
+    return { data: subgroups };
   });
 
   server.get('series', (schema, request) => {
@@ -13,8 +17,8 @@ export function getServerResponses({ tasks, series, groups, exercises, available
   });
 
   server.get('exercises', (schema, request) => {
-    const targetSeries = Number(request.queryParams.seriesId);
-    const exercisesIds = series.findBy('id', targetSeries).exercises;
+    const targetSeries = Number(request.queryParams.subGroupId);
+    const exercisesIds = subgroups.findBy('id', targetSeries).exercises;
     return { data: exercises.filter((e) => exercisesIds.includes(e.id)) };
   });
 
