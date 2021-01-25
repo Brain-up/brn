@@ -16,7 +16,7 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
       // locale: this.intl.locale[0]
     // });
     return this.store.findAll('group').then(result => {
-      return result.toArray().filterBy('locale', 'ru');
+      return result.toArray().filterBy('locale', this.intl.locale[0]);
     })
   }
 }
