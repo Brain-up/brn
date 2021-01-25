@@ -19,7 +19,7 @@ class ExerciseGroupsService(
     fun findAllGroups(): List<ExerciseGroupDto> {
         log.debug("Searching all groups")
         val groups: List<ExerciseGroup> = exerciseGroupRepository.findAll()
-        return CollectionUtils.emptyIfNull(groups).mapNotNull { x -> x.toDto() }
+        return CollectionUtils.emptyIfNull(groups).mapNotNull { group -> group.toDto() }
     }
 
     fun findGroupDtoById(groupId: Long): ExerciseGroupDto {
@@ -33,6 +33,14 @@ class ExerciseGroupsService(
         log.debug("Searching group with id=$groupId")
         return exerciseGroupRepository.findById(groupId)
             .orElseThrow { EntityNotFoundException("no group was found for id=$groupId") }
+    }
+
+    fun findByLocale(locale: String): List<ExerciseGroupDto> {
+        log.debug("Searching groups by locale=$locale")
+        if (locale.isEmpty())
+            return exerciseGroupRepository.findAll().map { group -> group.toDto() }
+        return exerciseGroupRepository.findByLocale(locale)
+            .map { group -> group.toDto() }
     }
 
     fun save(exerciseGroup: ExerciseGroup): ExerciseGroup {

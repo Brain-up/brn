@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class SeriesTwoRecord(
     @JsonProperty("level")
     val level: Int,
+    @JsonProperty("code")
+    val code: String,
     @JsonProperty("exerciseName")
     val exerciseName: String,
     @JsonProperty("orderNumber")
@@ -13,6 +15,6 @@ data class SeriesTwoRecord(
     val words: List<String>
 ) {
     companion object {
-        const val FORMAT = "level,exerciseName,orderNumber,words"
+        const val FORMAT = "level,code,exerciseName,orderNumber,words"
     }
 }

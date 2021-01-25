@@ -2,7 +2,6 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
-import com.epam.brn.model.ExerciseType
 import com.epam.brn.service.ExerciseService
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -25,25 +24,25 @@ internal class ExerciseControllerTest {
     @Test
     fun `should get exercises for user and series`() {
         // GIVEN
-        val seriesId: Long = 2
+        val subGroupId: Long = 2
         val exercise =
-            ExerciseDto(seriesId, 1, "name", "pictureUrl", "desc", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+            ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
         val listExercises = listOf(exercise)
-        Mockito.`when`(exerciseService.findAllExercisesBySeriesForCurrentUser(seriesId, true)).thenReturn(listExercises)
+        Mockito.`when`(exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)).thenReturn(listExercises)
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
-            exerciseController.getExercises(seriesId, true).body?.data as List<ExerciseDto>
+            exerciseController.getExercisesBySubGroup(subGroupId).body?.data as List<ExerciseDto>
         // THEN
         assertTrue(actualResultData.contains(exercise))
-        verify(exerciseService).findAllExercisesBySeriesForCurrentUser(seriesId, true)
+        verify(exerciseService).findExercisesBySubGroupForCurrentUser(subGroupId)
     }
 
     @Test
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseID: Long = 1
-        val exercise = ExerciseDto(2, 1, "exe", "pictureUrl", "desc", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+        val exercise = ExerciseDto(2, 1, "exe", 1, NoiseDto(0, ""))
         Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
         // WHEN
         @Suppress("UNCHECKED_CAST")

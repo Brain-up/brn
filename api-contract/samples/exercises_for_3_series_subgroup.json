@@ -1,0 +1,168 @@
+{
+  "data": [
+    {
+      "seriesId": 26,
+      "id": 667,
+      "name": "Пойми предложение из 2 слов",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": true,
+      "tasks": [
+        {
+          "id": 667
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 668,
+      "name": "Пойми предложение из 2 слов",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 668
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 669,
+      "name": "Пойми предложение из 2 слов",
+      "level": 3,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 669
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 670,
+      "name": "Пойми предложение из 2 слов",
+      "level": 4,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 670
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 671,
+      "name": "Пойми предложение из 2 слов",
+      "level": 5,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 671
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 672,
+      "name": "Пойми предложение из 2 слов",
+      "level": 6,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 672
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 673,
+      "name": "Пойми предложение из 2 слов",
+      "level": 7,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 673
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 674,
+      "name": "Пойми предложение из 2 слов",
+      "level": 8,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 674
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 26,
+      "id": 675,
+      "name": "Пойми предложение из 2 слов",
+      "level": 9,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "<OBJECT OBJECT_ACTION>",
+      "available": false,
+      "tasks": [
+        {
+          "id": 675
+        }
+      ],
+      "signals": []
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

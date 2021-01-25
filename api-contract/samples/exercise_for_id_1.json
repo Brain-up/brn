@@ -1,0 +1,22 @@
+{
+  "data": {
+    "seriesId": 1,
+    "id": 1,
+    "name": "Семья",
+    "level": 1,
+    "noise": {
+      "level": 0,
+      "url": ""
+    },
+    "template": "",
+    "available": true,
+    "tasks": [
+      {
+        "id": 1
+      }
+    ],
+    "signals": []
+  },
+  "errors": [],
+  "meta": []
+}

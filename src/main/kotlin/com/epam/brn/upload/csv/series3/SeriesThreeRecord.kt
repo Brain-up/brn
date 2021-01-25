@@ -7,8 +7,8 @@ data class SeriesThreeRecord(
     val level: Int,
     @JsonProperty("exerciseName")
     val exerciseName: String,
-    @JsonProperty("orderNumber")
-    val orderNumber: Int,
+    @JsonProperty("code")
+    val code: String,
     @JsonProperty("words")
     val words: List<String>,
     @JsonProperty("answerAudioFile")
@@ -17,6 +17,6 @@ data class SeriesThreeRecord(
     val answerParts: String
 ) {
     companion object {
-        const val FORMAT = "level,exerciseName,orderNumber,words,answerAudioFile,answerParts"
+        const val FORMAT = "level,code,exerciseName,words,answerAudioFile,answerParts"
     }
 }

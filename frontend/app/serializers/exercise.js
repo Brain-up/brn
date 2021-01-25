@@ -1,5 +1,5 @@
 import ApplicationSerializer from './application';
-
+import { getOwner } from '@ember/application';
 export default class ExerciseSerializer extends ApplicationSerializer {
   ATTR_NAMES_MAP = Object.freeze({
     order: 'level',
@@ -40,6 +40,17 @@ export default class ExerciseSerializer extends ApplicationSerializer {
         }
       });
     }
+    const items = Array.isArray(data) ? data : [data];
+    const appRouter = getOwner(this).lookup('route:application');
+    const model = appRouter.modelFor('group.series');
+    const seriaId = model.toArray().firstObject.seriesId;
+    const seria = this.store.peekRecord('series', seriaId);
+    const kind = seria.kind;
+    items.forEach((el) => {
+      el.tasks.forEach((task)=> {
+        task.type = `task/${kind}`;
+      })
+    });
     return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
   }
 }

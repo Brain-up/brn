@@ -60,7 +60,13 @@ module('Integration | Component | login-form', function(hooks) {
         assert.ok(password);
       }
     }
+    class MockNetwork extends Service {
+      loadCurrentUser() {
+        return {};
+      }
+    }
     this.owner.register('service:session', MockSession);
+    this.owner.register('service:network', MockNetwork);
 
     await render(hbs`<LoginForm />`);
 
@@ -145,8 +151,8 @@ module('Integration | Component | login-form', function(hooks) {
         isSubmitCalled = true;
       }
     }
-
     this.owner.register('service:session', MockSession);
+
     await render(hbs`<LoginForm />`);
 
     await fillIn('[name="login"]', 'a');

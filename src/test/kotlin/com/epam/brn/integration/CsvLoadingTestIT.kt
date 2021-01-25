@@ -6,6 +6,7 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
@@ -28,7 +29,7 @@ class CsvLoadingTestIT : BaseIT() {
         fun initialDataLoader(
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
-            seriesRepository: SeriesRepository,
+            subGroupRepository: SubGroupRepository,
             exerciseRepository: ExerciseRepository,
             userAccountRepository: UserAccountRepository,
             passwordEncoder: PasswordEncoder,
@@ -38,7 +39,7 @@ class CsvLoadingTestIT : BaseIT() {
         ) = InitialDataLoader(
             resourceLoader,
             exerciseGroupRepository,
-            seriesRepository,
+            subGroupRepository,
             exerciseRepository,
             userAccountRepository,
             passwordEncoder,
@@ -58,6 +59,9 @@ class CsvLoadingTestIT : BaseIT() {
     private lateinit var seriesRepository: SeriesRepository
 
     @Autowired
+    private lateinit var subGroupRepository: SubGroupRepository
+
+    @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
 
     @Autowired
@@ -71,8 +75,9 @@ class CsvLoadingTestIT : BaseIT() {
 
     @Test
     fun `should load test data from classpath initFiles folder`() {
-        exerciseGroupRepository.findAll() shouldHaveSize 2
+        exerciseGroupRepository.findAll() shouldHaveSize 4
         seriesRepository.findAll() shouldHaveSize 7
+        subGroupRepository.findAll() shouldHaveSize 37
 //        exerciseRepository.findAll() shouldHaveSize 188
 //        taskRepository.findAll() shouldHaveSize 188
 //        resourceRepository.findAll() shouldHaveSize 881
@@ -83,6 +88,7 @@ class CsvLoadingTestIT : BaseIT() {
     @AfterEach
     fun deleteAfterTest() {
         exerciseRepository.deleteAll()
+        subGroupRepository.deleteAll()
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()

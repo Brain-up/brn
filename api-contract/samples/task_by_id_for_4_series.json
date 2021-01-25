@@ -1,24 +1,56 @@
 {
   "data": {
-    "id": 29,
+    "id": 649,
     "exerciseType": "PHRASES",
     "name": "",
-    "serialNumber": 1,
+    "serialNumber": 2,
     "answerOptions": [
       {
-        "id": 160,
-        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/abbed565fd2198a34245f7d2a443bb2c.ogg",
-        "word": "Мамочка быстро идёт в магазин",
-        "wordType": "OBJECT",
-        "pictureFileUrl": "",
+        "id": 1280,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/a681ccad9cb6b4b8351fffe295ba6126.ogg",
+        "word": "сидит",
+        "wordType": "OBJECT_ACTION",
+        "pictureFileUrl": "pictures/withWord/сидит.jpg",
         "soundsCount": 0
       },
       {
-        "id": 159,
-        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/716d83ff90d4776d2c1848413a40ef15.ogg",
-        "word": "Мамочка идёт",
+        "id": 1279,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/a65a400bddc3bd074f251c6e38c58cd4.ogg",
+        "word": "девочка",
         "wordType": "OBJECT",
-        "pictureFileUrl": "",
+        "pictureFileUrl": "pictures/withWord/девочка.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 7,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/7b412138d3f39f5cea409507706b3de2.ogg",
+        "word": "бабушка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/бабушка.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 6,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/31115747d192c3d4e6834c13be24ba94.ogg",
+        "word": "дедушка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/дедушка.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 1282,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/a8136f40051b06b882bfee0b7c8b02e3.ogg",
+        "word": "идет",
+        "wordType": "OBJECT_ACTION",
+        "pictureFileUrl": "pictures/withWord/идет.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 1281,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/7db478cc3dc1c0c347343dd1f69bf8e0.ogg",
+        "word": "лежит",
+        "wordType": "OBJECT_ACTION",
+        "pictureFileUrl": "pictures/withWord/лежит.jpg",
         "soundsCount": 0
       }
     ]

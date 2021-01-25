@@ -39,28 +39,28 @@ export function getTestData() {
       id: 1,
       name: 'exercise 1',
       level: 1,
-      tasks: [{ id: 1, type: 'task/SINGLE_WORDS' }],
+      tasks: [{ id: 1 }],
     },
     {
       order: 2,
       id: 2,
       name: 'exercise 1',
       level: 2,
-      tasks: [{ id: 2, type: 'task/SINGLE_WORDS' }],
+      tasks: [{ id: 2 }],
     },
     {
       order: 3,
       id: 3,
       name: 'exercise 2',
       level: 1,
-      tasks: [{ id: 3, type: 'task/SINGLE_WORDS' }],
+      tasks: [{ id: 3 }],
     },
     {
       order: 4,
       id: 4,
       name: 'exercise 2',
       level: 2,
-      tasks: [{ id: 4, type: 'task/SINGLE_WORDS' }],
+      tasks: [{ id: 4 }],
     },
   ];
   const series = [
@@ -68,13 +68,35 @@ export function getTestData() {
       order: 1,
       id: 1,
       name: 'default',
+      type: 'SINGLE_WORDS',
       exerciseGroupId: 1,
-      exercises: [1, 2, 3, 4],
+      subgroups: [1, 2],
     },
   ];
   const groups = [
     { order: 1, id: 1, name: 'default', description: '123', series: [1] },
   ];
 
-  return { tasks, exercises, series, groups, availableExercises: ['1','3'] };
+  const subgroups = [
+    {
+      seriesId:1,
+      id:1,
+      level:1,
+      name:"Семья",
+      pictureUrl:"pictures/theme/family.svg",
+      description:"Слова про семью",
+      exercises: [1, 2, 3, 4]
+    },
+    {
+      seriesId:1,
+      id:2,
+      level:2,
+      name:"Любимый дом",
+      pictureUrl:"pictures/theme/home.svg",
+      description:"Слова про дом",
+      exercises:[]
+    }
+  ];
+
+  return { tasks, subgroups, exercises, series, groups, availableExercises: ['1','3'] };
 }

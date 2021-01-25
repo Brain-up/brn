@@ -5,9 +5,9 @@ import javax.validation.constraints.NotBlank
 data class ExerciseGroupDto(
     val id: Long?,
     @NotBlank
-    var name: String?,
+    var locale: String,
+    @NotBlank
+    var name: String,
     var description: String?,
-    val series: MutableSet<Long?> = HashSet()
-) {
-    constructor() : this(null, null, null)
-}
+    val series: MutableList<Long?> = mutableListOf()
+)
