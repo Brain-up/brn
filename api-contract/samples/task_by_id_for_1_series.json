@@ -1,57 +1,33 @@
 {
   "data": {
-    "id": 57,
-    "exerciseType": "SINGLE_WORDS",
+    "id": 1,
+    "exerciseType": "SINGLE_SIMPLE_WORDS",
     "name": "",
-    "correctAnswer": {
-      "id": 337,
-      "audioFileUrl": "noise_9db/ход.mp3",
-      "word": "ход",
-      "wordType": "OBJECT",
-      "pictureFileUrl": "pictures/ход.jpg",
-      "soundsCount": 1
-    },
-    "serialNumber": 36,
+    "serialNumber": 1,
     "answerOptions": [
       {
-        "id": 340,
-        "audioFileUrl": "noise_9db/ход.mp3",
-        "word": "рот",
+        "id": 3,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/79a359ea4ac3a4abb45fd93c3b17ec97.ogg",
+        "word": "мама",
         "wordType": "OBJECT",
-        "pictureFileUrl": "pictures/ход.jpg",
-        "soundsCount": 1
+        "pictureFileUrl": "pictures/мама.jpg",
+        "soundsCount": 0
       },
       {
-        "id": 339,
-        "audioFileUrl": "noise_9db/ход.mp3",
-        "word": "пот",
+        "id": 1,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/00540ac38fd85a46e095d6fc13fc0e94.ogg",
+        "word": "сын",
         "wordType": "OBJECT",
-        "pictureFileUrl": "pictures/ход.jpg",
-        "soundsCount": 1
+        "pictureFileUrl": "pictures/сын.jpg",
+        "soundsCount": 0
       },
       {
-        "id": 342,
-        "audioFileUrl": "noise_9db/ход.mp3",
-        "word": "кот",
+        "id": 2,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/9950f95013b0017a62cf88ea7684e928.ogg",
+        "word": "ребёнок",
         "wordType": "OBJECT",
-        "pictureFileUrl": "pictures/ход.jpg",
-        "soundsCount": 1
-      },
-      {
-        "id": 341,
-        "audioFileUrl": "noise_9db/ход.mp3",
-        "word": "сот",
-        "wordType": "OBJECT",
-        "pictureFileUrl": "pictures/ход.jpg",
-        "soundsCount": 1
-      },
-      {
-        "id": 338,
-        "audioFileUrl": "noise_9db/ход.mp3",
-        "word": "сад",
-        "wordType": "OBJECT",
-        "pictureFileUrl": "pictures/ход.jpg",
-        "soundsCount": 1
+        "pictureFileUrl": "pictures/ребёнок.jpg",
+        "soundsCount": 0
       }
     ]
   },

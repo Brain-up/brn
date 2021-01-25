@@ -1,0 +1,38 @@
+seriesType, level, code, name, description
+SINGLE_SIMPLE_WORDS,1,family,Семья,Слова про семью
+SINGLE_SIMPLE_WORDS,2,home,Любимый дом,Слова про дом
+SINGLE_SIMPLE_WORDS,3,food,Что я ем,Слова о еде
+SINGLE_SIMPLE_WORDS,4,clothes,Одежда,Слова об одежде
+SINGLE_SIMPLE_WORDS,5,school,В школе,Слова о школе и учебе
+SINGLE_SIMPLE_WORDS,6,math,Математика,Математика и ее термины
+SINGLE_SIMPLE_WORDS,7,pets,Домашние питомцы,Слова о домашних питомцах
+SINGLE_SIMPLE_WORDS,8,animals,Мир животных,Слова о животных
+SINGLE_SIMPLE_WORDS,9,transport,Транспорт,Слова о транспорте
+SINGLE_SIMPLE_WORDS,10,colors,Цвета и форма,Слова о понятиях цета и формы
+SINGLE_SIMPLE_WORDS,11,city,В городе,Слова о жизни города
+SINGLE_SIMPLE_WORDS,12,country,В деревне,Слова из деревенской жизни
+SINGLE_SIMPLE_WORDS,13,walk,На прогулке,Слова о прогулке
+SINGLE_SIMPLE_WORDS,14,weather,Погода,Слова о погоде
+SINGLE_SIMPLE_WORDS,15,future,Стану кем хочу,Слова о профессии
+SINGLE_SIMPLE_WORDS,16,body,Тело человека,Слова об организме
+SINGLE_SIMPLE_WORDS,17,game,Развлечения,Слова из нашей жизни развлеченийи и игр
+SINGLE_SIMPLE_WORDS,18,adventure,Путешествия,Слова из мира путешествий
+SINGLE_SIMPLE_WORDS,19,hospital,В больнице,Слова медицинские
+SINGLE_SIMPLE_WORDS,20,feelings,Что я чувствую,Слова о чувствах и эмоциях
+WORDS_SEQUENCES,1,words_2_from_6,По 2 слова из 6, Матрица слов 2 столбца на 3 строки
+WORDS_SEQUENCES,2,words_3_from_6,По 3 слова из 6, Матрица слов 2 столбца на 3 строки
+WORDS_SEQUENCES,3,words_3_from_9,По 3 слова из 9, Матрица слов 3 столбца на 3 строки
+WORDS_SEQUENCES,4,words_3_from_12,По 3 слова из 12, Матрица слов 3 столбца на 4 строки
+WORDS_SEQUENCES,5,words_4_from_12,По 4 слова из 12, Матрица слов 4 столбца на 3 строки
+WORDS_SEQUENCES,6,words_4_from_16,По 4 слова из 16, Матрица слов 4 столбца на 4 строки
+WORDS_SEQUENCES,7,words_5_from_15,По 5 слов из 15, Матрица слов 5 столбцов на 3 строки
+WORDS_SEQUENCES,8,words_6_from_18,По 6 слов из 18, Матрица слов 6 столбцов на 3 строки
+SENTENCE,1,sentence_2,Пойми предложение из 2 слов,Распознавание предложений из 2 слов из матрицы
+PHRASES,1,longShortPhrases,Фразы разной длительности,
+PHRASES,2,noPhrases,Фразы с частицей Не,
+PHRASES,3,similarPhrases,Похожие фразы,
+PHRASES,4,differentEndPhrases,Фразы с разным окончанием,
+PHRASES,5,shortWords,Короткие слова,
+PHRASES,6,prepositionPhrases,Предлоги,
+DURATION_SIGNALS,1,durationSignals,Длительность сигналов,
+FREQUENCY_SIGNALS,1,frequencySignals,Частота сигналов,

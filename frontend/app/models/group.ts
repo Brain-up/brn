@@ -1,4 +1,4 @@
-import { hasMany, attr } from '@ember-data/model';
+import { hasMany, attr, SyncHasMany } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import  SeriesModel from './series';
 
@@ -8,10 +8,10 @@ export default class Group extends CompletionDependent {
 
   @attr('string') name!: string;
   @attr('string') description!: string;
-  @hasMany('series', { async: false }) series!: SeriesModel[];
+  @attr('string') locale!: string;
+  @hasMany('series', { async: false }) series!: SyncHasMany<SeriesModel>;
 
-  // @ts-expect-error
-  get children() {
+  get children(): SeriesModel[] {
     return this.series.toArray();
   }
   get sortedSeries() {

@@ -23,31 +23,10 @@ import org.springframework.web.bind.annotation.RestController
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
-    @ApiOperation("Get all series exercises for current user with availability calculation if withAvailability = true.")
-    fun getExercises(
-        @RequestParam(value = "seriesId", required = true) seriesId: Long,
-        @RequestParam(value = "withAvailability", required = false, defaultValue = true.toString()) withAvailability: Boolean
-    ): ResponseEntity<BaseResponseDto> {
+    @ApiOperation("Get subGroup exercises for current user with availability calculation.")
+    fun getExercisesBySubGroup(@RequestParam(value = "subGroupId", required = true) subGroupId: Long): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok()
-            .body(BaseResponseDto(data = exerciseService.findAllExercisesBySeriesForCurrentUser(seriesId, withAvailability)))
-    }
-
-    @GetMapping(value = ["/byName"])
-    @ApiOperation("Get exercises for current user by exercise name.")
-    fun getExercisesByName(
-        @RequestParam(value = "name", required = true) name: String
-    ): ResponseEntity<BaseResponseDto> {
-        return ResponseEntity.ok()
-            .body(BaseResponseDto(data = exerciseService.findExercisesByNameForCurrentUser(name)))
-    }
-
-    @PostMapping(value = ["/byIds"])
-    @ApiOperation("Get available exercise ids for current user by ids which have same name.")
-    fun getExercisesByIds(
-        @Validated @RequestBody exerciseRequest: ExerciseRequest
-    ): ResponseEntity<BaseResponseDto> {
-        return ResponseEntity.ok()
-            .body(BaseResponseDto(data = exerciseService.getExercisesByIds(exerciseRequest.ids)))
+            .body(BaseResponseDto(data = exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
@@ -57,5 +36,25 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         return ResponseEntity.ok()
             .body(BaseSingleObjectResponseDto(data = exerciseService.findExerciseById(exerciseId)))
+    }
+
+    @Deprecated("use getExercisesBySubGroup")
+    @GetMapping(value = ["/byName"])
+    @ApiOperation("Get exercises for current user by exercise name with availability calculation.")
+    fun getExercisesByName(
+        @RequestParam(value = "name", required = true) name: String
+    ): ResponseEntity<BaseResponseDto> {
+        return ResponseEntity.ok()
+            .body(BaseResponseDto(data = exerciseService.findExercisesByNameForCurrentUser(name)))
+    }
+
+    @Deprecated("use getExercisesBySubGroup")
+    @PostMapping(value = ["/byIds"])
+    @ApiOperation("Get available exercise ids for current user by ids which have same name.")
+    fun getExercisesByIds(
+        @Validated @RequestBody exerciseRequest: ExerciseRequest
+    ): ResponseEntity<BaseResponseDto> {
+        return ResponseEntity.ok()
+            .body(BaseResponseDto(data = exerciseService.getExercisesByIds(exerciseRequest.ids)))
     }
 }

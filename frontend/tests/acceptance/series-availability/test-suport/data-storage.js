@@ -15,5 +15,9 @@ export function getTestData() {
   ];
   const groups = [{ order: 1, id: 1, series: [1, 2] }];
 
-  return { tasks, exercises, series, groups };
+  const subgroups = [
+
+  ];
+
+  return { tasks, subgroups, exercises, series, groups };
 }

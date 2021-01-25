@@ -1,11 +1,12 @@
 package com.epam.brn.integration
 
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.SeriesRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
@@ -43,7 +44,7 @@ class SeriesControllerIT : BaseIT() {
     }
 
     private fun insertSeries(group: ExerciseGroup, name: String): Series {
-        val series = Series(name = name, description = "description", exerciseGroup = group)
+        val series = Series(name = name, description = "description", exerciseGroup = group, level = 1, type = ExerciseType.SINGLE_SIMPLE_WORDS.name)
         return seriesRepository.save(series)
     }
 
@@ -110,7 +111,7 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val expectedResponse =
-            """{"data":"level,pictureUrl,exerciseName,words,noiseLevel,noiseUrl\n1,family,Семья,(сын ребёнок мама),0,\n2,family,Семья,(отец брат дедушка),0,\n3,family,Семья,(бабушка муж внучка),0,\n4,family,Семья,(сын ребёнок родители дочь мама папа),0,","errors":[],"meta":[]}"""
+            """{"data":"level,code,exerciseName,words,noiseLevel,noiseUrl\n1,family,Семья,(сын ребёнок мама),0,\n2,family,Семья,(отец брат дедушка),0,\n3,family,Семья,(бабушка муж внучка),0,\n4,family,Семья,(сын ребёнок родители дочь мама папа),0,","errors":[],"meta":[]}"""
         Assertions.assertTrue(response.contains("1,family,Семья,(сын ребёнок мама),0,"))
         Assertions.assertEquals(expectedResponse, response)
     }

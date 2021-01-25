@@ -1,0 +1,510 @@
+{
+  "data": [
+    {
+      "seriesId": 1,
+      "id": 1,
+      "name": "Семья",
+      "level": 1,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": true,
+      "tasks": [
+        {
+          "id": 1
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 2,
+      "name": "Семья",
+      "level": 2,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 2
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 3,
+      "name": "Семья",
+      "level": 3,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 3
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 4,
+      "name": "Семья",
+      "level": 4,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 4
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 5,
+      "name": "Семья",
+      "level": 5,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 5
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 6,
+      "name": "Семья",
+      "level": 6,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 6
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 7,
+      "name": "Семья",
+      "level": 7,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 7
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 8,
+      "name": "Семья",
+      "level": 8,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 8
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 9,
+      "name": "Семья",
+      "level": 9,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 9
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 10,
+      "name": "Семья",
+      "level": 10,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 10
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 11,
+      "name": "Семья",
+      "level": 11,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 11
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 12,
+      "name": "Семья",
+      "level": 12,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 12
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 13,
+      "name": "Семья",
+      "level": 13,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 13
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 14,
+      "name": "Семья",
+      "level": 14,
+      "noise": {
+        "level": 0,
+        "url": ""
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 14
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 15,
+      "name": "Семья /+голоса/",
+      "level": 15,
+      "noise": {
+        "level": 0,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": true,
+      "tasks": [
+        {
+          "id": 15
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 16,
+      "name": "Семья /+голоса/",
+      "level": 16,
+      "noise": {
+        "level": 0,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 16
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 17,
+      "name": "Семья /+голоса/",
+      "level": 17,
+      "noise": {
+        "level": 0,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 17
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 18,
+      "name": "Семья /+голоса/",
+      "level": 18,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 18
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 19,
+      "name": "Семья /+голоса/",
+      "level": 19,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 19
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 20,
+      "name": "Семья /+голоса/",
+      "level": 20,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 20
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 21,
+      "name": "Семья /+голоса/",
+      "level": 21,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 21
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 22,
+      "name": "Семья /+голоса/",
+      "level": 22,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 22
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 23,
+      "name": "Семья /+голоса/",
+      "level": 23,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 23
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 24,
+      "name": "Семья /+голоса/",
+      "level": 24,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 24
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 25,
+      "name": "Семья /+голоса/",
+      "level": 25,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 25
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 26,
+      "name": "Семья /+голоса/",
+      "level": 26,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 26
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 27,
+      "name": "Семья /+голоса/",
+      "level": 27,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 27
+        }
+      ],
+      "signals": []
+    },
+    {
+      "seriesId": 1,
+      "id": 28,
+      "name": "Семья /+голоса/",
+      "level": 28,
+      "noise": {
+        "level": 50,
+        "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+      },
+      "template": "",
+      "available": false,
+      "tasks": [
+        {
+          "id": 28
+        }
+      ],
+      "signals": []
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

@@ -29,7 +29,7 @@ class TaskService(
             task.answerOptions
                 .forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
         }
-        return when (ExerciseType.valueOf(exercise.exerciseType)) {
+        return when (ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.to1SeriesTaskDto() }
             ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.to2SeriesTaskDto(task.exercise?.template) }
             ExerciseType.SENTENCE -> tasks.map { task -> task.to3SeriesTaskDto(task.exercise?.template) }
@@ -43,7 +43,7 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         task.answerOptions.forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
-        return when (ExerciseType.valueOf(task.exercise!!.exerciseType)) {
+        return when (ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS -> task.to1SeriesTaskDto()
             ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)

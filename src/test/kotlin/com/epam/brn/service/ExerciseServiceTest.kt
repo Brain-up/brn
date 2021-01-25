@@ -2,12 +2,11 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
-import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
-import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.model.Exercise
+import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.UserAccount
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -46,7 +45,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, ""))
         val exerciseId = 1L
         `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
         `when`(exerciseMock.id).thenReturn(exerciseId)
@@ -63,17 +62,17 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get exercises by user and series`() {
         // GIVEN
-        val seriesId = 2L
+        val subGroupId = 2L
         val userId = 2L
-        val exercise1 = Exercise(id = 1, name = "pets", exerciseType = ExerciseType.WORDS_SEQUENCES.toString())
-        val exercise2 = Exercise(id = 2, name = "pets", exerciseType = ExerciseType.WORDS_SEQUENCES.toString())
-        `when`(studyHistoryRepository.getDoneExercises(seriesId, userId)).thenReturn(listOf(exercise1))
-        `when`(exerciseRepository.findExercisesBySeriesId(seriesId)).thenReturn(listOf(exercise1, exercise2))
+        val exercise1 = Exercise(id = 1, name = "pets")
+        val exercise2 = Exercise(id = 2, name = "pets")
+        `when`(studyHistoryRepository.getDoneExercises(subGroupId, userId)).thenReturn(listOf(exercise1))
+        `when`(exerciseRepository.findExercisesBySubGroupId(subGroupId)).thenReturn(listOf(exercise1, exercise2))
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSeries(userId, seriesId, true)
+        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSubGroupId(userId, subGroupId)
         // THEN
         assertEquals(actualResult.size, 2)
-        verify(exerciseRepository).findExercisesBySeriesId(seriesId)
+        verify(exerciseRepository).findExercisesBySubGroupId(subGroupId)
         verify(studyHistoryRepository).getDoneExercises(anyLong(), anyLong())
     }
 
@@ -81,7 +80,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock = ExerciseDto(2, 1, "name", "pictureUrl", "descr", 1, NoiseDto(0, ""), ExerciseType.WORDS_SEQUENCES)
+        val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, ""))
         `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
         `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
         // WHEN
@@ -119,20 +118,24 @@ internal class ExerciseServiceTest {
         val ex32 = Exercise(id = 32, name = "some4")
         val listAll = listOf(ex1, ex2, ex3, ex4, ex11, ex12, ex13, ex21, ex22, ex31, ex32)
         val listDone = listOf(ex1, ex2, ex11, ex21)
-        val studyHistory2 = StudyHistory(exercise = ex2,
+        val studyHistory2 = StudyHistory(
+            exercise = ex2,
             userAccount = mock(UserAccount::class.java),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
             wrongAnswers = 2,
-            replaysCount = 2)
-        val studyHistory11 = StudyHistory(exercise = ex11,
+            replaysCount = 2
+        )
+        val studyHistory11 = StudyHistory(
+            exercise = ex11,
             userAccount = mock(UserAccount::class.java),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
             wrongAnswers = 6,
-            replaysCount = 4)
+            replaysCount = 4
+        )
         `when`(studyHistoryRepository.findLastByUserAccountId(1))
             .thenReturn(listOf(studyHistory2, studyHistory11))
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)

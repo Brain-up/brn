@@ -1,30 +1,22 @@
 import Route from '@ember/routing/route';
 
 export default class GroupSeriesRoute extends Route {
-  model({ series_id }) {
-    return this.store.findRecord('series', series_id);
+  model({series_id}) {
+    const seria = this.store.peekRecord('series', series_id);
+    return this.store.query('subgroup', { seriesId: seria.id });
   }
 
-  async afterModel(series) {
-    await this.store.query('exercise', { seriesId: series.id });
-  }
-
-  setupController(controller, model, transition) {
-    super.setupController(controller, model, transition);
-    controller.exerciseAvailabilityCalculationTask.perform();
-  }
-
-  redirect(series, { to }) {
+  // redirect(series, { to }) {
     // to-do fixit to `group.series.index`
-    if (
-      to.name === 'series.index' &&
-      series.get('sortedExercises.firstObject')
-    ) {
-      this.transitionTo(
-        'group.series.exercise',
-        series.id,
-        series.get('sortedExercises.firstObject.id'),
-      );
-    }
-  }
+    // if (
+    //   to.name === 'series.index' &&
+    //   series.get('sortedExercises.firstObject')
+    // ) {
+    //   this.transitionTo(
+    //     'group.series.subgroup.exercise',
+    //     series.id,
+    //     series.get('sortedExercises.firstObject.id'),
+    //   );
+    // }
+  // }
 }

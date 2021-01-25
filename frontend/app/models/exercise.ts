@@ -8,6 +8,7 @@ import SeriesModel from './series';
 import SignalModel from './signal';
 import TaskModel from 'brn/models/task';
 import { cached } from 'tracked-toolbox';
+import SubgroupModel from './subgroup';
 
 export interface IStatsObject {
   countedSeconds: number,
@@ -19,7 +20,6 @@ export interface IStatsObject {
   rightAnswersIndex: number,
   startTime: Date,
   tasksCount: number,
-  userId: number
 }
 
 interface IStatsSaveDTO {
@@ -41,20 +41,14 @@ export default class Exercise extends CompletionDependent  {
   @attr('number') order!: number;
   // @todo - add enum
   @attr('string') exerciseType!: string;
-  @belongsTo('series', { async: true }) series!: SeriesModel;
+  @belongsTo('series', { async: false }) series!: SeriesModel;
   @hasMany('signal', { async: false }) signals!: SignalModel[];
   @hasMany('task', { async: true }) tasks!: TaskModel[];
   // @ts-ignore
   get children() {
     return this.tasks;
   }
-  // @ts-ignore
-  get parent() {
-    return this.series;
-  }
-  set parent(value) {
-    this.set('series', value);
-  }
+  @belongsTo('subgroup', { async: false, inverse: 'exercises' }) parent!: SubgroupModel;
   @attr('date') startTime!: Date;
   @attr('date') endTime!: Date;
   @attr() noise!: {
@@ -156,11 +150,7 @@ export default class Exercise extends CompletionDependent  {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...newStats,
-        // @ts-expect-error
-        userId: this.get('session.data.user.id') || null
-      }),
+      body: JSON.stringify(newStats),
     });
   }
 }

@@ -1,9 +1,9 @@
-series,level,exerciseName,exerciseType,signals
-Длительность сигналов,1,По 2 сигнала разной длительности.,TWO_DIFFERENT_LENGTH_SIGNAL,1000 60; 1000 120
-Длительность сигналов,2,По 2 сигнала разной длительности.,TWO_DIFFERENT_LENGTH_SIGNAL,1000 40; 1000 100
-Частота сигналов,1,По 2 сигнала разной частоты.,TWO_DIFFERENT_FREQUENCY_SIGNAL,500 120; 1500 120
-Частота сигналов,2,По 2 сигнала разной частоты.,TWO_DIFFERENT_FREQUENCY_SIGNAL,1000 120; 2000 120
-Длительность сигналов,1,По 3 сигнала разной длительности.,THREE_DIFFERENT_LENGTH_SIGNAL,1000 40; 1000 90; 1000 130
-Длительность сигналов,2,По 3 сигнала разной длительности.,THREE_DIFFERENT_LENGTH_SIGNAL,1000 20; 1000 60; 1000 120
-Частота сигналов,1,По 3 сигнала разной частоты.,THREE_DIFFERENT_FREQUENCY_SIGNAL,500 120; 1050 120; 2000 120
-Частота сигналов,2,По 3 сигнала разной частоты.,THREE_DIFFERENT_FREQUENCY_SIGNAL,200 120; 600 120; 2000 120
+level,code,exerciseName,exerciseType,signals
+1,durationSignals,По 2 сигнала разной длительности,DURATION_SIGNALS,1000 60; 1000 120
+2,durationSignals,По 2 сигнала разной длительности,DURATION_SIGNALS,1000 40; 1000 100
+1,durationSignals,По 3 сигнала разной длительности,DURATION_SIGNALS,1000 40; 1000 90; 1000 130
+2,durationSignals,По 3 сигнала разной длительности,DURATION_SIGNALS,1000 20; 1000 60; 1000 120
+1,frequencySignals,По 2 сигнала разной частоты,FREQUENCY_SIGNALS,500 120; 1500 120
+2,frequencySignals,По 2 сигнала разной частоты,FREQUENCY_SIGNALS,1000 120; 2000 120
+1,frequencySignals,По 3 сигнала разной частоты,FREQUENCY_SIGNALS,500 120; 1050 120; 2000 120
+2,frequencySignals,По 3 сигнала разной частоты,FREQUENCY_SIGNALS,200 120; 600 120; 2000 120

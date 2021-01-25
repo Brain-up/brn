@@ -8,7 +8,7 @@ footer {
   font-size: 12px;
 }
 
-a {
+a[rel="noopener"] {
   display: block;
   max-height: 100%;
   max-width: 70px;

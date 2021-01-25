@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  db_brn:
+    image: postgres:13
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+  brn:
+    container_name: brn
+    image: brainup/brn-backend:659
+    command: java -jar epam-brn.jar
+    ports:
+      - 8081:8081
+    environment:
+      POSTGRES_DB: brn
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: _POSTGRES_PASSWORD_
+      SPRING_PROFILE: prod
+      aws.credentialsPath: /run/secrets/aws-key
+      YANDEX_AUTH_TOKEN: _YANDEX_AUTH_TOKEN_
+      YANDEX_FOLDER_ID: _YANDEX_FOLDER_ID_
+    secrets:
+      - aws-key
+    depends_on:
+      - db_brn
+  brn_fe:
+    image: brainup/brn-frontend:659
+    container_name: brn_fe
+    ports:
+      - 80:80
+    depends_on:
+      - brn
+secrets:
+  aws-key:
+    file: aws-key.properties
+volumes:
+  dbdata:

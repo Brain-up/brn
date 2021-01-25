@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class SeriesFourRecord(
     @JsonProperty("level")
     val level: Int,
-    @JsonProperty("pictureUrl")
-    val pictureUrl: String,
+    @JsonProperty("code")
+    val code: String,
     @JsonProperty("exerciseName")
     val exerciseName: String,
     @JsonProperty("phrases")
@@ -17,6 +17,6 @@ data class SeriesFourRecord(
     val noiseUrl: String
 ) {
     companion object {
-        const val FORMAT = "level,pictureUrl,exerciseName,phrases,noiseLevel,noiseUrl"
+        const val FORMAT = "level,code,exerciseName,phrases,noiseLevel,noiseUrl"
     }
 }
