@@ -89,6 +89,7 @@ export default class LoginFormComponent extends Component {
   @action
   onSubmit(e: Event) {
     e.preventDefault();
+    e.stopPropagation();
     if (this.buttonState === BUTTON_STATES.DISABLED) {
       return;
     }

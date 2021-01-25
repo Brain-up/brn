@@ -1,8 +1,8 @@
 package com.epam.brn.upload.csv.subgroup
 
+import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.model.SubGroup
 import com.epam.brn.upload.csv.RecordProcessor
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -23,8 +23,8 @@ class SubgroupGenericRecordProcessor(
         val subGroups = records
             .map {
                 val series = seriesRepository
-                    .findById(it.seriesId)
-                    .orElseThrow { EntityNotFoundException("Series ${it.seriesId} was not found.") }
+                    .findByType(it.seriesType)
+                    ?: throw EntityNotFoundException("Series ${it.seriesType} was not found.")
                 SubGroup(it, series)
             }
         return subGroupRepository.saveAll(subGroups).toList()

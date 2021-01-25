@@ -125,6 +125,8 @@ export default class TaskPlayerComponent extends Component {
         yield timeout(1500);
         this.activeWord = null;
       }
+    } catch(e) {
+      // EOL
     } finally {
       this.activeWord = null;
       this.audio.stop();
@@ -135,7 +137,7 @@ export default class TaskPlayerComponent extends Component {
   maybeStartExercise() {
     if (!this.task.get('exercise.isStarted')) {
       this.stats.addEvent(StatEvents.Start);
-      this.task.exercise.content.trackTime('start');
+      this.task.exercise.trackTime('start');
     }
     this.audio.startNoise();
   }
@@ -144,6 +146,8 @@ export default class TaskPlayerComponent extends Component {
     try {
       this.mode = MODES.TASK;
       yield this.audio.startPlayTask();
+    } catch(e) {
+      // EOL
     } finally {
       // EOL
     }
@@ -169,6 +173,8 @@ export default class TaskPlayerComponent extends Component {
         yield timeout(250);
         this.activeWord = null;
       }
+    } catch(e) {
+      // EOL
     } finally {
       this.audio.stop();
       this.activeWord = null;
@@ -187,26 +193,35 @@ export default class TaskPlayerComponent extends Component {
   }
 
   @action async setMode(mode: string, ...args: any) {
-    if (this.activeTask) {
-      try {
-        this.activeTask.cancel();
-        await this.activeTask;
-      } catch (e) {
-        // EOL
+    try {
+      if (this.activeTask) {
+        try {
+          this.activeTask.cancel();
+        } catch (e) {
+          // EOL
+        } finally {
+          try {
+            await this.activeTask;
+          } catch(e) {
+            // EOL
+          }
+        }
       }
+      this.audio.stop();
+      if (mode === MODES.INTERACT) {
+        this.activeTask = this.interactModeTask.perform(...args);
+      } else if (mode === MODES.TASK) {
+        this.activeTask = this.taskModeTask.perform(...args);
+      } else if (mode === MODES.LISTEN) {
+        this.activeTask = this.listenModeTask.perform(...args);
+      }
+      (this.activeTask as any).catch(()=>{
+        // EOL
+      });
+      return this.activeTask;
+    } catch(e) {
+      // EOLS
     }
-    this.audio.stop();
-    if (mode === MODES.INTERACT) {
-      this.activeTask = this.interactModeTask.perform(...args);
-    } else if (mode === MODES.TASK) {
-      this.activeTask = this.taskModeTask.perform(...args);
-    } else if (mode === MODES.LISTEN) {
-      this.activeTask = this.listenModeTask.perform(...args);
-    }
-    (this.activeTask as any).catch(()=>{
-      // EOL
-    });
-    return this.activeTask;
   }
 
   @action
@@ -220,9 +235,14 @@ export default class TaskPlayerComponent extends Component {
       try {
         await this.setMode(MODES.LISTEN);
         // Let's switch to interact right after listen if not stopped
-        await this.setMode(MODES.INTERACT);
       } catch(e) {
         // EOL
+      } finally {
+        try {
+          await this.setMode(MODES.INTERACT);
+        } catch(e) {
+          // EOL
+        }
       }
     }
   }

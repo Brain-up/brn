@@ -1,4 +1,4 @@
-import { belongsTo, attr } from '@ember-data/model';
+import { belongsTo, attr, AsyncBelongsTo } from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -23,17 +23,15 @@ export default class Task extends CompletionDependent {
   @attr('', { defaultValue() { return [];}}) normalizedAnswerOptions!: any;
 
   @belongsTo('exercise', {
-    async: true,
+    async: false,
     inverse: 'tasks',
     polymorphic: true,
-  }) exercise!: Exercise;
+  }) exercise!: AsyncBelongsTo<Exercise>;
 
   @tracked
   _completedInCurrentCycle = false;
   @tracked
   nextAttempt = false;
-
-  // @ts-expect-error
   get parent() {
     return this.exercise;
   }
@@ -57,7 +55,7 @@ export default class Task extends CompletionDependent {
   }
   get nextTask() {
     // @ts-ignore
-    return arrayNext(this, this.exercise.get('content').get('sortedChildren'));
+    return arrayNext(this, this.exercise.sortedChildren);
   }
 
   get isLastTask() {

@@ -3,10 +3,10 @@ package com.epam.brn.upload.csv.subgroup
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
-@JsonPropertyOrder(value = ["seriesId, level, picture, name, description"])
+@JsonPropertyOrder(value = ["seriesType, level, picture, name, description"])
 data class SubgroupGenericRecord(
-    @JsonProperty("seriesId")
-    val seriesId: Long,
+    @JsonProperty("seriesType")
+    val seriesType: String,
 
     @JsonProperty("level")
     val level: Int,
@@ -21,6 +21,6 @@ data class SubgroupGenericRecord(
     val description: String
 ) {
     companion object {
-        const val FORMAT = "seriesId, level, code, name, description"
+        const val FORMAT = "seriesType, level, code, name, description"
     }
 }

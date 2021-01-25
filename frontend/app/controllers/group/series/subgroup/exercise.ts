@@ -9,8 +9,9 @@ import Router from '@ember/routing/router-service';
 import TasksManagerService from 'brn/services/tasks-manager';
 import StudyingTimerService from 'brn/services/studying-timer';
 import Exercise from 'brn/models/exercise';
+import { getOwner } from '@ember/application';
 
-export default class GroupSeriesExerciseController extends Controller {
+export default class GroupSeriesSubgroupExerciseController extends Controller {
   @service('router') router!: Router;
   @service('tasks-manager') tasksManager!: TasksManagerService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
@@ -25,7 +26,7 @@ export default class GroupSeriesExerciseController extends Controller {
   }
 
   goToSeries() {
-    this.router.transitionTo('group.series.index', this.model.get('series.id'));
+    this.router.transitionTo('group.series.subgroup', this.model.parent.id);
   }
 
   get modelStats(): IStatsExerciseStats {
@@ -39,7 +40,7 @@ export default class GroupSeriesExerciseController extends Controller {
     return this.modelStats;
   }
 
-  @(task(function*(this: GroupSeriesExerciseController, isCorrect = false) {
+  @(task(function*(this: GroupSeriesSubgroupExerciseController, isCorrect = false) {
     const waitingTime = isCorrect ? 3000 : 2000;
     this.correctnessWidgetIsShown = true;
     yield customTimeout(waitingTime);
@@ -66,10 +67,10 @@ export default class GroupSeriesExerciseController extends Controller {
 
   enableNextExercise(model: Exercise) {
     // to-do add integration test for it
-    const children = model.get('parent.groupedByNameExercises')[this.model.name];
+    const children = model.parent.exercises.toArray();
     const index = children.indexOf(this.model);
     const nextIndex = index + 1;
-    this.model.set('isManuallyCompleted', true);
+    model.set('isManuallyCompleted', true);
 
     if (children[nextIndex]) {
       children[nextIndex].set('available', true);
@@ -78,9 +79,9 @@ export default class GroupSeriesExerciseController extends Controller {
 
   @action
   async afterCompleted() {
-    this.showExerciseStats = false;
-
     this.enableNextExercise(this.model as Exercise);
+
+    await getOwner(this).lookup(`controller:group.series.subgroup`).exerciseAvailabilityCalculationTask.perform();
 
     this.goToSeries();
   }
