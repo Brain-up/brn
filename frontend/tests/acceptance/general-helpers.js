@@ -51,6 +51,10 @@ export function getServerResponses({ tasks, series, groups, subgroups, exercises
   });
 }
 
+export async function continueAfterStats() {
+  await click(`[data-test-continue]`);
+}
+
 export async function chooseAnswer(option) {
   await click(`[data-test-task-answer-option="${option}"]`);
 }

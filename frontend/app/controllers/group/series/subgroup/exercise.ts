@@ -9,6 +9,7 @@ import Router from '@ember/routing/router-service';
 import TasksManagerService from 'brn/services/tasks-manager';
 import StudyingTimerService from 'brn/services/studying-timer';
 import Exercise from 'brn/models/exercise';
+import { getOwner } from '@ember/application';
 
 export default class GroupSeriesSubgroupExerciseController extends Controller {
   @service('router') router!: Router;
@@ -39,7 +40,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     return this.modelStats;
   }
 
-  @(task(function*(this: GroupSeriesExerciseController, isCorrect = false) {
+  @(task(function*(this: GroupSeriesSubgroupExerciseController, isCorrect = false) {
     const waitingTime = isCorrect ? 3000 : 2000;
     this.correctnessWidgetIsShown = true;
     yield customTimeout(waitingTime);
@@ -78,9 +79,9 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   @action
   async afterCompleted() {
-    this.showExerciseStats = false;
-
     this.enableNextExercise(this.model as Exercise);
+
+    await getOwner(this).lookup(`controller:group.series.subgroup`).exerciseAvailabilityCalculationTask.perform();
 
     this.goToSeries();
   }
