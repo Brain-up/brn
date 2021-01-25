@@ -1,7 +1,6 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseGroupDto
-import com.epam.brn.enum.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -40,7 +39,7 @@ class ExerciseGroupsService(
         log.debug("Searching groups by locale=$locale")
         if (locale.isEmpty())
             return exerciseGroupRepository.findAll().map { group -> group.toDto() }
-        return exerciseGroupRepository.findByLocale(Locale.valueOf(locale).toString())
+        return exerciseGroupRepository.findByLocale(locale)
             .map { group -> group.toDto() }
     }
 
