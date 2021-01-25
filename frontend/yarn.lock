@@ -6366,10 +6366,10 @@ ember-native-dom-helpers@^0.6.3:
     broccoli-funnel "^1.1.0"
     ember-cli-babel "^6.6.0"
 
-ember-page-title@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/ember-page-title/-/ember-page-title-6.0.3.tgz#6f2f26428ae81262d31520c65c1ce8b336f34839"
-  integrity sha512-sXT+XrWWYkqCpwOXj1nGRdxDE4J1SbPcA9lSwtQEP0qDGenhp/GNTcLN8v3cpeyao75jAPxjgYN3YzFtvUB01Q==
+ember-page-title@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ember-page-title/-/ember-page-title-6.2.0.tgz#d79f7422299ebb8f8ac819399596e8f54f01a0e9"
+  integrity sha512-mgzI59rVH6Q00uG1OnsbrSfic+MxFQbtsjX3BuDWGgU7hWahDhAAgaQrKIFx99aEqWoiL+OiX4tQLPnxyZEceA==
   dependencies:
     ember-cli-babel "^7.22.1"
 
