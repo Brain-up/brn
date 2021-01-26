@@ -183,6 +183,10 @@ export default class TaskPlayerComponent extends Component {
   }).keepLatest())
   interactModeTask!: any;
 
+  get isProgressBarVisible() {
+    return this.mode === 'task';
+  }
+
   @action playText(text: string) {
     this.textToPlay = text;
   }

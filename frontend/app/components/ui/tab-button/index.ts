@@ -2,10 +2,18 @@ import Component from '@glimmer/component';
 
 interface UiTabButtonComponentArguments {
     title?: string,
+    mode?: 'enabled' | 'disabled' | 'active'
 }
 
 export default class UiTabButtonComponent extends Component<UiTabButtonComponentArguments> {
   get classes() {
-    return 'focus:outline-none rounded w-1/6 uppercase h-12';      
+    let items = ['focus:outline-none rounded-lg text-lg w-full uppercase h-12'];
+    if (this.args.mode === 'active') {
+      items.push('active');
+    }
+    return items.join(' ');
+  }
+  get isDisabled() {
+    return this.args.mode === 'disabled';
   }
 }

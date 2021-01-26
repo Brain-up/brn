@@ -37,9 +37,12 @@
     onPlayText=this.playText
     mode=this.mode as |context|
   }}
-    {{#if (eq this.mode "task")}}
-      <ProgressSausage @progressItems={{context.tasks}} />
-    {{/if}}
+
+  <ProgressSausage
+      style="visibility: {{if this.isProgressBarVisible 'visible' 'hidden'}};"
+      @progressItems={{context.tasks}}
+  />
+
   {{/component}}
   {{#if this.justEnteredTask}}
     <StartTaskButton @startTask={{this.startTask}} />
