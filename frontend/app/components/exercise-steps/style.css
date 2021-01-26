@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .chevron {
   margin-top: 12px;
   margin-left: 20px;
@@ -6,3 +8,5 @@
 .chevron-container {
   width: 50px;
 }
+
+/*! purgecss end ignore */
