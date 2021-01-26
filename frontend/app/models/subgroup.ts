@@ -15,6 +15,9 @@ export default class SubgroupModel extends Model {
   get count() {
     return this.exercisesIds.length;
   }
+  get parent() {
+    return this.store.peekRecord('series', this.seriesId);
+  }
   @cached
   get exercisesIds() {
     return this.hasMany('exercises').ids();
