@@ -34,10 +34,18 @@
         </div>
       {{/each}}
     </div>
-    <AudioPlayer
-      @audioFileUrl={{this.audioFiles}}
-      @disabled={{@disableAudioPlayer}}
-      @transparent={{not-eq @mode "task"}}
-    />
+    <Ui::BottomContainer>
+      <ExerciseSteps
+        @visible={{not @justEnteredTask}}
+        @activeStep={{@mode}}
+        @onClick={{@onModeChange}}
+        class="flex mb-8 ml-2 mr-2"
+      />
+      <AudioPlayer
+        @audioFileUrl={{this.audioFiles}}
+        @disabled={{@disableAudioPlayer}}
+        @transparent={{not-eq @mode "task"}}
+      />
+    </Ui::BottomContainer>
   {{/if}}
 </div>

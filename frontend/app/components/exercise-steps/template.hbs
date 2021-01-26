@@ -1,7 +1,9 @@
-<ul
-  class="flex"
+<div
+  class="{{style-namespace "exercise-steps"}}"
+  style='visibility:  {{this.visibility}};'
   {{did-insert this.setLastMode @activeStep}}
   {{did-update this.setLastMode @activeStep}}
+  ...attributes
 >
   <ExerciseSteps::Step
     @mode={{this.modeForListen}}
@@ -9,16 +11,18 @@
   >
     {{t "control_exercises.listen"}}
   </ExerciseSteps::Step>
+  <div class="chevron-container flex flex-1 flex-grow-0"><Ui::Chevron class="chevron" /></div>
   <ExerciseSteps::Step
     @mode={{this.modeForInteract}}
     {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
   >
     {{t "control_exercises.interact"}}
   </ExerciseSteps::Step>
+  <div class="chevron-container flex flex-1 flex-grow-0"><Ui::Chevron class="chevron" /></div>
   <ExerciseSteps::Step
     @mode={{this.modeForTask}}
     {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
   >
     {{t "control_exercises.solve"}}
   </ExerciseSteps::Step>
-</ul>
+</div>
