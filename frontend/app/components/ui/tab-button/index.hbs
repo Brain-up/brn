@@ -1,4 +1,4 @@
-<button type="button" class="{{style-namespace "ui/tab-button"}} {{this.classes}}" ...attributes>
+<button type="button" class="{{style-namespace "ui/tab-button"}} {{this.classes}}" disabled={{this.isDisabled}} ...attributes>
   {{#if (has-block)}}
   {{yield}}
     {{else}}

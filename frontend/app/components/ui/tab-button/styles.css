@@ -1,26 +1,30 @@
 /*! purgecss start ignore */
 & {
-    box-sizing: border-box;
-    background: linear-gradient(white, white),
-      linear-gradient(to right, #428dfc, #ba75f1);
-    border: 2px solid transparent;
-    background-repeat: no-repeat;
-    background-origin: padding-box, border-box;
+    color: rgba(19,19,18,0.5);
+    border: double 1px transparent;
+    background-image: linear-gradient(white, white), radial-gradient(circle at top left, #428dfc, #ba75f1);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    padding: 0 !important;
+    min-width: 150px;
   }
-  
-  
-  &:active {
+
+  &::before {
+    content: "";
+  }
+  &:active, &.active {
     background:#ebf4ff;
-  }
-  
-  &:hover:enabled {
     font-weight: bold;
+    color: #131312;
   }
-  
+
+  &:hover {
+    color: #131312;
+  }
+
   &:disabled {
     color: rgb(128, 127, 127);
-    border: rgb(199, 199, 199) solid 2px;
-    font-weight: bold;  
+    border: rgb(199, 199, 199) solid 1px;
   }
 
 /*! purgecss end ignore */

@@ -5,7 +5,7 @@
  }
 
 .clock-svg {
-  min-width: 40px; 
+  min-width: 40px;
   margin-left: -28px;
   margin-top: -2px;
   position: absolute;
@@ -13,10 +13,12 @@
 }
 
 .timer {
-  padding: 5px 10px 5px 50px; 
-  border: 1px solid #bdbbbb; 
-  border-radius: 15px; 
-  margin-left: -16px; 
+  padding: 0px 13px 0px 0px;
+  text-align: right;
+  border: 1px solid #bdbbbb;
+  border-radius: 15px;
+  width: 136px;
+  margin-left: -16px;
 }
 
 /*! purgecss end ignore */
