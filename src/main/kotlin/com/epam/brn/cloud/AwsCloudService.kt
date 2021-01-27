@@ -19,6 +19,7 @@ import javax.crypto.spec.SecretKeySpec
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudService {
     private final val mapperIndented: ObjectWriter
+
     init {
         val indenter = DefaultIndenter().withLinefeed("\r\n")
         val printer = DefaultPrettyPrinter().withObjectIndenter(indenter)
@@ -59,7 +60,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         val signature = sign(conditions.date, policy)
 
         val inputs = arrayListOf(mapOf("policy" to policy), mapOf("x-amz-signature" to signature))
-        for (condition in listOf(
+        val conditions = listOf(
             conditions.uploadKey,
             conditions.acl,
             conditions.uuid,
@@ -70,37 +71,41 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
             conditions.successActionRedirect,
             conditions.contentTypeStartsWith,
             conditions.metaTagStartsWith
-        )) {
+        )
+        for (condition in conditions) {
             if (condition.second.isNotEmpty())
                 inputs.add(mapOf(condition))
         }
         return mapOf("action" to awsConfig.bucketLink, "input" to inputs)
     }
 
-    private fun policy(conditions: AwsConfig.Conditions): String {
+    private fun policy(awsConditions: AwsConfig.Conditions): String {
         val includedFields: ArrayList<Any> = ArrayList()
-        for (condition in listOf(
-            conditions.bucket,
-            conditions.acl,
-            conditions.uploadKey,
-            conditions.uuid,
-            conditions.serverSideEncryption,
-            conditions.credential,
-            conditions.algorithm,
-            conditions.dateTime,
-            conditions.successActionRedirect,
-            conditions.contentTypeStartsWith,
-            conditions.metaTagStartsWith
-        )) {
+        val policyConditions = listOf(
+            awsConditions.bucket,
+            awsConditions.acl,
+            awsConditions.uploadKey,
+            awsConditions.uuid,
+            awsConditions.serverSideEncryption,
+            awsConditions.credential,
+            awsConditions.algorithm,
+            awsConditions.dateTime,
+            awsConditions.successActionRedirect,
+            awsConditions.contentTypeStartsWith,
+            awsConditions.metaTagStartsWith,
+        )
+        for (condition in policyConditions) {
             if (condition.second.isNotEmpty()) {
-                if (condition in arrayOf(conditions.uploadKey, conditions.contentTypeStartsWith, conditions.metaTagStartsWith))
-                    includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))
-                else
-                    includedFields.add(hashMapOf(condition))
+                with(awsConditions) {
+                    if (condition in arrayOf(uploadKey, contentTypeStartsWith, metaTagStartsWith))
+                        includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))
+                    else
+                        includedFields.add(hashMapOf(condition))
+                }
             }
         }
         val policy = hashMapOf(
-            conditions.expiration,
+            awsConditions.expiration,
             "conditions" to includedFields
         )
         return toJsonBase64(policy)
