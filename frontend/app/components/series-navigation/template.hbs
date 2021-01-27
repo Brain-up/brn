@@ -4,7 +4,7 @@
       class="max-w-7xl sm:px-6 lg:px-8 mx-auto mb-10"
     >
       <div class="max-w-none mx-auto">
-        <div class="sm:rounded-lg sm:shadow navigation-block pb-4 overflow-hidden">
+        <div class="sm:rounded-lg sm:shadow pb-4 overflow-hidden">
           <div class="sm:px-6 px-4 py-5">
             <h3
               data-test-series-navigation-header class="navigation-block__header text-lg font-bold leading-3"
@@ -14,7 +14,7 @@
           </div>
           {{#each
             (chunk
-              5 (sort-by "level" (filter-by "name" header this.sortedExercises))
+              4 (sort-by "level" (filter-by "name" header this.sortedExercises))
             ) as |exercises|
           }}
             <ul
@@ -23,35 +23,15 @@
               {{#each exercises as |exercise|}}
                 {{#let (contains exercise.id (or @available (array))) as |isAvailable|}}
                 <li>
-                  <div class="exercise-block__levels flex mt-2 ml-2 mr-2">
-                    <a
-                      data-test-series-navigation-list-link
-                      data-test-exercise-level={{exercise.level}}
-                      data-test-exercise-name={{exercise.name}}
-                      disabled={{not isAvailable}}
-                      href={{href-to "group.series.subgroup.exercise" exercise.id}}
-                      title={{concat (t "task_link.exercise") " " exercise.level}}
-                      class="task-square-link exercise-block__level hover:shadow-outline hover:shadow-md flex-1 p-2 m-4 mb-4 bg-white rounded-lg shadow-lg"
-                    >
-                      <Ui::Icon::Tree
-                        @level={{level}}
-                        @enabled={{isAvailable}}
-                      />
-                      <div class="check-container">
-                        <Ui::Icon::Check
-                          @isAvailable={{or (and
-                            (not exercise.isCompleted))
-                            isAvailable
-                          }}
-                          @isCompleted={{exercise.isCompleted}}
-                          @isLocked={{not isAvailable}}
-                        />
-                      </div>
-                      <div class="number-container">
-                        {{exercise.level}}
-                      </div>
-                    </a>
-                  </div>
+                  <Ui::ExerciseButton
+                    @exercise={{exercise}}
+                    @title={{exercise.id}}
+                    @isAvailable={{isAvailable}}
+                    class="exercise-block__level flex mt-2 ml-2 mr-2"
+                    data-test-series-navigation-list-link
+                    data-test-exercise-level={{exercise.level}}
+                    data-test-exercise-name={{exercise.name}}
+                  />
                 </li>
                  {{/let}}
               {{/each}}
