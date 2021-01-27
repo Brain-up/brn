@@ -97,7 +97,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         for (condition in policyConditions) {
             if (condition.second.isNotEmpty()) {
                 with(awsConditions) {
-                    val b = if (condition in arrayOf(uploadKey, contentTypeStartsWith, metaTagStartsWith))
+                    if (condition in arrayOf(uploadKey, contentTypeStartsWith, metaTagStartsWith))
                         includedFields.add(arrayOf("starts-with", "\$${condition.first}", condition.second))
                     else
                         includedFields.add(hashMapOf(condition))
