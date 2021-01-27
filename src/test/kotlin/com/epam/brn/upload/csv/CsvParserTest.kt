@@ -38,11 +38,12 @@ class CsvParserTest {
     @Test
     fun `should parse Groups`() {
 
-        val input = """
+        val input =
+            """
                 groupId, locale, name, description
                 1, ru, Неречевые упражнения, Неречевые упражнения
                 2, ru, Речевые упражнения, Речевые упражнения              
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
 
@@ -66,10 +67,11 @@ class CsvParserTest {
 
     @Test
     fun `should parse Series`() {
-        val input = """
+        val input =
+            """
                 groupId, level, type, name, description
                 1, 2, type, Составление предложений, Это составление предложений         
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
 
@@ -88,25 +90,28 @@ class CsvParserTest {
 
     @Test
     fun `should parse exercises for Series 1`() {
-        val input = """
+        val input =
+            """
                 level,code,exerciseName,words,noiseLevel,noiseUrl
                 1,family,Семья,(сын ребёнок мама),0,
                 2,family,Семья,(отец брат дедушка),0,
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
 
         assertThat(result).containsAll(
             listOf(
                 SeriesOneRecord(
-                    1, "family",
+                    1,
+                    "family",
                     "Семья",
                     mutableListOf("(сын", "ребёнок", "мама)"),
                     0,
                     ""
                 ),
                 SeriesOneRecord(
-                    2, "family",
+                    2,
+                    "family",
                     "Семья",
                     mutableListOf("(отец", "брат", "дедушка)"),
                     0,
@@ -118,12 +123,13 @@ class CsvParserTest {
 
     @Test
     fun `should parse exercises for Series 3`() {
-        val input = """
+        val input =
+            """
                 level,code,exerciseName,words,answerAudioFile,answerParts
                 1,sentence_2,Пойми предложение из 2 слов,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_бросает.mp3,(девочка бросает)
                 2,sentence_2,Пойми предложение из 2 слов,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_читает.mp3,(девочка читает)
                 3,sentence_2,Пойми предложение из 2 слов,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_рисует.mp3,(девочка рисует)
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
 
@@ -159,10 +165,11 @@ class CsvParserTest {
 
     @Test
     fun `should parse exercises for Series 4 Phrases`() {
-        val input = """
+        val input =
+            """
                 level,code,exerciseName,phrases,noiseLevel,noiseUrl
                 1,longShortPhrases,Фразы разной длительности,(Мамочка идёт. Мамочка быстро идёт в магазин.),0,
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
         val result = parser.parse(input)
         assertThat(result).containsAll(
             listOf(
@@ -180,11 +187,12 @@ class CsvParserTest {
 
     @Test
     fun `should parse exercise for non speech Series`() {
-        val input = """
+        val input =
+            """
                 level,code,exerciseName,exerciseType,signals
                 1,durationSignals,По 2 сигнала разной длительности,DURATION_SIGNALS,1000 60; 1000 120
                 1,frequencySignals,По 2 сигнала разной частоты,FREQUENCY_SIGNALS,500 120; 1500 120
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
 
@@ -210,10 +218,11 @@ class CsvParserTest {
 
     @Test
     fun `should throw parse exception`() {
-        val input = """
+        val input =
+            """
                 level pictureUrl exerciseName orderNumber word audioFileName pictureFileName words wordType
                 incorrect string
-                """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
+            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         assertThrows<CsvParser.ParseException> {
             parser.parse(input)

@@ -20,7 +20,6 @@ import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
@@ -154,8 +153,10 @@ class StudyHistoryIT : BaseIT() {
                 )
             )
         // WHEN
-        val result = existingUser.id?.let { studyHistoryRepository
-            .getDayTimer(it, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())) }
+        val result = existingUser.id?.let {
+            studyHistoryRepository
+                .getDayTimer(it, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))
+        }
         // THEN
         assertEquals(488, result)
     }
@@ -193,7 +194,7 @@ class StudyHistoryIT : BaseIT() {
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data").value(488))
     }
 
@@ -210,7 +211,7 @@ class StudyHistoryIT : BaseIT() {
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data").value(0))
     }
 

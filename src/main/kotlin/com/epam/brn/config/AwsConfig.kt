@@ -101,8 +101,10 @@ class AwsConfig(
         val expiration = DateTimeFormatter.ISO_DATE_TIME!!.format(instant().plus(Duration.parse(expireAfterDuration)))
         val amzDateTime = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!.format(instant())
 
-        return Conditions(date, bucketName, accessRule, uuid(), credential,
-            amzDateTime, expiration, filePath, successActionRedirect, contentTypeStartsWith, metaTagStartsWith)
+        return Conditions(
+            date, bucketName, accessRule, uuid(), credential,
+            amzDateTime, expiration, filePath, successActionRedirect, contentTypeStartsWith, metaTagStartsWith
+        )
     }
 
     // TODO: we might need extract this class to separate file
@@ -136,14 +138,14 @@ class AwsConfig(
 
         override fun toString(): String {
             return "Conditions(date='$date'," +
-                    " bucket=$bucket," +
-                    " acl=$acl, uuid=$uuid," +
-                    " serverSideEncryption=$serverSideEncryption," +
-                    " credential=$credential, algorithm=$algorithm," +
-                    " dateTime=$dateTime, expiration=$expiration," +
-                    " uploadKey=$uploadKey, successActionRedirect=$successActionRedirect," +
-                    " contentTypeStartsWith=$contentTypeStartsWith," +
-                    " metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
+                " bucket=$bucket," +
+                " acl=$acl, uuid=$uuid," +
+                " serverSideEncryption=$serverSideEncryption," +
+                " credential=$credential, algorithm=$algorithm," +
+                " dateTime=$dateTime, expiration=$expiration," +
+                " uploadKey=$uploadKey, successActionRedirect=$successActionRedirect," +
+                " contentTypeStartsWith=$contentTypeStartsWith," +
+                " metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
         }
     }
 }
