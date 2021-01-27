@@ -33,7 +33,8 @@ class CloudControllerAwsIT {
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
-        val response = """{
+        val response =
+            """{
             "data": {
                 "action": "http://somebucket.s3.amazonaws.com",
                 "input": [

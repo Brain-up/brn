@@ -1,16 +1,3 @@
-{{#let (query-node "#exercise-steps-slot") as |node|}}
-  {{#if node}}
-    {{#in-element node}}
-      {{#unless this.justEnteredTask}}
-        <ExerciseSteps
-          @activeStep={{this.mode}}
-          @onClick={{this.onModeChange}}
-        />
-      {{/unless}}
-    {{/in-element}}
-  {{/if}}
-{{/let}}
-
 {{#let (query-node "#exercise-timer-slot") as |node|}}
   {{#if node}}
     {{#in-element node}}
@@ -35,12 +22,18 @@
     disableAudioPlayer=this.disableAudioPlayer
     activeWord=this.activeWord
     onPlayText=this.playText
+    onModeChange=this.onModeChange
+    justEnteredTask=this.justEnteredTask
     mode=this.mode as |context|
   }}
-    {{#if (eq this.mode "task")}}
-      <ProgressSausage @progressItems={{context.tasks}} />
-    {{/if}}
+
+  <ProgressSausage
+      style="visibility: {{if this.isProgressBarVisible 'visible' 'hidden'}};"
+      @progressItems={{context.tasks}}
+  />
+
   {{/component}}
+
   {{#if this.justEnteredTask}}
     <StartTaskButton @startTask={{this.startTask}} />
   {{/if}}

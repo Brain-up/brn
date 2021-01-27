@@ -45,18 +45,18 @@ class ExerciseService(
         return emptyIfNull(history).map { x -> updateNoiseUrl(x.toDto(exercisesIdList.contains(x.id))) }
     }
 
-    fun findAllExercisesBySeriesForCurrentUser(seriesId: Long, withAvailability: Boolean): List<ExerciseDto> {
+    fun findExercisesBySubGroupForCurrentUser(subGroupId: Long): List<ExerciseDto> {
         val currentUser = userAccountService.getUserFromTheCurrentSession()
-        return findExercisesByUserIdAndSeries(currentUser.id!!, seriesId, withAvailability)
+        return findExercisesByUserIdAndSubGroupId(currentUser.id!!, subGroupId)
     }
 
-    fun findExercisesByUserIdAndSeries(userId: Long, seriesId: Long, withAvailability: Boolean): List<ExerciseDto> {
-        log.info("Searching exercises for user=$userId with series=$seriesId, withAvailability=$withAvailability")
-        val allExercises = exerciseRepository.findExercisesBySeriesId(seriesId)
+    fun findExercisesByUserIdAndSubGroupId(userId: Long, subGroupId: Long): List<ExerciseDto> {
+        log.info("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
+        val allExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
         log.info("current user is admin: ${userId == 1L}))")
-        if (!withAvailability || userId == 1L)
+        if (userId == 1L)
             return emptyIfNull(allExercises).map { exercise -> updateNoiseUrl(exercise.toDto(true)) }
-        val doneExercises = studyHistoryRepository.getDoneExercises(seriesId, userId)
+        val doneExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
         val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
         return emptyIfNull(allExercises).map { exercise ->
             updateNoiseUrl(exercise.toDto(openExercises.contains(exercise)))

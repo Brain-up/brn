@@ -43,4 +43,11 @@ export default class ExerciseStepsComponent extends Component {
             this.modes =  [...this.modes, mode];
         }
     }
+    get visibility() {
+      if (this.args.visible === false) {
+        return 'hidden';
+      } else {
+        return 'visible';
+      }
+    }
 }

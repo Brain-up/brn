@@ -1,14 +1,16 @@
 package com.epam.brn.integration
 
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.TaskRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
+import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.TaskRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -25,10 +27,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class TaskControllerIT : BaseIT() {
 
     @Autowired
+    lateinit var taskRepository: TaskRepository
+
+    @Autowired
     lateinit var exerciseRepository: ExerciseRepository
 
     @Autowired
-    lateinit var taskRepository: TaskRepository
+    lateinit var subGroupRepository: SubGroupRepository
 
     @Autowired
     lateinit var seriesRepository: SeriesRepository
@@ -42,12 +47,14 @@ class TaskControllerIT : BaseIT() {
     fun setUp() {
         val exerciseGroup = insertExerciseGroup()
         val series = insertSeries(exerciseGroup)
-        exercise = insertExercise(series)
+        val subGroup = insertSubGroup(series)
+        exercise = insertExercise(subGroup)
     }
 
     @AfterEach
     fun tearDown() {
         exerciseRepository.deleteAll()
+        subGroupRepository.deleteAll()
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
     }
@@ -55,7 +62,6 @@ class TaskControllerIT : BaseIT() {
     @Test
     fun `get task by id`() {
         val task = insertTask(exercise)
-
         // WHEN
         val resultAction = mockMvc
             .perform(
@@ -63,7 +69,6 @@ class TaskControllerIT : BaseIT() {
                     .secure(false)
                     .contentType(MediaType.APPLICATION_JSON)
             )
-
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -79,7 +84,6 @@ class TaskControllerIT : BaseIT() {
     @Test
     fun `get tasks by exerciseId`() {
         val task = insertTask(exercise)
-
         // WHEN
         val resultAction = mockMvc
             .perform(
@@ -87,7 +91,6 @@ class TaskControllerIT : BaseIT() {
                     .param("exerciseId", exercise.id.toString())
                     .contentType(MediaType.APPLICATION_JSON)
             )
-
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -119,20 +122,24 @@ class TaskControllerIT : BaseIT() {
                 id = 1,
                 description = "desc",
                 name = "series",
-                exerciseGroup = exerciseGroup
+                exerciseGroup = exerciseGroup,
+                level = 1,
+                type = ExerciseType.SINGLE_SIMPLE_WORDS.name
             )
         )
     }
 
-    private fun insertExercise(series: Series): Exercise {
+    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
+        SubGroup(series = series, level = 1, code = "code", name = "subGroup name")
+    )
+
+    private fun insertExercise(subGroup: SubGroup): Exercise {
         return exerciseRepository.save(
             Exercise(
                 id = 1,
-                description = toString(),
-                series = series,
+                subGroup = subGroup,
                 level = 0,
-                name = "exercise",
-                exerciseType = ExerciseType.WORDS_SEQUENCES.toString()
+                name = "exercise"
             )
         )
     }

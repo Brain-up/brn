@@ -75,7 +75,7 @@ export default class AudioService extends Service {
       return 0;
     }
     const owner = getOwner(this);
-    const model = owner.lookup('route:application').modelFor('group.series.exercise');
+    const model = owner.lookup('route:application').modelFor('group.series.subgroup.exercise');
     if (!model) {
       return 0;
     }
@@ -86,7 +86,7 @@ export default class AudioService extends Service {
       return 0;
     }
     const owner = getOwner(this);
-    const model = owner.lookup('route:application').modelFor('group.series.exercise');
+    const model = owner.lookup('route:application').modelFor('group.series.subgroup.exercise');
     if (!model) {
       return 0;
     }
@@ -137,10 +137,14 @@ export default class AudioService extends Service {
 
   @action
   async playAudio() {
-    if (!Ember.testing) {
-      await this.playTask.perform();
-    } else {
-      await this.fakePlayTask.perform();
+    try {
+      if (!Ember.testing) {
+        await this.playTask.perform();
+      } else {
+        await this.fakePlayTask.perform();
+      }
+    } catch(e) {
+      // EOL
     }
   }
 

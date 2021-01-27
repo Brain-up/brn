@@ -1,14 +1,87 @@
 {
  "data": [
   {
-   "id": "1",
-   "name": "распознавание слов",
-   "group": "1",
-   "exercises": [
-    "1",
-    "2",
-    "3"
+   "group": 2,
+   "id": 1,
+   "type": "SINGLE_SIMPLE_WORDS",
+   "name": "Слова",
+   "level": 1,
+   "description": "Распознавание слов",
+   "subGroups": [
+    8,
+    11,
+    3,
+    2,
+    14,
+    16,
+    17,
+    10,
+    1,
+    12,
+    20,
+    4,
+    18,
+    7,
+    19,
+    15,
+    5,
+    6,
+    9,
+    13
    ]
+  },
+  {
+   "group": 2,
+   "id": 2,
+   "type": "PHRASES",
+   "name": "Похожие фразы",
+   "level": 2,
+   "description": "Распознование похожих фраз",
+   "subGroups": [
+    22,
+    21,
+    23,
+    24,
+    25
+   ]
+  },
+  {
+   "group": 2,
+   "id": 3,
+   "type": "WORDS_SEQUENCES",
+   "name": "Группа слов",
+   "level": 3,
+   "description": "Распознавание последовательности слов",
+   "subGroups": [
+    26
+   ]
+  },
+  {
+   "group": 2,
+   "id": 4,
+   "type": "SENTENCE",
+   "name": "Предложения",
+   "level": 5,
+   "description": "Распознавание предложений",
+   "subGroups": [
+    29,
+    28,
+    27,
+    31,
+    32,
+    30
+   ]
+  },
+  {
+   "group": 2,
+   "id": 5,
+   "type": "DI",
+   "name": "Дихотическое слушание",
+   "level": 6,
+   "description": "Дихотическое слушание",
+   "subGroups": []
   }
- ]
+ ],
+ "errors": [],
+ "meta": []
 }

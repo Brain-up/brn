@@ -6,7 +6,7 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.model.Gender
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.upload.CsvUploadService
 import org.apache.logging.log4j.kotlin.logger
@@ -31,7 +31,7 @@ import java.nio.file.Path
 class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
-    private val seriesRepository: SeriesRepository,
+    private val subGroupRepository: SubGroupRepository,
     private val exerciseRepository: ExerciseRepository,
     private val userAccountRepository: UserAccountRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -62,7 +62,9 @@ class InitialDataLoader(
     }
 
     private val sourceFiles = listOf(
-        "groups.csv", "series.csv",
+        "groups.csv",
+        "series.csv",
+        "subgroups.csv",
         fileNameForSeries(1),
         fileNameForSeries(2),
         fileNameForSeries(3),

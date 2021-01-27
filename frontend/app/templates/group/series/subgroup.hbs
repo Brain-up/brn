@@ -1,0 +1,8 @@
+  <span {{did-insert (perform this.exerciseAvailabilityCalculationTask)}}></span>
+
+  <SeriesNavigation
+    @exercises={{@model}}
+    @available={{this.availableExercises}}
+  />
+
+{{outlet}}

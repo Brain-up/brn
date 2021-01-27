@@ -14,5 +14,5 @@ export default class TaskSentenceModel extends BaseTask {
   @attr() answerOptions!: any;
   @attr('string') correctAnswer!: string;
   @attr('string') template!: string;
-  @attr('array') answerParts!: any;
+  @attr('array') answerParts!: unknown[];
 }

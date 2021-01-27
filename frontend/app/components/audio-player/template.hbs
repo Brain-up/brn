@@ -1,4 +1,4 @@
-<div class={{style-namespace "audio-player"}} ...attributes
+<div class="{{style-namespace "audio-player"}} flex mr-1 ml-1" ...attributes
 
   {{did-update this.onUpdateProgress this.audioPlayingProgress}}
   {{did-insert this.onUpdateProgress this.audioPlayingProgress}}
@@ -8,7 +8,7 @@
   {{! template-lint-configure no-invalid-interactive false }}
   {{#let this.isPlaying as |disablePlayButton|}}
     <Ui::Button
-      class="w-full  {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}} {{if @transparent "invisible"}}"
+      class="play-button {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}} {{if @transparent "invisible"}} w-full"
       data-test-play-audio-button
       data-test-playing-progress={{this.audioPlayingProgress}}
       disabled={{disablePlayButton}}

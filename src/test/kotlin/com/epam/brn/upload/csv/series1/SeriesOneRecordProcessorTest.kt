@@ -1,15 +1,16 @@
 package com.epam.brn.upload.csv.series1
 
-import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
-import com.epam.brn.model.Resource
-import com.epam.brn.model.Series
-import com.epam.brn.model.Task
-import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.Resource
+import com.epam.brn.model.Series
+import com.epam.brn.model.SubGroup
+import com.epam.brn.model.Task
+import com.epam.brn.model.WordType
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -27,8 +28,9 @@ import java.util.Random
 internal class SeriesOneRecordProcessorTest {
 
     private val seriesRepositoryMock = mock(SeriesRepository::class.java)
-    private val resourceRepositoryMock = mock(ResourceRepository::class.java)
+    private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
+    private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val resourceCreationService = mock(WordsService::class.java)
 
     private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
@@ -36,12 +38,21 @@ internal class SeriesOneRecordProcessorTest {
     private val series = Series(
         id = 1L,
         name = "Распознавание простых слов",
+        type = "type",
+        level = 1,
         description = "Распознавание простых слов",
         exerciseGroup = ExerciseGroup(
             id = 2L,
             name = "Речевые упражнения",
             description = "Речевые упражнения"
         )
+    )
+
+    private val subGroup = SubGroup(
+        series = series,
+        level = 1,
+        code = "code",
+        name = "subGroup name"
     )
 
     private val exerciseName = "Однослоговые слова без шума"
@@ -52,7 +63,7 @@ internal class SeriesOneRecordProcessorTest {
     @BeforeEach
     internal fun setUp() {
         seriesOneRecordProcessor = SeriesOneRecordProcessor(
-            seriesRepositoryMock,
+            subGroupRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock,
             resourceCreationService
@@ -86,7 +97,8 @@ internal class SeriesOneRecordProcessorTest {
         val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
-                    level = 1, pictureUrl = "pictureUrl",
+                    level = 1,
+                    code = "pictureUrl",
                     exerciseName = exerciseName,
                     words = words,
                     noiseLevel = noiseLevel,
@@ -107,7 +119,8 @@ internal class SeriesOneRecordProcessorTest {
         val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
-                    level = 1, pictureUrl = "pictureUrl",
+                    level = 1,
+                    code = "pictureUrl",
                     exerciseName = exerciseName,
                     noiseLevel = noiseLevel,
                     noiseUrl = noiseUrl,
@@ -122,8 +135,12 @@ internal class SeriesOneRecordProcessorTest {
     @Test
     fun `should create correct answer options`() {
         val expected = setOf(
-            resource_бал(), resource_бум(), resource_быль(),
-            resource_вить(), resource_гад(), resource_дуб()
+            resource_бал(),
+            resource_бум(),
+            resource_быль(),
+            resource_вить(),
+            resource_гад(),
+            resource_дуб()
         )
 
         val tasks = seriesOneRecordProcessor
@@ -139,13 +156,9 @@ internal class SeriesOneRecordProcessorTest {
 
     private fun createExercise(): Exercise {
         val exercise = Exercise(
-            series = series,
             name = exerciseName,
-            description = exerciseName,
-            exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS.toString(),
             noiseLevel = 1,
             noiseUrl = "/fon/url.ogg",
-            pictureUrl = "/picturesTheme/pictureUrl.jpg",
             level = 1
         )
 
@@ -161,27 +174,32 @@ internal class SeriesOneRecordProcessorTest {
                 serialNumber = 1,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 2,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 3,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_быль()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 4,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 5,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 6,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),

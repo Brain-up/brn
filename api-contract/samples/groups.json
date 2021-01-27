@@ -1,46 +1,43 @@
 {
  "data": [
   {
-   "name": "Group 1",
-   "id": "1",
+   "id": 1,
+   "locale": "ru",
+   "name": "Неречевые упражнения",
+   "description": "Неречевые упражнения",
    "series": [
-    "1"
+    6,
+    7
    ]
   },
   {
-   "name": "Group 2",
-   "id": "2",
+   "id": 2,
+   "locale": "ru",
+   "name": "Речевые упражнения",
+   "description": "Речевые упражнения",
+   "series": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": 3,
+   "locale": "en",
+   "name": "Non-Speech exercises",
+   "description": "Non-Speech",
    "series": []
   },
   {
-   "name": "Group 3",
-   "id": "3",
-   "series": []
-  },
-  {
-   "name": "Group 4",
-   "id": "4",
-   "series": []
-  },
-  {
-   "name": "Group 5",
-   "id": "5",
-   "series": []
-  },
-  {
-   "name": "Group 6",
-   "id": "6",
-   "series": []
-  },
-  {
-   "name": "Group 7",
-   "id": "7",
-   "series": []
-  },
-  {
-   "name": "Group 8",
-   "id": "8",
+   "id": 4,
+   "locale": "en",
+   "name": "Speech exercises",
+   "description": "Speech",
    "series": []
   }
- ]
+ ],
+ "errors": [],
+ "meta": []
 }

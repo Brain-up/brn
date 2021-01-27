@@ -8,7 +8,7 @@ import java.util.Optional
 @Repository
 interface ExerciseRepository : JpaRepository<Exercise, Long> {
 
-    fun findExercisesBySeriesId(seriesId: Long): List<Exercise>
+    fun findExercisesBySubGroupId(subGroupId: Long): List<Exercise>
 
     fun findExercisesByName(name: String): List<Exercise>
 

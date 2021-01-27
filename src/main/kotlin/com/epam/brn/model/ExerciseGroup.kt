@@ -11,6 +11,7 @@ import javax.persistence.Id
 import javax.persistence.OneToMany
 import javax.persistence.SequenceGenerator
 
+// The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to group being a reserved word in db.
 @Entity
 data class ExerciseGroup(
     @Id
@@ -21,24 +22,28 @@ data class ExerciseGroup(
         allocationSize = 1
     )
     val id: Long? = null,
+    @Column(nullable = false)
+    val locale: String = "ru",
     @Column(nullable = false, unique = true)
     val name: String,
     @Column
     val description: String? = "",
     @OneToMany(mappedBy = "exerciseGroup", cascade = [(CascadeType.ALL)])
-    val series: MutableSet<Series> = LinkedHashSet()
+    val series: MutableList<Series> = ArrayList()
 ) {
     constructor(record: GroupRecord) : this(
         id = record.groupId,
+        locale = record.locale,
         name = record.name,
         description = record.description
     )
 
     fun toDto() = ExerciseGroupDto(
         id = id,
+        locale = locale,
         name = name,
         description = description,
-        series = series.map { series -> series.id }.toMutableSet()
+        series = series.map { series -> series.id }.toMutableList()
     )
 
     override fun equals(other: Any?): Boolean {
@@ -46,6 +51,7 @@ data class ExerciseGroup(
         if (javaClass != other?.javaClass) return false
         other as ExerciseGroup
         if (id != other.id) return false
+        if (locale != other.locale) return false
         if (name != other.name) return false
         if (description != other.description) return false
         return true
@@ -53,10 +59,11 @@ data class ExerciseGroup(
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
+        result = 31 * result + locale.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + (description?.hashCode() ?: 0)
         return result
     }
 
-    override fun toString() = "ExerciseGroup(id=$id, name='$name', description=$description)"
+    override fun toString() = "ExerciseGroup(id=$id, name='$name', locale = $locale, description=$description)"
 }
