@@ -7,6 +7,10 @@ create table if not exists authority
         constraint uk_6ct98mcqw43jw46da6tbapvie
             unique
 );
+create sequence authority_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists exercise_group
 (
@@ -18,6 +22,10 @@ create table if not exists exercise_group
         constraint uk_n4n5r4j77tp0j7w0ibumainjs
             unique
 );
+create sequence exercise_group_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists progress
 (
@@ -43,6 +51,10 @@ create table if not exists resource
     constraint uk7rqvk7iml0lvslr33ujqrbneu
         unique (word, audio_file_url)
 );
+create sequence resource_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create index if not exists word_audio_file_idx
     on resource (word, audio_file_url);
@@ -63,6 +75,10 @@ create table if not exists series
         constraint fk2c08ai2hn3ol2by2ff3ldvoqq
             references exercise_group
 );
+create sequence series_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists exercise
 (
@@ -83,6 +99,10 @@ create table if not exists exercise
     constraint uk1qbx6egnaof1jh2y0qtkoe8rj
         unique (name, level)
 );
+create sequence exercise_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists signal
 (
@@ -97,6 +117,10 @@ create table if not exists signal
         constraint fkrue6p2si4x3op2j3psi4fc5sw
             references exercise
 );
+create sequence signal_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists task
 (
@@ -112,6 +136,10 @@ create table if not exists task
         constraint fkar49eehe2lkif6att6hhepj75
             references exercise
 );
+create sequence task_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists answer_parts_resources
 (
@@ -155,6 +183,10 @@ create table if not exists user_account
         constraint fkcr5eonbalqc6icwdje9ekcdhm
             references progress
 );
+create sequence user_account_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create table if not exists study_history
 (
@@ -165,7 +197,7 @@ create table if not exists study_history
     execution_seconds   integer  not null,
     repetition_index    real,
     replays_count       integer  not null,
-    wrongAnswers        integer  not null,
+    wrong_answers       integer  not null,
     right_answers_index real,
     start_time          timestamp,
     tasks_count         smallint not null,
@@ -178,6 +210,10 @@ create table if not exists study_history
     constraint ukblb87no1fhqw76655j1xfbjc8
         unique (user_id, exercise_id, start_time)
 );
+create sequence study_history_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 create index if not exists study_history_ix_user_exercise
     on study_history (user_id, exercise_id);

@@ -13,11 +13,17 @@ import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import javax.persistence.OneToOne
+import javax.persistence.SequenceGenerator
 
 @Entity
 data class UserAccount(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "user_account_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+        name = "user_account_id_seq",
+        sequenceName = "user_account_id_seq",
+        allocationSize = 1
+    )
     val id: Long? = null,
     @Column(nullable = false)
     var fullName: String,

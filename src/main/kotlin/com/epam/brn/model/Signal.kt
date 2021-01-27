@@ -17,7 +17,7 @@ data class Signal(
     @SequenceGenerator(
         name = "signal_id_seq",
         sequenceName = "signal_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     val id: Long? = null,
     val name: String? = "",

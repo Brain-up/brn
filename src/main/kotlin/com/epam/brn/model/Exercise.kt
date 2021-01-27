@@ -24,7 +24,7 @@ data class Exercise(
     @SequenceGenerator(
         name = "exercise_id_seq",
         sequenceName = "exercise_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     var id: Long? = null,
     var name: String = "",
