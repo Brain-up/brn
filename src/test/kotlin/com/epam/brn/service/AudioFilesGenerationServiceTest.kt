@@ -19,10 +19,13 @@ internal class AudioFilesGenerationServiceTest {
 
     @Mock
     lateinit var wordsService: WordsService
+
     @Mock
     lateinit var awsConfig: AwsConfig
+
     @Mock
     lateinit var yandexSpeechKitService: YandexSpeechKitService
+
     @InjectMocks
     lateinit var audioFilesGenerationService: AudioFilesGenerationService
 
@@ -40,7 +43,7 @@ internal class AudioFilesGenerationServiceTest {
     @Test
     fun `should process files`() {
         // GIVEN
-        ReflectionTestUtils.setField(audioFilesGenerationService, "speed", "1")
+        ReflectionTestUtils.setField(audioFilesGenerationService, "speeds", listOf("0.8", "1", "1.2"))
         ReflectionTestUtils.setField(audioFilesGenerationService, "womanVoice", "alena")
         ReflectionTestUtils.setField(audioFilesGenerationService, "manVoice", "filipp")
         ReflectionTestUtils.setField(audioFilesGenerationService, "folderForFiles", "testFolder")
@@ -63,6 +66,7 @@ internal class AudioFilesGenerationServiceTest {
         // WHEN
         audioFilesGenerationService.generateAudioFiles()
         // THEN
+        Thread.sleep(1000)
         verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "1")
         verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "0.8")
         verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "1.2")

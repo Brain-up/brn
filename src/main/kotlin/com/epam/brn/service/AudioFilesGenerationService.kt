@@ -2,6 +2,8 @@ package com.epam.brn.service
 
 import com.epam.brn.config.AwsConfig
 import com.epam.brn.exception.ConversionOggToMp3Exception
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.bramp.ffmpeg.FFmpeg
 import net.bramp.ffmpeg.FFmpegExecutor
 import net.bramp.ffmpeg.FFprobe
@@ -28,8 +30,8 @@ class AudioFilesGenerationService(
     @Value("\${yandex.voiceAlena}")
     lateinit var womanVoice: String
 
-    @Value("\${yandex.speed}")
-    lateinit var speed: String
+    @Value("#{'\${yandex.speeds}'.split(',')}")
+    lateinit var speeds: List<String>
 
     @Value("\${withMp3Conversion}")
     var withMp3Conversion: Boolean = false
@@ -48,23 +50,23 @@ class AudioFilesGenerationService(
             return
         }
         log.info("Start generating audio files in yandex cloud for $wordsSize words. exists=${existsHashWords.size}")
-        var counter = 1
+        var createdCounter = 0
+        var skippedCounter = 0
         allWords.asSequence().forEach { word ->
             run {
                 val md5Hash = DigestUtils.md5Hex(word)
                 if (!existsHashWords.contains(md5Hash)) {
-                    log.info("Generated $counter word `$word` $speed from $wordsSize words.")
-                    processWord(word, womanVoice, "1")
-                    processWord(word, womanVoice, "0.8")
-                    processWord(word, womanVoice, "1.2")
-                    processWord(word, manVoice, "1")
-                    processWord(word, manVoice, "0.8")
-                    processWord(word, manVoice, "1.2")
-                    counter += 1
-                }
+                    createdCounter++
+                    log.info("Generate $createdCounter word `$word` speeds:$speeds from $wordsSize words.")
+                    speeds.forEach {
+                        GlobalScope.launch { processWord(word, womanVoice, it) }
+                        GlobalScope.launch { processWord(word, manVoice, it) }
+                    }
+                } else
+                    skippedCounter++
             }
         }
-        log.info("Audio files for ${allWords.size} words were created successfully!")
+        log.info("Audio files for ${allWords.size} words were created `$createdCounter`, skipped `$skippedCounter`.")
     }
 
     /**
