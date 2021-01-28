@@ -27,7 +27,6 @@ alter table series add column type varchar(30) not null;
 alter table exercise drop column exercise_type;
 alter table exercise drop column description;
 alter table exercise drop column exercise_series_id;
-alter table exercise drop constraint fkbnnibamsgvjhy13uli9s73yfr;
 alter table exercise add column sub_group_id  bigint
         constraint fkot3isl5pnpkqc8mwv0gwc98n7
             references sub_group;
