@@ -135,8 +135,12 @@ internal class SeriesOneRecordProcessorTest {
     @Test
     fun `should create correct answer options`() {
         val expected = setOf(
-            resource_бал(), resource_бум(), resource_быль(),
-            resource_вить(), resource_гад(), resource_дуб()
+            resource_бал(),
+            resource_бум(),
+            resource_быль(),
+            resource_вить(),
+            resource_гад(),
+            resource_дуб()
         )
 
         val tasks = seriesOneRecordProcessor
@@ -170,27 +174,32 @@ internal class SeriesOneRecordProcessorTest {
                 serialNumber = 1,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 2,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 3,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_быль()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 4,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 5,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
-            ), Task(
+            ),
+            Task(
                 exercise = exercise,
                 serialNumber = 6,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),

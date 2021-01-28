@@ -15,6 +15,10 @@ create table if not exists sub_group
     constraint ukpnpqa2j0bhrehrn7ocfo57lg7
         unique (name, level)
 );
+create sequence sub_group_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 alter table exercise_group add column locale varchar(10) not null;
 

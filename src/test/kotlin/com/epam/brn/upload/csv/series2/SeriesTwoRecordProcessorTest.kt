@@ -132,8 +132,12 @@ internal class SeriesTwoRecordProcessorTest {
 
         `when`(exerciseRepositoryMock.save(exercise)).thenReturn(exercise)
         val expectedResources = setOf(
-            resource_девочка(), resource_бабушка(), resource_дедушка(),
-            resource_сидит(), resource_лежит(), resource_идет()
+            resource_девочка(),
+            resource_бабушка(),
+            resource_дедушка(),
+            resource_сидит(),
+            resource_лежит(),
+            resource_идет()
         )
         val actual = seriesTwoRecordProcessor.process(
             mutableListOf(

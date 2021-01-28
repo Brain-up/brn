@@ -24,7 +24,7 @@ data class Exercise(
     @SequenceGenerator(
         name = "exercise_id_seq",
         sequenceName = "exercise_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     var id: Long? = null,
     var name: String = "",
@@ -54,7 +54,7 @@ data class Exercise(
 
     override fun toString() =
         "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, " +
-                "noiseUrl=$noiseUrl, template=$template)"
+            "noiseUrl=$noiseUrl, template=$template)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

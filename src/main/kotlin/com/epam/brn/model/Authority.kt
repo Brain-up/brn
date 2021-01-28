@@ -14,7 +14,7 @@ data class Authority(
     @SequenceGenerator(
         name = "authority_id_seq",
         sequenceName = "authority_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     var id: Long? = null,
     @Column(unique = true, nullable = false, name = "AUTHORITY_NAME")

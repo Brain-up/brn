@@ -23,7 +23,7 @@ data class Task(
     @SequenceGenerator(
         name = "task_id_seq",
         sequenceName = "task_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     val id: Long? = null,
     val name: String? = "",
