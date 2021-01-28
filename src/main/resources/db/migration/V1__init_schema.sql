@@ -183,10 +183,6 @@ create table if not exists user_account
         constraint fkcr5eonbalqc6icwdje9ekcdhm
             references progress
 );
-create sequence user_account_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create table if not exists study_history
 (
