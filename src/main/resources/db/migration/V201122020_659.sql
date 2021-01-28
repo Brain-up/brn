@@ -15,6 +15,10 @@ create table if not exists sub_group
     constraint ukpnpqa2j0bhrehrn7ocfo57lg7
         unique (name, level)
 );
+create sequence sub_group_id_seq
+minvalue 1
+start with 1
+increment by 1;
 
 alter table exercise_group add column locale varchar(10) not null;
 
@@ -23,6 +27,7 @@ alter table series add column type varchar(30) not null;
 alter table exercise drop column exercise_type;
 alter table exercise drop column description;
 alter table exercise drop column exercise_series_id;
+alter table exercise drop constraint fkbnnibamsgvjhy13uli9s73yfr;
 alter table exercise add column sub_group_id  bigint
         constraint fkot3isl5pnpkqc8mwv0gwc98n7
             references sub_group;

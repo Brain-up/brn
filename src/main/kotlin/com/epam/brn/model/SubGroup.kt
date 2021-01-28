@@ -24,7 +24,7 @@ data class SubGroup(
     @SequenceGenerator(
         name = "sub_group_id_seq",
         sequenceName = "sub_group_id_seq",
-        allocationSize = 50
+        allocationSize = 1
     )
     var id: Long? = null,
     var name: String,
