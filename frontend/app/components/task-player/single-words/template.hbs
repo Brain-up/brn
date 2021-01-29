@@ -2,7 +2,7 @@
   {{did-insert this.updateWords @task.words}}
   {{did-update this.updateWords @task.words}}
 >
-  {{yield (hash tasks=@task.parent.tasks)}}
+  {{yield (hash tasks=@task.parent.tasks)   to="header"}}
 {{#if (eq this.lastAnswer @task.word)}}
   <ImageDisplayBlock
     data-test-right-answer-notification
@@ -16,6 +16,8 @@
     {{did-insert (perform this.showTaskResult)}}
   />
 {{else}}
+
+  <Ui::TaskContent>
   <ul class="task-player__options mt-5">
     {{#each this.shuffledWords as |word|}}
       <li class="task-player__option">
@@ -38,18 +40,8 @@
       </li>
     {{/each}}
   </ul>
-   <Ui::BottomContainer>
-      <ExerciseSteps
-        @visible={{not @justEnteredTask}}
-        @activeStep={{@mode}}
-        @onClick={{@onModeChange}}
-        class="flex mb-8 ml-2 mr-2"
-      />
-      <AudioPlayer
-        @audioFileUrl={{@task.audioFileUrl}}
-        @disabled={{@disableAudioPlayer}}
-        @transparent={{not-eq @mode "task"}}
-      />
-    </Ui::BottomContainer>
+  </Ui::TaskContent>
+
+  {{yield (hash audioFileUrl=@task.audioFileUrl) to="footer"}}
 {{/if}}
 </div>

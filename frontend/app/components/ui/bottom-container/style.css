@@ -1,8 +1,9 @@
 /*! purgecss start ignore */
 
 & {
-  position: absolute;
   bottom: 0;
+  max-width: 80%;
+  margin-left: 10%;
 }
 
  /*! purgecss end ignore */

@@ -5,8 +5,10 @@
   ...attributes
   {{did-insert this.onInsert}}
 >
-  {{yield (hash tasks=this.tasksCopy)}}
+  {{yield (hash tasks=this.tasksCopy)   to="header"}}
   {{#if this.tasksCopy.length}}
+
+    <Ui::TaskContent>
     <div class="flex justify-center flex-grow mt-4">
       {{#each @task.selectedItemsOrder as |type|}}
         <div
@@ -36,18 +38,8 @@
         </div>
       {{/each}}
     </div>
-    <Ui::BottomContainer>
-      <ExerciseSteps
-        @visible={{not @justEnteredTask}}
-        @activeStep={{@mode}}
-        @onClick={{@onModeChange}}
-        class="flex mb-8 ml-2 mr-2"
-      />
-      <AudioPlayer
-        @audioFileUrl={{this.audioFiles}}
-        @disabled={{@disableAudioPlayer}}
-        @transparent={{not-eq @mode "task"}}
-      />
-    </Ui::BottomContainer>
+    </Ui::TaskContent>
+
+    {{yield (hash audioFileUrl=this.audioFiles) to="footer"}}
   {{/if}}
 </div>

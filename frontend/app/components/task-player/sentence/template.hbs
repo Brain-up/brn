@@ -2,10 +2,11 @@
   class="{{style-namespace "task-player/sentence"}} flex flex-col flex-1"
   {{did-update this.resetAnswerObject @task}}
 >
-  {{yield (hash tasks=@task.parent.tasks)}}
+  {{yield (hash tasks=@task.parent.tasks)   to="header"}}
   {{#if (and this.exerciseResultIsVisible @task.isLastTask)}}
     <AnswerCorrectnessWidget @isCorrect={{true}} />
   {{else}}
+    <Ui::TaskContent>
     <div class="flex justify-center flex-grow mt-4">
       {{#each @task.selectedItemsOrder as |type|}}
         <div
@@ -34,18 +35,7 @@
         </div>
       {{/each}}
     </div>
-    <Ui::BottomContainer>
-      <ExerciseSteps
-        @visible={{not @justEnteredTask}}
-        @activeStep={{@mode}}
-        @onClick={{@onModeChange}}
-        class="flex mb-8 ml-2 mr-2"
-      />
-      <AudioPlayer
-        @audioFileUrl={{this.audioFiles}}
-        @disabled={{@disableAudioPlayer}}
-        @transparent={{not-eq @mode "task"}}
-      />
-    </Ui::BottomContainer>
+    </Ui::TaskContent>
+    {{yield (hash audioFileUrl=this.audioFiles) to="footer"}}
   {{/if}}
 </div>
