@@ -1,6 +1,6 @@
 <div
   class="{{style-namespace "exercise-steps"}}"
-  style='visibility:  {{this.visibility}};'
+  style={{html-safe (concat "visibility:" this.visibility ";")}}
   {{did-insert this.setLastMode @activeStep}}
   {{did-update this.setLastMode @activeStep}}
   ...attributes

@@ -12,7 +12,8 @@
      flex flex-1"
   ...attributes
 >
-  {{#component
+
+  {{#let (component
     this.componentType
     onRightAnswer=this.onRightAnswer
     onWrongAnswer=this.onWrongAnswer
@@ -24,15 +25,34 @@
     onPlayText=this.playText
     onModeChange=this.onModeChange
     justEnteredTask=this.justEnteredTask
-    mode=this.mode as |context|
-  }}
+    mode=this.mode) as |Player|}}
 
-  <ProgressSausage
-      style="visibility: {{if this.isProgressBarVisible 'visible' 'hidden'}};"
-      @progressItems={{context.tasks}}
-  />
+  <Player>
+    <:header as |context|>
+      <ProgressSausage
+        style={{html-safe (concat "visibility:" (if this.isProgressBarVisible 'visible' 'hidden') ";")}}
+        @progressItems={{context.tasks}}
+      />
+    </:header>
 
-  {{/component}}
+    <:footer as |content|>
+      <Ui::BottomContainer>
+        <ExerciseSteps
+          @visible={{not this.justEnteredTask}}
+          @activeStep={{this.mode}}
+          @onClick={{this.onModeChange}}
+          class="flex mb-8 ml-2 mr-2"
+        />
+        <AudioPlayer
+          @audioFileUrl={{content.audioFileUrl}}
+          @disabled={{this.disableAudioPlayer}}
+          @transparent={{not-eq this.mode "task"}}
+        />
+      </Ui::BottomContainer>
+    </:footer>
+  </Player>
+
+  {{/let}}
 
   {{#if this.justEnteredTask}}
     <StartTaskButton @startTask={{this.startTask}} />

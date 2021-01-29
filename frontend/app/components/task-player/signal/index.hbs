@@ -1,6 +1,8 @@
 <div class="{{style-namespace "task-player/single-simple-words"}} flex flex-grow flex-col" ...attributes   {{did-insert this.onInsert}}>
-  {{yield (hash tasks=this.tasksCopy)}}
+  {{yield (hash tasks=this.tasksCopy)   to="header"}}
   {{#if this.tasksCopy.length}}
+
+    <Ui::TaskContent>
     <ul class="task-player__options mt-5">
       {{#each @task.answerOptions as |answerOption|}}
         <li class="task-player__option">
@@ -39,18 +41,9 @@
         </li>
       {{/each}}
     </ul>
-    <Ui::BottomContainer>
-      <ExerciseSteps
-        @visible={{not @justEnteredTask}}
-        @activeStep={{@mode}}
-        @onClick={{@onModeChange}}
-        class="flex mb-8 ml-2 mr-2"
-      />
-      <AudioPlayer
-        @audioFileUrl={{this.audioFileUrl}}
-        @disabled={{@disableAudioPlayer}}
-        @transparent={{not-eq @mode "task"}}
-      />
-    </Ui::BottomContainer>
+
+    </Ui::TaskContent>
+
+    {{yield (hash audioFileUrl=this.audioFileUrl) to="footer"}}
   {{/if}}
 </div>

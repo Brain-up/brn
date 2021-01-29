@@ -50,7 +50,7 @@ export default class TaskPlayerComponent extends Component {
     }
   }
 
-  get disableAudioPlayer() {
+  get disableAudioPlayer(): boolean {
     return (
       this.task.pauseExecution ||
       !this.studyingTimer.isStarted ||
