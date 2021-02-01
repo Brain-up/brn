@@ -123,7 +123,7 @@ class YandexSpeechKitService {
         word: String,
         voice: String,
         speed: String = "1",
-        lang: String = "ru-ru"
+        lang: String = Locale.RU.locale
     ): File {
         val md5Hash = DigestUtils.md5Hex(word)
         log.info("For word `$word` is created audio file with name `$md5Hash.ogg`")
