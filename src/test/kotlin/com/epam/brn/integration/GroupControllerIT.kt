@@ -53,9 +53,9 @@ class GroupControllerIT : BaseIT() {
     fun `test find ru groups`() {
         // GIVEN
         val exerciseGroupName1 = "GroupName1"
-        val groupRu = insertExerciseGroup(exerciseGroupName1, Locale.ru.name)
+        val groupRu = insertExerciseGroup(exerciseGroupName1, Locale.RU.name)
         val exerciseGroupName2 = "GroupName2"
-        val groupEn = insertExerciseGroup(exerciseGroupName2, Locale.en.name)
+        val groupEn = insertExerciseGroup(exerciseGroupName2, Locale.EN.name)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
