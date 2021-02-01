@@ -121,9 +121,9 @@ class YandexSpeechKitService {
      */
     fun generateAudioOggFile(
         word: String,
-        voice: String = this.manVoiceRu,
+        voice: String,
         speed: String = "1",
-        lang: String = this.lang
+        lang: String = "ru-ru"
     ): File {
         val md5Hash = DigestUtils.md5Hex(word)
         log.info("For word `$word` is created audio file with name `$md5Hash.ogg`")
