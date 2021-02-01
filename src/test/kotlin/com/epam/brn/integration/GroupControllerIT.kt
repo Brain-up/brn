@@ -60,7 +60,7 @@ class GroupControllerIT : BaseIT() {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(baseUrl)
-                .param("locale", "ru")
+                .param("locale", Locale.RU.locale)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
