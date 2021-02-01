@@ -170,10 +170,5 @@ Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number
  2.2 command line: `gradle jacocoTestReport`
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
-
-### Thank you very much for your support!
-
-our application is run on http://ecse005003f1.epam.com/ && http://31.184.253.199/
-
 ### License
-This project is licensed under the MIT license. See the LICENSE [text](https://opensource.org/licenses/MIT).
+This project started under MIT license. See the LICENSE [text](https://opensource.org/licenses/MIT).
