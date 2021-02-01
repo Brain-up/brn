@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.enum.Locale
 import com.epam.brn.exception.YandexServiceException
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.io.File
+import java.io.InputStream
 import java.time.ZonedDateTime
 
 @Service
@@ -36,6 +38,9 @@ class YandexSpeechKitService {
     @Value("\${yandex.lang}")
     lateinit var lang: String
 
+    @Value("\${yandex.voiceFilipp}")
+    lateinit var manVoiceRu: String
+
     @Value("\${yandex.format}")
     lateinit var format: String
 
@@ -45,13 +50,13 @@ class YandexSpeechKitService {
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForFiles: String
 
-    @Value(value = "\${yandex.folderForRusFiles}")
-    private lateinit var folderForRusFiles: String
-
     var iamToken: String = ""
     var iamTokenExpiresTime = ZonedDateTime.now()
 
     private val log = logger()
+
+    private val mapLocaleVoice =
+        mapOf(Locale.RU.locale to "filipp", Locale.EN.locale to "nick", Locale.TR.locale to "erkanyavas")
 
     fun getYandexIamTokenForAudioGeneration(): String {
         if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(ZonedDateTime.now()))
@@ -76,21 +81,14 @@ class YandexSpeechKitService {
     }
 
     /**
-     * Generate .ogg audio file from yandex cloud speech kit service
+     * Generate stream of .ogg audio file from yandex cloud speech kit service
      */
-    fun generateAudioOggFile(word: String, voice: String, speed: String): File {
-        val md5Hash = DigestUtils.md5Hex(word)
-        log.info("For word `$word` is created audio file with name `$md5Hash.ogg`")
-        val fileOgg = File("$md5Hash.ogg")
-        val targetOggFile =
-            if (speed == "1")
-                File("$folderForFiles/ogg/$voice/${fileOgg.name}")
-            else
-                File("$folderForFiles/ogg/$voice/$speed/${fileOgg.name}")
-        if (targetOggFile.exists()) {
-            log.info("${fileOgg.name} is already exist, it was not generated, it was skipped.")
-            return targetOggFile
-        }
+    fun generateAudioStream(
+        word: String,
+        voice: String = this.manVoiceRu,
+        speed: String = "1",
+        lang: String = this.lang
+    ): InputStream {
         val token = getYandexIamTokenForAudioGeneration()
         val parameters = ArrayList<NameValuePair>().apply {
             add(BasicNameValuePair("folderId", folderId))
@@ -115,13 +113,48 @@ class YandexSpeechKitService {
             throw YandexServiceException("Yandex cloud does not provide audio file for word `$word`, httpStatus={$statusCode}")
         log.info("Ogg audio file for Word `$word` was successfully generated.")
         val httpEntity = response.entity
-        val inputStream = httpEntity.content
-        FileUtils.copyInputStreamToFile(inputStream, fileOgg)
+        return httpEntity.content
+    }
 
+    /**
+     * Generate .ogg audio file from yandex cloud speech kit service if it is absent locally
+     */
+    fun generateAudioOggFile(
+        word: String,
+        voice: String,
+        speed: String = "1",
+        lang: String = Locale.RU.locale
+    ): File {
+        val md5Hash = DigestUtils.md5Hex(word)
+        log.info("For word `$word` is created audio file with name `$md5Hash.ogg`")
+        val fileOgg = File("$md5Hash.ogg")
+        val targetOggFile =
+            if (speed == "1")
+                File("$folderForFiles/ogg/$voice/${fileOgg.name}")
+            else
+                File("$folderForFiles/ogg/$voice/$speed/${fileOgg.name}")
+        if (targetOggFile.exists()) {
+            log.info("${fileOgg.name} is already exist, generation was skipped.")
+            return targetOggFile
+        }
+
+        val inputStream = generateAudioStream(word, voice, speed, lang)
+
+        FileUtils.copyInputStreamToFile(inputStream, fileOgg)
         fileOgg.let { sourceFile ->
             sourceFile.copyTo(targetOggFile, true)
             sourceFile.delete()
         }
         return targetOggFile
+    }
+
+    fun validateLocale(locale: String) {
+        if (!Locale.values().map { it.locale }.contains(locale.toLowerCase()))
+            throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
+    }
+
+    fun generateAudioOggFileWithValidation(word: String, locale: String): InputStream {
+        validateLocale(locale)
+        return generateAudioStream(word = word, voice = mapLocaleVoice.getValue(locale), lang = locale)
     }
 }

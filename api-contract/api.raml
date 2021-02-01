@@ -6,6 +6,24 @@ baseTestUri: http://10.66.216.143:8081/api
 mediaType:
   - application/json
 
+# AUDIO GENERATION ----------------------------
+/audio
+  get:
+    queryParameters:
+        text:
+         required: true
+         type: String
+         example: "London is the capital"
+        locale:
+          required: false
+          type: string
+          example: "en-us"
+          default: "ru-ru"
+    responses:
+        200:
+            body:
+                example: !include samples/audio.ogg
+
 # GROUP ----------------------------
 /groups:
   get:
@@ -13,7 +31,7 @@ mediaType:
       locale:
        required: false
        type: string
-       example: "ru"
+       example: "ru-ru"
     responses:
       200:
         body:

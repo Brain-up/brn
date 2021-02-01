@@ -68,10 +68,10 @@ internal class AudioFilesGenerationServiceTest {
         // THEN
         Thread.sleep(1000)
         verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "1")
-        verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "0.8")
-        verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "1.2")
-        verify(yandexSpeechKitService).generateAudioOggFile("one", "alena", "1")
-        verify(yandexSpeechKitService).generateAudioOggFile("one", "alena", "0.8")
-        verify(yandexSpeechKitService).generateAudioOggFile("one", "alena", "1.2")
+        verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "0.8", "ru-ru")
+        verify(yandexSpeechKitService).generateAudioOggFile("one", "filipp", "1.2", "ru-ru")
+        verify(yandexSpeechKitService).generateAudioOggFile("one", "alena", "1", "ru-ru")
+        verify(yandexSpeechKitService).generateAudioOggFile("one", "alena", "0.8", "ru-ru")
+        verify(yandexSpeechKitService).generateAudioOggFile("one", "alena", "1.2", "ru-ru")
     }
 }

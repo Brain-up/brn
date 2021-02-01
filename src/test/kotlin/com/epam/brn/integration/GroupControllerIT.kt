@@ -53,14 +53,14 @@ class GroupControllerIT : BaseIT() {
     fun `test find ru groups`() {
         // GIVEN
         val exerciseGroupName1 = "GroupName1"
-        val groupRu = insertExerciseGroup(exerciseGroupName1, Locale.ru.name)
+        val groupRu = insertExerciseGroup(exerciseGroupName1, Locale.RU.locale)
         val exerciseGroupName2 = "GroupName2"
-        val groupEn = insertExerciseGroup(exerciseGroupName2, Locale.en.name)
+        val groupEn = insertExerciseGroup(exerciseGroupName2, Locale.EN.locale)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(baseUrl)
-                .param("locale", "ru")
+                .param("locale", Locale.RU.locale)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -91,7 +91,7 @@ class GroupControllerIT : BaseIT() {
         assertTrue(response.contains(existingExerciseGroup.name))
     }
 
-    private fun insertExerciseGroup(exerciseGroupName: String, locale: String = "ru"): ExerciseGroup {
+    private fun insertExerciseGroup(exerciseGroupName: String, locale: String = Locale.RU.locale): ExerciseGroup {
         return exerciseGroupRepository.save(
             ExerciseGroup(
                 id = 0,
