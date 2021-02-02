@@ -119,7 +119,7 @@
     "ember-modal-dialog": "^3.0.1",
     "ember-modifier": "^1.0.3",
     "ember-page-title": "^6.0.3",
-    "ember-qunit": "^5.1.1",
+    "ember-qunit": "^5.1.2",
     "ember-ref-bucket": "^1.2.2",
     "ember-resolver": "^8.0.2",
     "ember-router-helpers": "^0.4.0",
