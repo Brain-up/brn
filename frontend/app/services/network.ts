@@ -73,9 +73,15 @@ export default class NetworkService extends Service {
     return data;
   }
   async getCurrentUser() {
-    let result = await this.request('users/current');
-    let { data } = await result.json();
-    return fromLatestUserDto(Array.isArray(data) ? data[0] : data);
+    try {
+      let result = await this.request('users/current');
+      let { data } = await result.json();
+      return fromLatestUserDto(Array.isArray(data) ? data[0] : data);
+    } catch(e) {
+      await this.session.invalidate();
+      throw e;
+    }
+
   }
   async patchUserInfo(userInfo: LatestUserDTO): Promise<LatestUserDTO> {
     let result = await this.patch('users/current', userInfo);
