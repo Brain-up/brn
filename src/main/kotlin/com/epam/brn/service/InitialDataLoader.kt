@@ -2,11 +2,10 @@ package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.model.Authority
-import com.epam.brn.model.UserAccount
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.upload.CsvUploadService
 import org.apache.logging.log4j.kotlin.logger
@@ -31,8 +30,6 @@ import java.nio.file.Path
 class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
-    private val subGroupRepository: SubGroupRepository,
-    private val exerciseRepository: ExerciseRepository,
     private val userAccountRepository: UserAccountRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
@@ -47,16 +44,28 @@ class InitialDataLoader(
     @Value("\${withAudioFilesGeneration}")
     var withAudioFilesGeneration: Boolean = false
 
+    val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_word_groups.csv"
+    val PHRASES_FILE_NAME = "series_phrases.csv"
+    val WORDS_SEQUENCES_FILE_NAME = "series_word_groups.csv"
+    val SENTENCE_FILE_NAME = "series_sentences.csv"
+    val SIGNAL_FILE_NAME = "signal_exercises.csv"
+
     companion object {
-        fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
-
-        fun getInputStreamFromSeriesInitFile(seriesId: Long): InputStream {
-            val inputStream = Thread.currentThread()
-                .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId)}")
-
-            if (inputStream == null)
-                throw IOException("Can not get init file for $seriesId series.")
-
+        private val mapSeriesNameInitFile = mapOf(
+            ExerciseType.SINGLE_SIMPLE_WORDS.name to "series_words.csv",
+            ExerciseType.PHRASES.name to "series_phrases.csv",
+            ExerciseType.WORDS_SEQUENCES.name to "series_word_groups.csv",
+            ExerciseType.SENTENCE.name to "series_sentences.csv",
+            ExerciseType.DURATION_SIGNALS.name to "signal_exercises.csv",
+            ExerciseType.FREQUENCY_SIGNALS.name to "signal_exercises.csv",
+        )
+        fun getInputStreamFromSeriesInitFile(seriesName: String): InputStream {
+            val fileName = mapSeriesNameInitFile[seriesName]
+            val inputStream = Thread
+                .currentThread()
+                .contextClassLoader
+                .getResourceAsStream("initFiles/$fileName")
+                ?: throw IOException("Can not get init file for $seriesName series.")
             return inputStream
         }
     }
@@ -65,10 +74,10 @@ class InitialDataLoader(
         "groups.csv",
         "series.csv",
         "subgroups.csv",
-        fileNameForSeries(1),
-        fileNameForSeries(2),
-        fileNameForSeries(3),
-        fileNameForSeries(4),
+        "series_words.csv",
+        "series_phrases.csv",
+        "series_word_groups.csv",
+        "series_sentences.csv",
         "signal_exercises.csv"
     )
 

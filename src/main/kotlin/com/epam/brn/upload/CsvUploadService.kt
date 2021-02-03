@@ -1,6 +1,8 @@
 package com.epam.brn.upload
 
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
+import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.InitialDataLoader
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
@@ -15,7 +17,8 @@ import java.io.LineNumberReader
 @Component
 class CsvUploadService(
     private val csvParser: CsvParser,
-    private val recordProcessors: List<RecordProcessor<out Any, out Any>>
+    private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
+    private val seriesRepository: SeriesRepository
 ) {
     companion object {
 
@@ -69,7 +72,10 @@ class CsvUploadService(
     fun load(file: File) = load(file.inputStream())
 
     fun getSampleStringForSeriesExerciseFile(seriesId: Long): String {
-        return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(seriesId))
+        val name = seriesRepository.findById(seriesId)
+            .orElseThrow { EntityNotFoundException("There no any series with id = $seriesId") }
+            .name
+        return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(name))
     }
 
     private fun readFormatSampleLines(inputStream: InputStream): String {
