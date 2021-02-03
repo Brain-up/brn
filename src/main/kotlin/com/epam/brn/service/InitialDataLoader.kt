@@ -44,20 +44,14 @@ class InitialDataLoader(
     @Value("\${withAudioFilesGeneration}")
     var withAudioFilesGeneration: Boolean = false
 
-    val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_word_groups.csv"
-    val PHRASES_FILE_NAME = "series_phrases.csv"
-    val WORDS_SEQUENCES_FILE_NAME = "series_word_groups.csv"
-    val SENTENCE_FILE_NAME = "series_sentences.csv"
-    val SIGNAL_FILE_NAME = "signal_exercises.csv"
-
     companion object {
         private val mapSeriesNameInitFile = mapOf(
-            ExerciseType.SINGLE_SIMPLE_WORDS.name to "series_words.csv",
-            ExerciseType.PHRASES.name to "series_phrases.csv",
-            ExerciseType.WORDS_SEQUENCES.name to "series_word_groups.csv",
-            ExerciseType.SENTENCE.name to "series_sentences.csv",
-            ExerciseType.DURATION_SIGNALS.name to "signal_exercises.csv",
-            ExerciseType.FREQUENCY_SIGNALS.name to "signal_exercises.csv",
+            ExerciseType.SINGLE_SIMPLE_WORDS.name to SINGLE_SIMPLE_WORDS_FILE_NAME,
+            ExerciseType.PHRASES.name to PHRASES_FILE_NAME,
+            ExerciseType.WORDS_SEQUENCES.name to WORDS_SEQUENCES_FILE_NAME,
+            ExerciseType.SENTENCE.name to SENTENCES_FILE_NAME,
+            ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
+            ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
         )
         fun getInputStreamFromSeriesInitFile(seriesName: String): InputStream {
             val fileName = mapSeriesNameInitFile[seriesName]
@@ -74,11 +68,11 @@ class InitialDataLoader(
         "groups.csv",
         "series.csv",
         "subgroups.csv",
-        "series_words.csv",
-        "series_phrases.csv",
-        "series_word_groups.csv",
-        "series_sentences.csv",
-        "signal_exercises.csv"
+        SINGLE_SIMPLE_WORDS_FILE_NAME,
+        PHRASES_FILE_NAME,
+        WORDS_SEQUENCES_FILE_NAME,
+        SENTENCES_FILE_NAME,
+        SIGNALS_FILE_NAME
     )
 
     @EventListener(ApplicationReadyEvent::class)
@@ -183,3 +177,9 @@ class InitialDataLoader(
         }
     }
 }
+
+val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words.csv"
+val PHRASES_FILE_NAME = "series_phrases.csv"
+val WORDS_SEQUENCES_FILE_NAME = "series_word_groups.csv"
+val SENTENCES_FILE_NAME = "series_sentences.csv"
+val SIGNALS_FILE_NAME = "signal_exercises.csv"
