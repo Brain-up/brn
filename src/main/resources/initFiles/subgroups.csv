@@ -27,11 +27,11 @@ WORDS_SEQUENCES,5,words_4_from_12,По 4 слова из 12, Матрица сл
 WORDS_SEQUENCES,6,words_4_from_16,По 4 слова из 16, Матрица слов 4 столбца на 4 строки
 WORDS_SEQUENCES,7,words_5_from_15,По 5 слов из 15, Матрица слов 5 столбцов на 3 строки
 WORDS_SEQUENCES,8,words_6_from_18,По 6 слов из 18, Матрица слов 6 столбцов на 3 строки
-SENTENCE,1,sentence_with_2_words,30, Пойми предложение из 2 слов
-SENTENCE,2,sentence_with_3_words,Предложение из 3 слов, Пойми предложение из 3 слов
-SENTENCE,3,sentence_with_4_words,Предложение из 4 слов, Пойми предложение из 4 слов
-SENTENCE,4,sentence_with_5_words,Предложение из 5 слов, Пойми предложение из 5 слов
-SENTENCE,5,sentence_with_6_words,Предложение из 6 слов, Пойми предложение из 6 слов
+SENTENCE,1,sentence_with_2_words,Из 2 слов, Пойми предложение из 2 слов
+SENTENCE,2,sentence_with_3_words,Из 3 слов, Пойми предложение из 3 слов
+SENTENCE,3,sentence_with_4_words,Из 4 слов, Пойми предложение из 4 слов
+SENTENCE,4,sentence_with_5_words,Из 5 слов, Пойми предложение из 5 слов
+SENTENCE,5,sentence_with_6_words,Из 6 слов, Пойми предложение из 6 слов
 PHRASES,1,longShortPhrases,Фразы разной длительности,
 PHRASES,2,noPhrases,Фразы с частицей Не,
 PHRASES,3,similarPhrases,Похожие фразы,
