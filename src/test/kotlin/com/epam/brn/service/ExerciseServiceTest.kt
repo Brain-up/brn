@@ -119,6 +119,42 @@ internal class ExerciseServiceTest {
     }
 
     @Test
+    fun `should return 2 availableExercises for one subgroup with last done success`() {
+        // GIVEN
+        val subGroup = SubGroup(
+            series = series,
+            level = 1,
+            code = "code",
+            name = "subGroup name"
+        )
+        val ex1 = Exercise(id = 1, name = "pets", subGroup = subGroup)
+        val ex2 = Exercise(id = 2, name = "pets", subGroup = subGroup)
+        val ex3 = Exercise(id = 3, name = "pets ddd", subGroup = subGroup)
+        val ex4 = Exercise(id = 4, name = "pets ddd", subGroup = subGroup)
+        val listAll = listOf(ex1, ex2, ex3, ex4)
+        val listDone = listOf(ex1)
+        val studyHistory1 = StudyHistory(
+            exercise = ex1,
+            userAccount = mock(UserAccount::class.java),
+            startTime = LocalDateTime.now(),
+            executionSeconds = 122,
+            tasksCount = 12,
+            wrongAnswers = 5,
+            replaysCount = 0
+        )
+        `when`(studyHistoryRepository.findLastByUserAccountId(1))
+            .thenReturn(listOf(studyHistory1))
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+        // THEN
+        assertEquals(2, actualResult.size)
+        assertTrue(actualResult.containsAll(listOf(ex1, ex3)))
+    }
+
+    @Test
     fun `should return availableExercises for one subgroup with last done success`() {
         // GIVEN
         val subGroup = SubGroup(
@@ -132,7 +168,7 @@ internal class ExerciseServiceTest {
         val ex3 = Exercise(id = 3, name = "pets ddd", subGroup = subGroup)
         val ex4 = Exercise(id = 4, name = "pets ddd", subGroup = subGroup)
         val listAll = listOf(ex1, ex2, ex3, ex4)
-        val listDone = listOf(ex1, ex2)
+        val listDone = listOf(ex1, ex3)
         val studyHistory1 = StudyHistory(
             exercise = ex1,
             userAccount = mock(UserAccount::class.java),
@@ -142,8 +178,8 @@ internal class ExerciseServiceTest {
             wrongAnswers = 0,
             replaysCount = 0
         )
-        val studyHistory2 = StudyHistory(
-            exercise = ex2,
+        val studyHistory3 = StudyHistory(
+            exercise = ex3,
             userAccount = mock(UserAccount::class.java),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
@@ -152,15 +188,15 @@ internal class ExerciseServiceTest {
             replaysCount = 1
         )
         `when`(studyHistoryRepository.findLastByUserAccountId(1))
-            .thenReturn(listOf(studyHistory1, studyHistory2))
+            .thenReturn(listOf(studyHistory1, studyHistory3))
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
         // THEN
-        assertEquals(3, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3)))
+        assertEquals(4, actualResult.size)
+        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex4)))
     }
 
     @Test
@@ -174,9 +210,10 @@ internal class ExerciseServiceTest {
         )
         val ex1 = Exercise(id = 1, name = "pets", subGroup = subGroup)
         val ex2 = Exercise(id = 2, name = "pets", subGroup = subGroup)
-        val ex3 = Exercise(id = 3, name = "pets ddd", subGroup = subGroup)
+        val ex3 = Exercise(id = 3, name = "pets", subGroup = subGroup)
         val ex4 = Exercise(id = 4, name = "pets ddd", subGroup = subGroup)
-        val listAll = listOf(ex1, ex2, ex3, ex4)
+        val ex5 = Exercise(id = 5, name = "pets ddd", subGroup = subGroup)
+        val listAll = listOf(ex1, ex2, ex3, ex4, ex5)
         val listDone = listOf(ex1, ex2)
         val studyHistory1 = StudyHistory(
             exercise = ex1,
@@ -204,8 +241,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
         // THEN
-        assertEquals(2, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2)))
+        assertEquals(3, actualResult.size)
+        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex4)))
     }
 
     @Test
@@ -268,7 +305,7 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
         // THEN
-        assertEquals(4, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex11)))
+        assertEquals(5, actualResult.size)
+        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex11, ex13)))
     }
 }
