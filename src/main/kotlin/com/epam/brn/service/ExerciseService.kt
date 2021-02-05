@@ -63,30 +63,14 @@ class ExerciseService(
         }
     }
 
-    fun getExercisesByIds(exerciseIds: List<Long>): List<Long> {
+    fun getAvailableExerciseIds(exerciseIds: List<Long>): List<Long> {
         if (exerciseIds.isEmpty()) return emptyList()
         val exercise = exerciseRepository.findById(exerciseIds[0])
         if (!exercise.isPresent) throw EntityNotFoundException("There is no one exercise with id = ${exerciseIds[0]}")
-        return findExercisesByNameForCurrentUser(exercise.get().name)
+        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        return findExercisesByUserIdAndSubGroupId(currentUser.id!!, exercise.get().subGroup!!.id!!)
             .filter(ExerciseDto::available)
             .map { e -> e.id!! }
-    }
-
-    fun findExercisesByNameForCurrentUser(exerciseName: String): List<ExerciseDto> {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
-        return findExercisesByNameAndUserId(currentUser.id!!, exerciseName)
-    }
-
-    fun findExercisesByNameAndUserId(userId: Long, exerciseName: String): List<ExerciseDto> {
-        log.info("Searching available exercises with name=$exerciseName for user=$userId")
-        val isSupport = userId == 1L
-        log.info("current user is admin: $isSupport")
-        val doneExercises = studyHistoryRepository.getDoneExercisesByName(exerciseName, userId)
-        val allExercises = exerciseRepository.findExercisesByName(exerciseName)
-        val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
-        return emptyIfNull(allExercises).map { exercise ->
-            updateNoiseUrl(exercise.toDto(openExercises.contains(exercise) || isSupport))
-        }
     }
 
     fun getAvailableExercises(
@@ -96,12 +80,12 @@ class ExerciseService(
     ): Set<Exercise> {
         if (doneExercises.size == allExercises.size)
             return doneExercises.toSet()
-        val mapDone = doneExercises.groupBy({ it.name }, { it })
+        val mapDone = doneExercises.groupBy({ it.subGroup }, { it })
         val available = mutableSetOf<Exercise>()
         val lastHistoryMap = studyHistoryRepository.findLastByUserAccountId(userId)
             .groupBy({ it.exercise }, { it })
         allExercises
-            .groupBy({ it.name }, { it })
+            .groupBy({ it.subGroup }, { it })
             .forEach { (name, currentNameExercises) ->
                 run {
                     available.add(currentNameExercises[0])
