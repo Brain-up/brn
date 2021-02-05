@@ -38,9 +38,8 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
             .body(BaseSingleObjectResponseDto(data = exerciseService.findExerciseById(exerciseId)))
     }
 
-    @Deprecated("use getExercisesBySubGroup")
     @PostMapping(value = ["/byIds"])
-    @ApiOperation("Get available exercise ids for current user by ids which have same subGroup.")
+    @ApiOperation("Get available exercise ids for current user by input ids which have same subGroup.")
     fun getExercisesByIds(
         @Validated @RequestBody exerciseRequest: ExerciseRequest
     ): ResponseEntity<BaseResponseDto> {
