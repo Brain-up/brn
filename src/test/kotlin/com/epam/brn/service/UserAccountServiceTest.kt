@@ -7,7 +7,7 @@ import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Authority
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.nhaarman.mockito_kotlin.verify

@@ -3,7 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SubGroupRepository

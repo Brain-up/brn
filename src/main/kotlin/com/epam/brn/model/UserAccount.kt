@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.enums.Gender
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import javax.persistence.CascadeType
@@ -44,10 +45,6 @@ data class UserAccount(
         inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
     )
     var authoritySet: MutableSet<Authority> = hashSetOf()
-
-    override fun toString(): String {
-        return "UserAccount(id=$id, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender,  progress=$progress)"
-    }
 
     fun toDto(): UserAccountDto {
         val userAccountDto = UserAccountDto(

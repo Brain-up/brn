@@ -46,9 +46,6 @@ data class StudyHistory(
     var rightAnswersIndex: Float? = null
 
 ) {
-    override fun toString() =
-        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, wrongAnswers=$wrongAnswers)"
-
     fun toDto() = StudyHistoryDto(
         id = this.id,
         exerciseId = this.exercise.id!!,

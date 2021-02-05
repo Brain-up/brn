@@ -10,7 +10,7 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -47,7 +47,7 @@ internal class SeriesThreeRecordProcessorTest {
         )
     )
 
-    private val subGroup = SubGroup(
+    private val testSubGroup = SubGroup(
         series = series,
         level = 1,
         code = "code",
@@ -84,7 +84,7 @@ internal class SeriesThreeRecordProcessorTest {
 
     @Test
     fun `should create correct exercise`() {
-        val expected = createExercise()
+        val expected = createExercise(null)
         val actual = seriesThreeRecordProcessor.process(
             listOf(
                 SeriesThreeRecord(
@@ -104,7 +104,7 @@ internal class SeriesThreeRecordProcessorTest {
 
     @Test
     fun `should create correct task`() {
-        val expected = createExercise().tasks.first()
+        val expected = createExercise(null).tasks.first()
         val actual = seriesThreeRecordProcessor.process(
             listOf(
                 SeriesThreeRecord(
@@ -168,7 +168,7 @@ internal class SeriesThreeRecordProcessorTest {
         verify(resourceRepositoryMock).saveAll(expected)
     }
 
-    private fun createExercise(): Exercise {
+    private fun createExercise(subGroup: SubGroup? = testSubGroup): Exercise {
         val exercise = Exercise(
             subGroup = subGroup,
             name = "Распознавание предложений из 2 слов",

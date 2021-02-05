@@ -1,6 +1,6 @@
 package com.epam.brn.dto.request
 
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
 import javax.validation.constraints.Email

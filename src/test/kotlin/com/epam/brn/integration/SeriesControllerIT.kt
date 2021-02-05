@@ -5,7 +5,7 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Series
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson

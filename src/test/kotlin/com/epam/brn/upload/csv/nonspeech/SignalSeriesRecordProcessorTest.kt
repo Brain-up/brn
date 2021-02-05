@@ -2,7 +2,7 @@ package com.epam.brn.upload.csv.nonspeech
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.model.Signal
 import com.epam.brn.model.SubGroup
@@ -94,7 +94,7 @@ internal class SignalSeriesRecordProcessorTest {
 
     @Test
     fun `should create correct exercise for different series`() {
-        val expected = listOf(createExercise(subGroupDuration), createExercise(subGroupFrequency))
+        val expected = listOf(createExercise(null), createExercise(null))
         given(exerciseRepositoryMock.saveAll(expected))
             .willReturn(expected)
         val actual = signalSeriesRecordProcessor.process(
@@ -131,7 +131,7 @@ internal class SignalSeriesRecordProcessorTest {
 
     @Test
     fun `should create correct signals`() {
-        val expected = listOf(createExerciseWithSignals(subGroupDuration))
+        val expected = listOf(createExerciseWithSignals(null))
         given(exerciseRepositoryMock.saveAll(expected))
             .willReturn(expected)
         val actual = signalSeriesRecordProcessor.process(
@@ -156,7 +156,7 @@ internal class SignalSeriesRecordProcessorTest {
             .saveAll(expected)
     }
 
-    private fun createExercise(subGroup: SubGroup): Exercise {
+    private fun createExercise(subGroup: SubGroup?): Exercise {
         return Exercise(
             subGroup = subGroup,
             name = "По 2 сигнала разной длительности.",
@@ -164,7 +164,7 @@ internal class SignalSeriesRecordProcessorTest {
         )
     }
 
-    private fun createExerciseWithSignals(subGroup: SubGroup): Exercise {
+    private fun createExerciseWithSignals(subGroup: SubGroup?): Exercise {
         val exercise = Exercise(
             subGroup = subGroup,
             name = "По 2 сигнала разной длительности.",

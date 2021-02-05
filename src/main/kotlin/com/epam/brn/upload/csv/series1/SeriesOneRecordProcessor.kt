@@ -7,7 +7,7 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -115,7 +115,7 @@ class SeriesOneRecordProcessor(
     }
 
     private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
-        Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
+        Task(exercise = exercise, answerOptions = answerOptions)
 
     private fun generateTasks(exercise: Exercise, answerOptions: MutableSet<Resource>): MutableList<Task> {
         return generateCorrectAnswers(answerOptions)

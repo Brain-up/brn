@@ -3,6 +3,7 @@ package com.epam.brn.model
 import com.epam.brn.dto.TaskDtoFor1Series
 import com.epam.brn.dto.TaskDtoFor2Series
 import com.epam.brn.dto.TaskDtoFor3Series
+import com.epam.brn.enums.ExerciseType
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -27,7 +28,7 @@ data class Task(
     )
     val id: Long? = null,
     val name: String? = "",
-    var serialNumber: Int? = 0,
+    var serialNumber: Int = 1,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise? = null,
@@ -82,30 +83,4 @@ data class Task(
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
     )
-
-    override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Task
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (serialNumber != other.serialNumber) return false
-        if (exercise != other.exercise) return false
-        if (correctAnswer != other.correctAnswer) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (serialNumber ?: 0)
-        result = 31 * result + (exercise?.hashCode() ?: 0)
-        result = 31 * result + (correctAnswer?.hashCode() ?: 0)
-        return result
-    }
 }

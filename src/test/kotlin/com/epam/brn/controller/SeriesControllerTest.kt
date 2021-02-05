@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.SeriesDto
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.verify

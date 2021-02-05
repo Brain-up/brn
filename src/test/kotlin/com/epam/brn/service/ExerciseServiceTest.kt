@@ -64,8 +64,8 @@ internal class ExerciseServiceTest {
         // GIVEN
         val subGroupId = 2L
         val userId = 2L
-        val exercise1 = Exercise(id = 1, name = "pets")
-        val exercise2 = Exercise(id = 2, name = "pets")
+        val exercise1 = Exercise(id = 1, name = "pets", level = 1)
+        val exercise2 = Exercise(id = 2, name = "pets", level = 2)
         `when`(studyHistoryRepository.getDoneExercises(subGroupId, userId)).thenReturn(listOf(exercise1))
         `when`(exerciseRepository.findExercisesBySubGroupId(subGroupId)).thenReturn(listOf(exercise1, exercise2))
         // WHEN

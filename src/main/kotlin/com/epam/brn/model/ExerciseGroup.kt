@@ -5,6 +5,7 @@ import com.epam.brn.upload.csv.group.GroupRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -28,9 +29,11 @@ data class ExerciseGroup(
     val name: String,
     @Column
     val description: String? = "",
-    @OneToMany(mappedBy = "exerciseGroup", cascade = [(CascadeType.ALL)])
-    val series: MutableList<Series> = ArrayList()
+
 ) {
+    @OneToMany(mappedBy = "exerciseGroup", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    val series: MutableList<Series> = ArrayList()
+
     constructor(record: GroupRecord) : this(
         id = record.groupId,
         locale = record.locale,
@@ -45,25 +48,4 @@ data class ExerciseGroup(
         description = description,
         series = series.map { series -> series.id }.toMutableList()
     )
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as ExerciseGroup
-        if (id != other.id) return false
-        if (locale != other.locale) return false
-        if (name != other.name) return false
-        if (description != other.description) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + locale.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString() = "ExerciseGroup(id=$id, name='$name', locale = $locale, description=$description)"
 }

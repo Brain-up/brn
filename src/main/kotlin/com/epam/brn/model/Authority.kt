@@ -20,8 +20,4 @@ data class Authority(
     @Column(unique = true, nullable = false, name = "AUTHORITY_NAME")
     val authorityName: String
 
-) {
-    override fun toString(): String {
-        return "Authority(id=$id, authority='$authorityName')"
-    }
-}
+)

@@ -10,7 +10,7 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
@@ -156,14 +156,12 @@ internal class SeriesTwoRecordProcessorTest {
 
     private fun createExercise(): Exercise {
         val exercise = Exercise(
-            subGroup = subGroup,
+            subGroup = null,
             name = "Шесть слов",
             template = "<OBJECT OBJECT_ACTION>",
             level = 1
         )
-
         exercise.addTask(createTask(exercise))
-
         return exercise
     }
 

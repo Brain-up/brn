@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository

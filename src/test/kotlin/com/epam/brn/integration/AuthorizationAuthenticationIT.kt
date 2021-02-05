@@ -3,7 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Authority
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.epam.brn.model.UserAccount
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach

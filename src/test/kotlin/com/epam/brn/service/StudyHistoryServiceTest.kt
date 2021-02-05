@@ -1,14 +1,14 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.model.Exercise
+import com.epam.brn.enums.Gender
+import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.model.Exercise
-import com.epam.brn.model.Gender
-import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.UserAccount
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -56,9 +56,7 @@ internal class StudyHistoryServiceTest {
             email = "test@gmail.com",
             active = true
         )
-        val exercise = Exercise(
-            id = 1L
-        )
+        val exercise = Exercise(id = 1L, name = "name")
         val studyHistoryNew = StudyHistory(
             userAccount = userAccount,
             exercise = exercise,

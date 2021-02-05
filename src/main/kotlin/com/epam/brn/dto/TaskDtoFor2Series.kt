@@ -1,7 +1,7 @@
 package com.epam.brn.dto
 
-import com.epam.brn.model.ExerciseType
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.WordType
 import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class TaskDtoFor2Series(
