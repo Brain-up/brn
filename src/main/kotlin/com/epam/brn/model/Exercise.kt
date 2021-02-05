@@ -3,6 +3,7 @@ package com.epam.brn.model
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.ShortTaskDto
+import com.epam.brn.enums.ExerciseType
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -18,7 +19,7 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
-data class Exercise(
+class Exercise(
     @Id
     @GeneratedValue(generator = "exercise_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(

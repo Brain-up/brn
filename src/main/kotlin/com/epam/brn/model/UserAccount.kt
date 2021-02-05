@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.enums.Gender
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import javax.persistence.CascadeType

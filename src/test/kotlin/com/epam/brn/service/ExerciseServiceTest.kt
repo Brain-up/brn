@@ -3,7 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository

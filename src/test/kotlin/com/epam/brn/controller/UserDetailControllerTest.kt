@@ -3,7 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils

@@ -1,6 +1,6 @@
 package com.epam.brn.dto.response
 
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZoneId
 import java.time.ZonedDateTime

@@ -1,4 +1,4 @@
-package com.epam.brn.model
+package com.epam.brn.enums
 
 enum class ExerciseType {
     WORDS_SEQUENCES,

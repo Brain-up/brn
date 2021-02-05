@@ -1,5 +1,6 @@
-package com.epam.brn.model
+package com.epam.brn.dto
 
+import com.epam.brn.model.UserAccount
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

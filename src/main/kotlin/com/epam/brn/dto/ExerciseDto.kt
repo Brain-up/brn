@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 
 data class ExerciseDto(
     var seriesId: Long?,

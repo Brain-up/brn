@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.service.ExerciseService
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -3,7 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository

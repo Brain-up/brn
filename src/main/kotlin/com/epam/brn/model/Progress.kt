@@ -9,7 +9,7 @@ import javax.persistence.Id
 import javax.persistence.OneToOne
 
 @Entity
-data class Progress(
+class Progress(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

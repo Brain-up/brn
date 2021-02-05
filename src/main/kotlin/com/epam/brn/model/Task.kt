@@ -3,6 +3,7 @@ package com.epam.brn.model
 import com.epam.brn.dto.TaskDtoFor1Series
 import com.epam.brn.dto.TaskDtoFor2Series
 import com.epam.brn.dto.TaskDtoFor3Series
+import com.epam.brn.enums.ExerciseType
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -17,7 +18,7 @@ import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
 
 @Entity
-data class Task(
+class Task(
     @Id
     @GeneratedValue(generator = "task_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(

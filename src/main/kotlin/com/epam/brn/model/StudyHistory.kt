@@ -19,7 +19,7 @@ import javax.persistence.UniqueConstraint
     uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "exercise_id", "startTime"])],
     indexes = [Index(name = "study_history_ix_user_exercise", columnList = "user_id,exercise_id")]
 )
-data class StudyHistory(
+class StudyHistory(
     @Id
     @GeneratedValue(generator = "study_history_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(

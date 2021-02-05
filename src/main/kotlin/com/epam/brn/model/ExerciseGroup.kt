@@ -12,7 +12,7 @@ import javax.persistence.OneToMany
 import javax.persistence.SequenceGenerator
 
 @Entity
-data class ExerciseGroup(
+class ExerciseGroup(
     @Id
     @GeneratedValue(generator = "exercise_group_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(

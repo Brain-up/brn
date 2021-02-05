@@ -8,7 +8,7 @@ import javax.persistence.Id
 import javax.persistence.SequenceGenerator
 
 @Entity
-data class Authority(
+class Authority(
     @Id
     @GeneratedValue(generator = "authority_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(

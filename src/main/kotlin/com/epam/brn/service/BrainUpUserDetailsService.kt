@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.model.CustomUserDetails
+import com.epam.brn.dto.CustomUserDetails
 import com.epam.brn.repo.UserAccountRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ResourceDto
+import com.epam.brn.enums.WordType
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -20,7 +21,7 @@ import javax.persistence.UniqueConstraint
         Index(name = "audio_file_idx", columnList = "audioFileUrl")
     ]
 )
-data class Resource(
+class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 
 @Entity
-data class Signal(
+class Signal(
     @Id
     @GeneratedValue(generator = "signal_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(

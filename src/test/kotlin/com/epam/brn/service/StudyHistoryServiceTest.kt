@@ -3,7 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.Gender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository

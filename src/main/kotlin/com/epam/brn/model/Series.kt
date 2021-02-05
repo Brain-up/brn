@@ -15,7 +15,7 @@ import javax.persistence.OneToMany
 import javax.persistence.SequenceGenerator
 
 @Entity
-data class Series(
+class Series(
     @Id
     @GeneratedValue(generator = "series_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
