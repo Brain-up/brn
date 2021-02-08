@@ -6634,10 +6634,10 @@ ember-source@3.25.0-beta.3:
     semver "^6.1.1"
     silent-error "^1.1.1"
 
-ember-template-lint-plugin-tailwindcss@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ember-template-lint-plugin-tailwindcss/-/ember-template-lint-plugin-tailwindcss-1.0.0.tgz#04d10314dee0d878d5639821656706573aa76ff4"
-  integrity sha512-05I4pgc1lTnrt8tNTFDAThqt51nWusFqx2b9R1R5TLIvq2oqFLCapyyznZmOhd//vuqFEWvQGWnOy/r3b/ETFg==
+ember-template-lint-plugin-tailwindcss@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ember-template-lint-plugin-tailwindcss/-/ember-template-lint-plugin-tailwindcss-1.1.0.tgz#648b92c79232d39f0a4a769200b7dd1bf155e6e4"
+  integrity sha512-hA+9Fd+arVXXRt6pLlgfrWeYEZ/RQZCRcdIEPF04dvspG2hIv8Cs3WwMzPj7ZyUiq4PJDoIE0W9126kpXFOwow==
   dependencies:
     ember-template-recast "^4.1.4"
 
