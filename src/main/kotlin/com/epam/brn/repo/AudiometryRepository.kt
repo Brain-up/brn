@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface AudiometryRepository : JpaRepository<Audiometry, Long> {
-    fun findByAudiometryType(audiometryType: String): Audiometry?
+    fun findByAudiometryTypeAndLocale(audiometryType: String, locale: String): Audiometry?
 }

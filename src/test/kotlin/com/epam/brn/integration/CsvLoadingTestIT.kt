@@ -81,7 +81,7 @@ class CsvLoadingTestIT : BaseIT() {
 
     @Test
     fun `should load test data from classpath initFiles folder`() {
-        audiometryRepository.findAll() shouldHaveSize 3
+        audiometryRepository.findAll() shouldHaveSize 4
         audiometryTaskRepository.findAll() shouldHaveSize 20
         exerciseGroupRepository.findAll() shouldHaveSize 4
         seriesRepository.findAll() shouldHaveSize 7

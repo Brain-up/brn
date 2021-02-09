@@ -2,6 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.enums.AudiometryType
+import com.epam.brn.enums.Locale
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
@@ -106,21 +107,30 @@ class InitialDataLoader(
 
     private fun addAudiometrics() {
         val audiometrySignal = Audiometry(
+            locale = null,
             name = "Частотная диагностика",
             description = "Частотная диагностика",
             audiometryType = AudiometryType.SIGNALS.name
         )
         val audiometrySpeech = Audiometry(
+            locale = Locale.RU.locale,
             name = "Речевая диагностика",
             description = "Речевая диагностика методом Лопотко",
             audiometryType = AudiometryType.SPEECH.name
         )
         val audiometryMatrix = Audiometry(
+            locale = Locale.RU.locale,
             name = "Матриксная диагностика",
             description = "Матриксная диагностика",
             audiometryType = AudiometryType.MATRIX.name
         )
-        audiometryRepository.saveAll(listOf(audiometrySignal, audiometrySpeech, audiometryMatrix))
+        val audiometrySpeechEn = Audiometry(
+            locale = Locale.EN.locale,
+            name = "Speech diagnostic",
+            description = "Speech diagnostic with Lopotko words sequences",
+            audiometryType = AudiometryType.SPEECH.name
+        )
+        audiometryRepository.saveAll(listOf(audiometrySignal, audiometrySpeech, audiometryMatrix, audiometrySpeechEn))
     }
 
     private fun addAdminUser(adminAuthority: Authority): UserAccount {

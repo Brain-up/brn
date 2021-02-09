@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import java.time.LocalDateTime
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -27,11 +28,13 @@ class AudiometryHistory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_task_id")
     var audiometryTask: AudiometryTask,
-
+    @Column(nullable = false)
     var startTime: LocalDateTime,
     var endTime: LocalDateTime? = null,
     var executionSeconds: Int?,
+    @Column(nullable = false)
     var tasksCount: Short,
+    @Column(nullable = false)
     var rightAnswers: Int,
     var replaysCount: Int? = null,
     var repetitionIndex: Float? = null,

@@ -35,7 +35,8 @@ internal class LopotkoProcessorTest {
 
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
 
-    private val audiometry = Audiometry(name = "Audiometry", audiometryType = AudiometryType.SPEECH.name)
+    private val audiometry =
+        Audiometry(name = "Audiometry", audiometryType = AudiometryType.SPEECH.name, locale = Locale.RU.locale)
     private val audiometryTask = AudiometryTask(
         level = 1,
         audiometryGroup = "A",
@@ -69,7 +70,12 @@ internal class LopotkoProcessorTest {
         ReflectionTestUtils.setField(lopotkoRecordProcessor, "audioPathFilipp", "/audio/filipp/%s.ogg")
         ReflectionTestUtils.setField(lopotkoRecordProcessor, "audioPathAlena", "/audio/alena/%s.ogg")
 
-        `when`(audiometryRepository.findByAudiometryType(AudiometryType.SPEECH.name)).thenReturn(audiometry)
+        `when`(
+            audiometryRepository.findByAudiometryTypeAndLocale(
+                AudiometryType.SPEECH.name,
+                Locale.RU.locale
+            )
+        ).thenReturn(audiometry)
 
         mockFindResourceByWordLike("бал", resource_бал())
         mockFindResourceByWordLike("бум", resource_бум())

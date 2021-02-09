@@ -8,17 +8,20 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
+import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
 @Entity
+@Table(uniqueConstraints = [UniqueConstraint(columnNames = ["locale", "name", "audiometryType"])])
 class Audiometry(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
+    val locale: String?,
     @Column(nullable = false, unique = true)
     val name: String,
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     val audiometryType: String,
-    @Column
     val description: String? = "",
     @OneToMany(mappedBy = "audiometry", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val audiometryTasks: MutableList<AudiometryTask> = ArrayList()
