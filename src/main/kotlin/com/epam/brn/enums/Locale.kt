@@ -1,4 +1,4 @@
-package com.epam.brn.enum
+package com.epam.brn.enums
 
 enum class Locale(val locale: String) {
     RU("ru-ru"),

@@ -1,19 +1,22 @@
 package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
+import com.epam.brn.enums.AudiometryType
+import com.epam.brn.model.Audiometry
 import com.epam.brn.model.Authority
-import com.epam.brn.model.UserAccount
 import com.epam.brn.model.Gender
+import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.upload.CsvUploadService
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
+import org.springframework.core.env.Environment
 import org.springframework.core.io.ResourceLoader
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -31,14 +34,17 @@ import java.nio.file.Path
 class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
-    private val subGroupRepository: SubGroupRepository,
-    private val exerciseRepository: ExerciseRepository,
     private val userAccountRepository: UserAccountRepository,
+    private val audiometryRepository: AudiometryRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
     private val uploadService: CsvUploadService,
     private val audioFilesGenerationService: AudioFilesGenerationService
 ) {
+
+    @Autowired
+    private lateinit var environment: Environment
+
     private val log = logger()
 
     @Value("\${init.folder:#{null}}")
@@ -48,11 +54,11 @@ class InitialDataLoader(
     var withAudioFilesGeneration: Boolean = false
 
     companion object {
-        fun fileNameForSeries(seriesId: Long) = "${seriesId}_series.csv"
+        fun fileNameForSeries(seriesId: Long, suffix: String) = "${seriesId}_series_$suffix.csv"
 
         fun getInputStreamFromSeriesInitFile(seriesId: Long): InputStream {
             val inputStream = Thread.currentThread()
-                .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId)}")
+                .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId, "prod")}")
 
             if (inputStream == null)
                 throw IOException("Can not get init file for $seriesId series.")
@@ -61,16 +67,22 @@ class InitialDataLoader(
         }
     }
 
-    private val sourceFiles = listOf(
-        "groups.csv",
-        "series.csv",
-        "subgroups.csv",
-        fileNameForSeries(1),
-        fileNameForSeries(2),
-        fileNameForSeries(3),
-        fileNameForSeries(4),
-        "signal_exercises.csv"
-    )
+    fun getSourceFiles(): List<String> {
+        var profile: String = environment.activeProfiles[0].toLowerCase()
+        if (profile == "integration-tests")
+            profile = "prod"
+        return listOf(
+            "groups.csv",
+            "series.csv",
+            "subgroups.csv",
+            fileNameForSeries(1, profile),
+            fileNameForSeries(2, profile),
+            fileNameForSeries(3, profile),
+            fileNameForSeries(4, profile),
+            "signal_exercises.csv",
+            "lopotko.csv"
+        )
+    }
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
@@ -83,11 +95,32 @@ class InitialDataLoader(
             userAccountRepository.saveAll(listOfUsers)
         }
 
-        if (isInitRequired())
-            init()
+        if (isInitRequired()) {
+            addAudiometrics()
+            initFromFiles()
+        }
 
         if (withAudioFilesGeneration)
             audioFilesGenerationService.generateAudioFiles()
+    }
+
+    private fun addAudiometrics() {
+        val audiometrySignal = Audiometry(
+            name = "Частотная диагностика",
+            description = "Частотная диагностика",
+            audiometryType = AudiometryType.SIGNALS.name
+        )
+        val audiometrySpeech = Audiometry(
+            name = "Речевая диагностика",
+            description = "Речевая диагностика методом Лопотко",
+            audiometryType = AudiometryType.SPEECH.name
+        )
+        val audiometryMatrix = Audiometry(
+            name = "Матриксная диагностика",
+            description = "Матриксная диагностика",
+            audiometryType = AudiometryType.MATRIX.name
+        )
+        audiometryRepository.saveAll(listOf(audiometrySignal, audiometrySpeech, audiometryMatrix))
     }
 
     private fun addAdminUser(adminAuthority: Authority): UserAccount {
@@ -130,7 +163,7 @@ class InitialDataLoader(
 
     private fun isInitRequired() = exerciseGroupRepository.count() == 0L
 
-    private fun init() {
+    private fun initFromFiles() {
         log.debug("Initialization started")
         if (directoryPath != null)
             initDataFromDirectory(directoryPath!!)
@@ -142,7 +175,7 @@ class InitialDataLoader(
         log.debug("Loading data from $directoryToScan.")
         if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath))
             throw IllegalArgumentException("$directoryToScan with initial data does not exist")
-        sourceFiles.forEach {
+        getSourceFiles().forEach {
             loadFromInputStream(
                 Files.newInputStream(directoryToScan.resolve(it))
             )
@@ -151,7 +184,7 @@ class InitialDataLoader(
 
     private fun initDataFromClassPath() {
         log.debug("Loading data from classpath 'initFiles' directory.")
-        sourceFiles.forEach {
+        getSourceFiles().forEach {
             loadFromInputStream(
                 resourceLoader.getResource("classpath:initFiles/$it").inputStream
             )
