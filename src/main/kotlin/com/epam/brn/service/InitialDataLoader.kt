@@ -95,85 +95,18 @@ class InitialDataLoader(
             listOfUsers.addAll(addDefaultUsers(userAuthority))
             userAccountRepository.saveAll(listOfUsers)
         }
-
-        if (isInitRequired()) {
+        if (isGroupsEmpty())
+            initExercisesFromFiles()
+        if (isAudiometricsEmpty())
             addAudiometrics()
-            initFromFiles()
-        }
-
         if (withAudioFilesGeneration)
             audioFilesGenerationService.generateAudioFiles()
     }
 
-    private fun addAudiometrics() {
-        val audiometrySignal = Audiometry(
-            locale = null,
-            name = "Частотная диагностика",
-            description = "Частотная диагностика",
-            audiometryType = AudiometryType.SIGNALS.name
-        )
-        val audiometrySpeech = Audiometry(
-            locale = Locale.RU.locale,
-            name = "Речевая диагностика",
-            description = "Речевая диагностика методом Лопотко",
-            audiometryType = AudiometryType.SPEECH.name
-        )
-        val audiometryMatrix = Audiometry(
-            locale = Locale.RU.locale,
-            name = "Матриксная диагностика",
-            description = "Матриксная диагностика",
-            audiometryType = AudiometryType.MATRIX.name
-        )
-        val audiometrySpeechEn = Audiometry(
-            locale = Locale.EN.locale,
-            name = "Speech diagnostic",
-            description = "Speech diagnostic with Lopotko words sequences",
-            audiometryType = AudiometryType.SPEECH.name
-        )
-        audiometryRepository.saveAll(listOf(audiometrySignal, audiometrySpeech, audiometryMatrix, audiometrySpeechEn))
-    }
+    private fun isGroupsEmpty() = exerciseGroupRepository.count() == 0L
+    private fun isAudiometricsEmpty() = audiometryRepository.count() == 0L
 
-    private fun addAdminUser(adminAuthority: Authority): UserAccount {
-        val password = passwordEncoder.encode("admin")
-        val userAccount =
-            UserAccount(
-                fullName = "admin",
-                password = password,
-                email = "admin@admin.com",
-                active = true,
-                bornYear = 1999,
-                gender = Gender.MALE.toString()
-            )
-        userAccount.authoritySet.addAll(setOf(adminAuthority))
-        return userAccount
-    }
-
-    private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
-        val password = passwordEncoder.encode("password")
-        val firstUser = UserAccount(
-            fullName = "Name1",
-            email = "default@default.ru",
-            active = true,
-            bornYear = 1999,
-            gender = Gender.MALE.toString(),
-            password = password
-        )
-        val secondUser = UserAccount(
-            fullName = "Name2",
-            email = "default2@default.ru",
-            active = true,
-            bornYear = 1999,
-            gender = Gender.FEMALE.toString(),
-            password = password
-        )
-        firstUser.authoritySet.addAll(setOf(userAuthority))
-        secondUser.authoritySet.addAll(setOf(userAuthority))
-        return mutableListOf(firstUser, secondUser)
-    }
-
-    private fun isInitRequired() = exerciseGroupRepository.count() == 0L
-
-    private fun initFromFiles() {
+    private fun initExercisesFromFiles() {
         log.debug("Initialization started")
         if (directoryPath != null)
             initDataFromDirectory(directoryPath!!)
@@ -215,5 +148,71 @@ class InitialDataLoader(
         } catch (e: Exception) {
             log.error(e)
         }
+    }
+
+    private fun addAdminUser(adminAuthority: Authority): UserAccount {
+        val password = passwordEncoder.encode("admin")
+        val userAccount =
+            UserAccount(
+                fullName = "admin",
+                password = password,
+                email = "admin@admin.com",
+                active = true,
+                bornYear = 1999,
+                gender = Gender.MALE.toString()
+            )
+        userAccount.authoritySet.addAll(setOf(adminAuthority))
+        return userAccount
+    }
+
+    private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
+        val password = passwordEncoder.encode("password")
+        val firstUser = UserAccount(
+            fullName = "Name1",
+            email = "default@default.ru",
+            active = true,
+            bornYear = 1999,
+            gender = Gender.MALE.toString(),
+            password = password
+        )
+        val secondUser = UserAccount(
+            fullName = "Name2",
+            email = "default2@default.ru",
+            active = true,
+            bornYear = 1999,
+            gender = Gender.FEMALE.toString(),
+            password = password
+        )
+        firstUser.authoritySet.addAll(setOf(userAuthority))
+        secondUser.authoritySet.addAll(setOf(userAuthority))
+        return mutableListOf(firstUser, secondUser)
+    }
+
+    private fun addAudiometrics() {
+        val audiometrySignal = Audiometry(
+            locale = null,
+            name = "Частотная диагностика",
+            description = "Частотная диагностика",
+            audiometryType = AudiometryType.SIGNALS.name
+        )
+        val audiometrySpeech = Audiometry(
+            locale = Locale.RU.locale,
+            name = "Речевая диагностика",
+            description = "Речевая диагностика методом Лопотко",
+            audiometryType = AudiometryType.SPEECH.name
+        )
+        val audiometryMatrix = Audiometry(
+            locale = Locale.RU.locale,
+            name = "Матриксная диагностика",
+            description = "Матриксная диагностика",
+            audiometryType = AudiometryType.MATRIX.name
+        )
+        val audiometrySpeechEn = Audiometry(
+            locale = Locale.EN.locale,
+            name = "Speech diagnostic",
+            description = "Speech diagnostic with Lopotko words sequences",
+            audiometryType = AudiometryType.SPEECH.name
+        )
+        audiometryRepository.saveAll(listOf(audiometrySignal, audiometrySpeech, audiometryMatrix, audiometrySpeechEn))
     }
 }
