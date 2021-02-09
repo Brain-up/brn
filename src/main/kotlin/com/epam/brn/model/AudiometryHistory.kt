@@ -39,7 +39,7 @@ class AudiometryHistory(
 
 ) {
     override fun toString() =
-        "AudiometryHistory(id=$id, userAccount=$userAccount, audiometryTask=audiometryTask, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, rightAnswers=$rightAnswers)"
+        "AudiometryHistory(id=$id, userAccount=$userAccount, audiometryTask=$audiometryTask, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, rightAnswers=$rightAnswers)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

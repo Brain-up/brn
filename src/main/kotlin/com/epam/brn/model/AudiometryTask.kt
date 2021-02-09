@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.enums.Locale
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -20,16 +21,14 @@ data class AudiometryTask(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    @Column
     var level: Int,
-    @Column
     val audiometryGroup: String, // А, Б, В, Г
-    @Column
     val frequencyZone: String,
-    @Column
     val minFrequency: Int,
-    @Column
     val maxFrequency: Int,
+
+    @Column(nullable = false)
+    val locale: String = Locale.RU.locale,
 
     var count: Int = 10,
     var showSize: Int = 9,

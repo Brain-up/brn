@@ -1,9 +1,12 @@
 package com.epam.brn.upload.csv.series1
 
 import com.epam.brn.enums.FrequencyZone
+import com.epam.brn.enums.Locale
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class LopotkoRecord(
+    @JsonProperty("locale")
+    val locale: Locale,
     @JsonProperty("type")
     val type: String,
     @JsonProperty("order")
@@ -20,6 +23,6 @@ data class LopotkoRecord(
     val words: List<String>,
 ) {
     companion object {
-        const val FORMAT = "type,order,group,frequencyZone,minFrequency,maxFrequency,words"
+        const val FORMAT = "locale,type,order,group,frequencyZone,minFrequency,maxFrequency,words"
     }
 }

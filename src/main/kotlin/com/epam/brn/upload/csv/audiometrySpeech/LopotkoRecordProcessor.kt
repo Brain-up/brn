@@ -79,6 +79,7 @@ class LopotkoRecordProcessor(
     private fun extractAudiometryTask(record: LopotkoRecord, answerOptions: MutableSet<Resource>): AudiometryTask {
         val audiometry = audiometryRepository.findByAudiometryType(AudiometryType.valueOf(record.type).name)
         return AudiometryTask(
+            locale = record.locale.locale,
             level = record.order,
             audiometryGroup = record.group,
             frequencyZone = record.frequencyZone.name,

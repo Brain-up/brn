@@ -2,6 +2,7 @@ package com.epam.brn.upload.csv.series1
 
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.FrequencyZone
+import com.epam.brn.enums.Locale
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
@@ -44,6 +45,7 @@ internal class LopotkoProcessorTest {
     )
     private val savedAudiometryTask = audiometryTask.copy(id = 1)
     private val lopotkoRecord = LopotkoRecord(
+        Locale.RU,
         AudiometryType.SPEECH.name,
         1,
         "A",
