@@ -32,7 +32,7 @@ data class AudiometryTask(
     val maxFrequency: Int,
 
     var count: Int = 10,
-    var showSize: Int = 6,
+    var showSize: Int = 9,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_id")
