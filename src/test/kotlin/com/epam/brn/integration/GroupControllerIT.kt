@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.enum.Locale
+import com.epam.brn.enums.Locale
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.model.ExerciseGroup
 import org.junit.jupiter.api.AfterEach

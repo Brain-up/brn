@@ -22,7 +22,8 @@ internal class WordsServiceTest {
         val fileResult = wordsService.createTxtFileWithExerciseWordsMap(words, fileName)
         // THAN
         assertTrue(fileResult.exists())
-        assertEquals("{man=manHex, girl=girlHex, boy=boyHex}", fileResult.readText())
+        val expected = "man=manHex${System.lineSeparator()}girl=girlHex${System.lineSeparator()}boy=boyHex${System.lineSeparator()}"
+        assertEquals(expected, fileResult.readText())
         fileResult.deleteOnExit()
     }
 }

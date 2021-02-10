@@ -12,11 +12,13 @@ class WordsService {
 
     val fullWordsSet = HashSet<String>()
 
-    fun createTxtFileWithExerciseWordsMap(words: MutableMap<String, String>, fileName: String): File {
-        words.remove("")
-        fullWordsSet.addAll(words.keys)
+    fun createTxtFileWithExerciseWordsMap(wordHashMap: MutableMap<String, String>, fileName: String): File {
+        wordHashMap.remove("")
+        fullWordsSet.addAll(wordHashMap.keys)
         val file = File(fileName)
-        File(fileName).writeText(words.toString())
+        val multilineText = StringBuilder()
+        wordHashMap.forEach { multilineText.append(it).append(System.lineSeparator()) }
+        File(fileName).writeText(multilineText.toString())
         return file
     }
 

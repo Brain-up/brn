@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseGroupDto
+import com.epam.brn.enums.Locale
 import com.epam.brn.upload.csv.group.GroupRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -23,7 +24,7 @@ data class ExerciseGroup(
     )
     val id: Long? = null,
     @Column(nullable = false)
-    val locale: String = "ru",
+    val locale: String = Locale.RU.name,
     @Column(nullable = false, unique = true)
     val name: String,
     @Column
