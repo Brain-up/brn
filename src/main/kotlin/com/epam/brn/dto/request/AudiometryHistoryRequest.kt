@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 
 data class AudiometryHistoryRequest(
-    var id: Long? = null,
     @NotNull
     var audiometryTaskId: Long,
     @NotNull
