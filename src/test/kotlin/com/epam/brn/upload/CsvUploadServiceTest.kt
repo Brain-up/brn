@@ -1,6 +1,7 @@
 package com.epam.brn.upload
 
 import com.epam.brn.exception.EntityNotFoundException
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.CsvParser
@@ -14,7 +15,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import java.io.IOException
 import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
@@ -36,7 +36,7 @@ internal class CsvUploadServiceTest {
     fun `should get exercise file format`() {
         // given
         val series = Mockito.mock(Series::class.java)
-        `when`(series.name).thenReturn("SINGLE_SIMPLE_WORDS")
+        `when`(series.type).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.name)
         `when`(seriesRepository.findById(1)).thenReturn(Optional.of(series))
         // when
         val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
@@ -60,14 +60,5 @@ internal class CsvUploadServiceTest {
                 invalidSeriesId
             )
         }
-    }
-
-    @Test
-    fun `should throw exception for missing series file`() {
-        val invalidSeriesId: Long = Long.MAX_VALUE
-        val series = Mockito.mock(Series::class.java)
-        `when`(series.name).thenReturn("name")
-        `when`(seriesRepository.findById(invalidSeriesId)).thenReturn(Optional.of(series))
-        assertThrows(IOException::class.java) { uploadService.getSampleStringForSeriesExerciseFile(invalidSeriesId) }
     }
 }

@@ -72,10 +72,10 @@ class CsvUploadService(
     fun load(file: File) = load(file.inputStream())
 
     fun getSampleStringForSeriesExerciseFile(seriesId: Long): String {
-        val name = seriesRepository.findById(seriesId)
+        val type = seriesRepository.findById(seriesId)
             .orElseThrow { EntityNotFoundException("There no any series with id = $seriesId") }
-            .name
-        return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(name))
+            .type
+        return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(type))
     }
 
     private fun readFormatSampleLines(inputStream: InputStream): String {

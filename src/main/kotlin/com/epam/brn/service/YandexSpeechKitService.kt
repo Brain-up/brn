@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.enum.Locale
+import com.epam.brn.enums.Locale
 import com.epam.brn.exception.YandexServiceException
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils

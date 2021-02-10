@@ -1,6 +1,8 @@
 package com.epam.brn.integration
 
 import com.epam.brn.auth.AuthorityService
+import com.epam.brn.repo.AudiometryRepository
+import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
@@ -30,6 +32,7 @@ class CsvLoadingTestIT : BaseIT() {
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
+            audiometryRepository: AudiometryRepository,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
             uploadService: CsvUploadService,
@@ -38,6 +41,7 @@ class CsvLoadingTestIT : BaseIT() {
             resourceLoader,
             exerciseGroupRepository,
             userAccountRepository,
+            audiometryRepository,
             passwordEncoder,
             authorityService,
             uploadService,
@@ -69,8 +73,16 @@ class CsvLoadingTestIT : BaseIT() {
     @Autowired
     private lateinit var authorityRepository: AuthorityRepository
 
+    @Autowired
+    private lateinit var audiometryRepository: AudiometryRepository
+
+    @Autowired
+    private lateinit var audiometryTaskRepository: AudiometryTaskRepository
+
     @Test
     fun `should load test data from classpath initFiles folder`() {
+        audiometryRepository.findAll() shouldHaveSize 4
+        audiometryTaskRepository.findAll() shouldHaveSize 20
         exerciseGroupRepository.findAll() shouldHaveSize 4
         seriesRepository.findAll() shouldHaveSize 7
         subGroupRepository.findAll() shouldHaveSize 41
@@ -88,5 +100,7 @@ class CsvLoadingTestIT : BaseIT() {
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
+        audiometryTaskRepository.deleteAll()
+        audiometryRepository.deleteAll()
     }
 }

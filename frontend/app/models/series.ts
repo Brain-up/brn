@@ -40,3 +40,11 @@ export default class Series extends Model {
     }, {} as Record<string, Exercise[] | undefined>) as Record<string, Exercise[]>;
   }
 }
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your models.
+declare module 'ember-data/types/registries/model' {
+  export default interface ModelRegistry {
+    'series': Series;
+  }
+}

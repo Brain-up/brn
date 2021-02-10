@@ -8,6 +8,7 @@ enum class WordType {
     ADDITION_OBJECT_DESCRIPTION,
     COUNT,
     SENTENCE,
+    AUDIOMETRY_WORD,
     UNKNOWN;
 
     companion object {
