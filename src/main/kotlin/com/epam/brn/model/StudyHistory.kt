@@ -10,7 +10,6 @@ import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
 
@@ -21,12 +20,7 @@ import javax.persistence.UniqueConstraint
 )
 data class StudyHistory(
     @Id
-    @GeneratedValue(generator = "study_history_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-        name = "study_history_id_seq",
-        sequenceName = "study_history_id_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)

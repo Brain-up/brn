@@ -7,10 +7,6 @@ create table if not exists authority
         constraint uk_6ct98mcqw43jw46da6tbapvie
             unique
 );
-create sequence authority_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create table if not exists exercise_group
 (
@@ -22,10 +18,6 @@ create table if not exists exercise_group
         constraint uk_n4n5r4j77tp0j7w0ibumainjs
             unique
 );
-create sequence exercise_group_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create table if not exists progress
 (
@@ -51,10 +43,6 @@ create table if not exists resource
     constraint uk7rqvk7iml0lvslr33ujqrbneu
         unique (word, audio_file_url)
 );
-create sequence resource_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create index if not exists word_audio_file_idx
     on resource (word, audio_file_url);
@@ -75,10 +63,6 @@ create table if not exists series
         constraint fk2c08ai2hn3ol2by2ff3ldvoqq
             references exercise_group
 );
-create sequence series_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create table if not exists exercise
 (
@@ -99,10 +83,6 @@ create table if not exists exercise
     constraint uk1qbx6egnaof1jh2y0qtkoe8rj
         unique (name, level)
 );
-create sequence exercise_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create table if not exists signal
 (
@@ -117,10 +97,6 @@ create table if not exists signal
         constraint fkrue6p2si4x3op2j3psi4fc5sw
             references exercise
 );
-create sequence signal_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create table if not exists task
 (
@@ -136,10 +112,6 @@ create table if not exists task
         constraint fkar49eehe2lkif6att6hhepj75
             references exercise
 );
-create sequence task_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create table if not exists answer_parts_resources
 (

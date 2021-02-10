@@ -5,17 +5,11 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.SequenceGenerator
 
 @Entity
 data class Authority(
     @Id
-    @GeneratedValue(generator = "authority_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-        name = "authority_id_seq",
-        sequenceName = "authority_id_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     @Column(unique = true, nullable = false, name = "AUTHORITY_NAME")
     val authorityName: String

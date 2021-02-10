@@ -17,7 +17,7 @@ import javax.persistence.OneToOne
 @Entity
 data class UserAccount(
     @Id
-    @GeneratedValue(generator = "user_account_id_seq", strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
     var fullName: String,
