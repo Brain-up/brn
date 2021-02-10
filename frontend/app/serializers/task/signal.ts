@@ -1,13 +1,16 @@
 import BaseTaskSerializer from '../task';
+import Model from '@ember-data/model';
+import Exercise from 'brn/models/exercise';
 
 export default class TaskSignalSerializer extends BaseTaskSerializer {
-  payloadToTypeId(payload) {
+  payloadToTypeId(payload: { id: number }) {
     return { id: `signal-task-${payload.id}`, type: 'task/signal' }
   }
-  normalize(typeClass, hash, parent) {
+  // @ts-expect-error
+  normalize(_: Model, hash: any, parent: Exercise) {
     const { id, type } = this.payloadToTypeId(hash);
     const store = this.store;
-    const opts = parent.signals.map((el, i)=>{
+    const opts = parent.signals.map((el: { id: string }, i: number)=>{
       return {
         get word() {
           return `${i+1}: [${this.signal.duration}ms, ${this.signal.frequency}Mhz]`;
@@ -44,5 +47,14 @@ export default class TaskSignalSerializer extends BaseTaskSerializer {
         }
       }
     }
+  }
+}
+
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your serializers.
+declare module 'ember-data/types/registries/serializer' {
+  export default interface SerializerRegistry {
+    'task/signal': TaskSignalSerializer;
   }
 }

@@ -1,5 +1,6 @@
 import ApplicationSerializer from './application';
 import { getOwner } from '@ember/application';
+import Store from '@ember-data/store';
 export default class ExerciseSerializer extends ApplicationSerializer {
   ATTR_NAMES_MAP = Object.freeze({
     order: 'level',
@@ -8,7 +9,7 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     tasks: { serialize: 'ids-and-types', deserialize: 'records' },
     signals: { serialize: 'ids-and-types', deserialize: 'records' },
   };
-  modelNameFromPayloadKey(key) {
+  modelNameFromPayloadKey(key: string) {
     if (key === 'task/PHRASES') {
       return 'task/phrase';
     }
@@ -20,8 +21,8 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     }
     return super.modelNameFromPayloadKey(key);
   }
-  normalizeSignal(store, payloadItem) {
-    const included = [];
+  normalizeSignal(store: Store, payloadItem: any) {
+    const included: any[] = [];
     const signalSerializer = store.serializerFor('signal');
     const taskSignalSerializer = store.serializerFor('task/signal');
     payloadItem.signals = payloadItem.signals.map((el) => {
@@ -58,5 +59,13 @@ export default class ExerciseSerializer extends ApplicationSerializer {
       })
     });
     return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
+  }
+}
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your serializers.
+declare module 'ember-data/types/registries/serializer' {
+  export default interface SerializerRegistry {
+    'exercise': ExerciseSerializer;
   }
 }

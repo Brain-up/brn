@@ -55,3 +55,11 @@ export default class CompletionDependentModel extends Model {
     return this.allSiblings.slice(this.allSiblings.indexOf(this) + 1);
   }
 }
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your models.
+declare module 'ember-data/types/registries/model' {
+  export default interface ModelRegistry {
+    'completion-dependent': CompletionDependentModel;
+  }
+}
