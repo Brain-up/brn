@@ -1,11 +1,12 @@
 import Route from '@ember/routing/route';
+import Task from 'brn/models/task';
 
 export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
-  async model({ task_id }) {
+  async model({ task_id }: { task_id: string }) {
     const tasks = await this.modelFor('group.series.subgroup.exercise').tasks;
     return tasks.toArray().find(({ id }) => task_id === id);
   }
-  async afterModel(task, { to }) {
+  async afterModel(task: Task, { to }) {
     if (
       !task.canInteract ||
       (to.parent.params.exercise_id &&
