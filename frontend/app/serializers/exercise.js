@@ -15,6 +15,9 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     if (key === 'task/DURATION_SIGNALS') {
       return 'task/signal';
     }
+    if (key === 'task/FREQUENCY_SIGNALS') {
+      return 'task/signal';
+    }
     return super.modelNameFromPayloadKey(key);
   }
   normalizeSignal(store, payloadItem) {
