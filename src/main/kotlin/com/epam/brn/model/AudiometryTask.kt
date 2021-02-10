@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.AudiometryTaskDto
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -63,4 +64,16 @@ data class AudiometryTask(
         result = 31 * result + frequencyZone.hashCode()
         return result
     }
+
+    fun toDto() = AudiometryTaskDto(
+        id,
+        level,
+        audiometryGroup,
+        frequencyZone,
+        minFrequency,
+        maxFrequency,
+        count,
+        showSize,
+        answerOptions
+    )
 }

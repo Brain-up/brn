@@ -3,6 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.model.UserAccount
 
 interface UserAccountService {
     fun findUserByName(name: String): UserAccountDto
@@ -14,4 +15,6 @@ interface UserAccountService {
     fun getUsers(): List<UserAccountDto>
     fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto
     fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto
+
+    fun getCurrentUser(): UserAccount
 }

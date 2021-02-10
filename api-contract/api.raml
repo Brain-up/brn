@@ -6,6 +6,29 @@ baseTestUri: http://10.66.216.143:8081/api
 mediaType:
   - application/json
 
+# AUDIOMETRY
+/audiometrics
+    get:
+        queryParameters:
+            locale:
+                required: false
+                type: String
+                example: "ru-ru"
+                default: "ru-ru"
+        responses:
+            200:
+                body:
+                    example: !include samples/audiometrics.json
+
+/audiometryHistory
+    post:
+        body:
+            example: !include samples/audiometryHistoryRequest.json
+        responses:
+            200:
+                body:
+                    example: 25
+
 # AUDIO GENERATION ----------------------------
 /audio
   get:
