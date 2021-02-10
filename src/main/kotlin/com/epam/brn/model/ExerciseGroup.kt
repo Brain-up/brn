@@ -10,18 +10,12 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
-import javax.persistence.SequenceGenerator
 
 // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to group being a reserved word in db.
 @Entity
 data class ExerciseGroup(
     @Id
-    @GeneratedValue(generator = "exercise_group_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-        name = "exercise_group_id_seq",
-        sequenceName = "exercise_group_id_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
     val locale: String = Locale.RU.name,

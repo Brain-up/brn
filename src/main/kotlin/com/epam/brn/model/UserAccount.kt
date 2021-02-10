@@ -12,12 +12,11 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
-import javax.persistence.OneToOne
 
 @Entity
 data class UserAccount(
     @Id
-    @GeneratedValue(generator = "user_account_id_seq", strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     @Column(nullable = false)
     var fullName: String,
@@ -34,9 +33,6 @@ data class UserAccount(
     var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     var avatar: String? = null
 ) {
-    @OneToOne(cascade = [(CascadeType.ALL)])
-    @JoinColumn(name = "progress_id")
-    val progress: Progress? = null
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "user_authorities",
@@ -46,7 +42,7 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender,  progress=$progress)"
+        return "UserAccount(id=$id, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender)"
     }
 
     fun toDto(): UserAccountDto {
