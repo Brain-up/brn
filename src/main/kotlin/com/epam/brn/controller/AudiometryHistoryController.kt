@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/audiometryHistory")
+@RequestMapping("/audiometry-history")
 @Api(value = "/audiometryHistory", description = "Contains actions for audiometry history")
 class AudiometryHistoryController(val audiometryHistoryService: AudiometryHistoryService) {
 
     @PostMapping
-    @ApiOperation("Save audiometry history")
+    @ApiOperation("Save speech audiometry history")
     fun save(@Validated @RequestBody audiometryHistory: AudiometryHistoryRequest): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = audiometryHistoryService.save(audiometryHistory)))
 }

@@ -20,8 +20,9 @@ mediaType:
                 body:
                     example: !include samples/audiometrics.json
 
-/audiometryHistory
+/audiometry-history
     post:
+        description: Save speech audiometry history
         body:
             example: !include samples/audiometryHistoryRequest.json
         responses:
