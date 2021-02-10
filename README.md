@@ -127,7 +127,8 @@ end-point specification is here: https://github.com/Brain-up/brn/blob/master/api
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
-### Deploy Application (back-end part and front-end parts, but it is rather slow) USING DOCKER COMPOSE:
+### Deploy Application USING DOCKER COMPOSE:
+(back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
 1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
 2. From console, from project's folder, execute:
 ```bash
