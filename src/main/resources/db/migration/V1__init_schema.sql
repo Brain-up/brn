@@ -19,17 +19,6 @@ create table if not exists exercise_group
             unique
 );
 
-create table if not exists progress
-(
-    id                bigint not null
-        constraint progress_pkey
-            primary key,
-    progress          varchar(255) not null,
-    exercise_group_id bigint
-        constraint fkm2f9vxu8rxyuvq2qlvaps3d1o
-            references exercise_group
-);
-
 create table if not exists resource
 (
     id               bigint not null
@@ -150,10 +139,7 @@ create table if not exists user_account
             unique,
     first_name  varchar(255) not null,
     last_name   varchar(255),
-    password    varchar(255) not null,
-    progress_id bigint
-        constraint fkcr5eonbalqc6icwdje9ekcdhm
-            references progress
+    password    varchar(255) not null
 );
 
 create table if not exists study_history
@@ -178,10 +164,6 @@ create table if not exists study_history
     constraint ukblb87no1fhqw76655j1xfbjc8
         unique (user_id, exercise_id, start_time)
 );
-create sequence study_history_id_seq
-minvalue 1
-start with 1
-increment by 1;
 
 create index if not exists study_history_ix_user_exercise
     on study_history (user_id, exercise_id);
