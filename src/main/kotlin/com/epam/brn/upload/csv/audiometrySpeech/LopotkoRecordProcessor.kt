@@ -80,7 +80,7 @@ class LopotkoRecordProcessor(
         val audiometry = audiometryRepository.findByAudiometryTypeAndLocale(
             AudiometryType.valueOf(record.type).name,
             record.locale.locale
-        )
+        )!!
         return AudiometryTask(
             level = record.order,
             audiometryGroup = record.group,

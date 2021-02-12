@@ -17,7 +17,7 @@ data class AudiometryHistoryRequest(
     @NotNull
     var tasksCount: Short,
     @NotNull
-    var rightAnswers: Int // -- right answers --
+    var rightAnswers: Int
 ) {
     fun toEntity(userAccount: UserAccount, audiometryTask: AudiometryTask) = AudiometryHistory(
         userAccount = userAccount,
@@ -27,5 +27,6 @@ data class AudiometryHistoryRequest(
         executionSeconds = this.executionSeconds,
         tasksCount = this.tasksCount,
         rightAnswers = this.rightAnswers,
+        rightAnswersIndex = rightAnswers.toFloat().div(tasksCount)
     )
 }

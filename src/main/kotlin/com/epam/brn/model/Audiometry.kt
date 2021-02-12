@@ -1,5 +1,7 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.AudiometryDto
+import com.epam.brn.enums.AudiometryType
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -44,5 +46,15 @@ class Audiometry(
         return result
     }
 
-    override fun toString() = "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
+    override fun toString() =
+        "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
+
+    fun toDto() = AudiometryDto(
+        id,
+        locale,
+        name,
+        AudiometryType.valueOf(audiometryType),
+        description,
+        audiometryTasks.map { task -> task.toDto() }.groupBy { it.frequencyZone }
+    )
 }

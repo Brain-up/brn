@@ -95,10 +95,10 @@ class InitialDataLoader(
             listOfUsers.addAll(addDefaultUsers(userAuthority))
             userAccountRepository.saveAll(listOfUsers)
         }
-        if (isGroupsEmpty())
-            initExercisesFromFiles()
         if (isAudiometricsEmpty())
             addAudiometrics()
+        if (isGroupsEmpty())
+            initExercisesFromFiles()
         if (withAudioFilesGeneration)
             audioFilesGenerationService.generateAudioFiles()
     }
