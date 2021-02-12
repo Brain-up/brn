@@ -1,14 +1,15 @@
 import ApplicationSerializer from './application';
 import AnswerOption from 'brn/utils/answer-option';
+import Model from '@ember-data/model';
 
 export default class TaskSerializer extends ApplicationSerializer {
   ATTR_NAMES_MAP = Object.freeze({
     order: 'serialNumber',
     type: 'exerciseType',
   });
-  normalize(typeClass, hash) {
+  public normalize(typeClass: Model, hash: any) {
     if (hash.answerOptions) {
-      let opts = [];
+      let opts: any[] = [];
       if (!Array.isArray(hash.answerOptions)) {
         Object.keys(hash.answerOptions).forEach((key) => {
           if (Array.isArray(hash.answerOptions[key])) {
@@ -25,5 +26,13 @@ export default class TaskSerializer extends ApplicationSerializer {
       hash.normalizedAnswerOptions = [];
     }
     return super.normalize(typeClass, hash);
+  }
+}
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your serializers.
+declare module 'ember-data/types/registries/serializer' {
+  export default interface SerializerRegistry {
+    'task': TaskSerializer;
   }
 }

@@ -18,3 +18,11 @@ export default class Group extends CompletionDependent {
     return this.sortedChildren;
   }
 };
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your models.
+declare module 'ember-data/types/registries/model' {
+  export default interface ModelRegistry {
+    'group': Group;
+  }
+}
