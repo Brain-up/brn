@@ -1,0 +1,32 @@
+package com.epam.brn.controller
+
+import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.service.UserStatisticService
+import io.swagger.annotations.Api
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+
+/**
+ *@author Nikolai Lazarev
+ */
+@RestController
+@RequestMapping("/statistic")
+@Api(value = "/statistic", description = "User statistic details")
+class UserStatisticController(
+    @Autowired
+    val userStatisticService: UserStatisticService
+) {
+
+    @GetMapping("/month")
+    fun getUserMonthStatistic(
+        @RequestParam(name = "month", required = true) month: Int,
+        @RequestParam(name = "year", required = false) year: Int
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val monthUserStatistic = userStatisticService.getUserMonthStatistic(month, year)
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = monthUserStatistic))
+    }
+}
