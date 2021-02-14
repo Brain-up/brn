@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.service.UserStatisticService
 import io.swagger.annotations.Api
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,5 +28,14 @@ class UserStatisticController(
     ): ResponseEntity<BaseResponseDto> {
         val userStatistic = userStatisticService.getSubGroupStatistic(ids)
         return ResponseEntity.ok().body(BaseResponseDto(data = userStatistic))
+    }
+
+    @GetMapping("/month")
+    fun getUserMonthStatistic(
+        @RequestParam(name = "month", required = true) month: Int,
+        @RequestParam(name = "year", required = false) year: Int
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val monthUserStatistic = userStatisticService.getUserMonthStatistic(month, year)
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = monthUserStatistic))
     }
 }

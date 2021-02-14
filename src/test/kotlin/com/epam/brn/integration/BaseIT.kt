@@ -95,11 +95,18 @@ abstract class BaseIT {
         )
     }
 
-    fun insertDefaultExercise(subGroup: SubGroup): Exercise =
+    fun insertDefaultExerciseWithSubGroup(subGroup: SubGroup): Exercise =
         exerciseRepository.save(
             Exercise(
                 name = "Test exercise ${subGroup.id}",
                 subGroup = subGroup
+            )
+        )
+
+    fun insertDefaultExercise(): Exercise =
+        exerciseRepository.save(
+            Exercise(
+                name = "Test exercise"
             )
         )
 
