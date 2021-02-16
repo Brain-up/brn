@@ -114,13 +114,6 @@ a[disabled] {
   font-size: 30px;
 }
 
-.task-square-link {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
 .exercise-container {
   display: flex;
   flex-direction: column;
