@@ -84,22 +84,6 @@ a[disabled] {
   flex: 1;
 }
 
-.series-page--aside {
-  position: relative;
-  flex-basis: 25%;
-  margin-right: 20px;
-}
-
-.series-page--aside__icon {
-  position: absolute;
-  top: 0;
-  right: 10px;
-}
-
-.series-page--aside__icon svg {
-  font-size: 30px;
-}
-
 .exercise-container {
   display: flex;
   flex-direction: column;

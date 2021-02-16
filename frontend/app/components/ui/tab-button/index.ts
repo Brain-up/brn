@@ -2,7 +2,9 @@ import Component from '@glimmer/component';
 
 interface UiTabButtonComponentArguments {
     title?: string,
-    mode?: 'enabled' | 'disabled' | 'active'
+    mode?: 'enabled' | 'disabled' | 'active',
+    route?: string,
+    models?: ArrayLike<any>
 }
 
 export default class UiTabButtonComponent extends Component<UiTabButtonComponentArguments> {

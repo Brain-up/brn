@@ -19,12 +19,12 @@ module('Acceptance | active seria highlighting test', function(hooks) {
   test('visiting /groups/1/series/1 has highligted link for active seria', async function(assert) {
     await pageObject.goToSeriesPage();
 
-    assert.dom('[data-test-active-link="link-1"]').hasClass('active-group');
-    assert.dom('[data-test-active-link="link-2"]').hasNoClass('active-group');
+    assert.dom('[data-test-active-link="link-1"]').hasClass('active');
+    assert.dom('[data-test-active-link="link-2"]').hasNoClass('active');
 
     await click('[data-test-active-link="link-2"]');
 
-    assert.dom('[data-test-active-link="link-1"]').hasNoClass('active-group');
-    assert.dom('[data-test-active-link="link-2"]').hasClass('active-group');
+    assert.dom('[data-test-active-link="link-1"]').hasNoClass('active');
+    assert.dom('[data-test-active-link="link-2"]').hasClass('active');
   });
 });
