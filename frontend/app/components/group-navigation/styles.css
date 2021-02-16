@@ -1,53 +1,70 @@
 /*! purgecss start ignore */
 
-.active-group {
-  background-color: #fbedfe;
-}
-.not-active-group {
-  background-color: #daf0fc;
-}
-
-.group-item {
-  min-height: 230px;
-  width: 100%;
-  outline-color: #3F51B5;
-  outline-width: medium;
+& {
+  padding: 20px 0;
+  display: grid;
+  grid-gap: 20px 0;
+  grid-template-columns: 20px 1fr 20px;
+  align-items: stretch;
 }
 
-.group-name {
-  color: #001274;
+& > * {
+  grid-column: 2 / -2;
 }
 
-.group-image {
-  width: 210px;
-  height: 134px;
-  background-repeat: no-repeat;
+& > .full {
+  grid-column: 1 / -1;
 }
 
-.image-0 {
-  background-image: url(/ui/groups/card-one.svg);
-  background-position: center;
+.hs {
+  display: grid;
+  grid-template-columns: 10px;
+  grid-template-rows: minmax(80px, 1fr);
+  grid-auto-flow: column;
+  overflow-x: scroll;
+  scroll-snap-type: x proximity;
+  padding-bottom: calc(.75 * 20px);
+  margin-bottom: calc(-.25 * 20px);
+}
+
+.hs:before,
+.hs:after {
+  content: '';
+  width: 10px;
 }
 
 
-.image-1 {
-  background-image: url(/ui/groups/card-one.svg), url(/ui/groups/card-two.svg);
-  background-position: 30px center, 120px center;
+ul {
+  list-style: none;
+  padding: 0;
 }
 
-.image-2 {
-  background-image:  url(/ui/groups/card-one.svg), url(/ui/groups/card-two.svg),url(/ui/groups/card-three.svg) ;
-  background-position: 8px center, 75px center, 142px center;
+
+.hs > li,
+.item {
+  scroll-snap-align: center;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
 }
 
-.image-3 {
-  background-image:  url(/ui/groups/card-two.svg), url(/ui/groups/card-two.svg),url(/ui/groups/card-three.svg) ;
-  background-position: 8px center, 75px center, 142px center;
+
+.hs > li:first-child {
+  padding-left: 0;
 }
 
-.image-4 {
-  background-image:  url(/ui/groups/card-two.svg),url(/ui/groups/card-three.svg),url(/ui/groups/card-three.svg) ;
-  background-position: 8px center, 75px center, 142px center;
+.no-scrollbar {
+  scrollbar-width: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 
 /*! purgecss end ignore */
