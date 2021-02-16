@@ -1,5 +1,5 @@
 <div class={{style-namespace "series-navigation"}} ...attributes>
-  {{#each this.exerciseHeaders as |header level|}}
+  {{#each this.exerciseHeaders as |header|}}
     <div
       class="max-w-7xl sm:px-6 lg:px-8 mx-auto mb-10"
     >
@@ -25,7 +25,7 @@
                   <li>
                     <Ui::ExerciseButton
                       @exercise={{exercise}}
-                      @title={{exercise.id}}
+                      @title={{exercise.level}}
                       @isAvailable={{isAvailable}}
                       class="exercise-block__level flex mt-2 ml-2 mr-2"
                       data-test-series-navigation-list-link
