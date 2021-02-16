@@ -22,18 +22,18 @@
             >
               {{#each exercises as |exercise|}}
                 {{#let (contains exercise.id (or @available (array))) as |isAvailable|}}
-                <li>
-                  <Ui::ExerciseButton
-                    @exercise={{exercise}}
-                    @title={{exercise.id}}
-                    @isAvailable={{isAvailable}}
-                    class="exercise-block__level flex mt-2 ml-2 mr-2"
-                    data-test-series-navigation-list-link
-                    data-test-exercise-level={{exercise.level}}
-                    data-test-exercise-name={{exercise.name}}
-                  />
-                </li>
-                 {{/let}}
+                  <li>
+                    <Ui::ExerciseButton
+                      @exercise={{exercise}}
+                      @title={{exercise.id}}
+                      @isAvailable={{isAvailable}}
+                      class="exercise-block__level flex mt-2 ml-2 mr-2"
+                      data-test-series-navigation-list-link
+                      data-test-exercise-level={{exercise.level}}
+                      data-test-exercise-name={{exercise.name}}
+                    />
+                  </li>
+                {{/let}}
               {{/each}}
             </ul>
           {{/each}}
