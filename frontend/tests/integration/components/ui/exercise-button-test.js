@@ -10,17 +10,12 @@ module('Integration | Component | ui/exercise-button', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<Ui::ExerciseButton />`);
+    this.setProperties({
+      exercise: { isCompleted: true }
+    });
 
-    assert.equal(this.element.textContent.trim(), '');
+    await render(hbs`<Ui::ExerciseButton @exercise={{this.exercise}} />`);
 
-    // Template block usage:
-    await render(hbs`
-      <Ui::ExerciseButton>
-        template block text
-      </Ui::ExerciseButton>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('.completed').exists();
   });
 });
