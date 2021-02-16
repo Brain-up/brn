@@ -1,9 +1,5 @@
-<form class="background-form" {{on "submit" this.onSubmit}}>
-    <div class="flex justify-end h-full bg-white">
-      <div
-        class="lg:flex-none sm:pr-20 lg:py-24 flex flex-col items-end flex-1 w-2/4 pt-4 pl-20 pr-40 bg-blue-500"
-      >
-        <div class="relative z-10 w-full max-w-xs p-2 bg-white rounded-lg">
+<form {{on "submit" this.onSubmit}}>
+    <div class="relative z-10 w-full max-w-xs p-2 bg-white rounded-lg">
           <h2
             class="title-form mb-8 text-base font-semibold leading-tight text-center text-blue-900 uppercase"
           >
@@ -54,6 +50,4 @@
           </div>
           {{/if}}
         </div>
-      </div>
-    </div>
 </form>
