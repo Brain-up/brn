@@ -5,9 +5,16 @@
   </div>
 {{/unless}}
 {{#unless this.headerAndNavShown}}
-    <aside class="sticky top-0">
+  {{#if (is-active 'group.series.index')}}
+    <aside class="bg-gradient-to-b from-white sticky top-0 rounded-bl rounded-br">
       <GroupNavigation @group={{@model}} />
     </aside>
+  {{/if}}
+  {{#if (is-active 'group.series.subgroup.index')}}
+    <aside class="bg-gradient-to-b from-white rounded-bl rounded-br">
+      <SubgroupNavigation @group={{model-for-route "group.series"}} />
+    </aside>
+  {{/if}}
 {{/unless}}
 <div class="series-container flex">
   <div class="series-page--canvas flex flex-grow">

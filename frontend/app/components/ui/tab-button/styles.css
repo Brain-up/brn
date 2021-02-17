@@ -7,6 +7,7 @@
     background-clip: content-box, border-box;
     padding: 0 !important;
     min-width: 150px;
+    max-width: 260px;
   }
 
   &::before {

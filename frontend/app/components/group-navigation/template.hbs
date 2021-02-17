@@ -1,5 +1,5 @@
 <div ...attributes class={{style-namespace "group-navigation"}}>
-  <ul class="hs full no-scrollbar sticky">
+  <ul class="hs full no-scrollbar">
     {{#each (sort-by "id" @group.series) as |series|}}
       <li class="item">
         <Ui::TabButton data-test-active-link={{series.name}}
