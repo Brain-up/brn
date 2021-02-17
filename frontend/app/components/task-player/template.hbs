@@ -1,14 +1,8 @@
-{{#let (query-node "#exercise-timer-slot") as |node|}}
-  {{#if node}}
-    {{#in-element node}}
-      <Timer @hideControls={{this.justEnteredTask}} />
-    {{/in-element}}
-  {{/if}}
-{{/let}}
+<SlotTo @selector="#exercise-timer-slot">
+  <Timer @hideControls={{this.justEnteredTask}} />
+</SlotTo>
 <div
   class="{{style-namespace "task-player"}}
-
-
      flex flex-1"
   ...attributes
 >
@@ -29,10 +23,12 @@
 
   <Player>
     <:header as |context|>
-      <ProgressSausage
-        style={{html-safe (concat "visibility:" (if this.isProgressBarVisible 'visible' 'hidden') ";")}}
-        @progressItems={{context.tasks}}
-      />
+      <SlotTo @selector="#progress-slot">
+        <ProgressSausage
+            style={{html-safe (concat "visibility:" (if this.isProgressBarVisible 'visible' 'hidden') ";")}}
+            @progressItems={{context.tasks}}
+          />
+      </SlotTo>
     </:header>
 
     <:footer as |content|>

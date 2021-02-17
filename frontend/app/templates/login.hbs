@@ -1,2 +1,10 @@
 {{page-title (t 'login.title')}}
-<LoginForm />
+
+{{!-- template-lint-disable no-inline-styles --}}
+<section class="header relative flex items-center h-screen pt-2" style="max-height:860px">
+  <div class="container flex flex-wrap items-center mx-auto">
+    <div class="md:w-8/12 lg:w-6/12 xl:w-6/12 w-full px-4">
+      <LoginForm />
+    </div>
+  </div>
+</section>

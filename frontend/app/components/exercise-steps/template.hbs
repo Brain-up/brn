@@ -11,14 +11,14 @@
   >
     {{t "control_exercises.listen"}}
   </ExerciseSteps::Step>
-  <div class="chevron-container flex flex-1 flex-grow-0"><Ui::Chevron class="chevron" /></div>
+  <div class="chevron-container flex justify-center flex-1"><Ui::Chevron class="chevron" /></div>
   <ExerciseSteps::Step
     @mode={{this.modeForInteract}}
     {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
   >
     {{t "control_exercises.interact"}}
   </ExerciseSteps::Step>
-  <div class="chevron-container flex flex-1 flex-grow-0"><Ui::Chevron class="chevron" /></div>
+  <div class="chevron-container flex justify-center flex-1"><Ui::Chevron class="chevron" /></div>
   <ExerciseSteps::Step
     @mode={{this.modeForTask}}
     {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}

@@ -7,7 +7,7 @@ import java.lang.Boolean.TRUE
 
 class CustomUserDetails(userAccount: UserAccount) : UserDetails {
 
-    private val userName: String = userAccount.email
+    private val userName: String? = userAccount.email
     private val password: String? = userAccount.password
     private val active = userAccount.active
     private val authorities: List<GrantedAuthority>

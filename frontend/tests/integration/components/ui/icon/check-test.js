@@ -17,26 +17,28 @@ module('Integration | Component | ui/icon/check', function (hooks) {
     await render(hbs`<Ui::Icon::Check @isCompleted={{true}} />`);
     assert.dom('svg').exists({ count: 1 });
 
-    await render(hbs`<Ui::Icon::Check @isAvailable={{true}} />`);
+    await render(hbs`<Ui::Icon::Check @isActive={{true}} />`);
     assert.dom('svg').exists({ count: 1 });
 
     await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{true}} />`);
     assert.dom('svg').exists({ count: 1 });
-    await render(hbs`<Ui::Icon::Check @isCompleted={{true}} @isAvailable={{true}}/>`);
+    await render(hbs`<Ui::Icon::Check @isCompleted={{true}} @isActive={{true}}/>`);
     assert.dom('svg').exists({ count: 1 });
-    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isAvailable={{true}}/>`);
-    assert.dom('svg').exists({ count: 1 });
-
-    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{true}} @isAvailable={{true}}/>`);
-    assert.dom('svg').exists({ count: 1 });
-    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{false}} @isAvailable={{true}}/>`);
-    assert.dom('svg').exists({ count: 1 });
-    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{true}} @isAvailable={{false}}/>`);
-    assert.dom('svg').exists({ count: 1 });
-    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{false}} @isAvailable={{false}}/>`);
-    assert.dom('svg').exists({ count: 1 });
-    await render(hbs`<Ui::Icon::Check @isLocked={{false}} @isCompleted={{true}} @isAvailable={{false}}/>`);
+    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isActive={{true}}/>`);
     assert.dom('svg').exists({ count: 1 });
 
+    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{true}} @isActive={{true}}/>`);
+    assert.dom('svg').exists({ count: 1 });
+    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{false}} @isActive={{true}}/>`);
+    assert.dom('svg').exists({ count: 1 });
+    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{true}} @isActive={{false}}/>`);
+    assert.dom('svg').exists({ count: 1 });
+    await render(hbs`<Ui::Icon::Check @isLocked={{true}} @isCompleted={{false}} @isActive={{false}}/>`);
+    assert.dom('svg').exists({ count: 1 });
+    await render(hbs`<Ui::Icon::Check @isLocked={{false}} @isCompleted={{true}} @isActive={{false}}/>`);
+    assert.dom('svg').exists({ count: 1 });
+
+    await render(hbs`<Ui::Icon::Check @isDisabled={{true}} />`);
+    assert.dom('svg').exists({ count: 1 });
   });
 });

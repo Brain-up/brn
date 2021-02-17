@@ -1,22 +1,28 @@
 <ModalDialog
   @overlayClass="z-50 min-h-full w-full fixed bg-blue-400 flex"
-  @containerClass="w-full flex bg-white p-8 rounded-lg text-2xl"
+  @containerClass="w-full flex bg-white p-8 rounded-lg text-2xl justify-center"
 >
-  <div class="series-page--canvas flex flex flex-col flex-grow"
+  <div class="series-page--canvas flex flex flex-col flex-grow max-w-screen-xl"
     {{did-insert this.disableBodyScroll}}
     {{will-destroy this.enableBodyScroll}}
     {{did-insert this.startStatsTracking @model}}
     {{will-destroy this.stopStatsTracking @model}}
   >
-    {{#if (eq this.target.currentRouteName "group.series.subgroup.exercise.task")}}
-      <div class="flex items-center justify-between">
-        <div>
-          <LinkTo @route="group.series.subgroup">
-            <FaIcon @icon="chevron-left" />
-            {{t "navigation.come_back"}}
+        {{!-- template-lint-disable no-inline-styles --}}
+        <div class="fixed" style="top:25px;right:25px;">
+          <LinkTo @route="group.series.subgroup" title={{t "navigation.come_back"}}>
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23 23L9 9" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M23 9L9 23" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </LinkTo>
         </div>
-
+    {{#if (eq this.target.currentRouteName "group.series.subgroup.exercise.task")}}
+      <div class="flex items-center justify-between">
+        {{!-- template-lint-disable no-inline-styles --}}
+        <div style="width: 100px;"></div>
+        {{!-- template-lint-disable no-inline-styles --}}
+        <div style="min-width: 900px"  id="progress-slot"></div>
         <div id="exercise-timer-slot">
 
         </div>

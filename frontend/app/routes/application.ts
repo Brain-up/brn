@@ -24,7 +24,7 @@ export default class ApplicationRoute extends Route {
       return;
     }
     if (!this.session.isAuthenticated) {
-      this.replaceWith('login');
+      this.replaceWith('index');
     }
   }
 }

@@ -3,6 +3,7 @@ import fetch from 'fetch';
 import { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Store from '@ember-data/store';
+
 interface UserDTO {
   firstName: string;
   lastName: string;

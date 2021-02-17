@@ -46,20 +46,6 @@ main > * {
   background-color: #eeeeeee6;
 }
 
-.background-form:after  {
-  background-image: url(/ui/form-background.png);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  bottom: 0;
-  content: "";
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 0;
-}
-
 a {
   text-decoration: none;
 }
@@ -96,29 +82,6 @@ a[disabled] {
 
 .series-container {
   flex: 1;
-}
-
-.series-page--aside {
-  position: relative;
-  flex-basis: 25%;
-  margin-right: 20px;
-}
-
-.series-page--aside__icon {
-  position: absolute;
-  top: 0;
-  right: 10px;
-}
-
-.series-page--aside__icon svg {
-  font-size: 30px;
-}
-
-.task-square-link {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
 }
 
 .exercise-container {
