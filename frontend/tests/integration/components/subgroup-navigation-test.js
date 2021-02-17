@@ -10,17 +10,8 @@ module('Integration | Component | subgroup-navigation', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<SubgroupNavigation />`);
+    await render(hbs`<SubgroupNavigation @group={{array}} />`);
 
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <SubgroupNavigation>
-        template block text
-      </SubgroupNavigation>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('ul').exists();
   });
 });
