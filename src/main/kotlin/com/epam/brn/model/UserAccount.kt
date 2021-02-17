@@ -18,14 +18,13 @@ data class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    @Column(nullable = false)
-    var fullName: String,
+    val userId: String? = null,
     @Column(nullable = false, unique = true)
-    val email: String,
-    @Column(nullable = false)
-    val password: String,
-    var bornYear: Int,
-    var gender: String,
+    val email: String?,
+    var fullName: String?,
+    val password: String?,
+    var bornYear: Int?,
+    var gender: String?,
     var active: Boolean = true,
     @Column(nullable = false)
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
@@ -42,17 +41,18 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender)"
+        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender)"
     }
 
     fun toDto(): UserAccountDto {
         val userAccountDto = UserAccountDto(
-            id = this.id,
-            name = this.fullName,
-            active = this.active,
-            email = this.email,
-            bornYear = this.bornYear,
-            gender = Gender.valueOf(gender),
+            id = id,
+            userId = userId,
+            name = fullName,
+            active = active,
+            email = email,
+            bornYear = bornYear,
+            gender = gender?.let { Gender.valueOf(it) },
             created = created,
             changed = changed,
             avatar = avatar
