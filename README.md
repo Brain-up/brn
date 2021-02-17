@@ -173,4 +173,4 @@ Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
 ### License
-This project was started under MIT license. See the LICENSE [text](https://opensource.org/licenses/MIT).
+CC0 1.0 Universal https://joinup.ec.europa.eu/licence/cc0-10-universal-cc0-10-public-domain-dedication  
