@@ -34,10 +34,27 @@ services:
     container_name: brn_fe
     ports:
       - 80:80
+    volumes: #for permanent cert storage
+      - web-root-for-certbot:/usr/share/nginx/html/certcheck
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     depends_on:
       - brn
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root-for-certbot:/var/www/html
+    depends_on:
+      - brn_fe
+    command: certonly --webroot --webroot-path=/var/www/html --email brainupspbproject@gmail.com --agree-tos --no-eff-email --staging -d brainup.site  -d www.brainup.site
 secrets:
   aws-key:
     file: aws-key.properties
 volumes:
   dbdata:
+  web-root-for-certbot: #voluems for certbot
+  certbot-etc: #voluems for certbot
+  certbot-var: #voluems for certbot
