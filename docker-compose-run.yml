@@ -49,12 +49,12 @@ services:
       - web-root-for-certbot:/var/www/html
     depends_on:
       - brn_fe
-    command: certonly --webroot --webroot-path=/var/www/html --email brainupspbproject@gmail.com --agree-tos --no-eff-email --staging -d brainup.site  -d www.brainup.site
+    command: certonly --webroot --webroot-path=/var/www/html --email brainupspbproject@gmail.com --agree-tos --no-eff-email --staging -d brainup.site  -d www.brainup.site -d audibly.ru
 secrets:
   aws-key:
     file: aws-key.properties
 volumes:
   dbdata:
-  web-root-for-certbot: #voluems for certbot
-  certbot-etc: #voluems for certbot
-  certbot-var: #voluems for certbot
+  web-root-for-certbot: #volumes for certbot
+  certbot-etc: #volumes for certbot
+  certbot-var: #volumes for certbot
