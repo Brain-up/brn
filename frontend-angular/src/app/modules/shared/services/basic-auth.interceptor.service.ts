@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppStateModel } from 'src/app/models/app-state.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BasicAuthInterceptor implements HttpInterceptor {
-  constructor(private store: Store<AppStateModel>) {
-  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let headers;

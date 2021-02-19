@@ -5,14 +5,11 @@
     <form [formGroup]="loginForm" class="login__form" (ngSubmit)="onLogin()">
       <div class="form-group">
         <label for="username">User Name(Email)</label>
-        <input class="form-control" formControlName="username">
+        <input class="form-control" formControlName="username" id="username">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input class="form-control" type="password" formControlName="password">
-      </div>
-      <div class="form-group">
-        <input disabled="true" hidden class="form-control" type="string" value="Password">
+        <input class="form-control" type="password" formControlName="password" id="password">
       </div>
       <button class="login__submit-btn" [disabled]="loginForm.invalid || (loginError | async)" type="submit">Login
       </button>
