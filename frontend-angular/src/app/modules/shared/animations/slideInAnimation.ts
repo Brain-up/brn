@@ -1,4 +1,5 @@
-import {animate, group, query, style, transition, trigger} from '@angular/animations';
+import { animate, group, query, style, transition, trigger } from '@angular/animations';
+
 const transitionBody = [
   query(':enter, :leave',
     style({position: 'fixed', width: '100%'}),
@@ -16,6 +17,7 @@ const transitionBody = [
     ], {optional: true}),
   ])
 ];
+
 export const slideInAnimation =
   trigger('routeAnimations', [
     transition('LoadAll <=> *', transitionBody),

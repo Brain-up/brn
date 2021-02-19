@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
-import { Observable} from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+
 import { FolderService } from '../../services/folders/folder.service';
 import { UploadService } from '../../services/upload/upload.service';
-import { Router } from '@angular/router';
 import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
-import { Store } from '@ngrx/store';
-import { AppStateModel } from 'src/app/models/app-state.model';
 import { fetchFoldersRequest } from '../../ngrx/actions';
 import { selectFolders } from '../../ngrx/reducers';
 import { AdminStateModel } from '../../model/admin-state.model';
@@ -21,6 +22,7 @@ import { AdminStateModel } from '../../model/admin-state.model';
 export class LoadFileComponent implements OnInit {
   folders$: Observable<Array<string>>;
   uploadFileForm: FormGroup;
+
   constructor(
     private snackBarService: SnackBarService,
     private folderService: FolderService,
@@ -38,6 +40,7 @@ export class LoadFileComponent implements OnInit {
       folder: new FormControl(),
     });
   }
+
   loadFiles() {
     const fileName = this.uploadFileForm.value.files.name;
     this.uploadService.getUploadData(this.uploadFileForm.value.folder, fileName).pipe(

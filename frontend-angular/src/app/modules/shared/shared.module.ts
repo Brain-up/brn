@@ -1,6 +1,5 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import { EffectsModule } from '@ngrx/effects';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { SnackBarService } from './services/snack-bar/snack-bar.service';

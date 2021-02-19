@@ -1,4 +1,4 @@
 export interface AuthStateModel {
-    isAuthenticated: boolean;
-    loginError?: string;
+  isAuthenticated: boolean;
+  loginError?: string;
 }

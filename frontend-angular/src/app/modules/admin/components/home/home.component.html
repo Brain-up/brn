@@ -10,8 +10,7 @@
     </ul>
   </nav>
   <section>
-    <div [@routeAnimations]="o && o.activatedRouteData
-      && o.activatedRouteData['animation']">
+    <div [@routeAnimations]="o && o.activatedRouteData && o.activatedRouteData['animation']">
       <router-outlet #o="outlet"></router-outlet>
     </div>
   </section>

@@ -1,7 +1,7 @@
 export interface SeriesModel {
-    group: number;
-    id: number;
-    name: string;
-    description: string;
-    excercises: Array<number>;
+  group: number;
+  id: number;
+  name: string;
+  description: string;
+  excercises: Array<number>;
 }
