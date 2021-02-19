@@ -8,11 +8,12 @@ import { untilDestroyed } from 'ngx-take-until-destroy';
 import { iif, Observable, of, EMPTY } from 'rxjs';
 import { switchMap, tap, pluck } from 'rxjs/operators';
 
-import { Group, Series } from '../../model/model';
+import { Series } from '../../model/series';
+import { Group } from '../../model/group';
 import { SeriesModel } from '../../model/series.model';
 import { UploadService } from '../../services/upload/upload.service';
 import { FormatService } from '../../services/format/format.service';
-import { LoadTasksReturnData } from '../../model/load-tasks-return-data.model';
+import { LoadTasksReturnData } from '../../model/load-tasks-return-data';
 import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
 import { AdminService } from '../../services/admin/admin.service';
 import { AdminStateModel } from '../../model/admin-state.model';

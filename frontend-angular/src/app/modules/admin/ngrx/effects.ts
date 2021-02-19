@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import * as fromActions from './actions';
 import { AppModule } from 'src/app/app.module';
 import { selectFolders, selectGroups } from './reducers';
-import { FolderService } from '../services/folders/folder.service';
+import { FoldersService } from '../services/folders/folders.service';
 import { AdminService } from '../services/admin/admin.service';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AdminEffects {
   constructor(
     private actions$: Actions,
     private store: Store<AppModule>,
-    private foldersService: FolderService,
+    private foldersService: FoldersService,
     private adminService: AdminService
   ) {
   }

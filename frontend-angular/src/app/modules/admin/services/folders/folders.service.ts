@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 
 @Injectable()
-export class FolderService {
+export class FoldersService {
   constructor(private httpClient: HttpClient) {
   }
 

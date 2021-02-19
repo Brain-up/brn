@@ -3,5 +3,5 @@ export interface SeriesModel {
   id: number;
   name: string;
   description: string;
-  excercises: Array<number>;
+  excercises: Array<number>; // TODO: check if there is a typo here: 'excercises' => 'exercises'
 }

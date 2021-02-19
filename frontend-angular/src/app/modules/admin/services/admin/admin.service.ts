@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Group, Series } from '../../model/model';
+import { Series } from '../../model/series';
+import { Group } from '../../model/group';
 
 @Injectable({
   providedIn: 'root'

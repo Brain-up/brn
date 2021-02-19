@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GetUploadModel } from '../../model/GetUploadModel';
+import { GetUploadModel } from '../../model/get-upload.model';
 
 @Injectable()
 export class UploadService {

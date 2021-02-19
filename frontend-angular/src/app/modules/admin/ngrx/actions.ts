@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Group } from '../model/model';
+import { Group } from '../model/group';
 
 export const fetchFoldersRequest = createAction(
   '[LoadFileComponent] fetchFoldersRequest'

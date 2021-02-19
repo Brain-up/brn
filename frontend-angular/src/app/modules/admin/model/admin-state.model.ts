@@ -1,4 +1,4 @@
-import { Group } from './model';
+import { Group } from './group';
 
 export interface AdminStateModel {
   folders?: Array<string>;

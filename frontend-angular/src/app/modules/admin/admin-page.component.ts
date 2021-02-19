@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { LOAD_FILE_PATH, LOAD_TASKS_FILE } from '../shared/app-path';
 import { AppStateModel } from 'src/app/models/app-state.model';
 import { destroySessionRequestAction } from '../auth/ngrx/actions';
-import { slideInAnimation } from '../shared/animations/slideInAnimation';
+import { slideInAnimation } from '../shared/animations/slide-in-animation';
 
 @Component({
   selector: 'app-admin-page',

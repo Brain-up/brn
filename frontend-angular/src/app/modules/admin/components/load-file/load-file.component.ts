@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { FolderService } from '../../services/folders/folder.service';
+import { FoldersService } from '../../services/folders/folders.service';
 import { UploadService } from '../../services/upload/upload.service';
 import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
 import { fetchFoldersRequest } from '../../ngrx/actions';
@@ -25,7 +25,7 @@ export class LoadFileComponent implements OnInit {
 
   constructor(
     private snackBarService: SnackBarService,
-    private folderService: FolderService,
+    private folderService: FoldersService,
     private uploadService: UploadService,
     private router: Router,
     private store: Store<AdminStateModel>

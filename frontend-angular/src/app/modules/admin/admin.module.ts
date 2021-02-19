@@ -21,7 +21,7 @@ import { LoadFileComponent } from './components/load-file/load-file.component';
 import { LoadTasksComponent } from './components/load-tasks/load-tasks.component';
 import { SharedModule } from '../shared/shared.module';
 import { HomeComponent } from './components/home/home.component';
-import { FolderService } from './services/folders/folder.service';
+import { FoldersService } from './services/folders/folders.service';
 import { UploadService } from './services/upload/upload.service';
 import { FormatService } from './services/format/format.service';
 import { AdminGuardService } from './services/admin-guard/admin-guard.service';
@@ -55,7 +55,7 @@ import { AdminEffects } from './ngrx/effects';
     EffectsModule.forFeature([AdminEffects])
   ],
   providers: [
-    FolderService,
+    FoldersService,
     FormatService,
     UploadService,
     AdminGuardService
