@@ -6,8 +6,33 @@ baseTestUri: http://10.66.216.143:8081/api
 mediaType:
   - application/json
 
+# STATISTICS ----------------------------------
+/statistics:
+  /subgroups:
+    get:
+      queryParameters:
+        ids:
+          required: true
+          type: List<Long>
+          example: 1,2
+      response:
+        200:
+          body:
+            example: {
+              {
+                subGroupId: 1,
+                completedExercises: 0
+                totalExercises: 28
+              },
+              {
+                subGroupId: 2,
+                completedExercises: 0
+                totalExercises: 56
+              }
+            }
+
 # AUDIO GENERATION ----------------------------
-/audio
+/audio:
   get:
     queryParameters:
         text:
