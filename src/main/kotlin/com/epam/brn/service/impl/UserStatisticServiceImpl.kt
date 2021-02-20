@@ -21,9 +21,9 @@ class UserStatisticServiceImpl(
         val userAccount = userAccountService.getUserFromTheCurrentSession()
         return subGroupsIds.map {
             SubGroupStatisticDto(
-                it,
-                exerciseRepository.findExercisesBySubGroupId(it).size,
-                studyHistoryRepository.getDoneExercises(it, userAccount.id!!).size
+                subGroupId = it,
+                totalExercises = exerciseRepository.findExercisesBySubGroupId(it).size,
+                completedExercises = studyHistoryRepository.getDoneExercises(it, userAccount.id!!).size
             )
         }.toList()
     }
