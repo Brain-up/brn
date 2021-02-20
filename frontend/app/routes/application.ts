@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import Ember from 'ember';
 import Session from 'ember-simple-auth/services/session';
 import IntlService from 'ember-intl/services/intl';
+import type Transition from '@ember/routing/-private/transition';
 
 export default class ApplicationRoute extends Route {
   @service('session') session!: Session;
@@ -14,7 +15,7 @@ export default class ApplicationRoute extends Route {
     this.intl.setLocale([locale]);
   }
 
-  redirect(_: unknown, { to } : { to: { name: string }}) {
+  redirect(_: unknown, { to } : Transition) {
     if (Ember.testing) {
       // skip testing bahavour for now
       return;
@@ -23,7 +24,7 @@ export default class ApplicationRoute extends Route {
       return;
     }
     if (!this.session.isAuthenticated) {
-      this.replaceWith('login');
+      this.replaceWith('index');
     }
   }
 }

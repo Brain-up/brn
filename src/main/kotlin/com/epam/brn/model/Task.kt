@@ -14,17 +14,11 @@ import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
-import javax.persistence.SequenceGenerator
 
 @Entity
 data class Task(
     @Id
-    @GeneratedValue(generator = "task_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-        name = "task_id_seq",
-        sequenceName = "task_id_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     val name: String? = "",
     var serialNumber: Int? = 0,

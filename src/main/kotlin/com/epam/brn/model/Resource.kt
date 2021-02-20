@@ -9,7 +9,6 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.ManyToMany
-import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
 
@@ -23,12 +22,7 @@ import javax.persistence.UniqueConstraint
 )
 data class Resource(
     @Id
-    @GeneratedValue(generator = "resource_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-        name = "resource_id_seq",
-        sequenceName = "resource_id_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     @Column(nullable = false)
     var audioFileUrl: String? = "",

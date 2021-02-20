@@ -8,17 +8,11 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.SequenceGenerator
 
 @Entity
 data class Signal(
     @Id
-    @GeneratedValue(generator = "signal_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-        name = "signal_id_seq",
-        sequenceName = "signal_id_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     val name: String? = "",
     val url: String? = "",

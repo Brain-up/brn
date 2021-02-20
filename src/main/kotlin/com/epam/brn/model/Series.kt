@@ -12,17 +12,11 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
-import javax.persistence.SequenceGenerator
 
 @Entity
 data class Series(
     @Id
-    @GeneratedValue(generator = "series_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-        name = "series_id_seq",
-        sequenceName = "series_id_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     var type: String,
     @Column(nullable = false, unique = true)

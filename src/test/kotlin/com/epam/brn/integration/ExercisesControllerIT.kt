@@ -1,11 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -13,6 +8,12 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -107,27 +108,28 @@ class ExercisesControllerIT : BaseIT() {
     }
 
     @Test
-    fun `test get exercises by name`() {
+    fun `test get exercises by ids`() {
         // GIVEN
         insertUser()
         val exerciseName = "ExerciseNameTest"
         val existingSeries = insertSeries()
         val subGroup = insertSubGroup(existingSeries)
-        insertExercise(exerciseName, subGroup)
+        val exercise = insertExercise(exerciseName, subGroup)
+        val requestJson: String = objectMapper.writeValueAsString(ExerciseRequest(listOf(exercise.id!!)))
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("$baseUrl/byName")
-                .param("name", exerciseName)
+                .post("$baseUrl/byIds")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
         )
         // THEN
         resultAction
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
-        val jsonDataObject = jsonResponse.getJSONArray("data").get(0) as JSONObject
-        Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
+        val jsonDataObject = jsonResponse.getJSONArray("data").getLong(0)
+        Assertions.assertTrue(jsonDataObject == exercise.id!!)
     }
 
     private fun insertStudyHistory(

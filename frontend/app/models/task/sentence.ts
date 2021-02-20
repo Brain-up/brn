@@ -16,3 +16,11 @@ export default class TaskSentenceModel extends BaseTask {
   @attr('string') template!: string;
   @attr('array') answerParts!: unknown[];
 }
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your models.
+declare module 'ember-data/types/registries/model' {
+  export default interface ModelRegistry {
+    'task/sentence': TaskSentenceModel;
+  }
+}

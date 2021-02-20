@@ -12,21 +12,19 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
-import javax.persistence.OneToOne
 
 @Entity
 data class UserAccount(
     @Id
-    @GeneratedValue(generator = "user_account_id_seq", strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    @Column(nullable = false)
-    var fullName: String,
+    val userId: String? = null,
     @Column(nullable = false, unique = true)
-    val email: String,
-    @Column(nullable = false)
-    val password: String,
-    var bornYear: Int,
-    var gender: String,
+    val email: String?,
+    var fullName: String?,
+    val password: String?,
+    var bornYear: Int?,
+    var gender: String?,
     var active: Boolean = true,
     @Column(nullable = false)
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
@@ -34,9 +32,6 @@ data class UserAccount(
     var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     var avatar: String? = null
 ) {
-    @OneToOne(cascade = [(CascadeType.ALL)])
-    @JoinColumn(name = "progress_id")
-    val progress: Progress? = null
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "user_authorities",
@@ -46,17 +41,18 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender,  progress=$progress)"
+        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender)"
     }
 
     fun toDto(): UserAccountDto {
         val userAccountDto = UserAccountDto(
-            id = this.id,
-            name = this.fullName,
-            active = this.active,
-            email = this.email,
-            bornYear = this.bornYear,
-            gender = Gender.valueOf(gender),
+            id = id,
+            userId = userId,
+            name = fullName,
+            active = active,
+            email = email,
+            bornYear = bornYear,
+            gender = gender?.let { Gender.valueOf(it) },
             created = created,
             changed = changed,
             avatar = avatar

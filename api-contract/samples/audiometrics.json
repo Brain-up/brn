@@ -1,0 +1,2081 @@
+{
+  "data": [
+    {
+      "id": 3,
+      "locale": "ru-ru",
+      "name": "Матриксная диагностика",
+      "audiometryType": "MATRIX",
+      "description": "Матриксная диагностика",
+      "audiometryTasks": {}
+    },
+    {
+      "id": 2,
+      "locale": "ru-ru",
+      "name": "Речевая диагностика",
+      "audiometryType": "SPEECH",
+      "description": "Речевая диагностика методом Лопотко",
+      "audiometryTasks": {
+        "LOW": [
+          {
+            "id": 1,
+            "level": 1,
+            "audiometryGroup": "A",
+            "frequencyZone": "LOW",
+            "minFrequency": 150,
+            "maxFrequency": 400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 60,
+                "audioFileUrl": "/audio/filipp/5b5717f7ebbbedb92820794b9544fc34.ogg",
+                "word": "ум",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 53,
+                "audioFileUrl": "/audio/filipp/50c6661f3b5867e147ad48189a77885f.ogg",
+                "word": "губка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 57,
+                "audioFileUrl": "/audio/filipp/bae3db5fa1796f3b41ecf99fdd25ebc4.ogg",
+                "word": "убор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 58,
+                "audioFileUrl": "/audio/filipp/a1d4c82cb6172890717418c07cba76cf.ogg",
+                "word": "пол",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 54,
+                "audioFileUrl": "/audio/filipp/ea11db22ce7c9986cf68b03a7094cf62.ogg",
+                "word": "пурпурный",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 52,
+                "audioFileUrl": "/audio/filipp/eae2bd2885e108ed775f2badec81cf91.ogg",
+                "word": "пух",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 61,
+                "audioFileUrl": "/audio/filipp/5efeade810a80d1cef26b9b548a79c20.ogg",
+                "word": "облом",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 56,
+                "audioFileUrl": "/audio/filipp/d43082a26a74bb599c8991caecb571e7.ogg",
+                "word": "обувь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 55,
+                "audioFileUrl": "/audio/filipp/8d6eb827cc4bf3820283c72e041e3efe.ogg",
+                "word": "крупа",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 59,
+                "audioFileUrl": "/audio/filipp/faa080cee44b856140a78c41c4e65219.ogg",
+                "word": "укор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "level": 2,
+            "audiometryGroup": "Б",
+            "frequencyZone": "LOW",
+            "minFrequency": 150,
+            "maxFrequency": 400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 62,
+                "audioFileUrl": "/audio/filipp/e4e8a7fa9e9c86ed481d1df2e7d9dd27.ogg",
+                "word": "обрубка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 66,
+                "audioFileUrl": "/audio/filipp/c0fb817227db7db073549a2b8a4660d1.ogg",
+                "word": "муха",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 68,
+                "audioFileUrl": "/audio/filipp/19c2885d8267ffafbc8fdddc5c364c50.ogg",
+                "word": "группа",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 65,
+                "audioFileUrl": "/audio/filipp/21246c1a01f8c5a0690a2c631e82eab4.ogg",
+                "word": "лубок",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 67,
+                "audioFileUrl": "/audio/filipp/c7c57d8650d4951948cef1bc03fac463.ogg",
+                "word": "пупок",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 69,
+                "audioFileUrl": "/audio/filipp/c4fba48bc2c55e8507186fc699ee6672.ogg",
+                "word": "бугор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 64,
+                "audioFileUrl": "/audio/filipp/e1de5e5c61e5b4d7730ca9e8a2d32125.ogg",
+                "word": "кум",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 63,
+                "audioFileUrl": "/audio/filipp/9ed71a5ba10f0276139618bd62db9423.ogg",
+                "word": "пурга",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 71,
+                "audioFileUrl": "/audio/filipp/ea015a905902e79465d35a593948eede.ogg",
+                "word": "луг",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 70,
+                "audioFileUrl": "/audio/filipp/104ac382945e018cb0ddaccd0cfa3620.ogg",
+                "word": "урок",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "level": 3,
+            "audiometryGroup": "В",
+            "frequencyZone": "LOW",
+            "minFrequency": 150,
+            "maxFrequency": 400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 79,
+                "audioFileUrl": "/audio/filipp/cfc78ecfad0003510bd81840b54e0639.ogg",
+                "word": "бумага",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 80,
+                "audioFileUrl": "/audio/filipp/48f7986f2311e7215da8d020f723336a.ogg",
+                "word": "булка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 78,
+                "audioFileUrl": "/audio/filipp/cb0404d5ae09a9db295882d7b2602873.ogg",
+                "word": "губа",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 81,
+                "audioFileUrl": "/audio/filipp/f56a5d249ce0aad1c610c987e263332d.ogg",
+                "word": "поп",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 72,
+                "audioFileUrl": "/audio/filipp/394f99796ce3387a11714786e056da0b.ogg",
+                "word": "упор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 76,
+                "audioFileUrl": "/audio/filipp/7f8dea0cbae46f4c37b7732187ad815d.ogg",
+                "word": "бомба",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 74,
+                "audioFileUrl": "/audio/filipp/556e4119758b352cf6bc820cf26c21ad.ogg",
+                "word": "бунт",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 73,
+                "audioFileUrl": "/audio/filipp/e5b37cf91cf482be4ec945125d63a2bb.ogg",
+                "word": "клуб",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 75,
+                "audioFileUrl": "/audio/filipp/be6031927fe47cfc4587edf1a75d6cf6.ogg",
+                "word": "угол",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 77,
+                "audioFileUrl": "/audio/filipp/e3e54dc343c3774bc8cbe84761ca72f8.ogg",
+                "word": "футбол",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "level": 4,
+            "audiometryGroup": "Г",
+            "frequencyZone": "LOW",
+            "minFrequency": 150,
+            "maxFrequency": 400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 84,
+                "audioFileUrl": "/audio/filipp/3458632fa9b5d3c0cdb14e2e0497bf0d.ogg",
+                "word": "луна",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 87,
+                "audioFileUrl": "/audio/filipp/7facce5726465c02c8cc0142f4aab11d.ogg",
+                "word": "укол",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 89,
+                "audioFileUrl": "/audio/filipp/e508ee478cc2565761d897bfa58a7d0a.ogg",
+                "word": "пурпур",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 88,
+                "audioFileUrl": "/audio/filipp/a07fed35092f3db847691769c58e0a8b.ogg",
+                "word": "плуг",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 83,
+                "audioFileUrl": "/audio/filipp/a0294e8f089aed10d9f261c393993063.ogg",
+                "word": "кругом",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 72,
+                "audioFileUrl": "/audio/filipp/394f99796ce3387a11714786e056da0b.ogg",
+                "word": "упор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 85,
+                "audioFileUrl": "/audio/filipp/5dbc71ebf3ea00ce52c51d9d2db507e0.ogg",
+                "word": "мука",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 86,
+                "audioFileUrl": "/audio/filipp/3327d971402546e0255558d7712f9dac.ogg",
+                "word": "буква",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 90,
+                "audioFileUrl": "/audio/filipp/7a3ce4c3d16e78d5e4ecd0f0cc458c7a.ogg",
+                "word": "голубок",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 82,
+                "audioFileUrl": "/audio/filipp/aa2b7d4fb92ae09ddbe60a985e159252.ogg",
+                "word": "лоб",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          }
+        ],
+        "MEDIUM_LOW": [
+          {
+            "id": 5,
+            "level": 5,
+            "audiometryGroup": "A",
+            "frequencyZone": "MEDIUM_LOW",
+            "minFrequency": 300,
+            "maxFrequency": 1200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 94,
+                "audioFileUrl": "/audio/filipp/2a5142f71b2fae9494a1de8cf8c2e657.ogg",
+                "word": "грохот",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 98,
+                "audioFileUrl": "/audio/filipp/8d303840c5dc48ff56bf2ade06dd9cd5.ogg",
+                "word": "колка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 92,
+                "audioFileUrl": "/audio/filipp/c00bdc91e6adcadd67d322a362e6a7d3.ogg",
+                "word": "хор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 96,
+                "audioFileUrl": "/audio/filipp/5cc84daff95dce8f64a198200fda200a.ogg",
+                "word": "горло",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 97,
+                "audioFileUrl": "/audio/filipp/7bb9395114ad9e0e5bacf6b97bb89cbd.ogg",
+                "word": "вор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 91,
+                "audioFileUrl": "/audio/filipp/279fda04fb949cfc4ed7b79aae63778b.ogg",
+                "word": "облако",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 95,
+                "audioFileUrl": "/audio/filipp/8017178fcdd41b3b9ca7a9ffa2390639.ogg",
+                "word": "колокол",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 99,
+                "audioFileUrl": "/audio/filipp/6b5a39b982353d72269232a45eb75e7f.ogg",
+                "word": "колода",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 93,
+                "audioFileUrl": "/audio/filipp/e42264daa15af87248863e72cfb15872.ogg",
+                "word": "волк",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 100,
+                "audioFileUrl": "/audio/filipp/e938e6d2a4de5dc4ec240b614a3d073c.ogg",
+                "word": "галка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "level": 6,
+            "audiometryGroup": "Б",
+            "frequencyZone": "MEDIUM_LOW",
+            "minFrequency": 300,
+            "maxFrequency": 1200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 101,
+                "audioFileUrl": "/audio/filipp/65da07d5a08e018523501b4dbc3b0986.ogg",
+                "word": "хохот",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 102,
+                "audioFileUrl": "/audio/filipp/4a61f7bb50c173ed273c39a64cee8606.ogg",
+                "word": "слово",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 106,
+                "audioFileUrl": "/audio/filipp/bf8a7fef27836fbbc2350e114687d344.ogg",
+                "word": "хлопок",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 105,
+                "audioFileUrl": "/audio/filipp/77402d594349b710c53d9d298d225d33.ogg",
+                "word": "комок",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 104,
+                "audioFileUrl": "/audio/filipp/e7eeb3d99891098fcf35d0f2c007286f.ogg",
+                "word": "глагол",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 110,
+                "audioFileUrl": "/audio/filipp/3854bf0b0eb1761025a87e25496dbc70.ogg",
+                "word": "вход",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 103,
+                "audioFileUrl": "/audio/filipp/aa201863b99786fb7d0bb60e85a48300.ogg",
+                "word": "фронт",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 109,
+                "audioFileUrl": "/audio/filipp/1c480a8f5e4896ecfd455be998fa7079.ogg",
+                "word": "корова",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 107,
+                "audioFileUrl": "/audio/filipp/6516fcc1d431305ecf2cb59ef4aac272.ogg",
+                "word": "гонка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 108,
+                "audioFileUrl": "/audio/filipp/fa39d32b4f75ae562e58038122d8a56a.ogg",
+                "word": "лодка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 7,
+            "level": 7,
+            "audiometryGroup": "В",
+            "frequencyZone": "MEDIUM_LOW",
+            "minFrequency": 300,
+            "maxFrequency": 1200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 120,
+                "audioFileUrl": "/audio/filipp/6bff5000bcdd54905b5d5619b6b50f88.ogg",
+                "word": "холодно",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 112,
+                "audioFileUrl": "/audio/filipp/9323b46bd1a31f0105d8ecaf9b5c5124.ogg",
+                "word": "около",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 111,
+                "audioFileUrl": "/audio/filipp/9fe6209aee770285068e6460aa381149.ogg",
+                "word": "рог",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 113,
+                "audioFileUrl": "/audio/filipp/4b07aa9bf1ca20a51d0e48f0a074ea85.ogg",
+                "word": "горох",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 114,
+                "audioFileUrl": "/audio/filipp/fe83866f4a6449c5dbd217b9b27b00bd.ogg",
+                "word": "молоко",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 117,
+                "audioFileUrl": "/audio/filipp/9ff6294ed7858be82247c8589fc33aad.ogg",
+                "word": "голод",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 118,
+                "audioFileUrl": "/audio/filipp/68679daff3a173afde91996d2bd28b6b.ogg",
+                "word": "флот",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 115,
+                "audioFileUrl": "/audio/filipp/ade2f374ec5f417d1d47cb86490566a9.ogg",
+                "word": "глоток",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 116,
+                "audioFileUrl": "/audio/filipp/236a80bfdd0a66a1b4d6af0175533e91.ogg",
+                "word": "волна",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 119,
+                "audioFileUrl": "/audio/filipp/b3bce13c673f2d9469048a65bc181663.ogg",
+                "word": "ров",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 8,
+            "level": 8,
+            "audiometryGroup": "Г",
+            "frequencyZone": "MEDIUM_LOW",
+            "minFrequency": 300,
+            "maxFrequency": 1200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 122,
+                "audioFileUrl": "/audio/filipp/7e1b35ccc49402577a85c2531343a876.ogg",
+                "word": "голова",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 125,
+                "audioFileUrl": "/audio/filipp/26e816493e231238d29feb18b049c68f.ogg",
+                "word": "кроха",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 127,
+                "audioFileUrl": "/audio/filipp/476a4caa0443ac7e688cb56c01e2e795.ogg",
+                "word": "ворон",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 124,
+                "audioFileUrl": "/audio/filipp/0df56a4da801762648c1397177cfcb19.ogg",
+                "word": "горка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 129,
+                "audioFileUrl": "/audio/filipp/8eb49ec9a4a0ea3381c2615f92587f6f.ogg",
+                "word": "коробка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 128,
+                "audioFileUrl": "/audio/filipp/ff9387992790c9a7e0f8227591f027dd.ogg",
+                "word": "флаг",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 130,
+                "audioFileUrl": "/audio/filipp/0a2132a7d1f627d420f3f79084aac020.ogg",
+                "word": "орган",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 123,
+                "audioFileUrl": "/audio/filipp/8f6cc7b913e1d025c2e8b6a8e83a0ca4.ogg",
+                "word": "глотка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 121,
+                "audioFileUrl": "/audio/filipp/06228f50b41082df45d8ee86380791ea.ogg",
+                "word": "рот",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 126,
+                "audioFileUrl": "/audio/filipp/fccbf62e1286d3aa541e45aa6b0ced52.ogg",
+                "word": "ломка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          }
+        ],
+        "MEDIUM": [
+          {
+            "id": 9,
+            "level": 9,
+            "audiometryGroup": "A",
+            "frequencyZone": "MEDIUM",
+            "minFrequency": 800,
+            "maxFrequency": 2400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 133,
+                "audioFileUrl": "/audio/filipp/4eec73c14958bfda0d6129b1815c0be6.ogg",
+                "word": "даль",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 136,
+                "audioFileUrl": "/audio/filipp/7616cefab434b2923eedd11f3d8aae04.ogg",
+                "word": "шар",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 138,
+                "audioFileUrl": "/audio/filipp/1481017703b1d17b56d421680f3c2f92.ogg",
+                "word": "жажда",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 139,
+                "audioFileUrl": "/audio/filipp/b21f39a3122c3d898a3e9a3bf05bf565.ogg",
+                "word": "торговля",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 134,
+                "audioFileUrl": "/audio/filipp/bec4b58d8eb9193e88d162c36e6be4b1.ogg",
+                "word": "так",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 135,
+                "audioFileUrl": "/audio/filipp/ab4b1ba392d8e794ad23b7786b198549.ogg",
+                "word": "доклад",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 132,
+                "audioFileUrl": "/audio/filipp/83950e8b25163590f5b8b527cc6fb217.ogg",
+                "word": "жертва",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 137,
+                "audioFileUrl": "/audio/filipp/d3bf2a0bd1bd755c44783d36c8becca2.ogg",
+                "word": "реальный",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 131,
+                "audioFileUrl": "/audio/filipp/c944d745b377880c6e3a2f851bb3510a.ogg",
+                "word": "товар",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 140,
+                "audioFileUrl": "/audio/filipp/7a2d3f1c623eb7ae024bfabe2bd0f211.ogg",
+                "word": "отара",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 10,
+            "level": 10,
+            "audiometryGroup": "Б",
+            "frequencyZone": "MEDIUM",
+            "minFrequency": 800,
+            "maxFrequency": 2400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 150,
+                "audioFileUrl": "/audio/filipp/d4a3bfc048794c2ff8c8dbfe2a052b4e.ogg",
+                "word": "дар",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 149,
+                "audioFileUrl": "/audio/filipp/d519eac641feb916c9e8fab4cdabccc7.ogg",
+                "word": "дорогой",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 148,
+                "audioFileUrl": "/audio/filipp/f4c5aa557b87c0a8397b89bb9abd7078.ogg",
+                "word": "торговать",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 143,
+                "audioFileUrl": "/audio/filipp/351475e69d3d9b7dde30bc2fc356adca.ogg",
+                "word": "штат",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 145,
+                "audioFileUrl": "/audio/filipp/a38b9520583a537965a526c2acc06071.ogg",
+                "word": "дата",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 146,
+                "audioFileUrl": "/audio/filipp/6f706aef2dad583dcee78f0ca5a6970b.ogg",
+                "word": "жара",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 141,
+                "audioFileUrl": "/audio/filipp/0bffa2786946cb3678b26679881b4e2f.ogg",
+                "word": "вода",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 147,
+                "audioFileUrl": "/audio/filipp/470e1b17e84230ecc4560592831cd8f0.ogg",
+                "word": "шахта",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 144,
+                "audioFileUrl": "/audio/filipp/2e0627a88fccd63f33109f89ad3310b2.ogg",
+                "word": "дрова",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 142,
+                "audioFileUrl": "/audio/filipp/45aa4882106311cf5c70d3a8a45924f2.ogg",
+                "word": "радар",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 11,
+            "level": 11,
+            "audiometryGroup": "В",
+            "frequencyZone": "MEDIUM",
+            "minFrequency": 800,
+            "maxFrequency": 2400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 151,
+                "audioFileUrl": "/audio/filipp/e519d98fee5c776d0c48861392dde6e2.ogg",
+                "word": "дорога",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 159,
+                "audioFileUrl": "/audio/filipp/1569535baa8b912e0eb86a1325cb96b3.ogg",
+                "word": "шишка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 154,
+                "audioFileUrl": "/audio/filipp/9e989e4e128ba6fb9defb9238a5eded8.ogg",
+                "word": "шеф",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 155,
+                "audioFileUrl": "/audio/filipp/d05fc208de3f706b2af9da283c5a6524.ogg",
+                "word": "тарелка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 156,
+                "audioFileUrl": "/audio/filipp/f3f52115748a1913b1d5a8941ec3a143.ogg",
+                "word": "трактор",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 160,
+                "audioFileUrl": "/audio/filipp/0e7a0a2e94ca37f5b0a52e168510ac52.ogg",
+                "word": "давка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 157,
+                "audioFileUrl": "/audio/filipp/3ffc9cd71a451abd2333113056f00b52.ogg",
+                "word": "такт",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 152,
+                "audioFileUrl": "/audio/filipp/8c01e3a36e21147ae8a4c6d4abdd34df.ogg",
+                "word": "тогда",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 153,
+                "audioFileUrl": "/audio/filipp/bac28cd96b18c1a3f0d01bd7d87e19fc.ogg",
+                "word": "железный",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 158,
+                "audioFileUrl": "/audio/filipp/c28b67d0351aae29aed41755558fec68.ogg",
+                "word": "жар",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 12,
+            "level": 12,
+            "audiometryGroup": "Г",
+            "frequencyZone": "MEDIUM",
+            "minFrequency": 800,
+            "maxFrequency": 2400,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 164,
+                "audioFileUrl": "/audio/filipp/d3424e1a75ada1494b3528cccb5b6f25.ogg",
+                "word": "догадка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 162,
+                "audioFileUrl": "/audio/filipp/83d6d953bf1b82cb754f4b603f2f769e.ogg",
+                "word": "шинель",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 168,
+                "audioFileUrl": "/audio/filipp/0c95303580246ccd5e008418b8e4d85d.ogg",
+                "word": "драка",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 167,
+                "audioFileUrl": "/audio/filipp/105debb44a2b62b0e7a551981b12527c.ogg",
+                "word": "ряд",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 169,
+                "audioFileUrl": "/audio/filipp/3a5a911bbb2551e30e46fda7eae9ecf9.ogg",
+                "word": "трава",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 166,
+                "audioFileUrl": "/audio/filipp/97fcc6ea6c48268ed40304742273bdfb.ogg",
+                "word": "тыква",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 161,
+                "audioFileUrl": "/audio/filipp/fcd2cfb4bb9a3d156b93815124d2d73d.ogg",
+                "word": "атака",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 163,
+                "audioFileUrl": "/audio/filipp/697420856fa971c657e65d2cdbe40776.ogg",
+                "word": "жатва",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 165,
+                "audioFileUrl": "/audio/filipp/c2c854ecd422455e737419840be146aa.ogg",
+                "word": "два",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 170,
+                "audioFileUrl": "/audio/filipp/d089c6e4d2150a53be29cf9cad70aa65.ogg",
+                "word": "дряхлый",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          }
+        ],
+        "MEDIUM_HIGH": [
+          {
+            "id": 13,
+            "level": 13,
+            "audiometryGroup": "A",
+            "frequencyZone": "MEDIUM_HIGH",
+            "minFrequency": 1200,
+            "maxFrequency": 3200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 173,
+                "audioFileUrl": "/audio/filipp/952a73b799892ed1b099f848e81e9407.ogg",
+                "word": "перец",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 174,
+                "audioFileUrl": "/audio/filipp/d02b7ab273019a74319bb56d4c671907.ogg",
+                "word": "лететь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 172,
+                "audioFileUrl": "/audio/filipp/949958fd50090204b32f166a0d8449cb.ogg",
+                "word": "передний",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 175,
+                "audioFileUrl": "/audio/filipp/d4c5c37d5e1c5ee5d65e7a35c2d20330.ogg",
+                "word": "бей",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 179,
+                "audioFileUrl": "/audio/filipp/d856cce77df6370d38335f1bbeda1250.ogg",
+                "word": "дверь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 176,
+                "audioFileUrl": "/audio/filipp/6b910fd3918360c4c0c6d23effcd4dd2.ogg",
+                "word": "шить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 171,
+                "audioFileUrl": "/audio/filipp/e2c2100332c8fc3f3e92bfe535383c95.ogg",
+                "word": "леденец",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 177,
+                "audioFileUrl": "/audio/filipp/4c7f5eaee627bd0ee67129204c8b3de1.ogg",
+                "word": "кипеть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 178,
+                "audioFileUrl": "/audio/filipp/7f91fd7a3700868fd3ab5071a5197c8d.ogg",
+                "word": "девятый",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 180,
+                "audioFileUrl": "/audio/filipp/531c5e66234bd239c17d19b76bb070c2.ogg",
+                "word": "билет",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 14,
+            "level": 14,
+            "audiometryGroup": "Б",
+            "frequencyZone": "MEDIUM_HIGH",
+            "minFrequency": 1200,
+            "maxFrequency": 3200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 183,
+                "audioFileUrl": "/audio/filipp/c0ec11da26149badf889e5eb84a53852.ogg",
+                "word": "идея",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 186,
+                "audioFileUrl": "/audio/filipp/20c26ea078befb6d2bf4d158f1ddf701.ogg",
+                "word": "ширь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 189,
+                "audioFileUrl": "/audio/filipp/57562e6ece4aabed16f46a1ee5ce614e.ogg",
+                "word": "дети",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 182,
+                "audioFileUrl": "/audio/filipp/260387ac7c4e103a008b79c6bf0da61f.ogg",
+                "word": "лежать",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 181,
+                "audioFileUrl": "/audio/filipp/f58782100ab8990d303c8069413659d7.ogg",
+                "word": "кисель",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 188,
+                "audioFileUrl": "/audio/filipp/5a22e36ab5e3121a991bb080c68b07c7.ogg",
+                "word": "берет",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 184,
+                "audioFileUrl": "/audio/filipp/ba0d2d294d9020d842da7c5b33d88932.ogg",
+                "word": "беречь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 185,
+                "audioFileUrl": "/audio/filipp/2310ef9100936a075fd297771958bf22.ogg",
+                "word": "летний",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 187,
+                "audioFileUrl": "/audio/filipp/0a5bf079c4c0efed0738ed584983ab9e.ogg",
+                "word": "петь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 190,
+                "audioFileUrl": "/audio/filipp/1908dc2319c504b7d1d4cdf2e98f684c.ogg",
+                "word": "шевелить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 15,
+            "level": 15,
+            "audiometryGroup": "В",
+            "frequencyZone": "MEDIUM_HIGH",
+            "minFrequency": 1200,
+            "maxFrequency": 3200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 196,
+                "audioFileUrl": "/audio/filipp/44e4751ea8fb1a0a68c82600077b8a1b.ogg",
+                "word": "деньги",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 197,
+                "audioFileUrl": "/audio/filipp/9d025207ed5ee65b664cc74f43a5df4b.ogg",
+                "word": "дед",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 193,
+                "audioFileUrl": "/audio/filipp/1923fc1bd62d3036c4fa4ed644f56c7f.ogg",
+                "word": "передать",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 200,
+                "audioFileUrl": "/audio/filipp/c4ffe12092647802eefeb442effc606b.ogg",
+                "word": "перелить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 198,
+                "audioFileUrl": "/audio/filipp/252abf40c1b49d856988970639b60a5f.ogg",
+                "word": "кефир",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 191,
+                "audioFileUrl": "/audio/filipp/c0c2c235ddc723153898724f4fd84359.ogg",
+                "word": "редкий",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 192,
+                "audioFileUrl": "/audio/filipp/b956264e61348a53761e389aa6598d13.ogg",
+                "word": "жить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 194,
+                "audioFileUrl": "/audio/filipp/dbe10123fc805b63cf6c346364cdbf86.ogg",
+                "word": "великий",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 195,
+                "audioFileUrl": "/audio/filipp/ff2e3001c298abf7f568a029e372f973.ogg",
+                "word": "шест",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 199,
+                "audioFileUrl": "/audio/filipp/3cd83cf97d7f64177e4052f7650c4336.ogg",
+                "word": "вертеть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 16,
+            "level": 16,
+            "audiometryGroup": "Г",
+            "frequencyZone": "MEDIUM_HIGH",
+            "minFrequency": 1200,
+            "maxFrequency": 3200,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 205,
+                "audioFileUrl": "/audio/filipp/6092220595918bdd7453effa4a698de8.ogg",
+                "word": "печь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 209,
+                "audioFileUrl": "/audio/filipp/368f2e7f414bbc0495ab9c35096eefb7.ogg",
+                "word": "финик",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 210,
+                "audioFileUrl": "/audio/filipp/28da5ad2082dbaa3ff6ec8151f1c1b64.ogg",
+                "word": "деятель",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 203,
+                "audioFileUrl": "/audio/filipp/b06a2825f30feaeb4a5e16fa596368bd.ogg",
+                "word": "верить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 207,
+                "audioFileUrl": "/audio/filipp/14d7caf4211e56f63d02f78260357a6b.ogg",
+                "word": "решить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 202,
+                "audioFileUrl": "/audio/filipp/3d9b0445d18e3802335733f62b779678.ogg",
+                "word": "жаркий",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 204,
+                "audioFileUrl": "/audio/filipp/c48c9fb8814808de0874fc9def5dd732.ogg",
+                "word": "кит",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 206,
+                "audioFileUrl": "/audio/filipp/ba2cf2ccddc09a8f3c883318ed82acbe.ogg",
+                "word": "дерзкий",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 201,
+                "audioFileUrl": "/audio/filipp/135b2e6957186d6d86638fbf39fe1910.ogg",
+                "word": "лепетать",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 208,
+                "audioFileUrl": "/audio/filipp/9b4ab941bbb72e8e87c800dbe463185d.ogg",
+                "word": "берег",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          }
+        ],
+        "HIGH": [
+          {
+            "id": 17,
+            "level": 17,
+            "audiometryGroup": "A",
+            "frequencyZone": "HIGH",
+            "minFrequency": 3200,
+            "maxFrequency": 12800,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 211,
+                "audioFileUrl": "/audio/filipp/8137193ee0f9d8959b6fd3d0a3481f3f.ogg",
+                "word": "биться",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 214,
+                "audioFileUrl": "/audio/filipp/560de0434df5706e11f4055a4c474165.ogg",
+                "word": "ситец",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 218,
+                "audioFileUrl": "/audio/filipp/fb21257948461a14d065f414762517df.ogg",
+                "word": "сессия",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 220,
+                "audioFileUrl": "/audio/filipp/e8e2fc6045f68e2c6230bdcda226f816.ogg",
+                "word": "свисти",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 213,
+                "audioFileUrl": "/audio/filipp/fb89053dc195bf3755dea2a1fa2a2365.ogg",
+                "word": "чистить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 216,
+                "audioFileUrl": "/audio/filipp/2a730d40ed1b6e2e67407aea6291a904.ogg",
+                "word": "сесть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 219,
+                "audioFileUrl": "/audio/filipp/6d7fe285cbcf1a44635e09361a5f30e2.ogg",
+                "word": "тесть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 215,
+                "audioFileUrl": "/audio/filipp/a1e95c39725c6e76feea8ac94df37390.ogg",
+                "word": "стилист",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 212,
+                "audioFileUrl": "/audio/filipp/af3d877a8d7012fb28f98f7ab5791e7a.ogg",
+                "word": "силиться",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 217,
+                "audioFileUrl": "/audio/filipp/9e7df0f8bd38ea955df73f61727e8ed0.ogg",
+                "word": "чибис",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 18,
+            "level": 18,
+            "audiometryGroup": "Б",
+            "frequencyZone": "HIGH",
+            "minFrequency": 3200,
+            "maxFrequency": 12800,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 223,
+                "audioFileUrl": "/audio/filipp/f11581bc798cf9651bf5547bccf0b182.ogg",
+                "word": "счистить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 224,
+                "audioFileUrl": "/audio/filipp/bacc03531af4c2b019626995510d584b.ogg",
+                "word": "кисть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 226,
+                "audioFileUrl": "/audio/filipp/449f8a541993853155af2be7eed6c3aa.ogg",
+                "word": "извить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 227,
+                "audioFileUrl": "/audio/filipp/457ae896acc5a27e259e30676527bc6d.ogg",
+                "word": "сцепиться",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 228,
+                "audioFileUrl": "/audio/filipp/c6104c3031990d7b5545925c1a8a679f.ogg",
+                "word": "испить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 230,
+                "audioFileUrl": "/audio/filipp/01d9b38458f06d7a1b8738103d80a154.ogg",
+                "word": "сейчас",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 222,
+                "audioFileUrl": "/audio/filipp/fd58cdc55a4fe5c1cac32f37ca50ff4a.ogg",
+                "word": "бить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 225,
+                "audioFileUrl": "/audio/filipp/d50f040711323899add97398e9059c19.ogg",
+                "word": "числиться",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 229,
+                "audioFileUrl": "/audio/filipp/aaf4341125c46303d6e1c16889d128e8.ogg",
+                "word": "снести",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 221,
+                "audioFileUrl": "/audio/filipp/fff79e5866d45a5d2badd0c547a638eb.ogg",
+                "word": "щи",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 19,
+            "level": 19,
+            "audiometryGroup": "В",
+            "frequencyZone": "HIGH",
+            "minFrequency": 3200,
+            "maxFrequency": 12800,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 236,
+                "audioFileUrl": "/audio/filipp/4ef2772e8cf75f2fba8f33dea026763e.ogg",
+                "word": "известь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 238,
+                "audioFileUrl": "/audio/filipp/949f87250274123d08cbd510283a9a80.ogg",
+                "word": "цыц",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 233,
+                "audioFileUrl": "/audio/filipp/da2077c3d54bb55ad6b4393bef4d1464.ogg",
+                "word": "свистеть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 231,
+                "audioFileUrl": "/audio/filipp/6be4fb79ddd52b8701028aa4a4e0f2bb.ogg",
+                "word": "здесь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 239,
+                "audioFileUrl": "/audio/filipp/528c75299239f732f2aace1a59c95fe3.ogg",
+                "word": "чиститься",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 240,
+                "audioFileUrl": "/audio/filipp/5d0f7b498ce559b69952a66edc1510f0.ogg",
+                "word": "известись",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 232,
+                "audioFileUrl": "/audio/filipp/2c576c88fe2cba24cf1597402f3f980f.ogg",
+                "word": "идти",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 234,
+                "audioFileUrl": "/audio/filipp/e57ccf512106b1cd5736fbc0999ae4ab.ogg",
+                "word": "честь",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 235,
+                "audioFileUrl": "/audio/filipp/35fdbff4d036afd599e977eb6aa49b61.ogg",
+                "word": "исписать",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 237,
+                "audioFileUrl": "/audio/filipp/e9a131f83ba32df4afa2b2f3f0571232.ogg",
+                "word": "видеть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          },
+          {
+            "id": 20,
+            "level": 20,
+            "audiometryGroup": "Г",
+            "frequencyZone": "HIGH",
+            "minFrequency": 3200,
+            "maxFrequency": 12800,
+            "count": 10,
+            "showSize": 9,
+            "answerOptions": [
+              {
+                "id": 244,
+                "audioFileUrl": "/audio/filipp/36b95311edffa84bc476efd25e9c7685.ogg",
+                "word": "сизый",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 243,
+                "audioFileUrl": "/audio/filipp/800145fa3b620521767d9eb37745ef51.ogg",
+                "word": "пить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 245,
+                "audioFileUrl": "/audio/filipp/6964fba1418eb065d225f0699b5316d7.ogg",
+                "word": "веселить",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 247,
+                "audioFileUrl": "/audio/filipp/90035fd851d1b7a05efdabb0383e2ea9.ogg",
+                "word": "вести",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 246,
+                "audioFileUrl": "/audio/filipp/1ce1f9d71cbd66cb41b8cc382cbc6c27.ogg",
+                "word": "счиститься",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 249,
+                "audioFileUrl": "/audio/filipp/1fd5303e6cad928a916f82e41d08e057.ogg",
+                "word": "сеть",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 221,
+                "audioFileUrl": "/audio/filipp/fff79e5866d45a5d2badd0c547a638eb.ogg",
+                "word": "щи",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 248,
+                "audioFileUrl": "/audio/filipp/77647277e6c5804e49fd0a67b60718f4.ogg",
+                "word": "свестись",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 241,
+                "audioFileUrl": "/audio/filipp/4a4a7bf4c17242d2610d0d94aa9de54c.ogg",
+                "word": "певец",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              },
+              {
+                "id": 242,
+                "audioFileUrl": "/audio/filipp/144373a112577f627b652188e0235861.ogg",
+                "word": "извиться",
+                "wordType": "AUDIOMETRY_WORD",
+                "pictureFileUrl": "",
+                "soundsCount": 0,
+                "tasks": []
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "locale": null,
+      "name": "Частотная диагностика",
+      "audiometryType": "SIGNALS",
+      "description": "Частотная диагностика",
+      "audiometryTasks": {}
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

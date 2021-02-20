@@ -31,6 +31,30 @@ mediaType:
               }
             }
 
+# AUDIOMETRY-----------------------------------
+/audiometrics:
+    get:
+        queryParameters:
+            locale:
+                required: false
+                type: String
+                example: "ru-ru"
+                default: "ru-ru"
+        responses:
+            200:
+                body:
+                    example: !include samples/audiometrics.json
+
+/audiometry-history:
+    post:
+        description: Save speech audiometry history
+        body:
+            example: !include samples/audiometryHistoryRequest.json
+        responses:
+            200:
+                body:
+                    example: 25
+
 # AUDIO GENERATION ----------------------------
 /audio:
   get:
@@ -138,6 +162,15 @@ mediaType:
         200:
           body:
             example1: !include samples/exercise_for_id_1.json
+  /byIds
+    post:
+        description: Get available exercise ids for current user by input ids which have same subGroup.
+        body:
+          application/json:
+            example: !include samples/exercise_request.json
+        responses:
+          200:
+            example: !include samples/avaliable_exercise_ids_by_input_ids.json
 
 # TASK ----------------------------
 /tasks:

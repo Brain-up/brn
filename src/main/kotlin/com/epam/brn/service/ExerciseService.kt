@@ -52,55 +52,39 @@ class ExerciseService(
 
     fun findExercisesByUserIdAndSubGroupId(userId: Long, subGroupId: Long): List<ExerciseDto> {
         log.info("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
-        val allExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
+        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
         log.info("current user is admin: ${userId == 1L}))")
         if (userId == 1L)
-            return emptyIfNull(allExercises).map { exercise -> updateNoiseUrl(exercise.toDto(true)) }
-        val doneExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
-        val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
-        return emptyIfNull(allExercises).map { exercise ->
-            updateNoiseUrl(exercise.toDto(openExercises.contains(exercise)))
+            return emptyIfNull(subGroupExercises).map { exercise -> updateNoiseUrl(exercise.toDto(true)) }
+        val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
+        val openSubGroupExercises = getAvailableExercises(doneSubGroupExercises, subGroupExercises, userId)
+        return emptyIfNull(subGroupExercises).map { exercise ->
+            updateNoiseUrl(exercise.toDto(openSubGroupExercises.contains(exercise)))
         }
     }
 
-    fun getExercisesByIds(exerciseIds: List<Long>): List<Long> {
+    fun getAvailableExerciseIds(exerciseIds: List<Long>): List<Long> {
         if (exerciseIds.isEmpty()) return emptyList()
         val exercise = exerciseRepository.findById(exerciseIds[0])
         if (!exercise.isPresent) throw EntityNotFoundException("There is no one exercise with id = ${exerciseIds[0]}")
-        return findExercisesByNameForCurrentUser(exercise.get().name)
+        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        return findExercisesByUserIdAndSubGroupId(currentUser.id!!, exercise.get().subGroup!!.id!!)
             .filter(ExerciseDto::available)
             .map { e -> e.id!! }
     }
 
-    fun findExercisesByNameForCurrentUser(exerciseName: String): List<ExerciseDto> {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
-        return findExercisesByNameAndUserId(currentUser.id!!, exerciseName)
-    }
-
-    fun findExercisesByNameAndUserId(userId: Long, exerciseName: String): List<ExerciseDto> {
-        log.info("Searching available exercises with name=$exerciseName for user=$userId")
-        val isSupport = userId == 1L
-        log.info("current user is admin: $isSupport")
-        val doneExercises = studyHistoryRepository.getDoneExercisesByName(exerciseName, userId)
-        val allExercises = exerciseRepository.findExercisesByName(exerciseName)
-        val openExercises = getAvailableExercises(doneExercises, allExercises, userId)
-        return emptyIfNull(allExercises).map { exercise ->
-            updateNoiseUrl(exercise.toDto(openExercises.contains(exercise) || isSupport))
-        }
-    }
-
     fun getAvailableExercises(
-        doneExercises: List<Exercise>,
-        allExercises: List<Exercise>,
+        doneSubGroupExercises: List<Exercise>,
+        subGroupExercises: List<Exercise>,
         userId: Long
     ): Set<Exercise> {
-        if (doneExercises.size == allExercises.size)
-            return doneExercises.toSet()
-        val mapDone = doneExercises.groupBy({ it.name }, { it })
+        if (doneSubGroupExercises.size == subGroupExercises.size)
+            return doneSubGroupExercises.toSet()
+        val mapDone = doneSubGroupExercises.groupBy({ it.name }, { it })
         val available = mutableSetOf<Exercise>()
         val lastHistoryMap = studyHistoryRepository.findLastByUserAccountId(userId)
             .groupBy({ it.exercise }, { it })
-        allExercises
+        subGroupExercises
             .groupBy({ it.name }, { it })
             .forEach { (name, currentNameExercises) ->
                 run {
@@ -124,7 +108,7 @@ class ExerciseService(
                         return@forEach
                     }
                     available.addAll(currentDone)
-                    val closed = currentNameExercises.minus(doneExercises)
+                    val closed = currentNameExercises.minus(doneSubGroupExercises)
                     if (closed.isNotEmpty())
                         available.add(closed.first())
                 }

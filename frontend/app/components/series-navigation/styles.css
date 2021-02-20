@@ -26,20 +26,12 @@
   padding-top: 0;
 }
 
-.exercise-block__levels {
-  display: flex;
-}
-
 .exercise-block__level {
   flex-direction: initial;
   align-items: center;
   position: relative;
-  width: 90px;
-  height: 90px;
-}
-
-.exercise-block__level[disabled] {
-  pointer-events: none;
+  width: 168px;
+  height: 168px;
 }
 
 .exercise-block__status-icon {
@@ -48,10 +40,6 @@
   position: absolute;
   right: 10px;
   top: 10px;
-}
-
-.navigation-block {
-  background-color: #fbedfe;
 }
 
 .navigation-block__header {
@@ -74,12 +62,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-.check-container {
-  position: absolute;
-  right: -10px;
-  top: -10px;
-}
-
 .number-container {
   position: absolute;
   left: -8px;
@@ -89,7 +71,6 @@ h2 {
   color: #fff;
   width: 20px;
   height: 20px;
-  background-color: #feb2b2;
 }
 
 /*! purgecss end ignore */

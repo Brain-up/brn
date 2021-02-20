@@ -86,7 +86,7 @@ class UserAccountServiceImpl(
 
     override fun getUserFromTheCurrentSession(): UserAccountDto = getCurrentUser().toDto()
 
-    fun getCurrentUser(): UserAccount {
+    override fun getCurrentUser(): UserAccount {
         val authentication = SecurityContextHolder.getContext().authentication
         val email = authentication.name ?: getNameFromPrincipals(authentication)
         return userAccountRepository.findUserAccountByEmail(email)

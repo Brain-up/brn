@@ -2,7 +2,7 @@ import Model, { attr, hasMany, AsyncHasMany } from '@ember-data/model';
 import Exercise from './exercise';
 import { cached } from 'tracked-toolbox';
 
-export default class SubgroupModel extends Model {
+export default class Subgroup extends Model {
   @attr('string') seriesId!: string;
   @attr('string') name!: string;
   @attr('number') level!: number;
@@ -21,5 +21,13 @@ export default class SubgroupModel extends Model {
   @cached
   get exercisesIds() {
     return this.hasMany('exercises').ids();
+  }
+}
+
+
+// DO NOT DELETE: this is how TypeScript knows how to look up your models.
+declare module 'ember-data/types/registries/model' {
+  export default interface ModelRegistry {
+    'subgroup': Subgroup;
   }
 }

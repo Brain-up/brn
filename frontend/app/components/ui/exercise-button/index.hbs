@@ -1,0 +1,19 @@
+<a
+  class="{{style-namespace "ui/exercise-button"}} {{this.classes}}"
+  disabled={{not @isAvailable}}
+  href={{href-to "group.series.subgroup.exercise" @exercise.id}}
+  title={{concat (t "task_link.exercise") " " @exercise.level}}
+  ...attributes
+>
+  <div class={{this.titleClasses}}>
+      {{@title}}
+  </div>
+  <div class="check-container">
+    <Ui::Icon::Check
+      @isCompleted={{this.isCompleted}}
+      @isLocked={{this.isLocked}}
+      @isDisabled={{this.isDisabled}}
+      @isActive={{this.isActive}}
+    />
+  </div>
+</a>
