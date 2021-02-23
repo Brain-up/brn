@@ -1707,10 +1707,10 @@
     "@types/jquery" "*"
     "@types/rsvp" "*"
 
-"@types/ember@*", "@types/ember@^3.16.2":
-  version "3.16.2"
-  resolved "https://registry.yarnpkg.com/@types/ember/-/ember-3.16.2.tgz#95d58f42de8d8eb043496fca2aaef3cf62832a13"
-  integrity sha512-00Rh+wDTua6H57wegaU7OWRf6tUNkDOCuxLqdqRDUQTag9W64G1Qgeo6jpT7PiZfoB0T559lziFVgHoKnyBQfQ==
+"@types/ember@*", "@types/ember@^3.16.4":
+  version "3.16.4"
+  resolved "https://registry.yarnpkg.com/@types/ember/-/ember-3.16.4.tgz#bfccd8ed198ca7bee09878a3423ca6e1a9caac17"
+  integrity sha512-kCZNxuCofZN2sYUltfUmPegqAr1wvZ4b6aH0i8AsG+AsUiaWCDzVfCayMfr4CRUOhUiQ2VA9AOgnZT+JgBvjXQ==
   dependencies:
     "@types/ember__application" "*"
     "@types/ember__array" "*"

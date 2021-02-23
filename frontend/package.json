@@ -76,7 +76,7 @@
     "@fullhuman/postcss-purgecss": "^3.0.0",
     "@glimmer/component": "^1.0.3",
     "@glimmer/tracking": "^1.0.3",
-    "@types/ember": "^3.16.2",
+    "@types/ember": "^3.16.4",
     "@types/ember-data": "^3.16.8",
     "@types/ember-data__adapter": "^3.16.1",
     "@types/ember-data__model": "^3.16.2",
