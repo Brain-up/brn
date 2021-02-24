@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpStatus
@@ -26,9 +25,6 @@ import java.time.format.DateTimeParseException
 internal class ExceptionControllerAdviceTest {
     private val exceptionControllerAdvice: ExceptionControllerAdvice =
         ExceptionControllerAdvice()
-
-    @Value("\${validation.field.birthday.invalid-format}")
-    private val birthdayProperty: String? = null
 
     @Test
     fun `should handle EntityNotFoundException`() {
@@ -120,13 +116,7 @@ internal class ExceptionControllerAdviceTest {
         val exception = HttpMessageNotReadableException("TEST", DateTimeParseException("TEST", "TEST", 3), inputMessage)
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleHttpMessageNotReadableException(exception)
-
         // THEN
-        assertTrue(
-            (responseEntity.body as BaseResponseDto).errors.containsAll(
-                listOf(birthdayProperty.toString())
-            )
-        )
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
