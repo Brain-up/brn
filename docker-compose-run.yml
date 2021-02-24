@@ -37,10 +37,11 @@ services:
     depends_on:
       - brn
   brn_fe_with_tls:
-    image: brainup/brn-frontend:latest
-    container_name: brn_fe
+    image: brainup/brn-frontend-with-tls:latest
+    container_name: brn_fe_with_tls
     ports:
       - 80:80
+#After successful cert probe add -443:443
     volumes: #for permanent cert storage
       - web-root-for-certbot:/usr/share/nginx/html/certcheck
       - certbot-etc:/etc/letsencrypt

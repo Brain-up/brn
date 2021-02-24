@@ -10,7 +10,7 @@ WORKDIR /src
 RUN npm ci
 RUN npm run build
 
-FROM nginx:alpine
-COPY default.conf  /etc/nginx/conf.d/
+FROM nginx:alpine AS brn_fe_with_tls
+COPY default_with_tls.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-frontend /src/tmp/deploy-dist /usr/share/nginx/html/
 COPY --from=build-frontend-angular /src/dist/frontend-angular /usr/share/nginx/html/admin/

@@ -18,6 +18,5 @@ jobs:
     - name: Build the Docker image for frontent
       run: |
         docker build . --file Dockerfile_frontend --tag brainup/brn-frontend
-        docker build . --file Dockerfile_frontend --tag brainup/brn-frontend_with_tls --target alpine_with_tls 
     - name: List of docker images
       run: docker images

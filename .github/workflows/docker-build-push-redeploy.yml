@@ -27,8 +27,19 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: Dockerfile_frontend
+  build_and_publish_frontend_with_tls:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry brainup/brn-frontend-with-tls
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-frontend-with-tls
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile_frontend_with_tls
   redeploy_instance:
-    needs: [ build_and_publish_backend, build_and_publish_frontend ]
+    needs: [ build_and_publish_backend, build_and_publish_frontend, build_and_publish_frontend_with_tls]
     runs-on: ${{ matrix.runners }}
     strategy:
       matrix:
