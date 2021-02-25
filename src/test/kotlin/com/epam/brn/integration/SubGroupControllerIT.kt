@@ -3,9 +3,6 @@ package com.epam.brn.integration
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.Series
-import com.epam.brn.model.SubGroup
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -36,33 +33,12 @@ class SubGroupControllerIT : BaseIT() {
         exerciseGroupRepository.deleteAll()
     }
 
-    private fun insertSeries(): Series {
-        val group = exerciseGroupRepository.save(
-            ExerciseGroup(
-                description = "desc",
-                name = "group ExercisesControllerIT"
-            )
-        )
-        return seriesRepository.save(
-            Series(
-                name = "series for SubGroupControllerIT",
-                exerciseGroup = group,
-                type = "type",
-                level = 1
-            )
-        )
-    }
-
-    private fun insertSubGroup(series: Series, level: Int): SubGroup = subGroupRepository.save(
-        SubGroup(series = series, level = level, code = "code", name = "subGroupName$level")
-    )
-
     @Test
     fun `test get subGroups for series`() {
         // GIVEN
-        val series = insertSeries()
-        insertSubGroup(series, 1)
-        insertSubGroup(series, 2)
+        val series = insertDefaultSeries()
+        insertDefaultSubGroup(series, 1)
+        insertDefaultSubGroup(series, 2)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -83,8 +59,8 @@ class SubGroupControllerIT : BaseIT() {
     @Test
     fun `test get subGroup for subGroupId`() {
         // GIVEN
-        val series = insertSeries()
-        val subGroup = insertSubGroup(series, 1)
+        val series = insertDefaultSeries()
+        val subGroup = insertDefaultSubGroup(series, 1)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
