@@ -8,9 +8,9 @@ describe('LoadTasksComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoadTasksComponent ]
-    })
-    .compileComponents();
+        declarations: [LoadTasksComponent]
+      })
+      .compileComponents();
   }));
 
   beforeEach(() => {

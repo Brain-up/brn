@@ -9,10 +9,10 @@ describe('AdminPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminPageComponent ],
-      providers: [UploadService]
-    })
-    .compileComponents();
+        declarations: [AdminPageComponent],
+        providers: [UploadService]
+      })
+      .compileComponents();
   }));
 
   beforeEach(() => {
