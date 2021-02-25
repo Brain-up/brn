@@ -79,6 +79,7 @@ data class AudiometryTask(
         return when (audiometry!!.audiometryType) {
             AudiometryType.SIGNALS.name -> AudiometrySignalsTaskDto(
                 id,
+                ear,
                 frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() }
             )
             AudiometryType.SPEECH.name -> AudiometryLopotkoTaskDto(

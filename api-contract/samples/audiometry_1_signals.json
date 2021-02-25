@@ -8,6 +8,7 @@
     "audiometryTasks": [
       {
         "id": 1,
+        "ear": "LEFT",
         "frequencies": [
           125,
           250,
@@ -20,6 +21,7 @@
       },
       {
         "id": 2,
+        "ear": "RIGHT",
         "frequencies": [
           125,
           250,
