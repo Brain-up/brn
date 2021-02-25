@@ -11,5 +11,5 @@ data class AudiometryDto(
     var name: String,
     val audiometryType: AudiometryType,
     var description: String?,
-    val audiometryTasks: Map<String, List<AudiometryTaskDto>>
+    val audiometryTasks: Any
 )
