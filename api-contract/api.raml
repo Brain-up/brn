@@ -6,8 +6,37 @@ baseTestUri: http://10.66.216.143:8081/api
 mediaType:
   - application/json
 
-# AUDIOMETRY
-/audiometrics
+# STATISTICS ----------------------------------
+/statistics:
+  /subgroups:
+    get:
+      queryParameters:
+        ids:
+          required: true
+          type: List<Long>
+          example: 1,2
+      response:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  subGroupId: 1,
+                  completedExercises: 0
+                  totalExercises: 28
+                },
+                {
+                  subGroupId: 2,
+                  completedExercises: 0
+                  totalExercises: 56
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+
+# AUDIOMETRY-----------------------------------
+/audiometrics:
     get:
         queryParameters:
             locale:
@@ -20,7 +49,7 @@ mediaType:
                 body:
                     example: !include samples/audiometrics.json
 
-/audiometry-history
+/audiometry-history:
     post:
         description: Save speech audiometry history
         body:
@@ -31,7 +60,7 @@ mediaType:
                     example: 25
 
 # AUDIO GENERATION ----------------------------
-/audio
+/audio:
   get:
     queryParameters:
         text:
