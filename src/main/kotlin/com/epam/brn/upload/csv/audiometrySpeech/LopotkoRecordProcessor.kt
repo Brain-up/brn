@@ -88,7 +88,8 @@ class LopotkoRecordProcessor(
             minFrequency = record.minFrequency,
             maxFrequency = record.maxFrequency,
             audiometry = audiometry,
-            answerOptions = answerOptions
+            answerOptions = answerOptions,
+            showSize = 9,
         )
     }
 }

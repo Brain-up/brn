@@ -19,7 +19,7 @@ class Audiometry(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    val locale: String?,
+    val locale: String,
     @Column(nullable = false, unique = true)
     val name: String,
     @Column(nullable = false)
@@ -49,12 +49,28 @@ class Audiometry(
     override fun toString() =
         "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
 
-    fun toDto() = AudiometryDto(
+    fun toDtoWithoutTasks() = AudiometryDto(
         id,
         locale,
         name,
         AudiometryType.valueOf(audiometryType),
         description,
-        audiometryTasks.map { task -> task.toDto() }.groupBy { it.frequencyZone }
+        emptyList<String>()
     )
+
+    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryDto {
+        val audiometryTasks = when (audiometryType) {
+            AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name -> tasks.map { it.toDto() }
+            AudiometryType.SPEECH.name -> tasks.groupBy({ it.frequencyZone }, { it.toDto() })
+            else -> throw IllegalArgumentException("Audiometry `$audiometryType` does not supported in the system.")
+        }
+        return AudiometryDto(
+            id,
+            locale,
+            name,
+            AudiometryType.valueOf(audiometryType),
+            description,
+            audiometryTasks
+        )
+    }
 }
