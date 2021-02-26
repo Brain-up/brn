@@ -6,12 +6,14 @@ import { SessionTokenMapperService } from './session-token-mapper.service';
 export class SessionTokenCoderService {
 
   static encodeToken(token: TokenOriginal): TokenShort {
+    // tslint:disable-next-line:prefer-const
     let {access_token, expires_in, token_start_date} = token;
     access_token = SessionTokenCoderService.encodeString(access_token);
     return SessionTokenMapperService.mapToShortToken({access_token, expires_in, token_start_date});
   }
 
   static decodeToken(token: TokenShort): TokenOriginal {
+    // tslint:disable-next-line:prefer-const
     let {t, e, s} = token;
     t = SessionTokenCoderService.decodeString(t);
     return SessionTokenMapperService.mapToOriginalToken({t, e, s});
