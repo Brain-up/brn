@@ -48,7 +48,7 @@ export class LoadTasksComponent implements OnInit {
     formData.append('taskFile', this.tasksGroup.get('file').value);
     formData.append('seriesId', this.tasksGroup.get('series').value.id);
 
-    this.uploadFileService.sendFormData('/api/loadTasksFile?seriesId=1', formData)
+    this.uploadFileService.sendFormData('/api/admin/loadTasksFile?seriesId=1', formData)
       .subscribe(returnData => {
         // TODO: - Check for other type of errors
         this.snackBarService.showHappySnackbar('Successfully loaded ' + this.tasksGroup.get('file').value.name);
