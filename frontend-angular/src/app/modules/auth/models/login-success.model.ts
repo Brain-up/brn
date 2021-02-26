@@ -1,5 +1,5 @@
-export interface LoginSuccessModel {
-  access_token: string;
+import { TokenOriginal } from './token';
+
+export interface LoginSuccessModel extends TokenOriginal {
   token_type: string;
-  expires_in: number;
 }

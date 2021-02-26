@@ -17,7 +17,7 @@ export const createSessionRequestAction = createAction(
 );
 export const createSessionSuccessAction = createAction(
   '[AuthEffects API] Create Session Success Action',
-  props<LoginSuccessModel>()
+  props<{ tokenData: LoginSuccessModel }>()
 );
 export const createSessionFailureAction = createAction(
   '[AuthEffects API] Create Session Failure Action',
