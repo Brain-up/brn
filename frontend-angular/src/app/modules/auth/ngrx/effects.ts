@@ -52,6 +52,13 @@ export class AuthEffects {
     ))
   ));
 
+  sessionSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(fromAuthActions.createSessionSuccessAction),
+    tap(action => {
+      SessionTokenService.saveToken(action.tokenData);
+    })
+  ), {dispatch: false})
+
   redirectToMainPage$ = createEffect(() => this.actions$.pipe(
     ofType(fromAuthActions.redirectAction),
     tap(action => this.router.navigateByUrl(action.location))
