@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild, forwardRef, Renderer2} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild, forwardRef, Renderer2 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -14,20 +14,23 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
     }
   ]
 })
-export class UploadFileComponent implements OnInit, ControlValueAccessor {
+export class UploadFileComponent implements ControlValueAccessor {
   @Input() disabled = false;
   @ViewChild('file', {static: true}) file;
   private onChange: (change: File) => void;
   private onTouch: () => void;
-  ngOnInit() {
+
+  constructor(private renderer: Renderer2) {
   }
 
   writeValue(value: FileList) {
     this.renderer.setProperty(this.file, 'files', value);
   }
+
   registerOnChange(fn: any) {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: () => void) {
     this.onTouch = fn;
   }
@@ -36,5 +39,4 @@ export class UploadFileComponent implements OnInit, ControlValueAccessor {
     const files: FileList = this.file.nativeElement.files;
     this.onChange(files.item(0));
   }
-  constructor(private renderer: Renderer2) {}
 }

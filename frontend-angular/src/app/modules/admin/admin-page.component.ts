@@ -1,12 +1,11 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {LOAD_FILE_PATH, LOAD_TASKS_FILE} from '../shared/app-path';
-
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+
+import { LOAD_FILE_PATH, LOAD_TASKS_FILE } from '../shared/app-path';
 import { AppStateModel } from 'src/app/models/app-state.model';
 import { destroySessionRequestAction } from '../auth/ngrx/actions';
-import { slideInAnimation } from '../shared/animations/slideInAnimation';
-
+import { slideInAnimation } from '../shared/animations/slide-in-animation';
 
 @Component({
   selector: 'app-admin-page',
@@ -15,10 +14,10 @@ import { slideInAnimation } from '../shared/animations/slideInAnimation';
   animations: [slideInAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent {
   opened = false;
-  ngOnInit() {
 
+  constructor(private router: Router, private store: Store<AppStateModel>) {
   }
 
   navigate(path: 'file' | 'tasks') {
@@ -28,7 +27,4 @@ export class AdminPageComponent implements OnInit {
   logoutUser() {
     this.store.dispatch(destroySessionRequestAction());
   }
-
-  constructor(private router: Router, private store: Store<AppStateModel>) {}
-
 }
