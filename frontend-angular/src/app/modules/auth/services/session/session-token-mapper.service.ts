@@ -8,7 +8,7 @@ export class SessionTokenMapperService {
       t: token.access_token,
       e: token.expires_in,
       s: token.token_start_date
-    }
+    };
   }
 
   static mapToOriginalToken(token: TokenShort): TokenOriginal {
@@ -16,6 +16,6 @@ export class SessionTokenMapperService {
       access_token: token.t,
       expires_in: token.e,
       token_start_date: token.s
-    }
+    };
   }
 }

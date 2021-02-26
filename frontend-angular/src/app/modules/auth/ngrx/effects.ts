@@ -57,7 +57,7 @@ export class AuthEffects {
     tap(action => {
       SessionTokenService.saveToken(action.tokenData);
     })
-  ), {dispatch: false})
+  ), {dispatch: false});
 
   redirectToMainPage$ = createEffect(() => this.actions$.pipe(
     ofType(fromAuthActions.redirectAction),
