@@ -1,0 +1,87 @@
+/*! purgecss start ignore */
+& {
+    border: double 3px transparent;
+    border-radius: 12px;
+    background-image: linear-gradient(white, white), radial-gradient(circle at top left, #428dfc, #ba75f1);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    padding: 0 !important;
+    width: 168px;
+    height: 168px;
+    position: relative;
+
+  }
+
+  &::before {
+    content: "";
+  }
+
+  &:hover {
+    border: solid 6px transparent;
+  }
+
+
+  &:hover .check-container {
+    right: -18px;
+    top: -18px;
+  }
+
+
+  &:active {
+    background: linear-gradient(92.58deg, rgba(70, 145, 253, 0.5) 54.88%, rgba(213, 176, 255, 0.5) 94.38%);
+    border: none;
+    color: white;
+  }
+
+  &:active .check-container {
+    right: -12px;
+    top: -12px;
+  }
+
+  &:disabled {
+    color: rgb(128, 127, 127);
+    border: rgb(199, 199, 199) solid 1px;
+  }
+
+  &.locked {
+    background: #FFFFFF;
+    border: 3px solid #F4F4F4;
+    box-sizing: border-box;
+    color: rgb(128, 127, 127);
+  }
+
+  &.locked:active {
+    border: 6px solid #F4F4F4;
+  }
+
+  &.disabled {
+    background: #FFFFFF;
+    border: 3px solid #F4F4F4;
+  }
+
+  .title {
+    font-size: 100px;
+    color: #4691fd;
+    text-align: center;
+    min-width: 100%;
+  }
+
+  .title:active {
+    color: white;
+  }
+
+  .title-locked, .title-locked:active {
+    color: #bdbdbd;
+  }
+
+  .title-disabled, .title-disabled:active {
+    color: #f4f4f4;
+  }
+
+  .check-container {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+  }
+
+/*! purgecss end ignore */

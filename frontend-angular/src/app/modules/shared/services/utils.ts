@@ -1,5 +1,5 @@
-import {Observable, Subject} from 'rxjs';
-import {HttpClient, HttpEventType, HttpRequest, HttpResponse} from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 
 export const upload: (files: Set<File>, params?: Record<string, any>) => (httpClient: HttpClient) => (url: string) =>
   { [key: string]: { progress: Observable<number> } }

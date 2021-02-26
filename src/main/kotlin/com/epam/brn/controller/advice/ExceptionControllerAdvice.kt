@@ -5,7 +5,6 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -17,7 +16,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.io.IOException
-import java.time.format.DateTimeParseException
 
 @ControllerAdvice
 @PropertySource("classpath:errorMessages.properties")
@@ -25,12 +23,9 @@ class ExceptionControllerAdvice {
 
     private val logger = logger()
 
-    @Value("\${validation.field.bornYear.notNull}")
-    private val bornYearProperty: String? = null
-
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponseDto> {
-        logger.warn("Entity not found exception: ${e.message}", e)
+        logger.error("Entity not found exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .contentType(MediaType.APPLICATION_JSON)
@@ -39,7 +34,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(FileFormatException::class)
     fun handleFileFormatException(e: FileFormatException): ResponseEntity<BaseResponseDto> {
-        logger.warn("File format exception: ${e.message}", e)
+        logger.error("File format exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -48,7 +43,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(CsvParser.ParseException::class)
     fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<BaseResponseDto> {
-        logger.warn("Csv file parsing exception: ${e.message}", e)
+        logger.error("Csv file parsing exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -57,8 +52,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponseDto> {
-        logger.warn("IllegalArgumentException: ${e.message}", e)
-
+        logger.error("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -67,7 +61,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(BadCredentialsException::class)
     fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
-        logger.warn("Forbidden: ${e.message}", e)
+        logger.error("Forbidden: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .contentType(MediaType.APPLICATION_JSON)
@@ -83,14 +77,7 @@ class ExceptionControllerAdvice {
     fun handleHttpMessageNotReadableException(
         e: HttpMessageNotReadableException
     ): ResponseEntity<BaseResponseDto> {
-        logger.warn("Argument Validation Error: ${e.message}", e)
-        val rootCause: Throwable? = e.rootCause
-        if (rootCause is DateTimeParseException) {
-            return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BaseResponseDto(errors = listOf(bornYearProperty.toString())))
-        }
+        logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
@@ -99,8 +86,7 @@ class ExceptionControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BaseResponseDto> {
-        logger.warn("Argument Validation Error: ${e.message}", e)
-
+        logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)

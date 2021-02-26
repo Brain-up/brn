@@ -1,12 +1,12 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import NetworkService from 'brn/services/network';
+import Session from 'ember-simple-auth/services/session';
+
 export default class IndexRoute extends Route {
-  @service('network') network!: NetworkService;
-  model() {
-    return this.network.loadCurrentUser();
-  }
+  @service('session') session!: Session;
   redirect() {
-    this.transitionTo('groups');
+    if (this.session.isAuthenticated) {
+      this.replaceWith('groups');
+    }
   }
 }

@@ -1,14 +1,12 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.StudyHistoryRepository
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -25,9 +23,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 internal class StudyHistoryServiceTest {
-
-    @Mock
-    lateinit var userAccountRepository: UserAccountRepository
 
     @Mock
     lateinit var exerciseRepository: ExerciseRepository
@@ -56,9 +51,7 @@ internal class StudyHistoryServiceTest {
             email = "test@gmail.com",
             active = true
         )
-        val exercise = Exercise(
-            id = 1L
-        )
+        val exercise = Exercise(id = 1L)
         val studyHistoryNew = StudyHistory(
             userAccount = userAccount,
             exercise = exercise,
@@ -78,17 +71,7 @@ internal class StudyHistoryServiceTest {
             wrongAnswers = 3,
             replaysCount = 3
         )
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(
-            UserAccountDto(
-                1L,
-                "ivan",
-                "mail",
-                2000,
-                Gender.MALE,
-                true
-            )
-        )
-        `when`(userAccountRepository.findUserAccountById(1L)).thenReturn(Optional.of(userAccount))
+        `when`(userAccountService.getCurrentUser()).thenReturn(userAccount)
         `when`(studyHistoryDtoMock.toEntity(userAccount, exercise)).thenReturn(studyHistoryNew)
         `when`(studyHistoryDtoMock.exerciseId).thenReturn(2L)
 

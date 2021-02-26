@@ -1,0 +1,14 @@
+<div ...attributes class={{style-namespace "group-navigation"}}>
+  <ul class="hs full no-scrollbar">
+    {{#each (sort-by "order" @group) as |exercise|}}
+      <li class="item">
+        <Ui::TabButton data-test-active-link={{exercise.name}}
+          class="pl-3 pr-3"
+          @small={{true}}
+          @route="group.series.subgroup"
+          @models={{array exercise.id}}
+          @title={{exercise.name}} />
+      </li>
+    {{/each}}
+  </ul>
+</div>

@@ -2,16 +2,15 @@
   <nav class="admin-home__nav">
     <ul class="admin-home__nav-items">
       <li class="admin-home__nav-item">
-        <a routerLink="file" color="primary">Load resource files to storage</a>
+        <a routerLink="file">Load resource files to storage</a>
       </li>
       <li class="admin-home__nav-item">
-        <a routerLink="tasks" color="primary">Load Configuration Files to appl</a>
+        <a routerLink="tasks">Load Configuration Files to appl</a>
       </li>
     </ul>
   </nav>
   <section>
-    <div [@routeAnimations]="o && o.activatedRouteData
-      && o.activatedRouteData['animation']">
+    <div [@routeAnimations]="o && o.activatedRouteData && o.activatedRouteData['animation']">
       <router-outlet #o="outlet"></router-outlet>
     </div>
   </section>

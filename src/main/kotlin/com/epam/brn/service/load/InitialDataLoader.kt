@@ -1,16 +1,13 @@
-package com.epam.brn.service
+package com.epam.brn.service.load
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.enums.AudiometryType
-import com.epam.brn.enums.Locale
-import com.epam.brn.model.Audiometry
 import com.epam.brn.model.Authority
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.AudioFilesGenerationService
 import com.epam.brn.upload.CsvUploadService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,7 +34,7 @@ class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
     private val exerciseGroupRepository: ExerciseGroupRepository,
     private val userAccountRepository: UserAccountRepository,
-    private val audiometryRepository: AudiometryRepository,
+    private val audiometryLoader: AudiometryLoader,
     private val passwordEncoder: PasswordEncoder,
     private val authorityService: AuthorityService,
     private val uploadService: CsvUploadService,
@@ -103,8 +100,8 @@ class InitialDataLoader(
             listOfUsers.addAll(addDefaultUsers(userAuthority))
             userAccountRepository.saveAll(listOfUsers)
         }
-        if (isAudiometricsEmpty())
-            addAudiometrics()
+
+        audiometryLoader.loadInitialAudiometricsWithTasks()
         if (isGroupsEmpty())
             initExercisesFromFiles()
         if (withAudioFilesGeneration)
@@ -112,7 +109,6 @@ class InitialDataLoader(
     }
 
     private fun isGroupsEmpty() = exerciseGroupRepository.count() == 0L
-    private fun isAudiometricsEmpty() = audiometryRepository.count() == 0L
 
     private fun initExercisesFromFiles() {
         log.debug("Initialization started")
@@ -194,34 +190,6 @@ class InitialDataLoader(
         firstUser.authoritySet.addAll(setOf(userAuthority))
         secondUser.authoritySet.addAll(setOf(userAuthority))
         return mutableListOf(firstUser, secondUser)
-    }
-
-    private fun addAudiometrics() {
-        val audiometrySignal = Audiometry(
-            locale = null,
-            name = "Частотная диагностика",
-            description = "Частотная диагностика",
-            audiometryType = AudiometryType.SIGNALS.name
-        )
-        val audiometrySpeech = Audiometry(
-            locale = Locale.RU.locale,
-            name = "Речевая диагностика",
-            description = "Речевая диагностика методом Лопотко",
-            audiometryType = AudiometryType.SPEECH.name
-        )
-        val audiometryMatrix = Audiometry(
-            locale = Locale.RU.locale,
-            name = "Матриксная диагностика",
-            description = "Матриксная диагностика",
-            audiometryType = AudiometryType.MATRIX.name
-        )
-        val audiometrySpeechEn = Audiometry(
-            locale = Locale.EN.locale,
-            name = "Speech diagnostic",
-            description = "Speech diagnostic with Lopotko words sequences",
-            audiometryType = AudiometryType.SPEECH.name
-        )
-        audiometryRepository.saveAll(listOf(audiometrySignal, audiometrySpeech, audiometryMatrix, audiometrySpeechEn))
     }
 }
 

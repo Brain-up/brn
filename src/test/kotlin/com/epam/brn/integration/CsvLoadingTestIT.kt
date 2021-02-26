@@ -12,7 +12,8 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
-import com.epam.brn.service.InitialDataLoader
+import com.epam.brn.service.load.AudiometryLoader
+import com.epam.brn.service.load.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
 import org.amshove.kluent.shouldHaveSize
 import org.junit.jupiter.api.AfterEach
@@ -32,7 +33,7 @@ class CsvLoadingTestIT : BaseIT() {
             resourceLoader: ResourceLoader,
             exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
-            audiometryRepository: AudiometryRepository,
+            audiometryLoader: AudiometryLoader,
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
             uploadService: CsvUploadService,
@@ -41,7 +42,7 @@ class CsvLoadingTestIT : BaseIT() {
             resourceLoader,
             exerciseGroupRepository,
             userAccountRepository,
-            audiometryRepository,
+            audiometryLoader,
             passwordEncoder,
             authorityService,
             uploadService,
@@ -81,8 +82,8 @@ class CsvLoadingTestIT : BaseIT() {
 
     @Test
     fun `should load test data from classpath initFiles folder`() {
-        audiometryRepository.findAll() shouldHaveSize 4
-        audiometryTaskRepository.findAll() shouldHaveSize 20
+        audiometryRepository.findAll() shouldHaveSize 6
+        audiometryTaskRepository.findAll() shouldHaveSize 24
         exerciseGroupRepository.findAll() shouldHaveSize 4
         seriesRepository.findAll() shouldHaveSize 7
         subGroupRepository.findAll() shouldHaveSize 41

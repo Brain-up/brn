@@ -1,3 +1,15 @@
+{{#if @route}}
+
+  <LinkTo @tagName="button" type="button" @route={{@route}} @models={{@models}}  class="{{style-namespace "ui/tab-button"}} {{this.classes}}" disabled={{this.isDisabled}} ...attributes>
+    {{#if (has-block)}}
+  {{yield}}
+    {{else}}
+    {{@title}}
+  {{/if}}
+  </LinkTo>
+
+{{else}}
+
 <button type="button" class="{{style-namespace "ui/tab-button"}} {{this.classes}}" disabled={{this.isDisabled}} ...attributes>
   {{#if (has-block)}}
   {{yield}}
@@ -6,3 +18,4 @@
   {{/if}}
 </button>
 
+{{/if}}

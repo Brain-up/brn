@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LoadFileComponent } from './load-file.component';
 
@@ -6,11 +6,11 @@ describe('LoadFileComponent', () => {
   let component: LoadFileComponent;
   let fixture: ComponentFixture<LoadFileComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoadFileComponent ]
-    })
-    .compileComponents();
+        declarations: [LoadFileComponent]
+      })
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,5 +1,7 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.AudiometryDto
+import com.epam.brn.enums.AudiometryType
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -17,7 +19,7 @@ class Audiometry(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    val locale: String?,
+    val locale: String,
     @Column(nullable = false, unique = true)
     val name: String,
     @Column(nullable = false)
@@ -44,5 +46,31 @@ class Audiometry(
         return result
     }
 
-    override fun toString() = "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
+    override fun toString() =
+        "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
+
+    fun toDtoWithoutTasks() = AudiometryDto(
+        id,
+        locale,
+        name,
+        AudiometryType.valueOf(audiometryType),
+        description,
+        emptyList<String>()
+    )
+
+    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryDto {
+        val audiometryTasks = when (audiometryType) {
+            AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name -> tasks.map { it.toDto() }
+            AudiometryType.SPEECH.name -> tasks.groupBy({ it.frequencyZone }, { it.toDto() })
+            else -> throw IllegalArgumentException("Audiometry `$audiometryType` does not supported in the system.")
+        }
+        return AudiometryDto(
+            id,
+            locale,
+            name,
+            AudiometryType.valueOf(audiometryType),
+            description,
+            audiometryTasks
+        )
+    }
 }

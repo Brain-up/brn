@@ -1,0 +1,30 @@
+{
+  "data": [
+    {
+      "id": 3,
+      "locale": "ru-ru",
+      "name": "Матриксная диагностика",
+      "audiometryType": "MATRIX",
+      "description": "Матриксная диагностика",
+      "audiometryTasks": []
+    },
+    {
+      "id": 2,
+      "locale": "ru-ru",
+      "name": "Речевая диагностика",
+      "audiometryType": "SPEECH",
+      "description": "Речевая диагностика методом Лопотко",
+      "audiometryTasks": []
+    },
+    {
+      "id": 1,
+      "locale": "ru-ru",
+      "name": "Частотная диагностика",
+      "audiometryType": "SIGNALS",
+      "description": "Частотная диагностика",
+      "audiometryTasks": []
+    }
+  ],
+  "errors": [],
+  "meta": []
+}
