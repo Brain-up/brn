@@ -48,10 +48,10 @@ export const selectAuthFeature = (state: AppStateModel) => state.auth;
 
 export const selectAuthState = createSelector(
   selectAuthFeature,
-  (state: AuthStateModel) => state.isAuthenticated
+  (state: AuthStateModel) => state && state.isAuthenticated
 );
 
 export const selectAuthError = createSelector(
   selectAuthFeature,
-  (state: AuthStateModel) => state.loginError
+  (state: AuthStateModel) => state && state.loginError
 );
