@@ -8,4 +8,5 @@ import { slideInAnimation } from 'src/app/modules/shared/animations/slide-in-ani
   animations: [slideInAnimation],
 })
 export class HomeComponent {
+  public activeBtnIndex: number;
 }
