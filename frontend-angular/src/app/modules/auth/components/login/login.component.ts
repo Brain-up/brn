@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { withLatestFrom, tap, debounceTime } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { withLatestFrom, tap, debounceTime, takeUntil } from 'rxjs/operators';
 
 import { AppStateModel } from 'src/app/models/app-state.model';
 import * as fromAuthActions from '../../ngrx/actions';
@@ -17,6 +17,7 @@ import { selectAuthError } from '../../ngrx/reducers';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginError: Observable<string>;
+  ngUnsubscribe = new Subject<void>();
 
   constructor(private store: Store<AppStateModel>) {
   }
@@ -37,11 +38,17 @@ export class LoginComponent implements OnInit {
         if (error) {
           this.store.dispatch(fromAuthActions.clearErrorAction());
         }
-      })
+      }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe();
   }
 
   onLogin() {
     this.store.dispatch(fromAuthActions.createSessionRequestAction(this.loginForm.value));
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

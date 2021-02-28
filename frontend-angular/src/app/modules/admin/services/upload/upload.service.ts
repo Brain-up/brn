@@ -13,7 +13,7 @@ export class UploadService {
     return this.httpClient.get<GetUploadModel>(`/api/cloud/upload?filePath=${resolvedPath}`);
   }
 
-  sendFormData(action: string, body: FormData): Observable<{}> | Observable<HttpErrorResponse> {
+  sendFormData(action: string, body: FormData): Observable<{} | HttpErrorResponse> {
     return this.httpClient.post(action, body);
   }
 }
