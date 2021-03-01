@@ -12,6 +12,9 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { SessionService } from './services/session/session.service';
 import { AuthGuardService } from './services/auth-guard/auth-guard.service';
+import { SessionTokenService } from './services/session/session-token.service';
+import { SessionTokenCoderService } from './services/session/session-token-coder.service';
+import { SessionTokenMapperService } from './services/session/session-token-mapper.service';
 import * as fromAuthNgrx from './ngrx/reducers';
 import { AuthEffects } from './ngrx/effects';
 
@@ -49,7 +52,10 @@ const authRoutes: Routes = [
   ],
   providers: [
     SessionService,
-    AuthGuardService
+    AuthGuardService,
+    SessionTokenService,
+    SessionTokenCoderService,
+    SessionTokenMapperService
   ]
 })
 export class AuthModule {
