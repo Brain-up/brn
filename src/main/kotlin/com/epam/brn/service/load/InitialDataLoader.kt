@@ -2,6 +2,7 @@ package com.epam.brn.service.load
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.model.Authority
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
@@ -50,14 +51,22 @@ class InitialDataLoader(
     var withAudioFilesGeneration: Boolean = false
 
     companion object {
-        fun fileNameForSeries(seriesId: Long, suffix: String) = "${seriesId}_series_$suffix.csv"
+        private val mapSeriesTypeInitFile = mapOf(
+            ExerciseType.SINGLE_SIMPLE_WORDS.name to SINGLE_SIMPLE_WORDS_FILE_NAME,
+            ExerciseType.PHRASES.name to PHRASES_FILE_NAME,
+            ExerciseType.WORDS_SEQUENCES.name to WORDS_SEQUENCES_FILE_NAME,
+            ExerciseType.SENTENCE.name to SENTENCES_FILE_NAME,
+            ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
+            ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
+        )
 
-        fun getInputStreamFromSeriesInitFile(seriesId: Long): InputStream {
+        fun getInputStreamFromSeriesInitFile(seriesType: String): InputStream {
+            val fileName = mapSeriesTypeInitFile[seriesType]
             val inputStream = Thread.currentThread()
-                .contextClassLoader.getResourceAsStream("initFiles/${fileNameForSeries(seriesId, "prod")}")
+                .contextClassLoader.getResourceAsStream("initFiles/$fileName.csv")
 
             if (inputStream == null)
-                throw IOException("Can not get init file for $seriesId series.")
+                throw IOException("Can not get init file for $seriesType series.")
 
             return inputStream
         }
@@ -65,16 +74,15 @@ class InitialDataLoader(
 
     fun getSourceFiles(): List<String> {
         var profile: String = environment.activeProfiles[0].toLowerCase()
-        if (profile == "integration-tests")
-            profile = "prod"
+        val suffix = if (profile == "dev") "-dev" else ""
         return listOf(
             "groups.csv",
             "series.csv",
             "subgroups.csv",
-            fileNameForSeries(1, profile),
-            fileNameForSeries(2, profile),
-            fileNameForSeries(3, profile),
-            fileNameForSeries(4, profile),
+            "$SINGLE_SIMPLE_WORDS_FILE_NAME$suffix.csv",
+            "$PHRASES_FILE_NAME$suffix.csv",
+            "$WORDS_SEQUENCES_FILE_NAME$suffix.csv",
+            "$SENTENCES_FILE_NAME$suffix.csv",
             "signal_exercises.csv",
             "lopotko.csv"
         )
@@ -181,3 +189,9 @@ class InitialDataLoader(
         return mutableListOf(firstUser, secondUser)
     }
 }
+
+val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words"
+val PHRASES_FILE_NAME = "series_phrases"
+val WORDS_SEQUENCES_FILE_NAME = "series_word_groups"
+val SENTENCES_FILE_NAME = "series_sentences"
+val SIGNALS_FILE_NAME = "signal_exercises"

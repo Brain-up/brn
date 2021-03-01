@@ -30,9 +30,9 @@ class TaskService(
                 .forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
         }
         return when (ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.to1SeriesTaskDto() }
-            ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.to2SeriesTaskDto(task.exercise?.template) }
-            ExerciseType.SENTENCE -> tasks.map { task -> task.to3SeriesTaskDto(task.exercise?.template) }
+            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.toWordsSeriesTaskDto() }
+            ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.toWordsGroupSeriesTaskDto(task.exercise?.template) }
+            ExerciseType.SENTENCE -> tasks.map { task -> task.toSentenceSeriesTaskDto(task.exercise?.template) }
             ExerciseType.PHRASES -> tasks.map { task -> task.to4SeriesTaskDto() }
             else -> throw EntityNotFoundException("No tasks for this signal exercise type")
         }
@@ -44,9 +44,9 @@ class TaskService(
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         task.answerOptions.forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
         return when (ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS -> task.to1SeriesTaskDto()
-            ExerciseType.WORDS_SEQUENCES -> task.to2SeriesTaskDto(task.exercise?.template)
-            ExerciseType.SENTENCE -> task.to3SeriesTaskDto(task.exercise?.template)
+            ExerciseType.SINGLE_SIMPLE_WORDS -> task.toWordsSeriesTaskDto()
+            ExerciseType.WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)
+            ExerciseType.SENTENCE -> task.toSentenceSeriesTaskDto(task.exercise?.template)
             ExerciseType.PHRASES -> task.to4SeriesTaskDto()
             else -> throw EntityNotFoundException("No tasks for this exercise type")
         }

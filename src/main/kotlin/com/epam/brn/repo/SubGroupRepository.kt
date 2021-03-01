@@ -1,6 +1,5 @@
 package com.epam.brn.repo
 
-import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
