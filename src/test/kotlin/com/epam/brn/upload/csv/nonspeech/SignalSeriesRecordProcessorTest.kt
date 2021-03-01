@@ -7,7 +7,6 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.Signal
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.then
@@ -23,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 internal class SignalSeriesRecordProcessorTest {
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
     private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
-    private val seriesRepositoryMock = mock(SeriesRepository::class.java)
 
     private lateinit var signalSeriesRecordProcessor: SignalSeriesRecordProcessor
 
