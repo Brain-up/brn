@@ -29,7 +29,7 @@ class SubgroupGenericRecordProcessor(
             }
         subGroups.forEach { subGroup ->
             run {
-                val existSubGroup = subGroupRepository.findByNameAndLevel(subGroup.name, subGroup.level)
+                val existSubGroup = subGroupRepository.findByNameAndLevelAndSeries(subGroup.name, subGroup.level, subGroup.series)
                 if (existSubGroup == null)
                     subGroupRepository.save(subGroup)
             }
