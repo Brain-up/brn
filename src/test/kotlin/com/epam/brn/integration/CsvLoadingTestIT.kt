@@ -31,7 +31,6 @@ class CsvLoadingTestIT : BaseIT() {
         @Bean
         fun initialDataLoader(
             resourceLoader: ResourceLoader,
-            exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
             audiometryLoader: AudiometryLoader,
             passwordEncoder: PasswordEncoder,
@@ -40,7 +39,6 @@ class CsvLoadingTestIT : BaseIT() {
             audioFilesGenerationService: AudioFilesGenerationService
         ) = InitialDataLoader(
             resourceLoader,
-            exerciseGroupRepository,
             userAccountRepository,
             audiometryLoader,
             passwordEncoder,

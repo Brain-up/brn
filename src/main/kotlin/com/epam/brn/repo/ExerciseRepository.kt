@@ -10,7 +10,7 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
 
     fun findExercisesBySubGroupId(subGroupId: Long): List<Exercise>
 
-    fun findExercisesByName(name: String): List<Exercise>
+    fun findByNameAndLevel(name: String, level: Int): Exercise?
 
     fun findExerciseByNameAndLevel(name: String, level: Int): Optional<Exercise>
 

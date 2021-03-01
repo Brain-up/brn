@@ -5,7 +5,6 @@ import com.epam.brn.model.Authority
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
 import com.epam.brn.upload.CsvUploadService
@@ -32,7 +31,6 @@ import java.nio.file.Path
 @Profile("dev", "prod")
 class InitialDataLoader(
     private val resourceLoader: ResourceLoader,
-    private val exerciseGroupRepository: ExerciseGroupRepository,
     private val userAccountRepository: UserAccountRepository,
     private val audiometryLoader: AudiometryLoader,
     private val passwordEncoder: PasswordEncoder,
@@ -102,13 +100,12 @@ class InitialDataLoader(
         }
 
         audiometryLoader.loadInitialAudiometricsWithTasks()
-        if (isGroupsEmpty())
-            initExercisesFromFiles()
+
+        initExercisesFromFiles()
+
         if (withAudioFilesGeneration)
             audioFilesGenerationService.generateAudioFiles()
     }
-
-    private fun isGroupsEmpty() = exerciseGroupRepository.count() == 0L
 
     private fun initExercisesFromFiles() {
         log.debug("Initialization started")

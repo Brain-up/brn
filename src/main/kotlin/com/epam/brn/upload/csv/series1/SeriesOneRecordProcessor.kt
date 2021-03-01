@@ -1,13 +1,13 @@
 package com.epam.brn.upload.csv.series1
 
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -49,23 +49,23 @@ class SeriesOneRecordProcessor(
 
     var random = Random()
 
-    override fun isApplicable(record: Any): Boolean {
-        return record is SeriesOneRecord
-    }
+    override fun isApplicable(record: Any): Boolean = record is SeriesOneRecord
 
     @Transactional
     override fun process(records: List<SeriesOneRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
-
         records.forEach {
-            val answerOptions = extractAnswerOptions(it)
-            resourceRepository.saveAll(answerOptions)
             val subGroup = subGroupRepository.findByCode(it.code)
-            val exercise = extractExercise(it, subGroup)
-            exercise.addTask(generateOneTask(exercise, answerOptions))
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(it.exerciseName, it.level)
+            if (!existExercise.isPresent) {
+                val answerOptions = extractAnswerOptions(it)
+                resourceRepository.saveAll(answerOptions)
 
-            exerciseRepository.save(exercise)
-            exercises.add(exercise)
+                val newExercise = generateExercise(it, subGroup)
+                newExercise.addTask(generateOneTask(newExercise, answerOptions))
+                exerciseRepository.save(newExercise)
+                exercises.add(newExercise)
+            }
         }
         wordsService.createTxtFileWithExerciseWordsMap(words, series1WordsFileName)
         return exercises.toMutableList()
@@ -100,19 +100,17 @@ class SeriesOneRecordProcessor(
 
     private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun extractExercise(record: SeriesOneRecord, subGroup: SubGroup): Exercise {
-        return exerciseRepository
-            .findExerciseByNameAndLevel(record.exerciseName, record.level)
-            .orElse(
-                Exercise(
-                    subGroup = subGroup,
-                    name = record.exerciseName,
-                    level = record.level,
-                    noiseLevel = record.noiseLevel,
-                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else ""
-                )
-            )
-    }
+    private fun generateExercise(record: SeriesOneRecord, subGroup: SubGroup) =
+        Exercise(
+            subGroup = subGroup,
+            name = record.exerciseName,
+            level = record.level,
+            noiseLevel = record.noiseLevel,
+            noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(
+                fonAudioPath,
+                record.noiseUrl
+            ) else ""
+        )
 
     private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
         Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)

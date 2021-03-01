@@ -23,7 +23,7 @@ data class Exercise(
     var id: Long? = null,
     var name: String = "",
     var template: String? = "",
-    var level: Int? = 0,
+    var level: Int = 0,
     var noiseLevel: Int = 0,
     var noiseUrl: String = "",
     @ManyToOne(fetch = FetchType.LAZY)

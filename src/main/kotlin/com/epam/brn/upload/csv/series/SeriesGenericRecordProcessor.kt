@@ -4,6 +4,7 @@ import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.ExerciseGroupsService
 import com.epam.brn.upload.csv.RecordProcessor
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,6 +14,8 @@ class SeriesGenericRecordProcessor(
     private val exerciseGroupsService: ExerciseGroupsService
 ) : RecordProcessor<SeriesGenericRecord, Series> {
 
+    private val log = logger()
+
     override fun isApplicable(record: Any): Boolean {
         return record is SeriesGenericRecord
     }
@@ -21,7 +24,13 @@ class SeriesGenericRecordProcessor(
     override fun process(records: List<SeriesGenericRecord>): List<Series> {
         val series = records
             .map { Series(it, exerciseGroupsService.findGroupById(it.groupId)) }
-
-        return seriesRepository.saveAll(series).toList()
+        series.forEach { series ->
+            run {
+                val existSeries = seriesRepository.findByTypeAndName(series.type, series.name)
+                if (existSeries == null)
+                    seriesRepository.save(series)
+            }
+        }
+        return series
     }
 }

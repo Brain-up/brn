@@ -27,6 +27,13 @@ class SubgroupGenericRecordProcessor(
                     ?: throw EntityNotFoundException("Series ${it.seriesType} was not found.")
                 SubGroup(it, series)
             }
-        return subGroupRepository.saveAll(subGroups).toList()
+        subGroups.forEach { subGroup ->
+            run {
+                val existSubGroup = subGroupRepository.findByNameAndLevel(subGroup.name, subGroup.level)
+                if (existSubGroup == null)
+                    subGroupRepository.save(subGroup)
+            }
+        }
+        return subGroups
     }
 }
