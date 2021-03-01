@@ -13,9 +13,5 @@ RUN npm run build
 FROM nginx:alpine
 COPY default.conf /etc/nginx/conf.d/
 COPY --from=build-frontend /src/tmp/deploy-dist /usr/share/nginx/html/
-<<<<<<< HEAD
 COPY --from=build-frontend-angular /src/dist/frontend-angular /usr/share/nginx/html/admin/
 
-=======
-COPY --from=build-frontend-angular /src/dist/frontend-angular /usr/share/nginx/html/admin/
->>>>>>> parent of 4fb64342 (Update Dockerfile_frontend)
