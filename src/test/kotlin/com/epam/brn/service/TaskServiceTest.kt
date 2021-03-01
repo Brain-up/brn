@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.TaskDtoFor1Series
+import com.epam.brn.dto.WordsSeriesTaskDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
@@ -53,10 +53,10 @@ internal class TaskServiceTest {
         fun `should return tasks by exerciseId`() {
             // GIVEN
             val task1 = mock(Task::class.java)
-            val taskDto1 = mock(TaskDtoFor1Series::class.java)
+            val taskDto1 = mock(WordsSeriesTaskDto::class.java)
             val task2 = mock(Task::class.java)
             val answer = mock(Resource::class.java)
-            val taskDto2 = mock(TaskDtoFor1Series::class.java)
+            val taskDto2 = mock(WordsSeriesTaskDto::class.java)
             val exercise = mock(Exercise::class.java)
             val subGroup = mock(SubGroup::class.java)
             val series = mock(Series::class.java)
@@ -70,8 +70,8 @@ internal class TaskServiceTest {
             `when`(exercise.subGroup).thenReturn(subGroup)
             `when`(subGroup.series).thenReturn(series)
             `when`(series.type).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.name)
-            `when`(task1.to1SeriesTaskDto()).thenReturn(taskDto1)
-            `when`(task2.to1SeriesTaskDto()).thenReturn(taskDto2)
+            `when`(task1.toWordsSeriesTaskDto()).thenReturn(taskDto1)
+            `when`(task2.toWordsSeriesTaskDto()).thenReturn(taskDto2)
             `when`(task1.answerOptions).thenReturn(mutableSetOf(answer))
             `when`(answer.audioFileUrl).thenReturn("url")
 
@@ -90,14 +90,14 @@ internal class TaskServiceTest {
             val exercise = mock(Exercise::class.java)
             val subGroup = mock(SubGroup::class.java)
             val series = mock(Series::class.java)
-            val taskDto = TaskDtoFor1Series()
+            val taskDto = WordsSeriesTaskDto(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
             `when`(taskRepository.findById(LONG_ONE))
                 .thenReturn(Optional.of(task))
             `when`(task.exercise).thenReturn(exercise)
             `when`(exercise.subGroup).thenReturn(subGroup)
             `when`(subGroup.series).thenReturn(series)
             `when`(series.type).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.name)
-            `when`(task.to1SeriesTaskDto()).thenReturn(taskDto)
+            `when`(task.toWordsSeriesTaskDto()).thenReturn(taskDto)
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
             // THEN
