@@ -3,11 +3,7 @@ import Model from '@ember-data/model';
 
 export default class TaskSentenceSerializer extends BaseTaskSerializer {
   normalize(typeClass: Model, hash: any) {
-    const hashCopy = {
-      ...hash,
-      correctAnswer: hash.correctAnswer.word,
-    };
-    return super.normalize(typeClass, hashCopy);
+    return super.normalize(typeClass, hash);
   }
 }
 
