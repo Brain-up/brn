@@ -55,7 +55,7 @@ class AudiometryLoader(
         val audiometryMatrixEn = Audiometry(
             locale = Locale.EN.locale,
             name = "Matrix diagnostic",
-            description = "Matrix diagnostic555",
+            description = "Matrix diagnostic",
             audiometryType = AudiometryType.MATRIX.name
         )
         saveAudiometrics(
