@@ -1,8 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AdminPageComponent} from './admin-page.component';
-import {MatButtonModule, MatIconModule, MatSnackBarModule} from '@angular/material';
-import {RouterModule} from '@angular/router';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 import {LoadFileComponent} from './components/load-file/load-file.component';
 import {LoadTasksComponent} from './components/load-tasks/load-tasks.component';
 import {ReactiveFormsModule} from '@angular/forms';
