@@ -49,10 +49,10 @@ data class AudiometryTask(
 
     // == for frequency diagnostic
     val frequencies: String? = null,
-    val ear: EAR = EAR.BOTH,
+    var ear: EAR = EAR.BOTH,
 ) {
     override fun toString() =
-        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, answerOptions=$answerOptions)"
+        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

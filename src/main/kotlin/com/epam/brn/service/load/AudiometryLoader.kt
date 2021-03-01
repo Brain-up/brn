@@ -18,9 +18,10 @@ class AudiometryLoader(
     @Value("#{'\${frequencyForDiagnostic}'.split(',')}")
     lateinit var frequencyForDiagnostic: List<Int>
 
+    @Value("\${createOrUpdate}")
+    var createOrUpdate: Boolean = false
+
     fun loadInitialAudiometricsWithTasks() {
-        if (audiometryRepository.count() > 0L)
-            return
         val audiometrySignal = Audiometry(
             locale = Locale.RU.locale,
             name = "Частотная диагностика",
@@ -54,10 +55,10 @@ class AudiometryLoader(
         val audiometryMatrixEn = Audiometry(
             locale = Locale.EN.locale,
             name = "Matrix diagnostic",
-            description = "Matrix diagnostic",
+            description = "Matrix diagnostic555",
             audiometryType = AudiometryType.MATRIX.name
         )
-        audiometryRepository.saveAll(
+        saveAudiometrics(
             listOf(
                 audiometrySignal,
                 audiometrySpeech,
@@ -70,11 +71,33 @@ class AudiometryLoader(
         loadFrequencyDiagnosticData()
     }
 
+    fun saveAudiometrics(list: List<Audiometry>) {
+        if (createOrUpdate)
+            list.forEach { createOrUpdate(it) }
+        else
+            audiometryRepository.saveAll(list)
+    }
+
+    fun createOrUpdate(audiometry: Audiometry): Audiometry {
+        val existAudiometry =
+            audiometryRepository.findByAudiometryTypeAndLocale(audiometry.audiometryType, audiometry.locale)
+        return if (existAudiometry == null)
+            audiometryRepository.save(audiometry) // create
+        else {
+            existAudiometry.description = audiometry.description
+            audiometryRepository.save(existAudiometry) // update existing audiometry
+        }
+    }
+
     fun loadFrequencyDiagnosticData() {
         val audiometrics = audiometryRepository.findByAudiometryType(AudiometryType.SIGNALS.name)
         audiometrics.forEach { audiometry ->
             val taskLeft =
-                AudiometryTask(audiometry = audiometry, ear = EAR.LEFT, frequencies = frequencyForDiagnostic.toString())
+                AudiometryTask(
+                    audiometry = audiometry,
+                    ear = EAR.LEFT,
+                    frequencies = frequencyForDiagnostic.toString()
+                )
             val taskRight =
                 AudiometryTask(
                     audiometry = audiometry,

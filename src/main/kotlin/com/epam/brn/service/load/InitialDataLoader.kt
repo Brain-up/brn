@@ -94,8 +94,8 @@ class InitialDataLoader(
         }
 
         audiometryLoader.loadInitialAudiometricsWithTasks()
-        if (isGroupsEmpty())
-            initExercisesFromFiles()
+//        if (isGroupsEmpty())
+        initExercisesFromFiles()
         if (withAudioFilesGeneration)
             audioFilesGenerationService.generateAudioFiles()
     }

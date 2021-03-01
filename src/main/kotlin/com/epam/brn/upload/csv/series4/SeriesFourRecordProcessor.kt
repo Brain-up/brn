@@ -55,15 +55,18 @@ class SeriesFourRecordProcessor(
         val exercises = mutableSetOf<Exercise>()
 
         records.forEach {
-            val answerOptions = extractAnswerOptions(it)
-            resourceRepository.saveAll(answerOptions)
-
             val subGroup = subGroupRepository.findByCode(it.code)
-            val exercise = extractExercise(it, subGroup)
-            exercise.addTask(generateOneTask(exercise, answerOptions))
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(it.exerciseName, it.level)
+            if (!existExercise.isPresent) {
+                val answerOptions = extractAnswerOptions(it)
+                resourceRepository.saveAll(answerOptions)
 
-            exerciseRepository.save(exercise)
-            exercises.add(exercise)
+                val newExercise = generateExercise(it, subGroup)
+                newExercise.addTask(generateOneTask(newExercise, answerOptions))
+
+                exerciseRepository.save(newExercise)
+                exercises.add(newExercise)
+            }
         }
         wordsService.createTxtFileWithExerciseWordsMap(words, series4WordsFileName)
         return exercises.toMutableList()
@@ -100,19 +103,14 @@ class SeriesFourRecordProcessor(
 
     private fun toPhrasesWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun extractExercise(record: SeriesFourRecord, subGroup: SubGroup): Exercise {
-        return exerciseRepository
-            .findExerciseByNameAndLevel(record.exerciseName, record.level)
-            .orElse(
-                Exercise(
-                    subGroup = subGroup,
-                    name = record.exerciseName,
-                    level = record.level,
-                    noiseLevel = record.noiseLevel,
-                    noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else ""
-                )
-            )
-    }
+    private fun generateExercise(record: SeriesFourRecord, subGroup: SubGroup): Exercise =
+        Exercise(
+            subGroup = subGroup,
+            name = record.exerciseName,
+            level = record.level,
+            noiseLevel = record.noiseLevel,
+            noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else ""
+        )
 
     private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
         Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)

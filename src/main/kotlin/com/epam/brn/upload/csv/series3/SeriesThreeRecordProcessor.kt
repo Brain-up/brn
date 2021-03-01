@@ -1,13 +1,13 @@
 package com.epam.brn.upload.csv.series3
 
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils
@@ -35,29 +35,30 @@ class SeriesThreeRecordProcessor(
 
     val words = mutableMapOf<String, String>()
 
-    override fun isApplicable(record: Any): Boolean {
-        return record is SeriesThreeRecord
-    }
+    override fun isApplicable(record: Any): Boolean = record is SeriesThreeRecord
 
     @Transactional
     override fun process(records: List<SeriesThreeRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
         records.forEach {
-            val correctAnswer = extractCorrectAnswer(it)
-            words[correctAnswer.word] = DigestUtils.md5Hex(correctAnswer.word)
-            resourceRepository.save(correctAnswer)
-
-            val answerOptions = extractAnswerOptions(it)
-            words.putAll(answerOptions.associate { r -> Pair(r.word, DigestUtils.md5Hex(r.word)) })
-            resourceRepository.saveAll(answerOptions)
-
             val subGroup = subGroupRepository.findByCode(it.code)
-            val exercise = extractExercise(it, subGroup)
-            exercise.addTask(createTask(exercise, correctAnswer, answerOptions))
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(it.exerciseName, it.level)
+            if (!existExercise.isPresent) {
+                val correctAnswer = extractCorrectAnswer(it)
+                words[correctAnswer.word] = DigestUtils.md5Hex(correctAnswer.word)
+                resourceRepository.save(correctAnswer)
 
-            exerciseRepository.save(exercise)
-            exercises.add(exercise)
+                val answerOptions = extractAnswerOptions(it)
+                words.putAll(answerOptions.associate { r -> Pair(r.word, DigestUtils.md5Hex(r.word)) })
+                resourceRepository.saveAll(answerOptions)
+
+                val newExercise = generateExercise(it, subGroup)
+                newExercise.addTask(createTask(newExercise, correctAnswer, answerOptions))
+
+                exerciseRepository.save(newExercise)
+                exercises.add(newExercise)
+            }
         }
         wordsService.createTxtFileWithExerciseWordsMap(words, series3WordsFileName)
         return exercises.toMutableList()
@@ -113,17 +114,13 @@ class SeriesThreeRecordProcessor(
             )
     }
 
-    private fun extractExercise(record: SeriesThreeRecord, subGroup: SubGroup): Exercise {
-        return exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
-            .orElse(
-                Exercise(
-                    subGroup = subGroup,
-                    name = record.exerciseName,
-                    template = calculateTemplate(record),
-                    level = record.level
-                )
-            )
-    }
+    private fun generateExercise(record: SeriesThreeRecord, subGroup: SubGroup) =
+        Exercise(
+            subGroup = subGroup,
+            name = record.exerciseName,
+            template = calculateTemplate(record),
+            level = record.level
+        )
 
     private fun calculateTemplate(record: SeriesThreeRecord): String {
         return extractWordGroups(record)

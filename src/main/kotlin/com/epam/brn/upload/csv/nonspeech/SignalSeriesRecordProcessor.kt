@@ -31,6 +31,13 @@ class SignalSeriesRecordProcessor(
             exercise.addSignals(signals)
             exercise
         }
-        return exerciseRepository.saveAll(exercises)
+        exercises.forEach { exercise ->
+            run {
+                val existExercise = exerciseRepository.findByNameAndLevel(exercise.name, exercise.level)
+                if (existExercise == null)
+                    exerciseRepository.save(exercise)
+            }
+        }
+        return exercises
     }
 }

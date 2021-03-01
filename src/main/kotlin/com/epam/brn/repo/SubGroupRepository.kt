@@ -12,9 +12,8 @@ interface SubGroupRepository : CrudRepository<SubGroup, Long> {
 
     fun findByCode(code: String): SubGroup
 
+    fun findByNameAndLevel(name: String, level: Int): SubGroup?
+
     @Query("select distinct s from SubGroup s where s.series.id=?1")
     fun findBySeriesId(seriesId: Long): List<SubGroup>
-
-//    @Query("select distinct s from Series s left JOIN FETCH s.exercises where s.id=?1")
-//    fun findSeriesWithExercisesById(groupId: Long): Optional<Series>
 }
