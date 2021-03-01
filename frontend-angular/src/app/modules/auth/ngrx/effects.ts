@@ -7,10 +7,10 @@ import { map, mergeMap, catchError, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import * as fromAuthActions from './actions';
-import { AuthStateModel } from '../models/auth-state.model';
 import { SessionService } from '../services/session/session.service';
 import { LoginSuccessModel } from '../models/login-success.model';
 import { LoginFailureModel } from '../models/login-failure.model';
+import { SessionTokenService } from '../services/session/session-token.service';
 
 @Injectable()
 export class AuthEffects {
@@ -24,12 +24,12 @@ export class AuthEffects {
   checkAuthState$ = createEffect(() => this.actions$.pipe(
     ofType(fromAuthActions.checkAuthStatusAction),
     map((action) => {
-      const authStateStr = localStorage.getItem('brnAuthState');
-      if (!authStateStr) {
+      const tokenData = SessionTokenService.getToken();
+      if (!tokenData) {
         return fromAuthActions.setAuthStatusAction({isAuthenticated: false});
       }
-      const authStateObj = JSON.parse(authStateStr);
-      if (this.checkForValidity(authStateObj)) {
+
+      if (SessionTokenService.isValidToken(tokenData)) {
         return fromAuthActions.setAuthStatusAction({isAuthenticated: true});
       }
     })
@@ -38,18 +38,11 @@ export class AuthEffects {
   createSession$ = createEffect(() => this.actions$.pipe(
     ofType(fromAuthActions.createSessionRequestAction),
     mergeMap((action) => this.sessionService.createSession(action).pipe(
-      switchMap((successAction: LoginSuccessModel) => {
-        const sessionToken = {...action};
-        delete sessionToken.type;
-        const sessionTokenStr = JSON.stringify(sessionToken);
-        localStorage.setItem('brnAuthState', sessionTokenStr);
-
-        return [
-          fromAuthActions.setAuthStatusAction({isAuthenticated: true}),
-          fromAuthActions.createSessionSuccessAction(successAction),
-          fromAuthActions.redirectAction({location: '/admin/home'})
-        ];
-      }),
+      switchMap((tokenData: LoginSuccessModel) => [
+        fromAuthActions.createSessionSuccessAction({tokenData}),
+        fromAuthActions.setAuthStatusAction({isAuthenticated: true}),
+        fromAuthActions.redirectAction({location: '/admin/home'})
+      ]),
       catchError((error: HttpErrorResponse) => of(
         fromAuthActions.createSessionFailureAction({
           errorObj: (error.error as LoginFailureModel),
@@ -58,6 +51,13 @@ export class AuthEffects {
       )),
     ))
   ));
+
+  sessionSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(fromAuthActions.createSessionSuccessAction),
+    tap(action => {
+      SessionTokenService.saveToken(action.tokenData);
+    })
+  ), {dispatch: false});
 
   redirectToMainPage$ = createEffect(() => this.actions$.pipe(
     ofType(fromAuthActions.redirectAction),
@@ -68,21 +68,12 @@ export class AuthEffects {
     ofType(fromAuthActions.destroySessionRequestAction),
     mergeMap(action => this.sessionService.destroySession().pipe(
       tap(_ => {
-        localStorage.removeItem('brnAuthState');
+        SessionTokenService.removeToken();
       }),
-      mergeMap(_ => {
-        {
-          return [
-            fromAuthActions.destroySessionSuccessAction(),
-            fromAuthActions.redirectAction({location: '/auth/login'})
-          ];
-        }
-      })
+      mergeMap(_ => [
+        fromAuthActions.destroySessionSuccessAction(),
+        fromAuthActions.redirectAction({location: '/auth/login'})
+      ])
     ))
   ));
-
-  checkForValidity(authState: AuthStateModel): boolean {
-    // TODO: Check for expiration of the token
-    return true;
-  }
 }
