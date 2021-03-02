@@ -80,10 +80,10 @@ class InitialDataLoader(
             "series.csv",
             "subgroups.csv",
             "$SINGLE_SIMPLE_WORDS_FILE_NAME$suffix.csv",
-            "$PHRASES_FILE_NAME$suffix.csv",
             "$WORDS_SEQUENCES_FILE_NAME$suffix.csv",
-            "$SENTENCES_FILE_NAME$suffix.csv",
+            "$PHRASES_FILE_NAME$suffix.csv",
             "signal_exercises.csv",
+            "$SENTENCES_FILE_NAME$suffix.csv",
             "lopotko.csv"
         )
     }

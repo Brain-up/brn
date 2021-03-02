@@ -49,7 +49,7 @@ data class AudiometryTask(
 
     // == for frequency diagnostic
     val frequencies: String? = null,
-    var ear: EAR = EAR.BOTH,
+    var ear: String = EAR.BOTH.name,
 ) {
     override fun toString() =
         "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
@@ -79,7 +79,7 @@ data class AudiometryTask(
         return when (audiometry!!.audiometryType) {
             AudiometryType.SIGNALS.name -> AudiometrySignalsTaskDto(
                 id,
-                ear,
+                EAR.valueOf(ear),
                 frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() }
             )
             AudiometryType.SPEECH.name -> AudiometryLopotkoTaskDto(

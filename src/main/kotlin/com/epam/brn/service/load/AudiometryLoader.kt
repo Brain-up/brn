@@ -95,13 +95,13 @@ class AudiometryLoader(
             val taskLeft =
                 AudiometryTask(
                     audiometry = audiometry,
-                    ear = EAR.LEFT,
+                    ear = EAR.LEFT.name,
                     frequencies = frequencyForDiagnostic.toString()
                 )
             val taskRight =
                 AudiometryTask(
                     audiometry = audiometry,
-                    ear = EAR.RIGHT,
+                    ear = EAR.RIGHT.name,
                     frequencies = frequencyForDiagnostic.toString()
                 )
             audiometryTaskRepository.saveAll(listOf(taskLeft, taskRight))
