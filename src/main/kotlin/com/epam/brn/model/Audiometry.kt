@@ -24,7 +24,7 @@ class Audiometry(
     val name: String,
     @Column(nullable = false)
     val audiometryType: String,
-    val description: String? = "",
+    var description: String? = "",
     @OneToMany(mappedBy = "audiometry", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val audiometryTasks: MutableList<AudiometryTask> = ArrayList()
 ) {

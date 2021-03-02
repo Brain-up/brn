@@ -31,7 +31,6 @@ class CsvLoadingTestIT : BaseIT() {
         @Bean
         fun initialDataLoader(
             resourceLoader: ResourceLoader,
-            exerciseGroupRepository: ExerciseGroupRepository,
             userAccountRepository: UserAccountRepository,
             audiometryLoader: AudiometryLoader,
             passwordEncoder: PasswordEncoder,
@@ -40,7 +39,6 @@ class CsvLoadingTestIT : BaseIT() {
             audioFilesGenerationService: AudioFilesGenerationService
         ) = InitialDataLoader(
             resourceLoader,
-            exerciseGroupRepository,
             userAccountRepository,
             audiometryLoader,
             passwordEncoder,
@@ -86,7 +84,7 @@ class CsvLoadingTestIT : BaseIT() {
         audiometryTaskRepository.findAll() shouldHaveSize 24
         exerciseGroupRepository.findAll() shouldHaveSize 4
         seriesRepository.findAll() shouldHaveSize 7
-        subGroupRepository.findAll() shouldHaveSize 37
+        subGroupRepository.findAll() shouldHaveSize 41
 //        exerciseRepository.findAll() shouldHaveSize 188
 //        taskRepository.findAll() shouldHaveSize 188
 //        resourceRepository.findAll() shouldHaveSize 881

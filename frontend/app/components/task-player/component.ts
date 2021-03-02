@@ -30,7 +30,11 @@ export default class TaskPlayerComponent extends Component {
 
   @tracked mode = ''; // listen, interact, task
   get componentType() {
-    return `task-player/${dasherize(this.task.exerciseType)}`;
+    let postfix = dasherize(this.task.exerciseType);
+    if (postfix === 'sentence') {
+      postfix = 'words-sequences';
+    }
+    return `task-player/${postfix}`;
   }
   get disableAnswers() {
     if (this.mode === MODES.INTERACT) {

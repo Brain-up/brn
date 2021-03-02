@@ -98,11 +98,12 @@ class SeriesControllerIT : BaseIT() {
 
     @Test
     fun `test get file format for seriesId`() {
-        val seriesId = 1
+        val group = insertGroup()
+        val series = insertSeries(group, "SINGLE_SIMPLE_WORDS")
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("/series/fileFormat/$seriesId")
+                .get("/series/fileFormat/${series.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
