@@ -19,9 +19,11 @@ import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
 import { ToneObject } from 'brn/components/audio-player/component';
 import SignalModel from 'brn/models/signal';
+import Intl from 'ember-intl/services/intl';
 export default class AudioService extends Service {
-  @service('network') network!: NetworkService;
-  @service('stats') stats!: StatsService;
+  @service('network') declare network: NetworkService;
+  @service('stats') declare stats: StatsService;
+  @service('intl') declare intl: Intl;
   context = createAudioContext();
   @tracked
   player: null | TimerComponent = null;
@@ -60,6 +62,10 @@ export default class AudioService extends Service {
     }
   }).enqueue())
   trackProgress!: TaskGenerator<any,any>
+
+  audioUrlForText(text: string) {
+    return `/api/audio?text=${encodeURIComponent(text)}&locale=${encodeURIComponent(this.intl.primaryLocale)}`;
+  }
 
   @action async startPlayTask(filesToPlay = this.filesToPlay) {
     if (this.isPlaying) {
