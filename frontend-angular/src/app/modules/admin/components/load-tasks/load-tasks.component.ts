@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
-import { untilDestroyed } from 'ngx-take-until-destroy';
-import { iif, Observable, of, EMPTY } from 'rxjs';
-import { switchMap, tap, pluck } from 'rxjs/operators';
+import { iif, Observable, of, EMPTY, Subject } from 'rxjs';
+import { switchMap, tap, pluck, takeUntil } from 'rxjs/operators';
 
 import { Series } from '../../model/series';
 import { Group } from '../../model/group';
@@ -26,11 +25,12 @@ import { selectGroups } from '../../ngrx/reducers';
   styleUrls: ['./load-tasks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoadTasksComponent implements OnInit {
+export class LoadTasksComponent implements OnInit, OnDestroy {
   format: string;
   groups$: Observable<Group[]>;
   tasksGroup: FormGroup;
   series$: Observable<Series[]>;
+  ngUnsubscribe = new Subject<void>();
 
   constructor(
     private adminAPI: AdminService,
@@ -49,6 +49,7 @@ export class LoadTasksComponent implements OnInit {
     formData.append('seriesId', this.tasksGroup.get('series').value.id);
 
     this.uploadFileService.sendFormData('/api/admin/loadTasksFile?seriesId=1', formData)
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(returnData => {
         // TODO: - Check for other type of errors
         this.snackBarService.showHappySnackbar('Successfully loaded ' + this.tasksGroup.get('file').value.name);
@@ -74,7 +75,8 @@ export class LoadTasksComponent implements OnInit {
 
     this.tasksGroup.controls.series.valueChanges.pipe(
       switchMap((val: SeriesModel) => val ? this.formatService.getFormat(val.id) : EMPTY),
-      pluck('data')
+      pluck('data'),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe(val => this.format = val);
 
     this.tasksGroup.controls.group.statusChanges.pipe(
@@ -83,7 +85,12 @@ export class LoadTasksComponent implements OnInit {
         of('').pipe(tap(_ => this.tasksGroup.controls.series.disable())),
         ),
       ),
-      untilDestroyed(this)
+      takeUntil(this.ngUnsubscribe)
     ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

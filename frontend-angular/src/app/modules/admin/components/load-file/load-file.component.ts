@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { mergeMap, takeUntil } from 'rxjs/operators';
 
 import { FoldersService } from '../../services/folders/folders.service';
 import { UploadService } from '../../services/upload/upload.service';
@@ -19,9 +19,10 @@ import { AdminStateModel } from '../../model/admin-state.model';
   styleUrls: ['./load-file.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoadFileComponent implements OnInit {
+export class LoadFileComponent implements OnInit, OnDestroy {
   folders$: Observable<Array<string>>;
   uploadFileForm: FormGroup;
+  ngUnsubscribe = new Subject<void>();
 
   constructor(
     private snackBarService: SnackBarService,
@@ -53,10 +54,16 @@ export class LoadFileComponent implements OnInit {
         formData.append('file', this.uploadFileForm.value.files);
         return this.uploadService.sendFormData(data.data.action, formData);
       }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe(_ => {
       this.router.navigateByUrl('/home');
       this.snackBarService.showHappySnackbar(`${fileName} was successfully uploaded`);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
 
