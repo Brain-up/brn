@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, Self } from '@angular/core';
-import { Observable} from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FolderService } from '../../services/folders/folder.service';
-import { UploadService } from '../../services/upload/upload.service';
 import { Router } from '@angular/router';
-import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
+
 import { Store } from '@ngrx/store';
-import { AppStateModel } from 'src/app/models/app-state.model';
+import { Observable, Subject } from 'rxjs';
+import { mergeMap, takeUntil } from 'rxjs/operators';
+
+import { FoldersService } from '../../services/folders/folders.service';
+import { UploadService } from '../../services/upload/upload.service';
+import { SnackBarService } from 'src/app/modules/shared/services/snack-bar/snack-bar.service';
 import { fetchFoldersRequest } from '../../ngrx/actions';
 import { selectFolders } from '../../ngrx/reducers';
 import { AdminStateModel } from '../../model/admin-state.model';
@@ -18,12 +19,14 @@ import { AdminStateModel } from '../../model/admin-state.model';
   styleUrls: ['./load-file.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoadFileComponent implements OnInit {
+export class LoadFileComponent implements OnInit, OnDestroy {
   folders$: Observable<Array<string>>;
   uploadFileForm: FormGroup;
+  ngUnsubscribe = new Subject<void>();
+
   constructor(
     private snackBarService: SnackBarService,
-    private folderService: FolderService,
+    private folderService: FoldersService,
     private uploadService: UploadService,
     private router: Router,
     private store: Store<AdminStateModel>
@@ -38,6 +41,7 @@ export class LoadFileComponent implements OnInit {
       folder: new FormControl(),
     });
   }
+
   loadFiles() {
     const fileName = this.uploadFileForm.value.files.name;
     this.uploadService.getUploadData(this.uploadFileForm.value.folder, fileName).pipe(
@@ -50,10 +54,16 @@ export class LoadFileComponent implements OnInit {
         formData.append('file', this.uploadFileForm.value.files);
         return this.uploadService.sendFormData(data.data.action, formData);
       }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe(_ => {
       this.router.navigateByUrl('/home');
       this.snackBarService.showHappySnackbar(`${fileName} was successfully uploaded`);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
 

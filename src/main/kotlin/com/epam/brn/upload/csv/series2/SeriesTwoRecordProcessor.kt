@@ -1,13 +1,13 @@
 package com.epam.brn.upload.csv.series2
 
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
@@ -40,18 +40,20 @@ class SeriesTwoRecordProcessor(
 
     override fun process(records: List<SeriesTwoRecord>): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
-
         records.forEach {
-            val answerOptions = extractAnswerOptions(it)
-            words.putAll(answerOptions.associate { r -> Pair(r.word, DigestUtils.md5Hex(r.word)) })
-            val savedResources = resourceRepository.saveAll(answerOptions)
-
             val subGroup = subGroupRepository.findByCode(it.code)
-            val exercise = extractExercise(it, subGroup)
-            val savedExercise = exerciseRepository.save(exercise)
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(it.exerciseName, it.level)
+            if (!existExercise.isPresent) {
+                val answerOptions = extractAnswerOptions(it)
+                words.putAll(answerOptions.associate { r -> Pair(r.word, DigestUtils.md5Hex(r.word)) })
+                val savedResources = resourceRepository.saveAll(answerOptions)
 
-            taskRepository.save(extractTask(savedExercise, savedResources.toMutableSet()))
-            exercises.add(savedExercise)
+                val newExercise = generateExercise(it, subGroup)
+                val savedExercise = exerciseRepository.save(newExercise)
+
+                taskRepository.save(extractTask(savedExercise, savedResources.toMutableSet()))
+                exercises.add(savedExercise)
+            }
         }
         wordsService.createTxtFileWithExerciseWordsMap(words, series2WordsFileName)
         return exercises.toMutableList()
@@ -95,17 +97,13 @@ class SeriesTwoRecordProcessor(
 
     private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun extractExercise(record: SeriesTwoRecord, subGroup: SubGroup): Exercise =
-        exerciseRepository
-            .findExerciseByNameAndLevel(record.exerciseName, record.level)
-            .orElse(
-                Exercise(
-                    subGroup = subGroup,
-                    name = record.exerciseName,
-                    template = calculateTemplate(record),
-                    level = record.level
-                )
-            )
+    private fun generateExercise(record: SeriesTwoRecord, subGroup: SubGroup) =
+        Exercise(
+            subGroup = subGroup,
+            name = record.exerciseName,
+            template = calculateTemplate(record),
+            level = record.level
+        )
 
     private fun calculateTemplate(record: SeriesTwoRecord): String =
         extractWordGroups(record)

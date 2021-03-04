@@ -10,7 +10,9 @@ interface SeriesRepository : CrudRepository<Series, Long> {
 
     fun findByNameLike(name: String): List<Series>
 
-    fun findByType(name: String): Series?
+    fun findByType(type: String): Series?
+
+    fun findByTypeAndName(type: String, name: String): Series?
 
     fun findByNameIn(names: List<String>): List<Series>
 

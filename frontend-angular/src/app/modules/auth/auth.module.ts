@@ -1,17 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './components/login/login.component';
-import { StoreModule } from '@ngrx/store';
-import * as fromAuthNgrx from './ngrx/reducers';
-import { HomeComponent } from './components/home/home.component';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatToolbarModule} from '@angular/material/toolbar';
 import { RouterModule, Routes } from '@angular/router';
-import { SessionService } from './services/session/session.service';
-import { EffectsModule } from '@ngrx/effects';
-import { AuthEffects } from './ngrx/effects';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
+import { SessionService } from './services/session/session.service';
 import { AuthGuardService } from './services/auth-guard/auth-guard.service';
+import { SessionTokenService } from './services/session/session-token.service';
+import { SessionTokenCoderService } from './services/session/session-token-coder.service';
+import { SessionTokenMapperService } from './services/session/session-token-mapper.service';
+import * as fromAuthNgrx from './ngrx/reducers';
+import { AuthEffects } from './ngrx/effects';
 
 const authRoutes: Routes = [
   {
@@ -30,6 +35,7 @@ const authRoutes: Routes = [
     ]
   }
 ];
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -46,7 +52,11 @@ const authRoutes: Routes = [
   ],
   providers: [
     SessionService,
-    AuthGuardService
+    AuthGuardService,
+    SessionTokenService,
+    SessionTokenCoderService,
+    SessionTokenMapperService
   ]
 })
-export class AuthModule { }
+export class AuthModule {
+}

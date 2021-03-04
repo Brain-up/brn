@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { checkAuthStatusAction } from './modules/auth/ngrx/actions';
-
 
 @Component({
   selector: 'app-root',
@@ -10,8 +9,11 @@ import { checkAuthStatusAction } from './modules/auth/ngrx/actions';
 })
 export class AppComponent implements OnInit {
   title = 'frontend-angular';
+
+  constructor(private store: Store<any>) {
+  }
+
   ngOnInit() {
     this.store.dispatch(checkAuthStatusAction());
   }
-  constructor(private store: Store<any>) {}
 }

@@ -21,7 +21,7 @@ class GroupController(val exerciseGroupsService: ExerciseGroupsService) {
     // group being a reserved word in db.
     @GetMapping
     @ApiOperation("Get all groups. by locale if it was set.")
-    fun getGroups(@RequestParam(value = "locale", required = false, defaultValue = "") locale: String): ResponseEntity<BaseResponseDto> {
+    fun getGroups(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok().body(BaseResponseDto(data = exerciseGroupsService.findByLocale(locale)))
     }
 

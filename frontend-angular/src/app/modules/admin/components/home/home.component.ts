@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { slideInAnimation } from 'src/app/modules/shared/animations/slideInAnimation';
-
+import { Component } from '@angular/core';
+import { slideInAnimation } from 'src/app/modules/shared/animations/slide-in-animation';
 
 @Component({
   selector: 'app-home',
@@ -8,11 +7,6 @@ import { slideInAnimation } from 'src/app/modules/shared/animations/slideInAnima
   styleUrls: ['./home.component.scss'],
   animations: [slideInAnimation],
 })
-export class HomeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class HomeComponent {
+  public activeBtnIndex: number;
 }

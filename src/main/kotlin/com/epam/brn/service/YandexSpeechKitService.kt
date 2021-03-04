@@ -110,7 +110,7 @@ class YandexSpeechKitService {
         val response = httpClient.execute(postRequest)
         val statusCode = response.statusLine.statusCode
         if (statusCode != HttpStatus.OK.value())
-            throw YandexServiceException("Yandex cloud does not provide audio file for word `$word`, httpStatus={$statusCode}")
+            throw YandexServiceException("Yandex cloud does not provide audio file for text `$word`, httpStatus={$statusCode}, content=${response.entity.content}")
         log.info("Ogg audio file for Word `$word` was successfully generated.")
         val httpEntity = response.entity
         return httpEntity.content

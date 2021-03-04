@@ -1,11 +1,6 @@
 name: Frontend Application tests
 
-on:
-  pull_request:
-    paths:
-      - 'Dockerfile_frontend'
-      - 'frontend/**'
-      - '.github/workflows/frontend-app-test.yml'
+on: pull_request
 
 jobs:
   test:

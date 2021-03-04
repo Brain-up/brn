@@ -45,7 +45,13 @@ class LopotkoRecordProcessor(
             resourceRepository.saveAll(answerOptions)
 
             val audiometryTask = extractAudiometryTask(it, answerOptions)
-            audiometryTasks.add(audiometryTaskRepository.save(audiometryTask))
+            val existAudiometryTask = audiometryTaskRepository.findByAudiometryAndFrequencyZoneAndAudiometryGroup(
+                audiometryTask.audiometry!!,
+                audiometryTask.frequencyZone!!,
+                audiometryTask.audiometryGroup!!
+            )
+            if (existAudiometryTask == null)
+                audiometryTasks.add(audiometryTaskRepository.save(audiometryTask))
         }
         wordsService.createTxtFileWithExerciseWordsMap(mapHashWord, lopotkoFileName)
         return audiometryTasks.toMutableList()
@@ -88,7 +94,8 @@ class LopotkoRecordProcessor(
             minFrequency = record.minFrequency,
             maxFrequency = record.maxFrequency,
             audiometry = audiometry,
-            answerOptions = answerOptions
+            answerOptions = answerOptions,
+            showSize = 9,
         )
     }
 }

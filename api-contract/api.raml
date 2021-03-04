@@ -42,12 +42,21 @@ mediaType:
             locale:
                 required: false
                 type: String
-                example: "ru-ru"
+                example: "en-us"
                 default: "ru-ru"
         responses:
             200:
                 body:
                     example: !include samples/audiometrics.json
+
+    /{audiometryId}:
+        get:
+            responses:
+                200:
+                    body:
+                        example: !include samples/audiometry_1_signals.json
+                        example: !include samples/audiometry_2_speech.json
+
 
 /audiometry-history:
     post:

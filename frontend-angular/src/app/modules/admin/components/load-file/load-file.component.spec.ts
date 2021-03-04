@@ -8,9 +8,9 @@ describe('LoadFileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoadFileComponent ]
-    })
-    .compileComponents();
+        declarations: [LoadFileComponent]
+      })
+      .compileComponents();
   }));
 
   beforeEach(() => {

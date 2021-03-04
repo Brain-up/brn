@@ -1,11 +1,6 @@
 name: Frontend Angular tests
 
-on:
-  pull_request:
-    paths:
-      - 'Dockerfile_frontend'
-      - 'frontend-angular/**'
-      - '.github/workflows/frontend-admin-test.yml'
+on: pull_request
 
 jobs:
   test:

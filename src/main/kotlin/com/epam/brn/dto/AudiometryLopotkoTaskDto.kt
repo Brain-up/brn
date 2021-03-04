@@ -2,7 +2,7 @@ package com.epam.brn.dto
 
 import com.epam.brn.model.Resource
 
-data class AudiometryTaskDto(
+data class AudiometryLopotkoTaskDto(
     val id: Long?,
     val level: Int,
     val audiometryGroup: String, // А, Б, В, Г

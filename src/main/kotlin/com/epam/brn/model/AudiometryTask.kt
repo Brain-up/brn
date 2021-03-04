@@ -1,6 +1,10 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.AudiometryTaskDto
+import com.epam.brn.dto.AudiometryLopotkoTaskDto
+import com.epam.brn.dto.AudiometryMatrixTaskDto
+import com.epam.brn.dto.AudiometrySignalsTaskDto
+import com.epam.brn.enums.AudiometryType
+import com.epam.brn.enums.EAR
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -20,16 +24,18 @@ data class AudiometryTask(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    var level: Int,
-    val audiometryGroup: String, // А, Б, В, Г
-    val frequencyZone: String,
-    val minFrequency: Int,
-    val maxFrequency: Int,
 
-    var count: Int = 10,
-    var showSize: Int = 9,
+    // == for Lopotko diagnostic
+    var level: Int? = 0,
+    val audiometryGroup: String? = null, // А, Б, В, Г
+    val frequencyZone: String? = null,
+    val minFrequency: Int? = null,
+    val maxFrequency: Int? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    var count: Int? = 10,
+    var showSize: Int? = null,
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "audiometry_id")
     var audiometry: Audiometry? = null,
 
@@ -40,9 +46,13 @@ data class AudiometryTask(
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
     var answerOptions: MutableSet<Resource> = hashSetOf(),
+
+    // == for frequency diagnostic
+    val frequencies: String? = null,
+    var ear: String = EAR.BOTH.name,
 ) {
     override fun toString() =
-        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, answerOptions=$answerOptions)"
+        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -65,15 +75,30 @@ data class AudiometryTask(
         return result
     }
 
-    fun toDto() = AudiometryTaskDto(
-        id,
-        level,
-        audiometryGroup,
-        frequencyZone,
-        minFrequency,
-        maxFrequency,
-        count,
-        showSize,
-        answerOptions
-    )
+    fun toDto(): Any {
+        return when (audiometry!!.audiometryType) {
+            AudiometryType.SIGNALS.name -> AudiometrySignalsTaskDto(
+                id,
+                EAR.valueOf(ear),
+                frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() }
+            )
+            AudiometryType.SPEECH.name -> AudiometryLopotkoTaskDto(
+                id,
+                level!!,
+                audiometryGroup!!,
+                frequencyZone!!,
+                minFrequency!!,
+                maxFrequency!!,
+                count!!,
+                showSize!!,
+                answerOptions
+            )
+            AudiometryType.SPEECH.name -> AudiometryMatrixTaskDto(
+                id,
+                count!!,
+                answerOptions
+            )
+            else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
+        }
+    }
 }

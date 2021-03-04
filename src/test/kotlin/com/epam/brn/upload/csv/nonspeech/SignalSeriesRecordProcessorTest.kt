@@ -7,22 +7,21 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.Signal
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.then
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
 internal class SignalSeriesRecordProcessorTest {
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
     private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
-    private val seriesRepositoryMock = mock(SeriesRepository::class.java)
 
     private lateinit var signalSeriesRecordProcessor: SignalSeriesRecordProcessor
 
@@ -67,9 +66,9 @@ internal class SignalSeriesRecordProcessorTest {
 
     @Test
     fun `should create correct exercise`() {
-        val expected = listOf(createExercise(subGroupDuration))
-        given(exerciseRepositoryMock.saveAll(expected))
-            .willReturn(expected)
+        val exercise = createExercise(subGroupDuration)
+        given(exerciseRepositoryMock.save(exercise))
+            .willReturn(exercise)
         val actual = signalSeriesRecordProcessor.process(
             listOf(
                 SignalSeriesRecord(
@@ -86,17 +85,20 @@ internal class SignalSeriesRecordProcessorTest {
             .should()
             .findByCode("durationSignals")
 
-        Assertions.assertThat(actual).isEqualTo(expected)
+        Assertions.assertThat(actual).contains(exercise)
         then(exerciseRepositoryMock)
             .should()
-            .saveAll(expected)
+            .save(exercise)
     }
 
     @Test
     fun `should create correct exercise for different series`() {
-        val expected = listOf(createExercise(subGroupDuration), createExercise(subGroupFrequency))
-        given(exerciseRepositoryMock.saveAll(expected))
-            .willReturn(expected)
+        val ex1 = createExercise(subGroupDuration)
+        val ex2 = createExercise(subGroupFrequency)
+        `when`(exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1)).thenReturn(null)
+        `when`(exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной частоты.", 1)).thenReturn(null)
+        `when`(exerciseRepositoryMock.save(ex1)).thenReturn(ex1)
+        `when`(exerciseRepositoryMock.save(ex2)).thenReturn(ex2)
         val actual = signalSeriesRecordProcessor.process(
             listOf(
                 SignalSeriesRecord(
@@ -107,7 +109,7 @@ internal class SignalSeriesRecordProcessorTest {
                     signals = emptyList()
                 ),
                 SignalSeriesRecord(
-                    exerciseName = "По 2 сигнала разной длительности.",
+                    exerciseName = "По 2 сигнала разной частоты.",
                     exerciseType = ExerciseType.FREQUENCY_SIGNALS,
                     level = 1,
                     code = "subGroupFrequency",
@@ -123,17 +125,16 @@ internal class SignalSeriesRecordProcessorTest {
             .should()
             .findByCode("subGroupFrequency")
 
-        Assertions.assertThat(actual).isEqualTo(expected)
-        then(exerciseRepositoryMock)
-            .should()
-            .saveAll(expected)
+        Assertions.assertThat(actual).containsAll(listOf(ex1, ex2))
+        then(exerciseRepositoryMock).should().save(ex1)
+        then(exerciseRepositoryMock).should().save(ex2)
     }
 
     @Test
     fun `should create correct signals`() {
-        val expected = listOf(createExerciseWithSignals(subGroupDuration))
-        given(exerciseRepositoryMock.saveAll(expected))
-            .willReturn(expected)
+        val exercise = createExerciseWithSignals(subGroupDuration)
+        `when`(exerciseRepositoryMock.save(exercise)).thenReturn(exercise)
+        `when`(exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1)).thenReturn(null)
         val actual = signalSeriesRecordProcessor.process(
             listOf(
                 SignalSeriesRecord(
@@ -150,19 +151,15 @@ internal class SignalSeriesRecordProcessorTest {
             .should()
             .findByCode("subGroupDuration")
 
-        Assertions.assertThat(actual).isEqualTo(expected)
-        then(exerciseRepositoryMock)
-            .should()
-            .saveAll(expected)
+        Assertions.assertThat(actual).contains(exercise)
+        then(exerciseRepositoryMock).should().save(exercise)
     }
 
-    private fun createExercise(subGroup: SubGroup): Exercise {
-        return Exercise(
-            subGroup = subGroup,
-            name = "По 2 сигнала разной длительности.",
-            level = 1
-        )
-    }
+    private fun createExercise(subGroup: SubGroup) = Exercise(
+        subGroup = subGroup,
+        name = "По 2 сигнала разной длительности.",
+        level = 1
+    )
 
     private fun createExerciseWithSignals(subGroup: SubGroup): Exercise {
         val exercise = Exercise(

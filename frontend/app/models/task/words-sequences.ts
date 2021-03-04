@@ -27,7 +27,9 @@ function createTasks([first, ...tail]: Array<string[]>, acc: Array<string[]> = [
 export default class WordsSequences extends BaseTask {
   @attr('string') template!: string;
   @attr() answerOptions!: string;
-  @attr('array') wrongAnswers!: unknown[];
+  @attr('array', { defaultValue() {
+    return [];
+  }}) wrongAnswers!: unknown[];
   exerciseType = 'words-sequences';
   @cached
   get selectedItemsOrder() {
