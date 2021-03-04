@@ -65,12 +65,11 @@ jobs:
         run: |
           docker-compose pull
           docker-compose up -d --no-deps brn
-      - name: Redeploy frontend
+      - name: Redeploy frontend epam
         if: matrix.runners == 'epam'
-          run: docker-compose up -d --no-deps brn_fe
+        run: docker-compose up -d --no-deps brn_fe
+      - name: Redeploy frontend vscale
         if: matrix.runners == 'vscale'
-          run: docker-compose up -d --no-deps brn_fe_with_tls
+        run: docker-compose up -d --no-deps brn_fe_with_tls
       - name: Remove old images
         run: docker image prune -af
-
-
