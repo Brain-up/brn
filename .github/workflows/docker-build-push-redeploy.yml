@@ -27,8 +27,19 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: Dockerfile_frontend
+  build_and_publish_frontend_with_tls:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry brainup/brn-frontend-with-tls
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: brainup/brn-frontend-with-tls
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile_frontend_with_tls
   redeploy_instance:
-    needs: [ build_and_publish_backend, build_and_publish_frontend ]
+    needs: [ build_and_publish_backend, build_and_publish_frontend, build_and_publish_frontend_with_tls]
     runs-on: ${{ matrix.runners }}
     strategy:
       matrix:
@@ -47,9 +58,19 @@ jobs:
           YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      - name: Redeploy application
+# It is unclear how to use IF, so option from the first link is used. In case of crash we can rewrite to if: ${{matrix.runners == 'vscale'}}
+# Link 1: https://github.community/t/what-is-the-correct-if-condition-syntax-for-checking-matrix-os-version/16221 
+# Link 2: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepsif
+      - name: Redeploy backend
         run: |
           docker-compose pull
           docker-compose up -d --no-deps brn
-          docker-compose up -d --no-deps brn_fe
-          docker image prune -af
+      - name: Redeploy frontend
+        if: matrix.runners == 'epam'
+          run: docker-compose up -d --no-deps brn_fe
+        if: matrix.runners == 'vscale'
+          run: docker-compose up -d --no-deps brn_fe_with_tls
+      - name: Remove old images
+        run: docker image prune -af
+
+
