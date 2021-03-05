@@ -347,28 +347,6 @@ mediaType:
     responses:
       204: No content
 
-# LOAD FILES ----------------------
-/loadTasksFile:
-  post:
-    body:
-      multipart/form-data:
-        properties:
-          seriesId:
-            description: "ID of the series created exercises belongs to"
-            required: true
-            type: string
-            example: "42"
-          taskFile:
-            description: "File with tasks to be uploaded"
-            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
-                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
-            formatForSeries2: "orderNumber words
-                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
-            required: true
-            type: file
-    responses:
-      201:
-
 /cloud:
   /folders:
     get:
@@ -428,22 +406,43 @@ mediaType:
         responses:
               200:
                 example: !include samples/study_histories_dto_response.json
-  /monthHistories:
-      get:
-          description: get histories for user by month and year
-          queryParameters:
-                userId:
-                      required: true
-                      type: integer
-                      example: 1
-                month:
-                      required: true
-                      type: integer
-                      example: 11
-                year:
-                      required: true
-                      type: integer
-                      example: 2020
-          responses:
-                200:
-                  example: !include samples/study_histories_dto_response.json
+    /monthHistories:
+        get:
+            description: get histories for user by month and year
+            queryParameters:
+                  userId:
+                        required: true
+                        type: integer
+                        example: 1
+                  month:
+                        required: true
+                        type: integer
+                        example: 11
+                  year:
+                        required: true
+                        type: integer
+                        example: 2020
+            responses:
+                  200:
+                    example: !include samples/study_histories_dto_response.json
+    # LOAD FILES ----------------------
+    /loadTasksFile:
+        post:
+            body:
+                multipart/form-data:
+                    properties:
+                        seriesId:
+                            description: "ID of the series created exercises belongs to"
+                            required: true
+                            type: string
+                            example: "42"
+                        taskFile:
+                            description: "File with tasks to be uploaded"
+                            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
+                                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
+                            formatForSeries2: "orderNumber words
+                                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
+                            required: true
+                            type: file
+            responses:
+              201:
