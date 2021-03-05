@@ -61,12 +61,12 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     return this.uncompletedTasks.firstObject;
   }
   get audioFiles() {
-    return (
-      this.firstUncompletedTask &&
-      (this.firstUncompletedTask as any).answer.map(({ audioFileUrl }: { audioFileUrl: string | null }) => {
-        return urlForAudio(audioFileUrl);
-      })
-    );
+    if (!this.firstUncompletedTask) {
+      return [];
+    }
+
+    const text = this.firstUncompletedTask.answer.map(({ word }) => word).join(' ');
+    return [this.audio.audioUrlForText(text)];
   }
   get answerCompleted() {
     return Object.values(this.currentAnswerObject as any).reduce(
