@@ -97,6 +97,11 @@ export default class NetworkService extends Service {
   createUser(user: LatestUserDTO) {
     return this.postRequest('registration', user);
   }
+  async subgroupStats(id: string) {
+    let result = await this.request(`statistics/subgroups?ids=${id}`);
+    let { data } = await result.json();
+    return data[0];
+  }
   async availableExercises(ids: string[]) {
     const result = await this.postRequest(`exercises/byIds`, {
       ids: ids.map((el)=>parseInt(el, 10))

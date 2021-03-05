@@ -5,7 +5,7 @@
   </div>
 {{/unless}}
 {{#unless this.headerAndNavShown}}
-  {{#if (is-active 'group.series.index')}}
+  {{#if (or (is-active 'group.series.index') (and (not (is-active 'group.series.subgroup.index')) (is-active 'group')))}}
     <aside class="bg-gradient-to-b from-white sticky top-0 rounded-bl rounded-br">
       <GroupNavigation @group={{@model}} />
     </aside>
