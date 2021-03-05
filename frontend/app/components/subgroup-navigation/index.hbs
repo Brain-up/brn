@@ -1,5 +1,13 @@
 <div ...attributes class={{style-namespace "group-navigation"}}>
-  <ul class="hs full no-scrollbar">
+  {{#if this.showLeftScrollButton}}
+    <button
+      type="button"
+      style={{html-safe 'position: fixed;'}}
+      {{did-insert this.alignScrollPositions "left"}}
+      {{on 'click' (fn this.scroll "left")}}
+    >{{concat "<"}}</button>
+  {{/if}}
+  <ul class="hs full no-scrollbar" style={{html-safe "scroll-behavior: smooth;"}} {{create-ref "container"}} {{on 'scroll' this.onScroll}}>
     {{#each (sort-by "order" @group) as |exercise|}}
       <li class="item">
         <Ui::TabButton data-test-active-link={{exercise.name}}
@@ -11,4 +19,13 @@
       </li>
     {{/each}}
   </ul>
+    {{#if this.showRightScrollButton}}
+      <button
+        type="button"
+        style={{html-safe 'position: fixed;'}}
+        {{did-insert this.alignScrollPositions "right"}}
+        {{on 'click' (fn this.scroll "right")}}
+      >{{concat ">"}}</button>
+    {{/if}}
+
 </div>
