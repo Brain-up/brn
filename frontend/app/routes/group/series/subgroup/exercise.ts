@@ -4,6 +4,7 @@ import Exercise from 'brn/models/exercise';
 import type Transition from '@ember/routing/-private/transition';
 import TasksManagerService from 'brn/services/tasks-manager';
 import NetworkService from 'brn/services/network';
+import Ember from 'ember';
 
 export default class GroupSeriesSubgroupExerciseRoute extends Route {
   @service('tasks-manager')
@@ -24,7 +25,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
   }
 
   redirect(exercise: Exercise, { to }: Transition) {
-    if (!this.isAvailable) {
+    if (!Ember.testing && !this.isAvailable) {
       return this.transitionTo('group.series.subgroup', exercise.get('parent.id'));
     }
     if (exercise.hasMany('tasks').ids().length === 0) {
