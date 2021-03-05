@@ -8,7 +8,7 @@ export default class GroupSeriesSubgroupController extends Controller {
   @service('network') network!: NetworkService;
 
   @tracked
-  availableExercises = [];
+  availableExercises: string[] = [];
   // eslint-disable-next-line no-unused-vars
   @(task(function*(this: GroupSeriesSubgroupController) {
     if (!this.model) {
@@ -19,5 +19,6 @@ export default class GroupSeriesSubgroupController extends Controller {
     const targets = exercises.mapBy('id');
     const results = yield this.network.availableExercises(targets);
     this.availableExercises = results;
+    return results;
   }).keepLatest()) exerciseAvailabilityCalculationTask!: Task<any, any>
 }
