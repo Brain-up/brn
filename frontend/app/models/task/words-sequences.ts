@@ -64,14 +64,14 @@ export default class WordsSequences extends BaseTask {
   }
   @cached
   get tasksToSolve() {
-    return this.tasksSequence.concat(
+    return shuffleArray(this.tasksSequence, 10).concat(
       this.wrongAnswers.map((wrongAnswer: any, index: number) => {
         return {
           ...wrongAnswer,
           order: this.tasksSequence.length + index,
         };
       }),
-    );
+    ).slice(0, 30);
   }
 }
 
