@@ -22,7 +22,7 @@
 }
 
 .task-player__option-button:active {
-  font-size: 60px;
+  font-weight: bold;
 }
 
 .task-player__option-button:disabled {
