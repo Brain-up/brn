@@ -64,7 +64,6 @@ data class AudiometryTask(
         if (maxFrequency != other.maxFrequency) return false
         if (frequencyZone != other.frequencyZone) return false
         if (audiometryGroup != other.audiometryGroup) return false
-        if (audiometry != other.audiometry) return false
         return true
     }
 

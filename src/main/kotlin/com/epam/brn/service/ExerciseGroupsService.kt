@@ -4,7 +4,6 @@ import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
-import org.apache.commons.collections4.CollectionUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -19,7 +18,7 @@ class ExerciseGroupsService(
     fun findAllGroups(): List<ExerciseGroupDto> {
         log.debug("Searching all groups")
         val groups: List<ExerciseGroup> = exerciseGroupRepository.findAll()
-        return CollectionUtils.emptyIfNull(groups).mapNotNull { group -> group.toDto() }
+        return groups.mapNotNull { group -> group.toDto() }
     }
 
     fun findGroupDtoById(groupId: Long): ExerciseGroupDto {

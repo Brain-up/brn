@@ -5,7 +5,6 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
-import org.apache.commons.collections4.CollectionUtils.emptyIfNull
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -42,7 +41,7 @@ class ExerciseService(
         log.info("Searching available exercises for user=$userId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
         val history = exerciseRepository.findAll()
-        return emptyIfNull(history).map { x -> updateNoiseUrl(x.toDto(exercisesIdList.contains(x.id))) }
+        return history.map { x -> updateNoiseUrl(x.toDto(exercisesIdList.contains(x.id))) }
     }
 
     fun findExercisesBySubGroupForCurrentUser(subGroupId: Long): List<ExerciseDto> {
@@ -55,10 +54,10 @@ class ExerciseService(
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
         log.info("current user is admin: ${userId == 1L}))")
         if (userId == 1L)
-            return emptyIfNull(subGroupExercises).map { exercise -> updateNoiseUrl(exercise.toDto(true)) }
+            return subGroupExercises.map { exercise -> updateNoiseUrl(exercise.toDto(true)) }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
         val openSubGroupExercises = getAvailableExercises(doneSubGroupExercises, subGroupExercises, userId)
-        return emptyIfNull(subGroupExercises).map { exercise ->
+        return subGroupExercises.map { exercise ->
             updateNoiseUrl(exercise.toDto(openSubGroupExercises.contains(exercise)))
         }
     }
