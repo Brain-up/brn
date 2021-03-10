@@ -25,7 +25,7 @@ class Audiometry(
     @Column(nullable = false)
     val audiometryType: String,
     var description: String? = "",
-    @OneToMany(mappedBy = "audiometry", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "audiometry", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val audiometryTasks: MutableList<AudiometryTask> = ArrayList()
 ) {
     override fun equals(other: Any?): Boolean {

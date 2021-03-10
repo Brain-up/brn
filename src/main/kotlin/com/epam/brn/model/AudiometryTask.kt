@@ -35,7 +35,7 @@ data class AudiometryTask(
     var count: Int? = 10,
     var showSize: Int? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_id")
     var audiometry: Audiometry? = null,
 
