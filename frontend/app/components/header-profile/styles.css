@@ -1,18 +1,21 @@
 /*! purgecss start ignore */
 .profile {
-  margin: 0 -25%;
   padding: 42px 25% 24px 25% ;
+  margin: 0 calc((-100vw + 100%)/2);
 }
+
 .profile__img {
   position: relative;
   display: inline-block;
-  width: 140px;
 }
 .profile__img img{
-  width: 140px;
   border-radius: 50%;
-  position: absolute;
-  top: -50px;
+}
+@media (min-width: 1024px) {
+  .profile__img img {
+    position: absolute;
+    top: -50px;
+  }
 }
 .profile__name {
   font-size: 18px;
