@@ -70,7 +70,7 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 
 ### Start Front Angular Part - admin application
 go to location where the project is download for example C:\brn\brn\frontend-angular
-1. run first time
+1. run first time (last version)
 `npm install`
 2. update proxy: open file proxy.conf.json and change target for local development. Do not commit this changes
 "http://localhost:8081" -> "http://audibly.ru"
