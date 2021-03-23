@@ -10,5 +10,5 @@ data class ExerciseSignalDto(
     var level: Int? = 0,
     var exerciseType: ExerciseType,
     var available: Boolean = true,
-    var signals: MutableSet<SignalDto> = HashSet()
+    var signals: MutableSet<SignalTaskDto> = HashSet()
 )

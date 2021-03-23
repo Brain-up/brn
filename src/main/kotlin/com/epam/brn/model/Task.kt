@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.GeneralTaskDto
 import com.epam.brn.dto.WordsSeriesTaskDto
 import com.epam.brn.dto.WordsGroupSeriesTaskDto
 import javax.persistence.CascadeType
@@ -72,6 +73,13 @@ data class Task(
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
+    )
+    fun toGeneralTaskDto(template: String? = "") = GeneralTaskDto(
+        id = id!!,
+        exerciseType = ExerciseType.WORDS_SEQUENCES,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet(),
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"

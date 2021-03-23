@@ -381,6 +381,12 @@ mediaType:
 
 # ADMIN  ----------------------
 /admin
+    /exercises
+        get:
+            description: get exercises with tasks, resources by subGroupId
+        responses:
+            200:
+                example: !include samples/exercises_with_tasks.json
     /users
         get:
             description: get all users

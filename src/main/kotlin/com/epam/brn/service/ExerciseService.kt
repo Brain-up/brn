@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
@@ -118,5 +119,10 @@ class ExerciseService(
     fun updateNoiseUrl(exerciseDto: ExerciseDto): ExerciseDto {
         exerciseDto.noise.url = urlConversionService.makeFullUrl(exerciseDto.noise.url)
         return exerciseDto
+    }
+
+    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseWithTasksDto> {
+        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
+        return subGroupExercises.map { it.toDtoWithTasks() }
     }
 }
