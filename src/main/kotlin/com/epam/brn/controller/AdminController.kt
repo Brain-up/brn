@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.upload.CsvUploadService
@@ -23,6 +24,7 @@ import java.time.LocalDate
 class AdminController(
     val studyHistoryService: StudyHistoryService,
     val userAccountService: UserAccountService,
+    val exerciseService: ExerciseService,
     private val csvUploadService: CsvUploadService
 ) {
 
@@ -57,4 +59,15 @@ class AdminController(
         csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(HttpStatus.CREATED)
     }
+
+    @GetMapping("/exercises")
+    @ApiOperation("Get subGroup exercises with tasks.")
+    fun getExercisesBySubGroup(
+        @RequestParam(
+            value = "subGroupId",
+            required = true
+        ) subGroupId: Long
+    ): ResponseEntity<BaseResponseDto> =
+        ResponseEntity.ok()
+            .body(BaseResponseDto(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 }

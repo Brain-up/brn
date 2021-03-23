@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
@@ -116,6 +117,20 @@ internal class ExerciseServiceTest {
         // THEN
         assertEquals(actualResult, exerciseMock)
         verify(exerciseRepository).findExerciseByNameAndLevel(anyString(), anyInt())
+    }
+
+    @Test
+    fun `should get exercises by subGroupId`() {
+        // GIVEN
+        val exerciseMock: Exercise = mock(Exercise::class.java)
+        val exerciseDtoMock: ExerciseWithTasksDto = mock(ExerciseWithTasksDto::class.java)
+        `when`(exerciseRepository.findExercisesBySubGroupId(1)).thenReturn(listOf(exerciseMock))
+        `when`(exerciseMock.toDtoWithTasks()).thenReturn(exerciseDtoMock)
+        // WHEN
+        val actualResults: List<ExerciseWithTasksDto> = exerciseService.findExercisesWithTasksBySubGroup(1)
+        // THEN
+        assertTrue(actualResults.contains(exerciseDtoMock))
+        verify(exerciseRepository).findExercisesBySubGroupId(1)
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.epam.brn.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-data class SignalDto(
+data class SignalTaskDto(
     val id: Long? = null,
     @JsonIgnore
     val exerciseId: Long? = null,

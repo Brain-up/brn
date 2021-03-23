@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-data class ExerciseDto(
+data class ExerciseWithTasksDto(
     var seriesId: Long?,
     var id: Long?,
     var name: String,
@@ -8,6 +8,6 @@ data class ExerciseDto(
     var noise: NoiseDto,
     var template: String? = "",
     var available: Boolean = true,
-    var tasks: MutableList<ShortTaskDto> = mutableListOf(),
-    var signals: MutableList<SignalTaskDto> = mutableListOf()
+    var tasks: List<GeneralTaskDto>,
+    var signals: List<SignalTaskDto>,
 )
