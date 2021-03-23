@@ -79,8 +79,8 @@ abstract class BaseIT {
             )
         )
 
-    fun insertDefaultStudyHistory(userAccount: UserAccount, exercise: Exercise): StudyHistory {
-        val startTime = LocalDateTime.now()
+    fun insertDefaultStudyHistory(userAccount: UserAccount, exercise: Exercise, time: LocalDateTime? = null): StudyHistory {
+        val startTime = time ?: LocalDateTime.now()
         return studyHistoryRepository.save(
             StudyHistory(
                 userAccount = userAccount,
@@ -103,10 +103,11 @@ abstract class BaseIT {
             )
         )
 
-    fun insertDefaultExercise(): Exercise =
+    fun insertDefaultExercise(subGroup: SubGroup? = null): Exercise =
         exerciseRepository.save(
             Exercise(
-                name = "Test exercise"
+                name = "Test exercise",
+                subGroup = subGroup
             )
         )
 
