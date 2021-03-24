@@ -1,0 +1,75 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "admin",
+      "email": "admin@admin.com",
+      "bornYear": 1999,
+      "gender": "MALE",
+      "active": true,
+      "firstDone": "2021-03-24T08:23:03.9501893Z",
+      "lastDone": "2021-03-24T08:23:03.9501893Z",
+      "lastWeek": [
+        30,
+        0,
+        32,
+        33,
+        45,
+        21,
+        40
+      ],
+      "workDayByLastMonth": 2,
+      "diagnosticProgress": {
+        "SIGNALS": true
+      }
+    },
+    {
+      "id": 2,
+      "name": "Name1",
+      "email": "default@default.ru",
+      "bornYear": 1999,
+      "gender": "MALE",
+      "active": true,
+      "firstDone": "2021-03-24T08:23:03.9501893Z",
+      "lastDone": "2021-03-24T08:23:03.9511884Z",
+      "lastWeek": [
+        30,
+        0,
+        32,
+        33,
+        45,
+        21,
+        40
+      ],
+      "workDayByLastMonth": 2,
+      "diagnosticProgress": {
+        "SIGNALS": true
+      }
+    },
+    {
+      "id": 3,
+      "name": "Name2",
+      "email": "default2@default.ru",
+      "bornYear": 1999,
+      "gender": "FEMALE",
+      "active": true,
+      "firstDone": "2021-03-24T08:23:03.9511884Z",
+      "lastDone": "2021-03-24T08:23:03.9511884Z",
+      "lastWeek": [
+        30,
+        0,
+        32,
+        33,
+        45,
+        21,
+        40
+      ],
+      "workDayByLastMonth": 2,
+      "diagnosticProgress": {
+        "SIGNALS": true
+      }
+    }
+  ],
+  "errors": [],
+  "meta": []
+}
