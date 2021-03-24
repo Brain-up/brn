@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserWithAnalyticsDto
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import javax.persistence.CascadeType
@@ -62,4 +63,14 @@ data class UserAccount(
             .toMutableSet()
         return userAccountDto
     }
+
+    fun toAnalyticsDto() = UserWithAnalyticsDto(
+        id = id,
+        userId = userId,
+        name = fullName,
+        active = active,
+        email = email,
+        bornYear = bornYear,
+        gender = gender?.let { Gender.valueOf(it) },
+    )
 }

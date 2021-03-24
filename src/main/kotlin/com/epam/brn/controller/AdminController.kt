@@ -7,6 +7,8 @@ import com.epam.brn.service.UserAccountService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -27,11 +29,16 @@ class AdminController(
     val exerciseService: ExerciseService,
     private val csvUploadService: CsvUploadService
 ) {
-
     @GetMapping("/users")
     @ApiOperation("Get users")
-    fun getUsers() = ResponseEntity.ok()
-        .body(BaseResponseDto(data = userAccountService.getUsers()))
+    fun getUsers(
+        @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
+        @PageableDefault pageable: Pageable,
+    ): ResponseEntity<Any> {
+        val users = if (withAnalytics) userAccountService.getUsersWithAnalytics(pageable)
+        else userAccountService.getUsers(pageable)
+        return ResponseEntity.ok().body(BaseResponseDto(data = users))
+    }
 
     @GetMapping("/histories")
     @ApiOperation("Get user's study histories for period")

@@ -390,9 +390,19 @@ mediaType:
     /users
         get:
             description: get all users
+            queryParameters:
+                withAnalytics:
+                    required: false
+                    default: false
+                    type: Boolean
+                    example: "true"
+                pageable:
+                    required: false
+                    type: Pageable
         responses:
             200:
               example: !include samples/users_get_response.json
+              example: !include samples/users_with_analytics_get_response.json
     /histories:
         get:
             description: get histories for user by period from <= startTime < to
