@@ -16,5 +16,7 @@ interface ResourceRepository : CrudRepository<Resource, Long> {
 
     fun findFirstByWordAndAudioFileUrlLike(word: String, audioFileUrl: String): Optional<Resource>
 
+    fun findFirstByWordAndWordTypeAndAudioFileUrlLike(word: String, wordType: String, audioFileUrl: String): Optional<Resource>
+
     fun findFirstByWordAndLocaleAndWordType(word: String, locale: String, wordType: String): Optional<Resource>
 }

@@ -77,19 +77,20 @@ class InitialDataLoader(
 
     fun getSourceFiles(): List<String> {
         var profile: String = environment.activeProfiles[0].toLowerCase()
-        val subFolder = if (profile == "dev") "dev/" else ""
+        val devSubFolder = if (profile == "dev") "dev/" else ""
         return listOf(
             "groups_.csv",
             "series_.csv",
             "subgroups_ru.csv",
             "subgroups_en.csv",
-            "$subFolder$SINGLE_SIMPLE_WORDS_FILE_NAME.csv",
-            "$subFolder$SINGLE_SIMPLE_WORDS_EN_FILE_NAME.csv",
-            "$subFolder$WORDS_SEQUENCES_FILE_NAME.csv",
-            "$subFolder$PHRASES_FILE_NAME.csv",
+            "$devSubFolder$SINGLE_SIMPLE_WORDS_FILE_NAME.csv",
+            "$devSubFolder$SINGLE_SIMPLE_WORDS_EN_FILE_NAME.csv",
+            "$devSubFolder$WORDS_SEQUENCES_FILE_NAME.csv",
+            "$devSubFolder$PHRASES_FILE_NAME.csv",
             "signal_exercises_ru.csv",
             "signal_exercises_en.csv",
-            "$subFolder$SENTENCES_FILE_NAME.csv",
+            "$devSubFolder$SENTENCES_FILE_NAME.csv",
+            "$devSubFolder$SENTENCES_EN_FILE_NAME.csv",
             "lopotko_ru.csv"
         )
     }
@@ -202,4 +203,5 @@ val SINGLE_SIMPLE_WORDS_EN_FILE_NAME = "series_words_en"
 val PHRASES_FILE_NAME = "series_phrases_ru"
 val WORDS_SEQUENCES_FILE_NAME = "series_word_groups_ru"
 val SENTENCES_FILE_NAME = "series_sentences_ru"
+val SENTENCES_EN_FILE_NAME = "series_sentences_en"
 val SIGNALS_FILE_NAME = "signal_exercises_"

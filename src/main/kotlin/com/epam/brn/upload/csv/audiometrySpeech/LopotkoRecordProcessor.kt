@@ -61,9 +61,10 @@ class LopotkoRecordProcessor(
     private fun toResource(word: String, locale: Locale): Resource {
         val hashWord = DigestUtils.md5Hex(word)
         mapHashWord[word] = hashWord
+        val wordType = WordType.AUDIOMETRY_WORD.toString()
         val audioFileUrl =
             wordsService.getSubFilePathForWord(AudioFileMetaData(word, locale.locale, wordsService.getDefaultManVoiceForLocale(locale.locale)))
-        val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFileUrl)
+        val resource = resourceRepository.findFirstByWordAndWordTypeAndAudioFileUrlLike(word, wordType, audioFileUrl)
             .orElse(
                 Resource(
                     word = word,
@@ -71,7 +72,7 @@ class LopotkoRecordProcessor(
                     locale = locale.locale,
                 )
             )
-        resource.wordType = WordType.AUDIOMETRY_WORD.toString()
+        resource.wordType = wordType
         return resource
     }
 
