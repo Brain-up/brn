@@ -1,5 +1,8 @@
 package com.epam.brn.integration
 
+import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
+import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.AudioFilesGenerationService
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Disabled
@@ -28,15 +31,20 @@ internal class AudioFilesGenerationServiceIT {
         ReflectionTestUtils.setField(audioFilesGenerationService, "withMp3Conversion", true)
         ReflectionTestUtils.setField(audioFilesGenerationService, "withSavingToS3", false)
 
-        val voice = "alena"
+        val locale = Locale.RU.locale
+        val voice = Voice.OKSANA
         val speed = "1"
+        val meta1 = AudioFileMetaData("бабушкааа", locale, voice, speed)
+        val meta2 = AudioFileMetaData("доктор моет чёрные грушиии", locale, voice, speed)
+
         val resultFile1Ogg = File("audioTest/ogg/$voice/${DigestUtils.md5Hex("бабушкааа")}.ogg")
         val resultFile1Mp3 = File("audioTest/$voice/${DigestUtils.md5Hex("бабушкааа")}.mp3")
         val resultFile2Ogg = File("audioTest/ogg/$voice/${DigestUtils.md5Hex("доктор моет чёрные грушиии")}.ogg")
         val resultFile2Mp3 = File("audioTest/$voice/${DigestUtils.md5Hex("доктор моет чёрные грушиии")}.mp3")
+
         // WHEN
-        audioFilesGenerationService.processWord("бабушкааа", voice, speed)
-        audioFilesGenerationService.processWord("доктор моет чёрные грушиии", voice, speed)
+        audioFilesGenerationService.processWord(meta1)
+        audioFilesGenerationService.processWord(meta2)
         // THEN
         assertTrue(resultFile1Ogg.exists())
         assertTrue(resultFile1Mp3.exists())

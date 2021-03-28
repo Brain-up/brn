@@ -1,0 +1,9 @@
+level,code,exerciseName,exerciseType,signals
+1,durationSignals,2 length signals,DURATION_SIGNALS,1000 60; 1000 120
+2,durationSignals,2 length signals,DURATION_SIGNALS,1000 40; 1000 100
+1,durationSignals,2 length signals,DURATION_SIGNALS,1000 40; 1000 90; 1000 130
+2,durationSignals,2 length signals,DURATION_SIGNALS,1000 20; 1000 60; 1000 120
+1,frequencySignals,2 frequency signals,FREQUENCY_SIGNALS,500 120; 1500 120
+2,frequencySignals,2 frequency signals,FREQUENCY_SIGNALS,1000 120; 2000 120
+1,frequencySignals,2 frequency signals,FREQUENCY_SIGNALS,500 120; 1050 120; 2000 120
+2,frequencySignals,2 frequency signals,FREQUENCY_SIGNALS,200 120; 600 120; 2000 120

@@ -117,7 +117,7 @@ class ExerciseService(
     }
 
     fun updateNoiseUrl(exerciseDto: ExerciseDto): ExerciseDto {
-        exerciseDto.noise.url = urlConversionService.makeFullUrl(exerciseDto.noise.url)
+        exerciseDto.noise.url = urlConversionService.makeUrlForNoise(exerciseDto.noise.url)
         return exerciseDto
     }
 

@@ -1,5 +1,7 @@
 package com.epam.brn.upload.csv.series2
 
+import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
@@ -32,7 +34,7 @@ internal class SeriesTwoRecordProcessorTest {
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
     private val taskRepositoryMock = mock(TaskRepository::class.java)
-    private val resourceCreationServiceMock = mock(WordsService::class.java)
+    private val wordsServiceMock = mock(WordsService::class.java)
 
     private lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
 
@@ -63,15 +65,10 @@ internal class SeriesTwoRecordProcessorTest {
             resourceRepositoryMock,
             exerciseRepositoryMock,
             taskRepositoryMock,
-            resourceCreationServiceMock
+            wordsServiceMock
         )
-
-        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "audioPath", "audio/ogg/filipp/%s.ogg")
         ReflectionTestUtils.setField(seriesTwoRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
-        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "series2WordsFileName", "words_series2.txt")
-
         `when`(seriesRepositoryMock.findById(2L)).thenReturn(Optional.of(series))
-
         mockFindResourceByWordLike("девочка", resource_девочка())
         mockFindResourceByWordLike("бабушка", resource_бабушка())
         mockFindResourceByWordLike("дедушка", resource_дедушка())
@@ -86,9 +83,13 @@ internal class SeriesTwoRecordProcessorTest {
 
     @Test
     fun `should create correct exercise`() {
+        // GIVEN
         val expected = createExercise()
         `when`(exerciseRepositoryMock.save(expected)).thenReturn(expected)
-
+        val subGroupMock = mock(SubGroup::class.java)
+        `when`(subGroupRepositoryMock.findByCodeAndLocale("code", Locale.RU.locale)).thenReturn(subGroupMock)
+        `when`(wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
+        // WHEN
         val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
                 SeriesTwoRecord(
@@ -100,17 +101,21 @@ internal class SeriesTwoRecordProcessorTest {
                 )
             )
         ).first()
-
+        // THEN
         assertThat(actual).isEqualTo(expected)
         verify(exerciseRepositoryMock).save(expected)
     }
 
     @Test
     fun `should create correct task`() {
+        // GIVEN
         val exercise = createExercise()
         val expectedTask = exercise.tasks.first()
         `when`(exerciseRepositoryMock.save(exercise)).thenReturn(exercise)
-
+        val subGroupMock = mock(SubGroup::class.java)
+        `when`(subGroupRepositoryMock.findByCodeAndLocale("code", Locale.RU.locale)).thenReturn(subGroupMock)
+        `when`(wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
+        // WHEN
         val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
                 SeriesTwoRecord(
@@ -122,14 +127,14 @@ internal class SeriesTwoRecordProcessorTest {
                 )
             )
         ).first().tasks.first()
-
+        // THEN
         assertThat(actual).isEqualToIgnoringGivenFields(expectedTask, "answerOptions")
     }
 
     @Test
     fun `should create correct answer options`() {
+        // GIVEN
         val exercise = createExercise()
-
         `when`(exerciseRepositoryMock.save(exercise)).thenReturn(exercise)
         val expectedResources = setOf(
             resource_девочка(),
@@ -139,6 +144,10 @@ internal class SeriesTwoRecordProcessorTest {
             resource_лежит(),
             resource_идет()
         )
+        val subGroupMock = mock(SubGroup::class.java)
+        `when`(subGroupRepositoryMock.findByCodeAndLocale("code", Locale.RU.locale)).thenReturn(subGroupMock)
+        `when`(wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
+        // WHEN
         val actual = seriesTwoRecordProcessor.process(
             mutableListOf(
                 SeriesTwoRecord(
@@ -150,7 +159,7 @@ internal class SeriesTwoRecordProcessorTest {
                 )
             )
         ).first().tasks.first().answerOptions
-
+        // THEN
         assertThat(actual).containsExactlyElementsOf(expectedResources)
     }
 

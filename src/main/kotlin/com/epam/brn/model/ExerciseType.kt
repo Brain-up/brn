@@ -5,6 +5,7 @@ enum class ExerciseType {
     SENTENCE,
     SINGLE_SIMPLE_WORDS,
     PHRASES,
+    FREQUENCY_WORDS,
     DI,
     DURATION_SIGNALS,
     FREQUENCY_SIGNALS;

@@ -7,6 +7,7 @@ enum class WordType {
     ADDITION_OBJECT,
     ADDITION_OBJECT_DESCRIPTION,
     COUNT,
+    PHRASE,
     SENTENCE,
     AUDIOMETRY_WORD,
     UNKNOWN;

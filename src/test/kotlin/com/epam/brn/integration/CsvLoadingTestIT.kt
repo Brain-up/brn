@@ -12,6 +12,7 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
+import com.epam.brn.service.WordsService
 import com.epam.brn.service.load.AudiometryLoader
 import com.epam.brn.service.load.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
@@ -36,7 +37,8 @@ class CsvLoadingTestIT : BaseIT() {
             passwordEncoder: PasswordEncoder,
             authorityService: AuthorityService,
             uploadService: CsvUploadService,
-            audioFilesGenerationService: AudioFilesGenerationService
+            audioFilesGenerationService: AudioFilesGenerationService,
+            wordsService: WordsService,
         ) = InitialDataLoader(
             resourceLoader,
             userAccountRepository,
@@ -44,7 +46,8 @@ class CsvLoadingTestIT : BaseIT() {
             passwordEncoder,
             authorityService,
             uploadService,
-            audioFilesGenerationService
+            audioFilesGenerationService,
+            wordsService,
         )
     }
 
@@ -83,7 +86,7 @@ class CsvLoadingTestIT : BaseIT() {
         audiometryRepository.findAll() shouldHaveSize 6
         audiometryTaskRepository.findAll() shouldHaveSize 24
         exerciseGroupRepository.findAll() shouldHaveSize 4
-        seriesRepository.findAll() shouldHaveSize 7
+        seriesRepository.findAll() shouldHaveSize 15
         subGroupRepository.findAll() shouldHaveSize 41
 //        exerciseRepository.findAll() shouldHaveSize 188
 //        taskRepository.findAll() shouldHaveSize 188

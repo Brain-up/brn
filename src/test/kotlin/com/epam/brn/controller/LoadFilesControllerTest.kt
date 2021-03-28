@@ -37,8 +37,8 @@ internal class LoadFilesControllerTest {
     fun `should call upload service to load file for 1 series`() {
         // GIVEN
         val taskFile = MockMultipartFile(
-            "series_words.csv",
-            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}series_words.csv")
+            "series_words_en.csv",
+            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}series_words_en.csv")
         )
         // WHEN
         adminController.loadExercises(1, taskFile)

@@ -3,6 +3,7 @@ package com.epam.brn.upload.csv.series1
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.FrequencyZone
 import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
@@ -20,7 +21,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
@@ -66,9 +66,6 @@ internal class LopotkoProcessorTest {
             resourceRepositoryMock,
             wordsService,
         )
-        ReflectionTestUtils.setField(lopotkoRecordProcessor, "lopotkoFileName", "lopotkoTest.txt")
-        ReflectionTestUtils.setField(lopotkoRecordProcessor, "audioPathFilipp", "/audio/filipp/%s.ogg")
-        ReflectionTestUtils.setField(lopotkoRecordProcessor, "audioPathAlena", "/audio/alena/%s.ogg")
 
         `when`(
             audiometryRepository.findByAudiometryTypeAndLocale(
@@ -93,6 +90,7 @@ internal class LopotkoProcessorTest {
     fun `should create correct audiometry task`() {
         // given
         `when`(audiometryTaskRepository.save(any(AudiometryTask::class.java))).thenReturn(savedAudiometryTask)
+        `when`(wordsService.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
         // when
         val actual = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()
         val expected = savedAudiometryTask
@@ -113,6 +111,7 @@ internal class LopotkoProcessorTest {
         )
         val audiometryTaskWithResources = savedAudiometryTask.copy(answerOptions = resources)
         `when`(audiometryTaskRepository.save(any(AudiometryTask::class.java))).thenReturn(audiometryTaskWithResources)
+        `when`(wordsService.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
         // when
         val actualtask = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()
         // then

@@ -1,5 +1,7 @@
 package com.epam.brn.upload.csv.series2
 
+import com.epam.brn.enums.Locale
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
@@ -9,9 +11,9 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
+import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
-import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -28,42 +30,34 @@ class SeriesTwoRecordProcessor(
     @Value(value = "\${brn.pictureWithWord.file.default.path}")
     private lateinit var pictureWithWordFileUrl: String
 
-    @Value(value = "\${series2WordsFileName}")
-    private lateinit var series2WordsFileName: String
-
-    @Value(value = "\${audioPath}")
-    private lateinit var audioPath: String
-
-    val words = mutableMapOf<String, String>()
-
     override fun isApplicable(record: Any): Boolean = record is SeriesTwoRecord
 
-    override fun process(records: List<SeriesTwoRecord>): List<Exercise> {
+    override fun process(records: List<SeriesTwoRecord>, locale: Locale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
-        records.forEach {
-            val subGroup = subGroupRepository.findByCode(it.code)
-            val existExercise = exerciseRepository.findExerciseByNameAndLevel(it.exerciseName, it.level)
+        records.forEach { record ->
+            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
+                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
-                val answerOptions = extractAnswerOptions(it)
-                words.putAll(answerOptions.associate { r -> Pair(r.word, DigestUtils.md5Hex(r.word)) })
+                val answerOptions = extractAnswerOptions(record, locale)
+                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 val savedResources = resourceRepository.saveAll(answerOptions)
 
-                val newExercise = generateExercise(it, subGroup)
+                val newExercise = generateExercise(record, subGroup)
                 val savedExercise = exerciseRepository.save(newExercise)
 
                 taskRepository.save(extractTask(savedExercise, savedResources.toMutableSet()))
                 exercises.add(savedExercise)
             }
         }
-        wordsService.createTxtFileWithExerciseWordsMap(words, series2WordsFileName)
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesTwoRecord): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesTwoRecord, locale: Locale): MutableSet<Resource> =
         extractWordGroups(record)
             .map {
                 splitOnWords(it.second).map { word: String ->
-                    toResource(word, it.first)
+                    toResource(word, it.first, locale)
                 }
             }
             .flatten().toMutableSet()
@@ -79,18 +73,23 @@ class SeriesTwoRecordProcessor(
 
     private fun splitOnWords(sentence: String): List<String> = sentence.split(' ').map { it.trim() }
 
-    private fun toResource(word: String, wordType: WordType): Resource {
-        val hashWord = DigestUtils.md5Hex(word)
-        words[word] = hashWord
-        val audioFileUrl = audioPath.format(hashWord)
-        val resource = resourceRepository.findFirstByWordAndWordType(word, wordType.name)
+    private fun toResource(word: String, wordType: WordType, locale: Locale): Resource {
+        val audioPath = wordsService.getSubFilePathForWord(
+            AudioFileMetaData(
+                word,
+                locale.locale,
+                wordsService.getDefaultManVoiceForLocale(locale.locale)
+            )
+        )
+        val resource = resourceRepository.findFirstByWordAndLocaleAndWordType(word, locale.locale, wordType.name)
             .orElse(
                 Resource(
                     word = word,
-                    audioFileUrl = audioFileUrl,
-                    pictureFileUrl = pictureWithWordFileUrl.format(word)
+                    pictureFileUrl = pictureWithWordFileUrl.format(word),
+                    locale = locale.locale
                 )
             )
+        resource.audioFileUrl = audioPath
         resource.wordType = wordType.name
         return resource
     }
