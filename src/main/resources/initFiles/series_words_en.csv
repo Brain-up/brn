@@ -3,23 +3,23 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 2,family,Family,(father grandfather son),0,
 3,family,Family,(grandmother brother cousin),0,
 4,family,Family,(son child parents daughter mather sister),0,
-100,family,Family /noise/,(child mother sister),50,voices
-101,family,Family /noise/,(father grandfather son),50,voices
-102,family,Family /noise/,(grandmother brother cousin),50,voices
-103,family,Family /noise/,(son child parents daughter mather sister),50,voices
+1,family,Family /noise/,(child mother sister),50,voices
+2,family,Family /noise/,(father grandfather son),50,voices
+3,family,Family /noise/,(grandmother brother cousin),50,voices
+4,family,Family /noise/,(son child parents daughter mather sister),50,voices
 1,home,My home,(home window door),0,
 2,home,My home,(chair clock bad),0,
 3,home,My home,(pillow locker table),0,
 4,home,My home,(key door clock chair bad),0,
-100,home,My home /1 noise/,(home window door),6,
-101,home,My home /1 noise/,(chair clock bad),6,
-102,home,My home /1 noise/,(pillow locker table),6,
-103,home,My home /1 noise/,(key door clock chair bad),6,
-200,home,My home /2 noise/,(home window door),20,
-201,home,My home /2 noise/,(chair clock bad),20,
-202,home,My home /2 noise/,(pillow locker table),20,
-203,home,My home /2 noise/,(key door clock chair bad),20,
-300,home,My home /2 noise/,(home window door),40,
-301,home,My home /2 noise/,(chair clock bad),40,
-302,home,My home /2 noise/,(pillow locker table),40,
-303,home,My home /2 noise/,(key door clock chair bad),40,
+1,home,My home /1 noise/,(home window door),6,
+2,home,My home /1 noise/,(chair clock bad),6,
+3,home,My home /1 noise/,(pillow locker table),6,
+4,home,My home /1 noise/,(key door clock chair bad),6,
+5,home,My home /2 noise/,(home window door),20,
+6,home,My home /2 noise/,(chair clock bad),20,
+7,home,My home /2 noise/,(pillow locker table),20,
+8,home,My home /2 noise/,(key door clock chair bad),20,
+9,home,My home /2 noise/,(home window door),40,
+10,home,My home /2 noise/,(chair clock bad),40,
+11,home,My home /2 noise/,(pillow locker table),40,
+12,home,My home /2 noise/,(key door clock chair bad),40,
