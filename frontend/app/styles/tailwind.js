@@ -51,6 +51,9 @@ module.exports = {
         evenly: 'space-evenly',
       },
     },
+    fontFamily: {
+      openSans: ['Open Sans'],
+    },
   },
   variants: {
     backgroundColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
