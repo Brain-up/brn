@@ -32,10 +32,28 @@ class UserStatisticController(
 
     @GetMapping("/month")
     fun getUserMonthStatistic(
-        @RequestParam(name = "month", required = true) month: Int,
-        @RequestParam(name = "year", required = false) year: Int
+        @RequestParam(name = "month", required = false) month: Int?,
+        @RequestParam(name = "year", required = false) year: Int?
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val monthUserStatistic = userStatisticService.getUserMonthStatistic(month, year)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = monthUserStatistic))
+    }
+
+    @GetMapping("/year")
+    fun getUserYearStatistic(
+        @RequestParam(name = "year", required = false) year: Int?
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val yearUserStatistic = userStatisticService.getUserYearStatistic(year)
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = yearUserStatistic))
+    }
+
+    @GetMapping("/day")
+    fun getUserDayStatistic(
+        @RequestParam(name = "month", required = false) month: Int?,
+        @RequestParam(name = "year", required = false) year: Int?,
+        @RequestParam(name = "day", required = false) day: Int?
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val dayUserStatistic = userStatisticService.getUserDayStatistic(month, day, year)
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = dayUserStatistic))
     }
 }
