@@ -162,7 +162,7 @@ class UserStatisticControllerIT : BaseIT() {
         val value = statistic.get(time.truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME))
 
         assertNotNull(value)
-        assertEquals(1, value.id)
+        assertEquals(exercise.id, value.id)
         assertNotNull(value.subSeriesName)
     }
 }
