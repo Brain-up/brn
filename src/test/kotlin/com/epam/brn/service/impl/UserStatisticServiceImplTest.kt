@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -127,6 +128,8 @@ internal class UserStatisticServiceImplTest {
 
         val result = userStatisticService.getUserMonthStatistic(month, year)
 
+        verify(studyHistoryRepository, times(1)).getMonthHistories(userAccount.id!!, month, year)
+
         assertTrue(result.containsKey(time.dayOfMonth))
         assertTrue(result.containsValue(5))
     }
@@ -155,6 +158,8 @@ internal class UserStatisticServiceImplTest {
 
         val result = userStatisticService.getUserMonthStatistic()
 
+        verify(studyHistoryRepository, times(1)).getMonthHistories(userAccount.id!!, month, year)
+
         assertTrue(result.containsKey(time.dayOfMonth))
         assertTrue(result.containsValue(5))
     }
@@ -180,6 +185,8 @@ internal class UserStatisticServiceImplTest {
 
         val result = userStatisticService.getUserYearStatistic(year)
 
+        verify(studyHistoryRepository, times(1)).getYearStatistic(userAccount.id!!, year)
+
         assertTrue(result.containsKey(time.monthValue))
         assertTrue(result.containsValue(5))
     }
@@ -204,6 +211,8 @@ internal class UserStatisticServiceImplTest {
         )
 
         val result = userStatisticService.getUserYearStatistic()
+
+        verify(studyHistoryRepository, times(1)).getYearStatistic(userAccount.id!!, year)
 
         assertTrue(result.containsKey(localDateTime.monthValue))
         assertTrue(result.containsValue(5))
@@ -234,8 +243,47 @@ internal class UserStatisticServiceImplTest {
         )
 
         val result = userStatisticService.getUserDayStatistic(year = year, month = month, day = day)
+
+        verify(studyHistoryRepository, times(1)).getDayStatistic(
+            userAccount.id!!,
+            time.year,
+            time.monthValue,
+            time.dayOfMonth
+        )
+
         val key = time.toLocalTime().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME)
         val value = result[key]
+
+        assertNotNull(value)
+        assertEquals(exercise.id, value.id)
+    }
+
+    @Test
+    fun `should return user statistic for current day`() {
+        val time = LocalDateTime.now()
+        val userAccount = insertAccount()
+        val exercise = Exercise(
+            id = 1,
+            level = 5
+        )
+        val studyHistory = insertStudyHistory(user = userAccount, exercise = exercise)
+        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount.toDto())
+        `when`(
+            studyHistoryRepository.getDayStatistic(anyLong(), anyInt(), anyInt(), anyInt())
+        ).thenReturn(
+            listOf(studyHistory)
+        )
+
+        val result = userStatisticService.getUserDayStatistic()
+        val key = time.toLocalTime().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME)
+        val value = result[key]
+
+        verify(studyHistoryRepository, times(1)).getDayStatistic(
+            userAccount.id!!,
+            time.year,
+            time.monthValue,
+            time.dayOfMonth
+        )
 
         assertNotNull(value)
         assertEquals(exercise.id, value.id)
