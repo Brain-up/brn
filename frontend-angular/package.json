@@ -27,7 +27,7 @@
     "@ngrx/store-devtools": "^11.0.1",
     "fp-ts": "^2.5.3",
     "ngx-take-until-destroy": "^5.4.0",
-    "rxjs": "~6.5.4",
+    "rxjs": "~6.6.7",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },
