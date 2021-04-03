@@ -7,7 +7,7 @@ It is projected to contain several series of media exercises, which should be ad
 The tool structure and usage is organized as other tools like www.uchi.ru.
 
 Our current version is here : http://brainup.site && http://31.184.253.199/ && http://audibly.ru/ (test user default@default.ru password).
-Now you as a user can register and start doing exercises and write feedback to us.
+Now you as a user can register and start doing exercises.
 
 ## SCIENTIFIC SOURCES
  - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit   
