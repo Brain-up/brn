@@ -17,7 +17,7 @@ class TaskService(
     private val taskRepository: TaskRepository,
     private val exerciseRepository: ExerciseRepository,
     private val resourceRepository: ResourceRepository,
-    private val urlConversionService: UrlConversionService
+    private val wordsService: WordsService
 ) {
     private val log = logger()
 
@@ -27,7 +27,7 @@ class TaskService(
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task ->
             task.answerOptions
-                .forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
+                .forEach { resource -> wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
         }
         return when (ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.toWordsSeriesTaskDto() }
@@ -42,7 +42,10 @@ class TaskService(
         log.debug("Searching task with id=$taskId")
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
-        task.answerOptions.forEach { a -> a.audioFileUrl = urlConversionService.makeFullUrl(a.audioFileUrl) }
+        task.answerOptions.forEach { resource ->
+            resource.audioFileUrl =
+                wordsService.getFullS3UrlForWord(resource.word, resource.locale)
+        }
         return when (ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS -> task.toWordsSeriesTaskDto()
             ExerciseType.WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)

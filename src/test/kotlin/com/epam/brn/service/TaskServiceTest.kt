@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.WordsSeriesTaskDto
+import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
@@ -41,7 +42,7 @@ internal class TaskServiceTest {
     lateinit var resourceRepository: ResourceRepository
 
     @Mock
-    lateinit var urlConversionService: UrlConversionService
+    lateinit var wordsService: WordsService
 
     @InjectMocks
     lateinit var taskService: TaskService
@@ -55,7 +56,7 @@ internal class TaskServiceTest {
             val task1 = mock(Task::class.java)
             val taskDto1 = mock(WordsSeriesTaskDto::class.java)
             val task2 = mock(Task::class.java)
-            val answer = mock(Resource::class.java)
+            val resource = Resource(word = "word", locale = Locale.RU.locale)
             val taskDto2 = mock(WordsSeriesTaskDto::class.java)
             val exercise = mock(Exercise::class.java)
             val subGroup = mock(SubGroup::class.java)
@@ -72,15 +73,14 @@ internal class TaskServiceTest {
             `when`(series.type).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.name)
             `when`(task1.toWordsSeriesTaskDto()).thenReturn(taskDto1)
             `when`(task2.toWordsSeriesTaskDto()).thenReturn(taskDto2)
-            `when`(task1.answerOptions).thenReturn(mutableSetOf(answer))
-            `when`(answer.audioFileUrl).thenReturn("url")
+            `when`(task1.answerOptions).thenReturn(mutableSetOf(resource))
 
-            `when`(urlConversionService.makeFullUrl("url")).thenReturn("fullUrl")
+            `when`(wordsService.getFullS3UrlForWord(resource.word, resource.locale)).thenReturn("fullUrl")
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
             // THEN
             assertEquals(2, foundTasks.size)
-            verify(urlConversionService).makeFullUrl("url")
+            verify(wordsService).getFullS3UrlForWord(resource.word, resource.locale)
         }
 
         @Test

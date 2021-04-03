@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.series
 
+import com.epam.brn.enums.Locale
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.ExerciseGroupsService
@@ -21,7 +22,7 @@ class SeriesGenericRecordProcessor(
     }
 
     @Transactional
-    override fun process(records: List<SeriesGenericRecord>): List<Series> {
+    override fun process(records: List<SeriesGenericRecord>, locale: Locale): List<Series> {
         val series = records
             .map { Series(it, exerciseGroupsService.findGroupById(it.groupId)) }
         series.forEach { series ->

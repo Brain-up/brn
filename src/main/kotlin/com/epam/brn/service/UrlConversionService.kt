@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class UrlConversionService(private val awsConfig: AwsConfig) {
-    fun makeFullUrl(url: String?): String {
-        if (url.isNullOrEmpty())
+    fun makeUrlForNoise(noiseUrl: String?): String {
+        if (noiseUrl.isNullOrEmpty())
             return ""
-        return awsConfig.baseFileUrl + url
+        return awsConfig.baseFileUrl + noiseUrl
     }
 }

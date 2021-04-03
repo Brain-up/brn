@@ -1,5 +1,7 @@
 package com.epam.brn.upload.csv.series1
 
+import com.epam.brn.enums.Locale
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
@@ -8,9 +10,9 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
-import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -31,69 +33,59 @@ class SeriesOneRecordProcessor(
     @Value(value = "\${brn.picture.theme.path}")
     private lateinit var pictureTheme: String
 
-    @Value(value = "\${series1WordsFileName}")
-    private lateinit var series1WordsFileName: String
-
-    @Value(value = "\${audioPath}")
-    private lateinit var audioPathFilipp: String
-
-    @Value(value = "\${audioPathAlena}")
-    private lateinit var audioPathAlena: String
-
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
-
-    val words = mutableMapOf<String, String>()
-
-    private val repeatCount = 2
 
     var random = Random()
 
     override fun isApplicable(record: Any): Boolean = record is SeriesOneRecord
 
     @Transactional
-    override fun process(records: List<SeriesOneRecord>): List<Exercise> {
+    override fun process(records: List<SeriesOneRecord>, locale: Locale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
-        records.forEach {
-            val subGroup = subGroupRepository.findByCode(it.code)
-            val existExercise = exerciseRepository.findExerciseByNameAndLevel(it.exerciseName, it.level)
+        records.forEach { record ->
+            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
+                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
-                val answerOptions = extractAnswerOptions(it)
+                val answerOptions = extractAnswerOptions(record, locale)
+                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 resourceRepository.saveAll(answerOptions)
 
-                val newExercise = generateExercise(it, subGroup)
+                val newExercise = generateExercise(record, subGroup)
                 newExercise.addTask(generateOneTask(newExercise, answerOptions))
                 exerciseRepository.save(newExercise)
                 exercises.add(newExercise)
             }
         }
-        wordsService.createTxtFileWithExerciseWordsMap(words, series1WordsFileName)
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesOneRecord): MutableSet<Resource> {
-        var audioPath = audioPathFilipp
-        if (record.exerciseName.startsWith("М"))
-            audioPath = audioPathAlena
-        return record.words
+    private fun extractAnswerOptions(record: SeriesOneRecord, locale: Locale): MutableSet<Resource> =
+        record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
-            .map { toResource(it, audioPath) }
+            .map { toResource(it, locale) }
             .toMutableSet()
-    }
 
-    private fun toResource(word: String, audioPath: String): Resource {
-        val hashWord = DigestUtils.md5Hex(word)
-        words[word] = hashWord
-        val audioFileUrl = audioPath.format(hashWord)
-        val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFileUrl)
-            .orElse(
-                Resource(
-                    word = word,
-                    audioFileUrl = audioFileUrl,
-                    pictureFileUrl = pictureDefaultPath.format(word)
-                )
+    private fun toResource(word: String, locale: Locale): Resource {
+        val audioPath = wordsService.getSubFilePathForWord(
+            AudioFileMetaData(
+                word,
+                locale.locale,
+                wordsService.getDefaultManVoiceForLocale(locale.locale)
             )
+        )
+        val resource =
+            resourceRepository.findFirstByWordAndLocaleAndWordType(word, locale.locale, WordType.OBJECT.toString())
+                .orElse(
+                    Resource(
+                        word = word,
+                        pictureFileUrl = pictureDefaultPath.format(word),
+                        locale = locale.locale,
+                    )
+                )
+        resource.audioFileUrl = audioPath
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }
@@ -114,25 +106,4 @@ class SeriesOneRecordProcessor(
 
     private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
         Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
-
-    private fun generateTasks(exercise: Exercise, answerOptions: MutableSet<Resource>): MutableList<Task> {
-        return generateCorrectAnswers(answerOptions)
-            .mapIndexed { serialNumber, correctAnswer ->
-                Task(
-                    exercise = exercise,
-                    serialNumber = serialNumber + 1,
-                    answerOptions = answerOptions,
-                    correctAnswer = correctAnswer
-                )
-            }.toMutableList()
-    }
-
-    private fun generateCorrectAnswers(answerOptions: MutableSet<Resource>): MutableList<Resource> {
-        val correctAnswers = mutableListOf<Resource>()
-        for (i in 1..repeatCount) {
-            correctAnswers.addAll(answerOptions)
-        }
-        correctAnswers.shuffle(random)
-        return correctAnswers
-    }
 }

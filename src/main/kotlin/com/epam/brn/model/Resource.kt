@@ -29,6 +29,7 @@ data class Resource(
     @Column(nullable = false)
     var word: String = "",
     var wordType: String = "",
+    var locale: String = "",
     var pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
     @ManyToMany(mappedBy = "answerOptions", cascade = [CascadeType.MERGE])

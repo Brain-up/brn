@@ -1,9 +1,7 @@
 package com.epam.brn.upload.csv.series1
 
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
@@ -11,6 +9,11 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
 import com.epam.brn.model.WordType
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -31,7 +34,7 @@ internal class SeriesOneRecordProcessorTest {
     private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
     private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
     private val resourceRepositoryMock = mock(ResourceRepository::class.java)
-    private val resourceCreationService = mock(WordsService::class.java)
+    private val wordsServiceMock = mock(WordsService::class.java)
 
     private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
 
@@ -66,13 +69,10 @@ internal class SeriesOneRecordProcessorTest {
             subGroupRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock,
-            resourceCreationService
+            wordsServiceMock
         )
 
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "series1WordsFileName", "words_series1.txt")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathFilipp", "/audio/filipp/%s.ogg")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "audioPathAlena", "/audio/alena/%s.ogg")
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
         ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
 
@@ -93,7 +93,9 @@ internal class SeriesOneRecordProcessorTest {
     @Test
     fun `should create correct exercise`() {
         val expected = createExercise()
-
+        val subGroupMock = mock(SubGroup::class.java)
+        `when`(subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale)).thenReturn(subGroupMock)
+        `when`(wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
         val actual = seriesOneRecordProcessor.process(
             mutableListOf(
                 SeriesOneRecord(
@@ -142,6 +144,21 @@ internal class SeriesOneRecordProcessorTest {
             resource_гад(),
             resource_дуб()
         )
+        val subGroupMock = mock(SubGroup::class.java)
+        `when`(subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale)).thenReturn(subGroupMock)
+        `when`(wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
+        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("бал", Locale.RU.locale, Voice.FILIPP)))
+            .thenReturn("/test/бал.ogg")
+        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("бум", Locale.RU.locale, Voice.FILIPP)))
+            .thenReturn("/test/бум.ogg")
+        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("быль", Locale.RU.locale, Voice.FILIPP)))
+            .thenReturn("/test/быль.ogg")
+        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("вить", Locale.RU.locale, Voice.FILIPP)))
+            .thenReturn("/test/вить.ogg")
+        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("гад", Locale.RU.locale, Voice.FILIPP)))
+            .thenReturn("/test/гад.ogg")
+        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("дуб", Locale.RU.locale, Voice.FILIPP)))
+            .thenReturn("/test/дуб.ogg")
 
         val tasks = seriesOneRecordProcessor
             .process(mutableListOf(SeriesOneRecord(1, "pictureUrl", exerciseName, words, noiseLevel, noiseUrl)))
@@ -150,7 +167,6 @@ internal class SeriesOneRecordProcessorTest {
         tasks.forEach {
             assertThat(it.answerOptions).containsExactlyElementsOf(expected)
         }
-
         verify(resourceRepositoryMock).saveAll(expected)
     }
 
@@ -161,9 +177,7 @@ internal class SeriesOneRecordProcessorTest {
             noiseUrl = "/fon/url.ogg",
             level = 1
         )
-
         exercise.addTasks(createTasks(exercise))
-
         return exercise
     }
 
@@ -212,7 +226,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "бал",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/518d3c4523afcd59e2feae1093870f5f.ogg",
+            audioFileUrl = "/test/бал.ogg",
             pictureFileUrl = "pictures/бал.jpg"
         )
     }
@@ -221,7 +235,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "бум",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/8e3cba18a3a6a3aa51e160a3d1e1ebcc.ogg",
+            audioFileUrl = "/test/бум.ogg",
             pictureFileUrl = "pictures/бум.jpg"
         )
     }
@@ -230,7 +244,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "быль",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/4df3cdbbe2abf27f91f673032c95141e.ogg",
+            audioFileUrl = "/test/быль.ogg",
             pictureFileUrl = "pictures/быль.jpg"
         )
     }
@@ -239,7 +253,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "вить",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/77ebaea90791bb15d4f758191aae5930.ogg",
+            audioFileUrl = "/test/вить.ogg",
             pictureFileUrl = "pictures/вить.jpg"
         )
     }
@@ -248,7 +262,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "гад",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/2e0b56e224fe469866e1aaa81caaafcc.ogg",
+            audioFileUrl = "/test/гад.ogg",
             pictureFileUrl = "pictures/гад.jpg"
         )
     }
@@ -257,7 +271,7 @@ internal class SeriesOneRecordProcessorTest {
         return Resource(
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/494d676049e14da7fd3a9182955287ab.ogg",
+            audioFileUrl = "/test/дуб.ogg",
             pictureFileUrl = "pictures/дуб.jpg"
         )
     }
