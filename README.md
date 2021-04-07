@@ -9,6 +9,8 @@ The tool structure and usage is organized as other tools like www.uchi.ru.
 Our current version is here : http://brainup.site && http://31.184.253.199/ && http://audibly.ru/ (test user default@default.ru password).
 Now you as a user can register and start doing exercises.
 
+Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
+
 ## SCIENTIFIC SOURCES
  - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit   
  - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ 
