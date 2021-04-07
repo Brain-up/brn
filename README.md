@@ -175,6 +175,16 @@ Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number
  2.2 command line: `gradle jacocoTestReport`
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
+### Thanks for support
+- EPAM for Jira/Confluence, test instance and Jenkins
+- JetBrains for IDEA licenses
+- Selectel for public instance
+- GitHub for code place and actions where we run CICD
+- Yandex for Yandex Speech Kit service and free account to use it
+
+### Thanks for our contributors
+
+
 ### License
 CC0 1.0 Universal https://joinup.ec.europa.eu/licence/cc0-10-universal-cc0-10-public-domain-dedication  
 
