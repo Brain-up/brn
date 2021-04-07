@@ -16,9 +16,10 @@ Prepare content for 3 series by speech specialists.
 Implement second Series `Group of words`.
 Fill content for 2 exist series - so users can start doing exercises.
 
-2021 Quarter 1 
+✔️ 2021 Quarter 1 
 Implement third Series `Sentences`.
 Implement `https`.
+Implement first English application version.
 Start to move from basic to firebase auth.
 Start to implement new design for application.
 Start to implement mobile version of application.
