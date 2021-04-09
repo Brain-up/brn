@@ -380,14 +380,14 @@ mediaType:
             example: "https://cloudprovider.bucket.com"
 
 # ADMIN  ----------------------
-/admin
-    /exercises
+/admin:
+    /exercises:
         get:
             description: get exercises with tasks, resources by subGroupId
         responses:
             200:
                 example: !include samples/exercises_with_tasks.json
-    /users
+    /users:
         get:
             description: get all users
             queryParameters:
@@ -441,6 +441,17 @@ mediaType:
             responses:
                   200:
                     example: !include samples/study_histories_dto_response.json
+    /resources:
+        /{id}:
+          post:
+              description: Update resource description by resource id.
+              queryParameters:
+                  description:
+                      required: true
+                      type: String
+              responses:
+                  200:
+                      example: !include samples/resource_dto_response.json
     # LOAD FILES ----------------------
     /loadTasksFile:
         post:

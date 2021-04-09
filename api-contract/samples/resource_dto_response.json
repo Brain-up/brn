@@ -1,0 +1,13 @@
+{
+  "data": {
+    "id": 1,
+    "audioFileUrl": "/audio/ru-ru/filipp/1/00540ac38fd85a46e095d6fc13fc0e94.ogg",
+    "word": "сын",
+    "wordType": "OBJECT",
+    "pictureFileUrl": "pictures/сын.jpg",
+    "soundsCount": 0,
+    "description": "updated description"
+  },
+  "errors": [],
+  "meta": []
+}

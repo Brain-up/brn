@@ -1,18 +1,20 @@
 package com.epam.brn.integration
 
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,6 +54,9 @@ class AdminControllerIT : BaseIT() {
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
 
+    @Autowired
+    lateinit var resourceRepository: ResourceRepository
+
     @AfterEach
     fun deleteAfterTest() {
         studyHistoryRepository.deleteAll()
@@ -60,6 +65,7 @@ class AdminControllerIT : BaseIT() {
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
+        resourceRepository.deleteAll()
     }
 
     @Test
@@ -257,6 +263,47 @@ class AdminControllerIT : BaseIT() {
             .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
             .andExpect(jsonPath("$.data[2].id").value(historySecondExerciseOne.id!!))
             .andExpect(jsonPath("$.data[3].id").value(historySecondExerciseTwo.id!!))
+    }
+
+    @Test
+    fun `should update resource description successfully`() {
+        // GIVEN
+        val resource = resourceRepository.save(Resource(description = "description", wordType = "OBJECT"))
+        val descriptionForUpdate = "new description"
+
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/resources/${resource.id}?description=$descriptionForUpdate")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.data.id").value(resource.id))
+            .andExpect(jsonPath("$.data.description").value(descriptionForUpdate))
+    }
+
+    @Test
+    fun `should return 404 if resource is not found for description update`() {
+        // GIVEN
+        val randomIdentifier = 12345150L
+        val descriptionForUpdate = "new description"
+
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/resources/$randomIdentifier?description=$descriptionForUpdate")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+
+        // THEN
+        resultAction
+            .andExpect(status().isNotFound)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors[0]").value("Resource not found by id=$randomIdentifier"))
     }
 
     private fun insertStudyHistory(
