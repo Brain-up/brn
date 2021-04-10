@@ -1,33 +1,21 @@
 <article class="admin">
-  <header class="admin__header">
-    <mat-toolbar>
-      <button class="admin__header-hamburger mat-button">
-        <i class="material-icons " (click)="sideNav.toggle()">menu</i>
-      </button>
-      <span class="admin__header-title">BRN-Admin</span>
+  <header>
+    <mat-toolbar class="admin__header">
+      <img src="assets/logo.svg" alt="Logo" [routerLink]="['/']">
+      <div class="links">
+        <a mat-flat-button [routerLink]="['students']" class="link">Students</a>
+        <a mat-flat-button [routerLink]="['exercises']" class="link">Exercises</a>
+        <a mat-flat-button [routerLink]="['resources']" class="link">Resources</a>
+        <a mat-flat-button [routerLink]="['upload']" class="link">Upload file</a>
+      </div>
+      <div class="user">
+<!--        TODO: use a real user data-->
+        <div class="icon">AB</div>
+        <div class="label">Александра Василевская</div>
+      </div>
     </mat-toolbar>
   </header>
-  <mat-sidenav-container>
-    <mat-sidenav #sideNav class="admin__sidenav" mode="side" opened>
-      <nav class="admin__sidenav-container">
-        <ul class="admin__sidenav-items">
-          <li class="admin__sidenav-item">
-            <button 
-              class="admin__sidenav-item-btn" 
-              mat-button
-              >Home</button>
-          </li>
-          <li class="admin__sidenav-item">
-            <button 
-              class="admin__sidenav-item-btn"
-              mat-button
-              (click)="logoutUser()">Logout</button>
-          </li>
-        </ul>
-      </nav>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+  <section class="admin__content">
+    <router-outlet></router-outlet>
+  </section>
 </article>
