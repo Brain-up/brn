@@ -1,15 +1,17 @@
 <article class="admin">
   <header>
     <mat-toolbar class="admin__header">
-      <img src="assets/logo.svg" alt="Logo" [routerLink]="['/']">
+      <a [routerLink]="['/']" class="logo">
+        <img src="assets/logo.svg" alt="Logo">
+      </a>
       <div class="links">
-        <a mat-flat-button [routerLink]="['students']" class="link">Students</a>
-        <a mat-flat-button [routerLink]="['exercises']" class="link">Exercises</a>
-        <a mat-flat-button [routerLink]="['resources']" class="link">Resources</a>
-        <a mat-flat-button [routerLink]="['upload']" class="link">Upload file</a>
+        <a *ngFor="let tab of mainTabs"
+           mat-flat-button class="link"
+           [routerLink]="[tab.link]">{{tab.label}}
+        </a>
       </div>
       <div class="user">
-<!--        TODO: use a real user data-->
+        <!-- TODO: use a real user data -->
         <div class="icon">AB</div>
         <div class="label">Александра Василевская</div>
       </div>

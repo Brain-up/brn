@@ -12,6 +12,13 @@ import { destroySessionRequestAction } from '../auth/ngrx/actions';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPageComponent {
+  public readonly mainTabs = [
+    {label: 'Students', link: 'students'},
+    {label: 'Exercises', link: 'exercises'},
+    {label: 'Resources', link: 'resources'},
+    {label: 'Upload file', link: 'upload'}
+  ];
+
   constructor(private router: Router, private store: Store<AppStateModel>) {
   }
 
