@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { map, filter, switchMap } from 'rxjs/operators';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { combineLatest, Subject, Subscription } from 'rxjs';
+import { map, filter, switchMap, tap } from 'rxjs/operators';
 
 import { AdminService } from '../../services/admin/admin.service';
 import { Exercise } from '../../model/exercise';
@@ -12,22 +18,52 @@ import { Exercise } from '../../model/exercise';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExercisesComponent implements OnInit, OnDestroy {
-  exercises$: Observable<Exercise[]>;
+  exercises: Exercise[];
   groupId: string;
   seriesId: string;
   subGroupId: string;
+  showExercises: boolean;
+  displayedColumns: string[];
+
   private groupId$ = new Subject<string>();
   private seriesId$ = new Subject<string>();
   private subGroupId$ = new Subject<string>();
+  private subscription: Subscription;
   private readonly LOG_SOURCE = 'ExercisesComponent';
 
   constructor(
-    private adminService: AdminService
+    private adminService: AdminService,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
   ngOnInit(): void {
-    this.exercises$ = combineLatest([this.groupId$, this.seriesId$, this.subGroupId$]).pipe(
+    this.initDataSource();
+    this.initExercises();
+  }
+
+  onGroupChange(groupId: string): void {
+    this.groupId$.next(groupId);
+  }
+
+  onSeriesChange(seriesId: string): void {
+    this.seriesId$.next(seriesId);
+  }
+
+  onSubGroupChange(subGroupId: string): void {
+    this.subGroupId$.next(subGroupId);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private initDataSource(): void {
+    this.displayedColumns = [ 'id', 'seriesId', 'name', 'level', 'noise', 'noiseSound', 'tasks', 'available'];
+  }
+
+  private initExercises() {
+    this.subscription = combineLatest([this.groupId$, this.seriesId$, this.subGroupId$]).pipe(
       map((argsArray: string[]) => {
         const allIdsExist = argsArray.every(x => !!x);
         if (!allIdsExist) {
@@ -36,26 +72,17 @@ export class ExercisesComponent implements OnInit, OnDestroy {
         return allIdsExist ? argsArray[2] : false;
       }),
       filter(Boolean),
+      tap(_ => {
+        this.showExercises = true;
+      }),
       switchMap((subGroupId: string) => this.adminService.getExercisesBySubGroupId(subGroupId))
-    );
+    ).subscribe((res) => {
+      this.exercises = res;
+      this.cdr.detectChanges();
+    });
   }
 
-  onGroupChange(groupId: string) {
-    this.groupId$.next(groupId);
-  }
-
-  onSeriesChange(seriesId: string) {
-    this.seriesId$.next(seriesId);
-  }
-
-  onSubGroupChange(subGroupId: string) {
-    this.subGroupId$.next(subGroupId);
-  }
-
-  ngOnDestroy(): void {
-  }
-
-  private hideExercisesTable() {
-    console.log('Hide exercises table');
+  private hideExercisesTable(): void {
+    this.showExercises = false;
   }
 }

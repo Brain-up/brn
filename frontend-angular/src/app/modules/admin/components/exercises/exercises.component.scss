@@ -1,6 +1,19 @@
 @import "../../../../styles/colors";
+@import "../../../../styles/variables";
 
 .select-container {
   width: 100%;
-  padding: 22px 72px;
+  padding: 22px $header-horizontal-padding;
+}
+
+.exercises {
+  &__table-container {
+    padding: 40px $header-horizontal-padding;
+  }
+
+  &__table {
+    width: 100%;
+    box-shadow: none;
+  }
+
 }
