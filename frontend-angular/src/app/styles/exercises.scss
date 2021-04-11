@@ -1,0 +1,11 @@
+@import "../styles/colors";
+
+.select__panel.mat-select-panel {
+  background: $hardly-gray-color;
+
+  .mat-option {
+    font-family: Montserrat;
+    font-size: 16px;
+    font-weight: normal;
+  }
+}

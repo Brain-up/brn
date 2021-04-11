@@ -10,9 +10,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import * as fromAdminNgrx from './ngrx/reducers';
+import { AdminEffects } from './ngrx/effects';
 
 import { AdminPageComponent } from './admin-page.component';
 import { LoadFileComponent } from './components/load-file/load-file.component';
@@ -24,8 +29,8 @@ import { UploadService } from './services/upload/upload.service';
 import { FormatService } from './services/format/format.service';
 import { AdminGuardService } from './services/admin-guard/admin-guard.service';
 import { AdminPageRoutingModule } from './admin-page-routing.module';
-import * as fromAdminNgrx from './ngrx/reducers';
-import { AdminEffects } from './ngrx/effects';
+import { ExercisesComponent } from './components/exercises/exercises.component';
+import { SelectPanelComponent } from './components/exercises/select-panel/select-panel.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +38,8 @@ import { AdminEffects } from './ngrx/effects';
     LoadFileComponent,
     LoadTasksComponent,
     HomeComponent,
+    ExercisesComponent,
+    SelectPanelComponent
   ],
   exports: [AdminPageComponent],
   imports: [
@@ -49,6 +56,9 @@ import { AdminEffects } from './ngrx/effects';
     MatIconModule,
     MatSidenavModule,
     MatToolbarModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatButtonToggleModule,
     StoreModule.forFeature(fromAdminNgrx.adminFeatureKey, fromAdminNgrx.adminReducer),
     EffectsModule.forFeature([AdminEffects])
   ],

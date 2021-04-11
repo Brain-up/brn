@@ -6,6 +6,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoadFileComponent } from './components/load-file/load-file.component';
 import { LoadTasksComponent } from './components/load-tasks/load-tasks.component';
 import { AdminGuardService } from './services/admin-guard/admin-guard.service';
+import { ExercisesComponent } from './components/exercises/exercises.component';
 
 const adminRoutes: Routes = [
   {
@@ -18,7 +19,10 @@ const adminRoutes: Routes = [
     children: [
       // TODO: will be implement in next tasks
       // {path: 'users', component: UsersComponent},
-      // {path: 'exercises', component: ExercisesComponent},
+       {
+         path: 'exercises',
+         component: ExercisesComponent
+       },
       // {path: 'resources', component: ResourcesComponent},
       // {path: 'upload', component: UploadComponent}, //see previous HomeComponent
 
