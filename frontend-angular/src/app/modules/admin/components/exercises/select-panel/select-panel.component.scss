@@ -1,0 +1,44 @@
+@import "../../../../../styles/colors";
+
+.select {
+  height: 56px;
+  width: 355px;
+  border-radius: 6px;
+  background: $hardly-gray-color;
+  box-shadow: 0px 2px 2px rgba(89, 71, 178, 0.12);
+
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  text-transform: uppercase;
+
+  color: $dark-violet-color;
+  margin-right: 38px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &::ng-deep {
+    .mat-form-field-flex {
+      padding-left: 24px;
+      padding-right: 24px;
+      background: $hardly-gray-color;
+    }
+
+    .mat-form-field-underline {
+      display: none;
+    }
+
+    .mat-select-value {
+      color: $dark-violet-color;
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 17px;
+    }
+  }
+}

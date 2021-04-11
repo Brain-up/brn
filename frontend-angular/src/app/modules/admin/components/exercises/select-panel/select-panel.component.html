@@ -1,0 +1,23 @@
+<mat-form-field appearance="fill" class="groups select">
+  <mat-label>{{groupsControl.value ? 'Groups' : 'All groups'}}</mat-label>
+  <mat-select [formControl]="groupsControl" panelClass="select__panel">
+    <mat-option>All groups</mat-option>
+    <mat-option *ngFor="let group of groups$ | async" [value]="group.id">{{group.name}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="fill" class="series select">
+  <mat-label>{{seriesControl.value ? 'Series' : 'All series'}}</mat-label>
+  <mat-select [formControl]="seriesControl" panelClass="select__panel">
+    <mat-option>All series</mat-option>
+    <mat-option *ngFor="let item of series$ | async" [value]="item.id">{{item.name}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="fill" class="sub-groups select">
+  <mat-label>{{subGroupsControl.value ? 'Topics' : 'All topics'}}</mat-label>
+  <mat-select [formControl]="subGroupsControl" panelClass="select__panel">
+    <mat-option>All topics</mat-option>
+    <mat-option *ngFor="let subGroup of subGroups$ | async" [value]="subGroup.id">{{subGroup.name}}</mat-option>
+  </mat-select>
+</mat-form-field>
