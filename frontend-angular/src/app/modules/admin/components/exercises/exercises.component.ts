@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {  Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map, filter, switchMap } from 'rxjs/operators';
 
 import { AdminService } from '../../services/admin/admin.service';
 import { Exercise } from '../../model/exercise';
@@ -8,39 +8,54 @@ import { Exercise } from '../../model/exercise';
 @Component({
   selector: 'app-exercises',
   templateUrl: './exercises.component.html',
-  styleUrls: ['./exercises.component.scss']
+  styleUrls: ['./exercises.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExercisesComponent implements OnInit {
+export class ExercisesComponent implements OnInit, OnDestroy {
   exercises$: Observable<Exercise[]>;
+  groupId: string;
+  seriesId: string;
+  subGroupId: string;
+  private groupId$ = new Subject<string>();
+  private seriesId$ = new Subject<string>();
+  private subGroupId$ = new Subject<string>();
   private readonly LOG_SOURCE = 'ExercisesComponent';
 
   constructor(
-    private adminService: AdminService,
-    private route: ActivatedRoute
+    private adminService: AdminService
   ) {
   }
 
   ngOnInit(): void {
-    // const subGroupId = this.route.snapshot.paramMap.get('id');
-
-    // this.exercises$ = this.adminService.getExercisesBySubGroupId(subGroupId).pipe(
-    //   catchError(err => {
-    //     console.error(this.LOG_SOURCE, 'An error occurred during getExercisesBySubGroupId', err);
-    //     return EMPTY;
-    //   }),
-    //   take(1)
-    // );
+    this.exercises$ = combineLatest([this.groupId$, this.seriesId$, this.subGroupId$]).pipe(
+      map((argsArray: string[]) => {
+        const allIdsExist = argsArray.every(x => !!x);
+        if (!allIdsExist) {
+          this.hideExercisesTable();
+        }
+        return allIdsExist ? argsArray[2] : false;
+      }),
+      filter(Boolean),
+      switchMap((subGroupId: string) => this.adminService.getExercisesBySubGroupId(subGroupId))
+    );
   }
 
   onGroupChange(groupId: string) {
-    console.log('groupId=', groupId);
+    this.groupId$.next(groupId);
   }
 
   onSeriesChange(seriesId: string) {
-    console.log('seriesId=', seriesId);
+    this.seriesId$.next(seriesId);
   }
 
   onSubGroupChange(subGroupId: string) {
-    console.log('subGroupId=', subGroupId);
+    this.subGroupId$.next(subGroupId);
+  }
+
+  ngOnDestroy(): void {
+  }
+
+  private hideExercisesTable() {
+    console.log('Hide exercises table');
   }
 }

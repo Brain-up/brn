@@ -2,11 +2,16 @@
 
   <div class="select-container">
     <app-select-panel
+      [groupId]="groupId"
+      [seriesId]="seriesId"
+      [subGroupId]="subGroupId"
       (groupChanged)="onGroupChange($event)"
       (seriesChanged)="onSeriesChange($event)"
       (subGroupChanged)="onSubGroupChange($event)">
     </app-select-panel>
   </div>
+
+  <div class="class" *ngFor="let e of exercises$ | async">{{e.name}}</div>
 
 
 </div>
