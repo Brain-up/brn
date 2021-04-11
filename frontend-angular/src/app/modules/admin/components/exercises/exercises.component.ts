@@ -58,6 +58,10 @@ export class ExercisesComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  isEnableChanged(exercise, isEnable: boolean) {
+    console.log('enable changed:', exercise, isEnable);
+  }
+
   private initDataSource(): void {
     this.displayedColumns = [ 'id', 'seriesId', 'name', 'level', 'noise', 'noiseSound', 'tasks', 'available'];
   }

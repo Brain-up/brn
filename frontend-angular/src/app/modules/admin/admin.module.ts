@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -59,6 +60,7 @@ import { SelectPanelComponent } from './components/exercises/select-panel/select
     MatTableModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
+    MatSlideToggleModule,
     StoreModule.forFeature(fromAdminNgrx.adminFeatureKey, fromAdminNgrx.adminReducer),
     EffectsModule.forFeature([AdminEffects])
   ],
