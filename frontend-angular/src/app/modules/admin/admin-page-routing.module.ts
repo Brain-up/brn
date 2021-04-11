@@ -17,7 +17,7 @@ const adminRoutes: Routes = [
     },
     children: [
       // TODO: will be implement in next tasks
-      // {path: 'students', component: StudentsComponent},
+      // {path: 'users', component: UsersComponent},
       // {path: 'exercises', component: ExercisesComponent},
       // {path: 'resources', component: ResourcesComponent},
       // {path: 'upload', component: UploadComponent}, //see previous HomeComponent

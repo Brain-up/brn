@@ -13,7 +13,7 @@ import { destroySessionRequestAction } from '../auth/ngrx/actions';
 })
 export class AdminPageComponent {
   public readonly mainTabs = [
-    {label: 'Students', link: 'students'},
+    {label: 'Users', link: 'users'},
     {label: 'Exercises', link: 'exercises'},
     {label: 'Resources', link: 'resources'},
     {label: 'Upload file', link: 'upload'}
