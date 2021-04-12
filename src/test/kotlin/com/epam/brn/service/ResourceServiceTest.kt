@@ -29,16 +29,18 @@ internal class ResourceServiceTest {
 
     @Test
     fun `should update description successfully`() {
+        // GIVEN
         val resource = Resource(
             id = id,
             wordType = "OBJECT"
         )
-
         `when`(resourceRepository.findById(id)).thenReturn(Optional.of(resource))
         `when`(resourceRepository.save(resource)).thenReturn(resource)
 
+        // WHEN
         val result: ResourceDto = resourceService.updateDescription(id, description)
 
+        // THEN
         assertEquals(id, result.id)
         assertEquals(description, result.description)
         verify(resourceRepository).findById(id)
@@ -47,12 +49,15 @@ internal class ResourceServiceTest {
 
     @Test
     fun `Should throw EntityNotFoundException if it does not exist`() {
+        // GIVEN
         `when`(resourceRepository.findById(id)).thenReturn(Optional.empty())
 
+        // WHEN
         val exception = assertThrows<EntityNotFoundException> {
             resourceService.updateDescription(id, description)
         }
 
+        // THEN
         assertEquals("Resource not found by id=$id", exception.message)
         verify(resourceRepository).findById(id)
         verifyNoMoreInteractions(resourceRepository)

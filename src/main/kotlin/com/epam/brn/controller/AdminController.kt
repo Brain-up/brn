@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
@@ -14,9 +15,12 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -82,12 +86,12 @@ class AdminController(
         ResponseEntity.ok()
             .body(BaseResponseDto(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 
-    @PostMapping("/resources/{id}")
+    @PatchMapping("/resources/{id}")
     @ApiOperation("Update resource description by resource id.")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
-        @RequestParam(value = "description", required = true) description: String
+        @RequestBody @Validated request: UpdateResourceDescriptionRequest
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok()
-            .body(BaseSingleObjectResponseDto(data = resourceService.updateDescription(id, description)))
+            .body(BaseSingleObjectResponseDto(data = resourceService.updateDescription(id, request.description!!)))
 }

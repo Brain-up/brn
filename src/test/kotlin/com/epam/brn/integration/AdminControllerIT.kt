@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -270,12 +271,14 @@ class AdminControllerIT : BaseIT() {
         // GIVEN
         val resource = resourceRepository.save(Resource(description = "description", wordType = "OBJECT"))
         val descriptionForUpdate = "new description"
+        val requestJson = objectMapper.writeValueAsString(UpdateResourceDescriptionRequest(descriptionForUpdate))
 
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .post("$baseUrl/resources/${resource.id}?description=$descriptionForUpdate")
+                .patch("$baseUrl/resources/${resource.id}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
         )
 
         // THEN
@@ -284,26 +287,6 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data.id").value(resource.id))
             .andExpect(jsonPath("$.data.description").value(descriptionForUpdate))
-    }
-
-    @Test
-    fun `should return 404 if resource is not found for description update`() {
-        // GIVEN
-        val randomIdentifier = 12345150L
-        val descriptionForUpdate = "new description"
-
-        // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .post("$baseUrl/resources/$randomIdentifier?description=$descriptionForUpdate")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-
-        // THEN
-        resultAction
-            .andExpect(status().isNotFound)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.errors[0]").value("Resource not found by id=$randomIdentifier"))
     }
 
     private fun insertStudyHistory(
