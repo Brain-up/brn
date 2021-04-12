@@ -46,7 +46,8 @@ data class Resource(
         description = description
     )
 
-    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word', pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
+    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word'," +
+            " pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
