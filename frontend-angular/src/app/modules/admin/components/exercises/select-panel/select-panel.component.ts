@@ -8,13 +8,15 @@ import {
   Output
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { catchError, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
-
 import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { catchError, filter, startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+
 import { Group } from '../../../model/group';
 import { Series } from '../../../model/series';
 import { Subgroup } from '../../../model/subgroup';
 import { AdminService } from '../../../services/admin/admin.service';
+import { Language } from '../../../model/language';
+import { LANGUAGES } from './languages';
 
 @Component({
   selector: 'app-select-panel',
@@ -24,28 +26,24 @@ import { AdminService } from '../../../services/admin/admin.service';
 })
 export class SelectPanelComponent implements OnInit, OnDestroy {
   @Input() set groupId(groupId: string) {
-    console.log('set groupId:', groupId);
     this.groupsControl.setValue(groupId);
   }
-
   @Input() set seriesId(seriesId: string) {
-    console.log('set seriesId:', seriesId);
     this.seriesControl.setValue(seriesId);
   }
-
   @Input() set subGroupId(subGroupId: string) {
-    console.log('set subGroupId:', subGroupId);
     this.subGroupsControl.setValue(subGroupId);
   }
-
   @Output() groupChanged = new EventEmitter<string>();
   @Output() seriesChanged = new EventEmitter<string>();
   @Output() subGroupChanged = new EventEmitter<string>();
 
+  languages: Language[] = LANGUAGES;
   groups$: Observable<Group[]>;
   series$: Observable<Series[]>;
   subGroups$: Observable<Subgroup[]>;
 
+  languagesControl = new FormControl();
   groupsControl = new FormControl();
   seriesControl = new FormControl();
   subGroupsControl = new FormControl();
@@ -67,8 +65,25 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  private initGroups() {
-    this.groups$ = this.adminService.getGroups().pipe(
+  private initGroups(): void {
+    let initialGroups: Group[];
+    this.getInitialGroups$()
+      .subscribe((groups: Group[]) => {
+        initialGroups = groups;
+      });
+
+    this.groups$ = this.languagesControl.valueChanges.pipe(
+      startWith(initialGroups),
+      tap((languageId: string) => {
+        console.log('languageId=', languageId);
+        this.groupsControl.reset();
+        return languageId;
+      }),
+      switchMap((languageId: string) => {
+        return languageId ?
+          this.adminService.getGroups(languageId)
+          : of(initialGroups);
+      }),
       catchError(err => {
         console.error(this.LOG_SOURCE, 'An error occurred during getGroups', err);
         return EMPTY;
@@ -77,7 +92,17 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  private initSeries() {
+  private getInitialGroups$(): Observable<Group[]> {
+    return this.adminService.getGroups().pipe(
+      catchError(err => {
+        console.error(this.LOG_SOURCE, 'An error occurred during getGroups', err);
+        return EMPTY;
+      }),
+      take(1)
+    );
+  }
+
+  private initSeries(): void {
     this.series$ = this.groupsControl.valueChanges.pipe(
       tap((groupId: string) => {
         this.seriesControl.reset();
@@ -97,7 +122,7 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  private initSubGroups() {
+  private initSubGroups(): void {
     this.subGroups$ = this.seriesControl.valueChanges.pipe(
       tap((seriesId: string) => {
         this.subGroupsControl.reset();
@@ -117,7 +142,7 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  private onSubGroupChanged() {
+  private onSubGroupChanged(): void {
     this.subGroupsControl.valueChanges.pipe(
       tap((id: string) => {
         this.subGroupChanged.emit(id);

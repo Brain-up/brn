@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -15,8 +15,12 @@ export class AdminService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getGroups(): Observable<Group[]> {
-    return this.httpClient.get<{ data: Group[] }>('/api/groups').pipe(
+  getGroups(locale?: string): Observable<Group[]> {
+    let params = new HttpParams();
+    if (locale) {
+      params = params.append('locale', locale);
+    }
+    return this.httpClient.get<{ data: Group[] }>('/api/groups', {params}).pipe(
       pluck('data'),
     );
   }
