@@ -6634,26 +6634,30 @@ ember-source@3.25.0-beta.3:
     semver "^6.1.1"
     silent-error "^1.1.1"
 
-ember-template-lint-plugin-tailwindcss@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ember-template-lint-plugin-tailwindcss/-/ember-template-lint-plugin-tailwindcss-1.0.0.tgz#04d10314dee0d878d5639821656706573aa76ff4"
-  integrity sha512-05I4pgc1lTnrt8tNTFDAThqt51nWusFqx2b9R1R5TLIvq2oqFLCapyyznZmOhd//vuqFEWvQGWnOy/r3b/ETFg==
+ember-template-lint-plugin-tailwindcss@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/ember-template-lint-plugin-tailwindcss/-/ember-template-lint-plugin-tailwindcss-3.1.0.tgz#faca4665b7cbb816519efc96454afcfa0a910251"
+  integrity sha512-1tNh6A6LxK8yYJZgfVVN242jQ+ueFlLLgi7G1XYenOLGnXYIx394eZKfnBdyyLJioPvj0aepnOuD79RjcW5Fwg==
   dependencies:
-    ember-template-recast "^4.1.4"
+    common-tags "^1.8.0"
+    ember-template-lint "2.20.0"
+    ember-template-recast "^5.0.1"
+    tslib "^2.1.0"
 
-ember-template-lint@^2.15.0:
-  version "2.18.0"
-  resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-2.18.0.tgz#cba7665c2ff3c34734285768d7bf41cdd08ffb3f"
-  integrity sha512-4J1Dk2ZaMo/nqtP4QJF+25yYnKNOewE8xopSRNGjgQpNwaUFZmZCtzJtoSJF6+SRLcMDljnewXRezugok4ljug==
+ember-template-lint@2.20.0, ember-template-lint@^2.15.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-2.20.0.tgz#73844a588acb167df8fe281f227c7a0837d1bc2d"
+  integrity sha512-J1iO/fAsWQe9CHAx102tEjALSTIOxeNGn5GjqJzWmfyxfSJlTMq1XqhfBBXoqTM9zmi/WFf5m6uH5cPIQSBStQ==
   dependencies:
     chalk "^4.0.0"
     ember-template-recast "^5.0.1"
     find-up "^5.0.0"
+    fuse.js "^6.4.6"
     get-stdin "^8.0.0"
     globby "^11.0.2"
     is-glob "^4.0.1"
     micromatch "^4.0.2"
-    resolve "^1.19.0"
+    resolve "^1.20.0"
     v8-compile-cache "^2.2.0"
     yargs "^16.2.0"
 
@@ -7877,6 +7881,11 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+fuse.js@^6.4.6:
+  version "6.4.6"
+  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-6.4.6.tgz#62f216c110e5aa22486aff20be7896d19a059b79"
+  integrity sha512-/gYxR/0VpXmWSfZOIPS3rWwU8SHgsRTwWuXhyb2O6s7aRuVtHtxCkR33bNYu3wyLyNx/Wpv0vU7FZy8Vj53VNw==
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -8705,7 +8714,7 @@ is-callable@^1.1.4, is-callable@^1.1.5:
   resolved "https://registry.yarnpkg.com/is-callable/-/is-callable-1.2.0.tgz#83336560b54a38e35e3a2df7afd0454d691468bb"
   integrity sha512-pyVD9AaGLxtg6srb2Ng6ynWJqkHU9bEM087AKck0w8QwDarTfNcpIYoU8x8Hv2Icm8u6kFJM18Dag8lyqGkviw==
 
-is-core-module@^2.1.0:
+is-core-module@^2.1.0, is-core-module@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.2.0.tgz#97037ef3d52224d85163f5597b2b63d9afed981a"
   integrity sha512-XRAfAdyyY5F5cOXn7hYQDqh2Xmii+DEfIcQGxK/uNwMHhIkPWO0g8msXcbzLe+MpGoR951MlqM/2iIlU4vKDdQ==
@@ -12039,6 +12048,14 @@ resolve@^1.1.7, resolve@^1.10.0, resolve@^1.10.1, resolve@^1.11.1, resolve@^1.12
     is-core-module "^2.1.0"
     path-parse "^1.0.6"
 
+resolve@^1.20.0:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
+  integrity sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==
+  dependencies:
+    is-core-module "^2.2.0"
+    path-parse "^1.0.6"
+
 restore-cursor@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/restore-cursor/-/restore-cursor-2.0.0.tgz#9f7ee287f82fd326d4fd162923d62129eee0dfaf"
@@ -13535,10 +13552,10 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
-  integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
+tslib@^2.0.1, tslib@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
+  integrity sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
 
 tsutils@^3.17.1:
   version "3.19.1"
