@@ -8,5 +8,6 @@ data class ResourceDto(
     val word: String? = "",
     val wordType: WordType?,
     val pictureFileUrl: String? = "",
-    val soundsCount: Int? = 0
+    val soundsCount: Int? = 0,
+    val description: String? = ""
 )

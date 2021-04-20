@@ -33,7 +33,8 @@ data class Resource(
     var pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
     @ManyToMany(mappedBy = "answerOptions", cascade = [CascadeType.MERGE])
-    var tasks: MutableSet<Task> = HashSet()
+    var tasks: MutableSet<Task> = HashSet(),
+    var description: String? = ""
 ) {
     fun toDto() = ResourceDto(
         id = id,
@@ -41,10 +42,12 @@ data class Resource(
         word = word,
         pictureFileUrl = pictureFileUrl,
         soundsCount = soundsCount,
-        wordType = WordType.valueOf(wordType)
+        wordType = WordType.valueOf(wordType),
+        description = description
     )
 
-    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word', pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount)"
+    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word'," +
+        " pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -58,6 +61,7 @@ data class Resource(
         if (wordType != other.wordType) return false
         if (pictureFileUrl != other.pictureFileUrl) return false
         if (soundsCount != other.soundsCount) return false
+        if (description != other.description) return false
 
         return true
     }
@@ -69,6 +73,7 @@ data class Resource(
         result = 31 * result + wordType.hashCode()
         result = 31 * result + (pictureFileUrl?.hashCode() ?: 0)
         result = 31 * result + (soundsCount ?: 0)
+        result = 31 * result + (description?.hashCode() ?: 0)
         return result
     }
 }

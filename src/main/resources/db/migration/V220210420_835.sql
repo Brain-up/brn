@@ -1,0 +1,1 @@
+alter table resource add column description varchar(255);

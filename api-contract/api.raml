@@ -175,7 +175,7 @@ mediaType:
         200:
           body:
             example1: !include samples/exercise_for_id_1.json
-  /byIds
+  /byIds:
     post:
         description: Get available exercise ids for current user by input ids which have same subGroup.
         body:
@@ -380,14 +380,14 @@ mediaType:
             example: "https://cloudprovider.bucket.com"
 
 # ADMIN  ----------------------
-/admin
-    /exercises
+/admin:
+    /exercises:
         get:
             description: get exercises with tasks, resources by subGroupId
         responses:
             200:
                 example: !include samples/exercises_with_tasks.json
-    /users
+    /users:
         get:
             description: get all users
             queryParameters:
@@ -441,6 +441,15 @@ mediaType:
             responses:
                   200:
                     example: !include samples/study_histories_dto_response.json
+    /resources:
+        /{id}:
+          patch:
+              description: Update resource description by resource id.
+              body:
+                  example: !include samples/update_resource_description_request.json
+              responses:
+                  200:
+                      example: !include samples/resource_dto_response.json
     # LOAD FILES ----------------------
     /loadTasksFile:
         post:
