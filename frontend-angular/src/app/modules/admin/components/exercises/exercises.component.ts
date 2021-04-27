@@ -3,8 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { map, filter, switchMap, tap } from 'rxjs/operators';
 
@@ -18,12 +22,13 @@ import { Answer, Exercise, Task } from '../../model/exercise';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExercisesComponent implements OnInit, OnDestroy {
-  exercises: Exercise[];
+  @ViewChild(MatSort) sort: MatSort;
   groupId: string;
   seriesId: string;
   subGroupId: string;
   showExercises: boolean;
   displayedColumns: string[];
+  dataSource: MatTableDataSource<any>;
 
   seriesName$ = new BehaviorSubject<string>('');
   private groupId$ = new Subject<string>();
@@ -95,13 +100,18 @@ export class ExercisesComponent implements OnInit, OnDestroy {
         this.showExercises = true;
       }),
       switchMap((subGroupId: string) => this.adminService.getExercisesBySubGroupId(subGroupId))
-    ).subscribe((res) => {
-      this.exercises = res;
+    ).subscribe((exercises: Exercise[]) => {
+      this.setDataSource(exercises);
       this.cdr.detectChanges();
     });
   }
 
   private hideExercisesTable(): void {
     this.showExercises = false;
+  }
+
+  private setDataSource(exercises: Exercise[]): void {
+    this.dataSource = new MatTableDataSource(exercises);
+    this.dataSource.sort = this.sort;
   }
 }

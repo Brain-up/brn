@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -58,6 +59,7 @@ import { SelectPanelComponent } from './components/exercises/select-panel/select
     MatSidenavModule,
     MatToolbarModule,
     MatTableModule,
+    MatSortModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
