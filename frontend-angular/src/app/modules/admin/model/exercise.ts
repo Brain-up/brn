@@ -15,6 +15,20 @@ interface Noise {
   url: string;
 }
 
-interface Task {
+export interface Task {
   id: number;
+  level: number;
+  exerciseType: string;
+  name: string;
+  serialNumber: number;
+  answerOptions: Array<Answer>;
+}
+
+export interface Answer {
+  id: number;
+  audioFileUrl: string;
+  word: string;
+  wordType: string;
+  pictureFileUrl: string;
+  soundsCount: number;
 }

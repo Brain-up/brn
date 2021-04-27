@@ -57,7 +57,7 @@
 
     <ng-container matColumnDef="tasks">
       <th mat-header-cell *matHeaderCellDef>Tasks</th>
-      <td mat-cell *matCellDef="let exercise"> {{exercise.tasks}} </td>
+      <td mat-cell *matCellDef="let exercise"> {{getMatrixFromTasks(exercise.tasks)}} </td>
     </ng-container>
 
     <ng-container matColumnDef="available">

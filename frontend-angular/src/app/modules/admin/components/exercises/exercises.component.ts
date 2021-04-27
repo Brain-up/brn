@@ -9,7 +9,7 @@ import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { map, filter, switchMap, tap } from 'rxjs/operators';
 
 import { AdminService } from '../../services/admin/admin.service';
-import { Exercise } from '../../model/exercise';
+import { Answer, Exercise, Task } from '../../model/exercise';
 
 @Component({
   selector: 'app-exercises',
@@ -60,6 +60,21 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   isEnableChanged(exercise, isEnable: boolean) {
     console.log('enable changed:', exercise, isEnable);
+  }
+
+  // TODO: implement a real logic for task matrix (for now it is a draft)
+  getMatrixFromTasks(tasks: Task[]): string {
+    if (!tasks || tasks.length === 0) {
+      return '';
+    }
+
+    let res = '';
+    tasks.forEach((task: Task) => {
+      const row  = task.answerOptions.map((answer: Answer) => answer.word).join(' ');
+      res += row + '\n';
+    });
+
+    return res;
   }
 
   private initDataSource(): void {
