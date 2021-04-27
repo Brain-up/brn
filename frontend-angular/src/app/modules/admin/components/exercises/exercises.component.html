@@ -52,7 +52,12 @@
 
     <ng-container matColumnDef="noiseSound">
       <th mat-header-cell *matHeaderCellDef>Noise sound</th>
-      <td mat-cell *matCellDef="let exercise"> {{exercise.noise?.url}} </td>
+      <td mat-cell *matCellDef="let exercise">
+        <figure *ngIf="exercise.noise?.url">
+          <figcaption>{{exercise.noise?.url}}</figcaption>
+          <audio controls [src]="exercise.noise?.url"></audio>
+        </figure>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="tasks">
