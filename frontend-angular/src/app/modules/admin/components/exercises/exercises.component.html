@@ -31,8 +31,8 @@
     </ng-container>
 
     <ng-container matColumnDef="seriesId">
-      <th mat-header-cell *matHeaderCellDef>SeriesId</th>
-      <td mat-cell *matCellDef="let exercise"> {{exercise.seriesId}} </td>
+      <th mat-header-cell *matHeaderCellDef>Series</th>
+      <td mat-cell *matCellDef="let exercise"> {{seriesName$.value}} </td>
     </ng-container>
 
     <ng-container matColumnDef="name">

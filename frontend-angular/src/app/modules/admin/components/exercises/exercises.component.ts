@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { combineLatest, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { map, filter, switchMap, tap } from 'rxjs/operators';
 
 import { AdminService } from '../../services/admin/admin.service';
@@ -25,8 +25,8 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   showExercises: boolean;
   displayedColumns: string[];
 
+  seriesName$ = new BehaviorSubject<string>('');
   private groupId$ = new Subject<string>();
-  private seriesId$ = new Subject<string>();
   private subGroupId$ = new Subject<string>();
   private subscription: Subscription;
   private readonly LOG_SOURCE = 'ExercisesComponent';
@@ -46,8 +46,8 @@ export class ExercisesComponent implements OnInit, OnDestroy {
     this.groupId$.next(groupId);
   }
 
-  onSeriesChange(seriesId: string): void {
-    this.seriesId$.next(seriesId);
+  onSeriesChange(seriesName: string): void {
+    this.seriesName$.next(seriesName);
   }
 
   onSubGroupChange(subGroupId: string): void {
@@ -67,7 +67,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   }
 
   private initExercises() {
-    this.subscription = combineLatest([this.groupId$, this.seriesId$, this.subGroupId$]).pipe(
+    this.subscription = combineLatest([this.groupId$, this.seriesName$, this.subGroupId$]).pipe(
       map((argsArray: string[]) => {
         const allIdsExist = argsArray.every(x => !!x);
         if (!allIdsExist) {

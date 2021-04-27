@@ -35,7 +35,7 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
     this.subGroupsControl.setValue(subGroupId);
   }
   @Output() groupChanged = new EventEmitter<string>();
-  @Output() seriesChanged = new EventEmitter<string>();
+  @Output() seriesChanged = new EventEmitter<string>(); // emit seriesName
   @Output() subGroupChanged = new EventEmitter<string>();
 
   languages: Language[] = LANGUAGES;
@@ -124,12 +124,15 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
 
   private initSubGroups(): void {
     this.subGroups$ = this.seriesControl.valueChanges.pipe(
-      tap((seriesId: string) => {
+      tap((seriesIdAndName: string) => {
         this.subGroupsControl.reset();
-        this.seriesChanged.emit(seriesId);
-        return seriesId;
+        if (seriesIdAndName) {
+          const seriesName = seriesIdAndName.split(';')[1];
+          this.seriesChanged.emit(seriesName);
+        }
       }),
-      switchMap((seriesId: string) => {
+      switchMap((seriesIdAndName: string) => {
+        const seriesId = seriesIdAndName ? seriesIdAndName.split(';')[0] : null;
         return seriesId ?
           this.adminService.getSubgroupsBySeriesId(seriesId)
           : of([]);

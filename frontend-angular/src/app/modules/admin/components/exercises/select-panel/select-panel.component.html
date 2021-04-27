@@ -18,7 +18,7 @@
   <mat-label>{{seriesControl.value ? 'Series' : 'All series'}}</mat-label>
   <mat-select [formControl]="seriesControl" panelClass="select__panel">
     <mat-option>All series</mat-option>
-    <mat-option *ngFor="let item of series$ | async" [value]="item.id">{{item.name}}</mat-option>
+    <mat-option *ngFor="let item of series$ | async" [value]="item.id + ';' + item.name">{{item.name}}</mat-option>
   </mat-select>
 </mat-form-field>
 
