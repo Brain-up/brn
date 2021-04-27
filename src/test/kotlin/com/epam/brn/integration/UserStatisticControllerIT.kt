@@ -1,9 +1,9 @@
 package com.epam.brn.integration
 
+import com.epam.brn.controller.UserStatisticController
 import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.response.SubGroupStatisticDto
-import com.epam.brn.dto.statistic.StartExerciseDto
+import com.epam.brn.dto.statistic.StudyStatistic
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.fasterxml.jackson.core.type.TypeReference
@@ -17,12 +17,9 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
-import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 /**
  *@author Nikolai Lazarev
@@ -32,7 +29,12 @@ class UserStatisticControllerIT : BaseIT() {
 
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
+
+    @Autowired
+    private lateinit var userStatisticController: UserStatisticController
     private val baseUrl = "/statistics"
+    private val fromParamName = "from"
+    private val toParameterName = "to"
     private val localDateTime: LocalDateTime = LocalDateTime.now()
     private val currentDay: Int = localDateTime.dayOfMonth
     private val currentYear: Int = localDateTime.year
@@ -92,77 +94,30 @@ class UserStatisticControllerIT : BaseIT() {
     }
 
     @Test
-    fun `should return user statistic for specific month of specific year`() {
-        val user = insertDefaultUser()
-        val startTime = LocalDateTime.now()
-        val endTime = startTime.plusMinutes(5)
-        val startEndDiv = Duration.between(startTime, endTime)
-        val exercise = insertDefaultExercise()
-        insertDefaultStudyHistory(user, exercise)
-
-        val result = mockMvc.perform(
-            get("$baseUrl/month")
-                .param("month", currentMonth.toString())
-                .param("year", currentYear.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(result, BaseSingleObjectResponseDto::class.java)
-        val statisticJson = Gson().toJson(baseResponseDto.data)
-        val statistic: Map<Int, Int> =
-            objectMapper.readValue(statisticJson, object : TypeReference<Map<Int, Int>>() {})
-
-        Assertions.assertTrue(statistic.containsKey(currentDay))
-        Assertions.assertTrue(statistic.containsValue(startEndDiv.toMinutes().toInt()))
-    }
-
-    @Test
-    fun `should return user specific year statistic`() {
+    fun `should return user statistic for period`() {
         val user = insertDefaultUser()
         val exercise = insertDefaultExercise()
-        val startTime = LocalDateTime.now()
-        val endTime = startTime.plusMinutes(5)
-        val startEndDiv = Duration.between(startTime, endTime)
-        insertDefaultStudyHistory(user, exercise)
+        val exercisingYear = 2020
+        val exercisingMonth = 11
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
 
-        val result = mockMvc.perform(
-            get("$baseUrl/year")
-                .param("year", currentYear.toString())
-        ).andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response = userStatisticController.getUserStudyStatistic(
+            from = LocalDate.of(exercisingYear, exercisingMonth, 1),
+            to = LocalDate.of(exercisingYear, exercisingMonth, 23)
+        ).body?.data
 
-        val baseResponseDto = objectMapper.readValue(result, BaseSingleObjectResponseDto::class.java)
-        val statisticJson = Gson().toJson(baseResponseDto.data)
-        val statistic: Map<Int, Int> =
-            objectMapper.readValue(statisticJson, object : TypeReference<Map<Int, Int>>() {})
+        assertTrue(response is List<*>)
+        assertTrue(response.size > 0)
 
-        Assertions.assertTrue(statistic.containsKey(currentMonth))
-        Assertions.assertTrue(statistic.containsValue(startEndDiv.toMinutes().toInt()))
-    }
+        val expectedStudyStatisticFor20 = StudyStatistic(
+            date = LocalDate.of(exercisingYear, exercisingMonth, 20),
+            exercisingTime = 3000
+        )
 
-    @Test
-    fun `should return user specific day statistic`() {
-        val time = LocalDateTime.now()
-        val user = insertDefaultUser()
-        val series = insertDefaultSeries()
-        val subGroup = insertDefaultSubGroup(series, 5)
-        val exercise = insertDefaultExercise(subGroup = subGroup)
-        insertDefaultStudyHistory(user, exercise, time)
-
-        val result = mockMvc.perform(
-            get("$baseUrl/day")
-                .param("day", currentDay.toString())
-                .param("month", currentMonth.toString())
-                .param("year", currentYear.toString())
-        ).andReturn().response.getContentAsString()
-
-        val baseResponseDto = objectMapper.readValue(result, BaseSingleObjectResponseDto::class.java)
-        val statisticJson = Gson().toJson(baseResponseDto.data)
-        val statistic: Map<String, StartExerciseDto> =
-            objectMapper.readValue(statisticJson, object : TypeReference<Map<String, StartExerciseDto>>() {})
-
-        val value = statistic.get(time.truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME))
-
-        assertNotNull(value)
-        assertEquals(exercise.id, value.id)
-        assertNotNull(value.subSeriesName)
+        assertTrue(response.contains(expectedStudyStatisticFor20))
     }
 }

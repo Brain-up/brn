@@ -79,14 +79,19 @@ abstract class BaseIT {
             )
         )
 
-    fun insertDefaultStudyHistory(userAccount: UserAccount, exercise: Exercise, time: LocalDateTime? = null): StudyHistory {
+    fun insertDefaultStudyHistory(
+        userAccount: UserAccount,
+        exercise: Exercise,
+        time: LocalDateTime? = null,
+        trainFor: Long = 5
+    ): StudyHistory {
         val startTime = time ?: LocalDateTime.now()
         return studyHistoryRepository.save(
             StudyHistory(
                 userAccount = userAccount,
                 startTime = startTime,
-                endTime = startTime.plusMinutes(5),
-                executionSeconds = ChronoUnit.SECONDS.between(startTime, startTime.plusMinutes(5)).toInt(),
+                endTime = startTime.plusMinutes(trainFor),
+                executionSeconds = ChronoUnit.SECONDS.between(startTime, startTime.plusMinutes(trainFor)).toInt(),
                 exercise = exercise,
                 tasksCount = 5,
                 wrongAnswers = 0,

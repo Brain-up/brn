@@ -9,11 +9,11 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.statistic.impl.UserStatisticServiceImpl
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -22,11 +22,8 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 /**
  * @author Nikolai Lazarev
@@ -93,9 +90,9 @@ internal class UserStatisticServiceImplTest {
         verify(exerciseRepository, times(1)).findExercisesBySubGroupId(anyLong())
 
         assertNotNull(result)
-        Assertions.assertTrue(result.first().subGroupId.equals(subGroupIds.first()))
-        Assertions.assertTrue(result.first().completedExercises.equals(0))
-        Assertions.assertTrue(result.first().totalExercises.equals(2))
+        Assertions.assertTrue(result.first().subGroupId == subGroupIds.first())
+        Assertions.assertTrue(result.first().completedExercises == 0)
+        Assertions.assertTrue(result.first().totalExercises == 2)
     }
 
     @Test
@@ -103,189 +100,5 @@ internal class UserStatisticServiceImplTest {
         val result = userStatisticService.getSubGroupStatistic(emptyList())
 
         Assertions.assertTrue(result.isEmpty())
-    }
-
-    @Test
-    fun `should return user month statistic for specific month`() {
-        val time = LocalDateTime.of(2018, 11, 20, 15, 0)
-        val year = time.year
-        val month = time.monthValue
-        val userAccount = insertAccount()
-        val exercise = Exercise(
-            id = 1
-        )
-        val studyHistory = insertStudyHistory(user = userAccount, exercise = exercise, time = time)
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount.toDto())
-        `when`(
-            studyHistoryRepository.getMonthHistories(
-                userId = userAccount.id!!,
-                month = month,
-                year = year
-            )
-        ).thenReturn(
-            listOf(studyHistory)
-        )
-
-        val result = userStatisticService.getUserMonthStatistic(month, year)
-
-        verify(studyHistoryRepository, times(1)).getMonthHistories(userAccount.id!!, month, year)
-
-        assertTrue(result.containsKey(time.dayOfMonth))
-        assertTrue(result.containsValue(5))
-    }
-
-    @Test
-    fun `should return current month user's statistic`() {
-        val time = LocalDateTime.now()
-        val year = time.year
-        val month = time.monthValue
-        val userAccount = insertAccount()
-        val exercise = Exercise(
-            id = 1
-        )
-        val studyHistory = insertStudyHistory(userAccount, time, exercise)
-
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount.toDto())
-        `when`(
-            studyHistoryRepository.getMonthHistories(
-                userId = userAccount.id!!,
-                month = month,
-                year = year
-            )
-        ).thenReturn(
-            listOf(studyHistory)
-        )
-
-        val result = userStatisticService.getUserMonthStatistic()
-
-        verify(studyHistoryRepository, times(1)).getMonthHistories(userAccount.id!!, month, year)
-
-        assertTrue(result.containsKey(time.dayOfMonth))
-        assertTrue(result.containsValue(5))
-    }
-
-    @Test
-    fun `should return user statistic for specific year`() {
-        val time = LocalDateTime.of(2018, 11, 20, 15, 0)
-        val year = time.year
-        val userAccount = insertAccount()
-        val exercise = Exercise(
-            id = 1
-        )
-        val studyHistory = insertStudyHistory(userAccount, time, exercise)
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount.toDto())
-        `when`(
-            studyHistoryRepository.getYearStatistic(
-                userId = userAccount.id!!,
-                year = year
-            )
-        ).thenReturn(
-            listOf(studyHistory)
-        )
-
-        val result = userStatisticService.getUserYearStatistic(year)
-
-        verify(studyHistoryRepository, times(1)).getYearStatistic(userAccount.id!!, year)
-
-        assertTrue(result.containsKey(time.monthValue))
-        assertTrue(result.containsValue(5))
-    }
-
-    @Test
-    fun `should return user statistic for current year`() {
-        val localDateTime = LocalDateTime.now()
-        val year = localDateTime.year
-        val userAccount = insertAccount()
-        val exercise = Exercise(
-            id = 1
-        )
-        val studyHistory = insertStudyHistory(userAccount, localDateTime, exercise)
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount.toDto())
-        `when`(
-            studyHistoryRepository.getYearStatistic(
-                userId = userAccount.id!!,
-                year = year
-            )
-        ).thenReturn(
-            listOf(studyHistory)
-        )
-
-        val result = userStatisticService.getUserYearStatistic()
-
-        verify(studyHistoryRepository, times(1)).getYearStatistic(userAccount.id!!, year)
-
-        assertTrue(result.containsKey(localDateTime.monthValue))
-        assertTrue(result.containsValue(5))
-    }
-
-    @Test
-    fun `should return user statistic for specific day`() {
-        val time = LocalDateTime.of(2018, 11, 20, 15, 0, 0)
-        val year = time.year
-        val month = time.monthValue
-        val day = time.dayOfMonth
-        val userAccount = insertAccount()
-        val exercise = Exercise(
-            id = 1,
-            level = 5
-        )
-        val studyHistory = insertStudyHistory(userAccount, time, exercise)
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount.toDto())
-        `when`(
-            studyHistoryRepository.getDayStatistic(
-                userId = userAccount.id!!,
-                year = year,
-                month = month,
-                day = day
-            )
-        ).thenReturn(
-            listOf(studyHistory)
-        )
-
-        val result = userStatisticService.getUserDayStatistic(year = year, month = month, day = day)
-
-        verify(studyHistoryRepository, times(1)).getDayStatistic(
-            userAccount.id!!,
-            time.year,
-            time.monthValue,
-            time.dayOfMonth
-        )
-
-        val key = time.toLocalTime().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME)
-        val value = result[key]
-
-        assertNotNull(value)
-        assertEquals(exercise.id, value.id)
-    }
-
-    @Test
-    fun `should return user statistic for current day`() {
-        val time = LocalDateTime.now()
-        val userAccount = insertAccount()
-        val exercise = Exercise(
-            id = 1,
-            level = 5
-        )
-        val studyHistory = insertStudyHistory(user = userAccount, exercise = exercise)
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount.toDto())
-        `when`(
-            studyHistoryRepository.getDayStatistic(anyLong(), anyInt(), anyInt(), anyInt())
-        ).thenReturn(
-            listOf(studyHistory)
-        )
-
-        val result = userStatisticService.getUserDayStatistic()
-        val key = time.toLocalTime().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_TIME)
-        val value = result[key]
-
-        verify(studyHistoryRepository, times(1)).getDayStatistic(
-            userAccount.id!!,
-            time.year,
-            time.monthValue,
-            time.dayOfMonth
-        )
-
-        assertNotNull(value)
-        assertEquals(exercise.id, value.id)
     }
 }

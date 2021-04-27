@@ -34,86 +34,32 @@ mediaType:
               errors: [],
               meta: []
             }
-  /day:
+  /study:
     get:
       queryParameters:
-        day:
-          required: false,
-          type: Int,
-          default: current day,
-          example: 23
-        month:
-          required: false
-          type: Int,
-          default: current month,
-          example: 11
-        year:
-          required: false
-          type: Int,
-          default: current year,
-          example: 2021
+        from:
+          required: true
+          type: LocaDate
+          example: 2000-11-23
+        to:
+          required: true
+          type: LocaDate
+          example: 2000-11-23
       response:
         200:
           body:
             example: {
               data: [
-                15:00: {
-                  seriesName: "name",
-                  subSeriesName: "subSeriesName",
-                  id: 1,
-                  level: 5,
-                  spentTime: 5,
-                  tasksCount: 4,
-                  wrongAnswers: 1,
-                  repetition: 1
+                {
+                  date: 2020-11-23
+                  exercisingTime: 3000
                 }
               ],
               errors: [],
               meta: []
             }
-  /month:
-    get:
-      queryParameters:
-        month:
-          required: false
-          type: Int,
-          default: current month,
-          example: 11
-        year:
-          required: false
-          type: Int,
-          default: current year,
-          example: 2021
-      response:
-        200:
-          body:
-            example: {
-              data: [
-                23: 5,
-                24: 10
-              ],
-              errors: [],
-              meta: []
-            }
-  /year:
-    get:
-      queryParameters:
-        year:
-          required: false
-          type: Int,
-          default: current year,
-          example: 2021
-      response:
-        200:
-          body:
-            example: {
-              data: [
-                11: 5,
-                12: 10
-              ],
-              errors: [],
-              meta: []
-            }
+
+
 # AUDIOMETRY-----------------------------------
 /audiometrics:
     get:
