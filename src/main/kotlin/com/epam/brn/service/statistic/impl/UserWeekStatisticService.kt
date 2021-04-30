@@ -5,12 +5,15 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.service.statistic.UserTimeGoalAchievedStrategy
+import org.springframework.stereotype.Service
 import java.sql.Date
 import java.time.LocalDate
 
 /**
  *@author Nikolai Lazarev
  */
+
+@Service
 class UserWeekStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
