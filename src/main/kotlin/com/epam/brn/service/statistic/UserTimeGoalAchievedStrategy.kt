@@ -6,10 +6,9 @@ package com.epam.brn.service.statistic
 interface UserTimeGoalAchievedStrategy<T> {
 
     /**
-     * Check if user achieved time goal or not
+     * Should calculate how close the user to complete his training goal and return result in percent
      * @param time - time to calculate the result
-     * @return - false if user didn't achieve the goal for the month
-     * @return - true if user achieved the goal for the month
+     * @return goal achievement in percent
      */
-    fun isGoalAchieved(time: T): Boolean
+    fun doStrategy(time: T): Int
 }
