@@ -1,1 +1,22 @@
-statistics-info-dialog component
+<div mat-dialog-title>
+  <h1>О чем говорит статистика</h1>
+
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <p class="title">Проверьте, достаточно ли регулярно вы делаете занятия:</p>
+
+  <img class="statistics-info-dialog" src="/assets/statistics-info-dialog.svg" />
+
+  <p class="prompt">
+    По данным исследований, чтобы улучшить порог слышимости, нужно заниматься не менее 6 дней в неделю по 20 минут в
+    течение 2 лет. В месяц должно быть не менее 8 часов 40 минут в сумме за 26 дней.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Хорошо</button>
+</mat-dialog-actions>

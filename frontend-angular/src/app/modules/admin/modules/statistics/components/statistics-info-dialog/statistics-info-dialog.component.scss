@@ -1,0 +1,51 @@
+:host {
+  display: block;
+  padding: 0 0 20px 0;
+
+  div[mat-dialog-title] {
+    display: flex;
+    justify-content: space-between;
+
+    h1 {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      text-transform: uppercase;
+    }
+  }
+
+  mat-dialog-content {
+    img.statistics-info-dialog {
+      width: 100%;
+    }
+
+    p {
+      font-style: normal;
+      font-weight: normal;
+      line-height: 24px;
+
+      &.title {
+        font-size: 18px;
+        text-align: left;
+      }
+
+      &.prompt {
+        font-size: 14px;
+        text-align: justify;
+        padding: 16px;
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    justify-content: center;
+
+    button[mat-dialog-close] {
+      border: 1px solid;
+      box-sizing: border-box;
+      box-shadow: 0px 4px 16px;
+      border-radius: 16px;
+    }
+  }
+}
