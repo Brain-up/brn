@@ -3,11 +3,11 @@ package com.epam.brn.controller
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.response.SubGroupStatisticDto
-import com.epam.brn.dto.statistic.WeekStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.service.statistic.UserStatisticService
 import io.swagger.annotations.Api
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,9 +23,8 @@ import java.time.LocalDate
 @RequestMapping("/statistics")
 @Api(value = "/statistics", description = "User statistic details")
 class UserStatisticController(
-    @Autowired
     val userStatisticService: UserStatisticService<SubGroupStatisticDto>,
-    val userPeriodStatisticService: UserPeriodStatisticService<WeekStudyStatistic>
+    val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
 ) {
 
     @GetMapping("/subgroups")
@@ -41,7 +40,7 @@ class UserStatisticController(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
     ): ResponseEntity<BaseSingleObjectResponseDto> {
-        val result = userPeriodStatisticService.getStatisticForPeriod(from, to)
+        val result = userDayStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
     }
 }

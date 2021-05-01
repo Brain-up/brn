@@ -5,9 +5,7 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserStatisticService
-import com.epam.brn.service.statistic.UserTimeGoalAchievedStrategy
 import org.springframework.stereotype.Service
-import java.time.YearMonth
 
 /**
  *@author Nikolai Lazarev
@@ -18,7 +16,6 @@ class UserStatisticServiceImpl(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
     private val userAccountService: UserAccountService,
-    private val monthlyGoalAchievedStrategy: UserTimeGoalAchievedStrategy<YearMonth>
 ) : UserStatisticService<SubGroupStatisticDto> {
 
     override fun getSubGroupStatistic(subGroupsIds: List<Long>): List<SubGroupStatisticDto> {

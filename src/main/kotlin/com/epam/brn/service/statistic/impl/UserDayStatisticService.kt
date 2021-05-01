@@ -1,6 +1,6 @@
 package com.epam.brn.service.statistic.impl
 
-import com.epam.brn.dto.statistic.WeekStudyStatistic
+import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -14,12 +14,12 @@ import java.time.LocalDate
  */
 
 @Service
-class UserWeekStatisticService(
+class UserDayStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
     private val userTimeGoalAchievedStrategy: UserTimeGoalAchievedStrategy<Int>
-) : UserPeriodStatisticService<WeekStudyStatistic> {
-    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate): List<WeekStudyStatistic> {
+) : UserPeriodStatisticService<DayStudyStatistic> {
+    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate): List<DayStudyStatistic> {
         val user = userAccountService.getUserFromTheCurrentSession()
         val studyHistories = studyHistoryRepository.getHistories(
             user.id!!,
@@ -27,7 +27,7 @@ class UserWeekStatisticService(
             Date.valueOf(to)
         )
         val statistic = studyHistories.map {
-            WeekStudyStatistic(
+            DayStudyStatistic(
                 exercisingTime = studyHistories.filter { studyHistory ->
                     studyHistory.startTime.monthValue == it.startTime.monthValue &&
                         studyHistory.startTime.dayOfMonth == it.startTime.dayOfMonth &&

@@ -3,7 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.controller.UserStatisticController
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.response.SubGroupStatisticDto
-import com.epam.brn.dto.statistic.WeekStudyStatistic
+import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.fasterxml.jackson.core.type.TypeReference
@@ -113,7 +113,7 @@ class UserStatisticControllerIT : BaseIT() {
         assertTrue(response is List<*>)
         assertTrue(response.size > 0)
 
-        val expectedStudyStatisticFor20 = WeekStudyStatistic(
+        val expectedStudyStatisticFor20 = DayStudyStatistic(
             date = LocalDate.of(exercisingYear, exercisingMonth, 20),
             exercisingTime = 3000,
             progress = 250

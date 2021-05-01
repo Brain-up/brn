@@ -6,7 +6,7 @@ import java.time.LocalDate
  *@author Nikolai Lazarev
  */
 
-data class WeekStudyStatistic(
+data class DayStudyStatistic(
     val date: LocalDate,
     val exercisingTime: Int,
     var progress: Int = 0
