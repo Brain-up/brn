@@ -26,6 +26,7 @@
     "@ngrx/store": "^11.0.1",
     "@ngrx/store-devtools": "^11.0.1",
     "@swimlane/ngx-charts": "^17.0.1",
+    "dayjs": "^1.10.4",
     "fp-ts": "^2.5.3",
     "ngx-take-until-destroy": "^5.4.0",
     "rxjs": "~6.5.4",
