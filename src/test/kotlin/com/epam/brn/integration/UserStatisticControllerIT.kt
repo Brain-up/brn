@@ -1,15 +1,17 @@
 package com.epam.brn.integration
 
-import com.epam.brn.controller.UserStatisticController
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.response.SubGroupStatisticDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -19,7 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.test.assertTrue
+import java.time.format.DateTimeFormatter
+import kotlin.test.assertNotNull
 
 /**
  *@author Nikolai Lazarev
@@ -30,15 +33,11 @@ class UserStatisticControllerIT : BaseIT() {
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
 
-    @Autowired
-    private lateinit var userStatisticController: UserStatisticController
     private val baseUrl = "/statistics"
     private val fromParamName = "from"
     private val toParameterName = "to"
-    private val localDateTime: LocalDateTime = LocalDateTime.now()
-    private val currentDay: Int = localDateTime.dayOfMonth
-    private val currentYear: Int = localDateTime.year
-    private val currentMonth: Int = localDateTime.monthValue
+    private val exercisingYear = 2020
+    private val exercisingMonth = 11
 
     @AfterEach
     fun deleteAfterTest() {
@@ -86,39 +85,72 @@ class UserStatisticControllerIT : BaseIT() {
         val resultStatistic: List<SubGroupStatisticDto> =
             objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticDto>>() {})
 
-        Assertions.assertEquals(1, resultStatistic.first().totalExercises)
-        Assertions.assertEquals(1, resultStatistic.first().completedExercises)
+        assertEquals(1, resultStatistic.first().totalExercises)
+        assertEquals(1, resultStatistic.first().completedExercises)
 
-        Assertions.assertEquals(0, resultStatistic[1].completedExercises)
-        Assertions.assertEquals(1, resultStatistic[1].totalExercises)
+        assertEquals(0, resultStatistic[1].completedExercises)
+        assertEquals(1, resultStatistic[1].totalExercises)
     }
 
     @Test
-    fun `should return user statistic for period`() {
+    fun `should return user statistic for days`() {
         val user = insertDefaultUser()
         val exercise = insertDefaultExercise()
-        val exercisingYear = 2020
-        val exercisingMonth = 11
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
 
-        val response = userStatisticController.getUserStudyStatistic(
-            from = LocalDate.of(exercisingYear, exercisingMonth, 1),
-            to = LocalDate.of(exercisingYear, exercisingMonth, 23)
-        ).body?.data
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val response = mockMvc.perform(
+            get("$baseUrl/study/week")
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        assertTrue(response is List<*>)
-        assertTrue(response.size > 0)
+        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<DayStudyStatistic> =
+            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
-        val expectedStudyStatisticFor20 = DayStudyStatistic(
-            date = LocalDate.of(exercisingYear, exercisingMonth, 20),
-            exercisingTime = 3000,
-            progress = 250
+        assertEquals(3, resultStatistic.size)
+        resultStatistic.forEach {
+            assertNotNull(it.progress)
+            assertNotNull(it.exercisingTime)
+        }
+    }
+
+    @Test
+    fun `should return user statistic for month`() {
+        val user = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        val studyHistories: List<StudyHistory> = listOf(
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
         )
 
-        assertTrue(response.contains(expectedStudyStatisticFor20))
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val response = mockMvc.perform(
+            get("$baseUrl/study/year")
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<MonthStudyStatistic> =
+            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
+
+        assertEquals(1, resultStatistic.size)
+        val monthStatistic = resultStatistic.first()
+        assertEquals(exercisingMonth, monthStatistic.month.monthValue)
+        assertNotNull(monthStatistic.exercisingTime)
+        assertNotNull(monthStatistic.progress)
     }
 }
