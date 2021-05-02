@@ -11,6 +11,8 @@ import { StatisticsInfoDialogComponent } from './components/statistics-info-dial
 export class StatisticsComponent implements OnDestroy {
   private statisticsInfoDialogRef: MatDialogRef<StatisticsInfoDialogComponent, void>;
 
+  public monthTimeTrackData: any;
+
   constructor(public readonly matDialog: MatDialog) {}
 
   ngOnDestroy(): void {

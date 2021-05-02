@@ -1,0 +1,60 @@
+@import '../../../../../../styles/colors.scss';
+
+:host {
+  $borderRadius: 8px;
+
+  .calendar {
+    border-radius: $borderRadius;
+    margin-bottom: 7px;
+    color: $charcoal-grey-color;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 14px;
+      border-bottom: 1px solid $charcoal-grey-color;
+
+      .dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: $charcoal-grey-color;
+      }
+    }
+  }
+
+  .content {
+    padding: 8px;
+    text-align: center;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 16px;
+
+    .total-time {
+      font-weight: bold;
+    }
+
+    .text {
+      font-weight: normal;
+
+      span {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .month-name,
+  .year-number {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 16px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .month-name.current {
+    background-color: $cold-violet-color;
+    border-radius: $borderRadius;
+  }
+}
