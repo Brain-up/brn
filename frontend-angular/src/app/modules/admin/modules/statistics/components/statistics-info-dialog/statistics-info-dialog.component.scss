@@ -1,3 +1,5 @@
+@import '../../../../../../styles/colors.scss';
+
 :host {
   display: block;
   padding: 0 0 20px 0;
@@ -12,10 +14,13 @@
       font-size: 16px;
       line-height: 24px;
       text-transform: uppercase;
+      color: $dark-violet-color;
     }
   }
 
   mat-dialog-content {
+    margin-bottom: 10px;
+
     img.statistics-info-dialog {
       width: 100%;
     }
@@ -26,6 +31,7 @@
       line-height: 24px;
 
       &.title {
+        margin-bottom: 24px;
         font-size: 18px;
         text-align: left;
       }
@@ -34,6 +40,8 @@
         font-size: 14px;
         text-align: justify;
         padding: 16px;
+        background-color: $hardly-grey-color;
+        border-radius: 8px;
       }
     }
   }
@@ -42,10 +50,13 @@
     justify-content: center;
 
     button[mat-dialog-close] {
-      border: 1px solid;
+      border: 1px solid $cold-violet-color;
       box-sizing: border-box;
-      box-shadow: 0px 4px 16px;
+      box-shadow: 0px 4px 16px #5947b240;
       border-radius: 16px;
+      background: $brain-gradient;
+      text-transform: uppercase;
+      color: #ffffff;
     }
   }
 }

@@ -1,3 +1,5 @@
+@import '../../../../styles/colors.scss';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -11,8 +13,8 @@
       display: flex;
       align-items: center;
       padding: 6px 16px;
-      border: 1px solid;
-      box-shadow: 0px 4px 16px;
+      border: 1px solid #eae6fe;
+      box-shadow: 0px 4px 16px #5947b21a;
       border-radius: 16px;
       font-style: normal;
       font-weight: 600;
@@ -22,6 +24,10 @@
 
       mat-icon {
         margin-right: 10px;
+      }
+
+      span {
+        color: $dark-violet-color;
       }
     }
   }

@@ -7,6 +7,7 @@
     border-radius: $borderRadius;
     margin-bottom: 7px;
     color: $charcoal-grey-color;
+    width: 80px;
 
     .header {
       display: flex;
@@ -21,24 +22,20 @@
         background-color: $charcoal-grey-color;
       }
     }
-  }
 
-  .content {
-    padding: 8px;
-    text-align: center;
-    font-style: normal;
-    font-size: 12px;
-    line-height: 16px;
-
-    .total-time {
-      font-weight: bold;
-    }
-
-    .text {
+    .content {
+      padding: 8px;
+      text-align: center;
+      font-style: normal;
+      font-size: 10px;
+      line-height: 16px;
       font-weight: normal;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
 
-      span {
-        font-weight: bold;
+      b.total-time {
+        font-size: 12px;
       }
     }
   }
@@ -56,5 +53,6 @@
   .month-name.current {
     background-color: $cold-violet-color;
     border-radius: $borderRadius;
+    color: #ffffff;
   }
 }

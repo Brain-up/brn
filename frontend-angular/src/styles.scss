@@ -1,12 +1,18 @@
+$main-font-family: Montserrat;
+
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 
+$custom-typography: mat-typography-config(
+  $font-family: $main-font-family,
+);
+
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
+@include mat-core($custom-typography);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -25,16 +31,19 @@ $frontend-angular-theme: mat-light-theme($frontend-angular-primary, $frontend-an
 // that you are using.
 @include angular-material-theme($frontend-angular-theme);
 
-/* You can add global styles to this file, and also import other style files */
+// Material override
+@import './app/styles/material-override.scss';
 
-html, body {
+// Global styles
+html,
+body {
   height: 100%;
   font-size: 16px;
 }
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: $main-font-family;
   min-height: 100%;
   overflow: hidden;
 }
@@ -48,8 +57,4 @@ body {
 
 .form-group {
   margin-bottom: 15px;
-}
-
-.cdk-global-scrollblock {
-  overflow-y: auto;
 }
