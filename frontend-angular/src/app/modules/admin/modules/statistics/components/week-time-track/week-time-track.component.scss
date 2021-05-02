@@ -1,0 +1,11 @@
+@import '../../../../../../styles/colors.scss';
+
+:host {
+  .title {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 24px;
+    text-transform: uppercase;
+    color: $active-grey-color;
+  }
+}
