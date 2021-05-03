@@ -17,6 +17,10 @@ export class SvgIconsRegistrarService {
       .addSvgIcon(
         'left-arrow',
         this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'left-arrow.svg')
+      )
+      .addSvgIcon(
+        'right-arrow',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'right-arrow.svg')
       );
   }
 }

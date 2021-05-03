@@ -11,6 +11,7 @@ import { StatisticsInfoDialogComponent } from './components/statistics-info-dial
 export class StatisticsComponent implements OnDestroy {
   private statisticsInfoDialogRef: MatDialogRef<StatisticsInfoDialogComponent, void>;
 
+  public weekTimeTrackData: any;
   public monthTimeTrackData: any;
 
   constructor(public readonly matDialog: MatDialog) {}
@@ -23,5 +24,13 @@ export class StatisticsComponent implements OnDestroy {
     this.statisticsInfoDialogRef = this.matDialog.open(StatisticsInfoDialogComponent, {
       width: '650px',
     });
+  }
+
+  public loadPrevWeek(): void {
+    this.weekTimeTrackData = {};
+  }
+
+  public loadNextWeek(): void {
+    this.weekTimeTrackData = {};
   }
 }

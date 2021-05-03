@@ -3,7 +3,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: 40px 28px;
+  padding: 40px 28px 0;
 
   .control-panel {
     display: flex;
@@ -24,6 +24,7 @@
 
       mat-icon {
         margin-right: 10px;
+        color: $cold-violet-color;
       }
 
       span {

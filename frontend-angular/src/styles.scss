@@ -34,6 +34,9 @@ $frontend-angular-theme: mat-light-theme($frontend-angular-primary, $frontend-an
 // Material override
 @import './app/styles/material-override.scss';
 
+// Styles of app libs
+@import '~billboard.js/src/scss/billboard.scss';
+
 // Global styles
 html,
 body {
@@ -45,7 +48,6 @@ body {
   margin: 0;
   font-family: $main-font-family;
   min-height: 100%;
-  overflow: hidden;
 }
 
 .form-control {
