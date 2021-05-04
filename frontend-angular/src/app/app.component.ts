@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { checkAuthStatusAction } from './modules/auth/ngrx/actions';
+import { SvgIconsRegistrarService } from './modules/shared/services/svg-icons-registrar.service';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +9,13 @@ import { checkAuthStatusAction } from './modules/auth/ngrx/actions';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'frontend-angular';
-
-  constructor(private store: Store<any>) {
-  }
+  constructor(
+    private readonly store: Store<any>,
+    private readonly svgIconsRegistrarService: SvgIconsRegistrarService
+  ) {}
 
   ngOnInit() {
     this.store.dispatch(checkAuthStatusAction());
+    this.svgIconsRegistrarService.registerIcons();
   }
 }
