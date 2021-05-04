@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { StatisticsComponent } from './statistics.component';
 
 describe('StatisticsComponent', () => {
@@ -8,6 +9,7 @@ describe('StatisticsComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StatisticsComponent],
+      providers: [ { provide: MatDialog, useValue: {} }]
     });
 
     fixture = TestBed.createComponent(StatisticsComponent);
