@@ -1,0 +1,57 @@
+{{#if this.showAvatarsModal}}
+  <ModalDialog
+          @overlayClass="p-16 z-50 min-h-full w-full fixed flex"
+          @containerClass="max-w-4xl flex bg-white p-8 rounded-lg text-2xl m-auto"
+  >
+    <Ui::Avatars @onSelect={{this.onAvatarSelect}} @onCancel={{this.onCancel}} @onSubmit={{this.onAvatarSubmit}} />
+  </ModalDialog>
+{{/if}}
+<section class="rounded-md border-4 border-gray-100">
+  <div class="bg-gradient-to-r from-blue-100 to-purple-100 profile lg:flex justify-between p-4">
+    <button
+            type="button"
+            title="{{this.user.email}}"
+            style={{html-safe (concat "background-image: url('" this.avatarUrl "');")}}
+            {{on "click" this.onShowAvatars}}
+            class="gradient-background inline-flex w-32 h-32 items-center justify-center bg-center bg-contain border border-gray-400 rounded-full m-auto focus:outline-none"
+    >
+    </button>
+  </div>
+  <div class="p-12">
+    <div class="mb-4">
+      <LoginForm::Input
+              @model={{this.session.data.user}}
+              @name="firstName"
+              @label={{t "registration_form.name"}}
+      />
+    </div>
+    <div class="mb-4">
+      <LoginForm::Input
+              required
+              minlength="4"
+              maxlength="4"
+              pattern="[0-9]{4}"
+              @warning={{this.warningErrorDate}}
+
+              @model={{this.session.data.user}}
+              @label={{t "registration_form.birthday"}}
+              @name="birthday"
+      />
+
+    </div>
+    <div class="mb-4">
+      <LoginForm::Input
+              @model={{this.session.data.user}}
+              @name="email"
+              @label={{t "registration_form.email"}}
+      />
+    </div>
+    <div class="mb-4">
+      <LoginForm::Input
+              @model={{this.session.data.user}}
+              @name="password"
+              @label={{t "registration_form.password"}}
+      />
+    </div>
+  </div>
+</section>
