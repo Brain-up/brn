@@ -4,7 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({ providedIn: 'root' })
 export class SvgIconsRegistrarService {
-  private static readonly ICONS_FOLDER_PATH = '../../../../assets/icons/';
+  private static readonly ICONS_FOLDER_PATH = 'assets/icons/';
 
   constructor(private readonly matIconRegistry: MatIconRegistry, private readonly domSanitizer: DomSanitizer) {}
 
