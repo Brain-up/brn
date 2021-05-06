@@ -34,8 +34,9 @@ mediaType:
               errors: [],
               meta: []
             }
-  /study:
+  /study/week:
     get:
+      description: get user's weekly statistic for period
       queryParameters:
         from:
           required: true
@@ -53,6 +54,33 @@ mediaType:
                 {
                   date: 2020-11-23
                   exercisingTime: 3000
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+  /study/year:
+    get:
+      description: get user's yearly statistic for period
+      queryParameters:
+        from:
+          required: true
+          type: LocaDate
+          example: 2000-11-23
+        to:
+          required: true
+          type: LocaDate
+          example: 2000-11-23
+      response:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2020-11
+                  exercisingTime: 3000
+                  progress: GREAT
                 }
               ],
               errors: [],
@@ -427,8 +455,8 @@ mediaType:
             example: "https://cloudprovider.bucket.com"
 
 # ADMIN  ----------------------
-/admin
-    /users
+/admin:
+    /users:
         get:
             description: get all users
         responses:
@@ -453,7 +481,7 @@ mediaType:
         responses:
               200:
                 example: !include samples/study_histories_dto_response.json
-  /monthHistories:
+    /monthHistories:
       get:
           description: get histories for user by month and year
           queryParameters:
@@ -472,3 +500,63 @@ mediaType:
           responses:
                 200:
                   example: !include samples/study_histories_dto_response.json
+    /study/week:
+      get:
+        description: get user's weekly statistic for period
+        queryParameters:
+          userId:
+            required: true
+            type: long
+            example: 1
+          from:
+            required: true
+            type: LocaDate
+            example: 2000-11-23
+          to:
+            required: true
+            type: LocaDate
+            example: 2000-11-23
+        response:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2020-11-23
+                    exercisingTime: 3000
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
+    /study/year:
+      get:
+        description: get user's yearly statistic for period
+        queryParameters:
+          userId:
+            required: true
+            type: long
+            example: 1
+          from:
+            required: true
+            type: LocaDate
+            example: 2000-11-23
+          to:
+            required: true
+            type: LocaDate
+            example: 2000-11-23
+        response:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2020-11
+                    exercisingTime: 3000
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }

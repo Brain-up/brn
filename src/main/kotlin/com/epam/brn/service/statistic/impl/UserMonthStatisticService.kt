@@ -20,16 +20,16 @@ class UserMonthStatisticService(
     private val userAccountService: UserAccountService,
 ) : UserPeriodStatisticService<MonthStudyStatistic> {
 
-    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate): List<MonthStudyStatistic> {
-        val userFromTheCurrentSession = userAccountService.getUserFromTheCurrentSession()
+    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long?): List<MonthStudyStatistic> {
+        val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
         val histories =
-            studyHistoryRepository.getHistories(userFromTheCurrentSession.id!!, Date.valueOf(from), Date.valueOf(to))
+            studyHistoryRepository.getHistories(tempUserId!!, Date.valueOf(from), Date.valueOf(to))
         return histories.map {
             val filteredHistories = histories.filter { historyFilter ->
                 historyFilter.startTime.month.equals(it.startTime.month)
             }
             MonthStudyStatistic(
-                month = YearMonth.of(it.startTime.year, it.startTime.month),
+                date = YearMonth.of(it.startTime.year, it.startTime.month),
                 exercisingTime = filteredHistories.sumBy { studyHistory -> studyHistory.executionSeconds },
                 progress = UserExercisingProgressStatus.GREAT
             )

@@ -18,10 +18,10 @@ class UserDayStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
 ) : UserPeriodStatisticService<DayStudyStatistic> {
-    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate): List<DayStudyStatistic> {
-        val user = userAccountService.getUserFromTheCurrentSession()
+    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long?): List<DayStudyStatistic> {
+        val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
         val studyHistories = studyHistoryRepository.getHistories(
-            user.id!!,
+            tempUserId!!,
             Date.valueOf(from),
             Date.valueOf(to)
         )
@@ -29,8 +29,8 @@ class UserDayStatisticService(
             DayStudyStatistic(
                 exercisingTime = studyHistories.filter { studyHistory ->
                     studyHistory.startTime.monthValue == it.startTime.monthValue &&
-                            studyHistory.startTime.dayOfMonth == it.startTime.dayOfMonth &&
-                            studyHistory.startTime.year == it.startTime.year
+                        studyHistory.startTime.dayOfMonth == it.startTime.dayOfMonth &&
+                        studyHistory.startTime.year == it.startTime.year
                 }.map {
                     it.executionSeconds
                 }.sum(),

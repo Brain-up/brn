@@ -12,7 +12,8 @@ interface UserPeriodStatisticService<T : Statistic> {
      * Should return statistic as Statistic implementation for period for from to to date
      * @param from - beginning date of the period
      * @param to - ending date of the period
+     * @param userId - id of the user for how get statistic
      * @return list of implementations of Statistic
      */
-    fun getStatisticForPeriod(from: LocalDate, to: LocalDate): List<T>
+    fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long? = null): List<T>
 }

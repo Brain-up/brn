@@ -149,7 +149,7 @@ class UserStatisticControllerIT : BaseIT() {
 
         assertEquals(1, resultStatistic.size)
         val monthStatistic = resultStatistic.first()
-        assertEquals(exercisingMonth, monthStatistic.month.monthValue)
+        assertEquals(exercisingMonth, monthStatistic.date.monthValue)
         assertNotNull(monthStatistic.exercisingTime)
         assertNotNull(monthStatistic.progress)
     }

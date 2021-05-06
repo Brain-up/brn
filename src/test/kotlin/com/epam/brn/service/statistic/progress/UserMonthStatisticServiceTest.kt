@@ -95,7 +95,7 @@ internal class UserMonthStatisticServiceTest {
         val statisticsForPeriod = userMonthStatisticService.getStatisticForPeriod(from, to)
         val statistic = statisticsForPeriod.first()
         assertEquals(studyHistories.sumBy { it.executionSeconds }, statistic.exercisingTime)
-        assertEquals(YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month), statistic.month)
+        assertEquals(YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month), statistic.date)
         assertEquals(progress, statistic.progress)
     }
 
