@@ -1,45 +1,73 @@
-.header {
-  margin: auto;
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: center;
-  width: 400px;
-  height: 200px;
-  border: thin solid black;
+@import '../../styles/colors';
 
-  & button:not(:last-child) {
-    margin-right: 10px;
-  }
+$header-height: 120px;
+$header-bottom-border: 4px;
+$user-width: 196px;
+$user-icon-size: 44px;
+$user-right-margin: 80px;
+
+header {
+  height: $header-height;
 }
 
 .admin {
-  &__header-title {
-    padding-left: 20px;
-  }
-
-  &__header-hamburger {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  &__sidenav {
-    box-shadow: 6px 0 6px rgba(0, 0, 0, 0.1);
-  }
-
-  &__sidenav-items {
-    padding: 0;
-    margin: 0;
-  }
-
-  &__sidenav-item {
-    width: 200px;
-    list-style-type: none;
-  }
-
-  &__sidenav-item-btn {
+  &__header {
+    height: calc(#{$header-height} - #{$header-bottom-border});
     width: 100%;
-    height: 60px;
+    padding: 20px 80px 20px 60px;
+    justify-content: space-between;
+    background: #FFFFFF;
+    box-shadow: 0 2px $header-bottom-border rgba(89, 71, 178, 0.15);
+
+    * {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .links {
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-around;
+      max-width: 900px;
+    }
+
+    .link {
+      color: $charcoal-grey-color;
+      text-transform: uppercase;
+
+      &.active {
+        color: $dark-violet-color;
+      }
+    }
+
+    .user {
+      flex-grow: 1;
+      height: 46px;
+      display: flex;
+      justify-content: flex-end;
+
+      > div {
+        display: inline-block;
+      }
+
+      .icon {
+        width: $user-icon-size;
+        height: $user-icon-size;
+        background: $latter-grey-color;
+        border-radius: $user-icon-size;
+        margin-right: 16px;
+        font-weight: 600;
+        line-height: $user-icon-size;
+        text-align: center;
+        float: left;
+      }
+
+      .label {
+        width: 130px;
+        font-weight: 400;
+        white-space: normal;
+        line-height: 22px;
+      }
+    }
   }
 }

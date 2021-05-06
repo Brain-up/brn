@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.SignalDto
+import com.epam.brn.dto.SignalTaskDto
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -22,7 +22,7 @@ data class Signal(
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise? = null
 ) {
-    fun toSignalDto() = SignalDto(
+    fun toSignalDto() = SignalTaskDto(
         id = id,
         name = name,
         url = url,

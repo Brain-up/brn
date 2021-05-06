@@ -1,5 +1,7 @@
 package com.epam.brn.upload.csv.nonspeech
 
+import com.epam.brn.enums.Locale
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Signal
 import com.epam.brn.repo.ExerciseRepository
@@ -16,9 +18,10 @@ class SignalSeriesRecordProcessor(
         return record is SignalSeriesRecord
     }
 
-    override fun process(records: List<SignalSeriesRecord>): List<Exercise> {
+    override fun process(records: List<SignalSeriesRecord>, locale: Locale): List<Exercise> {
         val exercises = records.map { record ->
-            val subGroup = subGroupRepository.findByCode(record.code)
+            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
+                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
             val exercise = Exercise(
                 subGroup = subGroup,
                 name = record.exerciseName,

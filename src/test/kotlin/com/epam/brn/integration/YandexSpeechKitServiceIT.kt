@@ -1,5 +1,8 @@
 package com.epam.brn.integration
 
+import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
+import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.YandexSpeechKitService
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Disabled
@@ -37,16 +40,17 @@ internal class YandexSpeechKitServiceIT {
 
     @Test
     fun `should generate ogg audio file`() {
-        val voice = "alena"
+        val locale = Locale.RU.locale
+        val voice = Voice.OKSANA
         val speed = "1"
-        val word = "бабушкааа"
-        val phrase = "доктор моет чёрные грушиии"
+        val meta1 = AudioFileMetaData("бабушкааа", locale, voice, speed)
+        val meta2 = AudioFileMetaData("доктор моет чёрные грушиии", locale, voice, speed)
         // WHEN
-        val fileWordResult = yandexSpeechKitService.generateAudioOggFile(word, voice, speed)
-        val filePhraseResult = yandexSpeechKitService.generateAudioOggFile(phrase, voice, speed)
+        val fileWordResult = yandexSpeechKitService.generateAudioOggFile(meta1)
+        val filePhraseResult = yandexSpeechKitService.generateAudioOggFile(meta2)
         // THEN
-        val expectedFileWord = File("audioTest/ogg/$voice/${DigestUtils.md5Hex(word)}.ogg")
-        val expectedFilePhrase = File("audioTest/ogg/$voice/${DigestUtils.md5Hex(phrase)}.ogg")
+        val expectedFileWord = File("audioTest/ogg/$locale/$voice/$speed/${DigestUtils.md5Hex(meta1.text)}.ogg")
+        val expectedFilePhrase = File("audioTest/ogg/$locale/$voice/$speed/${DigestUtils.md5Hex(meta2.text)}.ogg")
         assertEquals(expectedFileWord, fileWordResult)
         assertEquals(expectedFilePhrase, filePhraseResult)
         assertTrue(expectedFileWord.exists())

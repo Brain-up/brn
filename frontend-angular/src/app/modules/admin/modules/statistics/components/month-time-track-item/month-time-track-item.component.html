@@ -1,0 +1,19 @@
+<div class="calendar" [style.backgroundColor]="LEVEL_COLOR[data.level]">
+  <div class="header">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="content">
+    <b class="total-time">{{ data.totalTime }}</b>
+    <br />
+    за <b>{{ data.daysNumber }}</b> дней
+  </div>
+</div>
+
+<div class="month-name" [class.current]="data.isCurrentMonth">{{ data.monthName }}</div>
+
+<div class="year-number" *ngIf="data.isShowYearNumber">{{ data.yearNumber }}</div>

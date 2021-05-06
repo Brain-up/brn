@@ -228,7 +228,7 @@ mediaType:
         200:
           body:
             example1: !include samples/exercise_for_id_1.json
-  /byIds
+  /byIds:
     post:
         description: Get available exercise ids for current user by input ids which have same subGroup.
         body:
@@ -400,28 +400,6 @@ mediaType:
     responses:
       204: No content
 
-# LOAD FILES ----------------------
-/loadTasksFile:
-  post:
-    body:
-      multipart/form-data:
-        properties:
-          seriesId:
-            description: "ID of the series created exercises belongs to"
-            required: true
-            type: string
-            example: "42"
-          taskFile:
-            description: "File with tasks to be uploaded"
-            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
-                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
-            formatForSeries2: "orderNumber words
-                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
-            required: true
-            type: file
-    responses:
-      201:
-
 /cloud:
   /folders:
     get:
@@ -456,12 +434,28 @@ mediaType:
 
 # ADMIN  ----------------------
 /admin:
+    /exercises:
+        get:
+            description: get exercises with tasks, resources by subGroupId
+        responses:
+            200:
+                example: !include samples/exercises_with_tasks.json
     /users:
         get:
             description: get all users
+            queryParameters:
+                withAnalytics:
+                    required: false
+                    default: false
+                    type: Boolean
+                    example: "true"
+                pageable:
+                    required: false
+                    type: Pageable
         responses:
             200:
               example: !include samples/users_get_response.json
+              example: !include samples/users_with_analytics_get_response.json
     /histories:
         get:
             description: get histories for user by period from <= startTime < to
@@ -560,3 +554,33 @@ mediaType:
                 errors: [],
                 meta: []
               }
+    /resources:
+        /{id}:
+          patch:
+              description: Update resource description by resource id.
+              body:
+                  example: !include samples/update_resource_description_request.json
+              responses:
+                  200:
+                      example: !include samples/resource_dto_response.json
+    # LOAD FILES ----------------------
+    /loadTasksFile:
+        post:
+            body:
+                multipart/form-data:
+                    properties:
+                        seriesId:
+                            description: "ID of the series created exercises belongs to"
+                            required: true
+                            type: string
+                            example: "42"
+                        taskFile:
+                            description: "File with tasks to be uploaded"
+                            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
+                                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
+                            formatForSeries2: "orderNumber words
+                                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
+                            required: true
+                            type: file
+            responses:
+              201:

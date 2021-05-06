@@ -24,4 +24,5 @@ Router.map(function() {
   this.route('password-recovery');
   this.route('user-agreement');
   this.route('description');
+  this.route('profile');
 });

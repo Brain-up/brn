@@ -10,8 +10,6 @@ import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series1.SeriesOneRecord
 import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.series3.SeriesThreeRecord
-import com.epam.brn.upload.csv.series3.SeriesThreeRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.series4.SeriesFourRecord
 import com.epam.brn.upload.csv.series4.SeriesFourRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.subgroup.SubGroupGenericRecordMappingIteratorProvider
@@ -29,7 +27,6 @@ class CsvParserTest {
             SubGroupGenericRecordMappingIteratorProvider(),
             SeriesOneRecordMappingIteratorProvider(),
             SeriesTwoRecordMappingIteratorProvider(),
-            SeriesThreeRecordMappingIteratorProvider(),
             SeriesFourRecordMappingIteratorProvider(),
             SignalSeriesRecordProvider()
         )
@@ -116,48 +113,6 @@ class CsvParserTest {
                     mutableListOf("(отец", "брат", "дедушка)"),
                     0,
                     ""
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `should parse exercises for Series 3`() {
-        val input =
-            """
-                level,code,exerciseName,words,answerAudioFile,answerParts
-                1,sentence_2,Пойми предложение из 2 слов,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_бросает.mp3,(девочка бросает)
-                2,sentence_2,Пойми предложение из 2 слов,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_читает.mp3,(девочка читает)
-                3,sentence_2,Пойми предложение из 2 слов,(();();(девочка дедушка бабушка); (бросает читает рисует);();()),series3/девочка_рисует.mp3,(девочка рисует)
-            """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
-
-        val result = parser.parse(input)
-
-        assertThat(result).containsAll(
-            listOf(
-                SeriesThreeRecord(
-                    1,
-                    "Пойми предложение из 2 слов",
-                    "sentence_2",
-                    mutableListOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
-                    "series3/девочка_бросает.mp3",
-                    "(девочка бросает)"
-                ),
-                SeriesThreeRecord(
-                    2,
-                    "Пойми предложение из 2 слов",
-                    "sentence_2",
-                    mutableListOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
-                    "series3/девочка_читает.mp3",
-                    "(девочка читает)"
-                ),
-                SeriesThreeRecord(
-                    3,
-                    "Пойми предложение из 2 слов",
-                    "sentence_2",
-                    mutableListOf("(()", "()", "(девочка дедушка бабушка)", "(бросает читает рисует)", "()", "())"),
-                    "series3/девочка_рисует.mp3",
-                    "(девочка рисует)"
                 )
             )
         )

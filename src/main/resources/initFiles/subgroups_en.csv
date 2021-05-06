@@ -1,0 +1,42 @@
+seriesType, level, code, name, description
+DURATION_SIGNALS,1,durationSignals,Length signals,
+FREQUENCY_SIGNALS,1,frequencySignals,Frequency signals,
+SINGLE_SIMPLE_WORDS ,1,family,Family,Family words
+SINGLE_SIMPLE_WORDS,2,home,Home,Home words
+SINGLE_SIMPLE_WORDS,3,food,Food,
+SINGLE_SIMPLE_WORDS,4,clothes,Clothes,
+SINGLE_SIMPLE_WORDS,5,school,School,
+SINGLE_SIMPLE_WORDS,6,math,Mathematics,
+SINGLE_SIMPLE_WORDS,7,pets,Pets,
+SINGLE_SIMPLE_WORDS,8,animals,Animals,
+SINGLE_SIMPLE_WORDS,9,transport,Transport,
+SINGLE_SIMPLE_WORDS,10,colors,Colors and forms,
+SINGLE_SIMPLE_WORDS,11,city,City,
+SINGLE_SIMPLE_WORDS,12,country,Country,
+SINGLE_SIMPLE_WORDS,13,walk,Walk,
+SINGLE_SIMPLE_WORDS,14,weather,Weather,
+SINGLE_SIMPLE_WORDS,15,future,Future,
+SINGLE_SIMPLE_WORDS,16,body,Body,
+SINGLE_SIMPLE_WORDS,17,game,Game,
+SINGLE_SIMPLE_WORDS,18,adventure,Adventure,
+SINGLE_SIMPLE_WORDS,19,hospital,Hospital,
+SINGLE_SIMPLE_WORDS,20,feelings,Feelings,
+WORDS_SEQUENCES,1,words_2_from_6,2 words from 6, Matrix with 2 columns and 3 rows
+WORDS_SEQUENCES,2,words_3_from_6,3 words from 6, Matrix with 3 columns and 3 rows
+WORDS_SEQUENCES,3,words_3_from_9,3 words from 9, Matrix with 3 columns and 3 rows
+WORDS_SEQUENCES,4,words_3_from_12,3 words from 12, Matrix with 3 columns and 4 rows
+WORDS_SEQUENCES,5,words_4_from_12,4 words from 12, Matrix with 4 columns and 3 rows
+WORDS_SEQUENCES,6,words_4_from_16,4 words from 12, Matrix with 4 columns and 4 rows
+WORDS_SEQUENCES,7,words_5_from_15,5 words from 15, Matrix with 5 columns and 5 rows
+WORDS_SEQUENCES,8,words_6_from_18,6 words from 18, Matrix with 6 columns and 3 rows
+SENTENCE,1,sentence_with_2_words,2 words, Sentence with 2 words
+SENTENCE,2,sentence_with_3_words,3 words, Sentence with 3 words
+SENTENCE,3,sentence_with_4_words,4 words, Sentence with 4 words
+SENTENCE,4,sentence_with_5_words,5 words, Sentence with 5 words
+SENTENCE,5,sentence_with_6_words,6 words, Sentence with 6 words
+PHRASES,1,longShortPhrases,Phrases with different length,
+PHRASES,2,noPhrases,Phrases with `no`,
+PHRASES,3,similarPhrases,Similar phrases,
+PHRASES,4,differentEndPhrases,Phrases with different end,
+PHRASES,5,shortWords,Short words,
+PHRASES,6,prepositionPhrases,Prepositions,

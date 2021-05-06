@@ -8,12 +8,12 @@ import net.bramp.ffmpeg.FFmpeg
 import net.bramp.ffmpeg.FFmpegExecutor
 import net.bramp.ffmpeg.FFprobe
 import net.bramp.ffmpeg.builder.FFmpegBuilder
-import org.apache.commons.codec.digest.DigestUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 
 @Service
 class AudioFilesGenerationService(
@@ -22,13 +22,7 @@ class AudioFilesGenerationService(
     @Autowired val yandexSpeechKitService: YandexSpeechKitService
 ) {
     @Value(value = "\${yandex.folderForFiles}")
-    private lateinit var folderForFiles: String
-
-    @Value("\${yandex.voiceFilipp}")
-    lateinit var manVoice: String
-
-    @Value("\${yandex.voiceAlena}")
-    lateinit var womanVoice: String
+    private lateinit var folderForLocalFiles: String
 
     @Value("#{'\${yandex.speeds}'.split(',')}")
     lateinit var speeds: List<String>
@@ -42,49 +36,79 @@ class AudioFilesGenerationService(
     private val log = logger()
 
     fun generateAudioFiles() {
-        val allWords = wordsService.fullWordsSet
-        val existsHashWords = wordsService.getExistWordFiles()
-        val wordsSize = allWords.size
-        if (allWords.isEmpty()) {
-            log.info("There are no any words.")
-            return
-        }
-        log.info("Start generating audio files in yandex cloud for $wordsSize words. exists=${existsHashWords.size}")
-        var createdCounter = 0
-        var skippedCounter = 0
-        allWords.asSequence().forEach { word ->
-            run {
-                val md5Hash = DigestUtils.md5Hex(word)
-                if (!existsHashWords.contains(md5Hash)) {
-                    createdCounter++
-                    log.info("Generate $createdCounter word `$word` speeds:$speeds from $wordsSize words.")
-                    speeds.forEach {
-                        GlobalScope.launch { processWord(word, womanVoice, it) }
-                        GlobalScope.launch { processWord(word, manVoice, it) }
-                    }
-                } else
-                    skippedCounter++
+        val dictionaryByLocale = wordsService.dictionaryByLocale
+        dictionaryByLocale.forEach { (locale, setWordToHash) ->
+            val allWords = setWordToHash.keys
+            val wordsSize = allWords.size
+            if (allWords.isEmpty()) {
+                log.info("There are no words at all.")
+                return@forEach
             }
+            log.info(
+                """Start yandex generating audio for locale=${locale.locale} for $wordsSize words. 
+                    Need to generate ${wordsSize * speeds.count() * 2}. 
+                    Exists=${wordsService.getExistWordFilesCount(locale)}"""
+            )
+            var createdCounter = AtomicInteger(0)
+            var skippedCounter = AtomicInteger(0)
+            allWords.asSequence().forEach { word ->
+                run {
+                    log.info("Start generation audio files for word `$word` speeds:$speeds from $wordsSize words.")
+                    speeds.forEach { speed ->
+                        GlobalScope.launch {
+                            val metaData = AudioFileMetaData(
+                                word,
+                                locale.locale,
+                                wordsService.getDefaultManVoiceForLocale(locale.locale),
+                                speed
+                            )
+                            if (wordsService.isFileExistLocal(metaData)) {
+                                log.info("Skipped creation for $metaData.")
+                                skippedCounter.incrementAndGet()
+                            } else {
+                                createdCounter.incrementAndGet()
+                                processWord(metaData)
+                            }
+                        }
+                        GlobalScope.launch {
+                            val metaData = AudioFileMetaData(
+                                word,
+                                locale.locale,
+                                wordsService.getDefaultWomanVoiceForLocale(locale.locale),
+                                speed
+                            )
+                            if (wordsService.isFileExistLocal(metaData)) {
+                                skippedCounter.incrementAndGet()
+                            } else {
+                                createdCounter.incrementAndGet()
+                                processWord(metaData)
+                            }
+                        }
+                    }
+                }
+            }
+            // log.info("Audio files for locale=$locale for ${allWords.size} words were created `$createdCounter`, skipped `$skippedCounter`.")
         }
-        log.info("Audio files for ${allWords.size} words were created `$createdCounter`, skipped `$skippedCounter`.")
     }
 
     /**
      * Generate .ogg audio file from yandex cloud and optionally convert it into .mp3 file and save both of them
      */
-    fun processWord(word: String, voice: String, speed: String): File {
-        val fileOgg = yandexSpeechKitService.generateAudioOggFile(word, voice, speed)
-        if (withSavingToS3)
-            awsConfig.amazonS3.putObject(awsConfig.bucketName + "/audio/$voice", fileOgg.name, fileOgg)
-        log.info("Ogg audio file `${fileOgg.name}` was successfully save in S3 ${awsConfig.bucketName + "/audio/$voice/" + fileOgg.name}.")
+    fun processWord(audioFileMetaData: AudioFileMetaData): File {
+        val fileOgg = yandexSpeechKitService.generateAudioOggFile(audioFileMetaData)
+        if (withSavingToS3) {
+            val subPath = wordsService.getSubPathForWord(audioFileMetaData)
+            awsConfig.amazonS3.putObject(awsConfig.bucketName + subPath, fileOgg.name, fileOgg)
+            log.info("Aws saving `${audioFileMetaData.text}`: ogg audio file `${fileOgg.name}` saved in S3 ${awsConfig.bucketName + subPath + fileOgg.name}")
+        }
         if (withMp3Conversion)
-            convertOggFileToMp3(fileOgg, voice)
+            convertOggFileToMp3(fileOgg, audioFileMetaData.voice.name)
         return fileOgg
     }
 
     fun convertOggFileToMp3(fileOgg: File, voice: String) {
         val mp3FileName = "${fileOgg.nameWithoutExtension}.mp3"
-        val targetMp3FilePath = "$folderForFiles/$voice/$mp3FileName"
+        val targetMp3FilePath = "$folderForLocalFiles/$voice/$mp3FileName"
         val fileMp3 = File(targetMp3FilePath)
         if (fileMp3.exists()) {
             log.info("$mp3FileName is already exist, it was not replaced, it was skipped.")
@@ -116,6 +140,7 @@ class AudioFilesGenerationService(
         } catch (e: Exception) {
             throw ConversionOggToMp3Exception("Some exception was appeared in converting process: ${e.message}")
         }
+        log.info("Created mp3 $mp3FileName from ogg.")
         // Or run a two-pass encode (which is better quality at the cost of being slower)
         // executor.createTwoPassJob(builder).run()
     }

@@ -16,6 +16,12 @@ const adminRoutes: Routes = [
       animation: 'Admin'
     },
     children: [
+      // TODO: will be implement in next tasks
+      // {path: 'users', component: UsersComponent},
+      // {path: 'exercises', component: ExercisesComponent},
+      // {path: 'resources', component: ResourcesComponent},
+      // {path: 'upload', component: UploadComponent}, //see previous HomeComponent
+
       {
         path: 'home',
         component: HomeComponent,
@@ -40,8 +46,12 @@ const adminRoutes: Routes = [
         }
       },
       {
+        path: 'statistics',
+        loadChildren: () => import('./modules/statistics/statistics.module').then(m => m.StatisticsModule)
+      },
+      {
         path: '',
-        redirectTo: '/admin/home',
+        redirectTo: '/admin',
         pathMatch: 'full'
       }
     ]

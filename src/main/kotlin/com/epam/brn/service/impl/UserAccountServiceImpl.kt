@@ -4,6 +4,7 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserWithAnalyticsDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
@@ -12,6 +13,7 @@ import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
@@ -93,8 +95,14 @@ class UserAccountServiceImpl(
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
-    override fun getUsers(): List<UserAccountDto> =
+    override fun getUsers(pageable: Pageable): List<UserAccountDto> =
         userAccountRepository.findAll().map { it.toDto() }
+
+    override fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsDto> {
+        val users = userAccountRepository.findAll().map { it.toAnalyticsDto() }
+        // todo fill user models with analytics and write tests
+        return users
+    }
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {
         val currentUserAccount = getCurrentUser()

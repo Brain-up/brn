@@ -1,0 +1,16 @@
+FROM node:12 as build-frontend
+COPY frontend/ /src/
+WORKDIR /src
+RUN yarn
+RUN node node_modules/ember-cli/bin/ember deploy production
+
+FROM node:12 as build-frontend-angular
+COPY frontend-angular/ /src/
+WORKDIR /src
+RUN npm ci
+RUN npm run build
+
+FROM nginx:alpine AS brn_fe_with_tls
+COPY default_with_tls.conf /etc/nginx/conf.d/default.conf
+COPY --from=build-frontend /src/tmp/deploy-dist /usr/share/nginx/html/
+COPY --from=build-frontend-angular /src/dist/frontend-angular /usr/share/nginx/html/admin/

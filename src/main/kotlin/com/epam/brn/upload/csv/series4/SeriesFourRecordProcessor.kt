@@ -1,5 +1,7 @@
 package com.epam.brn.upload.csv.series4
 
+import com.epam.brn.enums.Locale
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
@@ -8,14 +10,13 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
-import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import java.util.Random
 
 @Component
 class SeriesFourRecordProcessor(
@@ -28,52 +29,38 @@ class SeriesFourRecordProcessor(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
 
-    @Value(value = "\${series4WordsFileName}")
-    private lateinit var series4WordsFileName: String
-
-    @Value(value = "\${audioPath}")
-    private lateinit var audioPathFilipp: String
-
-    @Value(value = "\${audioPathAlena}")
-    private lateinit var audioPathAlena: String
-
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
-
-    val words = mutableMapOf<String, String>()
-
-    private val repeatCount = 2
-
-    var random = Random()
 
     override fun isApplicable(record: Any): Boolean {
         return record is SeriesFourRecord
     }
 
     @Transactional
-    override fun process(records: List<SeriesFourRecord>): List<Exercise> {
+    override fun process(records: List<SeriesFourRecord>, locale: Locale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
-        records.forEach {
-            val subGroup = subGroupRepository.findByCode(it.code)
-            val existExercise = exerciseRepository.findExerciseByNameAndLevel(it.exerciseName, it.level)
+        records.forEach { record ->
+            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
+                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
-                val answerOptions = extractAnswerOptions(it)
+                val answerOptions = extractAnswerOptions(record, locale)
+                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 resourceRepository.saveAll(answerOptions)
 
-                val newExercise = generateExercise(it, subGroup)
+                val newExercise = generateExercise(record, subGroup)
                 newExercise.addTask(generateOneTask(newExercise, answerOptions))
 
                 exerciseRepository.save(newExercise)
                 exercises.add(newExercise)
             }
         }
-        wordsService.createTxtFileWithExerciseWordsMap(words, series4WordsFileName)
+
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesFourRecord): MutableSet<Resource> {
-        var audioPath = audioPathFilipp
+    private fun extractAnswerOptions(record: SeriesFourRecord, locale: Locale): MutableSet<Resource> {
         val words = record.phrases
             .asSequence()
             .map { toPhrasesWithoutBraces(it) }
@@ -83,27 +70,34 @@ class SeriesFourRecordProcessor(
             .joinToString(" ").replace(".", "")
         var phraseSecond = words.subList(words.indexOf(lastWordOnFirstPhrase) + 1, words.size)
             .joinToString(" ").replace(".", "")
-        return mutableSetOf(toResource(phraseFirst, audioPath), toResource(phraseSecond, audioPath))
+        return mutableSetOf(toResource(phraseFirst, locale), toResource(phraseSecond, locale))
     }
 
-    private fun toResource(phrase: String, audioPath: String): Resource {
-        val phraseHex = DigestUtils.md5Hex(phrase)
-        words.put(phrase, phraseHex)
-        val audioFileUrl = audioPath.format(phraseHex)
-        val resource = resourceRepository.findFirstByWordAndAudioFileUrlLike(phrase, audioFileUrl)
+    private fun toResource(phrase: String, locale: Locale): Resource {
+        val audioPath = wordsService.getSubFilePathForWord(
+            AudioFileMetaData(
+                phrase,
+                locale.locale,
+                wordsService.getDefaultManVoiceForLocale(locale.locale)
+            )
+        )
+        val wordType = WordType.PHRASE.toString()
+        val resource = resourceRepository.findFirstByWordAndLocaleAndWordType(phrase, locale.locale, wordType)
             .orElse(
                 Resource(
                     word = phrase,
-                    audioFileUrl = audioFileUrl
+                    locale = locale.locale,
+                    pictureFileUrl = pictureDefaultPath
                 )
             )
-        resource.wordType = WordType.OBJECT.toString()
+        resource.audioFileUrl = audioPath
+        resource.wordType = wordType
         return resource
     }
 
     private fun toPhrasesWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun generateExercise(record: SeriesFourRecord, subGroup: SubGroup): Exercise =
+    private fun generateExercise(record: SeriesFourRecord, subGroup: SubGroup) =
         Exercise(
             subGroup = subGroup,
             name = record.exerciseName,
@@ -114,13 +108,4 @@ class SeriesFourRecordProcessor(
 
     private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
         Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
-
-    private fun generateCorrectAnswers(answerOptions: MutableSet<Resource>): MutableList<Resource> {
-        val correctAnswers = mutableListOf<Resource>()
-        for (i in 1..repeatCount) {
-            correctAnswers.addAll(answerOptions)
-        }
-        correctAnswers.shuffle(random)
-        return correctAnswers
-    }
 }

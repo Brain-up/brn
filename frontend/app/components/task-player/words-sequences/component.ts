@@ -6,7 +6,6 @@ import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
 import { tracked } from '@glimmer/tracking';
-import { urlForAudio } from 'brn/utils/file-url';
 import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
@@ -61,12 +60,12 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     return this.uncompletedTasks.firstObject;
   }
   get audioFiles() {
-    return (
-      this.firstUncompletedTask &&
-      (this.firstUncompletedTask as any).answer.map(({ audioFileUrl }: { audioFileUrl: string | null }) => {
-        return urlForAudio(audioFileUrl);
-      })
-    );
+    if (!this.firstUncompletedTask) {
+      return [];
+    }
+
+    const text = this.firstUncompletedTask.answer.map(({ word }) => word).join(' ');
+    return [this.audio.audioUrlForText(text)];
   }
   get answerCompleted() {
     return Object.values(this.currentAnswerObject as any).reduce(

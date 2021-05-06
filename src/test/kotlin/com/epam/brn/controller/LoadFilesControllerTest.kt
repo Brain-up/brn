@@ -1,5 +1,12 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.ResourceService
+import com.epam.brn.service.StudyHistoryService
+import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -16,20 +23,38 @@ import java.io.FileInputStream
 internal class LoadFilesControllerTest {
 
     @InjectMocks
-    lateinit var loadFilesController: LoadFilesController
+    lateinit var adminController: AdminController
 
     @Mock
     lateinit var csvUploadService: CsvUploadService
+
+    @Mock
+    lateinit var studyHistoryService: StudyHistoryService
+
+    @Mock
+    lateinit var userAccountService: UserAccountService
+
+    @Mock
+    lateinit var exerciseService: ExerciseService
+
+    @Mock
+    lateinit var resourceService: ResourceService
+
+    @Mock
+    lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
+
+    @Mock
+    lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 
     @Test
     fun `should call upload service to load file for 1 series`() {
         // GIVEN
         val taskFile = MockMultipartFile(
-            "series_words.csv",
-            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}series_words.csv")
+            "series_words_en.csv",
+            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}series_words_en.csv")
         )
         // WHEN
-        loadFilesController.loadExercises(1, taskFile)
+        adminController.loadExercises(1, taskFile)
         // THEN
         verify(csvUploadService, times(1)).loadExercises(1, taskFile)
     }

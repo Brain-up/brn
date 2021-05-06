@@ -44,7 +44,7 @@ class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {
                 }
             } catch (e: Exception) {
                 errors.add("Parse error: ${e.localizedMessage}")
-                log.debug(e)
+                log.error(e)
             }
             if (errors.isNotEmpty()) throw ParseException(errors)
 

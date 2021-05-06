@@ -9,5 +9,5 @@ data class ExerciseDto(
     var template: String? = "",
     var available: Boolean = true,
     var tasks: MutableList<ShortTaskDto> = mutableListOf(),
-    var signals: MutableList<SignalDto> = mutableListOf()
+    var signals: MutableList<SignalTaskDto> = mutableListOf()
 )

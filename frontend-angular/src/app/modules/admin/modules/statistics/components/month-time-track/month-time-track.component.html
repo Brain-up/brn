@@ -1,0 +1,8 @@
+<div class="title">Общее время занятий по месяцам</div>
+
+<div class="content">
+  <app-month-time-track-item
+    *ngFor="let data of getMonthTimeTrackItemsData()"
+    [data]="data"
+  ></app-month-time-track-item>
+</div>

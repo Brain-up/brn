@@ -1,0 +1,7 @@
+level,code,exerciseName,orderNumber,words
+1,sentence_with_2_words,Sentence from 2 words,1,((One Some The);();();(girl boy uncle);();())
+2,sentence_with_2_words,Sentence from 2 words,1,((One Some The);();();(woman man child);();())
+1,sentence_with_3_words,Sentence from 3 words,20,((One Some The);(good kind nice);();(girl boy uncle);();())
+2,sentence_with_4_words,Sentence from 3 words,20,((One Some The);(good kind nice);();(woman man child);();())
+1,sentence_with_4_words,Sentence from 4 words,40,((One Some The);(good kind nice);();(woman man child);(run sleep read);())
+2,sentence_with_4_words,Sentence from 4 words,40,((Two Five Six);(clever kind smart);();(girls boys cats);();(run sleep eat))

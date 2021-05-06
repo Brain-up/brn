@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.ShortTaskDto
 import javax.persistence.CascadeType
@@ -44,6 +45,17 @@ data class Exercise(
         available = available,
         tasks = tasks.map { task -> ShortTaskDto(task.id) }.toMutableList(),
         signals = signals.map { signal -> signal.toSignalDto() }.toMutableList()
+    )
+
+    fun toDtoWithTasks() = ExerciseWithTasksDto(
+        seriesId = subGroup?.id,
+        id = id,
+        name = name,
+        template = template,
+        level = level,
+        noise = NoiseDto(noiseLevel, noiseUrl),
+        tasks = tasks.map { task -> task.toGeneralTaskDto() },
+        signals = signals.map { signal -> signal.toSignalDto() },
     )
 
     override fun toString() =

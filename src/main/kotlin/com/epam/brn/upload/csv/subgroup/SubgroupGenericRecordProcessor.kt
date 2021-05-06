@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.subgroup
 
+import com.epam.brn.enums.Locale
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
@@ -19,17 +20,17 @@ class SubgroupGenericRecordProcessor(
     }
 
     @Transactional
-    override fun process(records: List<SubgroupGenericRecord>): List<SubGroup> {
+    override fun process(records: List<SubgroupGenericRecord>, locale: Locale): List<SubGroup> {
         val subGroups = records
             .map {
                 val series = seriesRepository
-                    .findByType(it.seriesType)
-                    ?: throw EntityNotFoundException("Series ${it.seriesType} was not found.")
+                    .findByTypeAndLocale(it.seriesType, locale.locale)
+                    ?: throw EntityNotFoundException("Series ${it.seriesType} and group locale $locale was not found.")
                 SubGroup(it, series)
             }
         subGroups.forEach { subGroup ->
             run {
-                val existSubGroup = subGroupRepository.findByNameAndLevelAndSeries(subGroup.name, subGroup.level, subGroup.series)
+                val existSubGroup = subGroupRepository.findByNameAndLevel(subGroup.name, subGroup.level)
                 if (existSubGroup == null)
                     subGroupRepository.save(subGroup)
             }

@@ -64,7 +64,7 @@ internal class AudiometryServiceIT {
         insertHistory(user, tasks[3])
         insertHistory(user, tasks[5], LocalDateTime.now().minusDays(1))
         insertHistory(user, tasks[6])
-        val audiometryWithTasks = audiometryRepository.findById(audiometry.id!!).get()
+        val audiometryWithTasks = audiometryRepository.findByIdWithTasks(audiometry.id!!).get()
         // WHEN
         val resultTasks = audiometryService.findSecondAudiometryTasks(user, audiometryWithTasks)
         // THEN

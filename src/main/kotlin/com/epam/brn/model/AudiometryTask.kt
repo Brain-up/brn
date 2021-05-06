@@ -35,7 +35,7 @@ data class AudiometryTask(
     var count: Int? = 10,
     var showSize: Int? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_id")
     var audiometry: Audiometry? = null,
 
@@ -64,7 +64,6 @@ data class AudiometryTask(
         if (maxFrequency != other.maxFrequency) return false
         if (frequencyZone != other.frequencyZone) return false
         if (audiometryGroup != other.audiometryGroup) return false
-        if (audiometry != other.audiometry) return false
         return true
     }
 
