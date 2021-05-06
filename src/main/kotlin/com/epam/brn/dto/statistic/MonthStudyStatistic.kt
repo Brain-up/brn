@@ -8,5 +8,5 @@ import java.time.YearMonth
 data class MonthStudyStatistic(
     val month: YearMonth,
     val exercisingTime: Int,
-    var progress: Int = 0
-) : Statistic()
+    var progress: UserExercisingProgressStatus
+) : Statistic(progress)

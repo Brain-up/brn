@@ -1,14 +1,14 @@
-package com.epam.brn.service.statistic.impl
+package com.epam.brn.service.statistic.progress
 
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.statistic.UserTimeGoalAchievedStrategy
-import com.nhaarman.mockito_kotlin.any
+import com.epam.brn.service.statistic.impl.UserMonthStatisticService
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -42,9 +42,6 @@ internal class UserMonthStatisticServiceTest {
     @Mock
     private lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
-    private lateinit var userTimeGoalAchievedStrategy: UserTimeGoalAchievedStrategy<List<StudyHistory>>
-
     private lateinit var studyHistory: StudyHistory
     private lateinit var userAccount: UserAccount
     private lateinit var exercise: Exercise
@@ -55,7 +52,7 @@ internal class UserMonthStatisticServiceTest {
     private val year: Int = 2021
     private val hour: Int = 13
     private val minute: Int = 20
-    private val progressPercent: Int = 80
+    private val progress = UserExercisingProgressStatus.GOOD
     private val studyHistoryDate = LocalDateTime.of(year, month, day, hour, minute)
     private val from: LocalDate = LocalDate.of(year, month, day)
     private val to: LocalDate = LocalDate.of(year, month.plus(2), day)
@@ -91,7 +88,6 @@ internal class UserMonthStatisticServiceTest {
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
             studyHistories
         )
-        `when`(userTimeGoalAchievedStrategy.doStrategy(any())).thenReturn(progressPercent)
     }
 
     @Test
@@ -100,7 +96,7 @@ internal class UserMonthStatisticServiceTest {
         val statistic = statisticsForPeriod.first()
         assertEquals(studyHistories.sumBy { it.executionSeconds }, statistic.exercisingTime)
         assertEquals(YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month), statistic.month)
-        assertEquals(progressPercent, statistic.progress)
+        assertEquals(progress, statistic.progress)
     }
 
     @Test
@@ -122,12 +118,12 @@ internal class UserMonthStatisticServiceTest {
         val expectedStatisticFirst = MonthStudyStatistic(
             YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month),
             studyHistory.executionSeconds,
-            progressPercent
+            progress
         )
         val expectedStatisticSecond = MonthStudyStatistic(
             YearMonth.of(secondStudyHistory.startTime.year, secondStudyHistory.startTime.month),
             secondStudyHistory.executionSeconds,
-            progressPercent
+            progress
         )
 
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(

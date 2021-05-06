@@ -9,5 +9,5 @@ import java.time.LocalDate
 data class DayStudyStatistic(
     val date: LocalDate,
     val exercisingTime: Int,
-    var progress: Int = 0
-) : Statistic()
+    var progress: UserExercisingProgressStatus? = null
+) : Statistic(progress)

@@ -1,16 +1,16 @@
-package com.epam.brn.service.statistic.impl
+package com.epam.brn.service.statistic.progress
 
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.statistic.UserTimeGoalAchievedStrategy
+import com.epam.brn.service.statistic.impl.UserDayStatisticService
 import com.nhaarman.mockito_kotlin.any
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -31,9 +31,6 @@ internal class UserDayStatisticServiceTest {
 
     @InjectMocks
     private lateinit var userDayStatisticService: UserDayStatisticService
-
-    @Mock
-    private lateinit var userTimeGoalAchievedStrategy: UserTimeGoalAchievedStrategy<Int>
 
     @Mock
     private lateinit var studyHistoryRepository: StudyHistoryRepository
@@ -57,7 +54,7 @@ internal class UserDayStatisticServiceTest {
     private val from: LocalDate = LocalDate.of(year, month, day)
     private val to: LocalDate = LocalDate.of(year, month.plus(2), day)
     private val exercisingSeconds = 3500
-    private val userProgress = 80
+    private val userProgress = UserExercisingProgressStatus.GOOD
 
     @Before
     fun init() {
@@ -68,7 +65,6 @@ internal class UserDayStatisticServiceTest {
         )
         `when`(studyHistory.startTime).thenReturn(studyHistoryDate)
         `when`(studyHistory.executionSeconds).thenReturn(exercisingSeconds)
-        `when`(userTimeGoalAchievedStrategy.doStrategy(anyInt())).thenReturn(userProgress)
     }
 
     @Test
