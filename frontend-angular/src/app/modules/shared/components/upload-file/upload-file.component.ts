@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild, forwardRef, Renderer2 } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild, forwardRef, Renderer2, ElementRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -10,32 +10,35 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => UploadFileComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class UploadFileComponent implements ControlValueAccessor {
-  @Input() disabled = false;
-  @ViewChild('file', {static: true}) file;
+  @Input()
+  public disabled = false;
+
+  @ViewChild('file', { static: true })
+  public file: ElementRef<HTMLInputElement>;
+
   private onChange: (change: File) => void;
   private onTouch: () => void;
 
-  constructor(private renderer: Renderer2) {
-  }
+  constructor(private readonly renderer: Renderer2) {}
 
-  writeValue(value: FileList) {
+  public writeValue(value: FileList): void {
     this.renderer.setProperty(this.file, 'files', value);
   }
 
-  registerOnChange(fn: any) {
+  public registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: () => void) {
+  public registerOnTouched(fn: () => void): void {
     this.onTouch = fn;
   }
 
-  onFilesAdded() {
+  public onFilesAdded(): void {
     const files: FileList = this.file.nativeElement.files;
     this.onChange(files.item(0));
   }
