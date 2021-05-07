@@ -6,6 +6,7 @@ import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.google.gson.Gson
 import org.amshove.kluent.internal.assertNotSame
@@ -91,7 +92,8 @@ class UserDetailsControllerIT : BaseIT() {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 email = email,
-                password = password
+                password = password,
+                role = Role.DOCTOR.toString()
             )
         )
 }

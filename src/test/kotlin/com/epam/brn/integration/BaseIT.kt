@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
@@ -75,7 +76,8 @@ abstract class BaseIT {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                active = true
+                active = true,
+                role = Role.USER.toString()
             )
         )
 

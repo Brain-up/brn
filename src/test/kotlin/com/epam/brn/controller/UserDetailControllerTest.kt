@@ -4,6 +4,7 @@ import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.service.UserAccountService
 import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -42,7 +43,8 @@ internal class UserDetailControllerTest {
             email = "unittest@test.ru",
             gender = Gender.MALE,
             bornYear = 2000,
-            active = true
+            active = true,
+            role = Role.USER
         )
     }
 
@@ -88,7 +90,8 @@ internal class UserDetailControllerTest {
                 email = "email",
                 active = true,
                 gender = Gender.FEMALE,
-                bornYear = 2000
+                bornYear = 2000,
+                role = Role.DOCTOR
             )
             `when`(userAccountService.updateAvatarForCurrentUser(avatarUrl)).thenReturn(userAccountDto)
             // WHEN
@@ -114,7 +117,8 @@ internal class UserDetailControllerTest {
                 email = "email",
                 gender = Gender.FEMALE,
                 active = true,
-                bornYear = 2000
+                bornYear = 2000,
+                role = Role.USER
             )
             `when`(userAccountService.updateCurrentUser(changeRequest)).thenReturn(userAccountDto)
             // WHEN

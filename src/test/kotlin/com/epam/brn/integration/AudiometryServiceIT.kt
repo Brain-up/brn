@@ -7,6 +7,7 @@ import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
 import com.epam.brn.repo.AudiometryRepository
@@ -79,7 +80,8 @@ internal class AudiometryServiceIT {
             bornYear = 2000,
             email = "test@test.test",
             password = "password",
-            active = true
+            active = true,
+            role = Role.ADMIN.toString()
         )
     )
 

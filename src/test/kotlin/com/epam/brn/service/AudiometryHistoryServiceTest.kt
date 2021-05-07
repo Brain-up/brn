@@ -4,6 +4,7 @@ import com.epam.brn.dto.request.AudiometryHistoryRequest
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
@@ -42,7 +43,8 @@ internal class AudiometryHistoryServiceTest {
             bornYear = 2000,
             password = "test",
             email = "test@gmail.com",
-            active = true
+            active = true,
+            role = Role.ADMIN.toString()
         )
         `when`(userAccountService.getCurrentUser()).thenReturn(userAccount)
         val audiometryHistoryRequest = mock(AudiometryHistoryRequest::class.java)

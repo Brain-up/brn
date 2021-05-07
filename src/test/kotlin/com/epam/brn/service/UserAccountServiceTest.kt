@@ -8,6 +8,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.nhaarman.mockito_kotlin.verify
@@ -164,7 +165,8 @@ internal class UserAccountServiceTest {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = ZonedDateTime.now().minusMinutes(5),
-                avatar = null
+                avatar = null,
+                role = Role.USER.toString()
             )
             val userAccountUpdated = userAccount.copy()
             userAccountUpdated.avatar = avatarUrl
@@ -204,7 +206,8 @@ internal class UserAccountServiceTest {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = ZonedDateTime.now().minusMinutes(5),
-                avatar = null
+                avatar = null,
+                role = Role.USER.toString()
             )
             val userAccountChangeRequest = UserAccountChangeRequest(avatar = avatarUrl, name = "newName")
             val userAccountUpdated = userAccount.copy()

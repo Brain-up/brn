@@ -3,6 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
@@ -49,7 +50,8 @@ internal class StudyHistoryServiceTest {
             bornYear = 2000,
             password = "test",
             email = "test@gmail.com",
-            active = true
+            active = true,
+            role = Role.USER.toString()
         )
         val exercise = Exercise(id = 1L)
         val studyHistoryNew = StudyHistory(

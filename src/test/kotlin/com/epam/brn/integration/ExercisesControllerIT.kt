@@ -4,6 +4,7 @@ import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
@@ -159,7 +160,8 @@ class ExercisesControllerIT : BaseIT() {
                 bornYear = 2000,
                 email = "test@test.test",
                 password = "password",
-                active = true
+                active = true,
+                role = Role.DOCTOR.toString()
             )
         )
     }
