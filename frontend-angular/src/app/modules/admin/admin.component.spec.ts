@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StoreModule } from '@ngrx/store';
-import { AppComponent } from './app.component';
+import { AdminComponent } from './admin.component';
 
-describe('AppComponent', () => {
-  let fixture: ComponentFixture<AppComponent>;
-  let component: AppComponent;
+describe('AdminComponent', () => {
+  let fixture: ComponentFixture<AdminComponent>;
+  let component: AdminComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent],
+      declarations: [AdminComponent],
       imports: [StoreModule.forRoot({})],
     });
 
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(AdminComponent);
     component = fixture.componentInstance;
   });
 

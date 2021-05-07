@@ -31,7 +31,7 @@ export const redirectAction = createAction(
   props<{ location: string }>()
 );
 export const destroySessionRequestAction = createAction(
-  '[AdminPageComponent] destroySessionAction'
+  '[AdminComponent] destroySessionAction'
 );
 export const destroySessionSuccessAction = createAction(
   '[AuthEffects API] destroySessionSuccessAction'
