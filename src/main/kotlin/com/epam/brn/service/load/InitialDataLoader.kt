@@ -5,6 +5,7 @@ import com.epam.brn.enums.Locale
 import com.epam.brn.model.Authority
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
@@ -168,7 +169,8 @@ class InitialDataLoader(
                 email = "admin@admin.com",
                 active = true,
                 bornYear = 1999,
-                gender = Gender.MALE.toString()
+                gender = Gender.MALE.toString(),
+                role = Role.ADMIN.toString()
             )
         userAccount.authoritySet.addAll(setOf(adminAuthority))
         return userAccount
@@ -182,7 +184,8 @@ class InitialDataLoader(
             active = true,
             bornYear = 1999,
             gender = Gender.MALE.toString(),
-            password = password
+            password = password,
+            role = Role.USER.toString()
         )
         val secondUser = UserAccount(
             fullName = "Name2",
@@ -190,7 +193,8 @@ class InitialDataLoader(
             active = true,
             bornYear = 1999,
             gender = Gender.FEMALE.toString(),
-            password = password
+            password = password,
+            role = Role.DOCTOR.toString()
         )
         firstUser.authoritySet.addAll(setOf(userAuthority))
         secondUser.authoritySet.addAll(setOf(userAuthority))

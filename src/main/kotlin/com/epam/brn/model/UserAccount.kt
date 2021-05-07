@@ -31,7 +31,8 @@ data class UserAccount(
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     @Column(nullable = false)
     var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    var avatar: String? = null
+    var avatar: String? = null,
+    var role: String?
 ) {
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
@@ -56,7 +57,8 @@ data class UserAccount(
             gender = gender?.let { Gender.valueOf(it) },
             created = created,
             changed = changed,
-            avatar = avatar
+            avatar = avatar,
+            role = role?.let { Role.valueOf(it) }
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)
@@ -72,5 +74,6 @@ data class UserAccount(
         email = email,
         bornYear = bornYear,
         gender = gender?.let { Gender.valueOf(it) },
+        role = role?.let { Role.valueOf(it) }
     )
 }

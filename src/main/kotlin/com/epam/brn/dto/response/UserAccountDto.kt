@@ -1,6 +1,7 @@
 package com.epam.brn.dto.response
 
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Role
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -16,7 +17,8 @@ data class UserAccountDto(
     var active: Boolean = true,
     val created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    var avatar: String? = null
+    var avatar: String? = null,
+    val role: Role?
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }
