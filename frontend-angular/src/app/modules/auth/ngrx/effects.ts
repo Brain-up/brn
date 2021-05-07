@@ -41,7 +41,7 @@ export class AuthEffects {
       switchMap((tokenData: LoginSuccessModel) => [
         fromAuthActions.createSessionSuccessAction({tokenData}),
         fromAuthActions.setAuthStatusAction({isAuthenticated: true}),
-        fromAuthActions.redirectAction({location: '/admin'})
+        fromAuthActions.redirectAction({location: '/'})
       ]),
       catchError((error: HttpErrorResponse) => of(
         fromAuthActions.createSessionFailureAction({
