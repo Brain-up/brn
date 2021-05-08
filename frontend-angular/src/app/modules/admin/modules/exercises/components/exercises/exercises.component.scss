@@ -1,0 +1,41 @@
+@import '../../../../../../styles/colors.scss';
+@import '../../../../../../styles/variables.scss';
+
+.select-container {
+  width: 100%;
+  padding: 22px $header-horizontal-padding;
+}
+
+.exercises {
+  &__table-container {
+    padding: 40px $header-horizontal-padding;
+  }
+
+  &__table {
+    width: 100%;
+    box-shadow: none;
+  }
+}
+
+::ng-deep {
+  .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+    background:  $brain-gradient !important;
+  }
+
+  .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+    background-color: #FFFFFF;
+  }
+
+  .mat-slide-toggle-bar {
+    height: 22px !important;
+    width: 37px !important;
+    border-radius: 20px !important;
+  }
+
+  .mat-slide-toggle-thumb-container {
+    top: 1px !important;
+  }
+}
+
+
+
