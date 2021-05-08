@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppStateModel } from './models/app-state.model';
 import { checkAuthStatusAction } from './modules/auth/ngrx/actions';
-import { SvgIconsRegistrarService } from './modules/shared/services/svg-icons-registrar.service';
+import { SvgIconsRegistrarService } from '@shared/services/svg-icons-registrar.service';
 
 @Component({
   selector: 'app-root',

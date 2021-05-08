@@ -1,18 +1,18 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { WeekTimeTrackComponent } from './week-time-track.component';
+import { UploadFileComponent } from './upload-file.component';
 
-describe('WeekTimeTrackComponent', () => {
-  let fixture: ComponentFixture<WeekTimeTrackComponent>;
-  let component: WeekTimeTrackComponent;
+describe('UploadFileComponent', () => {
+  let fixture: ComponentFixture<UploadFileComponent>;
+  let component: UploadFileComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WeekTimeTrackComponent],
+      declarations: [UploadFileComponent],
       schemas: [NO_ERRORS_SCHEMA],
     });
 
-    fixture = TestBed.createComponent(WeekTimeTrackComponent);
+    fixture = TestBed.createComponent(UploadFileComponent);
     component = fixture.componentInstance;
   });
 
