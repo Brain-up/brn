@@ -1,71 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import * as fromAdminNgrx from './ngrx/reducers';
-import { AdminEffects } from './ngrx/effects';
-
 import { AdminComponent } from './admin.component';
-import { LoadFileComponent } from './components/load-file/load-file.component';
-import { LoadTasksComponent } from './components/load-tasks/load-tasks.component';
-import { SharedModule } from '../shared/shared.module';
-import { HomeComponent } from './components/home/home.component';
-import { FoldersService } from './services/folders/folders.service';
-import { UploadService } from './services/upload/upload.service';
-import { FormatService } from './services/format/format.service';
 import { AdminRoutingModule } from './admin-routing.module';
-import { ExercisesComponent } from './components/exercises/exercises.component';
-import { SelectPanelComponent } from './components/exercises/select-panel/select-panel.component';
+import { AdminApiService } from './services/api/admin-api.service';
+import { CloudApiService } from './services/api/cloud-api.service';
+import { GroupApiService } from './services/api/group-api.service';
+import { SeriesApiService } from './services/api/series-api.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [
-    AdminComponent,
-    LoadFileComponent,
-    LoadTasksComponent,
-    HomeComponent,
-    ExercisesComponent,
-    SelectPanelComponent
-  ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    AdminRoutingModule,
-    SharedModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatTableModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
-    StoreModule.forFeature(fromAdminNgrx.adminFeatureKey, fromAdminNgrx.adminReducer),
-    EffectsModule.forFeature([AdminEffects]),
-  ],
-  providers: [
-    FoldersService,
-    FormatService,
-    UploadService,
-  ]
+  declarations: [AdminComponent],
+  imports: [CommonModule, AdminRoutingModule, MatButtonModule, MatToolbarModule],
+  providers: [AdminApiService, CloudApiService, GroupApiService, SeriesApiService],
 })
 export class AdminModule {}
