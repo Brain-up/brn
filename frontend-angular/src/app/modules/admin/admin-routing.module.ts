@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { AdminPageComponent } from './admin-page.component';
+import { AdminComponent } from './admin.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoadFileComponent } from './components/load-file/load-file.component';
 import { LoadTasksComponent } from './components/load-tasks/load-tasks.component';
 import { AdminGuardService } from './services/admin-guard/admin-guard.service';
 import { ExercisesComponent } from './components/exercises/exercises.component';
 
-const adminRoutes: Routes = [
+const routes: Routes = [
   {
-    path: 'admin',
-    component: AdminPageComponent,
+    path: '',
+    component: AdminComponent,
     canActivate: [AdminGuardService],
     data: {
-      animation: 'Admin'
+      animation: 'Admin',
     },
     children: [
       // TODO: will be implement in next tasks
@@ -25,7 +24,6 @@ const adminRoutes: Routes = [
        },
       // {path: 'resources', component: ResourcesComponent},
       // {path: 'upload', component: UploadComponent}, //see previous HomeComponent
-
       {
         path: 'home',
         component: HomeComponent,
@@ -34,37 +32,42 @@ const adminRoutes: Routes = [
             path: 'file',
             component: LoadFileComponent,
             data: {
-              animation: 'LoadAll'
-            }
+              animation: 'LoadAll',
+            },
           },
           {
             path: 'tasks',
             component: LoadTasksComponent,
             data: {
-              animation: 'LoadTasks'
-            }
+              animation: 'LoadTasks',
+            },
+          },
+          {
+            path: '',
+            redirectTo: 'file',
+            pathMatch: 'full',
           },
         ],
         data: {
-          animation: 'Admin'
-        }
+          animation: 'Admin',
+        },
+      },
+      {
+        path: 'statistics',
+        loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
       },
       {
         path: '',
-        redirectTo: '/admin',
-        pathMatch: 'full'
-      }
-    ]
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+    ],
   },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(adminRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+  providers: [AdminGuardService],
 })
-export class AdminPageRoutingModule {
-}
+export class AdminRoutingModule {}

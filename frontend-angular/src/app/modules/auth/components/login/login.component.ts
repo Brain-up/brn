@@ -1,54 +1,50 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { withLatestFrom, tap, debounceTime, takeUntil } from 'rxjs/operators';
-
+import { withLatestFrom, debounceTime, takeUntil } from 'rxjs/operators';
 import { AppStateModel } from 'src/app/models/app-state.model';
+import { DEBOUNCE_TIME_IN_MS } from 'src/app/modules/shared/constants/time-constants';
 import * as fromAuthActions from '../../ngrx/actions';
 import { selectAuthError } from '../../ngrx/reducers';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  loginForm: FormGroup;
-  loginError: Observable<string>;
-  ngUnsubscribe = new Subject<void>();
+  public loginForm: FormGroup;
+  public loginError: Observable<string>;
+  public destroyer$ = new Subject<void>();
 
-  constructor(private store: Store<AppStateModel>) {
-  }
+  constructor(private readonly store: Store<AppStateModel>) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
       grant_type: new FormControl('password'),
       username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required)
+      password: new FormControl('', Validators.required),
     });
 
     this.loginError = this.store.select(selectAuthError);
 
-    this.loginForm.valueChanges.pipe(
-      debounceTime(300),
-      withLatestFrom(this.loginError),
-      tap(([changes, error]) => {
+    this.loginForm.valueChanges
+      .pipe(debounceTime(DEBOUNCE_TIME_IN_MS), withLatestFrom(this.loginError), takeUntil(this.destroyer$))
+      .subscribe(([changes, error]) => {
         if (error) {
           this.store.dispatch(fromAuthActions.clearErrorAction());
         }
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe();
-  }
-
-  onLogin() {
-    this.store.dispatch(fromAuthActions.createSessionRequestAction(this.loginForm.value));
+      });
   }
 
   ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+    this.destroyer$.next();
+    this.destroyer$.complete();
+  }
+
+  public onLogin(): void {
+    this.store.dispatch(fromAuthActions.createSessionRequestAction(this.loginForm.value));
   }
 }

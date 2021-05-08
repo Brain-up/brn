@@ -25,13 +25,12 @@ export class AuthEffects {
     ofType(fromAuthActions.checkAuthStatusAction),
     map((action) => {
       const tokenData = SessionTokenService.getToken();
-      if (!tokenData) {
-        return fromAuthActions.setAuthStatusAction({isAuthenticated: false});
-      }
 
-      if (SessionTokenService.isValidToken(tokenData)) {
+      if (tokenData && SessionTokenService.isValidToken(tokenData)) {
         return fromAuthActions.setAuthStatusAction({isAuthenticated: true});
       }
+
+      return fromAuthActions.setAuthStatusAction({isAuthenticated: false});
     })
   ));
 
@@ -41,7 +40,7 @@ export class AuthEffects {
       switchMap((tokenData: LoginSuccessModel) => [
         fromAuthActions.createSessionSuccessAction({tokenData}),
         fromAuthActions.setAuthStatusAction({isAuthenticated: true}),
-        fromAuthActions.redirectAction({location: '/admin'})
+        fromAuthActions.redirectAction({location: '/'})
       ]),
       catchError((error: HttpErrorResponse) => of(
         fromAuthActions.createSessionFailureAction({

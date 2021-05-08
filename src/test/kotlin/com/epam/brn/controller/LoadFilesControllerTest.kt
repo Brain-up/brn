@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.upload.CsvUploadService
@@ -32,6 +33,9 @@ internal class LoadFilesControllerTest {
 
     @Mock
     lateinit var exerciseService: ExerciseService
+
+    @Mock
+    lateinit var resourceService: ResourceService
 
     @Test
     fun `should call upload service to load file for 1 series`() {

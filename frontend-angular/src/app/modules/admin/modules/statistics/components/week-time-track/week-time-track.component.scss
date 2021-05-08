@@ -1,0 +1,46 @@
+@import '../../../../../../styles/colors.scss';
+
+:host {
+  .title {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 24px;
+    text-transform: uppercase;
+    color: $active-grey-color;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 15px;
+
+    button.prev,
+    button.next {
+      min-width: unset;
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: $brain-gradient;
+      box-shadow: 0px 4px 16px #5947b240;
+      border: 1px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      mat-icon {
+        color: #ffffff;
+      }
+    }
+
+    .chart ::ng-deep {
+      .bb-ygrid-line {
+        stroke-dasharray: 5;
+
+        line {
+          stroke: #ffb3bf;
+        }
+      }
+    }
+  }
+}
