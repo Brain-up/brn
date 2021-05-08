@@ -8,8 +8,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
-import { BasicAuthInterceptor } from './modules/shared/services/basic-auth.interceptor.service';
+import { BasicAuthInterceptor } from '@shared/interceptors/basic-auth.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
     HttpClientModule,
     AppRoutingModule,
     AuthModule,
+    MatSnackBarModule,
     StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

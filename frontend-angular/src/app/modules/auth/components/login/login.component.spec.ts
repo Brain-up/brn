@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { StoreModule } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
@@ -9,7 +9,7 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      imports: [StoreModule.forRoot({})],
+      providers: [{ provide: Store, useValue: {} }],
     });
 
     fixture = TestBed.createComponent(LoginComponent);

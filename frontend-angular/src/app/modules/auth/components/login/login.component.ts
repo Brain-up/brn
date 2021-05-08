@@ -15,9 +15,10 @@ import { selectAuthError } from '../../ngrx/reducers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  private readonly destroyer$ = new Subject<void>();
+
   public loginForm: FormGroup;
   public loginError: Observable<string>;
-  public destroyer$ = new Subject<void>();
 
   constructor(private readonly store: Store<AppStateModel>) {}
 

@@ -14,7 +14,7 @@ export class AdminComponent {
     { label: 'Users', link: 'users' },
     { label: 'Exercises', link: 'exercises' },
     { label: 'Resources', link: 'resources' },
-    { label: 'Upload file', link: 'upload' },
+    { label: 'Upload file', link: 'upload-file' },
   ];
 
   constructor(private readonly store: Store<AppStateModel>) {}
