@@ -1,22 +1,18 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ExercisesComponent } from './exercises.component';
+import { AdminService } from '../../services/admin/admin.service';
 
 describe('ExercisesComponent', () => {
   let component: ExercisesComponent;
-  let fixture: ComponentFixture<ExercisesComponent>;
+  let adminServiceMock;
+  let changeDetectorRefMock;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ExercisesComponent ]
-    })
-    .compileComponents();
-  });
+    adminServiceMock = jasmine.createSpyObj('AdminService',
+      ['getGroups', 'getSeriesByGroupId', 'getSubgroupsBySeriesId', 'getExercisesBySubGroupId']
+    );
+    changeDetectorRefMock = jasmine.createSpyObj('AdminService', ['detectChanges']);
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ExercisesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new ExercisesComponent(adminServiceMock, changeDetectorRefMock);
   });
 
   it('should create', () => {
