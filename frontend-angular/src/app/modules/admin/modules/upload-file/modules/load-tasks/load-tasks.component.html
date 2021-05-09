@@ -2,7 +2,7 @@
   <mat-form-field>
     <mat-label>Group</mat-label>
 
-    <mat-select formControlName="group" required>
+    <mat-select formControlName="group">
       <mat-option *ngFor="let group of groups$ | async" [value]="group">
         {{ group.name }}
       </mat-option>
@@ -16,7 +16,7 @@
   <mat-form-field>
     <mat-label>Series</mat-label>
 
-    <mat-select formControlName="series" required>
+    <mat-select formControlName="series">
       <mat-option *ngFor="let series of series$ | async" [value]="series">
         {{ series.name }}
       </mat-option>
@@ -25,9 +25,9 @@
     <mat-error *ngIf="tasksGroup.controls.series.hasError('required')">Field must not be empty</mat-error>
   </mat-form-field>
 
-  <app-upload-file-input [disabled]="!tasksGroup.controls.series.valid" formControlName="file"></app-upload-file-input>
+  <app-upload-file-input formControlName="file"></app-upload-file-input>
 
-  <button class="upload-tasks-content__submit-btn" type="submit">Submit</button>
+  <button class="upload-tasks-content__submit-btn" type="submit" [disabled]="tasksGroup.invalid">Submit</button>
 </form>
 
 <div *ngIf="fileFormat$ | async as format" class="upload-tasks-content__format">

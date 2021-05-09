@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoadTasksComponent } from './load-tasks.component';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SnackBarService } from '@shared/services/snack-bar.service';
+import { SnackBarService } from '@root/services/snack-bar.service';
 import { GroupApiService } from '@admin/services/api/group-api.service';
 import { SeriesApiService } from '@admin/services/api/series-api.service';
 import { AdminApiService } from '@admin/services/api/admin-api.service';

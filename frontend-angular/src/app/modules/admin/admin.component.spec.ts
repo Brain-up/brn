@@ -1,6 +1,5 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Store } from '@ngrx/store';
 import { AdminComponent } from './admin.component';
 
 describe('AdminComponent', () => {
@@ -10,7 +9,6 @@ describe('AdminComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AdminComponent],
-      providers: [{ provide: Store, useValue: {} }],
       schemas: [NO_ERRORS_SCHEMA],
     });
 

@@ -2,12 +2,10 @@
   "name": "frontend-angular",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve --port 4201",
     "build": "ng build --prod --base-href /admin/",
     "test": "ng test --watch=false",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -21,13 +19,9 @@
     "@angular/platform-browser": "11.2.3",
     "@angular/platform-browser-dynamic": "11.2.3",
     "@angular/router": "11.2.3",
-    "@ngrx/effects": "^11.0.1",
-    "@ngrx/entity": "^11.0.1",
-    "@ngrx/store": "^11.0.1",
-    "@ngrx/store-devtools": "^11.0.1",
     "billboard.js": "^3.0.3",
     "fp-ts": "^2.5.3",
-    "ngx-take-until-destroy": "^5.4.0",
+    "http-status-codes": "^2.1.4",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
