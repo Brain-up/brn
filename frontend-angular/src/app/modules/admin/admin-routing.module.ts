@@ -20,6 +20,10 @@ const routes: Routes = [
         path: 'statistics',
         loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
       },
+      {
+        path: 'exercises',
+        loadChildren: () => import('./modules/exercises/exercises.module').then((m) => m.ExercisesModule),
+      },
     ],
   },
 ];
