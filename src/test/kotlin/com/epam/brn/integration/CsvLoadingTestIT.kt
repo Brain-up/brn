@@ -87,7 +87,7 @@ class CsvLoadingTestIT : BaseIT() {
         audiometryTaskRepository.findAll() shouldHaveSize 24
         exerciseGroupRepository.findAll() shouldHaveSize 4
         seriesRepository.findAll() shouldHaveSize 15
-        subGroupRepository.findAll() shouldHaveSize 82
+        subGroupRepository.findAll() shouldHaveSize 108
 //        exerciseRepository.findAll() shouldHaveSize 188
 //        taskRepository.findAll() shouldHaveSize 188
 //        resourceRepository.findAll() shouldHaveSize 881
