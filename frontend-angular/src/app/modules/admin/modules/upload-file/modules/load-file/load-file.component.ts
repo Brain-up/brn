@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { mergeMap, takeUntil } from 'rxjs/operators';
-import { SnackBarService } from '@shared/services/snack-bar.service';
+import { SnackBarService } from '@root/services/snack-bar.service';
 import { CloudApiService } from '@admin/services/api/cloud-api.service';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 

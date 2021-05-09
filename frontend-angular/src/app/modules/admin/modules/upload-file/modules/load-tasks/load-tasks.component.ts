@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
-import { SnackBarService } from '@shared/services/snack-bar.service';
+import { SnackBarService } from '@root/services/snack-bar.service';
 import { Group } from '@admin/models/group';
 import { Series } from '@admin/models/series';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
@@ -38,7 +38,7 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     this.tasksGroup = this.formBuilder.group({
       group: ['', Validators.required],
       series: [{ value: '', disabled: true }, Validators.required],
-      file: [null, Validators.required],
+      file: [{ value: null, disabled: true }, Validators.required],
     });
 
     this.groups$ = this.groupApiService.getGroups();
@@ -55,6 +55,11 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     this.tasksGroup.controls.group.statusChanges.pipe(takeUntil(this.destroyer$)).subscribe((status: string) => {
       const action = status === 'VALID' ? 'enable' : 'disable';
       this.tasksGroup.controls.series[action]();
+    });
+
+    this.tasksGroup.controls.series.statusChanges.pipe(takeUntil(this.destroyer$)).subscribe((status: string) => {
+      const action = status === 'VALID' ? 'enable' : 'disable';
+      this.tasksGroup.controls.file[action]();
     });
   }
 

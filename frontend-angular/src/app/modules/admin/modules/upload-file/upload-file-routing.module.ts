@@ -8,17 +8,17 @@ const routes: Routes = [
     component: UploadFileComponent,
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'file',
+      },
+      {
         path: 'file',
         loadChildren: () => import('./modules/load-file/load-file.module').then((m) => m.LoadFileModule),
       },
       {
         path: 'tasks',
         loadChildren: () => import('./modules/load-tasks/load-tasks.module').then((m) => m.LoadTasksModule),
-      },
-      {
-        path: '',
-        redirectTo: 'file',
-        pathMatch: 'full',
       },
     ],
   },
