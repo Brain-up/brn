@@ -174,6 +174,7 @@ Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number
  2.1 use jacoco gradle task locally `jacocoTestReport` 
  2.2 command line: `gradle jacocoTestReport`
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
+(do not mind for now)
 
 ### Thanks for support
 - EPAM for Jira/Confluence, test instance and Jenkins
