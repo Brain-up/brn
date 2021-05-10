@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
@@ -18,6 +19,10 @@ interface UserAccountService {
     fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsDto>
     fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto
     fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto
-
+    fun addHeadphonesToUser(userId: Long, headphonesDto: HeadphonesDto): HeadphonesDto
+    fun addHeadphonesToCurrentUser(headphones: HeadphonesDto): HeadphonesDto
     fun getCurrentUser(): UserAccount
+    fun findUserEntityById(id: Long): UserAccount
+    fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
+    fun getAllHeadphonesForCurrentUser(): Set<HeadphonesDto>
 }

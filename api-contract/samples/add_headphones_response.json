@@ -1,0 +1,11 @@
+{
+ "data": {
+  "id": 2,
+  "name": "first",
+  "type": "ON_EAR_BLUETOOTH",
+  "description": "first",
+  "userAccount": 1
+ },
+ "errors": [],
+ "meta": []
+}

@@ -1,5 +1,6 @@
 package com.epam.brn.dto.response
 
+import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.model.Gender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZoneId
@@ -16,7 +17,8 @@ data class UserAccountDto(
     var active: Boolean = true,
     val created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    var avatar: String? = null
+    var avatar: String? = null,
+    var headphones: Set<HeadphonesDto>? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }

@@ -2,6 +2,7 @@ package com.epam.brn.dto.request
 
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
+import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
@@ -17,9 +18,11 @@ data class AudiometryHistoryRequest(
     @NotNull
     var tasksCount: Short,
     @NotNull
-    var rightAnswers: Int
+    var rightAnswers: Int,
+    @NotNull
+    var headphones: Long? = null
 ) {
-    fun toEntity(userAccount: UserAccount, audiometryTask: AudiometryTask) = AudiometryHistory(
+    fun toEntity(userAccount: UserAccount, audiometryTask: AudiometryTask, headphones: Headphones?) = AudiometryHistory(
         userAccount = userAccount,
         audiometryTask = audiometryTask,
         startTime = this.startTime,
@@ -27,6 +30,7 @@ data class AudiometryHistoryRequest(
         executionSeconds = this.executionSeconds,
         tasksCount = this.tasksCount,
         rightAnswers = this.rightAnswers,
-        rightAnswersIndex = rightAnswers.toFloat().div(tasksCount)
+        rightAnswersIndex = rightAnswers.toFloat().div(tasksCount),
+        headphones = headphones
     )
 }

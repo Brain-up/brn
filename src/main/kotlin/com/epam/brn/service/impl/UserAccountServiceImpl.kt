@@ -1,14 +1,17 @@
 package com.epam.brn.service.impl
 
 import com.epam.brn.auth.AuthorityService
+import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
+import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.HeadphonesService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import org.apache.commons.lang3.StringUtils.isNotEmpty
@@ -27,7 +30,8 @@ class UserAccountServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val authorityService: AuthorityService,
     private val passwordEncoder: PasswordEncoder,
-    private val timeService: TimeService
+    private val timeService: TimeService,
+    private val headphonesService: HeadphonesService
 ) : UserAccountService {
 
     private val log = logger()
@@ -86,6 +90,15 @@ class UserAccountServiceImpl(
             .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
     }
 
+    override fun findUserEntityById(id: Long): UserAccount {
+        return userAccountRepository.findUserAccountById(id)
+            .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
+    }
+
+    override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
+
+    override fun getAllHeadphonesForCurrentUser() = getCurrentUser().headphones.map(Headphones::toDto).toSet()
+
     override fun getUserFromTheCurrentSession(): UserAccountDto = getCurrentUser().toDto()
 
     override fun getCurrentUser(): UserAccount {
@@ -109,6 +122,19 @@ class UserAccountServiceImpl(
         currentUserAccount.avatar = avatarUrl
         currentUserAccount.changed = timeService.now()
         return userAccountRepository.save(currentUserAccount).toDto()
+    }
+
+    override fun addHeadphonesToUser(userId: Long, headphonesDto: HeadphonesDto): HeadphonesDto {
+        val userAccount = findUserEntityById(userId)
+        val entityHeadphones = headphonesDto.toEntity()
+        entityHeadphones.userAccount = userAccount
+        return headphonesService.save(entityHeadphones)
+    }
+
+    override fun addHeadphonesToCurrentUser(headphones: HeadphonesDto): HeadphonesDto {
+        val entityHeadphones = headphones.toEntity()
+        entityHeadphones.userAccount = getCurrentUser()
+        return headphonesService.save(entityHeadphones)
     }
 
     override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto {
