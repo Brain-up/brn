@@ -314,7 +314,42 @@ mediaType:
             body:
               application/json:
                 example: !include samples/user_get_response.json
-
+    /{id}/headphones:
+      post:
+        descriprion: Add headphones to user
+        body:
+          application/json:
+            example: !include samples/add_headphones.json
+        responses:
+          201:
+            body:
+              application/json:
+                example: !include samples/add_headphones_response.json
+      get:
+        descriprion: Get all headphones for user
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include samples/get_headphones_response.json
+    /current/headphones:
+      post:
+        descriprion: Add headphones to current user
+        body:
+          application/json:
+            example: !include samples/add_headphones.json
+        responses:
+          201:
+            body:
+              application/json:
+                example: !include samples/add_headphones_response.json
+      get:
+        descriprion: Get all headphones for current user
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include samples/get_headphones_response.json
 
 # Auth ----------------------
 /brnlogin:
