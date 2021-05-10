@@ -109,3 +109,4 @@ groups:
 avatar_controls:
   cancel: Cancel
   submit: Submit
+  title: Avatar selection

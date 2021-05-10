@@ -1,8 +1,5 @@
 /*! purgecss start ignore */
 
-button:focus {
-  //outline: none;
-}
 
 .activeTab {
   position: relative;
