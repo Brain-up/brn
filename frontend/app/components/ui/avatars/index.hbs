@@ -1,29 +1,26 @@
 <div class="relative flex flex-row flex-wrap overflow-y-auto justify-between {{style-namespace 'ui/avatars'}}" >
   <div class="w-full mb-6">Выбор аватара</div>
   {{#each this.avatars as |avatar index|}}
-      <div class="flex m-2 text-center bg-white rounded-full shadow-lg w-32 h-32">
+      <div class="flex w-32 h-32 m-2 text-center bg-white rounded-full shadow-lg">
         <button title="Select Avatar" type="button"
-          {{on "click" (fn this.onSelect ( inc index)) }}
+          {{on "click" (fn this.onSelect (inc index)) }}
                 class="{{if (eq this.activeTab (inc index)) "activeTab"}} focus:outline-none">
-          <img src={{avatar}} alt="Avatar Upload" class="object-none object-center w-auto mx-auto max-h-full rounded-full h-full" />
+          <img src={{avatar}} alt="Avatar Upload" class="object-none object-center w-auto h-full max-h-full mx-auto rounded-full" />
         </button>
       </div>
   {{/each}}
-  <div class="w-full flex mt-16 justify-end">
+  <div class="flex justify-end w-full mt-16">
       <Ui::Button
           {{on "click" (fn (optional @onCancel) )}}
           @size="small"
           data-test-submit-form
           @kind="outline"
-          class="{{get buttonState this.buttonState}} text-lg"
+          class="text-lg"
           @title={{t "avatar_controls.cancel"}} />
 
       <Ui::Button
-          {{on "click" (fn (optional @onSubmit) )}}
           @size="small"
-          data-test-submit-form
-          class="{{get buttonState this.buttonState}} text-lg h-102 "
-          @title={{t "avatar_controls.submit"}}
+          data-test-submit-form class="h-102 text-lg" {{on "click" (fn (optional @onSubmit) )}} @title={{t "avatar_controls.submit"}}
       />
   </div>
 </div>

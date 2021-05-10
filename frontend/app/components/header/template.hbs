@@ -64,9 +64,9 @@
       <div class="flex justify-end w-48 mr-6">
         <GlobalTimer />
 
-        <LinkTo @route="profile" class="hover:text-indigo-600 text-md text-indigo-500 focus:outline-none focus:underline font-medium transition duration-150 ease-in-out flex items-center">
-          <div class="w-10 h-10 rounded-full  border border-gray-400 mr-3">
-            <img src="{{this.avatarUrl}}" alt="user avatar" class="h-full object-cover rounded-full">
+        <LinkTo @route="profile" class="hover:text-indigo-600 text-md focus:outline-none focus:underline flex items-center font-medium text-indigo-500 transition duration-150 ease-in-out">
+          <div class="w-10 h-10 mr-3 border border-gray-400 rounded-full">
+            <img src="{{this.avatarUrl}}" alt="user avatar" class="object-cover h-full rounded-full">
           </div>
           <div>
             <p
@@ -85,17 +85,15 @@
       </div>
       <button
         data-test-logout-button
-        type="button" {{on "click" this.logout}} class="hover:text-gray-700 lg:mt-0 inline-block p-0 mt-4 text-sm leading-none text-gray-600 border-0 mr-8"
+        type="button" class="hover:text-gray-700 lg:mt-0 inline-block p-0 mt-4 mr-8 text-sm leading-none text-gray-600 border-0" {{on "click" this.logout}}
       >
-        <img src="/pictures/theme/log-out.svg" alt="user avatar" class="h-full object-cover rounded-full">
+        <img src="/pictures/theme/log-out.svg" alt="user avatar" class="object-cover h-full rounded-full">
       </button>
     {{else}}
       <div class="relative z-10 flex justify-end px-16">
         <div>
           <Ui::Button
-            data-test-registration-form
-            class="px-16 w-full flex items-center"
-            @kind="outline"
+            data-test-registration-form class="flex items-center w-full px-16" @kind="outline"
             @route="registration"
             @title={{t "login_form.registration"}}
           />

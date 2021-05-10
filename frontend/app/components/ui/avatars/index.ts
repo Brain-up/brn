@@ -5,21 +5,21 @@ import {inject as service} from "@ember/service";
 import UserDataService from "brn/services/user-data";
 
 interface IComponentArguments {
-  onSelect?: (id: number) => void,
+  onSelect?: (id?: number) => void,
   onSubmit?: () => void,
   onCancel?: () => void
 }
 
 export default class UiAvatarsComponent extends Component<IComponentArguments> {
   @service('user-data') userData!: UserDataService;
-  @tracked isActive = null;
+  @tracked selectedAvatar = 0;
 
   get activeTab(){
-    return this.isActive || parseInt(this.userData.selectedAvatarId,10);
+    return this.selectedAvatar || parseInt(this.userData.selectedAvatarId, 10);
   }
 
-  @action onSelect(id){
-    this.isActive = id;
+  @action onSelect(id: number){
+    this.selectedAvatar = id;
     this.args.onSelect?.(id);
   }
 

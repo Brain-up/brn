@@ -1,13 +1,11 @@
-<form {{on "submit" this.onSubmit}} class="bg-white rounded-xl px-16 pt-16 pb-16 pr-16 mb-6 shadow-lg">
+<form class="rounded-xl px-16 pt-16 pb-16 pr-16 mb-6 bg-white shadow-lg" {{on "submit" this.onSubmit}}>
     <div class="relative z-10 w-full bg-white rounded-lg">
-<!--      {{t "login_form.sign_in"}}-->
           {{#if this.loginInProgress}}
             <LoadingSpinner />
           {{else}}
             <div class="flex mb-8">
               <LinkTo
-                      @route="registration"
-                      class="hover:text-blue-1100 inline-block w-1/2 pb-3 text-sm font-bold tracking-wider text-center text-gray-500 border-b-2"
+                      @route="registration" class="hover:text-blue-1100 inline-block w-1/2 pb-3 text-sm font-bold tracking-wider text-center text-gray-500 border-b-2"
               >
                 {{t "registration_form.registration_hover"}}
 
@@ -45,7 +43,7 @@
             {{/if}}
           </div>
             <div class="mb-8 text-sm leading-5 text-right">
-              <LinkTo @route="password-recovery" class="hover:text-indigo-600 text-md text-indigo-500 focus:outline-none focus:underline font-medium transition duration-150 ease-in-out">
+              <LinkTo @route="password-recovery" class="hover:text-indigo-600 text-md focus:outline-none focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out">
                 {{t "login_form.forgot_password"}}
               </LinkTo>
             </div>

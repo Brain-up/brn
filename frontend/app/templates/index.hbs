@@ -1,8 +1,8 @@
 {{! template-lint-disable no-inline-styles }}
 <section
-  class="header container relative flex items-center lg:h-screen pt-16 mx-auto flex-wrap" style="max-height:860px"
+  class="header lg:h-screen container relative flex flex-wrap items-center pt-16 mx-auto" style="max-height:860px"
 >
-  <div class="container flex flex-wrap items-center mx-auto md:w-8/12 lg:w-6/12 xl:w-6/12 w-full px-4">
+  <div class="md:w-8/12 lg:w-6/12 xl:w-6/12 container flex flex-wrap items-center w-full px-4 mx-auto">
       <div>
         <h2 class="text-4xl font-semibold text-gray-700">
           BrainUP - онлайн занятия для детей и взрослых
@@ -12,13 +12,8 @@
           которая помогает тренировать способности слушать и понимать
         </p>
         <div class="mt-12 mb-4">
-<!--          <Ui::Button-->
-<!--            data-test-registration-form class="w-full p-2" @route="registration"-->
-<!--            @title={{t "login_form.registration"}}-->
-<!--          />-->
-
           <Ui::Button
-            data-test-registration-form class="p-2 px-32 flex items-center justify-center text-lg w-7/12" @route="login"
+            data-test-registration-form class="flex items-center justify-center w-7/12 p-2 px-32 text-lg" @route="login"
             @title={{t "login.title"}}
           />
         </div>
