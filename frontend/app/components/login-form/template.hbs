@@ -1,21 +1,30 @@
-<form {{on "submit" this.onSubmit}}>
-    <div class="relative z-10 w-full max-w-xs p-2 bg-white rounded-lg">
-          <h2
-            class="title-form mb-8 text-base font-semibold leading-tight text-center text-blue-900 uppercase"
-          >
-            {{t "login_form.sign_in"}}
-          </h2>
+<form class="rounded-xl px-16 pt-16 pb-16 pr-16 mb-6 bg-white shadow-lg" {{on "submit" this.onSubmit}}>
+    <div class="relative z-10 w-full bg-white rounded-lg">
           {{#if this.loginInProgress}}
             <LoadingSpinner />
           {{else}}
-          <div class="mb-4">
+            <div class="flex mb-8">
+              <LinkTo
+                      @route="registration" class="hover:text-blue-1100 inline-block w-1/2 pb-3 text-sm font-bold tracking-wider text-center text-gray-500 border-b-2"
+              >
+                {{t "registration_form.registration_hover"}}
+
+              </LinkTo>
+              <div
+                      class="w-1/2 text-sm font-bold tracking-wider text-center border-b-2 border-black"
+              >
+                {{t "registration_form.sign_in"}}
+              </div>
+            </div>
+
+            <div class="mb-4">
             <LoginForm::Input
               @placeholder={{t "login_form.login"}}
               @model={{this}}
               @name="login"
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-3">
             <LoginForm::Input
               @placeholder={{t "login_form.password"}}
               @model={{this}}
@@ -33,6 +42,11 @@
               </p>
             {{/if}}
           </div>
+            <div class="mb-8 text-sm leading-5 text-right">
+              <LinkTo @route="password-recovery" class="hover:text-indigo-600 text-md focus:outline-none focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out">
+                {{t "login_form.forgot_password"}}
+              </LinkTo>
+            </div>
           <div class="flex mb-4">
             {{#let
               (hash
@@ -42,11 +56,6 @@
             }}
               <Ui::Button @size="small" data-test-submit-form class="{{get buttonState this.buttonState}} w-full" @title={{t "login_form.sign_in"}} />
             {{/let}}
-          </div>
-          <div class="mt-4 text-sm leading-5 text-center">
-            <LinkTo @route="password-recovery" class="hover:text-blue-900 focus:outline-none focus:underline font-medium text-blue-900 transition duration-150 ease-in-out">
-                {{t "login_form.forgot_password"}}
-            </LinkTo>
           </div>
           {{/if}}
         </div>
