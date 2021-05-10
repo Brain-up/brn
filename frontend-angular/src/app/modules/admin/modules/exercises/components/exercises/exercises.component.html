@@ -1,0 +1,83 @@
+<div class="exercises">
+
+  <div class="select-container">
+    <app-select-panel
+      [groupId]="groupId"
+      [seriesId]="seriesId"
+      [subGroupId]="subGroupId"
+      (groupChanged)="onGroupChange($event)"
+      (seriesChanged)="onSeriesChange($event)"
+      (subGroupChanged)="onSubGroupChange($event)">
+    </app-select-panel>
+  </div>
+
+  <div class="exercises__table-container">
+    <div *ngIf="showExercises; then exercisesTable">
+    </div>
+  </div>
+
+</div>
+
+
+<ng-template #exercisesTable>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 exercises__table">
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition (see displayedColumns) -->
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Exercise id</th>
+      <td mat-cell *matCellDef="let exercise"> {{exercise.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="seriesId">
+      <th mat-header-cell *matHeaderCellDef>Series</th>
+      <td mat-cell *matCellDef="let exercise"> {{seriesName$.value}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let exercise"> {{exercise.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
+      <td mat-cell *matCellDef="let exercise"> {{exercise.level}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="noise">
+      <th mat-header-cell *matHeaderCellDef>Noise</th>
+      <td mat-cell *matCellDef="let exercise"> {{exercise.noise?.level + '%'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="noiseSound">
+      <th mat-header-cell *matHeaderCellDef>Noise sound</th>
+      <td mat-cell *matCellDef="let exercise">
+        <figure *ngIf="exercise.noise?.url">
+          <figcaption>{{exercise.noise?.url}}</figcaption>
+          <audio controls [src]="exercise.noise?.url"></audio>
+        </figure>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tasks">
+      <th mat-header-cell *matHeaderCellDef>Tasks</th>
+      <td mat-cell *matCellDef="let exercise"> {{getMatrixFromTasks(exercise.tasks)}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="available">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="available">Enable</th>
+      <td mat-cell *matCellDef="let exercise">
+        <mat-slide-toggle [checked]="exercise.available"
+                          color="primary"
+                          (change)="isEnableChanged(exercise.id, $event.checked)"
+                          class="enable-toggle">
+        </mat-slide-toggle>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</ng-template>

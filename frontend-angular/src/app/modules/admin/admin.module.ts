@@ -1,44 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
+import { MatButtonModule } from '@angular/material/button';
+
 import { AdminComponent } from './admin.component';
-import { LoadFileComponent } from './components/load-file/load-file.component';
-import { LoadTasksComponent } from './components/load-tasks/load-tasks.component';
-import { SharedModule } from '../shared/shared.module';
-import { HomeComponent } from './components/home/home.component';
-import { FoldersService } from './services/folders/folders.service';
-import { UploadService } from './services/upload/upload.service';
-import { FormatService } from './services/format/format.service';
 import { AdminRoutingModule } from './admin-routing.module';
-import * as fromAdminNgrx from './ngrx/reducers';
-import { AdminEffects } from './ngrx/effects';
+import { AdminApiService } from './services/api/admin-api.service';
+import { CloudApiService } from './services/api/cloud-api.service';
+import { GroupApiService } from './services/api/group-api.service';
+import { SeriesApiService } from './services/api/series-api.service';
+import { SubGroupApiService } from './services/api/sub-group-api.service';
+import { ExercisesApiService } from './services/api/exercises-api.service';
 
 @NgModule({
-  declarations: [AdminComponent, LoadFileComponent, LoadTasksComponent, HomeComponent],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    AdminRoutingModule,
-    SharedModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    StoreModule.forFeature(fromAdminNgrx.adminFeatureKey, fromAdminNgrx.adminReducer),
-    EffectsModule.forFeature([AdminEffects]),
+  declarations: [AdminComponent],
+  imports: [CommonModule, AdminRoutingModule, MatButtonModule, MatToolbarModule],
+  providers: [
+    AdminApiService,
+    CloudApiService,
+    GroupApiService,
+    SeriesApiService,
+    SubGroupApiService,
+    ExercisesApiService
   ],
-  providers: [FoldersService, FormatService, UploadService],
 })
 export class AdminModule {}

@@ -1,61 +1,28 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin.component';
-import { HomeComponent } from './components/home/home.component';
-import { LoadFileComponent } from './components/load-file/load-file.component';
-import { LoadTasksComponent } from './components/load-tasks/load-tasks.component';
-import { AdminGuardService } from './services/admin-guard/admin-guard.service';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    canActivate: [AdminGuardService],
-    data: {
-      animation: 'Admin',
-    },
     children: [
-      // TODO: will be implement in next tasks
-      // {path: 'users', component: UsersComponent},
-      // {path: 'exercises', component: ExercisesComponent},
-      // {path: 'resources', component: ResourcesComponent},
-      // {path: 'upload', component: UploadComponent}, //see previous HomeComponent
       {
-        path: 'home',
-        component: HomeComponent,
-        children: [
-          {
-            path: 'file',
-            component: LoadFileComponent,
-            data: {
-              animation: 'LoadAll',
-            },
-          },
-          {
-            path: 'tasks',
-            component: LoadTasksComponent,
-            data: {
-              animation: 'LoadTasks',
-            },
-          },
-          {
-            path: '',
-            redirectTo: 'file',
-            pathMatch: 'full',
-          },
-        ],
-        data: {
-          animation: 'Admin',
-        },
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'upload-file',
+      },
+      {
+        path: 'upload-file',
+        loadChildren: () => import('./modules/upload-file/upload-file.module').then((m) => m.UploadFileModule),
       },
       {
         path: 'statistics',
         loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
       },
       {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
+        path: 'exercises',
+        loadChildren: () => import('./modules/exercises/exercises.module').then((m) => m.ExercisesModule),
       },
     ],
   },
@@ -64,6 +31,5 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [AdminGuardService],
 })
 export class AdminRoutingModule {}

@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { StatisticsComponent } from './statistics.component';
@@ -9,7 +10,8 @@ describe('StatisticsComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StatisticsComponent],
-      providers: [ { provide: MatDialog, useValue: {} }]
+      providers: [{ provide: MatDialog, useValue: {} }],
+      schemas: [NO_ERRORS_SCHEMA],
     });
 
     fixture = TestBed.createComponent(StatisticsComponent);

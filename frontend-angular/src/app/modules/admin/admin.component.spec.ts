@@ -1,5 +1,5 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { StoreModule } from '@ngrx/store';
 import { AdminComponent } from './admin.component';
 
 describe('AdminComponent', () => {
@@ -9,7 +9,7 @@ describe('AdminComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AdminComponent],
-      imports: [StoreModule.forRoot({})],
+      schemas: [NO_ERRORS_SCHEMA],
     });
 
     fixture = TestBed.createComponent(AdminComponent);

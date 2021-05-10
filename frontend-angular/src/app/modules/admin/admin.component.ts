@@ -1,7 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppStateModel } from 'src/app/models/app-state.model';
-import { destroySessionRequestAction } from '../auth/ngrx/actions';
 
 @Component({
   selector: 'app-admin',
@@ -14,12 +11,6 @@ export class AdminComponent {
     { label: 'Users', link: 'users' },
     { label: 'Exercises', link: 'exercises' },
     { label: 'Resources', link: 'resources' },
-    { label: 'Upload file', link: 'upload' },
+    { label: 'Upload file', link: 'upload-file' },
   ];
-
-  constructor(private readonly store: Store<AppStateModel>) {}
-
-  public logoutUser(): void {
-    this.store.dispatch(destroySessionRequestAction());
-  }
 }
