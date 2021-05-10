@@ -6,14 +6,12 @@
     <Ui::Avatars @onSelect={{this.onAvatarSelect}} @onCancel={{this.onCancel}} @onSubmit={{this.onAvatarSubmit}} />
   </ModalDialog>
 {{/if}}
-<section class="rounded-md border-4 border-gray-100">
+<section class="border-4 border-gray-100 rounded-md">
   <div class="bg-gradient-to-r from-blue-100 to-purple-100 profile lg:flex justify-between p-4">
     <button
             type="button"
             title="{{this.user.email}}"
-            style={{html-safe (concat "background-image: url('" this.avatarUrl "');")}}
-            {{on "click" this.onShowAvatars}}
-            class="gradient-background inline-flex w-32 h-32 items-center justify-center bg-center bg-contain border border-gray-400 rounded-full m-auto focus:outline-none"
+            style={{html-safe (concat "background-image: url('" this.avatarUrl "');")}} class="gradient-background focus:outline-none inline-flex items-center justify-center w-32 h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full" {{on "click" this.onShowAvatars}}
     >
     </button>
   </div>

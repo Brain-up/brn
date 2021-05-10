@@ -26,7 +26,7 @@ export default class UserDataService extends Service {
   }
 
   get selectedAvatarId() {
-    return  this.session.data?.user?.avatar || this._selectedAvatarId;
+    return this.session.get('data.user.avatar') || this._selectedAvatarId;
   }
   set selectedAvatarId(value) {
     //debugger;
@@ -35,6 +35,7 @@ export default class UserDataService extends Service {
       avatar: value.toString()
     } as LatestUserDTO)
     this.session.set('data.user.avatar', value);
+    this.session.store.persist(this.session.data);
     this._selectedAvatarId = value;
   }
 
@@ -60,6 +61,7 @@ export default class UserDataService extends Service {
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your services.
 declare module '@ember/service' {
+  // eslint-disable-next-line no-unused-vars
   interface Registry {
     'user-data': UserDataService;
   }

@@ -10,7 +10,7 @@ export default class ProfileComponent extends Component {
   @service('user-data') userData!: UserDataService;
 
   @tracked showAvatarsModal = false;
-  @tracked isActive = null;
+  selectedAvatar: number = 0;
 
   get avatarUrl() {
     return this.userData.avatarUrl;
@@ -28,12 +28,13 @@ export default class ProfileComponent extends Component {
     if (!id) {
       return;
     }
-    this.isActive = id;
+    this.selectedAvatar = id;
+
   }
 
   @action onAvatarSubmit() {
-    this.userData.selectedAvatarId = this.isActive;
     this.showAvatarsModal = false;
+    this.userData.selectedAvatarId = this.selectedAvatar;
   }
 
   @action onCancel() {
@@ -41,6 +42,7 @@ export default class ProfileComponent extends Component {
   }
 
   @action onShowAvatars() {
+    this.selectedAvatar = this.userData.selectedAvatarId;
     this.showAvatarsModal = true;
   }
 
