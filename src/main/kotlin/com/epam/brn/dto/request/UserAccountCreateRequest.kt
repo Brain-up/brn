@@ -3,6 +3,7 @@ package com.epam.brn.dto.request
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
+import org.hibernate.validator.constraints.Length
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
@@ -31,7 +32,10 @@ data class UserAccountCreateRequest(
     val bornYear: Int,
     @field:NotNull(message = "{validation.field.gender.notNull}")
     val gender: Gender,
-    val avatar: String? = null
+    val avatar: String? = null,
+    val foto: String? = null,
+    @field:Length(min = 1, max = 255)
+    val description: String? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
     fun toModel(hashedPassword: String) = UserAccount(
@@ -40,6 +44,8 @@ data class UserAccountCreateRequest(
         password = hashedPassword,
         bornYear = bornYear,
         gender = gender.toString(),
-        avatar = avatar
+        avatar = avatar,
+        foto = foto,
+        description = description
     )
 }

@@ -1,7 +1,6 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
@@ -52,12 +51,12 @@ internal class UserDetailControllerTest {
         @Test
         fun `should get user by id`() {
             // GIVEN
-            Mockito.`when`(userAccountService.findUserById(userId)).thenReturn(userAccountDto)
+            `when`(userAccountService.findUserById(userId)).thenReturn(userAccountDto)
             // WHEN
 
             @Suppress("UNCHECKED_CAST")
             val savedUserAccountDto =
-                userDetailController.findUserById(userId).body?.data as List<UserAccountCreateRequest>
+                userDetailController.findUserById(userId).body?.data as List<UserAccountDto>
             // THEN
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
             assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
@@ -67,10 +66,10 @@ internal class UserDetailControllerTest {
         @Test
         fun `should get logged in user from the current session`() {
             // GIVEN
-            Mockito.`when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountDto)
+            `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccountDto)
             // WHEN
             @Suppress("UNCHECKED_CAST")
-            val savedUserAccountDto = userDetailController.getCurrentUser().body?.data as List<UserAccountCreateRequest>
+            val savedUserAccountDto = userDetailController.getCurrentUser().body?.data as List<UserAccountDto>
             // THEN
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
             assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)

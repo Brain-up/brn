@@ -193,6 +193,8 @@ internal class UserAccountServiceTest {
         fun `should update current session user`() {
             // GIVEN
             val avatarUrl = "test/avatar"
+            val fotoUrl = "test/picture"
+            val description = "Some description about the user"
             val email = "test@test.ru"
             val authentication = Mockito.mock(Authentication::class.java)
             val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
@@ -204,11 +206,20 @@ internal class UserAccountServiceTest {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = ZonedDateTime.now().minusMinutes(5),
-                avatar = null
+                avatar = null,
+                foto = null,
+                description = null
             )
-            val userAccountChangeRequest = UserAccountChangeRequest(avatar = avatarUrl, name = "newName")
+            val userAccountChangeRequest = UserAccountChangeRequest(
+                avatar = avatarUrl,
+                picture = fotoUrl,
+                description = description,
+                name = "newName"
+            )
             val userAccountUpdated = userAccount.copy()
             userAccountUpdated.avatar = avatarUrl
+            userAccountUpdated.foto = fotoUrl
+            userAccount.description = description
             userAccountUpdated.fullName = "newName"
 
             SecurityContextHolder.setContext(securityContext)
@@ -227,6 +238,8 @@ internal class UserAccountServiceTest {
             verify(userAccountRepository).save(userArgumentCaptor.capture())
             val userForSave = userArgumentCaptor.value
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
+            assertThat(userForSave.foto).isEqualTo(fotoUrl)
+            assertThat(userForSave.description).isEqualTo(description)
             assertThat(userForSave.fullName).isEqualTo("newName")
             assertThat(userForSave.id).isEqualTo(userAccount.id)
         }

@@ -16,7 +16,10 @@ data class UserAccountDto(
     var active: Boolean = true,
     val created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    var avatar: String? = null
+    var avatar: String? = null,
+    val foto: String? = null,
+    val description: String? = null,
+    val patients: MutableList<UserAccountDto> = mutableListOf(),
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }

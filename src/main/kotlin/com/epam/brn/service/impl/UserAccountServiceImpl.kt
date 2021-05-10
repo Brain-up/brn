@@ -130,6 +130,14 @@ class UserAccountServiceImpl(
             currentUserAccount.avatar = userChangeRequest.avatar
             changed = true
         }
+        if (userChangeRequest.picture != null) {
+            currentUserAccount.foto = userChangeRequest.picture
+            changed = true
+        }
+        if (userChangeRequest.description != null) {
+            currentUserAccount.description = userChangeRequest.description
+            changed = true
+        }
         return if (changed) {
             currentUserAccount.changed = timeService.now()
             userAccountRepository.save(currentUserAccount).toDto()

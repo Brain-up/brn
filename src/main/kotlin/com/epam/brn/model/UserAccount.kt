@@ -13,6 +13,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
 
 @Entity
 data class UserAccount(
@@ -31,7 +32,12 @@ data class UserAccount(
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     @Column(nullable = false)
     var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    var avatar: String? = null
+    var avatar: String? = null,
+    var foto: String? = null,
+    var description: String? = null,
+    @OneToMany
+    @JoinColumn(name = "doctor", referencedColumnName = "id")
+    var patients: MutableList<UserAccount> = mutableListOf()
 ) {
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
@@ -42,7 +48,8 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender)"
+        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
+            " bornYear=$bornYear, gender=$gender, description=$description)"
     }
 
     fun toDto(): UserAccountDto {
@@ -56,7 +63,12 @@ data class UserAccount(
             gender = gender?.let { Gender.valueOf(it) },
             created = created,
             changed = changed,
-            avatar = avatar
+            avatar = avatar,
+            foto = foto,
+            description = description,
+            patients = patients
+                .map(UserAccount::toDto)
+                .toMutableList()
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)

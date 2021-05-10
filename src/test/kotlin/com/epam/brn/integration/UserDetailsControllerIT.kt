@@ -61,7 +61,7 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val body = objectMapper.writeValueAsString(UserAccountChangeRequest(name = "newName", bornYear = 1950))
         val resultAction = mockMvc.perform(
-            patch("$currentUserBaseUrl")
+            patch(currentUserBaseUrl)
                 .content(body)
                 .contentType("application/json")
         )
@@ -75,6 +75,8 @@ class UserDetailsControllerIT : BaseIT() {
         assertEquals("newName", resultUser.name)
         assertEquals(1950, resultUser.bornYear)
         assertEquals(user.avatar, resultUser.avatar)
+        assertEquals(user.foto, resultUser.foto)
+        assertEquals(user.description, resultUser.description)
         assertNotSame(user.changed, resultUser.changed)
     }
 
