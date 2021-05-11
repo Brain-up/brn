@@ -2,17 +2,20 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -37,8 +40,9 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
 
     @PatchMapping(value = ["/current"])
     @ApiOperation("Update current logged in user")
-    fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) = ResponseEntity.ok()
-        .body(BaseSingleObjectResponseDto(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
+    fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) =
+        ResponseEntity.ok()
+            .body(BaseSingleObjectResponseDto(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
 
     @GetMapping
     @ApiOperation("Get user by name")
@@ -53,4 +57,33 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
         @RequestParam("avatar", required = true) avatar: String
     ) = ResponseEntity.ok()
         .body(BaseSingleObjectResponseDto(data = userAccountService.updateAvatarForCurrentUser(avatar)))
+
+    @PostMapping(value = ["/{userId}/headphones"])
+    @ApiOperation("Add headphones to the user")
+    fun addHeadphonesToUser(
+        @PathVariable("userId", required = true) userId: Long,
+        @Validated @RequestBody headphones: HeadphonesDto
+    ) = ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToUser(userId, headphones)))
+
+    @PostMapping(value = ["/current/headphones"])
+    @ApiOperation("Add headphones to the user")
+    fun addHeadphonesToCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
+
+    @GetMapping(value = ["/{userId}/headphones"])
+    @ApiOperation("Get all user's headphones")
+    fun getAllHeadphonesForUser(
+        @PathVariable("userId", required = true) userId: Long
+    ) = ResponseEntity
+        .ok()
+        .body(BaseResponseDto(data = userAccountService.getAllHeadphonesForUser(userId).toList()))
+
+    @GetMapping(value = ["/current/headphones"])
+    @ApiOperation("Get all headphones for current user")
+    fun getAllHeadphonesForUser() = ResponseEntity
+        .ok()
+        .body(BaseResponseDto(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
 }

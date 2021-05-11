@@ -1,0 +1,31 @@
+<article class="admin">
+  <header>
+    <mat-toolbar class="admin__header">
+      <a routerLinkActive="active" routerLink="/" class="logo">
+        <img src="assets/logo.svg" alt="Logo" />
+      </a>
+
+      <div class="links">
+        <a
+          routerLinkActive="active"
+          *ngFor="let tab of mainTabs"
+          mat-flat-button
+          class="link"
+          [routerLink]="[tab.link]"
+        >
+          {{ tab.label }}
+        </a>
+      </div>
+
+      <div class="user">
+        <div class="icon">AB</div>
+
+        <div class="label">Александра Василевская</div>
+      </div>
+    </mat-toolbar>
+  </header>
+
+  <section class="admin__content">
+    <router-outlet></router-outlet>
+  </section>
+</article>

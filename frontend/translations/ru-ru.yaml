@@ -4,7 +4,7 @@ header:
   about: Описание
 
 login:
-  title: Логин
+  title: Начать
 
 registration:
   title: Регистрация
@@ -110,3 +110,7 @@ groups:
   exercise_selection: "Давайте выберем, какие упражнения будем делать сегодня?"
   title: Группы
 
+avatar_controls:
+  cancel: Отменить
+  submit: Сохранить
+  title: Выбор аватара

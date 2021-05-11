@@ -14,7 +14,7 @@
       </div>
       <LinkTo
         @route="login"
-        class="hover:text-blue-1100 inline-block w-1/2 pb-4 text-sm font-bold tracking-wider text-center text-gray-700 border-b-2"
+        class="hover:text-blue-1100 inline-block w-1/2 pb-3 text-sm font-bold tracking-wider text-center text-gray-500 border-b-2"
       >
         {{t "registration_form.sign_in"}}
       </LinkTo>
@@ -122,18 +122,18 @@
           </p>
         {{/if}}
       </div>
-      <div class="flex mb-6 leading-none">
+      <div class="flex mb-4">
         <input
           id="agreement"
           name="agreement"
           type="checkbox"
           {{on 'change' this.setAgreedStatus}}
         />
-        <label class="block ml-2 text-xs align-top" for="agreement">
+        <label class="block ml-2 text-sm" for="agreement">
           {{t "registration_form.agreement_part1"}}
           <LinkTo
             @route="user-agreement"
-            class="hover:text-indigo-600 text-xs text-indigo-500 align-top"
+            class="hover:text-indigo-600 text-indigo-500"
           >
             {{t "registration_form.agreement_part2"}}
           </LinkTo>

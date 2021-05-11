@@ -9,12 +9,13 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "audiometry_task_id", "startTime"])],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "audiometry_task_id", "startTime", "headphones"])],
 )
 class AudiometryHistory(
     @Id
@@ -38,11 +39,13 @@ class AudiometryHistory(
     var rightAnswers: Int,
     var replaysCount: Int? = null,
     var repetitionIndex: Float? = null,
-    var rightAnswersIndex: Float? = null
-
+    var rightAnswersIndex: Float? = null,
+    @OneToOne
+    @JoinColumn(name = "headphones", nullable = false)
+    var headphones: Headphones? = null
 ) {
     override fun toString() =
-        "AudiometryHistory(id=$id, userAccount=$userAccount, audiometryTask=$audiometryTask, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, rightAnswers=$rightAnswers)"
+        "AudiometryHistory(id=$id, userAccount=$userAccount, audiometryTask=$audiometryTask, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, rightAnswers=$rightAnswers), headphones=$headphones"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
