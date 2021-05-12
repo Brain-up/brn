@@ -1,0 +1,70 @@
+{
+	"Admin": {
+		"Menu": {
+			"Exercises": "Exercises",
+			"Resources": "Resources",
+			"UploadFile": "Upload file",
+			"Users": "Users"
+		},
+		"Modules": {
+			"UploadFile": {
+				"Links": {
+					"LoadConfigurationFiles": "Load configuration files",
+					"LoadResourceFiles": "Load resource files"
+				},
+				"Modules": {
+					"LoadFiles": {
+						"Buttons": {
+							"Load": "Load"
+						},
+						"Labels": {
+							"SelectFile": "Select file",
+							"SelectFolder": "Select folder"
+						},
+						"SnackBar": {
+							"FileSuccessfullyUploaded [fileName]": "File '{{ fileName }}' successfully uploaded"
+						}
+					},
+					"LoadTasks": {
+						"AcceptedFormat": "Accepted format",
+						"Buttons": {
+							"Submit": "Submit"
+						},
+						"Errors": {
+							"FieldMustNotBeEmpty": "Field must not be empty"
+						},
+						"Labels": {
+							"Group": "Group",
+							"Series": "Series"
+						},
+						"SnackBar": {
+							"FileSuccessfullyUploaded [fileName]": "File '{{ fileName }}' successfully uploaded"
+						}
+					}
+				}
+			}
+		}
+	},
+	"Auth": {
+		"Modules": {
+			"Login": {
+				"Buttons": {
+					"Login": "Login"
+				},
+				"Labels": {
+					"Password": "Password",
+					"UserName": "User Name (Email)"
+				},
+				"Title": "Authentication"
+			}
+		},
+		"Title": "Admin panel"
+	},
+	"Root": {
+		"Interceptors": {
+			"Exceptions": {
+				"Unauthorized": "Unauthorized request"
+			}
+		}
+	}
+}
