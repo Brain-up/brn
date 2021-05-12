@@ -57,7 +57,7 @@ services:
       - web-root-for-certbot:/var/www/html
     depends_on:
       - brn_fe_with_tls
-    command: certonly --webroot --webroot-path=/var/www/html --email brainupspbproject@gmail.com --agree-tos --no-eff-email --force-renewal -d brainup.site  -d www.brainup.site -d audibly.ru
+    command: certonly --webroot --webroot-path=/var/www/html --email brainupspbproject@gmail.com --agree-tos --no-eff-email --force-renewal -d brainup.site  -d www.brainup.site
 secrets:
   aws-key:
     file: aws-key.properties
