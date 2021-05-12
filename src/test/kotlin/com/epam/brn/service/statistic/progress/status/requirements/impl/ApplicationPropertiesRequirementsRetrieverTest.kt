@@ -34,8 +34,10 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val period = UserExercisingPeriod.DAY
         val minimalRequirements = 0
         val maximalRequirements = 15
-        `when`(env.getProperty("$basePath.${period.name}.status.${status.name}.maximal")).thenReturn(maximalRequirements.toString())
-        `when`(env.getProperty("$basePath.${period.name}.status.${status.name}.minimal")).thenReturn(minimalRequirements.toString())
+        val periodName = period.name.toLowerCase()
+        val statusName = status.name.toLowerCase()
+        `when`(env.getProperty("$basePath.$periodName.status.$statusName.maximal")).thenReturn(maximalRequirements.toString())
+        `when`(env.getProperty("$basePath.$periodName.status.$statusName.minimal")).thenReturn(minimalRequirements.toString())
         val expectedRequirements = StatusRequirements(
             status = status,
             minimalRequirements = minimalRequirements,
@@ -52,8 +54,10 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val period = UserExercisingPeriod.DAY
         val status = UserExercisingProgressStatus.GOOD
         val maximalRequirements = 15
-        `when`(env.getProperty("$basePath.${period.name}.status.${status.name}.maximal")).thenReturn(maximalRequirements.toString())
-        `when`(env.getProperty("$basePath.${period.name}.status.${status.name}.minimal")).thenReturn(null)
+        val periodName = period.name.toLowerCase()
+        val statusName = status.name.toLowerCase()
+        `when`(env.getProperty("$basePath.$periodName.status.$statusName.maximal")).thenReturn(maximalRequirements.toString())
+        `when`(env.getProperty("$basePath.$periodName.status.$statusName.minimal")).thenReturn(null)
 
         assertThrows<OperationNotSupportedException> {
             retrieverApplicationProperties.getRequirementsForStatus(status, period)

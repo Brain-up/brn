@@ -20,13 +20,15 @@ class ApplicationPropertiesRequirementsRetriever(
         status: UserExercisingProgressStatus,
         period: UserExercisingPeriod
     ): StatusRequirements {
+        val periodName = period.name.toLowerCase()
+        val statusName = status.name.toLowerCase()
         return StatusRequirements(
-            maximalRequirements = environment.getProperty("brn.statistic.progress.${period.name}.status.${status.name}.maximal")
+            maximalRequirements = environment.getProperty("brn.statistic.progress.$periodName.status.$statusName.maximal")
                 ?.toInt()
-                ?: throw OperationNotSupportedException("Maximal requirements for period: ${period.name} or status: ${period.name} are not supported yet"),
-            minimalRequirements = environment.getProperty("brn.statistic.progress.${period.name}.status.${status.name}.minimal")
+                ?: throw OperationNotSupportedException("Maximal requirements for period: $periodName or status: $statusName are not supported yet"),
+            minimalRequirements = environment.getProperty("brn.statistic.progress.$periodName.status.$statusName.minimal")
                 ?.toInt()
-                ?: throw OperationNotSupportedException("Minimal requirements for period: ${period.name} or status: ${period.name} are not supported yet"),
+                ?: throw OperationNotSupportedException("Minimal requirements for period: $periodName or status: $statusName are not supported yet"),
             status = status
         )
     }
