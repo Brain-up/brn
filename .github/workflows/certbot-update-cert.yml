@@ -2,7 +2,7 @@ name: Update TLS certificates for vscale
 
 on:
   schedule:
-    - cron:  '* * 15 * *'
+    - cron:  '0 0 15 * *'
 
 jobs:
   update_certs:
@@ -27,4 +27,3 @@ jobs:
           docker-compose run --rm certbot renew
           docker-compose up -d --no-deps brn_fe_with_tls
           docker image prune -af
-
