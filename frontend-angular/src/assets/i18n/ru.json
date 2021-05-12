@@ -1,0 +1,70 @@
+{
+	"Admin": {
+		"Menu": {
+			"Exercises": "Упражнения",
+			"Resources": "Ресурсы",
+			"UploadFile": "Загрузить файл",
+			"Users": "Пользователи"
+		},
+		"Modules": {
+			"UploadFile": {
+				"Links": {
+					"LoadConfigurationFiles": "Admin.Modules.UploadFile.Links.LoadConfigurationFiles",
+					"LoadResourceFiles": "Admin.Modules.UploadFile.Links.LoadResourceFiles"
+				},
+				"Modules": {
+					"LoadFiles": {
+						"Buttons": {
+							"Load": "Загрузить"
+						},
+						"Labels": {
+							"SelectFile": "Admin.Modules.UploadFile.Modules.LoadFiles.Labels.SelectFile",
+							"SelectFolder": "Admin.Modules.UploadFile.Modules.LoadFiles.Labels.SelectFolder"
+						},
+						"SnackBar": {
+							"FileSuccessfullyUploaded [fileName]": "Admin.Modules.UploadFile.Modules.LoadFiles.SnackBar.FileSuccessfullyUploaded [fileName]"
+						}
+					},
+					"LoadTasks": {
+						"AcceptedFormat": "Admin.Modules.UploadFile.Modules.LoadTasks.AcceptedFormat",
+						"Buttons": {
+							"Submit": "Admin.Modules.UploadFile.Modules.LoadTasks.Buttons.Submit"
+						},
+						"Errors": {
+							"FieldMustNotBeEmpty": "Admin.Modules.UploadFile.Modules.LoadTasks.Errors.FieldMustNotBeEmpty"
+						},
+						"Labels": {
+							"Group": "Admin.Modules.UploadFile.Modules.LoadTasks.Labels.Group",
+							"Series": "Admin.Modules.UploadFile.Modules.LoadTasks.Labels.Series"
+						},
+						"SnackBar": {
+							"FileSuccessfullyUploaded [fileName]": "Admin.Modules.UploadFile.Modules.LoadTasks.SnackBar.FileSuccessfullyUploaded [fileName]"
+						}
+					}
+				}
+			}
+		}
+	},
+	"Auth": {
+		"Modules": {
+			"Login": {
+				"Buttons": {
+					"Login": "Войти"
+				},
+				"Labels": {
+					"Password": "Пароль",
+					"UserName": "Имя (Email)"
+				},
+				"Title": "Аутентификация"
+			}
+		},
+		"Title": "Админ панель"
+	},
+	"Root": {
+		"Interceptors": {
+			"Exceptions": {
+				"Unauthorized": "Root.Interceptors.Exceptions.Unauthorized"
+			}
+		}
+	}
+}
