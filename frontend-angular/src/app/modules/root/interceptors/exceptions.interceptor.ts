@@ -32,6 +32,9 @@ export class ExceptionsInterceptor implements HttpInterceptor {
                 break;
 
               default:
+                this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.UnknownError'));
+                this.authTokenService.removeAuthToken();
+                this.router.navigateByUrl(AUTH_PAGE);
                 break;
             }
           }
