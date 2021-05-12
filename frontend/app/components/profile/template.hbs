@@ -1,7 +1,7 @@
 {{#if this.showAvatarsModal}}
   <ModalDialog
-          @overlayClass="p-16 z-50 min-h-full w-full fixed flex"
-          @containerClass="max-w-4xl flex bg-white p-8 rounded-lg text-2xl m-auto"
+          @overlayClass="p-8 z-50 min-h-full w-full fixed flex {{style-namespace "profile"}}"
+          @containerClass="max-w-4xl flex bg-white rounded-lg text-2xl m-auto modal-max-h"
   >
     <Ui::Avatars @onSelect={{this.onAvatarSelect}} @onCancel={{this.onCancel}} @onSubmit={{this.onAvatarSubmit}} />
   </ModalDialog>
