@@ -6,7 +6,7 @@
     "build": "ng build --prod --base-href /admin/",
     "test": "ng test --watch=false",
     "lint": "ng lint",
-    "i18n-extract": "ngx-translate-extract --input=src --output=src/assets/i18n/ru.json src/assets/i18n/en.json --format=namespaced-json --key-as-default-value --clean --sort"
+    "i18n-extract": "ngx-translate-extract --input=src --output=src/assets/i18n/ru.json src/assets/i18n/en.json --format=namespaced-json --format-indentation=\"  \" --key-as-default-value --clean --sort"
   },
   "private": true,
   "dependencies": {
@@ -31,6 +31,7 @@
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^11.1.1",
     "@angular-devkit/build-angular": "^0.1102.1",
     "@angular/cli": "^11.2.1",
     "@angular/compiler-cli": "11.2.3",
@@ -38,7 +39,8 @@
     "@biesbjerg/ngx-translate-extract": "^7.0.4",
     "@types/jasmine": "~3.5.10",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~13.9.4",
+    "@types/node": "^13.9.8",
+    "@types/webpack": "^5.28.0",
     "codelyzer": "^6.0.1",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
