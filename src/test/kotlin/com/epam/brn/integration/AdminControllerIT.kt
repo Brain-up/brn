@@ -132,7 +132,7 @@ class AdminControllerIT : BaseIT() {
         Assertions.assertEquals(3, resultStatistic.size)
         resultStatistic.forEach {
             assertNotNull(it.progress)
-            assertNotNull(it.exercisingTime)
+            assertNotNull(it.exercisingTimeSeconds)
         }
     }
 
@@ -168,7 +168,7 @@ class AdminControllerIT : BaseIT() {
         Assertions.assertEquals(1, resultStatistic.size)
         val monthStatistic = resultStatistic.first()
         Assertions.assertEquals(exercisingMonth, monthStatistic.date.monthValue)
-        assertNotNull(monthStatistic.exercisingTime)
+        assertNotNull(monthStatistic.exercisingTimeSeconds)
         assertNotNull(monthStatistic.progress)
     }
 

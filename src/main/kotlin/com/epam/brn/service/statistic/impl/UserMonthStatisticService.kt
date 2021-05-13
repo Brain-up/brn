@@ -26,12 +26,13 @@ class UserMonthStatisticService(
             studyHistoryRepository.getHistories(tempUserId!!, Date.valueOf(from), Date.valueOf(to))
         return histories.map {
             val filteredHistories = histories.filter { historyFilter ->
-                historyFilter.startTime.month.equals(it.startTime.month)
+                historyFilter.startTime.month == it.startTime.month
             }
             MonthStudyStatistic(
                 date = YearMonth.of(it.startTime.year, it.startTime.month),
-                exercisingTime = filteredHistories.sumBy { studyHistory -> studyHistory.executionSeconds },
-                progress = UserExercisingProgressStatus.GREAT
+                exercisingTimeSeconds = filteredHistories.sumBy { studyHistory -> studyHistory.executionSeconds },
+                progress = UserExercisingProgressStatus.GREAT,
+                exercisingDays = filteredHistories.size
             )
         }.distinct()
     }

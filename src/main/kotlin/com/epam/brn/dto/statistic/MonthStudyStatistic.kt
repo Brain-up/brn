@@ -7,6 +7,7 @@ import java.time.YearMonth
  */
 data class MonthStudyStatistic(
     val date: YearMonth,
-    val exercisingTime: Int,
+    val exercisingTimeSeconds: Int,
+    val exercisingDays: Int,
     var progress: UserExercisingProgressStatus
 ) : Statistic(progress)
