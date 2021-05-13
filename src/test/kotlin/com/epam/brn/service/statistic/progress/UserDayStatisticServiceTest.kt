@@ -71,7 +71,7 @@ internal class UserDayStatisticServiceTest {
         )
         val expectedStatistic = DayStudyStatistic(
             date = studyHistoryDate.toLocalDate(),
-            exercisingTime = exercisingSeconds,
+            exercisingTimeSeconds = exercisingSeconds,
             progress = userProgress
         )
 

@@ -70,11 +70,18 @@ internal class UserMonthStatisticServiceTest {
     @Test
     fun `getStatisticForPeriod should return statistic for period from to`() {
         // GIVEN
+        `when`(studyHistorySecond.startTime).thenReturn(studyHistoryDate)
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
             listOf(
                 studyHistory,
-                studyHistory
+                studyHistorySecond
             )
+        )
+        val expectedStatistic = MonthStudyStatistic(
+            date = YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month),
+            exercisingTimeSeconds = executionSeconds,
+            exercisingDays = 2,
+            progress = UserExercisingProgressStatus.GREAT
         )
 
         // WHEN
@@ -82,9 +89,7 @@ internal class UserMonthStatisticServiceTest {
         val statistic = statisticsForPeriod.first()
 
         // THEN
-        assertEquals(studyHistory.executionSeconds * 2, statistic.exercisingTime)
-        assertEquals(YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month), statistic.date)
-        assertEquals(progress, statistic.progress)
+        assertEquals(expectedStatistic, statistic)
     }
 
     @Test
@@ -92,22 +97,25 @@ internal class UserMonthStatisticServiceTest {
         // GIVEN
         `when`(studyHistorySecond.startTime).thenReturn(secondStudyHistoryDate)
         `when`(studyHistorySecond.executionSeconds).thenReturn(executionSeconds)
+        val studyHistories = listOf(
+            studyHistory,
+            studyHistorySecond
+        )
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
-            listOf(
-                studyHistory,
-                studyHistorySecond
-            )
+            studyHistories
         )
 
         val firstExpectedStudyStatistic = MonthStudyStatistic(
-            YearMonth.of(studyHistoryDate.year, studyHistoryDate.month),
-            executionSeconds,
-            progress
+            date = YearMonth.of(studyHistoryDate.year, studyHistoryDate.month),
+            exercisingTimeSeconds = executionSeconds,
+            exercisingDays = 1,
+            progress = progress
         )
         val secondExpectedStudyStatistic = MonthStudyStatistic(
-            YearMonth.of(secondStudyHistoryDate.year, secondStudyHistoryDate.month),
-            executionSeconds,
-            progress
+            date = YearMonth.of(secondStudyHistoryDate.year, secondStudyHistoryDate.month),
+            exercisingTimeSeconds = executionSeconds,
+            exercisingDays = 1,
+            progress = progress
         )
 
         // WHEN

@@ -123,7 +123,7 @@ class UserStatisticControllerIT : BaseIT() {
         assertEquals(3, resultStatistic.size)
         resultStatistic.forEach {
             assertNotNull(it.progress)
-            assertNotNull(it.exercisingTime)
+            assertNotNull(it.exercisingTimeSeconds)
         }
     }
 
@@ -158,7 +158,7 @@ class UserStatisticControllerIT : BaseIT() {
         assertEquals(1, resultStatistic.size)
         val monthStatistic = resultStatistic.first()
         assertEquals(exercisingMonth, monthStatistic.date.monthValue)
-        assertNotNull(monthStatistic.exercisingTime)
+        assertNotNull(monthStatistic.exercisingTimeSeconds)
         assertNotNull(monthStatistic.progress)
     }
 }

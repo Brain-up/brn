@@ -27,7 +27,7 @@ class UserDayStatisticService(
         )
         return studyHistories.map {
             DayStudyStatistic(
-                exercisingTime = studyHistories.filter { studyHistory ->
+                exercisingTimeSeconds = studyHistories.filter { studyHistory ->
                     studyHistory.startTime.monthValue == it.startTime.monthValue &&
                         studyHistory.startTime.dayOfMonth == it.startTime.dayOfMonth &&
                         studyHistory.startTime.year == it.startTime.year
