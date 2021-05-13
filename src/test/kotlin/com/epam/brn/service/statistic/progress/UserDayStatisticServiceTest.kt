@@ -63,6 +63,7 @@ internal class UserDayStatisticServiceTest {
 
     @Test
     fun `getStatisticForPeriod should return statistic for a day`() {
+        // GIVEN
         `when`(studyHistory.startTime).thenReturn(studyHistoryDate)
         `when`(studyHistory.executionSeconds).thenReturn(exercisingSeconds)
         `when`(studyHistoryRepository.getHistories(anyLong(), any(), any())).thenReturn(
@@ -74,16 +75,22 @@ internal class UserDayStatisticServiceTest {
             progress = userProgress
         )
 
+        // WHEN
         val statisticForPeriod = userDayStatisticService.getStatisticForPeriod(from, to)
 
+        // THEN
         assertEquals(expectedStatistic, statisticForPeriod.first())
     }
 
     @Test
     fun `getStatisticForPeriod should return empty list when there are not histories for the period`() {
+        // GIVEN
         `when`(studyHistoryRepository.getHistories(anyLong(), any(), any())).thenReturn(emptyList())
+
+        // WHEN
         val statisticForPeriod = userDayStatisticService.getStatisticForPeriod(from, to)
 
+        // THEN
         assertTrue(statisticForPeriod.isEmpty())
     }
 }

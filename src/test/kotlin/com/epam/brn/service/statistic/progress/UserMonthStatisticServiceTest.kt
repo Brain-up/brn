@@ -69,14 +69,19 @@ internal class UserMonthStatisticServiceTest {
 
     @Test
     fun `getStatisticForPeriod should return statistic for period from to`() {
+        // GIVEN
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
             listOf(
                 studyHistory,
                 studyHistory
             )
         )
+
+        // WHEN
         val statisticsForPeriod = userMonthStatisticService.getStatisticForPeriod(from, to)
         val statistic = statisticsForPeriod.first()
+
+        // THEN
         assertEquals(studyHistory.executionSeconds * 2, statistic.exercisingTime)
         assertEquals(YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month), statistic.date)
         assertEquals(progress, statistic.progress)
@@ -84,6 +89,7 @@ internal class UserMonthStatisticServiceTest {
 
     @Test
     fun `getStatisticForPeriod should return statistic for period when there are histories for some month`() {
+        // GIVEN
         `when`(studyHistorySecond.startTime).thenReturn(secondStudyHistoryDate)
         `when`(studyHistorySecond.executionSeconds).thenReturn(executionSeconds)
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
@@ -104,7 +110,10 @@ internal class UserMonthStatisticServiceTest {
             progress
         )
 
+        // WHEN
         val statisticForPeriod = userMonthStatisticService.getStatisticForPeriod(from, to)
+
+        // THEN
         assertTrue(statisticForPeriod.size > 1)
         assertEquals(
             firstExpectedStudyStatistic,

@@ -84,6 +84,7 @@ class AdminControllerIT : BaseIT() {
 
     @Test
     fun `testing get user week statistic`() {
+        // GIVEN
         val userAccount = insertDefaultUser()
         val exercise = insertDefaultExercise()
         insertDefaultStudyHistory(
@@ -111,8 +112,9 @@ class AdminControllerIT : BaseIT() {
             30
         )
         insertDefaultStudyHistory(userAccount, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-
         val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUrl/study/week")
                 .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
@@ -126,6 +128,7 @@ class AdminControllerIT : BaseIT() {
         val resultStatistic: List<DayStudyStatistic> =
             objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
+        // THEN
         Assertions.assertEquals(3, resultStatistic.size)
         resultStatistic.forEach {
             assertNotNull(it.progress)
@@ -135,6 +138,7 @@ class AdminControllerIT : BaseIT() {
 
     @Test
     fun `should return user year statistic`() {
+        // GIVEN
         val user = insertDefaultUser()
         val exercise = insertDefaultExercise()
         val studyHistories: List<StudyHistory> = listOf(
@@ -144,8 +148,9 @@ class AdminControllerIT : BaseIT() {
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
         )
-
         val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUrl/study/year")
                 .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
@@ -159,6 +164,7 @@ class AdminControllerIT : BaseIT() {
         val resultStatistic: List<MonthStudyStatistic> =
             objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 
+        // THEN
         Assertions.assertEquals(1, resultStatistic.size)
         val monthStatistic = resultStatistic.first()
         Assertions.assertEquals(exercisingMonth, monthStatistic.date.monthValue)

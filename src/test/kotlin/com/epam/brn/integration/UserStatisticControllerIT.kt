@@ -46,7 +46,7 @@ class UserStatisticControllerIT : BaseIT() {
 
     @Test
     fun `should return user progress for subGroup`() {
-
+        // GIVEN
         val currentUser = insertDefaultUser()
         val series = insertDefaultSeries()
         val subGroups = listOf(
@@ -70,11 +70,12 @@ class UserStatisticControllerIT : BaseIT() {
 
         insertDefaultStudyHistory(currentUser, exercises.first())
 
+        // WHEN
         val resultAction = mockMvc.perform(
             get("$baseUrl/subgroups")
                 .param("ids", "${subGroupIds.get(0)},${subGroupIds.get(1)}")
         )
-        println(currentUser)
+
         val response = resultAction
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -85,6 +86,7 @@ class UserStatisticControllerIT : BaseIT() {
         val resultStatistic: List<SubGroupStatisticDto> =
             objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticDto>>() {})
 
+        // THEN
         assertEquals(1, resultStatistic.first().totalExercises)
         assertEquals(1, resultStatistic.first().completedExercises)
 
@@ -94,6 +96,7 @@ class UserStatisticControllerIT : BaseIT() {
 
     @Test
     fun `should return user statistic for days`() {
+        // GIVEN
         val user = insertDefaultUser()
         val exercise = insertDefaultExercise()
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
@@ -101,8 +104,9 @@ class UserStatisticControllerIT : BaseIT() {
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-
         val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // WHEN
         val response = mockMvc.perform(
             get("$baseUrl/study/week")
                 .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
@@ -115,6 +119,7 @@ class UserStatisticControllerIT : BaseIT() {
         val resultStatistic: List<DayStudyStatistic> =
             objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
+        // THEN
         assertEquals(3, resultStatistic.size)
         resultStatistic.forEach {
             assertNotNull(it.progress)
@@ -124,6 +129,7 @@ class UserStatisticControllerIT : BaseIT() {
 
     @Test
     fun `should return user statistic for month`() {
+        // GIVEN
         val user = insertDefaultUser()
         val exercise = insertDefaultExercise()
         val studyHistories: List<StudyHistory> = listOf(
@@ -133,8 +139,9 @@ class UserStatisticControllerIT : BaseIT() {
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
         )
-
         val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // WHEN
         val response = mockMvc.perform(
             get("$baseUrl/study/year")
                 .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
@@ -147,6 +154,7 @@ class UserStatisticControllerIT : BaseIT() {
         val resultStatistic: List<MonthStudyStatistic> =
             objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 
+        // THEN
         assertEquals(1, resultStatistic.size)
         val monthStatistic = resultStatistic.first()
         assertEquals(exercisingMonth, monthStatistic.date.monthValue)
