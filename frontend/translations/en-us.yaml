@@ -105,3 +105,8 @@ msg:
 groups:
   exercise_selection: "Let's choose what exercises we do today?"
   title: Groups
+
+avatar_controls:
+  cancel: Cancel
+  submit: Submit
+  title: Avatar selection
