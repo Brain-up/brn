@@ -50,10 +50,13 @@ module.exports = {
         ...justifyContent,
         evenly: 'space-evenly',
       },
+      flex: {
+        '6': '0 1 16.666%',
+      }
     },
     fontFamily: {
       openSans: ['Open Sans'],
-    },
+    }
   },
   variants: {
     backgroundColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
