@@ -1,9 +1,12 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
@@ -120,6 +123,60 @@ internal class UserDetailControllerTest {
             // THEN
             assertEquals(userAccountDto, response)
             verify(userAccountService).updateCurrentUser(changeRequest)
+        }
+
+        @Test
+        fun `should save headphones to user`() {
+            // GIVEN
+            val headphonesDto = HeadphonesDto(
+                name = "test",
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+            `when`(userAccountService.addHeadphonesToUser(1L, headphonesDto)).thenReturn(headphonesDto)
+            // WHEN
+            val response = userDetailController.addHeadphonesToUser(1, headphonesDto).body?.data as HeadphonesDto
+            // THEN
+            assertEquals(headphonesDto, response)
+            verify(userAccountService).addHeadphonesToUser(1L, headphonesDto)
+        }
+
+        @Test
+        fun `should save headphones to current user`() {
+            // GIVEN
+            val headphonesDto = HeadphonesDto(
+                name = "test",
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+            `when`(userAccountService.addHeadphonesToCurrentUser(headphonesDto)).thenReturn(headphonesDto)
+            // WHEN
+            val response = userDetailController.addHeadphonesToCurrentUser(headphonesDto).body?.data as HeadphonesDto
+            // THEN
+            assertEquals(headphonesDto, response)
+            verify(userAccountService).addHeadphonesToCurrentUser(headphonesDto)
+        }
+
+        @Test
+        fun `should return all headphones belongs to user`() {
+            // GIVEN
+            val headphonesDto = HeadphonesDto(
+                name = "test",
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+            val headphonesDtoSecond = HeadphonesDto(
+                name = "testSecond",
+                type = HeadphonesType.IN_EAR_NO_BLUETOOTH
+            )
+            `when`(userAccountService.getAllHeadphonesForUser(1L)).thenReturn(
+                setOf(
+                    headphonesDto,
+                    headphonesDtoSecond
+                )
+            )
+            // WHEN
+            val response = userDetailController.getAllHeadphonesForUser(1).body?.data as List<Any>
+            // THEN
+            assertThat(response).hasSize(2).containsExactly(headphonesDto, headphonesDtoSecond)
+            verify(userAccountService, times(1)).getAllHeadphonesForUser(1L)
         }
     }
 }

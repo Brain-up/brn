@@ -1,5 +1,6 @@
 package com.epam.brn.dto.response
 
+import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.model.Gender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZoneId
@@ -20,6 +21,7 @@ data class UserAccountDto(
     val foto: String? = null,
     val description: String? = null,
     val patients: MutableList<UserAccountDto> = mutableListOf(),
+    var headphones: Set<HeadphonesDto>? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }

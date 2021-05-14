@@ -7,6 +7,7 @@ import java.time.ZonedDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -37,7 +38,9 @@ data class UserAccount(
     var description: String? = null,
     @OneToMany
     @JoinColumn(name = "doctor", referencedColumnName = "id")
-    var patients: MutableList<UserAccount> = mutableListOf()
+    var patients: MutableList<UserAccount> = mutableListOf(),
+    @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var headphones: MutableSet<Headphones> = hashSetOf()
 ) {
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
@@ -68,7 +71,10 @@ data class UserAccount(
             description = description,
             patients = patients
                 .map(UserAccount::toDto)
-                .toMutableList()
+                .toMutableList(),
+            headphones = headphones
+                .map(Headphones::toDto)
+                .toHashSet()
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)
@@ -85,4 +91,24 @@ data class UserAccount(
         bornYear = bornYear,
         gender = gender?.let { Gender.valueOf(it) },
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UserAccount
+
+        if (id != other.id) return false
+        if (userId != other.userId) return false
+        if (email != other.email) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + (userId?.hashCode() ?: 0)
+        result = 31 * result + (email?.hashCode() ?: 0)
+        return result
+    }
 }
