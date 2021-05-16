@@ -2,14 +2,14 @@ import { ExercisesComponent } from './exercises.component';
 
 describe('ExercisesComponent', () => {
   let component: ExercisesComponent;
-  let exercisesApiServiceMock;
+  let adminApiServiceMock;
   let changeDetectorRefMock;
 
-  beforeEach(async () => {
-    exercisesApiServiceMock = jasmine.createSpyObj('ExercisesApiService', ['getExercisesBySubGroupId']);
-    changeDetectorRefMock = jasmine.createSpyObj('AdminService', ['detectChanges']);
+  beforeEach(() => {
+    adminApiServiceMock = jasmine.createSpyObj('AdminApiService', ['getExercisesBySubGroupId']);
+    changeDetectorRefMock = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
-    component = new ExercisesComponent(exercisesApiServiceMock, changeDetectorRefMock);
+    component = new ExercisesComponent(adminApiServiceMock, changeDetectorRefMock);
   });
 
   it('should create', () => {

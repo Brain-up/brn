@@ -7,6 +7,31 @@
       "Users": "Users"
     },
     "Modules": {
+      "Statistics": {
+        "Buttons": {
+          "WhatIsIt": "Admin.Modules.Statistics.Buttons.WhatIsIt"
+        },
+        "Components": {
+          "MonthTimeTrack": {
+            "EmptyData": "Admin.Modules.Statistics.Components.MonthTimeTrack.EmptyData",
+            "Title [year]": "Admin.Modules.Statistics.Components.MonthTimeTrack.Title [year]"
+          },
+          "MonthTimeTrackItem": {
+            "Days [days]": "Admin.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]"
+          },
+          "StatisticsInfoDialog": {
+            "Buttons": {
+              "Ok": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Buttons.Ok"
+            },
+            "ContentTitle": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.ContentTitle",
+            "Text": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Text",
+            "Title": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Title"
+          },
+          "WeekTimeTrack": {
+            "Title": "Admin.Modules.Statistics.Components.WeekTimeTrack.Title"
+          }
+        }
+      },
       "UploadFile": {
         "Links": {
           "LoadConfigurationFiles": "Load configuration files",

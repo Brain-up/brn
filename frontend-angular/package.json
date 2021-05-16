@@ -24,6 +24,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "billboard.js": "^3.0.3",
+    "dayjs": "^1.10.4",
     "fp-ts": "^2.5.3",
     "http-status-codes": "^2.1.4",
     "rxjs": "~6.5.4",

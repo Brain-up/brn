@@ -1,5 +1,5 @@
+import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { LEVEL_COLOR } from '../../models/level-color';
 import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
 
 @Component({
@@ -9,7 +9,7 @@ import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonthTimeTrackItemComponent {
-  public readonly LEVEL_COLOR = LEVEL_COLOR;
+  public readonly USER_EXERCISING_PROGRESS_STATUS_COLOR = USER_EXERCISING_PROGRESS_STATUS_COLOR;
 
   @Input()
   public data: IMonthTimeTrackItemData;

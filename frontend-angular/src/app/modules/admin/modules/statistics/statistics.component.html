@@ -2,14 +2,16 @@
   <button class="statistics-info-dialog" mat-button (click)="openStatisticsInfoDialog()">
     <mat-icon svgIcon="help"></mat-icon>
 
-    <span>О чем говорит статистика</span>
+    <span>{{ 'Admin.Modules.Statistics.Buttons.WhatIsIt' | translate }}</span>
   </button>
 </div>
 
-<app-week-time-track
-  [data]="weekTimeTrackData"
-  (loadPrevWeekEvent)="loadPrevWeek()"
-  (loadNextWeekEvent)="loadNextWeek()"
-></app-week-time-track>
+<app-week-time-track [data]="weekTimeTrackData$ | async"></app-week-time-track>
 
-<app-month-time-track [data]="monthTimeTrackData"></app-month-time-track>
+<app-month-time-track
+  [currentYear]="selectedMonth.year()"
+  [data]="monthTimeTrackData$ | async"
+  (selectMonthEvent)="selectMonth($event)"
+  (loadPrevYearEvent)="loadPrevYear()"
+  (loadNextYearEvent)="loadNextYear()"
+></app-month-time-track>
