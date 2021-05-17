@@ -138,38 +138,31 @@ class UserAccountServiceImpl(
     }
 
     override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto {
-        val currentUserAccount = getCurrentUser()
-        var changed = false
-        if (!userChangeRequest.name.isNullOrEmpty()) {
-            currentUserAccount.fullName = userChangeRequest.name
-            changed = true
-        }
-        if (userChangeRequest.bornYear != null) {
-            currentUserAccount.bornYear = userChangeRequest.bornYear
-            changed = true
-        }
-        if (userChangeRequest.gender != null) {
-            currentUserAccount.gender = userChangeRequest.gender.toString()
-            changed = true
-        }
-        if (userChangeRequest.avatar != null) {
-            currentUserAccount.avatar = userChangeRequest.avatar
-            changed = true
-        }
-        if (userChangeRequest.picture != null) {
-            currentUserAccount.foto = userChangeRequest.picture
-            changed = true
-        }
-        if (userChangeRequest.description != null) {
-            currentUserAccount.description = userChangeRequest.description
-            changed = true
-        }
-        return if (changed) {
-            currentUserAccount.changed = timeService.now()
-            userAccountRepository.save(currentUserAccount).toDto()
-        } else
-            currentUserAccount.toDto()
+        return getCurrentUser().let {
+            if (userChangeRequest.isNotEmpty())
+                userAccountRepository.save(it.updateFields(changeRequest = userChangeRequest))
+            else it
+        }.toDto()
     }
+
+    private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
+        this.description != null ||
+            this.avatar != null ||
+            this.bornYear != null ||
+            this.gender != null ||
+            this.name != null ||
+            this.photo != null
+
+    private fun UserAccount.updateFields(changeRequest: UserAccountChangeRequest) =
+        this.copy(
+            fullName = changeRequest.name?.takeIf { it.isNotBlank() } ?: fullName,
+            bornYear = changeRequest.bornYear ?: bornYear,
+            gender = changeRequest.gender?.toString() ?: gender,
+            avatar = changeRequest.avatar ?: avatar,
+            photo = changeRequest.photo ?: photo,
+            description = changeRequest.description ?: description,
+            changed = timeService.now()
+        )
 
     private fun getNameFromPrincipals(authentication: Authentication): String {
         val principal = authentication.principal

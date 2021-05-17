@@ -33,7 +33,7 @@ data class UserAccountCreateRequest(
     @field:NotNull(message = "{validation.field.gender.notNull}")
     val gender: Gender,
     val avatar: String? = null,
-    val foto: String? = null,
+    val photo: String? = null,
     @field:Length(min = 1, max = 255)
     val description: String? = null
 ) {
@@ -45,7 +45,7 @@ data class UserAccountCreateRequest(
         bornYear = bornYear,
         gender = gender.toString(),
         avatar = avatar,
-        foto = foto,
+        photo = photo,
         description = description
     )
 }

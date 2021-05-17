@@ -88,7 +88,7 @@ class UserDetailsControllerIT : BaseIT() {
         assertEquals("newName", resultUser.name)
         assertEquals(1950, resultUser.bornYear)
         assertEquals(user.avatar, resultUser.avatar)
-        assertEquals(user.foto, resultUser.foto)
+        assertEquals(user.photo, resultUser.photo)
         assertEquals(user.description, resultUser.description)
         assertNotSame(user.changed, resultUser.changed)
     }

@@ -18,7 +18,7 @@ data class UserAccountDto(
     val created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     val changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     var avatar: String? = null,
-    val foto: String? = null,
+    val photo: String? = null,
     val description: String? = null,
     val patients: MutableList<UserAccountDto> = mutableListOf(),
     var headphones: Set<HeadphonesDto>? = null

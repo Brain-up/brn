@@ -34,7 +34,7 @@ data class UserAccount(
     @Column(nullable = false)
     var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     var avatar: String? = null,
-    var foto: String? = null,
+    var photo: String? = null,
     var description: String? = null,
     @OneToMany
     @JoinColumn(name = "doctor", referencedColumnName = "id")
@@ -67,7 +67,7 @@ data class UserAccount(
             created = created,
             changed = changed,
             avatar = avatar,
-            foto = foto,
+            photo = photo,
             description = description,
             patients = patients
                 .map(UserAccount::toDto)

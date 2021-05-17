@@ -12,7 +12,7 @@ data class UserAccountChangeRequest(
     val bornYear: Int? = null,
     val gender: Gender? = null,
     val avatar: String? = null,
-    val picture: String? = null,
+    val photo: String? = null,
     @field:Length(min = 1, max = 255)
     val description: String? = null
 )

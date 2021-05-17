@@ -201,7 +201,7 @@ internal class UserAccountServiceTest {
         fun `should update current session user`() {
             // GIVEN
             val avatarUrl = "test/avatar"
-            val fotoUrl = "test/picture"
+            val photoUrl = "test/picture"
             val description = "Some description about the user"
             val email = "test@test.ru"
             val authentication = Mockito.mock(Authentication::class.java)
@@ -215,19 +215,19 @@ internal class UserAccountServiceTest {
                 bornYear = 2000,
                 changed = ZonedDateTime.now().minusMinutes(5),
                 avatar = null,
-                foto = null,
+                photo = null,
                 description = null
             )
             val userAccountChangeRequest = UserAccountChangeRequest(
                 avatar = avatarUrl,
-                picture = fotoUrl,
+                photo = photoUrl,
                 description = description,
                 name = "newName"
             )
             val userAccountUpdated = userAccount.copy()
             userAccountUpdated.avatar = avatarUrl
-            userAccountUpdated.foto = fotoUrl
-            userAccount.description = description
+            userAccountUpdated.photo = photoUrl
+            userAccountUpdated.description = description
             userAccountUpdated.fullName = "newName"
 
             SecurityContextHolder.setContext(securityContext)
@@ -246,7 +246,7 @@ internal class UserAccountServiceTest {
             verify(userAccountRepository).save(userArgumentCaptor.capture())
             val userForSave = userArgumentCaptor.value
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
-            assertThat(userForSave.foto).isEqualTo(fotoUrl)
+            assertThat(userForSave.photo).isEqualTo(photoUrl)
             assertThat(userForSave.description).isEqualTo(description)
             assertThat(userForSave.fullName).isEqualTo("newName")
             assertThat(userForSave.id).isEqualTo(userAccount.id)
