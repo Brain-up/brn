@@ -7,10 +7,35 @@
       "Users": "Пользователи"
     },
     "Modules": {
+      "Statistics": {
+        "Buttons": {
+          "WhatIsIt": "О чем говорит статистика"
+        },
+        "Components": {
+          "MonthTimeTrack": {
+            "EmptyData": "Нет данных",
+            "Title [year]": "Общее время занятий по месяцам за {{ year }} год"
+          },
+          "MonthTimeTrackItem": {
+            "Days [days]": "за <b>{{ days }}<b> дней"
+          },
+          "StatisticsInfoDialog": {
+            "Buttons": {
+              "Ok": "Хорошо"
+            },
+            "ContentTitle": "Проверьте, достаточно ли регулярно вы делаете занятия",
+            "Text": "По данным исследований, чтобы улучшить порог слышимости, нужно заниматься не менее <b>6</b> дней в неделю по <b>20</b> минут в течение <b>2</b> лет. В месяц должно быть не менее <b>8</b> часов <b>40</b> минут в сумме за <b>26</b> дней.",
+            "Title": "О чем говорит статистика"
+          },
+          "WeekTimeTrack": {
+            "Title": "Время ежедневных занятий по неделям"
+          }
+        }
+      },
       "UploadFile": {
         "Links": {
-          "LoadConfigurationFiles": "Admin.Modules.UploadFile.Links.LoadConfigurationFiles",
-          "LoadResourceFiles": "Admin.Modules.UploadFile.Links.LoadResourceFiles"
+          "LoadConfigurationFiles": "Загрузить конфигурационные файлы",
+          "LoadResourceFiles": "Загрузить ресурсные файлы"
         },
         "Modules": {
           "LoadFiles": {
@@ -18,27 +43,27 @@
               "Load": "Загрузить"
             },
             "Labels": {
-              "SelectFile": "Admin.Modules.UploadFile.Modules.LoadFiles.Labels.SelectFile",
-              "SelectFolder": "Admin.Modules.UploadFile.Modules.LoadFiles.Labels.SelectFolder"
+              "SelectFile": "Выбрать файл",
+              "SelectFolder": "Выбрать папку"
             },
             "SnackBar": {
-              "FileSuccessfullyUploaded [fileName]": "Admin.Modules.UploadFile.Modules.LoadFiles.SnackBar.FileSuccessfullyUploaded [fileName]"
+              "FileSuccessfullyUploaded [fileName]": "Файл '{{ fileName }}' успешно загружен"
             }
           },
           "LoadTasks": {
             "AcceptedFormat": "Admin.Modules.UploadFile.Modules.LoadTasks.AcceptedFormat",
             "Buttons": {
-              "Submit": "Admin.Modules.UploadFile.Modules.LoadTasks.Buttons.Submit"
+              "Submit": "Отправить"
             },
             "Errors": {
-              "FieldMustNotBeEmpty": "Admin.Modules.UploadFile.Modules.LoadTasks.Errors.FieldMustNotBeEmpty"
+              "FieldMustNotBeEmpty": "Поле не может быть пустым"
             },
             "Labels": {
-              "Group": "Admin.Modules.UploadFile.Modules.LoadTasks.Labels.Group",
-              "Series": "Admin.Modules.UploadFile.Modules.LoadTasks.Labels.Series"
+              "Group": "Группа",
+              "Series": "Серия"
             },
             "SnackBar": {
-              "FileSuccessfullyUploaded [fileName]": "Admin.Modules.UploadFile.Modules.LoadTasks.SnackBar.FileSuccessfullyUploaded [fileName]"
+              "FileSuccessfullyUploaded [fileName]": "Файл '{{ fileName }}' успешно загружен"
             }
           }
         }
@@ -63,8 +88,8 @@
   "Root": {
     "Interceptors": {
       "Exceptions": {
-        "Unauthorized": "Root.Interceptors.Exceptions.Unauthorized",
-        "UnknownError": "Root.Interceptors.Exceptions.UnknownError"
+        "Unauthorized": "Неавторизованный доступ",
+        "UnknownError": "Неизвестная ошибка"
       }
     }
   }
