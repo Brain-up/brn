@@ -31,11 +31,11 @@ import java.time.LocalDate
 @RequestMapping("/admin")
 @Api(value = "/admin", description = "Contains actions for admin")
 class AdminController(
-    val studyHistoryService: StudyHistoryService,
-    val userAccountService: UserAccountService,
-    val exerciseService: ExerciseService,
+    private val studyHistoryService: StudyHistoryService,
+    private val userAccountService: UserAccountService,
+    private val exerciseService: ExerciseService,
     private val csvUploadService: CsvUploadService,
-    val resourceService: ResourceService
+    private val resourceService: ResourceService
 ) {
     @GetMapping("/users")
     @ApiOperation("Get users")
