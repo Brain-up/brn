@@ -11,6 +11,8 @@ import { MonthTimeTrackItemComponent } from './components/month-time-track-item/
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
 
 @NgModule({
   declarations: [
@@ -29,5 +31,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatIconModule,
     MatProgressBarModule,
   ],
+  providers: [{ provide: AdminApiService, useFactory: () => new AdminApiServiceFake({ responseDelayInMs: 0 }) }],
 })
 export class StatisticsModule {}

@@ -10,17 +10,10 @@ import { GroupApiService } from './services/api/group-api.service';
 import { SeriesApiService } from './services/api/series-api.service';
 import { SubGroupApiService } from './services/api/sub-group-api.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { AdminApiServiceFake } from './services/api/admin-api.service.fake';
 
 @NgModule({
   declarations: [AdminComponent],
   imports: [CommonModule, AdminRoutingModule, TranslateModule, MatButtonModule, MatToolbarModule],
-  providers: [
-    { provide: AdminApiService, useFactory: () => new AdminApiServiceFake({ responseDelayInMs: 0 }) },
-    CloudApiService,
-    GroupApiService,
-    SeriesApiService,
-    SubGroupApiService,
-  ],
+  providers: [AdminApiService, CloudApiService, GroupApiService, SeriesApiService, SubGroupApiService],
 })
 export class AdminModule {}
