@@ -100,8 +100,10 @@ class InitialDataLoader(
         if (authorityService.findAll().isEmpty()) {
             val adminAuthority = authorityService.save(Authority(authorityName = "ROLE_ADMIN"))
             val userAuthority = authorityService.save(Authority(authorityName = "ROLE_USER"))
+            val doctorAuthority = authorityService.save(Authority(authorityName = "ROLE_DOCTOR"))
             val admin = addAdminUser(adminAuthority)
-            val listOfUsers = mutableListOf(admin)
+            val doctor = addDoctor(doctorAuthority)
+            val listOfUsers = mutableListOf(admin, doctor)
             listOfUsers.addAll(addDefaultUsers(userAuthority))
             userAccountRepository.saveAll(listOfUsers)
         }
@@ -171,6 +173,20 @@ class InitialDataLoader(
                 gender = Gender.MALE.toString()
             )
         userAccount.authoritySet.addAll(setOf(adminAuthority))
+        return userAccount
+    }
+
+    private fun addDoctor(doctorAuthority: Authority): UserAccount {
+        val password = passwordEncoder.encode("password")
+        val userAccount = UserAccount(
+            fullName = "Doctor1",
+            email = "default3@default.ru",
+            active = true,
+            bornYear = 1989,
+            gender = Gender.FEMALE.toString(),
+            password = password
+        )
+        userAccount.authoritySet.addAll(setOf(doctorAuthority))
         return userAccount
     }
 

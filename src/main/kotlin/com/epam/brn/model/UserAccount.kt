@@ -34,6 +34,7 @@ data class UserAccount(
     @Column(nullable = false)
     var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     var avatar: String? = null,
+    var role: String? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var headphones: MutableSet<Headphones> = hashSetOf()
 ) {

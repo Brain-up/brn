@@ -1,10 +1,15 @@
 package com.epam.brn.repo
 
+import com.epam.brn.model.Authority
+import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.Optional
+import javax.persistence.FetchType
 
 @Repository
 interface UserAccountRepository : JpaRepository<UserAccount, Long> {
@@ -17,4 +22,6 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
 
     @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet left JOIN FETCH u.headphones where u.id = ?1")
     fun findUserAccountById(id: Long): Optional<UserAccount>
+
+    fun findAllUserAccountByAuthoritySetIn(authoritySet: MutableSet<Authority>): List<UserAccount>
 }

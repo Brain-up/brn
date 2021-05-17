@@ -99,6 +99,12 @@ class UserAccountServiceImpl(
 
     override fun getAllHeadphonesForCurrentUser() = getCurrentUser().headphones.map(Headphones::toDto).toSet()
 
+    override fun getAllUsersByAuthorityName(name: String): List<UserAccountDto> {
+        val authority = authorityService.findAuthorityByAuthorityName(name)
+        val result = userAccountRepository.findAllUserAccountByAuthoritySetIn(mutableSetOf(authority))
+        return result.map { it.toDto() }
+    }
+
     override fun getUserFromTheCurrentSession(): UserAccountDto = getCurrentUser().toDto()
 
     override fun getCurrentUser(): UserAccount {

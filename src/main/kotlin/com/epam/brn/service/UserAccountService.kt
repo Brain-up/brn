@@ -25,4 +25,5 @@ interface UserAccountService {
     fun findUserEntityById(id: Long): UserAccount
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
     fun getAllHeadphonesForCurrentUser(): Set<HeadphonesDto>
+    fun getAllUsersByAuthorityName(name: String): List<UserAccountDto>
 }
