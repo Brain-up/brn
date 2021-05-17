@@ -146,12 +146,12 @@ class UserAccountServiceImpl(
     }
 
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
-        this.description != null ||
-            this.avatar != null ||
-            this.bornYear != null ||
-            this.gender != null ||
-            this.name != null ||
-            this.photo != null
+        this.name.isNullOrBlank()
+            .or(this.avatar != null)
+            .or(this.bornYear != null)
+            .or(this.gender != null)
+            .or(this.description != null)
+            .or(this.photo != null)
 
     private fun UserAccount.updateFields(changeRequest: UserAccountChangeRequest) =
         this.copy(
