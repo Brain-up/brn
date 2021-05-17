@@ -19,11 +19,10 @@
             {{#each slices as |exercises index|}}
 
             <ul
-              data-test-exercises-name-group class="flex flex-row {{if (eq (inc index) slices.length) 'justify-start' 'justify-around'}} ml-6 mr-6"
-            >
+              data-test-exercises-name-group class="flex flex-row ml-6 mr-6" >
               {{#each exercises as |exercise|}}
                 {{#let (contains exercise.id (or @available (array))) as |isAvailable|}}
-                  <li>
+                  <li class="flex-6">
                     <Ui::ExerciseButton
                       @exercise={{exercise}}
                       @title={{exercise.level}}
