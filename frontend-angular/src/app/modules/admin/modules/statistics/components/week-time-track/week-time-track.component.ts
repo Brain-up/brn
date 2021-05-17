@@ -13,12 +13,16 @@ import { IWeekChartDataItem } from '../../models/week-char-data-item';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeekTimeTrackComponent implements AfterViewInit {
+  private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
+
   private chart: Chart;
   private chartData: IWeekChartDataItem[];
 
   @Input()
-  public set data(data: UserWeeklyStatistics[] | null) {
-    if (!data) return;
+  public set data(data: UserWeeklyStatistics[] | undefined) {
+    if (!data) {
+      return;
+    }
 
     this.chartData = data.map((rawItem) => ({
       x: dayjs(rawItem.date).format('dd'),
@@ -50,7 +54,7 @@ export class WeekTimeTrackComponent implements AfterViewInit {
       axis: {
         x: {
           tick: {
-            format: (i: number) => `${this.chartData?.[i].x}\n${i}`,
+            format: (i: number) => `${this.chartData?.[i].x.toUpperCase()}\n${i + 1}`,
             culling: false,
             show: false,
           },
@@ -68,7 +72,7 @@ export class WeekTimeTrackComponent implements AfterViewInit {
         y: {
           lines: [
             {
-              value: 50,
+              value: WeekTimeTrackComponent.EXERCISING_TIME_NORM_IN_S,
             },
           ],
         },

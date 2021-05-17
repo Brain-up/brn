@@ -2,6 +2,7 @@ import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { secondsTo } from '@shared/helpers/seconds-to';
 import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
 
 @Component({
@@ -14,24 +15,33 @@ export class MonthTimeTrackComponent {
   public monthTimeTrackItemsData: IMonthTimeTrackItemData[];
 
   @Input()
-  public currentYear: string | number = '-';
+  public isLoading = true;
 
   @Input()
-  public set data(data: UserYearlyStatistics[] | null) {
-    if (!data) return;
+  public selectedMonth: Dayjs;
 
-    this.monthTimeTrackItemsData = data.map((rawItem) => ({
-      progress: rawItem.progress,
-      time: secondsTo(rawItem.exercisingTimeSeconds, 'hms'),
-      days: rawItem.days,
-      month: dayjs(rawItem.date).format('MMMM'),
-      year: dayjs(rawItem.date).year(),
-      date: rawItem.date,
-    }));
+  @Input()
+  public set data(data: UserYearlyStatistics[] | undefined) {
+    if (!data) {
+      return;
+    }
+
+    this.monthTimeTrackItemsData = data.map((rawItem) => {
+      const date = dayjs(rawItem.date);
+
+      return {
+        progress: rawItem.progress,
+        time: secondsTo(rawItem.exercisingTimeSeconds, 'hms'),
+        days: rawItem.days,
+        month: date.format('MMMM'),
+        year: date.year(),
+        date,
+      };
+    });
   }
 
   @Output()
-  public selectMonthEvent = new EventEmitter<string>();
+  public selectMonthEvent = new EventEmitter<Dayjs>();
 
   @Output()
   public loadPrevYearEvent = new EventEmitter<void>();
@@ -39,8 +49,8 @@ export class MonthTimeTrackComponent {
   @Output()
   public loadNextYearEvent = new EventEmitter<void>();
 
-  public selectMonth(date: string): void {
-    this.selectMonthEvent.emit(date);
+  public selectMonth(date: Dayjs): void {
+    this.selectMonthEvent.emit(date.clone());
   }
 
   public loadPrevYear(): void {
@@ -48,6 +58,18 @@ export class MonthTimeTrackComponent {
   }
 
   public loadNextYear(): void {
+    if (!this.isAllowNextYear()) {
+      return;
+    }
+
     this.loadNextYearEvent.emit();
+  }
+
+  public isSelectedMonth(date: Dayjs): boolean {
+    return date.year() === this.selectedMonth.year() && date.month() === this.selectedMonth.month();
+  }
+
+  public isAllowNextYear(): boolean {
+    return this.selectedMonth.add(1, 'year').year() <= dayjs().year();
   }
 }

@@ -5,6 +5,7 @@
     "start": "ng serve --port 4201",
     "build": "ng build --prod --base-href /admin/",
     "test": "ng test --watch=false",
+    "test-start": "ng test --watch=true --browsers Chrome",
     "lint": "ng lint",
     "i18n-extract": "ngx-translate-extract --input=src --output=src/assets/i18n/ru.json src/assets/i18n/en.json --format=namespaced-json --format-indentation=\"  \" --key-as-default-value --clean --sort"
   },

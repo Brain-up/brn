@@ -1,5 +1,5 @@
 <div class="title">
-  {{ 'Admin.Modules.Statistics.Components.MonthTimeTrack.Title [year]' | translate: { year: currentYear } }}
+  {{ 'Admin.Modules.Statistics.Components.MonthTimeTrack.Title [year]' | translate: { year: selectedMonth.year() } }}
 </div>
 
 <div class="content">
@@ -7,24 +7,28 @@
     <mat-icon svgIcon="left-arrow"></mat-icon>
   </button>
 
-  <div
-    *ngIf="monthTimeTrackItemsData?.length; else emptyMonthTimeTrackItemsDataTemplate"
-    class="month-time-track-items-wrap"
-  >
-    <app-month-time-track-item
-      *ngFor="let data of monthTimeTrackItemsData"
-      [data]="data"
-      (click)="selectMonth(data.date)"
-    ></app-month-time-track-item>
+  <div class="month-time-track-items-wrap">
+    <mat-progress-bar *ngIf="isLoading; else dataTemplate" mode="indeterminate"></mat-progress-bar>
   </div>
 
-  <button mat-button class="next" (click)="loadNextYear()">
+  <button mat-button [disabled]="!isAllowNextYear()" class="next" (click)="loadNextYear()">
     <mat-icon svgIcon="right-arrow"></mat-icon>
   </button>
 </div>
 
 <!-- #region Templates -->
-<ng-template #emptyMonthTimeTrackItemsDataTemplate>
+<ng-template #dataTemplate>
+  <ng-container *ngIf="monthTimeTrackItemsData?.length; else emptyDataTemplate">
+    <app-month-time-track-item
+      *ngFor="let data of monthTimeTrackItemsData"
+      [data]="data"
+      [isSelected]="isSelectedMonth(data.date)"
+      (click)="selectMonth(data.date)"
+    ></app-month-time-track-item>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyDataTemplate>
   <div class="empty-data">
     {{ 'Admin.Modules.Statistics.Components.MonthTimeTrack.EmptyData' | translate }}
   </div>

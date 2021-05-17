@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MonthTimeTrackItemComponent } from './components/month-time-track-item/month-time-track-item.component';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,14 @@ import { TranslateModule } from '@ngx-translate/core';
     MonthTimeTrackComponent,
     MonthTimeTrackItemComponent,
   ],
-  imports: [CommonModule, StatisticsRoutingModule, TranslateModule, MatButtonModule, MatDialogModule, MatIconModule],
+  imports: [
+    CommonModule,
+    StatisticsRoutingModule,
+    TranslateModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatProgressBarModule,
+  ],
 })
 export class StatisticsModule {}

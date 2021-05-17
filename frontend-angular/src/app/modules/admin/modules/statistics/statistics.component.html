@@ -6,11 +6,12 @@
   </button>
 </div>
 
-<app-week-time-track [data]="weekTimeTrackData$ | async"></app-week-time-track>
+<app-week-time-track [data]="weekTimeTrackData"></app-week-time-track>
 
 <app-month-time-track
-  [currentYear]="selectedMonth.year()"
-  [data]="monthTimeTrackData$ | async"
+  [isLoading]="isLoadingMonthTimeTrackData"
+  [selectedMonth]="selectedMonth"
+  [data]="monthTimeTrackData"
   (selectMonthEvent)="selectMonth($event)"
   (loadPrevYearEvent)="loadPrevYear()"
   (loadNextYearEvent)="loadNextYear()"

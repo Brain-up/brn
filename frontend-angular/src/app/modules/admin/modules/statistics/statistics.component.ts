@@ -1,12 +1,14 @@
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
 import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-statistics',
@@ -15,15 +17,19 @@ import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
+  private readonly destroyer$ = new Subject<void>();
   private readonly userId: number;
 
   private statisticsInfoDialogRef: MatDialogRef<StatisticsInfoDialogComponent, void>;
 
   public selectedMonth = dayjs();
-  public weekTimeTrackData$: Observable<UserWeeklyStatistics[]>;
-  public monthTimeTrackData$: Observable<UserYearlyStatistics[]>;
+  public isLoadingWeekTimeTrackData = true;
+  public weekTimeTrackData: UserWeeklyStatistics[];
+  public isLoadingMonthTimeTrackData = true;
+  public monthTimeTrackData: UserYearlyStatistics[];
 
   constructor(
+    private readonly cdr: ChangeDetectorRef,
     private readonly adminApiService: AdminApiService,
     private readonly activatedRoute: ActivatedRoute,
     public readonly matDialog: MatDialog
@@ -38,6 +44,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.statisticsInfoDialogRef?.close();
+    this.destroyer$.next();
+    this.destroyer$.complete();
   }
 
   public openStatisticsInfoDialog(): void {
@@ -46,8 +54,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public selectMonth(date: string): void {
-    this.selectedMonth = dayjs(date);
+  public selectMonth(date: Dayjs): void {
+    this.selectedMonth = date;
 
     this.getWeekTimeTrackData();
   }
@@ -69,12 +77,34 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   private getWeekTimeTrackData(): void {
     const fromMonth = this.selectedMonth.startOf('month');
     const toMonth = this.selectedMonth.endOf('month');
-    this.weekTimeTrackData$ = this.adminApiService.getUserWeeklyStatistics(this.userId, fromMonth, toMonth);
+
+    this.isLoadingWeekTimeTrackData = true;
+    this.adminApiService
+      .getUserWeeklyStatistics(this.userId, fromMonth, toMonth)
+      .pipe(
+        finalize(() => {
+          this.isLoadingWeekTimeTrackData = false;
+          this.cdr.detectChanges();
+        }),
+        takeUntil(this.destroyer$)
+      )
+      .subscribe((weekTimeTrackData) => (this.weekTimeTrackData = weekTimeTrackData));
   }
 
   private getMonthTimeTrackData(): void {
     const fromYear = this.selectedMonth.startOf('year');
     const toYear = this.selectedMonth.endOf('year');
-    this.monthTimeTrackData$ = this.adminApiService.getUserYearlyStatistics(this.userId, fromYear, toYear);
+
+    this.isLoadingMonthTimeTrackData = true;
+    this.adminApiService
+      .getUserYearlyStatistics(this.userId, fromYear, toYear)
+      .pipe(
+        finalize(() => {
+          this.isLoadingMonthTimeTrackData = false;
+          this.cdr.detectChanges();
+        }),
+        takeUntil(this.destroyer$)
+      )
+      .subscribe((monthTimeTrackData) => (this.monthTimeTrackData = monthTimeTrackData));
   }
 }
