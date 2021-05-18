@@ -4,17 +4,8 @@ import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.ShortTaskDto
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.Table
-import javax.persistence.UniqueConstraint
+import java.time.LocalDateTime
+import javax.persistence.*
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
@@ -27,6 +18,10 @@ data class Exercise(
     var level: Int = 0,
     var noiseLevel: Int = 0,
     var noiseUrl: String = "",
+    var active: Boolean,
+    var changedBy: String?,
+    var changedWhen: LocalDateTime,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_group_id")
     var subGroup: SubGroup? = null,
@@ -44,7 +39,10 @@ data class Exercise(
         noise = NoiseDto(noiseLevel, noiseUrl),
         available = available,
         tasks = tasks.map { task -> ShortTaskDto(task.id) }.toMutableList(),
-        signals = signals.map { signal -> signal.toSignalDto() }.toMutableList()
+        signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
+        active = active,
+        changedBy = changedBy,
+        changedWhen = changedWhen
     )
 
     fun toDtoWithTasks() = ExerciseWithTasksDto(
@@ -56,6 +54,9 @@ data class Exercise(
         noise = NoiseDto(noiseLevel, noiseUrl),
         tasks = tasks.map { task -> task.toGeneralTaskDto() },
         signals = signals.map { signal -> signal.toSignalDto() },
+        active = active,
+        changedBy = changedBy,
+        changedWhen = changedWhen
     )
 
     override fun toString() =
