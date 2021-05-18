@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "start": "ng serve --port 4201",
+    "start:local": "ng serve --port 4201 --disable-host-check --proxy-config src/proxy.conf.json",
     "build": "ng build --prod --base-href /admin/",
     "test": "ng test --watch=false",
     "test-start": "ng test --watch=true --browsers Chrome",

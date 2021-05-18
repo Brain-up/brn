@@ -1,6 +1,8 @@
 ports:
   - port: 4200
     onOpen: open-preview
+  - port: 4201
+    onOpen: open-preview
   - port: 5432
     onOpen: ignore
     visibility: private
@@ -21,6 +23,11 @@ tasks:
       export GITPODURLHOST=$(gp url 4200|cut -d\/ -f3) &&
       cd /workspace/brn/frontend && 
       yarn local
+  - init: cd frontend-angular && npm install
+    command: >
+      export NG_CLI_ANALYTICS=ci &&
+      cd /workspace/brn/frontend-angular && 
+      npm run start:local
 
 github:
   prebuilds:
