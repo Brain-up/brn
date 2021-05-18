@@ -2,7 +2,7 @@ ports:
   - port: 4200
     onOpen: open-preview
   - port: 4201
-    onOpen: open-preview
+    onOpen: ignore
   - port: 5432
     onOpen: ignore
     visibility: private
