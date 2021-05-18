@@ -2,10 +2,10 @@ const defaultConfig = {
   "disableAnalytics": false
 };
 
-if (process.env.GITPODURLHOST) {
-  console.log(process.env.GITPOD_WORKSPACE_URL);
-  console.log(process.env.GITPODURLHOST);
-  defaultConfig.liveReloadJsUrl = `https://${process.env.GITPODURLHOST}/_lr/livereload.js`
+if (process.env.GITPOD_WORKSPACE_URL) {
+  let workspaceURL = new URL(process.env.GITPOD_WORKSPACE_URL);
+  let port = 4200;
+  defaultConfig.liveReloadJsUrl = `https://${port}-${workspaceURL.host}/_lr/livereload.js`
   defaultConfig.liveReloadOptions = {
     "port": 443,
     "https": true,
