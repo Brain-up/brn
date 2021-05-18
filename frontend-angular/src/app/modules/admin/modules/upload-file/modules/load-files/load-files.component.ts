@@ -6,14 +6,15 @@ import { mergeMap, takeUntil } from 'rxjs/operators';
 import { SnackBarService } from '@root/services/snack-bar.service';
 import { CloudApiService } from '@admin/services/api/cloud-api.service';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-load-file',
-  templateUrl: './load-file.component.html',
-  styleUrls: ['./load-file.component.scss'],
+  selector: 'app-load-files',
+  templateUrl: './load-files.component.html',
+  styleUrls: ['./load-files.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoadFileComponent implements OnInit, OnDestroy {
+export class LoadFilesComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
 
   public folders$: Observable<string[]>;
@@ -24,7 +25,8 @@ export class LoadFileComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly snackBarService: SnackBarService,
     private readonly cloudApiService: CloudApiService,
-    private readonly adminApiService: AdminApiService
+    private readonly adminApiService: AdminApiService,
+    private readonly translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +63,12 @@ export class LoadFileComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => {
         this.router.navigateByUrl('/');
-        this.snackBarService.showHappySnackbar(`${fileName} was successfully uploaded`);
+        this.snackBarService.success(
+          this.translateService.get(
+            'Admin.Modules.UploadFile.Modules.LoadFiles.SnackBar.FileSuccessfullyUploaded [fileName]',
+            fileName
+          )
+        );
       });
   }
 }

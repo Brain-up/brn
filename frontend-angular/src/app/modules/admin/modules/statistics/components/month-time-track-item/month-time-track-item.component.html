@@ -1,4 +1,4 @@
-<div class="calendar" [style.backgroundColor]="LEVEL_COLOR[data.level]">
+<div class="calendar" [style.backgroundColor]="USER_EXERCISING_PROGRESS_STATUS_COLOR[data.progress]">
   <div class="header">
     <div class="dot"></div>
     <div class="dot"></div>
@@ -8,12 +8,20 @@
   </div>
 
   <div class="content">
-    <b class="total-time">{{ data.totalTime }}</b>
+    <b class="time">{{ data.time }}</b>
+
     <br />
-    за <b>{{ data.daysNumber }}</b> дней
+
+    <span
+      [innerHTML]="
+        'Admin.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]' | translate: { days: data.days }
+      "
+    ></span>
   </div>
 </div>
 
-<div class="month-name" [class.current]="data.isCurrentMonth">{{ data.monthName }}</div>
+<div class="date">
+  <div class="month">{{ data.month }}</div>
 
-<div class="year-number" *ngIf="data.isShowYearNumber">{{ data.yearNumber }}</div>
+  <div class="year">{{ data.year }}</div>
+</div>

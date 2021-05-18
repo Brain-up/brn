@@ -1,9 +1,10 @@
+import { Dayjs } from 'dayjs';
+
 export interface IMonthTimeTrackItemData {
-  level: number;
-  totalTime: string;
-  daysNumber: number;
-  isCurrentMonth: boolean;
-  monthName: string;
-  isShowYearNumber: boolean;
-  yearNumber: number;
+  progress: number;
+  time: string;
+  days: number;
+  month: string;
+  year: number;
+  date: Dayjs;
 }
