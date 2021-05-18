@@ -1,10 +1,10 @@
-import Service, {inject as service} from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
-import Router from "@ember/routing/router-service";
-import NetworkService, {LatestUserDTO} from "brn/services/network";
-import IntlService from "ember-intl/services/intl";
-import {tracked} from "@glimmer/tracking";
-import {action} from "@ember/object";
+import Router from '@ember/routing/router-service';
+import NetworkService, { LatestUserDTO } from 'brn/services/network';
+import IntlService from 'ember-intl/services/intl';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
 
 export default class UserDataService extends Service {
   @service('session') session!: Session;
@@ -32,8 +32,8 @@ export default class UserDataService extends Service {
     //debugger;
     localStorage.setItem(this.keyForAvatar, value.toString());
     this.network.patchUserInfo({
-      avatar: value.toString()
-    } as LatestUserDTO)
+      avatar: value.toString(),
+    } as LatestUserDTO);
     this.session.set('data.user.avatar', value);
     this.session.store.persist(this.session.data);
     this._selectedAvatarId = value;
@@ -50,13 +50,11 @@ export default class UserDataService extends Service {
   }
 
   @action setLocale(localeName: string) {
-    const name = localeName === 'ru' ? 'ru-ru': 'en-us';
+    const name = localeName === 'ru' ? 'ru-ru' : 'en-us';
     this.intl.setLocale([name]);
     this.selectedLocale = name;
     localStorage.setItem('locale', name);
-    this.router.transitionTo('groups', { queryParams: { locale: name } });
   }
-
 }
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your services.
