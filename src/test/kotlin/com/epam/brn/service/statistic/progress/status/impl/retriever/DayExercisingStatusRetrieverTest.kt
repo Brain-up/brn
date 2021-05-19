@@ -49,40 +49,52 @@ internal class DayExercisingStatusRetrieverTest {
 
     @Test
     fun `getWorstStatus should return GREAT status when user progress in the range of the status`() {
+        // GIVEN
         `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY)).thenReturn(requirementsStatuses)
         `when`(studyHistory.executionSeconds).thenReturn(20 * 60)
 
+        // WHEN
         val status = retriever.getWorstStatus(listOf(studyHistory))
 
+        // THEN
         assertEquals(UserExercisingProgressStatus.GREAT, status)
     }
 
     @Test
     fun `getWorstStatus should return GOOD status when user progress in the range of the status`() {
+        // GIVEN
         `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY)).thenReturn(requirementsStatuses)
         `when`(studyHistory.executionSeconds).thenReturn(15 * 60)
 
+        // WHEN
         val status = retriever.getWorstStatus(listOf(studyHistory))
 
+        // THEN
         assertEquals(UserExercisingProgressStatus.GOOD, status)
     }
 
     @Test
     fun `getWorstStatus should return BAD status when user progress in the range of the status`() {
+        // GIVEN
         `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY)).thenReturn(requirementsStatuses)
         `when`(studyHistory.executionSeconds).thenReturn(5 * 60)
 
+        // WHEN
         val status = retriever.getWorstStatus(listOf(studyHistory))
 
+        // THEN
         assertEquals(UserExercisingProgressStatus.BAD, status)
     }
 
     @Test
     fun `getSupportedPeriods should return WEEK and DAY periods`() {
+        // GIVEN
         val supportedPeriods = retriever.getSupportedPeriods()
 
+        // WHEN
         val expectedPeriods = listOf(UserExercisingPeriod.WEEK, UserExercisingPeriod.DAY)
 
+        // THEN
         assertEquals(expectedPeriods, supportedPeriods)
     }
 }

@@ -32,13 +32,19 @@ class StatusRequirementsManagerImplIT : BaseIT() {
 
     @Test
     fun `getPeriodRequirements should return all requirements for WEEK period`() {
+        // WHEN
         val periodRequirements = manager.getPeriodRequirements(UserExercisingPeriod.WEEK)
+
+        // THEN
         assertEquals(periodRequirementsWeek, periodRequirements)
     }
 
     @Test
     fun `getPeriodRequirements should return all requirements for DAY period`() {
+        // WHEN
         val periodRequirements = manager.getPeriodRequirements(UserExercisingPeriod.DAY)
+
+        // THEN
         assertEquals(periodRequirementsDay, periodRequirements)
     }
 }

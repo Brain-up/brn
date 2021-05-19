@@ -40,10 +40,10 @@ internal class ProgressStatusManagerImplTest {
 
     @Test
     fun `getStatus should call only retrievers which support WEEK period and return GOOD status`() {
+        // GIVEN
         retrievers.add(weekRetriever)
         retrievers.add(dayRetriever)
         val progress = listOf(studyHistory)
-
         `when`(dayRetriever.getSupportedPeriods()).thenReturn(
             listOf(
                 UserExercisingPeriod.WEEK,
@@ -54,20 +54,21 @@ internal class ProgressStatusManagerImplTest {
         `when`(dayRetriever.getWorstStatus(any())).thenReturn(UserExercisingProgressStatus.GOOD)
         `when`(weekRetriever.getWorstStatus(any())).thenReturn(UserExercisingProgressStatus.GOOD)
 
+        // WHEN
         val status = manager.getStatus(UserExercisingPeriod.WEEK, progress)
 
-        verify(dayRetriever, times(1)).getWorstStatus(progress)
-        verify(weekRetriever, times(1)).getWorstStatus(progress)
-
+        // THEN
+        verify(dayRetriever).getWorstStatus(progress)
+        verify(weekRetriever).getWorstStatus(progress)
         assertEquals(UserExercisingProgressStatus.GOOD, status)
     }
 
     @Test
     fun `getStatus should call only retrievers which support DAY period and return GOOD status`() {
+        // GIVEN
         retrievers.add(weekRetriever)
         retrievers.add(dayRetriever)
         val progress = listOf(studyHistory)
-
         `when`(dayRetriever.getSupportedPeriods()).thenReturn(
             listOf(
                 UserExercisingPeriod.WEEK,
@@ -77,11 +78,12 @@ internal class ProgressStatusManagerImplTest {
         `when`(weekRetriever.getSupportedPeriods()).thenReturn(listOf(UserExercisingPeriod.WEEK))
         `when`(dayRetriever.getWorstStatus(any())).thenReturn(UserExercisingProgressStatus.GOOD)
 
+        // WHEN
         val status = manager.getStatus(UserExercisingPeriod.DAY, progress)
 
-        verify(dayRetriever, times(1)).getWorstStatus(progress)
+        // THEN
+        verify(dayRetriever).getWorstStatus(progress)
         verify(weekRetriever, times(0)).getWorstStatus(progress)
-
         assertEquals(UserExercisingProgressStatus.GOOD, status)
     }
 }

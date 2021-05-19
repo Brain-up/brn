@@ -33,25 +33,31 @@ internal class UserCoolDownRetrieverImplTest {
 
     @Test
     fun `getMaximalUserCoolDown should return 1 day maximal cool down`() {
+        // GIVEN
         `when`(studyHistory1.startTime).thenReturn(time)
         `when`(studyHistory2.startTime).thenReturn(time.plusDays(1))
         `when`(studyHistory3.startTime).thenReturn(time.plusDays(2))
         val progress = listOf(studyHistory1, studyHistory3, studyHistory2)
 
+        // WHEN
         val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserCoolDown(progress)
 
+        // THEN
         assertEquals(1, maximalUserCoolDown)
     }
 
     @Test
     fun `getMaximalUserCoolDown should return 3 day maximal cool down`() {
+        // GIVEN
         `when`(studyHistory1.startTime).thenReturn(time)
         `when`(studyHistory2.startTime).thenReturn(time.plusDays(1))
         `when`(studyHistory3.startTime).thenReturn(time.plusDays(4))
         val progress = listOf(studyHistory1, studyHistory3, studyHistory2)
 
+        // WHEN
         val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserCoolDown(progress)
 
+        // THEN
         assertEquals(3, maximalUserCoolDown)
     }
 }

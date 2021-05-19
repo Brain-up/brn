@@ -30,6 +30,7 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
 
     @Test
     fun `getRequirementsForStatus should return requirements for BAD status`() {
+        // GIVEN
         val status = UserExercisingProgressStatus.BAD
         val period = UserExercisingPeriod.DAY
         val minimalRequirements = 0
@@ -44,13 +45,16 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
             maximalRequirements = maximalRequirements
         )
 
+        // WHEN
         val requirementsForStatus = retrieverApplicationProperties.getRequirementsForStatus(status, period)
 
+        // THEN
         assertEquals(expectedRequirements, requirementsForStatus)
     }
 
     @Test
     fun `getRequirementsForStatus should throw OperationNotSupportedException when unsupported status passed`() {
+        // GIVEN
         val period = UserExercisingPeriod.DAY
         val status = UserExercisingProgressStatus.GOOD
         val maximalRequirements = 15
@@ -59,6 +63,7 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         `when`(env.getProperty("$basePath.$periodName.status.$statusName.maximal")).thenReturn(maximalRequirements.toString())
         `when`(env.getProperty("$basePath.$periodName.status.$statusName.minimal")).thenReturn(null)
 
+        // THEN
         assertThrows<OperationNotSupportedException> {
             retrieverApplicationProperties.getRequirementsForStatus(status, period)
         }

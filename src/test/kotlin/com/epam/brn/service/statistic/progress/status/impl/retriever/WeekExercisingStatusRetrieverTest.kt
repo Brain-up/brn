@@ -53,43 +53,55 @@ internal class WeekExercisingStatusRetrieverTest {
 
     @Test
     fun `getWorstStatus should return GREAT status when user progress in the range of the status`() {
+        // GIVEN
         val period = listOf(studyHistory)
         `when`(coolDownRetriever.getMaximalUserCoolDown(period)).thenReturn(1)
         `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)).thenReturn(requirementsStatuses)
 
+        // WHEN
         val worstStatus = retriever.getWorstStatus(period)
 
+        // THEN
         assertEquals(UserExercisingProgressStatus.GREAT, worstStatus)
     }
 
     @Test
     fun `getWorstStatus should return GOOD status when user progress in the range of the status`() {
+        // GIVEN
         val period = listOf(studyHistory)
         `when`(coolDownRetriever.getMaximalUserCoolDown(period)).thenReturn(2)
         `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)).thenReturn(requirementsStatuses)
 
+        // WHEN
         val worstStatus = retriever.getWorstStatus(period)
 
+        // THEN
         assertEquals(UserExercisingProgressStatus.GOOD, worstStatus)
     }
 
     @Test
     fun `getWorstStatus should return BAD status when user progress in the range of the status`() {
+        // GIVEN
         val period = listOf(studyHistory)
         `when`(coolDownRetriever.getMaximalUserCoolDown(period)).thenReturn(5)
         `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)).thenReturn(requirementsStatuses)
 
+        // WHEN
         val worstStatus = retriever.getWorstStatus(period)
 
+        // THEN
         assertEquals(UserExercisingProgressStatus.BAD, worstStatus)
     }
 
     @Test
     fun `getSupportedPeriods should return WEEK period`() {
+        // GIVEN
         val supportedPeriods = retriever.getSupportedPeriods()
 
+        // WHEN
         val expectedPeriods = listOf(UserExercisingPeriod.WEEK)
 
+        // THEN
         assertEquals(expectedPeriods, supportedPeriods)
     }
 }
