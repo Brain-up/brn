@@ -1,14 +1,17 @@
 package com.epam.brn.service
 
 import com.epam.brn.auth.AuthorityService
+import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
+import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.nhaarman.mockito_kotlin.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -65,8 +68,13 @@ internal class UserAccountServiceTest {
     @Mock
     lateinit var authority: Authority
 
+    @Mock
+    lateinit var headphonesService: HeadphonesService
+
     @Captor
     lateinit var userArgumentCaptor: ArgumentCaptor<UserAccount>
+
+    private fun <T> any(type: Class<T>): T = Mockito.any(type)
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -229,6 +237,107 @@ internal class UserAccountServiceTest {
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
             assertThat(userForSave.fullName).isEqualTo("newName")
             assertThat(userForSave.id).isEqualTo(userAccount.id)
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests for user headphones functionality")
+    inner class HeadphonesFunctionality {
+        @Test
+        fun `should return all headphones for user`() {
+            // GIVEN
+            val listOfHeadphones = setOf(
+                HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
+                HeadphonesDto(name = "second", type = HeadphonesType.ON_EAR_BLUETOOTH)
+            )
+            `when`(headphonesService.getAllHeadphonesForUser(1L)).thenReturn(listOfHeadphones)
+            // WHEN
+            val returnedListOfHeadphones = userAccountService.getAllHeadphonesForUser(1L)
+            // THEN
+            assertThat(returnedListOfHeadphones).isEqualTo(listOfHeadphones)
+        }
+
+        @Test
+        fun `should add new headphones to the user`() {
+            val headphonesToAdd = HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+
+            `when`(userAccountRepository.findUserAccountById(1L)).thenReturn(Optional.of(userAccount))
+            `when`(headphonesService.save(any(Headphones::class.java))).thenReturn(headphonesToAdd)
+            // WHEN
+            val returnedListOfHeadphones = userAccountService.addHeadphonesToUser(1L, headphonesToAdd)
+            // THEN
+            assertThat(returnedListOfHeadphones).isEqualTo(headphonesToAdd)
+        }
+
+        @Test
+        fun `should add new headphones to the current user`() {
+            val headphonesToAdd = HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                password = "test",
+                email = "test@gmail.com",
+                active = true
+            )
+            val authentication = Mockito.mock(Authentication::class.java)
+            val securityContext = Mockito.mock(SecurityContext::class.java)
+            SecurityContextHolder.setContext(securityContext)
+            // WHEN
+            val email = "test@test.com"
+            `when`(authentication.name).thenReturn(email)
+            `when`(securityContext.authentication).thenReturn(authentication)
+            `when`(headphonesService.save(any(Headphones::class.java))).thenReturn(headphonesToAdd)
+            `when`(userAccountRepository.findUserAccountByEmail(email)).thenReturn(Optional.of(userAccount))
+
+            // WHEN
+            val returnedListOfHeadphones = userAccountService.addHeadphonesToCurrentUser(headphonesToAdd)
+            // THEN
+            assertThat(returnedListOfHeadphones).isEqualTo(headphonesToAdd)
+        }
+
+        @Test
+        fun `should return all headphones for the user`() {
+            val headphonesToAdd = setOf(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+
+            `when`(headphonesService.getAllHeadphonesForUser(1L)).thenReturn(headphonesToAdd)
+            // WHEN
+            val returnedListOfHeadphones = userAccountService.getAllHeadphonesForUser(1L)
+            // THEN
+            assertThat(returnedListOfHeadphones).isEqualTo(headphonesToAdd)
+        }
+
+        @Test
+        fun `should return all headphones for current the user`() {
+            val headphones = Headphones(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val headphonesToAdd = mutableSetOf(headphones)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                password = "test",
+                email = "test@gmail.com",
+                active = true,
+                headphones = headphonesToAdd
+            )
+            val authentication = Mockito.mock(Authentication::class.java)
+            val securityContext = Mockito.mock(SecurityContext::class.java)
+            SecurityContextHolder.setContext(securityContext)
+            // WHEN
+            val email = "test@test.com"
+            `when`(authentication.name).thenReturn(email)
+            `when`(securityContext.authentication).thenReturn(authentication)
+            `when`(userAccountRepository.findUserAccountByEmail(email)).thenReturn(Optional.of(userAccount))
+
+            val returnedListOfHeadphones = userAccountService.getAllHeadphonesForCurrentUser()
+
+            // THEN
+            assertThat(returnedListOfHeadphones)
+                .hasSize(NumberUtils.INTEGER_ONE)
+                .usingElementComparatorOnFields("name", "type")
+                .containsExactly(headphones.toDto())
         }
     }
 }

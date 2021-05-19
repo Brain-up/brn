@@ -7,12 +7,14 @@ import java.time.ZonedDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
 
 @Entity
 data class UserAccount(
@@ -31,7 +33,9 @@ data class UserAccount(
     var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
     @Column(nullable = false)
     var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
-    var avatar: String? = null
+    var avatar: String? = null,
+    @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var headphones: MutableSet<Headphones> = hashSetOf()
 ) {
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
@@ -56,7 +60,8 @@ data class UserAccount(
             gender = gender?.let { Gender.valueOf(it) },
             created = created,
             changed = changed,
-            avatar = avatar
+            avatar = avatar,
+            headphones = this.headphones.map(Headphones::toDto).toHashSet()
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)
@@ -73,4 +78,24 @@ data class UserAccount(
         bornYear = bornYear,
         gender = gender?.let { Gender.valueOf(it) },
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UserAccount
+
+        if (id != other.id) return false
+        if (userId != other.userId) return false
+        if (email != other.email) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + (userId?.hashCode() ?: 0)
+        result = 31 * result + (email?.hashCode() ?: 0)
+        return result
+    }
 }

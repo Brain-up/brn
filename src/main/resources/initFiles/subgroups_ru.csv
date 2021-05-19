@@ -19,6 +19,32 @@ SINGLE_SIMPLE_WORDS,17,game,Развлечения,Слова из нашей ж
 SINGLE_SIMPLE_WORDS,18,adventure,Путешествия,Слова из мира путешествий
 SINGLE_SIMPLE_WORDS,19,hospital,В больнице,Слова медицинские
 SINGLE_SIMPLE_WORDS,20,feelings,Что я чувствую,Слова о чувствах и эмоциях
+SINGLE_SIMPLE_WORDS,21,toys,Игрушки,Игрушки
+SINGLE_SIMPLE_WORDS,22,insects,Насекомые,Насекомые
+SINGLE_SIMPLE_WORDS,23,interior,Интерьер,Интерьер
+SINGLE_SIMPLE_WORDS,24,kitchen,На кухне,На кухне
+SINGLE_SIMPLE_WORDS,25,music,Музыка,Музыка
+SINGLE_SIMPLE_WORDS,26,musical_instruments,Музыкальные инструменты,Музыкальные инструменты
+SINGLE_SIMPLE_WORDS,27,birds,Птицы,Птицы
+SINGLE_SIMPLE_WORDS,28,jewelry,Украшения,Украшения
+SINGLE_SIMPLE_WORDS,29,history,История,История
+SINGLE_SIMPLE_WORDS,30,actions,Действия,Действия
+SINGLE_SIMPLE_WORDS,31,audible_actions,Действия(слышимые),Действия(слышимые)
+SINGLE_SIMPLE_WORDS,32,more_transport,Транспорт Дополнение,Транспорт Дополнение
+SINGLE_SIMPLE_WORDS,33,special_transport,Транспорт (спецтехника),Транспорт (спецтехника)
+SINGLE_SIMPLE_WORDS,34,fruit_trees,Плодовые деревья и кусты,Плодовые деревья и кусты
+SINGLE_SIMPLE_WORDS,35,plants,Растения,Растения
+SINGLE_SIMPLE_WORDS,36,trees,Деревья и кустарники,Деревья и кустарники
+SINGLE_SIMPLE_WORDS,37,sport,Спорт,Спорт
+SINGLE_SIMPLE_WORDS,38,shop,В магазине,В магазине
+SINGLE_SIMPLE_WORDS,39,artiodactyls,Парнокопытные,Парнокопытные
+SINGLE_SIMPLE_WORDS,40,dogs,Породы собак,Породы собак
+SINGLE_SIMPLE_WORDS,41,stationery,Канцелярские принадлежности,Канцелярские принадлежности
+SINGLE_SIMPLE_WORDS,42,flowers,Цветы,Цветы
+SINGLE_SIMPLE_WORDS,43,literature,Русский язык и литература,Русский язык и литература
+SINGLE_SIMPLE_WORDS,44,physics,Физика,Физика
+SINGLE_SIMPLE_WORDS,45,biology,Биология,Биология
+SINGLE_SIMPLE_WORDS,46,instruments,Инструменты,Инструменты
 WORDS_SEQUENCES,1,words_2_from_6,По 2 слова из 6, Матрица слов 2 столбца на 3 строки
 WORDS_SEQUENCES,2,words_3_from_6,По 3 слова из 6, Матрица слов 2 столбца на 3 строки
 WORDS_SEQUENCES,3,words_3_from_9,По 3 слова из 9, Матрица слов 3 столбца на 3 строки

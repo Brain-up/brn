@@ -11,15 +11,17 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
+    "paths": {
+      "@root/*": ["src/app/modules/root/*"],
+      "@shared/*": ["src/app/modules/shared/*"],
+      "@auth/*": ["src/app/modules/auth/*"],
+      "@admin/*": ["src/app/modules/admin/*"]
+    }
   },
   "angularCompilerOptions": {
+    "strictTemplates": true,
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }

@@ -1,42 +1,26 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { EffectsModule } from '@ngrx/effects';
-
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { environment } from 'src/environments/environment';
-import { AuthModule } from './modules/auth/auth.module';
-import { BasicAuthInterceptor } from './modules/shared/services/basic-auth.interceptor.service';
-import { AdminModule } from './modules/admin/admin.module';
+import { RootModule } from '@root/root.module';
+import { SvgIconsRegistrarService } from '@root/services/svg-icons-registrar.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ALocaleStorage } from '@shared/storages/local-storage';
+import { DEFAULT_LANG } from '@shared/constants/common-constants';
+import 'dayjs/locale/ru';
+import * as dayjs from 'dayjs';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    AdminModule,
-    AppRoutingModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    StoreModule.forRoot({}),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: environment.production
-    }),
-    EffectsModule.forRoot([]),
-    BrowserAnimationsModule,
-    AuthModule,
-  ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true}],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  imports: [BrowserModule, BrowserAnimationsModule, HttpClientModule, RootModule, AppRoutingModule],
+  bootstrap: [AppComponent],
 })
 export class AppModule {
+  constructor(translateService: TranslateService, svgIconsRegistrarService: SvgIconsRegistrarService) {
+    translateService.setDefaultLang(ALocaleStorage.LANG.get() ?? DEFAULT_LANG);
+    dayjs.locale(translateService.defaultLang);
+    svgIconsRegistrarService.registerIcons();
+  }
 }

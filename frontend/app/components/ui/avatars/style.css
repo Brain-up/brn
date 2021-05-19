@@ -1,0 +1,37 @@
+/*! purgecss start ignore */
+
+
+.activeTab {
+  position: relative;
+}
+
+.activeTab img {
+  position: relative;
+  z-index: 3;
+}
+
+.activeTab:before {
+  content: "";
+  background: linear-gradient(92.58deg, #4691FD 49.26%, #D5B0FF 85.77%);
+  border-radius: 100%;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+}
+.activeTab:after {
+  content: "";
+  position: absolute;
+  border-radius: 100%;
+  background: #fff;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.modal-max-h {
+  max-height: calc(100vh - 300px);
+}
+
+ /*! purgecss end ignore */

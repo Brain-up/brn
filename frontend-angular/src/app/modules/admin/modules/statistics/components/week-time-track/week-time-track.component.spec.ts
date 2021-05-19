@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { WeekTimeTrackComponent } from './week-time-track.component';
 
 describe('WeekTimeTrackComponent', () => {
@@ -8,6 +9,7 @@ describe('WeekTimeTrackComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [WeekTimeTrackComponent],
+      imports: [TranslateModule.forRoot()],
     });
 
     fixture = TestBed.createComponent(WeekTimeTrackComponent);

@@ -25,7 +25,7 @@
     "on:precommit": "lint-staged",
     "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
     "remote": "ember s --secure-proxy=false --proxy=http://ecse005003f1.epam.com/",
-    "remote:prod": "ember s --secure-proxy=true --proxy=https://audibly.ru/",
+    "remote:prod": "ember s --secure-proxy=true --proxy=https://brainup.site/",
     "mirage": "ember s"
   },
   "husky": {
@@ -61,6 +61,7 @@
     "ember-cli/ember-cli-preprocess-registry/broccoli-clean-css/clean-css-promise/clean-css": "^4.1.11",
     "ember-cli/bower-config/optimist/minimist": "^1.2.3",
     "ember-cli-page-object/jquery": "3.5.0",
+    "ember-cli-postcss/merge": "2.1.1",
     "*/@babel/types/lodash": ">=4.17.19",
     "*/elliptic": "^6.5.3",
     "*/node-fetch": "^2.6.1",
