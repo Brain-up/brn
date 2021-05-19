@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { StatisticsInfoDialogComponent } from './statistics-info-dialog.component';
 
 describe('StatisticsInfoDialogComponent', () => {
@@ -10,6 +11,7 @@ describe('StatisticsInfoDialogComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StatisticsInfoDialogComponent],
+      imports: [TranslateModule.forRoot()],
       schemas: [NO_ERRORS_SCHEMA],
     });
 

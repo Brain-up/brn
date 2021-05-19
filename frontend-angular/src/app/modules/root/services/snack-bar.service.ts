@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { isObservable, Observable, of } from 'rxjs';
 
 @Injectable()
 export class SnackBarService {
@@ -7,11 +8,13 @@ export class SnackBarService {
 
   constructor(private readonly matSnackBar: MatSnackBar) {}
 
-  public showHappySnackbar(message: string): void {
-    this.matSnackBar.open(message, ' 😊 ', { duration: this.DISPLAY_DURATION_IN_MS });
+  public success(message: string | Observable<string>): void {
+    const message$ = isObservable(message) ? message : of(message);
+    message$.subscribe((m) => this.matSnackBar.open(m, ' 😊 ', { duration: this.DISPLAY_DURATION_IN_MS }));
   }
 
-  public showSadSnackbar(message: string): void {
-    this.matSnackBar.open(message, ' 😪 ', { duration: this.DISPLAY_DURATION_IN_MS });
+  public error(message: string | Observable<string>): void {
+    const message$ = isObservable(message) ? message : of(message);
+    message$.subscribe((m) => this.matSnackBar.open(m, ' 😪 ', { duration: this.DISPLAY_DURATION_IN_MS }));
   }
 }

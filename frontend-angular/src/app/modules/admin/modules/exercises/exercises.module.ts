@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
 import { ExercisesComponent } from './components/exercises/exercises.component';
 import { SelectPanelComponent } from './components/exercises/select-panel/select-panel.component';
 import { ExercisesRoutingModule } from './exercises-routing.module';
@@ -23,7 +22,7 @@ import { ExercisesRoutingModule } from './exercises-routing.module';
     MatIconModule,
     MatTableModule,
     MatSortModule,
-    MatSlideToggleModule
-  ]
+    MatSlideToggleModule,
+  ],
 })
-export class ExercisesModule { }
+export class ExercisesModule {}

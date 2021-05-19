@@ -9,17 +9,16 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { catchError, filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-
+import { catchError, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { GroupApiService } from '@admin/services/api/group-api.service';
 import { SeriesApiService } from '@admin/services/api/series-api.service';
 import { SubGroupApiService } from '@admin/services/api/sub-group-api.service';
-import { ExercisesApiService } from '@admin/services/api/exercises-api.service';
 import { LANGUAGES } from './languages';
 import { Language } from '../../../models/language';
 import { Group } from '@admin/models/group';
 import { Series } from '@admin/models/series';
 import { Subgroup } from '@admin/models/subgroup';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
 
 enum DEFAULT_SELECT_VALUE {
  languageId = 'ru-ru',
@@ -45,7 +44,7 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
   }
   @Output() groupChanged = new EventEmitter<string>();
   @Output() seriesChanged = new EventEmitter<string>(); // emit seriesName
-  @Output() subGroupChanged = new EventEmitter<string>();
+  @Output() subGroupChanged = new EventEmitter<number>();
 
   languages: Language[] = LANGUAGES;
   groups$: Observable<Group[]>;
@@ -60,11 +59,11 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
   private readonly LOG_SOURCE = 'SelectPanelComponent';
 
   constructor(
-    private groupApiService: GroupApiService,
-    private seriesApiService: SeriesApiService,
-    private subGroupApiService: SubGroupApiService,
-    private exercisesApiService: ExercisesApiService) {
-  }
+    private readonly groupApiService: GroupApiService,
+    private readonly seriesApiService: SeriesApiService,
+    private readonly subGroupApiService: SubGroupApiService,
+    private readonly adminApiService: AdminApiService
+  ) {}
 
   ngOnInit(): void {
     this.initGroups();
@@ -146,11 +145,13 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
 
   private onSubGroupChanged(): void {
     this.subGroupsControl.valueChanges.pipe(
-      tap((id: string) => {
-        this.subGroupChanged.emit(id);
+      map((id: string) => {
+        const subGroupId = Number(id);
+        this.subGroupChanged.emit(subGroupId);
+        return subGroupId;
       }),
-      filter(Boolean),
-      switchMap((subGroupId: string) => this.exercisesApiService.getExercisesBySubGroupId(subGroupId)),
+      filter<number>(Boolean),
+      switchMap((subGroupId) => this.adminApiService.getExercisesBySubGroupId(subGroupId)),
       catchError(err => {
         console.error(this.LOG_SOURCE, 'An error occurred during getExercisesBySubGroupId', err);
         return EMPTY;

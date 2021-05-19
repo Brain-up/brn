@@ -10,11 +10,11 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'file',
+        redirectTo: 'files',
       },
       {
-        path: 'file',
-        loadChildren: () => import('./modules/load-file/load-file.module').then((m) => m.LoadFileModule),
+        path: 'files',
+        loadChildren: () => import('./modules/load-files/load-files.module').then((m) => m.LoadFilesModule),
       },
       {
         path: 'tasks',

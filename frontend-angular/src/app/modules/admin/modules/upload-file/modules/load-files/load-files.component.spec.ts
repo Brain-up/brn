@@ -4,27 +4,30 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@root/services/snack-bar.service';
-import { LoadFileComponent } from './load-file.component';
+import { LoadFilesComponent } from './load-files.component';
 
-describe('LoadFileComponent', () => {
-  let fixture: ComponentFixture<LoadFileComponent>;
-  let component: LoadFileComponent;
+describe('LoadFilesComponent', () => {
+  let fixture: ComponentFixture<LoadFilesComponent>;
+  let component: LoadFilesComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadFileComponent],
+      declarations: [LoadFilesComponent],
+      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: {} },
         { provide: FormBuilder, useValue: {} },
         { provide: SnackBarService, useValue: {} },
         { provide: CloudApiService, useValue: {} },
         { provide: AdminApiService, useValue: {} },
+        { provide: TranslateService, useValue: {} },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     });
 
-    fixture = TestBed.createComponent(LoadFileComponent);
+    fixture = TestBed.createComponent(LoadFilesComponent);
     component = fixture.componentInstance;
   });
 

@@ -1,15 +1,17 @@
-<div class="relative flex flex-row flex-wrap overflow-y-auto justify-between {{style-namespace 'ui/avatars'}}" >
+<div class="p-8 relative flex flex-row flex-wrap justify-between {{style-namespace 'ui/avatars'}}" >
   <div class="w-full mb-6">{{t "avatar_controls.title"}}</div>
-  {{#each this.avatars as |avatar index|}}
-      <div class="flex w-32 h-32 m-2 text-center bg-white rounded-full shadow-lg">
-        <button title="Select Avatar" type="button"
-          {{on "click" (fn this.onSelect (inc index)) }}
-                class="{{if (eq this.activeTab (inc index)) "activeTab"}} focus:outline-none">
-          <img src={{avatar}} alt="Avatar Upload" class="object-none object-center w-auto h-full max-h-full mx-auto rounded-full" />
-        </button>
-      </div>
-  {{/each}}
-  <div class="flex justify-end w-full mt-16">
+  <div class="flex flex-row flex-wrap overflow-y-auto justify-between modal-max-h">
+    {{#each this.avatars as |avatar index|}}
+        <div class="flex w-32 h-32 m-2 text-center bg-white rounded-full shadow-lg">
+          <button title="Select Avatar" type="button"
+            {{on "click" (fn this.onSelect (inc index)) }}
+                  class="{{if (eq this.activeTab (inc index)) "activeTab"}} focus:outline-none">
+            <img src={{avatar}} alt="Avatar Upload" class="object-none object-center w-auto h-full max-h-full mx-auto rounded-full" />
+          </button>
+        </div>
+    {{/each}}
+  </div>
+  <div class="flex justify-end w-full mt-8">
       <Ui::Button
           {{on "click" (fn (optional @onCancel) )}}
           @size="small"
