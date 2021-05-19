@@ -4,11 +4,27 @@ import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.ShortTaskDto
+import org.springframework.data.annotation.LastModifiedBy
+import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.EntityListeners
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
+@EntityListeners(AuditingEntityListener::class)
 data class Exercise(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +34,7 @@ data class Exercise(
     var level: Int = 0,
     var noiseLevel: Int = 0,
     var noiseUrl: String = "",
-    var active: Boolean,
-    var changedBy: String?,
-    var changedWhen: LocalDateTime,
+    var active: Boolean = true,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_group_id")
@@ -30,6 +44,14 @@ data class Exercise(
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val signals: MutableSet<Signal> = LinkedHashSet()
 ) {
+    @LastModifiedBy
+    @Column(name = "changed_by")
+    var changedBy: String = ""
+
+    @Column(name = "changed_when")
+    @LastModifiedDate
+    var changedWhen: LocalDateTime = LocalDateTime.now()
+
     fun toDto(available: Boolean = true) = ExerciseDto(
         seriesId = subGroup?.id,
         id = id,
@@ -61,7 +83,7 @@ data class Exercise(
 
     override fun toString() =
         "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, " +
-            "noiseUrl=$noiseUrl, template=$template)"
+                "noiseUrl=$noiseUrl, template=$template, active=$active)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
