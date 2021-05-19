@@ -91,4 +91,20 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " AND s.userAccount.id = :userId"
     )
     fun getTodayHistories(userId: Long): List<StudyHistory>
+
+    @Query(
+        "SELECT s FROM StudyHistory s " +
+            " WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
+            " AND s.userAccount.id = :userId"
+    )
+    fun getYearStatistic(userId: Long, year: Int): List<StudyHistory>
+
+    @Query(
+        "SELECT s FROM StudyHistory s " +
+            "WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
+            "AND EXTRACT(MONTH FROM s.startTime) = :month " +
+            "AND EXTRACT(DAY FROM s.startTime) = :day " +
+            "AND s.userAccount.id = :userId"
+    )
+    fun getDayStatistic(userId: Long, year: Int, month: Int, day: Int): List<StudyHistory>
 }

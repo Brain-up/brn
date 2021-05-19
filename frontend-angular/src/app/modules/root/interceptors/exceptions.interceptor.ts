@@ -7,13 +7,15 @@ import { Router } from '@angular/router';
 import { SnackBarService } from '@root/services/snack-bar.service';
 import { AUTH_PAGE } from '@shared/constants/common-constants';
 import { AuthTokenService } from '@root/services/auth-token.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ExceptionsInterceptor implements HttpInterceptor {
   constructor(
     private readonly router: Router,
     private readonly snackBarService: SnackBarService,
-    private readonly authTokenService: AuthTokenService
+    private readonly authTokenService: AuthTokenService,
+    private readonly translateService: TranslateService
   ) {}
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -24,12 +26,15 @@ export class ExceptionsInterceptor implements HttpInterceptor {
             switch (err.status) {
               case 0:
               case StatusCodes.UNAUTHORIZED:
-                this.snackBarService.showSadSnackbar('Unauthorized');
+                this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.Unauthorized'));
                 this.authTokenService.removeAuthToken();
                 this.router.navigateByUrl(AUTH_PAGE);
                 break;
 
               default:
+                this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.UnknownError'));
+                this.authTokenService.removeAuthToken();
+                this.router.navigateByUrl(AUTH_PAGE);
                 break;
             }
           }

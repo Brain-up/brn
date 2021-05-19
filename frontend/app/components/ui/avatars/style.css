@@ -30,5 +30,8 @@
   right: 0;
   bottom: 0;
 }
+.modal-max-h {
+  max-height: calc(100vh - 300px);
+}
 
  /*! purgecss end ignore */

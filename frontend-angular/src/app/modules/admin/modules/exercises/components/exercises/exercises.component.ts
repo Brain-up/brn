@@ -8,12 +8,10 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 import { map, filter, switchMap, tap } from 'rxjs/operators';
-
-import { Answer, Exercise, Task } from '../../../../models/exercise';
-import { ExercisesApiService } from '@admin/services/api/exercises-api.service';
+import { Answer, Exercise, Task } from '@admin/models/exercise';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
 
 @Component({
   selector: 'app-exercises',
@@ -32,15 +30,10 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   seriesName$ = new BehaviorSubject<string>('');
   private groupId$ = new Subject<string>();
-  private subGroupId$ = new Subject<string>();
+  private subGroupId$ = new Subject<number>();
   private subscription: Subscription;
-  private readonly LOG_SOURCE = 'ExercisesComponent';
 
-  constructor(
-    private exercisesApiService: ExercisesApiService,
-    private cdr: ChangeDetectorRef
-  ) {
-  }
+  constructor(private readonly adminApiService: AdminApiService, private readonly cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.initDataSource();
@@ -55,7 +48,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
     this.seriesName$.next(seriesName);
   }
 
-  onSubGroupChange(subGroupId: string): void {
+  onSubGroupChange(subGroupId: number): void {
     this.subGroupId$.next(subGroupId);
   }
 
@@ -88,19 +81,17 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   private initExercises() {
     this.subscription = combineLatest([this.groupId$, this.seriesName$, this.subGroupId$]).pipe(
-      map((argsArray: string[]) => {
+      map((argsArray) => {
         const allIdsExist = argsArray.every(x => !!x);
         if (!allIdsExist) {
           this.hideExercisesTable();
         }
         return allIdsExist ? argsArray[2] : false;
       }),
-      filter(Boolean),
-      tap(_ => {
-        this.showExercises = true;
-      }),
-      switchMap((subGroupId: string) => this.exercisesApiService.getExercisesBySubGroupId(subGroupId))
-    ).subscribe((exercises: Exercise[]) => {
+      filter<number>(Boolean),
+      tap(_ => (this.showExercises = true)),
+      switchMap((subGroupId) => this.adminApiService.getExercisesBySubGroupId(subGroupId))
+    ).subscribe((exercises) => {
       this.setDataSource(exercises);
       this.cdr.detectChanges();
     });
