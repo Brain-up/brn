@@ -5,28 +5,28 @@ import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.service.statistic.progress.status.requirements.StatusRequirementsManager
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertEquals
 
 /**
  * @author Nikolai Lazarev
  */
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class DayExercisingStatusRetrieverTest {
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var retriever: DayExercisingStatusRetriever
 
-    @Mock
+    @MockK
     private lateinit var studyHistory: StudyHistory
 
-    @Mock
+    @MockK
     private lateinit var requirementsManager: StatusRequirementsManager
 
     private val requirementsStatuses = listOf(
@@ -50,8 +50,8 @@ internal class DayExercisingStatusRetrieverTest {
     @Test
     fun `getWorstStatus should return GREAT status when user progress in the range of the status`() {
         // GIVEN
-        `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY)).thenReturn(requirementsStatuses)
-        `when`(studyHistory.executionSeconds).thenReturn(20 * 60)
+        every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY) } returns requirementsStatuses
+        every { studyHistory.executionSeconds } returns 20 * 60
 
         // WHEN
         val status = retriever.getWorstStatus(listOf(studyHistory))
@@ -63,8 +63,8 @@ internal class DayExercisingStatusRetrieverTest {
     @Test
     fun `getWorstStatus should return GOOD status when user progress in the range of the status`() {
         // GIVEN
-        `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY)).thenReturn(requirementsStatuses)
-        `when`(studyHistory.executionSeconds).thenReturn(15 * 60)
+        every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY) } returns requirementsStatuses
+        every { studyHistory.executionSeconds } returns 15 * 60
 
         // WHEN
         val status = retriever.getWorstStatus(listOf(studyHistory))
@@ -76,8 +76,8 @@ internal class DayExercisingStatusRetrieverTest {
     @Test
     fun `getWorstStatus should return BAD status when user progress in the range of the status`() {
         // GIVEN
-        `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY)).thenReturn(requirementsStatuses)
-        `when`(studyHistory.executionSeconds).thenReturn(5 * 60)
+        every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY) } returns requirementsStatuses
+        every { studyHistory.executionSeconds } returns 5 * 60
 
         // WHEN
         val status = retriever.getWorstStatus(listOf(studyHistory))

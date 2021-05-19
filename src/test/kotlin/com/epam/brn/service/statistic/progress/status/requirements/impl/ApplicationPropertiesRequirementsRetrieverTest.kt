@@ -3,13 +3,13 @@ package com.epam.brn.service.statistic.progress.status.requirements.impl
 import com.epam.brn.dto.statistic.StatusRequirements
 import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.core.env.Environment
 import javax.naming.OperationNotSupportedException
 import kotlin.test.assertEquals
@@ -18,13 +18,13 @@ import kotlin.test.assertEquals
  * @author Nikolai Lazarev
  */
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class ApplicationPropertiesRequirementsRetrieverTest {
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var retrieverApplicationProperties: ApplicationPropertiesRequirementsRetriever
 
-    @Mock
+    @MockK
     private lateinit var env: Environment
     private val basePath = "brn.statistic.progress"
 
@@ -37,8 +37,8 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val maximalRequirements = 15
         val periodName = period.name.toLowerCase()
         val statusName = status.name.toLowerCase()
-        `when`(env.getProperty("$basePath.$periodName.status.$statusName.maximal")).thenReturn(maximalRequirements.toString())
-        `when`(env.getProperty("$basePath.$periodName.status.$statusName.minimal")).thenReturn(minimalRequirements.toString())
+        every { env.getProperty("$basePath.$periodName.status.$statusName.maximal") } returns maximalRequirements.toString()
+        every { env.getProperty("$basePath.$periodName.status.$statusName.minimal") } returns minimalRequirements.toString()
         val expectedRequirements = StatusRequirements(
             status = status,
             minimalRequirements = minimalRequirements,
@@ -60,8 +60,8 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val maximalRequirements = 15
         val periodName = period.name.toLowerCase()
         val statusName = status.name.toLowerCase()
-        `when`(env.getProperty("$basePath.$periodName.status.$statusName.maximal")).thenReturn(maximalRequirements.toString())
-        `when`(env.getProperty("$basePath.$periodName.status.$statusName.minimal")).thenReturn(null)
+        every { env.getProperty("$basePath.$periodName.status.$statusName.maximal") } returns maximalRequirements.toString()
+        every { env.getProperty("$basePath.$periodName.status.$statusName.minimal") } returns null
 
         // THEN
         assertThrows<OperationNotSupportedException> {

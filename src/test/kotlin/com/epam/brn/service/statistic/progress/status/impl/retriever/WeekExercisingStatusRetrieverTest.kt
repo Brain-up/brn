@@ -6,31 +6,31 @@ import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.service.statistic.progress.status.UserCoolDownRetriever
 import com.epam.brn.service.statistic.progress.status.requirements.StatusRequirementsManager
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertEquals
 
 /**
  * @author Nikolai Lazarev
  */
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class WeekExercisingStatusRetrieverTest {
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var retriever: WeekExercisingStatusRetriever
 
-    @Mock
+    @MockK
     private lateinit var requirementsManager: StatusRequirementsManager
 
-    @Mock
+    @MockK
     private lateinit var coolDownRetriever: UserCoolDownRetriever
 
-    @Mock
+    @MockK
     private lateinit var studyHistory: StudyHistory
 
     private val requirementsStatuses = listOf(
@@ -55,8 +55,8 @@ internal class WeekExercisingStatusRetrieverTest {
     fun `getWorstStatus should return GREAT status when user progress in the range of the status`() {
         // GIVEN
         val period = listOf(studyHistory)
-        `when`(coolDownRetriever.getMaximalUserCoolDown(period)).thenReturn(1)
-        `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)).thenReturn(requirementsStatuses)
+        every { coolDownRetriever.getMaximalUserCoolDown(period) } returns 1
+        every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
         val worstStatus = retriever.getWorstStatus(period)
@@ -69,8 +69,8 @@ internal class WeekExercisingStatusRetrieverTest {
     fun `getWorstStatus should return GOOD status when user progress in the range of the status`() {
         // GIVEN
         val period = listOf(studyHistory)
-        `when`(coolDownRetriever.getMaximalUserCoolDown(period)).thenReturn(2)
-        `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)).thenReturn(requirementsStatuses)
+        every { coolDownRetriever.getMaximalUserCoolDown(period) } returns 2
+        every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
         val worstStatus = retriever.getWorstStatus(period)
@@ -83,8 +83,8 @@ internal class WeekExercisingStatusRetrieverTest {
     fun `getWorstStatus should return BAD status when user progress in the range of the status`() {
         // GIVEN
         val period = listOf(studyHistory)
-        `when`(coolDownRetriever.getMaximalUserCoolDown(period)).thenReturn(5)
-        `when`(requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)).thenReturn(requirementsStatuses)
+        every { coolDownRetriever.getMaximalUserCoolDown(period) } returns 5
+        every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
         val worstStatus = retriever.getWorstStatus(period)
