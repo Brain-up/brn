@@ -12,77 +12,77 @@ import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.upload.CsvUploadService
-import com.nhaarman.mockito_kotlin.doNothing
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.just
+import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.data.domain.Pageable
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class AdminControllerTest {
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var adminController: AdminController
 
-    @Mock
+    @MockK
     private lateinit var userAccountService: UserAccountService
 
-    @Mock
+    @MockK
     private lateinit var studyHistoryService: StudyHistoryService
 
-    @Mock
+    @MockK
     private lateinit var exerciseService: ExerciseService
 
-    @Mock
+    @MockK
     private lateinit var csvUploadService: CsvUploadService
 
-    @Mock
+    @MockK
     private lateinit var resourceService: ResourceService
 
-    @Mock
+    @MockK
     private lateinit var pageable: Pageable
 
-    @Mock
+    @MockK
     private lateinit var file: MultipartFile
 
-    @Mock
+    @MockK
     private lateinit var request: UpdateResourceDescriptionRequest
 
-    @Mock
+    @MockK
     private lateinit var userWithAnalyticsDto: UserWithAnalyticsDto
 
-    @Mock
+    @MockK
     private lateinit var userAccountDto: UserAccountDto
 
-    @Mock
+    @MockK
     private lateinit var studyHistoryDto: StudyHistoryDto
 
-    @Mock
+    @MockK
     private lateinit var exerciseWithTasksDto: ExerciseWithTasksDto
 
-    @Mock
+    @MockK
     private lateinit var resourceDto: ResourceDto
 
     @Test
     fun `getUsers should return users with statistic when withAnalytics is true`() {
         // GIVEN
         val withAnalytics = true
-        `when`(userAccountService.getUsersWithAnalytics(pageable)).thenReturn(listOf(userWithAnalyticsDto))
+        every { userAccountService.getUsersWithAnalytics(pageable) } returns listOf(userWithAnalyticsDto)
 
         // WHEN
         val users = adminController.getUsers(withAnalytics, pageable)
 
         // THEN
-        verify(userAccountService, times(1)).getUsersWithAnalytics(pageable)
+        verify(exactly = 1) { userAccountService.getUsersWithAnalytics(pageable) }
         assertEquals(HttpStatus.SC_OK, users.statusCodeValue)
         assertEquals(listOf(userWithAnalyticsDto), (users.body as BaseResponseDto).data)
     }
@@ -91,13 +91,13 @@ internal class AdminControllerTest {
     fun `getUsers should return users when withAnalytics is false`() {
         // GIVEN
         val withAnalytics = false
-        `when`(userAccountService.getUsers(pageable)).thenReturn(listOf(userAccountDto))
+        every { userAccountService.getUsers(pageable) } returns listOf(userAccountDto)
 
         // WHEN
         val users = adminController.getUsers(withAnalytics, pageable)
 
         // THEN
-        verify(userAccountService, times(1)).getUsers(pageable)
+        verify(exactly = 1) { userAccountService.getUsers(pageable) }
         assertEquals(HttpStatus.SC_OK, users.statusCodeValue)
         assertEquals(listOf(userAccountDto), (users.body as BaseResponseDto).data)
     }
@@ -107,13 +107,13 @@ internal class AdminControllerTest {
         // GIVEN
         val userId = 1L
         val date = LocalDate.now()
-        `when`(studyHistoryService.getHistories(userId, date, date)).thenReturn(listOf(studyHistoryDto))
+        every { studyHistoryService.getHistories(userId, date, date) } returns listOf(studyHistoryDto)
 
         // WHEN
         val histories = adminController.getHistories(userId, date, date)
 
         // THEN
-        verify(studyHistoryService, times(1)).getHistories(userId, date, date)
+        verify(exactly = 1) { studyHistoryService.getHistories(userId, date, date) }
         assertEquals(HttpStatus.SC_OK, histories.statusCodeValue)
         assertEquals(listOf(studyHistoryDto), histories.body!!.data)
     }
@@ -124,13 +124,13 @@ internal class AdminControllerTest {
         val userId = 1L
         val month = 1
         val year = 2021
-        `when`(studyHistoryService.getMonthHistories(userId, month, year)).thenReturn(listOf(studyHistoryDto))
+        every { studyHistoryService.getMonthHistories(userId, month, year) } returns listOf(studyHistoryDto)
 
         // WHEN
         val monthHistories = adminController.getMonthHistories(userId, month, year)
 
         // THEN
-        verify(studyHistoryService, times(1)).getMonthHistories(userId, month, year)
+        verify(exactly = 1) { studyHistoryService.getMonthHistories(userId, month, year) }
         assertEquals(HttpStatus.SC_OK, monthHistories.statusCodeValue)
         assertEquals(listOf(studyHistoryDto), monthHistories.body!!.data)
     }
@@ -139,7 +139,7 @@ internal class AdminControllerTest {
     fun `loadExercises should return http status 201`() {
         // GIVEN
         val seriesId = 1L
-        doNothing().`when`(csvUploadService).loadExercises(seriesId, file)
+        every { csvUploadService.loadExercises(seriesId, file) } just Runs
 
         // WHEN
         val loadExercises = adminController.loadExercises(seriesId, file)
@@ -152,13 +152,13 @@ internal class AdminControllerTest {
     fun `getExercisesBySubGroup should return data with http status 200`() {
         // GIVEN
         val subGroupId = 1L
-        `when`(exerciseService.findExercisesWithTasksBySubGroup(subGroupId)).thenReturn(listOf(exerciseWithTasksDto))
+        every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseWithTasksDto)
 
         // WHEN
         val exercises = adminController.getExercisesBySubGroup(subGroupId)
 
         // THEN
-        verify(exerciseService, times(1)).findExercisesWithTasksBySubGroup(subGroupId)
+        verify(exactly = 1) { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) }
         assertEquals(HttpStatus.SC_OK, exercises.statusCodeValue)
         assertEquals(listOf(exerciseWithTasksDto), exercises.body!!.data)
     }
@@ -168,14 +168,14 @@ internal class AdminControllerTest {
         // GIVEN
         val id = 1L
         val description = "description"
-        `when`(request.description).thenReturn(description)
-        `when`(resourceService.updateDescription(id, description)).thenReturn(resourceDto)
+        every { request.description } returns description
+        every { resourceService.updateDescription(id, description) } returns resourceDto
 
         // WHEN
         val updated = adminController.updateResourceDescription(id, request)
 
         // THEN
-        verify(resourceService, times(1)).updateDescription(id, description)
+        verify(exactly = 1) { resourceService.updateDescription(id, description) }
         assertEquals(HttpStatus.SC_OK, updated.statusCodeValue)
         assertEquals(resourceDto, updated.body!!.data)
     }
