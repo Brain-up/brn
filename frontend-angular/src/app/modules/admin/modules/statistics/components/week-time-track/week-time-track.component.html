@@ -1,13 +1,5 @@
-<div class="title">Время ежедневных занятий по неделям</div>
+<div class="title">{{ 'Admin.Modules.Statistics.Components.WeekTimeTrack.Title' | translate }}</div>
 
 <div class="content">
-  <button mat-button class="prev" (click)="loadPrevWeek()">
-    <mat-icon svgIcon="left-arrow"></mat-icon>
-  </button>
-
   <div #chart class="chart"></div>
-
-  <button mat-button class="next" (click)="loadNextWeek()">
-    <mat-icon svgIcon="right-arrow"></mat-icon>
-  </button>
 </div>

@@ -3,11 +3,24 @@
 :host {
   $borderRadius: 8px;
 
+  border-radius: $borderRadius;
+  cursor: pointer;
+
+  &.selected {
+    background: $brain-gradient;
+
+    .date {
+      .month,
+      .year {
+        color: #ffffff;
+      }
+    }
+  }
+
   .calendar {
-    border-radius: $borderRadius;
-    margin-bottom: 7px;
     color: $charcoal-grey-color;
     width: 80px;
+    border-radius: $borderRadius;
 
     .header {
       display: flex;
@@ -34,25 +47,23 @@
       white-space: nowrap;
       overflow: hidden;
 
-      b.total-time {
+      b.time {
         font-size: 12px;
       }
     }
   }
 
-  .month-name,
-  .year-number {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 10px;
-    line-height: 16px;
-    text-transform: uppercase;
-    text-align: center;
-  }
+  .date {
+    padding: 2px 0;
 
-  .month-name.current {
-    background-color: $cold-violet-color;
-    border-radius: $borderRadius;
-    color: #ffffff;
+    .month,
+    .year {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 10px;
+      line-height: 16px;
+      text-transform: uppercase;
+      text-align: center;
+    }
   }
 }

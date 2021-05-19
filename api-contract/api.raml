@@ -34,6 +34,60 @@ mediaType:
               errors: [],
               meta: []
             }
+  /study/week:
+    get:
+      description: get user's weekly statistic for period
+      queryParameters:
+        from:
+          required: true
+          type: date
+          example: 2000-11-23
+        to:
+          required: true
+          type: date
+          example: 2000-11-23
+      response:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2020-11-23
+                  exercisingTimeSeconds: 3000
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+  /study/year:
+    get:
+      description: get user's yearly statistic for period
+      queryParameters:
+        from:
+          required: true
+          type: date
+          example: 2000-11-23
+        to:
+          required: true
+          type: date
+          example: 2000-11-23
+      response:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2020-11
+                  exercisingDays: 15
+                  exercisingTimeSeconds: 3000
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+
 
 # AUDIOMETRY-----------------------------------
 /audiometrics:
@@ -463,24 +517,85 @@ mediaType:
               200:
                 example: !include samples/study_histories_dto_response.json
     /monthHistories:
-        get:
-            description: get histories for user by month and year
-            queryParameters:
-                  userId:
-                        required: true
-                        type: integer
-                        example: 1
-                  month:
-                        required: true
-                        type: integer
-                        example: 11
-                  year:
-                        required: true
-                        type: integer
-                        example: 2020
-            responses:
-                  200:
-                    example: !include samples/study_histories_dto_response.json
+      get:
+          description: get histories for user by month and year
+          queryParameters:
+                userId:
+                      required: true
+                      type: integer
+                      example: 1
+                month:
+                      required: true
+                      type: integer
+                      example: 11
+                year:
+                      required: true
+                      type: integer
+                      example: 2020
+          responses:
+                200:
+                  example: !include samples/study_histories_dto_response.json
+    /study/week:
+      get:
+        description: get user's weekly statistic for period
+        queryParameters:
+          userId:
+            required: true
+            type: long
+            example: 1
+          from:
+            required: true
+            type: date
+            example: 2000-11-23
+          to:
+            required: true
+            type: date
+            example: 2000-11-23
+        response:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2020-11-23
+                    exercisingTimeSeconds: 3000
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
+    /study/year:
+      get:
+        description: get user's yearly statistic for period
+        queryParameters:
+          userId:
+            required: true
+            type: long
+            example: 1
+          from:
+            required: true
+            type: date
+            example: 2000-11-23
+          to:
+            required: true
+            type: date
+            example: 2000-11-23
+        response:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2020-11
+                    exercisingDays: 15
+                    exercisingTimeSeconds: 3000
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
     /resources:
         /{id}:
           patch:

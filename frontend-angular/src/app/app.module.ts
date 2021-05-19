@@ -9,6 +9,8 @@ import { SvgIconsRegistrarService } from '@root/services/svg-icons-registrar.ser
 import { TranslateService } from '@ngx-translate/core';
 import { ALocaleStorage } from '@shared/storages/local-storage';
 import { DEFAULT_LANG } from '@shared/constants/common-constants';
+import 'dayjs/locale/ru';
+import * as dayjs from 'dayjs';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,6 +20,7 @@ import { DEFAULT_LANG } from '@shared/constants/common-constants';
 export class AppModule {
   constructor(translateService: TranslateService, svgIconsRegistrarService: SvgIconsRegistrarService) {
     translateService.setDefaultLang(ALocaleStorage.LANG.get() ?? DEFAULT_LANG);
+    dayjs.locale(translateService.defaultLang);
     svgIconsRegistrarService.registerIcons();
   }
 }

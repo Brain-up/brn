@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "start": "ng serve --port 4201",
+    "start:local": "ng serve --port 4201 --disable-host-check --proxy-config src/proxy.conf.json",
     "build": "ng build --prod --base-href /admin/",
     "test": "ng test --watch=false",
+    "test-start": "ng test --watch=true --browsers Chrome",
     "lint": "ng lint",
     "i18n-extract": "ngx-translate-extract --input=src --output=src/assets/i18n/ru.json src/assets/i18n/en.json --format=namespaced-json --format-indentation=\"  \" --key-as-default-value --clean --sort"
   },
@@ -24,6 +26,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "billboard.js": "^3.0.3",
+    "dayjs": "^1.10.4",
     "fp-ts": "^2.5.3",
     "http-status-codes": "^2.1.4",
     "rxjs": "~6.5.4",

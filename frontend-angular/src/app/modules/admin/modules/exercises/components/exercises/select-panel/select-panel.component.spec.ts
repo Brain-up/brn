@@ -5,15 +5,20 @@ describe('SelectPanelComponent', () => {
   let groupApiServiceMock;
   let seriesApiServiceMock;
   let subGroupApiServiceMock;
-  let exercisesApiServiceMock;
+  let adminApiServiceMock;
 
   beforeEach(() => {
     groupApiServiceMock = jasmine.createSpyObj('GroupApiService', ['getGroups']);
     seriesApiServiceMock = jasmine.createSpyObj('SeriesApiService', ['getSeriesByGroupId']);
     subGroupApiServiceMock = jasmine.createSpyObj('SubGroupApiService', ['getSubgroupsBySeriesId']);
-    exercisesApiServiceMock = jasmine.createSpyObj('ExercisesApiService', ['getExercisesBySubGroupId']);
+    adminApiServiceMock = jasmine.createSpyObj('AdminApiService', ['getExercisesBySubGroupId']);
 
-    component = new SelectPanelComponent(groupApiServiceMock, seriesApiServiceMock, subGroupApiServiceMock, exercisesApiServiceMock);
+    component = new SelectPanelComponent(
+      groupApiServiceMock,
+      seriesApiServiceMock,
+      subGroupApiServiceMock,
+      adminApiServiceMock
+    );
   });
 
   it('should create', () => {

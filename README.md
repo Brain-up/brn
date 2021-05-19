@@ -124,7 +124,7 @@ it would create db first time. and if you would not delete db image - structure 
   "username": "default@default.ru",
   "password": "password"
 }
-5. then you can call all other end-points from Postman collection https://app.getpostman.com/join-team?invite_code=a0b5da8aaf3fe3f5b7f157db5023e834 like
+5. then you can call all other end-points from Postman collection https://www.getpostman.com/collections/2df39c7c6f7f26a63d85 like
 http://localhost:8081/api/exercises/142 
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
 6. for logout use http://localhost:8081/api/logout
@@ -182,7 +182,7 @@ Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number
 - GitHub for code place and actions where we run CICD
 - Yandex for Yandex Speech Kit service and free account to use it
 
-### Thanks for our contributors
+### Thanks for contribution!
 
 
 ### License
