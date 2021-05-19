@@ -7,10 +7,13 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
+import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.mockk.Runs
 import io.mockk.every
@@ -35,6 +38,12 @@ internal class AdminControllerTest {
 
     @MockK
     private lateinit var userAccountService: UserAccountService
+
+    @MockK
+    private lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
+
+    @MockK
+    private lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 
     @MockK
     private lateinit var studyHistoryService: StudyHistoryService
@@ -71,6 +80,12 @@ internal class AdminControllerTest {
 
     @MockK
     private lateinit var resourceDto: ResourceDto
+
+    @MockK
+    private lateinit var dayStudyStatistic: DayStudyStatistic
+
+    @MockK
+    private lateinit var monthStudyStatistic: MonthStudyStatistic
 
     @Test
     fun `getUsers should return users with statistic when withAnalytics is true`() {
@@ -178,5 +193,43 @@ internal class AdminControllerTest {
         verify(exactly = 1) { resourceService.updateDescription(id, description) }
         assertEquals(HttpStatus.SC_OK, updated.statusCodeValue)
         assertEquals(resourceDto, updated.body!!.data)
+    }
+
+    @Test
+    fun `getUserWeeklyStatistic should return weekly statistic`() {
+        // GIVEN
+        val userId = 1L
+        val date = LocalDate.now()
+        every { userDayStatisticService.getStatisticForPeriod(date, date, userId) } returns listOf(dayStudyStatistic)
+
+        // WHEN
+        val userWeeklyStatistic = adminController.getUserWeeklyStatistic(date, date, userId)
+
+        // THEN
+        verify(exactly = 1) { userDayStatisticService.getStatisticForPeriod(date, date, userId) }
+        assertEquals(HttpStatus.SC_OK, userWeeklyStatistic.statusCodeValue)
+        assertEquals(listOf(dayStudyStatistic), userWeeklyStatistic.body!!.data)
+    }
+
+    @Test
+    fun `getUserYearlyStatistic should return yearly statistic`() {
+        // GIVEN
+        val userId = 1L
+        val date = LocalDate.now()
+        every {
+            userMonthStatisticService.getStatisticForPeriod(
+                date,
+                date,
+                userId
+            )
+        } returns listOf(monthStudyStatistic)
+
+        // WHEN
+        val userYearlyStatistic = adminController.getUserYearlyStatistic(date, date, userId)
+
+        // THEN
+        verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(date, date, userId) }
+        assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
+        assertEquals(listOf(monthStudyStatistic), userYearlyStatistic.body!!.data)
     }
 }
