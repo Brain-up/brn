@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/audiometrics")
 @Api(value = "/audiometrics", description = "Contains actions for audiometry")
-class AudiometryController(val audiometryService: AudiometryService) {
+class AudiometryController(private val audiometryService: AudiometryService) {
 
     @GetMapping
     @ApiOperation("Get audiometrics without tasks")
