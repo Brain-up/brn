@@ -83,7 +83,7 @@ data class Exercise(
 
     override fun toString() =
         "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, " +
-                "noiseUrl=$noiseUrl, template=$template, active=$active)"
+            "noiseUrl=$noiseUrl, template=$template, active=$active)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
