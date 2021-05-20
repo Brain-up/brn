@@ -3,27 +3,28 @@ package com.epam.brn.controller
 import com.epam.brn.service.YandexSpeechKitService
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import java.io.InputStream
 import java.io.ByteArrayInputStream
 import kotlin.test.assertEquals
 
 @Suppress("EqualsBetweenInconvertibleTypes")
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 
 internal class AudioControllerTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var controller: AudioController
 
-    @Mock
+    @MockK
     private lateinit var yandex: YandexSpeechKitService
 
     @Test
@@ -36,12 +37,13 @@ internal class AudioControllerTest {
 
         val stream: InputStream = ByteArrayInputStream(byteArrayOf(10, 20, 30, 40, 50))
 
-        `when`(yandex.generateAudioOggFileWithValidation(text, locale)).thenReturn(stream)
+        every { yandex.generateAudioOggFileWithValidation(text, locale) } returns stream
 
+        // WHEN
         val audioByteArray = controller.getAudioByteArray(text, locale)
 
+        // THEN
         assertEquals(HttpStatus.SC_OK, audioByteArray.statusCode.value())
-
-        verify(yandex, times(1)).generateAudioOggFileWithValidation(text, locale)
+        verify(exactly = 1) { yandex.generateAudioOggFileWithValidation(text, locale) }
     }
 }

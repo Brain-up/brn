@@ -3,23 +3,23 @@ package com.epam.brn.controller
 import com.epam.brn.dto.AudiometryDto
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.service.AudiometryService
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertEquals
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 
 internal class AudiometryControllerTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var audiometryController: AudiometryController
 
-    @Mock
+    @MockK
     private lateinit var audiometryService: AudiometryService
 
     @Test
@@ -36,12 +36,13 @@ internal class AudiometryControllerTest {
             audiometryTasks = "any",
             audiometryType = AudiometryType.valueOf("SIGNALS"),
         )
-        `when`(audiometryService.getAudiometrics(locale)).thenReturn(listOf(audiometryDto))
+        every { audiometryService.getAudiometrics(locale) } returns(listOf(audiometryDto))
 
+        // WHEN
         val audiometrics = audiometryController.getAudiometrics(locale)
 
+        // THEN
         assertEquals(HttpStatus.SC_OK, audiometrics.statusCode.value())
-
         assertEquals(listOf(audiometryDto), audiometrics.body!!.data)
     }
     @Test
@@ -58,12 +59,13 @@ internal class AudiometryControllerTest {
             audiometryType = AudiometryType.valueOf("SIGNALS"),
         )
 
-        `when`(audiometryService.getAudiometry(audiometryId)).thenReturn(audiometryDto)
+        every { audiometryService.getAudiometry(audiometryId) } returns audiometryDto
 
+        // WHEN
         val audiometry = audiometryController.getAudiometry(audiometryId)
 
+        // THEN
         assertEquals(HttpStatus.SC_OK, audiometry.statusCode.value())
-
         assertEquals(audiometryDto, audiometry.body!!.data)
     }
 }
