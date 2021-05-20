@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.security.Principal
+import javax.transaction.Transactional
 
 @Service
 class UserAccountServiceImpl(
@@ -99,10 +100,9 @@ class UserAccountServiceImpl(
 
     override fun getAllHeadphonesForCurrentUser() = getCurrentUser().headphones.map(Headphones::toDto).toSet()
 
-    override fun getAllUsersByAuthorityName(name: String): List<UserAccountDto> {
-        val authority = authorityService.findAuthorityByAuthorityName(name)
-        val result = userAccountRepository.findAllUserAccountByAuthoritySetIn(mutableSetOf(authority))
-        return result.map { it.toDto() }
+    @Transactional(rollbackOn = [Exception::class])
+    override fun getAllUsersByAuthoritySet(authoritySet: MutableSet<Authority>): List<UserAccountDto> {
+        return userAccountRepository.findAllUserAccountByAuthoritySetIn(authoritySet).map { it.toDto() }
     }
 
     override fun getUserFromTheCurrentSession(): UserAccountDto = getCurrentUser().toDto()

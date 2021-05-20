@@ -5,6 +5,7 @@ import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
+import com.epam.brn.model.Authority
 import com.epam.brn.model.UserAccount
 import org.springframework.data.domain.Pageable
 
@@ -25,5 +26,5 @@ interface UserAccountService {
     fun findUserEntityById(id: Long): UserAccount
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
     fun getAllHeadphonesForCurrentUser(): Set<HeadphonesDto>
-    fun getAllUsersByAuthorityName(name: String): List<UserAccountDto>
+    fun getAllUsersByAuthoritySet(authoritySet: MutableSet<Authority>): List<UserAccountDto>
 }
