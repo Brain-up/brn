@@ -4,19 +4,20 @@ import com.epam.brn.dto.SubGroupDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.SubGroupRepository
-import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockkStatic
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
+@ExtendWith(MockKExtension::class)
 internal class SubGroupServiceTest {
 
     @InjectMockKs
@@ -27,11 +28,6 @@ internal class SubGroupServiceTest {
 
     @MockK
     private lateinit var subGroup: SubGroup
-
-    @BeforeEach
-    fun init() {
-        MockKAnnotations.init(this)
-    }
 
     @Test
     fun `findSubGroupsForSeries should return data when there are subGroups for seriesId`() {
@@ -48,7 +44,7 @@ internal class SubGroupServiceTest {
         val allGroups = subGroupService.findSubGroupsForSeries(seriesId)
 
         // THEN
-        verify { subGroupRepository.findBySeriesId(seriesId) }
+        verify(exactly = 1) { subGroupRepository.findBySeriesId(seriesId) }
         assertEquals(listOf(subGroupDto), allGroups)
     }
 
