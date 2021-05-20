@@ -1,6 +1,9 @@
 package com.epam.brn.integration
 
+import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -16,7 +19,10 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.fasterxml.jackson.core.type.TypeReference
+import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -24,18 +30,25 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 class AdminControllerIT : BaseIT() {
 
     private val baseUrl = "/admin"
+    private val fromParamName = "from"
+    private val toParameterName = "to"
+    private val userIdParameterName = "userId"
+    private val exercisingYear = 2000
+    private val exercisingMonth = 10
 
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
@@ -67,6 +80,96 @@ class AdminControllerIT : BaseIT() {
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
         resourceRepository.deleteAll()
+    }
+
+    @Test
+    fun `testing get user week statistic`() {
+        // GIVEN
+        val userAccount = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0),
+            25
+        )
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0),
+            25
+        )
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0),
+            25
+        )
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0),
+            30
+        )
+        insertDefaultStudyHistory(userAccount, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUrl/study/week")
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+                .param(userIdParameterName, userAccount.id.toString())
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<DayStudyStatistic> =
+            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
+
+        // THEN
+        Assertions.assertEquals(3, resultStatistic.size)
+        resultStatistic.forEach {
+            assertNotNull(it.progress)
+            assertNotNull(it.exercisingTimeSeconds)
+        }
+    }
+
+    @Test
+    fun `should return user year statistic`() {
+        // GIVEN
+        val user = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        val studyHistories: List<StudyHistory> = listOf(
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
+        )
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUrl/study/year")
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+                .param(userIdParameterName, user.id.toString())
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<MonthStudyStatistic> =
+            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
+
+        // THEN
+        Assertions.assertEquals(1, resultStatistic.size)
+        val monthStatistic = resultStatistic.first()
+        Assertions.assertEquals(exercisingMonth, monthStatistic.date.monthValue)
+        assertNotNull(monthStatistic.exercisingTimeSeconds)
+        assertNotNull(monthStatistic.progress)
     }
 
     @Test
@@ -258,7 +361,7 @@ class AdminControllerIT : BaseIT() {
         )
         // THEN
         resultAction
-            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data[0].id").value(historyFirstExerciseOne.id!!))
             .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
@@ -283,7 +386,7 @@ class AdminControllerIT : BaseIT() {
 
         // THEN
         resultAction
-            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data.id").value(resource.id))
             .andExpect(jsonPath("$.data.description").value(descriptionForUpdate))

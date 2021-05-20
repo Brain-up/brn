@@ -3,10 +3,13 @@ package com.epam.brn.controller
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -31,12 +34,15 @@ import java.time.LocalDate
 @RequestMapping("/admin")
 @Api(value = "/admin", description = "Contains actions for admin")
 class AdminController(
-    val studyHistoryService: StudyHistoryService,
-    val userAccountService: UserAccountService,
-    val exerciseService: ExerciseService,
+    private val studyHistoryService: StudyHistoryService,
+    private val userAccountService: UserAccountService,
+    private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
+    private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,
+    private val exerciseService: ExerciseService,
     private val csvUploadService: CsvUploadService,
-    val resourceService: ResourceService
+    private val resourceService: ResourceService
 ) {
+
     @GetMapping("/users")
     @ApiOperation("Get users")
     fun getUsers(
@@ -65,6 +71,28 @@ class AdminController(
         @RequestParam("year", required = true) year: Int
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = studyHistoryService.getMonthHistories(userId, month, year)))
+
+    @GetMapping("/study/week")
+    @ApiOperation("Get user's weekly statistic for the period")
+    fun getUserWeeklyStatistic(
+        @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
+        @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
+        @RequestParam(name = "userId", required = true) userId: Long
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val result = userDayStatisticService.getStatisticForPeriod(from, to, userId)
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+    }
+
+    @GetMapping("/study/year")
+    @ApiOperation("Get user's yearly statistic for the period")
+    fun getUserYearlyStatistic(
+        @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
+        @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
+        @RequestParam(name = "userId", required = true) userId: Long
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val result = userMonthStatisticService.getStatisticForPeriod(from, to, userId)
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+    }
 
     @PostMapping("/loadTasksFile")
     fun loadExercises(
