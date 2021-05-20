@@ -1,7 +1,9 @@
 <section class="upload-file">
   <form class="upload-file__form" [formGroup]="uploadFileForm">
     <div class="upload-file__form-group">
-      <label for="upload-file__form-label">Select Folder</label>
+      <label for="upload-file__form-label">
+        {{ 'Admin.Modules.UploadFile.Modules.LoadFiles.Labels.SelectFolder' | translate }}
+      </label>
 
       <select formControlName="folder" class="upload-file__form-control">
         <option *ngFor="let folder of folders$ | async" [value]="folder">{{ folder }}</option>
@@ -9,11 +11,15 @@
     </div>
 
     <div class="upload-file__form-group">
-      <label for="upload-file__form-label">Select File</label>
+      <label for="upload-file__form-label">
+        {{ 'Admin.Modules.UploadFile.Modules.LoadFiles.Labels.SelectFile' | translate }}
+      </label>
 
       <app-upload-file-input formControlName="files"></app-upload-file-input>
     </div>
 
-    <button (click)="loadFiles()">Load Files</button>
+    <button (click)="loadFiles()">
+      {{ 'Admin.Modules.UploadFile.Modules.LoadFiles.Buttons.Load' | translate }}
+    </button>
   </form>
 </section>

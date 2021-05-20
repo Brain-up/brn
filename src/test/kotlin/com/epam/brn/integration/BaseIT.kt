@@ -79,14 +79,19 @@ abstract class BaseIT {
             )
         )
 
-    fun insertDefaultStudyHistory(userAccount: UserAccount, exercise: Exercise): StudyHistory {
-        val startTime = LocalDateTime.now()
+    fun insertDefaultStudyHistory(
+        userAccount: UserAccount,
+        exercise: Exercise,
+        time: LocalDateTime? = null,
+        trainFor: Long = 5
+    ): StudyHistory {
+        val startTime = time ?: LocalDateTime.now()
         return studyHistoryRepository.save(
             StudyHistory(
                 userAccount = userAccount,
                 startTime = startTime,
-                endTime = startTime.plusMinutes(5),
-                executionSeconds = ChronoUnit.SECONDS.between(startTime, startTime.plusMinutes(5)).toInt(),
+                endTime = startTime.plusMinutes(trainFor),
+                executionSeconds = ChronoUnit.SECONDS.between(startTime, startTime.plusMinutes(trainFor)).toInt(),
                 exercise = exercise,
                 tasksCount = 5,
                 wrongAnswers = 0,
@@ -95,10 +100,18 @@ abstract class BaseIT {
         )
     }
 
-    fun insertDefaultExercise(subGroup: SubGroup): Exercise =
+    fun insertDefaultExerciseWithSubGroup(subGroup: SubGroup): Exercise =
         exerciseRepository.save(
             Exercise(
                 name = "Test exercise ${subGroup.id}",
+                subGroup = subGroup
+            )
+        )
+
+    fun insertDefaultExercise(subGroup: SubGroup? = null): Exercise =
+        exerciseRepository.save(
+            Exercise(
+                name = "Test exercise",
                 subGroup = subGroup
             )
         )
