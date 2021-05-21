@@ -16,7 +16,6 @@ import java.io.InputStream
 import java.io.ByteArrayInputStream
 import kotlin.test.assertEquals
 
-@Suppress("EqualsBetweenInconvertibleTypes")
 @ExtendWith(MockKExtension::class)
 
 internal class AudioControllerTest {
