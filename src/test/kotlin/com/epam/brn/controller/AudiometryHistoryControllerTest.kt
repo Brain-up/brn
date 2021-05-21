@@ -37,6 +37,7 @@ internal class AudiometryHistoryControllerTest {
 
         // THEN
         assertEquals(HttpStatus.SC_OK, save.statusCode.value())
+        assertEquals(baseSingleObjectResponseDto, save.body!!.data)
         verify(exactly = 1) { audiometryHistoryService.save(audiometryHistory) }
     }
 }
