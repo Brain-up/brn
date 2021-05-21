@@ -32,8 +32,8 @@ export class MonthTimeTrackComponent {
 
       return {
         progress: rawItem.progress,
-        time: secondsTo(rawItem.exercisingTimeSeconds, 'hms'),
-        days: rawItem.days,
+        time: secondsTo(rawItem.exercisingTimeSeconds, 'h:m:s'),
+        days: rawItem.exercisingDays,
         month: date.format('MMMM'),
         year: date.year(),
         date,

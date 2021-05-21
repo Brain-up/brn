@@ -5,7 +5,10 @@ import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { Dayjs } from 'dayjs';
 import * as dayjs from 'dayjs';
 import { getRandomIntInclusive } from '@shared/helpers/get-random-int-inclusive';
-import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
+import {
+  UserExercisingProgressStatusType,
+  USER_EXERCISING_PROGRESS_STATUS_COLOR,
+} from '@admin/models/user-exercising-progress-status';
 import { AdminApiService } from './admin-api.service';
 import { MONTHS_IN_YEAR } from '@shared/constants/common-constants';
 
@@ -28,7 +31,7 @@ export class AdminApiServiceFake
       response.push({
         date: dayjs(from).add(i, 'day').toString(),
         exercisingTimeSeconds: getRandomIntInclusive(0, this.options.exercisingTimeSecondsLimit),
-        progress: getRandomIntInclusive(0, USER_EXERCISING_PROGRESS_STATUS_COLOR.length - 1),
+        progress: this.getRandomUserExercisingProgressStatusColor(),
       });
     }
 
@@ -46,14 +49,27 @@ export class AdminApiServiceFake
       response.push({
         date: today.toString(),
         exercisingTimeSeconds: getRandomIntInclusive(0, this.options.exercisingTimeSecondsLimit),
-        progress: getRandomIntInclusive(0, USER_EXERCISING_PROGRESS_STATUS_COLOR.length - 1),
-        days: today.daysInMonth(),
+        progress: this.getRandomUserExercisingProgressStatusColor(),
+        exercisingDays: today.daysInMonth(),
       });
     }
 
     return this.options.isUserYearlyStatisticsEmptyData
       ? of([])
       : of(response).pipe(delay(this.options.responseDelayInMs));
+  }
+
+  private getRandomUserExercisingProgressStatusColor(): UserExercisingProgressStatusType {
+    switch (getRandomIntInclusive(0, Object.keys(USER_EXERCISING_PROGRESS_STATUS_COLOR).length - 1)) {
+      case 0:
+        return 'BAD';
+
+      case 1:
+        return 'GOOD';
+
+      case 2:
+        return 'GREAT';
+    }
   }
 }
 

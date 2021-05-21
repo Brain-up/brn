@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
 import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
 
 @NgModule({
@@ -33,6 +32,6 @@ import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
     MatProgressBarModule,
     BarChartModule,
   ],
-  providers: [{ provide: AdminApiService, useFactory: () => new AdminApiServiceFake({ responseDelayInMs: 0 }) }],
+  providers: [AdminApiService],
 })
 export class StatisticsModule {}

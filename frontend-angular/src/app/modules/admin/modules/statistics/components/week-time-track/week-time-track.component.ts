@@ -25,7 +25,7 @@ export class WeekTimeTrackComponent {
       data: (dataItem) => USER_EXERCISING_PROGRESS_STATUS_COLOR[this.chartData[dataItem.index].progress],
     },
     labels: {
-      format: (seconds) => secondsTo(seconds, 'ms'),
+      format: (seconds) => (seconds ? secondsTo(seconds, 'm:s') : ''),
     },
     axis: {
       x: {
@@ -81,12 +81,25 @@ export class WeekTimeTrackComponent {
       return;
     }
 
-    this.chartData = data.map((rawItem) => ({
-      x: dayjs(rawItem.date).format('dd'),
-      y: rawItem.exercisingTimeSeconds,
-      progress: rawItem.progress,
-    }));
+    this.chartData = [];
+    for (let dayNumber = 1; dayNumber <= this.selectedMonth.daysInMonth(); dayNumber++) {
+      const realRawItem = data.find((rawItem) => dayjs(rawItem.date).date() === dayNumber);
 
-    this.barData = [['data', ...this.chartData.map((dataItem) => dataItem.y)]];
+      this.chartData.push(
+        realRawItem
+          ? {
+              x: dayjs(realRawItem.date).format('dd'),
+              y: realRawItem.exercisingTimeSeconds,
+              progress: realRawItem.progress,
+            }
+          : {
+              x: dayjs(this.selectedMonth.set('date', dayNumber)).format('dd'),
+              y: 0,
+              progress: 'BAD',
+            }
+      );
+    }
+
+    this.barData = data.length ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]] : [];
   }
 }
