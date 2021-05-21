@@ -14,7 +14,7 @@
         "Components": {
           "MonthTimeTrack": {
             "EmptyData": "Нет данных",
-            "Title [year]": "Общее время занятий по месяцам за {{ year }} год"
+            "Title [year]": "Общее время занятий по месяцам за <span>{{ year }}</span> год"
           },
           "MonthTimeTrackItem": {
             "Days [days]": "за <b>{{ days }}<b> дней"
@@ -28,7 +28,8 @@
             "Title": "О чем говорит статистика"
           },
           "WeekTimeTrack": {
-            "Title": "Время ежедневных занятий по неделям"
+            "EmptyData": "Нет данных",
+            "Title [month]": "Время ежедневных занятий за <span>{{ month }}</span>"
           }
         }
       },

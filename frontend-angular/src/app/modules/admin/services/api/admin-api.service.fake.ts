@@ -7,12 +7,11 @@ import * as dayjs from 'dayjs';
 import { getRandomIntInclusive } from '@shared/helpers/get-random-int-inclusive';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { AdminApiService } from './admin-api.service';
+import { MONTHS_IN_YEAR } from '@shared/constants/common-constants';
 
 export class AdminApiServiceFake
   implements Pick<AdminApiService, 'getUserWeeklyStatistics' | 'getUserYearlyStatistics'>
 {
-  private static readonly MONTHS_IN_YEAR = 12;
-
   private readonly options: IOptions = {};
 
   constructor(o?: IOptions) {
@@ -41,7 +40,7 @@ export class AdminApiServiceFake
   public getUserYearlyStatistics(userId: number, from: Dayjs, to: Dayjs): Observable<UserYearlyStatistics[]> {
     const response: UserYearlyStatistics[] = [];
 
-    for (let i = 0; i < (to < dayjs() ? AdminApiServiceFake.MONTHS_IN_YEAR : dayjs().month() + 1); i++) {
+    for (let i = 0; i < (to < dayjs() ? MONTHS_IN_YEAR : dayjs().month() + 1); i++) {
       const today = dayjs(from).add(i, 'month');
 
       response.push({

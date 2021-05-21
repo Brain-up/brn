@@ -6,7 +6,11 @@
   </button>
 </div>
 
-<app-week-time-track [data]="weekTimeTrackData"></app-week-time-track>
+<app-week-time-track
+  [isLoading]="isLoadingWeekTimeTrackData"
+  [selectedMonth]="selectedMonth"
+  [data]="weekTimeTrackData"
+></app-week-time-track>
 
 <app-month-time-track
   [isLoading]="isLoadingMonthTimeTrackData"
