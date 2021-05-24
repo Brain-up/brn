@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin.component';
-import { UserIdParamGuard } from './guards/user-id-param.guard';
 
 const routes: Routes = [
   {
@@ -18,9 +17,7 @@ const routes: Routes = [
         loadChildren: () => import('./modules/upload-file/upload-file.module').then((m) => m.UploadFileModule),
       },
       {
-        path: 'statistics/:userId',
-        canLoad: [UserIdParamGuard],
-        canActivate: [UserIdParamGuard],
+        path: 'statistics',
         loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
       },
       {
@@ -34,6 +31,5 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [UserIdParamGuard],
 })
 export class AdminRoutingModule {}

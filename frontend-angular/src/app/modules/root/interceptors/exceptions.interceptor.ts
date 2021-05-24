@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SnackBarService } from '@root/services/snack-bar.service';
-import { AUTH_PAGE } from '@shared/constants/common-constants';
+import { AUTH_PAGE_URL } from '@shared/constants/common-constants';
 import { AuthTokenService } from '@root/services/auth-token.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -27,13 +27,13 @@ export class ExceptionsInterceptor implements HttpInterceptor {
               case StatusCodes.UNAUTHORIZED:
                 this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.Unauthorized'));
                 this.authTokenService.removeAuthToken();
-                this.router.navigateByUrl(AUTH_PAGE);
+                this.router.navigateByUrl(AUTH_PAGE_URL);
                 break;
 
               default:
                 this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.UnknownError'));
                 this.authTokenService.removeAuthToken();
-                this.router.navigateByUrl(AUTH_PAGE);
+                this.router.navigateByUrl(AUTH_PAGE_URL);
                 break;
             }
           }

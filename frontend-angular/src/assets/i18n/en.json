@@ -87,6 +87,14 @@
     "Title": "Admin panel"
   },
   "Root": {
+    "Components": {
+      "NotFound": {
+        "Buttons": {
+          "GoHome": "Go home"
+        },
+        "Text": "404"
+      }
+    },
     "Interceptors": {
       "Exceptions": {
         "Unauthorized": "Unauthorized request",
