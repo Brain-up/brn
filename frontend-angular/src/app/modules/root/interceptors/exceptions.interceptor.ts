@@ -24,7 +24,6 @@ export class ExceptionsInterceptor implements HttpInterceptor {
         error: (err) => {
           if (err instanceof HttpErrorResponse) {
             switch (err.status) {
-              case 0:
               case StatusCodes.UNAUTHORIZED:
                 this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.Unauthorized'));
                 this.authTokenService.removeAuthToken();
