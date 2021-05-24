@@ -24,7 +24,7 @@ export class AdminApiService {
   public getUserWeeklyStatistics(userId: number, from: Dayjs, to: Dayjs): Observable<UserWeeklyStatistics[]> {
     return this.httpClient
       .get<{ data: UserWeeklyStatistics[] }>(
-        `/api/admin/study/week?userId=${userId}&from=${from.toISOString()}&to=${to.toISOString()}`
+        `/api/admin/study/week?userId=${userId}&from=${from.format('YYYY-MM-DD')}&to=${to.format('YYYY-MM-DD')}`
       )
       .pipe(pluck('data'));
   }
@@ -32,7 +32,7 @@ export class AdminApiService {
   public getUserYearlyStatistics(userId: number, from: Dayjs, to: Dayjs): Observable<UserYearlyStatistics[]> {
     return this.httpClient
       .get<{ data: UserYearlyStatistics[] }>(
-        `/api/admin/study/year?userId=${userId}&from=${from.toISOString()}&to=${to.toISOString()}`
+        `/api/admin/study/year?userId=${userId}&from=${from.format('YYYY-MM-DD')}&to=${to.format('YYYY-MM-DD')}`
       )
       .pipe(pluck('data'));
   }
