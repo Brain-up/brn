@@ -27,7 +27,8 @@ import { ExceptionsInterceptor } from '@root/interceptors/exceptions.interceptor
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, 'assets/i18n/', '.json'),
+        useFactory: (httpClient: HttpClient) =>
+          new TranslateHttpLoader(httpClient, 'assets/i18n/', `.json?cacheOff=${process.env.CACHE_OFF}`),
         deps: [HttpClient],
       },
     }),
