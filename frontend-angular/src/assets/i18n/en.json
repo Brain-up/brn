@@ -28,7 +28,8 @@
             "Title": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Title"
           },
           "WeekTimeTrack": {
-            "Title": "Admin.Modules.Statistics.Components.WeekTimeTrack.Title"
+            "EmptyData": "Admin.Modules.Statistics.Components.WeekTimeTrack.EmptyData",
+            "Title [month]": "Admin.Modules.Statistics.Components.WeekTimeTrack.Title [month]"
           }
         }
       },

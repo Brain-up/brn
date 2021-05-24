@@ -10,17 +10,28 @@
     color: $active-grey-color;
   }
 
+  .title ::ng-deep span {
+    color: $cold-violet-color;
+  }
+
   .content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 32px 32px;
+    height: 200px;
+    box-sizing: border-box;
 
     .month-time-track-items-wrap {
       display: flex;
       overflow: auto;
-      margin: 0 40px;
+      margin: 0 30px;
       width: 100%;
+      justify-content: space-between;
+
+      &.incomplete-year {
+        justify-content: flex-start;
+      }
 
       .empty-data {
         text-align: center;
@@ -33,7 +44,7 @@
       }
 
       :not(:last-child) {
-        margin-right: 20px;
+        margin-right: 10px;
       }
     }
 

@@ -4,6 +4,7 @@
 .select-container {
   width: 100%;
   padding: 22px $header-horizontal-padding;
+  box-sizing: border-box;
 }
 
 .exercises {
