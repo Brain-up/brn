@@ -4,9 +4,3 @@ alter table exercise
     add column changed_when timestamp not null default current_timestamp;
 alter table exercise
     add column changed_by varchar(255) not null default 'InitialDataLoader';
-
-update exercise
-set active       = true,
-    changed_when = current_timestamp,
-    changed_by   = 'InitialDataLoader'
-where active is null;
