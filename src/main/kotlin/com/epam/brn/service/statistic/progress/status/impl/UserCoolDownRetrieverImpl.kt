@@ -1,34 +1,32 @@
 package com.epam.brn.service.statistic.progress.status.impl
 
 import com.epam.brn.model.StudyHistory
+import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.progress.status.UserCoolDownRetriever
 import org.springframework.stereotype.Component
+import java.sql.Date
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.TreeSet
 
-/**
- *@author Nikolai Lazarev
- */
-
 @Component
-class UserCoolDownRetrieverImpl : UserCoolDownRetriever {
-    override fun getMaximalUserCoolDown(period: Collection<StudyHistory>): Int {
-        val periodSet = TreeSet(
-            Comparator<StudyHistory> { current, next ->
-                return@Comparator when {
-                    current.startTime.isAfter(next.startTime) -> 1
-                    current.startTime.isBefore(next.startTime) -> -1
-                    else -> 0
-                }
-            }
-        )
-        periodSet.addAll(period)
-        val durations: ArrayList<Int> = ArrayList()
+class UserCoolDownRetrieverImpl(
+    private val studyHistoryRepository: StudyHistoryRepository,
+    private val userAccountService: UserAccountService,
+    private val studyHistoryTimeComparator: Comparator<StudyHistory>
+) : UserCoolDownRetriever {
+    override fun getMaximalUserCoolDown(userId: Long?, from: LocalDate, to: LocalDate): Int {
+        val userTempId = userId ?: userAccountService.getUserFromTheCurrentSession().id
+        val histories = studyHistoryRepository.getHistories(userTempId!!, Date.valueOf(from), Date.valueOf(to))
+        val period = TreeSet(studyHistoryTimeComparator)
+        period.addAll(histories)
+        val coolDowns: ArrayList<Int> = ArrayList()
         for (i in 1 until period.size) {
-            durations.add(
-                ChronoUnit.DAYS.between(periodSet.elementAt(i - 1).startTime, periodSet.elementAt(i).startTime).toInt()
+            coolDowns.add(
+                ChronoUnit.DAYS.between(period.elementAt(i - 1).startTime, period.elementAt(i).startTime).toInt()
             )
         }
-        return durations.maxOrNull() ?: 0
+        return coolDowns.maxOrNull() ?: 0
     }
 }

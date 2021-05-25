@@ -1,15 +1,19 @@
 package com.epam.brn.service.statistic.progress.status
 
-import com.epam.brn.model.StudyHistory
+import java.time.LocalDate
 
 /**
- *@author Nikolai Lazarev
+ * This interface provides functionality to get user's cool downs in period of time
+ * Cool down - is a period when user didn't exercise at all
  */
 interface UserCoolDownRetriever {
 
     /**
      * Should return the biggest user break in training for the period in days count
-     * @param period - The period for which looking for a break
+     * @param from - start date of the period for which to look break for
+     * @param to - end date of the period for which to look break for
+     * @param userId - id of the user for which to look break for
+     * @return the biggest break in days
      */
-    fun getMaximalUserCoolDown(period: Collection<StudyHistory>): Int
+    fun getMaximalUserCoolDown(userId: Long? = null, from: LocalDate, to: LocalDate): Int
 }
