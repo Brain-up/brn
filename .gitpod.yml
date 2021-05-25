@@ -20,7 +20,6 @@ tasks:
       java -Dspring.jpa.hibernate.ddl-auto=create -jar build/libs/epam-brn.jar
   - init: cd frontend && yarn install
     command: >
-      export GITPODURLHOST=$(gp url 4200|cut -d\/ -f3) &&
       cd /workspace/brn/frontend && 
       yarn local
   - init: cd frontend-angular && npm install
