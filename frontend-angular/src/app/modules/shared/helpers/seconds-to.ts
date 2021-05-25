@@ -1,13 +1,13 @@
-export function secondsTo(totalSeconds: number, format: 'ms' | 'hms'): string {
+export function secondsTo(totalSeconds: number, format: 'm:s' | 'h:m:s'): string {
   const hours = Math.trunc(totalSeconds / 3600);
   const minutes = Math.trunc((totalSeconds - hours * 3600) / 60);
   const seconds = totalSeconds - hours * 3600 - minutes * 60;
 
   switch (format) {
-    case 'ms':
+    case 'm:s':
       return `${makeMinTwoDigits(minutes)}:${makeMinTwoDigits(seconds)}`;
 
-    case 'hms':
+    case 'h:m:s':
       return `${makeMinTwoDigits(hours)}:${makeMinTwoDigits(minutes)}:${makeMinTwoDigits(seconds)}`;
   }
 }
