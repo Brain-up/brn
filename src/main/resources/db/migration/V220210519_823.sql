@@ -8,4 +8,5 @@ alter table exercise
 update exercise
 set active       = true,
     changed_when = current_timestamp,
-    changed_by   = 'InitialDataLoader';
+    changed_by   = 'InitialDataLoader'
+where active is null;
