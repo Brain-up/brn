@@ -28,7 +28,7 @@ class JpaAuditConfig {
     fun userContextProvider(userAccountService: UserAccountService): AuditorAware<String> {
         return AuditorAware<String> {
             val authentication = SecurityContextHolder.getContext().authentication
-            Optional.of(if (authentication != null) authentication.name else "Unauthorized")
+            Optional.of(if (authentication != null) authentication.name else "InitialDataLoader")
         }
     }
 }
