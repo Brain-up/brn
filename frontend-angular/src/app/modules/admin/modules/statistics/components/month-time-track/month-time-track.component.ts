@@ -1,5 +1,6 @@
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MONTHS_IN_YEAR } from '@shared/constants/common-constants';
 import { secondsTo } from '@shared/helpers/seconds-to';
 import * as dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
@@ -31,8 +32,8 @@ export class MonthTimeTrackComponent {
 
       return {
         progress: rawItem.progress,
-        time: secondsTo(rawItem.exercisingTimeSeconds, 'hms'),
-        days: rawItem.days,
+        time: secondsTo(rawItem.exercisingTimeSeconds, 'h:m:s'),
+        days: rawItem.exercisingDays,
         month: date.format('MMMM'),
         year: date.year(),
         date,
@@ -71,5 +72,9 @@ export class MonthTimeTrackComponent {
 
   public isAllowNextYear(): boolean {
     return this.selectedMonth.add(1, 'year').year() <= dayjs().year();
+  }
+
+  public isIncompleteYear(): boolean {
+    return this.monthTimeTrackItemsData?.length < MONTHS_IN_YEAR;
   }
 }
