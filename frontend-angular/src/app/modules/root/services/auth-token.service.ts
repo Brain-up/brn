@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthToken } from '@root/models/auth-token';
 import { ALocaleStorage } from '@shared/storages/local-storage';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthTokenService {
   public getAuthToken(): AuthToken | null {
     const authTokenBase64 = ALocaleStorage.AUTH_TOKEN.get();

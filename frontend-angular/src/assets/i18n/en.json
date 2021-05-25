@@ -28,7 +28,8 @@
             "Title": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Title"
           },
           "WeekTimeTrack": {
-            "Title": "Admin.Modules.Statistics.Components.WeekTimeTrack.Title"
+            "EmptyData": "Admin.Modules.Statistics.Components.WeekTimeTrack.EmptyData",
+            "Title [month]": "Admin.Modules.Statistics.Components.WeekTimeTrack.Title [month]"
           }
         }
       },
@@ -86,6 +87,14 @@
     "Title": "Admin panel"
   },
   "Root": {
+    "Components": {
+      "NotFound": {
+        "Buttons": {
+          "GoHome": "Go home"
+        },
+        "Text": "404"
+      }
+    },
     "Interceptors": {
       "Exceptions": {
         "Unauthorized": "Unauthorized request",

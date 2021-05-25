@@ -22,7 +22,7 @@ describe('MonthTimeTrackItemComponent', () => {
   describe('Selected class on host', () => {
     beforeEach(() => {
       component.data = {
-        progress: 0,
+        progress: 'BAD',
         time: '02:34:12',
         days: 23,
         month: 'September',
