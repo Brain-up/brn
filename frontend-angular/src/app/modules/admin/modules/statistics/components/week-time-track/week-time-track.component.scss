@@ -1,7 +1,8 @@
 @import '../../../../../../styles/colors.scss';
 
 :host {
-  .title {
+  .title,
+  .content .empty-data {
     font-weight: 600;
     font-size: 12px;
     line-height: 24px;
@@ -9,13 +10,29 @@
     color: $active-grey-color;
   }
 
+  .title ::ng-deep span {
+    color: $cold-violet-color;
+  }
+
   .content {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 32px 15px;
+    height: 200px;
 
-    .chart ::ng-deep {
+    mat-progress-bar {
+      height: 5px;
+      border-radius: 5px;
+      width: 80%;
+    }
+
+    .empty-data {
+      text-align: center;
+      width: 100%;
+    }
+
+    app-bar-chart ::ng-deep {
       .bb-ygrid-line {
         stroke-dasharray: 5;
 

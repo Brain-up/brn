@@ -105,6 +105,21 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroyer$)
       )
-      .subscribe((monthTimeTrackData) => (this.monthTimeTrackData = monthTimeTrackData));
+      .subscribe((monthTimeTrackData) => {
+        this.monthTimeTrackData = monthTimeTrackData;
+
+        if (!monthTimeTrackData.length) {
+          return;
+        }
+
+        const lastMonth = dayjs(monthTimeTrackData[monthTimeTrackData.length - 1].date);
+
+        if (lastMonth.month() >= this.selectedMonth.month()) {
+          return;
+        }
+
+        this.selectedMonth = lastMonth;
+        this.getWeekTimeTrackData();
+      });
   }
 }
