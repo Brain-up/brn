@@ -10,13 +10,17 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
+import javax.persistence.Table
 
 // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to group being a reserved word in db.
 @Entity
+@Table(name = "exercise_group")
 data class ExerciseGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
+    @Column(nullable = false)
+    var code: String,
     @Column(nullable = false)
     val locale: String = Locale.RU.name,
     @Column(nullable = false, unique = true)
@@ -27,7 +31,7 @@ data class ExerciseGroup(
     val series: MutableList<Series> = ArrayList()
 ) {
     constructor(record: GroupRecord) : this(
-        id = record.groupId,
+        code = record.code,
         locale = record.locale,
         name = record.name,
         description = record.description
