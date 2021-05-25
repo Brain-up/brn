@@ -1,5 +1,7 @@
 package com.epam.brn.dto
 
+import java.time.LocalDateTime
+
 data class ExerciseWithTasksDto(
     var seriesId: Long?,
     var id: Long?,
@@ -10,4 +12,7 @@ data class ExerciseWithTasksDto(
     var available: Boolean = true,
     var tasks: List<GeneralTaskDto>,
     var signals: List<SignalTaskDto>,
+    var active: Boolean = true,
+    var changedBy: String? = "",
+    var changedWhen: LocalDateTime = LocalDateTime.now()
 )
