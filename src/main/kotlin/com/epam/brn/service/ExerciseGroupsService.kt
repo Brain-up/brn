@@ -28,12 +28,6 @@ class ExerciseGroupsService(
             .orElseThrow { EntityNotFoundException("no group was found for id=$groupId") }
     }
 
-    fun findGroupById(groupId: Long): ExerciseGroup {
-        log.debug("Searching group with id=$groupId")
-        return exerciseGroupRepository.findById(groupId)
-            .orElseThrow { EntityNotFoundException("no group was found for id=$groupId") }
-    }
-
     fun findByLocale(locale: String): List<ExerciseGroupDto> {
         log.debug("Searching groups by locale=$locale")
         if (locale.isEmpty())
@@ -44,5 +38,11 @@ class ExerciseGroupsService(
 
     fun save(exerciseGroup: ExerciseGroup): ExerciseGroup {
         return exerciseGroupRepository.save(exerciseGroup)
+    }
+
+    fun findGroupByCode(groupCode: String): ExerciseGroup {
+        log.debug("Searching group with code=$groupCode")
+        return exerciseGroupRepository.findByCode(groupCode)
+            .orElseThrow { EntityNotFoundException("no group was found for code=$groupCode") }
     }
 }

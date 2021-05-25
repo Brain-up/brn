@@ -12,8 +12,8 @@ export function secondsTo(totalSeconds: number, format: 'm:s' | 'h:m:s'): string
   }
 }
 
-function makeMinTwoDigits(number: number): string {
-  const numberAsString = String(number);
+function makeMinTwoDigits(digits: number): string {
+  const numberAsString = String(digits);
 
-  return numberAsString.length === 1 ? `0${number}` : numberAsString;
+  return numberAsString.length === 1 ? `0${digits}` : numberAsString;
 }

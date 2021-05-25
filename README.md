@@ -71,13 +71,9 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 5. BackEnd: Idea
 
 ### Start Front Angular Part - admin application
-go to location where the project is download for example C:\brn\brn\frontend-angular
-1. run first time (last version)
-`npm install`
-2. update proxy: open file proxy.conf.json and change target for local development. Do not commit this changes
-"http://localhost:8081" -> "http://brainup.site"
-3. run to start angular part
-`npm run start`
+Go to location where the project is download for example C:\brn\brn\frontend-angular
+
+📄 [See here](https://github.com/Brain-up/brn/tree/master/frontend-angular#readme)
 
 ### Start Front Ember Part - user application
 Run following commands:
