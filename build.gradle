@@ -57,6 +57,7 @@ dependencies {
         exclude group: "org.mockito"
     }
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testCompile "org.junit.jupiter:junit-jupiter-params:$junitVersion"
 

@@ -45,17 +45,10 @@ internal class SeriesOneRecordProcessorTest {
         level = 1,
         description = "Распознавание простых слов",
         exerciseGroup = ExerciseGroup(
-            id = 2L,
+            code = "SPEECH_RU_RU",
             name = "Речевые упражнения",
             description = "Речевые упражнения"
         )
-    )
-
-    private val subGroup = SubGroup(
-        series = series,
-        level = 1,
-        code = "code",
-        name = "subGroup name"
     )
 
     private val exerciseName = "Однослоговые слова без шума"

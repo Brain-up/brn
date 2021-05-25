@@ -17,6 +17,18 @@ class GroupRecordProcessor(private val groupRepository: ExerciseGroupRepository)
 
     @Transactional
     override fun process(records: List<GroupRecord>, locale: Locale): List<ExerciseGroup> {
-        return groupRepository.saveAll(records.map { ExerciseGroup(it) }).toList()
+        val groups = records
+            .map {
+                ExerciseGroup(it)
+            }
+        groups.forEach { group ->
+            run {
+                val existGroup = groupRepository.findByCode(group.code)
+                    .orElse(null)
+                if (existGroup == null)
+                    groupRepository.save(group)
+            }
+        }
+        return groups
     }
 }

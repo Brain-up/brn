@@ -39,7 +39,7 @@ class SeriesControllerIT : BaseIT() {
     }
 
     private fun insertGroup(): ExerciseGroup {
-        val group = ExerciseGroup(name = "GroupName", description = "GroupDescription SeriesControllerIT")
+        val group = ExerciseGroup(code = "CODE", name = "GroupName", description = "GroupDescription SeriesControllerIT")
         return exerciseGroupRepository.save(group)
     }
 

@@ -109,7 +109,7 @@ class TaskControllerIT : BaseIT() {
     private fun insertExerciseGroup(): ExerciseGroup {
         return exerciseGroupRepository.save(
             ExerciseGroup(
-                id = 1,
+                code = "CODE",
                 description = "desc",
                 name = "group"
             )
