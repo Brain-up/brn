@@ -3,4 +3,4 @@ alter table exercise
 alter table exercise
     add column changed_when timestamp not null default current_timestamp;
 alter table exercise
-    add column changed_by varchar(255) not null default '';
+    add column changed_by varchar(255) not null default 'InitialDataLoader';

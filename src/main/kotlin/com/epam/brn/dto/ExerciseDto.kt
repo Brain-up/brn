@@ -13,6 +13,6 @@ data class ExerciseDto(
     var tasks: MutableList<ShortTaskDto> = mutableListOf(),
     var signals: MutableList<SignalTaskDto> = mutableListOf(),
     var active: Boolean = true,
-    var changedBy: String? = "",
+    var changedBy: String? = "InitialDataLoader",
     var changedWhen: LocalDateTime = LocalDateTime.now()
 )
