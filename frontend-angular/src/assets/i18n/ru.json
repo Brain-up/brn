@@ -87,6 +87,14 @@
     "Title": "Админ панель"
   },
   "Root": {
+    "Components": {
+      "NotFound": {
+        "Buttons": {
+          "GoHome": "На главную"
+        },
+        "Text": "404"
+      }
+    },
     "Interceptors": {
       "Exceptions": {
         "Unauthorized": "Неавторизованный доступ",

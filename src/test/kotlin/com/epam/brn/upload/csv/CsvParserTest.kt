@@ -37,9 +37,9 @@ class CsvParserTest {
 
         val input =
             """
-                groupId, locale, name, description
-                1, ru, Неречевые упражнения, Неречевые упражнения
-                2, ru, Речевые упражнения, Речевые упражнения              
+                code, locale, name, description
+                NON_SPEECH_RU_RU, ru, Неречевые упражнения, Неречевые упражнения
+                SPEECH_RU_RU, ru, Речевые упражнения, Речевые упражнения              
             """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
@@ -47,13 +47,13 @@ class CsvParserTest {
         assertThat(result).containsAll(
             listOf(
                 GroupRecord(
-                    1,
+                    "NON_SPEECH_RU_RU",
                     "ru",
                     "Неречевые упражнения",
                     "Неречевые упражнения"
                 ),
                 GroupRecord(
-                    2,
+                    "SPEECH_RU_RU",
                     "ru",
                     "Речевые упражнения",
                     "Речевые упражнения"
@@ -66,8 +66,8 @@ class CsvParserTest {
     fun `should parse Series`() {
         val input =
             """
-                groupId, level, type, name, description
-                1, 2, type, Составление предложений, Это составление предложений         
+                groupCode, level, type, name, description
+                NON_SPEECH_RU_RU, 2, type, Составление предложений, Это составление предложений         
             """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
         val result = parser.parse(input)
@@ -75,7 +75,7 @@ class CsvParserTest {
         assertThat(result).containsAll(
             listOf(
                 SeriesGenericRecord(
-                    1,
+                    "NON_SPEECH_RU_RU",
                     2,
                     "type",
                     "Составление предложений",

@@ -15,7 +15,10 @@
         "id": 1
       }
     ],
-    "signals": []
+    "signals": [],
+    "active": true,
+    "changedBy": "InitialDataLoader",
+    "changedWhen": "2020-11-05T12:19:51.227"
   },
   "errors": [],
   "meta": []

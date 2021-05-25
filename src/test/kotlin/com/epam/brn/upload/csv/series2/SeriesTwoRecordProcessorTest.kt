@@ -45,7 +45,7 @@ internal class SeriesTwoRecordProcessorTest {
         name = "Распознавание последовательности слов",
         description = "Распознавание последовательности слов",
         exerciseGroup = ExerciseGroup(
-            id = 2L,
+            code = "SPEECH_RU_RU",
             name = "Речевые упражнения",
             description = "Речевые упражнения"
         )

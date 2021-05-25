@@ -5,7 +5,7 @@ import { AuthenticationApiService } from '@auth/services/api/authentication-api.
 import { takeUntil } from 'rxjs/operators';
 import { AuthTokenService } from '@root/services/auth-token.service';
 import { Router } from '@angular/router';
-import { HOME_PAGE } from '@shared/constants/common-constants';
+import { HOME_PAGE_URL } from '@shared/constants/common-constants';
 
 @Component({
   selector: 'app-login',
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyer$))
       .subscribe((authToken) => {
         this.authTokenService.setAuthToken(authToken);
-        this.router.navigateByUrl(HOME_PAGE);
+        this.router.navigateByUrl(HOME_PAGE_URL);
       });
   }
 }

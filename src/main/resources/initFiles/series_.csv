@@ -1,16 +1,16 @@
-groupId, level, type, name, description
-2, 1, SINGLE_SIMPLE_WORDS, Слова, Распознавание слов
-2, 2, PHRASES, Похожие фразы, Распознование похожих фраз
-2, 3, WORDS_SEQUENCES, Группа слов, Распознавание последовательности слов
-2, 5, SENTENCE, Предложения, Распознавание предложений
-2, 6, DI, Дихотическое слушание, Дихотическое слушание
-2, 7, FREQUENCY_WORDS, Слова с частотной группировкой, Слова с частотной группировкой
-1, 1, DURATION_SIGNALS, Длительность сигналов, Распознование сигналов по длительности
-1, 2, FREQUENCY_SIGNALS, Часота сигналов, Распознование сигналов по частоте сигналов
-4, 1, SINGLE_SIMPLE_WORDS, Words, Hearing and understanding simple words
-4, 2, PHRASES, Similar phrases, Hearing and understanding
-4, 3, WORDS_SEQUENCES, Words group, Hearing and understanding group of words
-4, 5, SENTENCE, Sentences, Hearing and understanding sentences
-4, 7, FREQUENCY_WORDS, Words group by frequency, Hearing and understanding words group by frequency
-3, 1, DURATION_SIGNALS, Length signals, Hearing and understanding signals with different length
-3, 2, FREQUENCY_SIGNALS, Frequency signals, Hearing and understanding signals with different frequency
+groupCode, level, type, name, description
+SPEECH_RU_RU, 1, SINGLE_SIMPLE_WORDS, Слова, Распознавание слов
+SPEECH_RU_RU, 2, PHRASES, Похожие фразы, Распознование похожих фраз
+SPEECH_RU_RU, 3, WORDS_SEQUENCES, Группа слов, Распознавание последовательности слов
+SPEECH_RU_RU, 5, SENTENCE, Предложения, Распознавание предложений
+SPEECH_RU_RU, 6, DI, Дихотическое слушание, Дихотическое слушание
+SPEECH_RU_RU, 7, FREQUENCY_WORDS, Слова с частотной группировкой, Слова с частотной группировкой
+NON_SPEECH_RU_RU, 1, DURATION_SIGNALS, Длительность сигналов, Распознование сигналов по длительности
+NON_SPEECH_RU_RU, 2, FREQUENCY_SIGNALS, Часота сигналов, Распознование сигналов по частоте сигналов
+SPEECH_EN_US, 1, SINGLE_SIMPLE_WORDS, Words, Hearing and understanding simple words
+SPEECH_EN_US, 2, PHRASES, Similar phrases, Hearing and understanding
+SPEECH_EN_US, 3, WORDS_SEQUENCES, Words group, Hearing and understanding group of words
+SPEECH_EN_US, 5, SENTENCE, Sentences, Hearing and understanding sentences
+SPEECH_EN_US, 7, FREQUENCY_WORDS, Words group by frequency, Hearing and understanding words group by frequency
+NON_SPEECH_EN_US, 1, DURATION_SIGNALS, Length signals, Hearing and understanding signals with different length
+NON_SPEECH_EN_US, 2, FREQUENCY_SIGNALS, Frequency signals, Hearing and understanding signals with different frequency
