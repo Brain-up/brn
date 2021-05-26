@@ -1,5 +1,5 @@
-@import '../../../../../../styles/colors.scss';
-@import '../../../../../../styles/variables.scss';
+@import 'colors.scss';
+@import 'variables.scss';
 
 .select-container {
   width: 100%;
@@ -20,11 +20,11 @@
 
 ::ng-deep {
   .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
-    background:  $brain-gradient !important;
+    background: $brain-gradient !important;
   }
 
   .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
   }
 
   .mat-slide-toggle-bar {
@@ -37,6 +37,3 @@
     top: 1px !important;
   }
 }
-
-
-
