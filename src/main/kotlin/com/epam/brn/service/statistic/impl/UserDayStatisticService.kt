@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service
 import java.sql.Date
 import java.time.LocalDate
 
-/**
- *@author Nikolai Lazarev
- */
-
 @Service
 class UserDayStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
@@ -25,18 +21,16 @@ class UserDayStatisticService(
             Date.valueOf(from),
             Date.valueOf(to)
         )
-        return studyHistories.map {
+        return studyHistories.map { studyHistory ->
             DayStudyStatistic(
-                exercisingTimeSeconds = studyHistories.filter { studyHistory ->
-                    studyHistory.startTime.monthValue == it.startTime.monthValue &&
-                        studyHistory.startTime.dayOfMonth == it.startTime.dayOfMonth &&
-                        studyHistory.startTime.year == it.startTime.year
+                exercisingTimeSeconds = studyHistories.filter { filterStudyHistory ->
+                    filterStudyHistory.startTime.toLocalDate() == studyHistory.startTime.toLocalDate()
                 }.map {
                     it.executionSeconds
                 }.sum(),
-                date = it.startTime.toLocalDate(),
+                date = studyHistory.startTime,
                 progress = UserExercisingProgressStatus.GREAT
             )
-        }.distinct()
+        }.distinctBy { it.date.toLocalDate() }
     }
 }

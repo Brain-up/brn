@@ -1,12 +1,11 @@
 package com.epam.brn.dto.statistic
 
-import java.time.YearMonth
+import org.springframework.format.annotation.DateTimeFormat
+import java.time.LocalDateTime
 
-/**
- *@author Nikolai Lazarev
- */
 data class MonthStudyStatistic(
-    val date: YearMonth,
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    val date: LocalDateTime,
     val exercisingTimeSeconds: Int,
     val exercisingDays: Int,
     var progress: UserExercisingProgressStatus

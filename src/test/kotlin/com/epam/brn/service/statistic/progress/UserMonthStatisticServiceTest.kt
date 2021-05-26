@@ -17,13 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension
 import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.YearMonth
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-
-/**
- * @author Nikolai Lazarev
- */
 
 @ExtendWith(MockitoExtension::class)
 internal class UserMonthStatisticServiceTest {
@@ -78,7 +73,7 @@ internal class UserMonthStatisticServiceTest {
             )
         )
         val expectedStatistic = MonthStudyStatistic(
-            date = YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month),
+            date = studyHistory.startTime,
             exercisingTimeSeconds = executionSeconds,
             exercisingDays = 2,
             progress = UserExercisingProgressStatus.GREAT
@@ -106,13 +101,13 @@ internal class UserMonthStatisticServiceTest {
         )
 
         val firstExpectedStudyStatistic = MonthStudyStatistic(
-            date = YearMonth.of(studyHistoryDate.year, studyHistoryDate.month),
+            date = studyHistoryDate,
             exercisingTimeSeconds = executionSeconds,
             exercisingDays = 1,
             progress = progress
         )
         val secondExpectedStudyStatistic = MonthStudyStatistic(
-            date = YearMonth.of(secondStudyHistoryDate.year, secondStudyHistoryDate.month),
+            date = studyHistoryDate,
             exercisingTimeSeconds = executionSeconds,
             exercisingDays = 1,
             progress = progress

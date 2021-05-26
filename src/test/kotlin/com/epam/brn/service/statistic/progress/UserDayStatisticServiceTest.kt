@@ -21,10 +21,6 @@ import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-/**
- * @author Nikolai Lazarev
- */
-
 @ExtendWith(MockitoExtension::class)
 internal class UserDayStatisticServiceTest {
 
@@ -70,7 +66,7 @@ internal class UserDayStatisticServiceTest {
             listOf(studyHistory)
         )
         val expectedStatistic = DayStudyStatistic(
-            date = studyHistoryDate.toLocalDate(),
+            date = studyHistoryDate,
             exercisingTimeSeconds = exercisingSeconds,
             progress = userProgress
         )

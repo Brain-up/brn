@@ -8,11 +8,6 @@ import com.epam.brn.service.statistic.UserPeriodStatisticService
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.time.LocalDate
-import java.time.YearMonth
-
-/**
- *@author Nikolai Lazarev
- */
 
 @Service
 class UserMonthStatisticService(
@@ -29,7 +24,7 @@ class UserMonthStatisticService(
                 historyFilter.startTime.month == it.startTime.month
             }
             MonthStudyStatistic(
-                date = YearMonth.of(it.startTime.year, it.startTime.month),
+                date = it.startTime,
                 exercisingTimeSeconds = filteredHistories.sumBy { studyHistory -> studyHistory.executionSeconds },
                 progress = UserExercisingProgressStatus.GREAT,
                 exercisingDays = filteredHistories.size

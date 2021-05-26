@@ -19,7 +19,6 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertNotNull
@@ -104,13 +103,13 @@ class UserStatisticControllerIT : BaseIT() {
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
         val response = mockMvc.perform(
             get("$baseUrl/study/week")
-                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
-                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
@@ -139,13 +138,13 @@ class UserStatisticControllerIT : BaseIT() {
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
         )
-        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
         val response = mockMvc.perform(
             get("$baseUrl/study/year")
-                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
-                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
