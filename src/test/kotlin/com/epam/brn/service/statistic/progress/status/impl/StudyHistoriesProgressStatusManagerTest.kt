@@ -19,10 +19,10 @@ import kotlin.test.assertEquals
  */
 
 @ExtendWith(MockKExtension::class)
-internal class ProgressStatusManagerImplTest {
+internal class StudyHistoriesProgressStatusManagerTest {
 
     @InjectMockKs
-    private lateinit var manager: ProgressStatusManagerImpl
+    private lateinit var managerStudyHistories: StudyHistoriesProgressStatusManager
 
     @MockK
     private lateinit var weekRetriever: ExercisingStatusRetriever<List<StudyHistory>>
@@ -48,7 +48,7 @@ internal class ProgressStatusManagerImplTest {
         every { weekRetriever.getWorstStatus(any()) } returns UserExercisingProgressStatus.GOOD
 
         // WHEN
-        val status = manager.getStatus(UserExercisingPeriod.WEEK, progress)
+        val status = managerStudyHistories.getStatus(UserExercisingPeriod.WEEK, progress)
 
         // THEN
         verify(exactly = 1) { dayRetriever.getWorstStatus(progress) }
@@ -70,7 +70,7 @@ internal class ProgressStatusManagerImplTest {
         every { dayRetriever.getWorstStatus(any()) } returns UserExercisingProgressStatus.GOOD
 
         // WHEN
-        val status = manager.getStatus(UserExercisingPeriod.DAY, progress)
+        val status = managerStudyHistories.getStatus(UserExercisingPeriod.DAY, progress)
 
         // THEN
         verify(exactly = 1) { dayRetriever.getWorstStatus(progress) }

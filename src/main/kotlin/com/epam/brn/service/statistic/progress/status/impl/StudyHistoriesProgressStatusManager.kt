@@ -7,19 +7,15 @@ import com.epam.brn.service.statistic.progress.status.ExercisingStatusRetriever
 import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import org.springframework.stereotype.Service
 
-/**
- *@author Nikolai Lazarev
- */
-
 @Service
-class ProgressStatusManagerImpl(
+class StudyHistoriesProgressStatusManager(
     private val retrievers: List<ExercisingStatusRetriever<Any>>
 ) : ProgressStatusManager<List<StudyHistory>> {
 
-    override fun getStatus(period: UserExercisingPeriod, progress: List<StudyHistory>): UserExercisingProgressStatus? {
+    override fun getStatus(periodType: UserExercisingPeriod, progress: List<StudyHistory>): UserExercisingProgressStatus? {
         val allStatuses: ArrayList<UserExercisingProgressStatus?> = ArrayList()
         retrievers.filter {
-            it.getSupportedPeriods().contains(period)
+            it.getSupportedPeriods().contains(periodType)
         }.forEach {
             allStatuses.add(it.getWorstStatus(progress))
         }

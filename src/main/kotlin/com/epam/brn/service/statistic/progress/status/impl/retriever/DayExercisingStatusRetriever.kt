@@ -7,10 +7,6 @@ import com.epam.brn.service.statistic.progress.status.ExercisingStatusRetriever
 import com.epam.brn.service.statistic.progress.status.requirements.StatusRequirementsManager
 import org.springframework.stereotype.Component
 
-/**
- *@author Nikolai Lazarev
- */
-
 @Component
 class DayExercisingStatusRetriever(
     private val requirementsManager: StatusRequirementsManager

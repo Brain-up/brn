@@ -12,5 +12,5 @@ interface ProgressStatusManager<T> {
      * Should calculate and return a status for the user progress
      * @param progress - progress for which calculate the status
      */
-    fun getStatus(period: UserExercisingPeriod, progress: T): UserExercisingProgressStatus?
+    fun getStatus(periodType: UserExercisingPeriod, progress: T): UserExercisingProgressStatus?
 }

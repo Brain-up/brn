@@ -8,9 +8,6 @@ import com.epam.brn.service.statistic.progress.status.UserCoolDownRetriever
 import com.epam.brn.service.statistic.progress.status.requirements.StatusRequirementsManager
 import org.springframework.stereotype.Component
 
-/**
- *@author Nikolai Lazarev
- */
 @Component
 class WeekExercisingStatusRetriever(
     private val requirementsManager: StatusRequirementsManager,
@@ -18,7 +15,13 @@ class WeekExercisingStatusRetriever(
 ) : ExercisingStatusRetriever<List<StudyHistory>> {
     override fun getWorstStatus(progress: List<StudyHistory>): UserExercisingProgressStatus? {
         val periodRequirements = requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)
-        val maximalUserCoolDownDays = coolDownRetriever.getMaximalUserCoolDown(progress)
+        val startTime = progress.minByOrNull { it.startTime }!!.startTime.toLocalDate()
+        val endTime = progress.maxByOrNull { it.startTime }!!.startTime.toLocalDate()
+        val maximalUserCoolDownDays = coolDownRetriever.getMaximalUserCoolDown(
+            userId = progress.first().userAccount.id,
+            from = startTime,
+            to = endTime
+        )
         return periodRequirements.first { 7 - maximalUserCoolDownDays in it.minimalRequirements until it.maximalRequirements }.status
     }
 
