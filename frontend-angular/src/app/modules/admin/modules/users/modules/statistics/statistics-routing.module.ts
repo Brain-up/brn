@@ -4,7 +4,7 @@ import { StatisticsComponent } from './statistics.component';
 
 const routes: Routes = [
   {
-    path: ':userId',
+    path: '',
     component: StatisticsComponent,
   },
 ];
