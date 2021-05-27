@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class StudyHistoriesProgressStatusManager(
-    private val retrievers: List<ExercisingStatusRetriever<Any>>
+    private val retrievers: List<ExercisingStatusRetriever<List<*>>>
 ) : ProgressStatusManager<List<StudyHistory>> {
 
     override fun getStatus(periodType: UserExercisingPeriod, progress: List<StudyHistory>): UserExercisingProgressStatus? {
