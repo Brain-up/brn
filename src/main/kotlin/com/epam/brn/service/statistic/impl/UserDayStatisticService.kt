@@ -2,6 +2,7 @@ package com.epam.brn.service.statistic.impl
 
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.UserExercisingPeriod
+import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -14,7 +15,7 @@ import java.time.LocalDate
 class UserDayStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
-    private val progressManager: ProgressStatusManager<List<*>>
+    private val progressManager: ProgressStatusManager<List<StudyHistory>>
 ) : UserPeriodStatisticService<DayStudyStatistic> {
     override fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long?): List<DayStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
