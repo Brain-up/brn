@@ -1,4 +1,4 @@
-import {IDefaultMethods} from '../interfaces/default-methods.interface';
+import { IDefaultMethods } from '../models/default-methods';
 
 export function defaultMethods(key: string): IDefaultMethods {
   return {

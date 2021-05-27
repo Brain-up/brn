@@ -1,5 +1,5 @@
-groupId, locale, name, description
-1, ru-ru, Неречевые упражнения, Неречевые упражнения
-2, ru-ru, Речевые упражнения, Речевые упражнения
-3, en-us, Non-Speech exercises, Non-Speech
-4, en-us, Speech exercises, Speech
+code, locale, name, description
+NON_SPEECH_RU_RU, ru-ru, Неречевые упражнения, Неречевые упражнения
+SPEECH_RU_RU, ru-ru, Речевые упражнения, Речевые упражнения
+NON_SPEECH_EN_US, en-us, Non-Speech exercises, Non-Speech
+SPEECH_EN_US, en-us, Speech exercises, Speech

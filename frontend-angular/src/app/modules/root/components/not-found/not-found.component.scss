@@ -1,0 +1,128 @@
+@import '../../../../styles/colors';
+
+:host {
+  $anims: float, floatReverse, float2, floatReverse2;
+  $easeSmooth: cubic-bezier(0.39, 0.575, 0.28, 0.995);
+  $color: $active-grey-color;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: $cold-violet-color;
+  overflow: hidden;
+
+  .particle {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+
+    @for $i from 1 through 80 {
+      &:nth-child(#{$i}) {
+        $size: random(20) + 10;
+        $blur: $i * 0.02;
+        $speed: random(20) + 20;
+        $delay: random(10) * 0.1;
+        $anim: nth($anims, random(length($anims)));
+
+        top: random(100) / (100 + $size/8) * 100%;
+        left: random(100) / (100 + $size/10) * 100%;
+        font-size: $size + px;
+        filter: blur((#{$blur}) + px);
+        animation: $speed + s $anim infinite;
+      }
+    }
+  }
+
+  .content {
+    border-radius: 8px;
+    position: relative;
+    width: 400px;
+    margin: 20px;
+    background: #ffffff73;
+    padding: 60px 0;
+    text-align: center;
+    box-shadow: -10px 10px 67px -12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    animation: apparition 1s $easeSmooth forwards;
+
+    p {
+      font-size: 1.3rem;
+      margin: 0 0 40px;
+      letter-spacing: 1px;
+      color: $color;
+      font-size: 100px;
+    }
+
+    a {
+      border: 1px solid $cold-violet-color;
+      box-sizing: border-box;
+      box-shadow: 0px 4px 16px #5947b240;
+      border-radius: 16px;
+      background: $brain-gradient;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+  }
+}
+
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(180px);
+  }
+}
+
+@keyframes floatReverse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-180px);
+  }
+}
+
+@keyframes float2 {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(28px);
+  }
+}
+
+@keyframes floatReverse2 {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-28px);
+  }
+}
+
+@mixin animation($delay, $duration, $animation) {
+  animation-delay: $delay;
+  animation-duration: $duration;
+  animation-name: $animation;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+}
