@@ -1,0 +1,39 @@
+@import 'colors';
+
+:host {
+  $borderRadius: 16px;
+  $transition: 300ms;
+
+  display: flex;
+  position: relative;
+  border: 1px solid $active-grey-color;
+  border-radius: $borderRadius;
+  width: fit-content;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  .toggler {
+    position: absolute;
+    transition: $transition;
+    background: $brain-gradient;
+    border-radius: $borderRadius;
+    height: 100%;
+    width: 50%;
+  }
+
+  .off,
+  .on {
+    width: 50%;
+    padding: 8px 16px;
+    color: $cold-violet-color;
+    z-index: 0;
+    transition: $transition;
+
+    &.selected {
+      color: #ffffff;
+    }
+  }
+}

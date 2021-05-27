@@ -68,6 +68,12 @@
             }
           }
         }
+      },
+      "Users": {
+        "FavoriteToggler": {
+          "AllUsers": "Все пользователи",
+          "Favorite": "Избранные"
+        }
       }
     }
   },

@@ -1,0 +1,5 @@
+<div class="toggler" [style.left.%]="state ? 50 : 0"></div>
+
+<div class="off" [class.selected]="!state">{{ offText }}</div>
+
+<div class="on" [class.selected]="state">{{ onText }}</div>

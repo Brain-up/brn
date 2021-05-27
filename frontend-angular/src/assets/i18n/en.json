@@ -68,6 +68,12 @@
             }
           }
         }
+      },
+      "Users": {
+        "FavoriteToggler": {
+          "AllUsers": "All users",
+          "Favorite": "Favorite"
+        }
       }
     }
   },

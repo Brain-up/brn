@@ -20,10 +20,6 @@ describe('StatisticsInfoDialogComponent', () => {
     hostElement = fixture.nativeElement;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should image source of dialog content section is valid', async () => {
     const imgElem = hostElement.querySelector<HTMLImageElement>('img.statistics-info-dialog');
 
