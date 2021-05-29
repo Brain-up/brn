@@ -1,4 +1,15 @@
-<app-toggler
-  [offText]="'Admin.Modules.Users.FavoriteToggler.AllUsers' | translate"
-  [onText]="'Admin.Modules.Users.FavoriteToggler.Favorite' | translate"
-></app-toggler>
+<div class="filters">
+  <div class="search">
+    <mat-icon>search</mat-icon>
+
+    <input matInput [placeholder]="'Admin.Modules.Users.Search' | translate" />
+  </div>
+
+  <app-toggler
+    class="toggler"
+    [offText]="'Admin.Modules.Users.FavoriteToggler.AllUsers' | translate"
+    [onText]="'Admin.Modules.Users.FavoriteToggler.Favorites' | translate"
+  ></app-toggler>
+</div>
+
+<app-users-table [data]="users"></app-users-table>

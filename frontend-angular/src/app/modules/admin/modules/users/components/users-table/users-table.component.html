@@ -1,0 +1,88 @@
+<table class="users">
+  <tr>
+    <th>
+      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Name' | translate }}
+    </th>
+
+    <th>
+      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit' | translate }}
+    </th>
+
+    <th>
+      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit' | translate }}
+    </th>
+
+    <th class="center">
+      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastWeek' | translate }}
+    </th>
+
+    <th class="center">
+      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth' | translate }}
+    </th>
+
+    <th class="center">
+      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress' | translate }}
+    </th>
+
+    <th class="center">
+      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite' | translate }}
+    </th>
+  </tr>
+
+  <tr *ngFor="let user of usersTableData">
+    <td class="name-column">
+      <div class="wrap">
+        <div class="avatar">AB</div>
+
+        <div class="info">
+          <div class="full-name">{{ user.name }}</div>
+
+          <div class="common">
+            {{
+              'Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]'
+                | translate: { years: user.yearsOld, gender: user.gender }
+            }}
+          </div>
+        </div>
+      </div>
+    </td>
+
+    <td class="visit-column">
+      <div class="date">{{ user.firstVisit.date }}</div>
+
+      <div class="time">
+        {{
+          'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
+            | translate: { hours: user.firstVisit.time }
+        }}
+      </div>
+    </td>
+
+    <td class="visit-column">
+      <div class="date">{{ user.lastVisit.date }}</div>
+
+      <div class="time">
+        {{
+          'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
+            | translate: { hours: user.lastVisit.time }
+        }}
+      </div>
+    </td>
+
+    <td class="last-week-column">
+      <app-bar-chart [data]="user.lastWeek.data" [options]="user.lastWeek.option"></app-bar-chart>
+    </td>
+
+    <td class="center">
+      {{ user.workingDaysInLastMonth }}
+    </td>
+
+    <td class="progress-column center">
+      <mat-icon svgIcon="up-arrow" *ngIf="user.hasProgress"></mat-icon>
+    </td>
+
+    <td class="favorite-column center">
+      <mat-icon svgIcon="star" [class.favorite]="user.isFavorite"></mat-icon>
+    </td>
+  </tr>
+</table>

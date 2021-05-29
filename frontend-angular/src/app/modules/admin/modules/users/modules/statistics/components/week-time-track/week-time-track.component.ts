@@ -19,8 +19,7 @@ export class WeekTimeTrackComponent {
 
   private chartData: IWeekChartDataItem[];
 
-  public barData: BarDataType;
-  public barOptions: BarOptionsType = {
+  public readonly barOptions: BarOptionsType = {
     colors: {
       data: (dataItem) => USER_EXERCISING_PROGRESS_STATUS_COLOR[this.chartData[dataItem.index].progress],
     },
@@ -68,6 +67,8 @@ export class WeekTimeTrackComponent {
       radius: 8,
     },
   };
+
+  public barData: BarDataType;
 
   @Input()
   public isLoading = true;

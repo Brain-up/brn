@@ -6,6 +6,8 @@ import { pluck } from 'rxjs/operators';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { Dayjs } from 'dayjs';
+import { SortType } from '@admin/models/sort';
+import { User } from '@admin/models/user';
 
 @Injectable()
 export class AdminApiService {
@@ -33,6 +35,24 @@ export class AdminApiService {
     return this.httpClient
       .get<{ data: UserYearlyStatistics[] }>(
         `/api/admin/study/year?userId=${userId}&from=${from.format('YYYY-MM-DD')}&to=${to.format('YYYY-MM-DD')}`
+      )
+      .pipe(pluck('data'));
+  }
+
+  public getUsers(options?: {
+    pageNumber?: number;
+    pageSize?: number;
+    sort?: SortType;
+    withAnalytics?: boolean;
+  }): Observable<User[]> {
+    const pageNumber = options.pageNumber ?? 1;
+    const pageSize = options.pageSize ?? 10;
+    const sort = options.sort ?? 'asc';
+    const withAnalytics = options.withAnalytics ?? true;
+
+    return this.httpClient
+      .get<{ data: User[] }>(
+        `/api/admin/users?withAnalytics=${withAnalytics}&pageNumber=${pageNumber}&pageSize=${pageSize}&sort=${sort}`
       )
       .pipe(pluck('data'));
   }

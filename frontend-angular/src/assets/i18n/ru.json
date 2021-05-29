@@ -70,10 +70,30 @@
         }
       },
       "Users": {
+        "Components": {
+          "UsersTable": {
+            "ColumnsName": {
+              "Favorite": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite",
+              "FirstVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit",
+              "LastVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit",
+              "LastWeek": "Admin.Modules.Users.Components.UsersTable.ColumnsName.LastWeek",
+              "Name": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Name",
+              "Progress": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress",
+              "WorkingDaysInLastMonth": "Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth"
+            },
+            "NameColumn": {
+              "CommonInfo [years, gender]": "Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]"
+            },
+            "VisitColumn": {
+              "Time [hours]": "Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]"
+            }
+          }
+        },
         "FavoriteToggler": {
           "AllUsers": "Все пользователи",
-          "Favorite": "Избранные"
-        }
+          "Favorites": "Избранные"
+        },
+        "Search": "Поиск"
       }
     }
   },

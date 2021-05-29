@@ -1,19 +1,12 @@
 @import 'colors';
 
 :host {
-  $borderRadius: 16px;
   $transition: 300ms;
+  $borderRadius: 16px;
 
-  display: flex;
+  display: block;
   position: relative;
-  border: 1px solid $active-grey-color;
-  border-radius: $borderRadius;
-  width: fit-content;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
+  height: 32px;
 
   .toggler {
     position: absolute;
@@ -24,16 +17,34 @@
     width: 50%;
   }
 
-  .off,
-  .on {
-    width: 50%;
-    padding: 8px 16px;
-    color: $cold-violet-color;
-    z-index: 0;
-    transition: $transition;
+  .wrap {
+    display: flex;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid $mouse-grey-color;
+    border-radius: $borderRadius;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    overflow: hidden;
 
-    &.selected {
-      color: #ffffff;
+    .off,
+    .on {
+      width: 50%;
+      color: $cold-violet-color;
+      z-index: 0;
+      transition: $transition;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 8px 16px;
+
+      &.selected {
+        color: #ffffff;
+      }
     }
   }
 }

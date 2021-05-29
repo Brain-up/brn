@@ -4,7 +4,7 @@ $main-font-family: Montserrat;
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
-@import "./app/styles/exercises";
+@import './app/styles/exercises';
 
 $custom-typography: mat-typography-config(
   $font-family: $main-font-family,
@@ -49,6 +49,10 @@ body {
   margin: 0;
   font-family: $main-font-family;
   min-height: 100%;
+
+  input {
+    font-family: $main-font-family;
+  }
 }
 
 .form-control {

@@ -70,10 +70,30 @@
         }
       },
       "Users": {
+        "Components": {
+          "UsersTable": {
+            "ColumnsName": {
+              "Favorite": "Favorite",
+              "FirstVisit": "First visit",
+              "LastVisit": "Last visit",
+              "LastWeek": "Last week",
+              "Name": "Name",
+              "Progress": "Progress",
+              "WorkingDaysInLastMonth": "Days in last month"
+            },
+            "NameColumn": {
+              "CommonInfo [years, gender]": "{{ years }} years old, {{ gender }}"
+            },
+            "VisitColumn": {
+              "Time [hours]": "{{ hours }} hours"
+            }
+          }
+        },
         "FavoriteToggler": {
           "AllUsers": "All users",
-          "Favorite": "Favorite"
-        }
+          "Favorites": "Favorites"
+        },
+        "Search": "Search"
       }
     }
   },
