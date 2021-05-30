@@ -3,39 +3,40 @@ package com.epam.brn.controller
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.service.ExerciseService
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class ExerciseControllerTest {
-    @InjectMocks
+    @InjectMockKs
     lateinit var exerciseController: ExerciseController
 
-    @Mock
+    @MockK
     lateinit var exerciseService: ExerciseService
 
     @Test
     fun `should get exercises for user and series`() {
         // GIVEN
         val subGroupId: Long = 2
-        val exercise =
-            ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
+        val exercise = ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
         val listExercises = listOf(exercise)
-        Mockito.`when`(exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)).thenReturn(listExercises)
+        every { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) } returns listExercises
+
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseDto> =
             exerciseController.getExercisesBySubGroup(subGroupId).body?.data as List<ExerciseDto>
+
         // THEN
+        verify { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) }
         assertTrue(actualResultData.contains(exercise))
-        verify(exerciseService).findExercisesBySubGroupForCurrentUser(subGroupId)
     }
 
     @Test
@@ -43,13 +44,14 @@ internal class ExerciseControllerTest {
         // GIVEN
         val exerciseID: Long = 1
         val exercise = ExerciseDto(2, 1, "exe", 1, NoiseDto(0, ""))
-        Mockito.`when`(exerciseService.findExerciseById(exerciseID)).thenReturn(exercise)
+        every { exerciseService.findExerciseById(exerciseID) } returns exercise
+
         // WHEN
         @Suppress("UNCHECKED_CAST")
-        val actualResultData: ExerciseDto =
-            exerciseController.getExercisesByID(exerciseID).body?.data as ExerciseDto
+        val actualResultData: ExerciseDto = exerciseController.getExercisesByID(exerciseID).body?.data as ExerciseDto
+
         // THEN
+        verify { exerciseService.findExerciseById(exerciseID) }
         assertEquals(actualResultData, exercise)
-        verify(exerciseService).findExerciseById(exerciseID)
     }
 }
