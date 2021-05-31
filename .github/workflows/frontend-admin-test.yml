@@ -30,7 +30,7 @@ jobs:
 
       - name: Run test coverage
         working-directory: ./frontend-angular
-        run: npm test:coverage
+        run: npm run test:coverage
 
       - uses: AthleticNet/comment-test-coverage@1.1
         with:
