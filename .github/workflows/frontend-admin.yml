@@ -1,0 +1,57 @@
+name: Frontend admin
+
+on: pull_request
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run action checkout
+        uses: actions/checkout@master
+
+      - name: Install dependencies
+        run: cd ./frontend-angular
+        run: npm install
+
+      - name: Run lint
+        run: npm run lint
+
+  # test:
+  #   name: Frontend Angular tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+
+  #     - name: Install Chrome
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get -y install google-chrome-stable
+
+  #     - name: Install dependencies
+  #       working-directory: ./frontend-angular
+  #       run: npm install
+
+  #     - name: Run tests
+  #       working-directory: ./frontend-angular
+  #       run: npm test
+
+  # coverage:
+  #   name: Test coverage changes
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+
+  #     - name: Install dependencies
+  #       working-directory: ./frontend-angular
+  #       run: npm install
+
+  #     - name: Run test coverage
+  #       working-directory: ./frontend-angular
+  #       run: npm run test:coverage
+
+  #     - uses: AthleticNet/comment-test-coverage@1.1
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         path: ./frontend-angular/coverage/frontend-angular/coverage-summary.json
+  #         title: Frontend Angular coverage
