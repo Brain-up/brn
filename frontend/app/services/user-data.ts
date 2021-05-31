@@ -49,11 +49,21 @@ export default class UserDataService extends Service {
     return this.selectedLocale || this.intl.primaryLocale;
   }
 
+  shouldStayOnCurrentRoute() {
+    return this.router.currentRouteName.includes('description');
+  }
+
   @action setLocale(localeName: string) {
     const name = localeName === 'ru' ? 'ru-ru' : 'en-us';
     this.intl.setLocale([name]);
     this.selectedLocale = name;
     localStorage.setItem('locale', name);
+
+    if (this.shouldStayOnCurrentRoute()) {
+      this.router.transitionTo(this.router.currentRouteName, { queryParams: { locale: name } });
+    } else {
+      this.router.transitionTo('groups', { queryParams: { locale: name } });
+    }
   }
 }
 

@@ -116,105 +116,115 @@ description:
   intro:
     A team of volunteers started to develop the Brain-Up interactive audio exercise platform for people with cognitive speech problems.
     The ability to hear and to understand speech can be significantly improved thanks to these special and regular activities. Welcome!
-  context_header: Background information
   context:
-    "According to statistics, almost 10% of people have hearing problems of different origins. However, about 20-30% of people can significantly
-    improve the ability to hear with the help of special exercises. The analysis of electrical impulses, which transform sound signals into words
-    and speech, occurs in separate areas of the brain. The recent data showed that the brain does not stop developing over the years and lends
-    itself to training at almost any age.
-    '<br><br>'
-    American specialists began to study the mentioned topic above about 20 years ago. As a result, they have accumulated good experience and 
-    analytics. Worked with engineers, they have developed several programs with exercises that genuinely  work and help many people to restore 
-    their listening skills. Unfortunately all of these apps are quite expensive. Furthermore, they not adapted for non-English speaking populations. 
-    In addition, they do not plan to support multilingual language blocks in the near future. One can see the obvious necessity of analogues of 
-    apps for Russian-speaking people.
-    '<br><br><strong>'
-    This project is being developed jointly with leading experts in the field of defectology in order to create a similar analogue 
-    of apps thanks to public scientific developments in this area. The project is not commercial. Volunteers take part in the development of this 
-    project. We are open to any help and cooperation.
-    '</strong><br><br>'
-    In the history of this draft more than 40 people have taken part in the development of apps from different countries (Russia, Ukraine, 
-    Belarus, Poland, Netherlands, Mexico) since 2019.
-    '<br><br>'
-    The working version of the Brain-Up program is already ready, where one can register and practice right now."
-  program_header: Training plan and exercise program
-  us_recomendations_list_title: "Lesson recommendations given by American colleagues:"
-  us_recomendations_list_item_1: it is necessary to exercise regularly (at least 6 times a week 30 minutes a day)
-  us_recomendations_list_item_2: it is necessary to listen to audio material, heed and complete tasks
-  us_recomendations_list_item_3: if you feel that the task is not very easy for you, do it again and again
-  us_recomendations_list_item_4: the aim is not the number of correct answers, but the duration of lessons on the development of auditory perception
-  exercises_description: 
-    "The block of classes consists of two groups of exercises - non-speech and speech exercises.
-    '<br><br><em>'
-    The non-speech block is still in development, but there are already several exercises.
-    </em>
-    '<br><br>'
-    There are several series of the same type in the speech block: Words, Group of words, Phrases. They have already been practically completed 
-    technically. Series will soon be supplemented with exercises. It is already possible to study these series."
-  exercises_series_1: 
-    "The \"Words\" series is the first one to start with. This series is aimed to help the user to train the ability to hear words spoken in 
-    silence and words with the imposition of various noises (more difficult version)."
-  exercises_series_2: 
-    "The matrix form of the exercises of the \"Group of words\" series was created by Inna Vasilievna Koroleva, professor of the Department 
-    of Hearing and Speech, LORNII. This successful methodology has already proven itself for many years. The user sees the matrix and hears 
-    words from each column in random order. As a result, there is a grammatically correct sentence with no meaning. The goal is for the 
-    brain to concentrate on the words, and not guess the meaning. For example, the following sentences can be generated: \"A girl reads 
-    cherries\", \"Grandmother draws books\", \"A woman dances money\", \"A girl draws money\", etc."
-  exercises_series_3:
-    "A series of \"Phrases\" teaches the user to focus on such difficulties as endings, prepositions and the particle \"not\" in a sentence."
-  support_header: How to support our project
-  support_details: "We ask users to actively participate in the tasks and inform us about possible errors"
-  bugs_tracker_link: "https://docs.google.com/document/d/1ihOrk7RRmz92teGMsw068KifR5MWpoBo8wq2Lb7gL44/edit"
-  bugs_tracker_link_title: using the link
-  possible_errors_reporting_goal: ", so that we can quickly fix these."
-  contact_us_by_email:
-    "We are open to new volunteers as a developer (Kotlin, Ember, Angular), a tester, a painter and as a content volunteer. If you want to 
-    become a part of the team, write to our project email: "
-  motivation_to_contribute: 
-    "Only our joint efforts can make this project \"alive\" and, possibly, we can help many people discover or return for themselves 
-    \"the world of understandable sounds\"."
-  useful_links_header: Useful links
-  articles_about_project: "Articles about the project:"
-  articles_about_project_link_text: "follow us on habr.ru"
-  foreign_programs_title: "Foreign programs for the development of auditory perception:"
-  foreign_program_1_title: Advanced Brain Technologies
-  foreign_program_2_title: Musical Auditory Training
-  foreign_program_3_title: Fast ForWord Reading Program
-  foreign_program_1_description: "― exercises to improve brain, emotional, and mental health through melodies and sounds"
-  foreign_program_2_description: "― development of auditory perception through music"
-  foreign_program_3_description: "― program for the development of brain abilities and speech understanding"
-  scientific_basis_header: "Scientific basis:"
-  scientific_basis_1_title: The Brain That Changes Itself I (2008)
-  scientific_basis_2_title: The Brain That Changes Itself II (2010)
-  scientific_basis_3_title: Hearing complaints among veterans following traumatic brain injury
-  scientific_basis_4_title: The official website of I.V. Koroleva (professor, doctor of psychological sciences)
-  support_companies_header: With the support
-  our_people_header: Meet our team
-  our_people_thanks: We would like to thank everyone who participates and supports our project!
-  our_team_header: "We are grateful to all the contributors who have helped at different times and those who continue to develop the platform today."
-  team_member_image_alt: Team member photo {number}
-  our_medical_consultants: "And to our medical specialists, consultants."
-  doctor_image_alt: Doctor/consultant photo {number}
-  doctor1_name: Inna Koroleva
-  doctor1_details: "Academic supervisor of the rehabilitation department, Doctor of Psychology, Professor, author of the manuals \"Learning to listen and speak\""
-  doctor2_name: Ekaterina Garbaruk
-  doctor2_details: Candidate of Biological Sciences, expert at the Laboratory of Hearing and Speech (The Pavlov First Saint Petersburg State Medical University), expert in diagnosis of aural disorders
-  doctor3_name: Lubov Proshina
-  doctor3_details: Teacher of the deaf, Belarusian Republican Scientific and Practical Center of Otorhinolaryngology, 10+ years of experience
-  doctor4_name: Natalia Metelskaya
-  doctor4_details: Teacher of the deaf, Mogilev Regional Children's Hospital (Belarus), 20+ years of experience
-  doctor5_name: Ksenia Berezkina
-  doctor5_details: Teacher of the deaf, City Resource Center for Hearing Impaired Children, 10+ years of experience
-  doctor6_name: Kristina Sivenkova
-  doctor6_details: Teacher of the deaf, Saint Petersburg Center of Otorhinolaryngology, young professional
-  doctor7_name: Daria Platonenko
-  doctor7_details: Teacher of the deaf, Belarusian Republican Scientific and Practical Center of Otorhinolaryngology, 3+ years of experience
-  doctor8_name: Olga Sukhova
-  doctor8_details: "Teacher of the deaf, defectologist, author of the manuals \"It is interesting to listen\""
-  doctor9_name: Yulia Kibalova
-  doctor9_details: Teacher of the deaf, defectologist, expert at the Laboratory of Hearing and Speech (The Pavlov First Saint Petersburg State Medical University), 10+ years of experience
-  join_us_header: "Join '<span class=\"text-indigo-600\">'Brain-Up'</span>'!"
-  join_us_description: We will be glad to everyone who wants to join and contribute to our project.
-  join_us_contact: "If you want to join our team, you can write to our lead Elena Moshnikova: "
-  join_us_contact_ending: Elena will be happy to answer all your questions and to cooperate.
-  join_us_motivation: "Our joint efforts make this project \"alive\" and, perhaps, we will be able to help many people discover or return the world of understandable sounds."
+    header: Background information
+    text:
+      0:
+        According to statistics, almost 10% of people have hearing problems of different origins. However, about 20-30% of people can significantly
+        improve the ability to hear with the help of special exercises. The analysis of electrical impulses, which transform sound signals into words
+        and speech, occurs in separate areas of the brain. The recent data showed that the brain does not stop developing over the years and lends
+        itself to training at almost any age.
+      1:
+        American specialists began to study the mentioned topic above about 20 years ago. As a result, they have accumulated good experience and 
+        analytics. Worked with engineers, they have developed several programs with exercises that genuinely  work and help many people to restore 
+        their listening skills. Unfortunately all of these apps are quite expensive. Furthermore, they not adapted for non-English speaking populations. 
+        In addition, they do not plan to support multilingual language blocks in the near future. One can see the obvious necessity of analogues of 
+        apps for Russian-speaking people.
+      2:
+        This project is being developed jointly with leading experts in the field of defectology in order to create a similar analogue 
+        of apps thanks to public scientific developments in this area. The project is not commercial. Volunteers take part in the development of this 
+        project. We are open to any help and cooperation.
+      3:
+        In the history of this draft more than 40 people have taken part in the development of apps from different countries (Russia, Ukraine, 
+        Belarus, Poland, Netherlands, Mexico) since 2019.
+      4:
+        The working version of the Brain-Up program is already ready, where one can register and practice right now."
+  exercises:
+    header: Training plan and exercise program
+    us_recomendations:
+      title: "Lesson recommendations given by American colleagues:"
+      0: it is necessary to exercise regularly (at least 6 times a week 30 minutes a day)
+      1: it is necessary to listen to audio material, heed and complete tasks
+      2: if you feel that the task is not very easy for you, do it again and again
+      3: the aim is not the number of correct answers, but the duration of lessons on the development of auditory perception
+    description: 
+      exercise_groups: The block of classes consists of two groups of exercises - non-speech and speech exercises.
+      non_speech_group: The non-speech block is still in development, but there are already several exercises.
+      speech_group: 
+        "There are several series of the same type in the speech block: Words, Group of words, Phrases. They have already been practically completed 
+        technically. Series will soon be supplemented with exercises. It is already possible to study these series."
+    series: 
+      0: 
+        "The \"Words\" series is the first one to start with. This series is aimed to help the user to train the ability to hear words spoken in 
+        silence and words with the imposition of various noises (more difficult version)."
+      1: 
+        "The matrix form of the exercises of the \"Group of words\" series was created by Inna Vasilievna Koroleva, professor of the Department 
+        of Hearing and Speech, LORNII. This successful methodology has already proven itself for many years. The user sees the matrix and hears 
+        words from each column in random order. As a result, there is a grammatically correct sentence with no meaning. The goal is for the 
+        brain to concentrate on the words, and not guess the meaning. For example, the following sentences can be generated: \"A girl reads 
+        cherries\", \"Grandmother draws books\", \"A woman dances money\", \"A girl draws money\", etc."
+      2:
+        "A series of \"Phrases\" teaches the user to focus on such difficulties as endings, prepositions and the particle \"not\" in a sentence."
+  contribute:
+    header: How to support our project
+    details: We ask users to actively participate in the tasks and inform us about possible errors
+    bug_tracking:
+      link: "https://docs.google.com/document/d/1ihOrk7RRmz92teGMsw068KifR5MWpoBo8wq2Lb7gL44/edit"
+      title: using the link
+      goal: ", so that we can quickly fix these."
+    contact_us:
+      "We are open to new volunteers as a developer (Kotlin, Ember, Angular), a tester, a painter and as a content volunteer. If you want to 
+      become a part of the team, write to our project email: "
+    motivation: 
+      "Only our joint efforts can make this project \"alive\" and, possibly, we can help many people discover or return for themselves 
+      \"the world of understandable sounds\"."
+  links:
+    header: Useful links
+    articles:
+      title: "Articles about the project:"
+      link: "https://habr.com/ru/company/epam_systems/blog/530824/"
+      link_title: "follow us on habr.ru"
+    foreign_programs:
+      title: "Foreign programs for the development of auditory perception:"
+      0:
+        title: Advanced Brain Technologies
+        link: "https://advancedbrain.com/"
+        description: "― exercises to improve brain, emotional, and mental health through melodies and sounds"
+      1:
+        title: Musical Auditory Training
+        link: "http://musicalauditorytraining.com/"
+        description: "― development of auditory perception through music"
+      2:
+        title: Fast ForWord Reading Program
+        link: "https://www.scilearn.com/program/"
+        description: "― program for the development of brain abilities and speech understanding"
+    scientific_basis:
+      header: "Scientific basis:"
+      0:
+        title: The Brain That Changes Itself I (2008)
+        link: "https://youtu.be/BMNrFENZ4Rw"
+      1:
+        title: The Brain That Changes Itself II (2010)
+        link: "https://youtu.be/QUoBMSKq7zg"
+      2:
+        title: Hearing complaints among veterans following traumatic brain injury
+        link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/"
+      3:
+        title: The official website of I.V. Koroleva (professor, doctor of psychological sciences)
+        link: "https://profkoroleva.ru/"
+  team:
+    header: Meet our team
+    thanks_words: "We are glad to all the contributors who have helped at different times and those who continue to develop the platform today."
+    image_alt: Team member photo {i}
+  doctors:
+    thanks_words: "Also, we are very grateful to our medical specialists, consultants and authors of the exercises!"
+  support:
+    header: With the support
+    thanks_words: We would like to thank everyone who participates and supports our project!
+  join_us:
+    header: "Join '<span class=\"text-indigo-600\">'Brain-Up'</span>'!"
+    description: We will be glad to everyone who wants to join and contribute to our project.
+    contact: 
+      start: "If you want to join our team, you can write to our lead Elena Moshnikova: "
+      end: Elena will be happy to answer all your questions and to cooperate.
+    motivation: "Our joint efforts make this project \"alive\" and, perhaps, we will be able to help many people discover or return the world of understandable sounds."
