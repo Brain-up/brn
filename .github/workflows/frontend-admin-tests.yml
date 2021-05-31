@@ -10,9 +10,9 @@ jobs:
       - name: Run action checkout
         uses: actions/checkout@master
 
-      # - name: Install dependencies
-      #   run: cd ./frontend-angular
-      #   run: npm install
+      - name: Install dependencies
+        run: cd ./frontend-angular
+        run: npm install
 
       # - name: Run lint
       #   run: npm run lint
