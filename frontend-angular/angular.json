@@ -33,6 +33,7 @@
               { "glob": "**/*", "input": "../api-contract/samples", "output": "api" }
             ],
             "styles": ["src/styles.scss"],
+            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] },
             "indexTransform": "src/index-transform.ts",
             "customWebpackConfig": {
               "path": "custom-webpack-config.ts",
@@ -90,7 +91,8 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss"],
+            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] }
           }
         },
         "lint": {

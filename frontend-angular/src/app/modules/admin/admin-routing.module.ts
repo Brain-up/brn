@@ -10,19 +10,19 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'upload-file',
+        redirectTo: 'users',
       },
       {
-        path: 'upload-file',
-        loadChildren: () => import('./modules/upload-file/upload-file.module').then((m) => m.UploadFileModule),
-      },
-      {
-        path: 'statistics',
-        loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
+        path: 'users',
+        loadChildren: () => import('./modules/users/users.module').then((m) => m.UsersModule),
       },
       {
         path: 'exercises',
         loadChildren: () => import('./modules/exercises/exercises.module').then((m) => m.ExercisesModule),
+      },
+      {
+        path: 'upload-file',
+        loadChildren: () => import('./modules/upload-file/upload-file.module').then((m) => m.UploadFileModule),
       },
     ],
   },
