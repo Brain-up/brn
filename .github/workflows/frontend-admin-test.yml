@@ -28,6 +28,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: Install dependencies
+        working-directory: ./frontend-angular
+        run: npm install
+
       - name: Run test coverage
         working-directory: ./frontend-angular
         run: npm run test:coverage
