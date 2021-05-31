@@ -19,18 +19,18 @@ jobs:
         working-directory: ./frontend-angular
         run: npm test
 
-  coverage:
-    name: Test coverage changes
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install dependencies
-        working-directory: ./frontend-angular
-        run: npm install
-      - name: Run test coverage
-        working-directory: ./frontend-angular
-        uses: AthleticNet/comment-test-coverage@1.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: ./frontend-angular/coverage/frontend-angular/coverage-summary.json
-          title: Frontend Angular coverage
+  # coverage:
+  #   name: Test coverage changes
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Install dependencies
+  #       working-directory: ./frontend-angular
+  #       run: npm install
+  #     - name: Run test coverage
+  #       working-directory: ./frontend-angular
+  #       uses: AthleticNet/comment-test-coverage@1.1
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         path: ./frontend-angular/coverage/frontend-angular/coverage-summary.json
+  #         title: Frontend Angular coverage
