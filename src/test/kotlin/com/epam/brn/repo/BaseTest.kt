@@ -24,7 +24,7 @@ abstract class BaseTest {
 
     @BeforeAll
     fun init() {
-        val group = ExerciseGroup(name = "речевые упражнения", description = "речевые упражнения")
+        val group = ExerciseGroup(code = "CODE", name = "речевые упражнения", description = "речевые упражнения")
         val series = Series(
             name = "распознавание слов",
             description = "распознавание слов",

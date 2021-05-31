@@ -24,6 +24,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-batch"
     implementation "org.springframework.boot:spring-boot-starter-security"
@@ -57,6 +58,7 @@ dependencies {
         exclude group: "org.mockito"
     }
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testCompile "org.junit.jupiter:junit-jupiter-params:$junitVersion"
 

@@ -15,9 +15,9 @@ header {
   &__header {
     height: calc(#{$header-height} - #{$header-bottom-border});
     width: 100%;
-    padding: 20px $header-horizontal-padding;
+    padding: 0 $header-horizontal-padding;
     justify-content: space-between;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0 2px $header-bottom-border rgba(89, 71, 178, 0.15);
 
     * {
@@ -70,11 +70,5 @@ header {
         line-height: 22px;
       }
     }
-  }
-
-  &__content {
-    height: calc(100vh - #{$header-height});
-    overflow-y: auto;
-    overflow-x: hidden;
   }
 }

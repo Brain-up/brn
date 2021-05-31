@@ -94,7 +94,7 @@ class GroupControllerIT : BaseIT() {
     private fun insertExerciseGroup(exerciseGroupName: String, locale: String = Locale.RU.locale): ExerciseGroup {
         return exerciseGroupRepository.save(
             ExerciseGroup(
-                id = 0,
+                code = "CODE",
                 description = "desc",
                 name = exerciseGroupName,
                 locale = locale

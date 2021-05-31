@@ -71,13 +71,9 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 5. BackEnd: Idea
 
 ### Start Front Angular Part - admin application
-go to location where the project is download for example C:\brn\brn\frontend-angular
-1. run first time (last version)
-`npm install`
-2. update proxy: open file proxy.conf.json and change target for local development. Do not commit this changes
-"http://localhost:8081" -> "http://brainup.site"
-3. run to start angular part
-`npm run start`
+Go to location where the project is download for example C:\brn\brn\frontend-angular
+
+📄 [See here](https://github.com/Brain-up/brn/tree/master/frontend-angular#readme)
 
 ### Start Front Ember Part - user application
 Run following commands:
@@ -116,18 +112,16 @@ _docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_
 ### Back end Kotlin Part:
 1. Run command 'gradle build' from main project folder to build project with tests.
 2. Application.kt is the main class to run application from Idea for example.
-3. on first running in application.properties set `spring.jpa.hibernate.ddl-auto=create`
-it would create db first time. and if you would not delete db image - structure will saved on second run with `spring.jpa.hibernate.ddl-auto=validate`
-4. post http://localhost:8081/api/brnlogin use in body
+3. post http://localhost:8081/api/brnlogin use in body
 {
   "grant_type": "password",
   "username": "default@default.ru",
   "password": "password"
 }
-5. then you can call all other end-points from Postman collection https://www.getpostman.com/collections/2df39c7c6f7f26a63d85 like
+4. then you can call all other end-points from Postman collection https://www.getpostman.com/collections/2df39c7c6f7f26a63d85 like
 http://localhost:8081/api/exercises/142 
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
-6. for logout use http://localhost:8081/api/logout
+5. for logout use http://localhost:8081/api/logout
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
