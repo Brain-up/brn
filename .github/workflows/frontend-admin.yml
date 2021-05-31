@@ -13,8 +13,8 @@ jobs:
       - name: Install dependencies
         run: cd ./frontend-angular && npm install
 
-      # - name: Run lint
-      #   run: npm run lint
+      - name: Run lint
+        run: npm run lint
 
   # test:
   #   name: Frontend Angular tests
