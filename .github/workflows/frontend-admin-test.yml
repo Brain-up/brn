@@ -27,6 +27,10 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend-angular
         run: npm install
-      - name: Run coverage
+      - name: Run test coverage
         working-directory: ./frontend-angular
-        run: npm run test:coverage
+        uses: AthleticNet/comment-test-coverage@1.2.2
+        with:
+          title: Frontend Angular coverage
+          path: ./coverage/frontend-angular/coverage-summary.json
+          token: ${{ secrets.GITHUB_TOKEN }}
