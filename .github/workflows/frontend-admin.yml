@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run action checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v1
 
       - name: Install dependencies
         working-directory: ./frontend-angular
@@ -18,24 +18,25 @@ jobs:
         working-directory: ./frontend-angular
         run: npm run lint
 
-  # test:
-  #   name: Frontend Angular tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@master
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run action checkout
+        uses: actions/checkout@v1
 
-  #     - name: Install Chrome
-  #       run: |
-  #         sudo apt-get update
-  #         sudo apt-get -y install google-chrome-stable
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install google-chrome-stable
 
-  #     - name: Install dependencies
-  #       working-directory: ./frontend-angular
-  #       run: npm install
+      - name: Install dependencies
+        working-directory: ./frontend-angular
+        run: npm install
 
-  #     - name: Run tests
-  #       working-directory: ./frontend-angular
-  #       run: npm test
+      - name: Run tests
+        working-directory: ./frontend-angular
+        run: npm run test
 
   # coverage:
   #   name: Test coverage changes
