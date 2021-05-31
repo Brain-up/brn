@@ -1,6 +1,10 @@
 name: Frontend admin
 
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - 'frontend-angular/**'
+      - '.github/workflows/frontend-admin.yml'
 
 jobs:
   lint:
@@ -58,4 +62,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: ./frontend-angular/coverage/frontend-angular/coverage-summary.json
-          title: Frontend Angular coverage
+          title: Frontend admin coverage
