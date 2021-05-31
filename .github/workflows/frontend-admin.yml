@@ -11,9 +11,11 @@ jobs:
         uses: actions/checkout@master
 
       - name: Install dependencies
-        run: cd ./frontend-angular && npm install
+        working-directory: ./frontend-angular
+        run: npm install
 
       - name: Run lint
+        working-directory: ./frontend-angular
         run: npm run lint
 
   # test:
