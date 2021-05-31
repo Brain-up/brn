@@ -1,7 +1,16 @@
 <table class="users">
   <tr>
-    <th>
-      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Name' | translate }}
+    <th class="name-column-title">
+      <div class="wrap">
+        {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Name' | translate }}
+
+        <mat-icon
+          [class.desc]="sortByName === 'desc'"
+          (click)="sortByNameEvent.emit(sortByName === 'asc' ? 'desc' : 'asc')"
+        >
+          keyboard_arrow_down
+        </mat-icon>
+      </div>
     </th>
 
     <th>
@@ -29,7 +38,7 @@
     </th>
   </tr>
 
-  <tr *ngFor="let user of usersTableData">
+  <tr *ngFor="let user of usersTableData" [routerLink]="[user.id, 'statistics']">
     <td class="name-column">
       <div class="wrap">
         <div class="avatar">AB</div>

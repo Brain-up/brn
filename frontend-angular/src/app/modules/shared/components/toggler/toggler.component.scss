@@ -1,7 +1,7 @@
 @import 'colors';
+@import 'variables';
 
 :host {
-  $transition: 300ms;
   $borderRadius: 16px;
 
   display: block;
@@ -10,7 +10,7 @@
 
   .toggler {
     position: absolute;
-    transition: $transition;
+    transition: $transition-time;
     background: $brain-gradient;
     border-radius: $borderRadius;
     height: 100%;
@@ -36,7 +36,7 @@
       width: 50%;
       color: $cold-violet-color;
       z-index: 0;
-      transition: $transition;
+      transition: $transition-time;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;

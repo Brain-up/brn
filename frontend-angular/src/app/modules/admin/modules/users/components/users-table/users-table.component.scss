@@ -1,6 +1,9 @@
 @import 'colors';
+@import 'variables';
 
 :host {
+  display: block;
+
   table.users {
     width: 100%;
     border-collapse: collapse;
@@ -19,6 +22,27 @@
 
       &.center {
         text-align: center;
+      }
+    }
+
+    .name-column-title {
+      .wrap {
+        display: flex;
+        align-items: center;
+
+        mat-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          user-select: none;
+          font-size: 20px;
+          transition: $transition-time;
+
+          &.desc {
+            transform: rotate(180deg);
+          }
+        }
       }
     }
 

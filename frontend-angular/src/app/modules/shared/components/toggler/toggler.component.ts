@@ -21,8 +21,6 @@ export class TogglerComponent {
 
   @HostListener('click')
   public toggle(): void {
-    this.state = !this.state;
-
-    this.toggleEvent.emit(this.state);
+    this.toggleEvent.emit(!this.state);
   }
 }

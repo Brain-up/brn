@@ -22,7 +22,6 @@ describe('TogglerComponent', () => {
 
       hostElement.click();
 
-      expect(component.state).toBeTrue();
       expect(toggleEventEmitSpy).toHaveBeenCalledWith(true);
     });
 
@@ -32,7 +31,6 @@ describe('TogglerComponent', () => {
 
       hostElement.click();
 
-      expect(component.state).toBeFalse();
       expect(toggleEventEmitSpy).toHaveBeenCalledWith(false);
     });
   });

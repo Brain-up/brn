@@ -1,7 +1,8 @@
 import { GenderType } from '@admin/models/gender';
+import { SortType } from '@admin/models/sort';
 import { User } from '@admin/models/user';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import * as dayjs from 'dayjs';
 import { ILastWeekChartDataItem } from '../../models/last-week-chart-data-item';
 import { IUsersTableItem } from '../../models/users-table-item';
@@ -18,6 +19,9 @@ export class UsersTableComponent {
   public usersTableData: IUsersTableItem[];
 
   @Input()
+  public sortByName: SortType = 'asc';
+
+  @Input()
   public set data(data: User[] | undefined) {
     if (!data) {
       return;
@@ -32,6 +36,7 @@ export class UsersTableComponent {
       this.chartsData.push(rawItem.lastWeek.map(({ value, progress }) => ({ y: value, progress })));
 
       return {
+        id: rawItem.id,
         name: rawItem.name,
         yearsOld: dayjs().year() - rawItem.bornYear,
         gender: rawItem.gender.toLowerCase() as Lowercase<GenderType>,
@@ -62,4 +67,7 @@ export class UsersTableComponent {
       };
     });
   }
+
+  @Output()
+  public sortByNameEvent = new EventEmitter<SortType>();
 }

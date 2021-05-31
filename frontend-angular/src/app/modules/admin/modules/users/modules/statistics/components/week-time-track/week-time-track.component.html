@@ -1,7 +1,7 @@
 <div
   class="title"
   [innerHTML]="
-    'Admin.Modules.Statistics.Components.WeekTimeTrack.Title [month]'
+    'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.Title [month]'
       | translate: { month: selectedMonth.format('MMMM') }
   "
 ></div>
@@ -21,7 +21,7 @@
 
 <ng-template #emptyDataTemplate>
   <div class="empty-data">
-    {{ 'Admin.Modules.Statistics.Components.WeekTimeTrack.EmptyData' | translate }}
+    {{ 'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData' | translate }}
   </div>
 </ng-template>
 <!-- #endregion -->

@@ -3,6 +3,7 @@ import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 
 export interface IUsersTableItem {
+  id: number;
   name: string;
   yearsOld: number;
   gender: Lowercase<GenderType>;

@@ -11,10 +11,10 @@ import {
 } from '@admin/models/user-exercising-progress-status';
 import { AdminApiService } from './admin-api.service';
 import { DAYS_IN_WEEK, MONTHS_IN_YEAR } from '@shared/constants/common-constants';
-import { SortType } from '@admin/models/sort';
 import { User } from '@admin/models/user';
 import { getRandomBool } from '@shared/helpers/get-random-bool';
 import { getRandomString } from '@shared/helpers/get-random-string';
+import { UsersData } from '@admin/models/users-data';
 
 export class AdminApiServiceFake
   implements Pick<AdminApiService, 'getUserWeeklyStatistics' | 'getUserYearlyStatistics' | 'getUsers'>
@@ -62,12 +62,7 @@ export class AdminApiServiceFake
     return of(this.options.isUserYearlyStatisticsEmptyData ? [] : response).pipe(delay(this.options.responseDelayInMs));
   }
 
-  public getUsers(options: {
-    pageNumber?: number;
-    pageSize?: number;
-    sort?: SortType;
-    withAnalytics?: boolean;
-  }): Observable<User[]> {
+  public getUsers(): Observable<UsersData> {
     const users: User[] = [];
 
     for (let i = 0; i < this.options.usersNumber; i++) {
@@ -96,7 +91,7 @@ export class AdminApiServiceFake
       });
     }
 
-    return of(users).pipe(delay(this.options.responseDelayInMs));
+    return of({ total: this.options.usersNumber, users }).pipe(delay(this.options.responseDelayInMs));
   }
 
   private getRandomUserExercisingProgressStatusColor(): UserExercisingProgressStatusType {

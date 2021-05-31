@@ -50,7 +50,8 @@ body {
   font-family: $main-font-family;
   min-height: 100%;
 
-  input {
+  input,
+  button {
     font-family: $main-font-family;
   }
 }
