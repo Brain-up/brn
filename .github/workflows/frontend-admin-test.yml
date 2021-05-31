@@ -18,3 +18,16 @@ jobs:
       - name: Run tests
         working-directory: ./frontend-angular
         run: npm test
+
+  coverage:
+    name: Test coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: rwjblue/setup-volta@v1
+      - name: Install dependencies
+        working-directory: ./frontend-angular
+        run: npm install
+      - name: Run coverage
+        working-directory: ./frontend-angular
+        run: npm test:coverage
