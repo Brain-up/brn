@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "start": "ng serve --port 4201",
-    "start:local": "ng serve --port 4201 --disable-host-check --proxy-config src/proxy.conf.json",
+    "start:local": "ng serve --port 4201 --disable-host-check",
     "build": "ng build --prod --base-href /admin/",
-    "test": "ng test --watch=false",
-    "test-start": "ng test --watch=true --browsers Chrome",
+    "test": "ng test --no-watch",
+    "test:start": "ng test --watch --browsers Chrome",
+    "test:coverage": "ng test --no-watch --code-coverage",
     "lint": "ng lint",
-    "i18n-extract": "ngx-translate-extract --input=src --output=src/assets/i18n/ru.json src/assets/i18n/en.json --format=namespaced-json --format-indentation=\"  \" --key-as-default-value --clean --sort"
+    "i18n:extract": "ngx-translate-extract --input=src --output=src/assets/i18n/ru.json src/assets/i18n/en.json --format=namespaced-json --format-indentation=\"  \" --key-as-default-value --clean --sort"
   },
   "private": true,
   "dependencies": {
@@ -47,9 +48,9 @@
     "codelyzer": "^6.0.1",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
-    "karma": "^6.1.1",
+    "karma": "^6.3.2",
     "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage-istanbul-reporter": "~3.0.2",
+    "karma-coverage": "^2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "protractor": "~7.0.0",
