@@ -1,0 +1,50 @@
+@import 'colors';
+@import 'variables';
+
+:host {
+  $borderRadius: 16px;
+
+  display: block;
+  position: relative;
+  height: 32px;
+
+  .toggler {
+    position: absolute;
+    transition: $transition-time;
+    background: $brain-gradient;
+    border-radius: $borderRadius;
+    height: 100%;
+    width: 50%;
+  }
+
+  .wrap {
+    display: flex;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid $mouse-grey-color;
+    border-radius: $borderRadius;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    overflow: hidden;
+
+    .off,
+    .on {
+      width: 50%;
+      color: $cold-violet-color;
+      z-index: 0;
+      transition: $transition-time;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 8px 16px;
+
+      &.selected {
+        color: #ffffff;
+      }
+    }
+  }
+}
