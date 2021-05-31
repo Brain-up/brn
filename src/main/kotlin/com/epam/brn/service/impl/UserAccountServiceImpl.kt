@@ -146,7 +146,7 @@ class UserAccountServiceImpl(
     }
 
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
-        this.name.isNullOrBlank()
+        (!this.name.isNullOrBlank())
             .or(this.avatar != null)
             .or(this.bornYear != null)
             .or(this.gender != null)
