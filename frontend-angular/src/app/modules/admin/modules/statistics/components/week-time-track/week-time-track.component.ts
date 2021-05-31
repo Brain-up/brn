@@ -1,15 +1,11 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { bb, bar, Chart } from 'billboard.js';
-import { LEVEL_COLOR } from '../../models/level-color';
+import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
+import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
+import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
+import { secondsTo } from '@shared/helpers/seconds-to';
+import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { IWeekChartDataItem } from '../../models/week-char-data-item';
 
 @Component({
@@ -18,105 +14,92 @@ import { IWeekChartDataItem } from '../../models/week-char-data-item';
   styleUrls: ['./week-time-track.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WeekTimeTrackComponent implements AfterViewInit {
-  private chart: Chart;
+export class WeekTimeTrackComponent {
+  private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
+
   private chartData: IWeekChartDataItem[];
 
+  public barData: BarDataType;
+  public barOptions: BarOptionsType = {
+    colors: {
+      data: (dataItem) => USER_EXERCISING_PROGRESS_STATUS_COLOR[this.chartData[dataItem.index].progress],
+    },
+    labels: {
+      format: (seconds) => (seconds ? secondsTo(seconds, 'm:s') : ''),
+    },
+    axis: {
+      x: {
+        tick: {
+          format: (i: number) => `${this.chartData[i].x.toUpperCase()}\n${i + 1}`,
+          culling: false,
+          show: false,
+        },
+      },
+      y: {
+        tick: {
+          text: { show: false },
+          culling: false,
+          show: false,
+          outer: false,
+        },
+      },
+    },
+    grid: {
+      y: {
+        lines: [
+          {
+            value: WeekTimeTrackComponent.EXERCISING_TIME_NORM_IN_S,
+          },
+        ],
+      },
+    },
+    size: {
+      height: 200,
+      width: 1000,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    bar: {
+      width: 16,
+      radius: 8,
+    },
+  };
+
   @Input()
-  public set data(data: any) {
-    this.chartData = [
-      { x: 'ПН', y: Math.random() * 200 },
-      { x: 'ВТ', y: Math.random() * 200 },
-      { x: 'СР', y: Math.random() * 200 },
-      { x: 'ЧТ', y: Math.random() * 200 },
-      { x: 'ПТ', y: Math.random() * 200 },
-    ];
+  public isLoading = true;
 
-    this.chart?.load({
-      columns: [['data', ...this.chartData.map((dataItem) => dataItem.y)]],
-    });
-  }
+  @Input()
+  public selectedMonth: Dayjs;
 
-  @Output()
-  public loadPrevWeekEvent = new EventEmitter<void>();
+  @Input()
+  public set data(data: UserWeeklyStatistics[] | undefined) {
+    if (!data) {
+      return;
+    }
 
-  @Output()
-  public loadNextWeekEvent = new EventEmitter<void>();
+    this.chartData = [];
+    for (let dayNumber = 1; dayNumber <= this.selectedMonth.daysInMonth(); dayNumber++) {
+      const realRawItem = data.find((rawItem) => dayjs(rawItem.date).date() === dayNumber);
 
-  @ViewChild('chart')
-  private chartElemRef: ElementRef;
-
-  ngAfterViewInit(): void {
-    this.chart = bb.generate({
-      bindto: this.chartElemRef.nativeElement,
-      data: {
-        columns: [['data', ...this.chartData.map((dataItem) => dataItem.y)]],
-        type: bar(),
-        colors: {
-          data: (dataItem) => {
-            if (dataItem.value < 30) {
-              return LEVEL_COLOR[0];
+      this.chartData.push(
+        realRawItem
+          ? {
+              x: dayjs(realRawItem.date).format('dd'),
+              y: realRawItem.exercisingTimeSeconds,
+              progress: realRawItem.progress,
             }
-
-            if (dataItem.value < 70) {
-              return LEVEL_COLOR[1];
+          : {
+              x: dayjs(this.selectedMonth.set('date', dayNumber)).format('dd'),
+              y: 0,
+              progress: 'BAD',
             }
+      );
+    }
 
-            return LEVEL_COLOR[2];
-          },
-        },
-        labels: {
-          format: (value) => value + ':' + '00',
-        },
-      },
-      axis: {
-        x: {
-          tick: {
-            format: (i: number) => `${this.chartData[i].x}\n${i}`,
-            culling: false,
-            show: false,
-          },
-        },
-        y: {
-          tick: {
-            text: { show: false },
-            culling: false,
-            show: false,
-            outer: false,
-          },
-        },
-      },
-      grid: {
-        y: {
-          lines: [
-            {
-              value: 50,
-            },
-          ],
-        },
-      },
-      size: {
-        height: 200,
-        width: 1000,
-      },
-      legend: {
-        show: false,
-      },
-      tooltip: {
-        show: false,
-      },
-      bar: {
-        width: 16,
-        radius: 8,
-      },
-    });
-  }
-
-  public loadPrevWeek(): void {
-    this.loadPrevWeekEvent.emit();
-  }
-
-  public loadNextWeek(): void {
-    this.loadNextWeekEvent.emit();
+    this.barData = data.length ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]] : [];
   }
 }

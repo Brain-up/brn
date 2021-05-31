@@ -1,0 +1,105 @@
+{
+  "Admin": {
+    "Menu": {
+      "Exercises": "Exercises",
+      "Resources": "Resources",
+      "UploadFile": "Upload file",
+      "Users": "Users"
+    },
+    "Modules": {
+      "Statistics": {
+        "Buttons": {
+          "WhatIsIt": "Admin.Modules.Statistics.Buttons.WhatIsIt"
+        },
+        "Components": {
+          "MonthTimeTrack": {
+            "EmptyData": "Admin.Modules.Statistics.Components.MonthTimeTrack.EmptyData",
+            "Title [year]": "Admin.Modules.Statistics.Components.MonthTimeTrack.Title [year]"
+          },
+          "MonthTimeTrackItem": {
+            "Days [days]": "Admin.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]"
+          },
+          "StatisticsInfoDialog": {
+            "Buttons": {
+              "Ok": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Buttons.Ok"
+            },
+            "ContentTitle": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.ContentTitle",
+            "Text": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Text",
+            "Title": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Title"
+          },
+          "WeekTimeTrack": {
+            "EmptyData": "Admin.Modules.Statistics.Components.WeekTimeTrack.EmptyData",
+            "Title [month]": "Admin.Modules.Statistics.Components.WeekTimeTrack.Title [month]"
+          }
+        }
+      },
+      "UploadFile": {
+        "Links": {
+          "LoadConfigurationFiles": "Load configuration files",
+          "LoadResourceFiles": "Load resource files"
+        },
+        "Modules": {
+          "LoadFiles": {
+            "Buttons": {
+              "Load": "Load"
+            },
+            "Labels": {
+              "SelectFile": "Select file",
+              "SelectFolder": "Select folder"
+            },
+            "SnackBar": {
+              "FileSuccessfullyUploaded [fileName]": "File '{{ fileName }}' successfully uploaded"
+            }
+          },
+          "LoadTasks": {
+            "AcceptedFormat": "Accepted format",
+            "Buttons": {
+              "Submit": "Submit"
+            },
+            "Errors": {
+              "FieldMustNotBeEmpty": "Field must not be empty"
+            },
+            "Labels": {
+              "Group": "Group",
+              "Series": "Series"
+            },
+            "SnackBar": {
+              "FileSuccessfullyUploaded [fileName]": "File '{{ fileName }}' successfully uploaded"
+            }
+          }
+        }
+      }
+    }
+  },
+  "Auth": {
+    "Modules": {
+      "Login": {
+        "Buttons": {
+          "Login": "Login"
+        },
+        "Labels": {
+          "Password": "Password",
+          "UserName": "User Name (Email)"
+        },
+        "Title": "Authentication"
+      }
+    },
+    "Title": "Admin panel"
+  },
+  "Root": {
+    "Components": {
+      "NotFound": {
+        "Buttons": {
+          "GoHome": "Go home"
+        },
+        "Text": "404"
+      }
+    },
+    "Interceptors": {
+      "Exceptions": {
+        "Unauthorized": "Unauthorized request",
+        "UnknownError": "Unknown error"
+      }
+    }
+  }
+}

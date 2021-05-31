@@ -10,6 +10,7 @@ import { Series } from '@admin/models/series';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { GroupApiService } from '@admin/services/api/group-api.service';
 import { SeriesApiService } from '@admin/services/api/series-api.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-load-tasks',
@@ -31,7 +32,8 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
     private readonly snackBarService: SnackBarService,
     private readonly groupApiService: GroupApiService,
     private readonly seriesApiService: SeriesApiService,
-    private readonly adminApiService: AdminApiService
+    private readonly adminApiService: AdminApiService,
+    private readonly translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -78,12 +80,16 @@ export class LoadTasksComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyer$))
       .subscribe(
         () => {
-          // TODO: - Check for other type of errors
-          this.snackBarService.showHappySnackbar('Successfully loaded ' + this.tasksGroup.get('file').value.name);
+          this.snackBarService.success(
+            this.translateService.get(
+              'Admin.Modules.UploadFile.Modules.LoadTasks.SnackBar.FileSuccessfullyUploaded [fileName]',
+              this.tasksGroup.get('file').value.name
+            )
+          );
           this.router.navigateByUrl('/');
         },
         (err: HttpErrorResponse) => {
-          this.snackBarService.showSadSnackbar(err.error.errors[0]);
+          this.snackBarService.error(err.error.errors[0]);
         }
       );
   }

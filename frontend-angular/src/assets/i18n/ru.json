@@ -1,0 +1,105 @@
+{
+  "Admin": {
+    "Menu": {
+      "Exercises": "Упражнения",
+      "Resources": "Ресурсы",
+      "UploadFile": "Загрузить файл",
+      "Users": "Пользователи"
+    },
+    "Modules": {
+      "Statistics": {
+        "Buttons": {
+          "WhatIsIt": "О чем говорит статистика"
+        },
+        "Components": {
+          "MonthTimeTrack": {
+            "EmptyData": "Нет данных",
+            "Title [year]": "Общее время занятий по месяцам за <span>{{ year }}</span> год"
+          },
+          "MonthTimeTrackItem": {
+            "Days [days]": "за <b>{{ days }}<b> дней"
+          },
+          "StatisticsInfoDialog": {
+            "Buttons": {
+              "Ok": "Хорошо"
+            },
+            "ContentTitle": "Проверьте, достаточно ли регулярно вы делаете занятия",
+            "Text": "По данным исследований, чтобы улучшить порог слышимости, нужно заниматься не менее <b>6</b> дней в неделю по <b>20</b> минут в течение <b>2</b> лет. В месяц должно быть не менее <b>8</b> часов <b>40</b> минут в сумме за <b>26</b> дней.",
+            "Title": "О чем говорит статистика"
+          },
+          "WeekTimeTrack": {
+            "EmptyData": "Нет данных",
+            "Title [month]": "Время ежедневных занятий за <span>{{ month }}</span>"
+          }
+        }
+      },
+      "UploadFile": {
+        "Links": {
+          "LoadConfigurationFiles": "Загрузить конфигурационные файлы",
+          "LoadResourceFiles": "Загрузить ресурсные файлы"
+        },
+        "Modules": {
+          "LoadFiles": {
+            "Buttons": {
+              "Load": "Загрузить"
+            },
+            "Labels": {
+              "SelectFile": "Выбрать файл",
+              "SelectFolder": "Выбрать папку"
+            },
+            "SnackBar": {
+              "FileSuccessfullyUploaded [fileName]": "Файл '{{ fileName }}' успешно загружен"
+            }
+          },
+          "LoadTasks": {
+            "AcceptedFormat": "Admin.Modules.UploadFile.Modules.LoadTasks.AcceptedFormat",
+            "Buttons": {
+              "Submit": "Отправить"
+            },
+            "Errors": {
+              "FieldMustNotBeEmpty": "Поле не может быть пустым"
+            },
+            "Labels": {
+              "Group": "Группа",
+              "Series": "Серия"
+            },
+            "SnackBar": {
+              "FileSuccessfullyUploaded [fileName]": "Файл '{{ fileName }}' успешно загружен"
+            }
+          }
+        }
+      }
+    }
+  },
+  "Auth": {
+    "Modules": {
+      "Login": {
+        "Buttons": {
+          "Login": "Войти"
+        },
+        "Labels": {
+          "Password": "Пароль",
+          "UserName": "Имя (Email)"
+        },
+        "Title": "Аутентификация"
+      }
+    },
+    "Title": "Админ панель"
+  },
+  "Root": {
+    "Components": {
+      "NotFound": {
+        "Buttons": {
+          "GoHome": "На главную"
+        },
+        "Text": "404"
+      }
+    },
+    "Interceptors": {
+      "Exceptions": {
+        "Unauthorized": "Неавторизованный доступ",
+        "UnknownError": "Неизвестная ошибка"
+      }
+    }
+  }
+}

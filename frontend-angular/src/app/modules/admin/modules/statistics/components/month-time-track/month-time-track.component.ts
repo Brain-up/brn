@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MONTHS_IN_YEAR } from '@shared/constants/common-constants';
+import { secondsTo } from '@shared/helpers/seconds-to';
+import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
 
 @Component({
@@ -8,56 +13,68 @@ import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonthTimeTrackComponent {
-  @Input()
-  public data: any;
+  public monthTimeTrackItemsData: IMonthTimeTrackItemData[];
 
-  public getMonthTimeTrackItemsData(): IMonthTimeTrackItemData[] {
-    return [
-      {
-        level: 0,
-        totalTime: '3:44:55',
-        daysNumber: 10,
-        isCurrentMonth: false,
-        monthName: 'Декабрь',
-        isShowYearNumber: true,
-        yearNumber: 2020,
-      },
-      {
-        level: 1,
-        totalTime: '5:25:00',
-        daysNumber: 25,
-        isCurrentMonth: false,
-        monthName: 'Январь',
-        isShowYearNumber: true,
-        yearNumber: 2021,
-      },
-      {
-        level: 1,
-        totalTime: '5:35:26',
-        daysNumber: 6,
-        isCurrentMonth: false,
-        monthName: 'Февраль',
-        isShowYearNumber: false,
-        yearNumber: 2021,
-      },
-      {
-        level: 2,
-        totalTime: '13:04:15',
-        daysNumber: 44,
-        isCurrentMonth: false,
-        monthName: 'Март',
-        isShowYearNumber: false,
-        yearNumber: 2021,
-      },
-      {
-        level: 0,
-        totalTime: '1:32:21',
-        daysNumber: 2,
-        isCurrentMonth: true,
-        monthName: 'Апрель',
-        isShowYearNumber: false,
-        yearNumber: 2021,
-      },
-    ];
+  @Input()
+  public isLoading = true;
+
+  @Input()
+  public selectedMonth: Dayjs;
+
+  @Input()
+  public set data(data: UserYearlyStatistics[] | undefined) {
+    if (!data) {
+      return;
+    }
+
+    this.monthTimeTrackItemsData = data.map((rawItem) => {
+      const date = dayjs(rawItem.date);
+
+      return {
+        progress: rawItem.progress,
+        time: secondsTo(rawItem.exercisingTimeSeconds, 'h:m:s'),
+        days: rawItem.exercisingDays,
+        month: date.format('MMMM'),
+        year: date.year(),
+        date,
+      };
+    });
+  }
+
+  @Output()
+  public selectMonthEvent = new EventEmitter<Dayjs>();
+
+  @Output()
+  public loadPrevYearEvent = new EventEmitter<void>();
+
+  @Output()
+  public loadNextYearEvent = new EventEmitter<void>();
+
+  public selectMonth(date: Dayjs): void {
+    this.selectMonthEvent.emit(date.clone());
+  }
+
+  public loadPrevYear(): void {
+    this.loadPrevYearEvent.emit();
+  }
+
+  public loadNextYear(): void {
+    if (!this.isAllowNextYear()) {
+      return;
+    }
+
+    this.loadNextYearEvent.emit();
+  }
+
+  public isSelectedMonth(date: Dayjs): boolean {
+    return date.year() === this.selectedMonth.year() && date.month() === this.selectedMonth.month();
+  }
+
+  public isAllowNextYear(): boolean {
+    return this.selectedMonth.add(1, 'year').year() <= dayjs().year();
+  }
+
+  public isIncompleteYear(): boolean {
+    return this.monthTimeTrackItemsData?.length < MONTHS_IN_YEAR;
   }
 }

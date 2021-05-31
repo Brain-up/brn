@@ -1,9 +1,12 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -36,6 +39,12 @@ internal class LoadFilesControllerTest {
 
     @Mock
     lateinit var resourceService: ResourceService
+
+    @Mock
+    lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
+
+    @Mock
+    lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 
     @Test
     fun `should call upload service to load file for 1 series`() {

@@ -1,13 +1,27 @@
-<div class="title">Время ежедневных занятий по неделям</div>
+<div
+  class="title"
+  [innerHTML]="
+    'Admin.Modules.Statistics.Components.WeekTimeTrack.Title [month]'
+      | translate: { month: selectedMonth.format('MMMM') }
+  "
+></div>
 
 <div class="content">
-  <button mat-button class="prev" (click)="loadPrevWeek()">
-    <mat-icon svgIcon="left-arrow"></mat-icon>
-  </button>
-
-  <div #chart class="chart"></div>
-
-  <button mat-button class="next" (click)="loadNextWeek()">
-    <mat-icon svgIcon="right-arrow"></mat-icon>
-  </button>
+  <mat-progress-bar *ngIf="isLoading; else dataTemplate" mode="indeterminate"></mat-progress-bar>
 </div>
+
+<!-- #region Templates -->
+<ng-template #dataTemplate>
+  <app-bar-chart
+    *ngIf="barData?.length; else emptyDataTemplate"
+    [data]="barData"
+    [options]="barOptions"
+  ></app-bar-chart>
+</ng-template>
+
+<ng-template #emptyDataTemplate>
+  <div class="empty-data">
+    {{ 'Admin.Modules.Statistics.Components.WeekTimeTrack.EmptyData' | translate }}
+  </div>
+</ng-template>
+<!-- #endregion -->

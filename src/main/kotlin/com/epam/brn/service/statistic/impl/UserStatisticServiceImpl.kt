@@ -1,10 +1,10 @@
-package com.epam.brn.service.impl
+package com.epam.brn.service.statistic.impl
 
 import com.epam.brn.dto.response.SubGroupStatisticDto
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.UserStatisticService
+import com.epam.brn.service.statistic.UserStatisticService
 import org.springframework.stereotype.Service
 
 /**
@@ -15,8 +15,9 @@ import org.springframework.stereotype.Service
 class UserStatisticServiceImpl(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userAccountService: UserAccountService
-) : UserStatisticService {
+    private val userAccountService: UserAccountService,
+) : UserStatisticService<SubGroupStatisticDto> {
+
     override fun getSubGroupStatistic(subGroupsIds: List<Long>): List<SubGroupStatisticDto> {
         val userAccount = userAccountService.getUserFromTheCurrentSession()
         return subGroupsIds.map {

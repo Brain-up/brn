@@ -9,6 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MonthTimeTrackItemComponent } from './components/month-time-track-item/month-time-track-item.component';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +22,16 @@ import { CommonModule } from '@angular/common';
     MonthTimeTrackComponent,
     MonthTimeTrackItemComponent,
   ],
-  imports: [CommonModule, StatisticsRoutingModule, MatButtonModule, MatDialogModule, MatIconModule],
+  imports: [
+    CommonModule,
+    StatisticsRoutingModule,
+    TranslateModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatProgressBarModule,
+    BarChartModule,
+  ],
+  providers: [AdminApiService],
 })
 export class StatisticsModule {}

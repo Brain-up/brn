@@ -1,0 +1,9 @@
+<span class="particle" *ngFor="let d of digits">{{ d.four }}</span>
+
+<span class="particle" *ngFor="let d of digits">{{ d.zero }}</span>
+
+<div class="content">
+  <p>{{ 'Root.Components.NotFound.Text' | translate }}</p>
+
+  <a mat-button [routerLink]="[HOME_PAGE_URL]">{{ 'Root.Components.NotFound.Buttons.GoHome' | translate }}</a>
+</div>

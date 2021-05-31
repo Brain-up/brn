@@ -1,9 +1,11 @@
+import { UserExercisingProgressStatusType } from '@admin/models/user-exercising-progress-status';
+import { Dayjs } from 'dayjs';
+
 export interface IMonthTimeTrackItemData {
-  level: number;
-  totalTime: string;
-  daysNumber: number;
-  isCurrentMonth: boolean;
-  monthName: string;
-  isShowYearNumber: boolean;
-  yearNumber: number;
+  progress: UserExercisingProgressStatusType;
+  time: string;
+  days: number;
+  month: string;
+  year: number;
+  date: Dayjs;
 }

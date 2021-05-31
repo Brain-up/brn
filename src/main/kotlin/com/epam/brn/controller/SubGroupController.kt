@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/subgroups")
 @Api(value = "/subgroups", description = "Contains actions over subgroups")
-class SubGroupController(val subGroupsService: SubGroupService) {
+class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @GetMapping
     @ApiOperation("Get subGroups for series id.")
