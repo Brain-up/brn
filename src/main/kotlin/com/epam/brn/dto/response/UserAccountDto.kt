@@ -20,8 +20,9 @@ data class UserAccountDto(
     var avatar: String? = null,
     val photo: String? = null,
     val description: String? = null,
+    var headphones: Set<HeadphonesDto>? = null,
     val patients: MutableList<UserAccountDto> = mutableListOf(),
-    var headphones: Set<HeadphonesDto>? = null
+    val doctor: UserAccountDto? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }

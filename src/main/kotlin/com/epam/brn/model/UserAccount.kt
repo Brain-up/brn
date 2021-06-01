@@ -14,6 +14,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
+import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 @Entity
@@ -36,9 +37,11 @@ data class UserAccount(
     var avatar: String? = null,
     var photo: String? = null,
     var description: String? = null,
-    @OneToMany
-    @JoinColumn(name = "doctor", referencedColumnName = "id")
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
     var patients: MutableList<UserAccount> = mutableListOf(),
+    @ManyToOne(fetch = FetchType.LAZY)
+    var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var headphones: MutableSet<Headphones> = hashSetOf()
 ) {
@@ -69,12 +72,37 @@ data class UserAccount(
             avatar = avatar,
             photo = photo,
             description = description,
-            patients = patients
-                .map(UserAccount::toDto)
-                .toMutableList(),
             headphones = headphones
                 .map(Headphones::toDto)
-                .toHashSet()
+                .toHashSet(),
+            doctor = doctor?.toDto(),
+        )
+        userAccountDto.authorities = this.authoritySet
+            .map(Authority::authorityName)
+            .toMutableSet()
+        return userAccountDto
+    }
+
+    fun toDoctorDto(): UserAccountDto {
+        val userAccountDto = UserAccountDto(
+            id = id,
+            userId = userId,
+            name = fullName,
+            active = active,
+            email = email,
+            bornYear = bornYear,
+            gender = gender?.let { Gender.valueOf(it) },
+            created = created,
+            changed = changed,
+            avatar = avatar,
+            photo = photo,
+            description = description,
+            headphones = headphones
+                .map(Headphones::toDto)
+                .toMutableSet(),
+            patients = patients
+                .map(UserAccount::toDto)
+                .toMutableList()
         )
         userAccountDto.authorities = this.authoritySet
             .map(Authority::authorityName)
