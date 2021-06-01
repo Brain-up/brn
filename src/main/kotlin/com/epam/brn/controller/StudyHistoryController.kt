@@ -36,8 +36,8 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     @GetMapping("/histories")
     @ApiOperation("Get current user's study histories for period")
     fun getHistories(
-        @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
-        @RequestParam("to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
+        @RequestParam("from", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from: LocalDate,
+        @RequestParam("to", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to: LocalDate
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 
