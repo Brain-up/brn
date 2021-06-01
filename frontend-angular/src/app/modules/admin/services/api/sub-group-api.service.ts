@@ -9,8 +9,6 @@ export class SubGroupApiService {
   constructor(private readonly httpClient: HttpClient) {}
 
   getSubgroupsBySeriesId(seriesId: string): Observable<Subgroup[]> {
-    return this.httpClient.get<{ data: Subgroup[] }>('/api/subgroups', {params: {seriesId}}).pipe(
-      pluck('data')
-    );
+    return this.httpClient.get<{ data: Subgroup[] }>(`/api/subgroups?seriesId=${seriesId}`).pipe(pluck('data'));
   }
 }

@@ -23,7 +23,7 @@ class SeriesFourRecordProcessor(
     private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val wordsService: WordsService
+    private val wordsService: WordsService,
 ) : RecordProcessor<SeriesFourRecord, Exercise> {
 
     @Value(value = "\${brn.picture.file.default.path}")
@@ -103,7 +103,8 @@ class SeriesFourRecordProcessor(
             name = record.exerciseName,
             level = record.level,
             noiseLevel = record.noiseLevel,
-            noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else ""
+            noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(fonAudioPath, record.noiseUrl) else "",
+            active = true
         )
 
     private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =

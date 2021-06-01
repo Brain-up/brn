@@ -3,10 +3,11 @@ package com.epam.brn.upload.csv.group
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
-@JsonPropertyOrder(value = ["groupId", "locale", "name", "description"])
+@JsonPropertyOrder(value = ["code", "locale", "name", "description"])
 data class GroupRecord(
-    @JsonProperty("groupId")
-    val groupId: Long,
+
+    @JsonProperty("code")
+    val code: String,
 
     @JsonProperty("locale")
     val locale: String,
@@ -18,6 +19,6 @@ data class GroupRecord(
     val description: String
 ) {
     companion object {
-        const val FORMAT = "groupId, locale, name, description"
+        const val FORMAT = "code, locale, name, description"
     }
 }

@@ -139,6 +139,7 @@ abstract class BaseIT {
     fun insertDefaultExerciseGroup(): ExerciseGroup =
         exerciseGroupRepository.save(
             ExerciseGroup(
+                code = "CODE",
                 description = "Description",
                 name = "Test exercise group for ${platformClassName()}"
             )
