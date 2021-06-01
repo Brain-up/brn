@@ -49,8 +49,8 @@ export default class UserDataService extends Service {
     return this.selectedLocale || this.intl.primaryLocale;
   }
 
-  shouldStayOnCurrentRoute() {
-    return this.router.currentRouteName.includes('description');
+  shouldUpdateRoute() {
+    return this.router.currentRouteName !== 'description' && this.router.currentRouteName !== 'index';
   }
 
   @action setLocale(localeName: string) {
@@ -59,9 +59,7 @@ export default class UserDataService extends Service {
     this.selectedLocale = name;
     localStorage.setItem('locale', name);
 
-    if (this.shouldStayOnCurrentRoute()) {
-      this.router.transitionTo(this.router.currentRouteName, { queryParams: { locale: name } });
-    } else {
+    if (this.shouldUpdateRoute()) {
       this.router.transitionTo('groups', { queryParams: { locale: name } });
     }
   }

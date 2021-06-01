@@ -36,17 +36,17 @@ class TeamMember {
 export default class PersonsService extends Service {
     @service('intl') intl!: IntlService;
 
-    get personsContent() {
+    get persons() {
         return {
-            doctors: this.doctorsContent,
-            teamMembers: this.persons.teamMembers
+            doctors: this.doctors,
+            teamMembers: this.personsData.teamMembers
         }
     }
 
-    get doctorsContent() {
+    get doctors() {
         let locale = this.intl.locale[0];
 
-        return this.persons.doctors.map((doctor) => {
+        return this.personsData.doctors.map((doctor) => {
             let doctorInfo = doctor.lang[locale];
             return {
                 img: doctor.img,
@@ -56,7 +56,7 @@ export default class PersonsService extends Service {
         });
     }
 
-    persons = {
+    personsData = {
         doctors: [
             new Doctor(
                 '/content/pages/description/doctors/inna-koroleva.jpg',
