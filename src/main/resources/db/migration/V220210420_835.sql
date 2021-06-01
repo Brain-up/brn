@@ -1,1 +1,1 @@
-alter table resource add column if not exists description varchar(255);
+alter table resource add column description varchar(255);

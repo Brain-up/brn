@@ -5,3 +5,5 @@ alter table user_account
         add constraint user_account_doctor_constraint
         foreign key (doctor)
         references user_account(id);
+
+alter table resource alter column description TYPE varchar;
