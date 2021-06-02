@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.IllegalArgumentException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("AuthorityServiceImplTest test using mockito")
-
 internal class AuthorityServiceImplTest {
 
     @InjectMockKs
@@ -28,7 +28,6 @@ internal class AuthorityServiceImplTest {
 
     @Test
     fun `findAuthorityById should get authority with authorityId`() {
-
         // GIVEN
         val authorityIdLong = 1L
         val authority = Authority(
@@ -48,7 +47,6 @@ internal class AuthorityServiceImplTest {
 
     @Test
     fun `findAuthorityByAuthorityName should return authority`() {
-
         // GIVEN
         val authorityName = "Name"
         val authority = Authority(
@@ -67,7 +65,6 @@ internal class AuthorityServiceImplTest {
 
     @Test
     fun `should throw error when authority by Id is not found`() {
-
         // GIVEN
         val authorityId = 1L
         every { authorityRepository.findAuthoritiesById(authorityId) } throws EntityNotFoundException("Authority is not found")
@@ -80,7 +77,6 @@ internal class AuthorityServiceImplTest {
 
     @Test
     fun `should throw error when authority by Name is not found`() {
-
         // GIVEN
         val authorityName = "Name"
         every { authorityRepository.findAuthorityByAuthorityName(authorityName) } throws EntityNotFoundException("Authority is not found")
@@ -89,5 +85,51 @@ internal class AuthorityServiceImplTest {
         assertFailsWith<EntityNotFoundException> {
             authorityRepository.findAuthorityByAuthorityName(authorityName)
         }
+    }
+    @Test
+    fun `should save authority`() {
+        // GIVEN
+        val authority = Authority(
+            id = 1L,
+            authorityName = "FirstName"
+        )
+        val authoritySaved = Authority(
+            id = 1L,
+            authorityName = "FirstName"
+        )
+        every { authorityRepository.save(authority) } returns (authoritySaved)
+        // WHEN
+        val resultSaving = authorityServiceImpl.save(authority)
+        // THEN
+        verify(exactly = 1) { authorityServiceImpl.save(authority) }
+        assertEquals(authority, resultSaving)
+    }
+    @Test
+    fun `should throw error when authority is null`() {
+        // GIVEN
+        val authority = Authority(
+            id = 1L,
+            authorityName = "FirstName"
+        )
+        every { authorityRepository.save(authority) } throws IllegalArgumentException("Authority is not found")
+        // WHEN
+        assertFailsWith<IllegalArgumentException> {
+            authorityRepository.save(authority)
+        }
+    }
+    @Test
+    fun `should find all authorities`() {
+        // GIVEN
+        val authorityOne = Authority(
+            id = 1L,
+            authorityName = "FirstName"
+        )
+        val authorityList = listOf(authorityOne)
+        every { authorityRepository.findAll() } returns (authorityList)
+        // WHEN
+        val allAuthorities = authorityServiceImpl.findAll()
+        // THEN
+        verify(exactly = 1) { authorityServiceImpl.findAll() }
+        assertEquals(authorityList, allAuthorities)
     }
 }
