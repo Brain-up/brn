@@ -71,7 +71,7 @@ internal class AuthorityServiceImplTest {
 
         // WHEN
         assertFailsWith<EntityNotFoundException> {
-            authorityRepository.findAuthoritiesById(authorityId)
+            authorityServiceImpl.findAuthorityById(authorityId)
         }
     }
 
@@ -83,7 +83,7 @@ internal class AuthorityServiceImplTest {
 
         // WHEN
         assertFailsWith<EntityNotFoundException> {
-            authorityRepository.findAuthorityByAuthorityName(authorityName)
+            authorityServiceImpl.findAuthorityByAuthorityName(authorityName)
         }
     }
     @Test
@@ -93,28 +93,24 @@ internal class AuthorityServiceImplTest {
             id = 1L,
             authorityName = "FirstName"
         )
-        val authoritySaved = Authority(
-            id = 1L,
-            authorityName = "FirstName"
-        )
-        every { authorityRepository.save(authority) } returns (authoritySaved)
+        every { authorityRepository.save(authority) } returns (authority)
         // WHEN
         val resultSaving = authorityServiceImpl.save(authority)
         // THEN
-        verify(exactly = 1) { authorityServiceImpl.save(authority) }
+        verify(exactly = 1) { authorityRepository.save(authority) }
         assertEquals(authority, resultSaving)
     }
     @Test
-    fun `should throw error when authority is null`() {
+    fun `should throw error when authority is not found`() {
         // GIVEN
         val authority = Authority(
             id = 1L,
             authorityName = "FirstName"
         )
-        every { authorityRepository.save(authority) } throws IllegalArgumentException("Authority is not found")
+        every { authorityRepository.save(authority) } throws IllegalArgumentException()
         // WHEN
         assertFailsWith<IllegalArgumentException> {
-            authorityRepository.save(authority)
+            authorityServiceImpl.save(authority)
         }
     }
     @Test
@@ -129,7 +125,7 @@ internal class AuthorityServiceImplTest {
         // WHEN
         val allAuthorities = authorityServiceImpl.findAll()
         // THEN
-        verify(exactly = 1) { authorityServiceImpl.findAll() }
+        verify(exactly = 1) { authorityRepository.findAll() }
         assertEquals(authorityList, allAuthorities)
     }
 }
