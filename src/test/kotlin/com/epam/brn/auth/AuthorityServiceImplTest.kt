@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.IllegalArgumentException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -99,20 +98,6 @@ internal class AuthorityServiceImplTest {
         // THEN
         verify(exactly = 1) { authorityRepository.save(authority) }
         assertEquals(authority, resultSaving)
-    }
-
-    @Test
-    fun `should throw error when authority is not found`() {
-        // GIVEN
-        val authority = Authority(
-            id = 1L,
-            authorityName = "FirstName"
-        )
-        every { authorityRepository.save(authority) } throws IllegalArgumentException()
-        // WHEN
-        assertFailsWith<IllegalArgumentException> {
-            authorityServiceImpl.save(authority)
-        }
     }
 
     @Test
