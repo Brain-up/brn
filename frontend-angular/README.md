@@ -7,7 +7,7 @@
 | 1     | install NodeJS **14+** & npm **6+**                                                                      | `npm ci`           |
 | 2     | `npm ci`                                                                                                 | `npm run generate` |
 | 3     | `npm i -g @angular/cli` **11.x.x**                                                                       |
-| 4     | to use production api change `http://localhost:8081` -> `http://brainup.site` in **src/proxy.conf.json** |
+| 4     | to use production api change `http://localhost:8081` -> `https://brainup.site` in **src/proxy.conf.json** |
 | 5     | `npm run start`                                                                                          |
 
 ## Lint

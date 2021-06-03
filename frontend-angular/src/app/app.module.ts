@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthInterceptor } from '@root/interceptors/auth.interceptor';
 import { ExceptionsInterceptor } from '@root/interceptors/exceptions.interceptor';
+import { StripUndefinedParamsInterceptor } from '@root/interceptors/strip-undefined-params.interceptor';
 
 @NgModule({
   declarations: [AppComponent, NotFoundComponent],
@@ -38,6 +39,7 @@ import { ExceptionsInterceptor } from '@root/interceptors/exceptions.interceptor
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ExceptionsInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: StripUndefinedParamsInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
