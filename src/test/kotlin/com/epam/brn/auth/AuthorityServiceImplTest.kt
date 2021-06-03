@@ -66,7 +66,7 @@ internal class AuthorityServiceImplTest {
     fun `should throw error when authority by Id is not found`() {
         // GIVEN
         val authorityId = 1L
-        every { authorityRepository.findAuthoritiesById(authorityId) } throws EntityNotFoundException("Authority is not found")
+        every { authorityRepository.findAuthoritiesById(authorityId) } returns null
 
         // WHEN
         assertFailsWith<EntityNotFoundException> {
@@ -77,8 +77,8 @@ internal class AuthorityServiceImplTest {
     @Test
     fun `should throw error when authority by Name is not found`() {
         // GIVEN
-        val authorityName = "Name"
-        every { authorityRepository.findAuthorityByAuthorityName(authorityName) } throws EntityNotFoundException("Authority is not found")
+        val authorityName = ""
+        every { authorityRepository.findAuthorityByAuthorityName(authorityName) } returns null
 
         // WHEN
         assertFailsWith<EntityNotFoundException> {
