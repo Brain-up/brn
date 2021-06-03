@@ -40,7 +40,6 @@ internal class AuthorityServiceImplTest {
         val authorityById = authorityServiceImpl.findAuthorityById(authorityIdLong)
 
         // THEN
-
         verify(exactly = 1) { authorityRepository.findAuthoritiesById(authorityIdLong) }
         assertEquals(authorityById, authority)
     }
@@ -86,6 +85,7 @@ internal class AuthorityServiceImplTest {
             authorityServiceImpl.findAuthorityByAuthorityName(authorityName)
         }
     }
+
     @Test
     fun `should save authority`() {
         // GIVEN
@@ -100,6 +100,7 @@ internal class AuthorityServiceImplTest {
         verify(exactly = 1) { authorityRepository.save(authority) }
         assertEquals(authority, resultSaving)
     }
+
     @Test
     fun `should throw error when authority is not found`() {
         // GIVEN
@@ -113,6 +114,7 @@ internal class AuthorityServiceImplTest {
             authorityServiceImpl.save(authority)
         }
     }
+
     @Test
     fun `should find all authorities`() {
         // GIVEN
