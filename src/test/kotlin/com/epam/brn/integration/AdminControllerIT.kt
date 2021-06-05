@@ -49,6 +49,7 @@ class AdminControllerIT : BaseIT() {
     private val userIdParameterName = "userId"
     private val exercisingYear = 2000
     private val exercisingMonth = 10
+    private val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
@@ -112,13 +113,12 @@ class AdminControllerIT : BaseIT() {
             30
         )
         insertDefaultStudyHistory(userAccount, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUrl/study/week")
-                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
-                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
                 .param(userIdParameterName, userAccount.id.toString())
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -148,13 +148,12 @@ class AdminControllerIT : BaseIT() {
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
         )
-        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUrl/study/year")
-                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(dateFormat))
-                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(dateFormat))
+                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
                 .param(userIdParameterName, user.id.toString())
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -352,11 +351,15 @@ class AdminControllerIT : BaseIT() {
                     historyTomorrowTwo
                 )
             )
+        val today = LocalDateTime.now()
+
         // WHEN
-        val today = LocalDate.now()
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get("$baseUrl/histories?userId=${existingUser.id}&from=$today&to=${today.plusDays(1)}")
+                .param(fromParamName, today.format(dateFormat))
+                .param(toParameterName, today.plusDays(1).format(dateFormat))
+                .param(userIdParameterName, existingUser.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN

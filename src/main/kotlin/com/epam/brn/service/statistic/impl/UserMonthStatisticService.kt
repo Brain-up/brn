@@ -29,6 +29,11 @@ class UserMonthStatisticService(
                 progress = UserExercisingProgressStatus.GREAT,
                 exercisingDays = filteredHistories.size
             )
-        }.distinct()
+        }.distinctBy {
+            listOf(
+                it.date.month,
+                it.date.year
+            )
+        }
     }
 }

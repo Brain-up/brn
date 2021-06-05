@@ -58,8 +58,8 @@ class AdminController(
     @ApiOperation("Get user's study histories for period")
     fun getHistories(
         @RequestParam("userId", required = true) userId: Long,
-        @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
-        @RequestParam("to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
+        @RequestParam("from", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from: LocalDate,
+        @RequestParam("to", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to: LocalDate
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
 
@@ -75,8 +75,11 @@ class AdminController(
     @GetMapping("/study/week")
     @ApiOperation("Get user's weekly statistic for the period")
     fun getUserWeeklyStatistic(
-        @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
-        @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
+        @RequestParam(
+            name = "from",
+            required = true
+        ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from: LocalDate,
+        @RequestParam(name = "to", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to: LocalDate,
         @RequestParam(name = "userId", required = true) userId: Long
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to, userId)
@@ -86,8 +89,11 @@ class AdminController(
     @GetMapping("/study/year")
     @ApiOperation("Get user's yearly statistic for the period")
     fun getUserYearlyStatistic(
-        @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
-        @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
+        @RequestParam(
+            name = "from",
+            required = true
+        ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from: LocalDate,
+        @RequestParam(name = "to", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to: LocalDate,
         @RequestParam(name = "userId", required = true) userId: Long
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to, userId)

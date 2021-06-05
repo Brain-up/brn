@@ -6,8 +6,10 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.google.gson.Gson
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -27,10 +29,16 @@ class StudyHistoryControllerIT : BaseIT() {
     @Autowired
     private lateinit var repository: StudyHistoryRepository
 
+    @AfterEach
+    fun rollback() {
+        deleteInsertedTestData()
+    }
+
     @Test
     fun `save should save StudyHistory to the repository`() {
         // GIVEN
         val exercise = insertDefaultExercise()
+        val gson = Gson()
         insertDefaultUser()
         val studyHistoryDtoId = 1L
         val studyHistoryDto = StudyHistoryDto(
@@ -43,13 +51,13 @@ class StudyHistoryControllerIT : BaseIT() {
             replaysCount = 3,
             wrongAnswers = 1
         )
+        val requestBody = gson.toJson(studyHistoryDto)
 
         // WHEN
-        val response = mockMvc.perform(
+        mockMvc.perform(
             post(baseUrl)
-                .content(
-                    Gson().toJson(studyHistoryDto)
-                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
         )
             .andExpect(status().isOk)
 
