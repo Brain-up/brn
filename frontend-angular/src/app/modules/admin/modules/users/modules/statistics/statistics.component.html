@@ -1,0 +1,22 @@
+<div class="control-panel">
+  <button class="statistics-info-dialog" mat-button (click)="openStatisticsInfoDialog()">
+    <mat-icon svgIcon="help"></mat-icon>
+
+    <span>{{ 'Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt' | translate }}</span>
+  </button>
+</div>
+
+<app-month-time-track
+  [isLoading]="isLoadingMonthTimeTrackData"
+  [selectedMonth]="selectedMonth"
+  [data]="monthTimeTrackData"
+  (selectMonthEvent)="selectMonth($event)"
+  (loadPrevYearEvent)="loadPrevYear()"
+  (loadNextYearEvent)="loadNextYear()"
+></app-month-time-track>
+
+<app-week-time-track
+  [isLoading]="isLoadingWeekTimeTrackData"
+  [selectedMonth]="selectedMonth"
+  [data]="weekTimeTrackData"
+></app-week-time-track>

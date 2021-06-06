@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Exercise } from '@admin/models/exercise';
 import { pluck } from 'rxjs/operators';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { Dayjs } from 'dayjs';
+import { SortType } from '@admin/models/sort';
+import { PAGE_SIZE_DEFAULT } from '@shared/constants/common-constants';
+import { UsersData } from '@admin/models/users-data';
 
 @Injectable()
 export class AdminApiService {
@@ -35,5 +38,31 @@ export class AdminApiService {
         `/api/admin/study/year?userId=${userId}&from=${from.format('YYYY-MM-DD')}&to=${to.format('YYYY-MM-DD')}`
       )
       .pipe(pluck('data'));
+  }
+
+  public getUsers(options?: {
+    pageNumber?: number;
+    pageSize?: number;
+    sortBy: {
+      name: SortType;
+    };
+    filters?: {
+      isFavorite?: boolean;
+      search?: string;
+    };
+    withAnalytics?: boolean;
+  }): Observable<UsersData> {
+    const params = new HttpParams({
+      fromObject: {
+        pageNumber: options?.pageNumber ? String(options.pageNumber) : undefined,
+        pageSize: String(options?.pageSize ? options.pageSize : PAGE_SIZE_DEFAULT),
+        'sortBy.name': options?.sortBy?.name ? String(options.sortBy.name) : undefined,
+        'filters.favorite': options?.filters?.isFavorite ? String(options.filters.isFavorite) : undefined,
+        'filters.search': options?.filters?.search ? String(options.filters.search) : undefined,
+        withAnalytics: options?.withAnalytics ? String(options.withAnalytics) : undefined,
+      },
+    });
+
+    return this.httpClient.get<{ data: UsersData }>('/api/admin/users', { params }).pipe(pluck('data'));
   }
 }

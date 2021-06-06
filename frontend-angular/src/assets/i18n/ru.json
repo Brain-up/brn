@@ -7,32 +7,6 @@
       "Users": "Пользователи"
     },
     "Modules": {
-      "Statistics": {
-        "Buttons": {
-          "WhatIsIt": "О чем говорит статистика"
-        },
-        "Components": {
-          "MonthTimeTrack": {
-            "EmptyData": "Нет данных",
-            "Title [year]": "Общее время занятий по месяцам за <span>{{ year }}</span> год"
-          },
-          "MonthTimeTrackItem": {
-            "Days [days]": "за <b>{{ days }}<b> дней"
-          },
-          "StatisticsInfoDialog": {
-            "Buttons": {
-              "Ok": "Хорошо"
-            },
-            "ContentTitle": "Проверьте, достаточно ли регулярно вы делаете занятия",
-            "Text": "По данным исследований, чтобы улучшить порог слышимости, нужно заниматься не менее <b>6</b> дней в неделю по <b>20</b> минут в течение <b>2</b> лет. В месяц должно быть не менее <b>8</b> часов <b>40</b> минут в сумме за <b>26</b> дней.",
-            "Title": "О чем говорит статистика"
-          },
-          "WeekTimeTrack": {
-            "EmptyData": "Нет данных",
-            "Title [month]": "Время ежедневных занятий за <span>{{ month }}</span>"
-          }
-        }
-      },
       "UploadFile": {
         "Links": {
           "LoadConfigurationFiles": "Загрузить конфигурационные файлы",
@@ -68,6 +42,61 @@
             }
           }
         }
+      },
+      "Users": {
+        "Components": {
+          "UsersTable": {
+            "ColumnsName": {
+              "Favorite": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite",
+              "FirstVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit",
+              "LastVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit",
+              "LastWeek": "Admin.Modules.Users.Components.UsersTable.ColumnsName.LastWeek",
+              "Name": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Name",
+              "Progress": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress",
+              "WorkingDaysInLastMonth": "Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth"
+            },
+            "NameColumn": {
+              "CommonInfo [years, gender]": "Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]"
+            },
+            "VisitColumn": {
+              "Time [hours]": "Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]"
+            }
+          }
+        },
+        "EmptyData": "Admin.Modules.Users.EmptyData",
+        "FavoriteToggler": {
+          "AllUsers": "Все пользователи",
+          "Favorites": "Избранные"
+        },
+        "Modules": {
+          "Statistics": {
+            "Buttons": {
+              "WhatIsIt": "О чем говорит статистика"
+            },
+            "Components": {
+              "MonthTimeTrack": {
+                "EmptyData": "Нет данных",
+                "Title [year]": "Общее время занятий по месяцам за <span>{{ year }}</span> год"
+              },
+              "MonthTimeTrackItem": {
+                "Days [days]": "за <b>{{ days }}<b> дней"
+              },
+              "StatisticsInfoDialog": {
+                "Buttons": {
+                  "Ok": "Хорошо"
+                },
+                "ContentTitle": "Проверьте, достаточно ли регулярно вы делаете занятия",
+                "Text": "По данным исследований, чтобы улучшить порог слышимости, нужно заниматься не менее <b>6</b> дней в неделю по <b>20</b> минут в течение <b>2</b> лет. В месяц должно быть не менее <b>8</b> часов <b>40</b> минут в сумме за <b>26</b> дней.",
+                "Title": "О чем говорит статистика"
+              },
+              "WeekTimeTrack": {
+                "EmptyData": "Нет данных",
+                "Title [month]": "Время ежедневных занятий за <span>{{ month }}</span>"
+              }
+            }
+          }
+        },
+        "Search": "Поиск"
       }
     }
   },
@@ -99,6 +128,13 @@
       "Exceptions": {
         "Unauthorized": "Неавторизованный доступ",
         "UnknownError": "Неизвестная ошибка"
+      }
+    }
+  },
+  "Shared": {
+    "Components": {
+      "Paginator": {
+        "Info [startRange, endRange, total]": "Shared.Components.Paginator.Info [startRange, endRange, total]"
       }
     }
   }

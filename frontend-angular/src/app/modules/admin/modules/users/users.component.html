@@ -1,0 +1,43 @@
+<div class="filters">
+  <app-search-input
+    [control]="searchControl"
+    [placeholder]="'Admin.Modules.Users.Search' | translate"
+  ></app-search-input>
+
+  <app-toggler
+    class="toggler"
+    [state]="getUsersOptions.isFavorite"
+    [offText]="'Admin.Modules.Users.FavoriteToggler.AllUsers' | translate"
+    [onText]="'Admin.Modules.Users.FavoriteToggler.Favorites' | translate"
+    (toggleEvent)="toggleFavorite($event)"
+  ></app-toggler>
+</div>
+
+<div class="content">
+  <mat-progress-bar *ngIf="isLoading$ | async; else dataTemplate" mode="indeterminate"></mat-progress-bar>
+
+  <app-paginator
+    *ngIf="usersData?.total"
+    [total]="usersData.total"
+    [pageNumber]="getUsersOptions.pageNumber"
+    (selectPageEvent)="selectPage($event)"
+  ></app-paginator>
+</div>
+
+<!-- #region Templates -->
+<ng-template #dataTemplate>
+  <ng-container *ngIf="usersData.users?.length; else emptyDataTemplate">
+    <app-users-table
+      [data]="usersData.users"
+      [sortByName]="getUsersOptions.sortByName"
+      (sortByNameEvent)="sortByName($event)"
+    ></app-users-table>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyDataTemplate>
+  <div class="empty-data">
+    {{ 'Admin.Modules.Users.EmptyData' | translate }}
+  </div>
+</ng-template>
+<!-- #endregion -->
