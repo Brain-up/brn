@@ -10,13 +10,16 @@ import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import java.io.File
 import java.io.FileInputStream
+import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class LoadFilesControllerTest {
@@ -24,7 +27,7 @@ internal class LoadFilesControllerTest {
     @InjectMockKs
     lateinit var adminController: AdminController
 
-    @MockK
+    @RelaxedMockK
     lateinit var csvUploadService: CsvUploadService
 
     @MockK
@@ -52,9 +55,12 @@ internal class LoadFilesControllerTest {
             "series_words_en.csv",
             FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}series_words_en.csv")
         )
+
         // WHEN
-        adminController.loadExercises(1, taskFile)
+        val result = adminController.loadExercises(1, taskFile)
+
         // THEN
         verify(exactly = 1) { csvUploadService.loadExercises(1, taskFile) }
+        assertEquals(HttpStatus.CREATED, result.statusCode)
     }
 }
