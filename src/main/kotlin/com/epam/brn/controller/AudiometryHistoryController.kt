@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/audiometry-history")
 @Api(value = "/audiometryHistory", description = "Contains actions for audiometry history")
-class AudiometryHistoryController(val audiometryHistoryService: AudiometryHistoryService) {
+class AudiometryHistoryController(private val audiometryHistoryService: AudiometryHistoryService) {
 
     @PostMapping
     @ApiOperation("Save speech audiometry history")

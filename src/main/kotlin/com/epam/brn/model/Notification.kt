@@ -26,7 +26,7 @@ data class Notification(
 ) {
     fun toDto() = NotificationDto(
         id = id,
-        userAccount = userAccount,
+        userAccount = userAccount!!.id,
         text = text,
         date = scheduledDate,
         checked = checked

@@ -21,6 +21,14 @@ export class SvgIconsRegistrarService {
       .addSvgIcon(
         'right-arrow',
         this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'right-arrow.svg')
+      )
+      .addSvgIcon(
+        'up-arrow',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'up-arrow.svg')
+      )
+      .addSvgIcon(
+        'star',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'star.svg')
       );
   }
 }

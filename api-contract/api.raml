@@ -239,6 +239,11 @@ mediaType:
           200:
             example: !include samples/avaliable_exercise_ids_by_input_ids.json
 
+  /{exerciseId}/active/{active}:
+   put:
+    responses:
+        200:
+
 # TASK ----------------------------
 /tasks:
   get:
