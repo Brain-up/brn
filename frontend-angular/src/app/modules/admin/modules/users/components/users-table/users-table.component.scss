@@ -1,0 +1,113 @@
+@import 'colors';
+@import 'variables';
+
+:host {
+  display: block;
+
+  table.users {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      color: $active-grey-color;
+    }
+
+    th,
+    td {
+      font-weight: normal;
+      font-size: 14px;
+      text-align: left;
+      padding: 24px 12px;
+      border-bottom: 1px solid $latter-grey-color;
+
+      &.center {
+        text-align: center;
+      }
+    }
+
+    .name-column-title {
+      .wrap {
+        display: flex;
+        align-items: center;
+
+        mat-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          user-select: none;
+          font-size: 20px;
+          transition: $transition-time;
+
+          &.desc {
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+
+    .name-column {
+      .wrap {
+        display: flex;
+
+        .avatar {
+          width: 44px;
+          height: 44px;
+          background-color: $latter-grey-color;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 16px;
+          font-weight: 600;
+          margin-right: 16px;
+        }
+
+        .info {
+          .full-name {
+            margin-bottom: 3px;
+          }
+
+          .common {
+            color: $active-grey-color;
+          }
+        }
+      }
+    }
+
+    .visit-column {
+      .date {
+        margin-bottom: 3px;
+      }
+
+      .time {
+        color: $active-grey-color;
+      }
+    }
+
+    .last-week-column {
+      padding: 0;
+
+      app-bar-chart {
+        margin: 0 auto;
+      }
+    }
+
+    .progress-column {
+      mat-icon {
+        color: $brain-green-color;
+      }
+    }
+
+    .favorite-column {
+      mat-icon {
+        color: $cold-violet-color;
+        fill: transparent;
+
+        &.favorite {
+          fill: $cold-violet-color;
+        }
+      }
+    }
+  }
+}

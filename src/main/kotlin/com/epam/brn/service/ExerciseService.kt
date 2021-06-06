@@ -121,6 +121,12 @@ class ExerciseService(
         return exerciseDto
     }
 
+    fun updateActiveStatus(exerciseId: Long, active: Boolean) {
+        var exercise = exerciseRepository.findById(exerciseId).get()
+        exercise.active = active
+        exerciseRepository.save(exercise)
+    }
+
     fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseWithTasksDto> {
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
         return subGroupExercises.map { it.toDtoWithTasks() }

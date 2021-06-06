@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 import kotlin.random.Random
+import kotlin.test.assertFalse
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 class ExercisesControllerIT : BaseIT() {
@@ -132,6 +133,22 @@ class ExercisesControllerIT : BaseIT() {
         Assertions.assertTrue(jsonDataObject == exercise.id!!)
     }
 
+    @Test
+    fun `test change active status`() {
+        val existingExercise = insertExercise("ExerciseNameTest")
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .put("$baseUrl/${existingExercise.id}/active/false")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+        exerciseRepository.findById(existingExercise.id!!)
+        assertFalse(exerciseRepository.findById(existingExercise.id!!).get().active)
+    }
+
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise,
@@ -192,6 +209,14 @@ class ExercisesControllerIT : BaseIT() {
             Exercise(
                 subGroup = subGroup,
                 level = 0,
+                name = exerciseName
+            )
+        )
+    }
+
+    fun insertExercise(exerciseName: String): Exercise {
+        return exerciseRepository.save(
+            Exercise(
                 name = exerciseName
             )
         )
