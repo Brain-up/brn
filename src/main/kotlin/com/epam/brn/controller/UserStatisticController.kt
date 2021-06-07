@@ -8,7 +8,6 @@ import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.service.statistic.UserStatisticService
 import io.swagger.annotations.Api
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -35,8 +34,8 @@ class UserStatisticController(
 
     @GetMapping("/study/week")
     fun getUserWeeklyStatistic(
-        @RequestParam(name = "from", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from: LocalDate,
-        @RequestParam(name = "to", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to: LocalDate
+        @RequestParam(name = "from", required = true) from: LocalDate,
+        @RequestParam(name = "to", required = true) to: LocalDate
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
@@ -44,8 +43,8 @@ class UserStatisticController(
 
     @GetMapping("/study/year")
     fun getUserYearlyStatistic(
-        @RequestParam(name = "from", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from: LocalDate,
-        @RequestParam(name = "to", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to: LocalDate
+        @RequestParam(name = "from", required = true) from: LocalDate,
+        @RequestParam(name = "to", required = true) to: LocalDate
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))

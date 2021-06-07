@@ -7,7 +7,6 @@ import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,8 +35,8 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     @GetMapping("/histories")
     @ApiOperation("Get current user's study histories for period")
     fun getHistories(
-        @RequestParam("from", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from: LocalDate,
-        @RequestParam("to", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to: LocalDate
+        @RequestParam("from", required = true) from: LocalDate,
+        @RequestParam("to", required = true) to: LocalDate
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 
