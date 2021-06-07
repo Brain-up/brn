@@ -72,6 +72,9 @@ class AdminControllerIT : BaseIT() {
     @Autowired
     lateinit var resourceRepository: ResourceRepository
 
+    @Autowired
+    private lateinit var gson: Gson
+
     @AfterEach
     fun deleteAfterTest() {
         studyHistoryRepository.deleteAll()
@@ -124,9 +127,9 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
         val resultStatistic: List<DayStudyStatistic> =
-            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
         // THEN
         Assertions.assertEquals(3, resultStatistic.size)
@@ -159,9 +162,9 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
         val resultStatistic: List<MonthStudyStatistic> =
-            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 
         // THEN
         Assertions.assertEquals(1, resultStatistic.size)

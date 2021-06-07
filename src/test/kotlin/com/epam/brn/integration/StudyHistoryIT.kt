@@ -258,7 +258,7 @@ class StudyHistoryIT : BaseIT() {
                 )
             )
         // WHEN
-        val today = LocalDate.now()
+        val today = LocalDateTime.now()
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get("$baseUrl/histories?from=$today&to=${today.plusDays(1)}")

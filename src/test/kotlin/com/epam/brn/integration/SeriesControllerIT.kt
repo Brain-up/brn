@@ -29,6 +29,9 @@ class SeriesControllerIT : BaseIT() {
     @Autowired
     lateinit var seriesRepository: SeriesRepository
 
+    @Autowired
+    lateinit var gson: Gson
+
     private val baseUrl = "/series"
     private val series1Name = "series1Name"
     private val series2Name = "series2Name"
@@ -67,7 +70,7 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
-        val seriesJson = Gson().toJson(baseResponseDto.data)
+        val seriesJson = gson.toJson(baseResponseDto.data)
         val resultSeries: List<SeriesDto> =
             objectMapper.readValue(seriesJson, object : TypeReference<List<SeriesDto>>() {})
         Assertions.assertEquals(2, resultSeries.size)
@@ -92,7 +95,7 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
-        val resultSeries: SeriesDto = objectMapper.readValue(Gson().toJson(baseResponseDto.data), SeriesDto::class.java)
+        val resultSeries: SeriesDto = objectMapper.readValue(gson.toJson(baseResponseDto.data), SeriesDto::class.java)
         Assertions.assertEquals(series.toDto(), resultSeries)
     }
 

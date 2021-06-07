@@ -3,8 +3,8 @@ package com.epam.brn.integration
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
+import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
@@ -92,11 +93,14 @@ class StudyHistoryControllerIT : BaseIT() {
         val exercise = insertDefaultExercise()
         val exercisingYear = 2019
         val exercisingMonth = 3
-        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
-        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
+        val studyHistoryFirst =
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
+        val studyHistorySecond =
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
         val from = LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1)
         val to = LocalDateTime.of(exercisingYear, exercisingMonth, 28, 1, 1)
         val datePattern = DateTimeFormatter.ISO_DATE_TIME
+        val expectedStudyHistories = listOf(studyHistoryFirst.toDto(), studyHistorySecond.toDto())
 
         // WHEN
         val response = mockMvc.perform(
@@ -108,9 +112,11 @@ class StudyHistoryControllerIT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         // THEN
-        val baseResponseDto = gson.fromJson(response, BaseResponseDto::class.java)
-        val studyHistories = baseResponseDto.data as List<StudyHistory>
+        val data = gson.fromJson(response, BaseResponseDto::class.java).data
+        val studyHistories: List<StudyHistoryDto> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<StudyHistoryDto>>() {})
 
         assertNotNull(studyHistories)
+        assertEquals(expectedStudyHistories, studyHistories)
     }
 }

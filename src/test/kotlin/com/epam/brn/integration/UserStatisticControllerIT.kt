@@ -31,6 +31,8 @@ class UserStatisticControllerIT : BaseIT() {
 
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
+    @Autowired
+    private lateinit var gson: Gson
 
     private val baseUrl = "/statistics"
     private val fromParamName = "from"
@@ -81,7 +83,7 @@ class UserStatisticControllerIT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         val baseResponseDto = objectMapper.readValue(response, BaseResponseDto::class.java)
-        val baseResponseJson = Gson().toJson(baseResponseDto.data)
+        val baseResponseJson = gson.toJson(baseResponseDto.data)
         val resultStatistic: List<SubGroupStatisticDto> =
             objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticDto>>() {})
 
@@ -114,9 +116,9 @@ class UserStatisticControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
         val resultStatistic: List<DayStudyStatistic> =
-            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
         // THEN
         assertEquals(3, resultStatistic.size)
@@ -149,9 +151,9 @@ class UserStatisticControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = Gson().fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
         val resultStatistic: List<MonthStudyStatistic> =
-            objectMapper.readValue(Gson().toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 
         // THEN
         assertEquals(1, resultStatistic.size)
