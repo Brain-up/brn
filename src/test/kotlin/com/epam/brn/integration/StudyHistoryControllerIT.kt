@@ -27,6 +27,9 @@ class StudyHistoryControllerIT : BaseIT() {
     private val toParameterName = "to"
 
     @Autowired
+    private lateinit var gson: Gson
+
+    @Autowired
     private lateinit var repository: StudyHistoryRepository
 
     @AfterEach
@@ -38,7 +41,6 @@ class StudyHistoryControllerIT : BaseIT() {
     fun `save should save StudyHistory to the repository`() {
         // GIVEN
         val exercise = insertDefaultExercise()
-        val gson = Gson()
         insertDefaultUser()
         val studyHistoryDtoId = 1L
         val studyHistoryDto = StudyHistoryDto(
@@ -69,7 +71,6 @@ class StudyHistoryControllerIT : BaseIT() {
     fun `getTodayWorkDurationInSeconds should return today's timer`() {
         // GIVEN
         insertDefaultUser()
-        val gson = Gson()
 
         // WHEN
         val response = mockMvc.perform(get("$baseUrl/todayTimer"))
@@ -91,7 +92,6 @@ class StudyHistoryControllerIT : BaseIT() {
         val exercise = insertDefaultExercise()
         val exercisingYear = 2019
         val exercisingMonth = 3
-        val gson = Gson()
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
         val from = LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1)
