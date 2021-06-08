@@ -1,0 +1,39 @@
+@import 'colors';
+
+:host {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+
+  .info {
+    color: $active-grey-color;
+  }
+
+  .numeric-buttons {
+    display: flex;
+
+    button {
+      background: transparent;
+      width: 32px;
+      height: 32px;
+      border: 1px solid $latter-grey-color;
+      border-radius: 4px;
+      font-weight: 600;
+      color: $active-grey-color;
+      cursor: pointer;
+      outline: none;
+
+      &.current {
+        background: $latter-grey-color;
+      }
+
+      &:first-child {
+        margin-left: 30px;
+      }
+
+      &:not(:last-child) {
+        margin-right: 8px;
+      }
+    }
+  }
+}

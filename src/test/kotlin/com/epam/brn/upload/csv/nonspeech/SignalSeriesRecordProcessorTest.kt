@@ -27,7 +27,7 @@ internal class SignalSeriesRecordProcessorTest {
     private lateinit var signalSeriesRecordProcessor: SignalSeriesRecordProcessor
 
     private val exerciseGroup = ExerciseGroup(
-        id = 1L,
+        code = "NON_SPEECH_RU_RU",
         name = "Неречевые упражнения",
         description = "Неречевые упражнения"
     )

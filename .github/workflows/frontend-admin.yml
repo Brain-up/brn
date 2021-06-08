@@ -1,0 +1,65 @@
+name: Frontend admin
+
+on:
+  pull_request:
+    paths:
+      - 'frontend-angular/**'
+      - '.github/workflows/frontend-admin.yml'
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run action checkout
+        uses: actions/checkout@v1
+
+      - name: Install dependencies
+        working-directory: ./frontend-angular
+        run: npm install
+
+      - name: Run lint
+        working-directory: ./frontend-angular
+        run: npm run lint
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run action checkout
+        uses: actions/checkout@v1
+
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install google-chrome-stable
+
+      - name: Install dependencies
+        working-directory: ./frontend-angular
+        run: npm install
+
+      - name: Run tests
+        working-directory: ./frontend-angular
+        run: npm run test
+
+  coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run action checkout
+        uses: actions/checkout@v1
+
+      - name: Install dependencies
+        working-directory: ./frontend-angular
+        run: npm install
+
+      - name: Run test coverage
+        working-directory: ./frontend-angular
+        run: npm run test:coverage
+
+      - name: Publish coverage results
+        uses: AthleticNet/comment-test-coverage@1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./frontend-angular/coverage/frontend-angular/coverage-summary.json
+          title: Frontend admin coverage

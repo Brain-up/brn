@@ -433,6 +433,7 @@ class AdminControllerIT : BaseIT() {
     private fun insertSeries(): Series {
         val exerciseGroup = exerciseGroupRepository.save(
             ExerciseGroup(
+                code = "CODE",
                 description = "desc",
                 name = "group"
             )

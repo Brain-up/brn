@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/audio")
 @Api(value = "/audio", description = "Contains actions for getting audio file for words")
-class AudioController(@Autowired val yandexSpeechKitService: YandexSpeechKitService) {
+class AudioController(@Autowired private val yandexSpeechKitService: YandexSpeechKitService) {
 
     @GetMapping(produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @ApiOperation("Get audio resource for string")

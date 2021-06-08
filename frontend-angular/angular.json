@@ -33,6 +33,7 @@
               { "glob": "**/*", "input": "../api-contract/samples", "output": "api" }
             ],
             "styles": ["src/styles.scss"],
+            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] },
             "indexTransform": "src/index-transform.ts",
             "customWebpackConfig": {
               "path": "custom-webpack-config.ts",
@@ -90,26 +91,15 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss"],
+            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json", "e2e/tsconfig.json"],
+            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
             "exclude": ["**/node_modules/**"]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "frontend-angular:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "frontend-angular:serve:production"
-            }
           }
         }
       }
