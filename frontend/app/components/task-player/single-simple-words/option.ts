@@ -23,9 +23,11 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<ITas
     }
     if (this.isClicked) {
       if (isCorrect) {
-        node.style.backgroundColor = 'green';
+        node.style.backgroundColor = '#47CD8A';
+        node.style.color = '#fff';
       } else {
-        node.style.backgroundColor = 'red';
+        node.style.backgroundColor = '#F38698';
+        node.style.color = '#fff';
       }
       this.isClicked = false;
     } else {

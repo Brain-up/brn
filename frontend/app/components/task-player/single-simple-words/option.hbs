@@ -5,12 +5,12 @@
     disabled={{this.isDisabled}}
     type="button"
     {{did-update this.handleAnswer @isCorrect}}
-    class="task-player__option-button bg-transparent py-2 px-4 rounded text-purple-primary
+    class="task-player__option-button bg-transparent py-2 px-4 rounded
 
       {{if
         (eq @activeWord @answerOption.word)
-        "border-2 bg-blue-500"
-        "border-2 border-purple-primary border-opacity-25"
+        "border-2 text-white bg-purple-primary"
+        "border-2 border-purple-primary border-opacity-25  text-purple-primary"
       }}
 
       {{if
