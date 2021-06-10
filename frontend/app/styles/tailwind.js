@@ -24,16 +24,19 @@ module.exports = {
           ...colors.pink,
           '200': '#FBEDFE',
           '500': '#FF6373',
+          'secondary': '#F38698'
         },
 
         yellow: {
           ...colors.yellow,
           '500': '#F68820',
+          'secondary': '#FBD051',
         },
 
         purple: {
           ...colors.purple,
           '700': '#2A165B',
+          'primary': '#503DAD'
         },
 
         indigo: {
@@ -41,6 +44,10 @@ module.exports = {
           '200': '#EDF0FE',
           '500': '#63BBEB',
         },
+        green: {
+          ...colors.green,
+          'secondary': '#47CD8A',
+        }
       },
       borderRadius: {
         ...borderRadius,
