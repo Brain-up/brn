@@ -15,7 +15,7 @@ export default class GlobalTimerComponent extends Component {
   get minutes() {
     const sec = this.seconds % 60;
     const min = Math.floor(this.seconds / 60);
-    return `${(min || '00') + " : " + (sec || '00')} `;
+    return `${(min || '00') + " : " + (sec || '00')}`;
   }
   get getColor() {
     if (this.seconds > 1200) {
