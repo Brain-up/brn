@@ -5,7 +5,8 @@
     >
       <div class="max-w-none mx-auto">
         <div class="sm:rounded-lg pb-4 overflow-hidden">
-          <div class="sm:px-6 px-4 py-5">
+          <div class="sm:px-6 hidden px-4 py-5">
+            //remove hidden when "Noise filter will be implemented"
             <h3
               data-test-series-navigation-header class="navigation-block__header text-lg font-bold leading-3"
             >
@@ -26,9 +27,7 @@
                       <Ui::ExerciseButton
                         @exercise={{exercise}}
                         @title={{exercise.level}}
-                        @isAvailable={{isAvailable}}
-                        class="exercise-block__level flex mt-2 ml-2 mr-2"
-                        data-test-series-navigation-list-link
+                        @isAvailable={{isAvailable}} class="exercise-block__level flex mt-2 ml-2 mr-2" data-test-series-navigation-list-link
                         data-test-exercise-level={{exercise.level}}
                         data-test-exercise-name={{exercise.name}}
                       />

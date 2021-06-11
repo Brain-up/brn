@@ -12,6 +12,6 @@ module('Integration | Component | global-timer', function(hooks) {
 
     await render(hbs`<GlobalTimer />`);
 
-    assert.dom('[data-test-timer-container]').hasAttribute('title', '0');
+    assert.dom('[data-test-timer-container]').hasAttribute('title', '00 : 00');
   });
 });
