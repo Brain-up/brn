@@ -1,24 +1,8 @@
 /*! purgecss start ignore */
 
 .timer-wrapper {
-  margin-bottom: 10px;
+  background: linear-gradient(90deg, rgba(161, 121, 242, 0.15) 0%, rgba(121, 121, 242, 0.15) 100%), #FFFFFF;
+  border-radius: 16px;
  }
-
-.clock-svg {
-  min-width: 40px;
-  margin-left: -28px;
-  margin-top: -2px;
-  position: absolute;
-  enable-background:new 0 0 512 512;
-}
-
-.timer {
-  padding: 0px 13px 0px 0px;
-  text-align: right;
-  border: 1px solid #bdbbbb;
-  border-radius: 15px;
-  width: 136px;
-  margin-left: -16px;
-}
 
 /*! purgecss end ignore */
