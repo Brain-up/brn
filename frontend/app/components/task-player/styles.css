@@ -14,11 +14,13 @@
 }
 
 .task-player__option-button {
-  height: 100px;
   width: 100%;
   display: block;
-  font-size: 40px;
+  font-size: 14px;
+  line-height: 24px;
+  text-transform: uppercase;
   transition: all .5s ease;
+  font-weight: 600;
 }
 
 .task-player__option-button:active {

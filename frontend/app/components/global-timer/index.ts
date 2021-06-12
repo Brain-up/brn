@@ -12,11 +12,19 @@ export default class GlobalTimerComponent extends Component {
   }
   @service('network') declare network: NetworkService;
   @tracked seconds = 0;
-  get minutes()  {
-    if (this.seconds <= 0) {
-      return 0;
+  get minutes() {
+    const sec = this.seconds % 60;
+    const min = Math.floor(this.seconds / 60);
+    return `${(min || '00') + " : " + (sec || '00')}`;
+  }
+  get getColor() {
+    if (this.seconds > 1200) {
+      return "bg-green-secondary";
+    } else if (this.seconds > 960) {
+      return "bg-yellow-secondary";
+    } else {
+      return "bg-pink-secondary";
     }
-    return (this.seconds / 60).toFixed(1);
   }
   @(task(function*(this: GlobalTimerComponent) {
     do {
