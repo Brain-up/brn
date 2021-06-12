@@ -38,7 +38,7 @@ internal class SeriesControllerTest {
         val actualResult = seriesController.getSeriesForGroup(groupId)
 
         // THEN
-        verify { seriesService.findSeriesForGroup(groupId) }
+        verify(exactly = 1) { seriesService.findSeriesForGroup(groupId) }
         assertTrue(actualResult.body.toString().contains("testName1"))
         assertTrue(actualResult.body.toString().contains("testName2"))
     }
@@ -54,7 +54,7 @@ internal class SeriesControllerTest {
         val actualResult = seriesController.getSeriesForId(1)
 
         // THEN
-        verify { seriesService.findSeriesDtoForId(seriesId) }
+        verify(exactly = 1) { seriesService.findSeriesDtoForId(seriesId) }
         assertTrue(actualResult.body.toString().contains("testName"))
     }
 }

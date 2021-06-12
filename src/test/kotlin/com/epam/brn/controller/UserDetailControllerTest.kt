@@ -61,7 +61,7 @@ internal class UserDetailControllerTest {
                 userDetailController.findUserById(userId).body?.data as List<UserAccountCreateRequest>
 
             // THEN
-            verify { userAccountService.findUserById(userId) }
+            verify(exactly = 1) { userAccountService.findUserById(userId) }
             assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
         }
@@ -76,7 +76,7 @@ internal class UserDetailControllerTest {
             val savedUserAccountDto = userDetailController.getCurrentUser().body?.data as List<UserAccountCreateRequest>
 
             // THEN
-            verify { userAccountService.getUserFromTheCurrentSession() }
+            verify(exactly = 1) { userAccountService.getUserFromTheCurrentSession() }
             assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
         }
@@ -100,7 +100,7 @@ internal class UserDetailControllerTest {
             val response = userDetailController.updateAvatarCurrentUser(avatarUrl).body?.data as UserAccountDto
 
             // THEN
-            verify { userAccountService.updateAvatarForCurrentUser(avatarUrl) }
+            verify(exactly = 1) { userAccountService.updateAvatarForCurrentUser(avatarUrl) }
             userAccountDto.avatar = avatarUrl
             assertEquals(userAccountDto, response)
         }
@@ -128,7 +128,7 @@ internal class UserDetailControllerTest {
             val response = userDetailController.updateCurrentUser(changeRequest).body?.data as UserAccountDto
 
             // THEN
-            verify { userAccountService.updateCurrentUser(changeRequest) }
+            verify(exactly = 1) { userAccountService.updateCurrentUser(changeRequest) }
             assertEquals(userAccountDto, response)
         }
 
@@ -145,7 +145,7 @@ internal class UserDetailControllerTest {
             val response = userDetailController.addHeadphonesToUser(1, headphonesDto).body?.data as HeadphonesDto
 
             // THEN
-            verify { userAccountService.addHeadphonesToUser(1L, headphonesDto) }
+            verify(exactly = 1) { userAccountService.addHeadphonesToUser(1L, headphonesDto) }
             assertEquals(headphonesDto, response)
         }
 
@@ -162,7 +162,7 @@ internal class UserDetailControllerTest {
             val response = userDetailController.addHeadphonesToCurrentUser(headphonesDto).body?.data as HeadphonesDto
 
             // THEN
-            verify { userAccountService.addHeadphonesToCurrentUser(headphonesDto) }
+            verify(exactly = 1) { userAccountService.addHeadphonesToCurrentUser(headphonesDto) }
             assertEquals(headphonesDto, response)
         }
 

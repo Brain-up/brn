@@ -15,11 +15,11 @@ import kotlin.test.assertEquals
 @ExtendWith(MockKExtension::class)
 internal class GroupControllerTest {
 
-    @MockK
-    lateinit var exerciseGroupsService: ExerciseGroupsService
-
     @InjectMockKs
     lateinit var groupController: GroupController
+
+    @MockK
+    lateinit var exerciseGroupsService: ExerciseGroupsService
 
     @Test
     fun `should get all groups`() {
@@ -34,7 +34,7 @@ internal class GroupControllerTest {
             groupController.getGroups("").body?.data as List<ExerciseGroupDto>
 
         // THEN
-        verify { exerciseGroupsService.findByLocale("") }
+        verify(exactly = 1) { exerciseGroupsService.findByLocale("") }
         assertTrue(actualResultData.contains(group))
     }
 
@@ -49,7 +49,7 @@ internal class GroupControllerTest {
         val actualResultData: ExerciseGroupDto = groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
 
         // THEN
-        verify { exerciseGroupsService.findGroupDtoById(groupId) }
+        verify(exactly = 1) { exerciseGroupsService.findGroupDtoById(groupId) }
         assertEquals(actualResultData, group)
     }
 }

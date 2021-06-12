@@ -40,7 +40,7 @@ internal class StudyHistoryControllerTest {
         val result = studyHistoryController.save(dto)
 
         // THEN
-        verify { studyHistoryService.save(dto) }
+        verify(exactly = 1) { studyHistoryService.save(dto) }
         assertEquals(HttpStatus.OK, result.statusCode)
     }
 }

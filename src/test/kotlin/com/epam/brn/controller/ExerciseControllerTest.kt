@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseControllerTest {
+
     @InjectMockKs
     lateinit var exerciseController: ExerciseController
 
@@ -35,7 +36,7 @@ internal class ExerciseControllerTest {
             exerciseController.getExercisesBySubGroup(subGroupId).body?.data as List<ExerciseDto>
 
         // THEN
-        verify { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) }
+        verify(exactly = 1) { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) }
         assertTrue(actualResultData.contains(exercise))
     }
 
@@ -51,7 +52,7 @@ internal class ExerciseControllerTest {
         val actualResultData: ExerciseDto = exerciseController.getExercisesByID(exerciseID).body?.data as ExerciseDto
 
         // THEN
-        verify { exerciseService.findExerciseById(exerciseID) }
+        verify(exactly = 1) { exerciseService.findExerciseById(exerciseID) }
         assertEquals(actualResultData, exercise)
     }
 }

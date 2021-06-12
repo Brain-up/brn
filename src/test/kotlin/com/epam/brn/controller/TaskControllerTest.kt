@@ -46,7 +46,7 @@ class TaskControllerTest {
             val actualResult: WordsSeriesTaskDto = taskController.getTaskById(taskId).body?.data as WordsSeriesTaskDto
 
             // THEN
-            verify { taskService.getTaskById(taskId) }
+            verify(exactly = 1) { taskService.getTaskById(taskId) }
             assertThat(actualResult).isEqualTo(task)
         }
 
@@ -74,7 +74,7 @@ class TaskControllerTest {
                 taskController.getTasksByExerciseId(exerciseId).body?.data as List<WordsSeriesTaskDto>
 
             // THEN
-            verify { taskService.getTasksByExerciseId(exerciseId) }
+            verify(exactly = 1) { taskService.getTasksByExerciseId(exerciseId) }
             assertThat(actualResult)
                 .hasSize(INTEGER_TWO)
                 .containsExactly(taskFirst, taskSecond)
