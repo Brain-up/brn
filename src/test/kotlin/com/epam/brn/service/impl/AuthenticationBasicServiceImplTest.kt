@@ -47,7 +47,7 @@ internal class AuthenticationBasicServiceImplTest {
         val actualResult = authenticationBasicServiceImpl.login(loginDto)
 
         // THEN
-        verify { authenticationManager.authenticate(any()) }
+        verify(exactly = 1) { authenticationManager.authenticate(any()) }
         assertEquals(basicHeader, actualResult)
     }
 
@@ -82,8 +82,8 @@ internal class AuthenticationBasicServiceImplTest {
         val actualResult = authenticationBasicServiceImpl.registration(userAccountDto)
 
         // THEN
-        verify { userAccountService.addUser(userAccountDto) }
-        verify { authenticationManager.authenticate(any()) }
+        verify(exactly = 1) { userAccountService.addUser(userAccountDto) }
+        verify(exactly = 1) { authenticationManager.authenticate(any()) }
         assertEquals(basicHeader, actualResult)
     }
 
