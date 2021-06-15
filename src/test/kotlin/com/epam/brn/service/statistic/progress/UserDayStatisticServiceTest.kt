@@ -7,15 +7,14 @@ import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserDayStatisticService
-import com.nhaarman.mockito_kotlin.any
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
@@ -25,22 +24,22 @@ import kotlin.test.assertTrue
  * @author Nikolai Lazarev
  */
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class UserDayStatisticServiceTest {
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var userDayStatisticService: UserDayStatisticService
 
-    @Mock
+    @MockK
     private lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
+    @MockK
     private lateinit var userAccountService: UserAccountService
 
-    @Mock
+    @MockK
     private lateinit var userAccount: UserAccountDto
 
-    @Mock
+    @MockK
     private lateinit var studyHistory: StudyHistory
 
     private val userAccountId = 1L
@@ -57,18 +56,17 @@ internal class UserDayStatisticServiceTest {
 
     @BeforeEach
     fun init() {
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount)
-        `when`(userAccount.id).thenReturn(userAccountId)
+        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+        every { userAccount.id } returns userAccountId
     }
 
     @Test
     fun `getStatisticForPeriod should return statistic for a day`() {
         // GIVEN
-        `when`(studyHistory.startTime).thenReturn(studyHistoryDate)
-        `when`(studyHistory.executionSeconds).thenReturn(exercisingSeconds)
-        `when`(studyHistoryRepository.getHistories(anyLong(), any(), any())).thenReturn(
-            listOf(studyHistory)
-        )
+        every { studyHistory.startTime } returns studyHistoryDate
+        every { studyHistory.executionSeconds } returns exercisingSeconds
+        every { studyHistoryRepository.getHistories(any(), any(), any()) } returns listOf(studyHistory)
+
         val expectedStatistic = DayStudyStatistic(
             date = studyHistoryDate.toLocalDate(),
             exercisingTimeSeconds = exercisingSeconds,
@@ -85,7 +83,7 @@ internal class UserDayStatisticServiceTest {
     @Test
     fun `getStatisticForPeriod should return empty list when there are not histories for the period`() {
         // GIVEN
-        `when`(studyHistoryRepository.getHistories(anyLong(), any(), any())).thenReturn(emptyList())
+        every { studyHistoryRepository.getHistories(any(), any(), any()) } returns emptyList()
 
         // WHEN
         val statisticForPeriod = userDayStatisticService.getStatisticForPeriod(from, to)
