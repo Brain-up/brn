@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -67,5 +68,6 @@ internal class AudiometryControllerTest {
         // THEN
         assertEquals(HttpStatus.SC_OK, audiometry.statusCode.value())
         assertEquals(audiometryDto, audiometry.body!!.data)
+        verify(exactly = 1) { audiometryController.getAudiometry(audiometryId) }
     }
 }
