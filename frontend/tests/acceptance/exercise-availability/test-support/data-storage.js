@@ -79,24 +79,31 @@ export function getTestData() {
 
   const subgroups = [
     {
-      seriesId:1,
-      id:1,
-      level:1,
-      name:"Семья",
-      pictureUrl:"pictures/theme/family.svg",
-      description:"Слова про семью",
-      exercises: [1, 2, 3, 4]
+      seriesId: 1,
+      id: 1,
+      level: 1,
+      name: 'Семья',
+      pictureUrl: 'pictures/theme/family.svg',
+      description: 'Слова про семью',
+      exercises: [1, 2, 3, 4],
     },
     {
-      seriesId:1,
-      id:2,
-      level:2,
-      name:"Любимый дом",
-      pictureUrl:"pictures/theme/home.svg",
-      description:"Слова про дом",
-      exercises:[]
-    }
+      seriesId: 1,
+      id: 2,
+      level: 2,
+      name: 'Любимый дом',
+      pictureUrl: 'pictures/theme/home.svg',
+      description: 'Слова про дом',
+      exercises: [],
+    },
   ];
 
-  return { tasks, subgroups, exercises, series, groups, availableExercises: ['1','3'] };
+  return {
+    tasks,
+    subgroups,
+    exercises,
+    series,
+    groups,
+    availableExercises: ['1', '3'],
+  };
 }

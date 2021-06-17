@@ -5,7 +5,7 @@ export default function shuffleArray(a, complexity = 1) {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   if (complexity > 1) {
-    return shuffleArray(shuffled, complexity-1);
+    return shuffleArray(shuffled, complexity - 1);
   }
   return shuffled;
 }

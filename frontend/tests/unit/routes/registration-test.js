@@ -4,10 +4,10 @@ import { setupApplicationTest } from 'ember-qunit';
 import { invalidateSession } from 'ember-simple-auth/test-support';
 import { click } from '@ember/test-helpers';
 
-module('Acceptance | app test', function(hooks) {
+module('Acceptance | app test', function (hooks) {
   setupApplicationTest(hooks);
 
-  test('/Registration redirects to index if user is alread logged in', async function(assert) {
+  test('/Registration redirects to index if user is alread logged in', async function (assert) {
     await visit('/login');
 
     assert.equal(currentURL(), '/login');
@@ -19,7 +19,7 @@ module('Acceptance | app test', function(hooks) {
     assert.equal(currentURL(), '/rigistration');
   });
 
-  test('/Registration protected redirects to /registration if user is not logged in', async function(assert) {
+  test('/Registration protected redirects to /registration if user is not logged in', async function (assert) {
     await visit('/login');
 
     await click('[data-test-registration-form]');

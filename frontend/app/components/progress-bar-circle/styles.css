@@ -1,6 +1,5 @@
 /*! purgecss start ignore */
 
-
 .circular-chart {
   height: 66px;
   width: 66px;
@@ -30,7 +29,7 @@
 }
 
 .percentage {
-  fill: #0D47A1;
+  fill: #0d47a1;
   font-size: 8px;
   font-weight: bold;
   text-anchor: middle;

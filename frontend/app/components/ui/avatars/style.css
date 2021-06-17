@@ -1,6 +1,5 @@
 /*! purgecss start ignore */
 
-
 .activeTab {
   position: relative;
 }
@@ -11,8 +10,8 @@
 }
 
 .activeTab:before {
-  content: "";
-  background: linear-gradient(92.58deg, #4691FD 49.26%, #D5B0FF 85.77%);
+  content: '';
+  background: linear-gradient(92.58deg, #4691fd 49.26%, #d5b0ff 85.77%);
   border-radius: 100%;
   position: absolute;
   top: -4px;
@@ -21,7 +20,7 @@
   bottom: -4px;
 }
 .activeTab:after {
-  content: "";
+  content: '';
   position: absolute;
   border-radius: 100%;
   background: #fff;
@@ -34,4 +33,4 @@
   max-height: calc(100vh - 300px);
 }
 
- /*! purgecss end ignore */
+/*! purgecss end ignore */

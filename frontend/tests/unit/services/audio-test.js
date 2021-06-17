@@ -1,10 +1,10 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Service | audio', function(hooks) {
+module('Unit | Service | audio', function (hooks) {
   setupTest(hooks);
 
-  test('registers objects', function(assert) {
+  test('registers objects', function (assert) {
     const testObject = {
       a: 1,
       testFunc() {

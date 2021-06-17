@@ -17,10 +17,14 @@ a.active {
 }
 
 .gradient-background {
-  background-image: linear-gradient(92.58deg, #428DFC 49.26%, rgba(103, 66, 252, 0.72) 85.77%);
+  background-image: linear-gradient(
+    92.58deg,
+    #428dfc 49.26%,
+    rgba(103, 66, 252, 0.72) 85.77%
+  );
 }
 
 .border-gradient:hover {
-  background:linear-gradient(45deg, #428DFC, #9f7aea) border-box; /*3*/
+  background: linear-gradient(45deg, #428dfc, #9f7aea) border-box; /*3*/
 }
 /*! purgecss end ignore */

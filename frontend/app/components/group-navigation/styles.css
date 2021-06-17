@@ -23,8 +23,8 @@
   grid-auto-flow: column;
   overflow-x: scroll;
   scroll-snap-type: x proximity;
-  padding-bottom: calc(.75 * 20px);
-  margin-bottom: calc(-.25 * 20px);
+  padding-bottom: calc(0.75 * 20px);
+  margin-bottom: calc(-0.25 * 20px);
 }
 
 .hs:before,
@@ -33,12 +33,10 @@
   width: 10px;
 }
 
-
 ul {
   list-style: none;
   padding: 0;
 }
-
 
 .hs > li,
 .item {
@@ -50,7 +48,6 @@ ul {
   align-items: center;
   border-radius: 8px;
 }
-
 
 .hs > li:first-child {
   padding-left: 0;
@@ -65,6 +62,5 @@ ul {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
 
 /*! purgecss end ignore */

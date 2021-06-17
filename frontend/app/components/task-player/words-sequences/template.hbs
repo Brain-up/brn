@@ -1,43 +1,39 @@
 <div
-  class="{{style-namespace "task-player/words-sequences"}}
-
-     flex-1 flex flex-col"
+  class="{{style-namespace "task-player/words-sequences"}} flex-1 flex flex-col"
   ...attributes
   {{did-insert this.onInsert}}
 >
-  {{yield (hash tasks=this.tasksCopy)   to="header"}}
+  {{yield (hash tasks=this.tasksCopy) to="header"}}
   {{#if this.tasksCopy.length}}
 
     <Ui::TaskContent>
-    <div class="flex justify-center flex-grow mt-4">
-      {{#each @task.selectedItemsOrder as |type|}}
-        <div
-          class="column flex-1 flex-col type-column
-
-
-            {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
-        >
-          {{#each (get @task.answerOptions type) as |answerOption|}}
-            <TextImageButton
-              @checked={{this.answerCompleted}}
-              @isCorrect={{this.isCorrect}}
-              @disabled={{@disableAnswers}}
-              @isSelected={{or
-                (eq @activeWord answerOption.word)
-                (eq (get this.currentAnswerObject type) answerOption.word)
-              }}
-              @clickAction={{if
-                (eq @mode "interact")
-                (fn @onPlayText answerOption.word)
-                (fn this.checkMaybe answerOption)
-              }}
-              @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
-              @word={{answerOption.word}}
-            />
-          {{/each}}
-        </div>
-      {{/each}}
-    </div>
+      <div class="flex justify-center flex-grow mt-4">
+        {{#each @task.selectedItemsOrder as |type|}}
+          <div
+            class="column flex-1 flex-col type-column
+              {{if (not (eq @task.selectedItemsOrder.lastObject type)) "mr-2"}}"
+          >
+            {{#each (get @task.answerOptions type) as |answerOption|}}
+              <TextImageButton
+                @checked={{this.answerCompleted}}
+                @isCorrect={{this.isCorrect}}
+                @disabled={{@disableAnswers}}
+                @isSelected={{or
+                  (eq @activeWord answerOption.word)
+                  (eq (get this.currentAnswerObject type) answerOption.word)
+                }}
+                @clickAction={{if
+                  (eq @mode "interact")
+                  (fn @onPlayText answerOption.word)
+                  (fn this.checkMaybe answerOption)
+                }}
+                @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
+                @word={{answerOption.word}}
+              />
+            {{/each}}
+          </div>
+        {{/each}}
+      </div>
     </Ui::TaskContent>
 
     {{yield (hash audioFileUrl=this.audioFiles) to="footer"}}

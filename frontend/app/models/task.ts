@@ -20,13 +20,19 @@ export default class Task extends CompletionDependent {
 
   @attr() answerOptions!: any;
   // @ts-ignore
-  @attr('', { defaultValue() { return [];}}) normalizedAnswerOptions!: any;
+  @attr('', {
+    defaultValue() {
+      return [];
+    },
+  })
+  normalizedAnswerOptions!: any;
 
   @belongsTo('exercise', {
     async: false,
     inverse: 'tasks',
     polymorphic: true,
-  }) exercise!: AsyncBelongsTo<Exercise>;
+  })
+  exercise!: AsyncBelongsTo<Exercise>;
 
   @tracked
   _completedInCurrentCycle = false;
@@ -50,7 +56,7 @@ export default class Task extends CompletionDependent {
       this.tasksManager.isCompletedInCurrentCycle(this)
     );
   }
-  set completedInCurrentCycle (value) {
+  set completedInCurrentCycle(value) {
     this._completedInCurrentCycle = value;
   }
   get nextTask() {
@@ -62,17 +68,15 @@ export default class Task extends CompletionDependent {
     return isEmpty(this.nextTask);
   }
 
-
   @action
   savePassed() {
     return this.tasksManager.saveAsCompleted(this);
   }
 }
 
-
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {
   export default interface ModelRegistry {
-    'task': Task;
+    task: Task;
   }
 }

@@ -3,15 +3,15 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | task-player/phrase', function(hooks) {
+module('Integration | Component | task-player/phrase', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
     this.task = {
-      tasksToSolve: []
-    }
+      tasksToSolve: [],
+    };
 
     await render(hbs`<TaskPlayer::Phrase @task={{this.task}} />`);
 

@@ -1,8 +1,13 @@
 /*! purgecss start ignore */
 
 .timer-wrapper {
-  background: linear-gradient(90deg, rgba(161, 121, 242, 0.15) 0%, rgba(121, 121, 242, 0.15) 100%), #FFFFFF;
+  background: linear-gradient(
+      90deg,
+      rgba(161, 121, 242, 0.15) 0%,
+      rgba(121, 121, 242, 0.15) 100%
+    ),
+    #ffffff;
   border-radius: 16px;
- }
+}
 
 /*! purgecss end ignore */

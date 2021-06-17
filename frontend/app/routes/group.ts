@@ -19,7 +19,7 @@ export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
     await this.store.query('series', { groupId: group.id });
   }
 
-  redirect(group: GroupModel, { to } : Transition) {
+  redirect(group: GroupModel, { to }: Transition) {
     if (!group.sortedSeries?.length) {
       this.transitionTo('groups');
     }

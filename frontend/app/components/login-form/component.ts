@@ -20,7 +20,7 @@ export default class LoginFormComponent extends Component {
   @service('intl') intl!: IntlService;
 
   @tracked login: string | undefined = undefined;
-  @tracked password: string | undefined  = undefined;
+  @tracked password: string | undefined = undefined;
 
   @tracked errorMessage = '';
 
@@ -57,7 +57,7 @@ export default class LoginFormComponent extends Component {
     return (value || '').trim();
   }
 
-  @(task(function*(this: LoginFormComponent) {
+  @(task(function* (this: LoginFormComponent) {
     let { login, password } = this;
     try {
       yield this.session.authenticate('authenticator:oauth2', login, password);

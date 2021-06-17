@@ -27,20 +27,22 @@ export default class SingleSimpleWordsComponent extends Component {
     const completedOrders = this.tasksCopy
       .filterBy('completedInCurrentCycle', true)
       .mapBy('order');
-    const tasksCopy = deepCopy(this.task.tasksToSolve).map((copy: { order: string}) => {
-      const completedInCurrentCycle = completedOrders.includes(copy.order);
-      const copyEquivalent: any = this.tasksCopy.findBy('order', copy.order);
-      return new TaskItem({
-        ...copy,
-        completedInCurrentCycle,
-        nextAttempt: copyEquivalent && !!copyEquivalent.nextAttempt,
-        canInteract: true,
-      });
-    });
+    const tasksCopy = deepCopy(this.task.tasksToSolve).map(
+      (copy: { order: string }) => {
+        const completedInCurrentCycle = completedOrders.includes(copy.order);
+        const copyEquivalent: any = this.tasksCopy.findBy('order', copy.order);
+        return new TaskItem({
+          ...copy,
+          completedInCurrentCycle,
+          nextAttempt: copyEquivalent && !!copyEquivalent.nextAttempt,
+          canInteract: true,
+        });
+      },
+    );
     this.tasksCopy = tasksCopy;
   }
 
-  @(task(function*(this: SingleSimpleWordsComponent, selected) {
+  @(task(function* (this: SingleSimpleWordsComponent, selected) {
     this.currentAnswer = selected;
     const isCorrect = deepEqual(
       this.currentAnswer,
@@ -57,7 +59,7 @@ export default class SingleSimpleWordsComponent extends Component {
       yield this.handleWrongAnswer();
     }
   }).drop())
-  showTaskResult!: TaskGenerator<any, any>
+  showTaskResult!: TaskGenerator<any, any>;
 
   async handleWrongAnswer() {
     this.markNextAttempt(this.firstUncompletedTask);

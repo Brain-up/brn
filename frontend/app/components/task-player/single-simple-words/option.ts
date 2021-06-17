@@ -3,10 +3,10 @@ import { action } from '@ember/object';
 import { MODES } from 'brn/utils/task-modes';
 
 interface ITaskPlayerSingleWordsOptionComponentArguments {
-  mode: keyof (typeof MODES),
-  disableAnswers: boolean,
-  isCorrect: boolean,
-  activeWord: string
+  mode: keyof typeof MODES;
+  disableAnswers: boolean;
+  isCorrect: boolean;
+  activeWord: string;
 }
 export default class TaskPlayerSingleWordsOptionComponent extends Component<ITaskPlayerSingleWordsOptionComponentArguments> {
   isClicked = false;
