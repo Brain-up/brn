@@ -19,14 +19,14 @@ function getEmptyTemplate(selectedItemsOrder = []): any {
 }
 
 interface IWordsSequencesComponentArgs {
-  task: any,
-  mode: keyof (typeof MODES),
-  disableAnswers: boolean,
-  activeWord: string,
-  disableAudioPlayer: boolean,
-  onPlayText(): void,
-  onRightAnswer(): void,
-  onWrongAnswer(params?: { skipRetry: true }): void
+  task: any;
+  mode: keyof typeof MODES;
+  disableAnswers: boolean;
+  activeWord: string;
+  disableAudioPlayer: boolean;
+  onPlayText(): void;
+  onRightAnswer(): void;
+  onWrongAnswer(params?: { skipRetry: true }): void;
 }
 
 export default class WordsSequencesComponent extends Component<IWordsSequencesComponentArgs> {
@@ -37,7 +37,7 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
   @service audio!: AudioService;
   @service stats!: StatsService;
   @tracked tasksCopy = [];
-  @tracked currentAnswerObject: null | Record<string,string> = null;
+  @tracked currentAnswerObject: null | Record<string, string> = null;
   @tracked isCorrect = false;
   get task() {
     return this.args.task;
@@ -64,7 +64,9 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
       return [];
     }
 
-    const text = this.firstUncompletedTask.answer.map(({ word }) => word).join(' ');
+    const text = this.firstUncompletedTask.answer
+      .map(({ word }) => word)
+      .join(' ');
     return [this.audio.audioUrlForText(text)];
   }
   get answerCompleted() {
@@ -98,20 +100,28 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     const completedOrders = this.tasksCopy
       .filterBy('completedInCurrentCycle', true)
       .mapBy('order');
-    const tasksCopy = deepCopy(this.task.tasksToSolve).map((copy: { order: number }) => {
-      const completedInCurrentCycle = completedOrders.includes(copy.order);
-      const copyEquivalent = this.tasksCopy.findBy('order', copy.order) as any;
-      return new TaskItem({
-        ...copy,
-        completedInCurrentCycle,
-        nextAttempt: copyEquivalent && !!copyEquivalent.nextAttempt,
-        canInteract: true,
-      });
-    });
+    const tasksCopy = deepCopy(this.task.tasksToSolve).map(
+      (copy: { order: number }) => {
+        const completedInCurrentCycle = completedOrders.includes(copy.order);
+        const copyEquivalent = this.tasksCopy.findBy(
+          'order',
+          copy.order,
+        ) as any;
+        return new TaskItem({
+          ...copy,
+          completedInCurrentCycle,
+          nextAttempt: copyEquivalent && !!copyEquivalent.nextAttempt,
+          canInteract: true,
+        });
+      },
+    );
     this.tasksCopy = tasksCopy;
   }
 
-  @(task(function*(this: WordsSequencesComponent, selected: { wordType: string, word: string }) {
+  @(task(function* (
+    this: WordsSequencesComponent,
+    selected: { wordType: string; word: string },
+  ) {
     this.currentAnswerObject = {
       ...(this.currentAnswerObject || {}),
       [selected.wordType]: selected.word,
@@ -119,7 +129,8 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     if (this.answerCompleted) {
       const isCorrect = deepEqual(
         this.task.selectedItemsOrder.map(
-          (orderName: string) => (this.currentAnswerObject as any)[orderName] as string,
+          (orderName: string) =>
+            (this.currentAnswerObject as any)[orderName] as string,
         ),
         this.firstUncompletedTask.answer.mapBy('word'),
       );
@@ -135,7 +146,7 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
       }
     }
   }).drop())
-  showTaskResult!: TaskGenerator<any, any>
+  showTaskResult!: TaskGenerator<any, any>;
 
   @action
   async checkMaybe(selectedData: any) {

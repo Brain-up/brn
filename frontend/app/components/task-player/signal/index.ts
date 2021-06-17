@@ -9,20 +9,19 @@ import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
 
 interface ISignalComponentArgs {
-  task: TaskSignalModel,
-  mode: keyof (typeof MODES),
-  disableAnswers: boolean,
-  activeWord: string,
-  disableAudioPlayer: boolean,
-  onPlayText(): void,
-  onRightAnswer(config?: any): void,
-  onWrongAnswer(config?: any): void
+  task: TaskSignalModel;
+  mode: keyof typeof MODES;
+  disableAnswers: boolean;
+  activeWord: string;
+  disableAudioPlayer: boolean;
+  onPlayText(): void;
+  onRightAnswer(config?: any): void;
+  onWrongAnswer(config?: any): void;
 }
 
-
 export default class TaskPlayerSignalComponent extends Component<ISignalComponentArgs> {
-  @service('stats') stats !: StatsService;
-  @service('audio') audio !: AudioService;
+  @service('stats') stats!: StatsService;
+  @service('audio') audio!: AudioService;
   get tasksCopy() {
     return this.task?.get('parent').get('tasks').toArray() || [];
   }
@@ -44,7 +43,7 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
     // }
   }
 
-  @(task(function*(this: TaskPlayerSignalComponent, isCorrect: boolean) {
+  @(task(function* (this: TaskPlayerSignalComponent, isCorrect: boolean) {
     if (isCorrect) {
       this.stats.addEvent(StatEvents.RightAnswer);
       yield this.handleCorrectAnswer();
@@ -53,14 +52,14 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
       yield this.handleWrongAnswer();
     }
   }).drop())
-  showTaskResult!: TaskGenerator<any, any>
+  showTaskResult!: TaskGenerator<any, any>;
 
   async handleCorrectAnswer() {
     // await customTimeout(1000);
     // this.startNewTask();
     // if (!this.firstUncompletedTask) {
-      // await customTimeout(3000);
-      this.onRightAnswer();
+    // await customTimeout(3000);
+    this.onRightAnswer();
     // }
   }
 
@@ -91,7 +90,5 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
     return this.task?.signal;
   }
 
-  @action onInsert() {
-
-  }
+  @action onInsert() {}
 }

@@ -1,52 +1,58 @@
 <SlotTo @selector="#exercise-timer-slot">
   <Timer @hideControls={{this.justEnteredTask}} />
 </SlotTo>
-<div
-  class="{{style-namespace "task-player"}}
-     flex flex-1"
-  ...attributes
->
+<div class="{{style-namespace "task-player"}} flex flex-1" ...attributes>
 
-  {{#let (component
-    this.componentType
-    onRightAnswer=this.onRightAnswer
-    onWrongAnswer=this.onWrongAnswer
-    onShuffled=this.onShuffled
-    task=@task
-    disableAnswers=this.disableAnswers
-    disableAudioPlayer=this.disableAudioPlayer
-    activeWord=this.activeWord
-    onPlayText=this.playText
-    onModeChange=this.onModeChange
-    justEnteredTask=this.justEnteredTask
-    mode=this.mode) as |Player|}}
+  {{#let
+    (component
+      this.componentType
+      onRightAnswer=this.onRightAnswer
+      onWrongAnswer=this.onWrongAnswer
+      onShuffled=this.onShuffled
+      task=@task
+      disableAnswers=this.disableAnswers
+      disableAudioPlayer=this.disableAudioPlayer
+      activeWord=this.activeWord
+      onPlayText=this.playText
+      onModeChange=this.onModeChange
+      justEnteredTask=this.justEnteredTask
+      mode=this.mode
+    )
+    as |Player|
+  }}
 
-  <Player>
-    <:header as |context|>
-      <SlotTo @selector="#progress-slot">
-        <ProgressSausage
-            style={{html-safe (concat "visibility:" (if this.isProgressBarVisible 'visible' 'hidden') ";")}}
+    <Player>
+      <:header as |context|>
+        <SlotTo @selector="#progress-slot">
+          <ProgressSausage
+            style={{html-safe
+              (concat
+                "visibility:"
+                (if this.isProgressBarVisible "visible" "hidden")
+                ";"
+              )
+            }}
             @progressItems={{context.tasks}}
           />
-      </SlotTo>
-    </:header>
+        </SlotTo>
+      </:header>
 
-    <:footer as |content|>
-      <Ui::BottomContainer>
-        <ExerciseSteps
-          @visible={{not this.justEnteredTask}}
-          @activeStep={{this.mode}}
-          @onClick={{this.onModeChange}}
-          class="flex mb-8 ml-2 mr-2"
-        />
-        <AudioPlayer
-          @audioFileUrl={{content.audioFileUrl}}
-          @disabled={{this.disableAudioPlayer}}
-          @transparent={{not-eq this.mode "task"}}
-        />
-      </Ui::BottomContainer>
-    </:footer>
-  </Player>
+      <:footer as |content|>
+        <Ui::BottomContainer>
+          <ExerciseSteps
+            @visible={{not this.justEnteredTask}}
+            @activeStep={{this.mode}}
+            @onClick={{this.onModeChange}}
+            class="flex mb-8 ml-2 mr-2"
+          />
+          <AudioPlayer
+            @audioFileUrl={{content.audioFileUrl}}
+            @disabled={{this.disableAudioPlayer}}
+            @transparent={{not-eq this.mode "task"}}
+          />
+        </Ui::BottomContainer>
+      </:footer>
+    </Player>
 
   {{/let}}
 

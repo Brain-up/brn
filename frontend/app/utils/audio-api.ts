@@ -22,7 +22,11 @@ export const TIMINGS = {
   },
 };
 
-export function createNoizeBuffer(context: BaseAudioContext, duration: number, level: number) {
+export function createNoizeBuffer(
+  context: BaseAudioContext,
+  duration: number,
+  level: number,
+) {
   let channels = 2;
   let frameCount = context.sampleRate * duration;
   let myArrayBuffer = context.createBuffer(
@@ -52,7 +56,8 @@ export function toMilliseconds(value: number) {
 }
 
 export function createAudioContext() {
-  const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+  const AudioContext =
+    window.AudioContext || (window as any).webkitAudioContext;
   return new AudioContext();
 }
 
@@ -73,11 +78,15 @@ export function createSource(context: BaseAudioContext, buffer: AudioBuffer) {
 }
 
 export class BufferLoader {
-  context !: BaseAudioContext;
-  urlList !: string[];
-  onload !: (results: AudioBuffer[]) => void;
+  context!: BaseAudioContext;
+  urlList!: string[];
+  onload!: (results: AudioBuffer[]) => void;
   bufferList = [];
-  constructor(context: BaseAudioContext, urlList: string[], callback: (results: AudioBuffer[]) => void) {
+  constructor(
+    context: BaseAudioContext,
+    urlList: string[],
+    callback: (results: AudioBuffer[]) => void,
+  ) {
     this.context = context;
     this.urlList = urlList;
     this.onload = callback;
@@ -91,15 +100,15 @@ export class BufferLoader {
         files.map((file) => {
           return new Promise((resolve, reject) => {
             this.context.decodeAudioData(file as ArrayBuffer, resolve, reject);
-          }) as Promise<AudioBuffer>
+          }) as Promise<AudioBuffer>;
         }),
       );
       return this.onload(results);
-    } catch(e) {
+    } catch (e) {
       console.error(e, files, this.urlList);
       return [];
     }
-  };
+  }
 }
 
 const AudioCache = new Map();
@@ -112,24 +121,23 @@ function arrayBufferRequest(url: string) {
     const request = new XMLHttpRequest();
     request.open('GET', url, true);
     request.responseType = 'arraybuffer';
-    request.onload = function() {
+    request.onload = function () {
       AudioCache.set(url, request.response.slice());
       resolve(request.response);
     };
-    request.onerror = function() {
+    request.onerror = function () {
       reject(new Error('BufferLoader: XHR error'));
     };
     request.send();
   });
 }
 
-export function loadAudioFiles(context: BaseAudioContext, files: string[]): Promise<AudioBuffer[]> {
+export function loadAudioFiles(
+  context: BaseAudioContext,
+  files: string[],
+): Promise<AudioBuffer[]> {
   return new Promise((resolve) => {
-    const bufferLoader = new BufferLoader(
-      context,
-      [...files],
-      resolve,
-    );
+    const bufferLoader = new BufferLoader(context, [...files], resolve);
     bufferLoader.load();
   });
 }

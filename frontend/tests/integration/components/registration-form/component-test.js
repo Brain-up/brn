@@ -9,10 +9,10 @@ function getDate(num) {
   return date.getFullYear() + num;
 }
 
-module('Integration | Component | registration-form', function(hooks) {
+module('Integration | Component | registration-form', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
@@ -24,7 +24,7 @@ module('Integration | Component | registration-form', function(hooks) {
     assert.dom('[data-test-form-warning]').doesNotExist();
   });
 
-  test('it send register request if all fields filled', async function(assert) {
+  test('it send register request if all fields filled', async function (assert) {
     assert.expect(4);
     class Network extends Service {
       createUser(fields) {
@@ -54,7 +54,7 @@ module('Integration | Component | registration-form', function(hooks) {
     await click('[data-test-submit-form]');
   });
 
-  test('it able to handle registration error', async function(assert) {
+  test('it able to handle registration error', async function (assert) {
     assert.expect(3);
     class Network extends Service {
       createUser(fields) {
@@ -77,13 +77,13 @@ module('Integration | Component | registration-form', function(hooks) {
     await fillIn('[name="password"]', 'd');
     await fillIn('[name="repeatPassword"]', 'd');
     await fillIn('[name="birthday"]', '1991');
-    await click('[name="agreement"]')
+    await click('[name="agreement"]');
     await click('[id="male"]');
     await click('[data-test-submit-form]');
     assert.dom('[data-test-form-error]').hasText('foo');
   });
 
-  test('show message when entering date below acceptable', async function(assert) {
+  test('show message when entering date below acceptable', async function (assert) {
     await render(hbs`<RegistrationForm />`);
 
     await fillIn('input[name="birthday"]', '1911');
@@ -91,7 +91,7 @@ module('Integration | Component | registration-form', function(hooks) {
     assert.dom('[data-test-warning-message="birthday"]').exists();
   });
 
-  test('show message when entering date higher than allowed', async function(assert) {
+  test('show message when entering date higher than allowed', async function (assert) {
     await render(hbs`<RegistrationForm />`);
 
     await fillIn('input[name="birthday"]', getDate(1));
@@ -99,7 +99,7 @@ module('Integration | Component | registration-form', function(hooks) {
     assert.dom('[data-test-warning-message="birthday"]').exists();
   });
 
-  test('do not show message when entering valid date', async function(assert) {
+  test('do not show message when entering valid date', async function (assert) {
     await render(hbs`<RegistrationForm />`);
 
     await fillIn('input[name="birthday"]', getDate(0));

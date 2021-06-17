@@ -5,10 +5,10 @@ import hbs from 'htmlbars-inline-precompile';
 import data from './test-support/data-storage';
 import pageObject from './test-support/page-object';
 
-module('Integration | Component | task-player/sentence', function(hooks) {
+module('Integration | Component | task-player/sentence', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(async function() {
+  hooks.beforeEach(async function () {
     const store = this.owner.lookup('service:store');
     this.set('model', store.createRecord('task/sentence'));
 
@@ -21,7 +21,7 @@ module('Integration | Component | task-player/sentence', function(hooks) {
     />`);
   });
 
-  test('it shows all the words for scentence', async function(assert) {
+  test('it shows all the words for scentence', async function (assert) {
     const pageWords = pageObject.buttons.mapBy('word');
 
     Object.values(data.task.answerOptions)

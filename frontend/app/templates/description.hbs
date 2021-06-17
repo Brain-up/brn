@@ -72,7 +72,8 @@
       <a
         href={{t "description.contribute.bug_tracking.link"}}
         target="_blank"
-        rel="noopener noreferrer" class="hover:no-underline text-blue-light underline"
+        rel="noopener noreferrer"
+        class="hover:no-underline text-blue-light underline"
       >
         {{t "description.contribute.bug_tracking.title"}}
       </a>{{t "description.contribute.bug_tracking.goal"}}
@@ -82,7 +83,8 @@
       <a
         href="mailto:brainupproject@yandex.ru"
         target="_blank"
-        rel="noopener noreferrer" class="hover:no-underline text-blue-light underline"
+        rel="noopener noreferrer"
+        class="hover:no-underline text-blue-light underline"
       >
         brainupproject@yandex.ru
       </a>
@@ -95,7 +97,8 @@
   <hr class="my-10" />
 
   <section
-    class="space-y-5" role="contentinfo"
+    class="space-y-5"
+    role="contentinfo"
     aria-labelledby="usefulLinksHeader"
   >
     <h2 id="usefulLinksHeader" class="text-2xl font-semibold">
@@ -109,7 +112,8 @@
           <a
             href={{t "description.links.articles.link"}}
             target="_blank"
-            rel="noopener noreferrer" class="hover:no-underline text-blue-light underline"
+            rel="noopener noreferrer"
+            class="hover:no-underline text-blue-light underline"
           >
             {{t "description.links.articles.link_title"}}
           </a>
@@ -121,11 +125,22 @@
             {{#each (range 0 2 true) as |i|}}
               <li>
                 <a
-                  href={{t (concat "description.links.foreign_programs." i ".link")}} class="hover:no-underline text-blue-light underline" target="_blank"
-                  rel="noopener noreferrer">
-                  {{t (concat "description.links.foreign_programs." i ".title")}}
+                  href={{t
+                    (concat "description.links.foreign_programs." i ".link")
+                  }}
+                  class="hover:no-underline text-blue-light underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{t
+                    (concat "description.links.foreign_programs." i ".title")
+                  }}
                 </a>
-                {{t (concat "description.links.foreign_programs." i ".description")}}
+                {{t
+                  (concat
+                    "description.links.foreign_programs." i ".description"
+                  )
+                }}
               </li>
             {{/each}}
           </ul>
@@ -138,10 +153,16 @@
             {{#each (range 0 3 true) as |i|}}
               <li>
                 <a
-                  href={{t (concat "description.links.scientific_basis." i ".link")}} class="hover:no-underline text-blue-light underline" target="_blank"
+                  href={{t
+                    (concat "description.links.scientific_basis." i ".link")
+                  }}
+                  class="hover:no-underline text-blue-light underline"
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {{t (concat "description.links.scientific_basis." i ".title")}}
+                  {{t
+                    (concat "description.links.scientific_basis." i ".title")
+                  }}
                 </a>
               </li>
             {{/each}}
@@ -154,7 +175,8 @@
   <hr class="my-10" />
 
   <section
-    class="space-y-5" role="contentinfo"
+    class="space-y-5"
+    role="contentinfo"
     aria-labelledby="ourPeopleHeader"
   >
     <h2 id="ourPeopleHeader" class="text-2xl font-semibold">
@@ -189,10 +211,7 @@
         {{#each this.persons.doctors as |doctor|}}
           <li class="md:w-1/2 lg:w-1/3 w-full p-5 text-center">
             <div class="w-48 h-48 m-auto mb-6 overflow-hidden rounded-full">
-              <img
-                src={{doctor.img}}
-                alt={{doctor.name}}
-              />
+              <img src={{doctor.img}} alt={{doctor.name}} />
             </div>
             <h4 class="mb-2 text-base font-semibold">
               {{doctor.name}}
@@ -209,7 +228,8 @@
   <hr class="my-10" />
 
   <section
-    class="space-y-5" role="contentinfo"
+    class="space-y-5"
+    role="contentinfo"
     aria-labelledby="ourPeopleHeader"
   >
     <h2 class="text-2xl font-semibold">
@@ -219,12 +239,14 @@
     <ul class="flex flex-wrap justify-around p-6 -mx-4 bg-gray-100">
       <li class="flex items-center p-3">
         <a
-          class="block" href="https://www.epam.com"
+          class="block"
+          href="https://www.epam.com"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            class="w-32" src="/content/pages/description/epam-logo.png"
+            class="w-32"
+            src="/content/pages/description/epam-logo.png"
             alt="EPAM"
           />
         </a>
@@ -232,12 +254,14 @@
 
       <li class="flex items-center p-3">
         <a
-          class="block" href="https://selectel.ru/"
+          class="block"
+          href="https://selectel.ru/"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            class="w-40" src="/content/pages/description/selectel-logo.svg"
+            class="w-40"
+            src="/content/pages/description/selectel-logo.svg"
             alt="Selectel"
           />
         </a>
@@ -245,12 +269,14 @@
 
       <li class="flex items-center p-3">
         <a
-          class="block" href="https://www.jetbrains.com"
+          class="block"
+          href="https://www.jetbrains.com"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            class="w-16" src="/content/pages/description/jetbrains-logo.svg"
+            class="w-16"
+            src="/content/pages/description/jetbrains-logo.svg"
             alt="JetBrains"
           />
         </a>
@@ -258,12 +284,14 @@
 
       <li class="flex items-center p-3">
         <a
-          class="block" href="https://cloud.yandex.ru/"
+          class="block"
+          href="https://cloud.yandex.ru/"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            class="w-40" src="/content/pages/description/yandex-cloud-logo.svg"
+            class="w-40"
+            src="/content/pages/description/yandex-cloud-logo.svg"
             alt="YandexCloud"
           />
         </a>
@@ -271,12 +299,14 @@
 
       <li class="flex items-center p-3">
         <a
-          class="block" href="https://github.com"
+          class="block"
+          href="https://github.com"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            class="w-16" src="/content/pages/description/github-logo.svg"
+            class="w-16"
+            src="/content/pages/description/github-logo.svg"
             alt="GitHub"
           />
         </a>
@@ -297,7 +327,8 @@
     <p class="font-openSans">
       {{t "description.join_us.contact.start"}}
       <a
-        href="mailto:elena_moshnikova@epam.com" class="hover:no-underline text-blue-light underline"
+        href="mailto:elena_moshnikova@epam.com"
+        class="hover:no-underline text-blue-light underline"
       >
         elena_moshnikova@epam.com
       </a>

@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'brn',
     environment,
@@ -18,7 +18,7 @@ module.exports = function(environment) {
       },
     },
 
-    APP: {}
+    APP: {},
   };
 
   if (environment === 'development') {

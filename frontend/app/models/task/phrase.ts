@@ -3,7 +3,7 @@ import { attr } from '@ember-data/model';
 import { cached } from 'tracked-toolbox';
 import shuffleArray from 'brn/utils/shuffle-array';
 export default class TaskPhraseModel extends BaseTask {
-  exerciseType = 'phrase'
+  exerciseType = 'phrase';
   @attr() declare answerOptions;
   @cached
   get tasksToSolve() {
@@ -18,7 +18,6 @@ export default class TaskPhraseModel extends BaseTask {
     });
   }
 }
-
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {

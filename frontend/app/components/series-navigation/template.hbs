@@ -1,33 +1,42 @@
 <div class={{style-namespace "series-navigation"}} ...attributes>
   {{#each this.exerciseHeaders as |header|}}
-    <div
-      class="mx-auto mb-10"
-    >
+    <div class="mx-auto mb-10">
       <div class="max-w-none mx-auto">
         <div class="sm:rounded-lg pb-4 overflow-hidden">
           <div class="sm:px-6 hidden px-4 py-5">
             //remove hidden when "Noise filter will be implemented"
             <h3
-              data-test-series-navigation-header class="navigation-block__header text-lg font-bold leading-3"
+              data-test-series-navigation-header
+              class="navigation-block__header text-lg font-bold leading-3"
             >
               {{header}}
             </h3>
           </div>
-          {{#let (chunk
+          {{#let
+            (chunk
               6 (sort-by "level" (filter-by "name" header this.sortedExercises))
-            ) as |slices|}}
+            )
+            as |slices|
+          }}
 
             {{#each slices as |exercises|}}
 
               <ul
-                data-test-exercises-name-group class="flex flex-row ml-6 mr-6" >
+                data-test-exercises-name-group
+                class="flex flex-row ml-6 mr-6"
+              >
                 {{#each exercises as |exercise|}}
-                  {{#let (contains exercise.id (or @available (array))) as |isAvailable|}}
+                  {{#let
+                    (contains exercise.id (or @available (array)))
+                    as |isAvailable|
+                  }}
                     <li class="flex-6">
                       <Ui::ExerciseButton
                         @exercise={{exercise}}
                         @title={{exercise.level}}
-                        @isAvailable={{isAvailable}} class="exercise-block__level flex mt-2 ml-2 mr-2" data-test-series-navigation-list-link
+                        @isAvailable={{isAvailable}}
+                        class="exercise-block__level flex mt-2 ml-2 mr-2"
+                        data-test-series-navigation-list-link
                         data-test-exercise-level={{exercise.level}}
                         data-test-exercise-name={{exercise.name}}
                       />

@@ -9,14 +9,23 @@
     <Ui::Stats::Icon class="flex items-center justify-around w-full mb-1" />
     <div class="flex items-center justify-around w-full mb-6">
       <ul class="leading-10 text-center">
-        <li>{{t "statistics.time_board"}}: {{or this.timeStats.min 0}} {{t "statistics.time_min"}}, {{or this.timeStats.sec 0}} {{t "statistics.time_sec"}}</li>
+        <li>{{t "statistics.time_board"}}:
+          {{or this.timeStats.min 0}}
+          {{t "statistics.time_min"}},
+          {{or this.timeStats.sec 0}}
+          {{t "statistics.time_sec"}}</li>
         <li>{{t "statistics.tasks"}}: {{or this.stats.rightAnswersCount 0}}</li>
         <li>{{t "statistics.repeats"}}: {{or this.stats.repeatsCount 0}}</li>
-        <li>{{t "statistics.wrong_answers"}}: {{or this.stats.wrongAnswersCount}}</li>
+        <li>{{t "statistics.wrong_answers"}}:
+          {{or this.stats.wrongAnswersCount}}</li>
       </ul>
     </div>
     <div class="flex items-center justify-center">
-      <Ui::Button data-test-continue @title={{t "statistics.continue"}} {{on "click" @onComplete}} />
+      <Ui::Button
+        data-test-continue
+        @title={{t "statistics.continue"}}
+        {{on "click" @onComplete}}
+      />
     </div>
   </div>
 </div>

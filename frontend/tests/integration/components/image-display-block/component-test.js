@@ -4,10 +4,10 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import pageObject from './test-support/page-object';
 
-module('Integration | Component | image-display-block', function(hooks) {
+module('Integration | Component | image-display-block', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     this.set('fileUrl', '/pictures/вить.jpg');
     this.set('label', 'вить');
 

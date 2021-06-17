@@ -50,7 +50,10 @@ export default class UserDataService extends Service {
   }
 
   shouldUpdateRoute() {
-    return this.router.currentRouteName !== 'description' && this.router.currentRouteName !== 'index';
+    return (
+      this.router.currentRouteName !== 'description' &&
+      this.router.currentRouteName !== 'index'
+    );
   }
 
   @action setLocale(localeName: string) {

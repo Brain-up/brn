@@ -44,27 +44,27 @@ const TASK_DATA = {
   },
 };
 
-module('Unit | Model | task/words-sequences', function(hooks) {
+module('Unit | Model | task/words-sequences', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     let store = this.owner.lookup('service:store');
     let model = store.createRecord('task/words-sequences', TASK_DATA);
     this.set('model', model);
   });
 
-  test('has right template order', function(assert) {
+  test('has right template order', function (assert) {
     assert.deepEqual(this.model.selectedItemsOrder, [
       'OBJECT',
       'OBJECT_ACTION',
     ]);
   });
 
-  test('generates subtasks for all variants of a given template', function(assert) {
+  test('generates subtasks for all variants of a given template', function (assert) {
     assert.ok(this.model.tasksToSolve.length === 8);
   });
 
-  test('adds wrong answers to the end of the sequence', function(assert) {
+  test('adds wrong answers to the end of the sequence', function (assert) {
     this.model.wrongAnswers = [].concat([
       {
         answer: {

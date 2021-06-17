@@ -4,9 +4,7 @@ interface IProgressSausageComponentArgs {
   progressItems: { completedInCurrentCycle: boolean }[];
 }
 
-export default class ProgressSausageComponent extends Component<
-  IProgressSausageComponentArgs
-> {
+export default class ProgressSausageComponent extends Component<IProgressSausageComponentArgs> {
   get progressItems() {
     return this.args.progressItems ?? [];
   }
