@@ -8,6 +8,10 @@ export default class HeaderComponent extends Component {
   @service('session') session!: Session;
   @service('user-data') userData!: UserDataService;
 
+  get activeLocale() {
+    return this.userData.activeLocale;
+  }
+
   get avatarUrl() {
     return this.userData.avatarUrl;
   }

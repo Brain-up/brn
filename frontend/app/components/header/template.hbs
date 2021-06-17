@@ -29,7 +29,14 @@
     <div
       class="lg:flex lg:items-center lg:w-auto relative z-10 flex-grow block"
     >
-      <div class="lg:flex-grow text-xs text-white">
+      <div
+        class="lg:flex-grow text-xs
+          {{if
+            this.session.isAuthenticated
+            "text-white"
+            "text-purple-primary"
+          }}"
+      >
         {{#if this.session.isAuthenticated}}
           <LinkTo
             @route="groups"
@@ -42,15 +49,24 @@
         {{/if}}
         <LinkTo
           @route="description"
-          class="lg:inline-block lg:mt-0 hover:bg-white hover:text-purple-primary block px-4 py-2 mt-4 mr-4 font-bold tracking-wider text-white uppercase rounded-full"
+          class="lg:inline-block lg:mt-0 block px-4 py-2 mt-4 mr-4 font-bold tracking-wider uppercase rounded-full
+            {{if
+              this.session.isAuthenticated
+              "hover:bg-white hover:text-purple-primary"
+              "hover:bg-purple-primary hover:text-white"
+            }}"
         >
           {{t "header.about"}}
         </LinkTo>
         <button
           type="button"
-          class="hover:text-opacity-50 text-white py-2 bg-transparent rounded uppercase
+          class="hover:text-opacity-50 py-2 bg-transparent rounded uppercase
             {{if (eq this.activeLocale "ru-ru") "font-bold"}}
-            "
+            {{if
+              this.session.isAuthenticated
+              "text-white"
+              "text-purple-primary"
+            }}"
           {{on "click" (fn this.setLocale "ru")}}
         >
           RU
@@ -58,8 +74,13 @@
         /
         <button
           type="button"
-          class="hover:text-opacity-50 text-white py-2 bg-transparent rounded uppercase
-            {{if (eq this.activeLocale "en-us") "font-bold"}}"
+          class="hover:text-opacity-50 py-2 bg-transparent rounded uppercase
+            {{if (eq this.activeLocale "en-us") "font-bold"}}
+            {{if
+              this.session.isAuthenticated
+              "text-white"
+              "text-purple-primary"
+            }}"
           {{on "click" (fn this.setLocale "en")}}
         >
           EN
