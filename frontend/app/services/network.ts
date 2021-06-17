@@ -3,6 +3,7 @@ import fetch from 'fetch';
 import { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Store from '@ember-data/store';
+import moment from 'moment';
 
 interface UserDTO {
   firstName: string;
@@ -34,6 +35,10 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
     birthday: new Date().setFullYear(user.bornYear).toString(),
     id: user.id as string,
   };
+}
+
+function formatDateForRequest(date: Date): string {
+  return moment(date).utc().format('YYYY-MM-DD');
 }
 
 export default class NetworkService extends Service {
@@ -110,6 +115,24 @@ export default class NetworkService extends Service {
     const json = await result.json();
     const { data } = json;
     return data.map((el: number) => String(el));
+  }
+  async getUserStatisticsByWeek(from: Date, to: Date) {
+    const fromFormatted: string = formatDateForRequest(from);
+    const toFormatted: string = formatDateForRequest(to);
+    const result = await this.request(
+      `statistics/study/week?from=${fromFormatted}&to=${toFormatted}`,
+    );
+    let { data } = await result.json();
+    return data;
+  }
+  async getUserStatisticsByYear(from: Date, to: Date) {
+    const fromFormatted: string = formatDateForRequest(from);
+    const toFormatted: string = formatDateForRequest(to);
+    const result = await this.request(
+      `statistics/study/year?from=${fromFormatted}&to=${toFormatted}`,
+    );
+    let { data } = await result.json();
+    return data;
   }
 }
 

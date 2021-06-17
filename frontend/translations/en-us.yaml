@@ -1,5 +1,6 @@
 header:
   groups: Groups
+  statistics: Statistics
   logout: Logout
   about: About
 
@@ -62,7 +63,7 @@ exercise:
 exercise_messages:
   successfully: Congratulations! Exercise successful!
   unsuccessfully: Wrong. Try again!
-  answer_successfully: Correct answer
+  answer_successfully: Correct answer  
 
 statistics:
   wrong_answers: Wrong Answers
@@ -228,3 +229,8 @@ description:
       start: "If you want to join our team, you can write to our lead Elena Moshnikova: "
       end: Elena will be happy to answer all your questions and to cooperate.
     motivation: "Our joint efforts make this project \"alive\" and, perhaps, we will be able to help many people discover or return the world of understandable sounds."
+
+profile:
+  statistics:
+    title: Statistics
+    about: What is it?

@@ -157,8 +157,10 @@
     "edition": "octane"
   },
   "dependencies": {
+    "ember-cli-moment-shim": "^3.8.0",
     "ember-component-css": "^0.7.4",
     "ember-fast-cli": "^1.3.0",
+    "ember-moment": "^8.0.1",
     "idle-js": "^1.2.0",
     "stylelint": "^13.6.1",
     "stylelint-config-recommended": "^3.0.0",
