@@ -9,6 +9,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        PROGRESS: {
+          BAD: '#F38698',
+          GOOD: '#FBD051',
+          GREAT: '#47CD8A',
+        },
         blue: {
           ...colors.blue,
           100: '#DAF0FC',
