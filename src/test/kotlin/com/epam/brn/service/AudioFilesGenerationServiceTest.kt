@@ -3,43 +3,45 @@ package com.epam.brn.service
 import com.epam.brn.config.AwsConfig
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import org.amshove.kluent.internal.assertSame
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
 import java.io.File
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class AudioFilesGenerationServiceTest {
 
-    @Mock
+    @InjectMockKs
+    lateinit var audioFilesGenerationService: AudioFilesGenerationService
+
+    @MockK
     lateinit var wordsService: WordsService
 
-    @Mock
+    @MockK
     lateinit var awsConfig: AwsConfig
 
-    @Mock
+    @MockK
     lateinit var yandexSpeechKitService: YandexSpeechKitService
-
-    @InjectMocks
-    lateinit var audioFilesGenerationService: AudioFilesGenerationService
 
     @Test
     fun `should process file`() {
         // GIVEN
-        val fileMock = Mockito.mock(File::class.java)
+        val fileMock = mockk<File>()
         val audioFileMetaData = AudioFileMetaData("word", "ru-ru", Voice.FILIPP)
-        `when`(yandexSpeechKitService.generateAudioOggFile(audioFileMetaData)).thenReturn(fileMock)
+        every { yandexSpeechKitService.generateAudioOggFile(audioFileMetaData) } returns fileMock
+
         // WHEN
         val actualResult = audioFilesGenerationService.processWord(audioFileMetaData)
+
         // THEN
         assertSame(fileMock, actualResult)
     }
@@ -52,12 +54,12 @@ internal class AudioFilesGenerationServiceTest {
         ReflectionTestUtils.setField(audioFilesGenerationService, "withMp3Conversion", false)
         ReflectionTestUtils.setField(audioFilesGenerationService, "withSavingToS3", false)
 
-        val fileMockOne1 = Mockito.mock(File::class.java)
-        val fileMockOne12 = Mockito.mock(File::class.java)
-        val fileMockOne08 = Mockito.mock(File::class.java)
-        val fileMockOne1En = Mockito.mock(File::class.java)
-        val fileMockOne12En = Mockito.mock(File::class.java)
-        val fileMockOne08En = Mockito.mock(File::class.java)
+        val fileMockOne1 = mockk<File>()
+        val fileMockOne12 = mockk<File>()
+        val fileMockOne08 = mockk<File>()
+        val fileMockOne1En = mockk<File>()
+        val fileMockOne12En = mockk<File>()
+        val fileMockOne08En = mockk<File>()
 
         val wordTwoRu = "два"
         val wordOneEn = "one"
@@ -78,45 +80,46 @@ internal class AudioFilesGenerationServiceTest {
         val metaOneEn1W = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.ALYSS, "1")
         val metaOneEn12W = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.ALYSS, "1.2")
 
-        `when`(wordsService.dictionaryByLocale).thenReturn(dictionaryByLocale)
-        `when`(wordsService.isFileExistLocal(metaTwoRu08M)).thenReturn(false)
-        `when`(wordsService.isFileExistLocal(metaTwoRu1M)).thenReturn(false)
-        `when`(wordsService.isFileExistLocal(metaTwoRu12M)).thenReturn(false)
-        `when`(wordsService.isFileExistLocal(metaTwoRu08W)).thenReturn(true)
-        `when`(wordsService.isFileExistLocal(metaTwoRu1W)).thenReturn(true)
-        `when`(wordsService.isFileExistLocal(metaTwoRu12W)).thenReturn(true)
+        every { wordsService.dictionaryByLocale } returns dictionaryByLocale
+        every { wordsService.getExistWordFilesCount(any()) } returns 1
+        every { wordsService.isFileExistLocal(metaTwoRu08M) } returns false
+        every { wordsService.isFileExistLocal(metaTwoRu1M) } returns false
+        every { wordsService.isFileExistLocal(metaTwoRu12M) } returns false
+        every { wordsService.isFileExistLocal(metaTwoRu08W) } returns true
+        every { wordsService.isFileExistLocal(metaTwoRu1W) } returns true
+        every { wordsService.isFileExistLocal(metaTwoRu12W) } returns true
 
-        `when`(wordsService.isFileExistLocal(metaOneEn08M)).thenReturn(true)
-        `when`(wordsService.isFileExistLocal(metaOneEn1M)).thenReturn(true)
-        `when`(wordsService.isFileExistLocal(metaOneEn12M)).thenReturn(true)
-        `when`(wordsService.isFileExistLocal(metaOneEn08W)).thenReturn(false)
-        `when`(wordsService.isFileExistLocal(metaOneEn1W)).thenReturn(false)
-        `when`(wordsService.isFileExistLocal(metaOneEn12W)).thenReturn(false)
+        every { wordsService.isFileExistLocal(metaOneEn08M) } returns true
+        every { wordsService.isFileExistLocal(metaOneEn1M) } returns true
+        every { wordsService.isFileExistLocal(metaOneEn12M) } returns true
+        every { wordsService.isFileExistLocal(metaOneEn08W) } returns false
+        every { wordsService.isFileExistLocal(metaOneEn1W) } returns false
+        every { wordsService.isFileExistLocal(metaOneEn12W) } returns false
 
-        `when`(wordsService.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
-        `when`(wordsService.getDefaultWomanVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.OKSANA)
-        `when`(wordsService.getDefaultManVoiceForLocale(Locale.EN.locale)).thenReturn(Voice.NICK)
-        `when`(wordsService.getDefaultWomanVoiceForLocale(Locale.EN.locale)).thenReturn(Voice.ALYSS)
+        every { wordsService.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
+        every { wordsService.getDefaultWomanVoiceForLocale(Locale.RU.locale) } returns Voice.OKSANA
+        every { wordsService.getDefaultManVoiceForLocale(Locale.EN.locale) } returns Voice.NICK
+        every { wordsService.getDefaultWomanVoiceForLocale(Locale.EN.locale) } returns Voice.ALYSS
 
-        `when`(yandexSpeechKitService.generateAudioOggFile(metaTwoRu08M)).thenReturn(fileMockOne1)
-        `when`(yandexSpeechKitService.generateAudioOggFile(metaTwoRu1M)).thenReturn(fileMockOne08)
-        `when`(yandexSpeechKitService.generateAudioOggFile(metaTwoRu12M)).thenReturn(fileMockOne12)
+        every { yandexSpeechKitService.generateAudioOggFile(metaTwoRu08M) } returns fileMockOne1
+        every { yandexSpeechKitService.generateAudioOggFile(metaTwoRu1M) } returns fileMockOne08
+        every { yandexSpeechKitService.generateAudioOggFile(metaTwoRu12M) } returns fileMockOne12
 
-        `when`(yandexSpeechKitService.generateAudioOggFile(metaOneEn1W)).thenReturn(fileMockOne1En)
-        `when`(yandexSpeechKitService.generateAudioOggFile(metaOneEn08W)).thenReturn(fileMockOne08En)
-        `when`(yandexSpeechKitService.generateAudioOggFile(metaOneEn12W)).thenReturn(fileMockOne12En)
+        every { yandexSpeechKitService.generateAudioOggFile(metaOneEn1W) } returns fileMockOne1En
+        every { yandexSpeechKitService.generateAudioOggFile(metaOneEn08W) } returns fileMockOne08En
+        every { yandexSpeechKitService.generateAudioOggFile(metaOneEn12W) } returns fileMockOne12En
 
         // WHEN
         audioFilesGenerationService.generateAudioFiles()
 
         // THEN
         Thread.sleep(1000)
-        verify(yandexSpeechKitService).generateAudioOggFile(metaTwoRu08M)
-        verify(yandexSpeechKitService).generateAudioOggFile(metaTwoRu1M)
-        verify(yandexSpeechKitService).generateAudioOggFile(metaTwoRu12M)
-        verify(yandexSpeechKitService).generateAudioOggFile(metaOneEn1W)
-        verify(yandexSpeechKitService).generateAudioOggFile(metaOneEn08W)
-        verify(yandexSpeechKitService).generateAudioOggFile(metaOneEn12W)
-        verifyNoMoreInteractions(yandexSpeechKitService)
+        verify(exactly = 1) { yandexSpeechKitService.generateAudioOggFile(metaTwoRu08M) }
+        verify(exactly = 1) { yandexSpeechKitService.generateAudioOggFile(metaTwoRu1M) }
+        verify(exactly = 1) { yandexSpeechKitService.generateAudioOggFile(metaTwoRu12M) }
+        verify(exactly = 1) { yandexSpeechKitService.generateAudioOggFile(metaOneEn1W) }
+        verify(exactly = 1) { yandexSpeechKitService.generateAudioOggFile(metaOneEn08W) }
+        verify(exactly = 1) { yandexSpeechKitService.generateAudioOggFile(metaOneEn12W) }
+        confirmVerified(yandexSpeechKitService)
     }
 }
