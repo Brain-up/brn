@@ -1,1 +1,15 @@
-{{yield}}
+<div class={{style-namespace "statistics/month-time-track"}} ...attributes>
+  <div class="track__title" {{did-update this.didUpdateData @data}}></div>
+  <div class="track__content">
+    {{t "profile.statistics.month_time_track.title_months"}}
+    <div class="month-time-track-items-wrap">
+      {{#each this.monthTimeTrackItemsData as |itemData|}}
+        <Statistics::MonthTimeTrackItem
+          @data={{itemData}}
+          @isSelected={{fn this.isSelectedMonth itemData.date}}
+          {{on "click" (fn @onSelectMonth itemData.date)}}
+        />
+      {{/each}}
+    </div>
+  </div>
+</div>

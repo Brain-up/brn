@@ -1,0 +1,62 @@
+.track__title,
+.track__content .empty-data {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 24px;
+  text-transform: uppercase;
+  color: #6d6a80;
+}
+.track__title span {
+  color: #7979f2;
+}
+.track__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 32px;
+  height: 200px;
+  box-sizing: border-box;
+}
+.track__content .month-time-track-items-wrap {
+  display: flex;
+  overflow: auto;
+  margin: 0 30px;
+  width: 100%;
+  justify-content: space-between;
+}
+.track__content .month-time-track-items-wrap.incomplete-year {
+  justify-content: flex-start;
+}
+.track__content .month-time-track-items-wrap .empty-data {
+  text-align: center;
+  width: 100%;
+}
+.track__content .month-time-track-items-wrap mat-progress-bar {
+  height: 5px;
+  border-radius: 5px;
+}
+.track__content .month-time-track-items-wrap {
+  margin-right: 10px;
+}
+.track__content button.prev,
+.track__content button.next {
+  min-width: unset;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #7979f2 0%, #a179f2 100%);
+  box-shadow: 0px 4px 16px #5947b240;
+  border: 1px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.track__content button.prev[disabled],
+.track__content button.next[disabled] {
+  background: linear-gradient(90deg, #a179f226 0%, #7979f226 100%), #ffffff;
+  box-shadow: none;
+}
+.track__content button.prev mat-icon,
+.track__content button.next mat-icon {
+  color: #ffffff;
+}

@@ -1,0 +1,28 @@
+<div class={{style-namespace "statistics/month-time-track-item"}} ...attributes>
+  <div class="calendar bg-PROGRESS-{{@data.progress}}">
+    <div class="header">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="content">
+      <b class="time">
+        {{@data.time}}
+      </b>
+      <br />
+      <span>
+        {{t "profile.statistics.month_time_track.days_period" days=@data.days}}
+      </span>
+    </div>
+  </div>
+  <div class="date">
+    <div class="month">
+      {{@data.month}}
+    </div>
+    <div class="year">
+      {{@data.year}}
+    </div>
+  </div>
+</div>

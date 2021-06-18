@@ -14,8 +14,8 @@ export default class StatisticsComponent extends Component {
   selectedMonth: moment.Moment = moment();
   @tracked isLoadingWeekTimeTrackData = true;
   @tracked isLoadingMonthTimeTrackData = true;
-  @tracked weekTimeTrackData: UserWeeklyStatisticsModel[];
-  @tracked monthTimeTrackData: UserYearlyStatisticsModel[];
+  @tracked weekTimeTrackData: UserWeeklyStatisticsModel[] | null = null;
+  @tracked monthTimeTrackData: UserYearlyStatisticsModel[] | null = null;
 
   @(task(function* (this: StatisticsComponent) {
     const fromMonth: Date = this.selectedMonth
@@ -43,7 +43,7 @@ export default class StatisticsComponent extends Component {
       toYear,
     );
     this.isLoadingMonthTimeTrackData = false;
-    if (!this.monthTimeTrackData.length) {
+    if (!this.monthTimeTrackData?.length) {
       return;
     }
     const lastMonth: moment.Moment = moment(
@@ -59,6 +59,31 @@ export default class StatisticsComponent extends Component {
 
   @action
   onInit(): void {
+    this.getWeekTimeTrackData.perform();
+    this.getMonthTimeTrackData.perform();
+  }
+
+  @action
+  openStatisticsInfoDialog(): void {}
+
+  @action
+  selectMonth(date: moment.Moment): void {
+    this.selectedMonth = date;
+    this.getWeekTimeTrackData.perform();
+  }
+
+  @action
+  loadPrevYear(): void {
+    this.selectedMonth = this.selectedMonth.subtract(1, 'year');
+
+    this.getWeekTimeTrackData.perform();
+    this.getMonthTimeTrackData.perform();
+  }
+
+  @action
+  loadNextYear(): void {
+    this.selectedMonth = this.selectedMonth.add(1, 'year');
+
     this.getWeekTimeTrackData.perform();
     this.getMonthTimeTrackData.perform();
   }

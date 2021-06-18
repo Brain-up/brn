@@ -9,6 +9,17 @@
       {{t "profile.statistics.about"}}
     </button>
   </div>
-  <Statistics::WeekTimeTrack />
-  <Statistics::MonthTimeTrack />
+  <Statistics::MonthTimeTrack
+    @isLoading={{this.isLoadingMonthTimeTrackData}}
+    @selectedMonth={{this.selectedMonth}}
+    @data={{this.monthTimeTrackData}}
+    @onSelectMonth={{this.selectMonth}}
+    @onLoadPrevYear={{this.loadPrevYear}}
+    @onLoadNextYear={{this.loadNextYear}}
+  />
+  <Statistics::WeekTimeTrack
+    @isLoading={{this.isLoadingWeekTimeTrackData}}
+    @selectedMonth={{this.selectedMonth}}
+    @data={{this.weekTimeTrackData}}
+  />
 </div>
