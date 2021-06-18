@@ -14,16 +14,7 @@ module(
 
       await render(hbs`<Statistics::MonthTimeTrackItem />`);
 
-      assert.equal(this.element.textContent.trim(), '');
-
-      // Template block usage:
-      await render(hbs`
-      <Statistics::MonthTimeTrackItem>
-        template block text
-      </Statistics::MonthTimeTrackItem>
-    `);
-
-      assert.equal(this.element.textContent.trim(), 'template block text');
+      assert.dom(this.element).exists();
     });
   },
 );
