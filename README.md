@@ -64,7 +64,7 @@ https://kb.epam.com/display/EPMLABSBRN/Coding+standards
 ## Development:
 
 ### Development prerequisites
-1. FrontEnd: Install node v10 or above https://nodejs.org/en/download/
+1. FrontEnd: Install node v12 or above https://nodejs.org/en/download/
 2. FrontEnd: Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
 3. FrontEnd: In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
 4. BackEnd: Install Docker https://hub.docker.com/search/?type=edition&offering=community 

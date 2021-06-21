@@ -4,25 +4,25 @@ import com.epam.brn.dto.SeriesDto
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.CsvUploadService
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class SeriesControllerTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var seriesController: SeriesController
 
-    @Mock
+    @MockK
     lateinit var seriesService: SeriesService
 
-    @Mock
+    @MockK
     lateinit var csvUploadService: CsvUploadService
 
     @Test
@@ -32,11 +32,13 @@ internal class SeriesControllerTest {
         val series1 = SeriesDto(1, 1, ExerciseType.SINGLE_SIMPLE_WORDS, "testName1", 1)
         val series2 = SeriesDto(1, 2, ExerciseType.SINGLE_SIMPLE_WORDS, "testName2", 2)
         val listSeries = listOf(series1, series2)
-        Mockito.`when`(seriesService.findSeriesForGroup(groupId)).thenReturn(listSeries)
+        every { seriesService.findSeriesForGroup(groupId) } returns listSeries
+
         // WHEN
         val actualResult = seriesController.getSeriesForGroup(groupId)
+
         // THEN
-        verify(seriesService).findSeriesForGroup(groupId)
+        verify(exactly = 1) { seriesService.findSeriesForGroup(groupId) }
         assertTrue(actualResult.body.toString().contains("testName1"))
         assertTrue(actualResult.body.toString().contains("testName2"))
     }
@@ -46,11 +48,13 @@ internal class SeriesControllerTest {
         // GIVEN
         val seriesId: Long = 1
         val series = SeriesDto(1, seriesId, ExerciseType.SINGLE_SIMPLE_WORDS, "testName", 1)
-        Mockito.`when`(seriesService.findSeriesDtoForId(seriesId)).thenReturn(series)
+        every { seriesService.findSeriesDtoForId(seriesId) } returns series
+
         // WHEN
         val actualResult = seriesController.getSeriesForId(1)
+
         // THEN
-        verify(seriesService).findSeriesDtoForId(seriesId)
+        verify(exactly = 1) { seriesService.findSeriesDtoForId(seriesId) }
         assertTrue(actualResult.body.toString().contains("testName"))
     }
 }

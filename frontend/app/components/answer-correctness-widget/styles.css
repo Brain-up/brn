@@ -1,7 +1,7 @@
 /*! purgecss start ignore */
 
 & {
-  background-color: #EDF8FE;
+  background-color: #edf8fe;
   border-radius: 10px;
   padding-bottom: 1.6rem;
 }
@@ -30,6 +30,5 @@ svg {
     opacity: 1;
   }
 }
-
 
 /*! purgecss end ignore */

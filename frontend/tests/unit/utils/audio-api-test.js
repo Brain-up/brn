@@ -9,9 +9,9 @@ import audioApi, {
 } from 'brn/utils/audio-api';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | audio-api', function() {
+module('Unit | Utility | audio-api', function () {
   // Replace this with your real tests.
-  test('it works', function(assert) {
+  test('it works', function (assert) {
     let result = audioApi();
     assert.ok(result);
   });
@@ -34,10 +34,15 @@ module('Unit | Utility | audio-api', function() {
   });
 
   test('createSource', (assert) => {
-    assert.ok(createSource(createAudioContext(), new AudioBuffer({
-      length: 10,
-      sampleRate: 8000
-    })));
+    assert.ok(
+      createSource(
+        createAudioContext(),
+        new AudioBuffer({
+          length: 10,
+          sampleRate: 8000,
+        }),
+      ),
+    );
   });
 
   test('createNoizeBuffer', (assert) => {

@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { IStatsExerciseStats } from 'brn/services/stats';
 
 interface IExerciseStatsComponentArgs {
-  stats: IStatsExerciseStats,
+  stats: IStatsExerciseStats;
   onComplete: () => void;
 }
 

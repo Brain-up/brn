@@ -12,17 +12,27 @@ export default class GlobalTimerComponent extends Component {
   }
   @service('network') declare network: NetworkService;
   @tracked seconds = 0;
-  get minutes()  {
-    if (this.seconds <= 0) {
-      return 0;
-    }
-    return (this.seconds / 60).toFixed(1);
+  get minutes() {
+    const sec = this.seconds % 60;
+    const min = Math.floor(this.seconds / 60);
+    return `${(min || '00') + ' : ' + (sec || '00')}`;
   }
-  @(task(function*(this: GlobalTimerComponent) {
+  get getColor() {
+    if (this.seconds > 1200) {
+      return 'bg-green-secondary';
+    } else if (this.seconds > 960) {
+      return 'bg-yellow-secondary';
+    } else {
+      return 'bg-pink-secondary';
+    }
+  }
+  @(task(function* (this: GlobalTimerComponent) {
     do {
       try {
         if (!Ember.testing) {
-          const response = yield this.network.request('study-history/todayTimer');
+          const response = yield this.network.request(
+            'study-history/todayTimer',
+          );
           const { data } = yield response.json();
           this.seconds = data;
         } else {
@@ -32,8 +42,7 @@ export default class GlobalTimerComponent extends Component {
         // ok
       }
       yield timeout(10000);
-    } while (true)
-
+    } while (true);
   }).keepLatest())
   syncTask!: TaskGenerator<any, any>;
 }

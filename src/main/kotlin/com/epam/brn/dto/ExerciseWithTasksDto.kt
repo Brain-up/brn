@@ -1,6 +1,7 @@
 package com.epam.brn.dto
 
-import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 data class ExerciseWithTasksDto(
     var seriesId: Long?,
@@ -14,5 +15,5 @@ data class ExerciseWithTasksDto(
     var signals: List<SignalTaskDto>,
     var active: Boolean = true,
     var changedBy: String? = "",
-    var changedWhen: LocalDateTime = LocalDateTime.now()
+    var changedWhen: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
 )

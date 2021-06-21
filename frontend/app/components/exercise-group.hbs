@@ -1,20 +1,27 @@
 <a
-  {{on 'mouseenter' this.mouseEnter}}
-  {{on 'mouseleave' this.mouseLeave}}
+  {{on "mouseenter" this.mouseEnter}}
+  {{on "mouseleave" this.mouseLeave}}
   href={{href-to "group.series.subgroup" @group.id}}
-  class="hover:shadow-outline w-1/4 m-2 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg">
-    {{!-- template-lint-disable no-inline-styles style-concatenation --}}
-    <div
-      style={{html-safe (concat 'height:145px;background-image: url(' @group.picture ');')}} class="w-full bg-center bg-no-repeat bg-contain"
-    >
-      {{#if this.isFlipped}}
-          {{!-- @ts-ignore --}}
-          <div class="w-full h-full pt-5 text-6xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75" title={{t 'exercise.progress'}}>{{this.stats.completedExercises}}/{{this.stats.totalExercises}}</div>
-      {{/if}}
+  class="hover:shadow-outline w-1/4 m-2 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg"
+>
+  {{! template-lint-disable no-inline-styles style-concatenation }}
+  <div
+    style={{html-safe
+      (concat "height:145px;background-image: url(" @group.picture ");")
+    }}
+    class="w-full bg-center bg-no-repeat bg-contain"
+  >
+    {{#if this.isFlipped}}
+      {{! @ts-ignore }}
+      <div
+        class="w-full h-full pt-5 text-6xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75"
+        title={{t "exercise.progress"}}
+      >{{this.stats.completedExercises}}/{{this.stats.totalExercises}}</div>
+    {{/if}}
+  </div>
+  <div class="px-2 py-2 bg-gray-200">
+    <div class="text-center">
+      {{@group.name}}
     </div>
-      <div class="px-2 py-2 bg-gray-200">
-        <div class="text-center">
-          {{@group.name}}
-        </div>
-      </div>
+  </div>
 </a>

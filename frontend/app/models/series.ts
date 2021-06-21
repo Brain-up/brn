@@ -1,4 +1,10 @@
-import Model, { belongsTo, hasMany, attr, AsyncHasMany, AsyncBelongsTo } from '@ember-data/model';
+import Model, {
+  belongsTo,
+  hasMany,
+  attr,
+  AsyncHasMany,
+  AsyncBelongsTo,
+} from '@ember-data/model';
 import Exercise from './exercise';
 import Group from './group';
 import { cached } from 'tracked-toolbox';
@@ -8,9 +14,10 @@ export default class Series extends Model {
   @attr('string') description!: string;
   @attr('number') level!: number;
   @attr('string') kind!: string;
-  @belongsTo('group', { async: false } ) group?: AsyncBelongsTo<Group>;
-  @hasMany('subgroup', { async: false }) subGroups!:  AsyncHasMany<SubgroupModel>;
-  @hasMany('exercise', { async: false } ) exercises!: AsyncHasMany<Exercise>;
+  @belongsTo('group', { async: false }) group?: AsyncBelongsTo<Group>;
+  @hasMany('subgroup', { async: false })
+  subGroups!: AsyncHasMany<SubgroupModel>;
+  @hasMany('exercise', { async: false }) exercises!: AsyncHasMany<Exercise>;
   get children() {
     return this.exercises;
   }
@@ -28,7 +35,7 @@ export default class Series extends Model {
   }
 
   @cached
-  get groupedByNameExercises(): Record<string, Exercise[]>  {
+  get groupedByNameExercises(): Record<string, Exercise[]> {
     return this.exercises.reduce((resultObj, currentExercise) => {
       const { name } = currentExercise;
       const targetGroup = resultObj[name];
@@ -37,14 +44,16 @@ export default class Series extends Model {
         : [currentExercise];
 
       return resultObj;
-    }, {} as Record<string, Exercise[] | undefined>) as Record<string, Exercise[]>;
+    }, {} as Record<string, Exercise[] | undefined>) as Record<
+      string,
+      Exercise[]
+    >;
   }
 }
-
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {
   export default interface ModelRegistry {
-    'series': Series;
+    series: Series;
   }
 }

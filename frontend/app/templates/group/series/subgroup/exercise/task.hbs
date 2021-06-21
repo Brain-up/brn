@@ -2,9 +2,6 @@
   data-test-task-player
   data-test-task-id={{@model.id}}
   data-test-task-exercise-id={{@model.exercise.id}}
-  @onRightAnswer={{queue
-    this.nextTaskTransition
-    @model.savePassed
-  }}
+  @onRightAnswer={{queue this.nextTaskTransition @model.savePassed}}
   @task={{@model}}
 />

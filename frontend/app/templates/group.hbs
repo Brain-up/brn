@@ -5,12 +5,19 @@
   </div>
 {{/unless}}
 {{#unless this.headerAndNavShown}}
-  {{#if (or (is-active 'group.series.index') (and (not (is-active 'group.series.subgroup.index')) (is-active 'group')))}}
-    <aside class="bg-gradient-to-b from-white sticky top-0 rounded-bl rounded-br">
+  {{#if
+    (or
+      (is-active "group.series.index")
+      (and (not (is-active "group.series.subgroup.index")) (is-active "group"))
+    )
+  }}
+    <aside
+      class="bg-gradient-to-b from-white sticky top-0 rounded-bl rounded-br"
+    >
       <GroupNavigation @group={{@model}} />
     </aside>
   {{/if}}
-  {{#if (is-active 'group.series.subgroup.index')}}
+  {{#if (is-active "group.series.subgroup.index")}}
     <aside class="bg-gradient-to-b from-white rounded-bl rounded-br">
       <SubgroupNavigation @group={{model-for-route "group.series"}} />
     </aside>
