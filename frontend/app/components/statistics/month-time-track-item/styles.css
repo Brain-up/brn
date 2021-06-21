@@ -1,3 +1,4 @@
+/*! purgecss start ignore */
 * {
   cursor: pointer;
 }
@@ -56,3 +57,4 @@ div:first {
   text-transform: uppercase;
   text-align: center;
 }
+/*! purgecss end ignore */
