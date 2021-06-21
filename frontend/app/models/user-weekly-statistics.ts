@@ -9,7 +9,7 @@ export interface IMonthTimeTrackItemData {
   days: number;
   month: string;
   year: number;
-  date: moment.Moment;
+  date: DateTime;
 }
 
 export default class UserWeeklyStatisticsModel extends Model {

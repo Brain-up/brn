@@ -52,6 +52,7 @@ export default class UserDataService extends Service {
   shouldUpdateRoute() {
     return (
       this.router.currentRouteName !== 'description' &&
+      this.router.currentRouteName !== 'profile.statistics' &&
       this.router.currentRouteName !== 'index'
     );
   }
