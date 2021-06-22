@@ -33,7 +33,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertFailsWith
 
@@ -171,7 +171,7 @@ internal class UserAccountServiceTest {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                changed = ZonedDateTime.now().minusMinutes(5),
+                changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
             )
             val userAccountUpdated = userAccount.copy()
@@ -182,7 +182,7 @@ internal class UserAccountServiceTest {
             `when`(authentication.name).thenReturn(email)
             `when`(userAccountRepository.findUserAccountByEmail(email))
                 .thenReturn(Optional.of(userAccount))
-            `when`(timeService.now()).thenReturn(ZonedDateTime.now())
+            `when`(timeService.now()).thenReturn(LocalDateTime.now())
             `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
                 .thenReturn(userAccountUpdated)
             // WHEN
@@ -211,7 +211,7 @@ internal class UserAccountServiceTest {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                changed = ZonedDateTime.now().minusMinutes(5),
+                changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
             )
             val userAccountChangeRequest = UserAccountChangeRequest(avatar = avatarUrl, name = "newName")
@@ -224,7 +224,7 @@ internal class UserAccountServiceTest {
             `when`(authentication.name).thenReturn(email)
             `when`(userAccountRepository.findUserAccountByEmail(email))
                 .thenReturn(Optional.of(userAccount))
-            `when`(timeService.now()).thenReturn(ZonedDateTime.now())
+            `when`(timeService.now()).thenReturn(LocalDateTime.now())
             `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
                 .thenReturn(userAccountUpdated)
             // WHEN

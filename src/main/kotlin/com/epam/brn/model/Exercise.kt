@@ -7,8 +7,7 @@ import com.epam.brn.dto.ShortTaskDto
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -51,7 +50,7 @@ data class Exercise(
 
     @Column(name = "changed_when")
     @LastModifiedDate
-    var changedWhen: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"))
+    var changedWhen: LocalDateTime = LocalDateTime.now()
     fun toDto(available: Boolean = true) = ExerciseDto(
         seriesId = subGroup?.id,
         id = id,

@@ -6,8 +6,8 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import org.springframework.stereotype.Service
-import java.sql.Date
-import java.time.LocalDate
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 @Service
 class UserMonthStatisticService(
@@ -15,10 +15,14 @@ class UserMonthStatisticService(
     private val userAccountService: UserAccountService,
 ) : UserPeriodStatisticService<MonthStudyStatistic> {
 
-    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long?): List<MonthStudyStatistic> {
+    override fun getStatisticForPeriod(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        userId: Long?
+    ): List<MonthStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
         val histories =
-            studyHistoryRepository.getHistories(tempUserId!!, Date.valueOf(from), Date.valueOf(to))
+            studyHistoryRepository.getHistories(tempUserId!!, Timestamp.valueOf(from), Timestamp.valueOf(to))
         return histories.map {
             val filteredHistories = histories.filter { historyFilter ->
                 historyFilter.startTime.month == it.startTime.month

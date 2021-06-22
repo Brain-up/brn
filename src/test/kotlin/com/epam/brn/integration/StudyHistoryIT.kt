@@ -1,11 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -13,6 +7,12 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,6 +34,8 @@ import kotlin.test.assertEquals
 class StudyHistoryIT : BaseIT() {
 
     private val baseUrl = "/study-history"
+    private val fromParamName = "from"
+    private val toParameterName = "to"
 
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
@@ -258,12 +260,16 @@ class StudyHistoryIT : BaseIT() {
                 )
             )
         // WHEN
-        val today = LocalDateTime.now()
+        val today = now
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("$baseUrl/histories?from=$today&to=${today.plusDays(1)}")
+                .get("$baseUrl/histories")
+                .param(fromParamName, today.format(dateFormat))
+                .param(toParameterName, today.plusDays(1).format(dateFormat))
                 .contentType(MediaType.APPLICATION_JSON)
         )
+
+        resultAction.andReturn().response
         // THEN
         resultAction
             .andExpect(status().isOk)

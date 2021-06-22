@@ -17,6 +17,9 @@ internal class YandexSpeechKitServiceTest {
     @Mock
     lateinit var wordsService: WordsService
 
+    @Mock
+    lateinit var timeService: TimeService
+
     @ParameterizedTest
     @ValueSource(strings = ["ru-ru", "en-us", "tr-tr"])
     fun `should success pass locale validation without Exceptions`(locale: String) {

@@ -14,8 +14,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import java.sql.Date
-import java.time.LocalDate
+import java.sql.Timestamp
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -51,8 +50,8 @@ internal class UserMonthStatisticServiceTest {
     private val progress = UserExercisingProgressStatus.GREAT
     private val studyHistoryDate = LocalDateTime.of(year, month, day, hour, minute)
     private val secondStudyHistoryDate = LocalDateTime.of(year, month, day, hour, minute).plusMonths(1)
-    private val from: LocalDate = LocalDate.of(year, month, day)
-    private val to: LocalDate = LocalDate.of(year, month.plus(2), day)
+    private val from = LocalDateTime.of(year, month, day, hour, minute)
+    private val to = LocalDateTime.of(year, month.plus(2), day, hour, minute)
 
     @BeforeEach
     fun init() {
@@ -66,7 +65,13 @@ internal class UserMonthStatisticServiceTest {
     fun `getStatisticForPeriod should return statistic for period from to`() {
         // GIVEN
         `when`(studyHistorySecond.startTime).thenReturn(studyHistoryDate)
-        `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
+        `when`(
+            studyHistoryRepository.getHistories(
+                userAccount.id!!,
+                Timestamp.valueOf(from),
+                Timestamp.valueOf(to)
+            )
+        ).thenReturn(
             listOf(
                 studyHistory,
                 studyHistorySecond
@@ -96,7 +101,13 @@ internal class UserMonthStatisticServiceTest {
             studyHistory,
             studyHistorySecond
         )
-        `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
+        `when`(
+            studyHistoryRepository.getHistories(
+                userAccount.id!!,
+                Timestamp.valueOf(from),
+                Timestamp.valueOf(to)
+            )
+        ).thenReturn(
             studyHistories
         )
 

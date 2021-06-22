@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/statistics")
@@ -34,8 +34,8 @@ class UserStatisticController(
 
     @GetMapping("/study/week")
     fun getUserWeeklyStatistic(
-        @RequestParam(name = "from", required = true) from: LocalDate,
-        @RequestParam(name = "to", required = true) to: LocalDate
+        @RequestParam(name = "from", required = true) from: LocalDateTime,
+        @RequestParam(name = "to", required = true) to: LocalDateTime
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
@@ -43,8 +43,8 @@ class UserStatisticController(
 
     @GetMapping("/study/year")
     fun getUserYearlyStatistic(
-        @RequestParam(name = "from", required = true) from: LocalDate,
-        @RequestParam(name = "to", required = true) to: LocalDate
+        @RequestParam(name = "from", required = true) from: LocalDateTime,
+        @RequestParam(name = "to", required = true) to: LocalDateTime
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))

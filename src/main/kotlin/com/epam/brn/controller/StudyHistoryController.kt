@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/study-history")
@@ -35,8 +35,8 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     @GetMapping("/histories")
     @ApiOperation("Get current user's study histories for period")
     fun getHistories(
-        @RequestParam("from", required = true) from: LocalDate,
-        @RequestParam("to", required = true) to: LocalDate
+        @RequestParam("from", required = true) from: LocalDateTime,
+        @RequestParam("to", required = true) to: LocalDateTime
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 

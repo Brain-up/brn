@@ -31,9 +31,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.nio.charset.StandardCharsets
+import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 import kotlin.test.assertEquals
@@ -49,7 +49,6 @@ class AdminControllerIT : BaseIT() {
     private val userIdParameterName = "userId"
     private val exercisingYear = 2000
     private val exercisingMonth = 10
-    private val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
@@ -209,8 +208,8 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val result = studyHistoryRepository.getHistories(
             existingUser.id!!,
-            java.sql.Date.valueOf(now.toLocalDate()),
-            java.sql.Date.valueOf(now.toLocalDate().plusDays(1))
+            Timestamp.valueOf(now),
+            Timestamp.valueOf(now.plusDays(1))
         )
         // THEN
         assertEquals(4, result.size)
@@ -231,8 +230,8 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val result = studyHistoryRepository.getHistories(
             existingUser.id!!,
-            java.sql.Date.valueOf(LocalDate.now()),
-            java.sql.Date.valueOf(LocalDate.now().plusDays(1))
+            Timestamp.valueOf(LocalDateTime.now()),
+            Timestamp.valueOf(LocalDateTime.now().plusDays(1))
         )
         // THEN
         assertEquals(0, result.size)
@@ -354,17 +353,19 @@ class AdminControllerIT : BaseIT() {
                     historyTomorrowTwo
                 )
             )
-        val today = LocalDateTime.now()
+        val today = now
 
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .get("$baseUrl/histories?userId=${existingUser.id}&from=$today&to=${today.plusDays(1)}")
+                .get("$baseUrl/histories")
                 .param(fromParamName, today.format(dateFormat))
                 .param(toParameterName, today.plusDays(1).format(dateFormat))
                 .param(userIdParameterName, existingUser.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
+
+        resultAction.andReturn().response
         // THEN
         resultAction
             .andExpect(MockMvcResultMatchers.status().isOk)

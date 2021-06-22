@@ -16,7 +16,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -46,8 +45,8 @@ internal class UserDayStatisticServiceTest {
     private val hour: Int = 13
     private val minute: Int = 20
     private val studyHistoryDate = LocalDateTime.of(year, month, day, hour, minute)
-    private val from: LocalDate = LocalDate.of(year, month, day)
-    private val to: LocalDate = LocalDate.of(year, month.plus(2), day)
+    private val from = LocalDateTime.of(year, month, day, hour, minute)
+    private val to = LocalDateTime.of(year, month.plus(2), day, hour, minute)
     private val exercisingSeconds = 3500
     private val userProgress = UserExercisingProgressStatus.GREAT
 

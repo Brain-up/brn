@@ -6,20 +6,20 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import org.springframework.stereotype.Service
-import java.sql.Date
-import java.time.LocalDate
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 @Service
 class UserDayStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
 ) : UserPeriodStatisticService<DayStudyStatistic> {
-    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long?): List<DayStudyStatistic> {
+    override fun getStatisticForPeriod(from: LocalDateTime, to: LocalDateTime, userId: Long?): List<DayStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
         val studyHistories = studyHistoryRepository.getHistories(
             tempUserId!!,
-            Date.valueOf(from),
-            Date.valueOf(to)
+            Timestamp.valueOf(from),
+            Timestamp.valueOf(to)
         )
         return studyHistories.map { studyHistory ->
             DayStudyStatistic(

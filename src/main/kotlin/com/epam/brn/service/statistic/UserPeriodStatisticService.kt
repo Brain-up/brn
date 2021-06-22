@@ -1,7 +1,7 @@
 package com.epam.brn.service.statistic
 
 import com.epam.brn.dto.statistic.Statistic
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  *@author Nikolai Lazarev
@@ -15,5 +15,5 @@ interface UserPeriodStatisticService<T : Statistic> {
      * @param userId - id of the user for how get statistic
      * @return list of implementations of Statistic
      */
-    fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long? = null): List<T>
+    fun getStatisticForPeriod(from: LocalDateTime, to: LocalDateTime, userId: Long? = null): List<T>
 }
