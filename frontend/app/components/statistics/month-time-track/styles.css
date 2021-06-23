@@ -1,3 +1,4 @@
+/*! purgecss start ignore */
 .track__title,
 .track__content .empty-data {
   font-weight: 600;
@@ -60,3 +61,4 @@
 .track__content button.next mat-icon {
   color: #ffffff;
 }
+/*! purgecss end ignore */

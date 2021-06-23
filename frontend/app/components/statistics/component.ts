@@ -3,7 +3,7 @@ import UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
 import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
 import NetworkService from 'brn/services/network';
 import { inject as service } from '@ember/service';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { tracked } from '@glimmer/tracking';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { action } from '@ember/object';
@@ -11,18 +11,15 @@ import { action } from '@ember/object';
 export default class StatisticsComponent extends Component {
   @service('network') network!: NetworkService;
 
-  selectedMonth: moment.Moment = moment();
+  @tracked selectedMonth: DateTime = DateTime.now();
   @tracked isLoadingWeekTimeTrackData = true;
   @tracked isLoadingMonthTimeTrackData = true;
   @tracked weekTimeTrackData: UserWeeklyStatisticsModel[] | null = null;
   @tracked monthTimeTrackData: UserYearlyStatisticsModel[] | null = null;
 
   @(task(function* (this: StatisticsComponent) {
-    const fromMonth: Date = this.selectedMonth
-      .clone()
-      .startOf('month')
-      .toDate();
-    const toMonth: Date = this.selectedMonth.clone().endOf('month').toDate();
+    const fromMonth: Date = this.selectedMonth.startOf('month').toJSDate();
+    const toMonth: Date = this.selectedMonth.endOf('month').toJSDate();
     this.isLoadingWeekTimeTrackData = true;
 
     this.weekTimeTrackData = yield this.network.getUserStatisticsByWeek(
@@ -34,8 +31,8 @@ export default class StatisticsComponent extends Component {
   getWeekTimeTrackData!: TaskGenerator<any, any>;
 
   @(task(function* (this: StatisticsComponent) {
-    const fromYear: Date = this.selectedMonth.clone().startOf('year').toDate();
-    const toYear: Date = this.selectedMonth.clone().endOf('year').toDate();
+    const fromYear: Date = this.selectedMonth.startOf('year').toJSDate();
+    const toYear: Date = this.selectedMonth.endOf('year').toJSDate();
     this.isLoadingMonthTimeTrackData = true;
 
     this.monthTimeTrackData = yield this.network.getUserStatisticsByYear(
@@ -46,10 +43,11 @@ export default class StatisticsComponent extends Component {
     if (!this.monthTimeTrackData?.length) {
       return;
     }
-    const lastMonth: moment.Moment = moment(
-      this.monthTimeTrackData.lastObject?.date,
-    );
-    if (lastMonth.month() >= this.selectedMonth.month()) {
+
+    const lastMonth: DateTime | null = this.monthTimeTrackData.lastObject
+      ? DateTime.fromISO(this.monthTimeTrackData.lastObject?.date)
+      : null;
+    if (!lastMonth || lastMonth.month >= this.selectedMonth.month) {
       return;
     }
     this.selectedMonth = lastMonth;
@@ -67,14 +65,14 @@ export default class StatisticsComponent extends Component {
   openStatisticsInfoDialog(): void {}
 
   @action
-  selectMonth(date: moment.Moment): void {
+  selectMonth(date: DateTime): void {
     this.selectedMonth = date;
     this.getWeekTimeTrackData.perform();
   }
 
   @action
   loadPrevYear(): void {
-    this.selectedMonth = this.selectedMonth.subtract(1, 'year');
+    this.selectedMonth = this.selectedMonth.minus({ year: 1 });
 
     this.getWeekTimeTrackData.perform();
     this.getMonthTimeTrackData.perform();
@@ -82,7 +80,7 @@ export default class StatisticsComponent extends Component {
 
   @action
   loadNextYear(): void {
-    this.selectedMonth = this.selectedMonth.add(1, 'year');
+    this.selectedMonth = this.selectedMonth.plus({ year: 1 });
 
     this.getWeekTimeTrackData.perform();
     this.getMonthTimeTrackData.perform();
