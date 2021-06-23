@@ -7,37 +7,37 @@ import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserMonthStatisticService
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class UserMonthStatisticServiceTest {
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var userMonthStatisticService: UserMonthStatisticService
 
-    @Mock
+    @MockK
     private lateinit var userAccountService: UserAccountService
 
-    @Mock
+    @MockK
     private lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
+    @MockK
     private lateinit var userAccount: UserAccountDto
 
-    @Mock
+    @MockK
     private lateinit var studyHistory: StudyHistory
 
-    @Mock
+    @MockK
     private lateinit var studyHistorySecond: StudyHistory
 
     private val month: Int = 2
@@ -55,31 +55,28 @@ internal class UserMonthStatisticServiceTest {
 
     @BeforeEach
     fun init() {
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount)
-        `when`(userAccount.id).thenReturn(userId)
-        `when`(studyHistory.startTime).thenReturn(studyHistoryDate)
-        `when`(studyHistory.executionSeconds).thenReturn(executionSeconds)
+        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+        every { userAccount.id } returns userId
+        every { studyHistory.startTime } returns studyHistoryDate
+        every { studyHistory.executionSeconds } returns executionSeconds
     }
 
     @Test
     fun `getStatisticForPeriod should return statistic for period from to`() {
         // GIVEN
-        `when`(studyHistorySecond.startTime).thenReturn(studyHistoryDate)
-        `when`(
+        every { studyHistorySecond.startTime } returns studyHistoryDate
+        every { studyHistorySecond.executionSeconds } returns executionSeconds
+        every {
             studyHistoryRepository.getHistories(
-                userAccount.id!!,
-                Timestamp.valueOf(from),
-                Timestamp.valueOf(to)
+                ofType(Long::class),
+                ofType(Timestamp::class),
+                ofType(Timestamp::class)
             )
-        ).thenReturn(
-            listOf(
-                studyHistory,
-                studyHistorySecond
-            )
-        )
+        } returns listOf(studyHistory, studyHistorySecond)
+
         val expectedStatistic = MonthStudyStatistic(
             date = studyHistory.startTime,
-            exercisingTimeSeconds = executionSeconds,
+            exercisingTimeSeconds = executionSeconds * 2,
             exercisingDays = 2,
             progress = UserExercisingProgressStatus.GREAT
         )
@@ -95,21 +92,19 @@ internal class UserMonthStatisticServiceTest {
     @Test
     fun `getStatisticForPeriod should return statistic for period when there are histories for some month`() {
         // GIVEN
-        `when`(studyHistorySecond.startTime).thenReturn(secondStudyHistoryDate)
-        `when`(studyHistorySecond.executionSeconds).thenReturn(executionSeconds)
+        every { studyHistorySecond.startTime } returns secondStudyHistoryDate
+        every { studyHistorySecond.executionSeconds } returns executionSeconds
         val studyHistories = listOf(
             studyHistory,
             studyHistorySecond
         )
-        `when`(
+        every {
             studyHistoryRepository.getHistories(
-                userAccount.id!!,
-                Timestamp.valueOf(from),
-                Timestamp.valueOf(to)
+                ofType(Long::class),
+                ofType(Timestamp::class),
+                ofType(Timestamp::class)
             )
-        ).thenReturn(
-            studyHistories
-        )
+        } returns studyHistories
 
         val firstExpectedStudyStatistic = MonthStudyStatistic(
             date = studyHistoryDate,
