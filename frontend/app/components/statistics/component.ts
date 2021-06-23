@@ -11,7 +11,7 @@ import { action } from '@ember/object';
 export default class StatisticsComponent extends Component {
   @service('network') network!: NetworkService;
 
-  selectedMonth: DateTime = DateTime.now();
+  @tracked selectedMonth: DateTime = DateTime.now();
   @tracked isLoadingWeekTimeTrackData = true;
   @tracked isLoadingMonthTimeTrackData = true;
   @tracked weekTimeTrackData: UserWeeklyStatisticsModel[] | null = null;
@@ -43,10 +43,11 @@ export default class StatisticsComponent extends Component {
     if (!this.monthTimeTrackData?.length) {
       return;
     }
-    const lastMonth: DateTime = DateTime.fromJSDate(
-      this.monthTimeTrackData.lastObject?.date || new Date(),
-    );
-    if (lastMonth.month >= this.selectedMonth.month) {
+
+    const lastMonth: DateTime | null = this.monthTimeTrackData.lastObject
+      ? DateTime.fromISO(this.monthTimeTrackData.lastObject?.date)
+      : null;
+    if (!lastMonth || lastMonth.month >= this.selectedMonth.month) {
       return;
     }
     this.selectedMonth = lastMonth;

@@ -20,8 +20,6 @@ export default class MonthTimeTrackComponent<
 > extends Component {
   @tracked monthTimeTrackItemsData: IMonthTimeTrackItemData[] | null = null;
   @tracked isLoading: boolean = true;
-  @tracked selectedMonth: DateTime | null = null;
-
   @action
   didUpdateData(): void {
     const data = this.args.data;
@@ -30,7 +28,7 @@ export default class MonthTimeTrackComponent<
     }
 
     this.monthTimeTrackItemsData = data.map((rawItem: any) => {
-      const date = DateTime.fromISO(rawItem.date);
+      const date: DateTime = DateTime.fromISO(rawItem.date);
 
       return {
         progress: rawItem.progress,
@@ -57,17 +55,9 @@ export default class MonthTimeTrackComponent<
   }
 
   isAllowedNextYear(): boolean {
-    return this.selectedMonth
+    return this.args.selectedMonth
       ? this.selectedMonth.plus({ year: 1 }).year <= DateTime.now().year
       : false;
-  }
-
-  isSelectedMonth(date: DateTime) {
-    return (
-      this.selectedMonth &&
-      date.year === this.selectedMonth.year &&
-      date.month === this.selectedMonth.month
-    );
   }
 
   isIncompleteYear(): boolean {

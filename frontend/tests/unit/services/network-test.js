@@ -10,7 +10,7 @@ module('Unit | Service | network', function (hooks) {
 
   // Replace this with your real tests.
   test('it exists', function (assert) {
-    let service = this.owner.lookup('service:network');
+    const service = this.owner.lookup('service:network');
     assert.ok(service);
   });
 
@@ -24,7 +24,7 @@ module('Unit | Service | network', function (hooks) {
       return {};
     });
 
-    let service = this.owner.lookup('service:network');
+    const service = this.owner.lookup('service:network');
 
     const toDate = new Date('2021-12-31');
     const fromDate = new Date('2021-01-01');
