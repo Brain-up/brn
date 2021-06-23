@@ -1,5 +1,10 @@
-<div class={{style-namespace "statistics/month-time-track-item"}} ...attributes>
-  <div class="calendar bg-PROGRESS-{{@data.progress}}">
+<div
+  class="{{style-namespace "statistics/month-time-track-item"}}
+    {{if @isSelected "selected" ""}}"
+  data-test-month-track-item
+  ...attributes
+>
+  <div data-test-calendar class="calendar bg-PROGRESS-{{@data.progress}}">
     <div class="header">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -12,7 +17,7 @@
         {{@data.time}}
       </b>
       <br />
-      <span>
+      <span class="days">
         {{t "profile.statistics.month_time_track.days_period" days=@data.days}}
       </span>
     </div>

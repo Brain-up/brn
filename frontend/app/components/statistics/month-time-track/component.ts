@@ -2,12 +2,13 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { IMonthTimeTrackItemData } from 'brn/models/user-weekly-statistics';
 import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { action } from '@ember/object';
+import { secondsTo } from 'brn/utils/seconds-to';
 
 interface IMonthTimeTrackComponentArgs {
   isLoading: boolean;
-  selectedMonth: moment.Moment;
+  selectedMonth: DateTime;
   data: UserYearlyStatisticsModel[];
   onSelectMonth(): void;
   onLoadPrevYear(): void;
@@ -17,10 +18,8 @@ interface IMonthTimeTrackComponentArgs {
 export default class MonthTimeTrackComponent<
   IMonthTimeTrackComponentArgs,
 > extends Component {
-  @tracked monthTimeTrackItemsData: IMonthTimeTrackItemData[];
+  @tracked monthTimeTrackItemsData: IMonthTimeTrackItemData[] | null = null;
   @tracked isLoading: boolean = true;
-  @tracked selectedMonth: moment.Moment;
-
   @action
   didUpdateData(): void {
     const data = this.args.data;
@@ -29,17 +28,14 @@ export default class MonthTimeTrackComponent<
     }
 
     this.monthTimeTrackItemsData = data.map((rawItem: any) => {
-      const date = moment(rawItem.date);
+      const date: DateTime = DateTime.fromISO(rawItem.date);
 
       return {
         progress: rawItem.progress,
-        time: moment()
-          .startOf('day')
-          .seconds(rawItem.exercisingTimeSeconds)
-          .format('h:mm:ss'),
+        time: secondsTo(rawItem.exercisingTimeSeconds, 'h:m:s'),
         days: rawItem.exercisingDays,
-        month: date.format('MMMM'),
-        year: date.year(),
+        month: date.toFormat('MMMM'),
+        year: date.year,
         date,
       };
     });
@@ -59,14 +55,9 @@ export default class MonthTimeTrackComponent<
   }
 
   isAllowedNextYear(): boolean {
-    return this.selectedMonth.clone().add(1, 'year').year() <= moment().year();
-  }
-
-  isSelectedMonth(date: moment.Moment): boolean {
-    return (
-      date.year() === this.selectedMonth.year() &&
-      date.month() === this.selectedMonth.month()
-    );
+    return this.args.selectedMonth
+      ? this.selectedMonth.plus({ year: 1 }).year <= DateTime.now().year
+      : false;
   }
 
   isIncompleteYear(): boolean {

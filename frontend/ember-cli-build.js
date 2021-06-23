@@ -17,6 +17,11 @@ const purgeCSS = {
       './app/components/**/*.js',
       './app/components/**/*.css'
     ],
+    safelist: [
+      'bg-PROGRESS-GREAT',
+      'bg-PROGRESS-GOOD',
+      'bg-PROGRESS-BAD'
+    ],
     defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || content.match(/[\w-/.:]+(?<!:)/g) || []
   }
 }

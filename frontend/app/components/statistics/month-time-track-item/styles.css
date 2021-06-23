@@ -1,36 +1,34 @@
-* {
+/*! purgecss start ignore */
+& {
+  border-radius: 8px;
   cursor: pointer;
 }
 
-div:first {
-  border-radius: 8px;
-}
-
-.selected {
+&.selected {
   background: linear-gradient(90deg, #7979f2 0%, #a179f2 100%);
 }
-.selected .date .month,
-.selected .date .year {
+&.selected .date .month,
+&.selected .date .year {
   color: #ffffff;
 }
-.calendar {
+& .calendar {
   color: #3d3a4d;
   width: 70px;
   border-radius: 8px;
 }
-.calendar .header {
+& .calendar .header {
   display: flex;
   justify-content: space-between;
   padding: 6px 14px;
   border-bottom: 1px solid #3d3a4d;
 }
-.calendar .header .dot {
+& .calendar .header .dot {
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background-color: #3d3a4d;
 }
-.calendar .content {
+& .calendar .content {
   padding: 8px;
   text-align: center;
   font-style: normal;
@@ -41,14 +39,14 @@ div:first {
   white-space: nowrap;
   overflow: hidden;
 }
-.calendar .content b.time {
+& .calendar .content b.time {
   font-size: 12px;
 }
-.date {
+& .date {
   padding: 2px 0;
 }
-.date .month,
-.date .year {
+& .date .month,
+& .date .year {
   font-style: normal;
   font-weight: 600;
   font-size: 10px;
@@ -56,3 +54,4 @@ div:first {
   text-transform: uppercase;
   text-align: center;
 }
+/*! purgecss end ignore */

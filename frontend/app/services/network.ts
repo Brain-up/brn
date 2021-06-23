@@ -3,7 +3,7 @@ import fetch from 'fetch';
 import { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Store from '@ember-data/store';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 interface UserDTO {
   firstName: string;
@@ -38,7 +38,7 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
 }
 
 function formatDateForRequest(date: Date): string {
-  return moment(date).utc().format('YYYY-MM-DD');
+  return DateTime.fromJSDate(date).toUTC().toFormat('yyyy-MM-dd');
 }
 
 export default class NetworkService extends Service {
