@@ -4,24 +4,24 @@ import com.epam.brn.dto.ResourceDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Optional
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class ResourceServiceTest {
-    @InjectMocks
+
+    @InjectMockKs
     lateinit var resourceService: ResourceService
 
-    @Mock
+    @MockK
     lateinit var resourceRepository: ResourceRepository
 
     val id = 1L
@@ -34,23 +34,24 @@ internal class ResourceServiceTest {
             id = id,
             wordType = "OBJECT"
         )
-        `when`(resourceRepository.findById(id)).thenReturn(Optional.of(resource))
-        `when`(resourceRepository.save(resource)).thenReturn(resource)
+        every { resourceRepository.findById(id) } returns Optional.of(resource)
+        every { resourceRepository.save(resource) } returns resource
 
         // WHEN
         val result: ResourceDto = resourceService.updateDescription(id, description)
 
         // THEN
+        verify(exactly = 1) { resourceRepository.findById(id) }
+        verify(exactly = 1) { resourceRepository.save(resource) }
+
         assertEquals(id, result.id)
         assertEquals(description, result.description)
-        verify(resourceRepository).findById(id)
-        verify(resourceRepository).save(resource)
     }
 
     @Test
     fun `Should throw EntityNotFoundException if it does not exist`() {
         // GIVEN
-        `when`(resourceRepository.findById(id)).thenReturn(Optional.empty())
+        every { resourceRepository.findById(id) } returns Optional.empty()
 
         // WHEN
         val exception = assertThrows<EntityNotFoundException> {
@@ -59,7 +60,6 @@ internal class ResourceServiceTest {
 
         // THEN
         assertEquals("Resource not found by id=$id", exception.message)
-        verify(resourceRepository).findById(id)
-        verifyNoMoreInteractions(resourceRepository)
+        verify(exactly = 1) { resourceRepository.findById(id) }
     }
 }
