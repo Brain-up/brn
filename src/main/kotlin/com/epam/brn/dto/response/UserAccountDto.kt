@@ -14,8 +14,8 @@ data class UserAccountDto(
     val bornYear: Int?,
     val gender: Gender?,
     var active: Boolean = true,
-    val created: LocalDateTime = LocalDateTime.now(),
-    val changed: LocalDateTime = LocalDateTime.now(),
+    val created: LocalDateTime? = null,
+    val changed: LocalDateTime? = null,
     var avatar: String? = null,
     var headphones: Set<HeadphonesDto>? = null
 ) {

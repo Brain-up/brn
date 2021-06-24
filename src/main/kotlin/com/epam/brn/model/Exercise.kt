@@ -50,7 +50,7 @@ data class Exercise(
 
     @Column(name = "changed_when")
     @LastModifiedDate
-    var changedWhen: LocalDateTime = LocalDateTime.now()
+    var changedWhen: LocalDateTime? = null
     fun toDto(available: Boolean = true) = ExerciseDto(
         seriesId = subGroup?.id,
         id = id,

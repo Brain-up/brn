@@ -14,5 +14,5 @@ data class ExerciseWithTasksDto(
     var signals: List<SignalTaskDto>,
     var active: Boolean = true,
     var changedBy: String? = "",
-    var changedWhen: LocalDateTime
+    var changedWhen: LocalDateTime? = null
 )

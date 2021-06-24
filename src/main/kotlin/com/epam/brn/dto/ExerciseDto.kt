@@ -14,5 +14,5 @@ data class ExerciseDto(
     var signals: MutableList<SignalTaskDto> = mutableListOf(),
     var active: Boolean = true,
     var changedBy: String? = "InitialDataLoader",
-    var changedWhen: LocalDateTime = LocalDateTime.now()
+    var changedWhen: LocalDateTime? = null
 )

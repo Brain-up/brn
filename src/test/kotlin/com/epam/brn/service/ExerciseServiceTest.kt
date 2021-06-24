@@ -45,6 +45,9 @@ internal class ExerciseServiceTest {
     @Mock
     lateinit var urlConversionService: UrlConversionService
 
+    @Mock
+    lateinit var timeService: TimeService
+
     private val series = Series(
         id = 1L,
         name = "Распознавание простых слов",

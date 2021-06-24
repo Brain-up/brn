@@ -14,7 +14,7 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.sql.Timestamp
+import java.sql.Date
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -62,7 +62,7 @@ internal class UserDayStatisticServiceTest {
         every { studyHistory.startTime } returns studyHistoryDate
         every { studyHistory.executionSeconds } returns exercisingSeconds
         every {
-            studyHistoryRepository.getHistories(ofType(Long::class), ofType(Timestamp::class), ofType(Timestamp::class))
+            studyHistoryRepository.getHistories(ofType(Long::class), ofType(Date::class), ofType(Date::class))
         } returns listOf(studyHistory)
         val expectedStatistic = DayStudyStatistic(
             date = studyHistoryDate,
@@ -83,8 +83,8 @@ internal class UserDayStatisticServiceTest {
         every {
             studyHistoryRepository.getHistories(
                 ofType(Long::class),
-                ofType(Timestamp::class),
-                ofType(Timestamp::class)
+                ofType(Date::class),
+                ofType(Date::class)
             )
         } returns emptyList()
 

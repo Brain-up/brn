@@ -7,7 +7,6 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.sql.Date
-import java.sql.Timestamp
 
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
@@ -76,7 +75,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " AND date_trunc('day', s.startTime) < :to " +
             " AND s.userAccount.id = :userId"
     )
-    fun getHistories(userId: Long, from: Timestamp, to: Timestamp): List<StudyHistory>
+    fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
 
     @Query(
         "SELECT s FROM StudyHistory s " +

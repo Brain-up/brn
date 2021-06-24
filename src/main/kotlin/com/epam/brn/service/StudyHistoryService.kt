@@ -5,7 +5,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.springframework.stereotype.Service
-import java.sql.Timestamp
+import java.sql.Date
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -42,7 +42,11 @@ class StudyHistoryService(
     }
 
     fun getHistories(userId: Long, from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
-        return studyHistoryRepository.getHistories(userId, Timestamp.valueOf(from), Timestamp.valueOf(to))
+        return studyHistoryRepository.getHistories(
+            userId,
+            Date.valueOf(from.toLocalDate()),
+            Date.valueOf(to.toLocalDate())
+        )
             .map { it.toDto() }
     }
 

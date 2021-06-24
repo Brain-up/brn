@@ -7,16 +7,16 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class ExerciseService(
-    @Autowired val exerciseRepository: ExerciseRepository,
-    @Autowired val studyHistoryRepository: StudyHistoryRepository,
-    @Autowired val userAccountService: UserAccountService,
-    @Autowired val urlConversionService: UrlConversionService
+    private val exerciseRepository: ExerciseRepository,
+    private val studyHistoryRepository: StudyHistoryRepository,
+    private val userAccountService: UserAccountService,
+    private val urlConversionService: UrlConversionService,
+    private val timeService: TimeService
 ) {
 
     @Value(value = "\${minRepetitionIndex}")
@@ -124,6 +124,7 @@ class ExerciseService(
     fun updateActiveStatus(exerciseId: Long, active: Boolean) {
         var exercise = exerciseRepository.findById(exerciseId).get()
         exercise.active = active
+        exercise.changedWhen = timeService.now()
         exerciseRepository.save(exercise)
     }
 

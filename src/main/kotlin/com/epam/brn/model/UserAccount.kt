@@ -36,10 +36,10 @@ data class UserAccount(
     var active: Boolean = true,
     @Column(nullable = false)
     @CreatedDate
-    var created: LocalDateTime = LocalDateTime.now(),
+    var created: LocalDateTime? = null,
     @Column(nullable = false)
     @LastModifiedDate
-    var changed: LocalDateTime = LocalDateTime.now(),
+    var changed: LocalDateTime? = null,
     @LastModifiedBy
     @Column(name = "changed_by")
     var changedBy: String = "",

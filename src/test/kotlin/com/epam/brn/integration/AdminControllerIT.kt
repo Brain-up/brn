@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.nio.charset.StandardCharsets
-import java.sql.Timestamp
+import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -208,8 +208,8 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val result = studyHistoryRepository.getHistories(
             existingUser.id!!,
-            Timestamp.valueOf(now),
-            Timestamp.valueOf(now.plusDays(1))
+            Date.valueOf(now.toLocalDate()),
+            Date.valueOf(now.plusDays(1).toLocalDate())
         )
         // THEN
         assertEquals(4, result.size)
@@ -230,8 +230,8 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val result = studyHistoryRepository.getHistories(
             existingUser.id!!,
-            Timestamp.valueOf(LocalDateTime.now()),
-            Timestamp.valueOf(LocalDateTime.now().plusDays(1))
+            Date.valueOf(LocalDate.now()),
+            Date.valueOf(LocalDate.now().plusDays(1))
         )
         // THEN
         assertEquals(0, result.size)
