@@ -3,15 +3,15 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | ui/avatars', function(hooks) {
+module('Integration | Component | ui/avatars', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
     await render(hbs`<Ui::Avatars />`);
 
-    assert.dom('img').exists({count: 20});
+    assert.dom('img').exists({ count: 20 });
   });
 });

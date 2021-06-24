@@ -3,10 +3,10 @@ import { setupTest } from 'ember-qunit';
 import { isEmpty } from '@ember/utils';
 import { isArray } from '@ember/array';
 
-module('Unit | Service | tasksManager', function(hooks) {
+module('Unit | Service | tasksManager', function (hooks) {
   setupTest(hooks);
 
-  test('has empty completedTasks array after init', function(assert) {
+  test('has empty completedTasks array after init', function (assert) {
     let service = this.owner.lookup('service:tasks-manager');
     assert.ok(
       isEmpty(service.completedTasks) && isArray(service.completedTasks),
@@ -14,7 +14,7 @@ module('Unit | Service | tasksManager', function(hooks) {
     );
   });
 
-  test('save as completed', function(assert) {
+  test('save as completed', function (assert) {
     let service = this.owner.lookup('service:tasks-manager');
     const targetObj = {};
     service.saveAsCompleted(targetObj);
@@ -24,7 +24,7 @@ module('Unit | Service | tasksManager', function(hooks) {
     );
   });
 
-  test('isCompleted prop', function(assert) {
+  test('isCompleted prop', function (assert) {
     let service = this.owner.lookup('service:tasks-manager');
     const targetObj = {};
     service.saveAsCompleted(targetObj);

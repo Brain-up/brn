@@ -1,17 +1,17 @@
 import Ember from 'ember';
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { inject  as service } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { later, cancel } from '@ember/runloop';
 import StudyingTimerService from 'brn/services/studying-timer';
 import { tracked } from '@glimmer/tracking';
 
 interface ITimerComponentArgs {
-  hideControls?: boolean
+  hideControls?: boolean;
 }
 
 export default class TimerComponent extends Component<ITimerComponentArgs> {
-  @service('studying-timer') studyingTimer !: StudyingTimerService;
+  @service('studying-timer') studyingTimer!: StudyingTimerService;
 
   @action
   onInsert() {
@@ -44,9 +44,9 @@ export default class TimerComponent extends Component<ITimerComponentArgs> {
     const mins = Math.floor(this.countedSeconds / 60);
     const hours = Math.floor(mins / 60);
     const seconds = this.countedSeconds % 60;
-    return `${
-      hours ? leadingZero(hours) + ':' : ''
-    }${leadingZero(mins - hours * 60)}:${leadingZero(seconds)}`;
+    return `${hours ? leadingZero(hours) + ':' : ''}${leadingZero(
+      mins - hours * 60,
+    )}:${leadingZero(seconds)}`;
   }
 
   updateSecondsCount() {
@@ -66,7 +66,7 @@ export default class TimerComponent extends Component<ITimerComponentArgs> {
     this.setStartTime();
     this.isStarted = true;
     if (!Ember.testing) {
-      this.timerId =  later(this, this.updateSecondsCount, 1000);
+      this.timerId = later(this, this.updateSecondsCount, 1000);
     }
   }
 

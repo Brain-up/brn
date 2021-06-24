@@ -22,7 +22,9 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
-    return this.model.get('tasks').every((task: any) => task.get('completedInCurrentCycle'));
+    return this.model
+      .get('tasks')
+      .every((task: any) => task.get('completedInCurrentCycle'));
   }
 
   goToSeries() {
@@ -40,13 +42,16 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     return this.modelStats;
   }
 
-  @(task(function*(this: GroupSeriesSubgroupExerciseController, isCorrect = false) {
+  @(task(function* (
+    this: GroupSeriesSubgroupExerciseController,
+    isCorrect = false,
+  ) {
     const waitingTime = isCorrect ? 3000 : 2000;
     this.correctnessWidgetIsShown = true;
     yield customTimeout(waitingTime);
     this.correctnessWidgetIsShown = false;
-  }).drop()) runCorrectnessWidgetTimer;
-
+  }).drop())
+  runCorrectnessWidgetTimer;
 
   @action
   async greedOnCompletedExercise() {
@@ -64,7 +69,6 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     this.stats.unregisterModel(model);
   }
 
-
   enableNextExercise(model: Exercise) {
     // to-do add integration test for it
     const children = model.parent.exercises.toArray();
@@ -81,7 +85,9 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   async afterCompleted() {
     this.enableNextExercise(this.model as Exercise);
 
-    await getOwner(this).lookup(`controller:group.series.subgroup`).exerciseAvailabilityCalculationTask.perform();
+    await getOwner(this)
+      .lookup(`controller:group.series.subgroup`)
+      .exerciseAvailabilityCalculationTask.perform();
 
     this.goToSeries();
   }

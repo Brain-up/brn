@@ -1,0 +1,18 @@
+<div class="info">
+  {{
+    'Shared.Components.Paginator.Info [startRange, endRange, total]'
+      | translate: { startRange: startRange, endRange: endRange, total: total }
+  }}
+</div>
+
+<div class="numeric-buttons">
+  <button class="prev" *ngIf="pageNumber > 1" (click)="selectPageEvent.emit(pageNumber - 1)">
+    {{ pageNumber - 1 }}
+  </button>
+
+  <button class="current" *ngIf="total / pageSize > 1">{{ pageNumber }}</button>
+
+  <button class="next" *ngIf="pageNumber < total / pageSize" (click)="selectPageEvent.emit(pageNumber + 1)">
+    {{ pageNumber + 1 }}
+  </button>
+</div>

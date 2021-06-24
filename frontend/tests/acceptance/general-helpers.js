@@ -1,6 +1,13 @@
 import { click } from '@ember/test-helpers';
 
-export function getServerResponses({ tasks, series, groups, subgroups, exercises, availableExercises  }) {
+export function getServerResponses({
+  tasks,
+  series,
+  groups,
+  subgroups,
+  exercises,
+  availableExercises,
+}) {
   /* eslint-disable no-undef */
   server.get('groups', () => {
     return { data: groups };

@@ -36,10 +36,8 @@ export default class ApplicationAdapter extends RESTAdapter {
   }
 }
 
-
-
 declare module 'ember-data/types/registries/adapter' {
   export default interface AdapterRegistry {
-    'application': ApplicationAdapter;
+    application: ApplicationAdapter;
   }
 }
