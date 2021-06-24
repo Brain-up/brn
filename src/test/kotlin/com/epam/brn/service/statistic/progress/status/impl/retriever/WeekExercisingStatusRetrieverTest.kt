@@ -5,7 +5,7 @@ import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
-import com.epam.brn.service.statistic.progress.status.UserCoolDownRetriever
+import com.epam.brn.service.statistic.progress.status.UserRestTimeRetriever
 import com.epam.brn.service.statistic.progress.status.requirements.StatusRequirementsManager
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -26,7 +26,7 @@ internal class WeekExercisingStatusRetrieverTest {
     private lateinit var requirementsManager: StatusRequirementsManager
 
     @MockK
-    private lateinit var coolDownRetriever: UserCoolDownRetriever
+    private lateinit var coolDownRetriever: UserRestTimeRetriever
 
     @MockK
     private lateinit var studyHistory: StudyHistory
@@ -62,7 +62,7 @@ internal class WeekExercisingStatusRetrieverTest {
         every { userAccount.id } returns userAccountId
         every { studyHistory.startTime } returns time
         every {
-            coolDownRetriever.getMaximalUserCoolDown(
+            coolDownRetriever.getMaximalUserRestTime(
                 userAccountId,
                 time.toLocalDate(),
                 time.toLocalDate()
@@ -87,7 +87,7 @@ internal class WeekExercisingStatusRetrieverTest {
         every { userAccount.id } returns userAccountId
         every { studyHistory.startTime } returns time
         every {
-            coolDownRetriever.getMaximalUserCoolDown(
+            coolDownRetriever.getMaximalUserRestTime(
                 userAccountId,
                 time.toLocalDate(),
                 time.toLocalDate()
@@ -112,7 +112,7 @@ internal class WeekExercisingStatusRetrieverTest {
         every { userAccount.id } returns userAccountId
         every { studyHistory.startTime } returns time
         every {
-            coolDownRetriever.getMaximalUserCoolDown(
+            coolDownRetriever.getMaximalUserRestTime(
                 userAccountId,
                 time.toLocalDate(),
                 time.toLocalDate()

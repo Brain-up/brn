@@ -17,10 +17,10 @@ import java.time.LocalDateTime
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-internal class UserCoolDownRetrieverImplTest {
+internal class UserRestTimeRetrieverImplTest {
 
     @InjectMockKs
-    private lateinit var userCoolDownRetrieverImpl: UserCoolDownRetrieverImpl
+    private lateinit var userCoolDownRetrieverImpl: UserRestTimeRetrieverImpl
 
     @MockK
     private lateinit var studyHistoryRepository: StudyHistoryRepository
@@ -65,7 +65,7 @@ internal class UserCoolDownRetrieverImplTest {
         every { studyHistory3.startTime } returns time.plusDays(2)
 
         // WHEN
-        val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserCoolDown(userId, date, date)
+        val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserRestTime(userId, date, date)
 
         // THEN
         assertEquals(1, maximalUserCoolDown)
@@ -83,7 +83,7 @@ internal class UserCoolDownRetrieverImplTest {
         every { studyHistory3.startTime } returns time.plusDays(4)
 
         // WHEN
-        val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserCoolDown(userId, date, date)
+        val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserRestTime(userId, date, date)
 
         // THEN
         assertEquals(3, maximalUserCoolDown)
