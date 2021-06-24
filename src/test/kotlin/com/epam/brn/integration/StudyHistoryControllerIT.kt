@@ -54,8 +54,7 @@ class StudyHistoryControllerIT : BaseIT() {
             replaysCount = 3,
             wrongAnswers = 1
         )
-        val requestBody = gson.toJson(studyHistoryDto)
-
+        val requestBody = objectMapper.writeValueAsString(studyHistoryDto)
         // WHEN
         mockMvc.perform(
             post(baseUrl)
