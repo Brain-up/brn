@@ -5,19 +5,19 @@ import { tracked } from '@glimmer/tracking';
 
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
-  'PASSWORD_MUST_BE_BETWEEN_4_AND_20_CHARACTERS_LONG': 'registration_form.password_length'
+  PASSWORD_MUST_BE_BETWEEN_4_AND_20_CHARACTERS_LONG:
+    'registration_form.password_length',
 };
 
 interface LatestUserDTO {
   name: string;
   email: string;
   password: string;
-  gender: "MALE" | "FEMALE";
+  gender: 'MALE' | 'FEMALE';
   bornYear: number;
   avatar: string;
   id?: string;
 }
-
 
 export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked email!: string;
@@ -26,20 +26,19 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked password!: string;
   @tracked birthday!: string;
   @tracked repeatPassword!: string;
-  @tracked gender!: "MALE" | "FEMALE";
+  @tracked gender!: 'MALE' | 'FEMALE';
   @tracked agreed = false;
 
   maxDate = new Date().getFullYear();
   minDate = new Date().getFullYear() - 100;
 
-
   get warningPasswordsEquality() {
-
     if (this.repeatPassword === undefined) {
       return false;
     }
 
-    const isPasswordsEqual = this.password && this.password === this.repeatPassword;
+    const isPasswordsEqual =
+      this.password && this.password === this.repeatPassword;
 
     if (!isPasswordsEqual) {
       return this.intl.t('registration_form.passwords_should_match');
@@ -58,7 +57,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     if (parseInt(birthday, 10) > maxDate || minDate > parseInt(birthday, 10)) {
       return this.intl.t('registration_form.invalid_date');
     }
-
 
     return false;
   }
@@ -96,7 +94,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   set login(value) {
     this.email = value;
   }
-  @(task(function*(this: RegistrationFormComponent) {
+  @(task(function* (this: RegistrationFormComponent) {
     const user: LatestUserDTO = {
       name: this.firstName.trim(),
       email: this.email,
@@ -115,7 +113,9 @@ export default class RegistrationFormComponent extends LoginFormComponent {
         this.errorMessage = this.intl.t(`msg.validation.${key}`);
       } else {
         this.errorMessage =
-          key in ERRORS_MAP ? this.intl.t(ERRORS_MAP[key as (keyof typeof ERRORS_MAP)]) : key;
+          key in ERRORS_MAP
+            ? this.intl.t(ERRORS_MAP[key as keyof typeof ERRORS_MAP])
+            : key;
       }
       this.registrationTask.cancelAll();
     }

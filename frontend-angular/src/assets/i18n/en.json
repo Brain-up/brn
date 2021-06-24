@@ -7,32 +7,6 @@
       "Users": "Users"
     },
     "Modules": {
-      "Statistics": {
-        "Buttons": {
-          "WhatIsIt": "Admin.Modules.Statistics.Buttons.WhatIsIt"
-        },
-        "Components": {
-          "MonthTimeTrack": {
-            "EmptyData": "Admin.Modules.Statistics.Components.MonthTimeTrack.EmptyData",
-            "Title [year]": "Admin.Modules.Statistics.Components.MonthTimeTrack.Title [year]"
-          },
-          "MonthTimeTrackItem": {
-            "Days [days]": "Admin.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]"
-          },
-          "StatisticsInfoDialog": {
-            "Buttons": {
-              "Ok": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Buttons.Ok"
-            },
-            "ContentTitle": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.ContentTitle",
-            "Text": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Text",
-            "Title": "Admin.Modules.Statistics.Components.StatisticsInfoDialog.Title"
-          },
-          "WeekTimeTrack": {
-            "EmptyData": "Admin.Modules.Statistics.Components.WeekTimeTrack.EmptyData",
-            "Title [month]": "Admin.Modules.Statistics.Components.WeekTimeTrack.Title [month]"
-          }
-        }
-      },
       "UploadFile": {
         "Links": {
           "LoadConfigurationFiles": "Load configuration files",
@@ -68,6 +42,61 @@
             }
           }
         }
+      },
+      "Users": {
+        "Components": {
+          "UsersTable": {
+            "ColumnsName": {
+              "Favorite": "Favorite",
+              "FirstVisit": "First visit",
+              "LastVisit": "Last visit",
+              "LastWeek": "Last week",
+              "Name": "Name",
+              "Progress": "Progress",
+              "WorkingDaysInLastMonth": "Days in last month"
+            },
+            "NameColumn": {
+              "CommonInfo [years, gender]": "{{ years }} years old, {{ gender }}"
+            },
+            "VisitColumn": {
+              "Time [hours]": "{{ hours }} hours"
+            }
+          }
+        },
+        "EmptyData": "Admin.Modules.Users.EmptyData",
+        "FavoriteToggler": {
+          "AllUsers": "All users",
+          "Favorites": "Favorites"
+        },
+        "Modules": {
+          "Statistics": {
+            "Buttons": {
+              "WhatIsIt": "Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt"
+            },
+            "Components": {
+              "MonthTimeTrack": {
+                "EmptyData": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.EmptyData",
+                "Title [year]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.Title [year]"
+              },
+              "MonthTimeTrackItem": {
+                "Days [days]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]"
+              },
+              "StatisticsInfoDialog": {
+                "Buttons": {
+                  "Ok": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Buttons.Ok"
+                },
+                "ContentTitle": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.ContentTitle",
+                "Text": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Text",
+                "Title": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Title"
+              },
+              "WeekTimeTrack": {
+                "EmptyData": "Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData",
+                "Title [month]": "Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.Title [month]"
+              }
+            }
+          }
+        },
+        "Search": "Search"
       }
     }
   },
@@ -99,6 +128,13 @@
       "Exceptions": {
         "Unauthorized": "Unauthorized request",
         "UnknownError": "Unknown error"
+      }
+    }
+  },
+  "Shared": {
+    "Components": {
+      "Paginator": {
+        "Info [startRange, endRange, total]": "Showing {{ startRange }}-{{ endRange }} of {{ total }} items"
       }
     }
   }

@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | exercise-stats/panel', function(hooks) {
+module('Integration | Component | exercise-stats/panel', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
@@ -26,7 +26,7 @@ module('Integration | Component | exercise-stats/panel', function(hooks) {
     assert.dom('[data-test-value]').hasText('42');
   });
 
-  test('it support bock invocation', async function(assert) {
+  test('it support bock invocation', async function (assert) {
     await render(
       hbs`<ExerciseStats::Panel @type="positive" @label="Foo">42</ExerciseStats::Panel>`,
     );

@@ -13,6 +13,6 @@ export class CloudApiService {
   }
 
   public getFolders(): Observable<string[]> {
-    return this.httpClient.get<{ data: string[] }>(`/api/cloud/folders`).pipe(pluck('data'));
+    return this.httpClient.get<{ data: string[] }>('/api/cloud/folders').pipe(pluck('data'));
   }
 }

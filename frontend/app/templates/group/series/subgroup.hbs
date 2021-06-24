@@ -1,8 +1,8 @@
-  <span {{did-insert (perform this.exerciseAvailabilityCalculationTask)}}></span>
+<span {{did-insert (perform this.exerciseAvailabilityCalculationTask)}}></span>
 
-  <SeriesNavigation
-    @exercises={{or @model.exercises @model}}
-    @available={{this.availableExercises}}
-  />
+<SeriesNavigation
+  @exercises={{or @model.exercises @model}}
+  @available={{this.availableExercises}}
+/>
 
 {{outlet}}

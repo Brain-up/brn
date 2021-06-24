@@ -1,12 +1,12 @@
 <div class="series-page--canvas flex flex-col flex-grow">
   {{#if (is-active "group.series.index")}}
     {{page-title @model.name}}
-      {{#each (chunk 4 this.exerciseSubGroups) as |groups|}}
-        <div class="flex mb-4 -mx-2">
-          {{#each groups as |group|}}
-            <ExerciseGroup @group={{group}} />
-          {{/each}}
-        </div>
+    {{#each (chunk 4 this.exerciseSubGroups) as |groups|}}
+      <div class="flex mb-4 -mx-2">
+        {{#each groups as |group|}}
+          <ExerciseGroup @group={{group}} />
+        {{/each}}
+      </div>
     {{/each}}
   {{/if}}
   {{outlet}}

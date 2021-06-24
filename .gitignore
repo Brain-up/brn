@@ -47,3 +47,6 @@ out/
 **/*.log
 **/*.log.*.gz
 brn.log.*
+
+### OS generated files ###
+.DS_Store

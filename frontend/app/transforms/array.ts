@@ -16,14 +16,13 @@ const ArrayTransform = Transform.extend({
 
   serialize(deserialized: unknown[]) {
     return transformToArray(deserialized);
-  }
+  },
 });
-
 
 export default ArrayTransform;
 
 declare module 'ember-data/types/registries/transform' {
   export default interface TransformRegistry {
-    'array': ArrayTransform;
+    array: ArrayTransform;
   }
 }

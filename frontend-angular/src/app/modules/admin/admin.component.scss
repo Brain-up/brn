@@ -1,5 +1,5 @@
-@import '../../styles/colors';
-@import '../../styles/variables';
+@import 'colors';
+@import 'variables';
 
 $header-height: 120px;
 $header-bottom-border: 4px;
@@ -7,12 +7,10 @@ $user-width: 196px;
 $user-icon-size: 44px;
 $user-right-margin: 80px;
 
-header {
+.header {
   height: $header-height;
-}
 
-.admin {
-  &__header {
+  mat-toolbar {
     height: calc(#{$header-height} - #{$header-bottom-border});
     width: 100%;
     padding: 0 $header-horizontal-padding;
@@ -71,4 +69,8 @@ header {
       }
     }
   }
+}
+
+.content {
+  padding: 35px 65px;
 }

@@ -3,7 +3,7 @@ import { currentURL } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
-import { authenticateSession  } from 'ember-simple-auth/test-support';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 
 import {
   getUnaccessibleTaskScenario,
@@ -11,7 +11,7 @@ import {
   getUnaccessibleSeriesScenario,
 } from './test-support/helpers';
 
-module('Acceptance | unaccessible routes', function(hooks) {
+module('Acceptance | unaccessible routes', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
@@ -19,7 +19,7 @@ module('Acceptance | unaccessible routes', function(hooks) {
     await authenticateSession();
   });
 
-  skip('visiting unaccessible task', async function(assert) {
+  skip('visiting unaccessible task', async function (assert) {
     getUnaccessibleTaskScenario();
 
     await pageObject.goToAccessibleTask();
@@ -33,7 +33,7 @@ module('Acceptance | unaccessible routes', function(hooks) {
     assert.equal(currentURL(), firstSiblingUrl);
   });
 
-  skip('visiting task that is not in the current exercise( using non-first exercise )', async function(assert) {
+  skip('visiting task that is not in the current exercise( using non-first exercise )', async function (assert) {
     getUnaccessibleExerciseScenario();
 
     await pageObject.goToRightTaskInTheExercise();
@@ -47,7 +47,7 @@ module('Acceptance | unaccessible routes', function(hooks) {
     assert.equal(currentURL(), firstSiblingUrl);
   });
 
-  skip('visiting unaccessible series', async function(assert) {
+  skip('visiting unaccessible series', async function (assert) {
     getUnaccessibleSeriesScenario();
 
     await pageObject.goToAccessibleSeries();

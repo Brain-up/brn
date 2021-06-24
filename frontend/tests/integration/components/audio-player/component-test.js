@@ -8,10 +8,10 @@ import { TIMINGS } from 'brn/utils/audio-api';
 import customTimeout from 'brn/utils/custom-timeout';
 import Service from '@ember/service';
 
-module('Integration | Component | audio-player', function(hooks) {
+module('Integration | Component | audio-player', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(async function() {
+  hooks.beforeEach(async function () {
     const fakeAudio = {
       currentTime: 0,
       duration: 60,
@@ -21,7 +21,7 @@ module('Integration | Component | audio-player', function(hooks) {
     this.set('emptyList', []);
   });
 
-  test('it registers itself to audio service', async function(assert) {
+  test('it registers itself to audio service', async function (assert) {
     assert.expect(1);
     class MockAudio extends Service {
       register(ctx) {
@@ -41,7 +41,7 @@ module('Integration | Component | audio-player', function(hooks) {
     );
   });
 
-  test('it disables button when playing', async function(assert) {
+  test('it disables button when playing', async function (assert) {
     await render(
       hbs`<AudioPlayer
         @audioElements={{this.audioElements}}
@@ -60,7 +60,7 @@ module('Integration | Component | audio-player', function(hooks) {
     assert.dom('[data-test-play-audio-button]').isNotDisabled();
   });
 
-  test('it shows playing progress', async function(assert) {
+  test('it shows playing progress', async function (assert) {
     await render(
       hbs`<AudioPlayer
         @audioElements={{this.audioElements}}

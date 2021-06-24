@@ -10,13 +10,13 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   queryParams = {
     locale: {
       type: 'string',
-      refreshModel: true
-    }
-  }
+      refreshModel: true,
+    },
+  };
   async model() {
     await this.network.loadCurrentUser();
     return await this.store.query('group', {
-      locale: this.intl.locale[0]
+      locale: this.intl.locale[0],
     });
   }
 }
