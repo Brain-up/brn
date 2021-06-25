@@ -6,16 +6,15 @@ import StatsService, { StatEvents } from '../../services/stats';
 import { ref } from 'ember-ref-bucket';
 
 export interface ToneObject {
-  duration: number,
-  frequency: number
+  duration: number;
+  frequency: number;
 }
 interface IAudioPlayerArguments {
-  audioFileUrl: string | ToneObject
+  audioFileUrl: string | ToneObject;
   transparent: boolean;
 }
 
 export default class AudioPlayerComponent extends Component<IAudioPlayerArguments> {
-
   animationId: number = 0;
 
   @ref('buttonElement') buttonElement!: HTMLElement;
@@ -23,6 +22,7 @@ export default class AudioPlayerComponent extends Component<IAudioPlayerArgument
   @service('stats') stats!: StatsService;
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.audio.stop();
   }
 

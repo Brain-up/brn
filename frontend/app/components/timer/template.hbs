@@ -5,49 +5,85 @@
   {{will-destroy this.onDestroy}}
 >
   <div
-    class="timer-wrapper"
+    class="timer-wrapper flex items-center px-5 py-2 rounded-full"
     data-test-timer-wrapper
     data-test-timer-is-paused={{this.isPaused}}
   >
     <svg
-      class="clock-svg"
-      width="40"
-      version="1.1"
-      id="Layer_1"
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      x="0px"
-      y="0px"
-      viewBox="0 0 512 512"
-      xml:space="preserve"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
     >
-      <style type="text/css">
-        .st0{fill:#F9C900;}
-	.st1{fill:#FFFFFF;}
-      </style>
       <path
-        class="st0"
-        d="M256,512C114.8,512,0,397.2,0,256S114.8,0,256,0s256,114.8,256,256S397.2,512,256,512z"
+        d="M5 12.5C5 8.92728 7.92728 6 11.5 6C15.0727 6 18 8.92728 18 12.5C18 16.0727 15.0727 19 11.5 19C7.92728 19 5 16.0727 5 12.5Z"
+        stroke="#A5A2B8"
+        stroke-width="2"
       ></path>
-      <path
-        class="st1"
-        d="M364,384.7c-4.1,0-8.2-1.6-11.3-4.7l-112-112c-3-3-4.7-7.1-4.7-11.3V107.3c0-8.8,7.2-16,16-16s16,7.2,16,16V250
-	l107.3,107.3c6.3,6.3,6.3,16.4,0,22.6C372.2,383.1,368.1,384.7,364,384.7z"
-      ></path>
+      <rect x="11" y="8" width="1" height="5" rx="0.5" fill="#A5A2B8"></rect>
+      <rect
+        x="14.5356"
+        y="14.8284"
+        width="1"
+        height="4"
+        rx="0.5"
+        transform="rotate(135 14.5356 14.8284)"
+        fill="#A5A2B8"
+      ></rect>
+      <rect x="15" y="5" width="3" height="3" rx="1" fill="#A5A2B8"></rect>
+      <rect x="10" y="3" width="3" height="3" rx="1" fill="#A5A2B8"></rect>
     </svg>
-    <div class="timer font-bold" data-test-timer-display-value>
+    <div
+      class="timer w-20 px-4 text-base font-semibold text-gray-600"
+      data-test-timer-display-value
+    >
       {{this.displayValue}}
     </div>
     {{#unless @hideControls}}
       <button
-        class="block ml-16"
+        class="block"
         type="button"
         {{on "click" this.studyingTimer.togglePause}}
       >
         {{#if (or this.isPaused (not this.isStarted))}}
-          <FaIcon @icon="play-circle" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M20.5 11.134C21.1667 11.5189 21.1667 12.4811 20.5 12.866L8.5 19.7942C7.83333 20.1791 7 19.698 7 18.9282L7 5.0718C7 4.302 7.83333 3.82087 8.5 4.20577L20.5 11.134Z"
+              fill="#7979F2"
+            ></path>
+          </svg>
         {{else}}
-          <FaIcon @icon="pause-circle" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="4"
+              width="6"
+              height="16"
+              rx="2"
+              fill="#7979F2"
+            ></rect>
+            <rect
+              x="14"
+              y="4"
+              width="6"
+              height="16"
+              rx="2"
+              fill="#7979F2"
+            ></rect>
+          </svg>
         {{/if}}
       </button>
     {{/unless}}

@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "http://localhost:8081",
+    "target": "http://brainup.site",
     "secure": false
   }
 }

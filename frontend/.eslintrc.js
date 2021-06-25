@@ -20,9 +20,15 @@ module.exports = {
     browser: true
   },
   rules: {
+    'ember/classic-decorator-no-classic-methods': 'off',
+    'ember/no-classic-components': 'off',
+    'ember/no-component-lifecycle-hooks': 'off',
+    'ember/no-get': 'off',
     'ember/no-jquery': 'error',
     'ember/no-classic-classes': 'off',
-    'ember/require-tagless-components': 'off'
+    'ember/require-tagless-components': 'off',
+    'no-undef': 'off',
+    'no-unused-vars': 'off'
   },
   overrides: [
     // node files

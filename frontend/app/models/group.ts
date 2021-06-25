@@ -1,6 +1,6 @@
 import { hasMany, attr, SyncHasMany } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
-import  SeriesModel from './series';
+import SeriesModel from './series';
 
 export default class Group extends CompletionDependent {
   parent = null;
@@ -17,12 +17,11 @@ export default class Group extends CompletionDependent {
   get sortedSeries() {
     return this.sortedChildren;
   }
-};
-
+}
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {
   export default interface ModelRegistry {
-    'group': Group;
+    group: Group;
   }
 }

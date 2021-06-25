@@ -2,30 +2,37 @@
   {{#if this.showLeftScrollButton}}
     <button
       type="button"
-      style={{html-safe 'position: fixed;'}}
+      style={{html-safe "position: fixed;"}}
       {{did-insert this.alignScrollPositions "left"}}
-      {{on 'click' (fn this.scroll "left")}}
+      {{on "click" (fn this.scroll "left")}}
     >{{concat "<"}}</button>
   {{/if}}
-  <ul class="hs full no-scrollbar" style={{html-safe "scroll-behavior: smooth;"}} {{create-ref "container"}} {{on 'scroll' this.onScroll}}>
+  <ul
+    class="hs full no-scrollbar"
+    style={{html-safe "scroll-behavior: smooth;"}}
+    {{create-ref "container"}}
+    {{on "scroll" this.onScroll}}
+  >
     {{#each (sort-by "order" @group) as |exercise|}}
       <li class="item">
-        <Ui::TabButton data-test-active-link={{exercise.name}}
+        <Ui::TabButton
+          data-test-active-link={{exercise.name}}
           class="pl-3 pr-3"
           @small={{true}}
           @route="group.series.subgroup"
           @models={{array exercise.id}}
-          @title={{exercise.name}} />
+          @title={{exercise.name}}
+        />
       </li>
     {{/each}}
   </ul>
-    {{#if this.showRightScrollButton}}
-      <button
-        type="button"
-        style={{html-safe 'position: fixed;'}}
-        {{did-insert this.alignScrollPositions "right"}}
-        {{on 'click' (fn this.scroll "right")}}
-      >{{concat ">"}}</button>
-    {{/if}}
+  {{#if this.showRightScrollButton}}
+    <button
+      type="button"
+      style={{html-safe "position: fixed;"}}
+      {{did-insert this.alignScrollPositions "right"}}
+      {{on "click" (fn this.scroll "right")}}
+    >{{concat ">"}}</button>
+  {{/if}}
 
 </div>

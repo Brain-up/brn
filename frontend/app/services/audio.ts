@@ -1,7 +1,12 @@
 import Ember from 'ember';
 import { isArray } from '@ember/array';
 import { action } from '@ember/object';
-import { task, timeout, Task as TaskGenerator, TaskInstance } from 'ember-concurrency';
+import {
+  task,
+  timeout,
+  Task as TaskGenerator,
+  TaskInstance,
+} from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 import {
@@ -42,7 +47,7 @@ export default class AudioService extends Service {
 
   @tracked audioFileUrl: null | string | string[] | ToneObject = null;
 
-  @(task(function*(this: AudioService) {
+  @(task(function* (this: AudioService) {
     try {
       this.startTime = Date.now();
       this.setProgress(0);
@@ -61,10 +66,12 @@ export default class AudioService extends Service {
       }
     }
   }).enqueue())
-  trackProgress!: TaskGenerator<any,any>
+  trackProgress!: TaskGenerator<any, any>;
 
   audioUrlForText(text: string) {
-    return `/api/audio?text=${encodeURIComponent(text)}&locale=${encodeURIComponent(this.intl.primaryLocale)}`;
+    return `/api/audio?text=${encodeURIComponent(
+      text,
+    )}&locale=${encodeURIComponent(this.intl.primaryLocale)}`;
   }
 
   @action async startPlayTask(filesToPlay = this.filesToPlay) {
@@ -81,7 +88,9 @@ export default class AudioService extends Service {
       return 0;
     }
     const owner = getOwner(this);
-    const model = owner.lookup('route:application').modelFor('group.series.subgroup.exercise');
+    const model = owner
+      .lookup('route:application')
+      .modelFor('group.series.subgroup.exercise');
     if (!model) {
       return 0;
     }
@@ -92,7 +101,9 @@ export default class AudioService extends Service {
       return 0;
     }
     const owner = getOwner(this);
-    const model = owner.lookup('route:application').modelFor('group.series.subgroup.exercise');
+    const model = owner
+      .lookup('route:application')
+      .modelFor('group.series.subgroup.exercise');
     if (!model) {
       return 0;
     }
@@ -109,14 +120,17 @@ export default class AudioService extends Service {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
-  async setAudioElements(filesToPlay: Array<string|ToneObject>) {
+  async setAudioElements(filesToPlay: Array<string | ToneObject>) {
     this.context = createAudioContext();
     if (Ember.testing) {
       this.buffers = [];
       return;
     }
-    if (filesToPlay.filter((el)=> typeof el === 'string').length) {
-      this.buffers = await loadAudioFiles(this.context, filesToPlay as string[]);
+    if (filesToPlay.filter((el) => typeof el === 'string').length) {
+      this.buffers = await loadAudioFiles(
+        this.context,
+        filesToPlay as string[],
+      );
     } else {
       this.buffers = filesToPlay;
     }
@@ -133,7 +147,7 @@ export default class AudioService extends Service {
       if (this.noiseNode) {
         this.noiseNode.source.stop();
       }
-    } catch(e) {
+    } catch (e) {
       // EOL
     }
     if (this.noiseTaskInstance) {
@@ -149,7 +163,7 @@ export default class AudioService extends Service {
       } else {
         await this.fakePlayTask.perform();
       }
-    } catch(e) {
+    } catch (e) {
       // EOL
     }
   }
@@ -181,30 +195,30 @@ export default class AudioService extends Service {
 
   async createToneSources(items: SignalModel[]) {
     const Tone = await import('tone');
-    return items.map(el => {
+    return items.map((el) => {
       const { duration, frequency } = el;
       return {
         source: {
           instance: new Tone.PolySynth(Tone.Synth).toDestination(),
           buffer: {
-            duration: duration / 100
+            duration: duration / 100,
           },
           start() {
             this.instance.triggerAttack(frequency, Tone.now(), 0.5);
           },
           stop() {
             this.instance.dispose();
-          }
-        }
-      }
+          },
+        },
+      };
     });
   }
 
   async createSources(context: AudioContext, buffers: AudioBuffer[]) {
-    if (buffers.filter(el => el instanceof AudioBuffer).length) {
+    if (buffers.filter((el) => el instanceof AudioBuffer).length) {
       return buffers.map((buffer) => createSource(context, buffer));
     } else {
-      return await this.createToneSources(((buffers as unknown) as SignalModel[]));
+      return await this.createToneSources(buffers as unknown as SignalModel[]);
     }
   }
 
@@ -214,17 +228,18 @@ export default class AudioService extends Service {
     }, 0);
   }
 
-  @(task(function* playNoise(this: AudioService){
+  @task(function* playNoise(this: AudioService) {
     let noise = null;
     let timeInSeconds = 10;
     try {
-      const [ level, url ] = [this.currentExerciseNoiseLevel, this.currentExerciseNoiseUrl];
+      const [level, url] = [
+        this.currentExerciseNoiseLevel,
+        this.currentExerciseNoiseUrl,
+      ];
       if (!level) {
         return;
       }
-      noise = yield this.getNoise(timeInSeconds,
-        level, url
-      );
+      noise = yield this.getNoise(timeInSeconds, level, url);
       noise.source.start(0);
       this.noiseNode = noise;
       if (url) {
@@ -238,7 +253,8 @@ export default class AudioService extends Service {
         noise.source.stop();
       }
     }
-  })) startNoiseTask!: TaskGenerator<any,any>
+  })
+  startNoiseTask!: TaskGenerator<any, any>;
 
   @(task(function* playAudio(this: AudioService, noizeSeconds = 0) {
     let startedSources = [];
@@ -256,7 +272,7 @@ export default class AudioService extends Service {
       if (hasNoize) {
         const noize: any = yield this.getNoise(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
-          this.currentExerciseNoiseLevel
+          this.currentExerciseNoiseLevel,
         );
         noize.source.start(0);
         startedSources.push(noize);
@@ -288,7 +304,7 @@ export default class AudioService extends Service {
   })
     .keepLatest()
     .maxConcurrency(1))
-  playTask!: TaskGenerator<any, any>
+  playTask!: TaskGenerator<any, any>;
 
   @(task(function* fakePlayAudio(this: AudioService) {
     this.totalDuration = TIMINGS.FAKE_AUDIO;
@@ -298,7 +314,7 @@ export default class AudioService extends Service {
     this.isPlaying = false;
     this.totalDuration = 0;
   }).enqueue())
-  fakePlayTask!: TaskGenerator<any, any>
+  fakePlayTask!: TaskGenerator<any, any>;
 
   setProgress(progress: number) {
     this.audioPlayingProgress = progress;
@@ -309,10 +325,9 @@ export default class AudioService extends Service {
   }
 }
 
-
 // DO NOT DELETE: this is how TypeScript knows how to look up your services.
 declare module '@ember/service' {
   interface Registry {
-    'audio': AudioService;
+    audio: AudioService;
   }
 }

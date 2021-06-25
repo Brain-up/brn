@@ -11,7 +11,8 @@ export default class Subgroup extends Model {
     return `/${this.pictureUrl}`;
   }
   @attr('string') description!: string;
-  @hasMany('exercise', { async: false, inverse: 'parent' }) exercises!: AsyncHasMany<Exercise>;
+  @hasMany('exercise', { async: false, inverse: 'parent' })
+  exercises!: AsyncHasMany<Exercise>;
   get count() {
     return this.exercisesIds.length;
   }
@@ -24,10 +25,9 @@ export default class Subgroup extends Model {
   }
 }
 
-
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {
   export default interface ModelRegistry {
-    'subgroup': Subgroup;
+    subgroup: Subgroup;
   }
 }

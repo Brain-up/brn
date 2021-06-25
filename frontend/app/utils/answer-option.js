@@ -4,7 +4,7 @@ export default class AnswerOption {
   id = null;
   word = null;
   pictureFileUrl = null;
-  constructor({id, audioFileUrl, word, pictureFileUrl} = {}) {
+  constructor({ id, audioFileUrl, word, pictureFileUrl } = {}) {
     // this.audioFileUrl = '/audio/no_noise/%D0%B1%D0%B0%D0%BB.mp3';
     this.audioFileUrl = audioFileUrl ? urlForAudio(audioFileUrl) : null;
     this.id = id;

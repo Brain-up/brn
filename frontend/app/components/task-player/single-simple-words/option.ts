@@ -3,10 +3,10 @@ import { action } from '@ember/object';
 import { MODES } from 'brn/utils/task-modes';
 
 interface ITaskPlayerSingleWordsOptionComponentArguments {
-  mode: keyof (typeof MODES),
-  disableAnswers: boolean,
-  isCorrect: boolean,
-  activeWord: string
+  mode: keyof typeof MODES;
+  disableAnswers: boolean;
+  isCorrect: boolean;
+  activeWord: string;
 }
 export default class TaskPlayerSingleWordsOptionComponent extends Component<ITaskPlayerSingleWordsOptionComponentArguments> {
   isClicked = false;
@@ -23,9 +23,11 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<ITas
     }
     if (this.isClicked) {
       if (isCorrect) {
-        node.style.backgroundColor = 'green';
+        node.style.backgroundColor = '#47CD8A';
+        node.style.color = '#fff';
       } else {
-        node.style.backgroundColor = 'red';
+        node.style.backgroundColor = '#F38698';
+        node.style.color = '#fff';
       }
       this.isClicked = false;
     } else {

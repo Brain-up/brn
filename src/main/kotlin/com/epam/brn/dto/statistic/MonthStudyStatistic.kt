@@ -9,5 +9,5 @@ data class MonthStudyStatistic(
     val date: YearMonth,
     val exercisingTimeSeconds: Int,
     val exercisingDays: Int,
-    var progress: UserExercisingProgressStatus
+    var progress: UserExercisingProgressStatus?
 ) : Statistic(progress)

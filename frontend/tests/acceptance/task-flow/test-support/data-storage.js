@@ -160,10 +160,7 @@ export function getData() {
       id: 1,
       exerciseType: 'SINGLE_WORDS',
       name: 'default',
-      tasks: [
-        { id: 1 },
-        { id: 2 },
-      ],
+      tasks: [{ id: 1 }, { id: 2 }],
     },
     {
       order: 2,
@@ -174,7 +171,13 @@ export function getData() {
     },
   ];
   const series = [
-    { order: 1, id: 1, name: 'default', exerciseGroupId: 1,  type: 'SINGLE_WORDS' },
+    {
+      order: 1,
+      id: 1,
+      name: 'default',
+      exerciseGroupId: 1,
+      type: 'SINGLE_WORDS',
+    },
   ];
   const groups = [
     { order: 1, id: 1, name: 'default', description: '123', series: [1] },
@@ -182,23 +185,23 @@ export function getData() {
 
   const subgroups = [
     {
-      seriesId:1,
-      id:1,
-      level:1,
-      name:"Семья",
-      pictureUrl:"pictures/theme/family.svg",
-      description:"Слова про семью",
-      exercises: [1, 2]
+      seriesId: 1,
+      id: 1,
+      level: 1,
+      name: 'Семья',
+      pictureUrl: 'pictures/theme/family.svg',
+      description: 'Слова про семью',
+      exercises: [1, 2],
     },
     {
-      seriesId:1,
-      id:2,
-      level:2,
-      name:"Любимый дом",
-      pictureUrl:"pictures/theme/home.svg",
-      description:"Слова про дом",
-      exercises:[]
-    }
+      seriesId: 1,
+      id: 2,
+      level: 2,
+      name: 'Любимый дом',
+      pictureUrl: 'pictures/theme/home.svg',
+      description: 'Слова про дом',
+      exercises: [],
+    },
   ];
   return { tasks, subgroups, exercises, series, groups };
 }
