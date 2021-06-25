@@ -2,11 +2,13 @@ package com.epam.brn.service.statistic.progress
 
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserMonthStatisticService
+import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -46,6 +48,9 @@ internal class UserMonthStatisticServiceTest {
     @MockK
     private lateinit var studyHistorySecond: StudyHistory
 
+    @MockK
+    private lateinit var progressManager: ProgressStatusManager<List<StudyHistory>>
+
     private val month: Int = 2
     private val day: Int = 23
     private val year: Int = 2021
@@ -80,6 +85,12 @@ internal class UserMonthStatisticServiceTest {
                 Date.valueOf(to)
             )
         } returns studyHistories
+        every {
+            progressManager.getStatus(
+                UserExercisingPeriod.WEEK,
+                studyHistories
+            )
+        } returns UserExercisingProgressStatus.GREAT
         val expectedStatistic = MonthStudyStatistic(
             date = YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month),
             exercisingTimeSeconds = executionSeconds * 2,
@@ -104,6 +115,18 @@ internal class UserMonthStatisticServiceTest {
             studyHistory,
             studyHistorySecond
         )
+        every {
+            progressManager.getStatus(
+                UserExercisingPeriod.WEEK,
+                listOf(studyHistory)
+            )
+        } returns UserExercisingProgressStatus.GREAT
+        every {
+            progressManager.getStatus(
+                UserExercisingPeriod.WEEK,
+                listOf(studyHistorySecond)
+            )
+        } returns UserExercisingProgressStatus.GREAT
         every {
             studyHistoryRepository.getHistories(
                 userId,
