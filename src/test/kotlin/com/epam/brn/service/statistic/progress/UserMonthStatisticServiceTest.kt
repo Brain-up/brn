@@ -2,11 +2,13 @@ package com.epam.brn.service.statistic.progress
 
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserMonthStatisticService
+import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -44,6 +46,9 @@ internal class UserMonthStatisticServiceTest {
     private lateinit var studyHistory: StudyHistory
 
     @Mock
+    private lateinit var progressManager: ProgressStatusManager<List<StudyHistory>>
+
+    @Mock
     private lateinit var studyHistorySecond: StudyHistory
 
     private val month: Int = 2
@@ -71,11 +76,15 @@ internal class UserMonthStatisticServiceTest {
     fun `getStatisticForPeriod should return statistic for period from to`() {
         // GIVEN
         `when`(studyHistorySecond.startTime).thenReturn(studyHistoryDate)
+        val studyHistories = listOf(
+            studyHistory,
+            studyHistorySecond
+        )
+        `when`(progressManager.getStatus(UserExercisingPeriod.WEEK, studyHistories)).thenReturn(
+            UserExercisingProgressStatus.GREAT
+        )
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
-            listOf(
-                studyHistory,
-                studyHistorySecond
-            )
+            studyHistories
         )
         val expectedStatistic = MonthStudyStatistic(
             date = YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month),
@@ -100,6 +109,12 @@ internal class UserMonthStatisticServiceTest {
         val studyHistories = listOf(
             studyHistory,
             studyHistorySecond
+        )
+        `when`(progressManager.getStatus(UserExercisingPeriod.WEEK, listOf(studyHistory))).thenReturn(
+            UserExercisingProgressStatus.GREAT
+        )
+        `when`(progressManager.getStatus(UserExercisingPeriod.WEEK, listOf(studyHistorySecond))).thenReturn(
+            UserExercisingProgressStatus.GREAT
         )
         `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
             studyHistories

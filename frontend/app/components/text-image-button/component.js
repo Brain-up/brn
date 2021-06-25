@@ -5,10 +5,7 @@ export default class TextImageButton extends Component {
   element = null;
   @action setStyle(element, [pictureFileUrl]) {
     this.element = element;
-    element.style.setProperty(
-      '--word-picture-url',
-      `url(${pictureFileUrl})`,
-    );
+    element.style.setProperty('--word-picture-url', `url(${pictureFileUrl})`);
   }
   get button() {
     return this.element && this.element.querySelector('button');

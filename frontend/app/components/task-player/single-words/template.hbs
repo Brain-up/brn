@@ -1,47 +1,61 @@
-<div class="flex flex-col flex-1" data-test-task-id={{@task.id}} data-test-task-exercise-id={{@task.exercise.id}}
+<div
+  class="flex flex-col flex-1"
+  data-test-task-id={{@task.id}}
+  data-test-task-exercise-id={{@task.exercise.id}}
   {{did-insert this.updateWords @task.words}}
   {{did-update this.updateWords @task.words}}
 >
-  {{yield (hash tasks=@task.parent.tasks)   to="header"}}
-{{#if (eq this.lastAnswer @task.word)}}
-  <ImageDisplayBlock
-    data-test-right-answer-notification
-    @pictureFileUrl={{@task.pictureFileUrl}}
-    @label={{@task.word}}
-    {{did-insert (perform this.runNextTaskTimer)}}
-  />
-{{else if (and @task.nextAttempt this.taskResultIsVisible)}}
-  <AnswerCorrectnessWidget
-    @isCorrect={{false}}
-    {{did-insert (perform this.showTaskResult)}}
-  />
-{{else}}
+  {{yield (hash tasks=@task.parent.tasks) to="header"}}
+  {{#if (eq this.lastAnswer @task.word)}}
+    <ImageDisplayBlock
+      data-test-right-answer-notification
+      @pictureFileUrl={{@task.pictureFileUrl}}
+      @label={{@task.word}}
+      {{did-insert (perform this.runNextTaskTimer)}}
+    />
+  {{else if (and @task.nextAttempt this.taskResultIsVisible)}}
+    <AnswerCorrectnessWidget
+      @isCorrect={{false}}
+      {{did-insert (perform this.showTaskResult)}}
+    />
+  {{else}}
 
-  <Ui::TaskContent>
-  <ul class="task-player__options mt-5">
-    {{#each this.shuffledWords as |word|}}
-      <li class="task-player__option">
-        <button
-          data-test-task-answer
-          data-test-task-answer-option={{word}}
-          disabled={{@disableAnswers}}
-          type="button"
-          class="task-player__option-button bg-transparent py-2 px-4 rounded text-black
-            {{if (eq @activeWord word) "border-2 bg-blue-500"  "border border-blue-500"}}
-            {{if
-              @disableAnswers
-              "opacity-50 cursor-default"
-              "hover:bg-purple-primary hover:text-white hover:border-transparent"
-            }}"
-          {{on "click" (if (eq @mode "interact") (fn @onPlayText word) (fn this.handleSubmit word))}}
-        >
-          {{word}}
-        </button>
-      </li>
-    {{/each}}
-  </ul>
-  </Ui::TaskContent>
+    <Ui::TaskContent>
+      <ul class="task-player__options mt-5">
+        {{#each this.shuffledWords as |word|}}
+          <li class="task-player__option">
+            <button
+              data-test-task-answer
+              data-test-task-answer-option={{word}}
+              disabled={{@disableAnswers}}
+              type="button"
+              class="task-player__option-button bg-transparent py-2 px-4 rounded text-black
+                {{if
+                  (eq @activeWord word)
+                  "border-2 bg-blue-500"
+                  "border border-blue-500"
+                }}
+                {{if
+                  @disableAnswers
+                  "opacity-50 cursor-default"
+                  "hover:bg-purple-primary hover:text-white hover:border-transparent"
+                }}"
+              {{on
+                "click"
+                (if
+                  (eq @mode "interact")
+                  (fn @onPlayText word)
+                  (fn this.handleSubmit word)
+                )
+              }}
+            >
+              {{word}}
+            </button>
+          </li>
+        {{/each}}
+      </ul>
+    </Ui::TaskContent>
 
-  {{yield (hash audioFileUrl=@task.audioFileUrl) to="footer"}}
-{{/if}}
+    {{yield (hash audioFileUrl=@task.audioFileUrl) to="footer"}}
+  {{/if}}
 </div>

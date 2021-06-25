@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function () {
   return {
     'free-solid-svg-icons': [
       'headphones-alt',
@@ -10,6 +10,6 @@ module.exports = function() {
       'times-circle',
       'check-circle',
       'chevron-left',
-    ]
+    ],
   };
 };

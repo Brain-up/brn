@@ -10,7 +10,7 @@ export default class GroupSeriesSubgroupController extends Controller {
   @tracked
   availableExercises: string[] = [];
   // eslint-disable-next-line no-unused-vars
-  @(task(function*(this: GroupSeriesSubgroupController) {
+  @(task(function* (this: GroupSeriesSubgroupController) {
     if (!this.model) {
       return;
     }
@@ -20,5 +20,6 @@ export default class GroupSeriesSubgroupController extends Controller {
     const results = yield this.network.availableExercises(targets);
     this.availableExercises = results;
     return results;
-  }).keepLatest()) exerciseAvailabilityCalculationTask!: Task<any, any>
+  }).keepLatest())
+  exerciseAvailabilityCalculationTask!: Task<any, any>;
 }

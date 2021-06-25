@@ -4,10 +4,10 @@ import { render } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | group-navigation', function(hooks) {
+module('Integration | Component | group-navigation', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     const store = this.owner.lookup('service:store');
     this.owner.setupRouter();
     const group = run(() => {
@@ -21,6 +21,10 @@ module('Integration | Component | group-navigation', function(hooks) {
 
     await render(hbs`<GroupNavigation @group={{this.group}}/>`);
 
-    assert.equal(this.element.querySelectorAll('button').length, 3, '3 buttons');
+    assert.equal(
+      this.element.querySelectorAll('button').length,
+      3,
+      '3 buttons',
+    );
   });
 });

@@ -12,7 +12,7 @@ import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
 
 interface ITaskPlayerSingleWordsComponent {
-  task: any,
+  task: any;
   onShuffled(items: string[]): void;
   onRightAnswer(): void;
   onWrongAnswer(): void;
@@ -32,18 +32,18 @@ export default class TaskPlayerSingleWordsComponent extends Component<ITaskPlaye
     return this.args.task;
   }
 
-  @(task(function*(this: TaskPlayerSingleWordsComponent) {
-    yield timeout(TIMINGS.SUCCESS_ANSWER_NOTIFICATION)
+  @(task(function* (this: TaskPlayerSingleWordsComponent) {
+    yield timeout(TIMINGS.SUCCESS_ANSWER_NOTIFICATION);
     this.args.onRightAnswer();
   }).restartable())
-  runNextTaskTimer!: TaskGenerator<any, any>
+  runNextTaskTimer!: TaskGenerator<any, any>;
 
-  @(task(function*(this: TaskPlayerSingleWordsComponent) {
+  @(task(function* (this: TaskPlayerSingleWordsComponent) {
     yield customTimeout(2000);
     this.taskResultIsVisible = false;
     this.args.onWrongAnswer();
   }).drop())
-  showTaskResult!: TaskGenerator<any, any>
+  showTaskResult!: TaskGenerator<any, any>;
 
   @action
   updateWords() {
@@ -80,4 +80,3 @@ export default class TaskPlayerSingleWordsComponent extends Component<ITaskPlaye
     }
   }
 }
-
