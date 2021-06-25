@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.response.DoctorUserAccountDto
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
 import org.springframework.data.annotation.CreatedDate
@@ -69,56 +70,55 @@ data class UserAccount(
             " bornYear=$bornYear, gender=$gender, description=$description)"
     }
 
-    fun toDto(): UserAccountDto {
-        val userAccountDto = UserAccountDto(
-            id = id,
-            userId = userId,
-            name = fullName,
-            active = active,
-            email = email,
-            bornYear = bornYear,
-            gender = gender?.let { Gender.valueOf(it) },
-            created = created,
-            changed = changed,
-            avatar = avatar,
-            photo = photo,
-            description = description,
-            headphones = headphones
-                .map(Headphones::toDto)
-                .toHashSet(),
-            doctor = doctor?.toDto(),
-        )
-        userAccountDto.authorities = this.authoritySet
+    fun toDto() = toDto(this.doctor?.toDoctorDto())
+
+    private fun toDto(doctor: DoctorUserAccountDto?) = UserAccountDto(
+        id = id,
+        userId = userId,
+        name = fullName,
+        active = active,
+        email = email,
+        bornYear = bornYear,
+        gender = gender?.let { Gender.valueOf(it) },
+        created = created,
+        changed = changed,
+        avatar = avatar,
+        photo = photo,
+        description = description,
+        headphones = headphones
+            .map(Headphones::toDto)
+            .toHashSet(),
+        doctor = doctor
+    ).also {
+        it.authorities = this.authoritySet
             .map(Authority::authorityName)
             .toMutableSet()
-        return userAccountDto
     }
 
-    fun toDoctorDto(): UserAccountDto {
-        val userAccountDto = UserAccountDto(
-            id = id,
-            userId = userId,
-            name = fullName,
-            active = active,
-            email = email,
-            bornYear = bornYear,
-            gender = gender?.let { Gender.valueOf(it) },
-            created = created,
-            changed = changed,
-            avatar = avatar,
-            photo = photo,
-            description = description,
-            headphones = headphones
-                .map(Headphones::toDto)
-                .toMutableSet(),
-            patients = patients
-                .map(UserAccount::toDto)
-                .toMutableList()
-        )
-        userAccountDto.authorities = this.authoritySet
+    fun toDoctorDto() = DoctorUserAccountDto(
+        id = id,
+        userId = userId,
+        name = fullName,
+        active = active,
+        email = email,
+        bornYear = bornYear,
+        gender = gender?.let { Gender.valueOf(it) },
+        created = created,
+        changed = changed,
+        avatar = avatar,
+        photo = photo,
+        description = description,
+        headphones = headphones
+            .map(Headphones::toDto)
+            .toMutableSet()
+    ).also {
+        it.authorities = this.authoritySet
             .map(Authority::authorityName)
             .toMutableSet()
-        return userAccountDto
+        // avoiding circular back-reference
+        it.patients = patients
+            .map { patient -> patient.toDto(it) }
+            .toMutableList()
     }
 
     fun toAnalyticsDto() = UserWithAnalyticsDto(
