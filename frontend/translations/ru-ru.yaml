@@ -240,8 +240,9 @@ description:
 profile:
   statistics:
     title: Статистика
-    about: О чем говорит статистика
+    about: О чем говорит статистика    
     month_time_track:
       title_months: Общее время занятий по месяцам
       title_weeks: Время ежедневных занятий по неделям
-      days_period: За {days} дней
+      days_period: За {days} дней  
+      empty_data: Нет данных за {year} год

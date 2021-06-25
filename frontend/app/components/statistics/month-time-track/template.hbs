@@ -1,24 +1,54 @@
 <div
-  class={{style-namespace "statistics/month-time-track"}}
+  class="{{style-namespace "statistics/month-time-track"}}"
+  ...attributes
   {{did-update this.didUpdateData @data}}
   {{did-insert this.didUpdateData}}
-  ...attributes
 >
-  <div class="track__title"></div>
-  <div class="track__content">
+  <div class="title">
     {{t "profile.statistics.month_time_track.title_months"}}
-    <div class="month-time-track-items-wrap">
-      {{#each this.monthTimeTrackItemsData as |itemData index|}}
-        <Statistics::MonthTimeTrackItem
-          data-test-month-track-item-index={{index}}
-          @data={{itemData}}
-          @isSelected={{and
-            (eq @selectedMonth.year itemData.date.year)
-            (eq @selectedMonth.month itemData.date.month)
+  </div>
+  <div class="track-content">
+    <button
+      class="prev focus:outline-none text-white"
+      type="button"
+      {{on "click" @onLoadPrevYear}}
+    >
+      <Ui::LeftArrow />
+    </button>
+    <div
+      class="month-time-track-items-wrap
+        {{if this.isIncompleteYear "incomplete-year"}}"
+    >
+      {{#if @isLoading}}
+        <LoadingSpinner />
+      {{else if this.monthTimeTrackItemsData.length}}
+        {{#each this.monthTimeTrackItemsData as |itemData index|}}
+          <Statistics::MonthTimeTrackItem
+            data-test-month-track-item-index={{index}}
+            @data={{itemData}}
+            @isSelected={{and
+              (eq @selectedMonth.year itemData.date.year)
+              (eq @selectedMonth.month itemData.date.month)
+            }}
+            {{on "click" (fn @onSelectMonth itemData.date)}}
+          />
+        {{/each}}
+      {{else}}
+        <div class="empty-data">
+          {{t
+            "profile.statistics.month_time_track.empty_data"
+            year=@selectedMonth.year
           }}
-          {{on "click" (fn @onSelectMonth itemData.date)}}
-        />
-      {{/each}}
+        </div>
+      {{/if}}
     </div>
+    <button
+      class="next focus:outline-none text-white"
+      disabled={{not this.isAllowedNextYear}}
+      type="button"
+      {{on "click" @onLoadNextYear}}
+    >
+      <Ui::RightArrow />
+    </button>
   </div>
 </div>

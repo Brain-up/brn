@@ -54,13 +54,13 @@ export default class MonthTimeTrackComponent<
     this.args.onLoadNextYear();
   }
 
-  isAllowedNextYear(): boolean {
+  get isAllowedNextYear(): boolean {
     return this.args.selectedMonth
-      ? this.selectedMonth.plus({ year: 1 }).year <= DateTime.now().year
+      ? this.args.selectedMonth.plus({ year: 1 }).year <= DateTime.now().year
       : false;
   }
 
-  isIncompleteYear(): boolean {
+  get isIncompleteYear(): boolean {
     return this.monthTimeTrackItemsData?.length < 12;
   }
 }

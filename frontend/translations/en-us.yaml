@@ -233,8 +233,9 @@ description:
 profile:
   statistics:
     title: Statistics
-    about: What is it?
+    about: What is it?    
     month_time_track:
       title_months: Total excersize time by months
       title_weeks: Total excersize time by weeks
       days_period: For {days} days
+      empty_data: No data for year {year}
