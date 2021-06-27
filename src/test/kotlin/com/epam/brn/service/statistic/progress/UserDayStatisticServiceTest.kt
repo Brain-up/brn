@@ -14,7 +14,6 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.sql.Date
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -62,7 +61,7 @@ internal class UserDayStatisticServiceTest {
         every { studyHistory.startTime } returns studyHistoryDate
         every { studyHistory.executionSeconds } returns exercisingSeconds
         every {
-            studyHistoryRepository.getHistories(ofType(Long::class), ofType(Date::class), ofType(Date::class))
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userAccountId, from, to)
         } returns listOf(studyHistory)
         val expectedStatistic = DayStudyStatistic(
             date = studyHistoryDate,
@@ -81,11 +80,7 @@ internal class UserDayStatisticServiceTest {
     fun `getStatisticForPeriod should return empty list when there are not histories for the period`() {
         // GIVEN
         every {
-            studyHistoryRepository.getHistories(
-                ofType(Long::class),
-                ofType(Date::class),
-                ofType(Date::class)
-            )
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userAccountId, from, to)
         } returns emptyList()
 
         // WHEN

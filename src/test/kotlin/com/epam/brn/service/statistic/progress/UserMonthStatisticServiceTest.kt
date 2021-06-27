@@ -14,7 +14,6 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.sql.Date
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -67,11 +66,7 @@ internal class UserMonthStatisticServiceTest {
         every { studyHistorySecond.startTime } returns studyHistoryDate
         every { studyHistorySecond.executionSeconds } returns executionSeconds
         every {
-            studyHistoryRepository.getHistories(
-                ofType(Long::class),
-                ofType(Date::class),
-                ofType(Date::class)
-            )
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
         } returns listOf(studyHistory, studyHistorySecond)
 
         val expectedStatistic = MonthStudyStatistic(
@@ -99,11 +94,7 @@ internal class UserMonthStatisticServiceTest {
             studyHistorySecond
         )
         every {
-            studyHistoryRepository.getHistories(
-                ofType(Long::class),
-                ofType(Date::class),
-                ofType(Date::class)
-            )
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
         } returns studyHistories
 
         val firstExpectedStudyStatistic = MonthStudyStatistic(
