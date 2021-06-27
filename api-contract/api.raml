@@ -36,7 +36,7 @@ mediaType:
             }
   /study/week:
     get:
-      description: get user's weekly statistic for period
+      description: get user's weekly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
           required: true
@@ -52,7 +52,7 @@ mediaType:
             example: {
               data: [
                 {
-                  date: 2020-11-23
+                  date: 2000-11-23T15:00:00
                   exercisingTimeSeconds: 3000
                   progress: GREAT
                 }
@@ -60,9 +60,40 @@ mediaType:
               errors: [],
               meta: []
             }
+  /study/week:
+        get:
+          description: get user's weekly statistic for period. Where periaod is a two dates in the ISO date time format
+          queryParameters:
+            version:
+              required: true
+              type: integer
+              example: 2
+            from:
+              required: true
+              type: date
+              example: 2000-11-23T15:00:00
+            to:
+              required: true
+              type: date
+              example: 2000-11-23T15:00:00
+          response:
+            200:
+              body:
+                example: {
+                  data: [
+                    {
+                      date: 2000-11-23T15:00:00
+                      exercisingTimeSeconds: 3000
+                      progress: GREAT
+                    }
+                  ],
+                  errors: [],
+                  meta: []
+                }
+
   /study/year:
     get:
-      description: get user's yearly statistic for period
+      description: get user's yearly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
           required: true
@@ -78,7 +109,7 @@ mediaType:
             example: {
               data: [
                 {
-                  date: 2020-11
+                  date: 2000-11-23T15:00:00
                   exercisingDays: 15
                   exercisingTimeSeconds: 3000
                   progress: GREAT
@@ -87,8 +118,37 @@ mediaType:
               errors: [],
               meta: []
             }
-
-
+  /study/year:
+      get:
+        description: get user's yearly statistic for period. Where periaod is a two dates in the ISO date time format
+        queryParameters:
+          version:
+            required: true
+            type: integer
+            example: 2
+          from:
+            required: true
+            type: date
+            example: 2000-11-23T15:00:00
+          to:
+            required: true
+            type: date
+            example: 2000-11-23T15:00:00
+        response:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2000-11-23T15:00:00
+                    exercisingDays: 15
+                    exercisingTimeSeconds: 3000
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
 # AUDIOMETRY-----------------------------------
 /audiometrics:
     get:

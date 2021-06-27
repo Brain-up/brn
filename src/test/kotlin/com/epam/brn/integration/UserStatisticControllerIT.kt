@@ -19,6 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertNotNull
@@ -31,6 +32,7 @@ class UserStatisticControllerIT : BaseIT() {
 
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
+
     @Autowired
     private lateinit var gson: Gson
 
@@ -39,6 +41,9 @@ class UserStatisticControllerIT : BaseIT() {
     private val toParameterName = "to"
     private val exercisingYear = 2020
     private val exercisingMonth = 11
+    private val legacyDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    private val versionParameterName = "version"
+    private val version = "2"
 
     @AfterEach
     fun deleteAfterTest() {
@@ -105,13 +110,12 @@ class UserStatisticControllerIT : BaseIT() {
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30)
         insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-        val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
         val response = mockMvc.perform(
             get("$baseUrl/study/week")
-                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
-                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(legacyDateFormatter))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(legacyDateFormatter))
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
@@ -145,6 +149,76 @@ class UserStatisticControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             get("$baseUrl/study/year")
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(legacyDateFormatter))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(legacyDateFormatter))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<MonthStudyStatistic> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
+
+        // THEN
+        assertEquals(1, resultStatistic.size)
+        val monthStatistic = resultStatistic.first()
+        assertEquals(exercisingMonth, monthStatistic.date.monthValue)
+        assertNotNull(monthStatistic.exercisingTimeSeconds)
+        assertNotNull(monthStatistic.progress)
+    }
+
+    @Test
+    fun `should return user statistic for days API version 2`() {
+        // GIVEN
+        val user = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
+        val dateFormat = DateTimeFormatter.ISO_DATE_TIME
+
+        // WHEN
+        val response = mockMvc.perform(
+            get("$baseUrl/study/week")
+                .param(versionParameterName, version)
+                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<DayStudyStatistic> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
+
+        // THEN
+        assertEquals(3, resultStatistic.size)
+        resultStatistic.forEach {
+            assertNotNull(it.progress)
+            assertNotNull(it.exercisingTimeSeconds)
+        }
+    }
+
+    @Test
+    fun `should return user statistic for month API version 2`() {
+        // GIVEN
+        val user = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        val studyHistories: List<StudyHistory> = listOf(
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
+        )
+        val dateFormat = DateTimeFormatter.ISO_DATE_TIME
+
+        // WHEN
+        val response = mockMvc.perform(
+            get("$baseUrl/study/year")
+                .param(versionParameterName, version)
                 .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
                 .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
         )
