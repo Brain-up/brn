@@ -34,6 +34,7 @@ import java.nio.charset.StandardCharsets
 import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 import kotlin.test.assertEquals
@@ -73,6 +74,10 @@ class AdminControllerIT : BaseIT() {
 
     @Autowired
     private lateinit var gson: Gson
+
+    private val legacyDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    private val versionParameterName = "version"
+    private val version = "2"
 
     @AfterEach
     fun deleteAfterTest() {
@@ -119,6 +124,60 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUrl/study/week")
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(legacyDateFormatter))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(legacyDateFormatter))
+                .param(userIdParameterName, userAccount.id.toString())
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<DayStudyStatistic> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
+
+        // THEN
+        Assertions.assertEquals(3, resultStatistic.size)
+        resultStatistic.forEach {
+            assertNotNull(it.progress)
+            assertNotNull(it.exercisingTimeSeconds)
+        }
+    }
+
+    @Test
+    fun `testing get user week statistic API version 2`() {
+        // GIVEN
+        val userAccount = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0),
+            25
+        )
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0),
+            25
+        )
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0),
+            25
+        )
+        insertDefaultStudyHistory(
+            userAccount,
+            exercise,
+            LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0),
+            30
+        )
+        insertDefaultStudyHistory(userAccount, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUrl/study/week")
+                .param(versionParameterName, version)
                 .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
                 .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
                 .param(userIdParameterName, userAccount.id.toString())
@@ -154,6 +213,42 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUrl/study/year")
+                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(legacyDateFormatter))
+                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(legacyDateFormatter))
+                .param(userIdParameterName, user.id.toString())
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val resultStatistic: List<MonthStudyStatistic> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
+
+        // THEN
+        Assertions.assertEquals(1, resultStatistic.size)
+        val monthStatistic = resultStatistic.first()
+        Assertions.assertEquals(exercisingMonth, monthStatistic.date.monthValue)
+        assertNotNull(monthStatistic.exercisingTimeSeconds)
+        assertNotNull(monthStatistic.progress)
+    }
+
+    @Test
+    fun `should return user year statistic API version 2`() {
+        // GIVEN
+        val user = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        val studyHistories: List<StudyHistory> = listOf(
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
+        )
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUrl/study/year")
+                .param(versionParameterName, version)
                 .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
                 .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
                 .param(userIdParameterName, user.id.toString())
@@ -359,8 +454,8 @@ class AdminControllerIT : BaseIT() {
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get("$baseUrl/histories")
-                .param(fromParamName, today.format(dateFormat))
-                .param(toParameterName, today.plusDays(1).format(dateFormat))
+                .param(fromParamName, today.format(legacyDateFormatter))
+                .param(toParameterName, today.plusDays(1).format(legacyDateFormatter))
                 .param(userIdParameterName, existingUser.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
