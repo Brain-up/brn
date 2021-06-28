@@ -34,8 +34,6 @@ import kotlin.test.assertEquals
 class StudyHistoryIT : BaseIT() {
 
     private val baseUrl = "/study-history"
-    private val fromParamName = "from"
-    private val toParameterName = "to"
 
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
@@ -225,59 +223,6 @@ class StudyHistoryIT : BaseIT() {
         val result = studyHistoryRepository.getTodayDayTimer(user.id!!)
         // THEN
         assertEquals(0, result)
-    }
-
-    @Test
-    fun `test get histories for current user by period`() {
-        // GIVEN
-        val existingUser = insertUser()
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val subGroup = insertSubGroup(existingSeries)
-        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
-        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
-        val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
-        val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        val historyTomorrowOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusDays(1))
-        val historyTomorrowTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.plusDays(1))
-        studyHistoryRepository
-            .saveAll(
-                listOf(
-                    historyYesterdayOne,
-                    historyYesterdayTwo,
-                    historyFirstExerciseOne,
-                    historyFirstExerciseTwo,
-                    historySecondExerciseOne,
-                    historySecondExerciseTwo,
-                    historyTomorrowOne,
-                    historyTomorrowTwo
-                )
-            )
-        // WHEN
-        val today = now
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/histories")
-                .param(fromParamName, today.format(dateFormat))
-                .param(toParameterName, today.plusDays(1).format(dateFormat))
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-
-        resultAction.andReturn().response
-        // THEN
-        resultAction
-            .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data[0].id").value(historyFirstExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
-            .andExpect(jsonPath("$.data[2].id").value(historySecondExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[3].id").value(historySecondExerciseTwo.id!!))
     }
 
     private fun insertStudyHistory(

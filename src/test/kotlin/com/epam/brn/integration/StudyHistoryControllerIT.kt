@@ -26,6 +26,9 @@ class StudyHistoryControllerIT : BaseIT() {
     private val baseUrl = "/study-history"
     private val fromParameterName = "from"
     private val toParameterName = "to"
+    private val versionParameterName = "version"
+    private val version = "2"
+    private val legacyDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     @Autowired
     private lateinit var gson: Gson
@@ -98,12 +101,46 @@ class StudyHistoryControllerIT : BaseIT() {
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
         val from = LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1)
         val to = LocalDateTime.of(exercisingYear, exercisingMonth, 28, 1, 1)
+        val expectedStudyHistories = listOf(studyHistoryFirst.toDto(), studyHistorySecond.toDto())
+
+        // WHEN
+        val response = mockMvc.perform(
+            get("$baseUrl/histories")
+                .param(fromParameterName, from.format(legacyDateFormat))
+                .param(toParameterName, to.format(legacyDateFormat))
+        )
+            .andExpect(status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        // THEN
+        val data = gson.fromJson(response, BaseResponseDto::class.java).data
+        val studyHistories: List<StudyHistoryDto> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<StudyHistoryDto>>() {})
+
+        assertNotNull(studyHistories)
+        assertEquals(expectedStudyHistories, studyHistories)
+    }
+
+    @Test
+    fun `getHistories should return histories for period of time API version 2`() {
+        // GIVEN
+        val user = insertDefaultUser()
+        val exercise = insertDefaultExercise()
+        val exercisingYear = 2019
+        val exercisingMonth = 3
+        val studyHistoryFirst =
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
+        val studyHistorySecond =
+            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25)
+        val from = LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1)
+        val to = LocalDateTime.of(exercisingYear, exercisingMonth, 28, 1, 1)
         val datePattern = DateTimeFormatter.ISO_DATE_TIME
         val expectedStudyHistories = listOf(studyHistoryFirst.toDto(), studyHistorySecond.toDto())
 
         // WHEN
         val response = mockMvc.perform(
             get("$baseUrl/histories")
+                .param(versionParameterName, version)
                 .param(fromParameterName, from.format(datePattern))
                 .param(toParameterName, to.format(datePattern))
         )

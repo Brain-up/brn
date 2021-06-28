@@ -357,7 +357,8 @@ mediaType:
                        }
   /histories:
     get:
-        description: get histories for current user by period from <= startTime < to
+        description: get histories for current user by period from <= startTime < to.
+          Where from and to are dates in yyyy-MM-dd format
         queryParameters:
               from:
                     required: true
@@ -370,6 +371,26 @@ mediaType:
         responses:
               200:
                 example: !include samples/study_histories_dto_response.json
+  /histories:
+      get:
+          description: get histories for current user by period from <= startTime < to.
+            Where from and to are dates in ISO format
+          queryParameters:
+                from:
+                      required: true
+                      type: date
+                      example: 2000-10-21T15:00:00
+                to:
+                      required: true
+                      type: date
+                      example: 2000-10-21T15:00:00
+                version:
+                      required: true
+                      type: integer
+                      example: 2
+          responses:
+                200:
+                  example: !include samples/study_histories_dto_response.json
   /monthHistories:
       get:
           description: get histories for current user by month and year
