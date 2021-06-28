@@ -8,6 +8,9 @@
 
 @import 'tailwindcss/utilities';
 
+/*Styles of app libs*/
+@import 'billboard.css'; /* had to clone and covert it from 'billboard.js/src/scss/billboard.scss' */
+
 /*! purgecss start ignore */
 html {
   background: #efefef;

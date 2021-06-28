@@ -239,3 +239,6 @@ profile:
       title_weeks: Total excersize time by weeks
       days_period: For {days} days
       empty_data: No data for year {year}
+    week_time_track:
+      title_weeks: Weekly exersize time
+      empty_data: No data for period {period}

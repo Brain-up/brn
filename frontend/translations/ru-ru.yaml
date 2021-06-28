@@ -246,3 +246,6 @@ profile:
       title_weeks: Время ежедневных занятий по неделям
       days_period: За {days} дней  
       empty_data: Нет данных за {year} год
+    week_time_track:
+      title_weeks: Время ежедневных занятий по неделям
+      empty_data: Нет данных за период {period}

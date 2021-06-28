@@ -1,1 +1,24 @@
-{{yield}}
+<div
+  class={{style-namespace "statistics/week-time-track"}}
+  {{did-insert this.didUpdateData}}
+  {{did-update this.didUpdateData @data}}
+  ...attributes
+>
+  <div class="title">
+    {{t "profile.statistics.week_time_track.title_weeks"}}
+  </div>
+  <div class="content">
+    {{#if @isLoading}}
+      <LoadingSpinner />
+    {{else if this.barData.length}}
+      <Statistics::BarChart
+        @data={{this.barData}}
+        @options={{this.barOptions}}
+      />
+    {{else}}
+      <div class="empty-data">
+        {{t "profile.statistics.week_time_track.empty_data" period=""}}
+      </div>
+    {{/if}}
+  </div>
+</div>

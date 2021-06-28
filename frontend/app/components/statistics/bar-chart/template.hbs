@@ -1,0 +1,12 @@
+<div
+  id="chart"
+  class="{{style-namespace "statistics/bar-chart"}} chart"
+  ...attributes
+  {{create-ref "chartContainer"}}
+  {{will-destroy this.onWillDestroy}}
+  {{did-insert
+    (queue this.didUpdateData this.didUpdateOptions this.buildChart)
+  }}
+  {{did-update this.didUpdateData @data}}
+  {{did-update this.didUpdateOptions @options}}
+></div>
