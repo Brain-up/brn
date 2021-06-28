@@ -4,7 +4,9 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.response.SubGroupStatisticDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.DayStudyStatisticDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.MonthStudyStatisticDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertNotNull
 
@@ -121,8 +124,8 @@ class UserStatisticControllerIT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
-        val resultStatistic: List<DayStudyStatistic> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
+        val resultStatistic: List<DayStudyStatisticDto> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatisticDto>>() {})
 
         // THEN
         assertEquals(3, resultStatistic.size)
@@ -156,13 +159,13 @@ class UserStatisticControllerIT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
-        val resultStatistic: List<MonthStudyStatistic> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
+        val resultStatistic: List<MonthStudyStatisticDto> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatisticDto>>() {})
 
         // THEN
         assertEquals(1, resultStatistic.size)
         val monthStatistic = resultStatistic.first()
-        assertEquals(exercisingMonth, monthStatistic.date.monthValue)
+        assertEquals(exercisingMonth, YearMonth.parse(monthStatistic.date).monthValue)
         assertNotNull(monthStatistic.exercisingTimeSeconds)
         assertNotNull(monthStatistic.progress)
     }

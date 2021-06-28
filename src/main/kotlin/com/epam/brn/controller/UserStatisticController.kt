@@ -44,7 +44,10 @@ class UserStatisticController(
         val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
         val tempTo = LocalDateTime.of(to, LocalTime.MAX)
         val result = userDayStatisticService.getStatisticForPeriod(tempFrom, tempTo)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+        val response = result.map {
+            it.toDto()
+        }
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
     }
 
     @GetMapping("/study/year")
@@ -56,7 +59,10 @@ class UserStatisticController(
         val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
         val tempTo = LocalDateTime.of(to, LocalTime.MAX)
         val result = userMonthStatisticService.getStatisticForPeriod(tempFrom, tempTo)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+        val response = result.map {
+            it.toDto()
+        }
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
     }
 
     @GetMapping(value = ["/study/week"], params = ["version=2"])
