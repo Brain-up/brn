@@ -2,13 +2,16 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.SubGroupDto
 import com.epam.brn.exception.EntityNotFoundException
+import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.SubGroupRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockkClass
 import io.mockk.mockkStatic
+import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -73,5 +76,25 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.findById(subGroupId) } returns Optional.empty()
         // THEN
         assertThrows<EntityNotFoundException> { subGroupService.findById(subGroupId) }
+    }
+
+    @Test
+    fun `should return dto for url`() {
+        // GIVEN
+        val pictureUrl = "url"
+        val pictureUrlTemplate = "template %s"
+        val seriesMockk = mockkClass(Series::class)
+        val seriesId = 1L
+        val subGroup = spyk(SubGroup(1, "", pictureUrl, 2, "", seriesMockk))
+        val subGroupDto = SubGroupDto(2, 2, 2, "name", pictureUrl, "description")
+        every { seriesMockk.id } returns seriesId
+        every { subGroup.toDto() } returns subGroupDto
+
+        // WHEN
+        val resultDto = subGroup.toDto(pictureUrlTemplate)
+
+        // THEN
+        assertEquals("template url", resultDto.pictureUrl)
+        verify(exactly = 1) { subGroup.toDto() }
     }
 }
