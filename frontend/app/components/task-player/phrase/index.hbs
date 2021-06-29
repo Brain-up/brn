@@ -1,5 +1,9 @@
-<div class="{{style-namespace "task-player/phrase"}} flex flex-grow flex-col" ...attributes   {{did-insert this.onInsert}}>
-  {{yield (hash tasks=this.tasksCopy)  to="header"}}
+<div
+  class="{{style-namespace "task-player/phrase"}} flex flex-grow flex-col"
+  ...attributes
+  {{did-insert this.onInsert}}
+>
+  {{yield (hash tasks=this.tasksCopy) to="header"}}
   {{#if this.tasksCopy.length}}
 
     <Ui::TaskContent>

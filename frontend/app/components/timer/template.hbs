@@ -5,32 +5,84 @@
   {{will-destroy this.onDestroy}}
 >
   <div
-    class="timer-wrapper flex items-center px-5 py-2 rounded-full" data-test-timer-wrapper
+    class="timer-wrapper flex items-center px-5 py-2 rounded-full"
+    data-test-timer-wrapper
     data-test-timer-is-paused={{this.isPaused}}
   >
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M5 12.5C5 8.92728 7.92728 6 11.5 6C15.0727 6 18 8.92728 18 12.5C18 16.0727 15.0727 19 11.5 19C7.92728 19 5 16.0727 5 12.5Z" stroke="#A5A2B8" stroke-width="2"/>
-      <rect x="11" y="8" width="1" height="5" rx="0.5" fill="#A5A2B8"/>
-      <rect x="14.5356" y="14.8284" width="1" height="4" rx="0.5" transform="rotate(135 14.5356 14.8284)" fill="#A5A2B8"/>
-      <rect x="15" y="5" width="3" height="3" rx="1" fill="#A5A2B8"/>
-      <rect x="10" y="3" width="3" height="3" rx="1" fill="#A5A2B8"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M5 12.5C5 8.92728 7.92728 6 11.5 6C15.0727 6 18 8.92728 18 12.5C18 16.0727 15.0727 19 11.5 19C7.92728 19 5 16.0727 5 12.5Z"
+        stroke="#A5A2B8"
+        stroke-width="2"
+      ></path>
+      <rect x="11" y="8" width="1" height="5" rx="0.5" fill="#A5A2B8"></rect>
+      <rect
+        x="14.5356"
+        y="14.8284"
+        width="1"
+        height="4"
+        rx="0.5"
+        transform="rotate(135 14.5356 14.8284)"
+        fill="#A5A2B8"
+      ></rect>
+      <rect x="15" y="5" width="3" height="3" rx="1" fill="#A5A2B8"></rect>
+      <rect x="10" y="3" width="3" height="3" rx="1" fill="#A5A2B8"></rect>
     </svg>
-    <div class="timer w-20 px-4 text-base font-semibold text-gray-600" data-test-timer-display-value>
+    <div
+      class="timer w-20 px-4 text-base font-semibold text-gray-600"
+      data-test-timer-display-value
+    >
       {{this.displayValue}}
     </div>
     {{#unless @hideControls}}
       <button
-        class="block" type="button"
+        class="block"
+        type="button"
         {{on "click" this.studyingTimer.togglePause}}
       >
         {{#if (or this.isPaused (not this.isStarted))}}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M20.5 11.134C21.1667 11.5189 21.1667 12.4811 20.5 12.866L8.5 19.7942C7.83333 20.1791 7 19.698 7 18.9282L7 5.0718C7 4.302 7.83333 3.82087 8.5 4.20577L20.5 11.134Z" fill="#7979F2"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M20.5 11.134C21.1667 11.5189 21.1667 12.4811 20.5 12.866L8.5 19.7942C7.83333 20.1791 7 19.698 7 18.9282L7 5.0718C7 4.302 7.83333 3.82087 8.5 4.20577L20.5 11.134Z"
+              fill="#7979F2"
+            ></path>
           </svg>
         {{else}}
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="4" width="6" height="16" rx="2" fill="#7979F2"/>
-            <rect x="14" y="4" width="6" height="16" rx="2" fill="#7979F2"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <rect
+              x="4"
+              y="4"
+              width="6"
+              height="16"
+              rx="2"
+              fill="#7979F2"
+            ></rect>
+            <rect
+              x="14"
+              y="4"
+              width="6"
+              height="16"
+              rx="2"
+              fill="#7979F2"
+            ></rect>
           </svg>
         {{/if}}
       </button>

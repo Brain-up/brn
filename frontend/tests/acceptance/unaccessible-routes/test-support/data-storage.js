@@ -124,21 +124,32 @@ export function getSeriesScenarioData() {
       order: 1,
       id: 1,
       name: 'default',
-      tasks: [
-        { id: 1 },
-        { id: 2 },
-      ],
+      tasks: [{ id: 1 }, { id: 2 }],
     },
     {
       order: 2,
       id: 2,
       name: 'default',
-      tasks: [{ id: 3}],
+      tasks: [{ id: 3 }],
     },
   ];
   const series = [
-    { order: 1, id: 1, name: 'default', type: 'SINGLE_WORDS', exerciseGroupId: 1, exercises: [1] },
-    { order: 2, id: 2, name: 'default', type: 'SINGLE_WORDS', exerciseGroupId: 1, exercises: [2] },
+    {
+      order: 1,
+      id: 1,
+      name: 'default',
+      type: 'SINGLE_WORDS',
+      exerciseGroupId: 1,
+      exercises: [1],
+    },
+    {
+      order: 2,
+      id: 2,
+      name: 'default',
+      type: 'SINGLE_WORDS',
+      exerciseGroupId: 1,
+      exercises: [2],
+    },
   ];
   const groups = [
     { order: 1, id: 1, name: 'default', description: '123', series: [1, 2] },

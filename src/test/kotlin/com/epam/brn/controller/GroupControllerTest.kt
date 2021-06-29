@@ -2,37 +2,40 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.service.ExerciseGroupsService
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertEquals
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class GroupControllerTest {
-    @Mock
-    lateinit var exerciseGroupsService: ExerciseGroupsService
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var groupController: GroupController
+
+    @MockK
+    lateinit var exerciseGroupsService: ExerciseGroupsService
 
     @Test
     fun `should get all groups`() {
         // GIVEN
         val group = ExerciseGroupDto(1, "en", "name", "desc")
         val listGroups = listOf(group)
-        Mockito.`when`(exerciseGroupsService.findByLocale("")).thenReturn(listGroups)
+        every { exerciseGroupsService.findByLocale("") } returns listGroups
+
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ExerciseGroupDto> =
             groupController.getGroups("").body?.data as List<ExerciseGroupDto>
+
         // THEN
+        verify(exactly = 1) { exerciseGroupsService.findByLocale("") }
         assertTrue(actualResultData.contains(group))
-        verify(exerciseGroupsService).findByLocale("")
     }
 
     @Test
@@ -40,13 +43,13 @@ internal class GroupControllerTest {
         // GIVEN
         val groupId = 1L
         val group = ExerciseGroupDto(1, "en", "name", "desc")
-        Mockito.`when`(exerciseGroupsService.findGroupDtoById(groupId)).thenReturn(group)
+        every { exerciseGroupsService.findGroupDtoById(groupId) } returns group
 
         // WHEN
-        val actualResultData: ExerciseGroupDto =
-            groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
+        val actualResultData: ExerciseGroupDto = groupController.getGroupById(groupId).body?.data as ExerciseGroupDto
+
         // THEN
+        verify(exactly = 1) { exerciseGroupsService.findGroupDtoById(groupId) }
         assertEquals(actualResultData, group)
-        verify(exerciseGroupsService).findGroupDtoById(groupId)
     }
 }

@@ -19,7 +19,7 @@
   font-size: 14px;
   line-height: 24px;
   text-transform: uppercase;
-  transition: all .5s ease;
+  transition: all 0.5s ease;
   font-weight: 600;
 }
 
@@ -51,6 +51,5 @@
     opacity: 1;
   }
 }
-
 
 /*! purgecss end ignore */

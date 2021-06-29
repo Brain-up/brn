@@ -2,7 +2,7 @@ import { belongsTo, hasMany, attr } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { inject as service } from '@ember/service';
-import { IStatsExerciseStats } from "brn/services/stats";
+import { IStatsExerciseStats } from 'brn/services/stats';
 import Session from 'ember-simple-auth/services/session';
 import SeriesModel from './series';
 import SignalModel from './signal';
@@ -11,27 +11,27 @@ import { cached } from 'tracked-toolbox';
 import SubgroupModel from './subgroup';
 
 export interface IStatsObject {
-  countedSeconds: number,
-  endTime: Date,
-  exerciseId: "110",
-  listeningsCount: number,
-  repetitionIndex: number,
-  rightAnswersCount: number,
-  rightAnswersIndex: number,
-  startTime: Date,
-  tasksCount: number,
+  countedSeconds: number;
+  endTime: Date;
+  exerciseId: '110';
+  listeningsCount: number;
+  repetitionIndex: number;
+  rightAnswersCount: number;
+  rightAnswersIndex: number;
+  startTime: Date;
+  tasksCount: number;
 }
 
 interface IStatsSaveDTO {
-  exerciseId: number,
-  startTime: Date,
-  endTime: Date,
-  executionSeconds: number,
-  tasksCount: number,
-  replaysCount: number,
-  wrongAnswers: number
+  exerciseId: number;
+  startTime: Date;
+  endTime: Date;
+  executionSeconds: number;
+  tasksCount: number;
+  replaysCount: number;
+  wrongAnswers: number;
 }
-export default class Exercise extends CompletionDependent  {
+export default class Exercise extends CompletionDependent {
   @service('session') session!: Session;
   @attr('string') name!: string;
   @attr('boolean') available!: boolean;
@@ -48,13 +48,14 @@ export default class Exercise extends CompletionDependent  {
   get children() {
     return this.tasks;
   }
-  @belongsTo('subgroup', { async: false, inverse: 'exercises' }) parent!: SubgroupModel;
+  @belongsTo('subgroup', { async: false, inverse: 'exercises' })
+  parent!: SubgroupModel;
   @attr('date') startTime!: Date;
   @attr('date') endTime!: Date;
   @attr() noise!: {
-    level?: number,
-    url?: string
-  }
+    level?: number;
+    url?: string;
+  };
   get noiseLevel() {
     return this.noise?.level || 0;
   }
@@ -81,26 +82,25 @@ export default class Exercise extends CompletionDependent  {
       completedTaskIds.includes(taskId),
     );
     return (
-      (!tasksIds.length && (this.isFirst || this.canInteract)) ||
-      tasksCompleted
+      (!tasksIds.length && (this.isFirst || this.canInteract)) || tasksCompleted
     );
   }
   get siblingExercises() {
     return this.series.get('sortedExercises') || [];
-  };
+  }
   get nextSiblings() {
     return this.siblingExercises.slice(this.siblingExercises.indexOf(this) + 1);
-  };
+  }
   get isStarted() {
     return this.startTime && !this.endTime;
-  };
+  }
   get stats() {
     const { startTime, endTime, id } = this;
 
     return {
       startTime,
       endTime,
-      exerciseId: id
+      exerciseId: id,
     };
   }
   trackTime(type = 'start') {
@@ -124,11 +124,13 @@ export default class Exercise extends CompletionDependent  {
     } else {
       stats.repetitionIndex = Number(stats.repetitionIndex.toFixed(2));
     }
-    stats.rightAnswersIndex = ((data.rightAnswersCount - data.repeatsCount) / stats.tasksCount) * 100;
+    stats.rightAnswersIndex =
+      ((data.rightAnswersCount - data.repeatsCount) / stats.tasksCount) * 100;
     if (isNaN(stats.rightAnswersIndex)) {
       stats.rightAnswersIndex = 0;
     } else {
-      stats.rightAnswersIndex = Number(stats.rightAnswersIndex.toFixed(2)) - stats.repetitionIndex;
+      stats.rightAnswersIndex =
+        Number(stats.rightAnswersIndex.toFixed(2)) - stats.repetitionIndex;
     }
 
     return stats;
@@ -142,8 +144,8 @@ export default class Exercise extends CompletionDependent  {
       exerciseId: parseInt(this.id, 10),
       replaysCount: data.repeatsCount,
       wrongAnswers: data.wrongAnswersCount,
-      tasksCount: data.rightAnswersCount
-    }
+      tasksCount: data.rightAnswersCount,
+    };
 
     await fetch('/api/study-history', {
       method: 'POST',
@@ -155,12 +157,9 @@ export default class Exercise extends CompletionDependent  {
   }
 }
 
-
-
-
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {
   export default interface ModelRegistry {
-    'exercise': Exercise;
+    exercise: Exercise;
   }
 }

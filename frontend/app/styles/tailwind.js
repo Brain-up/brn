@@ -9,45 +9,50 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        PROGRESS: {
+          BAD: '#F38698',
+          GOOD: '#FBD051',
+          GREAT: '#47CD8A',
+        },
         blue: {
           ...colors.blue,
-          '100': '#DAF0FC',
-          '300': '#EDF8FE',
-          '500': '#81D5F9',
-          '700': '#5E6EED',
-          '900': '#001274',
+          100: '#DAF0FC',
+          300: '#EDF8FE',
+          500: '#81D5F9',
+          700: '#5E6EED',
+          900: '#001274',
           light: '#428DFC',
           dark: '#5A6BFF',
-          '1100': '#428DFC',
+          1100: '#428DFC',
         },
         pink: {
           ...colors.pink,
-          '200': '#FBEDFE',
-          '500': '#FF6373',
-          'secondary': '#F38698'
+          200: '#FBEDFE',
+          500: '#FF6373',
+          secondary: '#F38698',
         },
 
         yellow: {
           ...colors.yellow,
-          '500': '#F68820',
-          'secondary': '#FBD051',
+          500: '#F68820',
+          secondary: '#FBD051',
         },
 
         purple: {
           ...colors.purple,
-          '700': '#2A165B',
-          'primary': '#503DAD'
+          700: '#2A165B',
+          primary: '#503DAD',
         },
 
         indigo: {
           ...colors.indigo,
-          '200': '#EDF0FE',
-          '500': '#63BBEB',
+          200: '#EDF0FE',
+          500: '#63BBEB',
         },
         green: {
           ...colors.green,
-          'secondary': '#47CD8A',
-        }
+          secondary: '#47CD8A',
+        },
       },
       borderRadius: {
         ...borderRadius,
@@ -58,12 +63,12 @@ module.exports = {
         evenly: 'space-evenly',
       },
       flex: {
-        '6': '0 1 16.666%',
-      }
+        6: '0 1 16.666%',
+      },
     },
     fontFamily: {
       openSans: ['Open Sans'],
-    }
+    },
   },
   variants: {
     backgroundColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],

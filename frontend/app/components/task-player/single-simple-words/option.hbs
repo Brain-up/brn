@@ -6,13 +6,11 @@
     type="button"
     {{did-update this.handleAnswer @isCorrect}}
     class="task-player__option-button bg-transparent py-2 px-4 rounded
-
       {{if
         (eq @activeWord @answerOption.word)
         "border-2 text-white bg-purple-primary"
         "border-2 border-purple-primary border-opacity-25  text-purple-primary"
       }}
-
       {{if
         @disableAnswers
         "opacity-50 cursor-default"

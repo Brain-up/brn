@@ -19,7 +19,9 @@ export default class CompletionDependentModel extends Model {
     }
     return (
       !this.previousSiblings.length ||
-      this.previousSiblings.every((sibling: CompletionDependentModel) => sibling.isCompleted)
+      this.previousSiblings.every(
+        (sibling: CompletionDependentModel) => sibling.isCompleted,
+      )
     );
   }
 
@@ -37,10 +39,9 @@ export default class CompletionDependentModel extends Model {
     }
     // eslint-disable-next-line ember/no-get
     const children = this.get('children');
-    return (
-      children.length &&
-      children.every((child) => child.isCompleted)
-    ) ? true : false;
+    return children.length && children.every((child) => child.isCompleted)
+      ? true
+      : false;
   }
   get isFirst() {
     return !this.previousSiblings.length;
@@ -55,7 +56,6 @@ export default class CompletionDependentModel extends Model {
     return this.allSiblings.slice(this.allSiblings.indexOf(this) + 1);
   }
 }
-
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.
 declare module 'ember-data/types/registries/model' {

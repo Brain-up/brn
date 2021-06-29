@@ -52,7 +52,7 @@ export default class LoginFormInputComponent extends Component<ILoginFormInputCo
 
   set value(value) {
     const { model, name } = this.args;
-    const safeValue = (value || '');
+    const safeValue = value || '';
     let normalizedValue = '';
     if (this.args.trimRight === false) {
       normalizedValue = safeValue.trimStart();
