@@ -8,8 +8,9 @@
 
 @import 'tailwindcss/utilities';
 
-/*Styles of app libs*/
+/*! purgecss start ignore */
 @import 'billboard.css'; /* had to clone and covert it from 'billboard.js/src/scss/billboard.scss' */
+/*! purgecss end ignore */
 
 /*! purgecss start ignore */
 html {

@@ -16,6 +16,7 @@ export default class StatisticsComponent extends Component {
   @tracked isLoadingMonthTimeTrackData = true;
   @tracked weekTimeTrackData: UserWeeklyStatisticsModel[] | null = null;
   @tracked monthTimeTrackData: UserYearlyStatisticsModel[] | null = null;
+  @tracked isShownStatisticsInfoDialog: boolean = false;
 
   @(task(function* (this: StatisticsComponent) {
     const fromMonth: Date = this.selectedMonth.startOf('month').toJSDate();
@@ -62,7 +63,14 @@ export default class StatisticsComponent extends Component {
   }
 
   @action
-  openStatisticsInfoDialog(): void {}
+  openStatisticsInfoDialog(): void {
+    this.isShownStatisticsInfoDialog = true;
+  }
+
+  @action
+  hideStatisticsInfoDialog(): void {
+    this.isShownStatisticsInfoDialog = false;
+  }
 
   @action
   selectMonth(date: DateTime): void {

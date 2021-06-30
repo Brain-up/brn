@@ -1,0 +1,45 @@
+<ModalDialog
+  @overlayClass="p-8 z-50 min-h-full w-full fixed flex"
+  @containerClass="max-w-4xl flex bg-white rounded-lg text-2xl m-auto p-5"
+>
+  <div
+    data-test-info-dialog
+    class="{{style-namespace "statistics/info-dialog"}}"
+  >
+    <div class="flex justify-between block pb-10">
+      <h1>
+        {{t "profile.statistics.info_dialog.title"}}
+      </h1>
+      <button
+        data-test-button-close
+        type="button"
+        class="focus:outline-none"
+        {{on "click" @closeModalAction}}
+      >
+        <Ui::Close />
+      </button>
+    </div>
+    <div class="info-dialog-content">
+      <p class="title">
+        {{t "profile.statistics.info_dialog.sub_title"}}
+      </p>
+      <img
+        class="statistics-info-dialog"
+        src="/ui/statistics-info-dialog.svg"
+        alt="Statistics info"
+      />
+      <p class="text">
+        {{t "profile.statistics.info_dialog.info" htmlSafe=true}}
+      </p>
+    </div>
+    <div class="info-dialog-actions">
+      <button
+        data-test-button-ok
+        type="button"
+        {{on "click" @closeModalAction}}
+      >
+        {{t "profile.statistics.info_dialog.button_ok"}}
+      </button>
+    </div>
+  </div>
+</ModalDialog>

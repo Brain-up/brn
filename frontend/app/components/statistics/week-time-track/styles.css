@@ -1,3 +1,4 @@
+/*! purgecss start ignore */
 & .title,
 & .content .empty-data {
   font-weight: 600;
@@ -26,3 +27,4 @@
 & .content .bb-ygrid-line line {
   stroke: #ffb3bf;
 }
+/*! purgecss end ignore */
