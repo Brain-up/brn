@@ -23,12 +23,9 @@ internal class HeadphonesServiceImplTest {
     @MockK
     lateinit var headphonesRepository: HeadphonesRepository
 
-    companion object {
-        private const val headphonesName = "test"
-        private val headphonesEntity = Headphones(name = headphonesName, type = HeadphonesType.IN_EAR_BLUETOOTH)
-        private val headphonesEntitySecond =
-            Headphones(name = headphonesName, type = HeadphonesType.ON_EAR_NO_BLUETOOTH)
-    }
+    private val headphonesName = "test"
+    private val headphonesEntity = Headphones(name = headphonesName, type = HeadphonesType.IN_EAR_BLUETOOTH)
+    private val headphonesEntitySecond = Headphones(name = headphonesName, type = HeadphonesType.ON_EAR_NO_BLUETOOTH)
 
     @Test
     fun `should save to the repository and return dto`() {
