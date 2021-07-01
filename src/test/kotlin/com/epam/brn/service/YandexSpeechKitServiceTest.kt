@@ -1,20 +1,20 @@
 package com.epam.brn.service
 
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class YandexSpeechKitServiceTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var yandexSpeechKitService: YandexSpeechKitService
 
-    @Mock
+    @MockK
     lateinit var wordsService: WordsService
 
     @ParameterizedTest

@@ -9,21 +9,25 @@ import com.epam.brn.model.Signal
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.nhaarman.mockito_kotlin.given
-import com.nhaarman.mockito_kotlin.then
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class SignalSeriesRecordProcessorTest {
-    private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
-    private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
+    @MockK
+    private lateinit var exerciseRepositoryMock: ExerciseRepository
 
+    @MockK
+    private lateinit var subGroupRepositoryMock: SubGroupRepository
+
+    @InjectMockKs
     private lateinit var signalSeriesRecordProcessor: SignalSeriesRecordProcessor
 
     private val exerciseGroup = ExerciseGroup(
@@ -63,15 +67,14 @@ internal class SignalSeriesRecordProcessorTest {
             subGroupRepositoryMock,
             exerciseRepositoryMock
         )
-        given(subGroupRepositoryMock.findByCodeAndLocale("durationSignals", locale))
-            .willReturn(subGroupDuration)
+        every { subGroupRepositoryMock.findByCodeAndLocale("durationSignals", locale) } returns subGroupDuration
     }
 
     @Test
     fun `should create correct exercise`() {
         val exercise = createExercise(subGroupDuration)
-        given(exerciseRepositoryMock.save(exercise))
-            .willReturn(exercise)
+        every { exerciseRepositoryMock.save(exercise) } returns exercise
+        every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) } returns null
         val actual = signalSeriesRecordProcessor.process(
             listOf(
                 SignalSeriesRecord(
@@ -84,14 +87,10 @@ internal class SignalSeriesRecordProcessorTest {
             )
         )
 
-        then(subGroupRepositoryMock)
-            .should()
-            .findByCodeAndLocale("durationSignals", locale)
+        verify { subGroupRepositoryMock.findByCodeAndLocale("durationSignals", locale) }
 
         Assertions.assertThat(actual).contains(exercise)
-        then(exerciseRepositoryMock)
-            .should()
-            .save(exercise)
+        verify { exerciseRepositoryMock.save(exercise) }
     }
 
     @Test
@@ -99,12 +98,13 @@ internal class SignalSeriesRecordProcessorTest {
         // GIVEN
         val ex1 = createExercise(subGroupDuration)
         val ex2 = createExercise(subGroupFrequency)
-        `when`(exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1)).thenReturn(null)
-        `when`(exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной частоты.", 1)).thenReturn(null)
-        `when`(exerciseRepositoryMock.save(ex1)).thenReturn(ex1)
-        `when`(exerciseRepositoryMock.save(ex2)).thenReturn(ex2)
-        `when`(subGroupRepositoryMock.findByCodeAndLocale("subGroupDuration", locale)).thenReturn(subGroupDuration)
-        `when`(subGroupRepositoryMock.findByCodeAndLocale("subGroupFrequency", locale)).thenReturn(subGroupFrequency)
+        ex2.name = "По 2 сигнала разной частоты."
+        every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) } returns null
+        every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной частоты.", 1) } returns null
+        every { exerciseRepositoryMock.save(ex1) } returns ex1
+        every { exerciseRepositoryMock.save(ex2) } returns ex2
+        every { subGroupRepositoryMock.findByCodeAndLocale("subGroupDuration", locale) } returns subGroupDuration
+        every { subGroupRepositoryMock.findByCodeAndLocale("subGroupFrequency", locale) } returns subGroupFrequency
         // WHEN
         val actual = signalSeriesRecordProcessor.process(
             listOf(
@@ -126,8 +126,8 @@ internal class SignalSeriesRecordProcessorTest {
         )
         // THEN
         Assertions.assertThat(actual).containsAll(listOf(ex1, ex2))
-        then(exerciseRepositoryMock).should().save(ex1)
-        then(exerciseRepositoryMock).should().save(ex2)
+        verify { exerciseRepositoryMock.save(ex1) }
+        verify { exerciseRepositoryMock.save(ex2) }
     }
 
     @Test
@@ -142,16 +142,16 @@ internal class SignalSeriesRecordProcessorTest {
             code = code,
             signals = listOf("1000 120", "1000 60")
         )
-        `when`(subGroupRepositoryMock.findByCodeAndLocale(code, locale.locale)).thenReturn(subGroupDuration)
+        every { subGroupRepositoryMock.findByCodeAndLocale(code, locale.locale) } returns subGroupDuration
 
         val exercise = createExerciseWithSignals(subGroupDuration)
-        `when`(exerciseRepositoryMock.save(exercise)).thenReturn(exercise)
-        `when`(exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1)).thenReturn(null)
+        every { exerciseRepositoryMock.save(exercise) } returns exercise
+        every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) } returns null
         // WHEN
         val actual = signalSeriesRecordProcessor.process(listOf(record), locale)
         // THEN
         Assertions.assertThat(actual).contains(exercise)
-        then(exerciseRepositoryMock).should().save(exercise)
+        verify { exerciseRepositoryMock.save(exercise) }
     }
 
     private fun createExercise(subGroup: SubGroup) = Exercise(

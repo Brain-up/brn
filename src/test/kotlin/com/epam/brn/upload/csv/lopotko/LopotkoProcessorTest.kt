@@ -11,26 +11,34 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Optional
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class LopotkoProcessorTest {
+    @MockK
+    private lateinit var audiometryRepository: AudiometryRepository
 
-    private val audiometryRepository = mock(AudiometryRepository::class.java)
-    private val audiometryTaskRepository = mock(AudiometryTaskRepository::class.java)
-    private val resourceRepositoryMock = mock(ResourceRepository::class.java)
-    private val wordsService = mock(WordsService::class.java)
+    @MockK
+    private lateinit var audiometryTaskRepository: AudiometryTaskRepository
 
+    @MockK
+    private lateinit var resourceRepositoryMock: ResourceRepository
+
+    @MockK
+    private lateinit var wordsService: WordsService
+
+    @InjectMockKs
     private lateinit var lopotkoRecordProcessor: LopotkoRecordProcessor
 
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
@@ -55,9 +63,6 @@ internal class LopotkoProcessorTest {
         400,
         words
     )
-
-    private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
-
     @BeforeEach
     internal fun setUp() {
         lopotkoRecordProcessor = LopotkoRecordProcessor(
@@ -67,12 +72,30 @@ internal class LopotkoProcessorTest {
             wordsService,
         )
 
-        `when`(
+        every { wordsService.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
+        every { wordsService.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } returns String()
+        every {
             audiometryRepository.findByAudiometryTypeAndLocale(
                 AudiometryType.SPEECH.name,
                 Locale.RU.locale
             )
-        ).thenReturn(audiometry)
+        } returns audiometry
+        every {
+            resourceRepositoryMock.findFirstByWordAndWordTypeAndAudioFileUrlLike(
+                ofType(String::class),
+                ofType(String::class),
+                ofType(String::class)
+            )
+        } returns Optional.empty()
+        every { resourceRepositoryMock.saveAll(any()) } returns emptySet()
+        every {
+            audiometryTaskRepository.findByAudiometryAndFrequencyZoneAndAudiometryGroup(
+                ofType(Audiometry::class),
+                ofType(String::class),
+                ofType(String::class)
+            )
+        } returns null
+        every { wordsService.createTxtFilesWithDiagnosticWords(any()) } returns Unit
 
         mockFindResourceByWordLike("бал", resource_бал())
         mockFindResourceByWordLike("бум", resource_бум())
@@ -83,19 +106,18 @@ internal class LopotkoProcessorTest {
     }
 
     private fun mockFindResourceByWordLike(word: String, result: Resource) {
-        `when`(resourceRepositoryMock.findFirstByWordLike(word)).thenReturn(Optional.of(result))
+        every { resourceRepositoryMock.findFirstByWordLike(word) } returns Optional.of(result)
     }
 
     @Test
     fun `should create correct audiometry task`() {
         // given
-        `when`(audiometryTaskRepository.save(any(AudiometryTask::class.java))).thenReturn(savedAudiometryTask)
-        `when`(wordsService.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
+        every { audiometryTaskRepository.save(ofType(AudiometryTask::class)) } returns savedAudiometryTask
         // when
         val actual = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()
         val expected = savedAudiometryTask
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "id")
-        verify(audiometryTaskRepository).save(any(AudiometryTask::class.java))
+        verify { audiometryTaskRepository.save(ofType(AudiometryTask::class)) }
     }
 
     @Test
@@ -110,8 +132,7 @@ internal class LopotkoProcessorTest {
             resource_дуб()
         )
         val audiometryTaskWithResources = savedAudiometryTask.copy(answerOptions = resources)
-        `when`(audiometryTaskRepository.save(any(AudiometryTask::class.java))).thenReturn(audiometryTaskWithResources)
-        `when`(wordsService.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
+        every { audiometryTaskRepository.save(ofType(AudiometryTask::class)) } returns audiometryTaskWithResources
         // when
         val actualtask = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()
         // then

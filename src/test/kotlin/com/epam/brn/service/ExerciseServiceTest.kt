@@ -10,39 +10,36 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
-import com.epam.brn.model.UserAccount
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.anyLong
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.mock
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertTrue
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class ExerciseServiceTest {
-    @InjectMocks
+
+    @InjectMockKs
     lateinit var exerciseService: ExerciseService
 
-    @Mock
+    @MockK
     lateinit var exerciseRepository: ExerciseRepository
 
-    @Mock
+    @MockK
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
+    @MockK
     lateinit var userAccountService: UserAccountService
 
-    @Mock
+    @MockK
     lateinit var urlConversionService: UrlConversionService
 
     private val series = Series(
@@ -61,19 +58,22 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get exercises by user`() {
         // GIVEN
-        val exerciseMock: Exercise = mock(Exercise::class.java)
+        val exerciseMock = mockk<Exercise>()
         val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, ""))
         val exerciseId = 1L
-        `when`(exerciseMock.toDto(true)).thenReturn(exerciseDtoMock)
-        `when`(exerciseMock.id).thenReturn(exerciseId)
-        `when`(studyHistoryRepository.getDoneExercisesIdList(anyLong())).thenReturn(listOf(exerciseId))
-        `when`(exerciseRepository.findAll()).thenReturn(listOf(exerciseMock))
+        every { exerciseMock.toDto(true) } returns exerciseDtoMock
+        every { exerciseMock.id } returns exerciseId
+        every { studyHistoryRepository.getDoneExercisesIdList(any()) } returns listOf(exerciseId)
+        every { exerciseRepository.findAll() } returns listOf(exerciseMock)
+        every { urlConversionService.makeUrlForNoise(any()) } returns ""
+
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(22L)
+
         // THEN
+        verify(exactly = 1) { studyHistoryRepository.getDoneExercisesIdList(any()) }
+        verify(exactly = 1) { exerciseRepository.findAll() }
         assertEquals(actualResult, listOf(exerciseDtoMock))
-        verify(exerciseRepository).findAll()
-        verify(studyHistoryRepository).getDoneExercisesIdList(anyLong())
     }
 
     @Test
@@ -83,54 +83,66 @@ internal class ExerciseServiceTest {
         val userId = 2L
         val exercise1 = Exercise(id = 1, name = "pets")
         val exercise2 = Exercise(id = 2, name = "pets")
-        `when`(studyHistoryRepository.getDoneExercises(subGroupId, userId)).thenReturn(listOf(exercise1))
-        `when`(exerciseRepository.findExercisesBySubGroupId(subGroupId)).thenReturn(listOf(exercise1, exercise2))
+        val studyHistoryMock = mockk<StudyHistory>(relaxed = true)
+        every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
+        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
+        every { urlConversionService.makeUrlForNoise(any()) } returns ""
+        every { studyHistoryRepository.findLastByUserAccountId(any()) } returns listOf(studyHistoryMock)
+
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSubGroupId(userId, subGroupId)
+
         // THEN
+        verify(exactly = 1) { studyHistoryRepository.getDoneExercises(any(), any()) }
+        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
         assertEquals(actualResult.size, 2)
-        verify(exerciseRepository).findExercisesBySubGroupId(subGroupId)
-        verify(studyHistoryRepository).getDoneExercises(anyLong(), anyLong())
     }
 
     @Test
     fun `should get exercise by id`() {
         // GIVEN
-        val exerciseMock: Exercise = mock(Exercise::class.java)
+        val exerciseMock = mockk<Exercise>()
         val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, ""))
-        `when`(exerciseMock.toDto()).thenReturn(exerciseDtoMock)
-        `when`(exerciseRepository.findById(anyLong())).thenReturn(Optional.of(exerciseMock))
+        every { exerciseMock.toDto() } returns exerciseDtoMock
+        every { exerciseRepository.findById(any()) } returns Optional.of(exerciseMock)
+        every { urlConversionService.makeUrlForNoise(any()) } returns ""
+
         // WHEN
         val actualResult: ExerciseDto = exerciseService.findExerciseById(1L)
+
         // THEN
+        verify(exactly = 1) { exerciseRepository.findById(any()) }
         assertEquals(actualResult, exerciseDtoMock)
-        verify(exerciseRepository).findById(anyLong())
     }
 
     @Test
     fun `should get exercise by name and level`() {
         // GIVEN
-        val exerciseMock: Exercise = mock(Exercise::class.java)
-        `when`(exerciseRepository.findExerciseByNameAndLevel("name", 1)).thenReturn(Optional.of(exerciseMock))
+        val exerciseMock = mockk<Exercise>()
+        every { exerciseRepository.findExerciseByNameAndLevel("name", 1) } returns Optional.of(exerciseMock)
+
         // WHEN
         val actualResult: Exercise = exerciseService.findExerciseByNameAndLevel("name", 1)
+
         // THEN
+        verify(exactly = 1) { exerciseRepository.findExerciseByNameAndLevel(any(), any()) }
         assertEquals(actualResult, exerciseMock)
-        verify(exerciseRepository).findExerciseByNameAndLevel(anyString(), anyInt())
     }
 
     @Test
     fun `should get exercises by subGroupId`() {
         // GIVEN
-        val exerciseMock: Exercise = mock(Exercise::class.java)
-        val exerciseDtoMock: ExerciseWithTasksDto = mock(ExerciseWithTasksDto::class.java)
-        `when`(exerciseRepository.findExercisesBySubGroupId(1)).thenReturn(listOf(exerciseMock))
-        `when`(exerciseMock.toDtoWithTasks()).thenReturn(exerciseDtoMock)
+        val exerciseMock = mockk<Exercise>()
+        val exerciseDtoMock = mockk<ExerciseWithTasksDto>()
+        every { exerciseRepository.findExercisesBySubGroupId(1) } returns listOf(exerciseMock)
+        every { exerciseMock.toDtoWithTasks() } returns exerciseDtoMock
+
         // WHEN
         val actualResults: List<ExerciseWithTasksDto> = exerciseService.findExercisesWithTasksBySubGroup(1)
+
         // THEN
+        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(1) }
         assertTrue(actualResults.contains(exerciseDtoMock))
-        verify(exerciseRepository).findExercisesBySubGroupId(1)
     }
 
     @Test
@@ -150,21 +162,22 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1)
         val studyHistory1 = StudyHistory(
             exercise = ex1,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
             wrongAnswers = 5,
             replaysCount = 0
         )
-        `when`(studyHistoryRepository.findLastByUserAccountId(1))
-            .thenReturn(listOf(studyHistory1))
+        every { studyHistoryRepository.findLastByUserAccountId(1) } returns listOf(studyHistory1)
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+
         // THEN
+        verify(exactly = 1) { studyHistoryRepository.findLastByUserAccountId(1) }
         assertEquals(2, actualResult.size)
         assertTrue(actualResult.containsAll(listOf(ex1, ex3)))
     }
@@ -186,7 +199,7 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex3)
         val studyHistory1 = StudyHistory(
             exercise = ex1,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -195,21 +208,22 @@ internal class ExerciseServiceTest {
         )
         val studyHistory3 = StudyHistory(
             exercise = ex3,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
             wrongAnswers = 1,
             replaysCount = 1
         )
-        `when`(studyHistoryRepository.findLastByUserAccountId(1))
-            .thenReturn(listOf(studyHistory1, studyHistory3))
+        every { studyHistoryRepository.findLastByUserAccountId(1) } returns listOf(studyHistory1, studyHistory3)
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+
         // THEN
+        verify(exactly = 1) { studyHistoryRepository.findLastByUserAccountId(1) }
         assertEquals(4, actualResult.size)
         assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex4)))
     }
@@ -232,7 +246,7 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex2)
         val studyHistory1 = StudyHistory(
             exercise = ex1,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -241,21 +255,22 @@ internal class ExerciseServiceTest {
         )
         val studyHistory2 = StudyHistory(
             exercise = ex2,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
             wrongAnswers = 5,
             replaysCount = 1
         )
-        `when`(studyHistoryRepository.findLastByUserAccountId(1))
-            .thenReturn(listOf(studyHistory1, studyHistory2))
+        every { studyHistoryRepository.findLastByUserAccountId(1) } returns listOf(studyHistory1, studyHistory2)
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+
         // THEN
+        verify(exactly = 1) { studyHistoryRepository.findLastByUserAccountId(1) }
         assertEquals(3, actualResult.size)
         assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex4)))
     }
@@ -287,7 +302,7 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex2, ex11)
         val studyHistory1 = StudyHistory(
             exercise = ex1,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -296,7 +311,7 @@ internal class ExerciseServiceTest {
         )
         val studyHistory2 = StudyHistory(
             exercise = ex2,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -305,21 +320,26 @@ internal class ExerciseServiceTest {
         )
         val studyHistory11 = StudyHistory(
             exercise = ex11,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
             wrongAnswers = 6,
             replaysCount = 4
         )
-        `when`(studyHistoryRepository.findLastByUserAccountId(1))
-            .thenReturn(listOf(studyHistory1, studyHistory2, studyHistory11))
+        every { studyHistoryRepository.findLastByUserAccountId(1) } returns listOf(
+            studyHistory1,
+            studyHistory2,
+            studyHistory11
+        )
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+
         // THEN
+        verify(exactly = 1) { studyHistoryRepository.findLastByUserAccountId(1) }
         assertEquals(5, actualResult.size)
         assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex11, ex13)))
     }
