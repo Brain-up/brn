@@ -6,38 +6,39 @@ import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Optional
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class CsvUploadServiceTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var uploadService: CsvUploadService
 
-    @Mock
+    @MockK
     lateinit var csvParser: CsvParser
 
-    @Mock
+    @MockK
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
 
-    @Mock
+    @MockK
     lateinit var seriesRepository: SeriesRepository
+
+    @MockK
+    lateinit var series: Series
 
     @Test
     fun `should get exercise file format`() {
         // given
-        val series = Mockito.mock(Series::class.java)
-        `when`(series.type).thenReturn(ExerciseType.SINGLE_SIMPLE_WORDS.name)
-        `when`(seriesRepository.findById(1)).thenReturn(Optional.of(series))
+        every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        every { seriesRepository.findById(1) } returns Optional.of(series)
         // when
         val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
         // then
@@ -54,7 +55,7 @@ internal class CsvUploadServiceTest {
     @Test
     fun `should throw exception for invalid series id`() {
         val invalidSeriesId: Long = Long.MAX_VALUE
-        `when`(seriesRepository.findById(invalidSeriesId)).thenReturn(Optional.empty())
+        every { seriesRepository.findById(invalidSeriesId) } returns Optional.empty()
         assertThrows(EntityNotFoundException::class.java) {
             uploadService.getSampleStringForSeriesExerciseFile(
                 invalidSeriesId

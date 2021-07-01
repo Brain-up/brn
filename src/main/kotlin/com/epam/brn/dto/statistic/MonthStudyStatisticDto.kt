@@ -10,5 +10,5 @@ data class MonthStudyStatisticDto(
     val date: String,
     val exercisingTimeSeconds: Int,
     val exercisingDays: Int,
-    var progress: UserExercisingProgressStatus
+    var progress: UserExercisingProgressStatus?
 )

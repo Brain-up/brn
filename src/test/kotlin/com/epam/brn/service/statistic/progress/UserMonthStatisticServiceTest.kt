@@ -2,11 +2,13 @@ package com.epam.brn.service.statistic.progress
 
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserMonthStatisticService
+import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -39,6 +41,9 @@ internal class UserMonthStatisticServiceTest {
     @MockK
     private lateinit var studyHistorySecond: StudyHistory
 
+    @MockK
+    private lateinit var progressStatusManager: ProgressStatusManager<List<StudyHistory>>
+
     private val month: Int = 2
     private val day: Int = 23
     private val year: Int = 2021
@@ -65,15 +70,22 @@ internal class UserMonthStatisticServiceTest {
         // GIVEN
         every { studyHistorySecond.startTime } returns studyHistoryDate
         every { studyHistorySecond.executionSeconds } returns executionSeconds
+        val studyHistories = listOf(studyHistory, studyHistorySecond)
         every {
             studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
-        } returns listOf(studyHistory, studyHistorySecond)
+        } returns studyHistories
+        every {
+            progressStatusManager.getStatus(
+                UserExercisingPeriod.WEEK,
+                studyHistories
+            )
+        } returns progress
 
         val expectedStatistic = MonthStudyStatistic(
             date = studyHistory.startTime,
             exercisingTimeSeconds = executionSeconds * 2,
             exercisingDays = 2,
-            progress = UserExercisingProgressStatus.GREAT
+            progress = progress
         )
 
         // WHEN
@@ -86,13 +98,20 @@ internal class UserMonthStatisticServiceTest {
 
     @Test
     fun `getStatisticForPeriod should return statistic for period when there are histories for some month`() {
-        // GIVEN
-        every { studyHistorySecond.startTime } returns secondStudyHistoryDate
-        every { studyHistorySecond.executionSeconds } returns executionSeconds
         val studyHistories = listOf(
             studyHistory,
             studyHistorySecond
         )
+        // GIVEN
+        every { studyHistorySecond.startTime } returns secondStudyHistoryDate
+        every { studyHistorySecond.executionSeconds } returns executionSeconds
+        every { progressStatusManager.getStatus(UserExercisingPeriod.WEEK, listOf(studyHistory)) } returns progress
+        every {
+            progressStatusManager.getStatus(
+                UserExercisingPeriod.WEEK,
+                listOf(studyHistorySecond)
+            )
+        } returns progress
         every {
             studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
         } returns studyHistories
@@ -123,5 +142,17 @@ internal class UserMonthStatisticServiceTest {
             secondExpectedStudyStatistic,
             statisticForPeriod.first { it.date.month == secondExpectedStudyStatistic.date.month }
         )
+    }
+
+    @Test
+    fun `getStatisticForPeriod should return empty list when there are not study histories for the period`() {
+        // GIVEN
+        every { studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to) } returns emptyList()
+
+        // WHEN
+        val statisticForPeriod = userMonthStatisticService.getStatisticForPeriod(from, to)
+
+        // THEN
+        assertTrue(statisticForPeriod.isEmpty())
     }
 }

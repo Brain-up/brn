@@ -17,10 +17,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.InputStream
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Service
 class YandexSpeechKitService(
-    val wordsService: WordsService,
+    private val wordsService: WordsService,
     private val timeService: TimeService
 ) {
 
@@ -43,7 +45,7 @@ class YandexSpeechKitService(
     lateinit var emotion: String
 
     var iamToken: String = ""
-    var iamTokenExpiresTime = timeService.now()
+    var iamTokenExpiresTime: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 
     val setNotCreationWords = mutableSetOf<AudioFileMetaData>()
 

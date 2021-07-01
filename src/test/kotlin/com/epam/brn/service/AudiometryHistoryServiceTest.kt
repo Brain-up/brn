@@ -10,34 +10,38 @@ import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
-import com.nhaarman.mockito_kotlin.argThat
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.spy
-import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime.now
 import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class AudiometryHistoryServiceTest {
-    @InjectMocks
+    @InjectMockKs
     lateinit var audiometryHistoryService: AudiometryHistoryService
 
-    @Mock
+    @MockK
     lateinit var audiometryTaskRepository: AudiometryTaskRepository
 
-    @Mock
+    @MockK
     lateinit var audiometryHistoryRepository: AudiometryHistoryRepository
 
-    @Mock
+    @MockK
     lateinit var userAccountService: UserAccountService
+
+    @MockK
+    lateinit var audiometryHistoryRequest: AudiometryHistoryRequest
+
+    @MockK
+    lateinit var audiometryTask: AudiometryTask
 
     @Test
     fun `should create audiometryHistory`() {
@@ -54,10 +58,8 @@ internal class AudiometryHistoryServiceTest {
             active = true,
             headphones = mutableSetOf(headphonesEntity)
         )
-        `when`(userAccountService.getCurrentUser()).thenReturn(userAccount)
-        val audiometryHistoryRequest = mock(AudiometryHistoryRequest::class.java)
-        val audiometryTask = mock(AudiometryTask::class.java)
-        val audiometryHistory = spy(
+        every { userAccountService.getCurrentUser() } returns userAccount
+        val audiometryHistory = spyk(
             AudiometryHistory(
                 id = 2L,
                 userAccount = userAccount,
@@ -69,23 +71,26 @@ internal class AudiometryHistoryServiceTest {
                 headphones = headphonesEntity
             )
         )
-        `when`(audiometryHistoryRequest.audiometryTaskId).thenReturn(1L)
-        `when`(audiometryTaskRepository.findById(1L)).thenReturn(Optional.of(audiometryTask))
-        `when`(audiometryHistoryRequest.toEntity(userAccount, audiometryTask, headphonesEntity)).thenReturn(
-            audiometryHistory
-        )
-        `when`(audiometryHistoryRepository.save(audiometryHistory)).thenReturn(audiometryHistory)
-        `when`(audiometryHistory.id).thenReturn(2L)
-        `when`(audiometryHistoryRequest.headphones).thenReturn(5L)
+        every { audiometryHistoryRequest.audiometryTaskId } returns 1L
+        every { audiometryTaskRepository.findById(1L) } returns Optional.of(audiometryTask)
+        every {
+            audiometryHistoryRequest.toEntity(
+                userAccount,
+                audiometryTask,
+                headphonesEntity
+            )
+        } returns audiometryHistory
+        every { audiometryHistoryRepository.save(audiometryHistory) } returns audiometryHistory
+        every { audiometryHistory.id } returns 2L
+        every { audiometryHistoryRequest.headphones } returns 5L
 
         // WHEN
         val result = audiometryHistoryService.save(audiometryHistoryRequest)
         // THEN
         assertEquals(2L, result)
-        verify(userAccountService).getCurrentUser()
-        verify(audiometryTaskRepository).findById(1L)
-        verify(audiometryHistoryRepository).save(argThat { headphones != null })
-        verify(audiometryHistoryRepository).save(audiometryHistory)
+        verify { userAccountService.getCurrentUser() }
+        verify { audiometryTaskRepository.findById(1L) }
+        verify { audiometryHistoryRepository.save(audiometryHistory) }
     }
 
     @Test
@@ -103,13 +108,10 @@ internal class AudiometryHistoryServiceTest {
             active = true,
             headphones = mutableSetOf(headphonesEntity)
         )
-        val audiometryHistoryRequest = mock(AudiometryHistoryRequest::class.java)
-        val audiometryTask = mock(AudiometryTask::class.java)
-
-        // WHEN
-        `when`(userAccountService.getCurrentUser()).thenReturn(userAccount)
-        `when`(audiometryHistoryRequest.audiometryTaskId).thenReturn(1L)
-        `when`(audiometryTaskRepository.findById(1L)).thenReturn(Optional.of(audiometryTask))
+        every { userAccountService.getCurrentUser() } returns userAccount
+        every { audiometryHistoryRequest.audiometryTaskId } returns 1L
+        every { audiometryTaskRepository.findById(1L) } returns Optional.of(audiometryTask)
+        every { audiometryHistoryRequest.headphones } returns null
 
         assertFailsWith<IllegalArgumentException> {
             audiometryHistoryService.save(audiometryHistoryRequest)
@@ -129,12 +131,9 @@ internal class AudiometryHistoryServiceTest {
             active = true,
             headphones = mutableSetOf()
         )
-        val audiometryHistoryRequest = mock(AudiometryHistoryRequest::class.java)
-
-        // WHEN
-        `when`(userAccountService.getCurrentUser()).thenReturn(userAccount)
-        `when`(audiometryHistoryRequest.audiometryTaskId).thenReturn(1L)
-        `when`(audiometryTaskRepository.findById(1L)).thenReturn(Optional.empty())
+        every { userAccountService.getCurrentUser() } returns userAccount
+        every { audiometryHistoryRequest.audiometryTaskId } returns 1L
+        every { audiometryTaskRepository.findById(1L) } returns Optional.empty()
 
         assertFailsWith<EntityNotFoundException> {
             audiometryHistoryService.save(audiometryHistoryRequest)

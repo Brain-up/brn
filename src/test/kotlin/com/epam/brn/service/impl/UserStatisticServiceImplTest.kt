@@ -2,74 +2,65 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserStatisticServiceImpl
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
-import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertNotNull
 
 /**
  * @author Nikolai Lazarev
  */
-@ExtendWith(MockitoExtension::class)
-@DisplayName("User statistic service test using mockito")
+@ExtendWith(MockKExtension::class)
 internal class UserStatisticServiceImplTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var userStatisticService: UserStatisticServiceImpl
 
-    @Mock
+    @MockK
     lateinit var subGroupRepository: SubGroupRepository
 
-    @Mock
+    @MockK
     lateinit var userAccountService: UserAccountService
 
-    @Mock
+    @MockK
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
+    @MockK
     lateinit var exerciseRepository: ExerciseRepository
 
-    @Mock
-    lateinit var series: Series
-
-    @Mock
+    @MockK
     lateinit var userAccount: UserAccountDto
-
-    @Mock
-    lateinit var exercise: Exercise
 
     private val userAccountID = 1L
 
     @Test
     fun `should return 0 to 2 user progress for subGroup`() {
         // GIVEN
+        val exercise = mockk<Exercise>()
         val subGroupIds: List<Long> = listOf(777)
         val allExercisesForSubGroup: List<Exercise> = listOf(exercise, exercise)
-        `when`(studyHistoryRepository.getDoneExercises(anyLong(), anyLong())).thenReturn(emptyList())
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount)
-        `when`(userAccount.id).thenReturn(userAccountID)
-        `when`(exerciseRepository.findExercisesBySubGroupId(anyLong())).thenReturn(allExercisesForSubGroup)
+        every { studyHistoryRepository.getDoneExercises(any(), any()) } returns emptyList()
+        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+        every { userAccount.id } returns userAccountID
+        every { exerciseRepository.findExercisesBySubGroupId(any()) } returns allExercisesForSubGroup
 
         // WHEN
         val result = userStatisticService.getSubGroupStatistic(subGroupIds)
 
         // THEN
-        verify(studyHistoryRepository, times(1)).getDoneExercises(anyLong(), anyLong())
-        verify(exerciseRepository, times(1)).findExercisesBySubGroupId(anyLong())
+        verify(exactly = 1) { studyHistoryRepository.getDoneExercises(any(), any()) }
+        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(any()) }
         assertNotNull(result)
         Assertions.assertTrue(result.first().subGroupId == subGroupIds.first())
         Assertions.assertTrue(result.first().completedExercises == 0)
@@ -78,10 +69,14 @@ internal class UserStatisticServiceImplTest {
 
     @Test
     fun `should return empty map when empty IDs list was passed`() {
+        // GIVEN
+        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+
         // WHEN
         val result = userStatisticService.getSubGroupStatistic(emptyList())
 
         // THEN
+        verify(exactly = 1) { userAccountService.getUserFromTheCurrentSession() }
         Assertions.assertTrue(result.isEmpty())
     }
 }

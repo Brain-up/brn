@@ -1,10 +1,12 @@
 package com.epam.brn.service.statistic.impl
 
 import com.epam.brn.dto.statistic.MonthStudyStatistic
-import com.epam.brn.dto.statistic.UserExercisingProgressStatus
+import com.epam.brn.dto.statistic.UserExercisingPeriod
+import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
+import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime
 class UserMonthStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
+    private val progressManager: ProgressStatusManager<List<StudyHistory>>
 ) : UserPeriodStatisticService<MonthStudyStatistic> {
 
     override fun getStatisticForPeriod(
@@ -32,7 +35,7 @@ class UserMonthStatisticService(
             MonthStudyStatistic(
                 date = it.startTime,
                 exercisingTimeSeconds = filteredHistories.sumBy { studyHistory -> studyHistory.executionSeconds },
-                progress = UserExercisingProgressStatus.GREAT,
+                progress = progressManager.getStatus(UserExercisingPeriod.WEEK, filteredHistories),
                 exercisingDays = filteredHistories.size
             )
         }.distinctBy {

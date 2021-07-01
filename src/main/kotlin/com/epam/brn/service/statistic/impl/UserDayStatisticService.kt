@@ -1,10 +1,12 @@
 package com.epam.brn.service.statistic.impl
 
 import com.epam.brn.dto.statistic.DayStudyStatistic
-import com.epam.brn.dto.statistic.UserExercisingProgressStatus
+import com.epam.brn.dto.statistic.UserExercisingPeriod
+import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
+import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime
 class UserDayStatisticService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
+    private val progressManager: ProgressStatusManager<List<StudyHistory>>
 ) : UserPeriodStatisticService<DayStudyStatistic> {
     override fun getStatisticForPeriod(from: LocalDateTime, to: LocalDateTime, userId: Long?): List<DayStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
@@ -20,15 +23,14 @@ class UserDayStatisticService(
             from = from,
             to = to
         )
-        return studyHistories.map { studyHistory ->
+        return studyHistories.map {
+            val filteredStudyHistories = studyHistories.filter { studyHistoryFilter ->
+                studyHistoryFilter.startTime.toLocalDate() == it.startTime.toLocalDate()
+            }
             DayStudyStatistic(
-                exercisingTimeSeconds = studyHistories.filter { filterStudyHistory ->
-                    filterStudyHistory.startTime.toLocalDate() == studyHistory.startTime.toLocalDate()
-                }.map {
-                    it.executionSeconds
-                }.sum(),
-                date = studyHistory.startTime,
-                progress = UserExercisingProgressStatus.GREAT
+                exercisingTimeSeconds = filteredStudyHistories.sumBy { dayStudyHistory -> dayStudyHistory.executionSeconds },
+                date = it.startTime,
+                progress = progressManager.getStatus(UserExercisingPeriod.DAY, filteredStudyHistories)
             )
         }.distinctBy { it.date.toLocalDate() }
     }

@@ -7,41 +7,40 @@ import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.any
-import org.mockito.Mockito.mock
-import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertEquals
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class StudyHistoryServiceTest {
 
-    @Mock
+    @InjectMockKs
+    lateinit var studyHistoryService: StudyHistoryService
+
+    @MockK
     lateinit var exerciseRepository: ExerciseRepository
 
-    @Mock
+    @MockK
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
+    @MockK
     lateinit var userAccountService: UserAccountService
-
-    @InjectMocks
-    lateinit var studyHistoryService: StudyHistoryService
 
     @Test
     fun `should create studyHistory when doesn't exist`() {
         // GIVEN
+        val exerciseId = 2L
         val now = LocalDateTime.now()
-
-        val studyHistoryDtoMock = mock(StudyHistoryDto::class.java)
+        val studyHistoryDtoMock = mockk<StudyHistoryDto>()
         val userAccount = UserAccount(
             id = 1L,
             fullName = "testUserFirstName",
@@ -71,19 +70,21 @@ internal class StudyHistoryServiceTest {
             wrongAnswers = 3,
             replaysCount = 3
         )
-        `when`(userAccountService.getCurrentUser()).thenReturn(userAccount)
-        `when`(studyHistoryDtoMock.toEntity(userAccount, exercise)).thenReturn(studyHistoryNew)
-        `when`(studyHistoryDtoMock.exerciseId).thenReturn(2L)
+        every { userAccountService.getCurrentUser() } returns userAccount
+        every { studyHistoryDtoMock.toEntity(userAccount, exercise) } returns studyHistoryNew
+        every { studyHistoryDtoMock.exerciseId } returns exerciseId
 
-        `when`(exerciseRepository.findById(2L)).thenReturn(Optional.of(exercise))
-        `when`(studyHistoryRepository.save(studyHistoryNew)).thenReturn(studyHistorySaved)
+        every { exerciseRepository.findById(exerciseId) } returns Optional.of(exercise)
+        every { studyHistoryRepository.save(studyHistoryNew) } returns studyHistorySaved
 
         // WHEN
         val result = studyHistoryService.save(studyHistoryDtoMock)
 
         // THEN
-        Assertions.assertThat(result).isEqualToIgnoringGivenFields(studyHistorySaved, "id", "exerciseId")
-        verify(studyHistoryRepository).save(any(StudyHistory::class.java))
+        verify(exactly = 1) { studyHistoryRepository.save(any()) }
+        Assertions.assertThat(result)
+            .usingRecursiveComparison()
+            .ignoringFields("id", "exerciseId")
     }
 
     @Test

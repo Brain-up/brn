@@ -2,11 +2,13 @@ package com.epam.brn.service.statistic.progress
 
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserDayStatisticService
+import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -29,6 +31,9 @@ internal class UserDayStatisticServiceTest {
 
     @MockK
     private lateinit var userAccountService: UserAccountService
+
+    @MockK
+    private lateinit var progressStatusManager: ProgressStatusManager<List<StudyHistory>>
 
     @MockK
     private lateinit var userAccount: UserAccountDto
@@ -58,11 +63,18 @@ internal class UserDayStatisticServiceTest {
     fun `getStatisticForPeriod should return statistic for a day`() {
         // GIVEN
         val date = LocalDateTime.now()
+        val studyHistories = listOf(studyHistory)
         every { studyHistory.startTime } returns studyHistoryDate
+        every {
+            progressStatusManager.getStatus(
+                UserExercisingPeriod.DAY,
+                studyHistories
+            )
+        } returns userProgress
         every { studyHistory.executionSeconds } returns exercisingSeconds
         every {
             studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userAccountId, from, to)
-        } returns listOf(studyHistory)
+        } returns studyHistories
         val expectedStatistic = DayStudyStatistic(
             date = studyHistoryDate,
             exercisingTimeSeconds = exercisingSeconds,
