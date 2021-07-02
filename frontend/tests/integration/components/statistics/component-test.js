@@ -2,11 +2,12 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { Service } from 'ember-intl';
 import sinon from 'sinon';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
 module('Integration | Component | statistics', function (hooks) {
   setupRenderingTest(hooks);
+  setupMirage(hooks);
 
   test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
@@ -14,17 +15,15 @@ module('Integration | Component | statistics', function (hooks) {
     const stubGetStatsByYear = sinon.stub();
     const stubGetStatsByWeek = sinon.stub();
 
-    const stubNetworkService = Service.extend({
-      getUserStatisticsByYear(from, to) {
-        stubGetStatsByYear.call(from, to);
-        return [];
-      },
-      getUserStatisticsByWeek(from, to) {
-        stubGetStatsByWeek.call(from, to);
-        return [];
-      },
+    server.get('/statistics/study/week', function () {
+      stubGetStatsByWeek();
+      return { data: [] };
     });
-    this.owner.register('service:network', stubNetworkService);
+
+    server.get('/statistics/study/year', function () {
+      stubGetStatsByYear();
+      return { data: [] };
+    });
 
     await render(hbs`<Statistics />`);
 
@@ -41,15 +40,14 @@ module('Integration | Component | statistics', function (hooks) {
   test('it shows info dialog', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
-    const stubNetworkService = Service.extend({
-      getUserStatisticsByYear(from, to) {
-        return [];
-      },
-      getUserStatisticsByWeek(from, to) {
-        return [];
-      },
+
+    server.get('/statistics/study/week', function () {
+      return { data: [] };
     });
-    this.owner.register('service:network', stubNetworkService);
+
+    server.get('/statistics/study/year', function () {
+      return { data: [] };
+    });
 
     await render(hbs`<Statistics />`);
 

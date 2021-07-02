@@ -1,7 +1,7 @@
 /*! purgecss start ignore */
 @import 'pod-styles.css';
-
 /*! purgecss end ignore */
+
 @import 'tailwindcss/base';
 
 @import 'tailwindcss/components';
@@ -9,10 +9,8 @@
 @import 'tailwindcss/utilities';
 
 /*! purgecss start ignore */
-@import 'billboard.css'; /* had to clone and covert it from 'billboard.js/src/scss/billboard.scss' */
-/*! purgecss end ignore */
+@import 'billboard.js/dist/billboard.min.css';
 
-/*! purgecss start ignore */
 html {
   background: #efefef;
   margin: 0;
@@ -108,5 +106,4 @@ a[disabled] {
   width: 1200px;
   padding: 25px 40px 40px;
 }
-
 /*! purgecss end ignore */

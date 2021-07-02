@@ -42,7 +42,7 @@ module(
       this.set('rawWeekTimeTrackData', TRACK_DATA);
 
       assert
-        .dom('.empty-data')
+        .dom('[data-test-empty-data]')
         .doesNotExist('no empty data description is shown');
       assert.dom('#chart').exists();
     });
@@ -62,7 +62,9 @@ module(
       this.set('selectedMonth', selectedMonth);
       this.set('rawWeekTimeTrackData', TRACK_DATA);
 
-      assert.dom('.empty-data').exists('empty data description is shown');
+      assert
+        .dom('[data-test-empty-data]')
+        .exists('empty data description is shown');
     });
   },
 );

@@ -42,6 +42,8 @@ module.exports = {
           ...colors.purple,
           700: '#2A165B',
           primary: '#503DAD',
+          left: '#7979f2',
+          right: '#a179f2',
         },
 
         indigo: {
@@ -65,6 +67,13 @@ module.exports = {
       flex: {
         6: '0 1 16.666%',
       },
+      height: {
+        '200px': '200px',
+        '48px': '48px',
+      },
+      width: {
+        '48px': '48px',
+      },
     },
     fontFamily: {
       openSans: ['Open Sans'],
@@ -74,6 +83,9 @@ module.exports = {
     backgroundColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
     textColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
     gradientColorStops: ['responsive', 'hover', 'focus', 'disabled', 'active'],
+    cursor: ['disabled'],
+    boxShadow: ['disabled'],
+    opacity: ['disabled'],
   },
   plugins: [],
 };

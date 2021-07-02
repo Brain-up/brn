@@ -1,8 +1,8 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { trackedRef } from 'ember-ref-bucket';
-import { bar, bb, Chart } from 'billboard.js';
-import { ChartOptions, Data } from 'billboard.js';
+import type { Chart, ChartOptions, Data } from 'billboard.js';
+import { isNone } from '@ember/utils';
 
 export type BarDataType = [...[string, ...number[]][]];
 
@@ -19,41 +19,38 @@ interface IBarChartComponentArgs {
 
 export default class BarChartComponent extends Component<IBarChartComponentArgs> {
   private chart: Chart | undefined;
-  private chartOptions: BarOptionsType | undefined;
-  private chartColumns: BarDataType | undefined;
   @trackedRef('chartContainer') chartElemRef!: HTMLDivElement;
+
+  get chartOptions(): BarOptionsType {
+    return this.args.options;
+  }
+
+  get chartColumns(): BarDataType {
+    return this.args.data;
+  }
 
   @action
   didUpdateData() {
-    this.data = this.args.data;
+    if (isNone(this.chartColumns)) {
+      return;
+    }
+    this.chart?.load({ columns: this.chartColumns });
   }
 
   @action
   didUpdateOptions() {
-    this.options = this.args.options;
-  }
-
-  set data(data: BarDataType) {
-    if (!data) {
+    if (isNone(this.chartOptions)) {
       return;
     }
-    this.chartColumns = data;
-    this.chart?.load({ columns: this.chartColumns });
-  }
-
-  set options(options: BarOptionsType) {
-    if (!options) {
-      return;
-    }
-    this.chartOptions = options;
+    this.chart?.destroy();
     if (this.chartElemRef) {
-      this.chart?.destroy();
       this.buildChart();
     }
   }
 
   @action
-  buildChart(): void {
+  async buildChart() {
+    const { bar, bb } = await import('billboard.js');
     this.chart = bb.generate({
       bindto: this.chartElemRef,
 

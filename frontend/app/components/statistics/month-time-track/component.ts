@@ -20,6 +20,7 @@ export default class MonthTimeTrackComponent<
 > extends Component {
   @tracked monthTimeTrackItemsData: IMonthTimeTrackItemData[] | null = null;
   @tracked isLoading: boolean = true;
+
   @action
   didUpdateData(): void {
     const data = this.args.data;

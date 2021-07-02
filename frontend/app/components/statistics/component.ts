@@ -22,7 +22,6 @@ export default class StatisticsComponent extends Component {
     const fromMonth: Date = this.selectedMonth.startOf('month').toJSDate();
     const toMonth: Date = this.selectedMonth.endOf('month').toJSDate();
     this.isLoadingWeekTimeTrackData = true;
-
     this.weekTimeTrackData = yield this.network.getUserStatisticsByWeek(
       fromMonth,
       toMonth,

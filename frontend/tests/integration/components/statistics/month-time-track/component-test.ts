@@ -65,20 +65,20 @@ module(
       this.set('rawMonthTimeTrackData', TRACK_DATA_1);
       assert.dom('[data-test-month-track-item]').exists({ count: 1 });
       assert
-        .dom('.month-time-track-items-wrap')
-        .hasClass('incomplete-year', 'year is incomplete');
+        .dom('[data-test-month-incomplete-year]')
+        .exists('year is incomplete');
 
       this.set('rawMonthTimeTrackData', TRACK_DATA_12);
       assert.dom('[data-test-month-track-item]').exists({ count: 12 });
       assert
-        .dom('.month-time-track-items-wrap')
-        .doesNotHaveClass('incomplete-year', 'year is complete');
+        .dom('[data-test-month-incomplete-year]')
+        .doesNotExist('year is complete');
 
       this.set('rawMonthTimeTrackData', TRACK_DATA_0);
       assert.dom('[data-test-month-track-item]').doesNotExist();
       assert
-        .dom('.month-time-track-items-wrap')
-        .hasClass('incomplete-year', 'year is incomplete');
+        .dom('[data-test-month-incomplete-year]')
+        .exists('year is incomplete');
     });
 
     test('it selects month', async function (assert) {
@@ -156,19 +156,19 @@ module(
 
       this.set('rawMonthTimeTrackData', TRACK_DATA_0);
 
-      assert.dom('button.next').isDisabled('button next is disabled');
-      assert.dom('button.prev').isEnabled('button prev is enabled');
+      assert.dom('[data-test-btn-next]').isDisabled('button next is disabled');
+      assert.dom('[data-test-btn-prev]').isEnabled('button prev is enabled');
 
       selectedMonth = DateTime.fromISO(`${lastYear}-06-23`);
       this.set('selectedMonth', selectedMonth);
 
-      assert.dom('button.next').isEnabled('button next is enabled');
-      assert.dom('button.prev').isEnabled('button prev is enabled');
+      assert.dom('[data-test-btn-next]').isEnabled('button next is enabled');
+      assert.dom('[data-test-btn-prev]').isEnabled('button prev is enabled');
 
-      await click('button.next');
+      await click('[data-test-btn-next]');
       assert.ok(stubLoadNextYear.calledOnce, 'loadNextYear is called');
 
-      await click('button.prev');
+      await click('[data-test-btn-prev]');
       assert.ok(stubLoadPrevYear.calledOnce, 'loadPrevYear is called');
     });
 
@@ -194,11 +194,13 @@ module(
       this.set('rawMonthTimeTrackData', TRACK_DATA_1);
 
       assert
-        .dom('.empty-data')
+        .dom('[data-test-empty-data]')
         .doesNotExist('no empty data description is shown');
 
       this.set('rawMonthTimeTrackData', TRACK_DATA_0);
-      assert.dom('.empty-data').exists('empty data description is shown');
+      assert
+        .dom('[data-test-empty-data]')
+        .exists('empty data description is shown');
     });
 
     test('it shows loading spinner', async function (assert) {

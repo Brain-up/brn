@@ -1,13 +1,13 @@
 <div
   class={{style-namespace "statistics/week-time-track"}}
+  ...attributes
   {{did-insert this.didUpdateData}}
   {{did-update this.didUpdateData @data}}
-  ...attributes
 >
-  <div class="title">
+  <div class="text-xs font-semibold leading-3 uppercase">
     {{t "profile.statistics.week_time_track.title_weeks"}}
   </div>
-  <div class="content">
+  <div class="h-200px box-content flex items-center justify-center px-5 py-6">
     {{#if @isLoading}}
       <LoadingSpinner />
     {{else if this.barData.length}}
@@ -16,7 +16,10 @@
         @options={{this.barOptions}}
       />
     {{else}}
-      <div class="empty-data">
+      <div
+        data-test-empty-data
+        class="w-full text-xs font-semibold leading-3 text-center uppercase"
+      >
         {{t "profile.statistics.week_time_track.empty_data" period=""}}
       </div>
     {{/if}}

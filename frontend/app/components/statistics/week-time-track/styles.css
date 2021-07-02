@@ -1,30 +1,8 @@
 /*! purgecss start ignore */
-& .title,
-& .content .empty-data {
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 24px;
-  text-transform: uppercase;
-  color: #6d6a80;
-}
-& .title span {
-  color: #7979f2;
-}
-& .content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 32px 15px;
-  height: 200px;
-}
-& .content .empty-data {
-  text-align: center;
-  width: 100%;
-}
-& .content .bb-ygrid-line {
+& .bb-ygrid-line {
   stroke-dasharray: 5;
 }
-& .content .bb-ygrid-line line {
+& .bb-ygrid-line line {
   stroke: #ffb3bf;
 }
 /*! purgecss end ignore */

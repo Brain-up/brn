@@ -31,58 +31,60 @@ interface IWeekTimeTrackComponentArgs {
 export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComponentArgs> {
   private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
 
-  private chartData: IWeekChartDataItem[];
+  @tracked private chartData?: IWeekChartDataItem[];
 
-  readonly barOptions: BarOptionsType = {
-    colors: {
-      data: (dataItem) =>
-        PROGRESS_COLORS[this.chartData[dataItem.index].progress],
-    },
-    labels: {
-      format: (seconds) => (seconds ? secondsTo(seconds, 'm:s') : ''),
-    },
-    axis: {
-      x: {
-        tick: {
-          format: (i: number) =>
-            `${this.chartData[i].x.toUpperCase()}\n${i + 1}`,
-          culling: false,
-          show: false,
-        },
+  get barOptions(): BarOptionsType {
+    return {
+      colors: {
+        data: (dataItem) =>
+          PROGRESS_COLORS[this.chartData[dataItem.index].progress],
       },
-      y: {
-        tick: {
-          text: { show: false },
-          culling: false,
-          show: false,
-          outer: false,
-        },
+      labels: {
+        format: (seconds) => (seconds ? secondsTo(seconds, 'm:s') : ''),
       },
-    },
-    grid: {
-      y: {
-        lines: [
-          {
-            value: WeekTimeTrackComponent.EXERCISING_TIME_NORM_IN_S,
+      axis: {
+        x: {
+          tick: {
+            format: (i: number) =>
+              `${this.chartData[i].x.toUpperCase()}\n${i + 1}`,
+            culling: false,
+            show: false,
           },
-        ],
+        },
+        y: {
+          tick: {
+            text: { show: false },
+            culling: false,
+            show: false,
+            outer: false,
+          },
+        },
       },
-    },
-    size: {
-      height: 200,
-      width: 1000,
-    },
-    legend: {
-      show: false,
-    },
-    tooltip: {
-      show: false,
-    },
-    bar: {
-      width: 16,
-      radius: 8,
-    },
-  };
+      grid: {
+        y: {
+          lines: [
+            {
+              value: WeekTimeTrackComponent.EXERCISING_TIME_NORM_IN_S,
+            },
+          ],
+        },
+      },
+      size: {
+        height: 200,
+        width: 1000,
+      },
+      legend: {
+        show: false,
+      },
+      tooltip: {
+        show: false,
+      },
+      bar: {
+        width: 16,
+        radius: 8,
+      },
+    };
+  }
 
   @tracked barData: BarDataType;
 
@@ -92,12 +94,12 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
 
   @action
   didUpdateData(): void {
+    this.chartData = [];
     const data = this.args.data;
     if (!data) {
       return;
     }
 
-    this.chartData = [];
     for (
       let dayNumber = 1;
       dayNumber <= this.selectedMonth.daysInMonth;
