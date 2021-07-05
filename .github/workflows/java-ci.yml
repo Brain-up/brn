@@ -19,6 +19,11 @@ jobs:
         run: ./gradlew build test integrationTest jacocoTestReport sonarqube
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: build/test-results/**/*.xml
       - name: Upload Unit Test Results
         uses: actions/upload-artifact@v2
         if: failure()
