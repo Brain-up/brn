@@ -19,3 +19,15 @@ jobs:
         run: ./gradlew build test integrationTest jacocoTestReport sonarqube
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Unit Test Results
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: Unit Test Results
+          path: build/reports/tests/test/
+      - name: Upload Integration Test Results
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: Integration Test Results
+          path: build/reports/tests/integrationTest/
