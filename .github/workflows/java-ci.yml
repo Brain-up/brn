@@ -23,6 +23,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
+          check_name: Gradle Unit and Integration Test Results
           files: build/test-results/**/*.xml
       - name: Upload Unit Test Results
         uses: actions/upload-artifact@v2
