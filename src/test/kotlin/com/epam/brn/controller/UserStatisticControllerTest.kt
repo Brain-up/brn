@@ -13,11 +13,10 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.apache.http.HttpStatus
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
@@ -68,8 +67,8 @@ internal class UserStatisticControllerTest {
     fun `should get user weekly statistic`() {
 
         // GIVEN
-        val from = LocalDate.of(2021, 5, 1)
-        val to = LocalDate.of(2021, 6, 5)
+        val from = LocalDateTime.of(2021, 5, 1, 0, 0)
+        val to = LocalDateTime.of(2021, 6, 5, 23, 59)
 
         val dayStudyStatisticList = listOf(dayStudyStatistic)
 
@@ -87,8 +86,8 @@ internal class UserStatisticControllerTest {
     fun `should get user yearly statistic`() {
 
         // GIVEN
-        val from = LocalDate.of(2020, 5, 1)
-        val to = LocalDate.of(2021, 5, 5)
+        val from = LocalDateTime.of(2021, 5, 1, 0, 0)
+        val to = LocalDateTime.of(2021, 6, 5, 23, 59)
 
         val monthStudyStatisticList = listOf(monthStudyStatistic)
 

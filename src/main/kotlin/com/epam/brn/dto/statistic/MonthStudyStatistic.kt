@@ -1,13 +1,19 @@
 package com.epam.brn.dto.statistic
 
-import java.time.YearMonth
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-/**
- *@author Nikolai Lazarev
- */
 data class MonthStudyStatistic(
-    val date: YearMonth,
+    val date: LocalDateTime,
     val exercisingTimeSeconds: Int,
     val exercisingDays: Int,
     var progress: UserExercisingProgressStatus?
-) : Statistic(progress)
+) : Statistic(progress) {
+    fun toDto(): MonthStudyStatisticDto =
+        MonthStudyStatisticDto(
+            date = date.format(DateTimeFormatter.ofPattern("yyyy-MM")),
+            exercisingTimeSeconds = exercisingTimeSeconds,
+            exercisingDays = exercisingDays,
+            progress = progress
+        )
+}

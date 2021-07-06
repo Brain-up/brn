@@ -1,11 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.ExerciseRepository
-import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.repo.StudyHistoryRepository
-import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -13,6 +7,12 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -223,55 +223,6 @@ class StudyHistoryIT : BaseIT() {
         val result = studyHistoryRepository.getTodayDayTimer(user.id!!)
         // THEN
         assertEquals(0, result)
-    }
-
-    @Test
-    fun `test get histories for current user by period`() {
-        // GIVEN
-        val existingUser = insertUser()
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val subGroup = insertSubGroup(existingSeries)
-        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
-        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
-        val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
-        val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        val historyTomorrowOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusDays(1))
-        val historyTomorrowTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.plusDays(1))
-        studyHistoryRepository
-            .saveAll(
-                listOf(
-                    historyYesterdayOne,
-                    historyYesterdayTwo,
-                    historyFirstExerciseOne,
-                    historyFirstExerciseTwo,
-                    historySecondExerciseOne,
-                    historySecondExerciseTwo,
-                    historyTomorrowOne,
-                    historyTomorrowTwo
-                )
-            )
-        // WHEN
-        val today = LocalDate.now()
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/histories?from=$today&to=${today.plusDays(1)}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-        // THEN
-        resultAction
-            .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data[0].id").value(historyFirstExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
-            .andExpect(jsonPath("$.data[2].id").value(historySecondExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[3].id").value(historySecondExerciseTwo.id!!))
     }
 
     private fun insertStudyHistory(

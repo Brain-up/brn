@@ -57,8 +57,9 @@ class UserAccountServiceImpl(
 
         val userAccount = userAccountCreateRequest.toModel(hashedPassword)
         userAccount.authoritySet = setOfAuthorities
-        userAccount.created = timeService.now()
-        userAccount.changed = timeService.now()
+        val creationDate = timeService.now()
+        userAccount.created = creationDate
+        userAccount.changed = creationDate
         return userAccountRepository.save(userAccount).toDto()
     }
 

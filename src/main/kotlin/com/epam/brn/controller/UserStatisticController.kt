@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
-/**
- *@author Nikolai Lazarev
- */
 @RestController
 @RequestMapping("/statistics")
 @Api(value = "/statistics", description = "User statistic details")
@@ -37,18 +36,48 @@ class UserStatisticController(
     }
 
     @GetMapping("/study/week")
+    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
+        val tempTo = LocalDateTime.of(to, LocalTime.MAX)
+        val result = userDayStatisticService.getStatisticForPeriod(tempFrom, tempTo)
+        val response = result.map {
+            it.toDto()
+        }
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
+    }
+
+    @GetMapping("/study/year")
+    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    fun getUserYearlyStatistic(
+        @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
+        @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
+        val tempTo = LocalDateTime.of(to, LocalTime.MAX)
+        val result = userMonthStatisticService.getStatisticForPeriod(tempFrom, tempTo)
+        val response = result.map {
+            it.toDto()
+        }
+        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
+    }
+
+    @GetMapping(value = ["/study/week"], params = ["version=2"])
+    fun getUserWeeklyStatistic(
+        @RequestParam(name = "from", required = true) from: LocalDateTime,
+        @RequestParam(name = "to", required = true) to: LocalDateTime
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
     }
 
-    @GetMapping("/study/year")
+    @GetMapping(value = ["/study/year"], params = ["version=2"])
     fun getUserYearlyStatistic(
-        @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
-        @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
+        @RequestParam(name = "from", required = true) from: LocalDateTime,
+        @RequestParam(name = "to", required = true) to: LocalDateTime
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))

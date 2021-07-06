@@ -29,7 +29,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertFailsWith
 
@@ -141,7 +141,7 @@ internal class UserAccountServiceTest {
             every { userAccountCreateRequest.password } returns "password"
             every { userAccountDto.name } returns "Tested"
             every { userAccount.toDto() } returns userAccountDto
-            every { timeService.now() } returns ZonedDateTime.now()
+            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(userAccount) } returns userAccount
             every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority
             // WHEN
@@ -167,7 +167,7 @@ internal class UserAccountServiceTest {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                changed = ZonedDateTime.now().minusMinutes(5),
+                changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
             )
             val userAccountUpdated = userAccount.copy()
@@ -178,7 +178,7 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns ZonedDateTime.now()
+            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
@@ -205,7 +205,7 @@ internal class UserAccountServiceTest {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                changed = ZonedDateTime.now().minusMinutes(5),
+                changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
             )
             val userAccountChangeRequest = UserAccountChangeRequest(avatar = avatarUrl, name = "newName")
@@ -218,7 +218,7 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns ZonedDateTime.now()
+            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
