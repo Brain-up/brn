@@ -1,0 +1,10 @@
+<div
+  id="chart"
+  class="chart flex justify-center"
+  ...attributes
+  {{create-ref "chartContainer"}}
+  {{will-destroy this.onWillDestroy}}
+  {{did-insert this.buildChart}}
+  {{did-update this.didUpdateData @data}}
+  {{did-update this.didUpdateOptions @options}}
+></div>

@@ -23,7 +23,7 @@ export interface IMonthTimeTrackItemData {
 }
 
 export default class UserWeeklyStatisticsModel extends Model {
-  @attr('date') date!: string;
+  @attr('date') date!: Date;
   @attr('number') exercisingTimeSeconds!: number;
   @attr('string') progress!: UserExercisingProgressStatusType;
 }
