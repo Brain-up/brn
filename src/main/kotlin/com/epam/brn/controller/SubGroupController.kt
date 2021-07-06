@@ -6,6 +6,7 @@ import com.epam.brn.service.SubGroupService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,6 +29,13 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
     @ApiOperation("Get subGroup for id.")
     fun getSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
         val subGroupDto = subGroupsService.findById(subGroupId)
+        return ResponseEntity.ok(BaseSingleObjectResponseDto(data = subGroupDto))
+    }
+
+    @DeleteMapping("{subGroupId}")
+    @ApiOperation("Get subGroup for id.")
+    fun deleteSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
+        val subGroupDto = subGroupsService.deleteById(subGroupId)
         return ResponseEntity.ok(BaseSingleObjectResponseDto(data = subGroupDto))
     }
 }
