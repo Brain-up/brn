@@ -15,8 +15,7 @@ class ExerciseService(
     private val exerciseRepository: ExerciseRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
-    private val urlConversionService: UrlConversionService,
-    private val timeService: TimeService
+    private val urlConversionService: UrlConversionService
 ) {
 
     @Value(value = "\${minRepetitionIndex}")
@@ -124,7 +123,6 @@ class ExerciseService(
     fun updateActiveStatus(exerciseId: Long, active: Boolean) {
         var exercise = exerciseRepository.findById(exerciseId).get()
         exercise.active = active
-        exercise.changedWhen = timeService.now()
         exerciseRepository.save(exercise)
     }
 

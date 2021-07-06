@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service
 import java.io.File
 import java.io.InputStream
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Service
 class YandexSpeechKitService(
@@ -44,14 +45,14 @@ class YandexSpeechKitService(
     lateinit var emotion: String
 
     var iamToken: String = ""
-    var iamTokenExpiresTime: LocalDateTime? = null
+    var iamTokenExpiresTime: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 
     val setNotCreationWords = mutableSetOf<AudioFileMetaData>()
 
     private val log = logger()
 
     fun getYandexIamTokenForAudioGeneration(): String {
-        if (iamToken.isNotEmpty() && iamTokenExpiresTime != null && iamTokenExpiresTime!!.isAfter(timeService.now()))
+        if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(timeService.now()))
             return iamToken
         val parameters = ArrayList<NameValuePair>()
         parameters.add(BasicNameValuePair("yandexPassportOauthToken", authToken))

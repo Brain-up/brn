@@ -4,6 +4,7 @@ import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.model.Gender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountDto(
@@ -14,8 +15,8 @@ data class UserAccountDto(
     val bornYear: Int?,
     val gender: Gender?,
     var active: Boolean = true,
-    val created: LocalDateTime? = null,
-    val changed: LocalDateTime? = null,
+    val created: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+    val changed: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     var avatar: String? = null,
     var headphones: Set<HeadphonesDto>? = null
 ) {
