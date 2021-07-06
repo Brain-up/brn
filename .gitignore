@@ -50,3 +50,7 @@ brn.log.*
 
 ### OS generated files ###
 .DS_Store
+
+### Kotlin tests
+words_en.txt
+words_ru.txt
