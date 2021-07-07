@@ -4,6 +4,7 @@ import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
@@ -62,26 +63,26 @@ internal class SeriesPhrasesRecordProcessorTest {
         )
         val subGroup = mockk<SubGroup>()
         val exercise = mockk<Exercise>()
-        every { exerciseRepository.existsByNameAndLevel(any(), any()) } returns false
+        every { exerciseRepository.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns subGroup
         every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
         every { wordsService.getSubFilePathForWord(any()) } returns ""
         every { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) } returns Optional.empty()
         every { wordsService.addWordsToDictionary(any(), any()) } returns Unit
-        every { resourceRepository.saveAll(any()) } returns emptyList()
+        every { resourceRepository.saveAll(any<List<Resource>>()) } returns emptyList()
         every { exerciseRepository.save(any()) } returns exercise
 
         // WHEN
         val exercises = seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), Locale.RU)
 
         // THEN
-        verify(exactly = 1) { exerciseRepository.existsByNameAndLevel(any(), any()) }
+        verify(exactly = 1) { exerciseRepository.findExerciseByNameAndLevel(any(), any()) }
         verify(exactly = 1) { subGroupRepository.findByCodeAndLocale(any(), any()) }
         verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
         verify(exactly = 2) { wordsService.getSubFilePathForWord(any()) }
         verify(exactly = 2) { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) }
         verify(exactly = 1) { wordsService.addWordsToDictionary(any(), any()) }
-        verify(exactly = 1) { resourceRepository.saveAll(any()) }
+        verify(exactly = 1) { resourceRepository.saveAll(any<List<Resource>>()) }
         verify(exactly = 1) { exerciseRepository.save(any()) }
         exercises shouldHaveSize 1
         exercises[0].name shouldBe seriesPhrasesRecord.exerciseName
@@ -101,13 +102,17 @@ internal class SeriesPhrasesRecordProcessorTest {
             noiseLevel = 0,
             noiseUrl = ""
         )
-        every { exerciseRepository.existsByNameAndLevel(any(), any()) } returns true
+        val subGroupMock = mockk<SubGroup>()
+        val exerciseMock = mockk<Exercise>()
+        every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns subGroupMock
+        every { exerciseRepository.findExerciseByNameAndLevel(any(), any()) } returns Optional.of(exerciseMock)
 
         // WHEN
         val exercises = seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), Locale.RU)
 
         // THEN
-        verify(exactly = 1) { exerciseRepository.existsByNameAndLevel(any(), any()) }
+        verify(exactly = 1) { subGroupRepository.findByCodeAndLocale(any(), any()) }
+        verify(exactly = 1) { exerciseRepository.findExerciseByNameAndLevel(any(), any()) }
         exercises.shouldBeEmpty()
     }
 
@@ -123,7 +128,6 @@ internal class SeriesPhrasesRecordProcessorTest {
             noiseUrl = ""
         )
         val locale = Locale.RU
-        every { exerciseRepository.existsByNameAndLevel(any(), any()) } returns false
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns null
 
         // WHEN
@@ -132,7 +136,6 @@ internal class SeriesPhrasesRecordProcessorTest {
         }
 
         // THEN
-        verify(exactly = 1) { exerciseRepository.existsByNameAndLevel(any(), any()) }
         verify(exactly = 1) { subGroupRepository.findByCodeAndLocale(any(), any()) }
         exception.message shouldBe "No subGroup was found for code=${seriesPhrasesRecord.code} and locale={${locale.locale}}"
     }

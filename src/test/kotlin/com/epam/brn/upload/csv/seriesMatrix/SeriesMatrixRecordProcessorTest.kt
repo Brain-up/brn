@@ -87,7 +87,7 @@ internal class SeriesMatrixRecordProcessorTest {
         ReflectionTestUtils.setField(seriesMatrixRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
         every { subGroupRepositoryMock.findByCodeAndLocale("code", Locale.RU.locale) } returns subGroupMock
         every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
-        every { exerciseRepositoryMock.existsByNameAndLevel(any(), any()) } returns false
+        every { exerciseRepositoryMock.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
         every {
             resourceRepositoryMock.findFirstByWordAndLocaleAndWordType(
                 ofType(String::class),
@@ -96,7 +96,7 @@ internal class SeriesMatrixRecordProcessorTest {
             )
         } returns Optional.empty()
         every { wordsServiceMock.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } returns String()
-        every { resourceRepositoryMock.saveAll(any()) } returns emptySet()
+        every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
         every { taskRepositoryMock.save(ofType(Task::class)) } returns Task()
         every { seriesRepositoryMock.findById(2L) } returns Optional.of(series)
 

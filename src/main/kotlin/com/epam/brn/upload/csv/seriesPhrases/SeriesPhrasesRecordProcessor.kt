@@ -37,24 +37,28 @@ class SeriesPhrasesRecordProcessor(
     }
 
     @Transactional
-    override fun process(records: List<SeriesPhrasesRecord>, locale: Locale): List<Exercise> =
-        records
-            .asSequence()
-            .filter { !exerciseRepository.existsByNameAndLevel(it.exerciseName, it.level) }
-            .map {
-                val subGroup = subGroupRepository.findByCodeAndLocale(it.code, locale.locale)
-                    ?: throw EntityNotFoundException("No subGroup was found for code=${it.code} and locale={${locale.locale}}")
+    override fun process(records: List<SeriesPhrasesRecord>, locale: Locale): List<Exercise> {
+        val exercises = mutableSetOf<Exercise>()
 
-                val answerOptions = extractAnswerOptions(it, locale)
+        records.forEach { record ->
+            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
+                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
+            val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
+            if (!existExercise.isPresent) {
+                val answerOptions = extractAnswerOptions(record, locale)
                 wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 resourceRepository.saveAll(answerOptions)
 
-                val newExercise = generateExercise(it, subGroup)
+                val newExercise = generateExercise(record, subGroup)
                 newExercise.addTask(generateOneTask(newExercise, answerOptions))
+
                 exerciseRepository.save(newExercise)
-                newExercise
+                exercises.add(newExercise)
             }
-            .toList()
+        }
+
+        return exercises.toMutableList()
+    }
 
     private fun extractAnswerOptions(record: SeriesPhrasesRecord, locale: Locale): MutableSet<Resource> {
         val words = record.phrases
