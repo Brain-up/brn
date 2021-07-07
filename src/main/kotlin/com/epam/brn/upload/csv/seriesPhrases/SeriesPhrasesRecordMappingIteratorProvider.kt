@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series1
+package com.epam.brn.upload.csv.seriesPhrases
 
 import com.epam.brn.upload.csv.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
@@ -9,27 +9,27 @@ import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class SeriesOneRecordMappingIteratorProvider :
-    MappingIteratorProvider<SeriesOneRecord> {
+class SeriesPhrasesRecordMappingIteratorProvider :
+    MappingIteratorProvider<SeriesPhrasesRecord> {
 
-    override fun iterator(inputStream: InputStream): MappingIterator<SeriesOneRecord> {
+    override fun iterator(inputStream: InputStream): MappingIterator<SeriesPhrasesRecord> {
         val csvMapper = CsvMapper().apply {
             enable(CsvParser.Feature.TRIM_SPACES)
         }
 
         val csvSchema = csvMapper
-            .schemaFor(SeriesOneRecord::class.java)
+            .schemaFor(SeriesPhrasesRecord::class.java)
             .withColumnReordering(true)
             .withArrayElementSeparator(StringUtils.SPACE)
             .withHeader()
 
         return csvMapper
-            .readerFor(SeriesOneRecord::class.java)
+            .readerFor(SeriesPhrasesRecord::class.java)
             .with(csvSchema)
             .readValues(inputStream)
     }
 
     override fun isApplicable(format: String): Boolean {
-        return SeriesOneRecord.FORMAT == format
+        return SeriesPhrasesRecord.FORMAT == format
     }
 }

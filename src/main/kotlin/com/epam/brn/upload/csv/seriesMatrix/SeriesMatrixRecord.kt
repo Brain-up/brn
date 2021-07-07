@@ -1,8 +1,8 @@
-package com.epam.brn.upload.csv.series2
+package com.epam.brn.upload.csv.seriesMatrix
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class SeriesTwoRecord(
+data class SeriesMatrixRecord(
     @JsonProperty("level")
     val level: Int,
     @JsonProperty("code")

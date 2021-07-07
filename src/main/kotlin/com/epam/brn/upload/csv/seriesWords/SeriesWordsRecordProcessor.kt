@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series1
+package com.epam.brn.upload.csv.seriesWords
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
@@ -20,12 +20,12 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.Random
 
 @Component
-class SeriesOneRecordProcessor(
+class SeriesWordsRecordProcessor(
     private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
     private val wordsService: WordsService
-) : RecordProcessor<SeriesOneRecord, Exercise> {
+) : RecordProcessor<SeriesWordsRecord, Exercise> {
 
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
@@ -38,10 +38,10 @@ class SeriesOneRecordProcessor(
 
     var random = Random()
 
-    override fun isApplicable(record: Any): Boolean = record is SeriesOneRecord
+    override fun isApplicable(record: Any): Boolean = record is SeriesWordsRecord
 
     @Transactional
-    override fun process(records: List<SeriesOneRecord>, locale: Locale): List<Exercise> {
+    override fun process(records: List<SeriesWordsRecord>, locale: Locale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
         records.forEach { record ->
             val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
@@ -61,7 +61,7 @@ class SeriesOneRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesOneRecord, locale: Locale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesWordsRecord, locale: Locale): MutableSet<Resource> =
         record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
@@ -92,7 +92,7 @@ class SeriesOneRecordProcessor(
 
     private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun generateExercise(record: SeriesOneRecord, subGroup: SubGroup) =
+    private fun generateExercise(record: SeriesWordsRecord, subGroup: SubGroup) =
         Exercise(
             subGroup = subGroup,
             name = record.exerciseName,

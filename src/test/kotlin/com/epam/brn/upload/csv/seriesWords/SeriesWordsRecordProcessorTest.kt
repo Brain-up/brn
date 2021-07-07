@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series1
+package com.epam.brn.upload.csv.seriesWords
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
@@ -29,7 +29,7 @@ import java.util.Optional
 import java.util.Random
 
 @ExtendWith(MockKExtension::class)
-internal class SeriesOneRecordProcessorTest {
+internal class SeriesWordsRecordProcessorTest {
 
     @MockK
     private lateinit var seriesRepositoryMock: SeriesRepository
@@ -50,7 +50,7 @@ internal class SeriesOneRecordProcessorTest {
     private lateinit var subGroupMock: SubGroup
 
     @InjectMockKs
-    private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
+    private lateinit var seriesWordsRecordProcessor: SeriesWordsRecordProcessor
 
     private val series = Series(
         id = 1L,
@@ -72,16 +72,16 @@ internal class SeriesOneRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        seriesOneRecordProcessor = SeriesOneRecordProcessor(
+        seriesWordsRecordProcessor = SeriesWordsRecordProcessor(
             subGroupRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock,
             wordsServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
+        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
+        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
+        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock
@@ -114,9 +114,9 @@ internal class SeriesOneRecordProcessorTest {
     @Test
     fun `should create correct exercise`() {
         val expected = createExercise()
-        val actual = seriesOneRecordProcessor.process(
+        val actual = seriesWordsRecordProcessor.process(
             mutableListOf(
-                SeriesOneRecord(
+                SeriesWordsRecord(
                     level = 1,
                     code = "pictureUrl",
                     exerciseName = exerciseName,
@@ -133,12 +133,12 @@ internal class SeriesOneRecordProcessorTest {
 
     // @Test
     fun `should create correct task`() {
-        seriesOneRecordProcessor.random = Random(800)
+        seriesWordsRecordProcessor.random = Random(800)
         val expected = createExercise().tasks.first()
 
-        val actual = seriesOneRecordProcessor.process(
+        val actual = seriesWordsRecordProcessor.process(
             mutableListOf(
-                SeriesOneRecord(
+                SeriesWordsRecord(
                     level = 1,
                     code = "pictureUrl",
                     exerciseName = exerciseName,
@@ -220,8 +220,8 @@ internal class SeriesOneRecordProcessorTest {
             )
         } returns "/test/дуб.ogg"
 
-        val tasks = seriesOneRecordProcessor
-            .process(mutableListOf(SeriesOneRecord(1, "pictureUrl", exerciseName, words, noiseLevel, noiseUrl)))
+        val tasks = seriesWordsRecordProcessor
+            .process(mutableListOf(SeriesWordsRecord(1, "pictureUrl", exerciseName, words, noiseLevel, noiseUrl)))
             .first().tasks
 
         tasks.forEach {
