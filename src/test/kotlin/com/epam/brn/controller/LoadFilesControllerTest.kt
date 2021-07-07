@@ -6,6 +6,7 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.mockk.impl.annotations.InjectMockKs
@@ -41,6 +42,9 @@ internal class LoadFilesControllerTest {
 
     @MockK
     lateinit var resourceService: ResourceService
+
+    @MockK
+    lateinit var subGroupService: SubGroupService
 
     @MockK
     lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>

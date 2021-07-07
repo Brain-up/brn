@@ -4,6 +4,8 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
@@ -13,15 +15,17 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
+import io.mockk.verify
+import io.mockk.mockkClass
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.just
-import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -56,6 +60,9 @@ internal class AdminControllerTest {
 
     @MockK
     private lateinit var resourceService: ResourceService
+
+    @MockK
+    private lateinit var subGroupService: SubGroupService
 
     @MockK
     private lateinit var pageable: Pageable
@@ -231,5 +238,21 @@ internal class AdminControllerTest {
         verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(date, date, userId) }
         assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
         assertEquals(listOf(monthStudyStatistic), userYearlyStatistic.body!!.data)
+    }
+
+    @Test
+    fun `addSubGroupToSeries should return http status 204`() {
+        // GIVEN
+        val seriesId = 1L
+        val subGroupRequest = SubGroupRequest(seriesId, 1, "Test name", "shortWords", "Test description")
+        val subGroupDto = mockkClass(SubGroupDto::class, relaxed = true)
+
+        every { subGroupService.addSubGroupToSeries(subGroupRequest, seriesId) } returns subGroupDto
+
+        // WHEN
+        val createdSubGroup = adminController.addSubGroupToSeries(seriesId, subGroupRequest)
+
+        // THEN
+        assertEquals(HttpStatus.SC_CREATED, createdSubGroup.statusCodeValue)
     }
 }
