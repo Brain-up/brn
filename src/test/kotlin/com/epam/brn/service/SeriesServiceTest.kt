@@ -1,62 +1,75 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.SeriesDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.model.Series
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Optional
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class SeriesServiceTest {
-    @InjectMocks
+
+    @InjectMockKs
     lateinit var seriesService: SeriesService
-    @Mock
+
+    @MockK
     lateinit var seriesRepository: SeriesRepository
 
     @Test
     fun `should get series for group`() {
         // GIVEN
         val groupId: Long = 1
-        val series = mock(Series::class.java)
+        val series = mockk<Series>()
+        val seriesDto = mockk<SeriesDto>()
         val listSeries = listOf(series)
-        `when`(seriesRepository.findByExerciseGroupLike(groupId)).thenReturn(listOf(series))
+        val expectedResult = listOf(seriesDto)
+        every { seriesRepository.findByExerciseGroupLike(groupId) } returns listSeries
+        every { series.toDto() } returns seriesDto
+
         // WHEN
         val actualResult = seriesService.findSeriesForGroup(groupId)
+
         // THEN
-        val expectedResult = listSeries.map { seriesEntry -> seriesEntry.toDto() }
+        verify(exactly = 1) { seriesRepository.findByExerciseGroupLike(groupId) }
         assertEquals(expectedResult, actualResult)
-        verify(seriesRepository).findByExerciseGroupLike(groupId)
     }
 
     @Test
     fun `should get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        val series = mock(Series::class.java)
-        `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.of(series))
+        val series = mockk<Series>()
+        val seriesDto = mockk<SeriesDto>()
+        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
+        every { series.toDto() } returns seriesDto
+
         // WHEN
         seriesService.findSeriesDtoForId(seriesId)
+
         // THEN
-        verify(seriesRepository).findById(seriesId)
+        verify(exactly = 1) { seriesRepository.findById(seriesId) }
     }
 
     @Test
     fun `should not get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        `when`(seriesRepository.findById(seriesId)).thenReturn(Optional.empty())
+        every { seriesRepository.findById(seriesId) } returns Optional.empty()
+
         // WHEN
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
+
         // THEN
-        verify(seriesRepository).findById(seriesId)
+        verify(exactly = 1) { seriesRepository.findById(seriesId) }
     }
 }

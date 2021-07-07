@@ -1,14 +1,14 @@
 package com.epam.brn.service
 
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class WordsServiceTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var wordsService: WordsService
 
     @Test

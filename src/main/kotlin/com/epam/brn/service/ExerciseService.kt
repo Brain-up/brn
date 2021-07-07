@@ -7,16 +7,15 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class ExerciseService(
-    @Autowired val exerciseRepository: ExerciseRepository,
-    @Autowired val studyHistoryRepository: StudyHistoryRepository,
-    @Autowired val userAccountService: UserAccountService,
-    @Autowired val urlConversionService: UrlConversionService
+    private val exerciseRepository: ExerciseRepository,
+    private val studyHistoryRepository: StudyHistoryRepository,
+    private val userAccountService: UserAccountService,
+    private val urlConversionService: UrlConversionService
 ) {
 
     @Value(value = "\${minRepetitionIndex}")

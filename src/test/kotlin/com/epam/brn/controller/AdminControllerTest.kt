@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
 import org.springframework.web.multipart.MultipartFile
-import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
@@ -128,7 +128,7 @@ internal class AdminControllerTest {
     fun `getHistories should return histories`() {
         // GIVEN
         val userId = 1L
-        val date = LocalDate.now()
+        val date = LocalDateTime.now()
         every { studyHistoryService.getHistories(userId, date, date) } returns listOf(studyHistoryDto)
 
         // WHEN
@@ -206,7 +206,7 @@ internal class AdminControllerTest {
     fun `getUserWeeklyStatistic should return weekly statistic`() {
         // GIVEN
         val userId = 1L
-        val date = LocalDate.now()
+        val date = LocalDateTime.now()
         every { userDayStatisticService.getStatisticForPeriod(date, date, userId) } returns listOf(dayStudyStatistic)
 
         // WHEN
@@ -222,7 +222,7 @@ internal class AdminControllerTest {
     fun `getUserYearlyStatistic should return yearly statistic`() {
         // GIVEN
         val userId = 1L
-        val date = LocalDate.now()
+        val date = LocalDateTime.now()
         every {
             userMonthStatisticService.getStatisticForPeriod(
                 date,
