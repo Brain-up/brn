@@ -9,6 +9,7 @@ import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
+import io.kotest.matchers.shouldBe
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
@@ -20,7 +21,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import java.io.File
 import java.io.FileInputStream
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class LoadFilesControllerTest {
@@ -65,6 +65,6 @@ internal class LoadFilesControllerTest {
 
         // THEN
         verify(exactly = 1) { csvUploadService.loadExercises(1, taskFile) }
-        assertEquals(HttpStatus.CREATED, result.statusCode)
+        result.statusCode shouldBe HttpStatus.CREATED
     }
 }
