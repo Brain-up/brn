@@ -7,7 +7,9 @@ import Router from '@ember/routing/router-service';
 export default class GroupSeriesSubgroupExerciseTaskController extends Controller {
   @service router!: Router;
   @action nextTaskTransition() {
-    getOwner(this).lookup(`controller:group.series.subgroup`).exerciseAvailabilityCalculationTask.perform();
+    getOwner(this)
+      .lookup(`controller:group.series.subgroup`)
+      .exerciseAvailabilityCalculationTask.perform();
 
     if (!this.model.isLastTask) {
       this.router.transitionTo(
@@ -17,4 +19,4 @@ export default class GroupSeriesSubgroupExerciseTaskController extends Controlle
       );
     }
   }
-};
+}

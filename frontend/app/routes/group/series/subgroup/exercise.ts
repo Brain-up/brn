@@ -26,7 +26,10 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
 
   redirect(exercise: Exercise, { to }: Transition) {
     if (!Ember.testing && !this.isAvailable) {
-      return this.transitionTo('group.series.subgroup', exercise.get('parent.id'));
+      return this.transitionTo(
+        'group.series.subgroup',
+        exercise.get('parent.id'),
+      );
     }
     if (exercise.hasMany('tasks').ids().length === 0) {
       alert(`Unable to find tasks for exercise ${exercise.get('id')}`);

@@ -15,7 +15,7 @@ export default class ApplicationRoute extends Route {
     this.intl.setLocale([locale]);
   }
 
-  redirect(_: unknown, { to } : Transition) {
+  redirect(_: unknown, { to }: Transition) {
     if (Ember.testing) {
       // skip testing bahavour for now
       return;

@@ -6,27 +6,29 @@ import com.google.api.gax.paging.Page
 import com.google.cloud.storage.Blob
 import com.google.cloud.storage.Bucket
 import com.google.cloud.storage.Storage
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MockKExtension::class)
 class GoogleCloudServiceTest {
 
-    @Mock
+    @MockK
     lateinit var storage: Storage
-    @Mock
+
+    @MockK
     lateinit var cloudConfig: GoogleCloudConfig
     lateinit var googleCloudService: GoogleCloudService
 
     @BeforeEach
     fun setup() {
-        MockitoAnnotations.initMocks(this)
-        Mockito.`when`(cloudConfig.storage).thenReturn(storage)
-        Mockito.`when`(cloudConfig.bucketName).thenReturn("")
+        every { cloudConfig.storage } returns storage
+        every { cloudConfig.bucketName } returns ""
         googleCloudService = GoogleCloudService(cloudConfig)
     }
 
@@ -34,21 +36,19 @@ class GoogleCloudServiceTest {
     @Suppress("UNCHECKED_CAST")
     fun `should return correct folder structure`() {
         // GIVEN
-        val resources: ArrayList<Blob> = ArrayList()
-        resources.addAll(
-            arrayOf(
-                mockBlob("folder0/file1"),
-                mockBlob("folder2/folder3/file4"),
-                mockBlob("folder2/file5"),
-                mockBlob("folder7/"),
-                mockBlob("file6")
-            )
+        val resources = listOf(
+            mockBlob("folder0/file1"),
+            mockBlob("folder2/folder3/file4"),
+            mockBlob("folder2/file5"),
+            mockBlob("folder7/"),
+            mockBlob("file6")
         )
-        var pageBlob = Mockito.mock(Page::class.java) as Page<Blob>
-        Mockito.`when`(pageBlob.iterateAll()).thenReturn(resources)
-        var bucket = Mockito.mock(Bucket::class.java)
-        Mockito.`when`(bucket.list()).thenReturn(pageBlob)
-        Mockito.`when`(storage.get(anyString())).thenReturn(bucket)
+        val pageBlob = mockk<Page<Blob>>()
+        every { pageBlob.iterateAll() } returns resources
+        val bucket = mockk<Bucket>()
+        every { bucket.list() } returns pageBlob
+        every { storage.get(any<String>()) } returns bucket
+
         // WHEN
         val bucketContent = googleCloudService.listBucket()
         val expected = listOf("folder0/", "folder2/", "folder2/folder3/", "folder7/")
@@ -57,8 +57,8 @@ class GoogleCloudServiceTest {
     }
 
     private fun mockBlob(fileName: String): Blob {
-        val blobOne: Blob = Mockito.mock(Blob::class.java)
-        Mockito.`when`(blobOne.name).thenReturn(fileName)
+        val blobOne = mockk<Blob>()
+        every { blobOne.name } returns fileName
         return blobOne
     }
 }

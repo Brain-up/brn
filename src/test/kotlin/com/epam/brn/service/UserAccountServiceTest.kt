@@ -13,68 +13,65 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.slot
+import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers
-import org.mockito.Captor
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.anyString
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertFailsWith
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 @DisplayName("UserAccountService test using mockito")
 internal class UserAccountServiceTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var userAccountService: UserAccountServiceImpl
 
-    @Mock
+    @MockK
     lateinit var userAccountRepository: UserAccountRepository
 
-    @Mock
+    @MockK
     lateinit var timeService: TimeService
 
-    @Mock
+    @MockK
     lateinit var passwordEncoder: PasswordEncoder
 
-    @Mock
+    @MockK
     lateinit var authorityService: AuthorityService
 
-    @Mock
+    @MockK(relaxed = true)
     lateinit var userAccount: UserAccount
 
-    @Mock
+    @MockK
     lateinit var userAccountDto: UserAccountDto
 
-    @Mock
+    @MockK
     lateinit var userAccountCreateRequest: UserAccountCreateRequest
 
-    @Mock
+    @MockK
     lateinit var authority: Authority
 
-    @Mock
+    @MockK
+    lateinit var authentication: Authentication
+
+    @MockK
+    lateinit var securityContext: SecurityContext
+
+    @MockK
     lateinit var headphonesService: HeadphonesService
-
-    @Captor
-    lateinit var userArgumentCaptor: ArgumentCaptor<UserAccount>
-
-    private fun <T> any(type: Class<T>): T = Mockito.any(type)
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -83,10 +80,9 @@ internal class UserAccountServiceTest {
         fun `should find a user by id`() {
             // GIVEN
             val userName = "Tested"
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.name).thenReturn(userName)
-            `when`(userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE))
-                .thenReturn(Optional.of(userAccount))
+            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountDto.name } returns userName
+            every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserById(NumberUtils.LONG_ONE)
             // THEN
@@ -97,10 +93,9 @@ internal class UserAccountServiceTest {
         fun `should find a user by name`() {
             // GIVEN
             val fullName = "Ivan"
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.name).thenReturn(fullName)
-            `when`(userAccountRepository.findUserAccountByName(fullName))
-                .thenReturn(Optional.of(userAccount))
+            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountDto.name } returns fullName
+            every { userAccountRepository.findUserAccountByName(fullName) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByName(fullName)
             // THEN
@@ -111,10 +106,9 @@ internal class UserAccountServiceTest {
         fun `should find a user by email`() {
             // GIVEN
             val email = "email"
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountDto.email).thenReturn(email)
-            `when`(userAccountRepository.findUserAccountByEmail(email))
-                .thenReturn(Optional.of(userAccount))
+            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountDto.email } returns email
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByEmail(email)
             // THEN
@@ -123,6 +117,8 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should throw an exception when there is no user by specified id`() {
+            // GIVEN
+            every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.empty()
             // THEN
             assertFailsWith<EntityNotFoundException> {
                 userAccountService.findUserById(NumberUtils.LONG_ONE)
@@ -137,15 +133,17 @@ internal class UserAccountServiceTest {
         fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
-            `when`(userAccountCreateRequest.toModel(ArgumentMatchers.anyString())).thenReturn(userAccount)
-            `when`(userAccountDto.name).thenReturn("Tested")
-            `when`(userAccount.toDto()).thenReturn(userAccountDto)
-            `when`(userAccountRepository.save(userAccount))
-                .thenReturn(userAccount)
-            `when`(authorityService.findAuthorityByAuthorityName(anyString()))
-                .thenReturn(authority)
-            `when`(passwordEncoder.encode(userAccountCreateRequest.password))
-                .thenReturn("password")
+            every { userAccountCreateRequest.email } returns "test@gmail.com"
+            every { userAccountRepository.findUserAccountByEmail(ofType(String::class)) } returns Optional.empty()
+            every { userAccountCreateRequest.authorities } returns mutableSetOf("ROLE_USER")
+            every { passwordEncoder.encode(ofType(String::class)) } returns "password"
+            every { userAccountCreateRequest.toModel(ofType(String::class)) } returns userAccount
+            every { userAccountCreateRequest.password } returns "password"
+            every { userAccountDto.name } returns "Tested"
+            every { userAccount.toDto() } returns userAccountDto
+            every { timeService.now() } returns LocalDateTime.now()
+            every { userAccountRepository.save(userAccount) } returns userAccount
+            every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority
             // WHEN
             val userAccountDtoReturned = userAccountService.addUser(userAccountCreateRequest)
             // THEN
@@ -162,8 +160,6 @@ internal class UserAccountServiceTest {
             // GIVEN
             val avatarUrl = "test/avatar"
             val email = "test@test.ru"
-            val authentication = Mockito.mock(Authentication::class.java)
-            val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
@@ -171,27 +167,27 @@ internal class UserAccountServiceTest {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                changed = ZonedDateTime.now().minusMinutes(5),
+                changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
             )
             val userAccountUpdated = userAccount.copy()
             userAccountUpdated.avatar = avatarUrl
+            val userArgumentCaptor = slot<UserAccount>()
 
             SecurityContextHolder.setContext(securityContext)
-            `when`(securityContext.authentication).thenReturn(authentication)
-            `when`(authentication.name).thenReturn(email)
-            `when`(userAccountRepository.findUserAccountByEmail(email))
-                .thenReturn(Optional.of(userAccount))
-            `when`(timeService.now()).thenReturn(ZonedDateTime.now())
-            `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
-                .thenReturn(userAccountUpdated)
+            every { securityContext.authentication } returns authentication
+            every { authentication.name } returns email
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { timeService.now() } returns LocalDateTime.now()
+            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
+            every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateAvatarForCurrentUser(avatarUrl)
             // THEN
-            verify(userAccountRepository).findUserAccountByEmail(email)
-            verify(timeService).now()
-            verify(userAccountRepository).save(userArgumentCaptor.capture())
-            val userForSave = userArgumentCaptor.value
+            verify { userAccountRepository.findUserAccountByEmail(email) }
+            verify { timeService.now() }
+            verify { userAccountRepository.save(userArgumentCaptor.captured) }
+            val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
             assertThat(userForSave.id).isEqualTo(userAccount.id)
             assertThat(userForSave.fullName).isEqualTo(userAccount.fullName)
@@ -202,8 +198,6 @@ internal class UserAccountServiceTest {
             // GIVEN
             val avatarUrl = "test/avatar"
             val email = "test@test.ru"
-            val authentication = Mockito.mock(Authentication::class.java)
-            val securityContext: SecurityContext = Mockito.mock(SecurityContext::class.java)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
@@ -211,29 +205,29 @@ internal class UserAccountServiceTest {
                 password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                changed = ZonedDateTime.now().minusMinutes(5),
+                changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
             )
             val userAccountChangeRequest = UserAccountChangeRequest(avatar = avatarUrl, name = "newName")
             val userAccountUpdated = userAccount.copy()
             userAccountUpdated.avatar = avatarUrl
             userAccountUpdated.fullName = "newName"
+            val userArgumentCaptor = slot<UserAccount>()
 
             SecurityContextHolder.setContext(securityContext)
-            `when`(securityContext.authentication).thenReturn(authentication)
-            `when`(authentication.name).thenReturn(email)
-            `when`(userAccountRepository.findUserAccountByEmail(email))
-                .thenReturn(Optional.of(userAccount))
-            `when`(timeService.now()).thenReturn(ZonedDateTime.now())
-            `when`(userAccountRepository.save(Mockito.any(UserAccount::class.java)))
-                .thenReturn(userAccountUpdated)
+            every { securityContext.authentication } returns authentication
+            every { authentication.name } returns email
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { timeService.now() } returns LocalDateTime.now()
+            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
+            every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateCurrentUser(userAccountChangeRequest)
             // THEN
-            verify(userAccountRepository).findUserAccountByEmail(email)
-            verify(timeService).now()
-            verify(userAccountRepository).save(userArgumentCaptor.capture())
-            val userForSave = userArgumentCaptor.value
+            verify { userAccountRepository.findUserAccountByEmail(email) }
+            verify { timeService.now() }
+            verify { userAccountRepository.save(userArgumentCaptor.captured) }
+            val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
             assertThat(userForSave.fullName).isEqualTo("newName")
             assertThat(userForSave.id).isEqualTo(userAccount.id)
@@ -250,7 +244,7 @@ internal class UserAccountServiceTest {
                 HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
                 HeadphonesDto(name = "second", type = HeadphonesType.ON_EAR_BLUETOOTH)
             )
-            `when`(headphonesService.getAllHeadphonesForUser(1L)).thenReturn(listOfHeadphones)
+            every { headphonesService.getAllHeadphonesForUser(1L) } returns listOfHeadphones
             // WHEN
             val returnedListOfHeadphones = userAccountService.getAllHeadphonesForUser(1L)
             // THEN
@@ -261,8 +255,8 @@ internal class UserAccountServiceTest {
         fun `should add new headphones to the user`() {
             val headphonesToAdd = HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
 
-            `when`(userAccountRepository.findUserAccountById(1L)).thenReturn(Optional.of(userAccount))
-            `when`(headphonesService.save(any(Headphones::class.java))).thenReturn(headphonesToAdd)
+            every { userAccountRepository.findUserAccountById(1L) } returns Optional.of(userAccount)
+            every { headphonesService.save(ofType(Headphones::class)) } returns headphonesToAdd
             // WHEN
             val returnedListOfHeadphones = userAccountService.addHeadphonesToUser(1L, headphonesToAdd)
             // THEN
@@ -281,15 +275,13 @@ internal class UserAccountServiceTest {
                 email = "test@gmail.com",
                 active = true
             )
-            val authentication = Mockito.mock(Authentication::class.java)
-            val securityContext = Mockito.mock(SecurityContext::class.java)
             SecurityContextHolder.setContext(securityContext)
             // WHEN
             val email = "test@test.com"
-            `when`(authentication.name).thenReturn(email)
-            `when`(securityContext.authentication).thenReturn(authentication)
-            `when`(headphonesService.save(any(Headphones::class.java))).thenReturn(headphonesToAdd)
-            `when`(userAccountRepository.findUserAccountByEmail(email)).thenReturn(Optional.of(userAccount))
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { headphonesService.save(ofType(Headphones::class)) } returns headphonesToAdd
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
 
             // WHEN
             val returnedListOfHeadphones = userAccountService.addHeadphonesToCurrentUser(headphonesToAdd)
@@ -301,7 +293,7 @@ internal class UserAccountServiceTest {
         fun `should return all headphones for the user`() {
             val headphonesToAdd = setOf(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
 
-            `when`(headphonesService.getAllHeadphonesForUser(1L)).thenReturn(headphonesToAdd)
+            every { headphonesService.getAllHeadphonesForUser(1L) } returns headphonesToAdd
             // WHEN
             val returnedListOfHeadphones = userAccountService.getAllHeadphonesForUser(1L)
             // THEN
@@ -322,14 +314,12 @@ internal class UserAccountServiceTest {
                 active = true,
                 headphones = headphonesToAdd
             )
-            val authentication = Mockito.mock(Authentication::class.java)
-            val securityContext = Mockito.mock(SecurityContext::class.java)
             SecurityContextHolder.setContext(securityContext)
             // WHEN
             val email = "test@test.com"
-            `when`(authentication.name).thenReturn(email)
-            `when`(securityContext.authentication).thenReturn(authentication)
-            `when`(userAccountRepository.findUserAccountByEmail(email)).thenReturn(Optional.of(userAccount))
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
 
             val returnedListOfHeadphones = userAccountService.getAllHeadphonesForCurrentUser()
 

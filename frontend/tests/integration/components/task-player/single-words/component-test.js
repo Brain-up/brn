@@ -6,10 +6,10 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { chooseAnswer } from './test-support/helpers';
 import pageObject from './test-support/page-object';
 
-module('Integration | Component | task-player', function(hooks) {
+module('Integration | Component | task-player', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(async function() {
+  hooks.beforeEach(async function () {
     const store = this.owner.lookup('service:store');
     const firstTask = store.createRecord('task/single-words', {
       id: '1',
@@ -45,7 +45,7 @@ module('Integration | Component | task-player', function(hooks) {
     await pageObject.startTask();
   });
 
-  test('refreshes options list and shows regret image after a wrong answer', async function(assert) {
+  test('refreshes options list and shows regret image after a wrong answer', async function (assert) {
     const wrongAnswers = this.model.words.filter(
       (wordOption) => wordOption !== this.model.word,
     );
@@ -68,9 +68,9 @@ module('Integration | Component | task-player', function(hooks) {
     assert.notDeepEqual(order, newOrder);
   });
 
-  test('shows notification if answer is right and calls onRightAnswer', async function(assert) {
+  test('shows notification if answer is right and calls onRightAnswer', async function (assert) {
     assert.expect(2);
-    this.set('onRightAnswer', function() {
+    this.set('onRightAnswer', function () {
       assert.ok(true, 'calls onRightAnswer');
     });
 

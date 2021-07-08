@@ -10,10 +10,9 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
 import { getData } from './test-support/data-storage';
 import { TIMINGS } from 'brn/utils/audio-api';
-import { authenticateSession  } from 'ember-simple-auth/test-support';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 
-
-module('Acceptance | tasks flow', function(hooks) {
+module('Acceptance | tasks flow', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
@@ -22,7 +21,7 @@ module('Acceptance | tasks flow', function(hooks) {
     getServerResponses(getData());
   });
 
-  test('has a start task button if the task is not started yet', async function(assert) {
+  test('has a start task button if the task is not started yet', async function (assert) {
     await pageObject.goToFirstTask();
     assert.dom('[data-test-start-task-button]').exists();
 
@@ -31,7 +30,7 @@ module('Acceptance | tasks flow', function(hooks) {
     assert.dom('[data-test-start-task-button]').doesNotExist();
   });
 
-  test('shows regret widget if answer is wrong and a word image if right', async function(assert) {
+  test('shows regret widget if answer is wrong and a word image if right', async function (assert) {
     await pageObject.goToFirstTask();
 
     const { targetTask, wrongAnswer } = setupAfterPageVisit();
@@ -55,7 +54,7 @@ module('Acceptance | tasks flow', function(hooks) {
     assert.dom('[data-test-right-answer-notification]').exists();
   });
 
-  test('goest to next task after a right answer picture', async function(assert) {
+  test('goest to next task after a right answer picture', async function (assert) {
     await pageObject.goToFirstTask();
 
     const { targetTask } = setupAfterPageVisit();
@@ -72,11 +71,11 @@ module('Acceptance | tasks flow', function(hooks) {
     assert.dom('[data-test-task-id="2"]').exists();
   });
 
-  test('sends a POST request to "study-history" after exercise completed', async function(assert) {
+  test('sends a POST request to "study-history" after exercise completed', async function (assert) {
     assert.expect(1);
 
     /* eslint-disable no-undef */
-    server.post('/study-history', function(request) {
+    server.post('/study-history', function (request) {
       assert.ok(true, 'sends a post request');
       return { id: 1, ...JSON.parse(request.requestBody) };
     });
@@ -98,9 +97,9 @@ module('Acceptance | tasks flow', function(hooks) {
     await customTimeout();
   });
 
-  test('shows a complete victory widget after exercise completed and goes to series route', async function(assert) {
+  test('shows a complete victory widget after exercise completed and goes to series route', async function (assert) {
     /* eslint-disable no-undef */
-    server.put('exercises/1', function() {});
+    server.put('exercises/1', function () {});
 
     await pageObject.goToFirstTask();
 
@@ -125,7 +124,6 @@ module('Acceptance | tasks flow', function(hooks) {
     assert.dom('[data-test-right-answer-notification]').exists();
     await waitFor('[data-test-answer-correctness-widget]');
 
-
     assert
       .dom('[data-test-answer-correctness-widget]')
       .hasAttribute('data-test-is-correct');
@@ -136,7 +134,6 @@ module('Acceptance | tasks flow', function(hooks) {
 
     await customTimeout();
     await customTimeout();
-
 
     assert.equal(currentURL(), '/groups/1/series/1/subgroup/1');
   });

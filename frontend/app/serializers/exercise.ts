@@ -26,12 +26,21 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     const signalSerializer = store.serializerFor('signal');
     const taskSignalSerializer = store.serializerFor('task/signal');
     payloadItem.signals = payloadItem.signals.map((el) => {
-      const normalizedSignal = signalSerializer.normalize(store.modelFor('signal'), el);
+      const normalizedSignal = signalSerializer.normalize(
+        store.modelFor('signal'),
+        el,
+      );
       included.push(normalizedSignal);
-      included.push(taskSignalSerializer.normalize(store.modelFor('task/signal'), normalizedSignal, payloadItem));
+      included.push(
+        taskSignalSerializer.normalize(
+          store.modelFor('task/signal'),
+          normalizedSignal,
+          payloadItem,
+        ),
+      );
       return signalSerializer.payloadToTypeId(el);
-    })
-    payloadItem.tasks = payloadItem.signals.map((el)=> {
+    });
+    payloadItem.tasks = payloadItem.signals.map((el) => {
       return taskSignalSerializer.payloadToTypeId(el);
     });
     if (included.length) {
@@ -54,18 +63,23 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     const seria = this.store.peekRecord('series', seriaId);
     const kind = seria.kind;
     items.forEach((el) => {
-      el.tasks.forEach((task)=> {
+      el.tasks.forEach((task) => {
         task.type = `task/${kind}`;
-      })
+      });
     });
-    return super.normalizeResponse(store, primaryModelClass, payload, id, requestType);
+    return super.normalizeResponse(
+      store,
+      primaryModelClass,
+      payload,
+      id,
+      requestType,
+    );
   }
 }
-
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your serializers.
 declare module 'ember-data/types/registries/serializer' {
   export default interface SerializerRegistry {
-    'exercise': ExerciseSerializer;
+    exercise: ExerciseSerializer;
   }
 }

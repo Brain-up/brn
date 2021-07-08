@@ -3,10 +3,10 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | text-image-button', function(hooks) {
+module('Integration | Component | text-image-button', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('sets right classes and action', async function(assert) {
+  test('sets right classes and action', async function (assert) {
     this.set('clickAction', () => {
       assert.ok(true, 'calls clickAction');
     });

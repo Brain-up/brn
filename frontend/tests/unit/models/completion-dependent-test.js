@@ -1,10 +1,10 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Model | completion dependent', function(hooks) {
+module('Unit | Model | completion dependent', function (hooks) {
   setupTest(hooks);
 
-  test('isCompleted if all children are completed', function(assert) {
+  test('isCompleted if all children are completed', function (assert) {
     let store = this.owner.lookup('service:store');
     const children = [
       {
@@ -13,7 +13,7 @@ module('Unit | Model | completion dependent', function(hooks) {
       },
       {
         isManuallyCompleted: true,
-        isCompleted: true
+        isCompleted: true,
       },
     ];
     let taskManager = this.owner.lookup('service:tasks-manager');
@@ -23,7 +23,7 @@ module('Unit | Model | completion dependent', function(hooks) {
     assert.ok(model.isCompleted, 'is true');
   });
 
-  test('canInteract according to sibling models', function(assert) {
+  test('canInteract according to sibling models', function (assert) {
     let store = this.owner.lookup('service:store');
     let parent = store.createRecord('completion-dependent', {});
     const children = [
@@ -52,7 +52,7 @@ module('Unit | Model | completion dependent', function(hooks) {
     );
   });
 
-  test('has previous sibling models prop', function(assert) {
+  test('has previous sibling models prop', function (assert) {
     let store = this.owner.lookup('service:store');
     let parent = store.createRecord('completion-dependent');
     const children = [

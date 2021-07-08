@@ -4,7 +4,6 @@ import { action } from '@ember/object';
 import { debounce, cancel } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 
-
 export default class SubgroupNavigation extends Component {
   @trackedRef('container') container!: HTMLUListElement;
   @tracked scrollIteration = 0;
@@ -17,7 +16,7 @@ export default class SubgroupNavigation extends Component {
       return false;
     }
     const scrollSize = this.container?.offsetWidth + this.container?.scrollLeft;
-    const result = (scrollSize <= this.container?.scrollWidth);
+    const result = scrollSize <= this.container?.scrollWidth;
     return result;
   }
   get hasScrollAtAll() {
@@ -28,7 +27,7 @@ export default class SubgroupNavigation extends Component {
     return this.container?.scrollWidth > this.container?.offsetWidth;
   }
 
-  @action alignScrollPositions(node: HTMLButtonElement, [direction]:string[]) {
+  @action alignScrollPositions(node: HTMLButtonElement, [direction]: string[]) {
     const rect = this.container.getBoundingClientRect();
     if (direction === 'right') {
       node.style.left = (rect.width + rect.left + 10).toString() + 'px';
@@ -38,14 +37,15 @@ export default class SubgroupNavigation extends Component {
     node.style.top = (rect.top + 30).toString() + 'px';
   }
 
-  @action scroll(direction: "right" | "left") {
+  @action scroll(direction: 'right' | 'left') {
     const position = this.container.scrollLeft;
     const offset = 150;
-    const newPosition = direction === 'right' ? position + offset : position - offset;
+    const newPosition =
+      direction === 'right' ? position + offset : position - offset;
     this.container.scrollTo({
       top: 0,
       left: newPosition,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 

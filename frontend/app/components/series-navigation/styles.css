@@ -47,13 +47,13 @@
 }
 
 .exercise-block__icon {
-  color: #3DC8F4;
+  color: #3dc8f4;
   margin-right: 20px;
   cursor: pointer;
 }
 
 .inactive-icon {
-  color: #8093B2;
+  color: #8093b2;
   /* color: #fc8181; */
   cursor: not-allowed;
 }

@@ -8,42 +8,44 @@ import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import java.io.File
 import java.io.FileInputStream
+import kotlin.test.assertEquals
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class LoadFilesControllerTest {
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var adminController: AdminController
 
-    @Mock
+    @RelaxedMockK
     lateinit var csvUploadService: CsvUploadService
 
-    @Mock
+    @MockK
     lateinit var studyHistoryService: StudyHistoryService
 
-    @Mock
+    @MockK
     lateinit var userAccountService: UserAccountService
 
-    @Mock
+    @MockK
     lateinit var exerciseService: ExerciseService
 
-    @Mock
+    @MockK
     lateinit var resourceService: ResourceService
 
-    @Mock
+    @MockK
     lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
 
-    @Mock
+    @MockK
     lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 
     @Test
@@ -53,9 +55,12 @@ internal class LoadFilesControllerTest {
             "series_words_en.csv",
             FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}tasks${File.separator}series_words_en.csv")
         )
+
         // WHEN
-        adminController.loadExercises(1, taskFile)
+        val result = adminController.loadExercises(1, taskFile)
+
         // THEN
-        verify(csvUploadService, times(1)).loadExercises(1, taskFile)
+        verify(exactly = 1) { csvUploadService.loadExercises(1, taskFile) }
+        assertEquals(HttpStatus.CREATED, result.statusCode)
     }
 }

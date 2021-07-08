@@ -4,10 +4,10 @@ import { render, fillIn, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 
-module('Integration | Component | login-form', function(hooks) {
+module('Integration | Component | login-form', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
+  test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
@@ -20,7 +20,7 @@ module('Integration | Component | login-form', function(hooks) {
     assert.dom('[data-test-form-warning]').doesNotExist();
   });
 
-  test('it showing warning on empty fields if edited', async function(assert) {
+  test('it showing warning on empty fields if edited', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
@@ -44,14 +44,14 @@ module('Integration | Component | login-form', function(hooks) {
     assert.dom('[data-test-form-warning]').exists();
   });
 
-  test('it requires @ sign in email', async function(assert) {
+  test('it requires @ sign in email', async function (assert) {
     await render(hbs`<LoginForm />`);
     await fillIn('[name="login"]', 'a@b');
     await fillIn('[name="password"]', 'b');
     assert.dom('[data-test-form-warning]').doesNotExist();
   });
 
-  test('login button works as expected', async function(assert) {
+  test('login button works as expected', async function (assert) {
     assert.expect(3);
     class MockSession extends Service {
       authenticate(type, login, password) {
@@ -75,7 +75,7 @@ module('Integration | Component | login-form', function(hooks) {
     await click('[data-test-submit-form]');
   });
 
-  test('incorrect login has feedback #1', async function(assert) {
+  test('incorrect login has feedback #1', async function (assert) {
     class MockSession extends Service {
       authenticate() {
         return Promise.reject({
@@ -94,7 +94,7 @@ module('Integration | Component | login-form', function(hooks) {
     assert.dom('[data-test-form-error]').hasText('foo');
   });
 
-  test('incorrect login has feedback #2', async function(assert) {
+  test('incorrect login has feedback #2', async function (assert) {
     class MockSession extends Service {
       authenticate() {
         return Promise.reject({
@@ -111,7 +111,7 @@ module('Integration | Component | login-form', function(hooks) {
     assert.dom('[data-test-form-error]').hasText('boo');
   });
 
-  test('incorrect login has feedback #3', async function(assert) {
+  test('incorrect login has feedback #3', async function (assert) {
     class MockSession extends Service {
       authenticate() {
         return Promise.reject('zoo');
@@ -126,7 +126,7 @@ module('Integration | Component | login-form', function(hooks) {
     assert.dom('[data-test-form-error]').hasText('zoo');
   });
 
-  test('incorrect login has feedback with mapped local errors', async function(assert) {
+  test('incorrect login has feedback with mapped local errors', async function (assert) {
     class MockSession extends Service {
       authenticate() {
         return Promise.reject('Bad credentials');
@@ -139,12 +139,10 @@ module('Integration | Component | login-form', function(hooks) {
     await fillIn('[name="login"]', 'a@b');
     await fillIn('[name="password"]', 'b');
     await click('[data-test-submit-form]');
-    assert
-      .dom('[data-test-form-error]')
-      .exists();
+    assert.dom('[data-test-form-error]').exists();
   });
 
-  test('incorrect form values does not invoke form submit', async function(assert) {
+  test('incorrect form values does not invoke form submit', async function (assert) {
     let isSubmitCalled = false;
     class MockSession extends Service {
       authenticate() {

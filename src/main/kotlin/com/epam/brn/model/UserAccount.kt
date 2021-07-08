@@ -2,11 +2,16 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedBy
+import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EntityListeners
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -17,6 +22,7 @@ import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 
 @Entity
+@EntityListeners(AuditingEntityListener::class)
 data class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +36,14 @@ data class UserAccount(
     var gender: String?,
     var active: Boolean = true,
     @Column(nullable = false)
-    var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    @CreatedDate
+    var created: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     @Column(nullable = false)
-    var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    @LastModifiedDate
+    var changed: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+    @LastModifiedBy
+    @Column(name = "changed_by")
+    var changedBy: String = "",
     var avatar: String? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var headphones: MutableSet<Headphones> = hashSetOf()

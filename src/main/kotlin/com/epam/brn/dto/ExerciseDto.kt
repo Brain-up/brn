@@ -1,6 +1,7 @@
 package com.epam.brn.dto
 
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 data class ExerciseDto(
     var seriesId: Long?,
@@ -14,5 +15,5 @@ data class ExerciseDto(
     var signals: MutableList<SignalTaskDto> = mutableListOf(),
     var active: Boolean = true,
     var changedBy: String? = "InitialDataLoader",
-    var changedWhen: LocalDateTime = LocalDateTime.now()
+    var changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 )

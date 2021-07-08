@@ -12,33 +12,33 @@ import Task from 'brn/models/task';
 import AudioService from 'brn/services/audio';
 
 interface ISentenceTaskFields {
-  answerParts: any[],
-  selectedItemsOrder: any[] & { firstObject: any, lastObject: any },
-  isLastTask: boolean,
-  savePassed(): void,
-  answerOptions: any,
-  repetitionCount: number,
-  set(key: string, value: number): void,
+  answerParts: any[];
+  selectedItemsOrder: any[] & { firstObject: any; lastObject: any };
+  isLastTask: boolean;
+  savePassed(): void;
+  answerOptions: any;
+  repetitionCount: number;
+  set(key: string, value: number): void;
   parent: {
-    tasks: Task[]
-  }
+    tasks: Task[];
+  };
 }
 
 interface ISentenceComponentArgs {
-  task: Task & ISentenceTaskFields,
-  mode: keyof (typeof MODES),
-  disableAnswers: boolean,
-  activeWord: string,
-  disableAudioPlayer: boolean,
-  onPlayText(): void,
-  onRightAnswer(): void,
-  onWrongAnswer(): void
+  task: Task & ISentenceTaskFields;
+  mode: keyof typeof MODES;
+  disableAnswers: boolean;
+  activeWord: string;
+  disableAudioPlayer: boolean;
+  onPlayText(): void;
+  onRightAnswer(): void;
+  onWrongAnswer(): void;
 }
 
-interface SentenceAnswer { };
+interface SentenceAnswer {}
 
 export default class SentenceComponent extends Component<ISentenceComponentArgs> {
-  @service('stats') stats!: StatsService
+  @service('stats') stats!: StatsService;
   @tracked exerciseResultIsVisible = false;
 
   get task() {
@@ -47,23 +47,25 @@ export default class SentenceComponent extends Component<ISentenceComponentArgs>
 
   @tracked wrongAnswerParts = [];
 
-  @service('audio') audio!: AudioService
+  @service('audio') audio!: AudioService;
 
   @tracked isCorrect = false;
 
   @tracked currentAnswerObject: Record<string, unknown> | null = null;
 
   get audioFiles() {
-    return this.task?.answerParts.map(({ audioFileUrl }) => {
-      return urlForAudio(audioFileUrl);
-    }) || [];
+    return (
+      this.task?.answerParts.map(({ audioFileUrl }) => {
+        return urlForAudio(audioFileUrl);
+      }) || []
+    );
   }
 
   get answerCompleted() {
     if (
       !this.currentAnswerObject ||
       Object.keys(this.currentAnswerObject).length <
-      (this.task?.answerParts.length || 0)
+        (this.task?.answerParts.length || 0)
     ) {
       return false;
     } else {

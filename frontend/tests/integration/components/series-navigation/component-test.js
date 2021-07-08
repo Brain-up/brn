@@ -6,10 +6,10 @@ import pageObject from './test-support/page-object';
 
 const TEST_EXERCISE_NAMES = ['Type 1', 'Type 2'];
 
-module('Integration | Component | series-navigation', function(hooks) {
+module('Integration | Component | series-navigation', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(async function() {
+  hooks.beforeEach(async function () {
     const store = this.owner.lookup('service:store');
     const testSeries = store.createRecord('series');
     const exercises = TEST_EXERCISE_NAMES.map((name, index) =>
@@ -35,7 +35,7 @@ module('Integration | Component | series-navigation', function(hooks) {
       @exercises={{this.exercises}}/>`);
   });
 
-  test('renders all exercises', async function(assert) {
+  test('renders all exercises', async function (assert) {
     assert.deepEqual(pageObject.headers.length, 2);
     assert.equal(pageObject.links.length, 2);
   });
