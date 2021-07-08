@@ -2,20 +2,23 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.SubGroupDto
 import com.epam.brn.exception.EntityNotFoundException
+import com.epam.brn.model.Exercise
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
+import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SubGroupRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
 import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
@@ -28,6 +31,9 @@ internal class SubGroupServiceTest {
 
     @MockK
     private lateinit var subGroupRepository: SubGroupRepository
+
+    @MockK
+    private lateinit var exerciseRepository: ExerciseRepository
 
     @MockK
     private lateinit var subGroup: SubGroup
@@ -48,7 +54,45 @@ internal class SubGroupServiceTest {
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findBySeriesId(seriesId) }
-        assertEquals(listOf(subGroupDto), allGroups)
+        allGroups shouldBe listOf(subGroupDto)
+    }
+
+    @Test
+    fun `deleteById should delete subGroup without exercises`() {
+        // GIVEN
+        val subGroupId = 1L
+        mockkStatic("com.epam.brn.service.SubGroupServiceKt")
+        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns emptyList()
+        justRun { subGroupRepository.deleteById(subGroupId) }
+
+        // WHEN
+        subGroupService.deleteSubGroupById(subGroupId)
+
+        // THEN
+        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+    }
+
+    @Test
+    fun `deleteById should throw an exception with exercises in subGroup`() {
+        // GIVEN
+        val subGroupId = 1L
+        val exercise = Exercise(
+            id = 1L,
+            name = "nameOfExercise",
+            template = "",
+            level = 1,
+            noiseLevel = 1,
+            noiseUrl = "noiseUrl",
+            active = true,
+            subGroup = subGroup
+        )
+        val listExercises = listOf(exercise)
+        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listExercises
+
+        // THEN
+        shouldThrow<IllegalArgumentException> {
+            subGroupService.deleteSubGroupById(subGroupId)
+        }
     }
 
     @Test
@@ -66,7 +110,8 @@ internal class SubGroupServiceTest {
         val group = subGroupService.findById(subGroupId)
 
         // THEN
-        assertEquals(subGroupDto, group)
+        verify(exactly = 1) { subGroupRepository.findById(subGroupId) }
+        group shouldBe subGroupDto
     }
 
     @Test
@@ -75,7 +120,7 @@ internal class SubGroupServiceTest {
         val subGroupId = 1L
         every { subGroupRepository.findById(subGroupId) } returns Optional.empty()
         // THEN
-        assertThrows<EntityNotFoundException> { subGroupService.findById(subGroupId) }
+        shouldThrow<EntityNotFoundException> { subGroupService.findById(subGroupId) }
     }
 
     @Test
@@ -94,7 +139,7 @@ internal class SubGroupServiceTest {
         val resultDto = subGroup.toDto(pictureUrlTemplate)
 
         // THEN
-        assertEquals("template url", resultDto.pictureUrl)
         verify(exactly = 1) { subGroup.toDto() }
+        resultDto.pictureUrl shouldBe "template url"
     }
 }

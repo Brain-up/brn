@@ -33,12 +33,11 @@ class SubGroupService(
         return subGroup.toDto(pictureTheme)
     }
 
-    fun deleteById(subGroupId: Long): Boolean {
+    fun deleteSubGroupById(subGroupId: Long) {
         if (exerciseRepository.findExercisesBySubGroupId(subGroupId).isNotEmpty()) {
-            throw IllegalArgumentException("Impossible delete. SubGroup is not empty.")
+            throw IllegalArgumentException("Can not delete subgroup because there are exercises that refer to the subgroup.")
         }
         subGroupRepository.deleteById(subGroupId)
-        return true
     }
 }
 

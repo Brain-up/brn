@@ -33,9 +33,8 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
     }
 
     @DeleteMapping("{subGroupId}")
-    @ApiOperation("Get subGroup for id.")
-    fun deleteSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
-        val subGroupDto = subGroupsService.deleteById(subGroupId)
-        return ResponseEntity.ok(BaseSingleObjectResponseDto(data = subGroupDto))
+    @ApiOperation("Delete series for id.")
+    fun deleteSubGroupForId(@PathVariable(value = "subGroupId") subGroupId: Long) {
+        subGroupsService.deleteSubGroupById(subGroupId)
     }
 }
