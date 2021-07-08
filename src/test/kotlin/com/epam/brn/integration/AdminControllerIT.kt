@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
@@ -489,6 +490,30 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data.id").value(resource.id))
             .andExpect(jsonPath("$.data.description").value(descriptionForUpdate))
+    }
+
+    @Test
+    fun `should add new subgroup to existed series`() {
+        // GIVEN
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
+        val existedSeries = insertSeries()
+        val seriesId = existedSeries.id
+        val requestJson = objectMapper.writeValueAsString(subGroupRequest)
+
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/subgroup")
+                .param("seriesId", seriesId.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
+        )
+
+        // THEN
+        resultAction
+            .andExpect(MockMvcResultMatchers.status().isCreated)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.data.name").value(subGroupRequest.name))
     }
 
     private fun insertStudyHistory(

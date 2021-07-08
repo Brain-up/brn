@@ -6,11 +6,9 @@ import javax.validation.constraints.NotNull
 
 class SubGroupRequest(
     @NotNull
-    var seriesId: Long,
+    var name: String,
     @NotNull
     var level: Int,
-    @NotNull
-    var name: String,
     @NotNull
     var code: String,
     @NotNull

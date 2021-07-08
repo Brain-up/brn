@@ -110,7 +110,7 @@ internal class SubGroupServiceTest {
         val seriesId = 1L
         val seriesMockk = mockkClass(Series::class, relaxed = true)
         val subGroup = mockkClass(SubGroup::class, relaxed = true)
-        val subGroupRequest = SubGroupRequest(seriesId, 1, "Test name", "shortWords", "Test description")
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
         every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns null
         every { seriesRepository.findById(seriesId) } returns Optional.of(seriesMockk)
         every { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) } returns subGroup
@@ -127,7 +127,7 @@ internal class SubGroupServiceTest {
         // GIVEN
         val seriesId = 1L
         val subGroup = mockkClass(SubGroup::class, relaxed = true)
-        val subGroupRequest = SubGroupRequest(seriesId, 1, "Test name", "shortWords", "Test description")
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
         every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns subGroup
 
         // THEN
@@ -138,7 +138,7 @@ internal class SubGroupServiceTest {
     fun `addSubGroupToSeries should trow exception when series does not exist`() {
         // GIVEN
         val seriesId = 1L
-        val subGroupRequest = SubGroupRequest(seriesId, 1, "Test name", "shortWords", "Test description")
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
         every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns null
         every { seriesRepository.findById(seriesId) } returns Optional.empty()
 

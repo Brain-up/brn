@@ -244,7 +244,7 @@ internal class AdminControllerTest {
     fun `addSubGroupToSeries should return http status 204`() {
         // GIVEN
         val seriesId = 1L
-        val subGroupRequest = SubGroupRequest(seriesId, 1, "Test name", "shortWords", "Test description")
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
         val subGroupDto = mockkClass(SubGroupDto::class, relaxed = true)
 
         every { subGroupService.addSubGroupToSeries(subGroupRequest, seriesId) } returns subGroupDto
