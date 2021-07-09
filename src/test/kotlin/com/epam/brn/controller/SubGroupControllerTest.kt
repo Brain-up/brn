@@ -61,9 +61,11 @@ internal class SubGroupControllerTest {
         justRun { subGroupService.deleteSubGroupById(subGroupId) }
 
         // WHEN
-        subGroupController.deleteSubGroupForId(subGroupId)
+        val deleteSubGroupForId = subGroupController.deleteSubGroupForId(subGroupId)
 
         // THEN
         verify(exactly = 1) { subGroupService.deleteSubGroupById(subGroupId) }
+        deleteSubGroupForId.statusCode.value() shouldBe HttpStatus.SC_OK
+        deleteSubGroupForId.body!!.data shouldBe Unit
     }
 }
