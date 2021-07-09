@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -13,6 +14,7 @@ import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.format.annotation.DateTimeFormat
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/admin")
@@ -168,4 +171,14 @@ class AdminController(
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok()
             .body(BaseSingleObjectResponseDto(data = resourceService.updateDescription(id, request.description!!)))
+
+    @PostMapping("/create/exercise/words")
+    @ApiOperation("Create new exercise 'words' for exist subgroup")
+    fun createExerciseWords(
+        @ApiParam(value = "Exercise's data", required = true)
+        @Valid @RequestBody exerciseWordsCreateDto: ExerciseWordsCreateDto
+    ): ResponseEntity<BaseResponseDto> {
+        exerciseService.createExercise(exerciseWordsCreateDto)
+        return ResponseEntity(HttpStatus.CREATED)
+    }
 }
