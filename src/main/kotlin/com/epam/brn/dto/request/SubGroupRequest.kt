@@ -2,16 +2,15 @@ package com.epam.brn.dto.request
 
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 
-class SubGroupRequest(
-    @NotNull
+data class SubGroupRequest(
+    @NotBlank
     var name: String,
-    @NotNull
+    @NotBlank
     var level: Int,
-    @NotNull
+    @NotBlank
     var code: String,
-    @NotNull
     var description: String?
 ) {
     fun toModel(series: Series) = SubGroup(
