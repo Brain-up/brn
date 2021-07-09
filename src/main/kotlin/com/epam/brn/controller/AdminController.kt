@@ -15,6 +15,7 @@ import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.format.annotation.DateTimeFormat
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/admin")
@@ -174,9 +176,15 @@ class AdminController(
 
     @PostMapping("/subgroup")
     @ApiOperation("Add new subgroup for existing series.")
+    @ApiParam(
+        name = "seriesId",
+        type = "Long",
+        value = "ID of existed series",
+        example = "1"
+    )
     fun addSubGroupToSeries(
         @RequestParam(value = "seriesId") seriesId: Long,
-        @Validated @RequestBody subGroupRequest: SubGroupRequest
+        @Valid @RequestBody subGroupRequest: SubGroupRequest
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
