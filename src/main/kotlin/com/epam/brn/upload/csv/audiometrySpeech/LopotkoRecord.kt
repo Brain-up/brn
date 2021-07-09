@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series1
+package com.epam.brn.upload.csv.seriesWords
 
 import com.epam.brn.enums.FrequencyZone
 import com.epam.brn.enums.Locale
