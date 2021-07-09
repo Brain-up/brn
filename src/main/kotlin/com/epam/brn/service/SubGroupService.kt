@@ -35,11 +35,10 @@ class SubGroupService(
     }
 
     fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupDto {
-        log.debug("try to find subgroup by name=$subGroupRequest.name and the level=$subGroupRequest.level")
+        log.debug("try to find subgroup by name=${subGroupRequest.name} and the level=${subGroupRequest.level}")
         val existSubGroup = subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level)
-        if (existSubGroup != null) {
-            throw IllegalArgumentException("The subgroup with name=$subGroupRequest.name and the level=$subGroupRequest.level already exists!")
-        }
+        if (existSubGroup != null)
+            throw IllegalArgumentException("The subgroup with name=${subGroupRequest.name} and the level=${subGroupRequest.level} already exists!")
         log.debug("try to find Series by Id=$seriesId")
         val series = seriesRepository.findById(seriesId)
             .orElseThrow { EntityNotFoundException("No series was found by id=$seriesId.") }
