@@ -24,6 +24,7 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.AfterEach
@@ -310,14 +311,12 @@ class AdminControllerIT : BaseIT() {
         )
         // THEN
         result.size shouldBe 4
-        result.map { it.id }.containsAll(
-            listOf(
-                historyFirstExerciseOne.id,
-                historyFirstExerciseTwo.id,
-                historySecondExerciseOne.id,
-                historySecondExerciseTwo.id
-            )
-        ) shouldBe true
+        result.map { it.id }.shouldContainExactlyInAnyOrder(
+            historyFirstExerciseOne.id,
+            historyFirstExerciseTwo.id,
+            historySecondExerciseOne.id,
+            historySecondExerciseTwo.id
+        )
     }
 
     @Test
@@ -366,14 +365,12 @@ class AdminControllerIT : BaseIT() {
         )
         // THEN
         result.size shouldBe 4
-        result.map { it.id }.containsAll(
-            listOf(
-                historyFirstExerciseOne.id,
-                historyFirstExerciseTwo.id,
-                historySecondExerciseOne.id,
-                historySecondExerciseTwo.id
-            )
-        ) shouldBe true
+        result.map { it.id }.shouldContainExactlyInAnyOrder(
+            historyFirstExerciseOne.id,
+            historyFirstExerciseTwo.id,
+            historySecondExerciseOne.id,
+            historySecondExerciseTwo.id
+        )
     }
 
     @Test
@@ -404,14 +401,12 @@ class AdminControllerIT : BaseIT() {
         val result = studyHistoryRepository.getTodayHistories(existingUser.id!!)
         // THEN
         result.size shouldBe 4
-        result.map { it.id }.containsAll(
-            listOf(
-                historyFirstExerciseOne.id,
-                historyFirstExerciseTwo.id,
-                historySecondExerciseOne.id,
-                historySecondExerciseTwo.id
-            )
-        ) shouldBe true
+        result.map { it.id }.shouldContainExactlyInAnyOrder(
+            historyFirstExerciseOne.id,
+            historyFirstExerciseTwo.id,
+            historySecondExerciseOne.id,
+            historySecondExerciseTwo.id
+        )
     }
 
     @Test

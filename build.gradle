@@ -21,7 +21,7 @@ repositories {
 
 ext["mockito.version"] = "${mockitoVersion}"
 dependencies {
-    implementation "io.kotest:kotest-assertions:$kotestAssertionsVerstion"
+    implementation "io.kotest:kotest-assertions-core:$kotestAssertionsVerstion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.springframework.boot:spring-boot-starter-web"
