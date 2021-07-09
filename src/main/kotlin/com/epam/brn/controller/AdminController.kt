@@ -176,13 +176,8 @@ class AdminController(
 
     @PostMapping("/subgroup")
     @ApiOperation("Add new subgroup for existing series.")
-    @ApiParam(
-        name = "seriesId",
-        type = "Long",
-        value = "ID of existed series",
-        example = "1"
-    )
     fun addSubGroupToSeries(
+        @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
         @Valid @RequestBody subGroupRequest: SubGroupRequest
     ): ResponseEntity<BaseSingleObjectResponseDto> =
