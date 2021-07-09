@@ -11,6 +11,7 @@ import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.upload.csv.RecordProcessor
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -42,6 +43,9 @@ internal class ExerciseServiceTest {
 
     @MockK
     lateinit var urlConversionService: UrlConversionService
+
+    @MockK
+    lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
 
     private val series = Series(
         id = 1L,

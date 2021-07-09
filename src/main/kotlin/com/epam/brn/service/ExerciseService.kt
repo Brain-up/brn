@@ -2,10 +2,12 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
+import com.epam.brn.dto.exercise.ExerciseWordsCreateDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -15,7 +17,8 @@ class ExerciseService(
     private val exerciseRepository: ExerciseRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
-    private val urlConversionService: UrlConversionService
+    private val urlConversionService: UrlConversionService,
+    private val recordProcessors: List<RecordProcessor<out Any, out Any>>
 ) {
 
     @Value(value = "\${minRepetitionIndex}")
@@ -129,5 +132,16 @@ class ExerciseService(
     fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseWithTasksDto> {
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
         return subGroupExercises.map { it.toDtoWithTasks() }
+    }
+
+    fun createExercise(exerciseWordsCreateDto: ExerciseWordsCreateDto): ExerciseDto {
+        val seriesWordsRecord = exerciseWordsCreateDto.toSeriesWordsRecord()
+        val exercise = recordProcessors.stream()
+            .filter { it.isApplicable(seriesWordsRecord) }
+            .findFirst()
+            .orElseThrow { RuntimeException("There is no applicable processor for type '${seriesWordsRecord.javaClass}'") }
+            .process(listOf(seriesWordsRecord) as List<Nothing>, exerciseWordsCreateDto.locale)
+            .first() as Exercise
+        return exercise.toDto()
     }
 }
