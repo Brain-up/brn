@@ -3,11 +3,12 @@ package com.epam.brn.dto.request
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 data class SubGroupRequest(
     @NotBlank
     var name: String,
-    @NotBlank
+    @NotNull
     var level: Int,
     @NotBlank
     var code: String,
