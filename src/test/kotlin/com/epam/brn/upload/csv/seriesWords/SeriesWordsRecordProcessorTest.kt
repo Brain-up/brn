@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series1
+package com.epam.brn.upload.csv.seriesWords
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
@@ -15,28 +15,42 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
-import com.nhaarman.mockito_kotlin.verify
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 import java.util.Random
 
-@ExtendWith(MockitoExtension::class)
-internal class SeriesOneRecordProcessorTest {
+@ExtendWith(MockKExtension::class)
+internal class SeriesWordsRecordProcessorTest {
 
-    private val seriesRepositoryMock = mock(SeriesRepository::class.java)
-    private val subGroupRepositoryMock = mock(SubGroupRepository::class.java)
-    private val exerciseRepositoryMock = mock(ExerciseRepository::class.java)
-    private val resourceRepositoryMock = mock(ResourceRepository::class.java)
-    private val wordsServiceMock = mock(WordsService::class.java)
+    @MockK
+    private lateinit var seriesRepositoryMock: SeriesRepository
 
-    private lateinit var seriesOneRecordProcessor: SeriesOneRecordProcessor
+    @MockK
+    private lateinit var subGroupRepositoryMock: SubGroupRepository
+
+    @MockK
+    private lateinit var exerciseRepositoryMock: ExerciseRepository
+
+    @MockK
+    private lateinit var resourceRepositoryMock: ResourceRepository
+
+    @MockK
+    private lateinit var wordsServiceMock: WordsService
+
+    @MockK
+    private lateinit var subGroupMock: SubGroup
+
+    @InjectMockKs
+    private lateinit var seriesWordsRecordProcessor: SeriesWordsRecordProcessor
 
     private val series = Series(
         id = 1L,
@@ -58,18 +72,32 @@ internal class SeriesOneRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        seriesOneRecordProcessor = SeriesOneRecordProcessor(
+        seriesWordsRecordProcessor = SeriesWordsRecordProcessor(
             subGroupRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock,
             wordsServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
-        ReflectionTestUtils.setField(seriesOneRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
+        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
+        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
+        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
 
-        `when`(seriesRepositoryMock.findById(1L)).thenReturn(Optional.of(series))
+        every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
+        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock
+        every { wordsServiceMock.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } returns String()
+        every {
+            resourceRepositoryMock.findFirstByWordAndLocaleAndWordType(
+                ofType(String::class),
+                ofType(String::class),
+                ofType(String::class)
+            )
+        } returns Optional.empty()
+        every { wordsServiceMock.addWordsToDictionary(ofType(Locale::class), any()) } returns Unit
+        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
+        every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, noiseLevel) } returns Optional.empty()
+        every { resourceRepositoryMock.saveAll(any()) } returns emptySet()
+        every { exerciseRepositoryMock.save(ofType(Exercise::class)) } returns Exercise()
 
         mockFindResourceByWordLike("бал", resource_бал())
         mockFindResourceByWordLike("бум", resource_бум())
@@ -80,18 +108,15 @@ internal class SeriesOneRecordProcessorTest {
     }
 
     private fun mockFindResourceByWordLike(word: String, result: Resource) {
-        `when`(resourceRepositoryMock.findFirstByWordLike(word)).thenReturn(Optional.of(result))
+        every { resourceRepositoryMock.findFirstByWordLike(word) } returns Optional.of(result)
     }
 
     @Test
     fun `should create correct exercise`() {
         val expected = createExercise()
-        val subGroupMock = mock(SubGroup::class.java)
-        `when`(subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale)).thenReturn(subGroupMock)
-        `when`(wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
-        val actual = seriesOneRecordProcessor.process(
+        val actual = seriesWordsRecordProcessor.process(
             mutableListOf(
-                SeriesOneRecord(
+                SeriesWordsRecord(
                     level = 1,
                     code = "pictureUrl",
                     exerciseName = exerciseName,
@@ -103,17 +128,17 @@ internal class SeriesOneRecordProcessorTest {
         ).first()
 
         assertThat(actual).isEqualTo(expected)
-        verify(exerciseRepositoryMock).save(expected)
+        verify { exerciseRepositoryMock.save(expected) }
     }
 
     // @Test
     fun `should create correct task`() {
-        seriesOneRecordProcessor.random = Random(800)
+        seriesWordsRecordProcessor.random = Random(800)
         val expected = createExercise().tasks.first()
 
-        val actual = seriesOneRecordProcessor.process(
+        val actual = seriesWordsRecordProcessor.process(
             mutableListOf(
-                SeriesOneRecord(
+                SeriesWordsRecord(
                     level = 1,
                     code = "pictureUrl",
                     exerciseName = exerciseName,
@@ -137,30 +162,72 @@ internal class SeriesOneRecordProcessorTest {
             resource_гад(),
             resource_дуб()
         )
-        val subGroupMock = mock(SubGroup::class.java)
-        `when`(subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale)).thenReturn(subGroupMock)
-        `when`(wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale)).thenReturn(Voice.FILIPP)
-        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("бал", Locale.RU.locale, Voice.FILIPP)))
-            .thenReturn("/test/бал.ogg")
-        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("бум", Locale.RU.locale, Voice.FILIPP)))
-            .thenReturn("/test/бум.ogg")
-        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("быль", Locale.RU.locale, Voice.FILIPP)))
-            .thenReturn("/test/быль.ogg")
-        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("вить", Locale.RU.locale, Voice.FILIPP)))
-            .thenReturn("/test/вить.ogg")
-        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("гад", Locale.RU.locale, Voice.FILIPP)))
-            .thenReturn("/test/гад.ogg")
-        `when`(wordsServiceMock.getSubFilePathForWord(AudioFileMetaData("дуб", Locale.RU.locale, Voice.FILIPP)))
-            .thenReturn("/test/дуб.ogg")
+        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock
+        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
+        every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, noiseLevel) } returns Optional.empty()
+        every {
+            wordsServiceMock.getSubFilePathForWord(
+                AudioFileMetaData(
+                    "бал",
+                    Locale.RU.locale,
+                    Voice.FILIPP
+                )
+            )
+        } returns "/test/бал.ogg"
+        every {
+            wordsServiceMock.getSubFilePathForWord(
+                AudioFileMetaData(
+                    "бум",
+                    Locale.RU.locale,
+                    Voice.FILIPP
+                )
+            )
+        } returns "/test/бум.ogg"
+        every {
+            wordsServiceMock.getSubFilePathForWord(
+                AudioFileMetaData(
+                    "быль",
+                    Locale.RU.locale,
+                    Voice.FILIPP
+                )
+            )
+        } returns "/test/быль.ogg"
+        every {
+            wordsServiceMock.getSubFilePathForWord(
+                AudioFileMetaData(
+                    "вить",
+                    Locale.RU.locale,
+                    Voice.FILIPP
+                )
+            )
+        } returns "/test/вить.ogg"
+        every {
+            wordsServiceMock.getSubFilePathForWord(
+                AudioFileMetaData(
+                    "гад",
+                    Locale.RU.locale,
+                    Voice.FILIPP
+                )
+            )
+        } returns "/test/гад.ogg"
+        every {
+            wordsServiceMock.getSubFilePathForWord(
+                AudioFileMetaData(
+                    "дуб",
+                    Locale.RU.locale,
+                    Voice.FILIPP
+                )
+            )
+        } returns "/test/дуб.ogg"
 
-        val tasks = seriesOneRecordProcessor
-            .process(mutableListOf(SeriesOneRecord(1, "pictureUrl", exerciseName, words, noiseLevel, noiseUrl)))
+        val tasks = seriesWordsRecordProcessor
+            .process(mutableListOf(SeriesWordsRecord(1, "pictureUrl", exerciseName, words, noiseLevel, noiseUrl)))
             .first().tasks
 
         tasks.forEach {
             assertThat(it.answerOptions).containsExactlyElementsOf(expected)
         }
-        verify(resourceRepositoryMock).saveAll(expected)
+        verify { resourceRepositoryMock.saveAll(expected) }
     }
 
     private fun createExercise(): Exercise {

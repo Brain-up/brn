@@ -9,47 +9,40 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.impl.UserMonthStatisticService
 import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
-import java.sql.Date
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.YearMonth
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-/**
- * @author Nikolai Lazarev
- */
-
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class UserMonthStatisticServiceTest {
 
-    @InjectMocks
+    @InjectMockKs
     private lateinit var userMonthStatisticService: UserMonthStatisticService
 
-    @Mock
+    @MockK
     private lateinit var userAccountService: UserAccountService
 
-    @Mock
+    @MockK
     private lateinit var studyHistoryRepository: StudyHistoryRepository
 
-    @Mock
+    @MockK
     private lateinit var userAccount: UserAccountDto
 
-    @Mock
+    @MockK
     private lateinit var studyHistory: StudyHistory
 
-    @Mock
-    private lateinit var progressManager: ProgressStatusManager<List<StudyHistory>>
-
-    @Mock
+    @MockK
     private lateinit var studyHistorySecond: StudyHistory
+
+    @MockK
+    private lateinit var progressStatusManager: ProgressStatusManager<List<StudyHistory>>
 
     private val month: Int = 2
     private val day: Int = 23
@@ -61,36 +54,38 @@ internal class UserMonthStatisticServiceTest {
     private val progress = UserExercisingProgressStatus.GREAT
     private val studyHistoryDate = LocalDateTime.of(year, month, day, hour, minute)
     private val secondStudyHistoryDate = LocalDateTime.of(year, month, day, hour, minute).plusMonths(1)
-    private val from: LocalDate = LocalDate.of(year, month, day)
-    private val to: LocalDate = LocalDate.of(year, month.plus(2), day)
+    private val from = LocalDateTime.of(year, month, day, hour, minute)
+    private val to = LocalDateTime.of(year, month.plus(2), day, hour, minute)
 
     @BeforeEach
     fun init() {
-        `when`(userAccountService.getUserFromTheCurrentSession()).thenReturn(userAccount)
-        `when`(userAccount.id).thenReturn(userId)
-        `when`(studyHistory.startTime).thenReturn(studyHistoryDate)
-        `when`(studyHistory.executionSeconds).thenReturn(executionSeconds)
+        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+        every { userAccount.id } returns userId
+        every { studyHistory.startTime } returns studyHistoryDate
+        every { studyHistory.executionSeconds } returns executionSeconds
     }
 
     @Test
     fun `getStatisticForPeriod should return statistic for period from to`() {
         // GIVEN
-        `when`(studyHistorySecond.startTime).thenReturn(studyHistoryDate)
-        val studyHistories = listOf(
-            studyHistory,
-            studyHistorySecond
-        )
-        `when`(progressManager.getStatus(UserExercisingPeriod.WEEK, studyHistories)).thenReturn(
-            UserExercisingProgressStatus.GREAT
-        )
-        `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
-            studyHistories
-        )
+        every { studyHistorySecond.startTime } returns studyHistoryDate
+        every { studyHistorySecond.executionSeconds } returns executionSeconds
+        val studyHistories = listOf(studyHistory, studyHistorySecond)
+        every {
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
+        } returns studyHistories
+        every {
+            progressStatusManager.getStatus(
+                UserExercisingPeriod.WEEK,
+                studyHistories
+            )
+        } returns progress
+
         val expectedStatistic = MonthStudyStatistic(
-            date = YearMonth.of(studyHistory.startTime.year, studyHistory.startTime.month),
-            exercisingTimeSeconds = executionSeconds,
+            date = studyHistory.startTime,
+            exercisingTimeSeconds = executionSeconds * 2,
             exercisingDays = 2,
-            progress = UserExercisingProgressStatus.GREAT
+            progress = progress
         )
 
         // WHEN
@@ -103,31 +98,32 @@ internal class UserMonthStatisticServiceTest {
 
     @Test
     fun `getStatisticForPeriod should return statistic for period when there are histories for some month`() {
-        // GIVEN
-        `when`(studyHistorySecond.startTime).thenReturn(secondStudyHistoryDate)
-        `when`(studyHistorySecond.executionSeconds).thenReturn(executionSeconds)
         val studyHistories = listOf(
             studyHistory,
             studyHistorySecond
         )
-        `when`(progressManager.getStatus(UserExercisingPeriod.WEEK, listOf(studyHistory))).thenReturn(
-            UserExercisingProgressStatus.GREAT
-        )
-        `when`(progressManager.getStatus(UserExercisingPeriod.WEEK, listOf(studyHistorySecond))).thenReturn(
-            UserExercisingProgressStatus.GREAT
-        )
-        `when`(studyHistoryRepository.getHistories(userAccount.id!!, Date.valueOf(from), Date.valueOf(to))).thenReturn(
-            studyHistories
-        )
+        // GIVEN
+        every { studyHistorySecond.startTime } returns secondStudyHistoryDate
+        every { studyHistorySecond.executionSeconds } returns executionSeconds
+        every { progressStatusManager.getStatus(UserExercisingPeriod.WEEK, listOf(studyHistory)) } returns progress
+        every {
+            progressStatusManager.getStatus(
+                UserExercisingPeriod.WEEK,
+                listOf(studyHistorySecond)
+            )
+        } returns progress
+        every {
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
+        } returns studyHistories
 
         val firstExpectedStudyStatistic = MonthStudyStatistic(
-            date = YearMonth.of(studyHistoryDate.year, studyHistoryDate.month),
+            date = studyHistoryDate,
             exercisingTimeSeconds = executionSeconds,
             exercisingDays = 1,
             progress = progress
         )
         val secondExpectedStudyStatistic = MonthStudyStatistic(
-            date = YearMonth.of(secondStudyHistoryDate.year, secondStudyHistoryDate.month),
+            date = studyHistoryDate,
             exercisingTimeSeconds = executionSeconds,
             exercisingDays = 1,
             progress = progress
@@ -146,5 +142,17 @@ internal class UserMonthStatisticServiceTest {
             secondExpectedStudyStatistic,
             statisticForPeriod.first { it.date.month == secondExpectedStudyStatistic.date.month }
         )
+    }
+
+    @Test
+    fun `getStatisticForPeriod should return empty list when there are not study histories for the period`() {
+        // GIVEN
+        every { studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to) } returns emptyList()
+
+        // WHEN
+        val statisticForPeriod = userMonthStatisticService.getStatisticForPeriod(from, to)
+
+        // THEN
+        assertTrue(statisticForPeriod.isEmpty())
     }
 }

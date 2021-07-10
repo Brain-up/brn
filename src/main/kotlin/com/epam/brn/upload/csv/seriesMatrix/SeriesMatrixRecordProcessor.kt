@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series2
+package com.epam.brn.upload.csv.seriesMatrix
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
@@ -19,20 +19,20 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class SeriesTwoRecordProcessor(
+class SeriesMatrixRecordProcessor(
     private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
     private val taskRepository: TaskRepository,
     private val wordsService: WordsService
-) : RecordProcessor<SeriesTwoRecord, Exercise> {
+) : RecordProcessor<SeriesMatrixRecord, Exercise> {
 
     @Value(value = "\${brn.pictureWithWord.file.default.path}")
     private lateinit var pictureWithWordFileUrl: String
 
-    override fun isApplicable(record: Any): Boolean = record is SeriesTwoRecord
+    override fun isApplicable(record: Any): Boolean = record is SeriesMatrixRecord
 
-    override fun process(records: List<SeriesTwoRecord>, locale: Locale): List<Exercise> {
+    override fun process(records: List<SeriesMatrixRecord>, locale: Locale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
         records.forEach { record ->
             val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
@@ -53,7 +53,7 @@ class SeriesTwoRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesTwoRecord, locale: Locale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesMatrixRecord, locale: Locale): MutableSet<Resource> =
         extractWordGroups(record)
             .map {
                 splitOnWords(it.second).map { word: String ->
@@ -62,7 +62,7 @@ class SeriesTwoRecordProcessor(
             }
             .flatten().toMutableSet()
 
-    private fun extractWordGroups(record: SeriesTwoRecord): Sequence<Pair<WordType, String>> =
+    private fun extractWordGroups(record: SeriesMatrixRecord): Sequence<Pair<WordType, String>> =
         record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
@@ -96,7 +96,7 @@ class SeriesTwoRecordProcessor(
 
     private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
-    private fun generateExercise(record: SeriesTwoRecord, subGroup: SubGroup) =
+    private fun generateExercise(record: SeriesMatrixRecord, subGroup: SubGroup) =
         Exercise(
             subGroup = subGroup,
             name = record.exerciseName,
@@ -104,7 +104,7 @@ class SeriesTwoRecordProcessor(
             level = record.level
         )
 
-    private fun calculateTemplate(record: SeriesTwoRecord): String =
+    private fun calculateTemplate(record: SeriesMatrixRecord): String =
         extractWordGroups(record)
             .joinToString(StringUtils.SPACE, "<", ">") { it.first.toString() }
 

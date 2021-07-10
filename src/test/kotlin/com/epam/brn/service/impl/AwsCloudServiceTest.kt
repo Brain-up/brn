@@ -6,19 +6,17 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.epam.brn.cloud.AwsCloudService
 import com.epam.brn.config.AwsConfig
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.junit.jupiter.MockitoExtension
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 class AwsCloudServiceTest {
 
     companion object {
@@ -52,21 +50,21 @@ class AwsCloudServiceTest {
         const val ANOTHER_SUBFOLDER = "folder3/folder3/"
     }
 
-    @InjectMocks
+    @InjectMockKs
     lateinit var awsCloudService: AwsCloudService
 
-    @Mock
+    @MockK
     lateinit var awsConfig: AwsConfig
 
     @Test
     fun `should get correct signature for client upload`() {
         // GIVEN
-        `when`(awsConfig.secretAccessKey).thenReturn("99999999999999999999999999999")
-        `when`(awsConfig.region).thenReturn("us-east-2")
-        `when`(awsConfig.serviceName).thenReturn("s3")
-        `when`(awsConfig.bucketLink).thenReturn("http://somebucket.s3.amazonaws.com")
+        every { awsConfig.secretAccessKey } returns "99999999999999999999999999999"
+        every { awsConfig.region } returns "us-east-2"
+        every { awsConfig.serviceName } returns "s3"
+        every { awsConfig.bucketLink } returns "http://somebucket.s3.amazonaws.com"
 
-        var conditions: AwsConfig.Conditions = AwsConfig.Conditions(
+        val conditions: AwsConfig.Conditions = AwsConfig.Conditions(
             TEST_DATE,
             TEST_BUCKET, TEST_ACCESS_RULE,
             TEST_UUID,
@@ -76,7 +74,7 @@ class AwsCloudServiceTest {
             TEST_FILEPATH,
             "", "", ""
         )
-        `when`(awsConfig.buildConditions(anyString())).thenReturn(conditions)
+        every { awsConfig.buildConditions(any()) } returns conditions
 
         // WHEN
         val actual = awsCloudService.uploadForm("")
@@ -102,9 +100,9 @@ class AwsCloudServiceTest {
     @Test
     fun `should convert to base64 string`() {
         // GIVEN
-        val expected = "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
-
-        var conditions = hashMapOf(
+        val expected =
+            "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
+        val conditions = hashMapOf(
             "expiration" to TEST_EXPIRATION_DATE,
             "conditions" to
                 listOf(
@@ -118,6 +116,7 @@ class AwsCloudServiceTest {
                     hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE)
                 )
         )
+
         // WHEN
         val base64 = awsCloudService.toJsonBase64(conditions)
 
@@ -128,14 +127,12 @@ class AwsCloudServiceTest {
     @Test
     fun `should get folder list without pagination`() {
         // GIVEN
-        val mockS3: AmazonS3 = Mockito.mock(AmazonS3::class.java)
-
+        val mockS3 = mockk<AmazonS3>()
         val result: ListObjectsV2Result = listObjectsV2Result(listOf(FILE, FOLDER, SUBFILE, SUBFOLDER))
-        `when`(result.isTruncated).thenReturn(false)
-
-        `when`(awsConfig.amazonS3).thenReturn(mockS3)
-        `when`(awsConfig.bucketName).thenReturn(TEST_BUCKET)
-        `when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result)
+        every { result.isTruncated } returns false
+        every { awsConfig.amazonS3 } returns mockS3
+        every { awsConfig.bucketName } returns TEST_BUCKET
+        every { mockS3.listObjectsV2(any<ListObjectsV2Request>()) } returns result
 
         // WHEN
         val listBucket = awsCloudService.listBucket()
@@ -148,18 +145,18 @@ class AwsCloudServiceTest {
     @Test
     fun `should get folder list with pagination`() {
         // GIVEN
-        val mockS3: AmazonS3 = Mockito.mock(AmazonS3::class.java)
-
+        val mockS3 = mockk<AmazonS3>()
         val result: ListObjectsV2Result = listObjectsV2Result(listOf(FILE, FOLDER, SUBFILE, SUBFOLDER))
-        `when`(result.isTruncated).thenReturn(true)
-        `when`(result.nextContinuationToken).thenReturn("asd")
+        every { result.isTruncated } returns true
+        every { result.nextContinuationToken } returns "asd"
 
-        val result2: ListObjectsV2Result = listObjectsV2Result(listOf(ANOTHER_FILE, ANOTHER_FOLDER, ANOTHER_SUBFILE, ANOTHER_SUBFOLDER))
-        `when`(result2.isTruncated).thenReturn(false)
+        val result2: ListObjectsV2Result =
+            listObjectsV2Result(listOf(ANOTHER_FILE, ANOTHER_FOLDER, ANOTHER_SUBFILE, ANOTHER_SUBFOLDER))
+        every { result2.isTruncated } returns false
 
-        `when`(awsConfig.amazonS3).thenReturn(mockS3)
-        `when`(awsConfig.bucketName).thenReturn(TEST_BUCKET)
-        `when`(mockS3.listObjectsV2(any<ListObjectsV2Request>())).thenReturn(result, result2)
+        every { awsConfig.amazonS3 } returns mockS3
+        every { awsConfig.bucketName } returns TEST_BUCKET
+        every { mockS3.listObjectsV2(any<ListObjectsV2Request>()) } returnsMany listOf(result, result2)
 
         // WHEN
         val listBucket = awsCloudService.listBucket()
@@ -170,20 +167,13 @@ class AwsCloudServiceTest {
     }
 
     private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Result {
-        val result: ListObjectsV2Result = Mockito.mock(ListObjectsV2Result::class.java)
+        val result = mockk<ListObjectsV2Result>()
         val objectSummaries: List<S3ObjectSummary> = toObjectSummaries(keys)
 
-        `when`(result.objectSummaries).thenReturn(objectSummaries)
+        every { result.objectSummaries } returns objectSummaries
         return result
     }
 
-    private fun toObjectSummaries(keys: List<String>): List<S3ObjectSummary> {
-        val objectSummaries: ArrayList<S3ObjectSummary> = ArrayList()
-        keys.forEach {
-            val os = S3ObjectSummary()
-            os.key = it
-            objectSummaries.add(os)
-        }
-        return objectSummaries
-    }
+    private fun toObjectSummaries(keys: List<String>): List<S3ObjectSummary> =
+        keys.map { S3ObjectSummary().apply { key = it } }.toList()
 }

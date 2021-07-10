@@ -8,9 +8,7 @@ import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import org.springframework.stereotype.Service
-import java.sql.Date
-import java.time.LocalDate
-import java.time.YearMonth
+import java.time.LocalDateTime
 
 @Service
 class UserMonthStatisticService(
@@ -19,20 +17,32 @@ class UserMonthStatisticService(
     private val progressManager: ProgressStatusManager<List<StudyHistory>>
 ) : UserPeriodStatisticService<MonthStudyStatistic> {
 
-    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long?): List<MonthStudyStatistic> {
+    override fun getStatisticForPeriod(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        userId: Long?
+    ): List<MonthStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
-        val histories =
-            studyHistoryRepository.getHistories(tempUserId!!, Date.valueOf(from), Date.valueOf(to))
+        val histories = studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(
+            userId = tempUserId!!,
+            from = from,
+            to = to
+        )
         return histories.map {
             val filteredHistories = histories.filter { historyFilter ->
                 historyFilter.startTime.month == it.startTime.month
             }
             MonthStudyStatistic(
-                date = YearMonth.of(it.startTime.year, it.startTime.month),
+                date = it.startTime,
                 exercisingTimeSeconds = filteredHistories.sumBy { studyHistory -> studyHistory.executionSeconds },
                 progress = progressManager.getStatus(UserExercisingPeriod.WEEK, filteredHistories),
                 exercisingDays = filteredHistories.size
             )
-        }.distinct()
+        }.distinctBy {
+            listOf(
+                it.date.month,
+                it.date.year
+            )
+        }
     }
 }

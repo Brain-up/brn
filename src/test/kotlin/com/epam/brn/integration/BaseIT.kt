@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -55,6 +56,8 @@ abstract class BaseIT {
 
     @Autowired
     private lateinit var seriesRepository: SeriesRepository
+
+    protected val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
     /**
      * Should delete data from repositories.

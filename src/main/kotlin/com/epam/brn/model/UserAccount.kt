@@ -7,8 +7,8 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -39,10 +39,10 @@ data class UserAccount(
     var active: Boolean = true,
     @Column(nullable = false)
     @CreatedDate
-    var created: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    var created: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     @Column(nullable = false)
     @LastModifiedDate
-    var changed: ZonedDateTime = ZonedDateTime.now(ZoneId.of("UTC")),
+    var changed: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     @LastModifiedBy
     @Column(name = "changed_by")
     var changedBy: String = "",

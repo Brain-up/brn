@@ -17,10 +17,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.InputStream
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Service
-class YandexSpeechKitService(val wordsService: WordsService) {
+class YandexSpeechKitService(
+    private val wordsService: WordsService,
+    private val timeService: TimeService
+) {
 
     @Value("\${yandex.getTokenLink}")
     lateinit var uriGetIamToken: String
@@ -41,14 +45,14 @@ class YandexSpeechKitService(val wordsService: WordsService) {
     lateinit var emotion: String
 
     var iamToken: String = ""
-    var iamTokenExpiresTime = ZonedDateTime.now()
+    var iamTokenExpiresTime: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 
     val setNotCreationWords = mutableSetOf<AudioFileMetaData>()
 
     private val log = logger()
 
     fun getYandexIamTokenForAudioGeneration(): String {
-        if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(ZonedDateTime.now()))
+        if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(timeService.now()))
             return iamToken
         val parameters = ArrayList<NameValuePair>()
         parameters.add(BasicNameValuePair("yandexPassportOauthToken", authToken))
@@ -64,7 +68,7 @@ class YandexSpeechKitService(val wordsService: WordsService) {
         val jsonObject = JSONObject(entity)
         iamToken = jsonObject.getString("iamToken")
         val tokenExpiresTimeValue = jsonObject.getString("expiresAt")
-        iamTokenExpiresTime = ZonedDateTime.now().plusHours(11)
+        iamTokenExpiresTime = timeService.now()
         log.info("Get iam token from yandex cloud successfully, it will expire at $tokenExpiresTimeValue")
         return iamToken
     }

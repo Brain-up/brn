@@ -1,0 +1,8 @@
+/*! purgecss start ignore */
+& .bb-ygrid-line {
+  stroke-dasharray: 5;
+}
+& .bb-ygrid-line line {
+  stroke: #ffb3bf;
+}
+/*! purgecss end ignore */

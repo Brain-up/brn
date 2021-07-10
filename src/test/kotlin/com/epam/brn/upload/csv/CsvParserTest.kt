@@ -7,11 +7,11 @@ import com.epam.brn.upload.csv.nonspeech.SignalSeriesRecord
 import com.epam.brn.upload.csv.nonspeech.SignalSeriesRecordProvider
 import com.epam.brn.upload.csv.series.SeriesGenericRecord
 import com.epam.brn.upload.csv.series.SeriesGenericRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.series1.SeriesOneRecord
-import com.epam.brn.upload.csv.series1.SeriesOneRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.series2.SeriesTwoRecordMappingIteratorProvider
-import com.epam.brn.upload.csv.series4.SeriesFourRecord
-import com.epam.brn.upload.csv.series4.SeriesFourRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.seriesWords.SeriesWordsRecord
+import com.epam.brn.upload.csv.seriesWords.SeriesWordsRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.seriesMatrix.SeriesMatrixRecordMappingIteratorProvider
+import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecord
+import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.subgroup.SubGroupGenericRecordMappingIteratorProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,9 +25,9 @@ class CsvParserTest {
             GroupRecordMappingIteratorProvider(),
             SeriesGenericRecordMappingIteratorProvider(),
             SubGroupGenericRecordMappingIteratorProvider(),
-            SeriesOneRecordMappingIteratorProvider(),
-            SeriesTwoRecordMappingIteratorProvider(),
-            SeriesFourRecordMappingIteratorProvider(),
+            SeriesWordsRecordMappingIteratorProvider(),
+            SeriesMatrixRecordMappingIteratorProvider(),
+            SeriesPhrasesRecordMappingIteratorProvider(),
             SignalSeriesRecordProvider()
         )
     )
@@ -98,7 +98,7 @@ class CsvParserTest {
 
         assertThat(result).containsAll(
             listOf(
-                SeriesOneRecord(
+                SeriesWordsRecord(
                     1,
                     "family",
                     "Семья",
@@ -106,7 +106,7 @@ class CsvParserTest {
                     0,
                     ""
                 ),
-                SeriesOneRecord(
+                SeriesWordsRecord(
                     2,
                     "family",
                     "Семья",
@@ -128,7 +128,7 @@ class CsvParserTest {
         val result = parser.parse(input)
         assertThat(result).containsAll(
             listOf(
-                SeriesFourRecord(
+                SeriesPhrasesRecord(
                     1,
                     "longShortPhrases",
                     "Фразы разной длительности",

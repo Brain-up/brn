@@ -8,8 +8,7 @@ import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.service.statistic.progress.status.ProgressStatusManager
 import org.springframework.stereotype.Service
-import java.sql.Date
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class UserDayStatisticService(
@@ -17,12 +16,12 @@ class UserDayStatisticService(
     private val userAccountService: UserAccountService,
     private val progressManager: ProgressStatusManager<List<StudyHistory>>
 ) : UserPeriodStatisticService<DayStudyStatistic> {
-    override fun getStatisticForPeriod(from: LocalDate, to: LocalDate, userId: Long?): List<DayStudyStatistic> {
+    override fun getStatisticForPeriod(from: LocalDateTime, to: LocalDateTime, userId: Long?): List<DayStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
-        val studyHistories = studyHistoryRepository.getHistories(
-            tempUserId!!,
-            Date.valueOf(from),
-            Date.valueOf(to)
+        val studyHistories = studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(
+            userId = tempUserId!!,
+            from = from,
+            to = to
         )
         return studyHistories.map {
             val filteredStudyHistories = studyHistories.filter { studyHistoryFilter ->
@@ -30,9 +29,9 @@ class UserDayStatisticService(
             }
             DayStudyStatistic(
                 exercisingTimeSeconds = filteredStudyHistories.sumBy { dayStudyHistory -> dayStudyHistory.executionSeconds },
-                date = it.startTime.toLocalDate(),
+                date = it.startTime,
                 progress = progressManager.getStatus(UserExercisingPeriod.DAY, filteredStudyHistories)
             )
-        }.distinct()
+        }.distinctBy { it.date.toLocalDate() }
     }
 }

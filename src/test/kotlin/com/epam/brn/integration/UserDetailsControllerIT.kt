@@ -39,6 +39,9 @@ class UserDetailsControllerIT : BaseIT() {
     lateinit var headphonesRepository: HeadphonesRepository
 
     @Autowired
+    private lateinit var gson: Gson
+
+    @Autowired
     lateinit var authorityRepository: AuthorityRepository
 
     internal val email: String = "test@test.test"
@@ -60,7 +63,7 @@ class UserDetailsControllerIT : BaseIT() {
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
         val resultUser: UserAccountDto =
-            objectMapper.readValue(Gson().toJson(baseResponseDto.data), UserAccountDto::class.java)
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
         assertEquals(user.id, resultUser.id)
         assertEquals(user.fullName, resultUser.name)
         assertEquals("/pictures/testAvatar", resultUser.avatar)
@@ -83,7 +86,7 @@ class UserDetailsControllerIT : BaseIT() {
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
         val resultUser: UserAccountDto =
-            objectMapper.readValue(Gson().toJson(baseResponseDto.data), UserAccountDto::class.java)
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
         assertEquals(user.id, resultUser.id)
         assertEquals("newName", resultUser.name)
         assertEquals(1950, resultUser.bornYear)
@@ -110,7 +113,7 @@ class UserDetailsControllerIT : BaseIT() {
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
         val addedHeadphones: HeadphonesDto =
-            objectMapper.readValue(Gson().toJson(baseResponseDto.data), HeadphonesDto::class.java)
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), HeadphonesDto::class.java)
         assertNotNull(addedHeadphones.id)
         assertEquals("first", addedHeadphones.name)
         assertEquals(HeadphonesType.IN_EAR_NO_BLUETOOTH, addedHeadphones.type)
@@ -131,7 +134,7 @@ class UserDetailsControllerIT : BaseIT() {
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseResponseDto::class.java)
         val returnedHeadphones = objectMapper.readValue(
-            Gson().toJson(baseResponseDto.data),
+            gson.toJson(baseResponseDto.data),
             object : TypeReference<List<HeadphonesDto>>() {}
         )
         assertNotNull(returnedHeadphones)
@@ -172,7 +175,7 @@ class UserDetailsControllerIT : BaseIT() {
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseResponseDto::class.java)
         val returnedHeadphones = objectMapper.readValue(
-            Gson().toJson(baseResponseDto.data),
+            gson.toJson(baseResponseDto.data),
             object : TypeReference<List<HeadphonesDto>>() {}
         )
         assertNotNull(returnedHeadphones)

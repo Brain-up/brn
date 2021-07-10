@@ -233,8 +233,17 @@ description:
 profile:
   statistics:
     title: Statistics
-    about: What is it?
+    about: What is it about?    
     month_time_track:
       title_months: Total excersize time by months
       title_weeks: Total excersize time by weeks
       days_period: For {days} days
+      empty_data: No data for year {year}
+    week_time_track:
+      title_weeks: Weekly exersize time
+      empty_data: No data for period {period}
+    info_dialog:
+      title: What is it about?
+      sub_title: "Check if you exercise regularly enough:"
+      info: "According to research, to improve the hearing threshold, you need to practice at least '<span class=\"font-bold\">'6'</span>' days a week for '<span class=\"font-bold\">'20'</span>' minutes for '<span class=\"font-bold\">'2'</span>' years.<br/>There must be at least '<span class=\"font-bold\">'8'</span>' hours '<span class=\"font-bold\">'40'</span>' minutes per month for a total of '<span class=\"font-bold\">'26'</span>' days."
+      button_ok: Ok
