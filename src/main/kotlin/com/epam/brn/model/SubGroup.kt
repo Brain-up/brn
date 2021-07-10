@@ -40,7 +40,6 @@ data class SubGroup(
         name = record.name,
         description = record.description
     )
-
     fun toDto() = SubGroupDto(
         seriesId = series.id!!,
         id = id!!,
