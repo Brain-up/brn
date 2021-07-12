@@ -51,15 +51,14 @@ class UserDetailsControllerIT : BaseIT() {
 
     @Test
     fun `test findUserAccountsByDoctor and findUserAccountsByDoctorId`() {
+        // GIVEN
         val doctor = insertUser()
         val patient1 = insertUser("patient1@patient.ru")
         val patient2 = insertUser("patient2@patient.ru")
-
-        val doc = userAccountRepository.findUserAccountById(doctor.id!!).get()
+        // WHEN
         val patientsByDoctor = userAccountRepository.findUserAccountsByDoctor(doctor)
         val patientsByDoctorId = userAccountRepository.findUserAccountsByDoctorId(doctor.id!!)
-
-        doc shouldBe doctor
+        // THAN
         patientsByDoctor.size shouldBe 2
         patientsByDoctorId.size shouldBe 2
         patientsByDoctor shouldContainAll listOf(patient1, patient2)
