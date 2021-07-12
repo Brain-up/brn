@@ -1,6 +1,5 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.response.DoctorUserAccountDto
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
 import org.springframework.data.annotation.CreatedDate
@@ -49,9 +48,6 @@ data class UserAccount(
     var avatar: String? = null,
     var photo: String? = null,
     var description: String? = null,
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
-    var patients: MutableList<UserAccount> = mutableListOf(),
     @ManyToOne(fetch = FetchType.LAZY)
     var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -67,12 +63,10 @@ data class UserAccount(
 
     override fun toString(): String {
         return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
-            " bornYear=$bornYear, gender=$gender, description=$description)"
+            " bornYear=$bornYear, gender=$gender, description=$description, doctor=$doctor)"
     }
 
-    fun toDto() = toDto(this.doctor?.toDoctorDto())
-
-    private fun toDto(doctor: DoctorUserAccountDto?) = UserAccountDto(
+    fun toDto() = UserAccountDto(
         id = id,
         userId = userId,
         name = fullName,
@@ -88,37 +82,11 @@ data class UserAccount(
         headphones = headphones
             .map(Headphones::toDto)
             .toHashSet(),
-        doctor = doctor
+        doctor = doctor?.id
     ).also {
         it.authorities = this.authoritySet
             .map(Authority::authorityName)
             .toMutableSet()
-    }
-
-    fun toDoctorDto() = DoctorUserAccountDto(
-        id = id,
-        userId = userId,
-        name = fullName,
-        active = active,
-        email = email,
-        bornYear = bornYear,
-        gender = gender?.let { Gender.valueOf(it) },
-        created = created,
-        changed = changed,
-        avatar = avatar,
-        photo = photo,
-        description = description,
-        headphones = headphones
-            .map(Headphones::toDto)
-            .toMutableSet()
-    ).also {
-        it.authorities = this.authoritySet
-            .map(Authority::authorityName)
-            .toMutableSet()
-        // avoiding circular back-reference
-        it.patients = patients
-            .map { patient -> patient.toDto(it) }
-            .toMutableList()
     }
 
     fun toAnalyticsDto() = UserWithAnalyticsDto(
