@@ -777,6 +777,22 @@ mediaType:
               responses:
                   200:
                       example: !include samples/resource_dto_response.json
+    /subgroup:
+          post:
+            description: Add new subgroup for existing series.
+                queryParameters:
+                  seriesId:
+                    description: "ID of the series"
+                    type: Long
+                    example: 1
+            body:
+              application/json:
+                example: !include samples/add_subgroup_to_series.json
+            responses:
+              201:
+                body:
+                  application/json:
+                    example: !include samples/add_subgroup_to_series_response.json
     # LOAD FILES ----------------------
     /loadTasksFile:
         post:

@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -9,10 +10,12 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.format.annotation.DateTimeFormat
@@ -31,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/admin")
@@ -42,7 +46,8 @@ class AdminController(
     private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,
     private val exerciseService: ExerciseService,
     private val csvUploadService: CsvUploadService,
-    private val resourceService: ResourceService
+    private val resourceService: ResourceService,
+    private val subGroupService: SubGroupService
 ) {
 
     @GetMapping("/users")
@@ -168,4 +173,14 @@ class AdminController(
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok()
             .body(BaseSingleObjectResponseDto(data = resourceService.updateDescription(id, request.description!!)))
+
+    @PostMapping("/subgroup")
+    @ApiOperation("Add new subgroup for existing series.")
+    fun addSubGroupToSeries(
+        @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
+        @RequestParam(value = "seriesId") seriesId: Long,
+        @Valid @RequestBody subGroupRequest: SubGroupRequest
+    ): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponseDto(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
 }
