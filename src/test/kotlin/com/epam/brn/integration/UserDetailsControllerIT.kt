@@ -53,8 +53,8 @@ class UserDetailsControllerIT : BaseIT() {
     fun `test findUserAccountsByDoctor and findUserAccountsByDoctorId`() {
         // GIVEN
         val doctor = insertUser()
-        val patient1 = insertUser("patient1@patient.ru")
-        val patient2 = insertUser("patient2@patient.ru")
+        val patient1 = insertUser("patient1@patient.ru", doctor)
+        val patient2 = insertUser("patient2@patient.ru", doctor)
         // WHEN
         val patientsByDoctor = userAccountRepository.findUserAccountsByDoctor(doctor)
         val patientsByDoctorId = userAccountRepository.findUserAccountsByDoctorId(doctor.id!!)
@@ -109,7 +109,6 @@ class UserDetailsControllerIT : BaseIT() {
         resultUser.avatar shouldBe user.avatar
         resultUser.photo shouldBe user.photo
         resultUser.description shouldBe user.description
-        resultUser.changed shouldBe user.changed
     }
 
     @Test
@@ -203,14 +202,15 @@ class UserDetailsControllerIT : BaseIT() {
         headphonesRepository.deleteAll()
     }
 
-    private fun insertUser(email_: String = email): UserAccount =
+    private fun insertUser(email_: String = email, doctor_: UserAccount? = null): UserAccount =
         userAccountRepository.save(
             UserAccount(
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 email = email_,
-                password = password
+                password = password,
+                doctor = doctor_
             )
         )
 
