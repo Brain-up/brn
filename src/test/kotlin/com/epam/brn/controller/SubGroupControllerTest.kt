@@ -55,13 +55,13 @@ internal class SubGroupControllerTest {
         seriesForId.body!!.data shouldBe subGroupDto
     }
     @Test
-    fun `deleteSubGroupForId should delete subGroup by subGroupId`() {
+    fun `deleteSubGroupById should delete subGroup by subGroupId`() {
         // GIVEN
         val subGroupId = 1L
         justRun { subGroupService.deleteSubGroupById(subGroupId) }
 
         // WHEN
-        val deleteSubGroupForId = subGroupController.deleteSubGroupForId(subGroupId)
+        val deleteSubGroupForId = subGroupController.deleteSubGroupById(subGroupId)
 
         // THEN
         verify(exactly = 1) { subGroupService.deleteSubGroupById(subGroupId) }

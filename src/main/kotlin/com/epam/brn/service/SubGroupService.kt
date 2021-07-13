@@ -34,10 +34,15 @@ class SubGroupService(
     }
 
     fun deleteSubGroupById(subGroupId: Long) {
-        if (exerciseRepository.findExercisesBySubGroupId(subGroupId).isNotEmpty()) {
-            throw IllegalArgumentException("Can not delete subgroup because there are exercises that refer to the subgroup.")
+        log.debug("try to delete SubGroup by Id=$subGroupId")
+        if (subGroupRepository.existsById(subGroupId)) {
+            if (exerciseRepository.existsBySubGroupId(subGroupId)) {
+                throw IllegalArgumentException("Can not delete subGroup because there are exercises that refer to the subGroup.")
+            }
+            subGroupRepository.deleteById(subGroupId)
+        } else {
+            throw IllegalArgumentException("Can not delete subGroup because subGroup is not found by this id.")
         }
-        subGroupRepository.deleteById(subGroupId)
     }
 }
 

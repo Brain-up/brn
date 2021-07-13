@@ -2,7 +2,6 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.SubGroupDto
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Exercise
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.ExerciseRepository
@@ -58,11 +57,12 @@ internal class SubGroupServiceTest {
     }
 
     @Test
-    fun `deleteById should delete subGroup without exercises`() {
+    fun `deleteSubGroupById should delete subGroup without exercises`() {
         // GIVEN
         val subGroupId = 1L
         mockkStatic("com.epam.brn.service.SubGroupServiceKt")
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns emptyList()
+        every { subGroupRepository.existsById(subGroupId) } returns true
+        every { exerciseRepository.existsBySubGroupId(subGroupId) } returns false
         justRun { subGroupRepository.deleteById(subGroupId) }
 
         // WHEN
@@ -73,21 +73,24 @@ internal class SubGroupServiceTest {
     }
 
     @Test
-    fun `deleteById should throw an exception with exercises in subGroup`() {
+    fun `deleteSubGroupById should throw an exception with exercises in subGroup`() {
         // GIVEN
         val subGroupId = 1L
-        val exercise = Exercise(
-            id = 1L,
-            name = "nameOfExercise",
-            template = "",
-            level = 1,
-            noiseLevel = 1,
-            noiseUrl = "noiseUrl",
-            active = true,
-            subGroup = subGroup
-        )
-        val listExercises = listOf(exercise)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listExercises
+        every { subGroupRepository.existsById(subGroupId) } returns true
+        every { exerciseRepository.existsBySubGroupId(subGroupId) } returns true
+        justRun { subGroupRepository.deleteById(subGroupId) }
+
+        // THEN
+        shouldThrow<IllegalArgumentException> {
+            subGroupService.deleteSubGroupById(subGroupId)
+        }
+    }
+
+    @Test
+    fun `deleteSubGroupById should throw an exception when subGroup is not found`() {
+        // GIVEN
+        val subGroupId = 1L
+        every { subGroupRepository.existsById(subGroupId) } returns false
 
         // THEN
         shouldThrow<IllegalArgumentException> {
