@@ -19,6 +19,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
+import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 @Entity
@@ -45,6 +46,10 @@ data class UserAccount(
     @Column(name = "changed_by")
     var changedBy: String = "",
     var avatar: String? = null,
+    var photo: String? = null,
+    var description: String? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var headphones: MutableSet<Headphones> = hashSetOf()
 ) {
@@ -57,27 +62,31 @@ data class UserAccount(
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
     override fun toString(): String {
-        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email', bornYear=$bornYear, gender=$gender)"
+        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
+            " bornYear=$bornYear, gender=$gender, description=$description, doctor=$doctor)"
     }
 
-    fun toDto(): UserAccountDto {
-        val userAccountDto = UserAccountDto(
-            id = id,
-            userId = userId,
-            name = fullName,
-            active = active,
-            email = email,
-            bornYear = bornYear,
-            gender = gender?.let { Gender.valueOf(it) },
-            created = created,
-            changed = changed,
-            avatar = avatar,
-            headphones = this.headphones.map(Headphones::toDto).toHashSet()
-        )
-        userAccountDto.authorities = this.authoritySet
+    fun toDto() = UserAccountDto(
+        id = id,
+        userId = userId,
+        name = fullName,
+        active = active,
+        email = email,
+        bornYear = bornYear,
+        gender = gender?.let { Gender.valueOf(it) },
+        created = created,
+        changed = changed,
+        avatar = avatar,
+        photo = photo,
+        description = description,
+        headphones = headphones
+            .map(Headphones::toDto)
+            .toHashSet(),
+        doctor = doctor?.id
+    ).also {
+        it.authorities = this.authoritySet
             .map(Authority::authorityName)
             .toMutableSet()
-        return userAccountDto
     }
 
     fun toAnalyticsDto() = UserWithAnalyticsDto(

@@ -197,6 +197,8 @@ internal class UserAccountServiceTest {
         fun `should update current session user`() {
             // GIVEN
             val avatarUrl = "test/avatar"
+            val photoUrl = "test/picture"
+            val description = "Some description about the user"
             val email = "test@test.ru"
             val userAccount = UserAccount(
                 id = 1L,
@@ -206,11 +208,20 @@ internal class UserAccountServiceTest {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = LocalDateTime.now().minusMinutes(5),
-                avatar = null
+                avatar = null,
+                photo = null,
+                description = null
             )
-            val userAccountChangeRequest = UserAccountChangeRequest(avatar = avatarUrl, name = "newName")
+            val userAccountChangeRequest = UserAccountChangeRequest(
+                avatar = avatarUrl,
+                photo = photoUrl,
+                description = description,
+                name = "newName"
+            )
             val userAccountUpdated = userAccount.copy()
             userAccountUpdated.avatar = avatarUrl
+            userAccountUpdated.photo = photoUrl
+            userAccountUpdated.description = description
             userAccountUpdated.fullName = "newName"
             val userArgumentCaptor = slot<UserAccount>()
 
@@ -229,6 +240,8 @@ internal class UserAccountServiceTest {
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
+            assertThat(userForSave.photo).isEqualTo(photoUrl)
+            assertThat(userForSave.description).isEqualTo(description)
             assertThat(userForSave.fullName).isEqualTo("newName")
             assertThat(userForSave.id).isEqualTo(userAccount.id)
         }
