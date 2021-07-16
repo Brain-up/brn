@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
-import com.epam.brn.dto.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository

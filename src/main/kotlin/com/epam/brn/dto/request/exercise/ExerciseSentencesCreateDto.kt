@@ -1,4 +1,4 @@
-package com.epam.brn.dto.exercise
+package com.epam.brn.dto.request.exercise
 
 import com.epam.brn.enums.Locale
 import javax.validation.constraints.NotBlank
