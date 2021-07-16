@@ -7,17 +7,17 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 data class ExerciseWordsCreateDto(
-    @NotNull
+    @field:NotNull
     val locale: Locale,
-    @NotBlank
+    @field:NotBlank
     val subGroup: String,
-    @NotNull
+    @field:NotNull
     val level: Int,
-    @NotBlank
+    @field:NotBlank
     val exerciseName: String,
-    @NotEmpty
+    @field:NotEmpty
     val words: List<String>,
-    @NotNull
+    @field:NotNull
     val noiseLevel: Int,
     val noiseUrl: String?
 ) {
