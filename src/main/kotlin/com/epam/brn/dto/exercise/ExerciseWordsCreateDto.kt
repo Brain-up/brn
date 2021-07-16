@@ -9,12 +9,10 @@ import javax.validation.constraints.NotNull
 data class ExerciseWordsCreateDto(
     @NotNull
     val locale: Locale,
-    @NotNull
-    val subGroup: Int,
+    @NotBlank
+    val subGroup: String,
     @NotNull
     val level: Int,
-    @NotBlank
-    val code: String,
     @NotBlank
     val exerciseName: String,
     @NotEmpty
@@ -25,7 +23,7 @@ data class ExerciseWordsCreateDto(
 ) {
     fun toSeriesWordsRecord() = SeriesWordsRecord(
         level = level,
-        code = code,
+        code = subGroup,
         exerciseName = exerciseName,
         words = words,
         noiseLevel = noiseLevel,
