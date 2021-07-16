@@ -147,7 +147,8 @@ class ExerciseService(
             .findFirst()
             .orElseThrow { RuntimeException("There is no applicable processor for type '${seriesWordsRecord.javaClass}'") }
             .process(listOf(seriesWordsRecord) as List<Nothing>, exerciseWordsCreateDto.locale)
-            .first() as Exercise
+            .firstOrNull() as Exercise?
+            ?: throw RuntimeException("Exercise with this name (${exerciseWordsCreateDto.exerciseName}) exist")
 
         log.debug("start create audiophiles")
         exerciseWordsCreateDto.words.forEach {
