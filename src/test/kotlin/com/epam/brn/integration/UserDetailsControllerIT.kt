@@ -14,7 +14,9 @@ import com.epam.brn.repo.HeadphonesRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
-import org.amshove.kluent.internal.assertNotSame
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -26,8 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 class UserDetailsControllerIT : BaseIT() {
@@ -50,6 +50,22 @@ class UserDetailsControllerIT : BaseIT() {
     private val currentUserBaseUrl = "$baseUrl/current"
 
     @Test
+    fun `test findUserAccountsByDoctor and findUserAccountsByDoctorId`() {
+        // GIVEN
+        val doctor = insertUser()
+        val patient1 = insertUser("patient1@patient.ru", doctor)
+        val patient2 = insertUser("patient2@patient.ru", doctor)
+        // WHEN
+        val patientsByDoctor = userAccountRepository.findUserAccountsByDoctor(doctor)
+        val patientsByDoctorId = userAccountRepository.findUserAccountsByDoctorId(doctor.id!!)
+        // THAN
+        patientsByDoctor.size shouldBe 2
+        patientsByDoctorId.size shouldBe 2
+        patientsByDoctor shouldContainAll listOf(patient1, patient2)
+        patientsByDoctorId shouldContainAll listOf(patient1, patient2)
+    }
+
+    @Test
     fun `update avatar for current user`() {
         // GIVEN
         val user = insertUser()
@@ -64,10 +80,10 @@ class UserDetailsControllerIT : BaseIT() {
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
         val resultUser: UserAccountDto =
             objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
-        assertEquals(user.id, resultUser.id)
-        assertEquals(user.fullName, resultUser.name)
-        assertEquals("/pictures/testAvatar", resultUser.avatar)
-        assertNotSame(user.changed, resultUser.changed)
+        resultUser.id shouldBe user.id
+        resultUser.name shouldBe user.fullName
+        resultUser.avatar shouldBe "/pictures/testAvatar"
+        resultUser.changed shouldNotBe user.changed
     }
 
     @Test
@@ -77,7 +93,7 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val body = objectMapper.writeValueAsString(UserAccountChangeRequest(name = "newName", bornYear = 1950))
         val resultAction = mockMvc.perform(
-            patch("$currentUserBaseUrl")
+            patch(currentUserBaseUrl)
                 .content(body)
                 .contentType("application/json")
         )
@@ -87,11 +103,12 @@ class UserDetailsControllerIT : BaseIT() {
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
         val resultUser: UserAccountDto =
             objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
-        assertEquals(user.id, resultUser.id)
-        assertEquals("newName", resultUser.name)
-        assertEquals(1950, resultUser.bornYear)
-        assertEquals(user.avatar, resultUser.avatar)
-        assertNotSame(user.changed, resultUser.changed)
+        resultUser.id shouldBe user.id
+        resultUser.name shouldBe "newName"
+        resultUser.bornYear shouldBe 1950
+        resultUser.avatar shouldBe user.avatar
+        resultUser.photo shouldBe user.photo
+        resultUser.description shouldBe user.description
     }
 
     @Test
@@ -112,9 +129,9 @@ class UserDetailsControllerIT : BaseIT() {
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
         val addedHeadphones: HeadphonesDto =
             objectMapper.readValue(gson.toJson(baseResponseDto.data), HeadphonesDto::class.java)
-        assertNotNull(addedHeadphones.id)
-        assertEquals("first", addedHeadphones.name)
-        assertEquals(HeadphonesType.IN_EAR_NO_BLUETOOTH, addedHeadphones.type)
+        addedHeadphones.id shouldNotBe null
+        addedHeadphones.name shouldBe "first"
+        addedHeadphones.type shouldBe HeadphonesType.IN_EAR_NO_BLUETOOTH
     }
 
     @Test
@@ -135,7 +152,6 @@ class UserDetailsControllerIT : BaseIT() {
             gson.toJson(baseResponseDto.data),
             object : TypeReference<List<HeadphonesDto>>() {}
         )
-        assertNotNull(returnedHeadphones)
         Assertions.assertThat(returnedHeadphones)
             .hasSize(3)
             .usingElementComparatorOnFields("name", "type")
@@ -146,16 +162,6 @@ class UserDetailsControllerIT : BaseIT() {
                     HeadphonesDto(name = "third", type = HeadphonesType.OVER_EAR_BLUETOOTH)
                 )
             )
-    }
-
-    private fun insertThreeHeadphonesForUser(user: UserAccount) {
-        headphonesRepository.saveAll(
-            listOf(
-                Headphones(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH, userAccount = user),
-                Headphones(name = "second", type = HeadphonesType.IN_EAR_BLUETOOTH, userAccount = user),
-                Headphones(name = "third", type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user)
-            )
-        )
     }
 
     @Test
@@ -176,7 +182,7 @@ class UserDetailsControllerIT : BaseIT() {
             gson.toJson(baseResponseDto.data),
             object : TypeReference<List<HeadphonesDto>>() {}
         )
-        assertNotNull(returnedHeadphones)
+        returnedHeadphones shouldNotBe null
         Assertions.assertThat(returnedHeadphones)
             .hasSize(3)
             .usingElementComparatorOnFields("name", "type")
@@ -193,16 +199,28 @@ class UserDetailsControllerIT : BaseIT() {
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()
         authorityRepository.deleteAll()
+        headphonesRepository.deleteAll()
     }
 
-    private fun insertUser(): UserAccount =
+    private fun insertUser(email_: String = email, doctor_: UserAccount? = null): UserAccount =
         userAccountRepository.save(
             UserAccount(
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                email = email,
-                password = password
+                email = email_,
+                password = password,
+                doctor = doctor_
             )
         )
+
+    private fun insertThreeHeadphonesForUser(user: UserAccount) {
+        headphonesRepository.saveAll(
+            listOf(
+                Headphones(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH, userAccount = user),
+                Headphones(name = "second", type = HeadphonesType.IN_EAR_BLUETOOTH, userAccount = user),
+                Headphones(name = "third", type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user)
+            )
+        )
+    }
 }

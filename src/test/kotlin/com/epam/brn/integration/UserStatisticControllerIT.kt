@@ -27,9 +27,6 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertNotNull
 
-/**
- *@author Nikolai Lazarev
- */
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 class UserStatisticControllerIT : BaseIT() {
 
@@ -147,7 +144,6 @@ class UserStatisticControllerIT : BaseIT() {
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
             insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
         )
-        val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
         val response = mockMvc.perform(

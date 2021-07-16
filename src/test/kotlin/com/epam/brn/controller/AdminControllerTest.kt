@@ -4,6 +4,8 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
@@ -13,22 +15,24 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
+import io.mockk.verify
+import io.mockk.mockkClass
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.just
-import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class AdminControllerTest {
@@ -56,6 +60,9 @@ internal class AdminControllerTest {
 
     @MockK
     private lateinit var resourceService: ResourceService
+
+    @MockK
+    private lateinit var subGroupService: SubGroupService
 
     @MockK
     private lateinit var pageable: Pageable
@@ -98,8 +105,8 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { userAccountService.getUsersWithAnalytics(pageable) }
-        assertEquals(HttpStatus.SC_OK, users.statusCodeValue)
-        assertEquals(listOf(userWithAnalyticsDto), (users.body as BaseResponseDto).data)
+        users.statusCodeValue shouldBe HttpStatus.SC_OK
+        (users.body as BaseResponseDto).data shouldBe listOf(userWithAnalyticsDto)
     }
 
     @Test
@@ -113,8 +120,8 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable) }
-        assertEquals(HttpStatus.SC_OK, users.statusCodeValue)
-        assertEquals(listOf(userAccountDto), (users.body as BaseResponseDto).data)
+        users.statusCodeValue shouldBe HttpStatus.SC_OK
+        (users.body as BaseResponseDto).data shouldBe listOf(userAccountDto)
     }
 
     @Test
@@ -129,8 +136,8 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { studyHistoryService.getHistories(userId, date, date) }
-        assertEquals(HttpStatus.SC_OK, histories.statusCodeValue)
-        assertEquals(listOf(studyHistoryDto), histories.body!!.data)
+        histories.statusCodeValue shouldBe HttpStatus.SC_OK
+        histories.body!!.data shouldBe listOf(studyHistoryDto)
     }
 
     @Test
@@ -146,8 +153,8 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { studyHistoryService.getMonthHistories(userId, month, year) }
-        assertEquals(HttpStatus.SC_OK, monthHistories.statusCodeValue)
-        assertEquals(listOf(studyHistoryDto), monthHistories.body!!.data)
+        monthHistories.statusCodeValue shouldBe HttpStatus.SC_OK
+        monthHistories.body!!.data shouldBe listOf(studyHistoryDto)
     }
 
     @Test
@@ -160,7 +167,7 @@ internal class AdminControllerTest {
         val loadExercises = adminController.loadExercises(seriesId, file)
 
         // THEN
-        assertEquals(HttpStatus.SC_CREATED, loadExercises.statusCodeValue)
+        loadExercises.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 
     @Test
@@ -174,8 +181,8 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) }
-        assertEquals(HttpStatus.SC_OK, exercises.statusCodeValue)
-        assertEquals(listOf(exerciseWithTasksDto), exercises.body!!.data)
+        exercises.statusCodeValue shouldBe HttpStatus.SC_OK
+        exercises.body!!.data shouldBe listOf(exerciseWithTasksDto)
     }
 
     @Test
@@ -191,8 +198,8 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { resourceService.updateDescription(id, description) }
-        assertEquals(HttpStatus.SC_OK, updated.statusCodeValue)
-        assertEquals(resourceDto, updated.body!!.data)
+        updated.statusCodeValue shouldBe HttpStatus.SC_OK
+        updated.body!!.data shouldBe resourceDto
     }
 
     @Test
@@ -207,8 +214,8 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { userDayStatisticService.getStatisticForPeriod(date, date, userId) }
-        assertEquals(HttpStatus.SC_OK, userWeeklyStatistic.statusCodeValue)
-        assertEquals(listOf(dayStudyStatistic), userWeeklyStatistic.body!!.data)
+        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userWeeklyStatistic.body!!.data shouldBe listOf(dayStudyStatistic)
     }
 
     @Test
@@ -229,7 +236,23 @@ internal class AdminControllerTest {
 
         // THEN
         verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(date, date, userId) }
-        assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
-        assertEquals(listOf(monthStudyStatistic), userYearlyStatistic.body!!.data)
+        userYearlyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userYearlyStatistic.body!!.data shouldBe listOf(monthStudyStatistic)
+    }
+
+    @Test
+    fun `addSubGroupToSeries should return http status 204`() {
+        // GIVEN
+        val seriesId = 1L
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
+        val subGroupDto = mockkClass(SubGroupDto::class, relaxed = true)
+
+        every { subGroupService.addSubGroupToSeries(subGroupRequest, seriesId) } returns subGroupDto
+
+        // WHEN
+        val createdSubGroup = adminController.addSubGroupToSeries(seriesId, subGroupRequest)
+
+        // THEN
+        createdSubGroup.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 }
