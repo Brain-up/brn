@@ -11,6 +11,7 @@ import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ExerciseService(
@@ -18,7 +19,9 @@ class ExerciseService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
     private val urlConversionService: UrlConversionService,
-    private val recordProcessors: List<RecordProcessor<out Any, out Any>>
+    private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
+    private val audioFilesGenerationService: AudioFilesGenerationService,
+    private val wordsService: WordsService
 ) {
 
     @Value(value = "\${minRepetitionIndex}")
@@ -134,14 +137,31 @@ class ExerciseService(
         return subGroupExercises.map { it.toDtoWithTasks() }
     }
 
+    @Transactional
     fun createExercise(exerciseWordsCreateDto: ExerciseWordsCreateDto): ExerciseDto {
         val seriesWordsRecord = exerciseWordsCreateDto.toSeriesWordsRecord()
+
+        log.debug("create exercise from exerciseWordsCreateDto: $exerciseWordsCreateDto")
         val exercise = recordProcessors.stream()
             .filter { it.isApplicable(seriesWordsRecord) }
             .findFirst()
             .orElseThrow { RuntimeException("There is no applicable processor for type '${seriesWordsRecord.javaClass}'") }
             .process(listOf(seriesWordsRecord) as List<Nothing>, exerciseWordsCreateDto.locale)
             .first() as Exercise
+
+        log.debug("start create audiophiles")
+        exerciseWordsCreateDto.words.forEach {
+            val audioFileMetaData = AudioFileMetaData(
+                text = it,
+                locale = exerciseWordsCreateDto.locale.locale,
+                voice = wordsService.getDefaultManVoiceForLocale(exerciseWordsCreateDto.locale.locale),
+                speed = "1"
+            )
+            log.debug("create and save AudioFile: $audioFileMetaData")
+            audioFilesGenerationService.processWord(audioFileMetaData)
+        }
+        log.debug("complete create audiophiles")
+
         return exercise.toDto()
     }
 }
