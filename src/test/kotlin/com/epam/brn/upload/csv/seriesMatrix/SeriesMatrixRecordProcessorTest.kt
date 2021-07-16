@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.series2
+package com.epam.brn.upload.csv.seriesMatrix
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
@@ -29,7 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
-internal class SeriesTwoRecordProcessorTest {
+internal class SeriesMatrixRecordProcessorTest {
 
     @MockK
     private lateinit var seriesRepositoryMock: SeriesRepository
@@ -53,7 +53,7 @@ internal class SeriesTwoRecordProcessorTest {
     private lateinit var subGroupMock: SubGroup
 
     @InjectMockKs
-    private lateinit var seriesTwoRecordProcessor: SeriesTwoRecordProcessor
+    private lateinit var seriesMatrixRecordProcessor: SeriesMatrixRecordProcessor
 
     private val series = Series(
         id = 2L,
@@ -77,14 +77,14 @@ internal class SeriesTwoRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        seriesTwoRecordProcessor = SeriesTwoRecordProcessor(
+        seriesMatrixRecordProcessor = SeriesMatrixRecordProcessor(
             subGroupRepositoryMock,
             resourceRepositoryMock,
             exerciseRepositoryMock,
             taskRepositoryMock,
             wordsServiceMock
         )
-        ReflectionTestUtils.setField(seriesTwoRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
+        ReflectionTestUtils.setField(seriesMatrixRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
         every { subGroupRepositoryMock.findByCodeAndLocale("code", Locale.RU.locale) } returns subGroupMock
         every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
@@ -118,9 +118,9 @@ internal class SeriesTwoRecordProcessorTest {
         val expected = createExercise()
         every { exerciseRepositoryMock.save(expected) } returns expected
         // WHEN
-        val actual = seriesTwoRecordProcessor.process(
+        val actual = seriesMatrixRecordProcessor.process(
             mutableListOf(
-                SeriesTwoRecord(
+                SeriesMatrixRecord(
                     level = 1,
                     code = "code",
                     exerciseName = "Шесть слов",
@@ -141,9 +141,9 @@ internal class SeriesTwoRecordProcessorTest {
         val expectedTask = exercise.tasks.first()
         every { exerciseRepositoryMock.save(exercise) } returns exercise
         // WHEN
-        val actual = seriesTwoRecordProcessor.process(
+        val actual = seriesMatrixRecordProcessor.process(
             mutableListOf(
-                SeriesTwoRecord(
+                SeriesMatrixRecord(
                     level = 1,
                     code = "code",
                     exerciseName = "Шесть слов",
@@ -170,9 +170,9 @@ internal class SeriesTwoRecordProcessorTest {
             resource_идет()
         )
         // WHEN
-        val actual = seriesTwoRecordProcessor.process(
+        val actual = seriesMatrixRecordProcessor.process(
             mutableListOf(
-                SeriesTwoRecord(
+                SeriesMatrixRecord(
                     level = 1,
                     code = "code",
                     exerciseName = "Шесть слов",

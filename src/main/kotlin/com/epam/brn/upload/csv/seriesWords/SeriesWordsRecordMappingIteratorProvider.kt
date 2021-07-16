@@ -1,33 +1,35 @@
-package com.epam.brn.upload.csv.series2
+package com.epam.brn.upload.csv.seriesWords
 
 import com.epam.brn.upload.csv.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvParser
+import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class SeriesTwoRecordMappingIteratorProvider :
-    MappingIteratorProvider<SeriesTwoRecord> {
+class SeriesWordsRecordMappingIteratorProvider :
+    MappingIteratorProvider<SeriesWordsRecord> {
 
-    override fun iterator(inputStream: InputStream): MappingIterator<SeriesTwoRecord> {
+    override fun iterator(inputStream: InputStream): MappingIterator<SeriesWordsRecord> {
         val csvMapper = CsvMapper().apply {
             enable(CsvParser.Feature.TRIM_SPACES)
         }
 
         val csvSchema = csvMapper
-            .schemaFor(SeriesTwoRecord::class.java)
+            .schemaFor(SeriesWordsRecord::class.java)
             .withColumnReordering(true)
+            .withArrayElementSeparator(StringUtils.SPACE)
             .withHeader()
 
         return csvMapper
-            .readerFor(SeriesTwoRecord::class.java)
+            .readerFor(SeriesWordsRecord::class.java)
             .with(csvSchema)
             .readValues(inputStream)
     }
 
     override fun isApplicable(format: String): Boolean {
-        return SeriesTwoRecord.FORMAT == format
+        return SeriesWordsRecord.FORMAT == format
     }
 }

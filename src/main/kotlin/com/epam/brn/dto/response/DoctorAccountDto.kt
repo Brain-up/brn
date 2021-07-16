@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class UserAccountDto(
+data class DoctorAccountDto(
     val id: Long? = null,
     val userId: String? = null,
     val name: String?,
@@ -21,7 +21,7 @@ data class UserAccountDto(
     val photo: String? = null,
     val description: String? = null,
     var headphones: Set<HeadphonesDto>? = null,
-    var doctor: Long? = null
+    var patients: MutableList<UserAccountDto> = mutableListOf(),
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }
