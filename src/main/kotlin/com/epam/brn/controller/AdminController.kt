@@ -2,9 +2,9 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
-import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
@@ -190,8 +190,7 @@ class AdminController(
     fun createExerciseWords(
         @ApiParam(value = "Exercise's data", required = true)
         @Valid @RequestBody exerciseWordsCreateDto: ExerciseWordsCreateDto
-    ): ResponseEntity<BaseResponseDto> {
-        exerciseService.createExercise(exerciseWordsCreateDto)
-        return ResponseEntity(HttpStatus.CREATED)
-    }
+    ): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponseDto(data = exerciseService.createExercise(exerciseWordsCreateDto)))
 }
