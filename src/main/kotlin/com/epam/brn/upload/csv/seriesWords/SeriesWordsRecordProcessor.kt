@@ -41,25 +41,22 @@ class SeriesWordsRecordProcessor(
     override fun isApplicable(record: Any): Boolean = record is SeriesWordsRecord
 
     @Transactional
-    override fun process(records: List<SeriesWordsRecord>, locale: Locale): List<Exercise> {
-        val exercises = mutableSetOf<Exercise>()
-        records.forEach { record ->
-            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
-                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
-            val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
-            if (!existExercise.isPresent) {
-                val answerOptions = extractAnswerOptions(record, locale)
+    override fun process(records: List<SeriesWordsRecord>, locale: Locale): List<Exercise> =
+        records
+            .filter { !exerciseRepository.existsByNameAndLevel(it.exerciseName, it.level) }
+            .map {
+                val subGroup = subGroupRepository.findByCodeAndLocale(it.code, locale.locale)
+                    ?: throw EntityNotFoundException("No subGroup was found for code=${it.code} and locale={${locale.locale}}")
+                val answerOptions = extractAnswerOptions(it, locale)
                 wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 resourceRepository.saveAll(answerOptions)
 
-                val newExercise = generateExercise(record, subGroup)
+                val newExercise = generateExercise(it, subGroup)
                 newExercise.addTask(generateOneTask(newExercise, answerOptions))
                 exerciseRepository.save(newExercise)
-                exercises.add(newExercise)
+                newExercise
             }
-        }
-        return exercises.toMutableList()
-    }
+            .toList()
 
     private fun extractAnswerOptions(record: SeriesWordsRecord, locale: Locale): MutableSet<Resource> =
         record.words
