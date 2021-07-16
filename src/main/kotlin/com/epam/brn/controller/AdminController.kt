@@ -2,6 +2,8 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
