@@ -31,7 +31,9 @@ data class UserAccountCreateRequest(
     val bornYear: Int,
     @field:NotNull(message = "{validation.field.gender.notNull}")
     val gender: Gender,
-    val avatar: String? = null
+    val avatar: String? = null,
+    val photo: String? = null,
+    val description: String? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
     fun toModel(hashedPassword: String) = UserAccount(
@@ -40,6 +42,8 @@ data class UserAccountCreateRequest(
         password = hashedPassword,
         bornYear = bornYear,
         gender = gender.toString(),
-        avatar = avatar
+        avatar = avatar,
+        photo = photo,
+        description = description
     )
 }

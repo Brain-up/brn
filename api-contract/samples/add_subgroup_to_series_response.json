@@ -1,0 +1,13 @@
+{
+  "data": {
+    "seriesId": 1,
+    "id": 116,
+    "level": 1,
+    "name": "Test subgroup name 10",
+    "pictureUrl": "shortWords",
+    "description": "Test description",
+    "exercises": []
+  },
+  "errors": [],
+  "meta": []
+}

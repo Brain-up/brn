@@ -10,5 +10,7 @@ data class UserAccountChangeRequest(
     @field:Min(value = 1900, message = "{validation.field.bornYear.moreThen1900}")
     val bornYear: Int? = null,
     val gender: Gender? = null,
-    val avatar: String? = null
+    val avatar: String? = null,
+    val photo: String? = null,
+    val description: String? = null
 )

@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
@@ -23,8 +24,10 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -40,9 +43,6 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
 class AdminControllerIT : BaseIT() {
@@ -139,10 +139,10 @@ class AdminControllerIT : BaseIT() {
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatisticDto>>() {})
 
         // THEN
-        Assertions.assertEquals(3, resultStatistic.size)
+        resultStatistic.size shouldBe 3
         resultStatistic.forEach {
-            assertNotNull(it.progress)
-            assertNotNull(it.exercisingTimeSeconds)
+            it.progress shouldNotBe null
+            it.exercisingTimeSeconds shouldNotBe null
         }
     }
 
@@ -193,10 +193,10 @@ class AdminControllerIT : BaseIT() {
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
         // THEN
-        Assertions.assertEquals(3, resultStatistic.size)
+        resultStatistic.size shouldBe 3
         resultStatistic.forEach {
-            assertNotNull(it.progress)
-            assertNotNull(it.exercisingTimeSeconds)
+            it.progress shouldNotBe null
+            it.exercisingTimeSeconds shouldNotBe null
         }
     }
 
@@ -228,11 +228,11 @@ class AdminControllerIT : BaseIT() {
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatisticDto>>() {})
 
         // THEN
-        Assertions.assertEquals(1, resultStatistic.size)
+        resultStatistic.size shouldBe 1
         val monthStatistic = resultStatistic.first()
-        Assertions.assertEquals(exercisingMonth, YearMonth.parse(monthStatistic.date).monthValue)
-        assertNotNull(monthStatistic.exercisingTimeSeconds)
-        assertNotNull(monthStatistic.progress)
+        YearMonth.parse(monthStatistic.date).monthValue shouldBe exercisingMonth
+        monthStatistic.exercisingTimeSeconds shouldNotBe null
+        monthStatistic.progress shouldNotBe null
     }
 
     @Test
@@ -264,11 +264,11 @@ class AdminControllerIT : BaseIT() {
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 
         // THEN
-        Assertions.assertEquals(1, resultStatistic.size)
+        resultStatistic.size shouldBe 1
         val monthStatistic = resultStatistic.first()
-        Assertions.assertEquals(exercisingMonth, monthStatistic.date.monthValue)
-        assertNotNull(monthStatistic.exercisingTimeSeconds)
-        assertNotNull(monthStatistic.progress)
+        monthStatistic.date.monthValue shouldBe exercisingMonth
+        monthStatistic.exercisingTimeSeconds shouldNotBe null
+        monthStatistic.progress shouldNotBe null
     }
 
     @Test
@@ -310,14 +310,12 @@ class AdminControllerIT : BaseIT() {
             Date.valueOf(now.plusDays(1).toLocalDate())
         )
         // THEN
-        assertEquals(4, result.size)
-        result.map { it.id }.containsAll(
-            listOf(
-                historyFirstExerciseOne.id,
-                historyFirstExerciseTwo.id,
-                historySecondExerciseOne.id,
-                historySecondExerciseTwo.id
-            )
+        result.size shouldBe 4
+        result.map { it.id }.shouldContainExactlyInAnyOrder(
+            historyFirstExerciseOne.id,
+            historyFirstExerciseTwo.id,
+            historySecondExerciseOne.id,
+            historySecondExerciseTwo.id
         )
     }
 
@@ -332,7 +330,7 @@ class AdminControllerIT : BaseIT() {
             Date.valueOf(LocalDate.now().plusDays(1))
         )
         // THEN
-        assertEquals(0, result.size)
+        result.size shouldBe 0
     }
 
     @Test
@@ -366,16 +364,12 @@ class AdminControllerIT : BaseIT() {
             LocalDate.now().year
         )
         // THEN
-        assertEquals(4, result.size)
-        assertTrue(
-            result.map { it.id }.containsAll(
-                listOf(
-                    historyFirstExerciseOne.id,
-                    historyFirstExerciseTwo.id,
-                    historySecondExerciseOne.id,
-                    historySecondExerciseTwo.id
-                )
-            )
+        result.size shouldBe 4
+        result.map { it.id }.shouldContainExactlyInAnyOrder(
+            historyFirstExerciseOne.id,
+            historyFirstExerciseTwo.id,
+            historySecondExerciseOne.id,
+            historySecondExerciseTwo.id
         )
     }
 
@@ -406,16 +400,12 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val result = studyHistoryRepository.getTodayHistories(existingUser.id!!)
         // THEN
-        assertEquals(4, result.size)
-        assertTrue(
-            result.map { it.id }.containsAll(
-                listOf(
-                    historyFirstExerciseOne.id,
-                    historyFirstExerciseTwo.id,
-                    historySecondExerciseOne.id,
-                    historySecondExerciseTwo.id
-                )
-            )
+        result.size shouldBe 4
+        result.map { it.id }.shouldContainExactlyInAnyOrder(
+            historyFirstExerciseOne.id,
+            historyFirstExerciseTwo.id,
+            historySecondExerciseOne.id,
+            historySecondExerciseTwo.id
         )
     }
 
@@ -495,6 +485,30 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data.id").value(resource.id))
             .andExpect(jsonPath("$.data.description").value(descriptionForUpdate))
+    }
+
+    @Test
+    fun `should add new subgroup to existed series`() {
+        // GIVEN
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
+        val existedSeries = insertSeries()
+        val seriesId = existedSeries.id
+        val requestJson = objectMapper.writeValueAsString(subGroupRequest)
+
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/subgroup")
+                .param("seriesId", seriesId.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson)
+        )
+
+        // THEN
+        resultAction
+            .andExpect(MockMvcResultMatchers.status().isCreated)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.data.name").value(subGroupRequest.name))
     }
 
     private fun insertStudyHistory(
