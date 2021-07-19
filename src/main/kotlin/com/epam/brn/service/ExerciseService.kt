@@ -3,6 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
@@ -29,6 +30,9 @@ class ExerciseService(
 
     @Value(value = "\${minRightAnswersIndex}")
     private lateinit var minRightAnswersIndex: Number
+
+    @Value("#{'\${yandex.speeds}'.split(',')}")
+    lateinit var speeds: List<String>
 
     private val log = logger()
 
@@ -138,31 +142,44 @@ class ExerciseService(
     }
 
     @Transactional
-    fun createExercise(exerciseWordsCreateDto: ExerciseWordsCreateDto): ExerciseDto {
+    fun createAndGenerateExerciseWords(exerciseWordsCreateDto: ExerciseWordsCreateDto): ExerciseDto {
         val seriesWordsRecord = exerciseWordsCreateDto.toSeriesWordsRecord()
 
         log.debug("create exercise from exerciseWordsCreateDto: $exerciseWordsCreateDto")
-        val exercise = recordProcessors.stream()
-            .filter { it.isApplicable(seriesWordsRecord) }
-            .findFirst()
-            .orElseThrow { RuntimeException("There is no applicable processor for type '${seriesWordsRecord.javaClass}'") }
-            .process(listOf(seriesWordsRecord) as List<Nothing>, exerciseWordsCreateDto.locale)
-            .firstOrNull() as Exercise?
+        val exercise = createExercise(seriesWordsRecord, exerciseWordsCreateDto.locale)
             ?: throw RuntimeException("Exercise with this name (${exerciseWordsCreateDto.exerciseName}) exist")
 
-        log.debug("start create audiophiles")
-        exerciseWordsCreateDto.words.forEach {
-            val audioFileMetaData = AudioFileMetaData(
-                text = it,
-                locale = exerciseWordsCreateDto.locale.locale,
-                voice = wordsService.getDefaultManVoiceForLocale(exerciseWordsCreateDto.locale.locale),
-                speed = "1"
-            )
-            log.debug("create and save AudioFile: $audioFileMetaData")
-            audioFilesGenerationService.processWord(audioFileMetaData)
-        }
+        generateAudioFilesAndSave(exerciseWordsCreateDto.words, exerciseWordsCreateDto.locale)
+
         log.debug("complete create audiophiles")
 
         return exercise.toDto()
+    }
+
+    private fun createExercise(exerciseRecord: Any, locale: Locale): Exercise? =
+        recordProcessors.stream()
+            .filter { it.isApplicable(exerciseRecord) }
+            .findFirst()
+            .orElseThrow { RuntimeException("There is no applicable processor for type '${exerciseRecord.javaClass}'") }
+            .process(listOf(exerciseRecord) as List<Nothing>, locale)
+            .firstOrNull() as Exercise?
+
+    private fun generateAudioFilesAndSave(words: List<String>, locale: Locale) {
+        speeds.forEach { speed ->
+            run {
+                words.forEach { word ->
+                    run {
+                        val audioFileMetaData = AudioFileMetaData(
+                            text = word,
+                            locale = locale.locale,
+                            voice = wordsService.getDefaultManVoiceForLocale(locale.locale),
+                            speed = speed
+                        )
+                        log.debug("create and save AudioFile: $audioFileMetaData")
+                        audioFilesGenerationService.processWord(audioFileMetaData)
+                    }
+                }
+            }
+        }
     }
 }
