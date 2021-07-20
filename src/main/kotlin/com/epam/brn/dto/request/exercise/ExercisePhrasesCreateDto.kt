@@ -1,23 +1,32 @@
 package com.epam.brn.dto.request.exercise
 
 import com.epam.brn.enums.Locale
+import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecord
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 data class ExercisePhrasesCreateDto(
-    @NotNull
+    @field:NotNull
     val locale: Locale,
-    @NotNull
-    val subGroup: Int,
-    @NotNull
+    @field:NotBlank
+    val subGroup: String,
+    @field:NotNull
     val level: Int,
-    @NotBlank
-    val code: String,
-    @NotBlank
+    @field:NotBlank
     val exerciseName: String,
-    @NotBlank
-    val phrases: String,
-    @NotNull
+    @field:NotEmpty
+    val phrases: List<String>,
+    @field:NotNull
     val noiseLevel: Int,
     val noiseUrl: String?
-)
+) {
+    fun toSeriesPhrasesRecord() = SeriesPhrasesRecord(
+        level = level,
+        code = subGroup,
+        exerciseName = exerciseName,
+        phrases = phrases,
+        noiseLevel = noiseLevel,
+        noiseUrl = noiseUrl.orEmpty()
+    )
+}

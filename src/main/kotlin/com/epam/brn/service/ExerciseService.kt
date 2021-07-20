@@ -2,6 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
+import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
@@ -145,13 +146,22 @@ class ExerciseService(
     fun createAndGenerateExerciseWords(exerciseWordsCreateDto: ExerciseWordsCreateDto): ExerciseDto {
         val seriesWordsRecord = exerciseWordsCreateDto.toSeriesWordsRecord()
 
-        log.debug("create exercise from exerciseWordsCreateDto: $exerciseWordsCreateDto")
         val exercise = createExercise(seriesWordsRecord, exerciseWordsCreateDto.locale)
-            ?: throw RuntimeException("Exercise with this name (${exerciseWordsCreateDto.exerciseName}) exist")
+            ?: throw RuntimeException("Exercise with this name (${exerciseWordsCreateDto.exerciseName}) already exist")
 
         generateAudioFilesAndSave(exerciseWordsCreateDto.words, exerciseWordsCreateDto.locale)
 
-        log.debug("complete create audiophiles")
+        return exercise.toDto()
+    }
+
+    @Transactional
+    fun createAndGenerateExercisePhrases(exercisePhrasesCreateDto: ExercisePhrasesCreateDto): ExerciseDto {
+        val seriesPhrasesRecord = exercisePhrasesCreateDto.toSeriesPhrasesRecord()
+
+        val exercise = createExercise(seriesPhrasesRecord, exercisePhrasesCreateDto.locale)
+            ?: throw RuntimeException("Exercise with this name (${exercisePhrasesCreateDto.exerciseName}) already exist")
+
+        generateAudioFilesAndSave(exercisePhrasesCreateDto.phrases, exercisePhrasesCreateDto.locale)
 
         return exercise.toDto()
     }
