@@ -47,6 +47,12 @@ internal class ExerciseServiceTest {
     @MockK
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
 
+    @MockK
+    lateinit var audioFilesGenerationService: AudioFilesGenerationService
+
+    @MockK
+    lateinit var wordsService: WordsService
+
     private val series = Series(
         id = 1L,
         name = "Распознавание простых слов",

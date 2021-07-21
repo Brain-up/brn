@@ -96,6 +96,7 @@ internal class SeriesWordsRecordProcessorTest {
         every { wordsServiceMock.addWordsToDictionary(ofType(Locale::class), any()) } returns Unit
         every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, noiseLevel) } returns Optional.empty()
+        every { exerciseRepositoryMock.existsByNameAndLevel(exerciseName, noiseLevel) } returns false
         every { resourceRepositoryMock.saveAll(any()) } returns emptySet()
         every { exerciseRepositoryMock.save(ofType(Exercise::class)) } returns Exercise()
 
