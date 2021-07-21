@@ -190,7 +190,7 @@ class AdminController(
     @PostMapping("/create/exercise/words")
     @ApiOperation("Create new exercise 'words' for exist subgroup")
     fun createExerciseWords(
-        @ApiParam(value = "Exercise's data", required = true)
+        @ApiParam(value = "Exercise 'words' data", required = true)
         @Valid @RequestBody exerciseWordsCreateDto: ExerciseWordsCreateDto
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
@@ -199,7 +199,7 @@ class AdminController(
     @PostMapping("/create/exercise/phrases")
     @ApiOperation("Create new exercise 'phrases' for exist subgroup")
     fun createExercisePhrases(
-        @ApiParam(value = "Exercise's data", required = true)
+        @ApiParam(value = "Exercise 'phrases' data", required = true)
         @Valid @RequestBody exercisePhrasesCreateDto: ExercisePhrasesCreateDto
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
@@ -208,7 +208,7 @@ class AdminController(
     @PostMapping("/create/exercise/sentences")
     @ApiOperation("Create new exercise 'sentences' for exist subgroup")
     fun createExerciseSentences(
-        @ApiParam(value = "Exercise's data", required = true)
+        @ApiParam(value = "Exercise 'sentences' data", required = true)
         @Valid @RequestBody exerciseSentencesCreateDto: ExerciseSentencesCreateDto
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
