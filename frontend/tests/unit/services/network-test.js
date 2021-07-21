@@ -1,8 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { DateTime } from 'luxon';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
-import customTimeout from 'brn/utils/custom-timeout';
 
 module('Unit | Service | network', function (hooks) {
   setupTest(hooks);
