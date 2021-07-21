@@ -5,6 +5,7 @@ import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -203,4 +204,13 @@ class AdminController(
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto)))
+
+    @PostMapping("/create/exercise/sentences")
+    @ApiOperation("Create new exercise 'sentences' for exist subgroup")
+    fun createExerciseSentences(
+        @ApiParam(value = "Exercise's data", required = true)
+        @Valid @RequestBody exerciseSentencesCreateDto: ExerciseSentencesCreateDto
+    ): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponseDto(data = exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto)))
 }
