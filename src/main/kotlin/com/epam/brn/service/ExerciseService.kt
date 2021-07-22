@@ -174,15 +174,7 @@ class ExerciseService(
         val exercise = createExercise(seriesMatrixRecord, exerciseSentencesCreateDto.locale)
             ?: throw RuntimeException("Exercise with this name (${exerciseSentencesCreateDto.exerciseName}) already exist")
 
-        val allWords = listOf(
-            exerciseSentencesCreateDto.words.count.orEmpty(),
-            exerciseSentencesCreateDto.words.objectDescription.orEmpty(),
-            exerciseSentencesCreateDto.words.objectWord.orEmpty(),
-            exerciseSentencesCreateDto.words.objectAction.orEmpty(),
-            exerciseSentencesCreateDto.words.additionObjectDescription.orEmpty(),
-            exerciseSentencesCreateDto.words.additionObject.orEmpty(),
-        ).flatten()
-        generateAudioFilesAndSave(allWords, exerciseSentencesCreateDto.locale)
+        generateAudioFilesAndSave(exerciseSentencesCreateDto.words.toFlattenList(), exerciseSentencesCreateDto.locale)
 
         return exercise.toDto()
     }
