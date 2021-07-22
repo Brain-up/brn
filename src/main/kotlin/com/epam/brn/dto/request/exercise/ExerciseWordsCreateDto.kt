@@ -8,27 +8,27 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
-@ApiModel(value = "ExerciseWordsCreateDto", description = "request dto for create exercise 'words'")
+@ApiModel(value = "ExerciseWordsCreateDto", description = "Request dto for create exercise 'words'")
 data class ExerciseWordsCreateDto(
-    @ApiModelProperty(value = "locale", required = true, example = "RU")
+    @ApiModelProperty(value = "Locale", required = true, example = "RU")
     @field:NotNull
     val locale: Locale,
-    @ApiModelProperty(value = "subgroup code", required = true, example = "family")
+    @ApiModelProperty(value = "Subgroup code", required = true, example = "family")
     @field:NotBlank
     val subGroup: String,
-    @ApiModelProperty(value = "level", required = true, example = "1")
+    @ApiModelProperty(value = "Level", required = true, example = "1")
     @field:NotNull
     val level: Int,
-    @ApiModelProperty(value = "exercise name", required = true, example = "Семья /+голоса/")
+    @ApiModelProperty(value = "Exercise name", required = true, example = "Семья /+голоса/")
     @field:NotBlank
     val exerciseName: String,
-    @ApiModelProperty(value = "words for creating exercise", required = true, example = "[сын, ребёнок, мама]")
+    @ApiModelProperty(value = "Words for creating exercise", required = true, example = "[сын, ребёнок, мама]")
     @field:NotEmpty
     val words: List<String>,
-    @ApiModelProperty(value = "noise level", required = true, example = "50")
+    @ApiModelProperty(value = "Noise level", required = true, example = "50")
     @field:NotNull
     val noiseLevel: Int,
-    @ApiModelProperty(value = "noise url", required = false, example = "voices")
+    @ApiModelProperty(value = "Noise url", required = false, example = "voices")
     val noiseUrl: String?
 ) {
     fun toSeriesWordsRecord() = SeriesWordsRecord(
