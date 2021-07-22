@@ -47,6 +47,7 @@ class SeriesWordsRecordProcessor(
             .map {
                 val subGroup = subGroupRepository.findByCodeAndLocale(it.code, locale.locale)
                     ?: throw EntityNotFoundException("No subGroup was found for code=${it.code} and locale={${locale.locale}}")
+
                 val answerOptions = extractAnswerOptions(it, locale)
                 wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 resourceRepository.saveAll(answerOptions)

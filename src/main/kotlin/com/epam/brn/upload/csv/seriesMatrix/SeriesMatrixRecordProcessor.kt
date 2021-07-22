@@ -32,26 +32,24 @@ class SeriesMatrixRecordProcessor(
 
     override fun isApplicable(record: Any): Boolean = record is SeriesMatrixRecord
 
-    override fun process(records: List<SeriesMatrixRecord>, locale: Locale): List<Exercise> {
-        val exercises = mutableSetOf<Exercise>()
-        records.forEach { record ->
-            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
-                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
-            val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
-            if (!existExercise.isPresent) {
-                val answerOptions = extractAnswerOptions(record, locale)
+    override fun process(records: List<SeriesMatrixRecord>, locale: Locale): List<Exercise> =
+        records
+            .filter { !exerciseRepository.existsByNameAndLevel(it.exerciseName, it.level) }
+            .map {
+                val subGroup = subGroupRepository.findByCodeAndLocale(it.code, locale.locale)
+                    ?: throw EntityNotFoundException("No subGroup was found for code=${it.code} and locale={${locale.locale}}")
+
+                val answerOptions = extractAnswerOptions(it, locale)
                 wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 val savedResources = resourceRepository.saveAll(answerOptions)
 
-                val newExercise = generateExercise(record, subGroup)
+                val newExercise = generateExercise(it, subGroup)
                 val savedExercise = exerciseRepository.save(newExercise)
 
                 taskRepository.save(extractTask(savedExercise, savedResources.toMutableSet()))
-                exercises.add(savedExercise)
+                savedExercise
             }
-        }
-        return exercises.toMutableList()
-    }
+            .toList()
 
     private fun extractAnswerOptions(record: SeriesMatrixRecord, locale: Locale): MutableSet<Resource> =
         extractWordGroups(record)
