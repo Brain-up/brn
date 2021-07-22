@@ -162,7 +162,7 @@ class ExerciseService(
         val exercise = createExercise(seriesPhrasesRecord, exercisePhrasesCreateDto.locale)
             ?: throw RuntimeException("Exercise with this name (${exercisePhrasesCreateDto.exerciseName}) already exist")
 
-        generateAudioFilesAndSave(exercisePhrasesCreateDto.phrases, exercisePhrasesCreateDto.locale)
+        generateAudioFilesAndSave(exercisePhrasesCreateDto.phrases.toList(), exercisePhrasesCreateDto.locale)
 
         return exercise.toDto()
     }
