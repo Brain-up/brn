@@ -36,6 +36,7 @@ class SeriesMatrixRecordProcessor(
     @Transactional
     override fun process(records: List<SeriesMatrixRecord>, locale: Locale): List<Exercise> =
         records
+            .asSequence()
             .filter { !exerciseRepository.existsByNameAndLevel(it.exerciseName, it.level) }
             .map {
                 val subGroup = subGroupRepository.findByCodeAndLocale(it.code, locale.locale)
