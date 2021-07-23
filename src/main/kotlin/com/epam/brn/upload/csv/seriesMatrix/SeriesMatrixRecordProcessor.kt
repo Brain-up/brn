@@ -17,6 +17,7 @@ import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import javax.transaction.Transactional
 
 @Component
 class SeriesMatrixRecordProcessor(
@@ -32,6 +33,7 @@ class SeriesMatrixRecordProcessor(
 
     override fun isApplicable(record: Any): Boolean = record is SeriesMatrixRecord
 
+    @Transactional
     override fun process(records: List<SeriesMatrixRecord>, locale: Locale): List<Exercise> =
         records
             .filter { !exerciseRepository.existsByNameAndLevel(it.exerciseName, it.level) }
