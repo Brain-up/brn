@@ -15,6 +15,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.Exception
 
 @Service
 class ExerciseService(
@@ -143,7 +144,7 @@ class ExerciseService(
         return subGroupExercises.map { it.toDtoWithTasks() }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     fun createAndGenerateExerciseWords(exerciseWordsCreateDto: ExerciseWordsCreateDto): ExerciseDto {
         val seriesWordsRecord = exerciseWordsCreateDto.toSeriesWordsRecord()
 
@@ -155,7 +156,7 @@ class ExerciseService(
         return exercise.toDto()
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     fun createAndGenerateExercisePhrases(exercisePhrasesCreateDto: ExercisePhrasesCreateDto): ExerciseDto {
         val seriesPhrasesRecord = exercisePhrasesCreateDto.toSeriesPhrasesRecord()
 
@@ -167,7 +168,7 @@ class ExerciseService(
         return exercise.toDto()
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     fun createAndGenerateExerciseSentences(exerciseSentencesCreateDto: ExerciseSentencesCreateDto): ExerciseDto {
         val seriesMatrixRecord = exerciseSentencesCreateDto.toSeriesMatrixRecord()
 

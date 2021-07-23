@@ -15,6 +15,7 @@ import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.io.InputStream
 import java.time.LocalDateTime
@@ -51,6 +52,7 @@ class YandexSpeechKitService(
 
     private val log = logger()
 
+    @Transactional
     fun getYandexIamTokenForAudioGeneration(): String {
         if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(timeService.now()))
             return iamToken
@@ -76,6 +78,7 @@ class YandexSpeechKitService(
     /**
      * Generate stream of .ogg audio file from yandex cloud speech kit service
      */
+    @Transactional
     fun generateAudioStream(audioFileMetaData: AudioFileMetaData): InputStream {
         val token = getYandexIamTokenForAudioGeneration()
         val parameters = ArrayList<NameValuePair>().apply {
@@ -118,6 +121,7 @@ class YandexSpeechKitService(
     /**
      * Generate .ogg audio file from yandex cloud speech kit service if it is absent locally
      */
+    @Transactional
     fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
         val fileName = wordsService.getLocalFilePathForWord(audioFileMetaData)
         log.info("For word $audioFileMetaData started creation audio file with name `$fileName`")
