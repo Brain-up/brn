@@ -12,20 +12,22 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.upload.csv.RecordProcessor
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.mock
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
-import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseServiceTest {
@@ -83,7 +85,7 @@ internal class ExerciseServiceTest {
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(22L)
 
         // THEN
-        assertEquals(actualResult, listOf(exerciseDtoMock))
+        actualResult shouldBe listOf(exerciseDtoMock)
         verify(exactly = 1) { exerciseRepository.findAll() }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercisesIdList(ofType(Long::class)) }
     }
@@ -96,7 +98,6 @@ internal class ExerciseServiceTest {
         val exercise1 = Exercise(id = 1, name = "pets")
         val exercise2 = Exercise(id = 2, name = "pets")
         val noiseUrl = "noiseUrl"
-        val lastStudyHistoryMockk = mockkClass(StudyHistory::class)
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
         every { studyHistoryRepository.findLastByUserAccountId(userId) } returns emptyList()
@@ -106,7 +107,7 @@ internal class ExerciseServiceTest {
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSubGroupId(userId, subGroupId)
 
         // THEN
-        assertEquals(actualResult.size, 2)
+        actualResult shouldHaveSize 2
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
     }
@@ -125,7 +126,7 @@ internal class ExerciseServiceTest {
         val actualResult: ExerciseDto = exerciseService.findExerciseById(1L)
 
         // THEN
-        assertEquals(actualResult, exerciseDtoMock)
+        actualResult shouldBe exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findById(ofType(Long::class)) }
     }
 
@@ -133,7 +134,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by name and level`() {
         // GIVEN
         val exerciseName = "name"
-        val exerciseMock: Exercise = mockkClass(Exercise::class)
+        val exerciseMock = Exercise(id = 1)
         val exerciseLevel = 1
         every { exerciseRepository.findExerciseByNameAndLevel(exerciseName, exerciseLevel) } returns Optional.of(
             exerciseMock
@@ -142,6 +143,7 @@ internal class ExerciseServiceTest {
         val actualResult: Exercise = exerciseService.findExerciseByNameAndLevel("name", 1)
         // THEN
         verify(exactly = 1) { exerciseRepository.findExerciseByNameAndLevel(exerciseName, exerciseLevel) }
+        actualResult.id shouldBe exerciseMock.id
     }
 
     @Test
@@ -155,7 +157,7 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResults: List<ExerciseWithTasksDto> = exerciseService.findExercisesWithTasksBySubGroup(1)
         // THEN
-        assertTrue(actualResults.contains(exerciseDtoMock))
+        actualResults shouldContain exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
     }
 
@@ -190,8 +192,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
         // THEN
-        assertEquals(2, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex3)))
+        actualResult shouldHaveSize 2
+        actualResult shouldContainAll listOf(ex1, ex3)
     }
 
     @Test
@@ -238,8 +240,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
         // THEN
-        assertEquals(4, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex4)))
+        actualResult shouldHaveSize 4
+        actualResult shouldContainAll listOf(ex1, ex2, ex3, ex4)
     }
 
     @Test
@@ -261,7 +263,7 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex2)
         val studyHistoryWithExercise1 = StudyHistory(
             exercise = ex1,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -270,7 +272,7 @@ internal class ExerciseServiceTest {
         )
         val studyHistoryWithExercise2 = StudyHistory(
             exercise = ex2,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -288,8 +290,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
         // THEN
-        assertEquals(3, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex4)))
+        actualResult shouldHaveSize 3
+        actualResult shouldContainAll listOf(ex1, ex2, ex4)
     }
 
     @Test
@@ -339,7 +341,7 @@ internal class ExerciseServiceTest {
 
         val studyHistoryWithExercise11 = StudyHistory(
             exercise = ex11,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -359,7 +361,7 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
         // THEN
-        assertEquals(5, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex11, ex13)))
+        actualResult shouldHaveSize 5
+        actualResult shouldContainAll listOf(ex1, ex2, ex3, ex11, ex13)
     }
 }
