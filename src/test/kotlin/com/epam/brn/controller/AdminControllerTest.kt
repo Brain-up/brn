@@ -1,16 +1,23 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.SubGroupDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.Phrases
+import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.enums.Locale
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
@@ -27,6 +34,7 @@ import io.mockk.mockkClass
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -254,5 +262,71 @@ internal class AdminControllerTest {
 
         // THEN
         createdSubGroup.statusCodeValue shouldBe HttpStatus.SC_CREATED
+    }
+
+    @Test
+    fun `createExerciseWords should return http status 204`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            words = listOf("word1", "word2"),
+            noiseLevel = 0
+        )
+        val exerciseDto = mockk<ExerciseDto>()
+        every { exerciseService.createAndGenerateExerciseWords(exerciseWordsCreateDto) } returns exerciseDto
+
+        // WHEN
+        val createdExercise = adminController.createExerciseWords(exerciseWordsCreateDto)
+
+        // THEN
+        verify(exactly = 1) { exerciseService.createAndGenerateExerciseWords(exerciseWordsCreateDto) }
+        createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
+    }
+
+    @Test
+    fun `createExercisePhrases should return http status 204`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            phrases = Phrases(shortPhrase = "shortPhrase", longPhrase = "longPhrase"),
+            noiseLevel = 0
+        )
+        val exerciseDto = mockk<ExerciseDto>()
+        every { exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto) } returns exerciseDto
+
+        // WHEN
+        val createdExercise = adminController.createExercisePhrases(exercisePhrasesCreateDto)
+
+        // THEN
+        verify(exactly = 1) { exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto) }
+        createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
+    }
+
+    @Test
+    fun `createExerciseSentences should return http status 204`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            orderNumber = 1,
+            words = SetOfWords()
+        )
+        val exerciseDto = mockk<ExerciseDto>()
+        every { exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto) } returns exerciseDto
+
+        // WHEN
+        val createdExercise = adminController.createExerciseSentences(exerciseSentencesCreateDto)
+
+        // THEN
+        verify(exactly = 1) { exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto) }
+        createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 }
