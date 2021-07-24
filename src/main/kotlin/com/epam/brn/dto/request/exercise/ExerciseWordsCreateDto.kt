@@ -29,7 +29,7 @@ data class ExerciseWordsCreateDto(
     @field:NotNull
     val noiseLevel: Int,
     @ApiModelProperty(value = "Noise url", required = false, example = "voices")
-    val noiseUrl: String?
+    val noiseUrl: String? = null
 ) {
     fun toSeriesWordsRecord() = SeriesWordsRecord(
         level = level,
