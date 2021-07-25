@@ -6,6 +6,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.ExerciseRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service
 class SubGroupService(
     private val subGroupRepository: SubGroupRepository,
     private val seriesRepository: SeriesRepository,
+    private val exerciseRepository: ExerciseRepository
 ) {
 
     @Value(value = "\${brn.picture.theme.path}")
@@ -32,6 +34,18 @@ class SubGroupService(
         val subGroup = subGroupRepository.findById(subGroupId)
             .orElseThrow { EntityNotFoundException("No subGroup was found by id=$subGroupId.") }
         return subGroup.toDto(pictureTheme)
+    }
+
+    fun deleteSubGroupById(subGroupId: Long) {
+        log.debug("try to delete SubGroup by Id=$subGroupId")
+        if (subGroupRepository.existsById(subGroupId)) {
+            if (exerciseRepository.existsBySubGroupId(subGroupId)) {
+                throw IllegalArgumentException("Can not delete subGroup because there are exercises that refer to the subGroup.")
+            }
+            subGroupRepository.deleteById(subGroupId)
+        } else {
+            throw IllegalArgumentException("Can not delete subGroup because subGroup is not found by this id.")
+        }
     }
 
     fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupDto {

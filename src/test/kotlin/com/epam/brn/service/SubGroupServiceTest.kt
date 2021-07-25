@@ -5,19 +5,21 @@ import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
+import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
 import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.lang.IllegalArgumentException
@@ -31,6 +33,9 @@ internal class SubGroupServiceTest {
 
     @MockK
     private lateinit var subGroupRepository: SubGroupRepository
+
+    @MockK
+    private lateinit var exerciseRepository: ExerciseRepository
 
     @MockK
     private lateinit var subGroup: SubGroup
@@ -54,7 +59,49 @@ internal class SubGroupServiceTest {
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findBySeriesId(seriesId) }
-        assertEquals(listOf(subGroupDto), allGroups)
+        allGroups shouldBe listOf(subGroupDto)
+    }
+
+    @Test
+    fun `deleteSubGroupById should delete subGroup without exercises`() {
+        // GIVEN
+        val subGroupId = 1L
+        mockkStatic("com.epam.brn.service.SubGroupServiceKt")
+        every { subGroupRepository.existsById(subGroupId) } returns true
+        every { exerciseRepository.existsBySubGroupId(subGroupId) } returns false
+        justRun { subGroupRepository.deleteById(subGroupId) }
+
+        // WHEN
+        subGroupService.deleteSubGroupById(subGroupId)
+
+        // THEN
+        verify(exactly = 1) { exerciseRepository.existsBySubGroupId(subGroupId) }
+    }
+
+    @Test
+    fun `deleteSubGroupById should throw an exception with exercises in subGroup`() {
+        // GIVEN
+        val subGroupId = 1L
+        every { subGroupRepository.existsById(subGroupId) } returns true
+        every { exerciseRepository.existsBySubGroupId(subGroupId) } returns true
+        justRun { subGroupRepository.deleteById(subGroupId) }
+
+        // THEN
+        shouldThrow<IllegalArgumentException> {
+            subGroupService.deleteSubGroupById(subGroupId)
+        }
+    }
+
+    @Test
+    fun `deleteSubGroupById should throw an exception when subGroup is not found`() {
+        // GIVEN
+        val subGroupId = 1L
+        every { subGroupRepository.existsById(subGroupId) } returns false
+
+        // THEN
+        shouldThrow<IllegalArgumentException> {
+            subGroupService.deleteSubGroupById(subGroupId)
+        }
     }
 
     @Test
@@ -72,7 +119,8 @@ internal class SubGroupServiceTest {
         val group = subGroupService.findById(subGroupId)
 
         // THEN
-        assertEquals(subGroupDto, group)
+        verify(exactly = 1) { subGroupRepository.findById(subGroupId) }
+        group shouldBe subGroupDto
     }
 
     @Test
@@ -81,7 +129,7 @@ internal class SubGroupServiceTest {
         val subGroupId = 1L
         every { subGroupRepository.findById(subGroupId) } returns Optional.empty()
         // THEN
-        assertThrows<EntityNotFoundException> { subGroupService.findById(subGroupId) }
+        shouldThrow<EntityNotFoundException> { subGroupService.findById(subGroupId) }
     }
 
     @Test
@@ -100,8 +148,8 @@ internal class SubGroupServiceTest {
         val resultDto = subGroup.toDto(pictureUrlTemplate)
 
         // THEN
-        assertEquals("template url", resultDto.pictureUrl)
         verify(exactly = 1) { subGroup.toDto() }
+        resultDto.pictureUrl shouldBe "template url"
     }
 
     @Test
@@ -131,7 +179,7 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns subGroup
 
         // THEN
-        assertThrows<IllegalArgumentException> { subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest) }
+        shouldThrow<IllegalArgumentException> { subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest) }
     }
 
     @Test
@@ -143,6 +191,6 @@ internal class SubGroupServiceTest {
         every { seriesRepository.findById(seriesId) } returns Optional.empty()
 
         // THEN
-        assertThrows<EntityNotFoundException> { subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest) }
+        shouldThrow<EntityNotFoundException> { subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest) }
     }
 }
