@@ -30,9 +30,6 @@ class SeriesWordsRecordProcessor(
     @Value(value = "\${brn.picture.file.default.path}")
     private lateinit var pictureDefaultPath: String
 
-    @Value(value = "\${brn.picture.theme.path}")
-    private lateinit var pictureTheme: String
-
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
 

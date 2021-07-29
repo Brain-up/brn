@@ -2,13 +2,14 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.SubGroupDto
 import com.epam.brn.service.SubGroupService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
 import io.mockk.verify
 import org.apache.http.HttpStatus
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -35,8 +36,8 @@ internal class SubGroupControllerTest {
 
         // THEN
         verify(exactly = 1) { subGroupService.findSubGroupsForSeries(seriesId) }
-        assertEquals(HttpStatus.SC_OK, allGroups.statusCode.value())
-        assertEquals(listOf(subGroupDto), allGroups.body!!.data)
+        allGroups.statusCode.value() shouldBe HttpStatus.SC_OK
+        allGroups.body!!.data shouldBe listOf(subGroupDto)
     }
 
     @Test
@@ -50,7 +51,21 @@ internal class SubGroupControllerTest {
 
         // THEN
         verify(exactly = 1) { subGroupService.findById(subGroupId) }
-        assertEquals(HttpStatus.SC_OK, seriesForId.statusCode.value())
-        assertEquals(subGroupDto, seriesForId.body!!.data)
+        seriesForId.statusCode.value() shouldBe HttpStatus.SC_OK
+        seriesForId.body!!.data shouldBe subGroupDto
+    }
+    @Test
+    fun `deleteSubGroupById should delete subGroup by subGroupId`() {
+        // GIVEN
+        val subGroupId = 1L
+        justRun { subGroupService.deleteSubGroupById(subGroupId) }
+
+        // WHEN
+        val deleteSubGroupForId = subGroupController.deleteSubGroupById(subGroupId)
+
+        // THEN
+        verify(exactly = 1) { subGroupService.deleteSubGroupById(subGroupId) }
+        deleteSubGroupForId.statusCode.value() shouldBe HttpStatus.SC_OK
+        deleteSubGroupForId.body!!.data shouldBe Unit
     }
 }

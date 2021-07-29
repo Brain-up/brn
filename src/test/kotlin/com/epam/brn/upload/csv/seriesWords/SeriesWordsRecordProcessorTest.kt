@@ -81,7 +81,6 @@ internal class SeriesWordsRecordProcessorTest {
 
         ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
         ReflectionTestUtils.setField(seriesWordsRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
-        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureTheme", "/picturesTheme/%s.jpg")
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock

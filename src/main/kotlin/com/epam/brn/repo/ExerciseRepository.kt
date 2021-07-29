@@ -14,6 +14,8 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
 
     fun findExerciseByNameAndLevel(name: String, level: Int): Optional<Exercise>
 
+    fun existsBySubGroupId(subGroupId: Long): Boolean
+
     fun existsByNameAndLevel(name: String, level: Int): Boolean
 
     override fun findById(id: Long): Optional<Exercise>
