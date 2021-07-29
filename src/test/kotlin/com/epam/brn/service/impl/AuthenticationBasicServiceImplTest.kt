@@ -34,7 +34,7 @@ internal class AuthenticationBasicServiceImplTest {
     @MockK
     lateinit var authenticationManager: AuthenticationManager
 
-    // fix in https://jira.epam.com/jira/browse/EPMLABSBRN-896 @Test
+    @Test
     fun `should login exist user`() {
         // GIVEN
         val authenticationMock = mockk<Authentication>()
@@ -70,16 +70,16 @@ internal class AuthenticationBasicServiceImplTest {
         assertThrows(BadCredentialsException::class.java) { authenticationBasicServiceImpl.login(loginDto) }
     }
 
-    // fix in https://jira.epam.com/jira/browse/EPMLABSBRN-896 @Test
+    @Test
     fun `should register new user`() {
         // GIVEN
         val email = "testUser".toLowerCase()
-        val passw = "testPassword"
+        val password = "testPassword"
         val userAccountDto = mockk<UserAccountCreateRequest>()
         val savedUserAccountDto = mockk<UserAccountDto>()
         val authenticationMock = mockk<Authentication>()
         every { userAccountDto.email } returns email
-        every { userAccountDto.password } returns passw
+        every { userAccountDto.password } returns password
         every { savedUserAccountDto.id } returns 1L
         every { userAccountService.addUser(userAccountDto) } returns savedUserAccountDto
         every { authenticationManager.authenticate(any()) } returns authenticationMock
