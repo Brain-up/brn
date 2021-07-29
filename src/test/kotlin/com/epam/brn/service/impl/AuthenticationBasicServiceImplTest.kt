@@ -11,7 +11,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Ignore
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,7 +21,6 @@ import org.springframework.util.Base64Utils
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-@Ignore
 internal class AuthenticationBasicServiceImplTest {
 
     @InjectMockKs
@@ -34,7 +32,7 @@ internal class AuthenticationBasicServiceImplTest {
     @MockK
     lateinit var authenticationManager: AuthenticationManager
 
-    @Test
+    // @Test
     fun `should login exist user`() {
         // GIVEN
         val authenticationMock = mockk<Authentication>()
@@ -65,7 +63,7 @@ internal class AuthenticationBasicServiceImplTest {
         assertThrows(BadCredentialsException::class.java) { authenticationBasicServiceImpl.login(loginDto) }
     }
 
-    @Test
+    // @Test
     fun `should register new user`() {
         // GIVEN
         val email = "testUser".toLowerCase()
