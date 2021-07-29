@@ -32,7 +32,7 @@ internal class AuthenticationBasicServiceImplTest {
     @MockK
     lateinit var authenticationManager: AuthenticationManager
 
-    // @Test
+    @Test
     fun `should login exist user`() {
         // GIVEN
         val authenticationMock = mockk<Authentication>()
@@ -63,7 +63,7 @@ internal class AuthenticationBasicServiceImplTest {
         assertThrows(BadCredentialsException::class.java) { authenticationBasicServiceImpl.login(loginDto) }
     }
 
-    // @Test
+    @Test
     fun `should register new user`() {
         // GIVEN
         val email = "testUser".toLowerCase()
