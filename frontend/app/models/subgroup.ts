@@ -8,7 +8,7 @@ export default class Subgroup extends Model {
   @attr('number') level!: number;
   @attr('string') pictureUrl!: string;
   get picture() {
-    return `/${this.pictureUrl}`;
+    return this.pictureUrl;
   }
   @attr('string') description!: string;
   @hasMany('exercise', { async: false, inverse: 'parent' })
