@@ -29,12 +29,12 @@ class TaskService(
             task.answerOptions
                 .forEach { resource -> wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
         }
-        return when (ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS -> tasks.map { task -> task.toWordsSeriesTaskDto() }
+        return when (val type = ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
+            ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> tasks.map { task -> task.toWordsSeriesTaskDto() }
             ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.toWordsGroupSeriesTaskDto(task.exercise?.template) }
             ExerciseType.SENTENCE -> tasks.map { task -> task.toSentenceSeriesTaskDto(task.exercise?.template) }
-            ExerciseType.PHRASES -> tasks.map { task -> task.to4SeriesTaskDto() }
-            else -> throw EntityNotFoundException("No tasks for this signal exercise type")
+            ExerciseType.PHRASES -> tasks.map { task -> task.toPhraseSeriesTaskDto() }
+            else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
 
@@ -46,12 +46,12 @@ class TaskService(
             resource.audioFileUrl =
                 wordsService.getFullS3UrlForWord(resource.word, resource.locale)
         }
-        return when (ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS -> task.toWordsSeriesTaskDto()
+        return when (val type = ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
+            ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> task.toWordsSeriesTaskDto()
             ExerciseType.WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)
             ExerciseType.SENTENCE -> task.toSentenceSeriesTaskDto(task.exercise?.template)
-            ExerciseType.PHRASES -> task.to4SeriesTaskDto()
-            else -> throw EntityNotFoundException("No tasks for this exercise type")
+            ExerciseType.PHRASES -> task.toPhraseSeriesTaskDto()
+            else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
 

@@ -67,7 +67,7 @@ data class Task(
         answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
         template = template,
     )
-    fun to4SeriesTaskDto() = WordsSeriesTaskDto(
+    fun toPhraseSeriesTaskDto() = WordsSeriesTaskDto(
         id = id!!,
         exerciseType = ExerciseType.PHRASES,
         name = name,
