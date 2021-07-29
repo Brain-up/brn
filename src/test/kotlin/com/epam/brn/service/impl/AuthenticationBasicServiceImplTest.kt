@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
 import org.springframework.util.Base64Utils
 import kotlin.test.assertEquals
 
@@ -32,11 +33,15 @@ internal class AuthenticationBasicServiceImplTest {
     @MockK
     lateinit var authenticationManager: AuthenticationManager
 
+    @MockK
+    lateinit var securityContext: SecurityContext
+
     @Test
     fun `should login exist user`() {
         // GIVEN
         val authenticationMock = mockk<Authentication>()
         every { authenticationManager.authenticate(any()) } returns authenticationMock
+        every { securityContext.authentication = authenticationMock } returns Unit
         val loginDto = LoginDto(
             username = "testUser".toLowerCase(),
             password = "testPassword"
@@ -76,6 +81,7 @@ internal class AuthenticationBasicServiceImplTest {
         every { savedUserAccountDto.id } returns 1L
         every { userAccountService.addUser(userAccountDto) } returns savedUserAccountDto
         every { authenticationManager.authenticate(any()) } returns authenticationMock
+        every { securityContext.authentication = authenticationMock } returns Unit
         val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
 
         // WHEN
