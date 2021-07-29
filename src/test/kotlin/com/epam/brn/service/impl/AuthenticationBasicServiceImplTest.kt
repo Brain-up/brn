@@ -17,6 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.util.Base64Utils
 import kotlin.test.assertEquals
 
@@ -36,20 +38,23 @@ internal class AuthenticationBasicServiceImplTest {
     fun `should login exist user`() {
         // GIVEN
         val authenticationMock = mockk<Authentication>()
-        val userAccountDtoMockk = mockk<UserAccountDto>()
+        val securityContextMockk = mockk<SecurityContext>()
+        every { securityContextMockk.authentication } returns authenticationMock
+        every { securityContextMockk.authentication = any() } returns Unit
+        SecurityContextHolder.setContext(securityContextMockk)
+
         every { authenticationManager.authenticate(any()) } returns authenticationMock
-        every { userAccountService.addUser(any()) } returns userAccountDtoMockk
         val loginDto = LoginDto(
             username = "testUser".toLowerCase(),
             password = "testPassword"
         )
-        val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
 
         // WHEN
         val actualResult = authenticationBasicServiceImpl.login(loginDto)
 
         // THEN
         verify(exactly = 1) { authenticationManager.authenticate(any()) }
+        val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
         assertEquals(basicHeader, actualResult)
     }
 
@@ -78,14 +83,18 @@ internal class AuthenticationBasicServiceImplTest {
         every { savedUserAccountDto.id } returns 1L
         every { userAccountService.addUser(userAccountDto) } returns savedUserAccountDto
         every { authenticationManager.authenticate(any()) } returns authenticationMock
-        val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
 
+        val securityContextMockk = mockk<SecurityContext>()
+        every { securityContextMockk.authentication } returns authenticationMock
+        every { securityContextMockk.authentication = any() } returns Unit
+        SecurityContextHolder.setContext(securityContextMockk)
         // WHEN
         val actualResult = authenticationBasicServiceImpl.registration(userAccountDto)
 
         // THEN
         verify(exactly = 1) { userAccountService.addUser(userAccountDto) }
         verify(exactly = 1) { authenticationManager.authenticate(any()) }
+        val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
         assertEquals(basicHeader, actualResult)
     }
 
