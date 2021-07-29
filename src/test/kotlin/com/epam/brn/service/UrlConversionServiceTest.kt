@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.test.util.ReflectionTestUtils
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
@@ -24,8 +25,22 @@ internal class UrlConversionServiceTest {
     private lateinit var awsConfig: AwsConfig
 
     @Test
-    fun `makeUrlForNoise should return baseFileUrl + noiseUrl`() {
+    fun `should return correct url for subgroup picture`() {
+        // GIVEN
+        val subGroupCode = "subGroupCode"
+        val baseFileUrl = "baseFileUrl"
+        every { awsConfig.baseFileUrl } returns (baseFileUrl)
+        ReflectionTestUtils.setField(urlConversionService, "folderForThemePictures", "/folderForThemePictures")
+        // WHEN
+        val makeUrlForNoise = urlConversionService.makeUrlForSubGroupPicture(subGroupCode)
 
+        // THEN
+        assertEquals("baseFileUrl/folderForThemePictures/subGroupCode.svg", makeUrlForNoise)
+        verify(exactly = 1) { awsConfig.baseFileUrl }
+    }
+
+    @Test
+    fun `makeUrlForNoise should return baseFileUrl + noiseUrl`() {
         // GIVEN
         val noiseUrl = "noiseUrl"
         val baseFileUrl = "baseFileUrl"
@@ -41,7 +56,6 @@ internal class UrlConversionServiceTest {
 
     @Test
     fun `makeUrlForNoise with noiseUrl = Empty should return Empty`() {
-
         // GIVEN
         val noiseUrl = ""
         val baseFileUrl = "baseFileUrl"
@@ -57,7 +71,6 @@ internal class UrlConversionServiceTest {
 
     @Test
     fun `makeUrlForNoise with noiseUrl = Null should return Empty`() {
-
         // GIVEN
         val noiseUrl = null
         val baseFileUrl = "baseFileUrl"

@@ -4,7 +4,7 @@
   "id": 1,
   "level": 1,
   "name": "Семья",
-  "pictureUrl": "pictures/theme/family.svg",
+  "pictureUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/pictures/theme/family.svg",
   "description": "Слова про семью",
   "exercises": [
    1,

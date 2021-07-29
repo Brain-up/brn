@@ -40,11 +40,11 @@ data class SubGroup(
         name = record.name,
         description = record.description
     )
-    fun toDto() = SubGroupDto(
+    fun toDto(pictureUrl: String) = SubGroupDto(
         seriesId = series.id!!,
         id = id!!,
         name = name,
-        pictureUrl = code,
+        pictureUrl = pictureUrl,
         description = description,
         level = level,
         exercises = exercises.map { exercise -> exercise.id }.toMutableList()
