@@ -36,7 +36,9 @@ internal class AuthenticationBasicServiceImplTest {
     fun `should login exist user`() {
         // GIVEN
         val authenticationMock = mockk<Authentication>()
+        val userAccountDtoMockk = mockk<UserAccountDto>()
         every { authenticationManager.authenticate(any()) } returns authenticationMock
+        every { userAccountService.addUser(any()) } returns userAccountDtoMockk
         val loginDto = LoginDto(
             username = "testUser".toLowerCase(),
             password = "testPassword"
