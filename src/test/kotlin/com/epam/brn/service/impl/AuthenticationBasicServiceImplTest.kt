@@ -5,60 +5,59 @@ import com.epam.brn.dto.request.LoginDto
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.service.UserAccountService
-import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import io.mockk.verify
+import com.nhaarman.mockito_kotlin.verify
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.any
+import org.mockito.Mockito.lenient
+import org.mockito.Mockito.mock
+import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 import org.springframework.util.Base64Utils
 import kotlin.test.assertEquals
 
-@ExtendWith(MockKExtension::class)
+@ExtendWith(MockitoExtension::class)
 internal class AuthenticationBasicServiceImplTest {
 
-    @InjectMockKs
-    lateinit var authenticationBasicServiceImpl: AuthenticationBasicServiceImpl
-
-    @MockK
+    @Mock
     lateinit var userAccountService: UserAccountService
 
-    @MockK
+    @Mock
     lateinit var authenticationManager: AuthenticationManager
+
+    @InjectMocks
+    lateinit var authenticationBasicServiceImpl: AuthenticationBasicServiceImpl
 
     @Test
     fun `should login exist user`() {
         // GIVEN
-        val authenticationMock = mockk<Authentication>()
-        every { authenticationManager.authenticate(any()) } returns authenticationMock
+        val authenticationMock = mock(Authentication::class.java)
+        `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
         val loginDto = LoginDto(
             username = "testUser".toLowerCase(),
             password = "testPassword"
         )
         val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
-
         // WHEN
         val actualResult = authenticationBasicServiceImpl.login(loginDto)
-
         // THEN
-        verify(exactly = 1) { authenticationManager.authenticate(any()) }
+        verify(authenticationManager).authenticate(any())
         assertEquals(basicHeader, actualResult)
     }
 
     @Test
     fun `should not login not exist user`() {
         // GIVEN
-        val authenticationMock = mockk<Authentication>()
-        every { authenticationManager.authenticate(any()) } returns authenticationMock
+        val authenticationMock = mock(Authentication::class.java)
+        `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
         val loginDto = LoginDto("test", "test", "test")
-        every { authenticationManager.authenticate(any()) } throws BadCredentialsException("BadCredentialsException")
-
+        `when`(authenticationManager.authenticate(any())).thenThrow(BadCredentialsException("BadCredentialsException"))
         // WHEN
         assertThrows(BadCredentialsException::class.java) { authenticationBasicServiceImpl.login(loginDto) }
     }
@@ -68,22 +67,19 @@ internal class AuthenticationBasicServiceImplTest {
         // GIVEN
         val email = "testUser".toLowerCase()
         val passw = "testPassword"
-        val userAccountDto = mockk<UserAccountCreateRequest>()
-        val savedUserAccountDto = mockk<UserAccountDto>()
-        val authenticationMock = mockk<Authentication>()
-        every { userAccountDto.email } returns email
-        every { userAccountDto.password } returns passw
-        every { savedUserAccountDto.id } returns 1L
-        every { userAccountService.addUser(userAccountDto) } returns savedUserAccountDto
-        every { authenticationManager.authenticate(any()) } returns authenticationMock
+        val userAccountDto = mock(UserAccountCreateRequest::class.java)
+        val savedUserAccountDto = mock(UserAccountDto::class.java)
+        val authenticationMock = mock(Authentication::class.java)
+        lenient().`when`(userAccountDto.email).thenReturn(email)
+        lenient().`when`(userAccountDto.password).thenReturn(passw)
+        lenient().`when`(userAccountService.addUser(userAccountDto)).thenReturn(savedUserAccountDto)
+        `when`(authenticationManager.authenticate(any())).thenReturn(authenticationMock)
         val basicHeader = Base64Utils.encodeToString(("testUser".toLowerCase() + ":testPassword").toByteArray())
-
         // WHEN
         val actualResult = authenticationBasicServiceImpl.registration(userAccountDto)
-
         // THEN
-        verify(exactly = 1) { userAccountService.addUser(userAccountDto) }
-        verify(exactly = 1) { authenticationManager.authenticate(any()) }
+        verify(userAccountService).addUser(userAccountDto)
+        verify(authenticationManager).authenticate(any())
         assertEquals(basicHeader, actualResult)
     }
 
@@ -92,11 +88,10 @@ internal class AuthenticationBasicServiceImplTest {
         // GIVEN
         val email = "testUser".toLowerCase()
         val passw = "testPassword"
-        val userAccountDto = mockk<UserAccountCreateRequest>()
-        every { userAccountDto.email } returns email
-        every { userAccountDto.password } returns passw
-        every { userAccountService.addUser(userAccountDto) } throws BadCredentialsException("")
-
+        val userAccountDto = mock(UserAccountCreateRequest::class.java)
+        lenient().`when`(userAccountDto.email).thenReturn(email)
+        lenient().`when`(userAccountDto.password).thenReturn(passw)
+        lenient().`when`(userAccountService.addUser(userAccountDto)).thenThrow(BadCredentialsException::class.java)
         // WHEN
         assertThrows(BadCredentialsException::class.java) { authenticationBasicServiceImpl.registration(userAccountDto) }
     }
@@ -107,10 +102,8 @@ internal class AuthenticationBasicServiceImplTest {
         val email = "admin@admin.com"
         val passw = "admin"
         val basicHeader = "YWRtaW5AYWRtaW4uY29tOmFkbWlu"
-
         // WHEN
         val actualResult = authenticationBasicServiceImpl.getBasicHeader(email, passw)
-
         // THEN
         assertEquals(basicHeader, actualResult)
     }
