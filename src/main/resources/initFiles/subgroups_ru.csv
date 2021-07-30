@@ -66,6 +66,3 @@ PHRASES,5,shortWords,Короткие слова,
 PHRASES,6,prepositionPhrases,Предлоги,
 DURATION_SIGNALS,1,durationSignals,Длительность сигналов,
 FREQUENCY_SIGNALS,1,frequencySignals,Частота сигналов,
-FREQUENCY_WORDS,1,low_frequency,Низкочастотные слова,Низкочастотные слова
-FREQUENCY_WORDS,2,medium_frequency,Среднечастотные слова,Среднечастотные слова
-FREQUENCY_WORDS,3,high_frequency,Высокочастотные слова,Высокочастотные слова

@@ -74,12 +74,12 @@ internal class AuthenticationBasicServiceImplTest {
     fun `should register new user`() {
         // GIVEN
         val email = "testUser".toLowerCase()
-        val password = "testPassword"
+        val passw = "testPassword"
         val userAccountDto = mockk<UserAccountCreateRequest>()
         val savedUserAccountDto = mockk<UserAccountDto>()
         val authenticationMock = mockk<Authentication>()
         every { userAccountDto.email } returns email
-        every { userAccountDto.password } returns password
+        every { userAccountDto.password } returns passw
         every { savedUserAccountDto.id } returns 1L
         every { userAccountService.addUser(userAccountDto) } returns savedUserAccountDto
         every { authenticationManager.authenticate(any()) } returns authenticationMock
