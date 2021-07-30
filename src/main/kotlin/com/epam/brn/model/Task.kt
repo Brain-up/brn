@@ -43,9 +43,9 @@ data class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
-    fun toWordsSeriesTaskDto() = WordsSeriesTaskDto(
+    fun toWordsSeriesTaskDto(exerciseType: ExerciseType) = WordsSeriesTaskDto(
         id = id!!,
-        exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
+        exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
