@@ -68,8 +68,8 @@ internal class TaskServiceTest {
             every { exercise.subGroup } returns subGroup
             every { subGroup.series } returns series
             every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-            every { task1.toWordsSeriesTaskDto() } returns taskDto1
-            every { task2.toWordsSeriesTaskDto() } returns taskDto2
+            every { task1.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1
+            every { task2.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2
             every { task1.answerOptions } returns mutableSetOf(resource)
             every { task2.answerOptions } returns mutableSetOf(resource)
 
@@ -99,7 +99,7 @@ internal class TaskServiceTest {
             every { exercise.subGroup } returns subGroup
             every { subGroup.series } returns series
             every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-            every { task.toWordsSeriesTaskDto() } returns taskDto
+            every { task.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
