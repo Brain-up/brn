@@ -26,7 +26,10 @@ module('Integration | Component | statistics', function (hooks) {
       return { data: [] };
     });
 
-    this.set('initialSelectedMonth', DateTime.fromISO('2021-01-20')).toUTC();
+    this.set(
+      'initialSelectedMonth',
+      DateTime.fromFormat('2021-01-20', 'yyyy-MM-dd', { zone: 'utc' }),
+    );
 
     await render(
       hbs`<Statistics @initialSelectedMonth={{this.initialSelectedMonth}}/>`,
@@ -36,12 +39,12 @@ module('Integration | Component | statistics', function (hooks) {
       stubGetStatsByWeek.calledOnce,
       'getUserStatisticsByWeek called on init',
     );
-    assert.ok(stubGetStatsByWeek.calledWith('2020-12-31', '2021-01-31'));
+    assert.ok(stubGetStatsByWeek.calledWith('2021-01-01', '2021-01-31'));
     assert.ok(
       stubGetStatsByYear.calledOnce,
       'getUserStatisticsByYear called on init',
     );
-    assert.ok(stubGetStatsByYear.calledWith('2020-12-31', '2021-12-31'));
+    assert.ok(stubGetStatsByYear.calledWith('2021-01-01', '2021-12-31'));
   });
 
   test('it shows info dialog', async function (assert) {
