@@ -54,10 +54,11 @@ class AdminController(
     @ApiOperation("Get users")
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
+        @RequestParam("role", defaultValue = "ROLE_USER") role: String,
         @PageableDefault pageable: Pageable,
     ): ResponseEntity<Any> {
-        val users = if (withAnalytics) userAccountService.getUsersWithAnalytics(pageable)
-        else userAccountService.getUsers(pageable)
+        val users = if (withAnalytics) userAccountService.getUsersWithAnalytics(pageable, role)
+        else userAccountService.getUsers(pageable, role)
         return ResponseEntity.ok().body(BaseResponseDto(data = users))
     }
 
@@ -183,4 +184,13 @@ class AdminController(
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
+
+    @GetMapping("/roles")
+    @ApiOperation("Get user roles")
+    fun getUsers(
+        @RequestParam("userId", required = true) userId: Long
+    ): ResponseEntity<Any> {
+        val authorities = userAccountService.getUserRoles(userId)
+        return ResponseEntity.ok().body(BaseResponseDto(data = authorities))
+    }
 }

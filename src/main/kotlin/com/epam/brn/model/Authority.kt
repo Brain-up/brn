@@ -1,5 +1,6 @@
 package com.epam.brn.model
 
+import com.epam.brn.dto.response.AuthorityDto
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -15,6 +16,11 @@ data class Authority(
     val authorityName: String
 
 ) {
+    fun toDto() = AuthorityDto(
+        id = id,
+        authorityName = authorityName
+    )
+
     override fun toString(): String {
         return "Authority(id=$id, authority='$authorityName')"
     }

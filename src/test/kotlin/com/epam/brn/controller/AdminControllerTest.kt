@@ -98,13 +98,14 @@ internal class AdminControllerTest {
     fun `getUsers should return users with statistic when withAnalytics is true`() {
         // GIVEN
         val withAnalytics = true
-        every { userAccountService.getUsersWithAnalytics(pageable) } returns listOf(userWithAnalyticsDto)
+        val role = "ROLE_USER"
+        every { userAccountService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsDto)
 
         // WHEN
-        val users = adminController.getUsers(withAnalytics, pageable)
+        val users = adminController.getUsers(withAnalytics, role, pageable)
 
         // THEN
-        verify(exactly = 1) { userAccountService.getUsersWithAnalytics(pageable) }
+        verify(exactly = 1) { userAccountService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BaseResponseDto).data shouldBe listOf(userWithAnalyticsDto)
     }
@@ -113,13 +114,14 @@ internal class AdminControllerTest {
     fun `getUsers should return users when withAnalytics is false`() {
         // GIVEN
         val withAnalytics = false
-        every { userAccountService.getUsers(pageable) } returns listOf(userAccountDto)
+        val role = "ROLE_USER"
+        every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountDto)
 
         // WHEN
-        val users = adminController.getUsers(withAnalytics, pageable)
+        val users = adminController.getUsers(withAnalytics, role, pageable)
 
         // THEN
-        verify(exactly = 1) { userAccountService.getUsers(pageable) }
+        verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BaseResponseDto).data shouldBe listOf(userAccountDto)
     }

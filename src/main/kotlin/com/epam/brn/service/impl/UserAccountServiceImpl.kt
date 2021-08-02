@@ -4,6 +4,7 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
+import com.epam.brn.dto.response.AuthorityDto
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
 import com.epam.brn.exception.EntityNotFoundException
@@ -109,11 +110,11 @@ class UserAccountServiceImpl(
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
-    override fun getUsers(pageable: Pageable): List<UserAccountDto> =
-        userAccountRepository.findAll().map { it.toDto() }
+    override fun getUsers(pageable: Pageable, role: String): List<UserAccountDto> =
+        userAccountRepository.findUsersAccountsByRole(role).map { it.toDto() }
 
-    override fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsDto> {
-        val users = userAccountRepository.findAll().map { it.toAnalyticsDto() }
+    override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsDto> {
+        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
         // todo fill user models with analytics and write tests
         return users
     }
@@ -179,5 +180,10 @@ class UserAccountServiceImpl(
         return userAccountRepository.findUserAccountByEmail(email)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
+    }
+
+    override fun getUserRoles(userId: Long): List<AuthorityDto> {
+        return userAccountRepository.findUserAccountById(userId)
+            .orElseThrow { EntityNotFoundException("No user was found for id = $userId") }.authoritySet.map { it.toDto() }
     }
 }
