@@ -38,6 +38,8 @@ data class StudyHistoryDto(
         executionSeconds = this.executionSeconds,
         tasksCount = this.tasksCount,
         wrongAnswers = this.wrongAnswers,
-        replaysCount = this.replaysCount
+        replaysCount = this.replaysCount,
+        repetitionIndex = replaysCount.toFloat() / (tasksCount + replaysCount),
+        rightAnswersIndex = (tasksCount - wrongAnswers).toFloat() / tasksCount,
     )
 }

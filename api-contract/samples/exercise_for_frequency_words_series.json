@@ -1,0 +1,25 @@
+{
+  "data": {
+    "seriesId": 111,
+    "id": 1861,
+    "name": "Высокочастотные",
+    "level": 301,
+    "noise": {
+      "level": 0,
+      "url": ""
+    },
+    "template": "",
+    "available": true,
+    "tasks": [
+      {
+        "id": 1849
+      }
+    ],
+    "signals": [],
+    "active": true,
+    "changedBy": "InitialDataLoader",
+    "changedWhen": "2021-07-30T09:08:03.541432"
+  },
+  "errors": [],
+  "meta": []
+}

@@ -36,8 +36,8 @@ data class StudyHistory(
     var tasksCount: Short,
     var wrongAnswers: Int,
     var replaysCount: Int,
-    var repetitionIndex: Float? = null,
-    var rightAnswersIndex: Float? = null
+    var repetitionIndex: Float? = 0.0f,
+    var rightAnswersIndex: Float? = 1.0f,
 
 ) {
     override fun toString() =

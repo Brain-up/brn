@@ -265,7 +265,29 @@ mediaType:
         200:
           body:
             example: !include samples/subgroup_by_id.json
-
+    delete:
+      description: |
+      The endpoint should delete subGroup without exercises
+      queryParameters:
+        subGroupId:
+          description: "ID of the subGroup tasks belongs to"
+          required: true
+          type: string
+          example: "3"
+      responses:
+        204:
+        400:
+          description: |
+             Bad or not empty subGroup. This can happen if the user inserts
+             incorrect number of subGroup or subGroup has exercises.
+          body:
+            application/json:
+              type: Error
+              example: {
+                           "data": [],
+                           "errors": "Can not delete subGroup because subGroup is not found by this id.",
+                           "meta": []
+                       }
 
 # EXERCISE ----------------------------
 /exercises:
@@ -281,14 +303,15 @@ mediaType:
         body:
           example1: !include samples/exercises_for_1_series_subgroup.json
           example2: !include samples/exercises_for_2_series_subgroup.json
-          example2: !include samples/exercises_for_3_series_subgroup.json
-          example2: !include samples/exercises_for_4_series_subgroup.json
+          example3: !include samples/exercises_for_3_series_subgroup.json
+          example4: !include samples/exercises_for_4_series_subgroup.json
   /{exerciseId}:
     get:
       responses:
         200:
           body:
             example1: !include samples/exercise_for_id_1.json
+            example2: !include samples/exercise_for_frequency_words_series.json
   /byIds:
     post:
         description: Get available exercise ids for current user by input ids which have same subGroup.
@@ -298,6 +321,7 @@ mediaType:
         responses:
           200:
             example: !include samples/avaliable_exercise_ids_by_input_ids.json
+
 
   /{exerciseId}/active/{active}:
    put:
@@ -332,6 +356,7 @@ mediaType:
               example_for_2_series: !include samples/task_by_id_for_2_series.json
               example_for_3_series: !include samples/task_by_id_for_3_series.json
               example_for_4_series: !include samples/task_by_id_for_4_series.json
+              example_for_frequency_words_series: !include samples/task_by_id_for_frequency_words_series.json
 
 # STUDY_HISTORY ----------------------
 /study-history:
