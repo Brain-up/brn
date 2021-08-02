@@ -525,7 +525,9 @@ class AdminControllerIT : BaseIT() {
                 executionSeconds = 122,
                 tasksCount = 12,
                 wrongAnswers = 2,
-                replaysCount = 4
+                replaysCount = 4,
+                repetitionIndex = 4.0f / 16,
+                rightAnswersIndex = 10.0f / 12,
             )
         )
     }

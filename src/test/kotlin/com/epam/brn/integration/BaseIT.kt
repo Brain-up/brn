@@ -98,7 +98,9 @@ abstract class BaseIT {
                 exercise = exercise,
                 tasksCount = 5,
                 wrongAnswers = 0,
-                replaysCount = 1
+                replaysCount = 1,
+                repetitionIndex = 4.0f / 16,
+                rightAnswersIndex = 10.0f / 12,
             )
         )
     }
