@@ -1,6 +1,6 @@
-import ApplicationAdapter from './application';
+import UserWeeklyStatisticsAdapter from './user-weekly-statistics';
 
-export default class UserYearlyStatisticsAdapter extends ApplicationAdapter {
+export default class UserYearlyStatisticsAdapter extends UserWeeklyStatisticsAdapter {
   pathForType() {
     return 'statistics/study/year';
   }

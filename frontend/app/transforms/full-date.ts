@@ -5,7 +5,11 @@ import { DateTime } from 'luxon';
 const { DateTransform } = DS;
 const FullDate = DateTransform.extend({
   deserialize(serialized: Record<string, never>): DateTime | null {
-    return (serialized && DateTime.fromISO(serialized)) || null;
+    return (
+      (serialized &&
+        DateTime.fromISO(serialized as unknown as string, { zone: 'utc' })) ||
+      null
+    );
   },
 });
 

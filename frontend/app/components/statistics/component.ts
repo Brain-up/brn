@@ -9,10 +9,6 @@ import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { action } from '@ember/object';
 import Store from '@ember-data/store';
 
-function formatDateForRequest(date: DateTime): string {
-  return date.toUTC().toFormat('yyyy-MM-dd');
-}
-
 interface IStatisticsComponentArgs {
   initialSelectedMonth?: DateTime;
 }
@@ -34,17 +30,17 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
     const toMonth: DateTime = this.selectedMonth.endOf('month');
     this.isLoadingWeekTimeTrackData = true;
 
-    const from: string = formatDateForRequest(fromMonth);
-    const to: string = formatDateForRequest(toMonth);
-
-    this.weekTimeTrackData = yield this.store
-      .query('user-weekly-statistics', {
-        from,
-        to,
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      this.weekTimeTrackData = yield this.store.query(
+        'user-weekly-statistics',
+        {
+          from: fromMonth,
+          to: toMonth,
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
     this.isLoadingWeekTimeTrackData = false;
   }).drop())
   getWeekTimeTrackData!: TaskGenerator<any, any>;
@@ -55,17 +51,17 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
     const toYear: DateTime = this.selectedMonth.endOf('year');
     this.isLoadingMonthTimeTrackData = true;
 
-    const from: string = formatDateForRequest(fromYear);
-    const to: string = formatDateForRequest(toYear);
-
-    this.monthTimeTrackData = yield this.store
-      .query('user-yearly-statistics', {
-        from,
-        to,
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      this.monthTimeTrackData = yield this.store.query(
+        'user-yearly-statistics',
+        {
+          from: fromYear,
+          to: toYear,
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
     this.isLoadingMonthTimeTrackData = false;
     if (!this.monthTimeTrackData?.length) {
       return;
