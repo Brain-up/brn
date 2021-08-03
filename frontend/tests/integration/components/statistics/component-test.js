@@ -4,6 +4,7 @@ import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { DateTime } from 'luxon';
 
 module('Integration | Component | statistics', function (hooks) {
   setupRenderingTest(hooks);
@@ -15,26 +16,35 @@ module('Integration | Component | statistics', function (hooks) {
     const stubGetStatsByYear = sinon.stub();
     const stubGetStatsByWeek = sinon.stub();
 
-    server.get('/statistics/study/week', function () {
-      stubGetStatsByWeek();
+    server.get('/statistics/study/week', function (schema, request) {
+      stubGetStatsByWeek(request.queryParams.from, request.queryParams.to);
       return { data: [] };
     });
 
-    server.get('/statistics/study/year', function () {
-      stubGetStatsByYear();
+    server.get('/statistics/study/year', function (schema, request) {
+      stubGetStatsByYear(request.queryParams.from, request.queryParams.to);
       return { data: [] };
     });
 
-    await render(hbs`<Statistics />`);
+    this.set(
+      'initialSelectedMonth',
+      DateTime.fromFormat('2021-01-20', 'yyyy-MM-dd', { zone: 'utc' }),
+    );
+
+    await render(
+      hbs`<Statistics @initialSelectedMonth={{this.initialSelectedMonth}}/>`,
+    );
 
     assert.ok(
       stubGetStatsByWeek.calledOnce,
       'getUserStatisticsByWeek called on init',
     );
+    assert.ok(stubGetStatsByWeek.calledWith('2021-01-01', '2021-01-31'));
     assert.ok(
       stubGetStatsByYear.calledOnce,
       'getUserStatisticsByYear called on init',
     );
+    assert.ok(stubGetStatsByYear.calledWith('2021-01-01', '2021-12-31'));
   });
 
   test('it shows info dialog', async function (assert) {

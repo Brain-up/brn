@@ -3,7 +3,6 @@ import fetch from 'fetch';
 import { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Store from '@ember-data/store';
-import { DateTime } from 'luxon';
 
 interface UserDTO {
   firstName: string;
@@ -35,10 +34,6 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
     birthday: new Date().setFullYear(user.bornYear).toString(),
     id: user.id as string,
   };
-}
-
-function formatDateForRequest(date: Date): string {
-  return DateTime.fromJSDate(date).toUTC().toFormat('yyyy-MM-dd');
 }
 
 export default class NetworkService extends Service {
@@ -116,28 +111,11 @@ export default class NetworkService extends Service {
     const { data } = json;
     return data.map((el: number) => String(el));
   }
-  async getUserStatisticsByWeek(from: Date, to: Date) {
-    const fromFormatted: string = formatDateForRequest(from);
-    const toFormatted: string = formatDateForRequest(to);
-    const result = await this.request(
-      `statistics/study/week?from=${fromFormatted}&to=${toFormatted}`,
-    );
-    let { data } = await result.json();
-    return data;
-  }
-  async getUserStatisticsByYear(from: Date, to: Date) {
-    const fromFormatted: string = formatDateForRequest(from);
-    const toFormatted: string = formatDateForRequest(to);
-    const result = await this.request(
-      `statistics/study/year?from=${fromFormatted}&to=${toFormatted}`,
-    );
-    let { data } = await result.json();
-    return data;
-  }
 }
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your services.
 declare module '@ember/service' {
+  // eslint-disable-next-line no-unused-vars
   interface Registry {
     network: NetworkService;
   }
