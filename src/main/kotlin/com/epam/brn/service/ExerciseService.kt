@@ -51,12 +51,12 @@ class ExerciseService(
 
     fun findExercisesByUserIdAndSubGroupId(userId: Long, subGroupId: Long): List<ExerciseDto> {
         log.info("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
-        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
+        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
         log.info("current user is admin: ${userId == 1L}))")
         if (userId == 1L)
             return subGroupExercises.map { exercise -> updateNoiseUrl(exercise.toDto(true)) }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
-        val openSubGroupExercises = getAvailableExercises(doneSubGroupExercises, subGroupExercises, userId)
+        val openSubGroupExercises = getAvailableExercisesForSubGroup(doneSubGroupExercises, subGroupExercises, userId, subGroupId)
         return subGroupExercises.map { exercise ->
             updateNoiseUrl(exercise.toDto(openSubGroupExercises.contains(exercise)))
         }
@@ -72,16 +72,17 @@ class ExerciseService(
             .map { e -> e.id!! }
     }
 
-    fun getAvailableExercises(
+    fun getAvailableExercisesForSubGroup(
         doneSubGroupExercises: List<Exercise>,
         subGroupExercises: List<Exercise>,
-        userId: Long
+        userId: Long,
+        subGroupId: Long
     ): Set<Exercise> {
         if (doneSubGroupExercises.size == subGroupExercises.size)
             return doneSubGroupExercises.toSet()
         val mapDone = doneSubGroupExercises.groupBy({ it.name }, { it })
         val available = mutableSetOf<Exercise>()
-        val lastHistoryMap = studyHistoryRepository.findLastByUserAccountId(userId)
+        val lastHistoryMap = studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId)
             .groupBy({ it.exercise }, { it })
         subGroupExercises
             .groupBy({ it.name }, { it })
