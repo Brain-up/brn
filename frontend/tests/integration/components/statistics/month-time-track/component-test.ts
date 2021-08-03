@@ -1,13 +1,18 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { pauseTest, render } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { DateTime } from 'luxon';
 import { PROGRESS } from 'brn/models/user-weekly-statistics';
 import sinon from 'sinon';
 import click from '@ember/test-helpers/dom/click';
+import Store from '@ember-data/store';
 
-const generateTrackData = (months: number[], year: number = 2021): any[] => {
+const generateTrackData = (
+  store: Store,
+  months: number[],
+  year: number = 2021,
+): any[] => {
   const result = [];
   const uniqueMonths = [...new Set(months)];
   if (uniqueMonths.length > 12 || uniqueMonths.length < months.length) {
@@ -16,12 +21,12 @@ const generateTrackData = (months: number[], year: number = 2021): any[] => {
   for (let i = 0; i < months.length; i++) {
     let month = months[i];
     const mm: string = (month < 10 ? '0' : '') + month;
-    const trackItemData = {
+    const trackItemData = store.createRecord('UserYearlyStatistics', {
       progress: PROGRESS.GREAT,
-      date: `${year}-${mm}`,
+      date: DateTime.fromFormat(`${year}-${mm}-03`, 'yyyy-MM-dd'),
       exercisingDays: 5,
       exercisingTimeSeconds: 3600,
-    };
+    });
     result.push(trackItemData);
   }
   return result;
@@ -41,15 +46,16 @@ module(
     test('it renders from 0 to 12 months', async function (assert) {
       // Set any properties with this.set('myProperty', 'value');
       // Handle any actions with this.set('myAction', function(val) { ... });
-
+      const store = this.owner.lookup('service:store');
       const currentYear: number = new Date().getFullYear();
 
-      const TRACK_DATA_1 = generateTrackData([6], currentYear); //June only
+      const TRACK_DATA_1 = generateTrackData(store, [6], currentYear); //June only
       const TRACK_DATA_12 = generateTrackData(
+        store,
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         currentYear,
       );
-      const TRACK_DATA_0 = generateTrackData([], currentYear);
+      const TRACK_DATA_0 = generateTrackData(store, [], currentYear);
 
       this.set('isLoadingMonthTimeTrackData', false);
 
@@ -82,6 +88,7 @@ module(
     });
 
     test('it selects month', async function (assert) {
+      const store = this.owner.lookup('service:store');
       this.set('newSelectedMonth', null);
 
       const stubSelectMonth = (selectedMonth: DateTime) => {
@@ -93,6 +100,7 @@ module(
       const currentYear: number = new Date().getFullYear();
 
       const TRACK_DATA_12 = generateTrackData(
+        store,
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         currentYear,
       );
@@ -118,17 +126,14 @@ module(
       assert.dom('[data-test-month-track-item-index="5"]').hasClass('selected');
 
       await click('[data-test-month-track-item-index="0"]');
-      assert.equal(
-        this.get('newSelectedMonth').month,
-        1,
-        'January is selected',
-      );
+      assert.equal(this.newSelectedMonth.month, 1, 'January is selected');
 
       await click('[data-test-month-track-item-index="3"]');
-      assert.equal(this.get('newSelectedMonth').month, 4, 'April is selected');
+      assert.equal(this.newSelectedMonth.month, 4, 'April is selected');
     });
 
     test('it goes to prev/next year', async function (assert) {
+      const store = this.owner.lookup('service:store');
       const stubLoadPrevYear = sinon.stub();
       const stubLoadNextYear = sinon.stub();
 
@@ -138,7 +143,7 @@ module(
       const currentYear: number = new Date().getFullYear();
       const lastYear: number = currentYear - 1;
 
-      const TRACK_DATA_0 = generateTrackData([], currentYear);
+      const TRACK_DATA_0 = generateTrackData(store, [], currentYear);
 
       this.set('isLoadingMonthTimeTrackData', false);
 
@@ -173,10 +178,11 @@ module(
     });
 
     test('it shows empty data', async function (assert) {
+      const store = this.owner.lookup('service:store');
       const currentYear: number = new Date().getFullYear();
 
-      const TRACK_DATA_1 = generateTrackData([6], currentYear); //June only
-      const TRACK_DATA_0 = generateTrackData([], currentYear);
+      const TRACK_DATA_1 = generateTrackData(store, [6], currentYear); //June only
+      const TRACK_DATA_0 = generateTrackData(store, [], currentYear);
 
       this.set('isLoadingMonthTimeTrackData', false);
 

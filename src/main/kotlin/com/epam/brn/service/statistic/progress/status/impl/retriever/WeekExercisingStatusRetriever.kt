@@ -22,7 +22,9 @@ class WeekExercisingStatusRetriever(
             from = startTime,
             to = endTime
         )
-        return periodRequirements.first { 7 - maximalUserCoolDownDays in it.minimalRequirements until it.maximalRequirements }.status
+        val statusRequirement =
+            periodRequirements.firstOrNull { 7 - maximalUserCoolDownDays in it.minimalRequirements until it.maximalRequirements }
+        return statusRequirement?.status
     }
 
     override fun getSupportedPeriods(): List<UserExercisingPeriod> {

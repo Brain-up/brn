@@ -68,7 +68,24 @@ type TaskDTO = {
   serialNumber: number;
 };
 
-type DTOItem = GroupDTO | SeriesDTO | SubgroupDTO | ExerciseDTO | TaskDTO;
+type UserWeeklyStatisticsDTO = {
+  date: Date;
+  excersizingTimeSeconds: number;
+  progress: string;
+};
+
+type UserYearlyStatisticsDTO = UserWeeklyStatisticsDTO & {
+  exercisingDays: number;
+};
+
+type DTOItem =
+  | GroupDTO
+  | SeriesDTO
+  | SubgroupDTO
+  | ExerciseDTO
+  | TaskDTO
+  | UserWeeklyStatisticsDTO
+  | UserYearlyStatisticsDTO;
 
 type GenericDTO = {
   data: DTOItem[];
