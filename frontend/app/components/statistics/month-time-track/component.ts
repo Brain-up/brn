@@ -1,10 +1,9 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { IMonthTimeTrackItemData } from 'brn/models/user-weekly-statistics';
 import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
 import { DateTime } from 'luxon';
 import { action } from '@ember/object';
-import { secondsTo } from 'brn/utils/seconds-to';
+import { isNone } from '@ember/utils';
 
 interface IMonthTimeTrackComponentArgs {
   isLoading: boolean;
@@ -15,31 +14,11 @@ interface IMonthTimeTrackComponentArgs {
   onLoadNextYear(): void;
 }
 
-export default class MonthTimeTrackComponent<
-  IMonthTimeTrackComponentArgs,
-> extends Component {
-  @tracked monthTimeTrackItemsData: IMonthTimeTrackItemData[] | null = null;
+export default class MonthTimeTrackComponent extends Component<IMonthTimeTrackComponentArgs> {
   @tracked isLoading: boolean = true;
 
-  @action
-  didUpdateData(): void {
-    const data = this.args.data;
-    if (!data) {
-      return;
-    }
-
-    this.monthTimeTrackItemsData = data.map((rawItem: any) => {
-      const date: DateTime = DateTime.fromISO(rawItem.date);
-
-      return {
-        progress: rawItem.progress,
-        time: secondsTo(rawItem.exercisingTimeSeconds, 'h:m:s'),
-        days: rawItem.exercisingDays,
-        month: date.toFormat('MMMM'),
-        year: date.year,
-        date,
-      };
-    });
+  get monthTimeTrackItemsData(): UserYearlyStatisticsModel[] | null {
+    return this.args.data;
   }
 
   @action
@@ -49,7 +28,7 @@ export default class MonthTimeTrackComponent<
 
   @action
   loadNextYear(): void {
-    if (!this.isAllowedNextYear()) {
+    if (!this.isAllowedNextYear) {
       return;
     }
     this.args.onLoadNextYear();
@@ -62,6 +41,9 @@ export default class MonthTimeTrackComponent<
   }
 
   get isIncompleteYear(): boolean {
-    return this.monthTimeTrackItemsData?.length < 12;
+    return (
+      isNone(this.monthTimeTrackItemsData) ||
+      this.monthTimeTrackItemsData!.length < 12
+    );
   }
 }
