@@ -3,18 +3,24 @@ import {
   BarDataType,
   BarOptionsType,
 } from 'brn/components/statistics/bar-chart/component';
-import { UserExercisingProgressStatusType } from 'brn/models/user-weekly-statistics';
+import {
+  PROGRESS,
+  UserExercisingProgressStatusType,
+} from 'brn/models/user-weekly-statistics';
 import { DateTime } from 'luxon';
 import UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { secondsTo } from 'brn/utils/seconds-to';
+import { isNone } from '@ember/utils';
 
+/* eslint-disable no-unused-vars */
 enum PROGRESS_COLORS {
   BAD = '#F38698',
   GOOD = '#FBD051',
   GREAT = '#47CD8A',
 }
+/* eslint-enable */
 
 export interface IWeekChartDataItem {
   x: string;
@@ -86,7 +92,7 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
     };
   }
 
-  @tracked barData: BarDataType;
+  @tracked barData: BarDataType = [];
 
   get selectedMonth(): DateTime {
     return this.args.selectedMonth;
@@ -95,32 +101,34 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
   @action
   didUpdateData(): void {
     this.chartData = [];
-    const data = this.args.data;
-    if (!data) {
+    const data: UserWeeklyStatisticsModel[] | null = this.args.data;
+    if (isNone(data)) {
       return;
     }
 
+    let dayNumber: number;
     for (
-      let dayNumber = 1;
+      dayNumber = 1;
       dayNumber <= this.selectedMonth.daysInMonth;
       dayNumber++
     ) {
-      const realRawItem = data.find(
-        (rawItem) => DateTime.fromISO(rawItem.date).day === dayNumber,
+      const dataItem: UserWeeklyStatisticsModel | undefined = data.find(
+        (statisticsItem: UserWeeklyStatisticsModel) =>
+          statisticsItem.date.day === dayNumber,
       );
       this.chartData.push(
-        realRawItem
+        dataItem
           ? {
-              x: DateTime.fromISO(realRawItem.date).weekdayShort.slice(0, 2),
-              y: realRawItem.exercisingTimeSeconds,
-              progress: realRawItem.progress,
+              x: dataItem.date.weekdayShort.slice(0, 2),
+              y: dataItem.exercisingTimeSeconds,
+              progress: dataItem.progress,
             }
           : {
               x: this.selectedMonth
                 .set({ day: dayNumber })
                 .weekdayShort.slice(0, 2),
               y: 0,
-              progress: 'BAD',
+              progress: PROGRESS.BAD,
             },
       );
     }
