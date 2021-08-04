@@ -59,6 +59,7 @@ class InitialDataLoader(
             ExerciseType.PHRASES.name to PHRASES_FILE_NAME,
             ExerciseType.WORDS_SEQUENCES.name to WORDS_SEQUENCES_FILE_NAME,
             ExerciseType.SENTENCE.name to SENTENCES_FILE_NAME,
+            ExerciseType.FREQUENCY_WORDS.name to SINGLE_FREQUENCY_WORDS_FILE_NAME,
             ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
             ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
         )
@@ -85,6 +86,8 @@ class InitialDataLoader(
             "subgroups_en.csv",
             "$devSubFolder$SINGLE_SIMPLE_WORDS_FILE_NAME.csv",
             "$devSubFolder$SINGLE_SIMPLE_WORDS_EN_FILE_NAME.csv",
+            "$devSubFolder$SINGLE_FREQUENCY_WORDS_FILE_NAME.csv",
+            "$devSubFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
             "$devSubFolder$WORDS_SEQUENCES_FILE_NAME.csv",
             "$devSubFolder$PHRASES_FILE_NAME.csv",
             "signal_exercises_ru.csv",
@@ -198,10 +201,12 @@ class InitialDataLoader(
     }
 }
 
-val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words_ru"
-val SINGLE_SIMPLE_WORDS_EN_FILE_NAME = "series_words_en"
-val PHRASES_FILE_NAME = "series_phrases_ru"
-val WORDS_SEQUENCES_FILE_NAME = "series_word_groups_ru"
-val SENTENCES_FILE_NAME = "series_sentences_ru"
-val SENTENCES_EN_FILE_NAME = "series_sentences_en"
-val SIGNALS_FILE_NAME = "signal_exercises_"
+const val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words_ru"
+const val SINGLE_SIMPLE_WORDS_EN_FILE_NAME = "series_words_en"
+const val SINGLE_FREQUENCY_WORDS_FILE_NAME = "series_frequency_words_ru"
+const val SINGLE_FREQUENCY_WORDS_EN_FILE_NAME = "series_frequency_words_en"
+const val PHRASES_FILE_NAME = "series_phrases_ru"
+const val WORDS_SEQUENCES_FILE_NAME = "series_word_groups_ru"
+const val SENTENCES_FILE_NAME = "series_sentences_ru"
+const val SENTENCES_EN_FILE_NAME = "series_sentences_en"
+const val SIGNALS_FILE_NAME = "signal_exercises_"
