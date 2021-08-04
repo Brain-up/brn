@@ -3,6 +3,13 @@ package com.epam.brn.service
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.NoiseDto
+import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.Phrases
+import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -12,6 +19,10 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.upload.csv.RecordProcessor
+import com.epam.brn.upload.csv.seriesMatrix.SeriesMatrixRecordProcessor
+import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecordProcessor
+import com.epam.brn.upload.csv.seriesWords.SeriesWordsRecordProcessor
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldHaveSize
@@ -19,6 +30,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkClass
@@ -28,6 +40,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
+import java.util.stream.Stream
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseServiceTest {
@@ -49,7 +62,7 @@ internal class ExerciseServiceTest {
     @MockK
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
 
-    @MockK
+    @RelaxedMockK
     lateinit var audioFilesGenerationService: AudioFilesGenerationService
 
     @MockK
@@ -363,5 +376,173 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 5
         actualResult shouldContainAll listOf(ex1, ex2, ex3, ex11, ex13)
+    }
+
+    @Test
+    fun `should be return new exercise from ExerciseWordsCreateDto`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            words = listOf("word1", "word2"),
+            noiseLevel = 0
+        )
+        val exercise = Exercise(name = exerciseWordsCreateDto.exerciseName)
+        val wordsRecordProcessor = mockk<SeriesWordsRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(wordsRecordProcessor)
+        every { wordsRecordProcessor.isApplicable(any()) } returns true
+        every { wordsRecordProcessor.process(any(), any()) } returns listOf(exercise)
+        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+
+        // WHEN
+        val exerciseDto = exerciseService.createAndGenerateExerciseWords(exerciseWordsCreateDto)
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { wordsRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { wordsRecordProcessor.process(any(), any()) }
+        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
+        exerciseDto.name shouldBe exercise.name
+    }
+
+    @Test
+    fun `should be throw RuntimeException in createAndGenerateExerciseWords`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            words = listOf("word1", "word2"),
+            noiseLevel = 0
+        )
+        val wordsRecordProcessor = mockk<SeriesWordsRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(wordsRecordProcessor)
+        every { wordsRecordProcessor.isApplicable(any()) } returns true
+        every { wordsRecordProcessor.process(any(), any()) } returns listOf()
+
+        // WHEN
+        val exception = shouldThrow<RuntimeException> { exerciseService.createAndGenerateExerciseWords(exerciseWordsCreateDto) }
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { wordsRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { wordsRecordProcessor.process(any(), any()) }
+        exception.message shouldBe "Exercise with this name (${exerciseWordsCreateDto.exerciseName}) already exist"
+    }
+
+    @Test
+    fun `should be return new exercise from ExercisePhrasesCreateDto`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            phrases = Phrases("short phrase", "long phrase"),
+            noiseLevel = 0
+        )
+        val exercise = Exercise(name = exercisePhrasesCreateDto.exerciseName)
+        val seriesPhrasesRecordProcessor = mockk<SeriesPhrasesRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesPhrasesRecordProcessor)
+        every { seriesPhrasesRecordProcessor.isApplicable(any()) } returns true
+        every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf(exercise)
+        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+
+        // WHEN
+        val exerciseDto = exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto)
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.process(any(), any()) }
+        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
+        exerciseDto.name shouldBe exercise.name
+    }
+
+    @Test
+    fun `should be throw RuntimeException in createAndGenerateExercisePhrases`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            phrases = Phrases("short phrase", "long phrase"),
+            noiseLevel = 0
+        )
+        val seriesPhrasesRecordProcessor = mockk<SeriesPhrasesRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesPhrasesRecordProcessor)
+        every { seriesPhrasesRecordProcessor.isApplicable(any()) } returns true
+        every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf()
+
+        // WHEN
+        val exception = shouldThrow<RuntimeException> { exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto) }
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.process(any(), any()) }
+        exception.message shouldBe "Exercise with this name (${exercisePhrasesCreateDto.exerciseName}) already exist"
+    }
+
+    @Test
+    fun `should be return new exercise from ExerciseSentencesCreateDto`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            orderNumber = 1,
+            words = SetOfWords(listOf("count1", "count2"))
+        )
+        val exercise = Exercise(name = exerciseSentencesCreateDto.exerciseName)
+        val seriesMatrixRecordProcessor = mockk<SeriesMatrixRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesMatrixRecordProcessor)
+        every { seriesMatrixRecordProcessor.isApplicable(any()) } returns true
+        every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf(exercise)
+        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+
+        // WHEN
+        val exerciseDto = exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto)
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.process(any(), any()) }
+        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
+        exerciseDto.name shouldBe exercise.name
+    }
+
+    @Test
+    fun `should be RuntimeException in createAndGenerateExerciseSentences`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            orderNumber = 1,
+            words = SetOfWords(listOf("count1", "count2"))
+        )
+        val seriesMatrixRecordProcessor = mockk<SeriesMatrixRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesMatrixRecordProcessor)
+        every { seriesMatrixRecordProcessor.isApplicable(any()) } returns true
+        every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf()
+
+        // WHEN
+        val exception = shouldThrow<RuntimeException> { exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto) }
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.process(any(), any()) }
+        exception.message shouldBe "Exercise with this name (${exerciseSentencesCreateDto.exerciseName}) already exist"
     }
 }
