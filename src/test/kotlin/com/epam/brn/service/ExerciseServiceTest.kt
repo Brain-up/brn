@@ -35,11 +35,8 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
-import org.amshove.kluent.shouldBe
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.mock
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
@@ -188,7 +185,9 @@ internal class ExerciseServiceTest {
     @Test
     fun `should return 2 availableExercises for one subgroup with last done success`() {
         // GIVEN
+        val subGroupId = 5L
         val subGroup = SubGroup(
+            id = subGroupId,
             series = series,
             level = 1,
             code = "code",
