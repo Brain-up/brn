@@ -20,7 +20,8 @@ data class AudiometryHistoryRequest(
     @NotNull
     var rightAnswers: Int,
     @NotNull
-    var headphones: Long? = null
+    var headphones: Long? = null,
+    var sinAudiometryResults: Map<Int, Int>? = mutableMapOf()
 ) {
     fun toEntity(userAccount: UserAccount, audiometryTask: AudiometryTask, headphones: Headphones?) = AudiometryHistory(
         userAccount = userAccount,
@@ -31,6 +32,6 @@ data class AudiometryHistoryRequest(
         tasksCount = this.tasksCount,
         rightAnswers = this.rightAnswers,
         rightAnswersIndex = rightAnswers.toFloat().div(tasksCount),
-        headphones = headphones
+        headphones = headphones,
     )
 }

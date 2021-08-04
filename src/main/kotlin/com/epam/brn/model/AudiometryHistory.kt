@@ -1,6 +1,8 @@
 package com.epam.brn.model
 
 import java.time.LocalDateTime
+import java.util.LinkedList
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
@@ -25,13 +28,14 @@ class AudiometryHistory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var userAccount: UserAccount,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "audiometry_task_id")
-    var audiometryTask: AudiometryTask,
     @Column(nullable = false)
     var startTime: LocalDateTime,
     var endTime: LocalDateTime? = null,
+
+    // for speech audiometry
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "audiometry_task_id")
+    var audiometryTask: AudiometryTask,
     var executionSeconds: Int?,
     @Column(nullable = false)
     var tasksCount: Short,
@@ -42,7 +46,11 @@ class AudiometryHistory(
     var rightAnswersIndex: Float? = null,
     @OneToOne
     @JoinColumn(name = "headphones", nullable = false)
-    var headphones: Headphones? = null
+    var headphones: Headphones? = null,
+
+    // for signal audiometry
+    @OneToMany(mappedBy = "audiometryHistory", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val sinAudiometryResults: MutableList<SinAudiometryResult>? = LinkedList(),
 ) {
     override fun toString() =
         "AudiometryHistory(id=$id, userAccount=$userAccount, audiometryTask=$audiometryTask, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, rightAnswers=$rightAnswers), headphones=$headphones"
