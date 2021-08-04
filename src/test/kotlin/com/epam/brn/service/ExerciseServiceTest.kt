@@ -35,8 +35,11 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
+import org.amshove.kluent.shouldBe
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito.mock
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
@@ -106,14 +109,21 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get exercises by user and series`() {
         // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
         val exercise1 = Exercise(id = 1, name = "pets")
         val exercise2 = Exercise(id = 2, name = "pets")
         val noiseUrl = "noiseUrl"
+        val lastStudyHistoryMockk = mockkClass(StudyHistory::class)
+        every { lastStudyHistoryMockk.exercise } returns exercise1
+        every { lastStudyHistoryMockk.tasksCount } returns 10
+        every { lastStudyHistoryMockk.replaysCount } returns 2
+        every { lastStudyHistoryMockk.wrongAnswers } returns 0
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
-        every { studyHistoryRepository.findLastByUserAccountId(userId) } returns emptyList()
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastStudyHistoryMockk)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
 
         // WHEN
@@ -123,6 +133,7 @@ internal class ExerciseServiceTest {
         actualResult shouldHaveSize 2
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
+        verify(exactly = 1) { studyHistoryRepository.findLastBySubGroupAndUserAccount(ofType(Long::class), ofType(Long::class)) }
     }
 
     @Test
@@ -198,12 +209,12 @@ internal class ExerciseServiceTest {
             wrongAnswers = 5,
             replaysCount = 0
         )
-        every { studyHistoryRepository.findLastByUserAccountId(1) } returns listOf(studyHistory1)
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, 1) } returns listOf(studyHistory1)
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
-        val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+        val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
         actualResult shouldHaveSize 2
         actualResult shouldContainAll listOf(ex1, ex3)
@@ -212,7 +223,9 @@ internal class ExerciseServiceTest {
     @Test
     fun `should return availableExercises for one subgroup with last done success`() {
         // GIVEN
+        val subGroupId = 5L
         val subGroup = SubGroup(
+            id = subGroupId,
             series = series,
             level = 1,
             code = "code",
@@ -243,7 +256,7 @@ internal class ExerciseServiceTest {
             wrongAnswers = 1,
             replaysCount = 1
         )
-        every { studyHistoryRepository.findLastByUserAccountId(userId) } returns listOf(
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(
             studyHistoryWithExercise1,
             studyHistoryWithExercise3
         )
@@ -251,7 +264,7 @@ internal class ExerciseServiceTest {
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
-        val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+        val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
         actualResult shouldHaveSize 4
         actualResult shouldContainAll listOf(ex1, ex2, ex3, ex4)
@@ -260,7 +273,9 @@ internal class ExerciseServiceTest {
     @Test
     fun `should return availableExercises for one subgroup with last done UNSUCCESS`() {
         // GIVEN
+        val subGroupId = 5L
         val subGroup = SubGroup(
+            id = subGroupId,
             series = series,
             level = 1,
             code = "code",
@@ -292,7 +307,7 @@ internal class ExerciseServiceTest {
             wrongAnswers = 5,
             replaysCount = 1
         )
-        every { studyHistoryRepository.findLastByUserAccountId(userAccountId) } returns listOf(
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns listOf(
             studyHistoryWithExercise1,
             studyHistoryWithExercise2
         )
@@ -301,7 +316,7 @@ internal class ExerciseServiceTest {
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
-        val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+        val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
         actualResult shouldHaveSize 3
         actualResult shouldContainAll listOf(ex1, ex2, ex4)
@@ -310,13 +325,16 @@ internal class ExerciseServiceTest {
     @Test
     fun `should return availableExercises for several subgroups`() {
         // GIVEN
+        val subGroupId = 5L
         val subGroup1 = SubGroup(
+            id = subGroupId,
             series = series,
             level = 1,
-            code = "code1",
-            name = "subGroup name1"
+            code = "code",
+            name = "subGroup name"
         )
         val subGroup2 = SubGroup(
+            id = 6,
             series = series,
             level = 2,
             code = "code2",
@@ -362,7 +380,7 @@ internal class ExerciseServiceTest {
             replaysCount = 4
         )
 
-        every { studyHistoryRepository.findLastByUserAccountId(userAccountId) } returns listOf(
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns listOf(
             studyHistoryWithExercise1,
             studyHistoryWithExercise2,
             studyHistoryWithExercise11
@@ -372,7 +390,7 @@ internal class ExerciseServiceTest {
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
         // WHEN
-        val actualResult = exerciseService.getAvailableExercises(listDone, listAll, 1)
+        val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
         actualResult shouldHaveSize 5
         actualResult shouldContainAll listOf(ex1, ex2, ex3, ex11, ex13)

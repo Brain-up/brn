@@ -12,17 +12,17 @@ module(
     test('it renders', async function (assert) {
       const TRACK_DATA = [
         {
-          date: '2021-06-08',
+          date: DateTime.fromISO('2021-06-08'),
           exercisingTimeSeconds: 15 * 60,
           progress: 'GOOD',
         },
         {
-          date: '2021-06-10',
+          date: DateTime.fromISO('2021-06-10'),
           exercisingTimeSeconds: 190,
           progress: 'BAD',
         },
         {
-          date: '2021-06-11',
+          date: DateTime.fromISO('2021-06-11'),
           exercisingTimeSeconds: 25 * 60,
           progress: 'GREAT',
         },

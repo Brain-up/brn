@@ -1,11 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, pauseTest } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import {
-  IMonthTimeTrackItemData,
-  PROGRESS,
-} from 'brn/models/user-weekly-statistics';
+import { PROGRESS } from 'brn/models/user-weekly-statistics';
 import { DateTime } from 'luxon';
 
 module(
@@ -18,7 +15,7 @@ module(
       // Handle any actions with this.set('myAction', function(val) { ... });
       const serviceIntl = this.owner.lookup('service:intl');
 
-      const itemData: IMonthTimeTrackItemData = {
+      const itemData: any = {
         progress: PROGRESS.BAD,
         time: '02:45:23',
         days: 5,
@@ -50,7 +47,7 @@ module(
       // Set any properties with this.set('myProperty', 'value');
       // Handle any actions with this.set('myAction', function(val) { ... });
 
-      const itemData: IMonthTimeTrackItemData = {
+      const itemData: any = {
         progress: PROGRESS.BAD,
         time: '02:45:23',
         days: 5,
