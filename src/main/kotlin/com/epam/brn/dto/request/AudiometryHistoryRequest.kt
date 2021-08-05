@@ -9,18 +9,18 @@ import javax.annotation.Nullable
 import javax.validation.constraints.NotNull
 
 data class AudiometryHistoryRequest(
-    @NotNull
+    @field:NotNull
     var audiometryTaskId: Long,
-    @NotNull
+    @field:NotNull
     var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
-    @NotNull
+    @field:NotNull
     var executionSeconds: Int?,
-    @NotNull
+    @field:NotNull
     var tasksCount: Short,
-    @Nullable
+    @field:Nullable
     var rightAnswers: Int = 0,
-    @NotNull
+    @field:NotNull
     var headphones: Long? = null,
     var sinAudiometryResults: Map<Int, Int>? = mutableMapOf()
 ) {
@@ -33,6 +33,6 @@ data class AudiometryHistoryRequest(
         tasksCount = this.tasksCount,
         rightAnswers = this.rightAnswers,
         rightAnswersIndex = rightAnswers.toFloat().div(tasksCount),
-        headphones = headphones,
+        headphones = headphones
     )
 }

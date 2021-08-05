@@ -5,9 +5,9 @@ import javax.validation.constraints.NotBlank
 
 data class AudiometryDto(
     val id: Long?,
-    @NotBlank
+    @field:NotBlank
     var locale: String?,
-    @NotBlank
+    @field:NotBlank
     var name: String,
     val audiometryType: AudiometryType,
     var description: String?,

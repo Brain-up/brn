@@ -8,18 +8,18 @@ import javax.validation.constraints.NotNull
 
 data class StudyHistoryDto(
     var id: Long? = null,
-    @NotNull
+    @field:NotNull
     var exerciseId: Long,
-    @NotNull
+    @field:NotNull
     var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
-    @NotNull
+    @field:NotNull
     var executionSeconds: Int,
-    @NotNull
+    @field:NotNull
     var tasksCount: Short,
-    @NotNull
+    @field:NotNull
     var replaysCount: Int, // -- count of replays.  --
-    @NotNull
+    @field:NotNull
     var wrongAnswers: Int // -- wrong answers count --
 ) {
     override fun toString(): String = "StudyHistoryDto(" +

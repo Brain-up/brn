@@ -6,11 +6,11 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 data class SubGroupRequest(
-    @NotBlank
+    @field: NotBlank
     var name: String,
-    @NotNull
+    @field:NotNull
     var level: Int,
-    @NotBlank
+    @field: NotBlank
     var code: String,
     var description: String?
 ) {
