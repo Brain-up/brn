@@ -1,0 +1,9 @@
+{
+  "audiometryTaskId": 1,
+  "executionSeconds": 10,
+  "startTime": "2021-02-10T12:27:02.648Z",
+  "endTime": "2021-02-10T12:28:02.648Z",
+  "tasksCount": 2,
+  "headphones": 2,
+  "sinAudiometryResults": {"125": "60", "10000": "75"}
+}
