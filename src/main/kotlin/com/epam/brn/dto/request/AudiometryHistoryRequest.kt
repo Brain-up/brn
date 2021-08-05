@@ -33,6 +33,6 @@ data class AudiometryHistoryRequest(
         tasksCount = this.tasksCount,
         rightAnswers = this.rightAnswers,
         rightAnswersIndex = rightAnswers.toFloat().div(tasksCount),
-        headphones = headphones
+        headphones = headphones,
     )
 }

@@ -48,6 +48,17 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
+            " WHERE (s.userAccount.id, s.startTime) " +
+            " IN (SELECT userAccount.id, max(startTime) " +
+            "       FROM StudyHistory " +
+            "       WHERE exercise.subGroup.id = :subGroupId  " +
+            "       GROUP BY exercise.id, userAccount.id " +
+            "       HAVING userAccount.id = :userId)"
+    )
+    fun findLastBySubGroupAndUserAccount(subGroupId: Long, userId: Long): List<StudyHistory>
+
+    @Query(
+        "SELECT s FROM StudyHistory s " +
             " WHERE (s.userAccount.id, s.exercise.id, s.startTime) " +
             " IN (SELECT userAccount.id, exercise.id, max(startTime) " +
             "       FROM StudyHistory " +
@@ -79,7 +90,11 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     @Deprecated(message = "This is a legacy method. Use findAllByUserAccountIdAndStartTimeBetween instead")
     fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
 
-    fun findAllByUserAccountIdAndStartTimeBetween(userId: Long, from: LocalDateTime, to: LocalDateTime): List<StudyHistory>
+    fun findAllByUserAccountIdAndStartTimeBetween(
+        userId: Long,
+        from: LocalDateTime,
+        to: LocalDateTime
+    ): List<StudyHistory>
 
     @Query(
         "SELECT s FROM StudyHistory s " +

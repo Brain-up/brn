@@ -1,3 +1,5 @@
+/* eslint-disable ember/no-component-lifecycle-hooks */
+// eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
 import { dasherize } from '@ember/string';
 import { inject as service } from '@ember/service';
@@ -25,7 +27,7 @@ export default class TaskPlayerComponent extends Component {
   tagName = '';
   activeTask: null | TaskInstance<any> = null;
   willDestroyElement() {
-super.willDestroyElement(...arguments);
+    super.willDestroyElement(...arguments);
     this.audio.stopNoise();
   }
 
@@ -44,7 +46,7 @@ super.willDestroyElement(...arguments);
     return this.audio.isPlaying || this.disableAudioPlayer;
   }
   didReceiveAttrs() {
-super.didReceiveAttrs();
+    super.didReceiveAttrs();
     if (this.justEnteredTask === false && this._task !== this.task) {
       if (Ember.testing) {
         this.setMode(MODES.TASK);
@@ -100,6 +102,7 @@ super.didReceiveAttrs();
       return answerOptions;
     }
     if (
+      modelName === 'task/frequency-words' ||
       modelName === 'task/single-words' ||
       modelName === 'task/single-simple-words' ||
       modelName === 'task/phrase'
@@ -126,7 +129,7 @@ super.didReceiveAttrs();
   @(task(function* (this: TaskPlayerComponent) {
     try {
       this.mode = MODES.LISTEN;
-      for (let option of this.orderedPlaylist) {
+      for (const option of this.orderedPlaylist) {
         this.activeWord = option.word;
         yield this.audio.setAudioElements([option.audioFileUrl]);
         yield this.audio.playAudio();
@@ -170,7 +173,7 @@ super.didReceiveAttrs();
         if (playText) {
           this.activeWord = playText;
           this.textToPlay = null;
-          let option = this.task.normalizedAnswerOptions.find(
+          const option = this.task.normalizedAnswerOptions.find(
             ({ word }: any) => word === playText,
           );
           if (option) {
