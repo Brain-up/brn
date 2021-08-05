@@ -176,7 +176,8 @@ mediaType:
     post:
         description: Save speech audiometry history
         body:
-            example: !include samples/audiometryHistoryRequest.json
+            example1: !include samples/audiometryHistoryRequest.json
+            example2: !include samples/audiometryHistoryRequestSignal.json
         responses:
             200:
                 body:
@@ -468,7 +469,7 @@ mediaType:
     /avatar:
       put:
         is: [Forbidden, NotFound]
-        desctiprion: Update user avatar.
+        description: Update user avatar.
         queryParameters:
           avatar:
               required: true
@@ -481,7 +482,7 @@ mediaType:
                 example: !include samples/user_get_response.json
     /{id}/headphones:
       post:
-        descriprion: Add headphones to user
+        description: Add headphones to user
         body:
           application/json:
             example: !include samples/add_headphones.json
@@ -491,7 +492,7 @@ mediaType:
               application/json:
                 example: !include samples/add_headphones_response.json
       get:
-        descriprion: Get all headphones for user
+        description: Get all headphones for user
         responses:
           200:
             body:
@@ -499,7 +500,7 @@ mediaType:
                 example: !include samples/get_headphones_response.json
     /current/headphones:
       post:
-        descriprion: Add headphones to current user
+        description: Add headphones to current user
         body:
           application/json:
             example: !include samples/add_headphones.json
@@ -509,7 +510,7 @@ mediaType:
               application/json:
                 example: !include samples/add_headphones_response.json
       get:
-        descriprion: Get all headphones for current user
+        description: Get all headphones for current user
         responses:
           200:
             body:
