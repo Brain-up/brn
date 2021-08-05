@@ -14,7 +14,7 @@ const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountCreateRequest(
-    @field:NotBlank(message = "{validation.field.fullName.blank}")
+    @field:NotBlank(message = "{validation.field.fullName.empty}")
     val name: String,
     @field:NotBlank(message = "{validation.field.email.blank}")
     @field:Email(message = "{validation.field.email.invalid-format}")
