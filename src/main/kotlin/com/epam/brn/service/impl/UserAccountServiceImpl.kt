@@ -4,7 +4,6 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.AuthorityDto
 import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
 import com.epam.brn.exception.EntityNotFoundException
@@ -180,10 +179,5 @@ class UserAccountServiceImpl(
         return userAccountRepository.findUserAccountByEmail(email)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
-    }
-
-    override fun getUserRoles(userId: Long): List<AuthorityDto> {
-        return userAccountRepository.findUserAccountById(userId)
-            .orElseThrow { EntityNotFoundException("No user was found for id = $userId") }.authoritySet.map { it.toDto() }
     }
 }

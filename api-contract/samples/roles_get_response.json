@@ -3,6 +3,14 @@
     {
       "id": 1,
       "authorityName": "ROLE_ADMIN"
+    },
+    {
+      "id": 2,
+      "authorityName": "ROLE_USER"
+    },
+    {
+      "id": 5,
+      "authorityName": "ROLE_DOCTOR"
     }
   ],
   "errors": [],

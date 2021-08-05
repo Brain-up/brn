@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.ResourceDto
@@ -11,6 +12,7 @@ import com.epam.brn.dto.response.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.model.Authority
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
@@ -65,6 +67,9 @@ internal class AdminControllerTest {
     private lateinit var subGroupService: SubGroupService
 
     @MockK
+    private lateinit var authorityService: AuthorityService
+
+    @MockK
     private lateinit var pageable: Pageable
 
     @MockK
@@ -93,6 +98,9 @@ internal class AdminControllerTest {
 
     @MockK
     private lateinit var monthStudyStatistic: MonthStudyStatistic
+
+    @MockK
+    private lateinit var authority: Authority
 
     @Test
     fun `getUsers should return users with statistic when withAnalytics is true`() {
@@ -256,5 +264,18 @@ internal class AdminControllerTest {
 
         // THEN
         createdSubGroup.statusCodeValue shouldBe HttpStatus.SC_CREATED
+    }
+
+    @Test
+    fun `getRoles should return http status 200`() {
+        // GIVEN
+
+        every { authorityService.findAll() } returns listOf(authority)
+
+        // WHEN
+        val authorities = adminController.getRoles()
+
+        // THEN
+        authorities.statusCodeValue shouldBe HttpStatus.SC_OK
     }
 }

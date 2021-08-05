@@ -92,7 +92,7 @@ class CsvLoadingTestIT : BaseIT() {
 //        taskRepository.findAll() shouldHaveSize 188
 //        resourceRepository.findAll() shouldHaveSize 881
         userAccountRepository.findAll() shouldHaveSize 3
-        authorityRepository.findAll() shouldHaveSize 2
+        authorityRepository.findAll() shouldHaveSize 3
     }
 
     @AfterEach

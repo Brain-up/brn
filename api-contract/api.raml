@@ -825,13 +825,7 @@ mediaType:
                     example: !include samples/add_subgroup_to_series_response.json
     /roles:
                 get:
-                    description: get user roles
-                    queryParameters:
-                        userId:
-                            required: true
-                            default: false
-                            type: Long
-                            example: "1"
+                    description: get all roles
                 responses:
                     200:
                       example: !include samples/roles_get_response.json
