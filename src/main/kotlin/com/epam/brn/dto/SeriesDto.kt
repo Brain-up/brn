@@ -2,14 +2,14 @@ package com.epam.brn.dto
 
 import com.epam.brn.model.ExerciseType
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 data class SeriesDto(
-    @NotBlank
-    val group: Long? = null,
+    @field:NotNull
+    val group: Long,
     val id: Long?,
-    @NotBlank
     val type: ExerciseType,
-    @NotBlank
+    @field:NotBlank
     val name: String,
     val level: Int,
     val description: String? = "",

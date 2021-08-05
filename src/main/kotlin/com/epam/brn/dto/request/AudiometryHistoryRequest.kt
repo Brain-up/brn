@@ -8,19 +8,19 @@ import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 
 data class AudiometryHistoryRequest(
-    @NotNull
+    @field:NotNull
     var audiometryTaskId: Long,
-    @NotNull
+    @field:NotNull
     var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
-    @NotNull
+    @field:NotNull
     var executionSeconds: Int?,
-    @NotNull
+    @field:NotNull
     var tasksCount: Short,
-    @NotNull
+    @field:NotNull
     var rightAnswers: Int,
-    @NotNull
-    var headphones: Long? = null
+    @field:NotNull
+    var headphones: Long
 ) {
     fun toEntity(userAccount: UserAccount, audiometryTask: AudiometryTask, headphones: Headphones?) = AudiometryHistory(
         userAccount = userAccount,
