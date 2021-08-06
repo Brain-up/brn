@@ -21,14 +21,16 @@ export default class ApplicationAdapter extends RESTAdapter {
   shouldBackgroundReloadRecord() {
     return false;
   }
-  urlForFindRecord(id: string, modelName: string, snapshot: any) {
+
+  urlForFindRecord(id: string, modelName: string, snapshot: any): string {
     let actualModelName = modelName;
     if (
       modelName === 'task/single-words' ||
       modelName === 'task/words-sequences' ||
       modelName === 'task/sentence' ||
       modelName === 'task/single-simple-words' ||
-      modelName === 'task/phrase'
+      modelName === 'task/phrase' ||
+      modelName === 'task/frequency-words'
     ) {
       actualModelName = 'tasks';
     }
