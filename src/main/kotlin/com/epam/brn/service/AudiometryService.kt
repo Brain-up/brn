@@ -41,13 +41,13 @@ class AudiometryService(
             )
             AudiometryType.SPEECH.name -> {
                 val user = userAccountService.getCurrentUser()
-                findSecondAudiometryTasks(user, audiometry)
+                findSecondSpeechAudiometryTasks(user, audiometry)
             }
             else -> throw IllegalArgumentException("Audiometry `$audiometry` does not supported in the system.")
         }
     }
 
-    fun findSecondAudiometryTasks(user: UserAccount, audiometry: Audiometry): List<AudiometryTask> {
+    fun findSecondSpeechAudiometryTasks(user: UserAccount, audiometry: Audiometry): List<AudiometryTask> {
         val userHistory = audiometryHistoryRepository.findByUserAndAudiometry(user, audiometry)
         val mapZoneLastTask = userHistory
             .groupBy({ it.audiometryTask.frequencyZone }, { it })
