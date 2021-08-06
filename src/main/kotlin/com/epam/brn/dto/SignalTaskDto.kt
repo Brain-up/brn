@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class SignalTaskDto(
     val id: Long? = null,
-    @field:JsonIgnore
+    @JsonIgnore
     val exerciseId: Long? = null,
     val name: String? = "",
     val url: String? = "",
