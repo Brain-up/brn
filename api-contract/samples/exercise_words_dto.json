@@ -1,0 +1,22 @@
+{
+  "data": {
+    "seriesId": 1,
+    "id": 24,
+    "name": "Семья /+голоса/",
+    "level": 24,
+    "noise": {
+      "level": 50,
+      "url": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/fon/voices.mp3"
+    },
+    "template": "",
+    "available": false,
+    "tasks": [
+      {
+        "id": 24
+      }
+    ],
+    "signals": []
+  },
+  "errors": [],
+  "meta": []
+}

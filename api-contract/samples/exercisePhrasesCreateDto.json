@@ -1,0 +1,12 @@
+{
+  "locale": "RU",
+  "subGroup": "subGroup",
+  "level": 12,
+  "exerciseName": "exerciseName",
+  "phrases": {
+    "shortPhrase": "short phrase",
+    "longPhrase": "long phrase"
+  },
+  "noiseLevel": 12,
+  "noiseUrl": "noiseUrl"
+}

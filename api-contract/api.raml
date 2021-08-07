@@ -819,6 +819,39 @@ mediaType:
                 body:
                   application/json:
                     example: !include samples/add_subgroup_to_series_response.json
+    /create/exercise/words:
+        post:
+            description: Create new exercise 'words' for exist subgroup
+            body:
+                application/json:
+                example: !include samples/exerciseWordsCreateDto.json
+            responses:
+                201:
+                    body:
+                        application/json:
+                        example: !include samples/exercise_words_dto.json.json
+    /create/exercise/phrases:
+            post:
+                description: Create new exercise 'phrases' for exist subgroup
+                body:
+                    application/json:
+                    example: !include samples/exercisePhrasesCreateDto.json
+                responses:
+                    201:
+                        body:
+                            application/json:
+                            example: !include samples/exercise_phrase_dto.json
+    /create/exercise/sentences:
+                post:
+                    description: Create new exercise 'sentences' for exist subgroup
+                    body:
+                        application/json:
+                        example: !include samples/exerciseSentencesCreateDto.json
+                    responses:
+                        201:
+                            body:
+                                application/json:
+                                example: !include samples/exercise_sentences_dto.json
     # LOAD FILES ----------------------
     /loadTasksFile:
         post:
