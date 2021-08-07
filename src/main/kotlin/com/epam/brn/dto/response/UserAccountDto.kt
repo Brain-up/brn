@@ -18,7 +18,10 @@ data class UserAccountDto(
     val created: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     val changed: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     var avatar: String? = null,
-    var headphones: Set<HeadphonesDto>? = null
+    val photo: String? = null,
+    val description: String? = null,
+    var headphones: Set<HeadphonesDto>? = null,
+    var doctor: Long? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }

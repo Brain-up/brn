@@ -1,0 +1,39 @@
+{
+  "data": {
+    "id": 1849,
+    "exerciseType": "FREQUENCY_WORDS",
+    "name": "",
+    "serialNumber": 1,
+    "answerOptions": [
+      {
+        "id": 2040,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/ru-ru/filipp/1/1569535baa8b912e0eb86a1325cb96b3.ogg",
+        "word": "шишка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/шишка.jpg",
+        "soundsCount": 0,
+        "description": ""
+      },
+      {
+        "id": 1404,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/ru-ru/filipp/1/ef8eee7c5917454cb8108b5c75dabb7b.ogg",
+        "word": "чашка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/чашка.jpg",
+        "soundsCount": 0,
+        "description": ""
+      },
+      {
+        "id": 5039,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/ru-ru/filipp/1/ffd9a58eaa10e7b6a3f1225c99de4efc.ogg",
+        "word": "шашка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/шашка.jpg",
+        "soundsCount": 0,
+        "description": ""
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

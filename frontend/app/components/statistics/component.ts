@@ -7,47 +7,70 @@ import { DateTime } from 'luxon';
 import { tracked } from '@glimmer/tracking';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { action } from '@ember/object';
+import Store from '@ember-data/store';
 
-export default class StatisticsComponent extends Component {
+interface IStatisticsComponentArgs {
+  initialSelectedMonth?: DateTime;
+}
+export default class StatisticsComponent extends Component<IStatisticsComponentArgs> {
   @service('network') network!: NetworkService;
+  @service('store') store!: Store;
 
-  @tracked selectedMonth: DateTime = DateTime.now();
+  @tracked selectedMonth: DateTime =
+    this.args.initialSelectedMonth || DateTime.now();
   @tracked isLoadingWeekTimeTrackData = true;
   @tracked isLoadingMonthTimeTrackData = true;
   @tracked weekTimeTrackData: UserWeeklyStatisticsModel[] | null = null;
   @tracked monthTimeTrackData: UserYearlyStatisticsModel[] | null = null;
   @tracked isShownStatisticsInfoDialog: boolean = false;
 
+  //eslint-disable-next-line
   @(task(function* (this: StatisticsComponent) {
-    const fromMonth: Date = this.selectedMonth.startOf('month').toJSDate();
-    const toMonth: Date = this.selectedMonth.endOf('month').toJSDate();
+    const fromMonth: DateTime = this.selectedMonth.startOf('month');
+    const toMonth: DateTime = this.selectedMonth.endOf('month');
     this.isLoadingWeekTimeTrackData = true;
-    this.weekTimeTrackData = yield this.network.getUserStatisticsByWeek(
-      fromMonth,
-      toMonth,
-    );
+
+    try {
+      this.weekTimeTrackData = yield this.store.query(
+        'user-weekly-statistics',
+        {
+          from: fromMonth,
+          to: toMonth,
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
     this.isLoadingWeekTimeTrackData = false;
   }).drop())
   getWeekTimeTrackData!: TaskGenerator<any, any>;
 
+  //eslint-disable-next-line
   @(task(function* (this: StatisticsComponent) {
-    const fromYear: Date = this.selectedMonth.startOf('year').toJSDate();
-    const toYear: Date = this.selectedMonth.endOf('year').toJSDate();
+    const fromYear: DateTime = this.selectedMonth.startOf('year');
+    const toYear: DateTime = this.selectedMonth.endOf('year');
     this.isLoadingMonthTimeTrackData = true;
 
-    this.monthTimeTrackData = yield this.network.getUserStatisticsByYear(
-      fromYear,
-      toYear,
-    );
+    try {
+      this.monthTimeTrackData = yield this.store.query(
+        'user-yearly-statistics',
+        {
+          from: fromYear,
+          to: toYear,
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
     this.isLoadingMonthTimeTrackData = false;
     if (!this.monthTimeTrackData?.length) {
       return;
     }
 
     const lastMonth: DateTime | null = this.monthTimeTrackData.lastObject
-      ? DateTime.fromISO(this.monthTimeTrackData.lastObject?.date)
+      ? this.monthTimeTrackData.lastObject?.date
       : null;
-    if (!lastMonth || lastMonth.month >= this.selectedMonth.month) {
+    if (!lastMonth) {
       return;
     }
     this.selectedMonth = lastMonth;
@@ -79,17 +102,20 @@ export default class StatisticsComponent extends Component {
 
   @action
   loadPrevYear(): void {
+    this.resetCurrentData();
     this.selectedMonth = this.selectedMonth.minus({ year: 1 });
-
-    this.getWeekTimeTrackData.perform();
     this.getMonthTimeTrackData.perform();
   }
 
   @action
   loadNextYear(): void {
+    this.resetCurrentData();
     this.selectedMonth = this.selectedMonth.plus({ year: 1 });
-
-    this.getWeekTimeTrackData.perform();
     this.getMonthTimeTrackData.perform();
+  }
+
+  resetCurrentData(): void {
+    this.weekTimeTrackData = [];
+    this.monthTimeTrackData = [];
   }
 }

@@ -1,23 +1,25 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
 import io.mockk.mockkClass
-import io.mockk.mockkStatic
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
@@ -27,46 +29,93 @@ internal class SubGroupServiceTest {
     private lateinit var subGroupService: SubGroupService
 
     @MockK
+    private lateinit var seriesRepository: SeriesRepository
+
+    @MockK
     private lateinit var subGroupRepository: SubGroupRepository
 
     @MockK
-    private lateinit var subGroup: SubGroup
+    private lateinit var exerciseRepository: ExerciseRepository
+
+    @MockK
+    private lateinit var urlConversionService: UrlConversionService
 
     @Test
     fun `findSubGroupsForSeries should return data when there are subGroups for seriesId`() {
         // GIVEN
+        val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
         val seriesId = 1L
-        val pictureTheme = "pictureTheme"
-        ReflectionTestUtils.setField(subGroupService, "pictureTheme", pictureTheme)
-        val subGroupDto = SubGroupDto(seriesId, 1L, 5, "name", "pictureURL", "description")
-        mockkStatic("com.epam.brn.service.SubGroupServiceKt")
-        every { subGroupRepository.findBySeriesId(seriesId) } returns listOf(subGroup)
-        every { subGroup.toDto(pictureTheme) } returns subGroupDto
-
+        val pictureUrl = "url/code"
+        val subGroupDto = SubGroupDto(seriesId, 1L, 5, "name", pictureUrl, "description")
+        every { subGroupRepository.findBySeriesId(seriesId) } returns listOf(subGroupMockk)
+        every { urlConversionService.makeUrlForSubGroupPicture("code") } returns pictureUrl
+        every { subGroupMockk.toDto(pictureUrl) } returns subGroupDto
+        every { subGroupMockk.code } returns "code"
         // WHEN
         val allGroups = subGroupService.findSubGroupsForSeries(seriesId)
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findBySeriesId(seriesId) }
-        assertEquals(listOf(subGroupDto), allGroups)
+        allGroups shouldBe listOf(subGroupDto)
     }
 
     @Test
-    fun `findById should return group when subGroup with id found`() {
+    fun `deleteSubGroupById should delete subGroup without exercises`() {
         // GIVEN
         val subGroupId = 1L
-        val pictureTheme = "pictureTheme"
-        ReflectionTestUtils.setField(subGroupService, "pictureTheme", pictureTheme)
-        val subGroupDto = SubGroupDto(subGroupId, 1L, 5, "name", "pictureURL", "description")
-        mockkStatic("com.epam.brn.service.SubGroupServiceKt")
-        every { subGroupRepository.findById(subGroupId) } returns Optional.of(subGroup)
-        every { subGroup.toDto(pictureTheme) } returns subGroupDto
+        every { subGroupRepository.existsById(subGroupId) } returns true
+        every { exerciseRepository.existsBySubGroupId(subGroupId) } returns false
+        justRun { subGroupRepository.deleteById(subGroupId) }
 
         // WHEN
-        val group = subGroupService.findById(subGroupId)
+        subGroupService.deleteSubGroupById(subGroupId)
 
         // THEN
-        assertEquals(subGroupDto, group)
+        verify(exactly = 1) { exerciseRepository.existsBySubGroupId(subGroupId) }
+    }
+
+    @Test
+    fun `deleteSubGroupById should throw an exception with exercises in subGroup`() {
+        // GIVEN
+        val subGroupId = 1L
+        every { subGroupRepository.existsById(subGroupId) } returns true
+        every { exerciseRepository.existsBySubGroupId(subGroupId) } returns true
+        justRun { subGroupRepository.deleteById(subGroupId) }
+
+        // THEN
+        shouldThrow<IllegalArgumentException> {
+            subGroupService.deleteSubGroupById(subGroupId)
+        }
+    }
+
+    @Test
+    fun `deleteSubGroupById should throw an exception when subGroup is not found`() {
+        // GIVEN
+        val subGroupId = 1L
+        every { subGroupRepository.existsById(subGroupId) } returns false
+
+        // THEN
+        shouldThrow<IllegalArgumentException> {
+            subGroupService.deleteSubGroupById(subGroupId)
+        }
+    }
+
+    @Test
+    fun `findById should return subGroupDto when subGroup with id found`() {
+        // GIVEN
+        val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
+        val subGroupId = 1L
+        val subGroupDto = SubGroupDto(subGroupId, 1L, 5, "name", "url/code", "description")
+        every { subGroupRepository.findById(subGroupId) } returns Optional.of(subGroupMockk)
+        every { subGroupMockk.toDto("url/code") } returns subGroupDto
+        every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
+        every { subGroupMockk.code } returns "code"
+        // WHEN
+        val resultSubGroupDto = subGroupService.findById(subGroupId)
+
+        // THEN
+        verify(exactly = 1) { subGroupRepository.findById(subGroupId) }
+        resultSubGroupDto shouldBe subGroupDto
     }
 
     @Test
@@ -75,26 +124,82 @@ internal class SubGroupServiceTest {
         val subGroupId = 1L
         every { subGroupRepository.findById(subGroupId) } returns Optional.empty()
         // THEN
-        assertThrows<EntityNotFoundException> { subGroupService.findById(subGroupId) }
+        shouldThrow<EntityNotFoundException> { subGroupService.findById(subGroupId) }
     }
 
     @Test
-    fun `should return dto for url`() {
+    fun `should return subgroup dto with picture url`() {
         // GIVEN
-        val pictureUrl = "url"
-        val pictureUrlTemplate = "template %s"
+        val code = "code"
+        val pictureUrl = "url/code"
         val seriesMockk = mockkClass(Series::class)
         val seriesId = 1L
-        val subGroup = spyk(SubGroup(1, "", pictureUrl, 2, "", seriesMockk))
+        val subGroup = spyk(SubGroup(1, "", code = code, 2, "", seriesMockk))
         val subGroupDto = SubGroupDto(2, 2, 2, "name", pictureUrl, "description")
         every { seriesMockk.id } returns seriesId
-        every { subGroup.toDto() } returns subGroupDto
-
+        every { subGroup.toDto(pictureUrl) } returns subGroupDto
+        every { urlConversionService.makeUrlForSubGroupPicture(code) } returns pictureUrl
         // WHEN
-        val resultDto = subGroup.toDto(pictureUrlTemplate)
+        val resultSubGroupDto = subGroupService.toSubGroupDto(subGroup)
 
         // THEN
-        assertEquals("template url", resultDto.pictureUrl)
-        verify(exactly = 1) { subGroup.toDto() }
+        verify(exactly = 1) { subGroup.toDto(pictureUrl) }
+        resultSubGroupDto.pictureUrl shouldBe "url/code"
+    }
+
+    @Test
+    fun `addSubGroupToSeries should add new subGroup for existing series`() {
+        // GIVEN
+        val seriesId = 1L
+        val seriesMockk = mockkClass(Series::class, relaxed = true)
+        val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
+        val subGroupRequest = SubGroupRequest("Test name", 1, "code", "Test description")
+        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns null
+        every { seriesRepository.findById(seriesId) } returns Optional.of(seriesMockk)
+        every { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) } returns subGroupMockk
+        every { subGroupMockk.code } returns "code"
+        every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
+
+        // WHEN
+        subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest)
+
+        // THEN
+        verify(exactly = 1) { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) }
+    }
+
+    @Test
+    fun `addSubGroupToSeries should trow exception when subGroup is exists`() {
+        // GIVEN
+        val seriesId = 1L
+        val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
+        val subGroupRequest = SubGroupRequest("Test name", 1, "code", "Test description")
+        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns subGroupMockk
+        every { subGroupMockk.code } returns "code"
+        every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/shortWords"
+
+        // THEN
+        shouldThrow<IllegalArgumentException> {
+            subGroupService.addSubGroupToSeries(
+                seriesId = seriesId,
+                subGroupRequest = subGroupRequest
+            )
+        }
+    }
+
+    @Test
+    fun `addSubGroupToSeries should trow exception when series does not exist`() {
+        // GIVEN
+        val seriesId = 1L
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
+        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns null
+        every { seriesRepository.findById(seriesId) } returns Optional.empty()
+        every { urlConversionService.makeUrlForSubGroupPicture("shortWords") } returns "url/shortWords"
+        // THEN
+        shouldThrow<EntityNotFoundException> {
+            subGroupService.addSubGroupToSeries(
+                seriesId = seriesId,
+                subGroupRequest = subGroupRequest
+            )
+        }
     }
 }

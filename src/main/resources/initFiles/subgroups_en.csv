@@ -40,3 +40,6 @@ PHRASES,3,similarPhrases,Similar phrases,
 PHRASES,4,differentEndPhrases,Phrases with different end,
 PHRASES,5,shortWords,Short words,
 PHRASES,6,prepositionPhrases,Prepositions,
+FREQUENCY_WORDS,1,low_frequency,Low frequency words,Low frequency words
+FREQUENCY_WORDS,2,medium_frequency,Medium frequency words,Medium frequency words
+FREQUENCY_WORDS,3,high_frequency,High frequency words,High frequency words
