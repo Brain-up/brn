@@ -4,13 +4,13 @@ import com.epam.brn.dto.ResourceDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.amshove.kluent.shouldBeNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -63,7 +63,9 @@ internal class ResourceServiceTest {
         // GIVEN
         val word = "word"
         val audioFileName = "audioFileName"
-        every { resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFileName) } returns Optional.of(resource)
+        every { resourceRepository.findFirstByWordAndAudioFileUrlLike(word, audioFileName) } returns Optional.of(
+            resource
+        )
 
         // WHEN
         val foundResource = resourceService.findFirstByWordAndAudioFileUrlLike(word, audioFileName)
