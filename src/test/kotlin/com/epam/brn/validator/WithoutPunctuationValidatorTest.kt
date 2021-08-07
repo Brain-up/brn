@@ -20,6 +20,7 @@ internal class WithoutPunctuationValidatorTest {
         val resultRU = withoutPunctuationValidator.isValid(testStringRU, null)
         val resultNum = withoutPunctuationValidator.isValid(testStringWithNum, null)
 
+        // THEN
         resultEN.shouldBeTrue()
         resultRU.shouldBeTrue()
         resultNum.shouldBeTrue()
@@ -37,6 +38,7 @@ internal class WithoutPunctuationValidatorTest {
         val resultRU = withoutPunctuationValidator.isValid(testStringRU, null)
         val resultNum = withoutPunctuationValidator.isValid(testStringWithNum, null)
 
+        // THEN
         resultEN.shouldBeFalse()
         resultRU.shouldBeFalse()
         resultNum.shouldBeFalse()
