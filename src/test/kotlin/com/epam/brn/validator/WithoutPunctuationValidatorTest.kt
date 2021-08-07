@@ -14,16 +14,19 @@ internal class WithoutPunctuationValidatorTest {
         val testStringEN = " same text"
         val testStringRU = "тестовый текст"
         val testStringWithNum = "same text with 123"
+        val testStringNull = null
 
         // WHEN
         val resultEN = withoutPunctuationValidator.isValid(testStringEN, null)
         val resultRU = withoutPunctuationValidator.isValid(testStringRU, null)
         val resultNum = withoutPunctuationValidator.isValid(testStringWithNum, null)
+        val resultNull = withoutPunctuationValidator.isValid(testStringNull, null)
 
         // THEN
         resultEN.shouldBeTrue()
         resultRU.shouldBeTrue()
         resultNum.shouldBeTrue()
+        resultNull.shouldBeTrue()
     }
 
     @Test
