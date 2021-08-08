@@ -92,11 +92,11 @@ class AudiometryLoader(
     fun loadFrequencyDiagnosticData() {
         val audiometrics = audiometryRepository.findByAudiometryType(AudiometryType.SIGNALS.name)
         audiometrics.forEach { audiometry ->
-            val existTasks = audiometryTaskRepository.findByAudiometry(audiometry)
-            if (existTasks.size == 2)
+            val existTasksCount = audiometryTaskRepository.countByAudiometry(audiometry)
+            if (existTasksCount == 2L)
                 return@forEach
-            if (existTasks.size > 2)
-                audiometryTaskRepository.deleteAll(existTasks) // fix db bug
+            if (existTasksCount > 2)
+                audiometryTaskRepository.removeAllByAudiometry(audiometry) // fix db bug
             val taskLeft =
                 AudiometryTask(
                     audiometry = audiometry,

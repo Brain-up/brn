@@ -34,7 +34,7 @@ internal class AudiometryLoaderTest {
         every { audiometryRepository.saveAll(any<List<Audiometry>>()) } returns emptyList()
         val audiometryMockk = mockk<Audiometry>()
         every { audiometryRepository.findByAudiometryType(AudiometryType.SIGNALS.name) } returns listOf(audiometryMockk)
-        every { audiometryTaskRepository.findByAudiometry(audiometryMockk) } returns emptyList()
+        every { audiometryTaskRepository.countByAudiometry(audiometryMockk) } returns 2
         every { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) } returns emptyList()
         // WHEN
         audiometryLoader.loadInitialAudiometricsWithTasks()
@@ -52,7 +52,7 @@ internal class AudiometryLoaderTest {
 
         val audiometryMockk = mockk<Audiometry>()
         every { audiometryRepository.findByAudiometryType(AudiometryType.SIGNALS.name) } returns listOf(audiometryMockk)
-        every { audiometryTaskRepository.findByAudiometry(audiometryMockk) } returns emptyList()
+        every { audiometryTaskRepository.countByAudiometry(audiometryMockk) } returns 2
         every { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) } returns emptyList()
         // WHEN
         audiometryLoader.loadInitialAudiometricsWithTasks()
@@ -69,12 +69,60 @@ internal class AudiometryLoaderTest {
         every { audiometryRepository.save(any()) } returns mockk()
         val audiometryMockk = mockk<Audiometry>()
         every { audiometryRepository.findByAudiometryType(AudiometryType.SIGNALS.name) } returns listOf(audiometryMockk)
-        every { audiometryTaskRepository.findByAudiometry(audiometryMockk) } returns emptyList()
+        every { audiometryTaskRepository.countByAudiometry(audiometryMockk) } returns 0
         every { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) } returns emptyList()
         // WHEN
         audiometryLoader.loadInitialAudiometricsWithTasks()
         // THEN
         verify(exactly = 6) { audiometryRepository.save(any()) }
+        verify(exactly = 1) { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) }
+    }
+
+    @Test
+    fun `should test loadFrequencyDiagnosticData without existing tasks`() {
+        // GIVEN
+        ReflectionTestUtils.setField(audiometryLoader, "frequencyForDiagnostic", listOf(125, 500))
+        val audiometry = mockk<Audiometry>()
+        every { audiometryRepository.findByAudiometryType(any()) } returns listOf(audiometry)
+        every { audiometryTaskRepository.countByAudiometry(audiometry) } returns 0
+        every { audiometryTaskRepository.removeAllByAudiometry(audiometry) } returns emptyList()
+        every { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) } returns emptyList()
+        // WHEN
+        audiometryLoader.loadFrequencyDiagnosticData()
+        // THEN
+        verify(exactly = 0) { audiometryTaskRepository.removeAllByAudiometry(audiometry) }
+        verify(exactly = 1) { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) }
+    }
+
+    @Test
+    fun `should test loadFrequencyDiagnosticData with existing 2 tasks`() {
+        // GIVEN
+        ReflectionTestUtils.setField(audiometryLoader, "frequencyForDiagnostic", listOf(125, 500))
+        val audiometry = mockk<Audiometry>()
+        every { audiometryRepository.findByAudiometryType(any()) } returns listOf(audiometry)
+        every { audiometryTaskRepository.countByAudiometry(audiometry) } returns 2
+        every { audiometryTaskRepository.removeAllByAudiometry(audiometry) } returns emptyList()
+        every { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) } returns emptyList()
+        // WHEN
+        audiometryLoader.loadFrequencyDiagnosticData()
+        // THEN
+        verify(exactly = 0) { audiometryTaskRepository.removeAllByAudiometry(audiometry) }
+        verify(exactly = 0) { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) }
+    }
+
+    @Test
+    fun `should test loadFrequencyDiagnosticData with fixing db bug when existing tasks more then 2`() {
+        // GIVEN
+        ReflectionTestUtils.setField(audiometryLoader, "frequencyForDiagnostic", listOf(125, 500))
+        val audiometry = mockk<Audiometry>()
+        every { audiometryRepository.findByAudiometryType(any()) } returns listOf(audiometry)
+        every { audiometryTaskRepository.countByAudiometry(audiometry) } returns 3
+        every { audiometryTaskRepository.removeAllByAudiometry(audiometry) } returns emptyList()
+        every { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) } returns emptyList()
+        // WHEN
+        audiometryLoader.loadFrequencyDiagnosticData()
+        // THEN
+        verify(exactly = 1) { audiometryTaskRepository.removeAllByAudiometry(audiometry) }
         verify(exactly = 1) { audiometryTaskRepository.saveAll(any<List<AudiometryTask>>()) }
     }
 }
