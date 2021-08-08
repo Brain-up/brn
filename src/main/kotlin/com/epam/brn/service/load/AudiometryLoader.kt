@@ -98,7 +98,7 @@ class AudiometryLoader(
             val existTasksCount = audiometryTaskRepository.countByAudiometry(audiometry)
             if (existTasksCount == 2L)
                 return@forEach
-            else {
+            if (existTasksCount != 0L) {
                 log.error("Wrong db status: for audiometry $audiometry existTasksCount=$existTasksCount")
                 audiometryTaskRepository.removeAllByAudiometry(audiometry) // fix db bug
             }
