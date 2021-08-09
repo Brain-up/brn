@@ -59,18 +59,13 @@ class Audiometry(
     )
 
     fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryDto {
-        val audiometryTasks = when (audiometryType) {
-            AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name -> tasks.map { it.toDto() }
-            AudiometryType.SPEECH.name -> tasks.groupBy({ it.frequencyZone }, { it.toDto() })
-            else -> throw IllegalArgumentException("Audiometry `$audiometryType` does not supported in the system.")
-        }
         return AudiometryDto(
             id,
             locale,
             name,
             AudiometryType.valueOf(audiometryType),
             description,
-            audiometryTasks
+            tasks.map { it.toDto() }
         )
     }
 }
