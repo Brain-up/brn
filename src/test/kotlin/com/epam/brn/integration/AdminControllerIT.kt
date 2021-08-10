@@ -23,12 +23,16 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.gson.Gson
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
@@ -509,6 +513,87 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data.name").value(subGroupRequest.name))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `when post request to subGroup and invalid name in subGroup then correct response`() {
+        // GIVEN
+        val subGroupRequest = SubGroupRequest(
+            name = "",
+            level = 1,
+            code = "12345",
+            description = "Test description"
+        )
+        val existedSeries = insertSeries()
+        val seriesId = existedSeries.id
+        val requestBody = objectMapper.writeValueAsString(subGroupRequest)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/subgroup")
+                .param("seriesId", seriesId.toString())
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `when post request to subGroup and invalid code in subGroup then correct response`() {
+        // GIVEN
+        val subGroupRequest = SubGroupRequest(
+            name = "Alex",
+            level = 1,
+            code = "",
+            description = "Test description"
+        )
+        val existedSeries = insertSeries()
+        val seriesId = existedSeries.id
+        val requestBody = objectMapper.writeValueAsString(subGroupRequest)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/subgroup")
+                .param("seriesId", seriesId.toString())
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
+    fun `when post request to subGroup and invalid level in subGroup then correct response`() {
+        // GIVEN
+        val subGroupRequest =
+            """{"name":"Alex","code":"12345","level":"","description":"Test description" }"""
+        val existedSeries = insertSeries()
+        val seriesId = existedSeries.id
+        val requestBody = objectMapper.writeValueAsString(subGroupRequest)
+        assertThrows<MismatchedInputException> { objectMapper.readValue<SubGroupRequest>(subGroupRequest) }
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/subgroup")
+                .param("seriesId", seriesId.toString())
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+
+        shouldThrow<MismatchedInputException> { objectMapper.readValue<SubGroupRequest>(subGroupRequest) }
     }
 
     private fun insertStudyHistory(
