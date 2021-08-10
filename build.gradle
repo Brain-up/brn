@@ -35,6 +35,8 @@ dependencies {
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
 
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.12.4'
+
     implementation "com.auth0:java-jwt:3.10.3"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 

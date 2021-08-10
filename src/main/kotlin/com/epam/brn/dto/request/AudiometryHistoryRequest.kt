@@ -18,7 +18,7 @@ data class AudiometryHistoryRequest(
     var executionSeconds: Int?,
     @field:NotNull
     var tasksCount: Short,
-    @Nullable
+    @field:Nullable
     var rightAnswers: Int = 0,
     @field:NotNull
     var headphones: Long? = null,
