@@ -28,42 +28,42 @@ internal class StudyHistoryServiceTest {
     lateinit var studyHistoryService: StudyHistoryService
 
     @MockK
-    lateinit var exerciseRepository: ExerciseRepository
+    lateinit var exerciseRepositoryMock: ExerciseRepository
 
     @MockK
-    lateinit var studyHistoryRepository: StudyHistoryRepository
+    lateinit var studyHistoryRepositoryMock: StudyHistoryRepository
 
     @MockK
-    lateinit var userAccountService: UserAccountService
+    lateinit var userAccountServiceMock: UserAccountService
 
     @MockK
     lateinit var studyHistoryDtoMock: StudyHistoryDto
 
     @MockK
-    lateinit var currentUser: UserAccountDto
+    lateinit var currentUserMock: UserAccountDto
 
     @MockK
-    lateinit var studyHistory: StudyHistory
+    lateinit var studyHistoryMock: StudyHistory
 
     @MockK
-    lateinit var from: LocalDateTime
+    lateinit var fromMock: LocalDateTime
 
     @MockK
-    lateinit var to: LocalDateTime
+    lateinit var toMock: LocalDateTime
 
     @Test
     fun `should return today timer`() {
         // GIVEN
         val timer = 1
-        every { userAccountService.getUserFromTheCurrentSession() } returns currentUser
-        every { currentUser.id } returns 1L
-        every { studyHistoryRepository.getTodayDayTimer(1L) } returns timer
+        every { userAccountServiceMock.getUserFromTheCurrentSession() } returns currentUserMock
+        every { currentUserMock.id } returns 1L
+        every { studyHistoryRepositoryMock.getTodayDayTimer(1L) } returns timer
 
         // WHEN
         val todayTimer = studyHistoryService.getTodayTimer()
 
         // THEN
-        todayTimer.shouldBe(timer)
+        todayTimer shouldBe timer
     }
 
     @Test
@@ -100,19 +100,19 @@ internal class StudyHistoryServiceTest {
             wrongAnswers = 3,
             replaysCount = 3
         )
-        every { userAccountService.getCurrentUser() } returns userAccount
+        every { userAccountServiceMock.getCurrentUser() } returns userAccount
         every { studyHistoryDtoMock.toEntity(userAccount, exercise) } returns studyHistoryNew
         every { studyHistoryDtoMock.exerciseId } returns 2L
 
-        every { exerciseRepository.findById(2L) } returns Optional.of(exercise)
-        every { studyHistoryRepository.save(studyHistoryNew) } returns studyHistorySaved
+        every { exerciseRepositoryMock.findById(2L) } returns Optional.of(exercise)
+        every { studyHistoryRepositoryMock.save(studyHistoryNew) } returns studyHistorySaved
 
         // WHEN
         val result = studyHistoryService.save(studyHistoryDtoMock)
 
         // THEN
-        verify(exactly = 1) { studyHistoryRepository.save(ofType(StudyHistory::class)) }
-        result.shouldBe(studyHistorySaved.toDto())
+        verify(exactly = 1) { studyHistoryRepositoryMock.save(ofType(StudyHistory::class)) }
+        result shouldBe studyHistorySaved.toDto()
     }
 
     @Test
@@ -125,66 +125,66 @@ internal class StudyHistoryServiceTest {
         val result = studyHistoryService.calculateDiffInSeconds(now, now.plusMinutes(1))
 
         // THEN
-        result.shouldBe(expectedTimer)
+        result shouldBe expectedTimer
     }
 
     @Test
     fun `should return histories for current user`() {
         // GIVEN
         val expectedStudyHistoryDto = listOf(studyHistoryDtoMock)
-        every { userAccountService.getUserFromTheCurrentSession() } returns currentUser
-        every { currentUser.id } returns 1L
-        every { studyHistoryService.getHistories(1L, from, to) } returns expectedStudyHistoryDto
+        every { userAccountServiceMock.getUserFromTheCurrentSession() } returns currentUserMock
+        every { currentUserMock.id } returns 1L
+        every { studyHistoryService.getHistories(1L, fromMock, toMock) } returns expectedStudyHistoryDto
 
         // WHEN
-        val historiesForCurrentUser = studyHistoryService.getHistoriesForCurrentUser(from, to)
+        val historiesForCurrentUser = studyHistoryService.getHistoriesForCurrentUser(fromMock, toMock)
 
         // THEN
-        historiesForCurrentUser.shouldBe(expectedStudyHistoryDto)
+        historiesForCurrentUser shouldBe(expectedStudyHistoryDto)
     }
 
     @Test
     fun `should return histories`() {
         // GIVEN
-        val expectedStudyHistory = listOf(studyHistory)
-        every { studyHistory.toDto() } returns studyHistoryDtoMock
-        every { studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(1L, from, to) } returns expectedStudyHistory
+        val expectedStudyHistory = listOf(studyHistoryMock)
+        every { studyHistoryMock.toDto() } returns studyHistoryDtoMock
+        every { studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetween(1L, fromMock, toMock) } returns expectedStudyHistory
 
         // WHEN
-        val histories = studyHistoryService.getHistories(1L, from, to)
+        val histories = studyHistoryService.getHistories(1L, fromMock, toMock)
 
         // THEN
         val expectedStudyHistoryDto = expectedStudyHistory.map { it.toDto() }
-        histories.shouldBe(expectedStudyHistoryDto)
+        histories shouldBe expectedStudyHistoryDto
     }
 
     @Test
     fun `should return month histories for current user`() {
         // GIVEN
         val expectedStudyHistoryDto = listOf(studyHistoryDtoMock)
-        every { userAccountService.getUserFromTheCurrentSession() } returns currentUser
-        every { currentUser.id } returns 1L
+        every { userAccountServiceMock.getUserFromTheCurrentSession() } returns currentUserMock
+        every { currentUserMock.id } returns 1L
         every { studyHistoryService.getMonthHistories(1L, 1, 1) } returns expectedStudyHistoryDto
 
         // WHEN
         val monthHistoriesForCurrentUser = studyHistoryService.getMonthHistoriesForCurrentUser(1, 1)
 
         // THEN
-        monthHistoriesForCurrentUser.shouldBe(expectedStudyHistoryDto)
+        monthHistoriesForCurrentUser shouldBe(expectedStudyHistoryDto)
     }
 
     @Test
     fun `should return month histories`() {
         // GIVEN
-        val expectedStudyHistory = listOf(studyHistory)
-        every { studyHistory.toDto() } returns studyHistoryDtoMock
-        every { studyHistoryRepository.getMonthHistories(1L, 1, 1) } returns expectedStudyHistory
+        val expectedStudyHistory = listOf(studyHistoryMock)
+        every { studyHistoryMock.toDto() } returns studyHistoryDtoMock
+        every { studyHistoryRepositoryMock.getMonthHistories(1L, 1, 1) } returns expectedStudyHistory
 
         // WHEN
         val histories = studyHistoryService.getMonthHistories(1L, 1, 1)
 
         // THEN
         val expectedStudyHistoryDto = expectedStudyHistory.map { it.toDto() }
-        histories.shouldBe(expectedStudyHistoryDto)
+        histories shouldBe expectedStudyHistoryDto
     }
 }

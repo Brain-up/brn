@@ -36,49 +36,46 @@ internal class TaskServiceTest {
     lateinit var taskService: TaskService
 
     @MockK
-    lateinit var taskRepository: TaskRepository
+    lateinit var taskRepositoryMock: TaskRepository
 
     @MockK
-    lateinit var exerciseRepository: ExerciseRepository
+    lateinit var exerciseRepositoryMock: ExerciseRepository
 
     @MockK
-    lateinit var resourceRepository: ResourceRepository
+    lateinit var resourceRepositoryMock: ResourceRepository
 
     @MockK
-    lateinit var wordsService: WordsService
+    lateinit var wordsServiceMock: WordsService
 
     @MockK
-    lateinit var task1: Task
+    lateinit var task1Mock: Task
 
     @MockK
-    lateinit var task2: Task
+    lateinit var task2Mock: Task
 
     @MockK
-    lateinit var resource: Resource
+    lateinit var resourceMock: Resource
 
     @MockK
-    lateinit var taskDto1: WordsSeriesTaskDto
+    lateinit var taskDto1Mock: WordsSeriesTaskDto
 
     @MockK
-    lateinit var taskDto2: WordsSeriesTaskDto
+    lateinit var taskDto2Mock: WordsSeriesTaskDto
 
     @MockK
-    lateinit var wordsGroupSeriesTaskDto1: WordsGroupSeriesTaskDto
+    lateinit var wordsGroupSeriesTaskDto1Mock: WordsGroupSeriesTaskDto
 
     @MockK
-    lateinit var wordsGroupSeriesTaskDto2: WordsGroupSeriesTaskDto
+    lateinit var wordsGroupSeriesTaskDto2Mock: WordsGroupSeriesTaskDto
 
     @MockK
-    lateinit var exercise: Exercise
+    lateinit var exerciseMock: Exercise
 
     @MockK
-    lateinit var exerciseType: ExerciseType
+    lateinit var subGroupMock: SubGroup
 
     @MockK
-    lateinit var subGroup: SubGroup
-
-    @MockK
-    lateinit var series: Series
+    lateinit var seriesMock: Series
 
     @Nested
     @DisplayName("Tests for getting tasks with parameters")
@@ -88,29 +85,29 @@ internal class TaskServiceTest {
             // GIVEN
             val expectedTaskSize = 2
             val resource = Resource(word = "word", locale = Locale.RU.locale)
-            every { taskRepository.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1,
-                task2
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
+                task1Mock,
+                task2Mock
             )
-            every { exerciseRepository.findById(ofType(Long::class)) } returns Optional.of(exercise)
+            every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1.answerOptions } returns mutableSetOf(resource)
-            every { task2.answerOptions } returns mutableSetOf()
-            every { task1.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1
-            every { task2.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2
+            every { task1Mock.answerOptions } returns mutableSetOf(resource)
+            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
+            every { task2Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
 
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
-            every { wordsService.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
-            foundTasks.size.shouldBe(expectedTaskSize)
+            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
+            foundTasks.size shouldBe expectedTaskSize
         }
 
         @Test
@@ -119,32 +116,32 @@ internal class TaskServiceTest {
             val expectedTaskSize = 2
             val template = ""
             val resource = Resource(word = "word", locale = Locale.RU.locale)
-            every { taskRepository.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1,
-                task2
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
+                task1Mock,
+                task2Mock
             )
-            every { exerciseRepository.findById(ofType(Long::class)) } returns Optional.of(exercise)
+            every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1.answerOptions } returns mutableSetOf(resource)
-            every { task2.answerOptions } returns mutableSetOf()
-            every { task1.exercise } returns exercise
-            every { task2.exercise } returns exercise
-            every { exercise.template } returns template
-            every { task1.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1
-            every { task2.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto2
+            every { task1Mock.answerOptions } returns mutableSetOf(resource)
+            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.exercise } returns exerciseMock
+            every { task2Mock.exercise } returns exerciseMock
+            every { exerciseMock.template } returns template
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
+            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto2Mock
 
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.WORDS_SEQUENCES.name
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
 
-            every { wordsService.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
-            foundTasks.size.shouldBe(expectedTaskSize)
+            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
+            foundTasks.size shouldBe expectedTaskSize
         }
 
         @Test
@@ -153,32 +150,32 @@ internal class TaskServiceTest {
             val expectedTaskSize = 2
             val template = ""
             val resource = Resource(word = "word", locale = Locale.RU.locale)
-            every { taskRepository.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1,
-                task2
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
+                task1Mock,
+                task2Mock
             )
-            every { exerciseRepository.findById(ofType(Long::class)) } returns Optional.of(exercise)
+            every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1.answerOptions } returns mutableSetOf(resource)
-            every { task2.answerOptions } returns mutableSetOf()
-            every { task1.exercise } returns exercise
-            every { task2.exercise } returns exercise
-            every { exercise.template } returns template
-            every { task1.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1
-            every { task2.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto2
+            every { task1Mock.answerOptions } returns mutableSetOf(resource)
+            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.exercise } returns exerciseMock
+            every { task2Mock.exercise } returns exerciseMock
+            every { exerciseMock.template } returns template
+            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
+            every { task2Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto2Mock
 
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.SENTENCE.name
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.SENTENCE.name
 
-            every { wordsService.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
-            foundTasks.size.shouldBe(expectedTaskSize)
+            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
+            foundTasks.size shouldBe expectedTaskSize
         }
 
         @Test
@@ -186,53 +183,53 @@ internal class TaskServiceTest {
             // GIVEN
             val expectedTaskSize = 2
             val resource = Resource(word = "word", locale = Locale.RU.locale)
-            every { taskRepository.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1,
-                task2
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
+                task1Mock,
+                task2Mock
             )
-            every { exerciseRepository.findById(ofType(Long::class)) } returns Optional.of(exercise)
+            every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1
-            every { task2.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2
-            every { task1.answerOptions } returns mutableSetOf(resource)
-            every { task2.answerOptions } returns mutableSetOf()
-            every { task1.toPhraseSeriesTaskDto() } returns taskDto1
-            every { task2.toPhraseSeriesTaskDto() } returns taskDto2
+            every { task1Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
+            every { task2Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
+            every { task1Mock.answerOptions } returns mutableSetOf(resource)
+            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto1Mock
+            every { task2Mock.toPhraseSeriesTaskDto() } returns taskDto2Mock
 
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.PHRASES.name
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.PHRASES.name
 
-            every { wordsService.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
-            foundTasks.size.shouldBe(expectedTaskSize)
+            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
+            foundTasks.size shouldBe expectedTaskSize
         }
 
         @Test
         fun `should throw an exception when there is no task for this signal exercise type`() {
             // GIVEN
             val resource = Resource(word = "word", locale = Locale.RU.locale)
-            every { taskRepository.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1,
-                task2
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
+                task1Mock,
+                task2Mock
             )
-            every { exerciseRepository.findById(ofType(Long::class)) } returns Optional.of(exercise)
+            every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1.answerOptions } returns mutableSetOf(resource)
-            every { task2.answerOptions } returns mutableSetOf()
-            every { task1.exercise } returns exercise
-            every { task2.exercise } returns exercise
+            every { task1Mock.answerOptions } returns mutableSetOf(resource)
+            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.exercise } returns exerciseMock
+            every { task2Mock.exercise } returns exerciseMock
 
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.DI.name
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.DI.name
 
-            every { wordsService.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
@@ -244,95 +241,95 @@ internal class TaskServiceTest {
         fun `should return task by id(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
             val taskDto = WordsSeriesTaskDto(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
-            every { taskRepository.findById(ofType(Long::class)) } returns Optional.of(task1)
-            every { task1.answerOptions } returns mutableSetOf()
-            every { task1.exercise } returns exercise
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-            every { task1.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
+            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.exercise } returns exerciseMock
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+            every { task1Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            taskById.shouldBe(taskDto)
+            taskById shouldBe taskDto
         }
 
         @Test
         fun `should return task by id(WORDS_SEQUENCES)`() {
             // GIVEN
             val template = ""
-            every { taskRepository.findById(ofType(Long::class)) } returns Optional.of(task1)
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
 
-            every { task1.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableSetOf()
 
-            every { task1.exercise } returns exercise
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { task1.id } returns 1L
-            every { series.type } returns ExerciseType.WORDS_SEQUENCES.name
-            every { exercise.template } returns template
-            every { task1.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1
+            every { task1Mock.exercise } returns exerciseMock
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { task1Mock.id } returns 1L
+            every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
+            every { exerciseMock.template } returns template
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            assertSame(wordsGroupSeriesTaskDto1, taskById)
+            assertSame(wordsGroupSeriesTaskDto1Mock, taskById)
         }
 
         @Test
         fun `should return task by id(SENTENCE)`() {
             // GIVEN
             val template = ""
-            every { taskRepository.findById(ofType(Long::class)) } returns Optional.of(task1)
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
 
-            every { task1.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableSetOf()
 
-            every { task1.exercise } returns exercise
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { task1.id } returns 1L
-            every { series.type } returns ExerciseType.SENTENCE.name
-            every { exercise.template } returns template
-            every { task1.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1
+            every { task1Mock.exercise } returns exerciseMock
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { task1Mock.id } returns 1L
+            every { seriesMock.type } returns ExerciseType.SENTENCE.name
+            every { exerciseMock.template } returns template
+            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            taskById.shouldBe(wordsGroupSeriesTaskDto1)
+            taskById shouldBe wordsGroupSeriesTaskDto1Mock
         }
 
         @Test
         fun `should return task by id(PHRASES)`() {
             // GIVEN
             val taskDto = WordsSeriesTaskDto(id = 1L, exerciseType = ExerciseType.PHRASES)
-            every { taskRepository.findById(ofType(Long::class)) } returns Optional.of(task1)
-            every { task1.answerOptions } returns mutableSetOf()
-            every { task1.exercise } returns exercise
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.PHRASES.name
-            every { task1.toPhraseSeriesTaskDto() } returns taskDto
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
+            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.exercise } returns exerciseMock
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.PHRASES.name
+            every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            taskById.shouldBe(taskDto)
+            taskById shouldBe taskDto
         }
 
         @Test
         fun `should throw an exception when there is no tasks for this exercise type`() {
             // GIVEN
-            every { taskRepository.findById(ofType(Long::class)) } returns Optional.of(task1)
-            every { task1.answerOptions } returns mutableSetOf()
-            every { task1.exercise } returns exercise
-            every { exercise.subGroup } returns subGroup
-            every { subGroup.series } returns series
-            every { series.type } returns ExerciseType.DI.name
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
+            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.exercise } returns exerciseMock
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.DI.name
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
@@ -343,7 +340,7 @@ internal class TaskServiceTest {
         @Test
         fun `should throw an exception when there is no task by exercise id`() {
             // GIVEN
-            every { exerciseRepository.findById(LONG_ONE) } returns Optional.empty()
+            every { exerciseRepositoryMock.findById(LONG_ONE) } returns Optional.empty()
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
@@ -354,7 +351,7 @@ internal class TaskServiceTest {
         @Test
         fun `should throw an exception when there is no task by specified id`() {
             // GIVEN
-            every { taskRepository.findById(LONG_ONE) } returns Optional.empty()
+            every { taskRepositoryMock.findById(LONG_ONE) } returns Optional.empty()
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
@@ -366,16 +363,16 @@ internal class TaskServiceTest {
         fun `should save task`() {
             // GIVEN
             val resources = mutableSetOf<Resource>()
-            every { task1.answerOptions } returns mutableSetOf()
-            every { task1.correctAnswer } returns resource
-            every { taskRepository.save(task1) } returns task1
-            every { resourceRepository.saveAll(any()) } returns resources
+            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.correctAnswer } returns resourceMock
+            every { taskRepositoryMock.save(task1Mock) } returns task1Mock
+            every { resourceRepositoryMock.saveAll(any()) } returns resources
 
             // WHEN
-            val task = taskService.save(task1)
+            val task = taskService.save(task1Mock)
 
             // THEN
-            task.shouldBe(task1)
+            task shouldBe task1Mock
         }
     }
 }
