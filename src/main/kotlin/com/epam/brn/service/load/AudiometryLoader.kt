@@ -7,6 +7,7 @@ import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -15,6 +16,8 @@ class AudiometryLoader(
     private val audiometryRepository: AudiometryRepository,
     private val audiometryTaskRepository: AudiometryTaskRepository
 ) {
+    private val log = logger()
+
     @Value("#{'\${frequencyForDiagnostic}'.split(',')}")
     lateinit var frequencyForDiagnostic: List<Int>
 
@@ -92,6 +95,13 @@ class AudiometryLoader(
     fun loadFrequencyDiagnosticData() {
         val audiometrics = audiometryRepository.findByAudiometryType(AudiometryType.SIGNALS.name)
         audiometrics.forEach { audiometry ->
+            val existTasksCount = audiometryTaskRepository.countByAudiometry(audiometry)
+            if (existTasksCount == 2L)
+                return@forEach
+            if (existTasksCount != 0L) {
+                log.error("Wrong db status: for audiometry $audiometry existTasksCount=$existTasksCount")
+                audiometryTaskRepository.removeAllByAudiometry(audiometry) // fix db bug
+            }
             val taskLeft =
                 AudiometryTask(
                     audiometry = audiometry,
