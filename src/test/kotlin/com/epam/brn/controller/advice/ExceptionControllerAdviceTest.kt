@@ -48,17 +48,17 @@ internal class ExceptionControllerAdviceTest {
         // GIVEN
         val bindingResult = mockk<BindingResult>()
         val method = mockk<Method>()
-        every { method.parameterCount } answers { 2 }
-        every { method.toGenericString() } answers { "" }
+        every { method.parameterCount } returns 2
+        every { method.toGenericString() } returns ""
         val methodParameter = MethodParameter(method, -1)
         val exception = MethodArgumentNotValidException(methodParameter, bindingResult)
         val fieldErrors: List<FieldError> = listOf(
             FieldError("TestEntity", "field1", "INCORRECT_FIELD_FORMAT"),
             FieldError("TestEntity", "firstName", "FIRST_NAME_MUST_NOT_HAVE_SPACES")
         )
-        every { bindingResult.fieldErrors } answers { fieldErrors }
-        every { bindingResult.errorCount } answers { fieldErrors.size }
-        every { bindingResult.allErrors } answers { fieldErrors }
+        every { bindingResult.fieldErrors } returns fieldErrors
+        every { bindingResult.errorCount } returns fieldErrors.size
+        every { bindingResult.allErrors } returns fieldErrors
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exception)
 
