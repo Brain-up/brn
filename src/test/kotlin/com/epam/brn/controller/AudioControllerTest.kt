@@ -1,8 +1,6 @@
 package com.epam.brn.controller
 
 import com.epam.brn.service.YandexSpeechKitService
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK

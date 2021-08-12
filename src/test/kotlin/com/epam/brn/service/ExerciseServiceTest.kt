@@ -15,13 +15,13 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
 import org.amshove.kluent.shouldBe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.mock
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
@@ -266,7 +266,7 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex2)
         val studyHistoryWithExercise1 = StudyHistory(
             exercise = ex1,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk<UserAccount>(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -275,7 +275,7 @@ internal class ExerciseServiceTest {
         )
         val studyHistoryWithExercise2 = StudyHistory(
             exercise = ex2,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk<UserAccount>(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -347,7 +347,7 @@ internal class ExerciseServiceTest {
 
         val studyHistoryWithExercise11 = StudyHistory(
             exercise = ex11,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk<UserAccount>(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,

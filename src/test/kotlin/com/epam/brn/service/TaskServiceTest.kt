@@ -29,7 +29,7 @@ import java.util.Optional
 import kotlin.test.assertSame
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("TaskService test using mockito")
+@DisplayName("TaskService test using MockK")
 internal class TaskServiceTest {
 
     @InjectMockKs
