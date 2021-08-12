@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("CloudControllerTest test using mockito")
+@DisplayName("CloudControllerTest test using MockK")
 internal class CloudControllerTest {
 
     @InjectMockKs

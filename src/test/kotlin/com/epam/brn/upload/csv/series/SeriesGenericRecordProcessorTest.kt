@@ -8,11 +8,11 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesGenericRecordProcessorTest {
@@ -46,7 +46,7 @@ internal class SeriesGenericRecordProcessorTest {
         // GIVEN
         val records = createInputSeriesGenericRecordList()
         val expected = createActualSeriesList()
-        val seriesMock = Mockito.mock(Series::class.java)
+        val seriesMock = mockk<Series>()
         every { exerciseGroupsService.findGroupByCode(ofType(String::class)) } returnsMany exerciseGroups
         for (i in exerciseGroups.indices) {
             every { exerciseGroupsService.findGroupByCode(match { it == exerciseGroups[i].code }) } returns exerciseGroups[i]
@@ -74,7 +74,7 @@ internal class SeriesGenericRecordProcessorTest {
         // GIVEN
         val records = createInputSeriesGenericRecordList()
         val expected = createActualSeriesList()
-        val seriesMock = Mockito.mock(Series::class.java)
+        val seriesMock = mockk<Series>()
         every { exerciseGroupsService.findGroupByCode(ofType(String::class)) } returnsMany exerciseGroups
         for (i in exerciseGroups.indices) {
             every { exerciseGroupsService.findGroupByCode(match { it == exerciseGroups[i].code }) } returns exerciseGroups[i]
