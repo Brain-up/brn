@@ -54,7 +54,7 @@ internal class DayExercisingStatusRetrieverTest {
         every { studyHistory.executionSeconds } returns 20 * 60
 
         // WHEN
-        val status = retriever.getWorstStatus(listOf(studyHistory))
+        val status = retriever.getStatus(listOf(studyHistory))
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GREAT, status)
@@ -67,7 +67,7 @@ internal class DayExercisingStatusRetrieverTest {
         every { studyHistory.executionSeconds } returns 15 * 60
 
         // WHEN
-        val status = retriever.getWorstStatus(listOf(studyHistory))
+        val status = retriever.getStatus(listOf(studyHistory))
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GOOD, status)
@@ -80,7 +80,7 @@ internal class DayExercisingStatusRetrieverTest {
         every { studyHistory.executionSeconds } returns 5 * 60
 
         // WHEN
-        val status = retriever.getWorstStatus(listOf(studyHistory))
+        val status = retriever.getStatus(listOf(studyHistory))
 
         // THEN
         assertEquals(UserExercisingProgressStatus.BAD, status)

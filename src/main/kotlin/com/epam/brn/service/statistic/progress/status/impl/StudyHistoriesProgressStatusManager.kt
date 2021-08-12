@@ -17,7 +17,7 @@ class StudyHistoriesProgressStatusManager(
         retrievers.filter {
             it.getSupportedPeriods().contains(periodType)
         }.forEach {
-            allStatuses.add(it.getWorstStatus(progress))
+            allStatuses.add(it.getStatus(progress))
         }
         return allStatuses.filterNotNull().minByOrNull { it.ordinal }
     }

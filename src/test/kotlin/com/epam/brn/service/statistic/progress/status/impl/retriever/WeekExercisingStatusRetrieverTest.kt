@@ -71,7 +71,7 @@ internal class WeekExercisingStatusRetrieverTest {
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
-        val worstStatus = retriever.getWorstStatus(period)
+        val worstStatus = retriever.getStatus(period)
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GREAT, worstStatus)
@@ -96,7 +96,7 @@ internal class WeekExercisingStatusRetrieverTest {
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
-        val worstStatus = retriever.getWorstStatus(period)
+        val worstStatus = retriever.getStatus(period)
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GOOD, worstStatus)
@@ -121,7 +121,7 @@ internal class WeekExercisingStatusRetrieverTest {
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
-        val worstStatus = retriever.getWorstStatus(period)
+        val worstStatus = retriever.getStatus(period)
 
         // THEN
         assertEquals(UserExercisingProgressStatus.BAD, worstStatus)
