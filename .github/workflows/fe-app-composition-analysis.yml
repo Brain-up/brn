@@ -29,7 +29,6 @@ jobs:
         working-directory: ./frontend
         run: yarn install
       - name: yarn audit
-        continue-on-error: true
         working-directory: ./frontend
-        run: yarn audit
+        run: yarn audit --groups dependencies
 
