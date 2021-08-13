@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.WordsGroupSeriesTaskDto
-import com.epam.brn.dto.WordsSeriesTaskDto
+import com.epam.brn.dto.WordsGroupSeriesTaskResponse
+import com.epam.brn.dto.WordsSeriesTaskResponse
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -57,16 +57,16 @@ internal class TaskServiceTest {
     lateinit var resourceMock: Resource
 
     @MockK
-    lateinit var taskDto1Mock: WordsSeriesTaskDto
+    lateinit var taskDto1Mock: WordsSeriesTaskResponse
 
     @MockK
-    lateinit var taskDto2Mock: WordsSeriesTaskDto
+    lateinit var taskDto2Mock: WordsSeriesTaskResponse
 
     @MockK
-    lateinit var wordsGroupSeriesTaskDto1Mock: WordsGroupSeriesTaskDto
+    lateinit var wordsGroupSeriesTaskResponse1Mock: WordsGroupSeriesTaskResponse
 
     @MockK
-    lateinit var wordsGroupSeriesTaskDto2Mock: WordsGroupSeriesTaskDto
+    lateinit var wordsGroupSeriesTaskResponse2Mock: WordsGroupSeriesTaskResponse
 
     @MockK
     lateinit var exerciseMock: Exercise
@@ -127,8 +127,8 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
-            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto2Mock
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
+            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -161,8 +161,8 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
-            every { task2Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto2Mock
+            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
+            every { task2Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -240,7 +240,7 @@ internal class TaskServiceTest {
         @Test
         fun `should return task by id(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
-            val taskDto = WordsSeriesTaskDto(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
+            val taskDto = WordsSeriesTaskResponse(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.exercise } returns exerciseMock
@@ -270,13 +270,13 @@ internal class TaskServiceTest {
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            assertSame(wordsGroupSeriesTaskDto1Mock, taskById)
+            assertSame(wordsGroupSeriesTaskResponse1Mock, taskById)
         }
 
         @Test
@@ -293,19 +293,19 @@ internal class TaskServiceTest {
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskDto1Mock
+            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            taskById shouldBe wordsGroupSeriesTaskDto1Mock
+            taskById shouldBe wordsGroupSeriesTaskResponse1Mock
         }
 
         @Test
         fun `should return task by id(PHRASES)`() {
             // GIVEN
-            val taskDto = WordsSeriesTaskDto(id = 1L, exerciseType = ExerciseType.PHRASES)
+            val taskDto = WordsSeriesTaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.exercise } returns exerciseMock
@@ -366,7 +366,7 @@ internal class TaskServiceTest {
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.correctAnswer } returns resourceMock
             every { taskRepositoryMock.save(task1Mock) } returns task1Mock
-            every { resourceRepositoryMock.saveAll(any()) } returns resources
+            every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns resources
 
             // WHEN
             val task = taskService.save(task1Mock)

@@ -2,7 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
-import com.epam.brn.dto.response.SubGroupStatisticDto
+import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -89,8 +89,8 @@ class UserStatisticControllerIT : BaseIT() {
 
         val baseResponseDto = objectMapper.readValue(response, BaseResponseDto::class.java)
         val baseResponseJson = gson.toJson(baseResponseDto.data)
-        val resultStatistic: List<SubGroupStatisticDto> =
-            objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticDto>>() {})
+        val resultStatistic: List<SubGroupStatisticResponse> =
+            objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticResponse>>() {})
 
         // THEN
         assertEquals(1, resultStatistic.first().totalExercises)

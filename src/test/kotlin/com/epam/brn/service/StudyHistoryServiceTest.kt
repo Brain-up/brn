@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
@@ -40,7 +40,7 @@ internal class StudyHistoryServiceTest {
     lateinit var studyHistoryDtoMock: StudyHistoryDto
 
     @MockK
-    lateinit var currentUserMock: UserAccountDto
+    lateinit var currentUserMock: UserAccountResponse
 
     @MockK
     lateinit var studyHistoryMock: StudyHistory

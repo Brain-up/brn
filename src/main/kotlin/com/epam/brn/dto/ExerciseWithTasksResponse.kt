@@ -3,7 +3,7 @@ package com.epam.brn.dto
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-data class ExerciseWithTasksDto(
+data class ExerciseWithTasksResponse(
     var seriesId: Long?,
     var id: Long?,
     var name: String,
@@ -11,7 +11,7 @@ data class ExerciseWithTasksDto(
     var noise: NoiseDto,
     var template: String? = "",
     var available: Boolean = true,
-    var tasks: List<GeneralTaskDto>,
+    var tasks: List<GeneralTaskResponse>,
     var signals: List<SignalTaskDto>,
     var active: Boolean = true,
     var changedBy: String? = "",

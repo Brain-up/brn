@@ -4,7 +4,7 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Headphones
@@ -78,8 +78,8 @@ class UserDetailsControllerIT : BaseIT() {
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
-        val resultUser: UserAccountDto =
-            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
+        val resultUser: UserAccountResponse =
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
         resultUser.id shouldBe user.id
         resultUser.name shouldBe user.fullName
         resultUser.avatar shouldBe "/pictures/testAvatar"
@@ -101,8 +101,8 @@ class UserDetailsControllerIT : BaseIT() {
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
-        val resultUser: UserAccountDto =
-            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
+        val resultUser: UserAccountResponse =
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
         resultUser.id shouldBe user.id
         resultUser.name shouldBe "newName"
         resultUser.bornYear shouldBe 1950
