@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
@@ -46,17 +46,17 @@ internal class SubGroupServiceTest {
         val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
         val seriesId = 1L
         val pictureUrl = "url/code"
-        val subGroupDto = SubGroupDto(seriesId, 1L, 5, "name", pictureUrl, "description")
+        val subGroupResponse = SubGroupResponse(seriesId, 1L, 5, "name", pictureUrl, "description")
         every { subGroupRepository.findBySeriesId(seriesId) } returns listOf(subGroupMockk)
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns pictureUrl
-        every { subGroupMockk.toDto(pictureUrl) } returns subGroupDto
+        every { subGroupMockk.toDto(pictureUrl) } returns subGroupResponse
         every { subGroupMockk.code } returns "code"
         // WHEN
         val allGroups = subGroupService.findSubGroupsForSeries(seriesId)
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findBySeriesId(seriesId) }
-        allGroups shouldBe listOf(subGroupDto)
+        allGroups shouldBe listOf(subGroupResponse)
     }
 
     @Test
@@ -105,9 +105,9 @@ internal class SubGroupServiceTest {
         // GIVEN
         val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
         val subGroupId = 1L
-        val subGroupDto = SubGroupDto(subGroupId, 1L, 5, "name", "url/code", "description")
+        val subGroupResponse = SubGroupResponse(subGroupId, 1L, 5, "name", "url/code", "description")
         every { subGroupRepository.findById(subGroupId) } returns Optional.of(subGroupMockk)
-        every { subGroupMockk.toDto("url/code") } returns subGroupDto
+        every { subGroupMockk.toDto("url/code") } returns subGroupResponse
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
         every { subGroupMockk.code } returns "code"
         // WHEN
@@ -115,7 +115,7 @@ internal class SubGroupServiceTest {
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findById(subGroupId) }
-        resultSubGroupDto shouldBe subGroupDto
+        resultSubGroupDto shouldBe subGroupResponse
     }
 
     @Test
@@ -135,9 +135,9 @@ internal class SubGroupServiceTest {
         val seriesMockk = mockkClass(Series::class)
         val seriesId = 1L
         val subGroup = spyk(SubGroup(1, "", code = code, 2, "", seriesMockk))
-        val subGroupDto = SubGroupDto(2, 2, 2, "name", pictureUrl, "description")
+        val subGroupResponse = SubGroupResponse(2, 2, 2, "name", pictureUrl, "description")
         every { seriesMockk.id } returns seriesId
-        every { subGroup.toDto(pictureUrl) } returns subGroupDto
+        every { subGroup.toDto(pictureUrl) } returns subGroupResponse
         every { urlConversionService.makeUrlForSubGroupPicture(code) } returns pictureUrl
         // WHEN
         val resultSubGroupDto = subGroupService.toSubGroupDto(subGroup)
@@ -154,7 +154,7 @@ internal class SubGroupServiceTest {
         val seriesMockk = mockkClass(Series::class, relaxed = true)
         val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
         val subGroupRequest = SubGroupRequest("Test name", 1, "code", "Test description")
-        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns null
+        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level!!) } returns null
         every { seriesRepository.findById(seriesId) } returns Optional.of(seriesMockk)
         every { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
@@ -173,7 +173,7 @@ internal class SubGroupServiceTest {
         val seriesId = 1L
         val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
         val subGroupRequest = SubGroupRequest("Test name", 1, "code", "Test description")
-        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns subGroupMockk
+        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level!!) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/shortWords"
 
@@ -191,7 +191,7 @@ internal class SubGroupServiceTest {
         // GIVEN
         val seriesId = 1L
         val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
-        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level) } returns null
+        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level!!) } returns null
         every { seriesRepository.findById(seriesId) } returns Optional.empty()
         every { urlConversionService.makeUrlForSubGroupPicture("shortWords") } returns "url/shortWords"
         // THEN

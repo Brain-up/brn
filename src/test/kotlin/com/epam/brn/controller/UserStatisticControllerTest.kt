@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
-import com.epam.brn.dto.response.SubGroupStatisticDto
+import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -28,7 +28,7 @@ internal class UserStatisticControllerTest {
     private lateinit var userStatisticController: UserStatisticController
 
     @MockK
-    private lateinit var userStatisticService: UserStatisticService<SubGroupStatisticDto>
+    private lateinit var userStatisticService: UserStatisticService<SubGroupStatisticResponse>
 
     @MockK
     private lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
@@ -37,7 +37,7 @@ internal class UserStatisticControllerTest {
     private lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 
     @MockK
-    private lateinit var subGroupStatisticDto: SubGroupStatisticDto
+    private lateinit var subGroupStatisticResponse: SubGroupStatisticResponse
 
     @MockK
     private lateinit var dayStudyStatistic: DayStudyStatistic
@@ -50,7 +50,7 @@ internal class UserStatisticControllerTest {
 
         // GIVEN
 
-        val subGroupStatisticDtoList = listOf(subGroupStatisticDto)
+        val subGroupStatisticDtoList = listOf(subGroupStatisticResponse)
         val ids = listOf(1L, 2L, 3L)
 
         // WHEN

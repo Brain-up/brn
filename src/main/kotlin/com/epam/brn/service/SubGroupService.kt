@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.SubGroupRepository
@@ -19,13 +19,13 @@ class SubGroupService(
 ) {
     private val log = logger()
 
-    fun findSubGroupsForSeries(seriesId: Long): List<SubGroupDto> {
+    fun findSubGroupsForSeries(seriesId: Long): List<SubGroupResponse> {
         log.debug("Try to find subGroups for seriesId=$seriesId")
         val subGroups = subGroupRepository.findBySeriesId(seriesId)
         return subGroups.map { subGroup -> toSubGroupDto(subGroup) }
     }
 
-    fun findById(subGroupId: Long): SubGroupDto {
+    fun findById(subGroupId: Long): SubGroupResponse {
         log.debug("try to find SubGroup by Id=$subGroupId")
         val subGroup = subGroupRepository.findById(subGroupId)
             .orElseThrow { EntityNotFoundException("No subGroup was found by id=$subGroupId.") }
@@ -44,9 +44,9 @@ class SubGroupService(
         }
     }
 
-    fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupDto {
+    fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupResponse {
         log.debug("try to find subgroup by name=${subGroupRequest.name} and the level=${subGroupRequest.level}")
-        val existSubGroup = subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level)
+        val existSubGroup = subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level!!)
         if (existSubGroup != null)
             throw IllegalArgumentException("The subgroup with name=${subGroupRequest.name} and the level=${subGroupRequest.level} already exists!")
         log.debug("try to find Series by Id=$seriesId")
@@ -57,7 +57,7 @@ class SubGroupService(
         return toSubGroupDto(savedSubGroup)
     }
 
-    fun toSubGroupDto(subGroup: SubGroup): SubGroupDto {
+    fun toSubGroupDto(subGroup: SubGroup): SubGroupResponse {
         val pictureUrl = urlConversionService.makeUrlForSubGroupPicture(subGroup.code)
         return subGroup.toDto(pictureUrl)
     }

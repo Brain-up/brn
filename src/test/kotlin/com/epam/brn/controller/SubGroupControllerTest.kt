@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.SubGroupResponse
 import com.epam.brn.service.SubGroupService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -23,13 +23,13 @@ internal class SubGroupControllerTest {
     private lateinit var subGroupService: SubGroupService
 
     @MockK
-    private lateinit var subGroupDto: SubGroupDto
+    private lateinit var subGroupResponse: SubGroupResponse
 
     @Test
     fun `getAllGroups should return data when there are subGroups for seriesId`() {
         // GIVEN
         val seriesId = 1L
-        every { subGroupService.findSubGroupsForSeries(seriesId) } returns listOf(subGroupDto)
+        every { subGroupService.findSubGroupsForSeries(seriesId) } returns listOf(subGroupResponse)
 
         // WHEN
         val allGroups = subGroupController.getAllGroups(seriesId)
@@ -37,14 +37,14 @@ internal class SubGroupControllerTest {
         // THEN
         verify(exactly = 1) { subGroupService.findSubGroupsForSeries(seriesId) }
         allGroups.statusCode.value() shouldBe HttpStatus.SC_OK
-        allGroups.body!!.data shouldBe listOf(subGroupDto)
+        allGroups.body!!.data shouldBe listOf(subGroupResponse)
     }
 
     @Test
     fun `getSeriesForId should return series by subGroupId`() {
         // GIVEN
         val subGroupId = 1L
-        every { subGroupService.findById(subGroupId) } returns subGroupDto
+        every { subGroupService.findById(subGroupId) } returns subGroupResponse
 
         // WHEN
         val seriesForId = subGroupController.getSeriesForId(subGroupId)
@@ -52,7 +52,7 @@ internal class SubGroupControllerTest {
         // THEN
         verify(exactly = 1) { subGroupService.findById(subGroupId) }
         seriesForId.statusCode.value() shouldBe HttpStatus.SC_OK
-        seriesForId.body!!.data shouldBe subGroupDto
+        seriesForId.body!!.data shouldBe subGroupResponse
     }
     @Test
     fun `deleteSubGroupById should delete subGroup by subGroupId`() {

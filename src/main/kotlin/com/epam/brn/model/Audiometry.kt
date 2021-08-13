@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.AudiometryDto
+import com.epam.brn.dto.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -49,7 +49,7 @@ class Audiometry(
     override fun toString() =
         "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
 
-    fun toDtoWithoutTasks() = AudiometryDto(
+    fun toDtoWithoutTasks() = AudiometryResponse(
         id,
         locale,
         name,
@@ -58,8 +58,8 @@ class Audiometry(
         emptyList<String>()
     )
 
-    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryDto {
-        return AudiometryDto(
+    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryResponse {
+        return AudiometryResponse(
             id,
             locale,
             name,

@@ -40,7 +40,7 @@ data class Series(
     )
 
     fun toDto() = SeriesDto(
-        group = exerciseGroup.id,
+        group = exerciseGroup.id!!,
         id = id,
         level = level,
         name = name,

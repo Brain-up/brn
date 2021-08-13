@@ -26,6 +26,7 @@ internal class StudyHistoryControllerTest {
     fun `should create new study history`() {
         // GIVEN
         val dto = StudyHistoryDto(
+            id = 1L,
             exerciseId = 1L,
             startTime = LocalDateTime.now().minusMinutes(1),
             endTime = LocalDateTime.now(),

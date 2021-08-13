@@ -1,6 +1,6 @@
 package com.epam.brn.service.impl
 
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
@@ -40,7 +40,7 @@ internal class UserStatisticServiceImplTest {
     lateinit var exerciseRepository: ExerciseRepository
 
     @MockK
-    lateinit var userAccount: UserAccountDto
+    lateinit var userAccount: UserAccountResponse
 
     private val userAccountID = 1L
 

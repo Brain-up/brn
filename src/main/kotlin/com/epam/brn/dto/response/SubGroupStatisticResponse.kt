@@ -5,7 +5,7 @@ import com.epam.brn.dto.statistic.Statistic
 /**
  *@author Nikolai Lazarev
  */
-data class SubGroupStatisticDto(
+data class SubGroupStatisticResponse(
     val subGroupId: Long,
     val completedExercises: Int = 0,
     val totalExercises: Int

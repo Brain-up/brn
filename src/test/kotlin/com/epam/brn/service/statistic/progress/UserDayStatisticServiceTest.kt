@@ -1,6 +1,6 @@
 package com.epam.brn.service.statistic.progress
 
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
@@ -36,7 +36,7 @@ internal class UserDayStatisticServiceTest {
     private lateinit var progressStatusManager: ProgressStatusManager<List<StudyHistory>>
 
     @MockK
-    private lateinit var userAccount: UserAccountDto
+    private lateinit var userAccount: UserAccountResponse
 
     @MockK
     private lateinit var studyHistory: StudyHistory

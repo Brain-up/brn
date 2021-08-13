@@ -511,6 +511,28 @@ class AdminControllerIT : BaseIT() {
             .andExpect(jsonPath("$.data.name").value(subGroupRequest.name))
     }
 
+    @Test
+    @Throws(Exception::class)
+    fun `when post request to subGroup and invalid parameters in subGroup then correct response`() {
+        // GIVEN
+        val subGroupRequest =
+            """{"name":"","code":"","level":"","description":"Test description" }"""
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/subgroup")
+                .param("seriesId", "0")
+                .content(subGroupRequest)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.content().json("{\"errors\":[\"не должно быть пустым\",\"не должно равняться null\",\"не должно быть пустым\"] }"))
+    }
+
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise,

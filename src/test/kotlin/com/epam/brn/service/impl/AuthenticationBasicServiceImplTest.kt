@@ -3,7 +3,7 @@ package com.epam.brn.service.impl
 import com.epam.brn.auth.AuthenticationBasicServiceImpl
 import com.epam.brn.dto.request.LoginDto
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.service.UserAccountService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -76,12 +76,12 @@ internal class AuthenticationBasicServiceImplTest {
         val email = "testUser".toLowerCase()
         val password = "testPassword"
         val userAccountDto = mockk<UserAccountCreateRequest>()
-        val savedUserAccountDto = mockk<UserAccountDto>()
+        val savedUserAccountResponse = mockk<UserAccountResponse>()
         val authenticationMock = mockk<Authentication>()
         every { userAccountDto.email } returns email
         every { userAccountDto.password } returns password
-        every { savedUserAccountDto.id } returns 1L
-        every { userAccountService.addUser(userAccountDto) } returns savedUserAccountDto
+        every { savedUserAccountResponse.id } returns 1L
+        every { userAccountService.addUser(userAccountDto) } returns savedUserAccountResponse
         every { authenticationManager.authenticate(any()) } returns authenticationMock
 
         val securityContextMockk = mockk<SecurityContext>()

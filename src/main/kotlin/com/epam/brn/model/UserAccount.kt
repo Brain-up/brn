@@ -1,7 +1,7 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.dto.response.UserWithAnalyticsDto
+import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
@@ -66,7 +66,7 @@ data class UserAccount(
             " bornYear=$bornYear, gender=$gender, description=$description, doctor=$doctor)"
     }
 
-    fun toDto() = UserAccountDto(
+    fun toDto() = UserAccountResponse(
         id = id,
         userId = userId,
         name = fullName,
@@ -89,7 +89,7 @@ data class UserAccount(
             .toMutableSet()
     }
 
-    fun toAnalyticsDto() = UserWithAnalyticsDto(
+    fun toAnalyticsDto() = UserWithAnalyticsResponse(
         id = id,
         userId = userId,
         name = fullName,
