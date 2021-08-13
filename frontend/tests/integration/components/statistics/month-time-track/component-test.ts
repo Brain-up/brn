@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
@@ -11,7 +12,7 @@ import Store from '@ember-data/store';
 const generateTrackData = (
   store: Store,
   months: number[],
-  year: number = 2021,
+  year = 2021,
 ): any[] => {
   const result = [];
   const uniqueMonths = [...new Set(months)];
@@ -19,7 +20,7 @@ const generateTrackData = (
     throw new Error(`Can't generate track data with params months=${months}`);
   }
   for (let i = 0; i < months.length; i++) {
-    let month = months[i];
+    const month = months[i];
     const mm: string = (month < 10 ? '0' : '') + month;
     const trackItemData = store.createRecord('UserYearlyStatistics', {
       progress: PROGRESS.GREAT,
@@ -38,8 +39,11 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
+      //@ts-expect-error this
       this.set('loadPrevYear', () => {});
+      //@ts-expect-error this
       this.set('loadNextYear', () => {});
+      //@ts-expect-error this
       this.set('selectMonth', () => {});
     });
 
@@ -89,10 +93,10 @@ module(
 
     test('it selects month', async function (assert) {
       const store = this.owner.lookup('service:store');
-      this.set('newSelectedMonth', null);
+      let newSelectedMonth = null;
 
       const stubSelectMonth = (selectedMonth: DateTime) => {
-        this.set('newSelectedMonth', selectedMonth);
+        newSelectedMonth = selectedMonth;
       };
 
       this.set('selectMonth', stubSelectMonth);
@@ -116,7 +120,7 @@ module(
         @onLoadNextYear={{this.loadNextYear}}
       />`);
 
-      let selectedMonth = DateTime.fromISO(`${currentYear}-06-23`);
+      const selectedMonth = DateTime.fromISO(`${currentYear}-06-23`);
       this.set('selectedMonth', selectedMonth);
 
       this.set('rawMonthTimeTrackData', TRACK_DATA_12);
@@ -126,10 +130,12 @@ module(
       assert.dom('[data-test-month-track-item-index="5"]').hasClass('selected');
 
       await click('[data-test-month-track-item-index="0"]');
-      assert.equal(this.newSelectedMonth.month, 1, 'January is selected');
+      // @ts-expect-error null
+      assert.equal(newSelectedMonth.month, 1, 'January is selected');
 
       await click('[data-test-month-track-item-index="3"]');
-      assert.equal(this.newSelectedMonth.month, 4, 'April is selected');
+      // @ts-expect-error null
+      assert.equal(newSelectedMonth.month, 4, 'April is selected');
     });
 
     test('it goes to prev/next year', async function (assert) {
@@ -195,7 +201,7 @@ module(
         @onLoadNextYear={{this.loadNextYear}}
       />`);
 
-      let selectedMonth = DateTime.fromISO(`${currentYear}-06-23`);
+      const selectedMonth = DateTime.fromISO(`${currentYear}-06-23`);
       this.set('selectedMonth', selectedMonth);
       this.set('rawMonthTimeTrackData', TRACK_DATA_1);
 

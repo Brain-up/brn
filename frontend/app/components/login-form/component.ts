@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { task } from 'ember-concurrency';
+import { Task, task } from 'ember-concurrency';
 import Router from '@ember/routing/router-service';
 import Session from 'ember-simple-auth/services/session';
 import IntlService from 'ember-intl/services/intl';
@@ -58,7 +58,7 @@ export default class LoginFormComponent extends Component {
   }
 
   @(task(function* (this: LoginFormComponent) {
-    let { login, password } = this;
+    const { login, password } = this;
     try {
       yield this.session.authenticate('authenticator:oauth2', login, password);
       yield this.network.loadCurrentUser();
@@ -84,7 +84,7 @@ export default class LoginFormComponent extends Component {
       // What to do with all this success?
     }
   }).drop())
-  loginTask;
+  loginTask!: Task<any, any>;
 
   @action
   onSubmit(e: Event) {

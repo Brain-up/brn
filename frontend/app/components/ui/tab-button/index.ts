@@ -10,7 +10,7 @@ interface UiTabButtonComponentArguments {
 
 export default class UiTabButtonComponent extends Component<UiTabButtonComponentArguments> {
   get classes() {
-    let items = [
+    const items = [
       'focus:outline-none rounded-lg w-full uppercase h-12 overflow-hidden',
     ];
     if (this.args.small) {

@@ -69,6 +69,7 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
 
   startTask() {
     if (this.args.mode === MODES.TASK) {
+      // @ts-expect-error SignalModel
       this.audio.startPlayTask(this.audioFileUrl);
     }
   }
@@ -90,5 +91,7 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
     return this.task?.signal;
   }
 
-  @action onInsert() {}
+  @action onInsert() {
+    // EOL
+  }
 }

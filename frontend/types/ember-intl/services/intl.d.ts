@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import Service from '@ember/service';
 
 export default class Intl extends Service {

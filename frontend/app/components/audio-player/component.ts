@@ -15,7 +15,7 @@ interface IAudioPlayerArguments {
 }
 
 export default class AudioPlayerComponent extends Component<IAudioPlayerArguments> {
-  animationId: number = 0;
+  animationId = 0;
 
   @ref('buttonElement') buttonElement!: HTMLElement;
   @service('audio') audio!: AudioService;
