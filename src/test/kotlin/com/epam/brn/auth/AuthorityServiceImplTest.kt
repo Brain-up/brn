@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("AuthorityServiceImplTest test using mockito")
+@DisplayName("AuthorityServiceImplTest test using MockK")
 internal class AuthorityServiceImplTest {
 
     @InjectMockKs

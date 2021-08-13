@@ -159,6 +159,9 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 5. Please note that if `gradlew ktlint` task fails, project build will fail also.
 
+### Kotlin input dto validation:
+https://github.com/Brain-up/brn/wiki/Kotlin-request-dto-validation-with-annotations
+
 ### Branches:
 Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
 

@@ -6,11 +6,11 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
@@ -27,7 +27,7 @@ internal class GroupRecordProcessorTest {
         // GIVEN
         val records = createInputGroupRecordList()
         val expected = createActualGroupList()
-        val exerciseGroupMock = Mockito.mock(ExerciseGroup::class.java)
+        val exerciseGroupMock = mockk<ExerciseGroup>()
         every { exerciseGroupRepository.findByCode(ofType(String::class)) } returns Optional.empty()
         every { exerciseGroupRepository.save(ofType(ExerciseGroup::class)) } returns exerciseGroupMock
         // WHEN
@@ -45,7 +45,7 @@ internal class GroupRecordProcessorTest {
         // GIVEN
         val records = createInputGroupRecordList()
         val expected = createActualGroupList()
-        val exerciseGroupMock = Mockito.mock(ExerciseGroup::class.java)
+        val exerciseGroupMock = mockk<ExerciseGroup>()
         every { exerciseGroupRepository.findByCode(ofType(String::class)) } returnsMany expected.map { Optional.of(it) }
         every { exerciseGroupRepository.save(ofType(ExerciseGroup::class)) } returns exerciseGroupMock
         // WHEN

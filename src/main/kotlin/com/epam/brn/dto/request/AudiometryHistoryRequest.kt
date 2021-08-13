@@ -5,7 +5,6 @@ import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import java.time.LocalDateTime
-import javax.annotation.Nullable
 import javax.validation.constraints.NotNull
 
 data class AudiometryHistoryRequest(
@@ -18,7 +17,7 @@ data class AudiometryHistoryRequest(
     var executionSeconds: Int?,
     @field:NotNull
     var tasksCount: Short?,
-    var rightAnswers: Int?=0,
+    var rightAnswers: Int? = 0,
     @field:NotNull
     var headphones: Long?,
     var sinAudiometryResults: Map<Int, Int>? = mutableMapOf()

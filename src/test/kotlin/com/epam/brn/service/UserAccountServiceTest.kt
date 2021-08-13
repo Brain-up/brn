@@ -34,7 +34,7 @@ import java.util.Optional
 import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("UserAccountService test using mockito")
+@DisplayName("UserAccountService test using MockK")
 internal class UserAccountServiceTest {
 
     @InjectMockKs
