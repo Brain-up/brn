@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes */
 import Transform from '@ember-data/serializer/transform';
 import { A, isArray } from '@ember/array';
 import { isEmpty } from '@ember/utils';
@@ -23,6 +24,6 @@ export default ArrayTransform;
 
 declare module 'ember-data/types/registries/transform' {
   export default interface TransformRegistry {
-    array: ArrayTransform;
+    array: typeof ArrayTransform;
   }
 }

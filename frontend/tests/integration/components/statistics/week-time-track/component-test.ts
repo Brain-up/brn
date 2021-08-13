@@ -36,7 +36,7 @@ module(
         @data={{this.rawWeekTimeTrackData}}        
       />`);
 
-      let selectedMonth = DateTime.fromISO('2021-06-23');
+      const selectedMonth = DateTime.fromISO('2021-06-23');
       this.set('selectedMonth', selectedMonth);
 
       this.set('rawWeekTimeTrackData', TRACK_DATA);
@@ -48,7 +48,7 @@ module(
     });
 
     test('it shows empty data', async function (assert) {
-      const TRACK_DATA = [];
+      const TRACK_DATA: any[] = [];
 
       this.set('isLoadingWeekTimeTrackData', false);
 
@@ -58,7 +58,7 @@ module(
         @data={{this.rawWeekTimeTrackData}}        
       />`);
 
-      let selectedMonth = DateTime.fromISO('2021-06-23');
+      const selectedMonth = DateTime.fromISO('2021-06-23');
       this.set('selectedMonth', selectedMonth);
       this.set('rawWeekTimeTrackData', TRACK_DATA);
 
