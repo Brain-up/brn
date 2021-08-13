@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull
 
 data class AudiometryHistoryRequest(
     @field:NotNull
-    var audiometryTaskId: Long,
+    var audiometryTaskId: Long?,
     @field:NotNull
     var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
@@ -18,10 +18,9 @@ data class AudiometryHistoryRequest(
     var executionSeconds: Int?,
     @field:NotNull
     var tasksCount: Short?,
-    @field:Nullable
     var rightAnswers: Int,
     @field:NotNull
-    var headphones: Long? = null,
+    var headphones: Long?,
     var sinAudiometryResults: Map<Int, Int>? = mutableMapOf()
 ) {
     fun toEntity(userAccount: UserAccount, audiometryTask: AudiometryTask, headphones: Headphones?) = AudiometryHistory(
