@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* global require */
 const fs = require('fs');
 const request = require('request');

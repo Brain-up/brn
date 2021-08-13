@@ -69,14 +69,14 @@ export default class NetworkService extends Service {
     });
   }
   async cloudUrl() {
-    let result = await this.request('cloud/baseFileUrl');
-    let { data } = await result.json();
+    const result = await this.request('cloud/baseFileUrl');
+    const { data } = await result.json();
     return data;
   }
   async getCurrentUser() {
     try {
-      let result = await this.request('users/current');
-      let { data } = await result.json();
+      const result = await this.request('users/current');
+      const { data } = await result.json();
       return fromLatestUserDto(Array.isArray(data) ? data[0] : data);
     } catch (e) {
       await this.session.invalidate();
@@ -84,8 +84,8 @@ export default class NetworkService extends Service {
     }
   }
   async patchUserInfo(userInfo: LatestUserDTO): Promise<LatestUserDTO> {
-    let result = await this.patch('users/current', userInfo);
-    let { data } = await result.json();
+    const result = await this.patch('users/current', userInfo);
+    const { data } = await result.json();
     return data;
   }
   async loadCurrentUser() {
@@ -99,8 +99,8 @@ export default class NetworkService extends Service {
     return this.postRequest('registration', user);
   }
   async subgroupStats(id: string) {
-    let result = await this.request(`statistics/subgroups?ids=${id}`);
-    let { data } = await result.json();
+    const result = await this.request(`statistics/subgroups?ids=${id}`);
+    const { data } = await result.json();
     return data[0];
   }
   async availableExercises(ids: string[]) {

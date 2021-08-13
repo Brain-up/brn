@@ -1,3 +1,4 @@
+/* eslint-disable  ember/no-get, ember/classic-decorator-no-classic-methods */
 import { belongsTo, hasMany, attr } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
@@ -44,7 +45,7 @@ export default class Exercise extends CompletionDependent {
   @belongsTo('series', { async: false }) series!: SeriesModel;
   @hasMany('signal', { async: false }) signals!: SignalModel[];
   @hasMany('task', { async: true }) tasks!: TaskModel[];
-  // @ts-ignore
+  // @ts-expect-error owerriden property
   get children() {
     return this.tasks;
   }
@@ -69,13 +70,13 @@ export default class Exercise extends CompletionDependent {
   get previousSiblings() {
     return arrayPreviousItems(
       this,
-      // @ts-ignore
+      // @ts-expect-error types mismatch
       this.get('series.groupedByNameExercises')[this.name],
     );
   }
   @cached
   get isCompleted() {
-    // @ts-ignore
+    // @ts-expect-error edata type error
     const tasksIds = this.hasMany('tasks').ids();
     const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
     const tasksCompleted = tasksIds.every((taskId) =>
@@ -105,7 +106,6 @@ export default class Exercise extends CompletionDependent {
   }
   trackTime(type = 'start') {
     if (type === 'start' || type === 'end') {
-      // @ts-expect-error
       this.set(`${type}Time`, new Date());
     }
   }
