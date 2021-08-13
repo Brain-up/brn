@@ -55,6 +55,7 @@ export default class StudyingTimerService extends Service {
   }
   @action
   async startIdleWatcher() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const player = this;
     const { timerInstance } = player;
     const { default: IdleJs } = await import('idle-js');

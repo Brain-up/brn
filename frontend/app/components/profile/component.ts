@@ -10,7 +10,7 @@ export default class ProfileComponent extends Component {
   @service('user-data') userData!: UserDataService;
 
   @tracked showAvatarsModal = false;
-  selectedAvatar: number = 0;
+  @tracked selectedAvatar = 0;
 
   get avatarUrl() {
     return this.userData.avatarUrl;

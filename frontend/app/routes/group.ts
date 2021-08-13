@@ -6,7 +6,7 @@ import type Transition from '@ember/routing/-private/transition';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
 
-// @ts-expect-error
+// @ts-expect-error mixin
 export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
   @service('network') network!: NetworkService;
 

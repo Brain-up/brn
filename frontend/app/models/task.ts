@@ -1,3 +1,4 @@
+/* eslint-disable ember/classic-decorator-no-classic-methods */
 import { belongsTo, attr, AsyncBelongsTo } from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
@@ -19,7 +20,7 @@ export default class Task extends CompletionDependent {
   @attr('number') repetitionCount!: number;
 
   @attr() answerOptions!: any;
-  // @ts-ignore
+  // @ts-expect-error attr default value
   @attr('', {
     defaultValue() {
       return [];
@@ -60,7 +61,6 @@ export default class Task extends CompletionDependent {
     this._completedInCurrentCycle = value;
   }
   get nextTask() {
-    // @ts-ignore
     return arrayNext(this, this.exercise.sortedChildren);
   }
 

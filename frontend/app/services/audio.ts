@@ -230,7 +230,7 @@ export default class AudioService extends Service {
 
   @task(function* playNoise(this: AudioService) {
     let noise = null;
-    let timeInSeconds = 10;
+    const timeInSeconds = 10;
     try {
       const [level, url] = [
         this.currentExerciseNoiseLevel,
@@ -257,7 +257,7 @@ export default class AudioService extends Service {
   startNoiseTask!: TaskGenerator<any, any>;
 
   @(task(function* playAudio(this: AudioService, noizeSeconds = 0) {
-    let startedSources = [];
+    const startedSources = [];
     const hasNoize = false;
     if (hasNoize) {
       noizeSeconds = 0.3;

@@ -3,17 +3,17 @@ import IntlService from 'ember-intl/services/intl';
 
 interface IDoctorInfo {
   [key: string]: {
-    name: String;
-    bio: String;
+    name: string;
+    bio: string;
   };
 }
 interface IIntlString {
-  ru: String;
-  en: String;
+  ru: string;
+  en: string;
 }
 
 class Doctor {
-  img: String;
+  img: string;
   lang: IDoctorInfo;
 
   constructor(img: string, name: IIntlString, bio: IIntlString) {
@@ -26,7 +26,7 @@ class Doctor {
 }
 
 class TeamMember {
-  img: String;
+  img: string;
 
   constructor(img: string) {
     this.img = img;
@@ -44,14 +44,14 @@ export default class PersonsService extends Service {
   }
 
   get doctors() {
-    let locale = this.intl.locale[0];
+    const locale = this.intl.locale[0];
 
     return this.personsData.doctors.map((doctor) => {
-      let doctorInfo = doctor.lang[locale];
+      const { name, bio } = doctor.lang[locale];
       return {
         img: doctor.img,
-        name: doctorInfo.name,
-        bio: doctorInfo.bio,
+        name,
+        bio,
       };
     });
   }
