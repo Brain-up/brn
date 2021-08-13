@@ -28,7 +28,7 @@ data class UserAccountCreateRequest(
     @field:Size(min = 4, max = 20, message = "{validation.field.password.invalid-format}")
     var password: String,
     @field:NotNull(message = "{validation.field.bornYear.notNull}")
-    val bornYear: Int,
+    val bornYear: Int?,
     @field:NotNull(message = "{validation.field.gender.notNull}")
     val gender: Gender,
     val avatar: String? = null,
