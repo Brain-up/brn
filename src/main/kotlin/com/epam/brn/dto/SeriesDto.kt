@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull
 
 data class SeriesDto(
     @field:NotNull
-    val group: Long,
+    val group: Long?,
     val id: Long?,
     val type: ExerciseType,
     @field:NotBlank

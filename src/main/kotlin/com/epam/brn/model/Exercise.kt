@@ -1,7 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.ExerciseWithTasksDto
+import com.epam.brn.dto.ExerciseWithTasksResponse
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.ShortTaskDto
 import org.springframework.data.annotation.LastModifiedBy
@@ -67,7 +67,7 @@ data class Exercise(
         changedWhen = changedWhen
     )
 
-    fun toDtoWithTasks() = ExerciseWithTasksDto(
+    fun toDtoWithTasks() = ExerciseWithTasksResponse(
         seriesId = subGroup?.id,
         id = id,
         name = name,

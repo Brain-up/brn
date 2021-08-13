@@ -4,7 +4,7 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
@@ -56,7 +56,7 @@ internal class UserAccountServiceTest {
     lateinit var userAccount: UserAccount
 
     @MockK
-    lateinit var userAccountDto: UserAccountDto
+    lateinit var userAccountResponse: UserAccountResponse
 
     @MockK
     lateinit var userAccountCreateRequest: UserAccountCreateRequest
@@ -80,8 +80,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by id`() {
             // GIVEN
             val userName = "Tested"
-            every { userAccount.toDto() } returns userAccountDto
-            every { userAccountDto.name } returns userName
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.name } returns userName
             every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserById(NumberUtils.LONG_ONE)
@@ -93,8 +93,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by name`() {
             // GIVEN
             val fullName = "Ivan"
-            every { userAccount.toDto() } returns userAccountDto
-            every { userAccountDto.name } returns fullName
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.name } returns fullName
             every { userAccountRepository.findUserAccountByName(fullName) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByName(fullName)
@@ -106,8 +106,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by email`() {
             // GIVEN
             val email = "email"
-            every { userAccount.toDto() } returns userAccountDto
-            every { userAccountDto.email } returns email
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.email } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByEmail(email)
@@ -139,8 +139,8 @@ internal class UserAccountServiceTest {
             every { passwordEncoder.encode(ofType(String::class)) } returns "password"
             every { userAccountCreateRequest.toModel(ofType(String::class)) } returns userAccount
             every { userAccountCreateRequest.password } returns "password"
-            every { userAccountDto.name } returns "Tested"
-            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountResponse.name } returns "Tested"
+            every { userAccount.toDto() } returns userAccountResponse
             every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(userAccount) } returns userAccount
             every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority

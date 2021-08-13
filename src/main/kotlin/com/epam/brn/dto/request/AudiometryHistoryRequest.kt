@@ -17,9 +17,9 @@ data class AudiometryHistoryRequest(
     @field:NotNull
     var executionSeconds: Int?,
     @field:NotNull
-    var tasksCount: Short,
+    var tasksCount: Short?,
     @field:Nullable
-    var rightAnswers: Int = 0,
+    var rightAnswers: Int,
     @field:NotNull
     var headphones: Long? = null,
     var sinAudiometryResults: Map<Int, Int>? = mutableMapOf()
@@ -30,9 +30,9 @@ data class AudiometryHistoryRequest(
         startTime = this.startTime,
         endTime = this.endTime,
         executionSeconds = this.executionSeconds,
-        tasksCount = this.tasksCount,
+        tasksCount = this.tasksCount!!,
         rightAnswers = this.rightAnswers,
-        rightAnswersIndex = rightAnswers.toFloat().div(tasksCount),
+        rightAnswersIndex = rightAnswers.toFloat().div(tasksCount!!),
         headphones = headphones
     )
 }

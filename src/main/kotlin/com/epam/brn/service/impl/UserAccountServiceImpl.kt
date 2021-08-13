@@ -4,8 +4,8 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.dto.response.UserWithAnalyticsDto
+import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Headphones
@@ -36,7 +36,7 @@ class UserAccountServiceImpl(
 
     private val log = logger()
 
-    override fun findUserByName(name: String): UserAccountDto {
+    override fun findUserByName(name: String): UserAccountResponse {
         return userAccountRepository
             .findUserAccountByName(name)
             .map(UserAccount::toDto)
@@ -46,7 +46,7 @@ class UserAccountServiceImpl(
             }
     }
 
-    override fun addUser(userAccountCreateRequest: UserAccountCreateRequest): UserAccountDto {
+    override fun addUser(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse {
         val existUser = userAccountRepository.findUserAccountByEmail(userAccountCreateRequest.email)
         existUser.ifPresent {
             throw IllegalArgumentException("The user already exists!")
@@ -78,14 +78,14 @@ class UserAccountServiceImpl(
             }
     }
 
-    override fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountDto {
+    override fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse {
         val hashedPassword = getHashedPassword(userAccountCreateRequest)
         val userAccountModel = userAccountCreateRequest.toModel(hashedPassword)
         userAccountModel.changed = timeService.now()
         return userAccountRepository.save(userAccountModel).toDto()
     }
 
-    override fun findUserById(id: Long): UserAccountDto {
+    override fun findUserById(id: Long): UserAccountResponse {
         return userAccountRepository.findUserAccountById(id)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
@@ -100,7 +100,7 @@ class UserAccountServiceImpl(
 
     override fun getAllHeadphonesForCurrentUser() = getCurrentUser().headphones.map(Headphones::toDto).toSet()
 
-    override fun getUserFromTheCurrentSession(): UserAccountDto = getCurrentUser().toDto()
+    override fun getUserFromTheCurrentSession(): UserAccountResponse = getCurrentUser().toDto()
 
     override fun getCurrentUser(): UserAccount {
         val authentication = SecurityContextHolder.getContext().authentication
@@ -109,16 +109,16 @@ class UserAccountServiceImpl(
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
-    override fun getUsers(pageable: Pageable): List<UserAccountDto> =
+    override fun getUsers(pageable: Pageable): List<UserAccountResponse> =
         userAccountRepository.findAll().map { it.toDto() }
 
-    override fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsDto> {
+    override fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsResponse> {
         val users = userAccountRepository.findAll().map { it.toAnalyticsDto() }
         // todo fill user models with analytics and write tests
         return users
     }
 
-    override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {
+    override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountResponse {
         val currentUserAccount = getCurrentUser()
         currentUserAccount.avatar = avatarUrl
         currentUserAccount.changed = timeService.now()
@@ -138,7 +138,7 @@ class UserAccountServiceImpl(
         return headphonesService.save(entityHeadphones)
     }
 
-    override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto {
+    override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse {
         return getCurrentUser().let {
             if (userChangeRequest.isNotEmpty())
                 userAccountRepository.save(it.updateFields(changeRequest = userChangeRequest))
@@ -175,7 +175,7 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    override fun findUserByEmail(email: String): UserAccountDto {
+    override fun findUserByEmail(email: String): UserAccountResponse {
         return userAccountRepository.findUserAccountByEmail(email)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }

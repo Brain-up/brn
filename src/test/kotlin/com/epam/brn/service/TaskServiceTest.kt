@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.WordsSeriesTaskDto
+import com.epam.brn.dto.WordsSeriesTaskResponse
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.ExerciseRepository
@@ -54,10 +54,10 @@ internal class TaskServiceTest {
         fun `should return tasks by exerciseId`() {
             // GIVEN
             val task1 = mockk<Task>()
-            val taskDto1 = mockk<WordsSeriesTaskDto>()
+            val taskDto1 = mockk<WordsSeriesTaskResponse>()
             val task2 = mockk<Task>()
             val resource = Resource(word = "word", locale = Locale.RU.locale)
-            val taskDto2 = mockk<WordsSeriesTaskDto>()
+            val taskDto2 = mockk<WordsSeriesTaskResponse>()
             val exercise = mockk<Exercise>()
             val subGroup = mockk<SubGroup>()
             val series = mockk<Series>()
@@ -91,7 +91,7 @@ internal class TaskServiceTest {
             val subGroup = mockk<SubGroup>()
             val series = mockk<Series>()
             val resource = Resource(word = "word", locale = Locale.RU.locale)
-            val taskDto = WordsSeriesTaskDto(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
+            val taskDto = WordsSeriesTaskResponse(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
             every { taskRepository.findById(LONG_ONE) } returns Optional.of(task)
             every { task.answerOptions } returns mutableSetOf(resource)
             every { wordsService.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"

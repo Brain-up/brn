@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.AudiometryDto
+import com.epam.brn.dto.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.Locale
 import com.epam.brn.model.Audiometry
@@ -42,9 +42,9 @@ internal class AudiometryServiceTest {
     fun `should get audiometrics without tasks`() {
         // GIVEN
         val audiometryMock = mockk<Audiometry>()
-        val audiometryDtoMock = mockk<AudiometryDto>()
+        val audiometryResponseMock = mockk<AudiometryResponse>()
         every { audiometryRepository.findByLocale(Locale.RU.locale) } returns listOf(audiometryMock)
-        every { audiometryMock.toDtoWithoutTasks() } returns audiometryDtoMock
+        every { audiometryMock.toDtoWithoutTasks() } returns audiometryResponseMock
 
         // WHEN
         val audiometrics = audiometryService.getAudiometrics(Locale.RU.locale)
@@ -53,7 +53,7 @@ internal class AudiometryServiceTest {
         verify(exactly = 1) { audiometryRepository.findByLocale(Locale.RU.locale) }
         verify(exactly = 1) { audiometryMock.toDtoWithoutTasks() }
         assertEquals(1, audiometrics.size)
-        assertTrue(audiometrics.contains(audiometryDtoMock))
+        assertTrue(audiometrics.contains(audiometryResponseMock))
     }
 
     @Test

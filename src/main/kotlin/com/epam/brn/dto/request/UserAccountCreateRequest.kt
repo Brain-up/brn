@@ -5,6 +5,7 @@ import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
@@ -14,7 +15,7 @@ const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountCreateRequest(
-    @field:NotBlank(message = "{validation.field.fullName.empty}")
+    @field:NotEmpty(message = "{validation.field.fullName.empty}")
     val name: String,
     @field:NotBlank(message = "{validation.field.email.blank}")
     @field:Email(message = "{validation.field.email.invalid-format}")
