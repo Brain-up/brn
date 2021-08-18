@@ -10,8 +10,8 @@ import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
-import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.SubGroupService
+import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api

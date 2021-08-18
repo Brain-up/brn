@@ -6,8 +6,8 @@ import javax.validation.constraints.NotBlank
 
 data class HeadphonesDto(
     var id: Long? = null,
-    @NotBlank
-    var name: String = "",
+    @field:NotBlank
+    var name: String,
     var type: HeadphonesType,
     var description: String = "",
     var userAccount: Long? = null

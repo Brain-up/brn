@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.AudiometryDto
+import com.epam.brn.dto.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Audiometry
@@ -22,12 +22,12 @@ class AudiometryService(
     @Value("#{'\${frequencyForDiagnostic}'.split(',')}")
     lateinit var frequencyForDiagnostic: List<Int>
 
-    fun getAudiometrics(locale: String): List<AudiometryDto> =
+    fun getAudiometrics(locale: String): List<AudiometryResponse> =
         audiometryRepository
             .findByLocale(locale)
             .map { a -> a.toDtoWithoutTasks() }
 
-    fun getAudiometry(audiometryId: Long): AudiometryDto {
+    fun getAudiometry(audiometryId: Long): AudiometryResponse {
         val audiometry = audiometryRepository.findById(audiometryId)
             .orElseGet { throw EntityNotFoundException("No audiometry was found with id=$audiometryId") }
         val userTasks = getUserAudiometryTasks(audiometry)
@@ -41,13 +41,13 @@ class AudiometryService(
             )
             AudiometryType.SPEECH.name -> {
                 val user = userAccountService.getCurrentUser()
-                findSecondAudiometryTasks(user, audiometry)
+                findSecondSpeechAudiometryTasks(user, audiometry)
             }
             else -> throw IllegalArgumentException("Audiometry `$audiometry` does not supported in the system.")
         }
     }
 
-    fun findSecondAudiometryTasks(user: UserAccount, audiometry: Audiometry): List<AudiometryTask> {
+    fun findSecondSpeechAudiometryTasks(user: UserAccount, audiometry: Audiometry): List<AudiometryTask> {
         val userHistory = audiometryHistoryRepository.findByUserAndAudiometry(user, audiometry)
         val mapZoneLastTask = userHistory
             .groupBy({ it.audiometryTask.frequencyZone }, { it })

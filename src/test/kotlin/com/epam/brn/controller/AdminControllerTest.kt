@@ -2,14 +2,14 @@ package com.epam.brn.controller
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.ExerciseWithTasksDto
+import com.epam.brn.dto.ExerciseWithTasksResponse
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
-import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.dto.response.UserWithAnalyticsDto
+import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.model.Authority
@@ -79,16 +79,16 @@ internal class AdminControllerTest {
     private lateinit var request: UpdateResourceDescriptionRequest
 
     @MockK
-    private lateinit var userWithAnalyticsDto: UserWithAnalyticsDto
+    private lateinit var userWithAnalyticsResponse: UserWithAnalyticsResponse
 
     @MockK
-    private lateinit var userAccountDto: UserAccountDto
+    private lateinit var userAccountResponse: UserAccountResponse
 
     @MockK
     private lateinit var studyHistoryDto: StudyHistoryDto
 
     @MockK
-    private lateinit var exerciseWithTasksDto: ExerciseWithTasksDto
+    private lateinit var exerciseWithTasksResponse: ExerciseWithTasksResponse
 
     @MockK
     private lateinit var resourceDto: ResourceDto
@@ -107,7 +107,7 @@ internal class AdminControllerTest {
         // GIVEN
         val withAnalytics = true
         val role = "ROLE_USER"
-        every { userAccountService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsDto)
+        every { userAccountService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
 
         // WHEN
         val users = adminController.getUsers(withAnalytics, role, pageable)
@@ -115,7 +115,7 @@ internal class AdminControllerTest {
         // THEN
         verify(exactly = 1) { userAccountService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BaseResponseDto).data shouldBe listOf(userWithAnalyticsDto)
+        (users.body as BaseResponseDto).data shouldBe listOf(userWithAnalyticsResponse)
     }
 
     @Test
@@ -123,7 +123,7 @@ internal class AdminControllerTest {
         // GIVEN
         val withAnalytics = false
         val role = "ROLE_USER"
-        every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountDto)
+        every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountResponse)
 
         // WHEN
         val users = adminController.getUsers(withAnalytics, role, pageable)
@@ -131,7 +131,7 @@ internal class AdminControllerTest {
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BaseResponseDto).data shouldBe listOf(userAccountDto)
+        (users.body as BaseResponseDto).data shouldBe listOf(userAccountResponse)
     }
 
     @Test
@@ -184,7 +184,7 @@ internal class AdminControllerTest {
     fun `getExercisesBySubGroup should return data with http status 200`() {
         // GIVEN
         val subGroupId = 1L
-        every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseWithTasksDto)
+        every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseWithTasksResponse)
 
         // WHEN
         val exercises = adminController.getExercisesBySubGroup(subGroupId)
@@ -192,7 +192,7 @@ internal class AdminControllerTest {
         // THEN
         verify(exactly = 1) { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) }
         exercises.statusCodeValue shouldBe HttpStatus.SC_OK
-        exercises.body!!.data shouldBe listOf(exerciseWithTasksDto)
+        exercises.body!!.data shouldBe listOf(exerciseWithTasksResponse)
     }
 
     @Test
@@ -255,9 +255,9 @@ internal class AdminControllerTest {
         // GIVEN
         val seriesId = 1L
         val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
-        val subGroupDto = mockkClass(SubGroupDto::class, relaxed = true)
+        val subGroupResponse = mockkClass(SubGroupResponse::class, relaxed = true)
 
-        every { subGroupService.addSubGroupToSeries(subGroupRequest, seriesId) } returns subGroupDto
+        every { subGroupService.addSubGroupToSeries(subGroupRequest, seriesId) } returns subGroupResponse
 
         // WHEN
         val createdSubGroup = adminController.addSubGroupToSeries(seriesId, subGroupRequest)

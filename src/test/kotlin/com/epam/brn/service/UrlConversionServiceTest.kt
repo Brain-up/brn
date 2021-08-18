@@ -14,7 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("UrlConversionService test using mockito")
+@DisplayName("UrlConversionService test using MockK")
 
 internal class UrlConversionServiceTest {
 

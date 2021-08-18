@@ -18,11 +18,15 @@ function fitTextSize(
   font: string,
   rawFontSize: string,
 ) {
-  let w = width(string, font);
+  const w = width(string, font);
   if (w < maxWidth) {
     return 0;
   }
-  let fontSize = parseFloat(rawFontSize.match(/\d+/)[0]);
+  const size = rawFontSize.match(/\d+/);
+  if (size === null) {
+    return 0;
+  }
+  const fontSize = parseFloat(size[0]);
   return Math.floor((fontSize * maxWidth) / w);
 }
 

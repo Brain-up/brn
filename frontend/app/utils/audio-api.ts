@@ -27,16 +27,16 @@ export function createNoizeBuffer(
   duration: number,
   level: number,
 ) {
-  let channels = 2;
-  let frameCount = context.sampleRate * duration;
-  let myArrayBuffer = context.createBuffer(
+  const channels = 2;
+  const frameCount = context.sampleRate * duration;
+  const myArrayBuffer = context.createBuffer(
     channels,
     frameCount,
     context.sampleRate,
   );
 
   for (let channel = 0; channel < channels; channel++) {
-    let nowBuffering = myArrayBuffer.getChannelData(channel);
+    const nowBuffering = myArrayBuffer.getChannelData(channel);
     for (let i = 0; i < frameCount; i++) {
       nowBuffering[i] = (Math.random() * 2 - 1) * level * 0.01;
     }

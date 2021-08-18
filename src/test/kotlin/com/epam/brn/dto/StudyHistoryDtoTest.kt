@@ -18,6 +18,7 @@ internal class StudyHistoryDtoTest {
     fun `should test toEntity`() {
         // GIVEN
         val dto = StudyHistoryDto(
+            id = 1L,
             exerciseId = 1L,
             startTime = LocalDateTime.now().minusMinutes(1),
             endTime = LocalDateTime.now(),

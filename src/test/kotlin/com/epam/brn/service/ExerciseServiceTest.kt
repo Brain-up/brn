@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.ExerciseWithTasksDto
+import com.epam.brn.dto.ExerciseWithTasksResponse
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -15,13 +15,13 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
 import org.amshove.kluent.shouldBe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mockito.mock
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
@@ -148,11 +148,11 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
         val subGroupId = 1L
-        val exerciseDtoMock: ExerciseWithTasksDto = mockkClass(ExerciseWithTasksDto::class)
+        val exerciseDtoMock: ExerciseWithTasksResponse = mockkClass(ExerciseWithTasksResponse::class)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exerciseMock)
         every { exerciseMock.toDtoWithTasks() } returns (exerciseDtoMock)
         // WHEN
-        val actualResults: List<ExerciseWithTasksDto> = exerciseService.findExercisesWithTasksBySubGroup(1)
+        val actualResults: List<ExerciseWithTasksResponse> = exerciseService.findExercisesWithTasksBySubGroup(1)
         // THEN
         assertTrue(actualResults.contains(exerciseDtoMock))
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
@@ -266,7 +266,7 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex2)
         val studyHistoryWithExercise1 = StudyHistory(
             exercise = ex1,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk<UserAccount>(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -275,7 +275,7 @@ internal class ExerciseServiceTest {
         )
         val studyHistoryWithExercise2 = StudyHistory(
             exercise = ex2,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk<UserAccount>(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -347,7 +347,7 @@ internal class ExerciseServiceTest {
 
         val studyHistoryWithExercise11 = StudyHistory(
             exercise = ex11,
-            userAccount = mock(UserAccount::class.java),
+            userAccount = mockk<UserAccount>(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,

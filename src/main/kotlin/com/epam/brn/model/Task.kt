@@ -1,8 +1,8 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.GeneralTaskDto
-import com.epam.brn.dto.WordsSeriesTaskDto
-import com.epam.brn.dto.WordsGroupSeriesTaskDto
+import com.epam.brn.dto.GeneralTaskResponse
+import com.epam.brn.dto.WordsSeriesTaskResponse
+import com.epam.brn.dto.WordsGroupSeriesTaskResponse
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -43,14 +43,14 @@ data class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
-    fun toWordsSeriesTaskDto(exerciseType: ExerciseType) = WordsSeriesTaskDto(
+    fun toWordsSeriesTaskDto(exerciseType: ExerciseType) = WordsSeriesTaskResponse(
         id = id!!,
         exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
     )
-    fun toWordsGroupSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskDto(
+    fun toWordsGroupSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskResponse(
         id = id!!,
         exerciseType = ExerciseType.WORDS_SEQUENCES,
         name = name,
@@ -59,7 +59,7 @@ data class Task(
         template = template
     )
 
-    fun toSentenceSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskDto(
+    fun toSentenceSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskResponse(
         id = id!!,
         exerciseType = ExerciseType.SENTENCE,
         name = name,
@@ -67,14 +67,14 @@ data class Task(
         answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
         template = template,
     )
-    fun toPhraseSeriesTaskDto() = WordsSeriesTaskDto(
+    fun toPhraseSeriesTaskDto() = WordsSeriesTaskResponse(
         id = id!!,
         exerciseType = ExerciseType.PHRASES,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
     )
-    fun toGeneralTaskDto(template: String? = "") = GeneralTaskDto(
+    fun toGeneralTaskDto(template: String? = "") = GeneralTaskResponse(
         id = id!!,
         exerciseType = ExerciseType.WORDS_SEQUENCES,
         name = name,

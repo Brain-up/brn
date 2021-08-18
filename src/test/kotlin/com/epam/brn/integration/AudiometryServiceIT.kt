@@ -74,7 +74,7 @@ internal class AudiometryServiceIT {
         insertHistory(user, headphones, tasks[6])
         val audiometryWithTasks = audiometryRepository.findByIdWithTasks(audiometry.id!!).get()
         // WHEN
-        val resultTasks = audiometryService.findSecondAudiometryTasks(user, audiometryWithTasks)
+        val resultTasks = audiometryService.findSecondSpeechAudiometryTasks(user, audiometryWithTasks)
         // THEN
         assertEquals(4, resultTasks.size)
         assertTrue(resultTasks.containsAll(listOf(tasks[2], tasks[4], tasks[5], tasks[7])))

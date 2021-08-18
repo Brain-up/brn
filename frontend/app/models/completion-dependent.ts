@@ -5,6 +5,7 @@ import TasksManagerService from '../services/tasks-manager';
 import { cached } from 'tracked-toolbox';
 import { tracked } from '@glimmer/tracking';
 export default class CompletionDependentModel extends Model {
+  declare children: unknown[];
   available!: boolean;
   // public parent!: any;
   // public children!: CompletionDependentModel[];
@@ -37,8 +38,10 @@ export default class CompletionDependentModel extends Model {
     if (this.tasksManager.completedTasks.length === 0) {
       return false;
     }
-    // eslint-disable-next-line ember/no-get
+
+    // eslint-disable-next-line ember/no-get, ember/classic-decorator-no-classic-methods
     const children = this.get('children');
+    // @ts-expect-error unknown children
     return children.length && children.every((child) => child.isCompleted)
       ? true
       : false;
@@ -47,6 +50,7 @@ export default class CompletionDependentModel extends Model {
     return !this.previousSiblings.length;
   }
   get allSiblings() {
+    // @ts-expect-error unknown children
     return this.parent.get('sortedChildren') || [];
   }
   get previousSiblings() {

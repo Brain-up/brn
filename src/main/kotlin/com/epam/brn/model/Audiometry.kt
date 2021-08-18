@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.AudiometryDto
+import com.epam.brn.dto.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -49,7 +49,7 @@ class Audiometry(
     override fun toString() =
         "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
 
-    fun toDtoWithoutTasks() = AudiometryDto(
+    fun toDtoWithoutTasks() = AudiometryResponse(
         id,
         locale,
         name,
@@ -58,19 +58,14 @@ class Audiometry(
         emptyList<String>()
     )
 
-    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryDto {
-        val audiometryTasks = when (audiometryType) {
-            AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name -> tasks.map { it.toDto() }
-            AudiometryType.SPEECH.name -> tasks.groupBy({ it.frequencyZone }, { it.toDto() })
-            else -> throw IllegalArgumentException("Audiometry `$audiometryType` does not supported in the system.")
-        }
-        return AudiometryDto(
+    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryResponse {
+        return AudiometryResponse(
             id,
             locale,
             name,
             AudiometryType.valueOf(audiometryType),
             description,
-            audiometryTasks
+            tasks.map { it.toDto() }
         )
     }
 }

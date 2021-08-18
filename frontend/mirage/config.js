@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 export default function() {
   this.passthrough('/write-coverage');
 

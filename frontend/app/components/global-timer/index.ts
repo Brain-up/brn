@@ -4,11 +4,26 @@ import NetworkService from '../../services/network';
 import { task, timeout, Task as TaskGenerator } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import Ember from 'ember';
+import { action } from '@ember/object';
 
 export default class GlobalTimerComponent extends Component {
   constructor(owner: any, args: any) {
     super(owner, args);
     this.syncTask.perform();
+    window.addEventListener('blur', this.disableTimer);
+    window.addEventListener('focus', this.enableTimer);
+  }
+  @tracked isEnabled = true;
+  @action enableTimer() {
+    this.isEnabled = true;
+  }
+  @action disableTimer() {
+    this.isEnabled = false;
+  }
+  willDestroy() {
+    window.removeEventListener('blur', this.disableTimer);
+    window.removeEventListener('focus', this.enableTimer);
+    super.willDestroy();
   }
   @service('network') declare network: NetworkService;
   @tracked seconds = 0;
@@ -30,11 +45,13 @@ export default class GlobalTimerComponent extends Component {
     do {
       try {
         if (!Ember.testing) {
-          const response = yield this.network.request(
-            'study-history/todayTimer',
-          );
-          const { data } = yield response.json();
-          this.seconds = data;
+          if (this.isEnabled) {
+            const response = yield this.network.request(
+              'study-history/todayTimer',
+            );
+            const { data } = yield response.json();
+            this.seconds = data;
+          }
         } else {
           break;
         }

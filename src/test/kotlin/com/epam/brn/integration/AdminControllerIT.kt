@@ -4,7 +4,7 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -520,6 +520,28 @@ class AdminControllerIT : BaseIT() {
     }
 
     @Test
+    @Throws(Exception::class)
+    fun `when post request to subGroup and invalid parameters in subGroup then correct response`() {
+        // GIVEN
+        val subGroupRequest =
+            """{"name":"","code":"","level":"","description":"Test description" }"""
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/subgroup")
+                .param("seriesId", "0")
+                .content(subGroupRequest)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.content().json("{\"errors\":[\"не должно быть пустым\",\"не должно равняться null\",\"не должно быть пустым\"] }"))
+    }
+
+    @Test
     fun `should return authorities list`() {
         // GIVEN
         insertRole("ROLE_ADMIN")
@@ -584,8 +606,8 @@ class AdminControllerIT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         val data = gson.fromJson(response, BaseResponseDto::class.java).data
-        val users: List<UserAccountDto> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountDto>>() {})
+        val users: List<UserAccountResponse> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountResponse>>() {})
 
         // THEN
         users.size shouldBe 1
