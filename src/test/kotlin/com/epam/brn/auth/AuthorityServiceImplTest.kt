@@ -113,6 +113,6 @@ internal class AuthorityServiceImplTest {
         val allAuthorities = authorityServiceImpl.findAll()
         // THEN
         verify(exactly = 1) { authorityRepository.findAll() }
-        assertEquals(authorityList, allAuthorities)
+        assertEquals(1, allAuthorities.size)
     }
 }

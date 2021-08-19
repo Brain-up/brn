@@ -17,7 +17,6 @@ data class Authority(
 
 ) {
     fun toDto() = AuthorityDto(
-        id = id,
         authorityName = authorityName
     )
 

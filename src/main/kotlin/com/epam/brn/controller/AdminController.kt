@@ -189,7 +189,7 @@ class AdminController(
 
     @GetMapping("/roles")
     @ApiOperation("Get all roles")
-    fun getRoles(): ResponseEntity<Any> {
+    fun getRoles(): ResponseEntity<BaseResponseDto> {
         val authorities = authorityService.findAll()
         return ResponseEntity.ok().body(BaseResponseDto(data = authorities))
     }

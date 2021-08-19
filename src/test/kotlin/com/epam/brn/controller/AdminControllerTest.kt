@@ -8,11 +8,11 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.response.AuthorityDto
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
-import com.epam.brn.model.Authority
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
@@ -100,7 +100,7 @@ internal class AdminControllerTest {
     private lateinit var monthStudyStatistic: MonthStudyStatistic
 
     @MockK
-    private lateinit var authority: Authority
+    private lateinit var authorityDto: AuthorityDto
 
     @Test
     fun `getUsers should return users with statistic when withAnalytics is true`() {
@@ -270,7 +270,7 @@ internal class AdminControllerTest {
     fun `getRoles should return http status 200`() {
         // GIVEN
 
-        every { authorityService.findAll() } returns listOf(authority)
+        every { authorityService.findAll() } returns listOf(authorityDto)
 
         // WHEN
         val authorities = adminController.getRoles()
