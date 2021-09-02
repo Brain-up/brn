@@ -22,6 +22,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -124,6 +125,43 @@ class UserDetailsControllerIT : BaseIT() {
                 .contentType("application/json")
         )
         // THEN
+        assertHeadphonesAreCreated(resultAction)
+    }
+
+    @Test
+    fun `add headphones to current user as admin`() {
+        // GIVEN
+        val user = insertUser()
+        // WHEN
+        val body =
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+        val resultAction = mockMvc.perform(
+            post("$baseUrl/current/headphones")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        assertHeadphonesAreCreated(resultAction)
+    }
+
+    @Test
+    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    fun `add headphones to current user not as admin`() {
+        // GIVEN
+        val user = insertUser()
+        // WHEN
+        val body =
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+        val resultAction = mockMvc.perform(
+            post("$baseUrl/current/headphones")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        assertHeadphonesAreCreated(resultAction)
+    }
+
+    private fun assertHeadphonesAreCreated(resultAction: ResultActions) {
         resultAction.andExpect(status().isCreated)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
