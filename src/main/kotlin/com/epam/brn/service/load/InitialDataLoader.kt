@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.core.env.Environment
 import org.springframework.core.io.ResourceLoader
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -99,6 +101,7 @@ class InitialDataLoader(
     }
 
     @EventListener(ApplicationReadyEvent::class)
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
         if (authorityService.findAll().isEmpty()) {
             val adminAuthority = authorityService.save(Authority(authorityName = "ROLE_ADMIN"))
@@ -167,12 +170,12 @@ class InitialDataLoader(
         val userAccount =
             UserAccount(
                 fullName = "admin",
-                password = password,
                 email = "admin@admin.com",
                 active = true,
                 bornYear = 1999,
                 gender = Gender.MALE.toString()
             )
+        userAccount.password = password
         userAccount.authoritySet.addAll(setOf(adminAuthority))
         return userAccount
     }
@@ -184,17 +187,17 @@ class InitialDataLoader(
             email = "default@default.ru",
             active = true,
             bornYear = 1999,
-            gender = Gender.MALE.toString(),
-            password = password
+            gender = Gender.MALE.toString()
         )
         val secondUser = UserAccount(
             fullName = "Name2",
             email = "default2@default.ru",
             active = true,
             bornYear = 1999,
-            gender = Gender.FEMALE.toString(),
-            password = password
+            gender = Gender.FEMALE.toString()
         )
+        firstUser.password = password
+        secondUser.password = password
         firstUser.authoritySet.addAll(setOf(userAuthority))
         secondUser.authoritySet.addAll(setOf(userAuthority))
         return mutableListOf(firstUser, secondUser)

@@ -34,6 +34,9 @@ dependencies {
     implementation "org.postgresql:postgresql"
     implementation "org.flywaydb:flyway-core:$flywayVersion"
 
+    /* Firebase admin */
+    implementation group: 'com.google.firebase', name: 'firebase-admin', version: '7.3.0'
+
     implementation "com.auth0:java-jwt:3.10.3"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 

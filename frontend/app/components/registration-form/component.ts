@@ -5,7 +5,7 @@ import { tracked } from '@glimmer/tracking';
 
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
-  PASSWORD_MUST_BE_BETWEEN_4_AND_20_CHARACTERS_LONG:
+  PASSWORD_MUST_BE_BETWEEN_6_AND_20_CHARACTERS_LONG:
     'registration_form.password_length',
 };
 

@@ -146,6 +146,7 @@ class AdminController(
     }
 
     @PostMapping("/loadTasksFile")
+    @ApiOperation("Load task file to series")
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile
@@ -155,7 +156,7 @@ class AdminController(
     }
 
     @GetMapping("/exercises")
-    @ApiOperation("Get subGroup exercises with tasks.")
+    @ApiOperation("Get subGroup exercises with tasks")
     fun getExercisesBySubGroup(
         @RequestParam(
             value = "subGroupId",
@@ -166,7 +167,7 @@ class AdminController(
             .body(BaseResponseDto(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 
     @PatchMapping("/resources/{id}")
-    @ApiOperation("Update resource description by resource id.")
+    @ApiOperation("Update resource description by resource id")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest
@@ -175,7 +176,7 @@ class AdminController(
             .body(BaseSingleObjectResponseDto(data = resourceService.updateDescription(id, request.description!!)))
 
     @PostMapping("/subgroup")
-    @ApiOperation("Add new subgroup for existing series.")
+    @ApiOperation("Add new subgroup for existing series")
     fun addSubGroupToSeries(
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,

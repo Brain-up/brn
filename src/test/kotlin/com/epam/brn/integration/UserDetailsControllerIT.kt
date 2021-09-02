@@ -247,7 +247,6 @@ class UserDetailsControllerIT : BaseIT() {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 email = email_,
-                password = password,
                 doctor = doctor_
             )
         )

@@ -1,6 +1,8 @@
 package com.epam.brn.repo
 
 import com.epam.brn.model.UserAccount
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -23,4 +25,8 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
 
     @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet left JOIN FETCH u.headphones where u.doctor.id = ?1")
     fun findUserAccountsByDoctorId(doctorId: Long): List<UserAccount>
+
+    fun findByUserId(uuid: String): UserAccount?
+
+    fun findAllByUserIdIsNull(pageable: Pageable): Page<UserAccount>
 }

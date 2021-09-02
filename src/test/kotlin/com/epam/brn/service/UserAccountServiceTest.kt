@@ -13,6 +13,7 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import com.google.firebase.auth.UserRecord
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -44,9 +45,6 @@ internal class UserAccountServiceTest {
     lateinit var userAccountRepository: UserAccountRepository
 
     @MockK
-    lateinit var timeService: TimeService
-
-    @MockK
     lateinit var passwordEncoder: PasswordEncoder
 
     @MockK
@@ -60,6 +58,12 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var userAccountCreateRequest: UserAccountCreateRequest
+
+    @MockK
+    lateinit var firebaseUserService: FirebaseUserService
+
+    @MockK
+    lateinit var firebaseUserRecord: UserRecord
 
     @MockK
     lateinit var authority: Authority
@@ -133,21 +137,24 @@ internal class UserAccountServiceTest {
         fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
+            val uid = "UID"
+            every { firebaseUserRecord.uid } returns uid
             every { userAccountCreateRequest.email } returns "test@gmail.com"
             every { userAccountRepository.findUserAccountByEmail(ofType(String::class)) } returns Optional.empty()
             every { userAccountCreateRequest.authorities } returns mutableSetOf("ROLE_USER")
             every { passwordEncoder.encode(ofType(String::class)) } returns "password"
-            every { userAccountCreateRequest.toModel(ofType(String::class)) } returns userAccount
+            every { userAccountCreateRequest.toModel() } returns userAccount
             every { userAccountCreateRequest.password } returns "password"
-            every { userAccountResponse.name } returns "Tested"
+            every { userAccountResponse.name } returns userName
+            every { userAccountResponse.userId } returns uid
             every { userAccount.toDto() } returns userAccountResponse
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(userAccount) } returns userAccount
             every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority
             // WHEN
-            val userAccountDtoReturned = userAccountService.addUser(userAccountCreateRequest)
+            val userAccountDtoReturned = userAccountService.createUser(userAccountCreateRequest, firebaseUserRecord)
             // THEN
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
+            assertThat(userAccountDtoReturned.userId).isEqualTo(uid)
         }
     }
 
@@ -164,7 +171,6 @@ internal class UserAccountServiceTest {
                 id = 1L,
                 fullName = "testUserFirstName",
                 email = email,
-                password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = LocalDateTime.now().minusMinutes(5),
@@ -178,14 +184,12 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateAvatarForCurrentUser(avatarUrl)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
-            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
@@ -204,7 +208,6 @@ internal class UserAccountServiceTest {
                 id = 1L,
                 fullName = "testUserFirstName",
                 email = email,
-                password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = LocalDateTime.now().minusMinutes(5),
@@ -229,14 +232,12 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateCurrentUser(userAccountChangeRequest)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
-            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
@@ -284,7 +285,6 @@ internal class UserAccountServiceTest {
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                password = "test",
                 email = "test@gmail.com",
                 active = true
             )
@@ -322,7 +322,6 @@ internal class UserAccountServiceTest {
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                password = "test",
                 email = "test@gmail.com",
                 active = true,
                 headphones = headphonesToAdd

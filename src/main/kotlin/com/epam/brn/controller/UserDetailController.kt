@@ -3,16 +3,18 @@ package com.epam.brn.controller
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.HeadphonesDto
+import com.epam.brn.dto.request.UserAccountChangePasswordRequest
 import com.epam.brn.dto.request.UserAccountChangeRequest
+import com.epam.brn.service.TokenHelperUtils
 import com.epam.brn.service.UserAccountService
+import com.google.firebase.auth.FirebaseAuth
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -20,11 +22,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/users")
 @Api(value = "/users", description = "Contains actions over user details and accounts")
-class UserDetailController(@Autowired val userAccountService: UserAccountService) {
+class UserDetailController(
+    private val userAccountService: UserAccountService,
+    private val firebaseAuth: FirebaseAuth
+) {
 
     @GetMapping(value = ["/{userId}"])
     @ApiOperation("Get user by Id")
@@ -43,6 +49,25 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) =
         ResponseEntity.ok()
             .body(BaseSingleObjectResponseDto(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
+
+    @PatchMapping(value = ["/current/password"])
+    @ApiOperation("Change password for current logged in user")
+    fun changePasswordCurrentUser(
+        request: HttpServletRequest,
+        @Validated @RequestBody userAccountChangePasswordRequest: UserAccountChangePasswordRequest
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        val token = TokenHelperUtils.getBearerToken(request)
+        val firebaseToken = firebaseAuth.verifyIdToken(token, true)
+        userAccountChangePasswordRequest.uuid = firebaseToken.uid
+        return ResponseEntity.ok()
+            .body(
+                BaseSingleObjectResponseDto(
+                    data = userAccountService.changePasswordCurrentUser(
+                        userAccountChangePasswordRequest
+                    )
+                )
+            )
+    }
 
     @GetMapping
     @ApiOperation("Get user by name")
@@ -68,7 +93,7 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
         .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToUser(userId, headphones)))
 
     @PostMapping(value = ["/current/headphones"])
-    @ApiOperation("Add headphones to the user")
+    @ApiOperation("Add headphones to current user")
     fun addHeadphonesToCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))

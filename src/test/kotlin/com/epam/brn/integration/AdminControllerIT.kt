@@ -557,7 +557,6 @@ class AdminControllerIT : BaseIT() {
             UserAccount(
                 fullName = "testUserFirstName",
                 email = "test@test.test",
-                password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 active = true

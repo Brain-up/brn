@@ -54,7 +54,6 @@ internal class AudiometryHistoryServiceTest {
         fullName = "testUserFirstName",
         gender = Gender.MALE.toString(),
         bornYear = 2000,
-        password = "test",
         email = "test@gmail.com",
         active = true,
     )

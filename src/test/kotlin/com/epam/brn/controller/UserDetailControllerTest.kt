@@ -7,6 +7,7 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
+import com.google.firebase.auth.FirebaseAuth
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -30,6 +31,9 @@ internal class UserDetailControllerTest {
 
     @MockK
     lateinit var userAccountService: UserAccountService
+
+    @MockK
+    lateinit var firebaseAuth: FirebaseAuth
 
     lateinit var userAccountResponse: UserAccountResponse
 

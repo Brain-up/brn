@@ -2,6 +2,8 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
+import com.epam.brn.dto.request.UserAccountAdditionalInfoRequest
+import com.epam.brn.dto.request.UserAccountChangePasswordRequest
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
@@ -11,9 +13,10 @@ import com.epam.brn.model.Authority
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.HeadphonesService
-import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
+import com.google.firebase.auth.UserRecord
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.data.domain.Pageable
@@ -21,20 +24,24 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.security.Principal
 
 @Service
 class UserAccountServiceImpl(
+    private val firebaseService: FirebaseUserService,
     private val userAccountRepository: UserAccountRepository,
     private val authorityService: AuthorityService,
-    private val passwordEncoder: PasswordEncoder,
-    private val timeService: TimeService,
     private val headphonesService: HeadphonesService
 ) : UserAccountService {
 
     private val log = logger()
+
+    override fun findUserByEmail(email: String): UserAccountResponse {
+        return userAccountRepository.findUserAccountByEmail(email)
+            .map { it.toDto() }
+            .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
+    }
 
     override fun findUserByName(name: String): UserAccountResponse {
         return userAccountRepository
@@ -46,43 +53,45 @@ class UserAccountServiceImpl(
             }
     }
 
-    override fun addUser(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse {
+    override fun findUserByUuid(uuid: String): UserAccountResponse? {
+        val user = userAccountRepository.findByUserId(uuid)
+        return user?.toDto()
+    }
+
+    override fun createUser(
+        userAccountCreateRequest: UserAccountCreateRequest,
+        firebaseUserRecord: UserRecord
+    ): UserAccountResponse {
         val existUser = userAccountRepository.findUserAccountByEmail(userAccountCreateRequest.email)
         existUser.ifPresent {
             throw IllegalArgumentException("The user already exists!")
         }
-
-        val setOfAuthorities = getTheAuthoritySet(userAccountCreateRequest)
-        val hashedPassword = getHashedPassword(userAccountCreateRequest)
-
-        val userAccount = userAccountCreateRequest.toModel(hashedPassword)
-        userAccount.authoritySet = setOfAuthorities
-        val creationDate = timeService.now()
-        userAccount.created = creationDate
-        userAccount.changed = creationDate
+        val userAccount = userAccountCreateRequest.toModel()
+        userAccount.userId = firebaseUserRecord?.uid
+        userAccount.authoritySet = getDefaultAuthoritySet()
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    fun getHashedPassword(userAccountCreateRequest: UserAccountCreateRequest): String =
-        passwordEncoder.encode(userAccountCreateRequest.password)
-
-    private fun getTheAuthoritySet(userAccountCreateRequest: UserAccountCreateRequest): MutableSet<Authority> {
-        var authorityNames = userAccountCreateRequest.authorities ?: mutableSetOf()
-        if (authorityNames.isEmpty())
-            authorityNames = mutableSetOf("ROLE_USER")
-
-        return authorityNames
-            .filter(::isNotEmpty)
-            .mapTo(mutableSetOf()) {
-                authorityService.findAuthorityByAuthorityName(it)
-            }
-    }
-
-    override fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse {
-        val hashedPassword = getHashedPassword(userAccountCreateRequest)
-        val userAccountModel = userAccountCreateRequest.toModel(hashedPassword)
-        userAccountModel.changed = timeService.now()
-        return userAccountRepository.save(userAccountModel).toDto()
+    override fun createUserWithFirebase(
+        userAccountAdditionalInfoRequest: UserAccountAdditionalInfoRequest,
+        firebaseUserRecord: UserRecord
+    ): UserAccountResponse {
+        val existUser = userAccountRepository.findUserAccountByEmail(firebaseUserRecord.email)
+        existUser.ifPresent {
+            throw IllegalArgumentException("The user already exists!")
+        }
+        val userAccount = UserAccount(
+            email = firebaseUserRecord.email,
+            fullName = firebaseUserRecord.displayName,
+            bornYear = userAccountAdditionalInfoRequest.bornYear,
+            gender = userAccountAdditionalInfoRequest.gender.toString(),
+            userId = userAccountAdditionalInfoRequest.uuid
+        )
+        if (userAccountAdditionalInfoRequest.avatar != null) {
+            userAccount.avatar = userAccountAdditionalInfoRequest.avatar
+        }
+        userAccount.authoritySet = getDefaultAuthoritySet()
+        return userAccountRepository.save(userAccount).toDto()
     }
 
     override fun findUserById(id: Long): UserAccountResponse {
@@ -121,7 +130,6 @@ class UserAccountServiceImpl(
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountResponse {
         val currentUserAccount = getCurrentUser()
         currentUserAccount.avatar = avatarUrl
-        currentUserAccount.changed = timeService.now()
         return userAccountRepository.save(currentUserAccount).toDto()
     }
 
@@ -146,6 +154,15 @@ class UserAccountServiceImpl(
         }.toDto()
     }
 
+    override fun changePasswordCurrentUser(userAccountChangePasswordRequest: UserAccountChangePasswordRequest): Boolean {
+        val firebaseUser = firebaseService.getUserById(userAccountChangePasswordRequest.uuid)
+        var firebaseUserRecord: UserRecord? = null
+        if (firebaseUser != null && firebaseUser.providerId == "password") {
+            firebaseUserRecord = firebaseService.changePassword(userAccountChangePasswordRequest)
+        }
+        return firebaseUserRecord != null
+    }
+
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
         (!this.name.isNullOrBlank())
             .or(this.avatar != null)
@@ -161,8 +178,7 @@ class UserAccountServiceImpl(
             gender = changeRequest.gender?.toString() ?: gender,
             avatar = changeRequest.avatar ?: avatar,
             photo = changeRequest.photo ?: photo,
-            description = changeRequest.description ?: description,
-            changed = timeService.now()
+            description = changeRequest.description ?: description
         )
 
     private fun getNameFromPrincipals(authentication: Authentication): String {
@@ -175,9 +191,15 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    override fun findUserByEmail(email: String): UserAccountResponse {
-        return userAccountRepository.findUserAccountByEmail(email)
-            .map { it.toDto() }
-            .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
+    private fun getDefaultAuthoritySet(): MutableSet<Authority> {
+        var authorityNames = mutableSetOf<String>()
+        if (authorityNames.isEmpty())
+            authorityNames = mutableSetOf("ROLE_USER")
+
+        return authorityNames
+            .filter(::isNotEmpty)
+            .mapTo(mutableSetOf()) {
+                authorityService.findAuthorityByAuthorityName(it)
+            }
     }
 }

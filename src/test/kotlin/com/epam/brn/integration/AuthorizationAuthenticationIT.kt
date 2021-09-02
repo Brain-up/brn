@@ -42,7 +42,6 @@ class AuthorizationAuthenticationIT : BaseIT() {
         val userAccount =
             UserAccount(
                 fullName = "testUserFirstName",
-                password = password,
                 email = email,
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
