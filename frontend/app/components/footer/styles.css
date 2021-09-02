@@ -9,7 +9,7 @@ footer {
 }
 
 a[rel='noopener'] {
-  display: block;
+  display: flex;
   max-height: 100%;
   max-width: 70px;
   overflow: hidden;

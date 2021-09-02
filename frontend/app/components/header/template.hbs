@@ -5,8 +5,8 @@
     "
   ...attributes
 >
-  <nav class="flex flex-wrap items-center justify-between p-8">
-    <div class="relative z-10 flex items-center flex-shrink-0 mr-8 text-white">
+  <nav class="flex flex-wrap justify-evenly p-2 pt-4 md:p-4">
+    <div class="z-10 flex flex-shrink md:mr-4 text-white">
       <LinkTo
         @route="index"
         data-test-logo
@@ -26,11 +26,9 @@
         </svg>
       </LinkTo>
     </div>
-    <div
-      class="lg:flex lg:items-center lg:w-auto relative z-10 flex-grow block"
-    >
+    <div class="flex items-center self-stretch w-auto relative z-10 block">
       <div
-        class="lg:flex-grow text-xs
+        class="text-xss sm:text-xs
           {{if
             this.session.isAuthenticated
             "text-white"
@@ -42,21 +40,21 @@
             @route="groups"
             @query={{hash locale=this.activeLocale}}
             data-test-group-link
-            class="lg:inline-block lg:mt-0 hover:bg-white hover:text-purple-primary block px-4 py-2 mt-4 mr-4 font-semibold tracking-wider text-white uppercase rounded-full"
+            class="inline-block hover:bg-white hover:text-purple-primary block px-2 sm:px-4 py-2 mt-2 sm:mt-4 mr-0 sm:mr-4 font-semibold tracking-wider text-white uppercase rounded-full"
           >
             {{t "header.groups"}}
           </LinkTo>
           <LinkTo
             @route="profile.statistics"
             data-test-statistics-link
-            class="lg:inline-block lg:mt-0 hover:bg-white hover:text-purple-primary block px-4 py-2 mt-4 mr-4 font-semibold tracking-wider text-white uppercase rounded-full"
+            class="inline-block hover:bg-white hover:text-purple-primary block px-2 sm:px-4 py-2 mt-4 mr-0 sm:mr-4 font-semibold tracking-wider text-white uppercase rounded-full"
           >
             {{t "header.statistics"}}
           </LinkTo>
         {{/if}}
         <LinkTo
           @route="description"
-          class="lg:inline-block lg:mt-0 block px-4 py-2 mt-4 mr-4 font-bold tracking-wider uppercase rounded-full
+          class="inline-block block px-2 sm:px-4 py-2 mt-4 mr-0 sm:mr-4 font-bold tracking-wider uppercase rounded-full
             {{if
               this.session.isAuthenticated
               "hover:bg-white hover:text-purple-primary"
@@ -81,7 +79,7 @@
         /
         <button
           type="button"
-          class="hover:text-opacity-50 py-2 bg-transparent rounded uppercase
+          class="inline-block hover:text-opacity-50 py-2 bg-transparent rounded uppercase
             {{if (eq this.activeLocale "en-us") "font-bold"}}
             {{if
               this.session.isAuthenticated
@@ -95,21 +93,25 @@
       </div>
     </div>
     {{#if this.session.isAuthenticated}}
-      <div class="flex justify-end mr-6">
+      <div class="flex justify-end ml-6 mt-2">
         <GlobalTimer />
 
         <LinkTo
           @route="profile"
           class="hover:text-opacity-50 text-md focus:no-underline focus:underline flex items-center font-medium text-white transition duration-150 ease-in-out"
         >
-          <div class="w-10 h-10 mr-3 border border-gray-400 rounded-full">
+          <div
+            class="w-10 h-10 mr-2 sm:mr-3 border border-gray-400 rounded-full"
+          >
             <img
               src="{{this.avatarUrl}}"
               alt="user avatar"
               class="object-cover h-full rounded-full"
             />
           </div>
-          <div class="font-small text-sm leading-5 uppercase">
+          <div
+            class="font-small mr-3 md:mr-4 text-xss sm:text-xs leading-5 uppercase"
+          >
             <p>
               {{this.user.firstName}}
             </p>
@@ -118,44 +120,45 @@
             </p>
           </div>
         </LinkTo>
-      </div>
-      <button
-        data-test-logout-button
-        type="button"
-        class="lg:mt-0 hover:text-opacity-50 inline-block p-0 mt-4 mr-8 text-sm leading-none text-white border-0"
-        {{on "click" this.logout}}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
+
+        <button
+          data-test-logout-button
+          type="button"
+          class="mt-0 hover:text-opacity-50 inline-block mr-2 text-xss sm:text-xs leading-none text-white border-0"
+          {{on "click" this.logout}}
         >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M5 4C3.89543 4 3 4.89543 3 6V18C3 19.1046 3.89543 20 5 20H11C12.1046 20 13 19.1046 13 18H11H9H5V6H9H11H13C13 4.89543 12.1046 4 11 4H5Z"
-            class="fill-current"
-          ></path>
-          <path
-            d="M18.984 12H10.734"
-            stroke-width="2"
-            stroke-miterlimit="10"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="stroke-current"
-          ></path>
-          <path
-            d="M16 8L20 12L16 16"
-            stroke="white"
-            stroke-width="2"
-            stroke-miterlimit="10"
-            stroke-linecap="round"
-            class="stroke-current"
-          ></path>
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M5 4C3.89543 4 3 4.89543 3 6V18C3 19.1046 3.89543 20 5 20H11C12.1046 20 13 19.1046 13 18H11H9H5V6H9H11H13C13 4.89543 12.1046 4 11 4H5Z"
+              class="fill-current"
+            ></path>
+            <path
+              d="M18.984 12H10.734"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="stroke-current"
+            ></path>
+            <path
+              d="M16 8L20 12L16 16"
+              stroke="white"
+              stroke-width="2"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              class="stroke-current"
+            ></path>
+          </svg>
+        </button>
+      </div>
     {{else}}
       <div class="relative z-10 flex justify-end px-16">
         <div>

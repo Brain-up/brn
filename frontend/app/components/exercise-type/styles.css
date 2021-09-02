@@ -5,7 +5,8 @@
   border-radius: 10px;
 }
 
-.card {
+.card,
+.card-sm{
   align-items: center;
   border-radius: 10px;
   display: flex;
@@ -16,12 +17,21 @@
   width: 410px;
 }
 
+.card-sm{
+  height: 222px;
+  width: 260px;
+}
+
 .card:focus {
   outline: none;
 }
 
 .speech-exercise,
-.non-speech-exercises {
+.speech-exercise-sm,
+.speech-exercise-mob,
+.non-speech-exercises,
+.non-speech-exercises-sm,
+.non-speech-exercises-mob {
   background-image: url(/pictures/exercise-type/speech-exercises.svg);
   background-repeat: no-repeat;
   background-size: contain;
@@ -30,9 +40,22 @@
   width: 410px;
 }
 
-.non-speech-exercises {
+.non-speech-exercises,
+.non-speech-exercises-sm,
+.non-speech-exercises-mob {
   background-image: url(/pictures/exercise-type/non-speech-exercises.svg);
 }
+
+.speech-exercise-sm,
+.speech-exercise-mob,
+.non-speech-exercises-sm,
+.non-speech-exercises-mob{
+  height: 165px;
+  width: 260px;
+
+}
+
+
 
 .progress {
   display: flex;

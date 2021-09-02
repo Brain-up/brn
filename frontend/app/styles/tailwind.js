@@ -8,6 +8,9 @@ const {
 module.exports = {
   theme: {
     extend: {
+      fontSize: {
+        xss: '.5rem',
+      },
       colors: {
         PROGRESS: {
           BAD: '#F38698',

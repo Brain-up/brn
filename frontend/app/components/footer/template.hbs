@@ -1,44 +1,46 @@
 <footer
-  class="{{style-namespace "footer"}} relative z-10 p-4 text-white"
+  class="{{style-namespace "footer"}} relative z-10 p-2 sm:p-4 text-white"
   ...attributes
 >
-  <div class="flex flex justify-end">
-    <div class="mr-40">
+  <div class="flex flex-wrap items-center justify-between text-sm sm:text-base">
+    <div class="mr-2 sm:mr-10 text-xss sm:text-base md:mr-28 lg:mr-40">
       <a
         href="mailto:brainupproject@yandex.ru?subject=BrainUp"
         title="brainupproject@yandex.ru"
-        class="leading-10 text-blue-900 underline"
+        class="leading-6 md:leading-10 text-blue-900 underline"
       >{{t "footer.contact_us"}}</a>
     </div>
-    <div class="ml-40 mr-4">
-      <span
-        data-test-support-message
-        class="mr-2 leading-10 text-blue-900 opacity-50"
-      >
-        {{t "footer.info_about"}}
-      </span>
-    </div>
-    <div>
-      <ul class="flex items-center">
-        <li data-test-support-logo>
-          <a href="https://www.jetbrains.com/" target="blank" rel="noopener">
-            <img src="/logos/jetbrains-variant-4_.png" alt="JetBrains" />
-          </a>
-        </li>
-        <li data-test-support-logo>
-          <a href="https://selectel.ru/" target="blank" rel="noopener">
-            <img src="/logos/selectel.png" alt="Selectel" />
-          </a>
-        </li>
-        <li class="ml-1 mr-1 leading-10 text-blue-900 opacity-50">
-          {{t "footer.info_about_helper"}}
-        </li>
-        <li data-test-support-logo class="realtive mt-1">
-          <a href="https://epam.com/" target="blank" rel="noopener">
-            <img src="/logos/epam.png" alt="EPAM" />
-          </a>
-        </li>
-      </ul>
+    <div class="flex items-center">
+      <div class="flex ml-0 sm:ml-2 sm:ml-10 md:ml-28 lg:ml-40 mr-2 sm:mr-4">
+        <span
+          data-test-support-message
+          class="mr-0 sm:mr-2 leading-4 sm:leading-6 md:leading-10 text-blue-900 opacity-50"
+        >
+          {{t "footer.info_about"}}
+        </span>
+      </div>
+      <div>
+        <ul class="flex items-center min-width-10">
+          <li data-test-support-logo>
+            <a href="https://www.jetbrains.com/" target="blank" rel="noopener">
+              <img src="/logos/jetbrains-variant-4_.png" alt="JetBrains" />
+            </a>
+          </li>
+          <li data-test-support-logo>
+            <a href="https://selectel.ru/" target="blank" rel="noopener">
+              <img src="/logos/selectel.png" alt="Selectel" />
+            </a>
+          </li>
+          <li class="ml-1 mr-1 leading-10 text-blue-900 opacity-50">
+            {{t "footer.info_about_helper"}}
+          </li>
+          <li data-test-support-logo class="realtive mt-1">
+            <a href="https://epam.com/" target="blank" rel="noopener">
+              <img src="/logos/epam.png" alt="EPAM" />
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
