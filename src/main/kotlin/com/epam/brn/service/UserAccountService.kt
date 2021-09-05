@@ -15,8 +15,8 @@ interface UserAccountService {
     fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse
     fun findUserById(id: Long): UserAccountResponse
     fun getUserFromTheCurrentSession(): UserAccountResponse
-    fun getUsers(pageable: Pageable): List<UserAccountResponse>
-    fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsResponse>
+    fun getUsers(pageable: Pageable, role: String): List<UserAccountResponse>
+    fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse>
     fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountResponse
     fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse
     fun addHeadphonesToUser(userId: Long, headphonesDto: HeadphonesDto): HeadphonesDto

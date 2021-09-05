@@ -13,6 +13,7 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
@@ -72,6 +74,9 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var headphonesService: HeadphonesService
+
+    @MockK
+    lateinit var pageable: Pageable
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -342,5 +347,27 @@ internal class UserAccountServiceTest {
                 .usingElementComparatorOnFields("name", "type")
                 .containsExactly(headphones.toDto())
         }
+
+        @Test
+        fun `should return all users`() {
+            // GIVEN
+            val usersList = listOf(userAccount, userAccount, userAccount)
+            every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+            // WHEN
+            val userAccountDtos = userAccountService.getUsers(pageable = pageable, "ROLE_USER")
+            // THEN
+            userAccountDtos.size shouldBe 3
+        }
+    }
+
+    @Test
+    fun `should return all users with analytics`() {
+        // GIVEN
+        val usersList = listOf(userAccount, userAccount, userAccount)
+        every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+        // WHEN
+        val userAccountDtos = userAccountService.getUsersWithAnalytics(pageable = pageable, "ROLE_USER")
+        // THEN
+        userAccountDtos.size shouldBe 3
     }
 }
