@@ -76,11 +76,9 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
 
     @PostMapping(value = ["/current/headphones"])
     @ApiOperation("Add headphones to the user")
-    fun addHeadphonesToCurrentUser(
-        @Validated @RequestBody headphones: HeadphonesDto
-    ) = ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
+    fun addHeadphonesToCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
 
     @GetMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Get all user's headphones")
