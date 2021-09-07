@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 internal class UserDetailControllerTest {
@@ -133,7 +134,7 @@ internal class UserDetailControllerTest {
         }
 
         @Test
-        fun `should save headphones to user`() {
+        fun `should save headphones to user with valid type`() {
             // GIVEN
             val headphonesDto = HeadphonesDto(
                 name = "test",
@@ -147,6 +148,21 @@ internal class UserDetailControllerTest {
             // THEN
             verify(exactly = 1) { userAccountService.addHeadphonesToUser(1L, headphonesDto) }
             assertEquals(headphonesDto, response)
+        }
+
+        @Test
+        fun `should throw exception with default type of headphones`() {
+            // GIVEN
+            val headphonesDto = HeadphonesDto(
+                name = "test",
+                type = HeadphonesType.NOT_DEFINED
+            )
+            every { userAccountService.addHeadphonesToUser(1L, headphonesDto) } returns headphonesDto
+
+            // WHEN
+            assertFailsWith<IllegalArgumentException> {
+                userDetailController.addHeadphonesToUser(1L, headphonesDto)
+            }
         }
 
         @Test

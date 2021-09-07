@@ -59,7 +59,7 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val patientsByDoctor = userAccountRepository.findUserAccountsByDoctor(doctor)
         val patientsByDoctorId = userAccountRepository.findUserAccountsByDoctorId(doctor.id!!)
-        // THAN
+        // THEN
         patientsByDoctor.size shouldBe 2
         patientsByDoctorId.size shouldBe 2
         patientsByDoctor shouldContainAll listOf(patient1, patient2)
@@ -131,7 +131,7 @@ class UserDetailsControllerIT : BaseIT() {
     @Test
     fun `add headphones to current user as admin`() {
         // GIVEN
-        val user = insertUser()
+        insertUser()
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
@@ -148,7 +148,7 @@ class UserDetailsControllerIT : BaseIT() {
     @WithMockUser(username = "test@test.test", roles = ["USER"])
     fun `add headphones to current user not as admin`() {
         // GIVEN
-        val user = insertUser()
+        insertUser()
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
