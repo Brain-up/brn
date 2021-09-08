@@ -6,6 +6,9 @@ const {
 } = require('tailwindcss/defaultTheme');
 
 module.exports = {
+  purge: {
+    preserveHtmlElements: false,
+  },
   theme: {
     extend: {
       colors: {
