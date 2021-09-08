@@ -4,7 +4,6 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -64,15 +63,8 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     fun addHeadphonesToUser(
         @PathVariable("userId", required = true) userId: Long,
         @Validated @RequestBody headphones: HeadphonesDto
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        when (headphones.type) {
-            HeadphonesType.NOT_DEFINED -> throw IllegalArgumentException("Type required")
-            else ->
-                return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToUser(userId, headphones)))
-        }
-    }
+    ) = ResponseEntity.status(HttpStatus.CREATED)
+        .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToUser(userId, headphones)))
 
     @PostMapping(value = ["/current/headphones"])
     @ApiOperation("Add headphones to the user")
