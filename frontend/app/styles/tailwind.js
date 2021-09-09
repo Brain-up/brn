@@ -1,5 +1,6 @@
 /* eslint-disable */
 const {
+  fontSize,
   colors,
   borderRadius,
   justifyContent,
@@ -8,6 +9,10 @@ const {
 module.exports = {
   theme: {
     extend: {
+      fontSize: {
+        ...fontSize,
+        xss: '.5rem',
+      },
       colors: {
         PROGRESS: {
           BAD: '#F38698',
