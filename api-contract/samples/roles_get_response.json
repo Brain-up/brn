@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "authorityName": "ROLE_ADMIN"
+    },
+    {
+      "authorityName": "ROLE_USER"
+    },
+    {
+      "authorityName": "ROLE_DOCTOR"
+    }
+  ],
+  "errors": [],
+  "meta": []
+}
