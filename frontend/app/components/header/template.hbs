@@ -39,21 +39,21 @@
             @route="groups"
             @query={{hash locale=this.activeLocale}}
             data-test-group-link
-            class="hover:bg-white hover:text-purple-primary sm:px-4 sm:mt-4 sm:mr-4 block inline-block px-2 py-2 mt-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
+            class="hover:bg-white hover:text-purple-primary sm:px-4 sm:mr-4 block inline-block px-2 py-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
           >
             {{t "header.groups"}}
           </LinkTo>
           <LinkTo
             @route="profile.statistics"
             data-test-statistics-link
-            class="hover:bg-white hover:text-purple-primary sm:px-4 sm:mr-4 block inline-block px-2 py-2 mt-4 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
+            class="hover:bg-white hover:text-purple-primary sm:px-4 block inline-block px-2 py-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
           >
             {{t "header.statistics"}}
           </LinkTo>
         {{/if}}
         <LinkTo
           @route="description"
-          class="inline-block block px-2 sm:px-4 py-2 mt-4 mr-0 sm:mr-4 font-bold tracking-wider uppercase rounded-full
+          class="inline-block block px-2 sm:px-4 py-2 mr-0 sm:mr-4 font-bold tracking-wider uppercase rounded-full
             {{if
               this.session.isAuthenticated
               "hover:bg-white hover:text-purple-primary"
@@ -92,7 +92,7 @@
       </div>
     </div>
     {{#if this.session.isAuthenticated}}
-      <div class="flex justify-end mt-2 ml-6">
+      <div class="flex justify-end ml-6">
         <GlobalTimer />
 
         <LinkTo
