@@ -15,6 +15,18 @@
   position: relative;
   width: 410px;
 }
+@media (max-width: 640px){
+  .card {
+    align-items: center;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+    width: 220px;
+  }
+}
 
 .card:focus {
   outline: none;
@@ -32,6 +44,22 @@
 
 .non-speech-exercises {
   background-image: url(/pictures/exercise-type/non-speech-exercises.svg);
+}
+
+@media (max-width: 640px){
+  .speech-exercise,
+  .non-speech-exercises {
+    background-image: url(/pictures/exercise-type/speech-exercises.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: block;
+    height: 135px;
+    width: 220px;
+  }
+
+  .non-speech-exercises {
+    background-image: url(/pictures/exercise-type/non-speech-exercises.svg);
+  }
 }
 
 .progress {
