@@ -1,5 +1,6 @@
 package com.epam.brn.auth
 
+import com.epam.brn.dto.response.AuthorityDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.repo.AuthorityRepository
@@ -26,5 +27,5 @@ class AuthorityServiceImpl(private val authorityRepository: AuthorityRepository)
 
     override fun save(authority: Authority) = authorityRepository.save(authority)
 
-    override fun findAll(): List<Authority> = authorityRepository.findAll()
+    override fun findAll(): List<AuthorityDto> = authorityRepository.findAll().map { authority -> authority.toDto() }
 }

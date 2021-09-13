@@ -597,6 +597,10 @@ mediaType:
                     default: false
                     type: Boolean
                     example: "true"
+                role:
+                    required: false
+                    default: "ROLE_USER"
+                    type: string
                 pageable:
                     required: false
                     type: Pageable
@@ -819,6 +823,12 @@ mediaType:
                 body:
                   application/json:
                     example: !include samples/add_subgroup_to_series_response.json
+    /roles:
+                get:
+                    description: get all roles
+                responses:
+                    200:
+                      example: !include samples/roles_get_response.json
     # LOAD FILES ----------------------
     /loadTasksFile:
         post:
