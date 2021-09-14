@@ -66,18 +66,15 @@ class InitialDataLoader(
 
         fun getInputStreamFromSeriesInitFile(seriesType: String): InputStream {
             val fileName = mapSeriesTypeInitFile[seriesType]
-            val inputStream = Thread.currentThread()
+
+            return Thread.currentThread()
                 .contextClassLoader.getResourceAsStream("initFiles/$fileName.csv")
-
-            if (inputStream == null)
-                throw IOException("Can not get init file for $seriesType series.")
-
-            return inputStream
+                ?: throw IOException("Can not get init file for $seriesType series.")
         }
     }
 
     fun getSourceFiles(): List<String> {
-        var profile: String = environment.activeProfiles[0].toLowerCase()
+        val profile: String = environment.activeProfiles[0].toLowerCase()
         val devSubFolder = if (profile == "dev") "dev/" else ""
         return listOf(
             "groups_.csv",
@@ -127,7 +124,7 @@ class InitialDataLoader(
 
     private fun initDataFromDirectory(directoryToScan: Path) {
         log.debug("Loading data from $directoryToScan.")
-        if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath))
+        if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath!!))
             throw IllegalArgumentException("$directoryToScan with initial data does not exist")
         getSourceFiles().forEach {
             loadFromInputStream(

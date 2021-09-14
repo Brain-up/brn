@@ -34,7 +34,7 @@ class CsvUploadService(
             "application/octet-stream"
         )
 
-        fun isCsvContentType(contentType: String?): Boolean {
+        private fun isCsvContentType(contentType: String?): Boolean {
             return contentType != null && csvContentTypes.contains(contentType)
         }
 
