@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.auth.AuthenticationService
-import com.epam.brn.dto.AuthOutDto
+import com.epam.brn.dto.AuthOutResponse
 import com.epam.brn.dto.request.LoginDto
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import io.swagger.annotations.Api
@@ -23,19 +23,19 @@ class AuthenticationController(val authenticationService: AuthenticationService)
     @ApiOperation("New user registration")
     fun registration(
         @Validated @RequestBody userAccountCreateRequest: UserAccountCreateRequest
-    ): ResponseEntity<AuthOutDto> {
+    ): ResponseEntity<AuthOutResponse> {
         val basicHeader = authenticationService.registration(userAccountCreateRequest)
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(AuthOutDto(basicHeader))
+            .body(AuthOutResponse(basicHeader))
     }
 
     @PostMapping("/brnlogin")
     @ApiOperation("Exist user login")
-    fun login(@Validated @RequestBody loginDto: LoginDto): ResponseEntity<AuthOutDto> {
+    fun login(@Validated @RequestBody loginDto: LoginDto): ResponseEntity<AuthOutResponse> {
         val basicHeader = authenticationService.login(loginDto)
         return ResponseEntity
             .ok()
-            .body(AuthOutDto(basicHeader))
+            .body(AuthOutResponse(basicHeader))
     }
 }

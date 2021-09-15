@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ExerciseWithTasksResponse
 import com.epam.brn.dto.ExerciseWithTasksDto
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -141,7 +142,7 @@ class ExerciseService(
         exerciseRepository.save(exercise)
     }
 
-    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseWithTasksDto> {
+    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseWithTasksResponse> {
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
         return subGroupExercises.map { it.toDtoWithTasks() }
     }

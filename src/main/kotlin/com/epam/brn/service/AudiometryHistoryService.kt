@@ -21,7 +21,7 @@ class AudiometryHistoryService(
     fun save(request: AudiometryHistoryRequest): Long {
         val currentUser = userAccountService.getCurrentUser()
         val audiometryTask = audiometryTaskRepository
-            .findById(request.audiometryTaskId)
+            .findById(request.audiometryTaskId!!)
             .orElseThrow { EntityNotFoundException("AudiometryTask with id=$request.audiometryTaskId was not found!") }
         val headphonesFromUser = getSpecificHeadphonesFromCurrentUser(currentUser.headphones, request.headphones)
         val audiometryHistory = request.toEntity(currentUser, audiometryTask, headphonesFromUser)

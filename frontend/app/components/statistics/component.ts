@@ -22,7 +22,7 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
   @tracked isLoadingMonthTimeTrackData = true;
   @tracked weekTimeTrackData: UserWeeklyStatisticsModel[] | null = null;
   @tracked monthTimeTrackData: UserYearlyStatisticsModel[] | null = null;
-  @tracked isShownStatisticsInfoDialog: boolean = false;
+  @tracked isShownStatisticsInfoDialog = false;
 
   //eslint-disable-next-line
   @(task(function* (this: StatisticsComponent) {

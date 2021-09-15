@@ -2,7 +2,7 @@ package com.epam.brn.dto
 
 import com.epam.brn.model.ExerciseType
 
-data class GeneralTaskDto(
+data class GeneralTaskResponse(
     val id: Long,
     var level: Int? = 0,
     val exerciseType: ExerciseType,

@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
-import com.epam.brn.dto.response.SubGroupStatisticDto
+import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -22,7 +22,7 @@ import java.time.LocalTime
 @RequestMapping("/statistics")
 @Api(value = "/statistics", description = "User statistic details")
 class UserStatisticController(
-    private val userStatisticService: UserStatisticService<SubGroupStatisticDto>,
+    private val userStatisticService: UserStatisticService<SubGroupStatisticResponse>,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
     private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 ) {

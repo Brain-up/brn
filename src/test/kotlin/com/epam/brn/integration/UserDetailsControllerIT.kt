@@ -4,7 +4,7 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Headphones
@@ -22,6 +22,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -78,8 +79,8 @@ class UserDetailsControllerIT : BaseIT() {
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
-        val resultUser: UserAccountDto =
-            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
+        val resultUser: UserAccountResponse =
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
         resultUser.id shouldBe user.id
         resultUser.name shouldBe user.fullName
         resultUser.avatar shouldBe "/pictures/testAvatar"
@@ -101,8 +102,8 @@ class UserDetailsControllerIT : BaseIT() {
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
-        val resultUser: UserAccountDto =
-            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
+        val resultUser: UserAccountResponse =
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
         resultUser.id shouldBe user.id
         resultUser.name shouldBe "newName"
         resultUser.bornYear shouldBe 1950
@@ -124,6 +125,43 @@ class UserDetailsControllerIT : BaseIT() {
                 .contentType("application/json")
         )
         // THEN
+        assertHeadphonesAreCreated(resultAction)
+    }
+
+    @Test
+    fun `add headphones to current user as admin`() {
+        // GIVEN
+        val user = insertUser()
+        // WHEN
+        val body =
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+        val resultAction = mockMvc.perform(
+            post("$baseUrl/current/headphones")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        assertHeadphonesAreCreated(resultAction)
+    }
+
+    @Test
+    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    fun `add headphones to current user not as admin`() {
+        // GIVEN
+        val user = insertUser()
+        // WHEN
+        val body =
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+        val resultAction = mockMvc.perform(
+            post("$baseUrl/current/headphones")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        assertHeadphonesAreCreated(resultAction)
+    }
+
+    private fun assertHeadphonesAreCreated(resultAction: ResultActions) {
         resultAction.andExpect(status().isCreated)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)

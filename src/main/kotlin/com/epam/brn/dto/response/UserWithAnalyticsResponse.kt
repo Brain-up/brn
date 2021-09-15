@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class UserWithAnalyticsDto(
+data class UserWithAnalyticsResponse(
     val id: Long? = null,
     val userId: String? = null,
     val name: String?,

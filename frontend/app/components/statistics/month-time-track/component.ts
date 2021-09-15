@@ -4,7 +4,6 @@ import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
 import { DateTime } from 'luxon';
 import { action } from '@ember/object';
 import { isNone } from '@ember/utils';
-
 interface IMonthTimeTrackComponentArgs {
   isLoading: boolean;
   selectedMonth: DateTime;
@@ -15,7 +14,7 @@ interface IMonthTimeTrackComponentArgs {
 }
 
 export default class MonthTimeTrackComponent extends Component<IMonthTimeTrackComponentArgs> {
-  @tracked isLoading: boolean = true;
+  @tracked isLoading = true;
 
   get monthTimeTrackItemsData(): UserYearlyStatisticsModel[] | null {
     return this.args.data;
@@ -41,9 +40,12 @@ export default class MonthTimeTrackComponent extends Component<IMonthTimeTrackCo
   }
 
   get isIncompleteYear(): boolean {
-    return (
-      isNone(this.monthTimeTrackItemsData) ||
-      this.monthTimeTrackItemsData!.length < 12
-    );
+    if (isNone(this.monthTimeTrackItemsData)) {
+      return true;
+    }
+    if (!Array.isArray(this.monthTimeTrackItemsData)) {
+      return false;
+    }
+    return this.monthTimeTrackItemsData.length < 12;
   }
 }

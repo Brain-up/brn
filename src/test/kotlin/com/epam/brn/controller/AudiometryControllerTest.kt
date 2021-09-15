@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.AudiometryDto
+import com.epam.brn.dto.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.service.AudiometryService
 import io.mockk.every
@@ -29,7 +29,7 @@ internal class AudiometryControllerTest {
         // GIVEN
         val locale = "locale"
 
-        val audiometryDto = AudiometryDto(
+        val audiometryResponse = AudiometryResponse(
             locale = "ru-ru",
             id = 1,
             name = "testName",
@@ -37,21 +37,21 @@ internal class AudiometryControllerTest {
             audiometryTasks = "any",
             audiometryType = AudiometryType.valueOf("SIGNALS"),
         )
-        every { audiometryService.getAudiometrics(locale) } returns(listOf(audiometryDto))
+        every { audiometryService.getAudiometrics(locale) } returns(listOf(audiometryResponse))
 
         // WHEN
         val audiometrics = audiometryController.getAudiometrics(locale)
 
         // THEN
         assertEquals(HttpStatus.SC_OK, audiometrics.statusCode.value())
-        assertEquals(listOf(audiometryDto), audiometrics.body!!.data)
+        assertEquals(listOf(audiometryResponse), audiometrics.body!!.data)
     }
     @Test
     fun `should get audiometry`() {
         // GIVEN
         val audiometryId = 1L
 
-        val audiometryDto = AudiometryDto(
+        val audiometryResponse = AudiometryResponse(
             locale = "ru-ru",
             id = 1,
             name = "testName",
@@ -60,14 +60,14 @@ internal class AudiometryControllerTest {
             audiometryType = AudiometryType.valueOf("SIGNALS"),
         )
 
-        every { audiometryService.getAudiometry(audiometryId) } returns audiometryDto
+        every { audiometryService.getAudiometry(audiometryId) } returns audiometryResponse
 
         // WHEN
         val audiometry = audiometryController.getAudiometry(audiometryId)
 
         // THEN
         assertEquals(HttpStatus.SC_OK, audiometry.statusCode.value())
-        assertEquals(audiometryDto, audiometry.body!!.data)
+        assertEquals(audiometryResponse, audiometry.body!!.data)
         verify(exactly = 1) { audiometryController.getAudiometry(audiometryId) }
     }
 }

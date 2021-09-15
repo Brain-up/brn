@@ -1,4 +1,3 @@
-import { attr } from '@ember-data/model';
 import WordsSequences from './words-sequences';
 
 export default class TaskSentenceModel extends WordsSequences {

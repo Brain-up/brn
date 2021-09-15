@@ -4,11 +4,11 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpStatus
@@ -46,14 +46,19 @@ internal class ExceptionControllerAdviceTest {
     fun `should handle MethodArgumentNotValidException`() {
 
         // GIVEN
-        val bindingResult = mock(BindingResult::class.java)
-        val methodParameter = MethodParameter(mock(Method::class.java), -1)
+        val bindingResult = mockk<BindingResult>()
+        val method = mockk<Method>()
+        every { method.parameterCount } returns 2
+        every { method.toGenericString() } returns ""
+        val methodParameter = MethodParameter(method, -1)
         val exception = MethodArgumentNotValidException(methodParameter, bindingResult)
         val fieldErrors: List<FieldError> = listOf(
             FieldError("TestEntity", "field1", "INCORRECT_FIELD_FORMAT"),
             FieldError("TestEntity", "firstName", "FIRST_NAME_MUST_NOT_HAVE_SPACES")
         )
-        `when`(bindingResult.fieldErrors).thenReturn(fieldErrors)
+        every { bindingResult.fieldErrors } returns fieldErrors
+        every { bindingResult.errorCount } returns fieldErrors.size
+        every { bindingResult.allErrors } returns fieldErrors
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exception)
 

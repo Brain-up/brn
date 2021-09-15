@@ -7,6 +7,7 @@ import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.SubGroupService
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe
@@ -45,6 +46,9 @@ internal class LoadFilesControllerTest {
 
     @MockK
     lateinit var subGroupService: SubGroupService
+
+    @MockK
+    lateinit var authorityService: AuthorityService
 
     @MockK
     lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>

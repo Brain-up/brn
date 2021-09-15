@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("AuthorityServiceImplTest test using mockito")
+@DisplayName("AuthorityServiceImplTest test using MockK")
 internal class AuthorityServiceImplTest {
 
     @InjectMockKs
@@ -113,6 +113,6 @@ internal class AuthorityServiceImplTest {
         val allAuthorities = authorityServiceImpl.findAll()
         // THEN
         verify(exactly = 1) { authorityRepository.findAll() }
-        assertEquals(authorityList, allAuthorities)
+        assertEquals(1, allAuthorities.size)
     }
 }

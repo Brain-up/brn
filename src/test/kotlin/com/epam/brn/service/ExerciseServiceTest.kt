@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.ExerciseWithTasksDto
+import com.epam.brn.dto.ExerciseWithTasksResponse
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
@@ -172,11 +172,11 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
         val subGroupId = 1L
-        val exerciseDtoMock: ExerciseWithTasksDto = mockkClass(ExerciseWithTasksDto::class)
+        val exerciseDtoMock: ExerciseWithTasksResponse = mockkClass(ExerciseWithTasksResponse::class)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exerciseMock)
         every { exerciseMock.toDtoWithTasks() } returns (exerciseDtoMock)
         // WHEN
-        val actualResults: List<ExerciseWithTasksDto> = exerciseService.findExercisesWithTasksBySubGroup(1)
+        val actualResults: List<ExerciseWithTasksResponse> = exerciseService.findExercisesWithTasksBySubGroup(1)
         // THEN
         actualResults shouldContain exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }

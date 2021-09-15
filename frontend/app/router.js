@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import EmberRouter from '@ember/routing/router';
 import config from 'brn/config/environment';
 
@@ -24,7 +25,7 @@ Router.map(function () {
   this.route('password-recovery');
   this.route('user-agreement');
   this.route('description');
-  this.route('profile', function() {
+  this.route('profile', function () {
     this.route('statistics');
   });
 });

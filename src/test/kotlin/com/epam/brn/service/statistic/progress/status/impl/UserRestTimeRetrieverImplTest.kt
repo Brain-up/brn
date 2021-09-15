@@ -1,6 +1,6 @@
 package com.epam.brn.service.statistic.progress.status.impl
 
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
@@ -41,7 +41,7 @@ internal class UserRestTimeRetrieverImplTest {
     private lateinit var studyHistory3: StudyHistory
 
     @MockK
-    private lateinit var userAccount: UserAccountDto
+    private lateinit var userAccount: UserAccountResponse
 
     private val time: LocalDateTime = LocalDateTime.now()
     private val userId: Long = 1

@@ -1,9 +1,11 @@
 {{page-title (t "groups.title")}}
-<div class="flex justify-center mt-6"><h3>{{t
+<div class="sm:text-base sm:mt-6 flex justify-center mt-0 text-sm"><h3>{{t
       "groups.exercise_selection"
     }}</h3></div>
-<ol class="series-container flex items-center justify-center">
-  <li class="list-item mr-6">
+<ol
+  class="series-container sm:flex-row flex flex-col items-center justify-center mt-3"
+>
+  <li class="list-item sm:mr-6 mr-0">
     <LinkTo @route="group" @model={{@model.lastObject}}>
       <ExerciseType
         @initial={{@model.lastObject.name}}
@@ -11,7 +13,7 @@
       />
     </LinkTo>
   </li>
-  <li class="list-item">
+  <li class="list-item sm:mt-0 mt-3">
     <LinkTo @route="group" @model={{@model.firstObject}}>
       <ExerciseType
         @initial={{@model.firstObject.name}}

@@ -4,7 +4,7 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.UserAccountDto
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
@@ -13,6 +13,7 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
@@ -34,7 +36,7 @@ import java.util.Optional
 import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("UserAccountService test using mockito")
+@DisplayName("UserAccountService test using MockK")
 internal class UserAccountServiceTest {
 
     @InjectMockKs
@@ -56,7 +58,7 @@ internal class UserAccountServiceTest {
     lateinit var userAccount: UserAccount
 
     @MockK
-    lateinit var userAccountDto: UserAccountDto
+    lateinit var userAccountResponse: UserAccountResponse
 
     @MockK
     lateinit var userAccountCreateRequest: UserAccountCreateRequest
@@ -73,6 +75,9 @@ internal class UserAccountServiceTest {
     @MockK
     lateinit var headphonesService: HeadphonesService
 
+    @MockK
+    lateinit var pageable: Pageable
+
     @Nested
     @DisplayName("Tests for getting users")
     inner class GetUserAccounts {
@@ -80,8 +85,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by id`() {
             // GIVEN
             val userName = "Tested"
-            every { userAccount.toDto() } returns userAccountDto
-            every { userAccountDto.name } returns userName
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.name } returns userName
             every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserById(NumberUtils.LONG_ONE)
@@ -93,8 +98,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by name`() {
             // GIVEN
             val fullName = "Ivan"
-            every { userAccount.toDto() } returns userAccountDto
-            every { userAccountDto.name } returns fullName
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.name } returns fullName
             every { userAccountRepository.findUserAccountByName(fullName) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByName(fullName)
@@ -106,8 +111,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by email`() {
             // GIVEN
             val email = "email"
-            every { userAccount.toDto() } returns userAccountDto
-            every { userAccountDto.email } returns email
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.email } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByEmail(email)
@@ -139,8 +144,8 @@ internal class UserAccountServiceTest {
             every { passwordEncoder.encode(ofType(String::class)) } returns "password"
             every { userAccountCreateRequest.toModel(ofType(String::class)) } returns userAccount
             every { userAccountCreateRequest.password } returns "password"
-            every { userAccountDto.name } returns "Tested"
-            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountResponse.name } returns "Tested"
+            every { userAccount.toDto() } returns userAccountResponse
             every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(userAccount) } returns userAccount
             every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority
@@ -342,5 +347,27 @@ internal class UserAccountServiceTest {
                 .usingElementComparatorOnFields("name", "type")
                 .containsExactly(headphones.toDto())
         }
+
+        @Test
+        fun `should return all users`() {
+            // GIVEN
+            val usersList = listOf(userAccount, userAccount, userAccount)
+            every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+            // WHEN
+            val userAccountDtos = userAccountService.getUsers(pageable = pageable, "ROLE_USER")
+            // THEN
+            userAccountDtos.size shouldBe 3
+        }
+    }
+
+    @Test
+    fun `should return all users with analytics`() {
+        // GIVEN
+        val usersList = listOf(userAccount, userAccount, userAccount)
+        every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+        // WHEN
+        val userAccountDtos = userAccountService.getUsersWithAnalytics(pageable = pageable, "ROLE_USER")
+        // THEN
+        userAccountDtos.size shouldBe 3
     }
 }

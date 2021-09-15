@@ -6,15 +6,15 @@ export default class TaskSignalSerializer extends BaseTaskSerializer {
   payloadToTypeId(payload: { id: number }) {
     return { id: `signal-task-${payload.id}`, type: 'task/signal' };
   }
-  // @ts-expect-error
+  // @ts-expect-error normalize arguments mismatch
   normalize(_: Model, hash: any, parent: Exercise) {
     const { id, type } = this.payloadToTypeId(hash);
     const store = this.store;
     const opts = parent.signals.map((el: { id: string }, i: number) => {
       return {
         get word() {
-          return `${i + 1}: [${this.signal.duration}ms, ${
-            this.signal.frequency
+          return `${i + 1}: [${this.signal?.duration}ms, ${
+            this.signal?.frequency
           }Mhz]`;
         },
         get signal() {

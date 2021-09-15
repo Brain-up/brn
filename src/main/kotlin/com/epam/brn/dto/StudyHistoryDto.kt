@@ -7,20 +7,20 @@ import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 
 data class StudyHistoryDto(
-    var id: Long? = null,
-    @NotNull
-    var exerciseId: Long,
-    @NotNull
+    var id: Long?,
+    @field:NotNull
+    var exerciseId: Long?,
+    @field:NotNull
     var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
-    @NotNull
-    var executionSeconds: Int,
-    @NotNull
-    var tasksCount: Short,
-    @NotNull
-    var replaysCount: Int, // -- count of replays.  --
-    @NotNull
-    var wrongAnswers: Int // -- wrong answers count --
+    @field:NotNull
+    var executionSeconds: Int?,
+    @field:NotNull
+    var tasksCount: Short?,
+    @field:NotNull
+    var replaysCount: Int?, // -- count of replays.  --
+    @field:NotNull
+    var wrongAnswers: Int? // -- wrong answers count --
 ) {
     override fun toString(): String = "StudyHistoryDto(" +
         "exerciseId=$exerciseId, " +
@@ -35,11 +35,11 @@ data class StudyHistoryDto(
         exercise = exercise,
         startTime = this.startTime,
         endTime = this.endTime,
-        executionSeconds = this.executionSeconds,
-        tasksCount = this.tasksCount,
-        wrongAnswers = this.wrongAnswers,
-        replaysCount = this.replaysCount,
-        repetitionIndex = replaysCount.toFloat() / (tasksCount + replaysCount),
-        rightAnswersIndex = (tasksCount - wrongAnswers).toFloat() / tasksCount,
+        executionSeconds = this.executionSeconds!!,
+        tasksCount = this.tasksCount!!,
+        wrongAnswers = this.wrongAnswers!!,
+        replaysCount = this.replaysCount!!,
+        repetitionIndex = replaysCount!!.toFloat() / (tasksCount!! + replaysCount!!),
+        rightAnswersIndex = (tasksCount!! - wrongAnswers!!).toFloat() / tasksCount!!,
     )
 }

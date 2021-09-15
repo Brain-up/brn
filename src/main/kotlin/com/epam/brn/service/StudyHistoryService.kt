@@ -25,7 +25,7 @@ class StudyHistoryService(
     fun save(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
         val currentUser = userAccountService.getCurrentUser()
         val exercise = exerciseRepository
-            .findById(studyHistoryDto.exerciseId)
+            .findById(studyHistoryDto.exerciseId!!)
             .orElseThrow { EntityNotFoundException("Exercise with exerciseId '${studyHistoryDto.exerciseId}' doesn't exist.") }
         val newStudyHistory = studyHistoryDto.toEntity(currentUser, exercise)
         val savedStudyHistory = studyHistoryRepository.save(newStudyHistory)

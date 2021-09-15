@@ -3,22 +3,22 @@ package com.epam.brn.service
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.UserAccountDto
-import com.epam.brn.dto.response.UserWithAnalyticsDto
+import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.model.UserAccount
 import org.springframework.data.domain.Pageable
 
 interface UserAccountService {
-    fun findUserByName(name: String): UserAccountDto
-    fun findUserByEmail(email: String): UserAccountDto
-    fun addUser(userAccountCreateRequest: UserAccountCreateRequest): UserAccountDto
-    fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountDto
-    fun findUserById(id: Long): UserAccountDto
-    fun getUserFromTheCurrentSession(): UserAccountDto
-    fun getUsers(pageable: Pageable): List<UserAccountDto>
-    fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsDto>
-    fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto
-    fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto
+    fun findUserByName(name: String): UserAccountResponse
+    fun findUserByEmail(email: String): UserAccountResponse
+    fun addUser(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse
+    fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse
+    fun findUserById(id: Long): UserAccountResponse
+    fun getUserFromTheCurrentSession(): UserAccountResponse
+    fun getUsers(pageable: Pageable, role: String): List<UserAccountResponse>
+    fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse>
+    fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountResponse
+    fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse
     fun addHeadphonesToUser(userId: Long, headphonesDto: HeadphonesDto): HeadphonesDto
     fun addHeadphonesToCurrentUser(headphones: HeadphonesDto): HeadphonesDto
     fun getCurrentUser(): UserAccount

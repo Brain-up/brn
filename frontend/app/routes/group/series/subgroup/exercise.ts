@@ -12,7 +12,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
   @service('network')
   network!: NetworkService;
 
-  isAvailable: boolean = false;
+  isAvailable = false;
 
   model({ exercise_id }: { exercise_id: string }) {
     return this.store.findRecord('exercise', exercise_id);

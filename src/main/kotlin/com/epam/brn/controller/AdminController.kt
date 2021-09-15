@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
@@ -10,8 +11,8 @@ import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
-import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.SubGroupService
+import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
@@ -48,17 +49,19 @@ class AdminController(
     private val exerciseService: ExerciseService,
     private val csvUploadService: CsvUploadService,
     private val resourceService: ResourceService,
-    private val subGroupService: SubGroupService
+    private val subGroupService: SubGroupService,
+    private val authorityService: AuthorityService
 ) {
 
     @GetMapping("/users")
     @ApiOperation("Get users")
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
+        @RequestParam("role", defaultValue = "ROLE_USER") role: String,
         @PageableDefault pageable: Pageable,
     ): ResponseEntity<Any> {
-        val users = if (withAnalytics) userAccountService.getUsersWithAnalytics(pageable)
-        else userAccountService.getUsers(pageable)
+        val users = if (withAnalytics) userAccountService.getUsersWithAnalytics(pageable, role)
+        else userAccountService.getUsers(pageable, role)
         return ResponseEntity.ok().body(BaseResponseDto(data = users))
     }
 
@@ -184,6 +187,13 @@ class AdminController(
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
+
+    @GetMapping("/roles")
+    @ApiOperation("Get all roles")
+    fun getRoles(): ResponseEntity<BaseResponseDto> {
+        val authorities = authorityService.findAll()
+        return ResponseEntity.ok().body(BaseResponseDto(data = authorities))
+    }
 
     @PostMapping("/create/exercise")
     @ApiOperation("Create new exercise for exist subgroup")

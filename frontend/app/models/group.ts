@@ -11,11 +11,12 @@ export default class Group extends CompletionDependent {
   @attr('string') locale!: string;
   @hasMany('series', { async: false }) series!: SyncHasMany<SeriesModel>;
 
+  // @ts-expect-error childern owerride
   get children(): SeriesModel[] {
     return this.series.toArray();
   }
-  get sortedSeries() {
-    return this.sortedChildren;
+  get sortedSeries(): SeriesModel[] {
+    return this.sortedChildren as unknown as SeriesModel[];
   }
 }
 

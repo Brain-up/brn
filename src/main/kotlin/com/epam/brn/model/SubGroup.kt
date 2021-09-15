@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.SubGroupDto
+import com.epam.brn.dto.SubGroupResponse
 import com.epam.brn.upload.csv.subgroup.SubgroupGenericRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -40,7 +40,7 @@ data class SubGroup(
         name = record.name,
         description = record.description
     )
-    fun toDto(pictureUrl: String) = SubGroupDto(
+    fun toDto(pictureUrl: String) = SubGroupResponse(
         seriesId = series.id!!,
         id = id!!,
         name = name,

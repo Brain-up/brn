@@ -144,7 +144,7 @@ docker stop idContainer for stop running container
 docker rm $(docker ps -a -q) Remove all stopped containers
 
 ## Development tips:
-1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused with @ElenaSpb.
+1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused it with @ElenaSpb, send your githubnick to her.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
 4. Create pull request with task name and description about what was done. 
@@ -159,6 +159,13 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 5. Please note that if `gradlew ktlint` task fails, project build will fail also.
 
+### Kotlin input dto validation:
+https://github.com/Brain-up/brn/wiki/Kotlin-request-dto-validation-with-annotations
+
+### Flyway scripts naming
+use `V2yearmonthday_taskNumber`
+for example `V220210804_899`.
+
 ### Branches:
 Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
 
@@ -170,7 +177,7 @@ Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
 ### Thanks for support
-- EPAM for Jira/Confluence, test instance and Jenkins
+- EPAM for Jira/Confluence, test instance and Jenkins, for contribution support program.
 - JetBrains for IDEA licenses
 - Selectel for public instance
 - GitHub for code place and actions where we run CICD

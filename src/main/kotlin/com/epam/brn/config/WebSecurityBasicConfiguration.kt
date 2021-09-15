@@ -40,6 +40,7 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/registration").permitAll()
             .antMatchers("/admin/**").hasRole(ADMIN)
             .antMatchers("/users/current").hasAnyRole(ADMIN, USER)
+            .antMatchers("/users/current/headphones").hasAnyRole(ADMIN, USER)
             .antMatchers("/users/**").hasRole(ADMIN)
             .antMatchers("/cloud/upload").hasRole(ADMIN)
             .antMatchers("/cloud/folders").hasRole(ADMIN)

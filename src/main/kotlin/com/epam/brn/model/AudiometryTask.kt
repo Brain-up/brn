@@ -1,8 +1,8 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.AudiometryLopotkoTaskDto
-import com.epam.brn.dto.AudiometryMatrixTaskDto
-import com.epam.brn.dto.AudiometrySignalsTaskDto
+import com.epam.brn.dto.AudiometryLopotkoTaskResponse
+import com.epam.brn.dto.AudiometryMatrixTaskResponse
+import com.epam.brn.dto.AudiometrySignalsTaskResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.EAR
 import javax.persistence.CascadeType
@@ -76,12 +76,12 @@ data class AudiometryTask(
 
     fun toDto(): Any {
         return when (audiometry!!.audiometryType) {
-            AudiometryType.SIGNALS.name -> AudiometrySignalsTaskDto(
+            AudiometryType.SIGNALS.name -> AudiometrySignalsTaskResponse(
                 id,
                 EAR.valueOf(ear),
                 frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() }
             )
-            AudiometryType.SPEECH.name -> AudiometryLopotkoTaskDto(
+            AudiometryType.SPEECH.name -> AudiometryLopotkoTaskResponse(
                 id,
                 level!!,
                 audiometryGroup!!,
@@ -92,7 +92,7 @@ data class AudiometryTask(
                 showSize!!,
                 answerOptions
             )
-            AudiometryType.SPEECH.name -> AudiometryMatrixTaskDto(
+            AudiometryType.SPEECH.name -> AudiometryMatrixTaskResponse(
                 id,
                 count!!,
                 answerOptions

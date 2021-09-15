@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-data class SubGroupDto(
+data class SubGroupResponse(
     var seriesId: Long,
     var id: Long,
     var level: Int,

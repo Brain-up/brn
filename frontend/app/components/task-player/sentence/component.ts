@@ -35,7 +35,9 @@ interface ISentenceComponentArgs {
   onWrongAnswer(): void;
 }
 
-interface SentenceAnswer {}
+interface SentenceAnswer {
+  [key: string]: unknown;
+}
 
 export default class SentenceComponent extends Component<ISentenceComponentArgs> {
   @service('stats') stats!: StatsService;
