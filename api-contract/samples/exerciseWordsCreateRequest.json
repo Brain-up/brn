@@ -1,12 +1,12 @@
 {
+  "typeOfExercise": "SINGLE_SIMPLE_WORDS",
   "locale": "RU",
   "subGroup": "subGroup",
   "level": 12,
   "exerciseName": "exerciseName",
-  "phrases": {
-    "shortPhrase": "short phrase",
-    "longPhrase": "long phrase"
-  },
+  "words": [
+    "word1", "word2"
+  ],
   "noiseLevel": 12,
   "noiseUrl": "noiseUrl"
 }

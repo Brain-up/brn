@@ -525,7 +525,7 @@ class AdminControllerIT : BaseIT() {
             subGroup = "",
             level = 0,
             exerciseName = "",
-            words = listOf(),
+            words = emptyList(),
             noiseLevel = 0
         )
         val requestBody = objectMapper.writeValueAsString(exerciseWordsCreateDto)
@@ -533,7 +533,7 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders
-                .post("$baseUrl/create/exercise/words")
+                .post("$baseUrl/create/exercise")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )
@@ -561,7 +561,7 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders
-                .post("$baseUrl/create/exercise/phrases")
+                .post("$baseUrl/create/exercise")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )
@@ -589,7 +589,7 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders
-                .post("$baseUrl/create/exercise/sentences")
+                .post("$baseUrl/create/exercise")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )

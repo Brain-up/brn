@@ -2,6 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksDto
+import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
@@ -146,37 +147,30 @@ class ExerciseService(
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    fun createAndGenerateExerciseWords(exerciseWordsCreateDto: ExerciseWordsCreateDto): ExerciseDto {
-        val seriesWordsRecord = exerciseWordsCreateDto.toSeriesWordsRecord()
-
-        val exercise = createExercise(seriesWordsRecord, exerciseWordsCreateDto.locale)
-            ?: throw RuntimeException("Exercise with this name (${exerciseWordsCreateDto.exerciseName}) already exist")
-
-        generateAudioFilesAndSave(exerciseWordsCreateDto.words, exerciseWordsCreateDto.locale)
-
-        return exercise.toDto()
-    }
-
-    @Transactional(rollbackFor = [Exception::class])
-    fun createAndGenerateExercisePhrases(exercisePhrasesCreateDto: ExercisePhrasesCreateDto): ExerciseDto {
-        val seriesPhrasesRecord = exercisePhrasesCreateDto.toSeriesPhrasesRecord()
-
-        val exercise = createExercise(seriesPhrasesRecord, exercisePhrasesCreateDto.locale)
-            ?: throw RuntimeException("Exercise with this name (${exercisePhrasesCreateDto.exerciseName}) already exist")
-
-        generateAudioFilesAndSave(exercisePhrasesCreateDto.phrases.toList(), exercisePhrasesCreateDto.locale)
-
-        return exercise.toDto()
-    }
-
-    @Transactional(rollbackFor = [Exception::class])
-    fun createAndGenerateExerciseSentences(exerciseSentencesCreateDto: ExerciseSentencesCreateDto): ExerciseDto {
-        val seriesMatrixRecord = exerciseSentencesCreateDto.toSeriesMatrixRecord()
-
-        val exercise = createExercise(seriesMatrixRecord, exerciseSentencesCreateDto.locale)
-            ?: throw RuntimeException("Exercise with this name (${exerciseSentencesCreateDto.exerciseName}) already exist")
-
-        generateAudioFilesAndSave(exerciseSentencesCreateDto.words.toFlattenList(), exerciseSentencesCreateDto.locale)
+    fun createAndGenerateExercise(exerciseCreateDto: ExerciseCreateDto): ExerciseDto {
+        val exercise = when (exerciseCreateDto) {
+            is ExerciseWordsCreateDto -> {
+                val seriesWordsRecord = exerciseCreateDto.toSeriesWordsRecord()
+                val exercise = createExercise(seriesWordsRecord, exerciseCreateDto.locale)
+                    ?: throw RuntimeException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                generateAudioFilesAndSave(exerciseCreateDto.words, exerciseCreateDto.locale)
+                exercise
+            }
+            is ExercisePhrasesCreateDto -> {
+                val seriesPhrasesRecord = exerciseCreateDto.toSeriesPhrasesRecord()
+                val exercise = createExercise(seriesPhrasesRecord, exerciseCreateDto.locale)
+                    ?: throw RuntimeException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                generateAudioFilesAndSave(exerciseCreateDto.phrases.toList(), exerciseCreateDto.locale)
+                exercise
+            }
+            is ExerciseSentencesCreateDto -> {
+                val seriesMatrixRecord = exerciseCreateDto.toSeriesMatrixRecord()
+                val exercise = createExercise(seriesMatrixRecord, exerciseCreateDto.locale)
+                    ?: throw RuntimeException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                generateAudioFilesAndSave(exerciseCreateDto.words.toFlattenList(), exerciseCreateDto.locale)
+                exercise
+            }
+        }
 
         return exercise.toDto()
     }

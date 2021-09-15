@@ -1,11 +1,13 @@
 {
+  "typeOfExercise": "PHRASES",
   "locale": "RU",
   "subGroup": "subGroup",
   "level": 12,
   "exerciseName": "exerciseName",
-  "words": [
-    "word1", "word2"
-  ],
+  "phrases": {
+    "shortPhrase": "short phrase",
+    "longPhrase": "long phrase"
+  },
   "noiseLevel": 12,
   "noiseUrl": "noiseUrl"
 }

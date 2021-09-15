@@ -276,13 +276,13 @@ internal class AdminControllerTest {
             noiseLevel = 0
         )
         val exerciseDto = mockk<ExerciseDto>()
-        every { exerciseService.createAndGenerateExerciseWords(exerciseWordsCreateDto) } returns exerciseDto
+        every { exerciseService.createAndGenerateExercise(exerciseWordsCreateDto) } returns exerciseDto
 
         // WHEN
-        val createdExercise = adminController.createExerciseWords(exerciseWordsCreateDto)
+        val createdExercise = adminController.createExercise(exerciseWordsCreateDto)
 
         // THEN
-        verify(exactly = 1) { exerciseService.createAndGenerateExerciseWords(exerciseWordsCreateDto) }
+        verify(exactly = 1) { exerciseService.createAndGenerateExercise(exerciseWordsCreateDto) }
         createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 
@@ -298,13 +298,13 @@ internal class AdminControllerTest {
             noiseLevel = 0
         )
         val exerciseDto = mockk<ExerciseDto>()
-        every { exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto) } returns exerciseDto
+        every { exerciseService.createAndGenerateExercise(exercisePhrasesCreateDto) } returns exerciseDto
 
         // WHEN
-        val createdExercise = adminController.createExercisePhrases(exercisePhrasesCreateDto)
+        val createdExercise = adminController.createExercise(exercisePhrasesCreateDto)
 
         // THEN
-        verify(exactly = 1) { exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto) }
+        verify(exactly = 1) { exerciseService.createAndGenerateExercise(exercisePhrasesCreateDto) }
         createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 
@@ -320,13 +320,13 @@ internal class AdminControllerTest {
             words = SetOfWords()
         )
         val exerciseDto = mockk<ExerciseDto>()
-        every { exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto) } returns exerciseDto
+        every { exerciseService.createAndGenerateExercise(exerciseSentencesCreateDto) } returns exerciseDto
 
         // WHEN
-        val createdExercise = adminController.createExerciseSentences(exerciseSentencesCreateDto)
+        val createdExercise = adminController.createExercise(exerciseSentencesCreateDto)
 
         // THEN
-        verify(exactly = 1) { exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto) }
+        verify(exactly = 1) { exerciseService.createAndGenerateExercise(exerciseSentencesCreateDto) }
         createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 }

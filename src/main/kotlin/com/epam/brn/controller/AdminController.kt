@@ -4,9 +4,7 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
-import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
-import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
-import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
@@ -187,30 +185,12 @@ class AdminController(
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
-    @PostMapping("/create/exercise/words")
-    @ApiOperation("Create new exercise 'words' for exist subgroup")
-    fun createExerciseWords(
-        @ApiParam(value = "Exercise 'words' data", required = true)
-        @Valid @RequestBody exerciseWordsCreateDto: ExerciseWordsCreateDto
+    @PostMapping("/create/exercise")
+    @ApiOperation("Create new exercise for exist subgroup")
+    fun createExercise(
+        @ApiParam(value = "Exercise data", required = true)
+        @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponseDto(data = exerciseService.createAndGenerateExerciseWords(exerciseWordsCreateDto)))
-
-    @PostMapping("/create/exercise/phrases")
-    @ApiOperation("Create new exercise 'phrases' for exist subgroup")
-    fun createExercisePhrases(
-        @ApiParam(value = "Exercise 'phrases' data", required = true)
-        @Valid @RequestBody exercisePhrasesCreateDto: ExercisePhrasesCreateDto
-    ): ResponseEntity<BaseSingleObjectResponseDto> =
-        ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponseDto(data = exerciseService.createAndGenerateExercisePhrases(exercisePhrasesCreateDto)))
-
-    @PostMapping("/create/exercise/sentences")
-    @ApiOperation("Create new exercise 'sentences' for exist subgroup")
-    fun createExerciseSentences(
-        @ApiParam(value = "Exercise 'sentences' data", required = true)
-        @Valid @RequestBody exerciseSentencesCreateDto: ExerciseSentencesCreateDto
-    ): ResponseEntity<BaseSingleObjectResponseDto> =
-        ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponseDto(data = exerciseService.createAndGenerateExerciseSentences(exerciseSentencesCreateDto)))
+            .body(BaseSingleObjectResponseDto(data = exerciseService.createAndGenerateExercise(exerciseCreateDto)))
 }
