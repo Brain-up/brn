@@ -38,7 +38,7 @@ dependencies {
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    implementation "org.apache.logging.log4j:log4j-api-kotlin:1.0.0"
+    implementation "org.apache.logging.log4j:log4j-api-kotlin:$log4jApiKotlinVersion"
 
     implementation "io.springfox:springfox-swagger-ui:2.10.5"
     implementation "io.springfox:springfox-swagger2:2.9.2"
