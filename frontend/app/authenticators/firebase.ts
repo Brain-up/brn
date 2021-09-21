@@ -2,27 +2,34 @@ import { inject as service } from '@ember/service';
 
 import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 import FirebaseService from 'ember-firebase-service/services/firebase';
-import firebase from 'firebase/app';
-
-interface AuthenticateCallback {
-  (auth: firebase.auth.Auth): Promise<firebase.auth.UserCredential>;
-}
+import type firebase from 'firebase';
 
 export default class FirebaseAuthenticator extends BaseAuthenticator {
   @service
   private firebase!: FirebaseService;
 
-  public async authenticate(
-    callback: AuthenticateCallback,
-  ): Promise<{ user: firebase.User | null }> {
-    console.log(...arguments);
+  public async authenticate(login: string, password: string): Promise<{ user: firebase.User | null }> {
     // authenticate
-    //     this.firebase.auth().signInWithEmailAndPassword('foo', 'bar');
 
-    const auth = this.firebase.auth();
-    const credential = await callback(auth);
+    try {
+      const result = await this.firebase.auth().signInWithEmailAndPassword(login, password);
+      console.log(result);
 
-    return { user: credential.user };
+      // const credential = await callback(auth);
+
+      return { user: result };
+    } catch(e) {
+      if (e.code === 'auth/internal-error') {
+        const { error }: any = JSON.parse(e.message);
+        const errorObj: any = new Error(error.message);
+        errorObj.errors = error.errors;
+        errorObj.code = error.code;
+        errorObj.status = error.status;
+        errorObj.message = error.message;
+        throw errorObj;
+      }
+    }
+
   }
 
   public invalidate(): Promise<void> {
