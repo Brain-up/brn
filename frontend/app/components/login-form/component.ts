@@ -60,7 +60,7 @@ export default class LoginFormComponent extends Component {
   @(task(function* (this: LoginFormComponent) {
     const { login, password } = this;
     try {
-      yield this.session.authenticate('authenticator:oauth2', login, password);
+      yield this.session.authenticate('authenticator:firebase', login, password);
       yield this.network.loadCurrentUser();
     } catch (error) {
       let key = '';
