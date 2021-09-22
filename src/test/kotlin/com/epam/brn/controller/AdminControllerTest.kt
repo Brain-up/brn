@@ -20,23 +20,24 @@ import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
-import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.SubGroupService
+import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
-import io.mockk.verify
-import io.mockk.mockkClass
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkClass
+import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -114,7 +115,7 @@ internal class AdminControllerTest {
     fun `getUsers should return users with statistic when withAnalytics is true`() {
         // GIVEN
         val withAnalytics = true
-        val role = "ROLE_USER"
+        val role = ROLE_USER.name
         every { userAccountService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
 
         // WHEN
@@ -130,7 +131,7 @@ internal class AdminControllerTest {
     fun `getUsers should return users when withAnalytics is false`() {
         // GIVEN
         val withAnalytics = false
-        val role = "ROLE_USER"
+        val role = ROLE_USER.name
         every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountResponse)
 
         // WHEN

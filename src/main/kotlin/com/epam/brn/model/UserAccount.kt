@@ -82,7 +82,7 @@ data class UserAccount(
         headphones = headphones
             .map(Headphones::toDto)
             .toHashSet(),
-        doctor = doctor?.id
+        doctorId = doctor?.id
     ).also {
         it.authorities = this.authoritySet
             .map(Authority::authorityName)
