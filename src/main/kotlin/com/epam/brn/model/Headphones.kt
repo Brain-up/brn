@@ -23,6 +23,7 @@ data class Headphones(
     var id: Long? = null,
     @NotNull
     var name: String = "",
+    var active: Boolean = true,
     @Enumerated(EnumType.STRING)
     var type: HeadphonesType,
     var description: String = "",
@@ -33,6 +34,7 @@ data class Headphones(
     fun toDto() = HeadphonesDto(
         id,
         name = name,
+        active = active,
         description = description,
         type = type,
         userAccount = userAccount?.id

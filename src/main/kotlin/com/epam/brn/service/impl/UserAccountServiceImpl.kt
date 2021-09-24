@@ -98,7 +98,8 @@ class UserAccountServiceImpl(
 
     override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
 
-    override fun getAllHeadphonesForCurrentUser() = getCurrentUser().headphones.map(Headphones::toDto).toSet()
+    override fun getAllHeadphonesForCurrentUser() = getCurrentUser()
+        .headphones.map(Headphones::toDto).filter { it.active }.toSet()
 
     override fun getUserFromTheCurrentSession(): UserAccountResponse = getCurrentUser().toDto()
 
@@ -135,6 +136,12 @@ class UserAccountServiceImpl(
     override fun addHeadphonesToCurrentUser(headphones: HeadphonesDto): HeadphonesDto {
         val entityHeadphones = headphones.toEntity()
         entityHeadphones.userAccount = getCurrentUser()
+        return headphonesService.save(entityHeadphones)
+    }
+
+    override fun deleteHeadphonesForCurrentUser(headphones: HeadphonesDto): HeadphonesDto {
+        val entityHeadphones = headphones.toEntity()
+        entityHeadphones.active = false
         return headphonesService.save(entityHeadphones)
     }
 

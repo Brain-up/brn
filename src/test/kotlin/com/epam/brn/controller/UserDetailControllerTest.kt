@@ -167,6 +167,29 @@ internal class UserDetailControllerTest {
         }
 
         @Test
+        fun `should delete headphones to current user`() {
+            // GIVEN
+            val activeHeadphonesDto = HeadphonesDto(
+                name = "test",
+                active = true,
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+            val deletedHeadphonesDto = HeadphonesDto(
+                name = "test",
+                active = false,
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+            every { userAccountService.deleteHeadphonesForCurrentUser(activeHeadphonesDto) } returns deletedHeadphonesDto
+
+            // WHEN
+            val response = userDetailController.deleteHeadphonesForCurrentUser(activeHeadphonesDto).body?.data as HeadphonesDto
+
+            // THEN
+            verify(exactly = 1) { userAccountService.deleteHeadphonesForCurrentUser(activeHeadphonesDto) }
+            assertEquals(deletedHeadphonesDto, response)
+        }
+
+        @Test
         fun `should return all headphones belongs to user`() {
             // GIVEN
             val headphonesDto = HeadphonesDto(

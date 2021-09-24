@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -72,6 +73,12 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     fun addHeadphonesToCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
+
+    @DeleteMapping(value = ["/current/headphones"])
+    @ApiOperation("Delete headphones for the current user")
+    fun deleteHeadphonesForCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
+        ResponseEntity.status(HttpStatus.OK)
+            .body(BaseSingleObjectResponseDto(data = userAccountService.deleteHeadphonesForCurrentUser(headphones)))
 
     @GetMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Get all user's headphones")
