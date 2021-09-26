@@ -1,6 +1,7 @@
 package com.epam.brn.dto.request.exercise
 
 import com.epam.brn.enums.Locale
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.upload.csv.seriesMatrix.SeriesMatrixRecord
 import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecord
 import com.epam.brn.upload.csv.seriesWords.SeriesWordsRecord

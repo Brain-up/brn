@@ -202,5 +202,5 @@ class AdminController(
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponseDto(data = exerciseService.createAndGenerateExercise(exerciseCreateDto)))
+            .body(BaseSingleObjectResponseDto(data = exerciseService.createExercise(exerciseCreateDto)))
 }

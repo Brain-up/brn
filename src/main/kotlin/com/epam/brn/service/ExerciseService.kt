@@ -147,7 +147,7 @@ class ExerciseService(
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    fun createAndGenerateExercise(exerciseCreateDto: ExerciseCreateDto): ExerciseDto {
+    fun createExercise(exerciseCreateDto: ExerciseCreateDto): ExerciseDto {
         val exercise = when (exerciseCreateDto) {
             is ExerciseWordsCreateDto -> {
                 val seriesWordsRecord = exerciseCreateDto.toSeriesWordsRecord()

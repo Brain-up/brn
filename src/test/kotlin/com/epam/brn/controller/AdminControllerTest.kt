@@ -299,13 +299,13 @@ internal class AdminControllerTest {
             noiseLevel = 0
         )
         val exerciseDto = mockk<ExerciseDto>()
-        every { exerciseService.createAndGenerateExercise(exerciseWordsCreateDto) } returns exerciseDto
+        every { exerciseService.createExercise(exerciseWordsCreateDto) } returns exerciseDto
 
         // WHEN
         val createdExercise = adminController.createExercise(exerciseWordsCreateDto)
 
         // THEN
-        verify(exactly = 1) { exerciseService.createAndGenerateExercise(exerciseWordsCreateDto) }
+        verify(exactly = 1) { exerciseService.createExercise(exerciseWordsCreateDto) }
         createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 
@@ -321,13 +321,13 @@ internal class AdminControllerTest {
             noiseLevel = 0
         )
         val exerciseDto = mockk<ExerciseDto>()
-        every { exerciseService.createAndGenerateExercise(exercisePhrasesCreateDto) } returns exerciseDto
+        every { exerciseService.createExercise(exercisePhrasesCreateDto) } returns exerciseDto
 
         // WHEN
         val createdExercise = adminController.createExercise(exercisePhrasesCreateDto)
 
         // THEN
-        verify(exactly = 1) { exerciseService.createAndGenerateExercise(exercisePhrasesCreateDto) }
+        verify(exactly = 1) { exerciseService.createExercise(exercisePhrasesCreateDto) }
         createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 
@@ -343,13 +343,13 @@ internal class AdminControllerTest {
             words = SetOfWords()
         )
         val exerciseDto = mockk<ExerciseDto>()
-        every { exerciseService.createAndGenerateExercise(exerciseSentencesCreateDto) } returns exerciseDto
+        every { exerciseService.createExercise(exerciseSentencesCreateDto) } returns exerciseDto
 
         // WHEN
         val createdExercise = adminController.createExercise(exerciseSentencesCreateDto)
 
         // THEN
-        verify(exactly = 1) { exerciseService.createAndGenerateExercise(exerciseSentencesCreateDto) }
+        verify(exactly = 1) { exerciseService.createExercise(exerciseSentencesCreateDto) }
         createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
     }
 }

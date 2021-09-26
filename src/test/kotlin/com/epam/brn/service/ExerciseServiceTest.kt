@@ -415,7 +415,7 @@ internal class ExerciseServiceTest {
         every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
 
         // WHEN
-        val exerciseDto = exerciseService.createAndGenerateExercise(exerciseWordsCreateDto)
+        val exerciseDto = exerciseService.createExercise(exerciseWordsCreateDto)
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
@@ -442,7 +442,7 @@ internal class ExerciseServiceTest {
         every { wordsRecordProcessor.process(any(), any()) } returns listOf()
 
         // WHEN
-        val exception = shouldThrow<RuntimeException> { exerciseService.createAndGenerateExercise(exerciseWordsCreateDto) }
+        val exception = shouldThrow<RuntimeException> { exerciseService.createExercise(exerciseWordsCreateDto) }
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
@@ -471,7 +471,7 @@ internal class ExerciseServiceTest {
         every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
 
         // WHEN
-        val exerciseDto = exerciseService.createAndGenerateExercise(exercisePhrasesCreateDto)
+        val exerciseDto = exerciseService.createExercise(exercisePhrasesCreateDto)
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
@@ -498,7 +498,7 @@ internal class ExerciseServiceTest {
         every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf()
 
         // WHEN
-        val exception = shouldThrow<RuntimeException> { exerciseService.createAndGenerateExercise(exercisePhrasesCreateDto) }
+        val exception = shouldThrow<RuntimeException> { exerciseService.createExercise(exercisePhrasesCreateDto) }
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
@@ -527,7 +527,7 @@ internal class ExerciseServiceTest {
         every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
 
         // WHEN
-        val exerciseDto = exerciseService.createAndGenerateExercise(exerciseSentencesCreateDto)
+        val exerciseDto = exerciseService.createExercise(exerciseSentencesCreateDto)
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
@@ -554,7 +554,7 @@ internal class ExerciseServiceTest {
         every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf()
 
         // WHEN
-        val exception = shouldThrow<RuntimeException> { exerciseService.createAndGenerateExercise(exerciseSentencesCreateDto) }
+        val exception = shouldThrow<RuntimeException> { exerciseService.createExercise(exerciseSentencesCreateDto) }
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
