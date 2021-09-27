@@ -169,6 +169,7 @@ class UserDetailsControllerIT : BaseIT() {
             objectMapper.readValue(gson.toJson(baseResponseDto.data), HeadphonesDto::class.java)
         addedHeadphones.id shouldNotBe null
         addedHeadphones.name shouldBe "first"
+        addedHeadphones.active shouldBe true
         addedHeadphones.type shouldBe HeadphonesType.IN_EAR_NO_BLUETOOTH
     }
 
@@ -226,9 +227,9 @@ class UserDetailsControllerIT : BaseIT() {
             .usingElementComparatorOnFields("name", "type")
             .containsAll(
                 listOf(
-                    HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                    HeadphonesDto(name = "second", type = HeadphonesType.IN_EAR_BLUETOOTH),
-                    HeadphonesDto(name = "third", type = HeadphonesType.OVER_EAR_BLUETOOTH)
+                    HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
+                    HeadphonesDto(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH),
+                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH)
                 )
             )
     }
