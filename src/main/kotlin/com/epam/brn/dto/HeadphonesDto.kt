@@ -8,7 +8,7 @@ data class HeadphonesDto(
     var id: Long? = null,
     @field:NotBlank
     var name: String,
-    var active: Boolean = true,
+    var active: Boolean,
     var type: HeadphonesType,
     var description: String = "",
     var userAccount: Long? = null
