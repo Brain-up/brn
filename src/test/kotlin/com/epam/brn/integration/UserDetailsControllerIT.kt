@@ -173,6 +173,34 @@ class UserDetailsControllerIT : BaseIT() {
     }
 
     @Test
+    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    fun `add default headphones to current user`() {
+        // GIVEN
+        insertUser()
+        // WHEN
+        val body =
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first"))
+        val resultAction = mockMvc.perform(
+            post("$baseUrl/current/headphones")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        assertDefaultHeadphonesAreCreated(resultAction)
+    }
+
+    private fun assertDefaultHeadphonesAreCreated(resultAction: ResultActions) {
+        resultAction.andExpect(status().isCreated)
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val addedHeadphones: HeadphonesDto =
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), HeadphonesDto::class.java)
+        addedHeadphones.id shouldNotBe null
+        addedHeadphones.name shouldBe "first"
+        addedHeadphones.type shouldBe HeadphonesType.NOT_DEFINED
+    }
+
+    @Test
     fun `get all headphones from the user`() {
         // GIVEN
         val user = insertUser()

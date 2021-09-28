@@ -113,8 +113,9 @@ class UserAccountServiceImpl(
         userAccountRepository.findUsersAccountsByRole(role).map { it.toDto() }
 
     override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
+        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
         // todo fill user models with analytics and write tests
-        return userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
+        return users
     }
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountResponse {
