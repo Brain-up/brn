@@ -1,7 +1,9 @@
 package com.epam.brn.auth.filter
 
 import com.epam.brn.model.UserAccountCredentials
+import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.TokenHelperUtils
+import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseToken
@@ -21,6 +23,8 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class FirebaseTokenAuthenticationFilter(
     private val brainUpUserDetailsService: UserDetailsService,
+    private val firebaseUserService: FirebaseUserService,
+    private val userAccountService: UserAccountService,
     private val firebaseAuth: FirebaseAuth
 ) : OncePerRequestFilter() {
 
@@ -38,9 +42,9 @@ class FirebaseTokenAuthenticationFilter(
     private fun verifyToken(request: HttpServletRequest) {
         val token: String? = TokenHelperUtils.getBearerToken(request)
         try {
-            val decodedToken: FirebaseToken? = firebaseAuth.verifyIdToken(token, true)
+            val decodedToken: FirebaseToken = firebaseAuth.verifyIdToken(token, true)
             try {
-                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken?.email)
+                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email)
                 val authentication = UsernamePasswordAuthenticationToken(
                     user,
                     UserAccountCredentials(decodedToken, token),
@@ -49,7 +53,19 @@ class FirebaseTokenAuthenticationFilter(
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
             } catch (e: UsernameNotFoundException) {
-                log.error("User with email: ${decodedToken?.email} doesn't exist")
+                log.warn("User with email: ${decodedToken.email} doesn't exist: create it")
+                val firebaseUserRecord = firebaseUserService.getUserById(decodedToken.uid)
+                if (firebaseUserRecord != null) {
+                    val createUser = userAccountService.createUser(firebaseUserRecord)
+                    val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(createUser.email)
+                    val authentication = UsernamePasswordAuthenticationToken(
+                        user,
+                        UserAccountCredentials(decodedToken, token),
+                        user.authorities
+                    )
+                    authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authentication
+                }
             }
         } catch (e: FirebaseAuthException) {
             log.error("Error while validate token: ${e.message}", e)

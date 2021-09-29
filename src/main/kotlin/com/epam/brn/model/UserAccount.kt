@@ -32,8 +32,8 @@ data class UserAccount(
     @Column(nullable = false, unique = true)
     val email: String?,
     var fullName: String?,
-    var bornYear: Int?,
-    var gender: String?,
+    var bornYear: Int? = null,
+    var gender: String? = null,
     var active: Boolean = true,
     @Column(nullable = false)
     @CreatedDate

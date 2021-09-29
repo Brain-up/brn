@@ -3,9 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.HeadphonesDto
-import com.epam.brn.dto.request.UserAccountChangePasswordRequest
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.service.TokenHelperUtils
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.FirebaseAuth
 import io.swagger.annotations.Api
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/users")
@@ -49,25 +46,6 @@ class UserDetailController(
     fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) =
         ResponseEntity.ok()
             .body(BaseSingleObjectResponseDto(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
-
-    @PatchMapping(value = ["/current/password"])
-    @ApiOperation("Change password for current logged in user")
-    fun changePasswordCurrentUser(
-        request: HttpServletRequest,
-        @Validated @RequestBody userAccountChangePasswordRequest: UserAccountChangePasswordRequest
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        val token = TokenHelperUtils.getBearerToken(request)
-        val firebaseToken = firebaseAuth.verifyIdToken(token, true)
-        userAccountChangePasswordRequest.uuid = firebaseToken.uid
-        return ResponseEntity.ok()
-            .body(
-                BaseSingleObjectResponseDto(
-                    data = userAccountService.changePasswordCurrentUser(
-                        userAccountChangePasswordRequest
-                    )
-                )
-            )
-    }
 
     @GetMapping
     @ApiOperation("Get user by name")

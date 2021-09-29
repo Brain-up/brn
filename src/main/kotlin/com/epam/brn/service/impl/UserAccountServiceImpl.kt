@@ -2,8 +2,6 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
-import com.epam.brn.dto.request.UserAccountAdditionalInfoRequest
-import com.epam.brn.dto.request.UserAccountChangePasswordRequest
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
@@ -72,8 +70,7 @@ class UserAccountServiceImpl(
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    override fun createUserWithFirebase(
-        userAccountAdditionalInfoRequest: UserAccountAdditionalInfoRequest,
+    override fun createUser(
         firebaseUserRecord: UserRecord
     ): UserAccountResponse {
         val existUser = userAccountRepository.findUserAccountByEmail(firebaseUserRecord.email)
@@ -81,15 +78,10 @@ class UserAccountServiceImpl(
             throw IllegalArgumentException("The user already exists!")
         }
         val userAccount = UserAccount(
-            email = firebaseUserRecord.email,
             fullName = firebaseUserRecord.displayName,
-            bornYear = userAccountAdditionalInfoRequest.bornYear,
-            gender = userAccountAdditionalInfoRequest.gender.toString(),
-            userId = userAccountAdditionalInfoRequest.uuid
+            email = firebaseUserRecord.email,
+            userId = firebaseUserRecord.uid
         )
-        if (userAccountAdditionalInfoRequest.avatar != null) {
-            userAccount.avatar = userAccountAdditionalInfoRequest.avatar
-        }
         userAccount.authoritySet = getDefaultAuthoritySet()
         return userAccountRepository.save(userAccount).toDto()
     }
@@ -152,15 +144,6 @@ class UserAccountServiceImpl(
                 userAccountRepository.save(it.updateFields(changeRequest = userChangeRequest))
             else it
         }.toDto()
-    }
-
-    override fun changePasswordCurrentUser(userAccountChangePasswordRequest: UserAccountChangePasswordRequest): Boolean {
-        val firebaseUser = firebaseService.getUserById(userAccountChangePasswordRequest.uuid)
-        var firebaseUserRecord: UserRecord? = null
-        if (firebaseUser != null && firebaseUser.providerId == "password") {
-            firebaseUserRecord = firebaseService.changePassword(userAccountChangePasswordRequest)
-        }
-        return firebaseUserRecord != null
     }
 
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =

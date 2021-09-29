@@ -1,8 +1,6 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
-import com.epam.brn.dto.request.UserAccountAdditionalInfoRequest
-import com.epam.brn.dto.request.UserAccountChangePasswordRequest
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
@@ -16,6 +14,9 @@ interface UserAccountService {
     fun findUserByEmail(email: String): UserAccountResponse
     fun createUser(
         userAccountCreateRequest: UserAccountCreateRequest,
+        firebaseUserRecord: UserRecord
+    ): UserAccountResponse
+    fun createUser(
         firebaseUserRecord: UserRecord
     ): UserAccountResponse
 
@@ -32,12 +33,4 @@ interface UserAccountService {
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
     fun getAllHeadphonesForCurrentUser(): Set<HeadphonesDto>
     fun findUserByUuid(uuid: String): UserAccountResponse?
-    fun createUserWithFirebase(
-        additionalInfoRequest: UserAccountAdditionalInfoRequest,
-        firebaseUserRecord: UserRecord
-    ): UserAccountResponse
-
-    fun changePasswordCurrentUser(
-        userAccountChangePasswordRequest: UserAccountChangePasswordRequest
-    ): Boolean
 }
