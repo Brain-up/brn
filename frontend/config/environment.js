@@ -17,7 +17,11 @@ module.exports = function (environment) {
         Date: false,
       },
     },
-
+    firebase: {
+      apiKey: '4d8f576aed50fc02ef997440bd256e663dd1f457',
+      authDomain: 'https://accounts.google.com/o/oauth2/auth',
+      projectId: 'firebase-auth-14382-try',
+    },
     APP: {},
   };
 
