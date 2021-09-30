@@ -1,26 +1,26 @@
 <a
+  class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg"
   {{on "mouseenter" this.mouseEnter}}
   {{on "mouseleave" this.mouseLeave}}
   href={{href-to "group.series.subgroup" @group.id}}
-  class="hover:shadow-outline w-1/4 m-2 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg"
 >
   {{! template-lint-disable no-inline-styles style-concatenation }}
   <div
-    style={{html-safe
-      (concat "height:145px;background-image: url(" @group.picture ");")
-    }}
-    class="w-full bg-center bg-no-repeat bg-contain"
+    class="sm:h-40 h-16 bg-center bg-no-repeat bg-contain"
+    style={{html-safe (concat "background-image: url(" @group.picture ");")}}
   >
     {{#if this.isFlipped}}
       {{! @ts-ignore }}
       <div
-        class="w-full h-full pt-5 text-6xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75"
+        class="sm:text-6xl w-full h-full pt-5 text-2xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75"
         title={{t "exercise.progress"}}
       >{{this.stats.completedExercises}}/{{this.stats.totalExercises}}</div>
     {{/if}}
   </div>
-  <div class="px-2 py-2 bg-gray-200">
-    <div class="text-center">
+  <div class="sm:px-2 sm:py-2 h-full px-0 py-1 bg-gray-200">
+    <div
+      class="sm:tracking-normal sm:leading-normal sm:text-base text-xs leading-none tracking-tighter text-center"
+    >
       {{@group.name}}
     </div>
   </div>
