@@ -10,6 +10,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.HeadphonesRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.HeadphonesService
 import com.epam.brn.service.TimeService
@@ -17,6 +18,7 @@ import com.epam.brn.service.UserAccountService
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
@@ -31,7 +33,8 @@ class UserAccountServiceImpl(
     private val authorityService: AuthorityService,
     private val passwordEncoder: PasswordEncoder,
     private val timeService: TimeService,
-    private val headphonesService: HeadphonesService
+    private val headphonesService: HeadphonesService,
+    private val headphonesRepository: HeadphonesRepository
 ) : UserAccountService {
 
     private val log = logger()
@@ -99,7 +102,7 @@ class UserAccountServiceImpl(
     override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
 
     override fun getAllHeadphonesForCurrentUser() = getCurrentUser()
-        .headphones.map(Headphones::toDto).filter { it.active }.toSet()
+        .headphones.map(Headphones::toDto).filter { it.active!! }.toSet()
 
     override fun getUserFromTheCurrentSession(): UserAccountResponse = getCurrentUser().toDto()
 
@@ -139,10 +142,11 @@ class UserAccountServiceImpl(
         return headphonesService.save(entityHeadphones)
     }
 
-    override fun deleteHeadphonesForCurrentUser(headphones: HeadphonesDto): HeadphonesDto {
-        val entityHeadphones = headphones.toEntity()
-        entityHeadphones.active = false
-        return headphonesService.save(entityHeadphones)
+    override fun deleteHeadphonesForCurrentUser(headphonesId: Long): Headphones {
+        return headphonesRepository.findByIdOrNull(headphonesId)?.let {
+            it.active = false
+            headphonesRepository.save(it)
+        } ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
     }
 
     override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse {

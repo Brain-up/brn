@@ -74,11 +74,15 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
 
-    @DeleteMapping(value = ["/current/headphones"])
-    @ApiOperation("Delete headphones for the current user")
-    fun deleteHeadphonesForCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
-        ResponseEntity.status(HttpStatus.OK)
-            .body(BaseSingleObjectResponseDto(data = userAccountService.deleteHeadphonesForCurrentUser(headphones)))
+    @DeleteMapping(value = ["/current/headphones/{headphonesId}"])
+    @ApiOperation("Delete headphones by Id")
+    fun deleteHeadphonesForCurrentUser(
+        @PathVariable(value = "headphonesId") headphonesId:
+            Long
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
+        return ResponseEntity.ok(BaseSingleObjectResponseDto(data = Unit))
+    }
 
     @GetMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Get all user's headphones")

@@ -5,7 +5,6 @@ create table headphones
             primary key,
     description varchar(255),
     name        varchar(255),
-    active      boolean,
     type        varchar(255),
     user_id     bigint
         constraint fkfd63f5wlyo1y7e4c4i746amn0

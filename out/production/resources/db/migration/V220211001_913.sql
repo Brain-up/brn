@@ -1,0 +1,1 @@
+alter table headphones add column if not exists active boolean
