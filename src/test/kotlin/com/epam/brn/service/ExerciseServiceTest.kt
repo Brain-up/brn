@@ -426,7 +426,7 @@ internal class ExerciseServiceTest {
     }
 
     @Test
-    fun `should be throw RuntimeException in createAndGenerateExerciseWords`() {
+    fun `should be throw IllegalArgumentException in createAndGenerateExerciseWords`() {
         // GIVEN
         val exerciseWordsCreateDto = ExerciseWordsCreateDto(
             locale = Locale.RU,
@@ -442,7 +442,7 @@ internal class ExerciseServiceTest {
         every { wordsRecordProcessor.process(any(), any()) } returns listOf()
 
         // WHEN
-        val exception = shouldThrow<RuntimeException> { exerciseService.createExercise(exerciseWordsCreateDto) }
+        val exception = shouldThrow<IllegalArgumentException> { exerciseService.createExercise(exerciseWordsCreateDto) }
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
@@ -482,7 +482,7 @@ internal class ExerciseServiceTest {
     }
 
     @Test
-    fun `should be throw RuntimeException in createAndGenerateExercisePhrases`() {
+    fun `should be throw IllegalArgumentException in createAndGenerateExercisePhrases`() {
         // GIVEN
         val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
             locale = Locale.RU,
@@ -498,7 +498,7 @@ internal class ExerciseServiceTest {
         every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf()
 
         // WHEN
-        val exception = shouldThrow<RuntimeException> { exerciseService.createExercise(exercisePhrasesCreateDto) }
+        val exception = shouldThrow<IllegalArgumentException> { exerciseService.createExercise(exercisePhrasesCreateDto) }
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
@@ -538,7 +538,7 @@ internal class ExerciseServiceTest {
     }
 
     @Test
-    fun `should be RuntimeException in createAndGenerateExerciseSentences`() {
+    fun `should be IllegalArgumentException in createAndGenerateExerciseSentences`() {
         // GIVEN
         val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
             locale = Locale.RU,
@@ -554,7 +554,7 @@ internal class ExerciseServiceTest {
         every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf()
 
         // WHEN
-        val exception = shouldThrow<RuntimeException> { exerciseService.createExercise(exerciseSentencesCreateDto) }
+        val exception = shouldThrow<IllegalArgumentException> { exerciseService.createExercise(exerciseSentencesCreateDto) }
 
         // THEN
         verify(exactly = 1) { recordProcessors.stream() }
