@@ -152,21 +152,21 @@ class ExerciseService(
             is ExerciseWordsCreateDto -> {
                 val seriesWordsRecord = exerciseCreateDto.toSeriesWordsRecord()
                 val exercise = createExercise(seriesWordsRecord, exerciseCreateDto.locale)
-                    ?: throw RuntimeException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                    ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
                 generateAudioFilesAndSave(exerciseCreateDto.words, exerciseCreateDto.locale)
                 exercise
             }
             is ExercisePhrasesCreateDto -> {
                 val seriesPhrasesRecord = exerciseCreateDto.toSeriesPhrasesRecord()
                 val exercise = createExercise(seriesPhrasesRecord, exerciseCreateDto.locale)
-                    ?: throw RuntimeException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                    ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
                 generateAudioFilesAndSave(exerciseCreateDto.phrases.toList(), exerciseCreateDto.locale)
                 exercise
             }
             is ExerciseSentencesCreateDto -> {
                 val seriesMatrixRecord = exerciseCreateDto.toSeriesMatrixRecord()
                 val exercise = createExercise(seriesMatrixRecord, exerciseCreateDto.locale)
-                    ?: throw RuntimeException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                    ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
                 generateAudioFilesAndSave(exerciseCreateDto.words.toFlattenList(), exerciseCreateDto.locale)
                 exercise
             }
