@@ -5,7 +5,7 @@ import kotlin.annotation.AnnotationTarget.FIELD
 import kotlin.reflect.KClass
 
 @MustBeDocumented
-@Constraint(validatedBy = [WithoutPunctuationValidator::class])
+@Constraint(validatedBy = [PunctuationValidator::class])
 @Target(allowedTargets = [FIELD ])
 @Retention(AnnotationRetention.RUNTIME)
 annotation class WithoutPunctuation(
