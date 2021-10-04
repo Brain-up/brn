@@ -33,6 +33,19 @@
   width: 168px;
   height: 168px;
 }
+@media (max-width: 500px){
+  .exercise-block__level {
+    width: 85px;
+    height: 85px;
+  }
+}
+
+@media (min-width: 501px) and (max-width: 1240px){
+  .exercise-block__level {
+    width: 115px;
+    height: 115px;
+  }
+}
 
 .exercise-block__status-icon {
   width: 20px;
