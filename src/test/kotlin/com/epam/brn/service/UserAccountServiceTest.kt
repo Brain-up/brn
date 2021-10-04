@@ -20,7 +20,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.justRun
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -372,15 +371,14 @@ internal class UserAccountServiceTest {
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
             every { headphonesRepository.findByIdOrNull(headphonesId) } returns headphones
-            every { headphonesRepository.save(headphones) } returns deletedHeadphones
-            justRun { userAccountRepository.deleteHeadphonesForCurrentUser(headphonesId) }
+            every { headphonesRepository.deleteHeadphonesForCurrentUser(headphonesId) } returns deletedHeadphones
 
             // WHEN
             val response = userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
 
             // THEN
             verify(exactly = 1) { headphonesRepository.findByIdOrNull(headphonesId) }
-            verify(exactly = 1) { headphonesRepository.save(headphones) }
+            verify(exactly = 1) { headphonesRepository.deleteHeadphonesForCurrentUser(headphonesId) }
 
             headphonesId shouldBe response.id
             deletedHeadphones.id shouldBe headphonesId

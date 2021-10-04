@@ -144,8 +144,7 @@ class UserAccountServiceImpl(
 
     override fun deleteHeadphonesForCurrentUser(headphonesId: Long): Headphones {
         return headphonesRepository.findByIdOrNull(headphonesId)?.let {
-            it.active = false
-            headphonesRepository.save(it)
+            headphonesRepository.deleteHeadphonesForCurrentUser(headphonesId)
         } ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
     }
 
