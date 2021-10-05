@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository
 interface HeadphonesRepository : JpaRepository<Headphones, Long> {
 
     @Query(
-        "SELECT headphones FROM Headphones headphones WHERE headphones.userAccount.id = :userId"
+        "SELECT headphones FROM Headphones headphones WHERE headphones.userAccount.id = :userId AND headphones.active = true"
     )
     fun getHeadphonesForUser(@Param("userId") userId: Long): List<Headphones>
 
