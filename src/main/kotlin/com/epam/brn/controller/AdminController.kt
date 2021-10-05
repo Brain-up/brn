@@ -5,6 +5,7 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
@@ -193,4 +194,13 @@ class AdminController(
         val authorities = authorityService.findAll()
         return ResponseEntity.ok().body(BaseResponseDto(data = authorities))
     }
+
+    @PostMapping("/create/exercise")
+    @ApiOperation("Create new exercise for exist subgroup")
+    fun createExercise(
+        @ApiParam(value = "Exercise data", required = true)
+        @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
+    ): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponseDto(data = exerciseService.createExercise(exerciseCreateDto)))
 }

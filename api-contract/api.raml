@@ -829,6 +829,21 @@ mediaType:
                 responses:
                     200:
                       example: !include samples/roles_get_response.json
+    /create/exercise:
+        post:
+            description: Create new exercise for exist subgroup
+            body:
+                application/json:
+                example: !include samples/exerciseWordsCreateRequest.json
+                example: !include samples/exercisePhrasesCreateRequest.json
+                example: !include samples/exerciseSentencesCreateRequest.json
+            responses:
+                201:
+                    body:
+                        application/json:
+                        example: !include samples/exerciseWordsResponse.json
+                        example: !include samples/exercisePhrasesResponse.json
+                        example: !include samples/exerciseSentencesResponse.json
     # LOAD FILES ----------------------
     /loadTasksFile:
         post:

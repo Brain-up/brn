@@ -1,0 +1,22 @@
+{
+  "data": {
+    "seriesId": 27,
+    "id": 676,
+    "name": "Фразы разной длительности",
+    "level": 1,
+    "noise": {
+      "level": 0,
+      "url": ""
+    },
+    "template": "",
+    "available": true,
+    "tasks": [
+      {
+        "id": 676
+      }
+    ],
+    "signals": []
+  },
+  "errors": [],
+  "meta": []
+}

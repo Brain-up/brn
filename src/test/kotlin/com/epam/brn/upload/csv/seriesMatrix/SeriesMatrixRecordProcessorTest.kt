@@ -96,7 +96,7 @@ internal class SeriesMatrixRecordProcessorTest {
             )
         } returns Optional.empty()
         every { wordsServiceMock.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } returns String()
-        every { resourceRepositoryMock.saveAll(any()) } returns emptySet()
+        every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
         every { taskRepositoryMock.save(ofType(Task::class)) } returns Task()
         every { seriesRepositoryMock.findById(2L) } returns Optional.of(series)
 
