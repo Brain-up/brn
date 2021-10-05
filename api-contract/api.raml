@@ -325,9 +325,9 @@ types:
             body:
               example: !include samples/avaliable_exercise_ids_by_input_ids.json
   /{exerciseId}/active/{active}:
-   put:
-    responses:
-        200:
+    put:
+      description: Update active status of the exercise 
+
 # TASK ----------------------------
 /tasks:
   get:
