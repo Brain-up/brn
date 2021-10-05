@@ -5,7 +5,6 @@ import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import org.springframework.data.domain.Pageable
 
@@ -22,7 +21,7 @@ interface UserAccountService {
     fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse
     fun addHeadphonesToUser(userId: Long, headphonesDto: HeadphonesDto): HeadphonesDto
     fun addHeadphonesToCurrentUser(headphones: HeadphonesDto): HeadphonesDto
-    fun deleteHeadphonesForCurrentUser(id: Long): Headphones
+    fun deleteHeadphonesForCurrentUser(id: Long)
     fun getCurrentUser(): UserAccount
     fun findUserEntityById(id: Long): UserAccount
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>

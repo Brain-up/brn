@@ -6,7 +6,6 @@ import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
-import com.epam.brn.model.Headphones
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import io.kotest.matchers.shouldBe
@@ -14,6 +13,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
@@ -179,13 +179,7 @@ internal class UserDetailControllerTest {
         fun `should delete headphones belongs to user`() {
             // GIVEN
             val headphonesId = 1L
-            val deletedHeadphones = Headphones(
-                id = headphonesId,
-                name = "test",
-                active = false,
-                type = HeadphonesType.IN_EAR_BLUETOOTH
-            )
-            every { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) } returns deletedHeadphones
+            justRun { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
 
             // WHEN
             val response = userDetailController.deleteHeadphonesForCurrentUser(headphonesId)

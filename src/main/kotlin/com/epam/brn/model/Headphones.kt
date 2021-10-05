@@ -23,7 +23,8 @@ data class Headphones(
     var id: Long? = null,
     @NotNull
     var name: String = "",
-    var active: Boolean?,
+    @NotNull
+    var active: Boolean,
     @Enumerated(EnumType.STRING)
     var type: HeadphonesType,
     var description: String = "",

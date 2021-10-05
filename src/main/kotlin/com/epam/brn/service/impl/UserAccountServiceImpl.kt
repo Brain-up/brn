@@ -102,7 +102,7 @@ class UserAccountServiceImpl(
     override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
 
     override fun getAllHeadphonesForCurrentUser() = getCurrentUser()
-        .headphones.map(Headphones::toDto).filter { it.active!! }.toSet()
+        .headphones.filter { it.active }.map(Headphones::toDto).toSet()
 
     override fun getUserFromTheCurrentSession(): UserAccountResponse = getCurrentUser().toDto()
 
@@ -142,7 +142,7 @@ class UserAccountServiceImpl(
         return headphonesService.save(entityHeadphones)
     }
 
-    override fun deleteHeadphonesForCurrentUser(headphonesId: Long): Headphones {
+    override fun deleteHeadphonesForCurrentUser(headphonesId: Long) {
         return headphonesRepository.findByIdOrNull(headphonesId)?.let {
             headphonesRepository.deleteHeadphonesForCurrentUser(headphonesId)
         } ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")

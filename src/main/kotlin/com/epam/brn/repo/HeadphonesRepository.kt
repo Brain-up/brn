@@ -17,5 +17,5 @@ interface HeadphonesRepository : JpaRepository<Headphones, Long> {
 
     @Modifying
     @Query("update Headphones u set u.active = false where u.userAccount.id = :headphonesId")
-    fun deleteHeadphonesForCurrentUser(headphonesId: Long): Headphones
+    fun deleteHeadphonesForCurrentUser(headphonesId: Long)
 }
