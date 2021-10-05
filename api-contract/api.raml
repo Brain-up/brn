@@ -152,6 +152,7 @@ types:
               errors: [],
               meta: []
             }
+
 # AUDIOMETRY-----------------------------------
 /audiometrics:
   get:
@@ -184,6 +185,7 @@ types:
       200:
         body:
           example: 25
+
 # AUDIO GENERATION ----------------------------
 /audio:
   get:
@@ -287,6 +289,7 @@ types:
               errors: ["Can not delete subGroup because subGroup is not found by this id."],
               meta: []
             }
+
 # EXERCISE ----------------------------
 /exercises:
   get:
@@ -353,6 +356,7 @@ types:
               example_for_3_series: !include samples/task_by_id_for_3_series.json
               example_for_4_series: !include samples/task_by_id_for_4_series.json
               example_for_frequency_words_series: !include samples/task_by_id_for_frequency_words_series.json
+
 # STUDY_HISTORY ----------------------
 /study-history:
   post:
@@ -430,6 +434,7 @@ types:
         200:
           body:
             example: !include samples/study_histories_dto_response.json
+
 # USERS ----------------------
 /users:
   get:
@@ -502,7 +507,8 @@ types:
           200:
             body:
               example: !include samples/get_headphones_response.json
-# Auth ----------------------
+
+# AUTH ----------------------
 /brnlogin:
   post:
     description: Login for exist user
@@ -533,6 +539,7 @@ types:
     responses:
       204:
         description: No content
+
 # CLOUD  ----------------------
 /cloud:
   /folders:
@@ -564,6 +571,7 @@ types:
         200:
           body:
             example: "https://cloudprovider.bucket.com"
+
 # ADMIN  ----------------------
 /admin:
   /exercises:
@@ -839,6 +847,7 @@ types:
               example_words: !include samples/exerciseWordsResponse.json
               example_phrases: !include samples/exercisePhrasesResponse.json
               example_sentences: !include samples/exerciseSentencesResponse.json
+
 # LOAD FILES ----------------------
 /loadTasksFile:
         post:
