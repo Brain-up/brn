@@ -21,7 +21,7 @@ interface UserAccountService {
     fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse
     fun addHeadphonesToUser(userId: Long, headphonesDto: HeadphonesDto): HeadphonesDto
     fun addHeadphonesToCurrentUser(headphones: HeadphonesDto): HeadphonesDto
-    fun deleteHeadphonesForCurrentUser(id: Long)
+    fun deleteHeadphonesForCurrentUser(headphonesId: Long)
     fun getCurrentUser(): UserAccount
     fun findUserEntityById(id: Long): UserAccount
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
