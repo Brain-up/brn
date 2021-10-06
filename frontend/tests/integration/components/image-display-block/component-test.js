@@ -8,7 +8,7 @@ module('Integration | Component | image-display-block', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    this.set('fileUrl', '/pictures/вить.jpg');
+    this.set('fileUrl', '\/pictures\/вить.jpg');
     this.set('label', 'вить');
 
     await render(hbs`<ImageDisplayBlock
