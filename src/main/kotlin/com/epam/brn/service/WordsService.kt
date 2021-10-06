@@ -26,6 +26,9 @@ class WordsService {
     @Value("\${aws.baseFileUrl}")
     private lateinit var baseFileUrl: String
 
+    @Value(value = "\${brn.audio.file.series.path}")
+    private lateinit var audioFileSeriesPath: String
+
     private val mapLocaleManVoice =
         mapOf(Locale.RU.locale to Voice.FILIPP, Locale.EN.locale to Voice.NICK, Locale.TR.locale to Voice.ERKANYAVAS)
 
@@ -93,6 +96,9 @@ class WordsService {
 
     fun getSubPathForWord(meta: AudioFileMetaData) =
         "/audio/${meta.locale}/${meta.voice.name.toLowerCase()}/${meta.speed}"
+
+    fun getAudioFileUrlDynamically(index: Int, word: String): String =
+        String.format(audioFileSeriesPath, index, word)
 }
 
 data class AudioFileMetaData(val text: String, val locale: String, val voice: Voice, val speed: String = "1") {
