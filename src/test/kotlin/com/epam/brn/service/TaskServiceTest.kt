@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 import kotlin.test.assertSame
 
@@ -136,8 +137,18 @@ internal class TaskServiceTest {
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
-            // WHEN
-            val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
+            // WHEN isAudioFileUrlGenerated = false
+            var foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
+
+            // THEN
+            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
+            foundTasks.size shouldBe expectedTaskSize
+
+            // WHEN  isAudioFileUrlGenerated = true
+            ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
+            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
+
+            foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
             verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
@@ -203,7 +214,17 @@ internal class TaskServiceTest {
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
             // WHEN
-            val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
+            var foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
+
+            // THEN
+            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
+            foundTasks.size shouldBe expectedTaskSize
+
+            // WHEN  isAudioFileUrlGenerated = true
+            ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
+            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
+
+            foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
             verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }

@@ -63,18 +63,16 @@ class TaskService(
             run {
                 resource.audioFileUrl =
                     if (isAudioFileUrlGenerated) {
-                        val index = when (val type = ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
-                            ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> 1
-                            ExerciseType.WORDS_SEQUENCES -> 2
-                            ExerciseType.SENTENCE -> 3
-                            ExerciseType.PHRASES -> 4
-                            else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
-                        }
-                        wordsService.getAudioFileUrlDynamically(index, resource.word)
-                    } else wordsService.getFullS3UrlForWord(resource.word, resource.locale)
+                        wordsService.getAudioFileUrlDynamically(getAudioFileIndex(task), resource.word)
+                    } else {
+                        wordsService.getFullS3UrlForWord(resource.word, resource.locale)
+                    }
             }
         }
     }
+
+    private fun getAudioFileIndex(task: Task) =
+        ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type).audioFileSeriesIndex
 
     @Transactional
     fun save(task: Task): Task {
