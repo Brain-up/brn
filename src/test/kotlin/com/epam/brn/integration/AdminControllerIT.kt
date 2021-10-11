@@ -1,12 +1,20 @@
 package com.epam.brn.integration
 
+import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.Phrases
+import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatisticDto
+import com.epam.brn.enums.Locale
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -15,6 +23,7 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.model.Authority
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
@@ -22,6 +31,7 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.repo.AuthorityRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -76,6 +86,9 @@ class AdminControllerIT : BaseIT() {
     lateinit var resourceRepository: ResourceRepository
 
     @Autowired
+    lateinit var authorityRepository: AuthorityRepository
+
+    @Autowired
     private lateinit var gson: Gson
 
     private val legacyDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -91,6 +104,7 @@ class AdminControllerIT : BaseIT() {
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
         resourceRepository.deleteAll()
+        authorityRepository.deleteAll()
     }
 
     @Test
@@ -533,6 +547,162 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().json("{\"errors\":[\"не должно быть пустым\",\"не должно равняться null\",\"не должно быть пустым\"] }"))
     }
 
+    @Test
+    fun `should return authorities list`() {
+        // GIVEN
+        insertRole("ROLE_ADMIN")
+        insertRole("ROLE_USER")
+        insertRole("ROLE_DOCTOR")
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("$baseUrl/roles")
+        )
+
+        // THEN
+        resultAction
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseResponseDto::class.java)
+        val authorities = objectMapper.readValue(
+            gson.toJson(baseResponseDto.data),
+            object : TypeReference<List<Authority>>() {}
+        )
+        authorities.size shouldBe 3
+    }
+
+    @Test
+    fun `should get users by role`() {
+        // GIVEN
+        val authorityAdmin = insertRole("ROLE_ADMIN")
+        val authorityUser = insertRole("ROLE_USER")
+
+        val user1 = UserAccount(
+            fullName = "testUserFirstName",
+            email = "test@test.test",
+            password = "password",
+            gender = Gender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user1.authoritySet = mutableSetOf(authorityAdmin, authorityUser)
+
+        val user2 = UserAccount(
+            fullName = "testUserFirstName2",
+            email = "test2@test.test",
+            password = "password",
+            gender = Gender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user2.authoritySet = mutableSetOf(authorityUser)
+
+        userAccountRepository.save(user1)
+        userAccountRepository.save(user2)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUrl/users")
+                .param("role", "ROLE_ADMIN")
+
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BaseResponseDto::class.java).data
+        val users: List<UserAccountResponse> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountResponse>>() {})
+
+        // THEN
+        users.size shouldBe 1
+    }
+
+    @Test
+    fun `should not be validated ExerciseWordsCreateDto`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = Locale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            words = emptyList(),
+            noiseLevel = 0
+        )
+        val requestBody = objectMapper.writeValueAsString(exerciseWordsCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/create/exercise")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(3))
+    }
+
+    @Test
+    fun `should not be validated ExercisePhrasesCreateDto`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = Locale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            phrases = Phrases("short phrase.", "long phrase"),
+            noiseLevel = 0
+        )
+        val requestBody = objectMapper.writeValueAsString(exercisePhrasesCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/create/exercise")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(3))
+    }
+
+    @Test
+    fun `should not be validated ExerciseSentencesCreateDto`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = Locale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            orderNumber = 1,
+            words = SetOfWords(emptyList())
+        )
+        val requestBody = objectMapper.writeValueAsString(exerciseSentencesCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/create/exercise")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(2))
+    }
+
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise,
@@ -593,6 +763,14 @@ class AdminControllerIT : BaseIT() {
                 subGroup = subGroup,
                 level = 0,
                 name = exerciseName
+            )
+        )
+    }
+
+    private fun insertRole(authorityName: String): Authority {
+        return authorityRepository.save(
+            Authority(
+                authorityName = authorityName
             )
         )
     }

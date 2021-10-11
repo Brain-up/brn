@@ -110,11 +110,11 @@ class UserAccountServiceImpl(
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
-    override fun getUsers(pageable: Pageable): List<UserAccountResponse> =
-        userAccountRepository.findAll().map { it.toDto() }
+    override fun getUsers(pageable: Pageable, role: String): List<UserAccountResponse> =
+        userAccountRepository.findUsersAccountsByRole(role).map { it.toDto() }
 
-    override fun getUsersWithAnalytics(pageable: Pageable): List<UserWithAnalyticsResponse> {
-        val users = userAccountRepository.findAll().map { it.toAnalyticsDto() }
+    override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
+        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
         // todo fill user models with analytics and write tests
         return users
     }

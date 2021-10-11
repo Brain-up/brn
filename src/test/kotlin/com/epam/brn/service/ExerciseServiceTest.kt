@@ -3,6 +3,13 @@ package com.epam.brn.service
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ExerciseWithTasksResponse
 import com.epam.brn.dto.NoiseDto
+import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.Phrases
+import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -11,21 +18,29 @@ import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
+import com.epam.brn.upload.csv.RecordProcessor
+import com.epam.brn.upload.csv.seriesMatrix.SeriesMatrixRecordProcessor
+import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecordProcessor
+import com.epam.brn.upload.csv.seriesWords.SeriesWordsRecordProcessor
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
-import org.amshove.kluent.shouldBe
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.util.Optional
-import kotlin.test.assertTrue
+import java.util.stream.Stream
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseServiceTest {
@@ -43,6 +58,15 @@ internal class ExerciseServiceTest {
 
     @MockK
     lateinit var urlConversionService: UrlConversionService
+
+    @MockK
+    lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
+
+    @RelaxedMockK
+    lateinit var audioFilesGenerationService: AudioFilesGenerationService
+
+    @MockK
+    lateinit var wordsService: WordsService
 
     private val series = Series(
         id = 1L,
@@ -74,7 +98,7 @@ internal class ExerciseServiceTest {
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(22L)
 
         // THEN
-        assertEquals(actualResult, listOf(exerciseDtoMock))
+        actualResult shouldBe listOf(exerciseDtoMock)
         verify(exactly = 1) { exerciseRepository.findAll() }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercisesIdList(ofType(Long::class)) }
     }
@@ -103,7 +127,7 @@ internal class ExerciseServiceTest {
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSubGroupId(userId, subGroupId)
 
         // THEN
-        assertEquals(actualResult.size, 2)
+        actualResult shouldHaveSize 2
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) { studyHistoryRepository.findLastBySubGroupAndUserAccount(ofType(Long::class), ofType(Long::class)) }
@@ -123,7 +147,7 @@ internal class ExerciseServiceTest {
         val actualResult: ExerciseDto = exerciseService.findExerciseById(1L)
 
         // THEN
-        assertEquals(actualResult, exerciseDtoMock)
+        actualResult shouldBe exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findById(ofType(Long::class)) }
     }
 
@@ -131,7 +155,7 @@ internal class ExerciseServiceTest {
     fun `should get exercise by name and level`() {
         // GIVEN
         val exerciseName = "name"
-        val exerciseMock: Exercise = mockkClass(Exercise::class)
+        val exerciseMock = Exercise(id = 1)
         val exerciseLevel = 1
         every { exerciseRepository.findExerciseByNameAndLevel(exerciseName, exerciseLevel) } returns Optional.of(
             exerciseMock
@@ -139,8 +163,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult: Exercise = exerciseService.findExerciseByNameAndLevel("name", 1)
         // THEN
-        actualResult shouldBe exerciseMock
         verify(exactly = 1) { exerciseRepository.findExerciseByNameAndLevel(exerciseName, exerciseLevel) }
+        actualResult.id shouldBe exerciseMock.id
     }
 
     @Test
@@ -154,7 +178,7 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResults: List<ExerciseWithTasksResponse> = exerciseService.findExercisesWithTasksBySubGroup(1)
         // THEN
-        assertTrue(actualResults.contains(exerciseDtoMock))
+        actualResults shouldContain exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
     }
 
@@ -191,8 +215,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
-        assertEquals(2, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex3)))
+        actualResult shouldHaveSize 2
+        actualResult shouldContainAll listOf(ex1, ex3)
     }
 
     @Test
@@ -241,8 +265,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
-        assertEquals(4, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex4)))
+        actualResult shouldHaveSize 4
+        actualResult shouldContainAll listOf(ex1, ex2, ex3, ex4)
     }
 
     @Test
@@ -266,7 +290,7 @@ internal class ExerciseServiceTest {
         val listDone = listOf(ex1, ex2)
         val studyHistoryWithExercise1 = StudyHistory(
             exercise = ex1,
-            userAccount = mockk<UserAccount>(),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -275,7 +299,7 @@ internal class ExerciseServiceTest {
         )
         val studyHistoryWithExercise2 = StudyHistory(
             exercise = ex2,
-            userAccount = mockk<UserAccount>(),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -293,8 +317,8 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
-        assertEquals(3, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex4)))
+        actualResult shouldHaveSize 3
+        actualResult shouldContainAll listOf(ex1, ex2, ex4)
     }
 
     @Test
@@ -347,7 +371,7 @@ internal class ExerciseServiceTest {
 
         val studyHistoryWithExercise11 = StudyHistory(
             exercise = ex11,
-            userAccount = mockk<UserAccount>(),
+            userAccount = mockk(),
             startTime = LocalDateTime.now(),
             executionSeconds = 122,
             tasksCount = 12,
@@ -367,7 +391,175 @@ internal class ExerciseServiceTest {
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
-        assertEquals(5, actualResult.size)
-        assertTrue(actualResult.containsAll(listOf(ex1, ex2, ex3, ex11, ex13)))
+        actualResult shouldHaveSize 5
+        actualResult shouldContainAll listOf(ex1, ex2, ex3, ex11, ex13)
+    }
+
+    @Test
+    fun `should be return new exercise from ExerciseWordsCreateDto`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            words = listOf("word1", "word2"),
+            noiseLevel = 0
+        )
+        val exercise = Exercise(name = exerciseWordsCreateDto.exerciseName)
+        val wordsRecordProcessor = mockk<SeriesWordsRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(wordsRecordProcessor)
+        every { wordsRecordProcessor.isApplicable(any()) } returns true
+        every { wordsRecordProcessor.process(any(), any()) } returns listOf(exercise)
+        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+
+        // WHEN
+        val exerciseDto = exerciseService.createExercise(exerciseWordsCreateDto)
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { wordsRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { wordsRecordProcessor.process(any(), any()) }
+        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
+        exerciseDto.name shouldBe exercise.name
+    }
+
+    @Test
+    fun `should be throw IllegalArgumentException in createAndGenerateExerciseWords`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            words = listOf("word1", "word2"),
+            noiseLevel = 0
+        )
+        val wordsRecordProcessor = mockk<SeriesWordsRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(wordsRecordProcessor)
+        every { wordsRecordProcessor.isApplicable(any()) } returns true
+        every { wordsRecordProcessor.process(any(), any()) } returns listOf()
+
+        // WHEN
+        val exception = shouldThrow<IllegalArgumentException> { exerciseService.createExercise(exerciseWordsCreateDto) }
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { wordsRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { wordsRecordProcessor.process(any(), any()) }
+        exception.message shouldBe "Exercise with this name (${exerciseWordsCreateDto.exerciseName}) already exist"
+    }
+
+    @Test
+    fun `should be return new exercise from ExercisePhrasesCreateDto`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            phrases = Phrases("short phrase", "long phrase"),
+            noiseLevel = 0
+        )
+        val exercise = Exercise(name = exercisePhrasesCreateDto.exerciseName)
+        val seriesPhrasesRecordProcessor = mockk<SeriesPhrasesRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesPhrasesRecordProcessor)
+        every { seriesPhrasesRecordProcessor.isApplicable(any()) } returns true
+        every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf(exercise)
+        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+
+        // WHEN
+        val exerciseDto = exerciseService.createExercise(exercisePhrasesCreateDto)
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.process(any(), any()) }
+        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
+        exerciseDto.name shouldBe exercise.name
+    }
+
+    @Test
+    fun `should be throw IllegalArgumentException in createAndGenerateExercisePhrases`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            phrases = Phrases("short phrase", "long phrase"),
+            noiseLevel = 0
+        )
+        val seriesPhrasesRecordProcessor = mockk<SeriesPhrasesRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesPhrasesRecordProcessor)
+        every { seriesPhrasesRecordProcessor.isApplicable(any()) } returns true
+        every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf()
+
+        // WHEN
+        val exception = shouldThrow<IllegalArgumentException> { exerciseService.createExercise(exercisePhrasesCreateDto) }
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesPhrasesRecordProcessor.process(any(), any()) }
+        exception.message shouldBe "Exercise with this name (${exercisePhrasesCreateDto.exerciseName}) already exist"
+    }
+
+    @Test
+    fun `should be return new exercise from ExerciseSentencesCreateDto`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            orderNumber = 1,
+            words = SetOfWords(listOf("count1", "count2"))
+        )
+        val exercise = Exercise(name = exerciseSentencesCreateDto.exerciseName)
+        val seriesMatrixRecordProcessor = mockk<SeriesMatrixRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesMatrixRecordProcessor)
+        every { seriesMatrixRecordProcessor.isApplicable(any()) } returns true
+        every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf(exercise)
+        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+
+        // WHEN
+        val exerciseDto = exerciseService.createExercise(exerciseSentencesCreateDto)
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.process(any(), any()) }
+        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
+        exerciseDto.name shouldBe exercise.name
+    }
+
+    @Test
+    fun `should be IllegalArgumentException in createAndGenerateExerciseSentences`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = Locale.RU,
+            subGroup = "subGroup",
+            level = 1,
+            exerciseName = "exerciseName",
+            orderNumber = 1,
+            words = SetOfWords(listOf("count1", "count2"))
+        )
+        val seriesMatrixRecordProcessor = mockk<SeriesMatrixRecordProcessor>()
+        every { recordProcessors.stream() } returns Stream.of(seriesMatrixRecordProcessor)
+        every { seriesMatrixRecordProcessor.isApplicable(any()) } returns true
+        every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf()
+
+        // WHEN
+        val exception = shouldThrow<IllegalArgumentException> { exerciseService.createExercise(exerciseSentencesCreateDto) }
+
+        // THEN
+        verify(exactly = 1) { recordProcessors.stream() }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.isApplicable(any()) }
+        verify(exactly = 1) { seriesMatrixRecordProcessor.process(any(), any()) }
+        exception.message shouldBe "Exercise with this name (${exerciseSentencesCreateDto.exerciseName}) already exist"
     }
 }

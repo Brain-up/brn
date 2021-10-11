@@ -29,4 +29,7 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
     fun findByUserId(uuid: String): UserAccount?
 
     fun findAllByUserIdIsNull(pageable: Pageable): Page<UserAccount>
+
+    @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet authorities left JOIN FETCH u.headphones where authorities.authorityName = :authorityName")
+    fun findUsersAccountsByRole(authorityName: String): List<UserAccount>
 }

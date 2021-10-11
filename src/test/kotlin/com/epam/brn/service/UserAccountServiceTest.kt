@@ -14,6 +14,7 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.google.firebase.auth.UserRecord
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
@@ -43,6 +45,9 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var userAccountRepository: UserAccountRepository
+
+    @MockK
+    lateinit var timeService: TimeService
 
     @MockK
     lateinit var passwordEncoder: PasswordEncoder
@@ -76,6 +81,9 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var headphonesService: HeadphonesService
+
+    @MockK
+    lateinit var pageable: Pageable
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -148,6 +156,7 @@ internal class UserAccountServiceTest {
             every { userAccountResponse.name } returns userName
             every { userAccountResponse.userId } returns uid
             every { userAccount.toDto() } returns userAccountResponse
+            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(userAccount) } returns userAccount
             every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority
             // WHEN
@@ -184,12 +193,14 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateAvatarForCurrentUser(avatarUrl)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
+            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
@@ -232,12 +243,14 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateCurrentUser(userAccountChangeRequest)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
+            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
@@ -341,5 +354,27 @@ internal class UserAccountServiceTest {
                 .usingElementComparatorOnFields("name", "type")
                 .containsExactly(headphones.toDto())
         }
+
+        @Test
+        fun `should return all users`() {
+            // GIVEN
+            val usersList = listOf(userAccount, userAccount, userAccount)
+            every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+            // WHEN
+            val userAccountDtos = userAccountService.getUsers(pageable = pageable, "ROLE_USER")
+            // THEN
+            userAccountDtos.size shouldBe 3
+        }
+    }
+
+    @Test
+    fun `should return all users with analytics`() {
+        // GIVEN
+        val usersList = listOf(userAccount, userAccount, userAccount)
+        every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+        // WHEN
+        val userAccountDtos = userAccountService.getUsersWithAnalytics(pageable = pageable, "ROLE_USER")
+        // THEN
+        userAccountDtos.size shouldBe 3
     }
 }
