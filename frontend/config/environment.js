@@ -18,8 +18,8 @@ module.exports = function (environment) {
       },
     },
     firebase: {
-      apiKey: '4d8f576aed50fc02ef997440bd256e663dd1f457',
-      authDomain: 'https://accounts.google.com/o/oauth2/auth',
+      apiKey: 'AIzaSyCcj3kmA59dkP-403i5hBkRI4nxj9Itggw',
+      authDomain: 'fir-auth-14382-try.firebaseapp.com',
       projectId: 'firebase-auth-14382-try',
     },
     APP: {},
