@@ -212,6 +212,8 @@ internal class TaskServiceTest {
             every { seriesMock.type } returns ExerciseType.PHRASES.name
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
+            every { task1Mock.exercise } returns exerciseMock
 
             // WHEN
             var foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -222,8 +224,6 @@ internal class TaskServiceTest {
 
             // WHEN  isAudioFileUrlGenerated = true
             ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
-            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
-
             foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
