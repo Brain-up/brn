@@ -47,9 +47,6 @@ internal class UserAccountServiceTest {
     lateinit var userAccountRepository: UserAccountRepository
 
     @MockK
-    lateinit var timeService: TimeService
-
-    @MockK
     lateinit var passwordEncoder: PasswordEncoder
 
     @MockK
@@ -156,7 +153,6 @@ internal class UserAccountServiceTest {
             every { userAccountResponse.name } returns userName
             every { userAccountResponse.userId } returns uid
             every { userAccount.toDto() } returns userAccountResponse
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(userAccount) } returns userAccount
             every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority
             // WHEN
@@ -193,14 +189,12 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateAvatarForCurrentUser(avatarUrl)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
-            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
@@ -243,14 +237,12 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateCurrentUser(userAccountChangeRequest)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
-            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
