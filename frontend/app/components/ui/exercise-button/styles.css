@@ -68,6 +68,15 @@
   min-width: 100%;
 }
 
+@media (max-width: 640px){
+  .title {
+    font-size: 80px;
+    color: #4691fd;
+    text-align: center;
+    min-width: 100%;
+  }
+}
+
 .title:active {
   color: white;
 }
