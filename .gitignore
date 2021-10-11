@@ -54,3 +54,4 @@ brn.log.*
 ### Kotlin tests
 words_en.txt
 words_ru.txt
+/src/main/resources/firebase_config.json
