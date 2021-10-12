@@ -20,7 +20,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.justRun
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -404,7 +403,31 @@ internal class UserAccountServiceTest {
         fun `should trow exception when headphones for current user is not found`() {
             // GIVEN
             val headphonesId = 1L
-            justRun { userAccount.headphones.firstOrNull { it.id == headphonesId } }
+            val headphones = Headphones(
+                id = 2L,
+                name = "test",
+                active = true,
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+
+            val headphonesToAdd = mutableSetOf(headphones)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                password = "test",
+                email = "test@gmail.com",
+                active = true,
+                headphones = headphonesToAdd
+            )
+            SecurityContextHolder.setContext(securityContext)
+            val email = "test@test.com"
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+
+            userAccount.headphones.firstOrNull { it.id == headphonesId }
             // THEN
             shouldThrow<NullPointerException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
         }
