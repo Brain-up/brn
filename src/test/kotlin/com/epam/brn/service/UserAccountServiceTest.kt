@@ -429,7 +429,7 @@ internal class UserAccountServiceTest {
 
             userAccount.headphones.firstOrNull { it.id == headphonesId }
             // THEN
-            shouldThrow<NullPointerException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
+            shouldThrow<EntityNotFoundException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
         }
 
         @Test
