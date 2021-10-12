@@ -18,7 +18,6 @@ import com.epam.brn.service.UserAccountService
 import org.apache.commons.lang3.StringUtils.isNotEmpty
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
@@ -143,9 +142,11 @@ class UserAccountServiceImpl(
     }
 
     override fun deleteHeadphonesForCurrentUser(headphonesId: Long) {
-        return headphonesRepository.findByIdOrNull(headphonesId)?.let {
-            headphonesRepository.deleteHeadphonesForCurrentUser(headphonesId)
-        } ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
+        val currentUserAccount = getCurrentUser()
+        val headphones = currentUserAccount.headphones.firstOrNull { it.id == headphonesId }
+            ?: throw NullPointerException("Can not delete headphones. No headphones was found by Id=$headphonesId")
+        headphones.active = false
+        headphonesRepository.save(headphones)
     }
 
     override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse {

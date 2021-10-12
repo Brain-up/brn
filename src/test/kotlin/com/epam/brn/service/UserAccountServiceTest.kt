@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
@@ -371,26 +370,43 @@ internal class UserAccountServiceTest {
                 active = false,
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
-            every { headphonesRepository.findByIdOrNull(headphonesId) } returns headphones
-            justRun { headphonesRepository.deleteHeadphonesForCurrentUser(headphonesId) }
+
+            val headphonesToAdd = mutableSetOf(headphones)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                password = "test",
+                email = "test@gmail.com",
+                active = true,
+                headphones = headphonesToAdd
+            )
+            SecurityContextHolder.setContext(securityContext)
+            val email = "test@test.com"
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { headphonesRepository.save(headphones) } returns deletedHeadphones
 
             // WHEN
+            userAccount.headphones.firstOrNull { it.id == headphonesId }
             userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
 
             // THEN
-            verify(exactly = 1) { headphonesRepository.findByIdOrNull(headphonesId) }
-            verify(exactly = 1) { headphonesRepository.deleteHeadphonesForCurrentUser(headphonesId) }
+            verify(exactly = 1) { headphonesRepository.save(headphones) }
 
             deletedHeadphones.id shouldBe headphonesId
+            deletedHeadphones.active shouldBe false
         }
 
         @Test
         fun `should trow exception when headphones for current user is not found`() {
             // GIVEN
             val headphonesId = 1L
-            every { headphonesRepository.findByIdOrNull(headphonesId) } returns null
+            justRun { userAccount.headphones.firstOrNull { it.id == headphonesId } }
             // THEN
-            shouldThrow<EntityNotFoundException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
+            shouldThrow<NullPointerException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
         }
 
         @Test
