@@ -2,9 +2,10 @@
 title: BRN API
 version: v1
 baseUri: http://localhost:8081/api
-baseTestUri: http://10.66.216.143:8081/api
 mediaType:
   - application/json
+types:
+  pageable: !include datatypes/pageable.raml
 
 # STATISTICS ----------------------------------
 /statistics:
@@ -13,21 +14,24 @@ mediaType:
       queryParameters:
         ids:
           required: true
-          type: List<Long>
-          example: 1,2
-      response:
+          type: array
+          items:
+            type: integer
+            format: int64
+          example: [1,2]
+      responses:
         200:
           body:
             example: {
               data: [
                 {
                   subGroupId: 1,
-                  completedExercises: 0
+                  completedExercises: 0,
                   totalExercises: 28
                 },
                 {
                   subGroupId: 2,
-                  completedExercises: 0
+                  completedExercises: 0,
                   totalExercises: 56
                 }
               ],
@@ -40,20 +44,20 @@ mediaType:
       queryParameters:
         from:
           required: true
-          type: date
+          type: date-only
           example: 2000-11-23
         to:
           required: true
-          type: date
+          type: date-only
           example: 2000-11-23
-      response:
+      responses:
         200:
           body:
             example: {
               data: [
                 {
-                  date: 2000-11-23
-                  exercisingTimeSeconds: 3000
+                  date: 2000-11-23,
+                  exercisingTimeSeconds: 3000,
                   progress: GREAT
                 }
               ],
@@ -61,57 +65,29 @@ mediaType:
               meta: []
             }
   /study/week:
-        get:
-          description: get user's weekly statistic for period. Where periaod is a two dates in the ISO date time format
-          queryParameters:
-            version:
-              required: true
-              type: integer
-              example: 2
-            from:
-              required: true
-              type: date
-              example: 2000-11-23T15:00:00
-            to:
-              required: true
-              type: date
-              example: 2000-11-23T15:00:00
-          response:
-            200:
-              body:
-                example: {
-                  data: [
-                    {
-                      date: 2000-11-23T15:00:00
-                      exercisingTimeSeconds: 3000
-                      progress: GREAT
-                    }
-                  ],
-                  errors: [],
-                  meta: []
-                }
-
-  /study/year:
     get:
-      description: get user's yearly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
+      description: get user's weekly statistic for period. Where periaod is a two dates in the ISO date time format
       queryParameters:
+        version:
+          required: true
+          type: integer
+          example: 2
         from:
           required: true
-          type: date
-          example: 2000-11-23
+          type: datetime-only
+          example: 2000-11-23T15:00:00
         to:
           required: true
-          type: date
-          example: 2000-11-23
-      response:
+          type: datetime-only
+          example: 2000-11-23T15:00:00
+      responses:
         200:
           body:
             example: {
               data: [
                 {
-                  date: 2000-11
-                  exercisingDays: 15
-                  exercisingTimeSeconds: 3000
+                  date: 2000-11-23T15:00:00,
+                  exercisingTimeSeconds: 3000,
                   progress: GREAT
                 }
               ],
@@ -119,87 +95,114 @@ mediaType:
               meta: []
             }
   /study/year:
-      get:
-        description: get user's yearly statistic for period. Where periaod is a two dates in the ISO date time format
-        queryParameters:
-          version:
-            required: true
-            type: integer
-            example: 2
-          from:
-            required: true
-            type: date
-            example: 2000-11-23T15:00:00
-          to:
-            required: true
-            type: date
-            example: 2000-11-23T15:00:00
-        response:
-          200:
-            body:
-              example: {
-                data: [
-                  {
-                    date: 2000-11-23T15:00:00
-                    exercisingDays: 15
-                    exercisingTimeSeconds: 3000
-                    progress: GREAT
-                  }
-                ],
-                errors: [],
-                meta: []
-              }
+    get:
+      description: get user's yearly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
+      queryParameters:
+        from:
+          required: true
+          type: date-only
+          example: 2000-11-23
+        to:
+          required: true
+          type: date-only
+          example: 2000-11-23
+      responses:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2000-11,
+                  exercisingDays: 15,
+                  exercisingTimeSeconds: 3000,
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+  /study/year:
+    get:
+      description: get user's yearly statistic for period. Where periaod is a two dates in the ISO date time format
+      queryParameters:
+        version:
+          required: true
+          type: integer
+          example: 2
+        from:
+          required: true
+          type: datetime-only
+          example: 2000-11-23T15:00:00
+        to:
+          required: true
+          type: datetime-only
+          example: 2000-11-23T15:00:00
+      responses:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2000-11-23T15:00:00,
+                  exercisingDays: 15,
+                  exercisingTimeSeconds: 3000,
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+
 # AUDIOMETRY-----------------------------------
 /audiometrics:
-    get:
-        queryParameters:
-            locale:
-                required: false
-                type: String
-                example: "en-us"
-                default: "ru-ru"
-        responses:
-            200:
-                body:
-                    example: !include samples/audiometrics.json
-
-    /{audiometryId}:
-        get:
-            responses:
-                200:
-                    body:
-                        example: !include samples/audiometry_1_signals.json
-                        example: !include samples/audiometry_2_speech.json
-
-
-/audiometry-history:
-    post:
-        description: Save speech audiometry history
+  get:
+    queryParameters:
+      locale:
+        required: false
+        type: string
+        example: "en-us"
+        default: "ru-ru"
+    responses:
+      200:
         body:
-            example1: !include samples/audiometryHistoryRequest.json
-            example2: !include samples/audiometryHistoryRequestSignal.json
-        responses:
-            200:
-                body:
-                    example: 25
+          example: !include samples/audiometrics.json
+  /{audiometryId}:
+    get:
+      responses:
+        200:
+          body:
+            examples:
+              example1: !include samples/audiometry_1_signals.json
+              example2: !include samples/audiometry_2_speech.json
+/audiometry-history:
+  post:
+    description: Save speech audiometry history
+    body:
+      examples:
+        example1: !include samples/audiometryHistoryRequest.json
+        example2: !include samples/audiometryHistoryRequestSignal.json
+    responses:
+      200:
+        body:
+          example: 25
 
 # AUDIO GENERATION ----------------------------
 /audio:
   get:
     queryParameters:
-        text:
-         required: true
-         type: String
-         example: "London is the capital"
-        locale:
-          required: false
-          type: string
-          example: "en-us"
-          default: "ru-ru"
+      text:
+        required: true
+        type: string
+        example: "London is the capital"
+      locale:
+         required: false
+         type: string
+         example: "en-us"
+         default: "ru-ru"
     responses:
-        200:
-            body:
-                example: !include samples/audio.ogg
+      200:
+        body:
+          example: !include samples/audio.ogg
 
 # GROUP ----------------------------
 /groups:
@@ -267,8 +270,7 @@ mediaType:
           body:
             example: !include samples/subgroup_by_id.json
     delete:
-      description: |
-      The endpoint should delete subGroup without exercises
+      description: The endpoint should delete subGroup without exercises
       queryParameters:
         subGroupId:
           description: "ID of the subGroup tasks belongs to"
@@ -282,13 +284,11 @@ mediaType:
              Bad or not empty subGroup. This can happen if the user inserts
              incorrect number of subGroup or subGroup has exercises.
           body:
-            application/json:
-              type: Error
-              example: {
-                           "data": [],
-                           "errors": "Can not delete subGroup because subGroup is not found by this id.",
-                           "meta": []
-                       }
+            example: {
+              data: [],
+              errors: ["Can not delete subGroup because subGroup is not found by this id."],
+              meta: []
+            }
 
 # EXERCISE ----------------------------
 /exercises:
@@ -302,38 +302,36 @@ mediaType:
     responses:
       200:
         body:
-          example1: !include samples/exercises_for_1_series_subgroup.json
-          example2: !include samples/exercises_for_2_series_subgroup.json
-          example3: !include samples/exercises_for_3_series_subgroup.json
-          example4: !include samples/exercises_for_4_series_subgroup.json
+          examples:
+            example1: !include samples/exercises_for_1_series_subgroup.json
+            example2: !include samples/exercises_for_2_series_subgroup.json
+            example3: !include samples/exercises_for_3_series_subgroup.json
+            example4: !include samples/exercises_for_4_series_subgroup.json
   /{exerciseId}:
     get:
       responses:
         200:
           body:
-            example1: !include samples/exercise_for_id_1.json
-            example2: !include samples/exercise_for_frequency_words_series.json
+            examples:
+              example1: !include samples/exercise_for_id_1.json
+              example2: !include samples/exercise_for_frequency_words_series.json
   /byIds:
     post:
         description: Get available exercise ids for current user by input ids which have same subGroup.
         body:
-          application/json:
-            example: !include samples/exercise_request.json
+          example: !include samples/exercise_request.json
         responses:
           200:
-            example: !include samples/avaliable_exercise_ids_by_input_ids.json
-
-
+            body:
+              example: !include samples/avaliable_exercise_ids_by_input_ids.json
   /{exerciseId}/active/{active}:
-   put:
-    responses:
-        200:
+    put:
+      description: Update active status of the exercise 
 
 # TASK ----------------------------
 /tasks:
   get:
-    description: |
-    The tasks endpoint returns tasks associated with specified exercise id
+    description: The tasks endpoint returns tasks associated with specified exercise id
     queryParameters:
       exerciseId:
         description: "ID of the exercise tasks belongs to"
@@ -343,7 +341,7 @@ mediaType:
     responses:
       200:
         body:
-          application/json:
+          examples:
             example_for_1_series: !include samples/tasks_by_exercise_for_1_series.json
             example_for_2_series: !include samples/tasks_by_exercise_for_2_series.json
   /{taskId}:
@@ -352,7 +350,7 @@ mediaType:
       responses:
         200:
           body:
-            application/json:
+            examples:
               example_for_1_series: !include samples/task_by_id_for_1_series.json
               example_for_2_series: !include samples/task_by_id_for_2_series.json
               example_for_3_series: !include samples/task_by_id_for_3_series.json
@@ -364,74 +362,78 @@ mediaType:
   post:
     description: Save history of exercises done by user
     body:
-      application/json:
-        example: !include samples/study_history.json
+      example: !include samples/study_history.json
     responses:
       201:
-        example: !include samples/study_history_response.json
+        body:
+          example: !include samples/study_history_response.json
   /todayTimer:
     get:
       description: get today current user work time in seconds
       responses:
         200:
           body:
-            application/json:
-              example: {
-                           "data": 60,
-                           "errors": [],
-                           "meta": []
-                       }
+            example: {
+              data: 60,
+              errors: [],
+              meta: []
+            }
   /histories:
     get:
-        description: get histories for current user by period from <= startTime < to.
-          Where from and to are dates in yyyy-MM-dd format
-        queryParameters:
-              from:
-                    required: true
-                    type: date
-                    example: "2020-11-05"
-              to:
-                    required: true
-                    type: date
-                    example: "2020-11-06"
-        responses:
-              200:
-                example: !include samples/study_histories_dto_response.json
+      description: |
+        Get histories for current user by period from <= startTime < to.
+        Where from and to are dates in yyyy-MM-dd format
+      queryParameters:
+        from:
+          required: true
+          type: date-only
+          example: 2020-11-05
+        to:
+          required: true
+          type: date-only
+          example: 2020-11-06
+      responses:
+        200:
+          body:
+            example: !include samples/study_histories_dto_response.json
   /histories:
-      get:
-          description: get histories for current user by period from <= startTime < to.
-            Where from and to are dates in ISO format
-          queryParameters:
-                from:
-                      required: true
-                      type: date
-                      example: 2000-10-21T15:00:00
-                to:
-                      required: true
-                      type: date
-                      example: 2000-10-21T15:00:00
-                version:
-                      required: true
-                      type: integer
-                      example: 2
-          responses:
-                200:
-                  example: !include samples/study_histories_dto_response.json
+    get:
+      description: |
+        Get histories for current user by period from <= startTime < to.
+        Where from and to are dates in ISO format
+      queryParameters:
+        from:
+          required: true
+          type: datetime-only
+          example: 2000-10-21T15:00:00
+        to:
+          required: true
+          type: datetime-only
+          example: 2000-10-21T15:00:00
+        version:
+          required: true
+          type: integer
+          example: 2
+      responses:
+        200:
+          body:
+            example: !include samples/study_histories_dto_response.json
   /monthHistories:
-      get:
-          description: get histories for current user by month and year
-          queryParameters:
-                month:
-                      required: true
-                      type: integer
-                      example: 11
-                year:
-                      required: true
-                      type: integer
-                      example: 2020
-          responses:
-                200:
-                  example: !include samples/study_histories_dto_response.json
+    get:
+      description: get histories for current user by month and year
+      queryParameters:
+        month:
+          required: true
+          type: integer
+          example: 11
+        year:
+          required: true
+          type: integer
+          example: 2020
+      responses:
+        200:
+          body:
+            example: !include samples/study_histories_dto_response.json
 
 # USERS ----------------------
 /users:
@@ -446,108 +448,99 @@ mediaType:
     responses:
       200:
         body:
-          application/json:
-            example: !include samples/user_get_response.json
+          example: !include samples/user_get_response.json
   /current:
     get:
       description: Get logged in user from the current session
       responses:
         200:
           body:
-            application/json:
-              example: !include samples/user_get_response.json
+            example: !include samples/user_get_response.json
     patch:
       description: Update current user details
       body:
-        application/json:
-          example: !include samples/user_patch_body.json
+        example: !include samples/user_patch_body.json
       responses:
         200:
           body:
-            application/json:
-              example: !include samples/user_get_response.json
+            example: !include samples/user_get_response.json
     /avatar:
       put:
         is: [Forbidden, NotFound]
         description: Update user avatar.
         queryParameters:
           avatar:
-              required: true
-              type: string
-              example: "/pictures/avatar/girl.cvg"
+            required: true
+            type: string
+            example: "/pictures/avatar/girl.cvg"
         responses:
           200:
             body:
-              application/json:
-                example: !include samples/user_get_response.json
+              example: !include samples/user_get_response.json
     /{id}/headphones:
       post:
         description: Add headphones to user
         body:
-          application/json:
-            example: !include samples/add_headphones.json
+          example: !include samples/add_headphones.json
         responses:
           201:
             body:
-              application/json:
-                example: !include samples/add_headphones_response.json
+              example: !include samples/add_headphones_response.json
       get:
         description: Get all headphones for user
         responses:
           200:
             body:
-              application/json:
-                example: !include samples/get_headphones_response.json
+              example: !include samples/get_headphones_response.json
     /current/headphones:
       post:
         description: Add headphones to current user
         body:
-          application/json:
-            example: !include samples/add_headphones.json
+          example: !include samples/add_headphones.json
         responses:
           201:
             body:
-              application/json:
-                example: !include samples/add_headphones_response.json
+              example: !include samples/add_headphones_response.json
       get:
         description: Get all headphones for current user
         responses:
           200:
             body:
-              application/json:
-                example: !include samples/get_headphones_response.json
+              example: !include samples/get_headphones_response.json
 
-# Auth ----------------------
+# AUTH ----------------------
 /brnlogin:
   post:
-  description: Login for exist user
+    description: Login for exist user
     body:
-     application/json:
-        example: !include samples/login.json
+      example: !include samples/login.json
     responses:
       200:
-        example: !include samples/authSuccessResponse.json
-      401 (Unauthorized):
-        example: !include samples/authBadCredResponse.json
-
+        body:
+          example: !include samples/authSuccessResponse.json
+      401:
+        body:
+          example: !include samples/authBadCredResponse.json
 /registration:
   post:
-  description: Registration for new user with login him
+    description: Registration for new user with login him
     body:
-      application/json:
-        example: !include samples/registration.json
+      example: !include samples/registration.json
     responses:
-      201 (Created):
-        example: !include samples/authSuccessResponse.json
-      400 (Bad Request):
-        example: !include samples/authErrorResponse.json
-
+      201:
+        body:
+          example: !include samples/authSuccessResponse.json
+      400:
+        body:
+          example: !include samples/authErrorResponse.json
 /logout:
   post:
-  description: Logout for logined user
+    description: Logout for logined user
     responses:
-      204: No content
+      204:
+        description: No content
 
+# CLOUD  ----------------------
 /cloud:
   /folders:
     get:
@@ -555,8 +548,7 @@ mediaType:
       responses:
         200:
           body:
-            application/json:
-              example: !include samples/cloud_folders.json
+            example: !include samples/cloud_folders.json
   /upload:
     get:
       queryParameters:
@@ -569,7 +561,7 @@ mediaType:
       responses:
         200:
           body:
-            application/json:
+            examples:
               example_for_aws_upload_form: !include samples/example_for_aws_upload_form.json
               example_for_google_upload_form: !include samples/example_for_google_upload_form.json
   /url:
@@ -582,270 +574,282 @@ mediaType:
 
 # ADMIN  ----------------------
 /admin:
-    /exercises:
-        get:
-            description: get exercises with tasks, resources by subGroupId
-        responses:
-            200:
-                example: !include samples/exercises_with_tasks.json
-    /users:
-        get:
-            description: get all users
-            queryParameters:
-                withAnalytics:
-                    required: false
-                    default: false
-                    type: Boolean
-                    example: "true"
-                role:
-                    required: false
-                    default: "ROLE_USER"
-                    type: string
-                pageable:
-                    required: false
-                    type: Pageable
-        responses:
-            200:
-              example: !include samples/users_get_response.json
-              example: !include samples/users_with_analytics_get_response.json
-    /histories:
-        get:
-            description: get histories for user by period from <= startTime < to where time is a date in format yyyy-MM-dd
-            queryParameters:
-                userId:
-                    required: true
-                    type: integer
-                    example: 1
-                from:
-                    required: true
-                    type: date
-                    example: "2020-11-05"
-                to:
-                    required: true
-                    type: date
-                    example: "2020-11-06"
-        responses:
-              200:
-                example: !include samples/study_histories_dto_response.json
-    /histories:
-            get:
-                description: get histories for user by period from <= startTime <= to where startTime is a date in ISO date time format
-                queryParameters:
-                    version:
-                        required: true
-                        type: integer
-                        example: 2
-                    userId:
-                        required: true
-                        type: integer
-                        example: 1
-                    from:
-                        required: true
-                        type: date
-                        example: 2000-10-21T15:00:00
-                    to:
-                        required: true
-                        type: date
-                        example: 2000-10-21T15:00:00
-            responses:
-                  200:
-                    example: !include samples/study_histories_dto_response.json
-    /monthHistories:
-      get:
-          description: get histories for user by month and year
-          queryParameters:
-                userId:
-                      required: true
-                      type: integer
-                      example: 1
-                month:
-                      required: true
-                      type: integer
-                      example: 11
-                year:
-                      required: true
-                      type: integer
-                      example: 2020
-          responses:
-                200:
-                  example: !include samples/study_histories_dto_response.json
-    /study/week:
-      get:
-        description: get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd
-        queryParameters:
-          userId:
-            required: true
-            type: long
-            example: 1
-          from:
-            required: true
-            type: date
-            example: 2000-11-23
-          to:
-            required: true
-            type: date
-            example: 2000-11-23
-        response:
+  /exercises:
+    get:
+      description: get exercises with tasks, resources by subGroupId
+      responses:
+        200:
+          body:
+            example: !include samples/exercises_with_tasks.json
+  /users:
+    get:
+      description: get all users
+      queryParameters:
+        withAnalytics:
+          required: false
+          default: false
+          type: boolean
+          example: true
+        role:
+          required: false
+          default: "ROLE_USER"
+          type: string
+        pageable:
+          required: false
+          type: pageable
+      responses:
+        200:
+          body:
+            examples:
+              example1: !include samples/users_get_response.json
+              example2: !include samples/users_with_analytics_get_response.json
+  /histories:
+    get:
+      description: get histories for user by period from <= startTime < to where time is a date in format yyyy-MM-dd
+      queryParameters:
+        userId:
+          required: true
+          type: integer
+          example: 1
+        from:
+          required: true
+          type: date-only
+          example: "2020-11-05"
+        to:
+          required: true
+          type: date-only
+          example: "2020-11-06"
+      responses:
+        200:
+          body:
+            example: !include samples/study_histories_dto_response.json
+  /histories:
+    get:
+      description: get histories for user by period from <= startTime <= to where startTime is a date in ISO date time format
+      queryParameters:
+        version:
+          required: true
+          type: integer
+          example: 2
+        userId:
+          required: true
+          type: integer
+          example: 1
+        from:
+          required: true
+          type: datetime-only
+          example: 2000-10-21T15:00:00
+        to:
+          required: true
+          type: datetime-only
+          example: 2000-10-21T15:00:00
+      responses:
+        200:
+          body:
+            example: !include samples/study_histories_dto_response.json
+  /monthHistories:
+    get:
+      description: get histories for user by month and year
+      queryParameters:
+        userId:
+          required: true
+          type: integer
+          example: 1
+        month:
+          required: true
+          type: integer
+          example: 11
+        year:
+          required: true
+          type: integer
+          example: 2020
+      responses:
+        200:
+          body:
+            example: !include samples/study_histories_dto_response.json
+  /study/week:
+    get:
+      description: get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd
+      queryParameters:
+        userId:
+          required: true
+          type: integer
+          format: int64
+          example: 1
+        from:
+          required: true
+          type: date-only
+          example: 2000-11-23
+        to:
+          required: true
+          type: date-only
+          example: 2000-11-23
+      responses:
           200:
             body:
               example: {
                 data: [
                   {
-                    date: 2000-10-23
-                    exercisingTimeSeconds: 3000
-                    progress: GREAT
-                  }
-                ],
-                errors: [],
-                meta: []
-    /study/week:
-          get:
-            description: get user's weekly statistic for period. Where period is a two dates in the ISO date time format
-            queryParameters:
-              version:
-                required: true
-                type: integer
-                example: 2
-              userId:
-                required: true
-                type: long
-                example: 1
-              from:
-                required: true
-                type: date
-                example: 2000-10-21T15:00:00
-              to:
-                required: true
-                type: date
-                example: 2000-10-21T15:00:00
-            response:
-              200:
-                body:
-                  example: {
-                    data: [
-                      {
-                        date: 2000-10-21T15:00:00
-                        exercisingTimeSeconds: 3000
-                        progress: GREAT
-                      }
-                    ],
-                    errors: [],
-                    meta: []
-                  }          }
-    /study/year:
-      get:
-        description: get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd
-        queryParameters:
-          userId:
-            required: true
-            type: long
-            example: 1
-          from:
-            required: true
-            type: date
-            example: 2000-11-23
-          to:
-            required: true
-            type: date
-            example: 2000-11-23
-        response:
-          200:
-            body:
-              example: {
-                data: [
-                  {
-                    date: 2000-11
-                    exercisingDays: 15
-                    exercisingTimeSeconds: 3000
+                    date: 2000-10-23,
+                    exercisingTimeSeconds: 3000,
                     progress: GREAT
                   }
                 ],
                 errors: [],
                 meta: []
               }
-    /study/year:
-          get:
-            description: get user's yearly statistic for period. Where period is a two dates in the ISO date time format
-            queryParameters:
-              version:
-                required: true
-                type: integer
-                example: 2
-              userId:
-                required: true
-                type: long
-                example: 1
-              from:
-                required: true
-                type: date
-                example: 2000-11-23T15:00:00
-              to:
-                required: true
-                type: date
-                example: 2000-11-23T15:00:00
-            response:
-              200:
-                body:
-                  example: {
-                    data: [
-                      {
-                        date: 2000-11-23T15:00:00
-                        exercisingDays: 15
-                        exercisingTimeSeconds: 3000
-                        progress: GREAT
-                      }
-                    ],
-                    errors: [],
-                    meta: []
-                  }
-    /resources:
-        /{id}:
-          patch:
-              description: Update resource description by resource id.
-              body:
-                  example: !include samples/update_resource_description_request.json
-              responses:
-                  200:
-                      example: !include samples/resource_dto_response.json
-    /subgroup:
-          post:
-            description: Add new subgroup for existing series.
-                queryParameters:
-                  seriesId:
-                    description: "ID of the series"
-                    type: Long
-                    example: 1
-            body:
-              application/json:
-                example: !include samples/add_subgroup_to_series.json
-            responses:
-              201:
-                body:
-                  application/json:
-                    example: !include samples/add_subgroup_to_series_response.json
-    /roles:
-                get:
-                    description: get all roles
-                responses:
-                    200:
-                      example: !include samples/roles_get_response.json
-    /create/exercise:
-        post:
-            description: Create new exercise for exist subgroup
-            body:
-                application/json:
-                example: !include samples/exerciseWordsCreateRequest.json
-                example: !include samples/exercisePhrasesCreateRequest.json
-                example: !include samples/exerciseSentencesCreateRequest.json
-            responses:
-                201:
-                    body:
-                        application/json:
-                        example: !include samples/exerciseWordsResponse.json
-                        example: !include samples/exercisePhrasesResponse.json
-                        example: !include samples/exerciseSentencesResponse.json
-    # LOAD FILES ----------------------
-    /loadTasksFile:
+  /study/week:
+    get:
+      description: get user's weekly statistic for period. Where period is a two dates in the ISO date time format
+      queryParameters:
+        version:
+          required: true
+          type: integer
+          example: 2
+        userId:
+          required: true
+          type: integer
+          format: int64
+          example: 1
+        from:
+          required: true
+          type: datetime-only
+          example: 2000-10-21T15:00:00
+        to:
+          required: true
+          type: datetime-only
+          example: 2000-10-21T15:00:00
+      responses:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2000-10-21T15:00:00,
+                  exercisingTimeSeconds: 3000,
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+  /study/year:
+    get:
+      description: get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd
+      queryParameters:
+        userId:
+          required: true
+          type: integer
+          format: int64
+          example: 1
+        from:
+          required: true
+          type: date-only
+          example: 2000-11-23
+        to:
+          required: true
+          type: date-only
+          example: 2000-11-23
+      responses:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2000-11,
+                  exercisingDays: 15,
+                  exercisingTimeSeconds: 3000,
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+  /study/year:
+    get:
+      description: get user's yearly statistic for period. Where period is a two dates in the ISO date time format
+      queryParameters:
+        version:
+          required: true
+          type: integer
+          example: 2
+        userId:
+          required: true
+          type: integer
+          format: int64
+          example: 1
+        from:
+          required: true
+          type: datetime-only
+          example: 2000-11-23T15:00:00
+        to:
+          required: true
+          type: datetime-only
+          example: 2000-11-23T15:00:00
+      responses:
+        200:
+          body:
+            example: {
+              data: [
+                {
+                  date: 2000-11-23T15:00:00,
+                  exercisingDays: 15,
+                  exercisingTimeSeconds: 3000,
+                  progress: GREAT
+                }
+              ],
+              errors: [],
+              meta: []
+            }
+  /resources/{id}:
+    patch:
+      description: Update resource description by resource id.
+      body:
+        example: !include samples/update_resource_description_request.json
+      responses:
+        200:
+          body:
+            example: !include samples/resource_dto_response.json
+  /subgroup:
+    post:
+      description: Add new subgroup for existing series.
+      queryParameters:
+        seriesId:
+          description: "ID of the series"
+          type: integer
+          format: int64
+          example: 1
+      body:
+        example: !include samples/add_subgroup_to_series.json
+      responses:
+        201:
+          body:
+            example: !include samples/add_subgroup_to_series_response.json
+  /roles:
+    get:
+      description: get all roles
+      responses:
+        200:
+          body:
+            example: !include samples/roles_get_response.json
+  /create/exercise:
+    post:
+      description: Create new exercise for exist subgroup
+      body:
+        examples:
+          example_words: !include samples/exerciseWordsCreateRequest.json
+          example_phrases: !include samples/exercisePhrasesCreateRequest.json
+          example_sentences: !include samples/exerciseSentencesCreateRequest.json
+      responses:
+        201:
+          body:
+            examples:
+              example_words: !include samples/exerciseWordsResponse.json
+              example_phrases: !include samples/exercisePhrasesResponse.json
+              example_sentences: !include samples/exerciseSentencesResponse.json
+
+# LOAD FILES ----------------------
+/loadTasksFile:
         post:
             body:
                 multipart/form-data:
@@ -856,11 +860,14 @@ mediaType:
                             type: string
                             example: "42"
                         taskFile:
-                            description: "File with tasks to be uploaded"
-                            formatForSeries1: "orderNumber word audioFileName pictureFileName words wordType
-                                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT"
-                            formatForSeries2: "orderNumber words
-                                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]"
+                            description: |
+                             File with tasks to be uploaded
+                             - format for series 1:
+                               orderNumber word audioFileName pictureFileName words wordType
+                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
+                             - format for series 2
+                               orderNumber words
+                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]
                             required: true
                             type: file
             responses:
