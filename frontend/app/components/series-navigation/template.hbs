@@ -13,38 +13,32 @@
             </h3>
           </div>
           {{#let
-            (chunk
-              6 (sort-by "level" (filter-by "name" header this.sortedExercises))
-            )
+            (sort-by "level" (filter-by "name" header this.sortedExercises))
             as |slices|
           }}
-
-            {{#each slices as |exercises|}}
-
-              <ul
-                data-test-exercises-name-group
-                class="flex flex-row ml-6 mr-6"
-              >
-                {{#each exercises as |exercise|}}
-                  {{#let
-                    (contains exercise.id (or @available (array)))
-                    as |isAvailable|
-                  }}
-                    <li class="flex-6">
-                      <Ui::ExerciseButton
-                        @exercise={{exercise}}
-                        @title={{exercise.level}}
-                        @isAvailable={{isAvailable}}
-                        class="exercise-block__level flex mt-2 ml-2 mr-2"
-                        data-test-series-navigation-list-link
-                        data-test-exercise-level={{exercise.level}}
-                        data-test-exercise-name={{exercise.name}}
-                      />
-                    </li>
-                  {{/let}}
-                {{/each}}
-              </ul>
-            {{/each}}
+            <div
+              data-test-exercises-name-group
+              class="sm:grid-cols-4 md:grid-cols-5 gap-y-2 sm:gap-y-3 grid justify-center grid-cols-3 mx-2 ml-0"
+            >
+              {{#each slices as |exercise|}}
+                {{#let
+                  (contains exercise.id (or @available (array)))
+                  as |isAvailable|
+                }}
+                  <div class="flex">
+                    <Ui::ExerciseButton
+                      @exercise={{exercise}}
+                      @title={{exercise.level}}
+                      @isAvailable={{isAvailable}}
+                      class="exercise-block__level flex mt-2 ml-2 mr-2"
+                      data-test-series-navigation-list-link
+                      data-test-exercise-level={{exercise.level}}
+                      data-test-exercise-name={{exercise.name}}
+                    />
+                  </div>
+                {{/let}}
+              {{/each}}
+            </div>
           {{/let}}
         </div>
       </div>
