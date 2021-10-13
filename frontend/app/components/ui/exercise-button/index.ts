@@ -9,7 +9,7 @@ interface UiExerciseButtonComponentArguments {
 
 export default class UiExerciseButtonComponent extends Component<UiExerciseButtonComponentArguments> {
   get classes() {
-    const items = ['focus:outline-none mb-2'];
+    const items = ['focus:outline-none'];
     if (this.mode) {
       items.push(this.mode);
     }
