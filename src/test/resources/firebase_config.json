@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "brainapp-koylubaev",
+  "private_key_id": "ced6065aa8c35c5635a45c2711b69490fc39ce07",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7IMsH1cpra8mK\nIM2Z2fNdwwTjVs/APh4KjEEEXEXF0Jx09fIqVarcCOOU858jcUj4YXA7wAIWMglG\nyLA2jUn5dUwDXrHWfWhkxWRjlFVNwSKrtOoIEQbCMEIcW/GkK+5oSWfPJpu38QkJ\nAuis2bMgUQRrJ78n8xZrf823dyXqMC9YtsrD/Qr8px+xUNANTxUkz9sME0K9zaSm\nXC7skjQe6yw+dgT1fUhPjwNsbSNVl1jLLWZVEbgiTPF9kZQeD7B7DNnZUmYNS6Up\nPEvGUzY6/SBJzva423Z38L1qRsF8ymavogNJwMSzrVGpnZqpaDilqR1IIxijQZQV\nOaRfNedZAgMBAAECggEABhy0+P9rDk1t3q7B3HC9pd4++IB/Rm2Y/Fn2rTJo3oRY\n+eqHI4obC7cYHOdEt0sF2cQP/wmfX9N4UVkwhUWh6Q2jYxhKmYGM4X6/j8+aZjDk\n5aQiAUuyE3FxVV0M9GJxdfNQ2let3ikXtRVE3ZF6S/fNe8UHdcH3RWFeKiwQf1jP\nZ2WbIjXCgrbM7VlN3QO/YOMvTTwb9K7g3h4JyFW0Qgkt2rebAWbp9lEbGRsOCYJ5\nADpSWbgSsOC2ssLpGXX7JdbgkvAr25RfTA/ok+DSrpwM8o4QaeoH5vmuwa2ZyC+Q\nOcnyYW+6IVHTm5pRVKajfzjoXHOTbVDqXdsUBBxMYQKBgQD4aI/RR3JSIEb18+yY\nw8ZrUKzcPTd1iep9wwlVlQ/r8p38DuP1oO0SWm334Nld6zaycdGvP0a49UCULibE\nhW8ngRpEC8TYaQfgyyRpTuWkqXdAtIC5WCA6xLG05Z4qqJoEfpQx3+EMw8YSM7yi\nOUbIOHB4/yWjbW2g1h/OGZTEOQKBgQDA2M0F+dOSVzQXe/owGoGa9985aticD4Gt\n0TtU1cEGvi4yg+rFG61sFv7DMnamB7LaQfCJgESpZ7B25947rV3Vwq2yLt7x0G0Z\nv6Pk8ZKLha97+yLcnb6WuSu4sVfLjJ3/4BmXqjsjVuQ40Q+iSo2Ahz5m6/h26ZPT\n0kO5ZeV8IQKBgA4HMZ/67ezPX9KB7OmPnMPwsWJanqgnmrNxcTSBD34enGdgm+UC\nKoEv1Cf8baoNH3CiVtoTs7W8O+JiXNQaSPWtJ8OR+pLSE5zRPAQqbXOIEnD4AJD2\n9hL7iqGRmgYEsXXxhALxBq+G2seqXku2+lVSQp/CoOiCxH8huHgWH72ZAoGAMshk\npRA2wLCqDQ0ewxAX1SE07T/Prrj+ozEX+K0ZWZc3PyIx7pntPyuHBwwA5pPca1E1\n8F+QtTOS6p0AjqKGtUXAy80/9Fm4gTFQDXf36TnZDkMB2SrJB5PXiZlZz0ZGTR1M\nX/35+MJm8vdKsKgFPzVeH2hAU8AKp5sVLntAxUECgYEA70d1Oodeswla8MVWscUa\njpGSfUp0CBL8e8EHY9Um5tGpTK1BTmq+MIhLkjUfckMsZjy0isrxalnm19buFWh9\n4MdAPtpVs2oglwOAIf/W/mJmEJlxbtHvdkZWKbXQi/U8mw10KS8DLJL8axo9uG7B\nP38E9dKT3ASwiyC871A4eiU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fa1xd@brainapp-koylubaev.iam.gserviceaccount.com",
+  "client_id": "105065929175153226527",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fa1xd%40brainapp-koylubaev.iam.gserviceaccount.com"
+}
