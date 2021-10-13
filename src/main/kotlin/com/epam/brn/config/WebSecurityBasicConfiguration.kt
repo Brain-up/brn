@@ -62,14 +62,14 @@ class WebSecurityBasicConfiguration(
 
     @Bean
     fun accessDeniedHandler(): AccessDeniedHandler? {
-        return AccessDeniedHandler { request: HttpServletRequest, response: HttpServletResponse, e: AccessDeniedException ->
+        return AccessDeniedHandler { _, response: HttpServletResponse, _ ->
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied")
         }
     }
 
     @Bean
     fun authenticationEntryPoint(): AuthenticationEntryPoint? {
-        return AuthenticationEntryPoint { request: HttpServletRequest, response: HttpServletResponse, e: AuthenticationException ->
+        return AuthenticationEntryPoint { _, response: HttpServletResponse, _ ->
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
         }
     }

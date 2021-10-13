@@ -14,7 +14,8 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
     @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet left JOIN FETCH u.headphones where u.fullName = ?1 ")
     fun findUserAccountByName(fullName: String): Optional<UserAccount>
 
-    @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet left JOIN FETCH u.headphones where LOWER(u.email) = LOWER( ?1)")
+    @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet left JOIN FETCH u.headphones " +
+            "where LOWER(u.email) = LOWER( ?1)")
     fun findUserAccountByEmail(email: String): Optional<UserAccount>
 
     @Query("select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet left JOIN FETCH u.headphones where u.id = ?1")
