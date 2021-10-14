@@ -1,0 +1,67 @@
+{
+  "data": [
+    {
+      "id": 8,
+      "exerciseType": "SENTENCE",
+      "name": "",
+      "serialNumber": 2,
+      "template": "<OBJECT OBJECT_ACTION>",
+      "answerOptions": {
+        "OBJECT": [
+          {
+            "id": 10,
+            "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/ae661cd6c9dc66e248740648bfe30753.ogg",
+            "word": "дочь",
+            "wordType": "OBJECT",
+            "pictureFileUrl": "pictures/withWord/дочь.jpg",
+            "soundsCount": 0
+          },
+          {
+            "id": 3,
+            "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/79a359ea4ac3a4abb45fd93c3b17ec97.ogg",
+            "word": "мама",
+            "wordType": "OBJECT",
+            "pictureFileUrl": "pictures/мама.jpg",
+            "soundsCount": 0
+          },
+          {
+            "id": 7,
+            "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/7b412138d3f39f5cea409507706b3de2.ogg",
+            "word": "бабушка",
+            "wordType": "OBJECT",
+            "pictureFileUrl": "pictures/бабушка.jpg",
+            "soundsCount": 0
+          }
+        ],
+        "OBJECT_ACTION": [
+          {
+            "id": 11,
+            "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/cfa208ef440aeb0ca32898b226e3dc41.ogg",
+            "word": "танцует",
+            "wordType": "OBJECT_ACTION",
+            "pictureFileUrl": "pictures/withWord/танцует.jpg",
+            "soundsCount": 0
+          },
+          {
+            "id": 12,
+            "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/5167cddca2c403895b7969e9091ad027.ogg",
+            "word": "вышивает",
+            "wordType": "OBJECT_ACTION",
+            "pictureFileUrl": "pictures/withWord/вышивает.jpg",
+            "soundsCount": 0
+          },
+          {
+            "id": 13,
+            "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/3dcff8e916438e7a2b305e1886832ad1.ogg",
+            "word": "вяжет",
+            "wordType": "OBJECT_ACTION",
+            "pictureFileUrl": "pictures/withWord/вяжет.jpg",
+            "soundsCount": 0
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "meta": []
+}

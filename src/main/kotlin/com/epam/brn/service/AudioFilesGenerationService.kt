@@ -12,6 +12,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -94,6 +95,7 @@ class AudioFilesGenerationService(
     /**
      * Generate .ogg audio file from yandex cloud and optionally convert it into .mp3 file and save both of them
      */
+    @Transactional
     fun processWord(audioFileMetaData: AudioFileMetaData): File {
         val fileOgg = yandexSpeechKitService.generateAudioOggFile(audioFileMetaData)
         if (withSavingToS3) {

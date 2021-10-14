@@ -16,7 +16,7 @@ export default class UiTabButtonComponent extends Component<UiTabButtonComponent
     if (this.args.small) {
       items.push('text-xs');
     } else {
-      items.push('text-lg');
+      items.push('text-sm');
     }
     if (this.args.mode === 'active') {
       items.push('active');

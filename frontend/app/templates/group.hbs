@@ -1,6 +1,6 @@
 {{page-title @model.name}}
 {{#unless this.headerAndNavShown}}
-  <div class="flex items-center mb-2">
+  <div class="flex items-center ml-4">
     <Breadcrumbs @group={{@model}} />
   </div>
 {{/unless}}
@@ -23,8 +23,10 @@
     </aside>
   {{/if}}
 {{/unless}}
-<div class="series-container flex">
-  <div class="series-page--canvas flex flex-grow">
+<div
+  class="series-container w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 container flex mx-auto"
+>
+  <div class="series-page--canvas flex justify-center flex-grow">
     {{outlet}}
   </div>
 </div>
