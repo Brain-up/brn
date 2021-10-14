@@ -360,12 +360,6 @@ internal class UserAccountServiceTest {
                 active = true,
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
-            val deletedHeadphones = Headphones(
-                id = headphonesId,
-                name = "test",
-                active = false,
-                type = HeadphonesType.IN_EAR_BLUETOOTH
-            )
 
             val headphonesToAdd = mutableSetOf(headphones)
             val userAccount = UserAccount(
@@ -390,9 +384,6 @@ internal class UserAccountServiceTest {
 
             // THEN
             verify(exactly = 1) { headphonesService.save(headphones) }
-
-            deletedHeadphones.id shouldBe headphonesId
-            deletedHeadphones.active shouldBe false
         }
 
         @Test

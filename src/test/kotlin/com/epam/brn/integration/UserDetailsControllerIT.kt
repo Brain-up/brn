@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -131,7 +132,7 @@ class UserDetailsControllerIT : BaseIT() {
     @Test
     fun `add headphones to current user as admin`() {
         // GIVEN
-        val user = insertUser()
+        insertUser()
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
@@ -148,7 +149,7 @@ class UserDetailsControllerIT : BaseIT() {
     @WithMockUser(username = "test@test.test", roles = ["USER"])
     fun `add headphones to current user not as admin`() {
         // GIVEN
-        val user = insertUser()
+        insertUser()
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
@@ -171,6 +172,25 @@ class UserDetailsControllerIT : BaseIT() {
         addedHeadphones.name shouldBe "first"
         addedHeadphones.active shouldBe true
         addedHeadphones.type shouldBe HeadphonesType.IN_EAR_NO_BLUETOOTH
+    }
+
+    @Test
+    fun `delete headphones to current user`() {
+        // GIVEN
+        val user = insertUser()
+        insertThreeHeadphonesForUser(user)
+        val headphonesId = userAccountRepository.findUserAccountByName("testUserFirstName")
+            .get().headphones.first().id
+        // WHEN
+        val resultAction = mockMvc.perform(
+            delete("$baseUrl/current/headphones/$headphonesId")
+                .contentType("application/json")
+        )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+        userAccountRepository.findUserAccountById(user.id!!).get()
+            .headphones.filter { it.active }.size shouldBe 2
     }
 
     @Test
