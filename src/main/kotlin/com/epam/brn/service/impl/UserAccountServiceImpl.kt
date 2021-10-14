@@ -31,7 +31,7 @@ class UserAccountServiceImpl(
     private val authorityService: AuthorityService,
     private val passwordEncoder: PasswordEncoder,
     private val timeService: TimeService,
-    private val headphonesService: HeadphonesService,
+    private val headphonesService: HeadphonesService
 ) : UserAccountService {
 
     private val log = logger()
