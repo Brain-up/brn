@@ -77,8 +77,7 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     @DeleteMapping(value = ["/current/headphones/{headphonesId}"])
     @ApiOperation("Delete headphones by Id")
     fun deleteHeadphonesForCurrentUser(
-        @PathVariable(value = "headphonesId") headphonesId:
-            Long
+        @PathVariable(value = "headphonesId") headphonesId: Long
     ): ResponseEntity<BaseSingleObjectResponseDto> {
         userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
         return ResponseEntity.ok(BaseSingleObjectResponseDto(data = Unit))

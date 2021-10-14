@@ -7,7 +7,6 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.impl.UserAccountServiceImpl
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -34,9 +33,6 @@ internal class UserDetailControllerTest {
 
     @MockK
     lateinit var userAccountService: UserAccountService
-
-    @MockK
-    lateinit var userAccountServiceImpl: UserAccountServiceImpl
 
     lateinit var userAccountResponse: UserAccountResponse
 

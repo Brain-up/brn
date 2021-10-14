@@ -11,7 +11,6 @@ import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.HeadphonesRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import io.kotest.assertions.throwables.shouldThrow
@@ -20,6 +19,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -76,9 +76,6 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var headphonesService: HeadphonesService
-
-    @MockK
-    lateinit var headphonesRepository: HeadphonesRepository
 
     @MockK
     lateinit var pageable: Pageable
@@ -383,17 +380,16 @@ internal class UserAccountServiceTest {
             )
             SecurityContextHolder.setContext(securityContext)
             val email = "test@test.com"
+            val headphonesDto = mockkClass(HeadphonesDto::class)
             every { authentication.name } returns email
             every { securityContext.authentication } returns authentication
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { headphonesRepository.save(headphones) } returns deletedHeadphones
-
+            every { headphonesService.save(headphones) } returns headphonesDto
             // WHEN
-            userAccount.headphones.firstOrNull { it.id == headphonesId }
             userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
 
             // THEN
-            verify(exactly = 1) { headphonesRepository.save(headphones) }
+            verify(exactly = 1) { headphonesService.save(headphones) }
 
             deletedHeadphones.id shouldBe headphonesId
             deletedHeadphones.active shouldBe false
@@ -427,7 +423,6 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
 
-            userAccount.headphones.firstOrNull { it.id == headphonesId }
             // THEN
             shouldThrow<EntityNotFoundException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
         }

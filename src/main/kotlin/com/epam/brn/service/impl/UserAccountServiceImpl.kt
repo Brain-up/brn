@@ -10,7 +10,6 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.HeadphonesRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.HeadphonesService
 import com.epam.brn.service.TimeService
@@ -33,7 +32,6 @@ class UserAccountServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val timeService: TimeService,
     private val headphonesService: HeadphonesService,
-    private val headphonesRepository: HeadphonesRepository
 ) : UserAccountService {
 
     private val log = logger()
@@ -146,7 +144,7 @@ class UserAccountServiceImpl(
         val headphones = currentUserAccount.headphones.firstOrNull { it.id == headphonesId }
             ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
         headphones.active = false
-        headphonesRepository.save(headphones)
+        headphonesService.save(headphones)
     }
 
     override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse {
