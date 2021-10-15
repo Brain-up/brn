@@ -158,6 +158,7 @@ docker rm $(docker ps -a -q) Remove all stopped containers
 3. Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
 4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
 5. Please note that if `gradlew ktlint` task fails, project build will fail also.
+6. For `api.raml` validation, you can use [Api Designer] (https://rawgit.com/mulesoft/api-designer/v0.4.2/dist/index.html).
 
 ### Kotlin input dto validation:
 https://github.com/Brain-up/brn/wiki/Kotlin-request-dto-validation-with-annotations

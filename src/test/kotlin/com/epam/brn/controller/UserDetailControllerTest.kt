@@ -7,13 +7,16 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.service.UserAccountService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
+import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -137,6 +140,7 @@ internal class UserDetailControllerTest {
             // GIVEN
             val headphonesDto = HeadphonesDto(
                 name = "test",
+                active = true,
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
             every { userAccountService.addHeadphonesToUser(1L, headphonesDto) } returns headphonesDto
@@ -154,6 +158,7 @@ internal class UserDetailControllerTest {
             // GIVEN
             val headphonesDto = HeadphonesDto(
                 name = "test",
+                active = true,
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
             every { userAccountService.addHeadphonesToCurrentUser(headphonesDto) } returns headphonesDto
@@ -167,14 +172,31 @@ internal class UserDetailControllerTest {
         }
 
         @Test
+        fun `should delete headphones belongs to user`() {
+            // GIVEN
+            val headphonesId = 1L
+            justRun { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
+
+            // WHEN
+            val response = userDetailController.deleteHeadphonesForCurrentUser(headphonesId)
+
+            // THEN
+            verify(exactly = 1) { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
+            response.statusCode.value() shouldBe HttpStatus.SC_OK
+            response.body!!.data shouldBe Unit
+        }
+
+        @Test
         fun `should return all headphones belongs to user`() {
             // GIVEN
             val headphonesDto = HeadphonesDto(
                 name = "test",
+                active = true,
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
             val headphonesDtoSecond = HeadphonesDto(
                 name = "testSecond",
+                active = true,
                 type = HeadphonesType.IN_EAR_NO_BLUETOOTH
             )
             every { userAccountService.getAllHeadphonesForUser(1L) } returns setOf(headphonesDto, headphonesDtoSecond)

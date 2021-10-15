@@ -98,7 +98,8 @@ class UserAccountServiceImpl(
 
     override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
 
-    override fun getAllHeadphonesForCurrentUser() = getCurrentUser().headphones.map(Headphones::toDto).toSet()
+    override fun getAllHeadphonesForCurrentUser() = getCurrentUser()
+        .headphones.filter { it.active }.map(Headphones::toDto).toSet()
 
     override fun getUserFromTheCurrentSession(): UserAccountResponse = getCurrentUser().toDto()
 
@@ -136,6 +137,14 @@ class UserAccountServiceImpl(
         val entityHeadphones = headphones.toEntity()
         entityHeadphones.userAccount = getCurrentUser()
         return headphonesService.save(entityHeadphones)
+    }
+
+    override fun deleteHeadphonesForCurrentUser(headphonesId: Long) {
+        val currentUserAccount = getCurrentUser()
+        val headphones = currentUserAccount.headphones.firstOrNull { it.id == headphonesId }
+            ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
+        headphones.active = false
+        headphonesService.save(headphones)
     }
 
     override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse {

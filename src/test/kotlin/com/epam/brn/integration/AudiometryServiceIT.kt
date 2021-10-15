@@ -80,7 +80,7 @@ internal class AudiometryServiceIT {
         assertTrue(resultTasks.containsAll(listOf(tasks[2], tasks[4], tasks[5], tasks[7])))
     }
 
-    private fun insetHeadphones() = headphonesRepository.save(Headphones(name = "first", type = HeadphonesType.OVER_EAR_BLUETOOTH))
+    private fun insetHeadphones() = headphonesRepository.save(Headphones(name = "first", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH))
 
     private fun insertUser(): UserAccount = userAccountRepository.save(
         UserAccount(

@@ -1,0 +1,13 @@
+{
+  "typeOfExercise": "SENTENCE",
+  "locale": "RU",
+  "subGroup": "subGroup",
+  "level": 12,
+  "exerciseName": "exerciseName",
+  "orderNumber": 1,
+  "words": {
+    "objectWord": ["aaa", "dd"],
+    "objectAction": ["bbbb", "hhh"],
+    "additionObject": ["wer", "mbv"]
+  }
+}

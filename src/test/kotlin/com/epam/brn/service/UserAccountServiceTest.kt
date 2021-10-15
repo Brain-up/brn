@@ -13,11 +13,13 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -259,8 +261,8 @@ internal class UserAccountServiceTest {
         fun `should return all headphones for user`() {
             // GIVEN
             val listOfHeadphones = setOf(
-                HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                HeadphonesDto(name = "second", type = HeadphonesType.ON_EAR_BLUETOOTH)
+                HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
+                HeadphonesDto(name = "second", active = true, type = HeadphonesType.ON_EAR_BLUETOOTH)
             )
             every { headphonesService.getAllHeadphonesForUser(1L) } returns listOfHeadphones
             // WHEN
@@ -271,7 +273,7 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should add new headphones to the user`() {
-            val headphonesToAdd = HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val headphonesToAdd = HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
 
             every { userAccountRepository.findUserAccountById(1L) } returns Optional.of(userAccount)
             every { headphonesService.save(ofType(Headphones::class)) } returns headphonesToAdd
@@ -283,7 +285,7 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should add new headphones to the current user`() {
-            val headphonesToAdd = HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val headphonesToAdd = HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
@@ -309,7 +311,7 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should return all headphones for the user`() {
-            val headphonesToAdd = setOf(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            val headphonesToAdd = setOf(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
 
             every { headphonesService.getAllHeadphonesForUser(1L) } returns headphonesToAdd
             // WHEN
@@ -320,7 +322,7 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should return all headphones for current the user`() {
-            val headphones = Headphones(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val headphones = Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
             val headphonesToAdd = mutableSetOf(headphones)
             val userAccount = UserAccount(
                 id = 1L,
@@ -346,6 +348,74 @@ internal class UserAccountServiceTest {
                 .hasSize(NumberUtils.INTEGER_ONE)
                 .usingElementComparatorOnFields("name", "type")
                 .containsExactly(headphones.toDto())
+        }
+
+        @Test
+        fun `should delete headphones to current user`() {
+            // GIVEN
+            val headphonesId = 1L
+            val headphones = Headphones(
+                id = headphonesId,
+                name = "test",
+                active = true,
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+
+            val headphonesToAdd = mutableSetOf(headphones)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                password = "test",
+                email = "test@gmail.com",
+                active = true,
+                headphones = headphonesToAdd
+            )
+            SecurityContextHolder.setContext(securityContext)
+            val email = "test@test.com"
+            val headphonesDto = mockkClass(HeadphonesDto::class)
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { headphonesService.save(headphones) } returns headphonesDto
+            // WHEN
+            userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
+
+            // THEN
+            verify(exactly = 1) { headphonesService.save(headphones) }
+        }
+
+        @Test
+        fun `should trow exception when headphones for current user is not found`() {
+            // GIVEN
+            val headphonesId = 1L
+            val headphones = Headphones(
+                id = 2L,
+                name = "test",
+                active = true,
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+
+            val headphonesToAdd = mutableSetOf(headphones)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                password = "test",
+                email = "test@gmail.com",
+                active = true,
+                headphones = headphonesToAdd
+            )
+            SecurityContextHolder.setContext(securityContext)
+            val email = "test@test.com"
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+
+            // THEN
+            shouldThrow<EntityNotFoundException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
         }
 
         @Test

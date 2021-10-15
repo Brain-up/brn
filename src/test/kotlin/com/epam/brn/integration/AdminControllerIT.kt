@@ -5,10 +5,16 @@ import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.Phrases
+import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatisticDto
+import com.epam.brn.enums.Locale
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -611,6 +617,90 @@ class AdminControllerIT : BaseIT() {
 
         // THEN
         users.size shouldBe 1
+    }
+
+    @Test
+    fun `should not be validated ExerciseWordsCreateDto`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = Locale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            words = emptyList(),
+            noiseLevel = 0
+        )
+        val requestBody = objectMapper.writeValueAsString(exerciseWordsCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/create/exercise")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(3))
+    }
+
+    @Test
+    fun `should not be validated ExercisePhrasesCreateDto`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = Locale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            phrases = Phrases("short phrase.", "long phrase"),
+            noiseLevel = 0
+        )
+        val requestBody = objectMapper.writeValueAsString(exercisePhrasesCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/create/exercise")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(3))
+    }
+
+    @Test
+    fun `should not be validated ExerciseSentencesCreateDto`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = Locale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            orderNumber = 1,
+            words = SetOfWords(emptyList())
+        )
+        val requestBody = objectMapper.writeValueAsString(exerciseSentencesCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("$baseUrl/create/exercise")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(2))
     }
 
     private fun insertStudyHistory(
