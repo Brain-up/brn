@@ -200,17 +200,13 @@ class UserDetailsControllerIT : BaseIT() {
         insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first"))
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.NOT_DEFINED))
         val resultAction = mockMvc.perform(
             post("$baseUrl/current/headphones")
                 .content(body)
                 .contentType("application/json")
         )
         // THEN
-        assertDefaultHeadphonesAreCreated(resultAction)
-    }
-
-    private fun assertDefaultHeadphonesAreCreated(resultAction: ResultActions) {
         resultAction.andExpect(status().isCreated)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
