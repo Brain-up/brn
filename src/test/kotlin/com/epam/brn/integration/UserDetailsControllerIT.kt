@@ -211,7 +211,7 @@ class UserDetailsControllerIT : BaseIT() {
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
         val addedHeadphones: HeadphonesDto =
-            objectMapper.readValue(gson.toJson(baseResponseDto.data), HeadphonesDto::class.java)
+            objectMapper.readValue(objectMapper.writeValueAsString(baseResponseDto.data), HeadphonesDto::class.java)
         addedHeadphones.id shouldNotBe null
         addedHeadphones.name shouldBe "first"
         addedHeadphones.type shouldBe HeadphonesType.NOT_DEFINED
