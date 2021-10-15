@@ -200,7 +200,7 @@ class UserDetailsControllerIT : BaseIT() {
         insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.NOT_DEFINED))
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = null))
         val resultAction = mockMvc.perform(
             post("$baseUrl/current/headphones")
                 .content(body)
