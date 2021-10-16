@@ -5,6 +5,7 @@ import { task, timeout, Task as TaskGenerator } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import Ember from 'ember';
 import { action } from '@ember/object';
+import Session from 'ember-simple-auth/services/session';
 
 export default class GlobalTimerComponent extends Component {
   constructor(owner: any, args: any) {
@@ -26,6 +27,7 @@ export default class GlobalTimerComponent extends Component {
     super.willDestroy();
   }
   @service('network') declare network: NetworkService;
+  @service('session') declare session: Session;
   @tracked seconds = 0;
   get minutes() {
     const sec = this.seconds % 60;
@@ -45,7 +47,7 @@ export default class GlobalTimerComponent extends Component {
     do {
       try {
         if (!Ember.testing) {
-          if (this.isEnabled) {
+          if (this.session.isAuthenticated && this.isEnabled) {
             const response = yield this.network.request(
               'study-history/todayTimer',
             );
