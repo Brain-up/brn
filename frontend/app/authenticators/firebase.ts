@@ -32,6 +32,7 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
       }
       return { user: this.applyTimersToUser(result.user.toJSON() as SerializedUser) };
     } catch(e) {
+      // https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinandretrievedatawithcredential
       if (e.code === 'auth/internal-error') {
         const { error }: any = JSON.parse(e.message);
         const errorObj: any = new Error(error.message);
@@ -59,6 +60,22 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
           throw errorObj;
         }
       } else if (e.code === 'auth/wrong-password') {
+        const { error }: any = e.message;
+        const errorObj: any = new Error(error);
+        errorObj.errors = e.errors;
+        errorObj.code = e.code;
+        errorObj.status = e.status;
+        errorObj.message = e.message;
+        throw errorObj;
+      } else if (e.code === 'auth/invalid-credential') {
+        const { error }: any = e.message;
+        const errorObj: any = new Error(error);
+        errorObj.errors = e.errors;
+        errorObj.code = e.code;
+        errorObj.status = e.status;
+        errorObj.message = e.message;
+        throw errorObj;
+      } else if (e.code === 'auth/user-disabled') {
         const { error }: any = e.message;
         const errorObj: any = new Error(error);
         errorObj.errors = e.errors;
