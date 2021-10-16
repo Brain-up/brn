@@ -4,7 +4,7 @@ import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 import FirebaseService from 'ember-firebase-service/services/firebase';
 import { getOwner } from '@ember/application';
 
-interface SerializedUser  {
+export interface SerializedUser  {
   uid: string;
   displayName: null | string;
   email: string;
