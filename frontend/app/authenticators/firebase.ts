@@ -58,6 +58,14 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
           errorObj.message = e.message;
           throw errorObj;
         }
+      } else if (e.code === 'auth/wrong-password') {
+        const { error }: any = e.message;
+        const errorObj: any = new Error(error);
+        errorObj.errors = e.errors;
+        errorObj.code = e.code;
+        errorObj.status = e.status;
+        errorObj.message = e.message;
+        throw errorObj;
       }
     }
 
