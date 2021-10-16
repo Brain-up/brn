@@ -12,13 +12,13 @@ class StudyHistoriesProgressStatusManager(
     private val retrievers: List<ExercisingStatusRetriever<List<*>>>
 ) : ProgressStatusManager<List<StudyHistory>> {
 
-    override fun getStatus(periodType: UserExercisingPeriod, progress: List<StudyHistory>): UserExercisingProgressStatus? {
-        val allStatuses: ArrayList<UserExercisingProgressStatus?> = ArrayList()
-        retrievers.filter {
-            it.getSupportedPeriods().contains(periodType)
-        }.forEach {
-            allStatuses.add(it.getStatus(progress))
-        }
-        return allStatuses.filterNotNull().minByOrNull { it.ordinal }
+    override fun getStatus(
+        periodType: UserExercisingPeriod,
+        progress: List<StudyHistory>
+    ): UserExercisingProgressStatus? {
+        return retrievers
+            .filter { it.getSupportedPeriods().contains(periodType) }
+            .mapNotNull { it.getStatus(progress) }
+            .minByOrNull { it.ordinal }
     }
 }
