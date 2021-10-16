@@ -2,6 +2,7 @@ import { inject as service } from '@ember/service';
 
 import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 import FirebaseService from 'ember-firebase-service/services/firebase';
+import { getOwner } from '@ember/application';
 
 interface SerializedUser  {
   uid: string;
@@ -29,7 +30,7 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
       if (result.user === null) {
         throw new Error('No user');
       }
-      return { user: result.user.toJSON() as SerializedUser };
+      return { user: this.applyTimersToUser(result.user.toJSON() as SerializedUser) };
     } catch(e) {
       if (e.code === 'auth/internal-error') {
         const { error }: any = JSON.parse(e.message);
@@ -46,7 +47,7 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
             throw new Error('No user');
           }
           return {
-            user: newUser.user.toJSON() as SerializedUser
+            user: this.applyTimersToUser(newUser.user.toJSON() as SerializedUser)
           };
         } catch(e) {
           const { error }: any = e.message;
@@ -66,6 +67,31 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
     return this.firebase.auth().signOut();
   }
 
+  tokenRefreshTimeout: any = null;
+
+  private async refreshToken() {
+    const auth = await this.firebase.auth();
+    await auth.currentUser?.getIdToken(true);
+    const userSnapshot: SerializedUser = getOwner(this).lookup('service:session').data?.authenticated.user;
+    const user = auth.currentUser?.toJSON() as SerializedUser;
+    userSnapshot.stsTokenManager = user.stsTokenManager;
+    this.applyTimersToUser(user);
+  }
+
+  private applyTimersToUser(user: SerializedUser) {
+    this.scheduleTokenRefresh(user.stsTokenManager.expirationTime - Date.now());
+    return user;
+  }
+
+  public scheduleTokenRefresh(interval: number) {
+    clearTimeout(this.tokenRefreshTimeout);
+    if (interval < 0) {
+      this.refreshToken();
+    } else {
+      setTimeout(()=> this.refreshToken(), interval);
+    }
+  }
+
   public restore(): Promise<{ user: SerializedUser }> {
     return new Promise((resolve, reject) => {
       const auth = this.firebase.auth();
@@ -74,11 +100,13 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
         unsubscribe();
 
         if (user) {
-          resolve({ user: user.toJSON() as SerializedUser });
+          const serializedUser: SerializedUser = user.toJSON() as SerializedUser;
+          resolve({ user: this.applyTimersToUser(serializedUser) });
         } else {
           auth.getRedirectResult().then((credential) => {
             if (credential) {
-              resolve({ user: credential.user?.toJSON() as SerializedUser });
+              const serializedUser: SerializedUser = credential.user?.toJSON() as SerializedUser;
+              resolve({ user: this.applyTimersToUser(serializedUser) });
             } else {
               reject();
             }
