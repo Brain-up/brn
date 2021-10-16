@@ -16,11 +16,15 @@ export interface SerializedUser  {
     expirationTime: number;
     refreshToken: string;
   }
-};
+}
 
 export default class FirebaseAuthenticator extends BaseAuthenticator {
   @service
   private firebase!: FirebaseService;
+
+  public async registerUser(email: string, password: string) {
+    return this.firebase.auth().createUserWithEmailAndPassword(email, password);
+  }
 
   public async authenticate(login: string, password: string): Promise<{ user: SerializedUser }> {
     // authenticate
@@ -43,7 +47,7 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
         throw errorObj;
       } else if (e.code === 'auth/user-not-found') {
         try {
-          const newUser = await this.firebase.auth().createUserWithEmailAndPassword(login, password);
+          const newUser = await this.registerUser(login, password);
           if (newUser.user === null) {
             throw new Error('No user');
           }
