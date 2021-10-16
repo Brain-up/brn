@@ -14,16 +14,11 @@ export default class HeaderComponent extends Component {
   }
 
   get avatarUrl() {
-    return this.user.avatar || this.userData.avatarUrl;
+    return this.userData.avatarUrl;
   }
 
   get user() {
-    const user: SerializedUser = this.session?.data?.user;
-    return {
-      avatar: user.photoURL,
-      lastName: '',
-      firstName: user.displayName
-    };
+    return this.userData.userModel;
   }
 
   @action logout() {

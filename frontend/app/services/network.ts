@@ -3,8 +3,9 @@ import fetch from 'fetch';
 import { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Store from '@ember-data/store';
+import UserDataService from './user-data';
 
-interface UserDTO {
+export interface UserDTO {
   firstName: string;
   lastName: string;
   email: string;
@@ -38,6 +39,7 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
 
 export default class NetworkService extends Service {
   @service('session') session!: Session;
+  @service('user-data') userData!: UserDataService;
   @service('store') store!: Store;
   @service('router') router!: any;
   prefix = '/api';
@@ -95,7 +97,7 @@ export default class NetworkService extends Service {
       user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
         0,
       )}`.toUpperCase();
-      this.session.set('data.user', user);
+      this.userData.userModel = user;
     } catch(e) {
       this.router.transitionTo('login');
       const error = new Error('Unable to login');
