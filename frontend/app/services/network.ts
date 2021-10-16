@@ -39,6 +39,7 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
 export default class NetworkService extends Service {
   @service('session') session!: Session;
   @service('store') store!: Store;
+  @service('router') router!: any;
   prefix = '/api';
   get _headers() {
     return Object.assign(
@@ -89,11 +90,20 @@ export default class NetworkService extends Service {
     return data;
   }
   async loadCurrentUser() {
-    const user: any = await this.getCurrentUser();
-    user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
-      0,
-    )}`.toUpperCase();
-    this.session.set('data.user', user);
+    try {
+      const user: any = await this.getCurrentUser();
+      user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
+        0,
+      )}`.toUpperCase();
+      this.session.set('data.user', user);
+    } catch(e) {
+      this.router.transitionTo('login');
+      const error = new Error('Unable to login');
+      error.message = 'Unable to login';
+      error.name = 'Unauthorized';
+      error.code = 401;
+      throw error;
+    }
   }
   createUser(user: LatestUserDTO) {
     return this.postRequest('registration', user);
