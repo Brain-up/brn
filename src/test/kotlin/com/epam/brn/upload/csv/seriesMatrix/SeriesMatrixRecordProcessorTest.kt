@@ -157,6 +157,28 @@ internal class SeriesMatrixRecordProcessorTest {
     }
 
     @Test
+    fun `should create correct task with different caml case in input`() {
+        // GIVEN
+        val exercise = createExercise()
+        val expectedTask = exercise.tasks.first()
+        every { exerciseRepositoryMock.save(exercise) } returns exercise
+        // WHEN
+        val actual = seriesMatrixRecordProcessor.process(
+            mutableListOf(
+                SeriesMatrixRecord(
+                    level = 1,
+                    code = "code",
+                    exerciseName = "Шесть слов",
+                    orderNumber = 1,
+                    words = listOf("(()", "()", "(Девочка бабушка дедушкА)", "(сидит леЖит идет)", "()", "())")
+                )
+            )
+        ).first().tasks.first()
+        // THEN
+        assertThat(actual).isEqualToIgnoringGivenFields(expectedTask, "answerOptions")
+    }
+
+    @Test
     fun `should create correct answer options`() {
         // GIVEN
         val exercise = createExercise()

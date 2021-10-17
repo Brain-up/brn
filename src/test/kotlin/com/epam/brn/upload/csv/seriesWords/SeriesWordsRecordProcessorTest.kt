@@ -69,6 +69,7 @@ internal class SeriesWordsRecordProcessorTest {
     private val noiseLevel = 1
     private val noiseUrl = "url"
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
+    private val wordsInDifferentCases = listOf("(Бал", "бум", "бЫль", "вить", "гад", "дуБ)")
 
     @BeforeEach
     internal fun setUp() {
@@ -120,6 +121,26 @@ internal class SeriesWordsRecordProcessorTest {
                     code = "pictureUrl",
                     exerciseName = exerciseName,
                     words = words,
+                    noiseLevel = noiseLevel,
+                    noiseUrl = noiseUrl
+                )
+            )
+        ).first()
+
+        assertThat(actual).isEqualTo(expected)
+        verify { exerciseRepositoryMock.save(expected) }
+    }
+
+    @Test
+    fun `should create correct exercise from words with different cases`() {
+        val expected = createExercise()
+        val actual = seriesWordsRecordProcessor.process(
+            mutableListOf(
+                SeriesWordsRecord(
+                    level = 1,
+                    code = "pictureUrl",
+                    exerciseName = exerciseName,
+                    words = wordsInDifferentCases,
                     noiseLevel = noiseLevel,
                     noiseUrl = noiseUrl
                 )

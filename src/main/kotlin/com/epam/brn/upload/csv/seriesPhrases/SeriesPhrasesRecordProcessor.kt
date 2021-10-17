@@ -46,7 +46,7 @@ class SeriesPhrasesRecordProcessor(
             val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
                 val answerOptions = extractAnswerOptions(record, locale)
-                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
+                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word.toLowerCase() })
                 resourceRepository.saveAll(answerOptions)
 
                 val newExercise = generateExercise(record, subGroup)
@@ -70,7 +70,7 @@ class SeriesPhrasesRecordProcessor(
             .joinToString(" ").replace(".", "")
         var phraseSecond = words.subList(words.indexOf(lastWordOnFirstPhrase) + 1, words.size)
             .joinToString(" ").replace(".", "")
-        return mutableSetOf(toResource(phraseFirst, locale), toResource(phraseSecond, locale))
+        return mutableSetOf(toResource(phraseFirst.toLowerCase(), locale), toResource(phraseSecond.toLowerCase(), locale))
     }
 
     private fun toResource(phrase: String, locale: Locale): Resource {
