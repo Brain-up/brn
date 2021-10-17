@@ -42,7 +42,7 @@ class SeriesMatrixRecordProcessor(
             val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
                 val answerOptions = extractAnswerOptions(record, locale)
-                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word.toLowerCase() })
+                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 val savedResources = resourceRepository.saveAll(answerOptions)
 
                 val newExercise = generateExercise(record, subGroup)
@@ -71,7 +71,7 @@ class SeriesMatrixRecordProcessor(
             .mapIndexed { wordGroupPosition, wordGroup ->
                 WordType.of(wordGroupPosition) to wordGroup
             }
-            .filter { StringUtils.isNotBlank(it.second.toLowerCase()) }
+            .filter { StringUtils.isNotBlank(it.second) }
 
     private fun splitOnWords(sentence: String): List<String> = sentence.split(' ').map { it.trim() }
 
