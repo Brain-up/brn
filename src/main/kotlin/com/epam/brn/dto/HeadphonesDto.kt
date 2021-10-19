@@ -16,8 +16,8 @@ data class HeadphonesDto(
     fun toEntity() = Headphones(
         id = id,
         name = name,
-        active ?: true,
-        type ?: HeadphonesType.NOT_DEFINED,
+        active = active ?: true,
+        type = type ?: HeadphonesType.NOT_DEFINED,
         description = description
     )
 }
