@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component
 class DayExercisingStatusRetriever(
     private val requirementsManager: StatusRequirementsManager
 ) : ExercisingStatusRetriever<List<StudyHistory>> {
-    override fun getWorstStatus(progress: List<StudyHistory>): UserExercisingProgressStatus? {
+    override fun getStatus(progress: List<StudyHistory>): UserExercisingProgressStatus? {
         val periodRequirements = requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY)
-        return progress.map {
-            periodRequirements.first { requirements ->
-                it.executionSeconds in requirements.minimalRequirements * 60 until requirements.maximalRequirements * 60
-            }.status
-        }.minByOrNull { status -> status.ordinal }
+        val sumOfHistory = progress.sumBy { it.executionSeconds }
+        return periodRequirements.firstOrNull { requirements ->
+            sumOfHistory in requirements.minimalRequirements * 60 until requirements.maximalRequirements * 60
+        }?.status
     }
 
     override fun getSupportedPeriods(): List<UserExercisingPeriod> {
