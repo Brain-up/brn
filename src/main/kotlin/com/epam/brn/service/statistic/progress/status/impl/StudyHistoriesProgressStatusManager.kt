@@ -19,6 +19,6 @@ class StudyHistoriesProgressStatusManager(
         }.forEach {
             allStatuses.add(it.getWorstStatus(progress))
         }
-        return allStatuses.filterNotNull().minByOrNull { it!!.ordinal }
+        return allStatuses.filterNotNull().minByOrNull { it.ordinal }
     }
 }

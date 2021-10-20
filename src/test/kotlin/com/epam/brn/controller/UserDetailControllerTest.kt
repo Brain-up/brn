@@ -136,7 +136,7 @@ internal class UserDetailControllerTest {
         }
 
         @Test
-        fun `should save headphones to user`() {
+        fun `should save headphones to user with valid type`() {
             // GIVEN
             val headphonesDto = HeadphonesDto(
                 name = "test",

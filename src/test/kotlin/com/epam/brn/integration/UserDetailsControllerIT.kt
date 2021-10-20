@@ -60,7 +60,7 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val patientsByDoctor = userAccountRepository.findUserAccountsByDoctor(doctor)
         val patientsByDoctorId = userAccountRepository.findUserAccountsByDoctorId(doctor.id!!)
-        // THAN
+        // THEN
         patientsByDoctor.size shouldBe 2
         patientsByDoctorId.size shouldBe 2
         patientsByDoctor shouldContainAll listOf(patient1, patient2)
@@ -191,6 +191,30 @@ class UserDetailsControllerIT : BaseIT() {
             .andExpect(status().isOk)
         userAccountRepository.findUserAccountById(user.id!!).get()
             .headphones.filter { it.active }.size shouldBe 2
+    }
+
+    @Test
+    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    fun `add default headphones to current user`() {
+        // GIVEN
+        insertUser()
+        // WHEN
+        val body =
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = null))
+        val resultAction = mockMvc.perform(
+            post("$baseUrl/current/headphones")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        resultAction.andExpect(status().isCreated)
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val addedHeadphones: HeadphonesDto =
+            objectMapper.readValue(objectMapper.writeValueAsString(baseResponseDto.data), HeadphonesDto::class.java)
+        addedHeadphones.id shouldNotBe null
+        addedHeadphones.name shouldBe "first"
+        addedHeadphones.type shouldBe HeadphonesType.NOT_DEFINED
     }
 
     @Test
