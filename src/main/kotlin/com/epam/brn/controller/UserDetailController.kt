@@ -64,8 +64,7 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     fun addHeadphonesToUser(
         @PathVariable("userId", required = true) userId: Long,
         @Validated @RequestBody headphones: HeadphonesDto
-    ) = ResponseEntity
-        .status(HttpStatus.CREATED)
+    ) = ResponseEntity.status(HttpStatus.CREATED)
         .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToUser(userId, headphones)))
 
     @PostMapping(value = ["/current/headphones"])
