@@ -1,0 +1,36 @@
+{
+  "data": {
+    "id": 1,
+    "exerciseType": "SINGLE_SIMPLE_WORDS",
+    "name": "",
+    "serialNumber": 1,
+    "answerOptions": [
+      {
+        "id": 3,
+        "audioFileUrl": "series1/мама.mp3",
+        "word": "мама",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/мама.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 1,
+        "audioFileUrl": "series1/сын.mp3",
+        "word": "сын",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/сын.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 2,
+        "audioFileUrl": "series1/сын.mp3",
+        "word": "ребёнок",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/ребёнок.jpg",
+        "soundsCount": 0
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

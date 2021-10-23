@@ -63,16 +63,13 @@ class TaskService(
             run {
                 resource.audioFileUrl =
                     if (isAudioFileUrlGenerated) {
-                        wordsService.getAudioFileUrlDynamically(getAudioFileIndex(task), resource.word)
+                        wordsService.getAudioFileUrlDynamically(task.exercise!!.toDto().exerciseIndex, resource.word)
                     } else {
                         wordsService.getFullS3UrlForWord(resource.word, resource.locale)
                     }
             }
         }
     }
-
-    private fun getAudioFileIndex(task: Task) =
-        ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type).audioFileSeriesIndex
 
     @Transactional
     fun save(task: Task): Task {

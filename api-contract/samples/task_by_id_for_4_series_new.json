@@ -1,0 +1,60 @@
+{
+  "data": {
+    "id": 649,
+    "exerciseType": "PHRASES",
+    "name": "",
+    "serialNumber": 2,
+    "answerOptions": [
+      {
+        "id": 1280,
+        "audioFileUrl": "series4/сидит.mp3",
+        "word": "сидит",
+        "wordType": "OBJECT_ACTION",
+        "pictureFileUrl": "pictures/withWord/сидит.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 1279,
+        "audioFileUrl": "series4/девочка.mp3",
+        "word": "девочка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/withWord/девочка.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 7,
+        "audioFileUrl": "series4/бабушка.mp3",
+        "word": "бабушка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/бабушка.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 6,
+        "audioFileUrl": "series4/дедушка.mp3",
+        "word": "дедушка",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "pictures/дедушка.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 1282,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/a8136f40051b06b882bfee0b7c8b02e3.ogg",
+        "word": "идет",
+        "wordType": "OBJECT_ACTION",
+        "pictureFileUrl": "pictures/withWord/идет.jpg",
+        "soundsCount": 0
+      },
+      {
+        "id": 1281,
+        "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/filipp/7db478cc3dc1c0c347343dd1f69bf8e0.ogg",
+        "word": "лежит",
+        "wordType": "OBJECT_ACTION",
+        "pictureFileUrl": "pictures/withWord/лежит.jpg",
+        "soundsCount": 0
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

@@ -64,7 +64,9 @@ data class Exercise(
         signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
         active = active,
         changedBy = changedBy,
-        changedWhen = changedWhen
+        changedWhen = changedWhen,
+        isAudioFileUrlGenerateDynamically = false,
+        exerciseIndex = 1
     )
 
     fun toDtoWithTasks() = ExerciseWithTasksResponse(

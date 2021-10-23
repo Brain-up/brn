@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.WordsGroupSeriesTaskResponse
 import com.epam.brn.dto.WordsSeriesTaskResponse
 import com.epam.brn.enums.Locale
@@ -73,6 +74,9 @@ internal class TaskServiceTest {
     lateinit var exerciseMock: Exercise
 
     @MockK
+    lateinit var exerciseDtoMock: ExerciseDto
+
+    @MockK
     lateinit var subGroupMock: SubGroup
 
     @MockK
@@ -138,20 +142,46 @@ internal class TaskServiceTest {
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
 
             // WHEN isAudioFileUrlGenerated = false
-            var foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
+            val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
             verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
             foundTasks.size shouldBe expectedTaskSize
+        }
+
+        @Test
+        fun `should return tasks by exerciseId(isAudioFileUrlGenerated`() {
+            val template = ""
+            val resource = Resource(word = "word", locale = Locale.RU.locale)
+            val expectedTaskSize = 2
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
+                task1Mock,
+                task2Mock
+            )
+            every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
+
+            every { task1Mock.answerOptions } returns mutableSetOf(resource)
+            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.exercise } returns exerciseMock
+            every { task2Mock.exercise } returns exerciseMock
+            every { exerciseMock.template } returns template
+            every { exerciseMock.toDto() } returns exerciseDtoMock
+            every { exerciseMock.toDto().exerciseIndex } returns 1
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
+            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
+
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
 
             // WHEN  isAudioFileUrlGenerated = true
             ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
             every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
 
-            foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
+            val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
+            verify(exactly = 1) { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) }
             foundTasks.size shouldBe expectedTaskSize
         }
 
@@ -172,6 +202,7 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
+            every { exerciseMock.toDto().exerciseIndex } returns 1
             every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
             every { task2Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
 
@@ -206,13 +237,14 @@ internal class TaskServiceTest {
             every { task2Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto1Mock
             every { task2Mock.toPhraseSeriesTaskDto() } returns taskDto2Mock
-
+            every { exerciseMock.toDto() } returns exerciseDtoMock
+            every { exerciseMock.toDto().exerciseIndex } returns 1
+            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
-            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
             every { task1Mock.exercise } returns exerciseMock
 
             // WHEN
