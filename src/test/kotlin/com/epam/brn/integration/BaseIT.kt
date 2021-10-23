@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -7,6 +8,7 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
@@ -57,6 +59,9 @@ abstract class BaseIT {
     @Autowired
     private lateinit var seriesRepository: SeriesRepository
 
+    @Autowired
+    private lateinit var authorityRepository: AuthorityRepository
+
     protected val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
     /**
@@ -70,17 +75,7 @@ abstract class BaseIT {
         userAccountRepository.deleteAll()
     }
 
-    fun insertDefaultUser(): UserAccount =
-        userAccountRepository.save(
-            UserAccount(
-                fullName = "testUserFirstName",
-                email = "test@test.test",
-                password = "password",
-                gender = Gender.MALE.toString(),
-                bornYear = 2000,
-                active = true
-            )
-        )
+    fun insertDefaultUser(): UserAccount = createUser(fullName = "testUserFirstName", email = "test@test.test")
 
     fun insertDefaultStudyHistory(
         userAccount: UserAccount,
@@ -147,4 +142,29 @@ abstract class BaseIT {
                 name = "Test exercise group for ${platformClassName()}"
             )
         )
+
+    fun createUser(
+        fullName: String? = null,
+        email: String,
+        active: Boolean = true,
+        bornYear: Int = 2000,
+        gender: String = Gender.FEMALE.toString(),
+        password: String = "password",
+        authorities: MutableSet<Authority> = mutableSetOf()
+    ): UserAccount {
+        return userAccountRepository.save(
+            UserAccount(
+                fullName = fullName ?: email,
+                email = email,
+                active = active,
+                bornYear = bornYear,
+                gender = gender,
+                password = password
+            ).apply { authorities.isNotEmpty().let { authoritySet.addAll(authorities) } }
+        )
+    }
+
+    fun createAuthority(authorityName: String): Authority =
+        authorityRepository.findAuthorityByAuthorityName(authorityName)
+            ?: authorityRepository.save(Authority(authorityName = authorityName))
 }

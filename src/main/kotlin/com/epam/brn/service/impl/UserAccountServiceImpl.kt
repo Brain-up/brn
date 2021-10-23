@@ -6,6 +6,7 @@ import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
+import com.epam.brn.enums.Role
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Headphones
@@ -69,7 +70,7 @@ class UserAccountServiceImpl(
     private fun getTheAuthoritySet(userAccountCreateRequest: UserAccountCreateRequest): MutableSet<Authority> {
         var authorityNames = userAccountCreateRequest.authorities ?: mutableSetOf()
         if (authorityNames.isEmpty())
-            authorityNames = mutableSetOf("ROLE_USER")
+            authorityNames = mutableSetOf(Role.ROLE_USER.name)
 
         return authorityNames
             .filter(::isNotEmpty)
@@ -154,6 +155,15 @@ class UserAccountServiceImpl(
             else it
         }.toDto()
     }
+
+    override fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount =
+        userAccountRepository.save(findUserEntityById(userId).apply { doctor = findUserEntityById(doctorId) })
+
+    override fun removeDoctorFromPatient(userId: Long): UserAccount =
+        userAccountRepository.save(findUserEntityById(userId).apply { doctor = null })
+
+    override fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse> =
+        userAccountRepository.findUserAccountsByDoctor(findUserEntityById(doctorId)).map { it.toDto() }
 
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
         (!this.name.isNullOrBlank())
