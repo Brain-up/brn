@@ -4,28 +4,32 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
+import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/users")
 @Api(value = "/users", description = "Contains actions over user details and accounts")
-class UserDetailController(@Autowired val userAccountService: UserAccountService) {
+class UserDetailController(
+    private val userAccountService: UserAccountService,
+    private val doctorService: DoctorService
+) {
 
     @GetMapping(value = ["/{userId}"])
     @ApiOperation("Get user by Id")
@@ -95,4 +99,16 @@ class UserDetailController(@Autowired val userAccountService: UserAccountService
     fun getAllHeadphonesForUser() = ResponseEntity
         .ok()
         .body(BaseResponseDto(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
+
+    @GetMapping("/current/{patientId}/doctor")
+    @ApiOperation("Get patient's doctor")
+    fun getDoctorAssignedToPatient(@PathVariable patientId: Long) =
+        ResponseEntity.ok()
+            .body(BaseSingleObjectResponseDto(data = doctorService.getDoctorAssignedToPatient(patientId)))
+
+    @DeleteMapping("/current/{patientId}/doctor")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation("Delete doctor from patient")
+    fun deleteDoctorFromPatient(@PathVariable patientId: Long) =
+        doctorService.deleteDoctorFromPatientAsPatient(patientId)
 }

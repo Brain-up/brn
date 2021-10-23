@@ -6,6 +6,7 @@ import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
+import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -33,6 +34,9 @@ internal class UserDetailControllerTest {
 
     @MockK
     lateinit var userAccountService: UserAccountService
+
+    @MockK
+    private lateinit var doctorService: DoctorService
 
     lateinit var userAccountResponse: UserAccountResponse
 
@@ -208,5 +212,58 @@ internal class UserDetailControllerTest {
             verify(exactly = 1) { userAccountService.getAllHeadphonesForUser(1L) }
             assertThat(response).hasSize(2).containsExactly(headphonesDto, headphonesDtoSecond)
         }
+    }
+
+    @Test
+    internal fun `should get all headphones for user`() {
+        // GIVEN
+        val headphone1 = HeadphonesDto(id = 1, name = "h1", type = HeadphonesType.IN_EAR_BLUETOOTH, active = true)
+        val headphone2 = HeadphonesDto(id = 2, name = "h2", type = HeadphonesType.IN_EAR_NO_BLUETOOTH, active = true)
+        val headphones: Set<HeadphonesDto> = setOf(headphone1, headphone2)
+
+        every { userAccountService.getAllHeadphonesForCurrentUser() } returns headphones
+
+        // WHEN
+        val response = userDetailController.getAllHeadphonesForUser().body?.data
+
+        // THEN
+        verify { userAccountService.getAllHeadphonesForCurrentUser() }
+        response?.size shouldBe headphones.size
+        response?.contains(headphone1) shouldBe true
+        response?.contains(headphone2) shouldBe true
+    }
+
+    @Test
+    internal fun `should get doctor assigned to patient`() {
+        // GIVEN
+        val patientId: Long = 1
+        val doctor = UserAccountResponse(
+            id = patientId,
+            name = "testName",
+            email = "email",
+            gender = Gender.FEMALE,
+            bornYear = 2000
+        )
+        every { doctorService.getDoctorAssignedToPatient(patientId) } returns doctor
+
+        // WHEN
+        val response = userDetailController.getDoctorAssignedToPatient(patientId).body?.data
+
+        // THEN
+        verify { doctorService.getDoctorAssignedToPatient(patientId) }
+        response shouldBe doctor
+    }
+
+    @Test
+    internal fun `should delete doctor from patient`() {
+        // GIVEN
+        val patientId: Long = 1
+        every { doctorService.deleteDoctorFromPatientAsPatient(patientId) } returns Unit
+
+        // WHEN
+        userDetailController.deleteDoctorFromPatient(patientId)
+
+        // THEN
+        verify { doctorService.deleteDoctorFromPatientAsPatient(patientId) }
     }
 }

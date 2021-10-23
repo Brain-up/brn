@@ -26,4 +26,7 @@ interface UserAccountService {
     fun findUserEntityById(id: Long): UserAccount
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
     fun getAllHeadphonesForCurrentUser(): Set<HeadphonesDto>
+    fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount
+    fun removeDoctorFromPatient(userId: Long): UserAccount
+    fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse>
 }
