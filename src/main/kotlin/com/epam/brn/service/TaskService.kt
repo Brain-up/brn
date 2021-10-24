@@ -29,7 +29,9 @@ class TaskService(
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
-        tasks.forEach { task -> processAnswerOptions(task) }
+        if (!isAudioFileUrlGenerated) {
+            tasks.forEach { task -> processAnswerOptions(task) }
+        }
         return when (val type = ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> tasks.map { task ->
                 task.toWordsSeriesTaskDto(
@@ -47,7 +49,10 @@ class TaskService(
         log.debug("Searching task with id=$taskId")
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
-        processAnswerOptions(task)
+
+        if (!isAudioFileUrlGenerated) {
+            processAnswerOptions(task)
+        }
 
         return when (val type = ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> task.toWordsSeriesTaskDto(type)
@@ -60,14 +65,7 @@ class TaskService(
 
     private fun processAnswerOptions(task: Task) {
         task.answerOptions.forEach { resource ->
-            run {
-                resource.audioFileUrl =
-                    if (isAudioFileUrlGenerated) {
-                        wordsService.getAudioFileUrlDynamically(task.exercise!!.toDto().exerciseIndex, resource.word)
-                    } else {
-                        wordsService.getFullS3UrlForWord(resource.word, resource.locale)
-                    }
-            }
+            run { resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
         }
     }
 

@@ -16,7 +16,6 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.Exception
 
 @Service
 class ExerciseService(
@@ -38,11 +37,14 @@ class ExerciseService(
     @Value("#{'\${yandex.speeds}'.split(',')}")
     lateinit var speeds: List<String>
 
+    @Value(value = "\${brn.audio.file.url.generate.dynamically}")
+    private var isAudioFileUrlGenerated: Boolean = false
+
     private val log = logger()
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
         val exercise = exerciseRepository.findById(exerciseID)
-        return exercise.map { e -> updateNoiseUrl(e.toDto()) }
+        return exercise.map { e -> updateExerciseDto(e.toDto()) }
             .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
@@ -55,7 +57,7 @@ class ExerciseService(
         log.info("Searching available exercises for user=$userId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
         val history = exerciseRepository.findAll()
-        return history.map { x -> updateNoiseUrl(x.toDto(exercisesIdList.contains(x.id))) }
+        return history.map { x -> updateExerciseDto(x.toDto(exercisesIdList.contains(x.id))) }
     }
 
     fun findExercisesBySubGroupForCurrentUser(subGroupId: Long): List<ExerciseDto> {
@@ -68,11 +70,11 @@ class ExerciseService(
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
         log.info("current user is admin: ${userId == 1L}))")
         if (userId == 1L)
-            return subGroupExercises.map { exercise -> updateNoiseUrl(exercise.toDto(true)) }
+            return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
         val openSubGroupExercises = getAvailableExercisesForSubGroup(doneSubGroupExercises, subGroupExercises, userId, subGroupId)
         return subGroupExercises.map { exercise ->
-            updateNoiseUrl(exercise.toDto(openSubGroupExercises.contains(exercise)))
+            updateExerciseDto(exercise.toDto(openSubGroupExercises.contains(exercise)))
         }
     }
 
@@ -130,8 +132,9 @@ class ExerciseService(
         return available
     }
 
-    fun updateNoiseUrl(exerciseDto: ExerciseDto): ExerciseDto {
+    fun updateExerciseDto(exerciseDto: ExerciseDto): ExerciseDto {
         exerciseDto.noise.url = urlConversionService.makeUrlForNoise(exerciseDto.noise.url)
+        exerciseDto.isAudioFileUrlGenerated = isAudioFileUrlGenerated
         return exerciseDto
     }
 

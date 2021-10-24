@@ -96,9 +96,6 @@ class WordsService {
 
     fun getSubPathForWord(meta: AudioFileMetaData) =
         "/audio/${meta.locale}/${meta.voice.name.toLowerCase()}/${meta.speed}"
-
-    fun getAudioFileUrlDynamically(index: Int, word: String): String =
-        String.format(audioFileSeriesPath, index, word)
 }
 
 data class AudioFileMetaData(val text: String, val locale: String, val voice: Voice, val speed: String = "1") {

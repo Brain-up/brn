@@ -166,7 +166,6 @@ internal class TaskServiceTest {
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
             every { exerciseMock.toDto() } returns exerciseDtoMock
-            every { exerciseMock.toDto().exerciseIndex } returns 1
             every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
             every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
 
@@ -176,12 +175,10 @@ internal class TaskServiceTest {
 
             // WHEN  isAudioFileUrlGenerated = true
             ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
-            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
 
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) }
             foundTasks.size shouldBe expectedTaskSize
         }
 
@@ -202,7 +199,6 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { exerciseMock.toDto().exerciseIndex } returns 1
             every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
             every { task2Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
 
@@ -238,8 +234,6 @@ internal class TaskServiceTest {
             every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto1Mock
             every { task2Mock.toPhraseSeriesTaskDto() } returns taskDto2Mock
             every { exerciseMock.toDto() } returns exerciseDtoMock
-            every { exerciseMock.toDto().exerciseIndex } returns 1
-            every { wordsServiceMock.getAudioFileUrlDynamically(any(), resource.word) } returns "fullUrl"
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name

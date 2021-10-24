@@ -16,6 +16,5 @@ data class ExerciseDto(
     var active: Boolean = true,
     var changedBy: String? = "InitialDataLoader",
     var changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
-    var exerciseIndex: Int = 1,
-    var isAudioFileUrlGenerateDynamically: Boolean = false
+    var isAudioFileUrlGenerated: Boolean = false
 )
