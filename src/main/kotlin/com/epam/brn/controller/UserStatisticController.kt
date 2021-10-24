@@ -64,22 +64,4 @@ class UserStatisticController(
         }
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
     }
-
-    @GetMapping(value = ["/study/week"], params = ["version=2"])
-    fun getUserWeeklyStatistic(
-        @RequestParam(name = "from", required = true) from: LocalDateTime,
-        @RequestParam(name = "to", required = true) to: LocalDateTime
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        val result = userDayStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
-    }
-
-    @GetMapping(value = ["/study/year"], params = ["version=2"])
-    fun getUserYearlyStatistic(
-        @RequestParam(name = "from", required = true) from: LocalDateTime,
-        @RequestParam(name = "to", required = true) to: LocalDateTime
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        val result = userMonthStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
-    }
 }
