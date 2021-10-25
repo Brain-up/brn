@@ -24,6 +24,8 @@ import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
+import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -53,6 +55,9 @@ internal class AdminControllerTest {
 
     @MockK
     private lateinit var userAccountService: UserAccountService
+
+    @MockK
+    private lateinit var userAnalyticsService: UserAnalyticsService
 
     @MockK
     private lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
@@ -122,7 +127,7 @@ internal class AdminControllerTest {
         val users = adminController.getUsers(withAnalytics, role, pageable)
 
         // THEN
-        verify(exactly = 1) { userAccountService.getUsersWithAnalytics(pageable, role) }
+        verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BaseResponseDto).data shouldBe listOf(userWithAnalyticsResponse)
     }

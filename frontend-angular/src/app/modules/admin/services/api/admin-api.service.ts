@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Exercise } from '@admin/models/exercise';
-import { pluck } from 'rxjs/operators';
+import { pluck, map } from 'rxjs/operators';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { Dayjs } from 'dayjs';
 import { SortType } from '@admin/models/sort';
 import { PAGE_SIZE_DEFAULT } from '@shared/constants/common-constants';
+import { User } from '@admin/models/user';
 import { UsersData } from '@admin/models/users-data';
 
 @Injectable()
@@ -63,6 +64,6 @@ export class AdminApiService {
       },
     });
 
-    return this.httpClient.get<{ data: UsersData }>('/api/admin/users', { params }).pipe(pluck('data'));
+    return this.httpClient.get<{ data: User[] }>('/api/admin/users', { params }).pipe(map(response => ({ total: response.data.length, users: response.data })));
   }
 }

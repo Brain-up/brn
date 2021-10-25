@@ -1,5 +1,4 @@
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
 import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,6 +25,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatIconModule,
     MatProgressBarModule,
   ],
-  providers: [{ provide: AdminApiService, useFactory: () => new AdminApiServiceFake() }],
+  providers: [AdminApiService],
 })
 export class UsersModule {}

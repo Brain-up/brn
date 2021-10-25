@@ -116,7 +116,6 @@ class UserAccountServiceImpl(
 
     override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
         val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
-        // todo fill user models with analytics and write tests
         return users
     }
 
