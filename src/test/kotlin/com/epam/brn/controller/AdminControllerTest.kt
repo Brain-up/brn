@@ -27,7 +27,6 @@ import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.SubGroupService
-import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe
@@ -121,7 +120,7 @@ internal class AdminControllerTest {
         // GIVEN
         val withAnalytics = true
         val role = ROLE_USER.name
-        every { userAccountService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
+        every { userAnalyticsService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
 
         // WHEN
         val users = adminController.getUsers(withAnalytics, role, pageable)
