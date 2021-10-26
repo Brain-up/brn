@@ -11,8 +11,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import java.time.LocalDateTime
-import java.time.Month
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.Test
@@ -49,7 +47,7 @@ internal class UserAnalyticsServiceTest {
         every { userAccountService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
 
-        val userAnalyticsDtos = userAccountService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
+        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
 
         userAnalyticsDtos.size shouldBe 2
     }
@@ -58,15 +56,14 @@ internal class UserAnalyticsServiceTest {
     fun `should not return user with analytics`() {
 
         val usersList = listOf(userWithAnalytics)
-        val dayStatisticList = listOf(dayStudyStatistic, dayStudyStatistic)
-        val from = LocalDateTime.of(2015, Month.JANUARY, 3, 0, 0, 0)
+        val dayStatisticList = emptyList<DayStudyStatistic>()
 
         every { userAccountService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name) } returns usersList
-        every { userDayStatisticService.getStatisticForPeriod(from, from, userWithAnalytics.id) } returns dayStatisticList
+        every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
 
-        val userAnalyticsDtos = userAccountService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
+        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
 
-        usersList.size shouldBe 1
+        userAnalyticsDtos.size shouldBe 1
         userAnalyticsDtos[0].lastWeek.size shouldBe 0
     }
 }
