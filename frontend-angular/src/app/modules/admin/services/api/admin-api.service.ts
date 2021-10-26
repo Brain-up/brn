@@ -64,6 +64,7 @@ export class AdminApiService {
       },
     });
 
-    return this.httpClient.get<{ data: User[] }>('/api/admin/users', { params }).pipe(map(response => ({ total: response.data.length, users: response.data })));
+    return this.httpClient.get<{ data: User[] }>('/api/admin/users', { params })
+                          .pipe(map(response => ({ total: response.data.length, users: response.data })));
   }
 }
