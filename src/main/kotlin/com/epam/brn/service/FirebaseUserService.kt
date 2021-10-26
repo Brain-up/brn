@@ -1,7 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.request.UserAccountChangePasswordRequest
-import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserRecord
@@ -34,24 +32,7 @@ class FirebaseUserService(
         return createdUser
     }
 
-    fun changeUser(uuid: String, userAccountChangeRequest: UserAccountChangeRequest): UserRecord? {
-        val firebaseUser = UserRecord.UpdateRequest(uuid)
-            .setDisplayName(userAccountChangeRequest.name)
-            .setPhotoUrl(userAccountChangeRequest.avatar)
-
-        val updatedUser = firebaseAuth.updateUser(firebaseUser)
-        return updatedUser
-    }
-
     fun deleteUser(uuid: String) {
         firebaseAuth.deleteUser(uuid)
-    }
-
-    fun changePassword(userAccountChangePasswordRequest: UserAccountChangePasswordRequest): UserRecord? {
-        val firebaseUser = UserRecord.UpdateRequest(userAccountChangePasswordRequest.uuid)
-            .setPassword(userAccountChangePasswordRequest.password)
-
-        val updatedUser = firebaseAuth.updateUser(firebaseUser)
-        return updatedUser
     }
 }

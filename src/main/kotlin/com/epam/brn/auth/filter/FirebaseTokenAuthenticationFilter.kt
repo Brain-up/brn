@@ -25,7 +25,8 @@ class FirebaseTokenAuthenticationFilter(
     private val brainUpUserDetailsService: UserDetailsService,
     private val firebaseUserService: FirebaseUserService,
     private val userAccountService: UserAccountService,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val tokenHelperUtils: TokenHelperUtils
 ) : OncePerRequestFilter() {
 
     private val log = logger()
@@ -40,7 +41,7 @@ class FirebaseTokenAuthenticationFilter(
     }
 
     private fun verifyToken(request: HttpServletRequest) {
-        val token: String? = TokenHelperUtils.getBearerToken(request)
+        val token: String? = tokenHelperUtils.getBearerToken(request)
         try {
             val decodedToken: FirebaseToken = firebaseAuth.verifyIdToken(token, true)
             try {
