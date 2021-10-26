@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/study-history")
@@ -36,17 +35,13 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
 
     @GetMapping("/histories")
     @ApiOperation("Get current user's study histories for period")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.StudyHistoryControllerV2"])
+    )
     fun getHistories(
         @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam("to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
-    ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
-
-    @GetMapping(value = ["/histories"], params = ["version=2"])
-    @ApiOperation("Get current user's study histories for period")
-    fun getHistories(
-        @RequestParam("from", required = true) from: LocalDateTime,
-        @RequestParam("to", required = true) to: LocalDateTime
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 
