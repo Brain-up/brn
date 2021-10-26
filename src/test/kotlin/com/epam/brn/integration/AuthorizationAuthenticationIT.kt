@@ -1,9 +1,9 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.request.UserAccountCreateRequest
+import com.epam.brn.enums.Role
 import com.epam.brn.integration.firebase.FirebaseWebClient
 import com.epam.brn.integration.firebase.model.FirebaseVerifyPasswordRequest
-import com.epam.brn.enums.Role
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.assertEquals
@@ -59,11 +58,11 @@ class AuthorizationAuthenticationIT : BaseIT() {
         uuidFirebaseNewUser = saveFirebaseUser(newUserFullName, newUserEmail, newUserPassword)!!.uid
         uuidFirebaseUserRole = saveFirebaseUser(userRoleFullName, userRoleEmail, userRolePassword)!!.uid
 
-        val roleUserName = Role.ROLE_ADMIN.name
+        val roleUserName = Role.ROLE_USER.name
         val userAuthority = authorityRepository.findAuthorityByAuthorityName(roleUserName)
             ?: authorityRepository.save(Authority(authorityName = roleUserName))
 
-        val authName = "ROLE_ADMIN"
+        val authName = Role.ROLE_ADMIN.name
         val adminAuthority = authorityRepository.findAuthorityByAuthorityName(authName)
             ?: authorityRepository.save(Authority(authorityName = authName))
         createUserInLocalDatabase(fullName, email, uuidFirebaseAdmin, adminAuthority)
@@ -77,17 +76,6 @@ class AuthorizationAuthenticationIT : BaseIT() {
         firebaseUserService.deleteUser(uuidFirebaseAdmin)
         firebaseUserService.deleteUser(uuidFirebaseNewUser)
         firebaseUserService.deleteUser(uuidFirebaseUserRole)
-    }
-
-    @Test
-    fun `test get groups with valid credentials`() {
-        // WHEN
-        val resultAction = this.mockMvc.perform(
-            get(baseUrl)
-                .with(user(this.email).password(this.password).roles("USER", "ADMIN"))
-        )
-        // THEN
-        resultAction.andExpect(status().isOk)
     }
 
     @Test
