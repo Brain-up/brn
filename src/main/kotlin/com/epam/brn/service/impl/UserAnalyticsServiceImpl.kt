@@ -24,8 +24,11 @@ class UserAnalyticsServiceImpl(
 
         val now = LocalDate.now()
         val fieldISO = WeekFields.of(Locale.getDefault()).dayOfWeek()
+        val firstDay = now.with(fieldISO, 1L)
+        val from = LocalDateTime.of(firstDay, LocalTime.MIN)
+        val to = LocalDateTime.of(firstDay.plusDays(7L), LocalTime.MAX)
 
-        users.map { it.lastWeek = userDayStatisticService.getStatisticForPeriod(LocalDateTime.of(now.with(fieldISO, 1L), LocalTime.MIN), LocalDateTime.of(now.with(fieldISO, 1L).plusDays(7L), LocalTime.MAX), it.id) }
+        users.map { it.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, it.id) }
 
         return users
     }
