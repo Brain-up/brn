@@ -1,7 +1,9 @@
-import LoginFormComponent from './../login-form/component';
+import LoginFormComponent from 'brn/components/login-form/component';
 import { action } from '@ember/object';
 import { task, Task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
+import { getOwner } from '@ember/application';
+import FirebaseAuthenticator from 'brn/authenticators/firebase';
 
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
@@ -88,6 +90,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       this.registrationTask.isRunning
     );
   }
+  // @ts-expect-error overrides property
   get login() {
     return this.email;
   }
@@ -103,7 +106,16 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       bornYear: parseInt(this.birthday, 10),
       password: this.password,
     };
-    const result = yield this.network.createUser(user);
+    try {
+      const auth = getOwner(this).lookup('authenticator:firebase') as FirebaseAuthenticator;
+      yield auth.registerUser(user.email, user.password);
+    } catch(e) {
+      this.errorMessage = e.message;
+      this.registrationTask.cancelAll();
+      return
+    }
+
+    const result = yield this.network.patchUserInfo(user);
     if (result.ok) {
       yield this.loginTask.perform();
     } else {
@@ -123,13 +135,13 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   registrationTask!: Task<any, any>;
 
   @action
-  onSubmit(e: DocumentEvent & any) {
+  onSubmit(e: SubmitEvent & any) {
     e.preventDefault();
     this.registrationTask.perform();
   }
 
   @action
-  setGender(e: DocumentEvent & any) {
+  setGender(e: SubmitEvent & any) {
     this.gender = e.target.value;
   }
 

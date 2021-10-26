@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import Session from 'ember-simple-auth/services/session';
 import UserDataService from 'brn/services/user-data';
+import { SerializedUser } from 'brn/authenticators/firebase';
 
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;
@@ -17,7 +18,7 @@ export default class HeaderComponent extends Component {
   }
 
   get user() {
-    return this.session?.data?.user;
+    return this.userData.userModel;
   }
 
   @action logout() {
