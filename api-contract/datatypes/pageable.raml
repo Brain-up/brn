@@ -1,0 +1,19 @@
+#%RAML 1.0 DataType
+usage: Apply this trait to a GET method that supports pagination.
+properties:
+  offset?:
+    type: integer
+    default: 10
+    minimum: 0
+  limit?:
+    type: integer
+    default: 50
+    minimum: 1
+  pageNumber?:
+    type: integer
+    default: 0
+    minimum: 0
+  pageSize?:
+    type: integer
+    default: 1
+    minimum: 1

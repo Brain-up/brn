@@ -2,6 +2,9 @@ package com.epam.brn.service.load
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Role.ROLE_ADMIN
+import com.epam.brn.enums.Role.ROLE_DOCTOR
+import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.model.Authority
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
@@ -68,13 +71,8 @@ class InitialDataLoader(
 
         fun getInputStreamFromSeriesInitFile(seriesType: String): InputStream {
             val fileName = mapSeriesTypeInitFile[seriesType]
-            val inputStream = Thread.currentThread()
-                .contextClassLoader.getResourceAsStream("initFiles/$fileName.csv")
-
-            if (inputStream == null)
-                throw IOException("Can not get init file for $seriesType series.")
-
-            return inputStream
+            return Thread.currentThread().contextClassLoader.getResourceAsStream("initFiles/$fileName.csv")
+                ?: throw IOException("Can not get init file for $seriesType series.")
         }
     }
 
@@ -104,9 +102,9 @@ class InitialDataLoader(
     @Order(Ordered.HIGHEST_PRECEDENCE)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
         if (authorityService.findAll().isEmpty()) {
-            val adminAuthority = authorityService.save(Authority(authorityName = "ROLE_ADMIN"))
-            val userAuthority = authorityService.save(Authority(authorityName = "ROLE_USER"))
-            authorityService.save(Authority(authorityName = "ROLE_DOCTOR"))
+            val adminAuthority = authorityService.save(Authority(authorityName = ROLE_ADMIN.name))
+            val userAuthority = authorityService.save(Authority(authorityName = ROLE_USER.name))
+            authorityService.save(Authority(authorityName = ROLE_DOCTOR.name))
             val admin = addAdminUser(adminAuthority)
             val listOfUsers = mutableListOf(admin)
             listOfUsers.addAll(addDefaultUsers(userAuthority))

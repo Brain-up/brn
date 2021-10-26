@@ -4,17 +4,21 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
-import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatisticDto
 import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Role.ROLE_ADMIN
+import com.epam.brn.enums.Role.ROLE_DOCTOR
+import com.epam.brn.enums.Role.ROLE_USER
+import com.epam.brn.model.Authority
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -23,7 +27,7 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
-import com.epam.brn.model.Authority
+import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
@@ -31,7 +35,6 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.repo.AuthorityRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -544,15 +547,18 @@ class AdminControllerIT : BaseIT() {
         response
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.content().json("{\"errors\":[\"не должно быть пустым\",\"не должно равняться null\",\"не должно быть пустым\"] }"))
+            .andExpect(
+                MockMvcResultMatchers.content()
+                    .json("{\"errors\":[\"не должно быть пустым\",\"не должно равняться null\",\"не должно быть пустым\"] }")
+            )
     }
 
     @Test
     fun `should return authorities list`() {
         // GIVEN
-        insertRole("ROLE_ADMIN")
-        insertRole("ROLE_USER")
-        insertRole("ROLE_DOCTOR")
+        insertRole(ROLE_ADMIN.name)
+        insertRole(ROLE_USER.name)
+        insertRole(ROLE_DOCTOR.name)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -576,8 +582,8 @@ class AdminControllerIT : BaseIT() {
     @Test
     fun `should get users by role`() {
         // GIVEN
-        val authorityAdmin = insertRole("ROLE_ADMIN")
-        val authorityUser = insertRole("ROLE_USER")
+        val authorityAdmin = insertRole(ROLE_ADMIN.name)
+        val authorityUser = insertRole(ROLE_USER.name)
 
         val user1 = UserAccount(
             fullName = "testUserFirstName",
@@ -603,7 +609,7 @@ class AdminControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get("$baseUrl/users")
-                .param("role", "ROLE_ADMIN")
+                .param("role", ROLE_ADMIN.name)
 
         )
             .andExpect(MockMvcResultMatchers.status().isOk)

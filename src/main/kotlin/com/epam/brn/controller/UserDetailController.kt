@@ -4,6 +4,7 @@ import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
+import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.FirebaseAuth
 import io.swagger.annotations.Api
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -26,7 +29,8 @@ import org.springframework.web.bind.annotation.RestController
 @Api(value = "/users", description = "Contains actions over user details and accounts")
 class UserDetailController(
     private val userAccountService: UserAccountService,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val doctorService: DoctorService
 ) {
 
     @GetMapping(value = ["/{userId}"])
@@ -66,8 +70,7 @@ class UserDetailController(
     fun addHeadphonesToUser(
         @PathVariable("userId", required = true) userId: Long,
         @Validated @RequestBody headphones: HeadphonesDto
-    ) = ResponseEntity
-        .status(HttpStatus.CREATED)
+    ) = ResponseEntity.status(HttpStatus.CREATED)
         .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToUser(userId, headphones)))
 
     @PostMapping(value = ["/current/headphones"])
@@ -75,6 +78,15 @@ class UserDetailController(
     fun addHeadphonesToCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
+
+    @DeleteMapping(value = ["/current/headphones/{headphonesId}"])
+    @ApiOperation("Delete headphones by Id")
+    fun deleteHeadphonesForCurrentUser(
+        @PathVariable(value = "headphonesId") headphonesId: Long
+    ): ResponseEntity<BaseSingleObjectResponseDto> {
+        userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
+        return ResponseEntity.ok(BaseSingleObjectResponseDto(data = Unit))
+    }
 
     @GetMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Get all user's headphones")
@@ -89,4 +101,16 @@ class UserDetailController(
     fun getAllHeadphonesForUser() = ResponseEntity
         .ok()
         .body(BaseResponseDto(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
+
+    @GetMapping("/current/{patientId}/doctor")
+    @ApiOperation("Get patient's doctor")
+    fun getDoctorAssignedToPatient(@PathVariable patientId: Long) =
+        ResponseEntity.ok()
+            .body(BaseSingleObjectResponseDto(data = doctorService.getDoctorAssignedToPatient(patientId)))
+
+    @DeleteMapping("/current/{patientId}/doctor")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation("Delete doctor from patient")
+    fun deleteDoctorFromPatient(@PathVariable patientId: Long) =
+        doctorService.deleteDoctorFromPatientAsPatient(patientId)
 }

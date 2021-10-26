@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -59,7 +60,7 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val patientsByDoctor = userAccountRepository.findUserAccountsByDoctor(doctor)
         val patientsByDoctorId = userAccountRepository.findUserAccountsByDoctorId(doctor.id!!)
-        // THAN
+        // THEN
         patientsByDoctor.size shouldBe 2
         patientsByDoctorId.size shouldBe 2
         patientsByDoctor shouldContainAll listOf(patient1, patient2)
@@ -118,7 +119,7 @@ class UserDetailsControllerIT : BaseIT() {
         val user = insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
         val resultAction = mockMvc.perform(
             post("$baseUrl/${user.id}/headphones")
                 .content(body)
@@ -131,10 +132,10 @@ class UserDetailsControllerIT : BaseIT() {
     @Test
     fun `add headphones to current user as admin`() {
         // GIVEN
-        val user = insertUser()
+        insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
         val resultAction = mockMvc.perform(
             post("$baseUrl/current/headphones")
                 .content(body)
@@ -148,10 +149,10 @@ class UserDetailsControllerIT : BaseIT() {
     @WithMockUser(username = "test@test.test", roles = ["USER"])
     fun `add headphones to current user not as admin`() {
         // GIVEN
-        val user = insertUser()
+        insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
         val resultAction = mockMvc.perform(
             post("$baseUrl/current/headphones")
                 .content(body)
@@ -169,7 +170,51 @@ class UserDetailsControllerIT : BaseIT() {
             objectMapper.readValue(gson.toJson(baseResponseDto.data), HeadphonesDto::class.java)
         addedHeadphones.id shouldNotBe null
         addedHeadphones.name shouldBe "first"
+        addedHeadphones.active shouldBe true
         addedHeadphones.type shouldBe HeadphonesType.IN_EAR_NO_BLUETOOTH
+    }
+
+    @Test
+    fun `delete headphones to current user`() {
+        // GIVEN
+        val user = insertUser()
+        insertThreeHeadphonesForUser(user)
+        val headphonesId = userAccountRepository.findUserAccountByName("testUserFirstName")
+            .get().headphones.first().id
+        // WHEN
+        val resultAction = mockMvc.perform(
+            delete("$baseUrl/current/headphones/$headphonesId")
+                .contentType("application/json")
+        )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+        userAccountRepository.findUserAccountById(user.id!!).get()
+            .headphones.filter { it.active }.size shouldBe 2
+    }
+
+    @Test
+    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    fun `add default headphones to current user`() {
+        // GIVEN
+        insertUser()
+        // WHEN
+        val body =
+            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = null))
+        val resultAction = mockMvc.perform(
+            post("$baseUrl/current/headphones")
+                .content(body)
+                .contentType("application/json")
+        )
+        // THEN
+        resultAction.andExpect(status().isCreated)
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val addedHeadphones: HeadphonesDto =
+            objectMapper.readValue(objectMapper.writeValueAsString(baseResponseDto.data), HeadphonesDto::class.java)
+        addedHeadphones.id shouldNotBe null
+        addedHeadphones.name shouldBe "first"
+        addedHeadphones.type shouldBe HeadphonesType.NOT_DEFINED
     }
 
     @Test
@@ -195,9 +240,9 @@ class UserDetailsControllerIT : BaseIT() {
             .usingElementComparatorOnFields("name", "type")
             .containsAll(
                 listOf(
-                    HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                    HeadphonesDto(name = "second", type = HeadphonesType.IN_EAR_BLUETOOTH),
-                    HeadphonesDto(name = "third", type = HeadphonesType.OVER_EAR_BLUETOOTH)
+                    HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
+                    HeadphonesDto(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH),
+                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH)
                 )
             )
     }
@@ -226,9 +271,9 @@ class UserDetailsControllerIT : BaseIT() {
             .usingElementComparatorOnFields("name", "type")
             .containsAll(
                 listOf(
-                    HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                    HeadphonesDto(name = "second", type = HeadphonesType.IN_EAR_BLUETOOTH),
-                    HeadphonesDto(name = "third", type = HeadphonesType.OVER_EAR_BLUETOOTH)
+                    HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
+                    HeadphonesDto(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH),
+                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH)
                 )
             )
     }
@@ -254,9 +299,9 @@ class UserDetailsControllerIT : BaseIT() {
     private fun insertThreeHeadphonesForUser(user: UserAccount) {
         headphonesRepository.saveAll(
             listOf(
-                Headphones(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH, userAccount = user),
-                Headphones(name = "second", type = HeadphonesType.IN_EAR_BLUETOOTH, userAccount = user),
-                Headphones(name = "third", type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user)
+                Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH, userAccount = user),
+                Headphones(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, userAccount = user),
+                Headphones(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user)
             )
         )
     }

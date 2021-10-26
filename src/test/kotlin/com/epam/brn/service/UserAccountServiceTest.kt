@@ -6,6 +6,7 @@ import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
+import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
@@ -14,11 +15,13 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.google.firebase.auth.UserRecord
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -54,6 +57,9 @@ internal class UserAccountServiceTest {
 
     @MockK(relaxed = true)
     lateinit var userAccount: UserAccount
+
+    @MockK(relaxed = true)
+    lateinit var doctorAccount: UserAccount
 
     @MockK
     lateinit var userAccountResponse: UserAccountResponse
@@ -146,7 +152,7 @@ internal class UserAccountServiceTest {
             every { firebaseUserRecord.uid } returns uid
             every { userAccountCreateRequest.email } returns "test@gmail.com"
             every { userAccountRepository.findUserAccountByEmail(ofType(String::class)) } returns Optional.empty()
-            every { userAccountCreateRequest.authorities } returns mutableSetOf("ROLE_USER")
+            every { userAccountCreateRequest.authorities } returns mutableSetOf(ROLE_USER.name)
             every { passwordEncoder.encode(ofType(String::class)) } returns "password"
             every { userAccountCreateRequest.toModel() } returns userAccount
             every { userAccountCreateRequest.password } returns "password"
@@ -260,8 +266,8 @@ internal class UserAccountServiceTest {
         fun `should return all headphones for user`() {
             // GIVEN
             val listOfHeadphones = setOf(
-                HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                HeadphonesDto(name = "second", type = HeadphonesType.ON_EAR_BLUETOOTH)
+                HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
+                HeadphonesDto(name = "second", active = true, type = HeadphonesType.ON_EAR_BLUETOOTH)
             )
             every { headphonesService.getAllHeadphonesForUser(1L) } returns listOfHeadphones
             // WHEN
@@ -272,7 +278,8 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should add new headphones to the user`() {
-            val headphonesToAdd = HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val headphonesToAdd =
+                HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
 
             every { userAccountRepository.findUserAccountById(1L) } returns Optional.of(userAccount)
             every { headphonesService.save(ofType(Headphones::class)) } returns headphonesToAdd
@@ -284,7 +291,8 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should add new headphones to the current user`() {
-            val headphonesToAdd = HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val headphonesToAdd =
+                HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
@@ -309,7 +317,8 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should return all headphones for the user`() {
-            val headphonesToAdd = setOf(HeadphonesDto(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            val headphonesToAdd =
+                setOf(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
 
             every { headphonesService.getAllHeadphonesForUser(1L) } returns headphonesToAdd
             // WHEN
@@ -320,7 +329,7 @@ internal class UserAccountServiceTest {
 
         @Test
         fun `should return all headphones for current the user`() {
-            val headphones = Headphones(name = "first", type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
+            val headphones = Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
             val headphonesToAdd = mutableSetOf(headphones)
             val userAccount = UserAccount(
                 id = 1L,
@@ -348,14 +357,138 @@ internal class UserAccountServiceTest {
         }
 
         @Test
+        fun `should delete headphones to current user`() {
+            // GIVEN
+            val headphonesId = 1L
+            val headphones = Headphones(
+                id = headphonesId,
+                name = "test",
+                active = true,
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+
+            val headphonesToAdd = mutableSetOf(headphones)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                email = "test@gmail.com",
+                active = true,
+                headphones = headphonesToAdd
+            )
+            SecurityContextHolder.setContext(securityContext)
+            val email = "test@test.com"
+            val headphonesDto = mockkClass(HeadphonesDto::class)
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { headphonesService.save(headphones) } returns headphonesDto
+            // WHEN
+            userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
+
+            // THEN
+            verify(exactly = 1) { headphonesService.save(headphones) }
+        }
+
+        @Test
+        fun `should trow exception when headphones for current user is not found`() {
+            // GIVEN
+            val headphonesId = 1L
+            val headphones = Headphones(
+                id = 2L,
+                name = "test",
+                active = true,
+                type = HeadphonesType.IN_EAR_BLUETOOTH
+            )
+
+            val headphonesToAdd = mutableSetOf(headphones)
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = Gender.MALE.toString(),
+                bornYear = 2000,
+                email = "test@gmail.com",
+                active = true,
+                headphones = headphonesToAdd
+            )
+            SecurityContextHolder.setContext(securityContext)
+            val email = "test@test.com"
+            every { authentication.name } returns email
+            every { securityContext.authentication } returns authentication
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+
+            // THEN
+            shouldThrow<EntityNotFoundException> { userAccountService.deleteHeadphonesForCurrentUser(headphonesId) }
+        }
+
+        @Test
         fun `should return all users`() {
             // GIVEN
             val usersList = listOf(userAccount, userAccount, userAccount)
-            every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+            every { userAccountRepository.findUsersAccountsByRole(ROLE_USER.name) } returns usersList
             // WHEN
-            val userAccountDtos = userAccountService.getUsers(pageable = pageable, "ROLE_USER")
+            val userAccountDtos = userAccountService.getUsers(pageable = pageable, ROLE_USER.name)
             // THEN
             userAccountDtos.size shouldBe 3
+        }
+    }
+
+    @Nested
+    @DisplayName("Doctor related tests")
+    inner class DoctorFunctionality {
+
+        @Test
+        fun `should update doctor for patient`() {
+            // GIVEN
+            val userId: Long = 1
+            val doctorId: Long = 2
+            every { userAccountRepository.findUserAccountById(userId) } returns Optional.of(userAccount)
+            every { doctorAccount.id } returns doctorId
+            every { userAccountRepository.findUserAccountById(doctorId) } returns Optional.of(doctorAccount)
+            every { userAccountRepository.save(any()) } returns userAccount
+
+            // WHEN
+            userAccountService.updateDoctorForPatient(userId, doctorId)
+
+            // THEN
+            verify { userAccountRepository.findUserAccountById(userId) }
+            verify { userAccountRepository.findUserAccountById(doctorId) }
+            verify { userAccountRepository.save(userAccount) }
+        }
+
+        @Test
+        fun `should remove doctor from patient`() {
+            // GIVEN
+            val userId: Long = 1
+            val opDoctor = Optional.of(userAccount.apply { doctor = doctorAccount })
+            every { userAccountRepository.findUserAccountById(userId) } returns opDoctor
+            every { userAccountRepository.save(any()) } returns userAccount
+
+            // WHEN
+            userAccountService.removeDoctorFromPatient(userId)
+
+            // THEN
+            verify { userAccountRepository.findUserAccountById(userId) }
+            verify { userAccountRepository.save(userAccount) }
+        }
+
+        @Test
+        fun `should get patients for doctor`() {
+            // GIVEN
+            val doctorId: Long = 2
+            val patients = listOf(userAccount, userAccount)
+            every { userAccountRepository.findUserAccountById(doctorId) } returns Optional.of(doctorAccount)
+            every { userAccountRepository.findUserAccountsByDoctor(doctorAccount) } returns patients
+
+            // WHEN
+            val patientsForDoctor = userAccountService.getPatientsForDoctor(doctorId)
+
+            // THEN
+            verify { userAccountRepository.findUserAccountById(doctorId) }
+            verify { userAccountRepository.findUserAccountsByDoctor(doctorAccount) }
+
+            patientsForDoctor.size shouldBe patients.size
         }
     }
 
@@ -363,9 +496,9 @@ internal class UserAccountServiceTest {
     fun `should return all users with analytics`() {
         // GIVEN
         val usersList = listOf(userAccount, userAccount, userAccount)
-        every { userAccountRepository.findUsersAccountsByRole("ROLE_USER") } returns usersList
+        every { userAccountRepository.findUsersAccountsByRole(ROLE_USER.name) } returns usersList
         // WHEN
-        val userAccountDtos = userAccountService.getUsersWithAnalytics(pageable = pageable, "ROLE_USER")
+        val userAccountDtos = userAccountService.getUsersWithAnalytics(pageable = pageable, ROLE_USER.name)
         // THEN
         userAccountDtos.size shouldBe 3
     }

@@ -53,7 +53,7 @@ internal class WeekExercisingStatusRetrieverTest {
     )
 
     @Test
-    fun `getWorstStatus should return GREAT status when user progress in the range of the status`() {
+    fun `getStatus should return GREAT status when user progress in the range of the status`() {
         // GIVEN
         val period = listOf(studyHistory)
         val userAccountId = 1L
@@ -71,14 +71,14 @@ internal class WeekExercisingStatusRetrieverTest {
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
-        val worstStatus = retriever.getWorstStatus(period)
+        val worstStatus = retriever.getStatus(period)
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GREAT, worstStatus)
     }
 
     @Test
-    fun `getWorstStatus should return GOOD status when user progress in the range of the status`() {
+    fun `getStatus should return GOOD status when user progress in the range of the status`() {
         // GIVEN
         val period = listOf(studyHistory)
         val userAccountId = 1L
@@ -96,14 +96,14 @@ internal class WeekExercisingStatusRetrieverTest {
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
-        val worstStatus = retriever.getWorstStatus(period)
+        val worstStatus = retriever.getStatus(period)
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GOOD, worstStatus)
     }
 
     @Test
-    fun `getWorstStatus should return BAD status when user progress in the range of the status`() {
+    fun `getStatus should return BAD status when user progress in the range of the status`() {
         // GIVEN
         val period = listOf(studyHistory)
         val userAccountId = 1L
@@ -121,7 +121,7 @@ internal class WeekExercisingStatusRetrieverTest {
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
 
         // WHEN
-        val worstStatus = retriever.getWorstStatus(period)
+        val worstStatus = retriever.getStatus(period)
 
         // THEN
         assertEquals(UserExercisingProgressStatus.BAD, worstStatus)

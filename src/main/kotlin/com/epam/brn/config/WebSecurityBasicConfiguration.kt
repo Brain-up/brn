@@ -1,7 +1,9 @@
 package com.epam.brn.config
 
+import com.epam.brn.enums.Role.ROLE_ADMIN
+import com.epam.brn.enums.Role.ROLE_DOCTOR
+import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.auth.filter.FirebaseTokenAuthenticationFilter
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -28,14 +30,6 @@ class WebSecurityBasicConfiguration(
     private val firebaseTokenAuthenticationFilter: FirebaseTokenAuthenticationFilter
 ) : WebSecurityConfigurerAdapter() {
 
-    companion object {
-        const val ADMIN = "ADMIN"
-        const val USER = "USER"
-    }
-
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.csrf()
@@ -45,14 +39,15 @@ class WebSecurityBasicConfiguration(
             .addFilterBefore(firebaseTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
             .antMatchers("/registration/**").permitAll()
-            .antMatchers("/admin/**").hasRole(ADMIN)
-            .antMatchers("/users/current").hasAnyRole(ADMIN, USER)
-            .antMatchers("/users/current/headphones").hasAnyRole(ADMIN, USER)
-            .antMatchers("/users/current/password").hasAnyRole(ADMIN, USER)
-            .antMatchers("/users/**").hasRole(ADMIN)
-            .antMatchers("/cloud/upload").hasRole(ADMIN)
-            .antMatchers("/cloud/folders").hasRole(ADMIN)
-            .antMatchers("/**").hasAnyRole(ADMIN, USER)
+            .antMatchers("/admin/**").hasAuthority(ROLE_ADMIN.name)
+            .antMatchers("/users/current").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
+            .antMatchers("/users/current/headphones").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
+            .antMatchers("/users/current/password").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
+            .antMatchers("/users/**").hasAuthority(ROLE_ADMIN.name)
+            .antMatchers("/cloud/upload").hasAuthority(ROLE_ADMIN.name)
+            .antMatchers("/cloud/folders").hasAuthority(ROLE_ADMIN.name)
+            .antMatchers("/doctors/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_DOCTOR.name)
+            .antMatchers("/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
             .and().formLogin().disable()
             .httpBasic().disable()
             .exceptionHandling()

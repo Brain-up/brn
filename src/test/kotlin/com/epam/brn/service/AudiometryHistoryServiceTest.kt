@@ -61,7 +61,7 @@ internal class AudiometryHistoryServiceTest {
     @Test
     fun `should create audiometryHistory without sinAudiometryResults`() {
         // GIVEN
-        val headphonesDto = HeadphonesDto(name = "test", type = HeadphonesType.IN_EAR_BLUETOOTH, id = 5L)
+        val headphonesDto = HeadphonesDto(name = "test", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, id = 5L)
         val headphonesEntity = headphonesDto.toEntity()
         userAccount.headphones = mutableSetOf(headphonesEntity)
         every { userAccountService.getCurrentUser() } returns userAccount
@@ -103,7 +103,7 @@ internal class AudiometryHistoryServiceTest {
     @Test
     fun `should create audiometryHistory with sinAudiometryResults`() {
         // GIVEN
-        val headphonesDto = HeadphonesDto(name = "test", type = HeadphonesType.IN_EAR_BLUETOOTH, id = 5L)
+        val headphonesDto = HeadphonesDto(name = "test", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, id = 5L)
         val headphonesEntity = headphonesDto.toEntity()
         userAccount.headphones = mutableSetOf(headphonesEntity)
         every { userAccountService.getCurrentUser() } returns userAccount

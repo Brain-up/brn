@@ -13,7 +13,7 @@ class WeekExercisingStatusRetriever(
     private val requirementsManager: StatusRequirementsManager,
     private val restTimeRetriever: UserRestTimeRetriever
 ) : ExercisingStatusRetriever<List<StudyHistory>> {
-    override fun getWorstStatus(progress: List<StudyHistory>): UserExercisingProgressStatus? {
+    override fun getStatus(progress: List<StudyHistory>): UserExercisingProgressStatus? {
         val periodRequirements = requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)
         val startTime = progress.minByOrNull { it.startTime }!!.startTime.toLocalDate()
         val endTime = progress.maxByOrNull { it.startTime }!!.startTime.toLocalDate()

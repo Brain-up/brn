@@ -24,7 +24,13 @@ internal class DayExercisingStatusRetrieverTest {
     private lateinit var retriever: DayExercisingStatusRetriever
 
     @MockK
-    private lateinit var studyHistory: StudyHistory
+    private lateinit var goodStudyHistory: StudyHistory
+
+    @MockK
+    private lateinit var greatStudyHistory: StudyHistory
+
+    @MockK
+    private lateinit var worstStudyHistory: StudyHistory
 
     @MockK
     private lateinit var requirementsManager: StatusRequirementsManager
@@ -48,39 +54,42 @@ internal class DayExercisingStatusRetrieverTest {
     )
 
     @Test
-    fun `getWorstStatus should return GREAT status when user progress in the range of the status`() {
+    fun `getStatus should return GREAT status when user progress in the range of the status`() {
         // GIVEN
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY) } returns requirementsStatuses
-        every { studyHistory.executionSeconds } returns 20 * 60
+        every { goodStudyHistory.executionSeconds } returns 15 * 60
+        every { greatStudyHistory.executionSeconds } returns 20 * 60
+        every { worstStudyHistory.executionSeconds } returns 5 * 60
 
         // WHEN
-        val status = retriever.getWorstStatus(listOf(studyHistory))
+        val status = retriever.getStatus(listOf(goodStudyHistory, greatStudyHistory, worstStudyHistory))
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GREAT, status)
     }
 
     @Test
-    fun `getWorstStatus should return GOOD status when user progress in the range of the status`() {
+    fun `getStatus should return GOOD status when user progress in the range of the status`() {
         // GIVEN
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY) } returns requirementsStatuses
-        every { studyHistory.executionSeconds } returns 15 * 60
+        every { goodStudyHistory.executionSeconds } returns 10 * 60
+        every { worstStudyHistory.executionSeconds } returns 5 * 60
 
         // WHEN
-        val status = retriever.getWorstStatus(listOf(studyHistory))
+        val status = retriever.getStatus(listOf(goodStudyHistory, worstStudyHistory))
 
         // THEN
         assertEquals(UserExercisingProgressStatus.GOOD, status)
     }
 
     @Test
-    fun `getWorstStatus should return BAD status when user progress in the range of the status`() {
+    fun `getStatus should return BAD status when user progress in the range of the status`() {
         // GIVEN
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.DAY) } returns requirementsStatuses
-        every { studyHistory.executionSeconds } returns 5 * 60
+        every { worstStudyHistory.executionSeconds } returns 5 * 60
 
         // WHEN
-        val status = retriever.getWorstStatus(listOf(studyHistory))
+        val status = retriever.getStatus(listOf(worstStudyHistory))
 
         // THEN
         assertEquals(UserExercisingProgressStatus.BAD, status)

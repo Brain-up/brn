@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.integration.firebase.FirebaseWebClient
 import com.epam.brn.integration.firebase.model.FirebaseVerifyPasswordRequest
+import com.epam.brn.enums.Role
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
@@ -58,7 +59,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
         uuidFirebaseNewUser = saveFirebaseUser(newUserFullName, newUserEmail, newUserPassword)!!.uid
         uuidFirebaseUserRole = saveFirebaseUser(userRoleFullName, userRoleEmail, userRolePassword)!!.uid
 
-        val roleUserName = "ROLE_USER"
+        val roleUserName = Role.ROLE_ADMIN.name
         val userAuthority = authorityRepository.findAuthorityByAuthorityName(roleUserName)
             ?: authorityRepository.save(Authority(authorityName = roleUserName))
 
@@ -127,7 +128,6 @@ class AuthorizationAuthenticationIT : BaseIT() {
             .perform(
                 get(baseUrl).header("Authorization", idToken)
             )
-
         // THEN
         resultAction.andExpect(status().isOk)
         val userAccount = userAccountRepository.findUserAccountByEmail(newUserEmail).get()
@@ -146,7 +146,6 @@ class AuthorizationAuthenticationIT : BaseIT() {
             .perform(
                 get(adminUsersPath).header("Authorization", idToken)
             )
-
         // THEN
         resultAction.andExpect(status().isForbidden)
     }

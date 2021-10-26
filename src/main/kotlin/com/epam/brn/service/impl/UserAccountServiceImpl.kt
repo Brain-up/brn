@@ -6,12 +6,12 @@ import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
+import com.epam.brn.enums.Role
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.HeadphonesService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.UserRecord
@@ -27,7 +27,6 @@ import java.security.Principal
 
 @Service
 class UserAccountServiceImpl(
-    private val firebaseService: FirebaseUserService,
     private val userAccountRepository: UserAccountRepository,
     private val authorityService: AuthorityService,
     private val headphonesService: HeadphonesService
@@ -99,7 +98,8 @@ class UserAccountServiceImpl(
 
     override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
 
-    override fun getAllHeadphonesForCurrentUser() = getCurrentUser().headphones.map(Headphones::toDto).toSet()
+    override fun getAllHeadphonesForCurrentUser() = getCurrentUser()
+        .headphones.filter { it.active }.map(Headphones::toDto).toSet()
 
     override fun getUserFromTheCurrentSession(): UserAccountResponse = getCurrentUser().toDto()
 
@@ -138,6 +138,14 @@ class UserAccountServiceImpl(
         return headphonesService.save(entityHeadphones)
     }
 
+    override fun deleteHeadphonesForCurrentUser(headphonesId: Long) {
+        val currentUserAccount = getCurrentUser()
+        val headphones = currentUserAccount.headphones.firstOrNull { it.id == headphonesId }
+            ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
+        headphones.active = false
+        headphonesService.save(headphones)
+    }
+
     override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountResponse {
         return getCurrentUser().let {
             if (userChangeRequest.isNotEmpty())
@@ -145,6 +153,15 @@ class UserAccountServiceImpl(
             else it
         }.toDto()
     }
+
+    override fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount =
+        userAccountRepository.save(findUserEntityById(userId).apply { doctor = findUserEntityById(doctorId) })
+
+    override fun removeDoctorFromPatient(userId: Long): UserAccount =
+        userAccountRepository.save(findUserEntityById(userId).apply { doctor = null })
+
+    override fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse> =
+        userAccountRepository.findUserAccountsByDoctor(findUserEntityById(doctorId)).map { it.toDto() }
 
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
         (!this.name.isNullOrBlank())
@@ -177,7 +194,7 @@ class UserAccountServiceImpl(
     private fun getDefaultAuthoritySet(): MutableSet<Authority> {
         var authorityNames = mutableSetOf<String>()
         if (authorityNames.isEmpty())
-            authorityNames = mutableSetOf("ROLE_USER")
+            authorityNames = mutableSetOf(Role.ROLE_USER.name)
 
         return authorityNames
             .filter(::isNotEmpty)
