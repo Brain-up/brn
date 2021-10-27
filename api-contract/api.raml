@@ -434,7 +434,7 @@ types:
       delete:
         description: Delete doctor from patient
         responses:
-          200
+          200:
 
 # AUTH ----------------------
 /brnlogin:
@@ -509,7 +509,7 @@ types:
         application/json:
           example: !include samples/add_patient_to_doctor_request.json
       responses:
-        200
+        200:
     get:
       description: Get all patients for doctor
       responses:
@@ -517,11 +517,11 @@ types:
           body:
             application/json:
               example: !include samples/get_all_patient_for_doctor_response.json
-    /{patientId}
+    /{patientId}:
       delete:
         description: Delete patient from doctor
         responses:
-          200
+          200:
 
 # ADMIN  ----------------------
 /admin:
