@@ -3,7 +3,6 @@ package com.epam.brn.service.impl
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.enums.Role
@@ -53,20 +52,6 @@ class UserAccountServiceImpl(
     override fun findUserByUuid(uuid: String): UserAccountResponse? {
         val user = userAccountRepository.findByUserId(uuid)
         return user?.toDto()
-    }
-
-    override fun createUser(
-        userAccountCreateRequest: UserAccountCreateRequest,
-        firebaseUserRecord: UserRecord
-    ): UserAccountResponse {
-        val existUser = userAccountRepository.findUserAccountByEmail(userAccountCreateRequest.email)
-        existUser.ifPresent {
-            throw IllegalArgumentException("The user already exists!")
-        }
-        val userAccount = userAccountCreateRequest.toModel()
-        userAccount.userId = firebaseUserRecord?.uid
-        userAccount.authoritySet = getDefaultAuthoritySet()
-        return userAccountRepository.save(userAccount).toDto()
     }
 
     override fun createUser(

@@ -11,6 +11,7 @@ import com.epam.brn.service.UserAccountService
 import com.google.firebase.ErrorCode
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseToken
 import com.google.firebase.auth.UserRecord
 import io.mockk.every
@@ -150,7 +151,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         val filterChain = FilterChain { filterRequest, filterResponse -> }
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
-        every { firebaseAuth.verifyIdToken(tokenMock, true) } throws (FirebaseException(ErrorCode.INVALID_ARGUMENT, "Token invalid", null))
+        every { firebaseAuth.verifyIdToken(tokenMock, true) } throws (FirebaseAuthException(FirebaseException(ErrorCode.INVALID_ARGUMENT, "Token invalid", null)))
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
         // THEN

@@ -9,7 +9,7 @@ import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.FirebaseUserService
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserRecord
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -29,7 +29,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     lateinit var authorityRepository: AuthorityRepository
 
     @Autowired
-    lateinit var firebaseUserService: FirebaseUserService
+    lateinit var firebaseAuth: FirebaseAuth
 
     @Autowired
     lateinit var firebaseWebClient: FirebaseWebClient
@@ -73,9 +73,9 @@ class AuthorizationAuthenticationIT : BaseIT() {
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()
         authorityRepository.deleteAll()
-        firebaseUserService.deleteUser(uuidFirebaseAdmin)
-        firebaseUserService.deleteUser(uuidFirebaseNewUser)
-        firebaseUserService.deleteUser(uuidFirebaseUserRole)
+        deleteFirebaseUser(uuidFirebaseAdmin)
+        deleteFirebaseUser(uuidFirebaseNewUser)
+        deleteFirebaseUser(uuidFirebaseUserRole)
     }
 
     @Test
@@ -147,13 +147,13 @@ class AuthorizationAuthenticationIT : BaseIT() {
             bornYear = 2000
         )
         try {
-            val userByEmail = firebaseUserService.getUserByEmail(firebaseUser.email)
+            val userByEmail = firebaseAuth.getUserByEmail(firebaseUser.email)
             if (userByEmail?.uid != null) {
-                firebaseUserService.deleteUser(userByEmail.uid)
+                firebaseAuth.deleteUser(userByEmail.uid)
             }
         } catch (e: Exception) {
         }
-        return firebaseUserService.addUser(firebaseUser)
+        return addFirebaseUser(firebaseUser)
     }
 
     private fun createUserInLocalDatabase(fullName: String, email: String, uuid: String, authority: Authority) {
@@ -168,5 +168,23 @@ class AuthorizationAuthenticationIT : BaseIT() {
             )
         userAccount.authoritySet.add(authority)
         userAccountRepository.save(userAccount)
+    }
+
+    fun addFirebaseUser(userAccountCreateRequest: UserAccountCreateRequest): UserRecord? {
+        val firebaseUser = UserRecord.CreateRequest()
+            .setEmail(userAccountCreateRequest.email)
+            .setDisplayName(userAccountCreateRequest.name)
+            .setPassword(userAccountCreateRequest.password)
+            .setEmailVerified(false)
+        if (userAccountCreateRequest.avatar != null) {
+            firebaseUser
+                .setPhotoUrl(userAccountCreateRequest.avatar)
+        }
+        val createdUser = firebaseAuth.createUser(firebaseUser)
+        return createdUser
+    }
+
+    fun deleteFirebaseUser(uuid: String) {
+        firebaseAuth.deleteUser(uuid)
     }
 }

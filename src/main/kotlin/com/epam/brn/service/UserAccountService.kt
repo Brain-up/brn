@@ -2,7 +2,6 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.model.UserAccount
@@ -12,10 +11,6 @@ import org.springframework.data.domain.Pageable
 interface UserAccountService {
     fun findUserByName(name: String): UserAccountResponse
     fun findUserByEmail(email: String): UserAccountResponse
-    fun createUser(
-        userAccountCreateRequest: UserAccountCreateRequest,
-        firebaseUserRecord: UserRecord
-    ): UserAccountResponse
     fun createUser(
         firebaseUserRecord: UserRecord
     ): UserAccountResponse

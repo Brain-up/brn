@@ -1,10 +1,16 @@
 package com.epam.brn.service
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserRecord
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class FirebaseUserServiceTest {
@@ -15,24 +21,19 @@ internal class FirebaseUserServiceTest {
     @MockK
     lateinit var firebaseAuth: FirebaseAuth
 
-/*    @Test
+    @Test
     fun `should get user by uid`() {
         // GIVEN
-        val userMock: UserRecord = mockkClass(UserRecord::class)
-        val userDtoMock = (2, 1, "name", 1, NoiseDto(0, noiseUrl))
-        val exerciseId = 1L
-        every { exerciseMock.toDto(true) } returns exerciseDtoMock
-        every { exerciseMock.id } returns exerciseId
-        every { studyHistoryRepository.getDoneExercisesIdList(ofType(Long::class)) } returns listOf(exerciseId)
-        every { exerciseRepository.findAll() } returns listOf(exerciseMock)
-        every { urlConversionService.makeUrlForNoise(noiseUrl) } returns noiseUrl
+        val uuid = "123456789"
+        val userMock = mockk<UserRecord>()
+        every { firebaseAuth.getUser(uuid) } returns userMock
 
         // WHEN
-        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(22L)
+        val result = firebaseUserService.getUserById(uuid)
 
         // THEN
-        assertEquals(actualResult, listOf(exerciseDtoMock))
-        verify(exactly = 1) { exerciseRepository.findAll() }
-        verify(exactly = 1) { studyHistoryRepository.getDoneExercisesIdList(ofType(Long::class)) }
-    }*/
+        assertEquals(userMock, result)
+        verify(exactly = 1) { firebaseAuth.getUser(uuid) }
+        verify(exactly = 0) { firebaseAuth.getUserByEmail(any()) }
+    }
 }
