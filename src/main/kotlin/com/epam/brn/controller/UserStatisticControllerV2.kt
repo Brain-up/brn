@@ -20,7 +20,7 @@ class UserStatisticControllerV2(
     private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 ) {
 
-    @GetMapping(value = ["/study/week"])
+    @GetMapping("/study/week")
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime
@@ -29,7 +29,7 @@ class UserStatisticControllerV2(
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
     }
 
-    @GetMapping(value = ["/study/year"])
+    @GetMapping("/study/year")
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime
