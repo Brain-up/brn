@@ -3,6 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.StudyHistoryDto
 import com.fasterxml.jackson.core.type.TypeReference
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -19,6 +20,11 @@ class StudyHistoryControllerV2IT : BaseIT() {
     private val baseUrl = "/v2/study-history"
     private val fromParameterName = "from"
     private val toParameterName = "to"
+
+    @AfterEach
+    fun rollback() {
+        deleteInsertedTestData()
+    }
 
     @Test
     fun `getHistories should return histories for period of time`() {
