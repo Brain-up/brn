@@ -37,7 +37,7 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     @ApiOperation("Get current user's study histories for period")
     @Deprecated(
         message = "Use the method with LocalDateTime as the dates type instead",
-        ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.StudyHistoryControllerV2"])
+        replaceWith = ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.StudyHistoryControllerV2"])
     )
     fun getHistories(
         @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,

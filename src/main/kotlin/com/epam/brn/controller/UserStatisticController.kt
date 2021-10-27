@@ -36,7 +36,10 @@ class UserStatisticController(
     }
 
     @GetMapping("/study/week")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getUserWeeklyStatistic(from, to)", imports = ["com.epam.brn.controller.UserStatisticControllerV2"])
+    )
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
@@ -51,7 +54,10 @@ class UserStatisticController(
     }
 
     @GetMapping("/study/year")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getUserYearlyStatistic(from, to)", imports = ["com.epam.brn.controller.UserStatisticControllerV2"])
+    )
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate

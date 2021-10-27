@@ -67,7 +67,10 @@ class AdminController(
 
     @GetMapping("/histories")
     @ApiOperation("Get user's study histories for period")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
+    )
     fun getHistories(
         @RequestParam("userId", required = true) userId: Long,
         @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
@@ -86,7 +89,10 @@ class AdminController(
 
     @GetMapping("/study/week")
     @ApiOperation("Get user's weekly statistic for the period")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getUserWeeklyStatistic(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
+    )
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
@@ -103,7 +109,10 @@ class AdminController(
 
     @GetMapping("/study/year")
     @ApiOperation("Get user's yearly statistic for the period")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getUserYearlyStatistic(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
+    )
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
