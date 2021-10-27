@@ -176,6 +176,6 @@ sonarqube {
         property 'sonar.working.directory', "./build/sonar"
         property 'sonar.coverage.exclusions', "**/com/epam/brn/dto/**,**/com/epam/brn/model/**," +
                 "**/com/epam/brn/config/**,**/com/epam/brn/exception/**,**/com/epam/brn/Application*," +
-                "**/com/epam/brn/service/load/InitialDataLoader*"
+                "**/com/epam/brn/service/load/InitialDataLoader*,**/com/epam/brn/service/load/FirebaseUserDataLoader*"
     }
 }

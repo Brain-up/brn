@@ -166,6 +166,30 @@ internal class FirebaseTokenAuthenticationFilterTest {
     }
 
     @Test
+    fun `should set authentication by NULL when error occurred`() {
+        // GIVEN
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val tokenMock = "firebaseTokenMock"
+        requestMock.addHeader("Authorization", "Bearer $tokenMock")
+        val responseMock = MockHttpServletResponse()
+        val filterChain = FilterChain { filterRequest, filterResponse -> }
+
+        every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
+        every { firebaseAuth.verifyIdToken(tokenMock, true) } throws (IllegalArgumentException())
+        // WHEN
+        firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
+        // THEN
+        val authentication = SecurityContextHolder.getContext().authentication
+        assertNull(authentication)
+
+        verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
+        verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
+        verify(exactly = 0) { firebaseUserService.getUserById(any()) }
+        verify(exactly = 0) { userAccountService.createUser(any()) }
+    }
+
+    @Test
     fun `should set authentication by NULL when user not exist in local DB and not returning from firebase DB`() {
         // GIVEN
         val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
