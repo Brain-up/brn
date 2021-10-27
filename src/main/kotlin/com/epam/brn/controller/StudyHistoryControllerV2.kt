@@ -19,7 +19,7 @@ class StudyHistoryControllerV2(
     @Autowired val studyHistoryService: StudyHistoryService
 ) {
 
-    @GetMapping(value = ["/histories"])
+    @GetMapping("/histories")
     @ApiOperation("Get current user's study histories for period")
     fun getHistories(
         @RequestParam("from", required = true) from: LocalDateTime,
