@@ -9,7 +9,7 @@ data class HeadphonesDto(
     @field:NotBlank
     var name: String,
     var active: Boolean?,
-    var type: HeadphonesType,
+    var type: HeadphonesType?,
     var description: String = "",
     var userAccount: Long? = null
 ) {
@@ -17,7 +17,7 @@ data class HeadphonesDto(
         id = id,
         name = name,
         active = active ?: true,
-        type = type,
+        type = type ?: HeadphonesType.NOT_DEFINED,
         description = description
     )
 }

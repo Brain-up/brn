@@ -12,11 +12,9 @@ Now you as a user can register and start doing exercises.
 Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
 
 ## SCIENTIFIC SOURCES
- - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit   
- - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/ 
- - https://youtu.be/BMNrFENZ4Rw 
- - https://youtu.be/QUoBMSKq7zg
- 
+- Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit
+- Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/
+
 ## Published ARTICLES about our project
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
@@ -24,7 +22,7 @@ Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
 - https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html (only for epamers)
  
 ## WHY JOIN OUR PROJECT AS A DEVELOPER?
-We use latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. We will review your code, give you advice to improve it and listen to your suggestions. 
+We use the latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. We will review your code, give you advice to improve it and listen to your suggestions. 
 Most importantly being an open source project you can show your work in it to any person interested, proving your development expertise with actual examples of your work flow and code samples in a live application. 
 
 ## WE ARE LOOKING FOR
@@ -43,23 +41,27 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 - TestContainers for running integration tests.
 
 ## HOW TO JOIN?
-1. for epam developers: Just click on “JOIN TEAM” button in https://contribute.epam.com/products/143 and we will get in touch with you shortly. 
-2. for all other developers: you can send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) or directly to [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.
-our project skype chat: https://join.skype.com/jxSiWkgwT2x1
+You can send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) 
+or directly to [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
+Our project Skype chat: https://join.skype.com/jxSiWkgwT2x1  
+Project on epam plus (for epamers): https://plus.epam.com/projects/115
 
 # GETTING STARTED!
 ## Resources:
 ### Documentation
-https://github.com/Brain-up/brn/wiki ||
-https://kb.epam.com/display/EPMLABSBRN/Brn+project+documentation
+https://github.com/Brain-up/brn/wiki  
+https://kb.epam.com/display/EPMLABSBRN/Business+Domain+Info
+
 ### Jira
-https://github.com/Brain-up/brn/issues ||
+https://github.com/Brain-up/brn/issues  
 https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
+
 ### Jenkins (only for epamers now)
 https://kb.epam.com/pages/viewpage.action?pageId=885110636
-### Coding standarts
-https://github.com/Brain-up/brn/wiki/Coding-Standards ||
-https://kb.epam.com/display/EPMLABSBRN/Coding+standards
+
+### Coding standards
+https://github.com/Brain-up/brn/wiki/Coding-Standards  
+https://kb.epam.com/display/EPMLABSBRN/Coding+Guidelines
 
 ## Development:
 
@@ -76,16 +78,7 @@ Go to location where the project is download for example C:\brn\brn\frontend-ang
 📄 [See here](https://github.com/Brain-up/brn/tree/master/frontend-angular#readme)
 
 ### Start Front Ember Part - user application
-Run following commands:
-linux/mac:
-``` 
-cd ./frontend/ && yarn && node ./node_modules/.bin/ember serve
-```
-for windows:
-```
- ./node_modules/.bin/ember serve --port=4201
-```
-FE dev server now accessible at http://localhost:4200/
+📄 [See here](https://github.com/Brain-up/brn/tree/master/frontend#readme)
 
 ### Database running:
 1. Install docker to your machine.
@@ -99,31 +92,43 @@ To install docker use:
 * [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
 
 2.1 To run docker db image use the following command:
-*  on linux:
-`docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
+* on linux:
+```bash
+docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11
+```
+
 * on windows: 
-`docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11`
-_$PG_PASSWORD_ and _$PG_USER_ are environment variables and  could be replaced directly or added to your operation system 
+```
+docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11
+```
+`$PG_PASSWORD` and `$PG_USER` are environment variables and  could be replaced directly or added to your operating system. 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
 
 2.2 Alternatively, you can just replace the variables by "admin", the default user and password for development:
-_docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11_
+```bash
+docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11
+```
 
 ### Back end Kotlin Part:
 1. Run command 'gradle build' from main project folder to build project with tests.
 2. Application.kt is the main class to run application from Idea for example.
 3. post http://localhost:8081/api/brnlogin use in body
+```json
 {
   "grant_type": "password",
   "username": "default@default.ru",
   "password": "password"
 }
+```
 4. then you can call all other end-points from Postman collection https://www.getpostman.com/collections/2df39c7c6f7f26a63d85 like
-http://localhost:8081/api/exercises/142 
+http://localhost:8081/api/exercises/142  
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
 5. for logout use http://localhost:8081/api/logout
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
+
+#### Useful Postman scripts:
+- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistic (you can use it with `brnlogin` request in `Test` tab)
 
 ### Deploy Application USING DOCKER COMPOSE:
 (back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
@@ -139,17 +144,18 @@ docker-compose -d up --build
 REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
 
 docker useful command:
-docker ps -a -q for show all containers
-docker stop idContainer for stop running container
-docker rm $(docker ps -a -q) Remove all stopped containers
-
+```shell
+docker ps -a -q # for show all containers
+docker stop idContainer # for stop running container
+docker rm $(docker ps -a -q) # Remove all stopped containers
+```
 ## Development tips:
 1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused it with @ElenaSpb, send your githubnick to her.
 2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
-3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMCOSRINT/Coding+standarts .
+3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMLABSBRN/Coding+Guidelines .
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
-6. The task gets merged by a project mantainer. 
+6. The task gets merged by a project maintainer. 
 7. check that build job on jenkins passes successfully.
 
 ### Code style:

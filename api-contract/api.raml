@@ -326,7 +326,7 @@ types:
               example: !include samples/avaliable_exercise_ids_by_input_ids.json
   /{exerciseId}/active/{active}:
     put:
-      description: Update active status of the exercise 
+      description: Update active status of the exercise
 
 # TASK ----------------------------
 /tasks:
@@ -507,6 +507,18 @@ types:
           200:
             body:
               example: !include samples/get_headphones_response.json
+    /current/{patientId}/doctor:
+      get:
+        description: Get patient's doctor
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include samples/get_doctor_assigned_to_patient_response.json
+      delete:
+        description: Delete doctor from patient
+        responses:
+          200
 
 # AUTH ----------------------
 /brnlogin:
@@ -571,6 +583,29 @@ types:
         200:
           body:
             example: "https://cloudprovider.bucket.com"
+
+# DOCTOR  ----------------------
+/doctor:
+  /{doctorId}/patients:
+    post:
+      description: Add doctor to patient
+      body:
+        application/json:
+          example: !include samples/add_patient_to_doctor_request.json
+      responses:
+        200
+    get:
+      description: Get all patients for doctor
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include samples/get_all_patient_for_doctor_response.json
+    /{patientId}
+      delete:
+        description: Delete patient from doctor
+        responses:
+          200
 
 # ADMIN  ----------------------
 /admin:

@@ -1,6 +1,7 @@
 package com.epam.brn.enums
 
 enum class HeadphonesType {
+    NOT_DEFINED,
     ON_EAR_BLUETOOTH,
     OVER_EAR_BLUETOOTH,
     IN_EAR_BLUETOOTH,

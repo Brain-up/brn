@@ -44,15 +44,15 @@ internal class StudyHistoriesProgressStatusManagerTest {
         val progress = listOf(studyHistory)
         every { dayRetriever.getSupportedPeriods() } returns listOf(UserExercisingPeriod.WEEK, UserExercisingPeriod.DAY)
         every { weekRetriever.getSupportedPeriods() } returns listOf(UserExercisingPeriod.WEEK)
-        every { dayRetriever.getWorstStatus(any()) } returns UserExercisingProgressStatus.GOOD
-        every { weekRetriever.getWorstStatus(any()) } returns UserExercisingProgressStatus.GOOD
+        every { dayRetriever.getStatus(any()) } returns UserExercisingProgressStatus.GOOD
+        every { weekRetriever.getStatus(any()) } returns UserExercisingProgressStatus.GOOD
 
         // WHEN
         val status = managerStudyHistories.getStatus(UserExercisingPeriod.WEEK, progress)
 
         // THEN
-        verify(exactly = 1) { dayRetriever.getWorstStatus(progress) }
-        verify(exactly = 1) { weekRetriever.getWorstStatus(progress) }
+        verify(exactly = 1) { dayRetriever.getStatus(progress) }
+        verify(exactly = 1) { weekRetriever.getStatus(progress) }
         assertEquals(UserExercisingProgressStatus.GOOD, status)
     }
 
@@ -67,14 +67,14 @@ internal class StudyHistoriesProgressStatusManagerTest {
             UserExercisingPeriod.DAY
         )
         every { weekRetriever.getSupportedPeriods() } returns listOf(UserExercisingPeriod.WEEK)
-        every { dayRetriever.getWorstStatus(any()) } returns UserExercisingProgressStatus.GOOD
+        every { dayRetriever.getStatus(any()) } returns UserExercisingProgressStatus.GOOD
 
         // WHEN
         val status = managerStudyHistories.getStatus(UserExercisingPeriod.DAY, progress)
 
         // THEN
-        verify(exactly = 1) { dayRetriever.getWorstStatus(progress) }
-        verify(exactly = 0) { weekRetriever.getWorstStatus(progress) }
+        verify(exactly = 1) { dayRetriever.getStatus(progress) }
+        verify(exactly = 0) { weekRetriever.getStatus(progress) }
         assertEquals(UserExercisingProgressStatus.GOOD, status)
     }
 }
