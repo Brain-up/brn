@@ -50,9 +50,7 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
 
-        if (!isAudioFileUrlGenerated) {
-            processAnswerOptions(task)
-        }
+        if (!isAudioFileUrlGenerated) processAnswerOptions(task)
 
         return when (val type = ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> task.toWordsSeriesTaskDto(type)
