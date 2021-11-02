@@ -494,15 +494,4 @@ internal class UserAccountServiceTest {
             patientsForDoctor.size shouldBe patients.size
         }
     }
-
-    @Test
-    fun `should return all users with analytics`() {
-        // GIVEN
-        val usersList = listOf(userAccount, userAccount, userAccount)
-        every { userAccountRepository.findUsersAccountsByRole(ROLE_USER.name) } returns usersList
-        // WHEN
-        val userAccountDtos = userAccountService.getUsersWithAnalytics(pageable = pageable, ROLE_USER.name)
-        // THEN
-        userAccountDtos.size shouldBe 3
-    }
 }

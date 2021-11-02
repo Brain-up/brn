@@ -2,9 +2,9 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
-import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
+import com.epam.brn.repo.UserAccountRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -15,12 +15,12 @@ import java.util.Locale
 
 @Service
 class UserAnalyticsServiceImpl(
-    private val userAccountService: UserAccountService,
+    private val userAccountRepository: UserAccountRepository,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
 ) : UserAnalyticsService {
 
     override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
-        val users = userAccountService.getUsersWithAnalytics(pageable, role)
+        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
 
         val now = LocalDate.now()
         val firstWeekDay = WeekFields.of(Locale.getDefault()).dayOfWeek()

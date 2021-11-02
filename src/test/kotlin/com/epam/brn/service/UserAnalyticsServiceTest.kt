@@ -1,10 +1,10 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.enums.Role.ROLE_ADMIN
-import com.epam.brn.service.impl.UserAccountServiceImpl
+import com.epam.brn.model.UserAccount
 import com.epam.brn.service.impl.UserAnalyticsServiceImpl
+import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -24,7 +24,7 @@ internal class UserAnalyticsServiceTest {
     lateinit var userAnalyticsService: UserAnalyticsServiceImpl
 
     @MockK
-    lateinit var userAccountService: UserAccountServiceImpl
+    lateinit var userAccountRepository: UserAccountRepository
 
     @MockK
     lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
@@ -33,7 +33,7 @@ internal class UserAnalyticsServiceTest {
     lateinit var pageable: Pageable
 
     @MockK(relaxed = true)
-    lateinit var userWithAnalytics: UserWithAnalyticsResponse
+    lateinit var doctorAccount: UserAccount
 
     @MockK(relaxed = true)
     lateinit var dayStudyStatistic: DayStudyStatistic
@@ -41,10 +41,10 @@ internal class UserAnalyticsServiceTest {
     @Test
     fun `should return all users with analytics`() {
 
-        val usersList = listOf(userWithAnalytics, userWithAnalytics)
+        val usersList = listOf(doctorAccount, doctorAccount)
         val dayStatisticList = listOf(dayStudyStatistic, dayStudyStatistic)
 
-        every { userAccountService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name) } returns usersList
+        every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
@@ -55,10 +55,10 @@ internal class UserAnalyticsServiceTest {
     @Test
     fun `should not return user with analytics`() {
 
-        val usersList = listOf(userWithAnalytics)
+        val usersList = listOf(doctorAccount)
         val dayStatisticList = emptyList<DayStudyStatistic>()
 
-        every { userAccountService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name) } returns usersList
+        every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
