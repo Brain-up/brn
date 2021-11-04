@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.Test
 import org.springframework.data.domain.Pageable
+import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserAnalyticsService test using MockK")
@@ -28,6 +29,9 @@ internal class UserAnalyticsServiceTest {
 
     @MockK
     lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
+
+    @MockK
+    lateinit var timeService: TimeService
 
     @MockK
     lateinit var pageable: Pageable
@@ -46,6 +50,7 @@ internal class UserAnalyticsServiceTest {
 
         every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
+        every { timeService.now() } returns LocalDateTime.now()
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
 
@@ -60,6 +65,7 @@ internal class UserAnalyticsServiceTest {
 
         every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
+        every { timeService.now() } returns LocalDateTime.now()
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
 
