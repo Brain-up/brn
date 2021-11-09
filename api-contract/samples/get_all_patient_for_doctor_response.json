@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "authorities": [
+        "ROLE_USER"
+      ],
+      "id": 3,
+      "name": "Name2",
+      "email": "default2@default.ru",
+      "bornYear": 1999,
+      "gender": "FEMALE",
+      "active": true,
+      "created": "2021-08-06T14:38:18.571",
+      "changed": "2021-10-13T18:04:42.292759",
+      "headphones": [],
+      "doctorId": 4
+    },
+    {
+      "authorities": [
+        "ROLE_USER"
+      ],
+      "id": 2,
+      "name": "Name1",
+      "email": "default@default.ru",
+      "bornYear": 1999,
+      "gender": "MALE",
+      "active": true,
+      "created": "2021-08-06T14:38:18.566",
+      "changed": "2021-10-15T09:04:10.809606",
+      "headphones": [],
+      "doctorId": 4
+    }
+  ],
+  "errors": [],
+  "meta": []
+}
