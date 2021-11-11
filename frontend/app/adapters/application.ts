@@ -10,7 +10,7 @@ export default class ApplicationAdapter extends RESTAdapter {
       return {};
     }
     return {
-      Authorization: `Basic ${this.session.data?.authenticated.user.stsTokenManager.accessToken}`,
+      Authorization: `Bearer ${this.session.data?.authenticated.user.stsTokenManager.accessToken}`,
     };
   }
   namespace = 'api';
