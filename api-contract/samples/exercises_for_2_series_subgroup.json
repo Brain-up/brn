@@ -16,7 +16,8 @@
           "id": 649
         }
       ],
-      "signals": []
+      "signals": [],
+      "isAudioFileUrlGenerated": false
     },
     {
       "seriesId": 21,
