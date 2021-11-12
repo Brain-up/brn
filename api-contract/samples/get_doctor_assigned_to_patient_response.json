@@ -1,0 +1,19 @@
+{
+  "data": {
+    "authorities": [
+      "ROLE_USER",
+      "ROLE_DOCTOR"
+    ],
+    "id": 4,
+    "name": "Name2",
+    "email": "doctor@default.ru",
+    "bornYear": 1999,
+    "gender": "FEMALE",
+    "active": true,
+    "created": "2021-09-22T14:52:49.839423",
+    "changed": "2021-09-22T14:52:49.839423",
+    "headphones": []
+  },
+  "errors": [],
+  "meta": []
+}

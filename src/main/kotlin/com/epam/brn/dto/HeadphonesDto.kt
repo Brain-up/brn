@@ -8,14 +8,16 @@ data class HeadphonesDto(
     var id: Long? = null,
     @field:NotBlank
     var name: String,
-    var type: HeadphonesType,
+    var active: Boolean?,
+    var type: HeadphonesType?,
     var description: String = "",
     var userAccount: Long? = null
 ) {
     fun toEntity() = Headphones(
         id = id,
         name = name,
-        type = type,
+        active = active ?: true,
+        type = type ?: HeadphonesType.NOT_DEFINED,
         description = description
     )
 }

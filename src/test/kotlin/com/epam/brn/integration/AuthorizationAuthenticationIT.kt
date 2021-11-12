@@ -1,10 +1,11 @@
 package com.epam.brn.integration
 
-import com.epam.brn.repo.AuthorityRepository
-import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.enums.Role
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
+import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.repo.UserAccountRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,7 +36,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
 
     @BeforeEach
     fun initBeforeEachTest() {
-        val authName = "ROLE_ADMIN"
+        val authName = Role.ROLE_ADMIN.name
         val authority = authorityRepository.findAuthorityByAuthorityName(authName)
             ?: authorityRepository.save(Authority(authorityName = authName))
         val password = passwordEncoder.encode(password)
