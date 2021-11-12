@@ -50,7 +50,7 @@
               "Favorite": "Favorite",
               "FirstVisit": "First visit",
               "LastVisit": "Last visit",
-              "LastWeek": "Current week",
+              "CurrentWeek": "Current week",
               "Name": "Name",
               "Progress": "Progress",
               "WorkingDaysInLastMonth": "Days in last month"
