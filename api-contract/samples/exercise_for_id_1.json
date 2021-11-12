@@ -17,6 +17,7 @@
     ],
     "signals": [],
     "active": true,
+    "isAudioFileUrlGenerated": false,
     "changedBy": "InitialDataLoader",
     "changedWhen": "2020-11-05T12:19:51.227"
   },
