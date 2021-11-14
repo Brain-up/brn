@@ -115,9 +115,11 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       return
     }
 
+    yield this.loginTask.perform();
+
     const result = yield this.network.patchUserInfo(user);
     if (result.ok) {
-      yield this.loginTask.perform();
+        return;
     } else {
       const error = yield result.json();
       const key = error.errors.pop();
