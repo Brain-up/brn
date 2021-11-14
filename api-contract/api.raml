@@ -6,6 +6,25 @@ mediaType:
   - application/json
 types:
   pageable: !include datatypes/pageable.raml
+annotationTypes:
+  deprecated:
+    properties:
+      replaceWith:
+        type: string
+        description: |
+          Describe the alternative resource/method that can be used as a substitute.
+        required: true
+      since:
+        type: string
+        pattern: (0[1-9]|10|11|12)/20[0-9]{2}
+        required: false
+        description: Describe when the resource/method became deprecated in the format (mm/YYYY)
+    allowedTargets: [Resource, Method]
+    displayName: Deprecated
+    description: |
+      A deprecated resource or method is *not* recommended for new work.
+      The resource or method will be removed in a future version of the API.
+      Deprecation does NOT mean it is not supported anymore in the current version.
 
 # STATISTICS ----------------------------------
 /statistics:
@@ -40,6 +59,8 @@ types:
             }
   /study/week:
     get:
+      (deprecated):
+        replaceWith: /v2/statistics/study/week
       description: get user's weekly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
@@ -64,38 +85,10 @@ types:
               errors: [],
               meta: []
             }
-  /study/week:
-    get:
-      description: get user's weekly statistic for period. Where periaod is a two dates in the ISO date time format
-      queryParameters:
-        version:
-          required: true
-          type: integer
-          example: 2
-        from:
-          required: true
-          type: datetime-only
-          example: 2000-11-23T15:00:00
-        to:
-          required: true
-          type: datetime-only
-          example: 2000-11-23T15:00:00
-      responses:
-        200:
-          body:
-            example: {
-              data: [
-                {
-                  date: 2000-11-23T15:00:00,
-                  exercisingTimeSeconds: 3000,
-                  progress: GREAT
-                }
-              ],
-              errors: [],
-              meta: []
-            }
   /study/year:
     get:
+      (deprecated):
+        replaceWith: /v2/statistics/study/year
       description: get user's yearly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
@@ -113,37 +106,6 @@ types:
               data: [
                 {
                   date: 2000-11,
-                  exercisingDays: 15,
-                  exercisingTimeSeconds: 3000,
-                  progress: GREAT
-                }
-              ],
-              errors: [],
-              meta: []
-            }
-  /study/year:
-    get:
-      description: get user's yearly statistic for period. Where periaod is a two dates in the ISO date time format
-      queryParameters:
-        version:
-          required: true
-          type: integer
-          example: 2
-        from:
-          required: true
-          type: datetime-only
-          example: 2000-11-23T15:00:00
-        to:
-          required: true
-          type: datetime-only
-          example: 2000-11-23T15:00:00
-      responses:
-        200:
-          body:
-            example: {
-              data: [
-                {
-                  date: 2000-11-23T15:00:00,
                   exercisingDays: 15,
                   exercisingTimeSeconds: 3000,
                   progress: GREAT
@@ -380,6 +342,8 @@ types:
             }
   /histories:
     get:
+      (deprecated):
+        replaceWith: /v2/study-history/histories
       description: |
         Get histories for current user by period from <= startTime < to.
         Where from and to are dates in yyyy-MM-dd format
@@ -392,28 +356,6 @@ types:
           required: true
           type: date-only
           example: 2020-11-06
-      responses:
-        200:
-          body:
-            example: !include samples/study_histories_dto_response.json
-  /histories:
-    get:
-      description: |
-        Get histories for current user by period from <= startTime < to.
-        Where from and to are dates in ISO format
-      queryParameters:
-        from:
-          required: true
-          type: datetime-only
-          example: 2000-10-21T15:00:00
-        to:
-          required: true
-          type: datetime-only
-          example: 2000-10-21T15:00:00
-        version:
-          required: true
-          type: integer
-          example: 2
       responses:
         200:
           body:
@@ -466,7 +408,6 @@ types:
             example: !include samples/user_get_response.json
     /avatar:
       put:
-        is: [Forbidden, NotFound]
         description: Update user avatar.
         queryParameters:
           avatar:
@@ -518,7 +459,7 @@ types:
       delete:
         description: Delete doctor from patient
         responses:
-          200
+          200:
 
 # AUTH ----------------------
 /brnlogin:
@@ -593,7 +534,7 @@ types:
         application/json:
           example: !include samples/add_patient_to_doctor_request.json
       responses:
-        200
+        200:
     get:
       description: Get all patients for doctor
       responses:
@@ -601,11 +542,11 @@ types:
           body:
             application/json:
               example: !include samples/get_all_patient_for_doctor_response.json
-    /{patientId}
+    /{patientId}:
       delete:
         description: Delete patient from doctor
         responses:
-          200
+          200:
 
 # ADMIN  ----------------------
 /admin:
@@ -640,6 +581,8 @@ types:
               example2: !include samples/users_with_analytics_get_response.json
   /histories:
     get:
+      (deprecated):
+        replaceWith: /v2/admin/histories
       description: get histories for user by period from <= startTime < to where time is a date in format yyyy-MM-dd
       queryParameters:
         userId:
@@ -654,30 +597,6 @@ types:
           required: true
           type: date-only
           example: "2020-11-06"
-      responses:
-        200:
-          body:
-            example: !include samples/study_histories_dto_response.json
-  /histories:
-    get:
-      description: get histories for user by period from <= startTime <= to where startTime is a date in ISO date time format
-      queryParameters:
-        version:
-          required: true
-          type: integer
-          example: 2
-        userId:
-          required: true
-          type: integer
-          example: 1
-        from:
-          required: true
-          type: datetime-only
-          example: 2000-10-21T15:00:00
-        to:
-          required: true
-          type: datetime-only
-          example: 2000-10-21T15:00:00
       responses:
         200:
           body:
@@ -704,6 +623,8 @@ types:
             example: !include samples/study_histories_dto_response.json
   /study/week:
     get:
+      (deprecated):
+        replaceWith: /v2/admin/study/week
       description: get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         userId:
@@ -733,43 +654,10 @@ types:
                 errors: [],
                 meta: []
               }
-  /study/week:
-    get:
-      description: get user's weekly statistic for period. Where period is a two dates in the ISO date time format
-      queryParameters:
-        version:
-          required: true
-          type: integer
-          example: 2
-        userId:
-          required: true
-          type: integer
-          format: int64
-          example: 1
-        from:
-          required: true
-          type: datetime-only
-          example: 2000-10-21T15:00:00
-        to:
-          required: true
-          type: datetime-only
-          example: 2000-10-21T15:00:00
-      responses:
-        200:
-          body:
-            example: {
-              data: [
-                {
-                  date: 2000-10-21T15:00:00,
-                  exercisingTimeSeconds: 3000,
-                  progress: GREAT
-                }
-              ],
-              errors: [],
-              meta: []
-            }
   /study/year:
     get:
+      (deprecated):
+        replaceWith: /v2/admin/study/year
       description: get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         userId:
@@ -792,42 +680,6 @@ types:
               data: [
                 {
                   date: 2000-11,
-                  exercisingDays: 15,
-                  exercisingTimeSeconds: 3000,
-                  progress: GREAT
-                }
-              ],
-              errors: [],
-              meta: []
-            }
-  /study/year:
-    get:
-      description: get user's yearly statistic for period. Where period is a two dates in the ISO date time format
-      queryParameters:
-        version:
-          required: true
-          type: integer
-          example: 2
-        userId:
-          required: true
-          type: integer
-          format: int64
-          example: 1
-        from:
-          required: true
-          type: datetime-only
-          example: 2000-11-23T15:00:00
-        to:
-          required: true
-          type: datetime-only
-          example: 2000-11-23T15:00:00
-      responses:
-        200:
-          body:
-            example: {
-              data: [
-                {
-                  date: 2000-11-23T15:00:00,
                   exercisingDays: 15,
                   exercisingTimeSeconds: 3000,
                   progress: GREAT
@@ -907,3 +759,169 @@ types:
                             type: file
             responses:
               201:
+
+################################
+# V2 API ----------------------#
+################################
+/v2:
+  # STATISTICS ----------------------------------
+  /statistics:
+    /study/week:
+      get:
+        description: get user's weekly statistic for period. Where periaod is a two dates in the ISO date time format
+        queryParameters:
+          from:
+            required: true
+            type: datetime-only
+            example: 2000-11-23T15:00:00
+          to:
+            required: true
+            type: datetime-only
+            example: 2000-11-23T15:00:00
+        responses:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2000-11-23T15:00:00,
+                    exercisingTimeSeconds: 3000,
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
+    /study/year:
+      get:
+        description: get user's yearly statistic for period. Where periaod is a two dates in the ISO date time format
+        queryParameters:
+          from:
+            required: true
+            type: datetime-only
+            example: 2000-11-23T15:00:00
+          to:
+            required: true
+            type: datetime-only
+            example: 2000-11-23T15:00:00
+        responses:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2000-11-23T15:00:00,
+                    exercisingDays: 15,
+                    exercisingTimeSeconds: 3000,
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
+
+  # STUDY_HISTORY ----------------------
+  /study-history:
+    /histories:
+      get:
+        description: |
+          Get histories for current user by period from <= startTime < to.
+          Where from and to are dates in ISO format
+        queryParameters:
+          from:
+            required: true
+            type: datetime-only
+            example: 2000-10-21T15:00:00
+          to:
+            required: true
+            type: datetime-only
+            example: 2000-10-21T15:00:00
+        responses:
+          200:
+            body:
+              example: !include samples/study_histories_dto_response.json
+  # ADMIN  ----------------------
+  /admin:
+    /histories:
+      get:
+        description: get histories for user by period from <= startTime <= to where startTime is a date in ISO date time format
+        queryParameters:
+          userId:
+            required: true
+            type: integer
+            example: 1
+          from:
+            required: true
+            type: datetime-only
+            example: 2000-10-21T15:00:00
+          to:
+            required: true
+            type: datetime-only
+            example: 2000-10-21T15:00:00
+        responses:
+          200:
+            body:
+              example: !include samples/study_histories_dto_response.json
+    /study/week:
+      get:
+        description: get user's weekly statistic for period. Where period is a two dates in the ISO date time format
+        queryParameters:
+          userId:
+            required: true
+            type: integer
+            format: int64
+            example: 1
+          from:
+            required: true
+            type: datetime-only
+            example: 2000-10-21T15:00:00
+          to:
+            required: true
+            type: datetime-only
+            example: 2000-10-21T15:00:00
+        responses:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2000-10-21T15:00:00,
+                    exercisingTimeSeconds: 3000,
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
+    /study/year:
+      get:
+        description: get user's yearly statistic for period. Where period is a two dates in the ISO date time format
+        queryParameters:
+          userId:
+            required: true
+            type: integer
+            format: int64
+            example: 1
+          from:
+            required: true
+            type: datetime-only
+            example: 2000-11-23T15:00:00
+          to:
+            required: true
+            type: datetime-only
+            example: 2000-11-23T15:00:00
+        responses:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    date: 2000-11-23T15:00:00,
+                    exercisingDays: 15,
+                    exercisingTimeSeconds: 3000,
+                    progress: GREAT
+                  }
+                ],
+                errors: [],
+                meta: []
+              }
