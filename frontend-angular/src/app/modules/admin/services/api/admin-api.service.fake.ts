@@ -84,7 +84,7 @@ export class AdminApiServiceFake
         gender: getRandomBool() ? 'MALE' : 'FEMALE',
         id: i + 1,
         lastDone,
-        lastWeek: lastWeek.map((value) => ({ value, progress: this.getRandomUserExercisingProgressStatusColor() })),
+        lastWeek: lastWeek.map((value) => ({ exercisingTimeSeconds: value, progress: this.getRandomUserExercisingProgressStatusColor() })),
         name,
         workDayByLastMonth: getRandomIntInclusive(0, dayjs().subtract(1, 'month').daysInMonth()),
         isFavorite: getRandomBool(),

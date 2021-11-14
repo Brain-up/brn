@@ -6,6 +6,7 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.SubGroupService
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -37,6 +38,9 @@ internal class LoadFilesControllerTest {
 
     @MockK
     lateinit var userAccountService: UserAccountService
+
+    @MockK
+    lateinit var userAnalyticsService: UserAnalyticsService
 
     @MockK
     lateinit var exerciseService: ExerciseService

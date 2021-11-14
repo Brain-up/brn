@@ -10,7 +10,7 @@ export class User {
   public gender: GenderType;
   public id: number;
   public lastDone: string;
-  public lastWeek: { value: number; progress: UserExercisingProgressStatusType }[];
+  public lastWeek: { exercisingTimeSeconds: number; progress: UserExercisingProgressStatusType }[];
   public name: string;
   public workDayByLastMonth: number;
   public isFavorite: boolean;
