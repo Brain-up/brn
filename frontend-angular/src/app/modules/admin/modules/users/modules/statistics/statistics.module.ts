@@ -1,3 +1,4 @@
+import { LineChartModule } from './../../../../../shared/components/line-chart/line-chart.module';
 import { NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
@@ -13,6 +14,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
+import { MatTabsModule } from '@angular/material/tabs';
+import { DiagnosticsTrackComponent } from './components/diagnostics-track/diagnostics-track.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -21,6 +25,7 @@ import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
     WeekTimeTrackComponent,
     MonthTimeTrackComponent,
     MonthTimeTrackItemComponent,
+    DiagnosticsTrackComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +36,9 @@ import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
     MatIconModule,
     MatProgressBarModule,
     BarChartModule,
+    LineChartModule,
+    MatTabsModule,
+    MatMenuModule,
   ],
   providers: [AdminApiService],
 })

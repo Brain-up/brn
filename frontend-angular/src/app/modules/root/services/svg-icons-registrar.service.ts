@@ -11,6 +11,14 @@ export class SvgIconsRegistrarService {
   public registerIcons(): void {
     this.matIconRegistry
       .addSvgIcon(
+        'file-download',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'file-download.svg')
+      )
+      .addSvgIcon(
+        'expand-more',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'expand-more.svg')
+      )
+      .addSvgIcon(
         'help',
         this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'help.svg')
       )

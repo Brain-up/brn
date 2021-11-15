@@ -1,13 +1,31 @@
-<div
-  class="title"
-  [innerHTML]="
-    'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.Title [month]'
-      | translate: { month: selectedMonth.format('MMMM') }
-  "
-></div>
+<div class="header">
+  <button mat-button class="prev" (click)="loadPrevMonth()">
+    <mat-icon svgIcon="left-arrow"></mat-icon>
+  </button>
+
+  <div
+    class="title"
+    [innerHTML]="
+      'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.TitleMonth'
+        | translate: { month: selectedMonth.format('MMMM') }
+    "
+  ></div>
+
+  <button
+    mat-button
+    [disabled]="!isAllowNextMonth()"
+    class="next"
+    (click)="loadNextMonth()"
+  >
+    <mat-icon svgIcon="right-arrow"></mat-icon>
+  </button>
+</div>
 
 <div class="content">
-  <mat-progress-bar *ngIf="isLoading; else dataTemplate" mode="indeterminate"></mat-progress-bar>
+  <mat-progress-bar
+    *ngIf="isLoading; else dataTemplate"
+    mode="indeterminate"
+  ></mat-progress-bar>
 </div>
 
 <!-- #region Templates -->
@@ -21,7 +39,10 @@
 
 <ng-template #emptyDataTemplate>
   <div class="empty-data">
-    {{ 'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData' | translate }}
+    {{
+      'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData'
+        | translate
+    }}
   </div>
 </ng-template>
 <!-- #endregion -->

@@ -1,6 +1,6 @@
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 import { secondsTo } from '@shared/helpers/seconds-to';
@@ -9,12 +9,12 @@ import { Dayjs } from 'dayjs';
 import { IWeekChartDataItem } from '../../models/week-char-data-item';
 
 @Component({
-  selector: 'app-week-time-track',
-  templateUrl: './week-time-track.component.html',
-  styleUrls: ['./week-time-track.component.scss'],
+  selector: 'app-diagnostics-track',
+  templateUrl: './diagnostics-track.component.html',
+  styleUrls: ['./diagnostics-track.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WeekTimeTrackComponent {
+export class DiagnosticsTrackComponent {
   private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
 
   private chartData: IWeekChartDataItem[];
@@ -47,7 +47,7 @@ export class WeekTimeTrackComponent {
       y: {
         lines: [
           {
-            value: WeekTimeTrackComponent.EXERCISING_TIME_NORM_IN_S,
+            value: 'WeekTimeTrackComponent.EXERCISING_TIME_NORM_IN_S',
           },
         ],
       },

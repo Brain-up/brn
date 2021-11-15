@@ -1,0 +1,33 @@
+<div
+  class="title"
+  [innerHTML]="
+    'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.TitleYear'
+      | translate: { year: 'Month' }
+  "
+></div>
+
+<div class="content">
+  <mat-progress-bar
+    *ngIf="isLoading; else dataTemplate"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>
+
+<!-- #region Templates -->
+<ng-template #dataTemplate>
+  <app-line-chart>
+    *ngIf="barData?.length; else emptyDataTemplate"
+    [data]="barData"
+    [options]="barOptions"
+  ></app-line-chart>
+</ng-template>
+
+<ng-template #emptyDataTemplate>
+  <div class="empty-data">
+    {{
+      'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData'
+        | translate
+    }}
+  </div>
+</ng-template>
+<!-- #endregion -->

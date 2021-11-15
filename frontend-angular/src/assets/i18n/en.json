@@ -50,7 +50,7 @@
               "Favorite": "Favorite",
               "FirstVisit": "First visit",
               "LastVisit": "Last visit",
-              "CurrentWeek": "Current week",
+              "LastWeek": "Last week",
               "Name": "Name",
               "Progress": "Progress",
               "WorkingDaysInLastMonth": "Days in last month"
@@ -71,27 +71,32 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
-              "WhatIsIt": "Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt"
+              "WhatIsIt": "What is it about?",
+              "Statistics": "Statistics",
+              "Diagnostics": "Diagnostics",
+              "ExportProfile": "Export Profile",
+              "ExportToJson": "Export to JSON",
+              "ExportToCsv": "Export to CSV"
             },
             "Components": {
               "MonthTimeTrack": {
-                "EmptyData": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.EmptyData",
-                "Title [year]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.Title [year]"
+                "EmptyData": "No data",
+                "TitleYear": "{{ year }}"
               },
               "MonthTimeTrackItem": {
-                "Days [days]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]"
+                "Days": "{{ days }} days"
               },
               "StatisticsInfoDialog": {
                 "Buttons": {
-                  "Ok": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Buttons.Ok"
+                  "Ok": "Ok"
                 },
-                "ContentTitle": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.ContentTitle",
-                "Text": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Text",
-                "Title": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Title"
+                "ContentTitle": "Check if you exercise regularly enough:",
+                "Text": "According to research, to improve the hearing threshold, you need to practice at least 6 days a week for 20 minutes for 2 years. There must be at least 8 hours 40 minutes per month for a total of 26 days.",
+                "Title": "What is it about?"
               },
               "WeekTimeTrack": {
-                "EmptyData": "Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData",
-                "Title [month]": "Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.Title [month]"
+                "EmptyData": "No data",
+                "TitleMonth": "{{ month }}"
               }
             }
           }

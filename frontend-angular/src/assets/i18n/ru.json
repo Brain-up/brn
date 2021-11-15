@@ -50,7 +50,7 @@
               "Favorite": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite",
               "FirstVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit",
               "LastVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit",
-              "CurrentWeek": "Admin.Modules.Users.Components.UsersTable.ColumnsName.CurrentWeek",
+              "LastWeek": "Admin.Modules.Users.Components.UsersTable.ColumnsName.LastWeek",
               "Name": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Name",
               "Progress": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress",
               "WorkingDaysInLastMonth": "Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth"

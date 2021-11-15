@@ -1,22 +1,36 @@
-<div
-  class="title"
-  [innerHTML]="
-    'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.Title [year]' | translate: { year: selectedMonth.year() }
-  "
-></div>
-
-<div class="content">
+<div class='header'>
   <button mat-button class="prev" (click)="loadPrevYear()">
     <mat-icon svgIcon="left-arrow"></mat-icon>
   </button>
-
-  <div class="month-time-track-items-wrap" [class.incomplete-year]="isIncompleteYear()">
-    <mat-progress-bar *ngIf="isLoading; else dataTemplate" mode="indeterminate"></mat-progress-bar>
-  </div>
-
-  <button mat-button [disabled]="!isAllowNextYear()" class="next" (click)="loadNextYear()">
+  
+  <div
+    class="title"
+    [innerHTML]="
+      'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.TitleYear'
+        | translate: { year: selectedMonth.year() }
+    "
+  ></div>
+  
+  <button
+    mat-button
+    [disabled]="!isAllowNextYear()"
+    class="next"
+    (click)="loadNextYear()"
+  >
     <mat-icon svgIcon="right-arrow"></mat-icon>
   </button>
+</div>
+
+<div class="content">
+  <div
+    class="month-time-track-items-wrap"
+    [class.incomplete-year]="isIncompleteYear()"
+  >
+    <mat-progress-bar
+      *ngIf="isLoading; else dataTemplate"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
 </div>
 
 <!-- #region Templates -->
@@ -33,7 +47,10 @@
 
 <ng-template #emptyDataTemplate>
   <div class="empty-data">
-    {{ 'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.EmptyData' | translate }}
+    {{
+      'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.EmptyData'
+        | translate
+    }}
   </div>
 </ng-template>
 <!-- #endregion -->

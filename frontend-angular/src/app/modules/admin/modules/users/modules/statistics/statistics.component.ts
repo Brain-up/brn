@@ -1,5 +1,11 @@
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
@@ -20,7 +26,10 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
   private readonly userId: number;
 
-  private statisticsInfoDialogRef: MatDialogRef<StatisticsInfoDialogComponent, void>;
+  private statisticsInfoDialogRef: MatDialogRef<
+    StatisticsInfoDialogComponent,
+    void
+  >;
 
   public selectedMonth = dayjs();
   public isLoadingWeekTimeTrackData = true;
@@ -32,7 +41,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly adminApiService: AdminApiService,
     private readonly activatedRoute: ActivatedRoute,
-    public readonly matDialog: MatDialog
+    public readonly matDialog: MatDialog,
   ) {
     this.userId = Number(this.activatedRoute.snapshot.params.userId);
   }
@@ -49,9 +58,12 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   }
 
   public openStatisticsInfoDialog(): void {
-    this.statisticsInfoDialogRef = this.matDialog.open(StatisticsInfoDialogComponent, {
-      width: '650px',
-    });
+    this.statisticsInfoDialogRef = this.matDialog.open(
+      StatisticsInfoDialogComponent,
+      {
+        width: '650px',
+      },
+    );
   }
 
   public selectMonth(date: Dayjs): void {
@@ -74,6 +86,18 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.getMonthTimeTrackData();
   }
 
+  public loadPrevMonth(): void {
+    this.selectedMonth = this.selectedMonth.subtract(1, 'month');
+
+    this.getWeekTimeTrackData();
+  }
+
+  public loadNextMonth(): void {
+    this.selectedMonth = this.selectedMonth.add(1, 'month');
+
+    this.getWeekTimeTrackData();
+  }
+
   private getWeekTimeTrackData(): void {
     const fromMonth = this.selectedMonth.startOf('month');
     const toMonth = this.selectedMonth.endOf('month');
@@ -86,9 +110,14 @@ export class StatisticsComponent implements OnInit, OnDestroy {
           this.isLoadingWeekTimeTrackData = false;
           this.cdr.detectChanges();
         }),
-        takeUntil(this.destroyer$)
+        takeUntil(this.destroyer$),
       )
-      .subscribe((weekTimeTrackData) => (this.weekTimeTrackData = weekTimeTrackData));
+      .subscribe(
+        (weekTimeTrackData) => {
+          (this.weekTimeTrackData = weekTimeTrackData),
+          console.log('weekTimeTrackData log', weekTimeTrackData);
+        },
+      );
   }
 
   private getMonthTimeTrackData(): void {
@@ -103,7 +132,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
           this.isLoadingMonthTimeTrackData = false;
           this.cdr.detectChanges();
         }),
-        takeUntil(this.destroyer$)
+        takeUntil(this.destroyer$),
       )
       .subscribe((monthTimeTrackData) => {
         this.monthTimeTrackData = monthTimeTrackData;
@@ -112,7 +141,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
           return;
         }
 
-        const lastMonth = dayjs(monthTimeTrackData[monthTimeTrackData.length - 1].date);
+        const lastMonth = dayjs(
+          monthTimeTrackData[monthTimeTrackData.length - 1].date,
+        );
 
         if (lastMonth.month() >= this.selectedMonth.month()) {
           return;

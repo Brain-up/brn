@@ -31,4 +31,39 @@
       }
     }
   }
+  .content {
+    ::ng-deep .mat-tab-label {
+      font-size: 16px;
+    }
+
+    ::ng-deep .mat-tab-body {
+      padding-top: 48px;
+    }
+
+    ::ng-deep .mat-tab-labels {
+      padding: 16px 0;
+    }
+
+    ::ng-deep .mat-ink-bar {
+      background-color: $dark-violet-color;
+    }
+    ::ng-deep .mat-tab-label-active {
+      color: $dark-violet-color;
+    }
+
+    ::ng-deep .mat-tab-disabled {
+      color: inherit;
+    }
+
+    .export-profile {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      line-height: 24px;
+      
+      span {
+        margin: 0 8px;
+      }
+    }
+  }
 }
