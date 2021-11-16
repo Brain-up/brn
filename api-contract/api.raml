@@ -6,6 +6,25 @@ mediaType:
   - application/json
 types:
   pageable: !include datatypes/pageable.raml
+annotationTypes:
+  deprecated:
+    properties:
+      replaceWith:
+        type: string
+        description: |
+          Describe the alternative resource/method that can be used as a substitute.
+        required: true
+      since:
+        type: string
+        pattern: (0[1-9]|10|11|12)/20[0-9]{2}
+        required: false
+        description: Describe when the resource/method became deprecated in the format (mm/YYYY)
+    allowedTargets: [Resource, Method]
+    displayName: Deprecated
+    description: |
+      A deprecated resource or method is *not* recommended for new work.
+      The resource or method will be removed in a future version of the API.
+      Deprecation does NOT mean it is not supported anymore in the current version.
 
 # STATISTICS ----------------------------------
 /statistics:
@@ -40,6 +59,8 @@ types:
             }
   /study/week:
     get:
+      (deprecated):
+        replaceWith: /v2/statistics/study/week
       description: get user's weekly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
@@ -66,6 +87,8 @@ types:
             }
   /study/year:
     get:
+      (deprecated):
+        replaceWith: /v2/statistics/study/year
       description: get user's yearly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
@@ -319,6 +342,8 @@ types:
             }
   /histories:
     get:
+      (deprecated):
+        replaceWith: /v2/study-history/histories
       description: |
         Get histories for current user by period from <= startTime < to.
         Where from and to are dates in yyyy-MM-dd format
@@ -556,6 +581,8 @@ types:
               example2: !include samples/users_with_analytics_get_response.json
   /histories:
     get:
+      (deprecated):
+        replaceWith: /v2/admin/histories
       description: get histories for user by period from <= startTime < to where time is a date in format yyyy-MM-dd
       queryParameters:
         userId:
@@ -596,6 +623,8 @@ types:
             example: !include samples/study_histories_dto_response.json
   /study/week:
     get:
+      (deprecated):
+        replaceWith: /v2/admin/study/week
       description: get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         userId:
@@ -627,6 +656,8 @@ types:
               }
   /study/year:
     get:
+      (deprecated):
+        replaceWith: /v2/admin/study/year
       description: get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         userId:

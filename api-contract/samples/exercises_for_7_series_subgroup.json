@@ -27,7 +27,8 @@
           "frequency": 500,
           "length": 120
         }
-      ]
+      ],
+      "isAudioFileUrlGenerated": false
     },
     {
       "seriesId": 34,
