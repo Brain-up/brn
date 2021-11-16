@@ -71,7 +71,12 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
-              "WhatIsIt": "О чем говорит статистика"
+              "WhatIsIt": "О чем говорит статистика",
+              "Statistics": "Статистика",
+              "Diagnostics": "Диагностика",
+              "ExportProfile": "Профиль экспорта",
+              "ExportToJson": "Экспорт в JSON",
+              "ExportToCsv": "Экспорт в CSV"
             },
             "Components": {
               "MonthTimeTrack": {

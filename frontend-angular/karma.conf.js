@@ -16,11 +16,15 @@ module.exports = function (config) {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
-      reporters: [{ type: 'json-summary' }, { type: 'text-summary' }],
+      reporters: [
+        { type: 'json-summary' },
+        { type: 'text-summary' },
+        { type: 'html' },
+      ],
       dir: require('path').join(__dirname, './coverage'),
       subdir: 'frontend-angular',
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'kjhtml', 'coverage'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

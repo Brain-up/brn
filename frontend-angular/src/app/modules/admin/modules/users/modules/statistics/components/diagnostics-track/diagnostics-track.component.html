@@ -16,9 +16,9 @@
 <!-- #region Templates -->
 <ng-template #dataTemplate>
   <app-line-chart>
-    *ngIf="barData?.length; else emptyDataTemplate"
-    [data]="barData"
-    [options]="barOptions"
+    *ngIf="lineData?.length; else emptyDataTemplate"
+    [data]="lineData"
+    [options]="lineOptions"
   ></app-line-chart>
 </ng-template>
 

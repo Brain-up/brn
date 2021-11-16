@@ -84,14 +84,14 @@
                 "TitleYear": "{{ year }}"
               },
               "MonthTimeTrackItem": {
-                "Days": "{{ days }} days"
+                "Days": "<b>{{ days }}</b> days"
               },
               "StatisticsInfoDialog": {
                 "Buttons": {
                   "Ok": "Ok"
                 },
                 "ContentTitle": "Check if you exercise regularly enough:",
-                "Text": "According to research, to improve the hearing threshold, you need to practice at least 6 days a week for 20 minutes for 2 years. There must be at least 8 hours 40 minutes per month for a total of 26 days.",
+                "Text": "According to research, to improve the hearing threshold, you need to practice at least <b>6</b> days a week for <b>20</b> minutes for <b>2</b> years. There must be at least <b>8</b> hours <b>40</b> minutes per month for a total of <b>26</b> days.",
                 "Title": "What is it about?"
               },
               "WeekTimeTrack": {

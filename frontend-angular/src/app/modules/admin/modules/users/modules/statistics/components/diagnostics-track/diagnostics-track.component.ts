@@ -2,7 +2,7 @@ import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exerci
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
-import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
+import { LineOptionsType } from '@shared/components/line-chart/models/line-options';
 import { secondsTo } from '@shared/helpers/seconds-to';
 import * as dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
@@ -19,7 +19,7 @@ export class DiagnosticsTrackComponent {
 
   private chartData: IWeekChartDataItem[];
 
-  public readonly barOptions: BarOptionsType = {
+  public readonly lineOptions: LineOptionsType = {
     colors: {
       data: (dataItem) => USER_EXERCISING_PROGRESS_STATUS_COLOR[this.chartData[dataItem.index].progress],
     },
@@ -68,7 +68,7 @@ export class DiagnosticsTrackComponent {
     },
   };
 
-  public barData: BarDataType;
+  public lineData: any;
 
   @Input()
   public isLoading = true;
@@ -77,7 +77,7 @@ export class DiagnosticsTrackComponent {
   public selectedMonth: Dayjs;
 
   @Input()
-  public set data(data: UserWeeklyStatistics[] | undefined) {
+  public set data(data: any[] | undefined) {
     if (!data) {
       return;
     }
@@ -101,7 +101,75 @@ export class DiagnosticsTrackComponent {
       );
     }
 
-    this.barData = data.length ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]] : [];
+    this.lineData = [
+      {
+        "name": "Germany",
+        "series": [
+          {
+            "name": "1990",
+            "value": 62000000
+          },
+          {
+            "name": "2010",
+            "value": 73000000
+          },
+          {
+            "name": "2011",
+            "value": 89400000
+          }
+        ]
+      },
+    
+      {
+        "name": "USA",
+        "series": [
+          {
+            "name": "1990",
+            "value": 250000000
+          },
+          {
+            "name": "2010",
+            "value": 309000000
+          },
+          {
+            "name": "2011",
+            "value": 311000000
+          }
+        ]
+      },
+    
+      {
+        "name": "France",
+        "series": [
+          {
+            "name": "1990",
+            "value": 58000000
+          },
+          {
+            "name": "2010",
+            "value": 50000020
+          },
+          {
+            "name": "2011",
+            "value": 58000000
+          }
+        ]
+      },
+      {
+        "name": "UK",
+        "series": [
+          {
+            "name": "1990",
+            "value": 57000000
+          },
+          {
+            "name": "2010",
+            "value": 62000000
+          }
+        ]
+      }
+    ];
+    
   }
 
   @Output()

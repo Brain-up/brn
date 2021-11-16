@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, AfterViewInit, OnDestroy, ElementRef, ViewChild, Input } from '@angular/core';
-import { bar, bb, Chart } from 'billboard.js';
+import { bb, Chart, line } from 'billboard.js';
 import { LineDataType } from './models/line-data';
 import { LineOptionsType } from './models/line-options';
 
@@ -55,7 +55,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy {
       bindto: this.chartElemRef.nativeElement,
 
       data: {
-        type: bar(),
+        type: line(),
         columns: this.chartColumns,
         colors: this.chartOptions?.colors,
         labels: this.chartOptions?.labels,
