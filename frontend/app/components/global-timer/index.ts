@@ -48,6 +48,9 @@ export default class GlobalTimerComponent extends Component {
       try {
         if (!Ember.testing) {
           if (this.session.isAuthenticated && this.isEnabled) {
+            if (!this.network.userData?.userModel) {
+              return;
+            }
             const response = yield this.network.request(
               'study-history/todayTimer',
             );

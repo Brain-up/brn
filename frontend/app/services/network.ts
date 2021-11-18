@@ -39,7 +39,7 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
 
 export default class NetworkService extends Service {
   @service('session') session!: Session;
-  @service('user-data') userData!: UserDataService;
+  @service('user-data') userData?: UserDataService;
   @service('store') store!: Store;
   @service('router') router!: any;
   prefix = '/api';
@@ -98,7 +98,7 @@ export default class NetworkService extends Service {
         0,
       )}`.toUpperCase();
       this.userData.userModel = user;
-    } catch(e) {
+    } catch (e) {
       this.router.transitionTo('login');
       const error = new Error('Unable to login');
       error.message = 'Unable to login';
