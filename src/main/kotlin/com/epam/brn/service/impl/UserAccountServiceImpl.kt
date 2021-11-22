@@ -156,15 +156,15 @@ class UserAccountServiceImpl(
             .or(this.description != null)
             .or(this.photo != null)
 
-    private fun UserAccount.updateFields(changeRequest: UserAccountChangeRequest) =
-        this.copy(
-            fullName = changeRequest.name?.takeIf { it.isNotBlank() } ?: fullName,
-            bornYear = changeRequest.bornYear ?: bornYear,
-            gender = changeRequest.gender?.toString() ?: gender,
-            avatar = changeRequest.avatar ?: avatar,
-            photo = changeRequest.photo ?: photo,
-            description = changeRequest.description ?: description
-        )
+    private fun UserAccount.updateFields(changeRequest: UserAccountChangeRequest): UserAccount {
+        this.fullName = changeRequest.name?.takeIf { it.isNotBlank() } ?: fullName
+        this.bornYear = changeRequest.bornYear ?: bornYear
+        this.gender = changeRequest.gender?.toString() ?: gender
+        this.avatar = changeRequest.avatar ?: avatar
+        this.photo = changeRequest.photo ?: photo
+        this.description = changeRequest.description ?: description
+        return this
+    }
 
     private fun getNameFromPrincipals(authentication: Authentication): String {
         val principal = authentication.principal
