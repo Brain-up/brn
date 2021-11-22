@@ -5,18 +5,14 @@ import { SnackBarService } from './snack-bar.service';
 
 describe('SnackBarService', () => {
   let service: SnackBarService;
-  let matSnackBarSpy: jasmine.SpyObj<MatSnackBar>;
+  const mockSnackbar = jasmine.createSpyObj(['open']);
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('MatSnackBar', ['open']);
-
     TestBed.configureTestingModule({
       imports: [MatSnackBarModule],
-      providers: [{ provide: MatSnackBar, useValue: spy }],
+      providers: [{ provide: MatSnackBar, useValue: mockSnackbar }],
     });
-
     service = TestBed.inject(SnackBarService);
-    matSnackBarSpy = TestBed.get<MatSnackBar>(MatSnackBar);
   });
 
   it('should be created', () => {
@@ -24,26 +20,26 @@ describe('SnackBarService', () => {
   });
 
   it('should call success with string and display the message for 2sec', () => {
-    let message = 'Success!';
+    const message = 'Success!';
     service.success(message);
-    expect(matSnackBarSpy.open).toHaveBeenCalled();
+    expect(mockSnackbar.open).toHaveBeenCalled();
   });
 
   it('should call success with string observable and display the message for 2sec', () => {
-    let message$ = new BehaviorSubject('Success!');
+    const message$ = new BehaviorSubject('Success!');
     service.success(message$);
-    expect(matSnackBarSpy.open).toHaveBeenCalled();
+    expect(mockSnackbar.open).toHaveBeenCalled();
   });
 
   it('should call error with string and display the message for 2sec', () => {
-    let error = 'Error!';
+    const error = 'Error!';
     service.error(error);
-    expect(matSnackBarSpy.open).toHaveBeenCalled();
+    expect(mockSnackbar.open).toHaveBeenCalled();
   });
 
   it('should call error with string observable and display the message for 2sec', () => {
-    let error$ = new BehaviorSubject('Error!');
+    const error$ = new BehaviorSubject('Error!');
     service.error(error$);
-    expect(matSnackBarSpy.open).toHaveBeenCalled();
+    expect(mockSnackbar.open).toHaveBeenCalled();
   });
 });

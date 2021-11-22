@@ -14,7 +14,6 @@ import { SelectPanelComponent } from './select-panel.component';
 
 describe('SelectPanelComponent', () => {
   let component: SelectPanelComponent;
-  let fixture: ComponentFixture<SelectPanelComponent>;
 
   let groupApiServiceMock;
   let seriesApiServiceMock;

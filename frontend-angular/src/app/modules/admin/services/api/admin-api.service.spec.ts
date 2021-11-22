@@ -12,10 +12,10 @@ import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import * as dayjs from 'dayjs';
 
 const baseUrl = '/api/admin';
-const action: string = 'action';
+const action = 'action';
 const body: FormData = new FormData();
-const subGroupId: number = 1234;
-const userId: number = 1234;
+const subGroupId = 1234;
+const userId = 1234;
 const from: Dayjs = dayjs('2019-01-01');
 const to: Dayjs = dayjs('2022-01-01');
 

@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http/testing';
 
 const baseUrl = '/api/cloud';
-const filePath: string = '/random/path/example.json';
+const filePath = '/random/path/example.json';
 
 describe('CloudApiService', () => {
   let service: CloudApiService;

@@ -6,14 +6,14 @@ const value = 'value';
 beforeEach(() => {
   let store = {};
   const mockLocalStorage = {
-    getItem: (key: string): string => {
-      return key in store ? store[key] : null;
+    getItem: (key2: string): string => {
+      return key2 in store ? store[key2] : null;
     },
-    setItem: (key: string, value: string) => {
-      store[key] = `${value}`;
+    setItem: (key2: string, value2: string) => {
+      store[key2] = `${value2}`;
     },
-    removeItem: (key: string) => {
-      delete store[key];
+    removeItem: (key2: string) => {
+      delete store[key2];
     },
     clear: () => {
       store = {};

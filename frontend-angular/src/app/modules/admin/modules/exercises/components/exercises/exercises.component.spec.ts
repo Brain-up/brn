@@ -44,28 +44,28 @@ describe('ExercisesComponent', () => {
 
     it('should not set initial exercises if an id is missing', () => {
       component.seriesName$ = new BehaviorSubject<string>('1234');
-      component['groupId$'] = new BehaviorSubject<string>('1234');
-      component['subGroupId$'] = new BehaviorSubject<number>(undefined);
+      component[`groupId$`] = new BehaviorSubject<string>('1234');
+      component[`subGroupId$`] = new BehaviorSubject<number>(undefined);
       component.ngOnInit();
       expect(component.showExercises).toEqual(false);
     });
 
     it('should set initial exercises', () => {
       component.seriesName$ = new BehaviorSubject<string>('1234');
-      component['groupId$'] = new BehaviorSubject<string>('1234');
-      component['subGroupId$'] = new BehaviorSubject<number>(1234);
+      component[`groupId$`] = new BehaviorSubject<string>('1234');
+      component[`subGroupId$`] = new BehaviorSubject<number>(1234);
       component.ngOnInit();
       expect(component.showExercises).toEqual(true);
     });
   });
 
   it('should not set task matrix of no tasks', () => {
-    let tasks: Task[] = [];
+    const tasks: Task[] = [];
     expect(component.getMatrixFromTasks(tasks)).toEqual('');
   });
 
   it('should set task matrix', () => {
-    let tasks: Task[] = [
+    const tasks: Task[] = [
       {
         id: 1234,
         level: 1234,
@@ -80,31 +80,31 @@ describe('ExercisesComponent', () => {
 
   it('should set the excercises hidden', () => {
     component.showExercises = true;
-    component['hideExercisesTable']();
+    component[`hideExercisesTable`]();
     expect(component.showExercises).toEqual(false);
   });
 
   it('should unsubscribe when destoryed', () => {
-    component['subscription'] = new Subscription();
+    component[`subscription`] = new Subscription();
     const spyDestroy = spyOn(Subscription.prototype, 'unsubscribe');
     component.ngOnDestroy();
     expect(spyDestroy).toHaveBeenCalledTimes(1);
   });
 
   it('should change group', () => {
-    const nextSpy = spyOn(component['groupId$'], 'next');
+    const nextSpy = spyOn(component[`groupId$`], 'next');
     component.onGroupChange('groupId');
     expect(nextSpy).toHaveBeenCalled();
   });
 
   it('should change series', () => {
-    const nextSpy = spyOn(component['seriesName$'], 'next');
+    const nextSpy = spyOn(component[`seriesName$`], 'next');
     component.onSeriesChange('seriesName');
     expect(nextSpy).toHaveBeenCalled();
   });
 
   it('should change subgroup', () => {
-    const nextSpy = spyOn(component['subGroupId$'], 'next');
+    const nextSpy = spyOn(component[`subGroupId$`], 'next');
     component.onSubGroupChange(1234);
     expect(nextSpy).toHaveBeenCalled();
   });

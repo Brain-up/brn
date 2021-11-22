@@ -38,8 +38,8 @@ describe('LoadTasksComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('unsubscribes when destoryed', () => {
-    component['destroyer'] = new Subject();
+  it('should unsubscribe when destoryed', () => {
+    component[`destroyer`] = new Subject();
     const spyDestroy = spyOn(Subject.prototype, 'next');
     component.ngOnDestroy();
     expect(spyDestroy).toHaveBeenCalledTimes(1);

@@ -47,7 +47,7 @@ describe('LoadFilesComponent', () => {
   });
 
   it('should unsubscribe when destoryed', () => {
-    component['destroyer'] = new Subject();
+    component[`destroyer`] = new Subject();
     const spyDestroy = spyOn(Subject.prototype, 'next');
     component.ngOnDestroy();
     expect(spyDestroy).toHaveBeenCalledTimes(1);

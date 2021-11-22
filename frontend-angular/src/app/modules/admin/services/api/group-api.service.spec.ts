@@ -8,8 +8,8 @@ import {
 } from '@angular/common/http/testing';
 
 const baseUrl = '/api/groups';
-const locale: string = 'en';
-const id: number = 1234;
+const locale = 'en';
+const id = 1234;
 
 describe('GroupApiService', () => {
   let service: GroupApiService;

@@ -8,7 +8,6 @@ describe('getRandomString', () => {
 
   it('should return empty string on zero', () => {
     const length = 0;
-    const chars = getRandomString(length);
     expect(getRandomString(length)).toEqual('');
   });
 });
