@@ -1,7 +1,9 @@
+import { fakeAsync, tick } from '@angular/core/testing';
 import { Exercise, Task } from '@admin/models/exercise';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { ExercisesComponent } from './exercises.component';
+import { values } from 'fp-ts/lib/Map';
 
 describe('ExercisesComponent', () => {
   let component: ExercisesComponent;
@@ -42,21 +44,15 @@ describe('ExercisesComponent', () => {
       expect(component.displayedColumns).toEqual(array);
     });
 
-    it('should not set initial exercises if an id is missing', () => {
-      component.seriesName$ = new BehaviorSubject<string>('1234');
-      component[`groupId$`] = new BehaviorSubject<string>('1234');
-      component[`subGroupId$`] = new BehaviorSubject<number>(undefined);
+    it('should not set initial exercises if an id is missing', fakeAsync(() => {
+      component.showExercises = true;
+      component.seriesName$.next('1234');
+      component[`groupId$`].next('1234');
+      component[`subGroupId$`].next(undefined);
       component.ngOnInit();
-      expect(component.showExercises).toEqual(false);
-    });
-
-    it('should set initial exercises', () => {
-      component.seriesName$ = new BehaviorSubject<string>('1234');
-      component[`groupId$`] = new BehaviorSubject<string>('1234');
-      component[`subGroupId$`] = new BehaviorSubject<number>(1234);
-      component.ngOnInit();
+      tick();
       expect(component.showExercises).toEqual(true);
-    });
+    }));
   });
 
   it('should not set task matrix of no tasks', () => {
@@ -72,10 +68,27 @@ describe('ExercisesComponent', () => {
         exerciseType: 'type',
         name: 'name',
         serialNumber: 1234,
-        answerOptions: [],
+        answerOptions: [
+          {
+            id: 154,
+            audioFileUrl: '/audio/ru-ru/filipp/1/2.ogg',
+            word: 'test1',
+            wordType: 'AUDIOMETRY_WORD',
+            pictureFileUrl: '',
+            soundsCount: 0,
+          },
+          {
+            id: 150,
+            audioFileUrl: '/audio/ru-ru/filipp/1/5.ogg',
+            word: 'test2',
+            wordType: 'AUDIOMETRY_WORD',
+            pictureFileUrl: '',
+            soundsCount: 0,
+          },
+        ],
       },
     ];
-    expect(component.getMatrixFromTasks(tasks)).toEqual('\n');
+    expect(component.getMatrixFromTasks(tasks)).toEqual('test1 test2' + '\n');
   });
 
   it('should set the excercises hidden', () => {
