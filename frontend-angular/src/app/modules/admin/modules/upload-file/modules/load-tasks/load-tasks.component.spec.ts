@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoadTasksComponent } from './load-tasks.component';
 import { FormBuilder } from '@angular/forms';
@@ -35,5 +36,12 @@ describe('LoadTasksComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('unsubscribes when destoryed', () => {
+    component['destroyer'] = new Subject();
+    const spyDestroy = spyOn(Subject.prototype, 'next');
+    component.ngOnDestroy();
+    expect(spyDestroy).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "http://brainup.site",
+    "target": "https://brainup.site",
     "secure": false
   }
 }
