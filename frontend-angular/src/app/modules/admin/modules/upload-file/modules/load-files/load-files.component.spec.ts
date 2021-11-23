@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { CloudApiService } from '@admin/services/api/cloud-api.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -9,11 +10,21 @@ import { SnackBarService } from '@root/services/snack-bar.service';
 import { LoadFilesComponent } from './load-files.component';
 
 describe('LoadFilesComponent', () => {
-  let fixture: ComponentFixture<LoadFilesComponent>;
   let component: LoadFilesComponent;
+  let fixture: ComponentFixture<LoadFilesComponent>;
+  let mockCloudApiService: CloudApiService;
+  const folders: string[] = ['folder1', 'folder2'];
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    mockCloudApiService = jasmine.createSpyObj<CloudApiService>(
+      'CloudApiService',
+      {
+        getUploadForm: undefined,
+        getFolders: undefined,
+      },
+    );
+
+    await TestBed.configureTestingModule({
       declarations: [LoadFilesComponent],
       imports: [TranslateModule.forRoot()],
       providers: [
@@ -33,5 +44,12 @@ describe('LoadFilesComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should unsubscribe when destoryed', () => {
+    component[`destroyer`] = new Subject();
+    const spyDestroy = spyOn(Subject.prototype, 'next');
+    component.ngOnDestroy();
+    expect(spyDestroy).toHaveBeenCalledTimes(1);
   });
 });
