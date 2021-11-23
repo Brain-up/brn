@@ -1,6 +1,11 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { StatisticsComponent } from './statistics.component';
@@ -20,8 +25,17 @@ describe('StatisticsComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StatisticsComponent],
-      imports: [RouterTestingModule, TranslateModule.forRoot(), MatDialogModule],
-      providers: [{ provide: AdminApiService, useFactory: () => new AdminApiServiceFake({ responseDelayInMs }) }],
+      imports: [
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        MatDialogModule,
+      ],
+      providers: [
+        {
+          provide: AdminApiService,
+          useFactory: () => new AdminApiServiceFake({ responseDelayInMs }),
+        },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     });
 
@@ -30,8 +44,8 @@ describe('StatisticsComponent', () => {
     hostElement = fixture.nativeElement;
   });
 
-  describe('Loading data', () => {
-    it('hook ngOnInit', fakeAsync(() => {
+  describe('should call loading data', () => {
+    it('should call hook ngOnInit', fakeAsync(() => {
       component.ngOnInit();
 
       tick(tickInMs);
@@ -40,7 +54,7 @@ describe('StatisticsComponent', () => {
       expect(component.monthTimeTrackData).toBeTruthy();
     }));
 
-    it('method selectMonth', fakeAsync(() => {
+    it('should call selectMonth', fakeAsync(() => {
       const currentMonth = component.selectedMonth.month();
 
       component.selectMonth(dayjs().subtract(1, 'month'));
@@ -51,7 +65,7 @@ describe('StatisticsComponent', () => {
       expect(component.weekTimeTrackData).toBeTruthy();
     }));
 
-    it('method loadPrevYear', fakeAsync(() => {
+    it('should call loadPrevYear', fakeAsync(() => {
       const currentYear = component.selectedMonth.year();
 
       component.loadPrevYear();
@@ -63,7 +77,7 @@ describe('StatisticsComponent', () => {
       expect(component.monthTimeTrackData).toBeTruthy();
     }));
 
-    it('method loadNextYear', fakeAsync(() => {
+    it('should call loadNextYear', fakeAsync(() => {
       const currentYear = component.selectedMonth.year();
 
       component.loadNextYear();
@@ -78,12 +92,16 @@ describe('StatisticsComponent', () => {
 
   it('should opened statistics info dialog', () => {
     const matDialogOpenSpy = spyOn(component.matDialog, 'open');
-    const statisticsInfoDialogButtonElem = hostElement.querySelector<HTMLButtonElement>(
-      'button.statistics-info-dialog'
-    );
+    const statisticsInfoDialogButtonElem =
+      hostElement.querySelector<HTMLButtonElement>(
+        'button.statistics-info-dialog',
+      );
 
     statisticsInfoDialogButtonElem.click();
 
-    expect(matDialogOpenSpy).toHaveBeenCalledWith(StatisticsInfoDialogComponent, { width: '650px' });
+    expect(matDialogOpenSpy).toHaveBeenCalledWith(
+      StatisticsInfoDialogComponent,
+      { width: '650px' },
+    );
   });
 });
