@@ -50,6 +50,9 @@ internal class TaskServiceTest {
     lateinit var wordsServiceMock: WordsService
 
     @MockK
+    lateinit var urlConversionService: UrlConversionService
+
+    @MockK
     lateinit var task1Mock: Task
 
     @MockK
@@ -106,6 +109,7 @@ internal class TaskServiceTest {
             every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl) } returns "fullPictureUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -140,6 +144,7 @@ internal class TaskServiceTest {
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl) } returns "fullPictureUrl"
 
             // WHEN isAudioFileUrlGenerated = false
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -172,6 +177,8 @@ internal class TaskServiceTest {
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
+            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl) } returns "fullPictureUrl"
 
             // WHEN  isAudioFileUrlGenerated = true
             ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
@@ -207,6 +214,7 @@ internal class TaskServiceTest {
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl) } returns "fullPictureUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -239,6 +247,7 @@ internal class TaskServiceTest {
             every { seriesMock.type } returns ExerciseType.PHRASES.name
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
             every { task1Mock.exercise } returns exerciseMock
 
             // WHEN
@@ -277,6 +286,7 @@ internal class TaskServiceTest {
             every { seriesMock.type } returns ExerciseType.DI.name
 
             every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
+            every { urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl) } returns "fullPictureUrl"
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {

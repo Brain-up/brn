@@ -18,7 +18,8 @@ class TaskService(
     private val taskRepository: TaskRepository,
     private val exerciseRepository: ExerciseRepository,
     private val resourceRepository: ResourceRepository,
-    private val wordsService: WordsService
+    private val wordsService: WordsService,
+    private val urlConversionService: UrlConversionService
 ) {
     private val log = logger()
 
@@ -29,9 +30,7 @@ class TaskService(
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
-        if (!isAudioFileUrlGenerated) {
-            tasks.forEach { task -> processAnswerOptions(task) }
-        }
+        tasks.forEach { task -> processAnswerOptions(task) }
         return when (val type = ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> tasks.map { task ->
                 task.toWordsSeriesTaskDto(
@@ -50,7 +49,7 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
 
-        if (!isAudioFileUrlGenerated) processAnswerOptions(task)
+        processAnswerOptions(task)
 
         return when (val type = ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
             ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> task.toWordsSeriesTaskDto(type)
@@ -63,7 +62,9 @@ class TaskService(
 
     private fun processAnswerOptions(task: Task) {
         task.answerOptions.forEach { resource ->
-            run { resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale) }
+            if (!isAudioFileUrlGenerated)
+                resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale)
+            resource.pictureFileUrl = urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl)
         }
     }
 
