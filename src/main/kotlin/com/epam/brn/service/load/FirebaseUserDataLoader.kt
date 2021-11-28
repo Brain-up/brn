@@ -69,11 +69,14 @@ class FirebaseUserDataLoader(
                     )
                 }
 
-            val importUsers = firebaseAuth.importUsers(users, options)
-            importUsers.errors.stream().forEach {
-                log.error("Import user to firebase error: ${it.reason}")
-                foundedUsersContent[it.index].userId = null
+            if (users.size > 0) {
+                val importUsers = firebaseAuth.importUsers(users, options)
+                importUsers.errors.stream().forEach {
+                    log.error("Import user to firebase error: ${it.reason}")
+                    foundedUsersContent[it.index].userId = null
+                }
             }
+
             foundedUsersContent
                 .filter {
                     map[it.email] != null
