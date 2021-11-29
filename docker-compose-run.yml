@@ -23,10 +23,12 @@ services:
       POSTGRES_PASSWORD: _POSTGRES_PASSWORD_
       SPRING_PROFILE: prod
       aws.credentialsPath: /run/secrets/aws-key
+      firebase.credentials.path: /run/secrets/firebase-config
       YANDEX_AUTH_TOKEN: _YANDEX_AUTH_TOKEN_
       YANDEX_FOLDER_ID: _YANDEX_FOLDER_ID_
     secrets:
       - aws-key
+      - firebase-config
     depends_on:
       - db_brn
   brn_fe:
@@ -61,6 +63,8 @@ services:
 secrets:
   aws-key:
     file: aws-key.properties
+  firebase-config:
+    file: firebase_config.json
 volumes:
   dbdata:
   web-root-for-certbot: #volumes for certbot
