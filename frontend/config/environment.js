@@ -18,9 +18,9 @@ module.exports = function (environment) {
       },
     },
     firebase: {
-      apiKey: 'AIzaSyCcj3kmA59dkP-403i5hBkRI4nxj9Itggw',
-      authDomain: 'fir-auth-14382-try.firebaseapp.com',
-      projectId: 'firebase-auth-14382-try',
+      apiKey: "AIzaSyB03Q4ZCxdqaKuN7cJqCQGhkibYD4Q-qsc",
+      authDomain: "brainup-spb-dev-bb6d0.firebaseapp.com",
+      projectId: "brainup-spb-dev-bb6d0",
     },
     APP: {},
   };
