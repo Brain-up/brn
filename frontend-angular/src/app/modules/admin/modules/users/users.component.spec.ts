@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { DEBOUNCE_TIME_IN_MS } from '@shared/constants/time-constants';
+import { Subject } from 'rxjs';
 import { UsersComponent } from './users.component';
 
 describe('UsersComponent', () => {
@@ -79,4 +80,11 @@ describe('UsersComponent', () => {
     expect(component.getUsersOptions.pageNumber).toBe(1);
     expect(component.usersData.users.length).toBe(usersNumber);
   }));
+
+  it('unsubscribes when destoryed', () => {
+    component[`destroyer`] = new Subject();
+    const spyDestroy = spyOn(Subject.prototype, 'next');
+    component.ngOnDestroy();
+    expect(spyDestroy).toHaveBeenCalledTimes(1);
+  });
 });

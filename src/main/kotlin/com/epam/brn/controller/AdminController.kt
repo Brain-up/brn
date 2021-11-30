@@ -13,6 +13,7 @@ import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
@@ -44,6 +45,7 @@ import javax.validation.Valid
 class AdminController(
     private val studyHistoryService: StudyHistoryService,
     private val userAccountService: UserAccountService,
+    private val userAnalyticsService: UserAnalyticsService,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
     private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,
     private val exerciseService: ExerciseService,
@@ -60,27 +62,21 @@ class AdminController(
         @RequestParam("role", defaultValue = "ROLE_USER") role: String,
         @PageableDefault pageable: Pageable,
     ): ResponseEntity<Any> {
-        val users = if (withAnalytics) userAccountService.getUsersWithAnalytics(pageable, role)
+        val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)
         else userAccountService.getUsers(pageable, role)
         return ResponseEntity.ok().body(BaseResponseDto(data = users))
     }
 
     @GetMapping("/histories")
     @ApiOperation("Get user's study histories for period")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
+    )
     fun getHistories(
         @RequestParam("userId", required = true) userId: Long,
         @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam("to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
-    ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
-
-    @GetMapping(value = ["/histories"], params = ["version=2"])
-    @ApiOperation("Get user's study histories for period")
-    fun getHistories(
-        @RequestParam("userId", required = true) userId: Long,
-        @RequestParam("from", required = true) from: LocalDateTime,
-        @RequestParam("to", required = true) to: LocalDateTime
     ) = ResponseEntity.ok()
         .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
 
@@ -95,7 +91,10 @@ class AdminController(
 
     @GetMapping("/study/week")
     @ApiOperation("Get user's weekly statistic for the period")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getUserWeeklyStatistic(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
+    )
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
@@ -110,20 +109,12 @@ class AdminController(
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
     }
 
-    @GetMapping(value = ["/study/week"], params = ["version=2"])
-    @ApiOperation("Get user's weekly statistic for the period")
-    fun getUserWeeklyStatistic(
-        @RequestParam(name = "from", required = true) from: LocalDateTime,
-        @RequestParam(name = "to", required = true) to: LocalDateTime,
-        @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        val result = userDayStatisticService.getStatisticForPeriod(from, to, userId)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
-    }
-
     @GetMapping("/study/year")
     @ApiOperation("Get user's yearly statistic for the period")
-    @Deprecated(message = "Use the same method with LocalDateTime as the dates type instead")
+    @Deprecated(
+        message = "Use the method with LocalDateTime as the dates type instead",
+        replaceWith = ReplaceWith("getUserYearlyStatistic(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
+    )
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
@@ -136,17 +127,6 @@ class AdminController(
             it.toDto()
         }
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
-    }
-
-    @GetMapping(value = ["/study/year"], params = ["version=2"])
-    @ApiOperation("Get user's yearly statistic for the period")
-    fun getUserYearlyStatistic(
-        @RequestParam(name = "from", required = true) from: LocalDateTime,
-        @RequestParam(name = "to", required = true) to: LocalDateTime,
-        @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
-        val result = userMonthStatisticService.getStatisticForPeriod(from, to, userId)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
     }
 
     @PostMapping("/loadTasksFile")

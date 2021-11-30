@@ -24,8 +24,9 @@ import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
-import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.UserAnalyticsService
+import com.epam.brn.service.SubGroupService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe
@@ -43,7 +44,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
 import org.springframework.web.multipart.MultipartFile
-import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
 internal class AdminControllerTest {
@@ -53,6 +53,9 @@ internal class AdminControllerTest {
 
     @MockK
     private lateinit var userAccountService: UserAccountService
+
+    @MockK
+    private lateinit var userAnalyticsService: UserAnalyticsService
 
     @MockK
     private lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
@@ -116,13 +119,13 @@ internal class AdminControllerTest {
         // GIVEN
         val withAnalytics = true
         val role = ROLE_USER.name
-        every { userAccountService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
+        every { userAnalyticsService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
 
         // WHEN
         val users = adminController.getUsers(withAnalytics, role, pageable)
 
         // THEN
-        verify(exactly = 1) { userAccountService.getUsersWithAnalytics(pageable, role) }
+        verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BaseResponseDto).data shouldBe listOf(userWithAnalyticsResponse)
     }
@@ -141,22 +144,6 @@ internal class AdminControllerTest {
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BaseResponseDto).data shouldBe listOf(userAccountResponse)
-    }
-
-    @Test
-    fun `getHistories should return histories`() {
-        // GIVEN
-        val userId = 1L
-        val date = LocalDateTime.now()
-        every { studyHistoryService.getHistories(userId, date, date) } returns listOf(studyHistoryDto)
-
-        // WHEN
-        val histories = adminController.getHistories(userId, date, date)
-
-        // THEN
-        verify(exactly = 1) { studyHistoryService.getHistories(userId, date, date) }
-        histories.statusCodeValue shouldBe HttpStatus.SC_OK
-        histories.body!!.data shouldBe listOf(studyHistoryDto)
     }
 
     @Test
@@ -219,44 +206,6 @@ internal class AdminControllerTest {
         verify(exactly = 1) { resourceService.updateDescription(id, description) }
         updated.statusCodeValue shouldBe HttpStatus.SC_OK
         updated.body!!.data shouldBe resourceDto
-    }
-
-    @Test
-    fun `getUserWeeklyStatistic should return weekly statistic`() {
-        // GIVEN
-        val userId = 1L
-        val date = LocalDateTime.now()
-        every { userDayStatisticService.getStatisticForPeriod(date, date, userId) } returns listOf(dayStudyStatistic)
-
-        // WHEN
-        val userWeeklyStatistic = adminController.getUserWeeklyStatistic(date, date, userId)
-
-        // THEN
-        verify(exactly = 1) { userDayStatisticService.getStatisticForPeriod(date, date, userId) }
-        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
-        userWeeklyStatistic.body!!.data shouldBe listOf(dayStudyStatistic)
-    }
-
-    @Test
-    fun `getUserYearlyStatistic should return yearly statistic`() {
-        // GIVEN
-        val userId = 1L
-        val date = LocalDateTime.now()
-        every {
-            userMonthStatisticService.getStatisticForPeriod(
-                date,
-                date,
-                userId
-            )
-        } returns listOf(monthStudyStatistic)
-
-        // WHEN
-        val userYearlyStatistic = adminController.getUserYearlyStatistic(date, date, userId)
-
-        // THEN
-        verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(date, date, userId) }
-        userYearlyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
-        userYearlyStatistic.body!!.data shouldBe listOf(monthStudyStatistic)
     }
 
     @Test

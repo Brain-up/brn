@@ -40,6 +40,20 @@ internal class UrlConversionServiceTest {
     }
 
     @Test
+    fun `should return correct url for task picture`() {
+        // GIVEN
+        val taskPictureUrl = "picture/word.jpg"
+        val baseFileUrl = "baseFileUrl"
+        every { awsConfig.baseFileUrl } returns (baseFileUrl)
+        ReflectionTestUtils.setField(urlConversionService, "folderForThemePictures", "/folderForThemePictures")
+        // WHEN
+        val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(taskPictureUrl)
+        // THEN
+        assertEquals("baseFileUrl/picture/word.png", resultPictureUrl)
+        verify(exactly = 1) { awsConfig.baseFileUrl }
+    }
+
+    @Test
     fun `makeUrlForNoise should return baseFileUrl + noiseUrl`() {
         // GIVEN
         val noiseUrl = "noiseUrl"

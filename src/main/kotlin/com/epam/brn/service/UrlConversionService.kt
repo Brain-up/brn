@@ -17,4 +17,7 @@ class UrlConversionService(private val awsConfig: AwsConfig) {
 
     fun makeUrlForSubGroupPicture(subGroupCode: String): String =
         awsConfig.baseFileUrl + folderForThemePictures + "/" + subGroupCode + ".svg"
+
+    fun makeUrlForTaskPicture(pictureTaskUrl: String?): String =
+        awsConfig.baseFileUrl + "/" + pictureTaskUrl?.replace("jpg", "png")
 }
