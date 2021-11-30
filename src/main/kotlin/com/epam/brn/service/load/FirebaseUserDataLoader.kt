@@ -12,14 +12,17 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.data.domain.PageRequest
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.util.StringUtils
 import java.util.UUID
 import java.util.stream.Collectors
 
 @Service
 class FirebaseUserDataLoader(
     val firebaseAuth: FirebaseAuth,
-    val userAccountRepository: UserAccountRepository
+    val userAccountRepository: UserAccountRepository,
+    val passwordEncoder: PasswordEncoder
 ) {
 
     private val log = logger()
@@ -56,6 +59,10 @@ class FirebaseUserDataLoader(
                 }
                 .forEach {
                     it.userId = UUID.randomUUID().toString()
+
+                    val pwd = if (StringUtils.hasText(it.password)) it.password?.encodeToByteArray()
+                    else passwordEncoder.encode(UUID.randomUUID().toString()).encodeToByteArray()
+
                     users.add(
                         ImportUserRecord.builder()
                             .setEmail(it.email)
@@ -63,7 +70,7 @@ class FirebaseUserDataLoader(
                             .setEmailVerified(true)
                             .setPhotoUrl(it.photo)
                             .setUid(it.userId)
-                            .setPasswordHash(it.password?.encodeToByteArray())
+                            .setPasswordHash(pwd)
                             .build()
 
                     )
