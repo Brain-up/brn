@@ -59,7 +59,8 @@
             "soundsCount": 0
           }
         ]
-      }
+      },
+      "isAudioFileUrlGenerated": false
     }
   ],
   "errors": [],

@@ -20,12 +20,24 @@ describe('UsersTableComponent', () => {
     hostElement = fixture.nativeElement;
   });
 
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
   it('should emit sort by name', () => {
     const sortByNameEventEmitSpy = spyOn(component.sortByNameEvent, 'emit');
 
-    const sortIconElem = hostElement.querySelector<HTMLElement>('.name-column-title mat-icon');
+    const sortIconElem = hostElement.querySelector<HTMLElement>(
+      '.name-column-title mat-icon',
+    );
     sortIconElem.click();
 
     expect(sortByNameEventEmitSpy).toHaveBeenCalledWith('desc');
+  });
+
+  it('should test input property data if null', () => {
+    component.data = null;
+    fixture.detectChanges();
+    expect(component.usersTableData).toBe(undefined);
   });
 });

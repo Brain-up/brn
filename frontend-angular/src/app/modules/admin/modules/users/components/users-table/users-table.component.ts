@@ -33,7 +33,7 @@ export class UsersTableComponent {
       const firstVisit = dayjs(rawItem.firstDone);
       const lastVisit = dayjs(rawItem.lastDone);
 
-      this.chartsData.push(rawItem.lastWeek.map(({ value, progress }) => ({ y: value, progress })));
+      this.chartsData.push(rawItem.lastWeek.map(({ exercisingTimeSeconds, progress }) => ({ y: exercisingTimeSeconds, progress })));
 
       return {
         id: rawItem.id,
@@ -49,7 +49,7 @@ export class UsersTableComponent {
           time: lastVisit.format('h'),
         },
         lastWeek: {
-          data: [['data', ...rawItem.lastWeek.map(({ value }) => value)]],
+          data: [['data', ...rawItem.lastWeek.map(({ exercisingTimeSeconds }) => exercisingTimeSeconds)]],
           option: {
             colors: {
               data: (dataItem) => USER_EXERCISING_PROGRESS_STATUS_COLOR[this.chartsData[i][dataItem.index].progress],

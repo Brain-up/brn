@@ -4,7 +4,6 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.enums.Role
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
@@ -97,12 +96,6 @@ class UserAccountServiceImpl(
 
     override fun getUsers(pageable: Pageable, role: String): List<UserAccountResponse> =
         userAccountRepository.findUsersAccountsByRole(role).map { it.toDto() }
-
-    override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
-        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
-        // todo fill user models with analytics and write tests
-        return users
-    }
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountResponse {
         val currentUserAccount = getCurrentUser()
