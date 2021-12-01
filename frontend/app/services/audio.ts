@@ -69,7 +69,7 @@ export default class AudioService extends Service {
   trackProgress!: TaskGenerator<any, any>;
 
   audioUrlForText(text: string) {
-    return `/api/audio?text=${encodeURIComponent(
+    return window.location.protocol + '//' + window.location.host + `/api/audio?text=${encodeURIComponent(
       text,
     )}&locale=${encodeURIComponent(this.intl.primaryLocale)}`;
   }
@@ -130,6 +130,7 @@ export default class AudioService extends Service {
       this.buffers = await loadAudioFiles(
         this.context,
         filesToPlay as string[],
+        () => this.network.token ?? ''
       );
     } else {
       this.buffers = filesToPlay;
@@ -180,7 +181,7 @@ export default class AudioService extends Service {
   async getNoise(duration: number, level: number, url: null | string = null) {
     if (url !== null) {
       const noiseContext = createAudioContext();
-      const noiseBuffers = await loadAudioFiles(noiseContext, [url]);
+      const noiseBuffers = await loadAudioFiles(noiseContext, [url], () => this.network.token ?? '');
       const source = await createSource(noiseContext, noiseBuffers[0]);
       source.source.loop = true;
       source.gainNode.gain.value = level * 0.01;
