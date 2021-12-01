@@ -37,9 +37,7 @@ export default modifier(function autofitText(element: HTMLDivElement) {
   const fontWeight = style.getPropertyValue('font-weight');
   const fontStyle = style.getPropertyValue('font-style');
   const fontVariant = style.getPropertyValue('font-variant');
-  console.log(style.getPropertyValue('padding-left'));
-  console.log(style.getPropertyValue('padding-right'));
-  console.log(style.getPropertyValue('text-transform'));
+
   let text = (element.textContent || '').toString().trim();
   const transform = style.getPropertyValue('text-transform');
   if (transform === 'uppercase') {

@@ -10,6 +10,9 @@ interface ITaskPlayerSingleWordsOptionComponentArguments {
 }
 export default class TaskPlayerSingleWordsOptionComponent extends Component<ITaskPlayerSingleWordsOptionComponentArguments> {
   isClicked = false;
+  @action setDefaultImage(e: Error & { target: HTMLImageElement}) {
+    e.target.src = 'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+  }
   @action handleClick(cb: any) {
     this.isClicked = true;
     cb();

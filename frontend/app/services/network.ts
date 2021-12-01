@@ -43,6 +43,9 @@ export default class NetworkService extends Service {
   @service('store') store!: Store;
   @service('router') router!: any;
   prefix = '/api';
+  get token() {
+    return this.store.adapterFor('application').token;
+  }
   get _headers() {
     return Object.assign(
       {

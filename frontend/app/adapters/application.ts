@@ -5,12 +5,15 @@ import Session from 'ember-simple-auth/services/session';
 export default class ApplicationAdapter extends RESTAdapter {
   @service('session')
   session!: Session;
+  get token() {
+    return this.session.data?.authenticated.user.stsTokenManager.accessToken;
+  }
   get headers() {
     if (!this.session.isAuthenticated) {
       return {};
     }
     return {
-      Authorization: `Bearer ${this.session.data?.authenticated.user.stsTokenManager.accessToken}`,
+      Authorization: `Bearer ${this.token}`,
     };
   }
   namespace = 'api';

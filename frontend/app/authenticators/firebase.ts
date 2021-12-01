@@ -46,23 +46,32 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
         errorObj.message = error.message;
         throw errorObj;
       } else if (e.code === 'auth/user-not-found') {
-        try {
-          const newUser = await this.registerUser(login, password);
-          if (newUser.user === null) {
-            throw new Error('No user');
-          }
-          return {
-            user: this.applyTimersToUser(newUser.user.toJSON() as SerializedUser)
-          };
-        } catch(e) {
-          const { error }: any = e.message;
-          const errorObj: any = new Error(error);
-          errorObj.errors = e.errors;
-          errorObj.code = e.code;
-          errorObj.status = e.status;
-          errorObj.message = e.message;
-          throw errorObj;
-        }
+
+        const { error }: any = e.message;
+        const errorObj: any = new Error(error);
+        errorObj.errors = e.errors;
+        errorObj.code = e.code;
+        errorObj.status = e.status;
+        errorObj.message = e.message;
+        throw errorObj;
+
+        // try {
+        //   const newUser = await this.registerUser(login, password);
+        //   if (newUser.user === null) {
+        //     throw new Error('No user');
+        //   }
+        //   return {
+        //     user: this.applyTimersToUser(newUser.user.toJSON() as SerializedUser)
+        //   };
+        // } catch(e) {
+        //   const { error }: any = e.message;
+        //   const errorObj: any = new Error(error);
+        //   errorObj.errors = e.errors;
+        //   errorObj.code = e.code;
+        //   errorObj.status = e.status;
+        //   errorObj.message = e.message;
+        //   throw errorObj;
+        // }
       } else if (e.code === 'auth/wrong-password') {
         const { error }: any = e.message;
         const errorObj: any = new Error(error);
