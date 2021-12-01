@@ -54,6 +54,9 @@ data class UserAccount(
 ) {
     var password: String? = null
 
+    @Column(name = "is_firebase_error")
+    var isFirebaseError: Boolean = false
+
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "user_authorities",
