@@ -32,12 +32,13 @@ class FirebaseUserDataLoader(
 
     @EventListener(ApplicationReadyEvent::class)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        val users = ArrayList<ImportUserRecord>()
         val options = UserImportOptions.withHash(Bcrypt.getInstance())
 
         if (batchCount > 100) batchCount = 100
 
         while (true) {
+            val users = ArrayList<ImportUserRecord>()
+            val idUsers = ArrayList<Long?>()
             val pageRequest = PageRequest.of(0, batchCount)
             val foundedUsers = userAccountRepository.findAllByUserIdIsNull(pageRequest)
             if (foundedUsers.totalElements <= 0) {
@@ -45,6 +46,7 @@ class FirebaseUserDataLoader(
             }
 
             val foundedUsersContent = foundedUsers.content
+            val foundedUsersContentMap = foundedUsersContent.associateBy { it.id }
             val userEmails = foundedUsersContent.stream()
                 .map { EmailIdentifier(it.email) }
                 .collect(Collectors.toList())
@@ -62,6 +64,7 @@ class FirebaseUserDataLoader(
                     val pwd = if (StringUtils.hasText(it.password)) it.password?.encodeToByteArray()
                     else passwordEncoder.encode(UUID.randomUUID().toString()).encodeToByteArray()
 
+                    idUsers.add(it.id)
                     users.add(
                         ImportUserRecord.builder()
                             .setEmail(it.email)
@@ -78,8 +81,13 @@ class FirebaseUserDataLoader(
             if (users.size > 0) {
                 val importUsers = firebaseAuth.importUsers(users, options)
                 importUsers.errors.stream().forEach {
-                    log.error("Import user to firebase error: ${it.reason}")
-                    foundedUsersContent[it.index].userId = null
+                    log.error("Import user to firebase error: ${it.reason}.")
+                    log.debug("Index: ${it.index}, idUsers.size: ${idUsers.size}")
+                    val userId = idUsers[it.index]
+                    val userAccount = foundedUsersContentMap[userId]
+                    userAccount?.userId = null
+                    log.debug("email: ${userAccount?.email}")
+
                 }
             }
 
