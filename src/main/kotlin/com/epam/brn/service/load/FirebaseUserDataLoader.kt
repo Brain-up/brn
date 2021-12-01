@@ -36,7 +36,7 @@ class FirebaseUserDataLoader(
         val options = UserImportOptions.withHash(Bcrypt.getInstance())
 
         if (batchCount > 100) batchCount = 100
-        
+
         while (true) {
             val pageRequest = PageRequest.of(0, batchCount)
             val foundedUsers = userAccountRepository.findAllByUserIdIsNull(pageRequest)
