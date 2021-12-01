@@ -1,5 +1,6 @@
 package com.epam.brn.service.load
 
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.google.firebase.auth.EmailIdentifier
 import com.google.firebase.auth.FirebaseAuth
@@ -40,7 +41,7 @@ class FirebaseUserDataLoader(
             val users = ArrayList<ImportUserRecord>()
             val idUsers = ArrayList<Long?>()
             val pageRequest = PageRequest.of(0, batchCount)
-            val foundedUsers = userAccountRepository.findAllByUserIdIsNull(pageRequest)
+            val foundedUsers = userAccountRepository.findAllByUserIdIsNullAndIsFirebaseErrorIsFalse(pageRequest)
             if (foundedUsers.totalElements <= 0) {
                 break
             }
@@ -48,7 +49,8 @@ class FirebaseUserDataLoader(
             val foundedUsersContent = foundedUsers.content
             val foundedUsersContentMap = foundedUsersContent.associateBy { it.id }
             val userEmails = foundedUsersContent.stream()
-                .map { EmailIdentifier(it.email) }
+                .map { createEmailIdentified(it) }
+                .filter { it != null }
                 .collect(Collectors.toList())
 
             val foundedFirebaseUsers = firebaseAuth.getUsers(userEmails as Collection<UserIdentifier>?)
@@ -64,18 +66,21 @@ class FirebaseUserDataLoader(
                     val pwd = if (StringUtils.hasText(it.password)) it.password?.encodeToByteArray()
                     else passwordEncoder.encode(UUID.randomUUID().toString()).encodeToByteArray()
 
-                    idUsers.add(it.id)
-                    users.add(
-                        ImportUserRecord.builder()
-                            .setEmail(it.email)
-                            .setDisplayName(it.fullName)
-                            .setEmailVerified(true)
-                            .setPhotoUrl(it.photo)
-                            .setUid(it.userId)
-                            .setPasswordHash(pwd)
-                            .build()
-
-                    )
+                    try {
+                        users.add(
+                            ImportUserRecord.builder()
+                                .setEmail(it.email)
+                                .setDisplayName(it.fullName)
+                                .setEmailVerified(true)
+                                .setPhotoUrl(it.photo)
+                                .setUid(it.userId)
+                                .setPasswordHash(pwd)
+                                .build()
+                        )
+                        idUsers.add(it.id)
+                    } catch (e: Exception) {
+                        log.error("Some error occurred while create ImportUserRecord: $e. Skip record with id: ${it.id}")
+                    }
                 }
 
             if (users.size > 0) {
@@ -86,8 +91,8 @@ class FirebaseUserDataLoader(
                     val userId = idUsers[it.index]
                     val userAccount = foundedUsersContentMap[userId]
                     userAccount?.userId = null
-                    log.debug("email: ${userAccount?.email}")
-
+                    userAccount?.isFirebaseError = true
+                    log.debug("Email: ${userAccount?.email}")
                 }
             }
 
@@ -101,6 +106,14 @@ class FirebaseUserDataLoader(
                     it.userId = uid
                 }
             userAccountRepository.saveAll(foundedUsersContent)
+        }
+    }
+
+    private fun createEmailIdentified(it: UserAccount): EmailIdentifier? {
+        return try {
+            EmailIdentifier(it.email)
+        } catch (e: Exception) {
+            null
         }
     }
 }
