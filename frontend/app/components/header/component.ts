@@ -17,7 +17,7 @@ export default class HeaderComponent extends Component {
   }
 
   get user() {
-    return this.session?.data?.user;
+    return this.userData.userModel;
   }
 
   @action logout() {

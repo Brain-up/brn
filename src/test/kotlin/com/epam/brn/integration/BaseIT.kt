@@ -149,7 +149,6 @@ abstract class BaseIT {
         active: Boolean = true,
         bornYear: Int = 2000,
         gender: String = Gender.FEMALE.toString(),
-        password: String = "password",
         authorities: MutableSet<Authority> = mutableSetOf()
     ): UserAccount {
         return userAccountRepository.save(
@@ -158,8 +157,7 @@ abstract class BaseIT {
                 email = email,
                 active = active,
                 bornYear = bornYear,
-                gender = gender,
-                password = password
+                gender = gender
             ).apply { authorities.isNotEmpty().let { authoritySet.addAll(authorities) } }
         )
     }

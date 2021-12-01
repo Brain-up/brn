@@ -251,7 +251,6 @@ class StudyHistoryIT : BaseIT() {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 email = "test@test.test",
-                password = "password",
                 active = true
             )
         )

@@ -47,7 +47,6 @@ class UserDetailsControllerIT : BaseIT() {
     lateinit var authorityRepository: AuthorityRepository
 
     internal val email: String = "test@test.test"
-    internal val password: String = "test"
     private val baseUrl = "/users"
     private val currentUserBaseUrl = "$baseUrl/current"
 
@@ -292,7 +291,6 @@ class UserDetailsControllerIT : BaseIT() {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 email = email_,
-                password = password,
                 doctor = doctor_
             )
         )

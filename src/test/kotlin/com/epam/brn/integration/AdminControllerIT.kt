@@ -496,7 +496,6 @@ class AdminControllerIT : BaseIT() {
         val user1 = UserAccount(
             fullName = "testUserFirstName",
             email = "test@test.test",
-            password = "password",
             gender = Gender.MALE.toString(),
             bornYear = 2000,
             active = true,
@@ -506,7 +505,6 @@ class AdminControllerIT : BaseIT() {
         val user2 = UserAccount(
             fullName = "testUserFirstName2",
             email = "test2@test.test",
-            password = "password",
             gender = Gender.MALE.toString(),
             bornYear = 2000,
             active = true,
@@ -641,7 +639,6 @@ class AdminControllerIT : BaseIT() {
             UserAccount(
                 fullName = "testUserFirstName",
                 email = "test@test.test",
-                password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 active = true

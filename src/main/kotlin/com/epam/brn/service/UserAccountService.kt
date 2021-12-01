@@ -2,16 +2,18 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.model.UserAccount
+import com.google.firebase.auth.UserRecord
 import org.springframework.data.domain.Pageable
 
 interface UserAccountService {
     fun findUserByName(name: String): UserAccountResponse
     fun findUserByEmail(email: String): UserAccountResponse
-    fun addUser(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse
-    fun save(userAccountCreateRequest: UserAccountCreateRequest): UserAccountResponse
+    fun createUser(
+        firebaseUserRecord: UserRecord
+    ): UserAccountResponse
+
     fun findUserById(id: Long): UserAccountResponse
     fun getUserFromTheCurrentSession(): UserAccountResponse
     fun getUsers(pageable: Pageable, role: String): List<UserAccountResponse>
@@ -24,6 +26,7 @@ interface UserAccountService {
     fun findUserEntityById(id: Long): UserAccount
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
     fun getAllHeadphonesForCurrentUser(): Set<HeadphonesDto>
+    fun findUserByUuid(uuid: String): UserAccountResponse?
     fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount
     fun removeDoctorFromPatient(userId: Long): UserAccount
     fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse>
