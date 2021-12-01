@@ -1,6 +1,6 @@
 package com.epam.brn.auth.filter
 
-import com.epam.brn.model.UserAccountCredentials
+import com.epam.brn.auth.model.UserAccountCredentials
 import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.TokenHelperUtils
 import com.epam.brn.service.UserAccountService
@@ -55,7 +55,7 @@ class FirebaseTokenAuthenticationFilter(
                 SecurityContextHolder.getContext().authentication = authentication
             } catch (e: UsernameNotFoundException) {
                 log.warn("User with email: ${decodedToken.email} doesn't exist: create it")
-                val firebaseUserRecord = firebaseUserService.getUserById(decodedToken.uid)
+                val firebaseUserRecord = firebaseUserService.getUserByUuid(decodedToken.uid)
                 if (firebaseUserRecord != null) {
                     val createUser = userAccountService.createUser(firebaseUserRecord)
                     val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(createUser.email)

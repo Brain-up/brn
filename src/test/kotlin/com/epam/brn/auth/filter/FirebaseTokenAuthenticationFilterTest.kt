@@ -3,7 +3,7 @@ package com.epam.brn.auth.filter
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.Role
 import com.epam.brn.model.Authority
-import com.epam.brn.model.CustomUserDetails
+import com.epam.brn.auth.model.CustomUserDetails
 import com.epam.brn.model.UserAccount
 import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.TokenHelperUtils
@@ -97,7 +97,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
-        verify(exactly = 0) { firebaseUserService.getUserById(any()) }
+        verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
 
@@ -117,7 +117,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
         every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen customUserDetailsMock
-        every { firebaseUserService.getUserById(uuid) } returns userRecordMock
+        every { firebaseUserService.getUserByUuid(uuid) } returns userRecordMock
         every { userAccountService.createUser(userRecordMock) } returns UserAccountResponse(
             email = email,
             bornYear = 0,
@@ -137,7 +137,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
         verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email) }
-        verify(exactly = 1) { firebaseUserService.getUserById(uuid) }
+        verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 1) { userAccountService.createUser(any()) }
     }
 
@@ -161,7 +161,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
-        verify(exactly = 0) { firebaseUserService.getUserById(any()) }
+        verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
 
@@ -185,7 +185,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
-        verify(exactly = 0) { firebaseUserService.getUserById(any()) }
+        verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
 
@@ -204,7 +204,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
         every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen customUserDetailsMock
-        every { firebaseUserService.getUserById(uuid) } returns null
+        every { firebaseUserService.getUserByUuid(uuid) } returns null
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
@@ -215,7 +215,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
-        verify(exactly = 1) { firebaseUserService.getUserById(uuid) }
+        verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
 

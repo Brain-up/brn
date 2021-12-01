@@ -8,7 +8,7 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.client.WebClient
 
 @Service
-class FirebaseWebClient {
+class FirebaseWebClientTestMock {
 
     private val webClient: WebClient
 

@@ -1,4 +1,4 @@
-package com.epam.brn.model
+package com.epam.brn.auth.model
 
 import com.google.firebase.auth.FirebaseToken
 

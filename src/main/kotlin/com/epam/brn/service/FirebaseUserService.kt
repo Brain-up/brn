@@ -9,7 +9,7 @@ class FirebaseUserService(
     private val firebaseAuth: FirebaseAuth
 ) {
 
-    fun getUserById(uuid: String): UserRecord? {
+    fun getUserByUuid(uuid: String): UserRecord? {
         return firebaseAuth.getUser(uuid)
     }
 }

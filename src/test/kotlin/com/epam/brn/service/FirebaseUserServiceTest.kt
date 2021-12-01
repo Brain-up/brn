@@ -29,7 +29,7 @@ internal class FirebaseUserServiceTest {
         every { firebaseAuth.getUser(uuid) } returns userMock
 
         // WHEN
-        val result = firebaseUserService.getUserById(uuid)
+        val result = firebaseUserService.getUserByUuid(uuid)
 
         // THEN
         assertEquals(userMock, result)

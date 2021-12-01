@@ -2,7 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.enums.Role
-import com.epam.brn.integration.firebase.FirebaseWebClient
+import com.epam.brn.integration.firebase.FirebaseWebClientTestMock
 import com.epam.brn.integration.firebase.model.FirebaseVerifyPasswordRequest
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
@@ -32,7 +32,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     lateinit var firebaseAuth: FirebaseAuth
 
     @Autowired
-    lateinit var firebaseWebClient: FirebaseWebClient
+    lateinit var firebaseWebClientTestMock: FirebaseWebClientTestMock
 
     internal val baseUrl = "/groups"
     internal val adminUsersPath = "/admin/users"
@@ -81,7 +81,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     @Test
     fun `test get groups authentication`() {
         val verifyPasswordResponse =
-            firebaseWebClient.verifyPassword(FirebaseVerifyPasswordRequest(email, password, true))
+            firebaseWebClientTestMock.verifyPassword(FirebaseVerifyPasswordRequest(email, password, true))
         val idToken = "Bearer ${verifyPasswordResponse?.idToken}"
         // WHEN
         val resultAction = this.mockMvc
@@ -108,7 +108,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     @Test
     fun `test create new user in local DB when login new firebase user`() {
         val verifyPasswordResponse =
-            firebaseWebClient.verifyPassword(FirebaseVerifyPasswordRequest(newUserEmail, newUserPassword, true))
+            firebaseWebClientTestMock.verifyPassword(FirebaseVerifyPasswordRequest(newUserEmail, newUserPassword, true))
         val idToken = "Bearer ${verifyPasswordResponse?.idToken}"
 
         // WHEN
@@ -126,7 +126,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     @Test
     fun `test get admin-users when don't have permission for it`() {
         val verifyPasswordResponse =
-            firebaseWebClient.verifyPassword(FirebaseVerifyPasswordRequest(userRoleEmail, userRolePassword, true))
+            firebaseWebClientTestMock.verifyPassword(FirebaseVerifyPasswordRequest(userRoleEmail, userRolePassword, true))
         val idToken = "Bearer ${verifyPasswordResponse?.idToken}"
 
         // WHEN

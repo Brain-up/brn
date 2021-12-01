@@ -38,6 +38,7 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/users/current").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
             .antMatchers("/users/current/headphones").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
             .antMatchers("/users/current/password").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
+            .antMatchers("/users/current/*/doctor").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
             .antMatchers("/users/**").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/cloud/upload").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/cloud/folders").hasAuthority(ROLE_ADMIN.name)
