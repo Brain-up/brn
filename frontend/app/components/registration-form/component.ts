@@ -1,11 +1,13 @@
-import LoginFormComponent from './../login-form/component';
+import LoginFormComponent from 'brn/components/login-form/component';
 import { action } from '@ember/object';
 import { task, Task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
+import { getOwner } from '@ember/application';
+import FirebaseAuthenticator from 'brn/authenticators/firebase';
 
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
-  PASSWORD_MUST_BE_BETWEEN_4_AND_20_CHARACTERS_LONG:
+  PASSWORD_MUST_BE_BETWEEN_6_AND_20_CHARACTERS_LONG:
     'registration_form.password_length',
 };
 
@@ -88,6 +90,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       this.registrationTask.isRunning
     );
   }
+  // @ts-expect-error overrides property
   get login() {
     return this.email;
   }
@@ -103,9 +106,20 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       bornYear: parseInt(this.birthday, 10),
       password: this.password,
     };
-    const result = yield this.network.createUser(user);
+    try {
+      const auth = getOwner(this).lookup('authenticator:firebase') as FirebaseAuthenticator;
+      yield auth.registerUser(user.email, user.password);
+    } catch(e) {
+      this.errorMessage = e.message;
+      this.registrationTask.cancelAll();
+      return
+    }
+
+    yield this.loginTask.perform();
+
+    const result = yield this.network.patchUserInfo(user);
     if (result.ok) {
-      yield this.loginTask.perform();
+        return;
     } else {
       const error = yield result.json();
       const key = error.errors.pop();
@@ -123,13 +137,13 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   registrationTask!: Task<any, any>;
 
   @action
-  onSubmit(e: DocumentEvent & any) {
+  onSubmit(e: SubmitEvent & any) {
     e.preventDefault();
     this.registrationTask.perform();
   }
 
   @action
-  setGender(e: DocumentEvent & any) {
+  setGender(e: SubmitEvent & any) {
     this.gender = e.target.value;
   }
 

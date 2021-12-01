@@ -1,7 +1,7 @@
 import Service, { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Router from '@ember/routing/router-service';
-import NetworkService, { LatestUserDTO } from 'brn/services/network';
+import NetworkService, { LatestUserDTO, UserDTO } from 'brn/services/network';
 import IntlService from 'ember-intl/services/intl';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
@@ -12,6 +12,9 @@ export default class UserDataService extends Service {
   @service('network') network!: NetworkService;
   @service('intl') intl!: IntlService;
 
+  @tracked
+  userModel!: UserDTO | undefined;
+
   get userId() {
     return this.session.data?.user?.id;
   }
@@ -19,23 +22,26 @@ export default class UserDataService extends Service {
     return `user:${this.userId}:avatar_id`;
   }
 
-  @tracked _selectedAvatarId = localStorage.getItem(this.keyForAvatar) || 1;
+  @tracked _selectedAvatarId = this.userModel && localStorage.getItem(this.keyForAvatar) || 1;
 
   get avatarUrl() {
+    if (this.session.data?.authenticated.user.photoURL) {
+      return this.session.data?.authenticated.user.photoURL;
+    }
     return `/pictures/avatars/avatar ${this.selectedAvatarId}.png`;
   }
 
   get selectedAvatarId() {
-    return this.session.get('data.user.avatar') || this._selectedAvatarId;
+    return this.userModel?.avatar || this._selectedAvatarId;
   }
   set selectedAvatarId(value) {
-    //debugger;
     localStorage.setItem(this.keyForAvatar, value.toString());
     this.network.patchUserInfo({
       avatar: value.toString(),
     } as LatestUserDTO);
-    this.session.set('data.user.avatar', value);
-    this.session.store.persist(this.session.data);
+    if (this.userModel) {
+      this.userModel.avatar = value.toString();
+    }
     this._selectedAvatarId = value;
   }
 

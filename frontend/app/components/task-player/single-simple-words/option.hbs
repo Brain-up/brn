@@ -25,6 +25,15 @@
       )
     }}
   >
-    {{@answerOption.word}}
+    {{#if @answerOption.pictureFileUrl}}
+      {{@answerOption.word}}
+      <img
+        class="border-blue-50 border-2 rounded-lg"
+        src={{@answerOption.pictureFileUrl}}
+        alt={{@answerOption.word}}
+      />
+    {{else}}
+      {{@answerOption.word}}
+    {{/if}}
   </button>
 </li>

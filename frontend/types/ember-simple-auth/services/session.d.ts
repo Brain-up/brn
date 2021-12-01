@@ -3,8 +3,19 @@ import Service from '@ember/service';
 
 interface Data {
     authenticated: {
-        id: string;
-        access_token: string;
+        user: {
+          uid: string;
+          displayName: null | string;
+          email: string;
+          emailVerified: boolean;
+          photoURL: null | string;
+          stsTokenManager: {
+            accessToken: string;
+            apiKey: string;
+            expirationTime: number;
+            refreshToken: string;
+          }
+        }
     };
     user: any;
 }

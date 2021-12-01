@@ -28,13 +28,12 @@ data class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    val userId: String? = null,
+    var userId: String? = null,
     @Column(nullable = false, unique = true)
     val email: String?,
     var fullName: String?,
-    val password: String?,
-    var bornYear: Int?,
-    var gender: String?,
+    var bornYear: Int? = null,
+    var gender: String? = null,
     var active: Boolean = true,
     @Column(nullable = false)
     @CreatedDate
@@ -53,6 +52,8 @@ data class UserAccount(
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var headphones: MutableSet<Headphones> = hashSetOf()
 ) {
+    var password: String? = null
+
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "user_authorities",

@@ -33,6 +33,9 @@ module.exports = function (defaults) {
     babel: {
       plugins: [ require.resolve('ember-auto-import/babel-plugin') ]
     },
+    autoImport: {
+      exclude: ['firebase']
+    },
     'ember-test-selectors': {
       strip: false
     },
@@ -71,5 +74,8 @@ module.exports = function (defaults) {
   // modules that you would like to import into your application
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
+
+  app.import('vendor/ember-firebase-service/firebase/firebase-auth.js');
+
   return app.toTree();
 };

@@ -8,6 +8,7 @@ import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
+import com.google.firebase.auth.FirebaseAuth
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -34,6 +35,9 @@ internal class UserDetailControllerTest {
 
     @MockK
     lateinit var userAccountService: UserAccountService
+
+    @MockK
+    lateinit var firebaseAuth: FirebaseAuth
 
     @MockK
     private lateinit var doctorService: DoctorService

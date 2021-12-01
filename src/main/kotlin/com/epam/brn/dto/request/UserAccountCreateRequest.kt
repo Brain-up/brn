@@ -24,7 +24,7 @@ data class UserAccountCreateRequest(
     )
     val email: String,
     @field:NotBlank(message = "{validation.field.password.blank}")
-    @field:Size(min = 4, max = 20, message = "{validation.field.password.invalid-format}")
+    @field:Size(min = 6, max = 20, message = "{validation.field.password.invalid-format}")
     var password: String,
     @field:NotNull(message = "{validation.field.bornYear.notNull}")
     val bornYear: Int?,
@@ -35,10 +35,9 @@ data class UserAccountCreateRequest(
     val description: String? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
-    fun toModel(hashedPassword: String) = UserAccount(
+    fun toModel() = UserAccount(
         fullName = name,
         email = email,
-        password = hashedPassword,
         bornYear = bornYear,
         gender = gender.toString(),
         avatar = avatar,

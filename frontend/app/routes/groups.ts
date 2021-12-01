@@ -3,10 +3,11 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
+import Intl from 'ember-intl/services/intl';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   @service('network') network!: NetworkService;
-  @service('intl') intl;
+  @service('intl') intl!: Intl;
   queryParams = {
     locale: {
       type: 'string',

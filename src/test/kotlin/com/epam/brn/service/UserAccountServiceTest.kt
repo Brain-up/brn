@@ -14,6 +14,7 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import com.google.firebase.auth.UserRecord
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -37,6 +38,8 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserAccountService test using MockK")
@@ -47,9 +50,6 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var userAccountRepository: UserAccountRepository
-
-    @MockK
-    lateinit var timeService: TimeService
 
     @MockK
     lateinit var passwordEncoder: PasswordEncoder
@@ -68,6 +68,9 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var userAccountCreateRequest: UserAccountCreateRequest
+
+    @MockK
+    lateinit var firebaseUserRecord: UserRecord
 
     @MockK
     lateinit var authority: Authority
@@ -127,6 +130,42 @@ internal class UserAccountServiceTest {
         }
 
         @Test
+        fun `should throw EntityNotFoundException while get user by email`() {
+            // GIVEN
+            val email = "email"
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.empty()
+            // THEN
+            shouldThrow<EntityNotFoundException> { userAccountService.findUserByEmail(email) }
+        }
+
+        @Test
+        fun `should find a user by uuid`() {
+            // GIVEN
+            val uuid = "uuid"
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.userId } returns uuid
+            every { userAccountRepository.findByUserId(uuid) } returns userAccount
+            // WHEN
+            val userAccountDtoReturned = userAccountService.findUserByUuid(uuid)
+            // THEN
+            assertNotNull(userAccountDtoReturned)
+            assertThat(userAccountDtoReturned.userId).isEqualTo(uuid)
+        }
+
+        @Test
+        fun `should return NULL while get user by uuid`() {
+            // GIVEN
+            val uuid = "uuid"
+            every { userAccount.toDto() } returns userAccountResponse
+            every { userAccountResponse.userId } returns uuid
+            every { userAccountRepository.findByUserId(uuid) } returns null
+            // WHEN
+            val userAccountDtoReturned = userAccountService.findUserByUuid(uuid)
+            // THEN
+            assertNull(userAccountDtoReturned)
+        }
+
+        @Test
         fun `should throw an exception when there is no user by specified id`() {
             // GIVEN
             every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.empty()
@@ -144,21 +183,49 @@ internal class UserAccountServiceTest {
         fun `should create new user`() {
             // GIVEN
             val userName = "Tested"
-            every { userAccountCreateRequest.email } returns "test@gmail.com"
+            val uid = "UID"
+            val email = "test@gmail.com"
+            every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns Authority(
+                id = 1L,
+                authorityName = ROLE_USER.name
+            )
+            every { firebaseUserRecord.uid } returns uid
+            every { firebaseUserRecord.email } returns email
+            every { firebaseUserRecord.displayName } returns userName
             every { userAccountRepository.findUserAccountByEmail(ofType(String::class)) } returns Optional.empty()
-            every { userAccountCreateRequest.authorities } returns mutableSetOf(ROLE_USER.name)
-            every { passwordEncoder.encode(ofType(String::class)) } returns "password"
-            every { userAccountCreateRequest.toModel(ofType(String::class)) } returns userAccount
-            every { userAccountCreateRequest.password } returns "password"
-            every { userAccountResponse.name } returns "Tested"
-            every { userAccount.toDto() } returns userAccountResponse
-            every { timeService.now() } returns LocalDateTime.now()
-            every { userAccountRepository.save(userAccount) } returns userAccount
-            every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns authority
+            val captureMyObject = slot<UserAccount>()
+            every { userAccountRepository.save(capture(captureMyObject)) } answers { captureMyObject.captured }
             // WHEN
-            val userAccountDtoReturned = userAccountService.addUser(userAccountCreateRequest)
+            val userAccountDtoReturned = userAccountService.createUser(firebaseUserRecord)
             // THEN
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
+            assertThat(userAccountDtoReturned.userId).isEqualTo(uid)
+            assertThat(userAccountDtoReturned.email).isEqualTo(email)
+            assertNotNull(userAccountDtoReturned.authorities)
+            assertThat(userAccountDtoReturned.authorities!!.size).isEqualTo(1)
+
+            verify(exactly = 1) { userAccountRepository.findUserAccountByEmail(email) }
+            verify(exactly = 1) { userAccountRepository.save(captureMyObject.captured) }
+        }
+
+        @Test
+        fun `should throw IllegalArgumentException when create new user which exist in database already`() {
+            // GIVEN
+            val userName = "Tested"
+            val uid = "UID"
+            val email = "test@gmail.com"
+            every { firebaseUserRecord.uid } returns uid
+            every { firebaseUserRecord.email } returns email
+            every { firebaseUserRecord.displayName } returns userName
+            every { userAccountRepository.findUserAccountByEmail(ofType(String::class)) } returns Optional.of(
+                userAccount
+            )
+            // THEN
+            assertFailsWith<IllegalArgumentException> {
+                userAccountService.createUser(firebaseUserRecord)
+            }
+            verify(exactly = 1) { userAccountRepository.findUserAccountByEmail(email) }
+            verify(exactly = 0) { userAccountRepository.save(userAccount) }
         }
     }
 
@@ -175,7 +242,6 @@ internal class UserAccountServiceTest {
                 id = 1L,
                 fullName = "testUserFirstName",
                 email = email,
-                password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = LocalDateTime.now().minusMinutes(5),
@@ -189,14 +255,12 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateAvatarForCurrentUser(avatarUrl)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
-            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
@@ -215,7 +279,6 @@ internal class UserAccountServiceTest {
                 id = 1L,
                 fullName = "testUserFirstName",
                 email = email,
-                password = "password",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 changed = LocalDateTime.now().minusMinutes(5),
@@ -240,14 +303,12 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { timeService.now() } returns LocalDateTime.now()
             every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateCurrentUser(userAccountChangeRequest)
             // THEN
             verify { userAccountRepository.findUserAccountByEmail(email) }
-            verify { timeService.now() }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
             assertThat(userForSave.avatar).isEqualTo(avatarUrl)
@@ -297,7 +358,6 @@ internal class UserAccountServiceTest {
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                password = "test",
                 email = "test@gmail.com",
                 active = true
             )
@@ -336,7 +396,6 @@ internal class UserAccountServiceTest {
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                password = "test",
                 email = "test@gmail.com",
                 active = true,
                 headphones = headphonesToAdd
@@ -374,7 +433,6 @@ internal class UserAccountServiceTest {
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                password = "test",
                 email = "test@gmail.com",
                 active = true,
                 headphones = headphonesToAdd
@@ -410,7 +468,6 @@ internal class UserAccountServiceTest {
                 fullName = "testUserFirstName",
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
-                password = "test",
                 email = "test@gmail.com",
                 active = true,
                 headphones = headphonesToAdd
