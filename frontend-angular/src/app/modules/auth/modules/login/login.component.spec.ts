@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthTokenService } from '@root/services/auth-token.service';
+import { SnackBarService } from '@root/services/snack-bar.service';
 import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
@@ -19,6 +20,7 @@ describe('LoginComponent', () => {
         { provide: FormBuilder, useValue: {} },
         { provide: AuthenticationApiService, useValue: {} },
         { provide: AuthTokenService, useValue: {} },
+        { provide: SnackBarService, useValue: {} },
       ],
     });
 
