@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { LoginData } from '../../models/login-data';
-import { AuthToken } from '@root/models/auth-token';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import firebase from 'firebase/app';
+import {
+  AUTH_PAGE_URL,
+  HOME_PAGE_URL,
+} from '@shared/constants/common-constants';
+import { AuthTokenService } from '@root/services/auth-token.service';
 
 @Injectable()
 export class AuthenticationApiService {
@@ -12,16 +14,20 @@ export class AuthenticationApiService {
 
   constructor(
     private readonly angularFireAuth: AngularFireAuth,
-    private readonly httpClient: HttpClient,
+    private readonly authTokenService: AuthTokenService,
     private readonly router: Router,
   ) {
-    this.angularFireAuth.authState.subscribe((auth) => {
-      this.authState = auth;
-    });
+    this.initAuth();
   }
 
-  public login(data: LoginData): Observable<AuthToken> {
-    return this.httpClient.post<AuthToken>('/api/brnlogin', data);
+  private initAuth(): void {
+    this.angularFireAuth.authState.subscribe((auth) => {
+      if (auth) {
+        this.authState = auth;
+      } else {
+        this.authTokenService.removeAuthToken();
+      }
+    });
   }
 
   public get isUserAnonymousLoggedIn(): boolean {
@@ -33,10 +39,10 @@ export class AuthenticationApiService {
   }
 
   public get currentUserName(): string {
-    return this.authState['email'];
+    return this.authState.email;
   }
 
-  public get currentUser(): any {
+  public get currentUser(): unknown {
     return this.authState !== null ? this.authState : null;
   }
 
@@ -48,32 +54,40 @@ export class AuthenticationApiService {
     }
   }
 
-  public signUpWithEmail(email: string, password: string) {
-    return this.angularFireAuth
-      .createUserWithEmailAndPassword(email, password)
-      .then((user) => {
-        this.authState = user;
+  public googleLogin(): any {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return this.oAuthLogin(provider)
+      .then(() => {
+        this.authTokenService.setAuthToken(this.authState);
+        this.router.navigateByUrl(HOME_PAGE_URL);
       })
       .catch((error) => {
-        console.log(error);
+        console.log('error', error);
         throw error;
       });
   }
 
-  public loginWithEmail(email: string, password: string) {
+  private oAuthLogin(provider): any {
+    return this.angularFireAuth.signInWithPopup(provider);
+  }
+
+  public loginWithEmail(email: string, password: string): any {
     return this.angularFireAuth
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
         this.authState = user;
+        this.authTokenService.setAuthToken(this.authState);
+        this.router.navigateByUrl(HOME_PAGE_URL);
       })
       .catch((error) => {
-        console.log(error);
+        console.log('error', error);
         throw error;
       });
   }
 
   public signOut(): void {
     this.angularFireAuth.signOut();
-    this.router.navigate(['/']);
+    this.authTokenService.removeAuthToken();
+    this.router.navigate([AUTH_PAGE_URL]);
   }
 }

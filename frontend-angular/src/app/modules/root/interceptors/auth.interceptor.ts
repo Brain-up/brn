@@ -8,7 +8,6 @@ import {
 import { Observable } from 'rxjs';
 import { AuthTokenService } from '@root/services/auth-token.service';
 
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private readonly authTokenService: AuthTokenService) {}
@@ -22,7 +21,9 @@ export class AuthInterceptor implements HttpInterceptor {
     if (authToken) {
       return next.handle(
         req.clone({
-          setHeaders: { Authorization: `Bearer ${authToken.access_token}` },
+          setHeaders: {
+            Authorization: `Bearer ${authToken.user.stsTokenManager.accessToken}`,
+          },
         }),
       );
     }

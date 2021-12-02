@@ -5,7 +5,13 @@
     </a>
 
     <div class="links">
-      <a routerLinkActive="active" *ngFor="let tab of mainTabs" mat-flat-button class="link" [routerLink]="[tab.link]">
+      <a
+        routerLinkActive="active"
+        *ngFor="let tab of mainTabs"
+        mat-flat-button
+        class="link"
+        [routerLink]="[tab.link]"
+      >
         {{ tab.label | translate }}
       </a>
     </div>
@@ -14,6 +20,12 @@
       <div class="icon">AB</div>
 
       <div class="label">Александра Василевская</div>
+    </div>
+
+    <div class="logout">
+      <button mat-button (click)="logout()">
+        <mat-icon svgIcon="logout"></mat-icon>
+      </button>
     </div>
   </mat-toolbar>
 </div>
