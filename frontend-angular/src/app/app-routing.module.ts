@@ -13,8 +13,8 @@ const routes: Routes = [
   },
   {
     path: '',
-    canLoad: [AuthAccessGuard],
-    canActivate: [AuthAccessGuard],
+    // canLoad: [AuthAccessGuard],
+    // canActivate: [AuthAccessGuard],
     loadChildren: () => import('./modules/admin/admin.module').then((m) => m.AdminModule),
   },
   {
