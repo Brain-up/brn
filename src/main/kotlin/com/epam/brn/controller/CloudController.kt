@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 class CloudController(@Autowired private val cloudService: CloudService) {
 
     @GetMapping("/upload")
-    @ApiOperation("Get upload form")
+    @ApiOperation("Get cloud upload form")
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BaseSingleObjectResponseDto> {
         if (filePath.isNullOrEmpty())
@@ -33,19 +33,19 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     }
 
     @GetMapping("/url")
-    @ApiOperation("Get bucket url")
+    @ApiOperation("Get cloud bucket url")
     @Throws(Exception::class)
     fun bucketUrl(): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.bucketUrl()))
 
     @GetMapping("/baseFileUrl")
-    @ApiOperation("Get base file Url")
+    @ApiOperation("Get cloud base file url")
     @Throws(Exception::class)
     fun baseFileUrl(): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.baseFileUrl()))
 
     @GetMapping("/folders")
-    @ApiOperation("Get folders in bucket")
+    @ApiOperation("Get cloud folder structure")
     @Throws(Exception::class)
     fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.listBucket()))

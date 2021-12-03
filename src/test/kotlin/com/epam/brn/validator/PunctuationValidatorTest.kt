@@ -13,18 +13,21 @@ internal class PunctuationValidatorTest {
         // GIVEN
         val testStringEN = " same text"
         val testStringRU = "тестовый текст"
+        val testStringRU2 = "Мамочка идёт"
         val testStringWithNum = "same text with 123"
         val testStringNull = null
 
         // WHEN
         val resultEN = punctuationValidator.isValid(testStringEN, null)
         val resultRU = punctuationValidator.isValid(testStringRU, null)
+        val resultRU2 = punctuationValidator.isValid(testStringRU2, null)
         val resultNum = punctuationValidator.isValid(testStringWithNum, null)
         val resultNull = punctuationValidator.isValid(testStringNull, null)
 
         // THEN
         resultEN.shouldBeTrue()
         resultRU.shouldBeTrue()
+        resultRU2.shouldBeTrue()
         resultNum.shouldBeTrue()
         resultNull.shouldBeTrue()
     }

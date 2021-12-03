@@ -6,7 +6,6 @@ import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
-import com.google.firebase.auth.FirebaseAuth
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
@@ -29,12 +28,11 @@ import org.springframework.web.bind.annotation.RestController
 @Api(value = "/users", description = "Contains actions over user details and accounts")
 class UserDetailController(
     private val userAccountService: UserAccountService,
-    private val firebaseAuth: FirebaseAuth,
     private val doctorService: DoctorService
 ) {
 
     @GetMapping(value = ["/{userId}"])
-    @ApiOperation("Get user by Id")
+    @ApiOperation("Get user by id")
     fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok()
             .body(BaseResponseDto(data = listOf(userAccountService.findUserById(id))))
@@ -80,7 +78,7 @@ class UserDetailController(
             .body(BaseSingleObjectResponseDto(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
 
     @DeleteMapping(value = ["/current/headphones/{headphonesId}"])
-    @ApiOperation("Delete headphones by Id")
+    @ApiOperation("Delete headphone by id")
     fun deleteHeadphonesForCurrentUser(
         @PathVariable(value = "headphonesId") headphonesId: Long
     ): ResponseEntity<BaseSingleObjectResponseDto> {
