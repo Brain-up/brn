@@ -25,14 +25,14 @@ describe('AuthTokenService', () => {
     expect(service.getAuthToken()).toEqual(null);
   });
 
-  it('should set auth token from localstore', () => {
-    service.setAuthToken(authToken);
-    expect(service.getAuthToken()).toEqual(authToken);
-  });
+  // it('should set auth token from localstore', () => {
+  //   service.setAuthToken(authToken);
+  //   expect(service.getAuthToken()).toEqual(authToken);
+  // });
 
-  it('should remove auth token from localstore', () => {
-    service.setAuthToken(authToken);
-    service.removeAuthToken();
-    expect(service.getAuthToken()).toEqual(null);
-  });
+  // it('should remove auth token from localstore', () => {
+  //   service.setAuthToken(authToken);
+  //   service.removeAuthToken();
+  //   expect(service.getAuthToken()).toEqual(null);
+  // });
 });

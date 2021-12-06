@@ -6,29 +6,48 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class SvgIconsRegistrarService {
   private static readonly ICONS_FOLDER_PATH = 'assets/icons/';
 
-  constructor(private readonly matIconRegistry: MatIconRegistry, private readonly domSanitizer: DomSanitizer) {}
+  constructor(
+    private readonly matIconRegistry: MatIconRegistry,
+    private readonly domSanitizer: DomSanitizer,
+  ) {}
 
   public registerIcons(): void {
     this.matIconRegistry
       .addSvgIcon(
         'help',
-        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'help.svg')
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'help.svg',
+        ),
       )
       .addSvgIcon(
         'left-arrow',
-        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'left-arrow.svg')
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'left-arrow.svg',
+        ),
+      )
+      .addSvgIcon(
+        'logout',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'logout.svg',
+        ),
       )
       .addSvgIcon(
         'right-arrow',
-        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'right-arrow.svg')
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'right-arrow.svg',
+        ),
       )
       .addSvgIcon(
         'up-arrow',
-        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'up-arrow.svg')
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'up-arrow.svg',
+        ),
       )
       .addSvgIcon(
         'star',
-        this.domSanitizer.bypassSecurityTrustResourceUrl(SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'star.svg')
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'star.svg',
+        ),
       );
   }
 }

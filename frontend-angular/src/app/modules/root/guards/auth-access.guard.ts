@@ -5,10 +5,15 @@ import { AUTH_PAGE_URL } from '@shared/constants/common-constants';
 
 @Injectable()
 export class AuthAccessGuard implements CanLoad, CanActivate {
-  constructor(private readonly router: Router, private readonly authTokenService: AuthTokenService) {}
+  constructor(
+    private readonly authTokenService: AuthTokenService,
+    private readonly router: Router,
+  ) {}
 
   public canLoad(): true | UrlTree {
-    return this.authTokenService.getAuthToken() ? true : this.router.createUrlTree([AUTH_PAGE_URL]);
+    return this.authTokenService.getAuthToken()
+      ? true
+      : this.router.createUrlTree([AUTH_PAGE_URL]);
   }
 
   public canActivate(): true | UrlTree {

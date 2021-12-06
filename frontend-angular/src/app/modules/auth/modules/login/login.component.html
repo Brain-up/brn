@@ -4,15 +4,24 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="login()">
       <div class="form-group">
-        <label for="username">{{ 'Auth.Modules.Login.Labels.UserName' | translate }}</label>
+        <label for="username">{{
+          'Auth.Modules.Login.Labels.UserName' | translate
+        }}</label>
 
-        <input class="form-control" formControlName="username" id="username" />
+        <input class="form-control" formControlName="email" id="email" />
       </div>
 
       <div class="form-group">
-        <label for="password"> {{ 'Auth.Modules.Login.Labels.Password' | translate }} </label>
+        <label for="password">
+          {{ 'Auth.Modules.Login.Labels.Password' | translate }}
+        </label>
 
-        <input type="password" class="form-control" formControlName="password" id="password" />
+        <input
+          type="password"
+          class="form-control"
+          formControlName="password"
+          id="password"
+        />
       </div>
 
       <button type="submit" [disabled]="loginForm.invalid">

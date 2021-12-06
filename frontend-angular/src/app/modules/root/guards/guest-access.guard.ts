@@ -5,10 +5,15 @@ import { HOME_PAGE_URL } from '@shared/constants/common-constants';
 
 @Injectable()
 export class GuestAccessGuard implements CanLoad, CanActivate {
-  constructor(private readonly router: Router, private readonly authTokenService: AuthTokenService) {}
+  constructor(
+    private readonly router: Router,
+    private readonly authTokenService: AuthTokenService,
+  ) {}
 
   public canLoad(): UrlTree | true {
-    return this.authTokenService.getAuthToken() ? this.router.createUrlTree([HOME_PAGE_URL]) : true;
+    return this.authTokenService.getAuthToken()
+      ? this.router.createUrlTree([HOME_PAGE_URL])
+      : true;
   }
 
   public canActivate(): UrlTree | true {
