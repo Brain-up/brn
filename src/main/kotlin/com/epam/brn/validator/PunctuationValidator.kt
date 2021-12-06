@@ -13,6 +13,6 @@ class PunctuationValidator : ConstraintValidator<WithoutPunctuation, String> {
     }
 
     companion object {
-        private val regex = Regex("[^А-яA-z0-9 ]")
+        private val regex = Regex("[^А-яA-z0-9ё ]")
     }
 }

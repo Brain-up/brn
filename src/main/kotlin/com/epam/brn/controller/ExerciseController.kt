@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.RestController
 class ExerciseController(@Autowired val exerciseService: ExerciseService) {
 
     @GetMapping
-    @ApiOperation("Get subGroup exercises for current user with availability calculation.")
+    @ApiOperation("Get exercises for subgroup and current user with availability calculation")
     fun getExercisesBySubGroup(@RequestParam(value = "subGroupId", required = true) subGroupId: Long): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok()
             .body(BaseResponseDto(data = exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
-    @ApiOperation("Get exercise by id.")
+    @ApiOperation("Get exercise by id")
     fun getExercisesByID(
         @PathVariable("exerciseId") exerciseId: Long
     ): ResponseEntity<BaseSingleObjectResponseDto> {
@@ -40,7 +40,7 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     }
 
     @PostMapping(value = ["/byIds"])
-    @ApiOperation("Get available exercise ids for current user by input ids which have same subGroup.")
+    @ApiOperation("Get available exercise ids for current user by input ids which have same subgroup")
     fun getExercisesByIds(
         @Validated @RequestBody exerciseRequest: ExerciseRequest
     ): ResponseEntity<BaseResponseDto> {
@@ -49,7 +49,7 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     }
 
     @PutMapping(value = ["/{exerciseId}/active/{active}"])
-    @ApiOperation("Update active status of the exercise.")
+    @ApiOperation("Update active status of the exercise")
     fun updateExerciseStatus(@PathVariable("exerciseId") exerciseId: Long, @PathVariable("active") active: Boolean) {
         exerciseService.updateActiveStatus(exerciseId, active)
     }

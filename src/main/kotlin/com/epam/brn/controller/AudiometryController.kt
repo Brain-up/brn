@@ -25,7 +25,7 @@ class AudiometryController(private val audiometryService: AudiometryService) {
             .body(BaseResponseDto(data = audiometryService.getAudiometrics(locale)))
 
     @GetMapping(value = ["/{audiometryId}"])
-    @ApiOperation("Get audiometry with tasks")
+    @ApiOperation("Get audiometry for id with tasks")
     fun getAudiometry(@PathVariable("audiometryId") audiometryId: Long) =
         ResponseEntity
             .ok()

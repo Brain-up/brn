@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/v2/admin")
-@Api(value = "/admin", description = "Contains actions for admin")
+@Api(value = "/v2/admin", description = "Contains actions for admin")
 class AdminControllerV2(
     private val studyHistoryService: StudyHistoryService,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
@@ -25,7 +25,7 @@ class AdminControllerV2(
 ) {
 
     @GetMapping("/histories")
-    @ApiOperation("Get user's study histories for period")
+    @ApiOperation("Get user's study histories for period from <= startTime <= to where startTime is a date in ISO date time format")
     fun getHistories(
         @RequestParam("userId", required = true) userId: Long,
         @RequestParam("from", required = true) from: LocalDateTime,
@@ -34,7 +34,7 @@ class AdminControllerV2(
         .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
 
     @GetMapping("/study/week")
-    @ApiOperation("Get user's weekly statistic for the period")
+    @ApiOperation("Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format")
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
@@ -45,7 +45,7 @@ class AdminControllerV2(
     }
 
     @GetMapping("/study/year")
-    @ApiOperation("Get user's yearly statistic for the period")
+    @ApiOperation("Get user's yearly statistic for the period. Where period is a two dates in the ISO date time format")
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,

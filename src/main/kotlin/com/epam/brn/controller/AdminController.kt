@@ -56,7 +56,7 @@ class AdminController(
 ) {
 
     @GetMapping("/users")
-    @ApiOperation("Get users")
+    @ApiOperation("Get all users")
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
         @RequestParam("role", defaultValue = "ROLE_USER") role: String,
@@ -68,7 +68,7 @@ class AdminController(
     }
 
     @GetMapping("/histories")
-    @ApiOperation("Get user's study histories for period")
+    @ApiOperation("Get user's study histories for period from <= startTime < to. Where period is a two dates in the format yyyy-MM-dd")
     @Deprecated(
         message = "Use the method with LocalDateTime as the dates type instead",
         replaceWith = ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
@@ -81,7 +81,7 @@ class AdminController(
         .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
 
     @GetMapping("/monthHistories")
-    @ApiOperation("Get month user's study histories")
+    @ApiOperation("Get month user's study histories by month and year")
     fun getMonthHistories(
         @RequestParam("userId", required = true) userId: Long,
         @RequestParam("month", required = true) month: Int,
@@ -90,7 +90,7 @@ class AdminController(
         .body(BaseResponseDto(data = studyHistoryService.getMonthHistories(userId, month, year)))
 
     @GetMapping("/study/week")
-    @ApiOperation("Get user's weekly statistic for the period")
+    @ApiOperation("Get user's weekly statistic for the period. Where period is a two dates in the format yyyy-MM-dd")
     @Deprecated(
         message = "Use the method with LocalDateTime as the dates type instead",
         replaceWith = ReplaceWith("getUserWeeklyStatistic(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
@@ -110,7 +110,7 @@ class AdminController(
     }
 
     @GetMapping("/study/year")
-    @ApiOperation("Get user's yearly statistic for the period")
+    @ApiOperation("Get user's yearly statistic for the period. Where period is a two dates in the format yyyy-MM-dd")
     @Deprecated(
         message = "Use the method with LocalDateTime as the dates type instead",
         replaceWith = ReplaceWith("getUserYearlyStatistic(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
@@ -140,7 +140,7 @@ class AdminController(
     }
 
     @GetMapping("/exercises")
-    @ApiOperation("Get subGroup exercises with tasks")
+    @ApiOperation("Get exercises for subgroup with tasks")
     fun getExercisesBySubGroup(
         @RequestParam(
             value = "subGroupId",

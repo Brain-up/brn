@@ -24,17 +24,19 @@ import java.time.LocalDate
 class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
 
     @PostMapping
+    @ApiOperation("Save current user's study history")
     fun save(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<StudyHistoryDto> {
         return ResponseEntity.ok().body(studyHistoryService.save(studyHistoryDto))
     }
 
     @GetMapping("/todayTimer")
+    @ApiOperation("Get current user's today work time: execution seconds")
     fun getTodayWorkDurationInSeconds(): ResponseEntity<BaseSingleObjectResponseDto> {
         return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = studyHistoryService.getTodayTimer()))
     }
 
     @GetMapping("/histories")
-    @ApiOperation("Get current user's study histories for period")
+    @ApiOperation("Get current user's study histories for period. Where from and to are dates in yyyy-MM-dd format")
     @Deprecated(
         message = "Use the method with LocalDateTime as the dates type instead",
         replaceWith = ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.StudyHistoryControllerV2"])
@@ -46,7 +48,7 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
         .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 
     @GetMapping("/monthHistories")
-    @ApiOperation("Get month user's study histories")
+    @ApiOperation("Get current user's month study histories by month and year")
     fun getMonthHistories(
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int

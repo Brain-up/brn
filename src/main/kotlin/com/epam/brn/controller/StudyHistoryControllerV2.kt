@@ -20,7 +20,7 @@ class StudyHistoryControllerV2(
 ) {
 
     @GetMapping("/histories")
-    @ApiOperation("Get current user's study histories for period")
+    @ApiOperation("Get current user's study histories for period from <= startTime < to. Where from and to are dates in ISO format")
     fun getHistories(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
