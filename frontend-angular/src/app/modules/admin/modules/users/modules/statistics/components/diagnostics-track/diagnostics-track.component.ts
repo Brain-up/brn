@@ -1,6 +1,12 @@
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { LineOptionsType } from '@shared/components/line-chart/models/line-options';
 import { secondsTo } from '@shared/helpers/seconds-to';
@@ -21,7 +27,10 @@ export class DiagnosticsTrackComponent {
 
   public readonly lineOptions: LineOptionsType = {
     colors: {
-      data: (dataItem) => USER_EXERCISING_PROGRESS_STATUS_COLOR[this.chartData[dataItem.index].progress],
+      data: (dataItem) =>
+        USER_EXERCISING_PROGRESS_STATUS_COLOR[
+          this.chartData[dataItem.index].progress
+        ],
     },
     labels: {
       format: (seconds) => (seconds ? secondsTo(seconds, 'm:s') : ''),
@@ -29,7 +38,8 @@ export class DiagnosticsTrackComponent {
     axis: {
       x: {
         tick: {
-          format: (i: number) => `${this.chartData[i].x.toUpperCase()}\n${i + 1}`,
+          format: (i: number) =>
+            `${this.chartData[i].x.toUpperCase()}\n${i + 1}`,
           culling: false,
           show: false,
         },
@@ -83,8 +93,14 @@ export class DiagnosticsTrackComponent {
     }
 
     this.chartData = [];
-    for (let dayNumber = 1; dayNumber <= this.selectedMonth.daysInMonth(); dayNumber++) {
-      const realRawItem = data.find((rawItem) => dayjs(rawItem.date).date() === dayNumber);
+    for (
+      let dayNumber = 1;
+      dayNumber <= this.selectedMonth.daysInMonth();
+      dayNumber++
+    ) {
+      const realRawItem = data.find(
+        (rawItem) => dayjs(rawItem.date).date() === dayNumber,
+      );
 
       this.chartData.push(
         realRawItem
@@ -97,79 +113,78 @@ export class DiagnosticsTrackComponent {
               x: dayjs(this.selectedMonth.set('date', dayNumber)).format('dd'),
               y: 0,
               progress: 'BAD',
-            }
+            },
       );
     }
 
     this.lineData = [
       {
-        "name": "Germany",
-        "series": [
+        name: 'Germany',
+        series: [
           {
-            "name": "1990",
-            "value": 62000000
+            name: '1990',
+            value: 62000000,
           },
           {
-            "name": "2010",
-            "value": 73000000
+            name: '2010',
+            value: 73000000,
           },
           {
-            "name": "2011",
-            "value": 89400000
-          }
-        ]
+            name: '2011',
+            value: 89400000,
+          },
+        ],
       },
-    
+
       {
-        "name": "USA",
-        "series": [
+        name: 'USA',
+        series: [
           {
-            "name": "1990",
-            "value": 250000000
+            name: '1990',
+            value: 250000000,
           },
           {
-            "name": "2010",
-            "value": 309000000
+            name: '2010',
+            value: 309000000,
           },
           {
-            "name": "2011",
-            "value": 311000000
-          }
-        ]
+            name: '2011',
+            value: 311000000,
+          },
+        ],
       },
-    
+
       {
-        "name": "France",
-        "series": [
+        name: 'France',
+        series: [
           {
-            "name": "1990",
-            "value": 58000000
+            name: '1990',
+            value: 58000000,
           },
           {
-            "name": "2010",
-            "value": 50000020
+            name: '2010',
+            value: 50000020,
           },
           {
-            "name": "2011",
-            "value": 58000000
-          }
-        ]
+            name: '2011',
+            value: 58000000,
+          },
+        ],
       },
       {
-        "name": "UK",
-        "series": [
+        name: 'UK',
+        series: [
           {
-            "name": "1990",
-            "value": 57000000
+            name: '1990',
+            value: 57000000,
           },
           {
-            "name": "2010",
-            "value": 62000000
-          }
-        ]
-      }
+            name: '2010',
+            value: 62000000,
+          },
+        ],
+      },
     ];
-    
   }
 
   @Output()

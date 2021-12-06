@@ -31,6 +31,7 @@
         class="border-blue-50 border-2 rounded-lg"
         src={{@answerOption.pictureFileUrl}}
         alt={{@answerOption.word}}
+        {{on 'error' this.setDefaultImage}}
       />
     {{else}}
       {{@answerOption.word}}

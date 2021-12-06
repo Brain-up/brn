@@ -22,30 +22,50 @@ export class AdminApiService {
 
   public getExercisesBySubGroupId(subGroupId: number): Observable<Exercise[]> {
     return this.httpClient
-      .get<{ data: Exercise[] }>(`/api/admin/exercises?subGroupId=${subGroupId}`)
+      .get<{ data: Exercise[] }>(
+        `/api/admin/exercises?subGroupId=${subGroupId}`,
+      )
       .pipe(pluck('data'));
   }
 
-  public getUserWeeklyStatistics(userId: number, from: Dayjs, to: Dayjs): Observable<UserWeeklyStatistics[]> {
+  public getUserWeeklyStatistics(
+    userId: number,
+    from: Dayjs,
+    to: Dayjs,
+  ): Observable<UserWeeklyStatistics[]> {
     return this.httpClient
       .get<{ data: UserWeeklyStatistics[] }>(
-        `/api/v2/admin/study/week?userId=${userId}&from=${from.format('YYYY-MM-DDTHH:mm:ss')}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`
+        `/api/v2/admin/study/week?userId=${userId}&from=${from.format(
+          'YYYY-MM-DDTHH:mm:ss',
+        )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`,
       )
       .pipe(pluck('data'));
   }
 
-  public getUserYearlyStatistics(userId: number, from: Dayjs, to: Dayjs): Observable<UserYearlyStatistics[]> {
+  public getUserYearlyStatistics(
+    userId: number,
+    from: Dayjs,
+    to: Dayjs,
+  ): Observable<UserYearlyStatistics[]> {
     return this.httpClient
       .get<{ data: UserYearlyStatistics[] }>(
-        `/api/v2/admin/study/year?userId=${userId}&from=${from.format('YYYY-MM-DDTHH:mm:ss')}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`
+        `/api/v2/admin/study/year?userId=${userId}&from=${from.format(
+          'YYYY-MM-DDTHH:mm:ss',
+        )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`,
       )
       .pipe(pluck('data'));
   }
 
-  public getUserHistoriesStatistics(userId: number, from: Dayjs, to: Dayjs): Observable<HistoriesData[]> {
+  public getUserHistoriesStatistics(
+    userId: number,
+    from: Dayjs,
+    to: Dayjs,
+  ): Observable<HistoriesData[]> {
     return this.httpClient
       .get<{ data: HistoriesData[] }>(
-        `/api/v2/admin/histories?userId=${userId}&from=${from.format('YYYY-MM-DDTHH:mm:ss')}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`
+        `/api/v2/admin/histories?userId=${userId}&from=${from.format(
+          'YYYY-MM-DDTHH:mm:ss',
+        )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`,
       )
       .pipe(pluck('data'));
   }
@@ -64,16 +84,34 @@ export class AdminApiService {
   }): Observable<UsersData> {
     const params = new HttpParams({
       fromObject: {
-        pageNumber: options?.pageNumber ? String(options.pageNumber) : undefined,
-        pageSize: String(options?.pageSize ? options.pageSize : PAGE_SIZE_DEFAULT),
-        'sortBy.name': options?.sortBy?.name ? String(options.sortBy.name) : undefined,
-        'filters.favorite': options?.filters?.isFavorite ? String(options.filters.isFavorite) : undefined,
-        'filters.search': options?.filters?.search ? String(options.filters.search) : undefined,
-        withAnalytics: options?.withAnalytics ? String(options.withAnalytics) : undefined,
+        pageNumber: options?.pageNumber
+          ? String(options.pageNumber)
+          : undefined,
+        pageSize: String(
+          options?.pageSize ? options.pageSize : PAGE_SIZE_DEFAULT,
+        ),
+        'sortBy.name': options?.sortBy?.name
+          ? String(options.sortBy.name)
+          : undefined,
+        'filters.favorite': options?.filters?.isFavorite
+          ? String(options.filters.isFavorite)
+          : undefined,
+        'filters.search': options?.filters?.search
+          ? String(options.filters.search)
+          : undefined,
+        withAnalytics: options?.withAnalytics
+          ? String(options.withAnalytics)
+          : undefined,
       },
     });
 
-    return this.httpClient.get<{ data: User[] }>('/api/admin/users', { params })
-                          .pipe(map(response => ({ total: response.data?.length, users: response.data })));
+    return this.httpClient
+      .get<{ data: User[] }>('/api/admin/users', { params })
+      .pipe(
+        map((response) => ({
+          total: response.data?.length,
+          users: response.data,
+        })),
+      );
   }
 }

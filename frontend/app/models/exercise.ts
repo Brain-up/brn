@@ -10,6 +10,7 @@ import SignalModel from './signal';
 import TaskModel from 'brn/models/task';
 import { cached } from 'tracked-toolbox';
 import SubgroupModel from './subgroup';
+import NetworkService from 'brn/services/network';
 
 export interface IStatsObject {
   countedSeconds: number;
@@ -34,6 +35,7 @@ interface IStatsSaveDTO {
 }
 export default class Exercise extends CompletionDependent {
   @service('session') session!: Session;
+  @service('network') network!: NetworkService;
   @attr('string') name!: string;
   @attr('boolean') available!: boolean;
   @attr('string') description!: string;
@@ -147,13 +149,7 @@ export default class Exercise extends CompletionDependent {
       tasksCount: data.rightAnswersCount,
     };
 
-    await fetch('/api/study-history', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newStats),
-    });
+    await this.network.postRequest('study-history', newStats);
   }
 }
 

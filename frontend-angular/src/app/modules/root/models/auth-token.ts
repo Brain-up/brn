@@ -25,13 +25,6 @@ export interface MultiFactor {
   enrolledFactors: any[];
 }
 
-export interface RootObject {
-  user: User;
-  credential?: any;
-  additionalUserInfo: AdditionalUserInfo;
-  operationType: string;
-}
-
 export interface User {
   uid: string;
   displayName: string;
@@ -55,4 +48,11 @@ export interface User {
 export interface AdditionalUserInfo {
   providerId: string;
   isNewUser: boolean;
+}
+
+export interface RootObject {
+  user: User;
+  credential?: any;
+  additionalUserInfo: AdditionalUserInfo;
+  operationType: string;
 }

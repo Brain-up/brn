@@ -52,6 +52,7 @@ describe('StatisticsComponent', () => {
 
       expect(component.weekTimeTrackData).toBeTruthy();
       expect(component.monthTimeTrackData).toBeTruthy();
+      expect(component.historiesData).toBeTruthy();
     }));
 
     it('should call selectMonth', fakeAsync(() => {

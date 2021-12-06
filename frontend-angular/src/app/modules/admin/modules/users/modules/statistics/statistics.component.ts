@@ -117,8 +117,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyer$),
       )
       .subscribe((weekTimeTrackData) => {
-        this.weekTimeTrackData = weekTimeTrackData,
-        console.log('weekTimeTrackData log', this.weekTimeTrackData);
+        (this.weekTimeTrackData = weekTimeTrackData),
+          console.log('weekTimeTrackData log', this.weekTimeTrackData);
       });
   }
 
@@ -157,8 +157,6 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       });
   }
 
-
-
   private getHistoriesData(): void {
     const fromMonth = this.selectedMonth.startOf('month');
     const toMonth = this.selectedMonth.endOf('month');
@@ -173,12 +171,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroyer$),
       )
-      .subscribe(
-        (historiesData) => {
-          (this.historiesData = historiesData),
+      .subscribe((historiesData) => {
+        (this.historiesData = historiesData),
           console.log('historiesData log', this.historiesData);
-        },
-      );
+      });
   }
-
 }

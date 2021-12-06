@@ -1,6 +1,6 @@
+import { PipesModule } from './../shared/pipes/pipes.module';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
 import { AdminComponent } from './admin.component';
 
@@ -11,10 +11,9 @@ describe('AdminComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AdminComponent],
+      imports: [PipesModule],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: AuthenticationApiService, useValue: {} },
-      ],
+      providers: [{ provide: AuthenticationApiService, useValue: {} }],
     });
 
     fixture = TestBed.createComponent(AdminComponent);

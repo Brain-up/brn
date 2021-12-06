@@ -27,13 +27,17 @@ module('Unit | Adapter | application', function (hooks) {
       isAuthenticated = true;
       data = {
         authenticated: {
-          access_token: '42',
+          user: {
+            stsTokenManager: {
+              accessToken: '42'
+            }
+          }
         },
       };
     }
 
     this.owner.register('service:session', MockSession);
 
-    assert.deepEqual(adapter.headers, { Authorization: 'Basic 42' });
+    assert.deepEqual(adapter.headers, { Authorization: 'Bearer 42' });
   });
 });

@@ -12,12 +12,13 @@ import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import * as dayjs from 'dayjs';
 
 const baseUrl = '/api/admin';
+const baseUrlV2 = '/api/v2/admin';
 const action = 'action';
 const body: FormData = new FormData();
 const subGroupId = 1234;
 const userId = 1234;
-const from: Dayjs = dayjs('2019-01-01');
-const to: Dayjs = dayjs('2022-01-01');
+const from: Dayjs = dayjs('2019-01-01T00:00:00');
+const to: Dayjs = dayjs('2022-01-10T00:00:00');
 
 describe('AdminApiService', () => {
   let service: AdminApiService;
@@ -127,9 +128,9 @@ describe('AdminApiService', () => {
 
   it('should call get user weekly statistics', () => {
     let userWeeklyStatistics: UserWeeklyStatistics[] | undefined;
-    const url = `${baseUrl}/study/week?userId=${userId}&from=${from.format(
-      'YYYY-MM-DD',
-    )}&to=${to.format('YYYY-MM-DD')}`;
+    const url = `${baseUrlV2}/study/week?userId=${userId}&from=${from.format(
+      'YYYY-MM-DDTHH:mm:ss',
+    )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
 
     service.getUserWeeklyStatistics(userId, from, to).subscribe((data) => {
       userWeeklyStatistics = data;
@@ -145,9 +146,9 @@ describe('AdminApiService', () => {
     const errorEvent = new ErrorEvent('API error');
     const status = 500;
     const statusText = 'Server error';
-    const url = `${baseUrl}/study/week?userId=${userId}&from=${from.format(
-      'YYYY-MM-DD',
-    )}&to=${to.format('YYYY-MM-DD')}`;
+    const url = `${baseUrlV2}/study/week?userId=${userId}&from=${from.format(
+      'YYYY-MM-DDTHH:mm:ss',
+    )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
 
     let actualError: HttpErrorResponse | undefined;
 
@@ -175,9 +176,9 @@ describe('AdminApiService', () => {
 
   it('should call get user yearly statistics', () => {
     let userYearlyStatistics: UserWeeklyStatistics[] | undefined;
-    const url = `${baseUrl}/study/year?userId=${userId}&from=${from.format(
-      'YYYY-MM-DD',
-    )}&to=${to.format('YYYY-MM-DD')}`;
+    const url = `${baseUrlV2}/study/year?userId=${userId}&from=${from.format(
+      'YYYY-MM-DDTHH:mm:ss',
+    )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
 
     service.getUserYearlyStatistics(userId, from, to).subscribe((data) => {
       userYearlyStatistics = data;
@@ -193,9 +194,9 @@ describe('AdminApiService', () => {
     const errorEvent = new ErrorEvent('API error');
     const status = 500;
     const statusText = 'Server error';
-    const url = `${baseUrl}/study/year?userId=${userId}&from=${from.format(
-      'YYYY-MM-DD',
-    )}&to=${to.format('YYYY-MM-DD')}`;
+    const url = `${baseUrlV2}/study/year?userId=${userId}&from=${from.format(
+      'YYYY-MM-DDTHH:mm:ss',
+    )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
 
     let actualError: HttpErrorResponse | undefined;
 
