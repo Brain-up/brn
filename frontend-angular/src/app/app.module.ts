@@ -17,6 +17,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthInterceptor } from '@root/interceptors/auth.interceptor';
 import { ExceptionsInterceptor } from '@root/interceptors/exceptions.interceptor';
 import { StripUndefinedParamsInterceptor } from '@root/interceptors/strip-undefined-params.interceptor';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent, NotFoundComponent],
@@ -35,6 +38,8 @@ import { StripUndefinedParamsInterceptor } from '@root/interceptors/strip-undefi
     }),
     MatSnackBarModule,
     MatButtonModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
