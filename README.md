@@ -92,21 +92,16 @@ To install docker use:
 * [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
 
 2.1 To run docker db image use the following command:
-* on linux:
-```bash
-docker run -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11
+* on linux\windows:
 ```
-
-* on windows: 
-```
-docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:11
+docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:13
 ```
 `$PG_PASSWORD` and `$PG_USER` are environment variables and  could be replaced directly or added to your operating system. 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
 
 2.2 Alternatively, you can just replace the variables by "admin", the default user and password for development:
 ```bash
-docker run --name postgres_dev5 -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:11
+docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:13
 ```
 
 ### Back end Kotlin Part:
@@ -132,20 +127,19 @@ Note that if you are using IntelliJ, you may want to use version 2019.2 and late
 
 ### Deploy Application USING DOCKER COMPOSE:
 (back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
-1. Open file docker-compose.yml and change SPRING_PROFILE to "dev".
-2. From console, from project's folder, execute:
+From console, from project's folder, execute:
 ```bash
 docker-compose up --build
 ```
 Alternatively, use daemon mode (no console output):
 ```bash
-docker-compose -d up --build
+docker-compose up --build -d
 ```
 REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
 
 docker useful command:
 ```shell
-docker ps -a -q # for show all containers
+docker ps -a # for show all containers
 docker stop idContainer # for stop running container
 docker rm $(docker ps -a -q) # Remove all stopped containers
 ```

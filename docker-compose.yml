@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   db_brn:
+    container_name: db_brn
     image: postgres:13
     restart: always
     ports:
@@ -10,7 +11,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
   brn:
-    container_name: brn
+    container_name: brn_be
     command: java -jar epam-brn.jar
     build:
       context: .
@@ -18,18 +19,30 @@ services:
     ports:
       - 8081:8081
     environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/firebase_config_json
+      DB_HOST: db_brn
+      DB_PORT: 5432
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      SPRING_PROFILE: prod
+      SPRING_PROFILE: dev
+    secrets:
+      - firebase_config_json
     depends_on:
       - db_brn
   brn_fe:
     container_name: brn_fe
     build:
       context: .
+      args:
+        FIREBASE_PROJECT_ID: brainup-spb-dev-bb6d0
+        FIREBASE_AUTH_DOMAIN: brainup-spb-dev-bb6d0.firebaseapp.com
+        FIREBASE_API_KEY: AIzaSyB03Q4ZCxdqaKuN7cJqCQGhkibYD4Q-qsc
       dockerfile: Dockerfile_frontend
     ports:
       - 80:80
     depends_on:
       - brn
+secrets:
+  firebase_config_json:
+    file: ./src/main/resources/firebase-brainupspb-dev.json
