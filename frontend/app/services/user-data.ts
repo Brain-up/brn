@@ -25,7 +25,7 @@ export default class UserDataService extends Service {
   @tracked _selectedAvatarId = this.userModel && localStorage.getItem(this.keyForAvatar) || 1;
 
   get avatarUrl() {
-    if (this.session.data?.authenticated.user.photoURL) {
+    if (this.session.data?.authenticated?.user?.photoURL) {
       return this.session.data?.authenticated.user.photoURL;
     }
     return `/pictures/avatars/avatar ${this.selectedAvatarId}.png`;

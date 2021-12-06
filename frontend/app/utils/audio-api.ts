@@ -81,19 +81,22 @@ export class BufferLoader {
   context!: BaseAudioContext;
   urlList!: string[];
   onload!: (results: AudioBuffer[]) => void;
+  getTokenCallback!: () => string;
   bufferList = [];
   constructor(
     context: BaseAudioContext,
     urlList: string[],
     callback: (results: AudioBuffer[]) => void,
+    getTokenCallback: () => string
   ) {
     this.context = context;
     this.urlList = urlList;
     this.onload = callback;
+    this.getTokenCallback = getTokenCallback;
   }
   async load() {
     const files = await Promise.all(
-      this.urlList.map((url) => arrayBufferRequest(url)),
+      this.urlList.map((url) => arrayBufferRequest(url, this.getTokenCallback())),
     );
     try {
       const results: AudioBuffer[] = await Promise.all(
@@ -113,13 +116,18 @@ export class BufferLoader {
 
 const AudioCache = new Map();
 
-function arrayBufferRequest(url: string) {
+function arrayBufferRequest(url: string, token: string) {
+  const urlObj = new URL(url);
   return new Promise((resolve, reject) => {
     if (AudioCache.has(url)) {
       return resolve(AudioCache.get(url).slice());
     }
     const request = new XMLHttpRequest();
     request.open('GET', url, true);
+    if (urlObj.search !== '') {
+      // we don't need it for amazon api, we use it without query params
+      request.setRequestHeader('Authorization', `Bearer ${token}`);
+    }
     request.responseType = 'arraybuffer';
     request.onload = function () {
       AudioCache.set(url, request.response.slice());
@@ -135,9 +143,10 @@ function arrayBufferRequest(url: string) {
 export function loadAudioFiles(
   context: BaseAudioContext,
   files: string[],
+  getToken: () => string
 ): Promise<AudioBuffer[]> {
   return new Promise((resolve) => {
-    const bufferLoader = new BufferLoader(context, [...files], resolve);
+    const bufferLoader = new BufferLoader(context, [...files], resolve, getToken);
     bufferLoader.load();
   });
 }

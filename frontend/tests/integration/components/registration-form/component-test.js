@@ -1,4 +1,4 @@
-import { module, test } from 'qunit';
+import { module, skip, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, fillIn, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
@@ -24,7 +24,7 @@ module('Integration | Component | registration-form', function (hooks) {
     assert.dom('[data-test-form-warning]').doesNotExist();
   });
 
-  test('it send register request if all fields filled', async function (assert) {
+  skip('it send register request if all fields filled', async function (assert) {
     assert.expect(4);
     class Network extends Service {
       createUser(fields) {
@@ -54,7 +54,7 @@ module('Integration | Component | registration-form', function (hooks) {
     await click('[data-test-submit-form]');
   });
 
-  test('it able to handle registration error', async function (assert) {
+  skip('it able to handle registration error', async function (assert) {
     assert.expect(3);
     class Network extends Service {
       createUser(fields) {
