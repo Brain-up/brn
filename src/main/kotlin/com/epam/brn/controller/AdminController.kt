@@ -81,7 +81,7 @@ class AdminController(
         .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
 
     @GetMapping("/monthHistories")
-    @ApiOperation("Get month user's study histories by month and yea")
+    @ApiOperation("Get month user's study histories by month and year")
     fun getMonthHistories(
         @RequestParam("userId", required = true) userId: Long,
         @RequestParam("month", required = true) month: Int,
