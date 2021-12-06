@@ -2,7 +2,10 @@
   <tr>
     <th class="name-column-title">
       <div class="wrap">
-        {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Name' | translate }}
+        {{
+          'Admin.Modules.Users.Components.UsersTable.ColumnsName.Name'
+            | translate
+        }}
 
         <mat-icon
           [class.desc]="sortByName === 'desc'"
@@ -14,34 +17,55 @@
     </th>
 
     <th>
-      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit' | translate }}
+      {{
+        'Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit'
+          | translate
+      }}
     </th>
 
     <th>
-      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit' | translate }}
+      {{
+        'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit'
+          | translate
+      }}
     </th>
 
     <th class="center">
-      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastWeek' | translate }}
+      {{
+        'Admin.Modules.Users.Components.UsersTable.ColumnsName.CurrentWeek'
+          | translate
+      }}
     </th>
 
     <th class="center">
-      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth' | translate }}
+      {{
+        'Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth'
+          | translate
+      }}
     </th>
 
     <th class="center">
-      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress' | translate }}
+      {{
+        'Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress'
+          | translate
+      }}
     </th>
 
     <th class="center">
-      {{ 'Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite' | translate }}
+      {{
+        'Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite'
+          | translate
+      }}
     </th>
   </tr>
 
-  <tr *ngFor="let user of usersTableData" [routerLink]="[user.id, 'statistics']">
+  <tr
+    *ngFor="let user of usersTableData; let i = index"
+    [routerLink]="[user.id, 'statistics']"
+  >
     <td class="name-column">
       <div class="wrap">
-        <div class="avatar">AB</div>
+        <div class="avatar">{{ user.name | shortName }}</div>
 
         <div class="info">
           <div class="full-name">{{ user.name }}</div>
@@ -49,7 +73,8 @@
           <div class="common">
             {{
               'Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]'
-                | translate: { years: user.yearsOld, gender: user.gender }
+                | translate
+                  : { years: user.yearsOld, gender: user.gender | lowercase }
             }}
           </div>
         </div>
@@ -79,7 +104,10 @@
     </td>
 
     <td class="last-week-column">
-      <app-bar-chart [data]="user.lastWeek.data" [options]="user.lastWeek.option"></app-bar-chart>
+      <app-bar-chart
+        [data]="user.lastWeek.data"
+        [options]="user.lastWeek.option"
+      ></app-bar-chart>
     </td>
 
     <td class="center">

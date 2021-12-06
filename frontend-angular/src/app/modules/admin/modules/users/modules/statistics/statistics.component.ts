@@ -15,6 +15,7 @@ import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { Subject } from 'rxjs';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { HistoriesData } from '@admin/models/histories';
 
 @Component({
   selector: 'app-statistics',
@@ -36,6 +37,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   public weekTimeTrackData: UserWeeklyStatistics[];
   public isLoadingMonthTimeTrackData = true;
   public monthTimeTrackData: UserYearlyStatistics[];
+  public historiesData: HistoriesData[];
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -49,6 +51,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getWeekTimeTrackData();
     this.getMonthTimeTrackData();
+    this.getHistoriesData();
   }
 
   ngOnDestroy(): void {
@@ -90,6 +93,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.selectedMonth = this.selectedMonth.subtract(1, 'month');
 
     this.getWeekTimeTrackData();
+    this.getHistoriesData();
   }
 
   public loadNextMonth(): void {
@@ -112,12 +116,10 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroyer$),
       )
-      .subscribe(
-        (weekTimeTrackData) => {
-          (this.weekTimeTrackData = weekTimeTrackData),
-          console.log('weekTimeTrackData log', weekTimeTrackData);
-        },
-      );
+      .subscribe((weekTimeTrackData) => {
+        this.weekTimeTrackData = weekTimeTrackData,
+        console.log('weekTimeTrackData log', this.weekTimeTrackData);
+      });
   }
 
   private getMonthTimeTrackData(): void {
@@ -136,6 +138,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       )
       .subscribe((monthTimeTrackData) => {
         this.monthTimeTrackData = monthTimeTrackData;
+        console.log('weekTimeTrackData log', this.monthTimeTrackData);
 
         if (!monthTimeTrackData.length) {
           return;
@@ -153,4 +156,29 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         this.getWeekTimeTrackData();
       });
   }
+
+
+
+  private getHistoriesData(): void {
+    const fromMonth = this.selectedMonth.startOf('month');
+    const toMonth = this.selectedMonth.endOf('month');
+
+    this.isLoadingWeekTimeTrackData = true;
+    this.adminApiService
+      .getUserHistoriesStatistics(this.userId, fromMonth, toMonth)
+      .pipe(
+        finalize(() => {
+          this.isLoadingWeekTimeTrackData = false;
+          this.cdr.detectChanges();
+        }),
+        takeUntil(this.destroyer$),
+      )
+      .subscribe(
+        (historiesData) => {
+          (this.historiesData = historiesData),
+          console.log('historiesData log', this.historiesData);
+        },
+      );
+  }
+
 }

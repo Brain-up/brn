@@ -11,6 +11,7 @@ import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
 import { PaginatorModule } from '@shared/components/paginator/paginator.module';
 import { SearchInputModule } from '@shared/components/search-input/search-input.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PipesModule } from '@shared/pipes/pipes.module';
 
 @NgModule({
   declarations: [UsersComponent, UsersTableComponent],
@@ -24,6 +25,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     PaginatorModule,
     MatIconModule,
     MatProgressBarModule,
+    PipesModule,
   ],
   providers: [AdminApiService],
 })

@@ -2,7 +2,13 @@ import { GenderType } from '@admin/models/gender';
 import { SortType } from '@admin/models/sort';
 import { User } from '@admin/models/user';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import * as dayjs from 'dayjs';
 import { ILastWeekChartDataItem } from '../../models/last-week-chart-data-item';
 import { IUsersTableItem } from '../../models/users-table-item';
@@ -33,13 +39,18 @@ export class UsersTableComponent {
       const firstVisit = dayjs(rawItem.firstDone);
       const lastVisit = dayjs(rawItem.lastDone);
 
-      this.chartsData.push(rawItem.lastWeek.map(({ exercisingTimeSeconds, progress }) => ({ y: exercisingTimeSeconds, progress })));
+      this.chartsData.push(
+        rawItem.lastWeek.map(({ exercisingTimeSeconds, progress }) => ({
+          y: exercisingTimeSeconds,
+          progress,
+        })),
+      );
 
       return {
         id: rawItem.id,
         name: rawItem.name,
         yearsOld: dayjs().year() - rawItem.bornYear,
-        gender: rawItem.gender.toLowerCase() as Lowercase<GenderType>,
+        gender: rawItem.gender as Lowercase<GenderType>,
         firstVisit: {
           date: firstVisit.format('MMMM D, YYYY'),
           time: firstVisit.format('h'),
@@ -49,10 +60,20 @@ export class UsersTableComponent {
           time: lastVisit.format('h'),
         },
         lastWeek: {
-          data: [['data', ...rawItem.lastWeek.map(({ exercisingTimeSeconds }) => exercisingTimeSeconds)]],
+          data: [
+            [
+              'data',
+              ...rawItem.lastWeek.map(
+                ({ exercisingTimeSeconds }) => exercisingTimeSeconds,
+              ),
+            ],
+          ],
           option: {
             colors: {
-              data: (dataItem) => USER_EXERCISING_PROGRESS_STATUS_COLOR[this.chartsData[i][dataItem.index].progress],
+              data: (dataItem) =>
+                USER_EXERCISING_PROGRESS_STATUS_COLOR[
+                  this.chartsData[i][dataItem.index].progress
+                ],
             },
             axis: { x: { show: false }, y: { show: false } },
             size: { height: 60, width: 140 },

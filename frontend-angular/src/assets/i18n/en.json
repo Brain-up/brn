@@ -47,6 +47,7 @@
         "Components": {
           "UsersTable": {
             "ColumnsName": {
+              "CurrentWeek": "Current week",
               "Favorite": "Favorite",
               "FirstVisit": "First visit",
               "LastVisit": "Last visit",
@@ -115,7 +116,8 @@
           "Password": "Password",
           "UserName": "User Name (Email)"
         },
-        "Title": "Authentication"
+        "Title": "Authentication",
+        "Error": "The password is invalid or the user does not have a password."
       }
     },
     "Title": "Admin panel"

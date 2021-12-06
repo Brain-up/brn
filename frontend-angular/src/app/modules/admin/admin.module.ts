@@ -10,10 +10,28 @@ import { GroupApiService } from './services/api/group-api.service';
 import { SeriesApiService } from './services/api/series-api.service';
 import { SubGroupApiService } from './services/api/sub-group-api.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
+import { PipesModule } from '@shared/pipes/pipes.module';
 
 @NgModule({
   declarations: [AdminComponent],
-  imports: [CommonModule, AdminRoutingModule, TranslateModule, MatButtonModule, MatToolbarModule],
-  providers: [AdminApiService, CloudApiService, GroupApiService, SeriesApiService, SubGroupApiService],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    TranslateModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
+    PipesModule
+  ],
+  providers: [
+    AuthenticationApiService,
+    AdminApiService,
+    CloudApiService,
+    GroupApiService,
+    SeriesApiService,
+    SubGroupApiService,
+  ],
 })
 export class AdminModule {}
