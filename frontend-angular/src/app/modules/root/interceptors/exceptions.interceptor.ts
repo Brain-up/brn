@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StatusCodes } from 'http-status-codes';
 import { tap } from 'rxjs/operators';
@@ -15,30 +21,41 @@ export class ExceptionsInterceptor implements HttpInterceptor {
     private readonly router: Router,
     private readonly snackBarService: SnackBarService,
     private readonly authTokenService: AuthTokenService,
-    private readonly translateService: TranslateService
+    private readonly translateService: TranslateService,
   ) {}
 
-  public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  public intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       tap({
         error: (err) => {
           if (err instanceof HttpErrorResponse) {
             switch (err.status) {
               case StatusCodes.UNAUTHORIZED:
-                this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.Unauthorized'));
+                this.snackBarService.error(
+                  this.translateService.get(
+                    'Root.Interceptors.Exceptions.Unauthorized',
+                  ),
+                );
                 this.authTokenService.removeAuthToken();
                 this.router.navigateByUrl(AUTH_PAGE_URL);
                 break;
 
               default:
-                this.snackBarService.error(this.translateService.get('Root.Interceptors.Exceptions.UnknownError'));
+                this.snackBarService.error(
+                  this.translateService.get(
+                    'Root.Interceptors.Exceptions.UnknownError',
+                  ),
+                );
                 this.authTokenService.removeAuthToken();
                 this.router.navigateByUrl(AUTH_PAGE_URL);
                 break;
             }
           }
         },
-      })
+      }),
     );
   }
 }
