@@ -1,5 +1,11 @@
 'use strict';
 
+const firebaseProjectId = process.env.FIREBASE_PROJECT_ID || 'brainupspb';
+const firebaseAuthDomain =
+  process.env.FIREBASE_AUTH_DOMAIN || 'brainupspb.firebaseapp.com';
+const firebaseAPIKey =
+  process.env.FIREBASE_API_KEY || 'AIzaSyCxu7mVxd_waBDUn9VKblBl4zl8MX5WxWY';
+
 module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'brn',
@@ -18,9 +24,9 @@ module.exports = function (environment) {
       },
     },
     firebase: {
-      apiKey: 'AIzaSyCxu7mVxd_waBDUn9VKblBl4zl8MX5WxWY',
-      authDomain: 'brainupspb.firebaseapp.com',
-      projectId: 'brainupspb',
+      apiKey: firebaseAPIKey,
+      authDomain: firebaseAuthDomain,
+      projectId: firebaseProjectId,
     },
     APP: {},
   };
