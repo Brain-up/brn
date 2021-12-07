@@ -1,4 +1,4 @@
-import { User } from '@admin/models/user';
+import { User, UserMapped } from '@admin/models/user';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import {
   Component,
@@ -13,7 +13,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as dayjs from 'dayjs';
 import { ILastWeekChartDataItem } from '../../models/last-week-chart-data-item';
-import { IUsersTableItem } from '../../models/users-table-item';
 
 @Component({
   selector: 'app-users-table',
@@ -31,9 +30,8 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     'progress',
     'favorite',
   ];
-  dataSource: MatTableDataSource<User>;
-  public usersListMappedData: any;
-  // public usersListMappedData: IUsersTableItem[];
+  dataSource: MatTableDataSource<UserMapped>;
+  public usersListMappedData: UserMapped[];
   public chartsData: ILastWeekChartDataItem[][];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

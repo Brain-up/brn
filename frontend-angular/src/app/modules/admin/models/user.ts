@@ -1,4 +1,5 @@
-import { GenderType } from './gender';
+import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
+import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 import { UserExercisingProgressStatusType } from './user-exercising-progress-status';
 
 export class User {
@@ -7,11 +8,22 @@ export class User {
   public diagnosticProgress: { SIGNALS: boolean };
   public email: string;
   public firstDone: string;
-  public gender: GenderType;
+  public gender: 'MALE' | 'FEMALE';
   public id: number;
+  public isFavorite: boolean;
   public lastDone: string;
-  public lastWeek: { exercisingTimeSeconds: number; progress: UserExercisingProgressStatusType }[];
+  public lastWeek: {
+    exercisingTimeSeconds: number;
+    progress: UserExercisingProgressStatusType;
+  }[];
   public name: string;
   public workDayByLastMonth: number;
-  public isFavorite: boolean;
+}
+
+export class UserMapped extends User {
+  age: number;
+  currentWeekChart: {
+    data: BarDataType;
+    option: BarOptionsType;
+  };
 }

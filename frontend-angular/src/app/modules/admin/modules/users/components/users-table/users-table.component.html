@@ -1,135 +1,11 @@
-<!-- <table class="users">
-  <tr>
-    <th class="name-column-title">
-      <div class="wrap">
-        {{
-          'Admin.Modules.Users.Components.UsersTable.ColumnsName.Name'
-            | translate
-        }}
-
-        <mat-icon
-          [class.desc]="sortByName === 'desc'"
-          (click)="sortByNameEvent.emit(sortByName === 'asc' ? 'desc' : 'asc')"
-        >
-          keyboard_arrow_down
-        </mat-icon>
-      </div>
-    </th>
-
-    <th>
-      {{
-        'Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit'
-          | translate
-      }}
-    </th>
-
-    <th>
-      {{
-        'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit'
-          | translate
-      }}
-    </th>
-
-    <th class="center">
-      {{
-        'Admin.Modules.Users.Components.UsersTable.ColumnsName.CurrentWeek'
-          | translate
-      }}
-    </th>
-
-    <th class="center">
-      {{
-        'Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth'
-          | translate
-      }}
-    </th>
-
-    <th class="center">
-      {{
-        'Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress'
-          | translate
-      }}
-    </th>
-
-    <th class="center">
-      {{
-        'Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite'
-          | translate
-      }}
-    </th>
-  </tr>
-
-  <tr
-    *ngFor="let user of usersTableData"
-    [routerLink]="[user.id, 'statistics']"
-  >
-    <td class="name-column">
-      <div class="wrap">
-        <div class="avatar">AB</div>
-
-        <div class="info">
-          <div class="full-name">{{ user.name }}</div>
-
-          <div class="common">
-            {{
-              'Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]'
-                | translate
-                  : { years: user.yearsOld, gender: user.gender | lowercase }
-            }}
-          </div>
-        </div>
-      </div>
-    </td>
-
-    <td class="visit-column">
-      <div class="date">{{ user.firstVisit.date }}</div>
-
-      <div class="time">
-        {{
-          'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
-            | translate: { hours: user.firstVisit.time }
-        }}
-      </div>
-    </td>
-
-    <td class="visit-column">
-      <div class="date">{{ user.lastVisit.date }}</div>
-
-      <div class="time">
-        {{
-          'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
-            | translate: { hours: user.lastVisit.time }
-        }}
-      </div>
-    </td>
-
-    <td class="last-week-column">
-      <app-bar-chart
-        [data]="user.lastWeek.data"
-        [options]="user.lastWeek.option"
-      ></app-bar-chart>
-    </td>
-
-    <td class="center">
-      {{ user.workingDaysInLastMonth }}
-    </td>
-
-    <td class="progress-column center">
-      <mat-icon svgIcon="up-arrow" *ngIf="user.hasProgress"></mat-icon>
-    </td>
-
-    <td class="favorite-column center">
-      <mat-icon svgIcon="star" [class.favorite]="user.isFavorite"></mat-icon>
-    </td>
-  </tr>
-</table> -->
-
 <mat-form-field appearance="standard">
-  <mat-label>Filter</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input />
+  <mat-label>{{ 'Admin.Modules.Users.Search' | translate }}</mat-label>
+  <input matInput (keyup)="applyFilter($event)" #input />
+  <mat-icon matPrefix>search</mat-icon>
 </mat-form-field>
 
 <table mat-table [dataSource]="dataSource" matSort>
+  <!-- Table columns -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       {{
@@ -161,7 +37,6 @@
     </td>
   </ng-container>
 
-  <!-- Name Column -->
   <ng-container matColumnDef="lastVisit">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       {{
@@ -178,7 +53,6 @@
     </td>
   </ng-container>
 
-  <!-- Fruit Column -->
   <ng-container matColumnDef="currentWeek">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       {{
@@ -186,8 +60,8 @@
           | translate
       }}
     </th>
-    <td mat-cell *matCellDef="let user">
-      <ng-container *ngIf="chartsData && userList && dataSource">
+    <td class="last-week-column" mat-cell *matCellDef="let user">
+      <ng-container *ngIf="dataSource">
         <app-bar-chart
           [data]="user.currentWeekChart.data"
           [options]="user.currentWeekChart.option"
@@ -213,8 +87,11 @@
           | translate
       }}
     </th>
-    <td mat-cell *matCellDef="let user">
-      {{ user.diagnosticProgress.SIGNALS }}
+    <td class="progress-column" mat-cell *matCellDef="let user">
+      <mat-icon
+        svgIcon="up-arrow"
+        *ngIf="user.diagnosticProgress.SIGNALS"
+      ></mat-icon>
     </td>
   </ng-container>
 
@@ -225,13 +102,15 @@
           | translate
       }}
     </th>
-    <td mat-cell *matCellDef="let user">{{ user.isFavorite }}</td>
+    <td class="favorite-column" mat-cell *matCellDef="let user">
+      <mat-icon svgIcon="star" [class.favorite]="user.isFavorite"></mat-icon>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-  <!-- Row shown when there is no matching data. -->
+  <!-- If no matching data. -->
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
       No data matching the filter "{{ input.value }}"
