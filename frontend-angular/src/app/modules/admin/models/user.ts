@@ -1,5 +1,6 @@
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
+import { string } from 'fp-ts';
 import { UserExercisingProgressStatusType } from './user-exercising-progress-status';
 
 export class User {
@@ -10,13 +11,15 @@ export class User {
   public firstDone: string;
   public gender: 'MALE' | 'FEMALE';
   public id: number;
-  public isFavorite: boolean;
+  public isFavorite?: boolean;
   public lastDone: string;
   public lastWeek: {
+    date: string;
     exercisingTimeSeconds: number;
     progress: UserExercisingProgressStatusType;
   }[];
   public name: string;
+  public userId: string;
   public workDayByLastMonth: number;
 }
 

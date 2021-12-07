@@ -42,9 +42,16 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     if (!userList) {
       return;
     }
-    this.chartsData = [];
 
+    this.chartsData = [];
     this.usersListMappedData = userList.map((user, i) => {
+      this.chartsData.push(
+        user.lastWeek.map(({ exercisingTimeSeconds, progress }) => ({
+          y: exercisingTimeSeconds,
+          progress,
+        })),
+      );
+
       return {
         age: dayjs().year() - user.bornYear,
         currentWeekChart: {
@@ -79,10 +86,6 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
 
   public ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.usersListMappedData);
-
-    console.log('userList', this.userList);
-    console.log('dataSource', this.dataSource);
-    console.log('usersListMappedData', this.usersListMappedData);
   }
 
   public applyFilter(event: Event): void {
