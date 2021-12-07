@@ -1,6 +1,10 @@
 @import 'colors';
 @import 'variables';
 
+table {
+  width: 100%;
+}
+
 :host {
   display: block;
 

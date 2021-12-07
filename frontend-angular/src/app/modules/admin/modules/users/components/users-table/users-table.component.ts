@@ -1,14 +1,16 @@
-import { GenderType } from '@admin/models/gender';
-import { SortType } from '@admin/models/sort';
 import { User } from '@admin/models/user';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  Output,
-  EventEmitter,
+  ViewChild,
+  AfterViewInit,
+  OnInit,
 } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import * as dayjs from 'dayjs';
 import { ILastWeekChartDataItem } from '../../models/last-week-chart-data-item';
 import { IUsersTableItem } from '../../models/users-table-item';
@@ -19,51 +21,39 @@ import { IUsersTableItem } from '../../models/users-table-item';
   styleUrls: ['./users-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UsersTableComponent {
-  private chartsData: ILastWeekChartDataItem[][];
+export class UsersTableComponent implements OnInit, AfterViewInit {
+  public displayedColumns: string[] = [
+    'name',
+    'firstVisit',
+    'lastVisit',
+    'currentWeek',
+    'workingDaysInLastMonth',
+    'progress',
+    'favorite',
+  ];
+  dataSource: MatTableDataSource<User>;
+  public usersListMappedData: any;
+  // public usersListMappedData: IUsersTableItem[];
+  public chartsData: ILastWeekChartDataItem[][];
 
-  public usersTableData: IUsersTableItem[];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   @Input()
-  public sortByName: SortType = 'asc';
-
-  @Input()
-  public set data(data: User[] | undefined) {
-    if (!data) {
+  public set userList(userList: User[] | undefined) {
+    if (!userList) {
       return;
     }
-
     this.chartsData = [];
 
-    this.usersTableData = data.map((rawItem, i) => {
-      const firstVisit = dayjs(rawItem.firstDone);
-      const lastVisit = dayjs(rawItem.lastDone);
-
-      this.chartsData.push(
-        rawItem.lastWeek.map(({ exercisingTimeSeconds, progress }) => ({
-          y: exercisingTimeSeconds,
-          progress,
-        })),
-      );
-
+    this.usersListMappedData = userList.map((user, i) => {
       return {
-        id: rawItem.id,
-        name: rawItem.name,
-        yearsOld: dayjs().year() - rawItem.bornYear,
-        gender: rawItem.gender as Lowercase<GenderType>,
-        firstVisit: {
-          date: firstVisit.format('MMMM D, YYYY'),
-          time: firstVisit.format('h'),
-        },
-        lastVisit: {
-          date: lastVisit.format('MMMM D, YYYY'),
-          time: lastVisit.format('h'),
-        },
-        lastWeek: {
+        age: dayjs().year() - user.bornYear,
+        currentWeekChart: {
           data: [
             [
               'data',
-              ...rawItem.lastWeek.map(
+              ...user.lastWeek.map(
                 ({ exercisingTimeSeconds }) => exercisingTimeSeconds,
               ),
             ],
@@ -82,13 +72,32 @@ export class UsersTableComponent {
             bar: { width: 8, radius: 4 },
           },
         },
-        workingDaysInLastMonth: rawItem.workDayByLastMonth,
-        hasProgress: rawItem.diagnosticProgress.SIGNALS,
-        isFavorite: rawItem.isFavorite,
+        ...user,
       };
     });
   }
 
-  @Output()
-  public sortByNameEvent = new EventEmitter<SortType>();
+  constructor() {}
+
+  public ngOnInit(): void {
+    this.dataSource = new MatTableDataSource(this.usersListMappedData);
+
+    console.log('userList', this.userList);
+    console.log('dataSource', this.dataSource);
+    console.log('usersListMappedData', this.usersListMappedData);
+  }
+
+  public applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 }

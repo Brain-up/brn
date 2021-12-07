@@ -14,7 +14,10 @@
 </div>
 
 <div class="content">
-  <mat-progress-bar *ngIf="isLoading$ | async; else dataTemplate" mode="indeterminate"></mat-progress-bar>
+  <mat-progress-bar
+    *ngIf="isLoading$ | async; else dataTemplate"
+    mode="indeterminate"
+  ></mat-progress-bar>
 
   <app-paginator
     *ngIf="usersData?.total"
@@ -27,11 +30,7 @@
 <!-- #region Templates -->
 <ng-template #dataTemplate>
   <ng-container *ngIf="usersData.users?.length; else emptyDataTemplate">
-    <app-users-table
-      [data]="usersData.users"
-      [sortByName]="getUsersOptions.sortByName"
-      (sortByNameEvent)="sortByName($event)"
-    ></app-users-table>
+    <app-users-table [userList]="usersData.users"></app-users-table>
   </ng-container>
 </ng-template>
 
