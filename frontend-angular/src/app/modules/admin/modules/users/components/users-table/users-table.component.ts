@@ -1,4 +1,4 @@
-import { User, UserMapped } from '@admin/models/user';
+import { User, UserMapped } from '@admin/models/user.model';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import {
   Component,
@@ -11,8 +11,10 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataShareService } from '@shared/services/data-share.service';
 import * as dayjs from 'dayjs';
-import { ILastWeekChartDataItem } from '../../models/last-week-chart-data-item';
+import { ILastWeekChartDataItem } from '../../../../models/last-week-chart-data-item';
 
 @Component({
   selector: 'app-users-table',
@@ -21,6 +23,9 @@ import { ILastWeekChartDataItem } from '../../models/last-week-chart-data-item';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersTableComponent implements OnInit, AfterViewInit {
+  private chartsData: ILastWeekChartDataItem[][];
+  private usersListMappedData: UserMapped[];
+  public dataSource: MatTableDataSource<UserMapped>;
   public displayedColumns: string[] = [
     'name',
     'firstVisit',
@@ -30,13 +35,13 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     'progress',
     'favorite',
   ];
-  dataSource: MatTableDataSource<UserMapped>;
-  public usersListMappedData: UserMapped[];
-  public chartsData: ILastWeekChartDataItem[][];
+  public filterFavorites: boolean = false;
+
+  filterValues: any = {};
+  fav: boolean;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
   @Input()
   public set userList(userList: User[] | undefined) {
     if (!userList) {
@@ -82,10 +87,19 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  constructor() {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private dataShareService: DataShareService<User>,
+    private router: Router,
+  ) {}
 
   public ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.usersListMappedData);
+  }
+
+  public ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   public applyFilter(event: Event): void {
@@ -97,8 +111,22 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  public applyFavoriteFilter(column: string, filterValue: string): void {
+    this.filterFavorites = !this.filterFavorites;
+
+    this.filterValues[column] = filterValue;
+
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public navigateToSelectedUser(user): void {
+    this.dataShareService.addData(user);
+    this.router.navigate([user.id, 'statistics'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }

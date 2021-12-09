@@ -1,30 +1,173 @@
-<div class="filters">
-  <app-toggler
-    class="toggler"
-    [state]="getUsersOptions.isFavorite"
-    [offText]="'Admin.Modules.Users.FavoriteToggler.AllUsers' | translate"
-    [onText]="'Admin.Modules.Users.FavoriteToggler.Favorites' | translate"
-    (toggleEvent)="toggleFavorite($event)"
-  ></app-toggler>
-</div>
-
 <div class="content">
   <mat-progress-bar
-    *ngIf="isLoading$ | async; else dataTemplate"
+    *ngIf="isLoading$ | async; else usersTable"
     mode="indeterminate"
   ></mat-progress-bar>
 </div>
 
-<!-- #region Templates -->
-<ng-template #dataTemplate>
-  <ng-container *ngIf="usersData.users?.length; else emptyDataTemplate">
-    <app-users-table [userList]="usersData.users"></app-users-table>
+<ng-template #usersTable>
+  <ng-container *ngIf="userList?.length; else emptyTable">
+    <div class="filters">
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>{{ 'Admin.Modules.Users.Search' | translate }}</mat-label>
+        <input matInput (keyup)="applyFilter($event)" #input maxlength="36" />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+
+      <app-toggler
+        class="toggler"
+        [state]="filterFavorites"
+        [offText]="'Admin.Modules.Users.FavoriteToggler.AllUsers' | translate"
+        [onText]="'Admin.Modules.Users.FavoriteToggler.Favorites' | translate"
+        (toggleEvent)="applyFavoriteFilter($event)"
+      ></app-toggler>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort [trackBy]="">
+      <!-- Table columns -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.Name'
+              | translate
+          }}
+        </th>
+        <td class="name-column" mat-cell *matCellDef="let user">
+          <a class="mat-row-link" (click)="navigateToSelectedUser(user)"></a>
+
+          <div class="avatar">AB</div>
+          <div>
+            <div class="item">{{ user.name }}</div>
+            <div class="subItem">
+              {{
+                'Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]'
+                  | translate
+                    : { years: user.age, gender: user.gender | lowercase }
+              }}
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="firstVisit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit'
+              | translate
+          }}
+        </th>
+        <td mat-cell *matCellDef="let user">
+          <div class="item">{{ user.firstDone | date: 'longDate' }}</div>
+          <div class="subItem">
+            {{
+              'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
+                | translate: { hours: user.firstDone | date: 'H' }
+            }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastVisit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit'
+              | translate
+          }}
+        </th>
+        <td mat-cell *matCellDef="let user">
+          <div class="item">{{ user.lastDone | date }}</div>
+          <div class="subItem">
+            {{
+              'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
+                | translate: { hours: user.lastDone | date: 'H' }
+            }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="currentWeek">
+        <th class="center" mat-header-cell *matHeaderCellDef>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.CurrentWeek'
+              | translate
+          }}
+        </th>
+        <td class="last-week-column center" mat-cell *matCellDef="let user">
+          <ng-container *ngIf="dataSource">
+            <!-- <app-bar-chart
+              [data]="user.currentWeekChart.data"
+              [options]="user.currentWeekChart.option"
+            ></app-bar-chart> -->
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="workingDaysInLastMonth">
+        <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth'
+              | translate
+          }}
+        </th>
+        <td class="center" mat-cell *matCellDef="let user">
+          {{ user.workDayByLastMonth }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="progress">
+        <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress'
+              | translate
+          }}
+        </th>
+        <td class="progress-column center" mat-cell *matCellDef="let user">
+          <mat-icon
+            svgIcon="up-arrow"
+            *ngIf="user.diagnosticProgress.SIGNALS"
+          ></mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="favorite">
+        <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite'
+              | translate
+          }}
+        </th>
+        <td class="favorite-column center" mat-cell *matCellDef="let user">
+          <mat-icon svgIcon="star" [class.favorite]="user.isFavorite">{{
+            user.isFavorite
+          }}</mat-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        matRipple
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
+
+      <!-- If no matching data -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No data matching the filter "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSize]="25"
+      [pageSizeOptions]="[25, 100]"
+      aria-label="Select page of users"
+    ></mat-paginator>
   </ng-container>
 </ng-template>
 
-<ng-template #emptyDataTemplate>
+<ng-template #emptyTable>
   <div class="empty-data">
     {{ 'Admin.Modules.Users.EmptyData' | translate }}
   </div>
 </ng-template>
-<!-- #endregion -->

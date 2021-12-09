@@ -1,11 +1,23 @@
-import { SortType } from '@admin/models/sort';
-import { UsersData } from '@admin/models/users-data';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { DEBOUNCE_TIME_IN_MS } from '@shared/constants/time-constants';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
+import { DataShareService } from '@shared/services/data-share.service';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  User,
+  UserMapped,
+  UserWithNoAnalytics,
+} from '@admin/models/user.model';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'app-users',
@@ -15,78 +27,85 @@ import { debounceTime, finalize, takeUntil } from 'rxjs/operators';
 })
 export class UsersComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
-
   private getUsersSubscription: Subscription;
 
   public readonly isLoading$ = new BehaviorSubject(true);
-  public readonly searchControl = new FormControl();
-  public readonly getUsersOptions: { pageNumber: number; sortByName: SortType; isFavorite: boolean } = {
-    pageNumber: 1,
-    sortByName: 'asc',
-    isFavorite: false,
-  };
+  public dataSource: MatTableDataSource<UserWithNoAnalytics | UserMapped>;
+  public displayedColumns: string[] = [
+    'name',
+    'firstVisit',
+    'lastVisit',
+    'currentWeek',
+    'workingDaysInLastMonth',
+    'progress',
+    'favorite',
+  ];
+  public filterFavorites: boolean = false;
+  public userList: UserWithNoAnalytics[] | UserMapped[];
 
-  public usersData: UsersData;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private readonly adminApiService: AdminApiService) {}
+  constructor(
+    private readonly adminApiService: AdminApiService,
+    private activatedRoute: ActivatedRoute,
+    private dataShareService: DataShareService<User>,
+    private router: Router,
+  ) {}
 
-  ngOnInit(): void {
-    this.searchControl.valueChanges
-      .pipe(debounceTime(DEBOUNCE_TIME_IN_MS), takeUntil(this.destroyer$))
-      .subscribe(() => {
-        this.getUsersOptions.pageNumber = 1;
-        this.getUsers();
-      });
-
+  public ngOnInit(): void {
     this.getUsers();
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.destroyer$.next();
     this.destroyer$.complete();
   }
 
-  public toggleFavorite(isFavorite: boolean): void {
-    this.getUsersOptions.pageNumber = 1;
-    this.getUsersOptions.isFavorite = isFavorite;
-
-    this.getUsers();
-  }
-
-  public sortByName(sort: SortType): void {
-    this.getUsersOptions.pageNumber = 1;
-    this.getUsersOptions.sortByName = sort;
-
-    this.getUsers();
-  }
-
-  public selectPage(pageNumber: number): void {
-    this.getUsersOptions.pageNumber = pageNumber;
-
-    this.getUsers();
-  }
-
   private getUsers(): void {
     this.getUsersSubscription?.unsubscribe();
-
     this.isLoading$.next(true);
 
     this.getUsersSubscription = this.adminApiService
-      .getUsers({
-        pageNumber: this.getUsersOptions.pageNumber,
-        sortBy: {
-          name: this.getUsersOptions.sortByName,
-        },
-        filters: {
-          isFavorite: this.getUsersOptions.isFavorite,
-          search: this.searchControl.value,
-        },
-        withAnalytics: true,
-      })
+      .getUsers('ROLE_USER', true)
       .pipe(
         finalize(() => this.isLoading$.next(false)),
-        takeUntil(this.destroyer$)
+        takeUntil(this.destroyer$),
       )
-      .subscribe((usersData) => (this.usersData = usersData));
+      .subscribe((userList) => {
+        this.userList = userList;
+        this.dataSource = new MatTableDataSource(userList);
+        // Change detection cycle: ViewChild undefined due *ngIf
+        setTimeout(() => {
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+        });
+   
+      });
+  }
+
+  public applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public applyFavoriteFilter(column): void {
+    // this.filterFavorites = !this.filterFavorites;
+    // this.filterValues[column] = filterValue;
+    // this.dataSource.filter = JSON.stringify(this.filterValues);
+    // if (this.dataSource.paginator) {
+    //   this.dataSource.paginator.firstPage();
+    // }
+  }
+
+  public navigateToSelectedUser(user): void {
+    this.dataShareService.addData(user);
+    this.router.navigate([user.id, 'statistics'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }

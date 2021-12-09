@@ -1,8 +1,18 @@
-<mat-form-field appearance="standard">
-  <mat-label>{{ 'Admin.Modules.Users.Search' | translate }}</mat-label>
-  <input matInput (keyup)="applyFilter($event)" #input />
-  <mat-icon matPrefix>search</mat-icon>
-</mat-form-field>
+<div class="filters">
+  <mat-form-field appearance="standard">
+    <mat-label>{{ 'Admin.Modules.Users.Search' | translate }}</mat-label>
+    <input matInput (keyup)="applyFilter($event)" #input />
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <app-toggler
+    class="toggler"
+    [state]="filterFavorites"
+    [offText]="'Admin.Modules.Users.FavoriteToggler.AllUsers' | translate"
+    [onText]="'Admin.Modules.Users.FavoriteToggler.Favorites' | translate"
+    (toggleEvent)="applyFavoriteFilter('favorite', fav ? 'blue' : '')"
+  ></app-toggler>
+</div>
 
 <table mat-table [dataSource]="dataSource" matSort>
   <!-- Table columns -->
@@ -13,6 +23,8 @@
       }}
     </th>
     <td class="name-column" mat-cell *matCellDef="let user">
+      <a class="mat-row-link" (click)="navigateToSelectedUser(user)"></a>
+
       <div class="avatar">AB</div>
       <div>
         <div class="item">{{ user.name }}</div>
@@ -63,7 +75,7 @@
   </ng-container>
 
   <ng-container matColumnDef="currentWeek">
-    <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
+    <th class="center" mat-header-cell *matHeaderCellDef>
       {{
         'Admin.Modules.Users.Components.UsersTable.ColumnsName.CurrentWeek'
           | translate
@@ -114,12 +126,14 @@
       }}
     </th>
     <td class="favorite-column center" mat-cell *matCellDef="let user">
-      <mat-icon svgIcon="star" [class.favorite]="user.isFavorite"></mat-icon>
+      <mat-icon svgIcon="star" [class.favorite]="user.isFavorite">{{
+        user.isFavorite
+      }}</mat-icon>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr mat-row matRipple *matRowDef="let row; columns: displayedColumns"></tr>
 
   <!-- If no matching data. -->
   <tr class="mat-row" *matNoDataRow>

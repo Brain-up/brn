@@ -1,3 +1,4 @@
+import { values } from 'fp-ts/lib/Map';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
@@ -11,10 +12,9 @@ import {
 } from '@admin/models/user-exercising-progress-status';
 import { AdminApiService } from './admin-api.service';
 import { DAYS_IN_WEEK, MONTHS_IN_YEAR } from '@shared/constants/common-constants';
-import { User } from '@admin/models/user';
+import { User } from '@admin/models/user.model';
 import { getRandomBool } from '@shared/helpers/get-random-bool';
 import { getRandomString } from '@shared/helpers/get-random-string';
-import { UsersData } from '@admin/models/users-data';
 
 export class AdminApiServiceFake
   implements Pick<AdminApiService, 'getUserWeeklyStatistics' | 'getUserYearlyStatistics' | 'getUsers'>
@@ -62,7 +62,7 @@ export class AdminApiServiceFake
     return of(this.options.isUserYearlyStatisticsEmptyData ? [] : response).pipe(delay(this.options.responseDelayInMs));
   }
 
-  public getUsers(): Observable<UsersData> {
+  public getUsers(): Observable<User[]> {
     const users: User[] = [];
 
     for (let i = 0; i < this.options.usersNumber; i++) {
@@ -84,14 +84,17 @@ export class AdminApiServiceFake
         gender: getRandomBool() ? 'MALE' : 'FEMALE',
         id: i + 1,
         lastDone,
-        lastWeek: lastWeek.map((value) => ({ exercisingTimeSeconds: value, progress: this.getRandomUserExercisingProgressStatusColor() })),
+        lastWeek: lastWeek.map((value) => ({
+           date: '1234', exercisingTimeSeconds: value, progress: this.getRandomUserExercisingProgressStatusColor() 
+          })),
         name,
         workDayByLastMonth: getRandomIntInclusive(0, dayjs().subtract(1, 'month').daysInMonth()),
         isFavorite: getRandomBool(),
+        userId: '1234'
       });
     }
 
-    return of({ total: this.options.usersNumber, users }).pipe(delay(this.options.responseDelayInMs));
+    return of(users).pipe(delay(this.options.responseDelayInMs));
   }
 
   private getRandomUserExercisingProgressStatusColor(): UserExercisingProgressStatusType {

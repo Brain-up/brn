@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
 import { PaginatorModule } from '@shared/components/paginator/paginator.module';
@@ -26,6 +28,8 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
     MatInputModule,
     MatPaginatorModule,
     MatProgressBarModule,
+    MatSlideToggleModule,
+    MatSortModule,
     MatTableModule,
     PaginatorModule,
     SearchInputModule,
