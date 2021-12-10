@@ -30,4 +30,17 @@ export interface UserMapped extends User {
   };
 }
 
-export interface UserWithNoAnalytics {}
+export interface UserWithNoAnalytics {
+  active: boolean;
+  authorities: string[];
+  avatar: string;
+  bornYear: number;
+  changed: string;
+  created: string;
+  email: string;
+  gender: string;
+  headphones: any[];
+  id: number;
+  name: string;
+  userId: string;
+}

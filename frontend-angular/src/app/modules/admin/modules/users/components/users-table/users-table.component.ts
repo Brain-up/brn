@@ -35,7 +35,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     'progress',
     'favorite',
   ];
-  public filterFavorites: boolean = false;
+  public filterFavorites = false;
 
   filterValues: any = {};
   fav: boolean;

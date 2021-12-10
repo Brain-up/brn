@@ -26,13 +26,20 @@
 .mat-paginator {
   font-size: $font-size-14 !important;
 
- .mat-paginator-page-size .mat-select-trigger {
+  .mat-paginator-page-size .mat-select-trigger {
     font-size: $font-size-14 !important;
+  }
+
+  .mat-select-value {
+    color: $active-grey-color !important;
+  }
+  
+  .mat-paginator-page-size-label {
+    display: none;
   }
 }
 
-
-.mat-form-field {
+.mat-form-field-appearance-outline {
   font-size: $font-size-14;
   font-weight: 300;
   width: 270px;
@@ -50,13 +57,52 @@
     padding-bottom: 0;
   }
 
-   .mat-form-field-flex {
+  .mat-form-field-flex {
     margin-top: 0;
-    padding: 0 $padding-20;
+    padding: 0 $padding-20 !important;
   }
 
-  .mat-form-field-appearance-outline.mat-focused
-    .mat-form-field-outline-thick {
+  .mat-form-field-outline-thick {
     color: $dark-violet-color !important;
+  }
+}
+
+.mat-button-toggle-group-appearance-standard,
+.favorite-toggler {
+  border-radius: 16px !important;
+  border: 1px solid $mouse-grey-color;
+  display: block;
+  font-size: $font-size-12;
+  font-weight: 600;
+  height: 32px;
+  position: relative;
+  width: 210px;
+
+  .mat-button-toggle-checked {
+    background: $brain-gradient;
+    color: $hardly-grey-color !important;
+    transition: all $transition-time;
+  }
+
+  .mat-button-toggle {
+    border-left: none !important;
+    color: $cold-violet-color;
+    width: 50%;
+  }
+
+  .mat-button-toggle-label-content {
+    line-height: 32px !important;
+  }
+
+  .mat-button-toggle-focus-overlay {
+    background-color: transparent;
+  }
+
+  .off {
+    border-radius: 0 16px 16px 0;
+  }
+
+  .on {
+    border-radius: 16px 0 0 16px;
   }
 }

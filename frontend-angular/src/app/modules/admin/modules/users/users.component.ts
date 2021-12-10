@@ -6,11 +6,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  User,
-  UserMapped,
-  UserWithNoAnalytics,
-} from '@admin/models/user.model';
+import { User, UserMapped } from '@admin/models/user.model';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,9 +25,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
   private getUsersSubscription: Subscription;
 
-  public readonly isLoading$ = new BehaviorSubject(true);
-  public dataSource: MatTableDataSource<UserWithNoAnalytics | UserMapped>;
-  public displayedColumns: string[] = [
+  public dataSource: MatTableDataSource<UserMapped>;
+  public readonly displayedColumns: string[] = [
     'name',
     'firstVisit',
     'lastVisit',
@@ -40,8 +35,8 @@ export class UsersComponent implements OnInit, OnDestroy {
     'progress',
     'favorite',
   ];
-  public filterFavorites: boolean = false;
-  public userList: UserWithNoAnalytics[] | UserMapped[];
+  public readonly isLoading$ = new BehaviorSubject(true);
+  public userList: UserMapped[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -67,7 +62,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.isLoading$.next(true);
 
     this.getUsersSubscription = this.adminApiService
-      .getUsers('ROLE_USER', true)
+      .getUsers()
       .pipe(
         finalize(() => this.isLoading$.next(false)),
         takeUntil(this.destroyer$),
@@ -75,12 +70,11 @@ export class UsersComponent implements OnInit, OnDestroy {
       .subscribe((userList) => {
         this.userList = userList;
         this.dataSource = new MatTableDataSource(userList);
-        // Change detection cycle: ViewChild undefined due *ngIf
+        // Change detection cycle: ViewChild is undefined due *ngIf
         setTimeout(() => {
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
         });
-   
       });
   }
 
@@ -91,15 +85,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  public applyFavoriteFilter(column): void {
-    // this.filterFavorites = !this.filterFavorites;
-    // this.filterValues[column] = filterValue;
-    // this.dataSource.filter = JSON.stringify(this.filterValues);
-    // if (this.dataSource.paginator) {
-    //   this.dataSource.paginator.firstPage();
-    // }
   }
 
   public navigateToSelectedUser(user): void {

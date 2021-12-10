@@ -8,19 +8,39 @@
 <ng-template #usersTable>
   <ng-container *ngIf="userList?.length; else emptyTable">
     <div class="filters">
-      <mat-form-field appearance="outline" class="search">
+      <mat-form-field appearance="outline" class="search-search">
         <mat-label>{{ 'Admin.Modules.Users.Search' | translate }}</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input maxlength="36" />
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
 
-      <app-toggler
-        class="toggler"
-        [state]="filterFavorites"
-        [offText]="'Admin.Modules.Users.FavoriteToggler.AllUsers' | translate"
-        [onText]="'Admin.Modules.Users.FavoriteToggler.Favorites' | translate"
-        (toggleEvent)="applyFavoriteFilter($event)"
-      ></app-toggler>
+      <mat-button-toggle-group
+        class="favorite-toggler"
+        name="favoriteToggler"
+        aria-label="Favorite toggler"
+        value="allUsers"
+      >
+        <mat-button-toggle
+          [disableRipple]="true"
+          class="off"
+          value="allUsers"
+          >{{
+            'Admin.Modules.Users.FavoriteToggler.AllUsers'
+              | translate
+              | uppercase
+          }}</mat-button-toggle
+        >
+        <mat-button-toggle
+          [disableRipple]="true"
+          class="on"
+          value="favoriteUsers"
+          >{{
+            'Admin.Modules.Users.FavoriteToggler.Favorites'
+              | translate
+              | uppercase
+          }}</mat-button-toggle
+        >
+      </mat-button-toggle-group>
     </div>
 
     <table mat-table [dataSource]="dataSource" matSort [trackBy]="">
@@ -93,12 +113,12 @@
           }}
         </th>
         <td class="last-week-column center" mat-cell *matCellDef="let user">
-          <ng-container *ngIf="dataSource">
-            <!-- <app-bar-chart
+
+            <app-bar-chart
               [data]="user.currentWeekChart.data"
               [options]="user.currentWeekChart.option"
-            ></app-bar-chart> -->
-          </ng-container>
+            ></app-bar-chart>
+  
         </td>
       </ng-container>
 
@@ -152,8 +172,8 @@
 
       <!-- If no matching data -->
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          No data matching the filter "{{ input.value }}"
+        <td class="mat-cell" colspan="7">
+          {{ 'Admin.Modules.Users.NoMatchForSearch' | translate }} "{{ input.value }}".
         </td>
       </tr>
     </table>
@@ -161,7 +181,7 @@
     <mat-paginator
       [pageSize]="25"
       [pageSizeOptions]="[25, 100]"
-      aria-label="Select page of users"
+      attr.aria-label="{{'Admin.Modules.Users.SelectPage' | translate}}"
     ></mat-paginator>
   </ng-container>
 </ng-template>

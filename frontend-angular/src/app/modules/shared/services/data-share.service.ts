@@ -10,7 +10,7 @@ export class DataShareService<T> {
   public addData(newData: T) {
     this.data$.next(newData);
   }
-  
+
   public getData() {
     return this.data$.asObservable();
   }

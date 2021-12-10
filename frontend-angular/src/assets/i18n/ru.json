@@ -63,7 +63,7 @@
             }
           }
         },
-        "EmptyData": "Admin.Modules.Users.EmptyData",
+        "EmptyData": "Нет доступных пользователей",
         "FavoriteToggler": {
           "AllUsers": "Все пользователи",
           "Favorites": "Избранные"
@@ -96,7 +96,9 @@
             }
           }
         },
-        "Search": "Поиск"
+        "NoMatchForSearch": "Нет пользователей, соответствующих фильтру",
+        "Search": "Поиск",
+        "SelectPage": "Выберите страницу пользователей"
       }
     }
   },

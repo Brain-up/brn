@@ -1,6 +1,7 @@
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
 import { CommonModule } from '@angular/common';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -23,6 +24,7 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
   imports: [
     BarChartModule,
     CommonModule,
+    MatButtonToggleModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,

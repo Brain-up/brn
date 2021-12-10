@@ -1,26 +1,24 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { merge, Observable, zip } from 'rxjs';
+import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { Exercise } from '@admin/models/exercise';
-import { map, pluck, mergeMap, concatMap, tap } from 'rxjs/operators';
+import { GetUsers } from '@admin/models/endpoints.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map, pluck } from 'rxjs/operators';
+import {
+  Observable,
+  } from 'rxjs';
+import { Roles } from '@admin/models/roles.type';
+import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
-import { Dayjs } from 'dayjs';
 import {
-  User,
   UserMapped,
   UserWithNoAnalytics,
 } from '@admin/models/user.model';
-import { GetUsers } from '@admin/models/endpoints.model';
-import { Roles } from '@admin/models/roles.type';
-import * as dayjs from 'dayjs';
-import { ILastWeekChartDataItem } from '@admin/models/last-week-chart-data-item';
-import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 
 @Injectable()
 export class AdminApiService {
-  private chartsData: ILastWeekChartDataItem[][];
-
   constructor(private readonly httpClient: HttpClient) {}
 
   public sendFormData(action: string, body: FormData): Observable<void> {
@@ -66,71 +64,64 @@ export class AdminApiService {
   public getUsers(
     role: Roles = 'ROLE_USER',
     withAnalytics: boolean = true,
-  ): Observable<UserWithNoAnalytics[] | UserMapped[]> {
+  ): Observable<UserMapped[]> {
     let params = new HttpParams();
     params = params.append('role', role);
     params = params.append('withAnalytics', String(withAnalytics));
 
-    if (withAnalytics) {
-      return this.httpClient
-        .get<GetUsers>('/api/admin/users', {
-          params,
-        })
-        .pipe(
-          pluck('data'),
-          // tap((userList: UserMapped[]) =>
-          //   userList.map((user, i) => {
-          //     this.chartsData.push(
-          //       user.lastWeek.map(({ exercisingTimeSeconds, progress }) => ({
-          //         y: exercisingTimeSeconds,
-          //         progress,
-          //       })),
-          //     );
-          //     console.log('chart', this.chartsData);
-          //   }),
-          // ),
-          map((userList: UserMapped[]) =>
-            userList.map((user, i) => {
-              // this.chartsData.push(
-              //   user.lastWeek.map(({ exercisingTimeSeconds, progress }) => ({
-              //     y: exercisingTimeSeconds,
-              //     progress,
-              //   })),
-              // );
-              (user.currentWeekChart = {
-                data: [
-                  [
-                    'data',
-                    ...user.lastWeek.map(
-                      ({ exercisingTimeSeconds }) => exercisingTimeSeconds,
-                    ),
-                  ],
+    return this.httpClient
+      .get<GetUsers>('/api/admin/users', {
+        params,
+      })
+      .pipe(
+        pluck('data'),
+        map((userList: UserMapped[]) =>
+          userList.map((user, i) => {
+            (user.currentWeekChart = {
+              data: [
+                [
+                  'data',
+                  ...user.lastWeek.map(
+                    ({ exercisingTimeSeconds }) => exercisingTimeSeconds,
+                  ),
                 ],
-                option: {
-                  colors: {
-                    // data: (dataItem) =>
-                    //   USER_EXERCISING_PROGRESS_STATUS_COLOR[
-                    //     this.chartsData[i][dataItem.index].progress
-                    //   ],
-                  },
-                  axis: { x: { show: false }, y: { show: false } },
-                  size: { height: 60, width: 140 },
-                  legend: { show: false },
-                  tooltip: { show: false },
-                  bar: { width: 8, radius: 4 },
+              ],
+              option: {
+                colors: {
+                  data: (dataItem) =>
+                    USER_EXERCISING_PROGRESS_STATUS_COLOR[
+                      user.lastWeek[i].progress
+                    ],
                 },
-              }),
-                (user.age = dayjs().year() - user.bornYear);
-              return user;
+                axis: { x: { show: false }, y: { show: false } },
+                size: { height: 60, width: 140 },
+                legend: { show: false },
+                tooltip: { show: false },
+                bar: { width: 8, radius: 4 },
+              },
             }),
-          ),
-        );
-    } else {
-      return this.httpClient
-        .get<GetUsers>('/api/admin/users', {
-          params,
-        })
-        .pipe(pluck('data'));
-    }
+              (user.age = dayjs().year() - user.bornYear);
+            return user;
+          }),
+        ),
+      );
+  }
+
+  public getUsersWithNoAnalytics(
+    role: Roles = 'ROLE_USER',
+    withAnalytics: boolean = false,
+  ): Observable<UserWithNoAnalytics[]> {
+    let params = new HttpParams();
+    params = params.append('role', role);
+    params = params.append('withAnalytics', String(withAnalytics));
+
+    return this.httpClient
+      .get<GetUsers>('/api/admin/users', {
+        params,
+      })
+      .pipe(
+        pluck('data'),
+        map((userList: UserWithNoAnalytics[]) => userList),
+      );
   }
 }
