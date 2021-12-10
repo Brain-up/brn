@@ -1,4 +1,4 @@
-import { UsersData } from './../../models/users-data';
+import { User, UserMapped } from '@admin/models/user.model';
 import { Dayjs } from 'dayjs';
 import { AdminApiService } from './admin-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -223,7 +223,7 @@ describe('AdminApiService', () => {
   });
 
   it('should call get users', () => {
-    let usersData: UsersData | undefined;
+    let usersData: User[] | undefined;
     const url = `${baseUrl}/users`;
 
     service.getUsers().subscribe((data) => {
@@ -231,7 +231,7 @@ describe('AdminApiService', () => {
     });
 
     const request = controller.expectOne(
-      `${url}?pageNumber=undefined&pageSize=10&sortBy.name=undefined&filters.favorite=undefined&filters.search=undefined&withAnalytics=undefined`,
+      `${url}?role=ROLE_USER&withAnalytics=true`,
     );
     expect(request.request.method).toEqual('GET');
     request.flush('', { status: 204, statusText: 'No Data' });
@@ -260,7 +260,7 @@ describe('AdminApiService', () => {
 
     controller
       .expectOne(
-        `${url}?pageNumber=undefined&pageSize=10&sortBy.name=undefined&filters.favorite=undefined&filters.search=undefined&withAnalytics=undefined`,
+        `${url}?role=ROLE_USER&withAnalytics=true`,
       )
       .error(errorEvent, { status, statusText });
 

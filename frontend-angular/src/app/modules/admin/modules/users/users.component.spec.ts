@@ -1,10 +1,17 @@
-import { SortType } from '@admin/models/sort';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { DEBOUNCE_TIME_IN_MS } from '@shared/constants/time-constants';
+import { User } from '@root/models/auth-token';
+import { DataShareService } from '@shared/services/data-share.service';
 import { Subject } from 'rxjs';
 import { UsersComponent } from './users.component';
 
@@ -12,6 +19,13 @@ describe('UsersComponent', () => {
   const usersNumber = 5;
   const responseDelayInMs = 0;
   const tickInMs = responseDelayInMs + 100;
+  let mockRouter = {
+    navigate: jasmine.createSpy('navigate')
+  } 
+
+  const fakeActivatedRoute = {
+    snapshot: { data: {} },
+  } as ActivatedRoute;
 
   let fixture: ComponentFixture<UsersComponent>;
   let component: UsersComponent;
@@ -19,9 +33,15 @@ describe('UsersComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [UsersComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), RouterTestingModule],
       providers: [
-        { provide: AdminApiService, useFactory: () => new AdminApiServiceFake({ responseDelayInMs, usersNumber }) },
+        {
+          provide: AdminApiService,
+          useFactory: () =>
+            new AdminApiServiceFake({ responseDelayInMs, usersNumber }),
+        },
+        { provide: ActivatedRoute, useValue: fakeActivatedRoute },
+        { provide: DataShareService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     });
@@ -35,50 +55,7 @@ describe('UsersComponent', () => {
 
     tick(tickInMs);
 
-    expect(component.usersData.users.length).toBe(usersNumber);
-  }));
-
-  it('check logic work of method toggleFavorite', fakeAsync(() => {
-    const newIsFavoriteValue = true;
-    component.toggleFavorite(newIsFavoriteValue);
-
-    tick(tickInMs);
-
-    expect(component.getUsersOptions.pageNumber).toBe(1);
-    expect(component.getUsersOptions.isFavorite).toBe(newIsFavoriteValue);
-    expect(component.usersData.users.length).toBe(usersNumber);
-  }));
-
-  it('check logic work of method sortByName', fakeAsync(() => {
-    const newSortByNameValue: SortType = 'desc';
-    component.sortByName(newSortByNameValue);
-
-    tick(tickInMs);
-
-    expect(component.getUsersOptions.pageNumber).toBe(1);
-    expect(component.getUsersOptions.sortByName).toBe(newSortByNameValue);
-    expect(component.usersData.users.length).toBe(usersNumber);
-  }));
-
-  it('check logic work of method selectPage', fakeAsync(() => {
-    const newPageNumberValue = 2;
-    component.selectPage(newPageNumberValue);
-
-    tick(tickInMs);
-
-    expect(component.getUsersOptions.pageNumber).toBe(newPageNumberValue);
-    expect(component.usersData.users.length).toBe(usersNumber);
-  }));
-
-  it('check logic work of searchControl', fakeAsync(() => {
-    component.ngOnInit();
-    component.usersData = null;
-    component.searchControl.setValue('dmi');
-
-    tick(DEBOUNCE_TIME_IN_MS + tickInMs);
-
-    expect(component.getUsersOptions.pageNumber).toBe(1);
-    expect(component.usersData.users.length).toBe(usersNumber);
+    expect(component.userList.length).not.toBe(undefined);
   }));
 
   it('unsubscribes when destoryed', () => {

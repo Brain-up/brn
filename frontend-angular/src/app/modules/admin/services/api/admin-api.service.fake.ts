@@ -1,6 +1,6 @@
 import { values } from 'fp-ts/lib/Map';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { Dayjs } from 'dayjs';
@@ -15,7 +15,7 @@ import {
   DAYS_IN_WEEK,
   MONTHS_IN_YEAR,
 } from '@shared/constants/common-constants';
-import { User } from '@admin/models/user.model';
+import { User, UserMapped } from '@admin/models/user.model';
 import { getRandomBool } from '@shared/helpers/get-random-bool';
 import { getRandomString } from '@shared/helpers/get-random-string';
 
@@ -90,7 +90,7 @@ export class AdminApiServiceFake
     ).pipe(delay(this.options.responseDelayInMs));
   }
 
-  public getUsers(): Observable<User[]> {
+  public getUsers(): Observable<UserMapped[]> {
     const users: User[] = [];
 
     for (let i = 0; i < this.options.usersNumber; i++) {
@@ -132,7 +132,15 @@ export class AdminApiServiceFake
       });
     }
 
-    return of(users).pipe(delay(this.options.responseDelayInMs));
+    return of(users).pipe(
+      delay(this.options.responseDelayInMs),
+      map((userList: UserMapped[]) =>
+        userList.map((user, i) => {
+          user.age = dayjs().year() - user.bornYear;
+          return user;
+        }),
+      ),
+    );
   }
 
   private getRandomUserExercisingProgressStatusColor(): UserExercisingProgressStatusType {

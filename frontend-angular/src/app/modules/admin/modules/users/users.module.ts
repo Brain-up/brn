@@ -17,10 +17,9 @@ import { TogglerModule } from '@shared/components/toggler/toggler.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { UsersComponent } from './users.component';
 import { UsersRoutingModule } from './users-routing.module';
-import { UsersTableComponent } from './components/users-table/users-table.component';
 
 @NgModule({
-  declarations: [UsersComponent, UsersTableComponent],
+  declarations: [UsersComponent],
   imports: [
     BarChartModule,
     CommonModule,
