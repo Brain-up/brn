@@ -28,12 +28,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   public dataSource: MatTableDataSource<UserMapped>;
   public readonly displayedColumns: string[] = [
     'name',
-    'firstVisit',
-    'lastVisit',
+    'firstDone',
+    'lastDone',
     'currentWeek',
-    'workingDaysInLastMonth',
+    'workDayByLastMonth',
     'progress',
-    'favorite',
+    'isFavorite',
   ];
   public readonly isLoading$ = new BehaviorSubject(true);
   public userList: UserMapped[];
@@ -85,6 +85,18 @@ export class UsersComponent implements OnInit, OnDestroy {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  public favoriteFilter(filterActive: boolean): void {
+    if (filterActive) {
+      const favorites = this.userList.filter((user) => user.isFavorite);
+      this.dataSource = new MatTableDataSource(favorites);
+    } else {
+      this.dataSource = new MatTableDataSource(this.userList);
+    }
+
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
   public navigateToSelectedUser(user): void {

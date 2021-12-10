@@ -19,9 +19,9 @@ describe('UsersComponent', () => {
   const usersNumber = 5;
   const responseDelayInMs = 0;
   const tickInMs = responseDelayInMs + 100;
-  let mockRouter = {
-    navigate: jasmine.createSpy('navigate')
-  } 
+  const mockRouter = {
+    navigate: jasmine.createSpy('navigate'),
+  };
 
   const fakeActivatedRoute = {
     snapshot: { data: {} },

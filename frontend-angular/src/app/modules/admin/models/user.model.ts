@@ -1,3 +1,4 @@
+import { boolean } from 'fp-ts';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 import { UserExercisingProgressStatusType } from './user-exercising-progress-status';
@@ -28,6 +29,7 @@ export interface UserMapped extends User {
     data: BarDataType;
     option: BarOptionsType;
   };
+  progress: boolean;
 }
 
 export interface UserWithNoAnalytics {

@@ -137,6 +137,30 @@ export class AdminApiServiceFake
       map((userList: UserMapped[]) =>
         userList.map((user, i) => {
           user.age = dayjs().year() - user.bornYear;
+          user.currentWeekChart = {
+            data: [
+              [
+                'data',
+                ...user.lastWeek.map(
+                  ({ exercisingTimeSeconds }) => exercisingTimeSeconds,
+                ),
+              ],
+            ],
+            option: {
+              // colors: {
+              //   data: (dataItem) =>
+              //     USER_EXERCISING_PROGRESS_STATUS_COLOR[
+              //       user.lastWeek[i].progress
+              //     ],
+              // },
+              axis: { x: { show: false }, y: { show: false } },
+              size: { height: 60, width: 140 },
+              legend: { show: false },
+              tooltip: { show: false },
+              bar: { width: 8, radius: 4 },
+            },
+          };
+          user.progress = user.diagnosticProgress.SIGNALS;
           return user;
         }),
       ),

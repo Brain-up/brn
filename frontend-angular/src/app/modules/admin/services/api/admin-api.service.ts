@@ -5,17 +5,12 @@ import { GetUsers } from '@admin/models/endpoints.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, pluck } from 'rxjs/operators';
-import {
-  Observable,
-  } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Roles } from '@admin/models/roles.type';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
-import {
-  UserMapped,
-  UserWithNoAnalytics,
-} from '@admin/models/user.model';
+import { UserMapped, UserWithNoAnalytics } from '@admin/models/user.model';
 
 @Injectable()
 export class AdminApiService {
@@ -77,7 +72,8 @@ export class AdminApiService {
         pluck('data'),
         map((userList: UserMapped[]) =>
           userList.map((user, i) => {
-            (user.currentWeekChart = {
+            user.age = dayjs().year() - user.bornYear;
+            user.currentWeekChart = {
               data: [
                 [
                   'data',
@@ -87,20 +83,20 @@ export class AdminApiService {
                 ],
               ],
               option: {
-                colors: {
-                  data: (dataItem) =>
-                    USER_EXERCISING_PROGRESS_STATUS_COLOR[
-                      user.lastWeek[i].progress
-                    ],
-                },
+                // colors: {
+                //   data: (dataItem) =>
+                //     USER_EXERCISING_PROGRESS_STATUS_COLOR[
+                //       user.lastWeek[i].progress
+                //     ],
+                // },
                 axis: { x: { show: false }, y: { show: false } },
                 size: { height: 60, width: 140 },
                 legend: { show: false },
                 tooltip: { show: false },
                 bar: { width: 8, radius: 4 },
               },
-            }),
-              (user.age = dayjs().year() - user.bornYear);
+            };
+            user.progress = user.diagnosticProgress.SIGNALS;
             return user;
           }),
         ),

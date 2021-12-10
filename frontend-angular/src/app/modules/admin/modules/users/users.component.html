@@ -24,6 +24,7 @@
           [disableRipple]="true"
           class="off"
           value="allUsers"
+          (click)="favoriteFilter(false)"
           >{{
             'Admin.Modules.Users.FavoriteToggler.AllUsers'
               | translate
@@ -34,6 +35,7 @@
           [disableRipple]="true"
           class="on"
           value="favoriteUsers"
+          (click)="favoriteFilter(true)"
           >{{
             'Admin.Modules.Users.FavoriteToggler.Favorites'
               | translate
@@ -55,21 +57,23 @@
         <td class="name-column" mat-cell *matCellDef="let user">
           <a class="mat-row-link" (click)="navigateToSelectedUser(user)"></a>
 
-          <div class="avatar">AB</div>
-          <div>
-            <div class="item">{{ user.name }}</div>
-            <div class="subItem">
-              {{
-                'Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]'
-                  | translate
-                    : { years: user.age, gender: user.gender | lowercase }
-              }}
+          <div class="wrap">
+            <div class="avatar">AB</div>
+            <div class="info">
+              <div class="item">{{ user.name }}</div>
+              <div class="subItem">
+                {{
+                  'Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]'
+                    | translate
+                      : { years: user.age, gender: user.gender | lowercase }
+                }}
+              </div>
             </div>
           </div>
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="firstVisit">
+      <ng-container matColumnDef="firstDone">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{
             'Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit'
@@ -87,7 +91,7 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="lastVisit">
+      <ng-container matColumnDef="lastDone">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{
             'Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit'
@@ -113,16 +117,16 @@
           }}
         </th>
         <td class="last-week-column center" mat-cell *matCellDef="let user">
-
+          <ng-container *ngIf="user.currentWeekChart; else emptyTable">
             <app-bar-chart
               [data]="user.currentWeekChart.data"
               [options]="user.currentWeekChart.option"
             ></app-bar-chart>
-  
+          </ng-container>
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="workingDaysInLastMonth">
+      <ng-container matColumnDef="workDayByLastMonth">
         <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
           {{
             'Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth'
@@ -144,12 +148,12 @@
         <td class="progress-column center" mat-cell *matCellDef="let user">
           <mat-icon
             svgIcon="up-arrow"
-            *ngIf="user.diagnosticProgress.SIGNALS"
+            [class.progress]="user.progress"
           ></mat-icon>
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="favorite">
+      <ng-container matColumnDef="isFavorite">
         <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
           {{
             'Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite'
@@ -157,9 +161,10 @@
           }}
         </th>
         <td class="favorite-column center" mat-cell *matCellDef="let user">
-          <mat-icon svgIcon="star" [class.favorite]="user.isFavorite">{{
-            user.isFavorite
-          }}</mat-icon>
+          <mat-icon
+            svgIcon="star"
+            [class.favorite]="user.isFavorite"
+          ></mat-icon>
         </td>
       </ng-container>
 
@@ -173,7 +178,9 @@
       <!-- If no matching data -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="7">
-          {{ 'Admin.Modules.Users.NoMatchForSearch' | translate }} "{{ input.value }}".
+          {{ 'Admin.Modules.Users.NoMatchForSearch' | translate }} "{{
+            input.value
+          }}".
         </td>
       </tr>
     </table>
@@ -181,7 +188,7 @@
     <mat-paginator
       [pageSize]="25"
       [pageSizeOptions]="[25, 100]"
-      attr.aria-label="{{'Admin.Modules.Users.SelectPage' | translate}}"
+      attr.aria-label="{{ 'Admin.Modules.Users.SelectPage' | translate }}"
     ></mat-paginator>
   </ng-container>
 </ng-template>

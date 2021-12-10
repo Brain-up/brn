@@ -64,8 +64,10 @@
     }
 
     .name-column {
-      align-items: center;
-      display: flex;
+      .wrap {
+        align-items: center;
+        display: flex;
+      }
 
       .avatar {
         align-items: center;
@@ -99,7 +101,11 @@
 
     .progress-column {
       mat-icon {
-        color: $brain-green-color;
+        color: transparent;
+
+        &.progress {
+          color: $brain-green-color;
+        }
       }
     }
 
