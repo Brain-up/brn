@@ -83,12 +83,12 @@ export class AdminApiService {
                 ],
               ],
               option: {
-                // colors: {
-                //   data: (dataItem) =>
-                //     USER_EXERCISING_PROGRESS_STATUS_COLOR[
-                //       user.lastWeek[i].progress
-                //     ],
-                // },
+                colors: {
+                  data: (item) =>
+                    USER_EXERCISING_PROGRESS_STATUS_COLOR[
+                      user.lastWeek.map(({ progress }) => progress)[item.index]
+                    ],
+                },
                 axis: { x: { show: false }, y: { show: false } },
                 size: { height: 60, width: 140 },
                 legend: { show: false },

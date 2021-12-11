@@ -40,6 +40,10 @@
       &.center {
         justify-content: center;
         text-align: center;
+
+        ::ng-deep .mat-sort-header-container {
+          justify-content: center !important;
+        }
       }
     }
 
