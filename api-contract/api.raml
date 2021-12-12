@@ -30,6 +30,7 @@ annotationTypes:
 /statistics:
   /subgroups:
     get:
+      description: Get user's subgroup statistics
       queryParameters:
         ids:
           required: true
@@ -61,7 +62,7 @@ annotationTypes:
     get:
       (deprecated):
         replaceWith: /v2/statistics/study/week
-      description: get user's weekly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
+      description: Get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
           required: true
@@ -89,7 +90,7 @@ annotationTypes:
     get:
       (deprecated):
         replaceWith: /v2/statistics/study/year
-      description: get user's yearly statistic for period. Where periaod is a two dates in the format yyyy-MM-dd
+      description: Get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         from:
           required: true
@@ -117,7 +118,9 @@ annotationTypes:
 
 # AUDIOMETRY-----------------------------------
 /audiometrics:
+  description: Contains actions for audiometry
   get:
+    description: Get audiometrics without tasks
     queryParameters:
       locale:
         required: false
@@ -130,6 +133,7 @@ annotationTypes:
           example: !include samples/audiometrics.json
   /{audiometryId}:
     get:
+      description: Get audiometry for id with tasks
       responses:
         200:
           body:
@@ -137,6 +141,7 @@ annotationTypes:
               example1: !include samples/audiometry_1_signals.json
               example2: !include samples/audiometry_2_speech.json
 /audiometry-history:
+  description: Contains actions for audiometry history
   post:
     description: Save speech audiometry history
     body:
@@ -150,17 +155,19 @@ annotationTypes:
 
 # AUDIO GENERATION ----------------------------
 /audio:
+  description: Contains actions for getting audio file for words
   get:
+    description: Get audio resource for string
     queryParameters:
       text:
         required: true
         type: string
         example: "London is the capital"
       locale:
-         required: false
-         type: string
-         example: "en-us"
-         default: "ru-ru"
+        required: false
+        type: string
+        example: "en-us"
+        default: "ru-ru"
     responses:
       200:
         body:
@@ -168,7 +175,9 @@ annotationTypes:
 
 # GROUP ----------------------------
 /groups:
+  description: Contains actions over groups
   get:
+    description: Get all groups by locale if it was set
     queryParameters:
       locale:
        required: false
@@ -180,6 +189,7 @@ annotationTypes:
           example: !include samples/groups.json
   /{groupId}:
     get:
+      description: Get group by id
       responses:
         200:
           body:
@@ -187,7 +197,9 @@ annotationTypes:
 
 # SERIES ----------------------------
 /series:
+  description: Contains actions over series
   get:
+    description: Get all series for group
     queryParameters:
       groupId:
         description: "ID of the group series belongs to"
@@ -200,6 +212,7 @@ annotationTypes:
           example: !include samples/series_by_group.json
   /{seriesId}:
     get:
+      description: Get serie for id
       responses:
         200:
           body:
@@ -214,7 +227,9 @@ annotationTypes:
 
 # SUBGROUP ----------------------------
 /subgroups:
+  description: Contains actions over subgroup
   get:
+    description: Get subgroups for series
     queryParameters:
       seriesId:
         description: "ID of the series belongs to"
@@ -227,12 +242,13 @@ annotationTypes:
           example: !include samples/subgroup_by_series.json
   /{subGroupId}:
     get:
+      description: Get subgroup for id
       responses:
         200:
           body:
             example: !include samples/subgroup_by_id.json
     delete:
-      description: The endpoint should delete subGroup without exercises
+      description: Delete subgroup by id without exercises
       queryParameters:
         subGroupId:
           description: "ID of the subGroup tasks belongs to"
@@ -254,7 +270,9 @@ annotationTypes:
 
 # EXERCISE ----------------------------
 /exercises:
+  description: Contains actions over exercises
   get:
+    description: Get exercises for subgroup and current user with availability calculation
     queryParameters:
       subGroupId:
         description: "ID of the subgroup exercises belongs to"
@@ -271,6 +289,7 @@ annotationTypes:
             example4: !include samples/exercises_for_4_series_subgroup.json
   /{exerciseId}:
     get:
+      descritpion: Get exercise by id
       responses:
         200:
           body:
@@ -279,7 +298,7 @@ annotationTypes:
               example2: !include samples/exercise_for_frequency_words_series.json
   /byIds:
     post:
-        description: Get available exercise ids for current user by input ids which have same subGroup.
+        description: Get available exercise ids for current user by input ids which have same subgroup
         body:
           example: !include samples/exercise_request.json
         responses:
@@ -292,8 +311,9 @@ annotationTypes:
 
 # TASK ----------------------------
 /tasks:
+  description: Contains actions over tasks
   get:
-    description: The tasks endpoint returns tasks associated with specified exercise id
+    description: Get all tasks by exercise id
     queryParameters:
       exerciseId:
         description: "ID of the exercise tasks belongs to"
@@ -321,8 +341,9 @@ annotationTypes:
 
 # STUDY_HISTORY ----------------------
 /study-history:
+  description: Contains actions over the results of finished exercise
   post:
-    description: Save history of exercises done by user
+    description: Save current user's study history
     body:
       example: !include samples/study_history.json
     responses:
@@ -331,7 +352,7 @@ annotationTypes:
           example: !include samples/study_history_response.json
   /todayTimer:
     get:
-      description: get today current user work time in seconds
+      description: Get current user's today work time execution seconds
       responses:
         200:
           body:
@@ -345,8 +366,7 @@ annotationTypes:
       (deprecated):
         replaceWith: /v2/study-history/histories
       description: |
-        Get histories for current user by period from <= startTime < to.
-        Where from and to are dates in yyyy-MM-dd format
+        Get current user's study histories for period from <= startTime < to. Where from and to are dates in yyyy-MM-dd format
       queryParameters:
         from:
           required: true
@@ -362,7 +382,7 @@ annotationTypes:
             example: !include samples/study_histories_dto_response.json
   /monthHistories:
     get:
-      description: get histories for current user by month and year
+      description: Get current user's month study histories by month and year
       queryParameters:
         month:
           required: true
@@ -379,10 +399,11 @@ annotationTypes:
 
 # USERS ----------------------
 /users:
+  description: Contains actions over user details and accounts
   get:
-    description: Get the user by userName
+    description: Get the user by name
     queryParameters:
-      userName:
+      name:
         description: "Name of the user"
         required: true
         type: string
@@ -391,36 +412,16 @@ annotationTypes:
       200:
         body:
           example: !include samples/user_get_response.json
-  /current:
+  /{userId}:
     get:
-      description: Get logged in user from the current session
+      description: Get user by id
       responses:
         200:
           body:
             example: !include samples/user_get_response.json
-    patch:
-      description: Update current user details
-      body:
-        example: !include samples/user_patch_body.json
-      responses:
-        200:
-          body:
-            example: !include samples/user_get_response.json
-    /avatar:
-      put:
-        description: Update user avatar.
-        queryParameters:
-          avatar:
-            required: true
-            type: string
-            example: "/pictures/avatar/girl.cvg"
-        responses:
-          200:
-            body:
-              example: !include samples/user_get_response.json
-    /{id}/headphones:
+    /headphones:
       post:
-        description: Add headphones to user
+        description: Add headphones to the user
         body:
           example: !include samples/add_headphones.json
         responses:
@@ -433,7 +434,35 @@ annotationTypes:
           200:
             body:
               example: !include samples/get_headphones_response.json
-    /current/headphones:
+  /current:
+    get:
+      description: Get current logged in user
+      responses:
+        200:
+          body:
+            example: !include samples/user_get_response.json
+    patch:
+      description: Update current logged in user
+      body:
+        example: !include samples/user_patch_body.json
+      responses:
+        200:
+          body:
+            example: !include samples/user_get_response.json
+    /avatar:
+      put:
+        description: Update avatar current user
+        queryParameters:
+          avatar:
+            description: "Path to avatar"
+            required: true
+            type: string
+            example: "/pictures/avatar/girl.svg"
+        responses:
+          200:
+            body:
+              example: !include samples/user_get_response.json
+    /headphones:
       post:
         description: Add headphones to current user
         body:
@@ -448,7 +477,12 @@ annotationTypes:
           200:
             body:
               example: !include samples/get_headphones_response.json
-    /current/{patientId}/doctor:
+
+      /{headphonesId}:
+        description: Delete headphone by id
+        responses:
+          200
+    /{patientId}/doctor:
       get:
         description: Get patient's doctor
         responses:
@@ -459,42 +493,11 @@ annotationTypes:
       delete:
         description: Delete doctor from patient
         responses:
-          200:
-
-# AUTH ----------------------
-/brnlogin:
-  post:
-    description: Login for exist user
-    body:
-      example: !include samples/login.json
-    responses:
-      200:
-        body:
-          example: !include samples/authSuccessResponse.json
-      401:
-        body:
-          example: !include samples/authBadCredResponse.json
-/registration:
-  post:
-    description: Registration for new user with login him
-    body:
-      example: !include samples/registration.json
-    responses:
-      201:
-        body:
-          example: !include samples/authSuccessResponse.json
-      400:
-        body:
-          example: !include samples/authErrorResponse.json
-/logout:
-  post:
-    description: Logout for logined user
-    responses:
-      204:
-        description: No content
+          200
 
 # CLOUD  ----------------------
 /cloud:
+  description: Contains actions for cloud upload and bucket listing
   /folders:
     get:
       description: Get cloud folder structure
@@ -504,13 +507,13 @@ annotationTypes:
             example: !include samples/cloud_folders.json
   /upload:
     get:
+      description: Get cloud upload form
       queryParameters:
         filename:
           description: "File name to be used for uploading"
           required: true
           type: string
           example: "file1.jpg"
-      description: Get cloud upload form
       responses:
         200:
           body:
@@ -524,12 +527,20 @@ annotationTypes:
         200:
           body:
             example: "https://cloudprovider.bucket.com"
+  /baseFileUrl:
+    get:
+      description: Get cloud base file url
+      responses:
+        200:
+          body:
+            example: "https://cloudprovider.bucket.com"
 
 # DOCTOR  ----------------------
-/doctor:
+/doctors:
+  description: Contains actions for doctor
   /{doctorId}/patients:
     post:
-      description: Add doctor to patient
+      description: Add patient to doctor
       body:
         application/json:
           example: !include samples/add_patient_to_doctor_request.json
@@ -550,16 +561,23 @@ annotationTypes:
 
 # ADMIN  ----------------------
 /admin:
+  description: Contains actions for admin
   /exercises:
     get:
-      description: get exercises with tasks, resources by subGroupId
+      description: Get exercises for subgroup with tasks
+      queryParameters:
+        subGroupId:
+          description: "ID of the subgroup exercises belongs to"
+          required: true
+          type: integer
+          example: 42
       responses:
         200:
           body:
             example: !include samples/exercises_with_tasks.json
   /users:
     get:
-      description: get all users
+      description: Get all users
       queryParameters:
         withAnalytics:
           required: false
@@ -583,7 +601,7 @@ annotationTypes:
     get:
       (deprecated):
         replaceWith: /v2/admin/histories
-      description: get histories for user by period from <= startTime < to where time is a date in format yyyy-MM-dd
+      description: Get user's study histories for period from <= startTime < to where time is a date in format yyyy-MM-dd
       queryParameters:
         userId:
           required: true
@@ -603,7 +621,7 @@ annotationTypes:
             example: !include samples/study_histories_dto_response.json
   /monthHistories:
     get:
-      description: get histories for user by month and year
+      description: Get month user's study histories by month and yea
       queryParameters:
         userId:
           required: true
@@ -625,7 +643,7 @@ annotationTypes:
     get:
       (deprecated):
         replaceWith: /v2/admin/study/week
-      description: get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd
+      description: Get user's weekly statistic for the period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         userId:
           required: true
@@ -658,7 +676,7 @@ annotationTypes:
     get:
       (deprecated):
         replaceWith: /v2/admin/study/year
-      description: get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd
+      description: Get user's yearly statistic for the period. Where period is a two dates in the format yyyy-MM-dd
       queryParameters:
         userId:
           required: true
@@ -690,7 +708,7 @@ annotationTypes:
             }
   /resources/{id}:
     patch:
-      description: Update resource description by resource id.
+      description: Update resource description by resource id
       body:
         example: !include samples/update_resource_description_request.json
       responses:
@@ -699,7 +717,7 @@ annotationTypes:
             example: !include samples/resource_dto_response.json
   /subgroup:
     post:
-      description: Add new subgroup for existing series.
+      description: Add new subgroup for existing series
       queryParameters:
         seriesId:
           description: "ID of the series"
@@ -714,7 +732,7 @@ annotationTypes:
             example: !include samples/add_subgroup_to_series_response.json
   /roles:
     get:
-      description: get all roles
+      description: Get all roles
       responses:
         200:
           body:
@@ -735,40 +753,42 @@ annotationTypes:
               example_phrases: !include samples/exercisePhrasesResponse.json
               example_sentences: !include samples/exerciseSentencesResponse.json
 
-# LOAD FILES ----------------------
-/loadTasksFile:
-        post:
-            body:
-                multipart/form-data:
-                    properties:
-                        seriesId:
-                            description: "ID of the series created exercises belongs to"
-                            required: true
-                            type: string
-                            example: "42"
-                        taskFile:
-                            description: |
-                             File with tasks to be uploaded
-                             - format for series 1:
-                               orderNumber word audioFileName pictureFileName words wordType
-                               1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
-                             - format for series 2
-                               orderNumber words
-                               1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]
-                            required: true
-                            type: file
-            responses:
-              201:
+  /loadTasksFile:
+    post:
+      description: Load task file to series
+      body:
+        multipart/form-data:
+          properties:
+            seriesId:
+              description: "ID of the series created exercises belongs to"
+              required: true
+              type: string
+              example: "42"
+            taskFile:
+              description: |
+                File with tasks to be uploaded
+                - format for series 1:
+                  orderNumber word audioFileName pictureFileName words wordType
+                  1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
+                - format for series 2
+                  orderNumber words
+                  1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]
+              required: true
+              type: file
+        responses:
+          201:
 
 ################################
 # V2 API ----------------------#
 ################################
 /v2:
+  description: Second version of API
   # STATISTICS ----------------------------------
   /statistics:
+    description: Contains actions over user statistic details
     /study/week:
       get:
-        description: get user's weekly statistic for period. Where periaod is a two dates in the ISO date time format
+        description: Get user's weekly statistic for period. Where period is a two dates in the ISO date time format
         queryParameters:
           from:
             required: true
@@ -794,7 +814,7 @@ annotationTypes:
               }
     /study/year:
       get:
-        description: get user's yearly statistic for period. Where periaod is a two dates in the ISO date time format
+        description: Get user's yearly statistic for period. Where period is a two dates in the ISO date time format
         queryParameters:
           from:
             required: true
@@ -822,10 +842,11 @@ annotationTypes:
 
   # STUDY_HISTORY ----------------------
   /study-history:
+    description: Contains actions over the results of finished exercise
     /histories:
       get:
         description: |
-          Get histories for current user by period from <= startTime < to.
+          Get current user's study histories for period from <= startTime < to.
           Where from and to are dates in ISO format
         queryParameters:
           from:
@@ -842,9 +863,10 @@ annotationTypes:
               example: !include samples/study_histories_dto_response.json
   # ADMIN  ----------------------
   /admin:
+    description: Contains actions for admin
     /histories:
       get:
-        description: get histories for user by period from <= startTime <= to where startTime is a date in ISO date time format
+        description: Get user's study histories for period from <= startTime <= to where startTime is a date in ISO date time format
         queryParameters:
           userId:
             required: true
@@ -864,7 +886,7 @@ annotationTypes:
               example: !include samples/study_histories_dto_response.json
     /study/week:
       get:
-        description: get user's weekly statistic for period. Where period is a two dates in the ISO date time format
+        description: Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format
         queryParameters:
           userId:
             required: true
@@ -895,7 +917,7 @@ annotationTypes:
               }
     /study/year:
       get:
-        description: get user's yearly statistic for period. Where period is a two dates in the ISO date time format
+        description: Get user's yearly statistic for the period. Where period is a two dates in the ISO date time format
         queryParameters:
           userId:
             required: true

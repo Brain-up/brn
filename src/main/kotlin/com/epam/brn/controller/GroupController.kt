@@ -20,7 +20,7 @@ class GroupController(val exerciseGroupsService: ExerciseGroupsService) {
     // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to
     // group being a reserved word in db.
     @GetMapping
-    @ApiOperation("Get all groups. by locale if it was set.")
+    @ApiOperation("Get all groups by locale if it was set")
     fun getGroups(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String): ResponseEntity<BaseResponseDto> {
         return ResponseEntity.ok().body(BaseResponseDto(data = exerciseGroupsService.findByLocale(locale)))
     }

@@ -8,6 +8,7 @@ import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import com.epam.brn.service.statistic.UserStatisticService
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +21,7 @@ import java.time.LocalTime
 
 @RestController
 @RequestMapping("/statistics")
-@Api(value = "/statistics", description = "User statistic details")
+@Api(value = "/statistics", description = "Contains actions over user statistic details")
 class UserStatisticController(
     private val userStatisticService: UserStatisticService<SubGroupStatisticResponse>,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
@@ -28,6 +29,7 @@ class UserStatisticController(
 ) {
 
     @GetMapping("/subgroups")
+    @ApiOperation("Get user's subgroup statistics")
     fun getUserSubGroupStatistic(
         @RequestParam(value = "ids", required = true) ids: List<Long>
     ): ResponseEntity<BaseResponseDto> {
@@ -36,6 +38,7 @@ class UserStatisticController(
     }
 
     @GetMapping("/study/week")
+    @ApiOperation("Get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd")
     @Deprecated(
         message = "Use the method with LocalDateTime as the dates type instead",
         replaceWith = ReplaceWith("getUserWeeklyStatistic(from, to)", imports = ["com.epam.brn.controller.UserStatisticControllerV2"])
@@ -54,6 +57,7 @@ class UserStatisticController(
     }
 
     @GetMapping("/study/year")
+    @ApiOperation("Get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd")
     @Deprecated(
         message = "Use the method with LocalDateTime as the dates type instead",
         replaceWith = ReplaceWith("getUserYearlyStatistic(from, to)", imports = ["com.epam.brn.controller.UserStatisticControllerV2"])

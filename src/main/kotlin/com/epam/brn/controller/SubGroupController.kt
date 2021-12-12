@@ -15,25 +15,25 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/subgroups")
-@Api(value = "/subgroups", description = "Contains actions over subgroups")
+@Api(value = "/subgroups", description = "Contains actions over subgroup")
 class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @GetMapping
-    @ApiOperation("Get subGroups for series id.")
+    @ApiOperation("Get subgroups for series")
     fun getAllGroups(@RequestParam(value = "seriesId", required = true) seriesId: Long): ResponseEntity<BaseResponseDto> {
         val data = subGroupsService.findSubGroupsForSeries(seriesId)
         return ResponseEntity.ok().body(BaseResponseDto(data = data))
     }
 
     @GetMapping("{subGroupId}")
-    @ApiOperation("Get subGroup for id.")
+    @ApiOperation("Get subgroup for id")
     fun getSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
         val subGroupDto = subGroupsService.findById(subGroupId)
         return ResponseEntity.ok(BaseSingleObjectResponseDto(data = subGroupDto))
     }
 
     @DeleteMapping("{subGroupId}")
-    @ApiOperation("Delete series for id.")
+    @ApiOperation("Delete subgroup by id without exercises")
     fun deleteSubGroupById(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BaseSingleObjectResponseDto> {
         subGroupsService.deleteSubGroupById(subGroupId)
         return ResponseEntity.ok(BaseSingleObjectResponseDto(data = Unit))
