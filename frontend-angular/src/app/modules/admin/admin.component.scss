@@ -13,7 +13,7 @@ $user-right-margin: 80px;
   mat-toolbar {
     height: calc(#{$header-height} - #{$header-bottom-border});
     width: 100%;
-    padding: 0 $header-horizontal-padding;
+    padding: 0 $padding-64;
     justify-content: space-between;
     background: #ffffff;
     box-shadow: 0 2px $header-bottom-border rgba(89, 71, 178, 0.15);
@@ -72,5 +72,5 @@ $user-right-margin: 80px;
 }
 
 .content {
-  padding: 35px 65px;
+  padding: $padding-16 $padding-64;
 }
