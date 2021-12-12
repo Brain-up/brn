@@ -3,13 +3,13 @@
 
 .select-container {
   width: 100%;
-  padding: 22px $header-horizontal-padding;
+  padding: 22px $padding-64;
   box-sizing: border-box;
 }
 
 .exercises {
   &__table-container {
-    padding: 40px $header-horizontal-padding;
+    padding: 40px $padding-64;
   }
 
   &__table {

@@ -63,7 +63,8 @@
             }
           }
         },
-        "EmptyData": "Admin.Modules.Users.EmptyData",
+        "EmptyData": "No users available",
+        
         "FavoriteToggler": {
           "AllUsers": "All users",
           "Favorites": "Favorites"
@@ -96,7 +97,9 @@
             }
           }
         },
-        "Search": "Search"
+        "NoMatchForSearch": "No users matching the filter",
+        "Search": "Search",
+        "SelectPage": "Select page of users"
       }
     }
   },
