@@ -14,6 +14,7 @@ import { User } from '@root/models/auth-token';
 import { DataShareService } from '@shared/services/data-share.service';
 import { Subject } from 'rxjs';
 import { UsersComponent } from './users.component';
+import { PipesModule } from '@shared/pipes/pipes.module';
 
 describe('UsersComponent', () => {
   const usersNumber = 5;
@@ -33,7 +34,7 @@ describe('UsersComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [UsersComponent],
-      imports: [TranslateModule.forRoot(), RouterTestingModule],
+      imports: [PipesModule, RouterTestingModule, TranslateModule.forRoot()],
       providers: [
         {
           provide: AdminApiService,
