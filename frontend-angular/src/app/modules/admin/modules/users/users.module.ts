@@ -17,7 +17,6 @@ import { TogglerModule } from '@shared/components/toggler/toggler.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { UsersComponent } from './users.component';
 import { UsersRoutingModule } from './users-routing.module';
-import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
 
 @NgModule({
   declarations: [UsersComponent],
@@ -39,7 +38,6 @@ import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake'
     TranslateModule,
     UsersRoutingModule,
   ],
-  // providers: [AdminApiService, ],
-  providers: [{ provide: AdminApiService, useFactory: () => new AdminApiServiceFake() }],
+  providers: [AdminApiService],
 })
 export class UsersModule {}

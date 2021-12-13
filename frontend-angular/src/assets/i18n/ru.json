@@ -71,6 +71,7 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
+              "Back": "Вернуться к пользователям",
               "WhatIsIt": "О чем говорит статистика"
             },
             "Components": {

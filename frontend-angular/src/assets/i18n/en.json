@@ -72,6 +72,7 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
+              "Back": "Back to users",
               "WhatIsIt": "Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt"
             },
             "Components": {

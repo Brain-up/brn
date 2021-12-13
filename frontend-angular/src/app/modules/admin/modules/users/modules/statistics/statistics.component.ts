@@ -1,14 +1,21 @@
-import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
-import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
 import * as dayjs from 'dayjs';
+import { ActivatedRoute } from '@angular/router';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+  } from '@angular/core';
 import { Dayjs } from 'dayjs';
-import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { Subject } from 'rxjs';
-import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { HOME_PAGE_URL } from '@shared/constants/common-constants';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
+import { Subject } from 'rxjs';
+import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
+import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 
 @Component({
   selector: 'app-statistics',
@@ -23,6 +30,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   private statisticsInfoDialogRef: MatDialogRef<StatisticsInfoDialogComponent, void>;
 
   public selectedMonth = dayjs();
+  public readonly HOME_PAGE_URL = HOME_PAGE_URL;
   public isLoadingWeekTimeTrackData = true;
   public weekTimeTrackData: UserWeeklyStatistics[];
   public isLoadingMonthTimeTrackData = true;

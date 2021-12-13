@@ -1,8 +1,32 @@
+<div class="user-info">
+  <a
+    class="back-to-users"
+    routerLinkActive="active"
+    [routerLink]="[HOME_PAGE_URL]"
+    title="{{
+      'Admin.Modules.Users.Modules.Statistics.Buttons.Back' | translate
+    }}"
+  >
+    <mat-icon svgIcon="arrow-back"></mat-icon>
+  </a>
+  <h4 class="profile-name">Name</h4>
+  <div class="profile-data">
+    <p>Birthday</p>
+    <p>email</p>
+  </div>
+</div>
+
 <div class="control-panel">
-  <button class="statistics-info-dialog" mat-button (click)="openStatisticsInfoDialog()">
+  <button
+    class="statistics-info-dialog"
+    mat-button
+    (click)="openStatisticsInfoDialog()"
+  >
     <mat-icon svgIcon="help"></mat-icon>
 
-    <span>{{ 'Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt' | translate }}</span>
+    <span>{{
+      'Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt' | translate
+    }}</span>
   </button>
 </div>
 
