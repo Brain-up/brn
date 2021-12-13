@@ -1,21 +1,23 @@
 import * as dayjs from 'dayjs';
 import { ActivatedRoute } from '@angular/router';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { Dayjs } from 'dayjs';
+import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
+import { HOME_PAGE_URL } from '@shared/constants/common-constants';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
+import { Subject } from 'rxjs';
+import { TokenService } from '@root/services/token.service';
+import { User } from '@admin/models/user.model';
+import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
+import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit
-  } from '@angular/core';
-import { Dayjs } from 'dayjs';
-import { finalize, takeUntil } from 'rxjs/operators';
-import { HOME_PAGE_URL } from '@shared/constants/common-constants';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
-import { Subject } from 'rxjs';
-import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
+  OnInit,
+} from '@angular/core';
 
 @Component({
   selector: 'app-statistics',
@@ -27,7 +29,10 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
   private readonly userId: number;
 
-  private statisticsInfoDialogRef: MatDialogRef<StatisticsInfoDialogComponent, void>;
+  private statisticsInfoDialogRef: MatDialogRef<
+    StatisticsInfoDialogComponent,
+    void
+  >;
 
   public selectedMonth = dayjs();
   public readonly HOME_PAGE_URL = HOME_PAGE_URL;
@@ -35,17 +40,20 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   public weekTimeTrackData: UserWeeklyStatistics[];
   public isLoadingMonthTimeTrackData = true;
   public monthTimeTrackData: UserYearlyStatistics[];
+  public userData: any;
 
   constructor(
-    private readonly cdr: ChangeDetectorRef,
-    private readonly adminApiService: AdminApiService,
     private readonly activatedRoute: ActivatedRoute,
-    public readonly matDialog: MatDialog
+    private readonly adminApiService: AdminApiService,
+    private readonly cdr: ChangeDetectorRef,
+    private tokenService: TokenService,
+    public readonly matDialog: MatDialog,
   ) {
     this.userId = Number(this.activatedRoute.snapshot.params.userId);
   }
 
   ngOnInit(): void {
+    this.getUserInfo();
     this.getWeekTimeTrackData();
     this.getMonthTimeTrackData();
   }
@@ -57,9 +65,12 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   }
 
   public openStatisticsInfoDialog(): void {
-    this.statisticsInfoDialogRef = this.matDialog.open(StatisticsInfoDialogComponent, {
-      width: '650px',
-    });
+    this.statisticsInfoDialogRef = this.matDialog.open(
+      StatisticsInfoDialogComponent,
+      {
+        width: '650px',
+      },
+    );
   }
 
   public selectMonth(date: Dayjs): void {
@@ -94,9 +105,11 @@ export class StatisticsComponent implements OnInit, OnDestroy {
           this.isLoadingWeekTimeTrackData = false;
           this.cdr.detectChanges();
         }),
-        takeUntil(this.destroyer$)
+        takeUntil(this.destroyer$),
       )
-      .subscribe((weekTimeTrackData) => (this.weekTimeTrackData = weekTimeTrackData));
+      .subscribe(
+        (weekTimeTrackData) => (this.weekTimeTrackData = weekTimeTrackData),
+      );
   }
 
   private getMonthTimeTrackData(): void {
@@ -111,7 +124,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
           this.isLoadingMonthTimeTrackData = false;
           this.cdr.detectChanges();
         }),
-        takeUntil(this.destroyer$)
+        takeUntil(this.destroyer$),
       )
       .subscribe((monthTimeTrackData) => {
         this.monthTimeTrackData = monthTimeTrackData;
@@ -120,7 +133,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
           return;
         }
 
-        const lastMonth = dayjs(monthTimeTrackData[monthTimeTrackData.length - 1].date);
+        const lastMonth = dayjs(
+          monthTimeTrackData[monthTimeTrackData.length - 1].date,
+        );
 
         if (lastMonth.month() >= this.selectedMonth.month()) {
           return;
@@ -129,5 +144,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         this.selectedMonth = lastMonth;
         this.getWeekTimeTrackData();
       });
+  }
+
+  private getUserInfo(): void {
+    this.userData = this.tokenService.getToken<User>('SELECTED_USER');
   }
 }

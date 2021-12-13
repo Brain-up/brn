@@ -1,18 +1,22 @@
-<div class="user-info">
-  <a
-    class="back-to-users"
-    routerLinkActive="active"
-    [routerLink]="[HOME_PAGE_URL]"
-    title="{{
-      'Admin.Modules.Users.Modules.Statistics.Buttons.Back' | translate
-    }}"
-  >
-    <mat-icon svgIcon="arrow-back"></mat-icon>
-  </a>
-  <h4 class="profile-name">Name</h4>
+<div class="user-info" *ngIf="userData">
+  <div class="inline">
+    <h3 class="profile-name">{{userData.name}}</h3>
+
+    <button
+      mat-button
+      class="back-to-users"
+      routerLinkActive="active"
+      [routerLink]="[HOME_PAGE_URL]"
+      title="{{
+        'Admin.Modules.Users.Modules.Statistics.Buttons.Back' | translate
+      }}"
+    >
+      <mat-icon svgIcon="arrow-back"></mat-icon>
+    </button>
+  </div>
   <div class="profile-data">
-    <p>Birthday</p>
-    <p>email</p>
+    <p>{{userData.name}}</p>
+    <p>{{userData.email}}</p>
   </div>
 </div>
 

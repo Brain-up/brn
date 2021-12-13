@@ -1,17 +1,18 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, UrlTree, Router, CanLoad } from '@angular/router';
-import { AuthTokenService } from '@root/services/auth-token.service';
 import { AUTH_PAGE_URL } from '@shared/constants/common-constants';
+import { CanActivate, CanLoad, Router, UrlTree } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { TokenService } from '@root/services/token.service';
+import { UserCredential } from '@root/models/auth-token';
 
 @Injectable()
 export class AuthAccessGuard implements CanLoad, CanActivate {
   constructor(
-    private readonly authTokenService: AuthTokenService,
+    private readonly tokenService: TokenService,
     private readonly router: Router,
   ) {}
 
   public canLoad(): true | UrlTree {
-    return this.authTokenService.getAuthToken()
+    return this.tokenService.getToken<UserCredential>()
       ? true
       : this.router.createUrlTree([AUTH_PAGE_URL]);
   }

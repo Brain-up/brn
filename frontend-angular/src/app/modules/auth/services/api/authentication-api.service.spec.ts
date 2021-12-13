@@ -1,11 +1,11 @@
-import { LoginData } from './../../models/login-data';
-import { TestBed } from '@angular/core/testing';
-import { AuthenticationApiService } from './authentication-api.service';
-import { AuthTokenService } from '@root/services/auth-token.service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+import { AuthenticationApiService } from './authentication-api.service';
 import { environment } from 'src/environments/environment';
+import { LoginData } from './../../models/login-data';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TestBed } from '@angular/core/testing';
+import { TokenService } from '@root/services/token.service';
 
 const data: LoginData = {
   grant_type: 'password',
@@ -23,10 +23,7 @@ describe('AuthenticationApiService', () => {
         AngularFireAuthModule,
         RouterTestingModule,
       ],
-      providers: [
-        AuthenticationApiService,
-        AuthTokenService,
-      ],
+      providers: [AuthenticationApiService, TokenService],
     });
     service = TestBed.inject(AuthenticationApiService);
   });

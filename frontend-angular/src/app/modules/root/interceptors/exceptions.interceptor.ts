@@ -1,4 +1,12 @@
+import { AUTH_PAGE_URL } from '@shared/constants/common-constants';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { SnackBarService } from '@root/services/snack-bar.service';
+import { StatusCodes } from 'http-status-codes';
+import { tap } from 'rxjs/operators';
+import { TokenService } from '@root/services/token.service';
+import { TranslateService } from '@ngx-translate/core';
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -6,21 +14,13 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { StatusCodes } from 'http-status-codes';
-import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { SnackBarService } from '@root/services/snack-bar.service';
-import { AUTH_PAGE_URL } from '@shared/constants/common-constants';
-import { AuthTokenService } from '@root/services/auth-token.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class ExceptionsInterceptor implements HttpInterceptor {
   constructor(
     private readonly router: Router,
     private readonly snackBarService: SnackBarService,
-    private readonly authTokenService: AuthTokenService,
+    private readonly tokenService: TokenService,
     private readonly translateService: TranslateService,
   ) {}
 
@@ -39,7 +39,8 @@ export class ExceptionsInterceptor implements HttpInterceptor {
                     'Root.Interceptors.Exceptions.Unauthorized',
                   ),
                 );
-                this.authTokenService.removeAuthToken();
+                this.tokenService.removeToken();
+                this.tokenService.removeToken('SELECTED_USER');
                 this.router.navigateByUrl(AUTH_PAGE_URL);
                 break;
 
@@ -49,7 +50,8 @@ export class ExceptionsInterceptor implements HttpInterceptor {
                     'Root.Interceptors.Exceptions.UnknownError',
                   ),
                 );
-                this.authTokenService.removeAuthToken();
+                this.tokenService.removeToken();
+                this.tokenService.removeToken('SELECTED_USER');
                 this.router.navigateByUrl(AUTH_PAGE_URL);
                 break;
             }
