@@ -41,7 +41,6 @@ import { UsersRoutingModule } from './users-routing.module';
     TranslateModule,
     UsersRoutingModule,
   ],
-  // providers: [AdminApiService, ],
   providers: [AdminApiService],
 })
 export class UsersModule {}
