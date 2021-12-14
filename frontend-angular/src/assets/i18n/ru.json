@@ -56,10 +56,10 @@
               "WorkingDaysInLastMonth": "Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth"
             },
             "NameColumn": {
-              "CommonInfo [years, gender]": "Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo [years, gender]"
+              "CommonInfo [years, gender]": "Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo {{ years}} , {{ gender }}"
             },
             "VisitColumn": {
-              "Time [hours]": "Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]"
+              "Time [hours]": "Admin.Modules.Users.Components.UsersTable.VisitColumn.Time {{ hours }}"
             }
           }
         },
@@ -71,8 +71,12 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
-              "Back": "Вернуться к пользователям",
-              "WhatIsIt": "О чем говорит статистика"
+              "WhatIsIt": "О чем говорит статистика",
+              "Statistics": "Статистика",
+              "Diagnostics": "Диагностика",
+              "ExportProfile": "Профиль экспорта",
+              "ExportToJson": "Экспорт в JSON",
+              "ExportToCsv": "Экспорт в CSV"
             },
             "Components": {
               "MonthTimeTrack": {
@@ -88,7 +92,7 @@
                 },
                 "ContentTitle": "Проверьте, достаточно ли регулярно вы делаете занятия",
                 "Text": "По данным исследований, чтобы улучшить порог слышимости, нужно заниматься не менее <b>6</b> дней в неделю по <b>20</b> минут в течение <b>2</b> лет. В месяц должно быть не менее <b>8</b> часов <b>40</b> минут в сумме за <b>26</b> дней.",
-                "Title": "О чем говорит статистика"
+                "Title": "О чем говорит статистика?"
               },
               "WeekTimeTrack": {
                 "EmptyData": "Нет данных",

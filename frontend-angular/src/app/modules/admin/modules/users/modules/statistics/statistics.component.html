@@ -1,7 +1,5 @@
 <div class="user-info" *ngIf="userData">
-  <div class="inline">
-    <h3 class="profile-name">{{userData.name}}</h3>
-
+  <div class="profile-data">
     <button
       mat-button
       class="back-to-users"
@@ -13,38 +11,90 @@
     >
       <mat-icon svgIcon="arrow-back"></mat-icon>
     </button>
-  </div>
-  <div class="profile-data">
-    <p>{{userData.name}}</p>
-    <p>{{userData.email}}</p>
+
+    <div>
+      <h3 class="profile-name">{{ userData.name }}</h3>
+      <p>{{ userData.name }}</p>
+      <p>{{ userData.email }}</p>
+    </div>
   </div>
 </div>
 
-<div class="control-panel">
-  <button
-    class="statistics-info-dialog"
-    mat-button
-    (click)="openStatisticsInfoDialog()"
+<div class='about-dialog'>
+<button
+  class="statistics-info-dialog"
+  mat-button
+  (click)="openStatisticsInfoDialog()"
+>
+  <mat-icon svgIcon="help"></mat-icon>
+
+  <span>{{
+    'Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt' | translate
+  }}</span>
+</button>
+</div>
+
+<mat-tab-group class="content" mat-align-tabs="end">
+  <mat-tab
+    label="{{
+      'Admin.Modules.Users.Modules.Statistics.Buttons.Statistics' | translate
+    }}"
   >
-    <mat-icon svgIcon="help"></mat-icon>
+    <app-month-time-track
+      [isLoading]="isLoadingMonthTimeTrackData"
+      [selectedMonth]="selectedMonth"
+      [data]="monthTimeTrackData"
+      (selectMonthEvent)="selectMonth($event)"
+      (loadPrevYearEvent)="loadPrevYear()"
+      (loadNextYearEvent)="loadNextYear()"
+    ></app-month-time-track>
 
-    <span>{{
-      'Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt' | translate
-    }}</span>
-  </button>
-</div>
-
-<app-month-time-track
-  [isLoading]="isLoadingMonthTimeTrackData"
-  [selectedMonth]="selectedMonth"
-  [data]="monthTimeTrackData"
-  (selectMonthEvent)="selectMonth($event)"
-  (loadPrevYearEvent)="loadPrevYear()"
-  (loadNextYearEvent)="loadNextYear()"
-></app-month-time-track>
-
-<app-week-time-track
-  [isLoading]="isLoadingWeekTimeTrackData"
-  [selectedMonth]="selectedMonth"
-  [data]="weekTimeTrackData"
-></app-week-time-track>
+    <app-week-time-track
+      [isLoading]="isLoadingWeekTimeTrackData"
+      [selectedMonth]="selectedMonth"
+      [data]="weekTimeTrackData"
+      (loadPrevMonthEvent)="loadPrevMonth()"
+      (loadNextMonthEvent)="loadNextMonth()"
+    ></app-week-time-track>
+  </mat-tab>
+  <mat-tab
+    label="{{
+      'Admin.Modules.Users.Modules.Statistics.Buttons.Diagnostics' | translate
+    }}"
+  >
+    <!-- <app-diagnostics-track>-->
+  </mat-tab>
+  <mat-tab disabled>
+    <ng-template mat-tab-label>
+      <div
+        class="export-profile"
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        (click)="$event.stopPropagation()"
+      >
+        <mat-icon svgIcon="file-download"></mat-icon>
+        <span>
+          {{
+            'Admin.Modules.Users.Modules.Statistics.Buttons.ExportProfile'
+              | translate
+          }}
+        </span>
+        <mat-icon svgIcon="expand-more"></mat-icon>
+      </div>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          {{
+            'Admin.Modules.Users.Modules.Statistics.Buttons.ExportToJson'
+              | translate
+          }}
+        </button>
+        <button mat-menu-item>
+          {{
+            'Admin.Modules.Users.Modules.Statistics.Buttons.ExportToCsv'
+              | translate
+          }}
+        </button>
+      </mat-menu>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

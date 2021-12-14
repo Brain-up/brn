@@ -93,6 +93,19 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.getMonthTimeTrackData();
   }
 
+  public loadPrevMonth(): void {
+    this.selectedMonth = this.selectedMonth.subtract(1, 'month');
+
+    this.getWeekTimeTrackData();
+    // this.getHistoriesData();
+  }
+
+  public loadNextMonth(): void {
+    this.selectedMonth = this.selectedMonth.add(1, 'month');
+
+    this.getWeekTimeTrackData();
+  }
+
   private getWeekTimeTrackData(): void {
     const fromMonth = this.selectedMonth.startOf('month');
     const toMonth = this.selectedMonth.endOf('month');

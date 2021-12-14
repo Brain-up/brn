@@ -1,41 +1,83 @@
 @import 'colors.scss';
 @import 'variables.scss';
 
-.inline {
-  align-items: center;
+.user-info {
+  align-items: start;
   display: flex;
   justify-content: space-between;
+  position: absolute;
+
+  .profile-data {
+    display: flex;
+    align-items: start;
+
+    .profile-name {
+      margin-top: $margin-8;
+    }
+  }
 }
 
-:host {
+// .mat-tab-group {
+//   margin-top: $margin-48;
+// }
+.about-dialog {
   display: flex;
-  flex-direction: column;
+  justify-content: flex-end;
 
-  .control-panel {
+  .statistics-info-dialog {
+    padding: 6px 16px;
+    border: 1px solid #eae6fe;
+    box-shadow: 0px 4px 16px #5947b21a;
+    border-radius: 16px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: uppercase;
+
+    mat-icon {
+      margin-right: 10px;
+      color: $cold-violet-color;
+    }
+
+    span {
+      color: $dark-violet-color;
+    }
+  }
+}
+
+.content {
+  ::ng-deep .mat-tab-label {
+    font-size: 16px;
+  }
+
+  ::ng-deep .mat-tab-body {
+    padding-top: 48px;
+  }
+
+  ::ng-deep .mat-tab-labels {
+    padding: 16px 0;
+  }
+
+  ::ng-deep .mat-ink-bar {
+    background-color: $dark-violet-color;
+  }
+  ::ng-deep .mat-tab-label-active {
+    color: $dark-violet-color;
+  }
+
+  ::ng-deep .mat-tab-disabled {
+    color: inherit;
+  }
+
+  .export-profile {
+    align-items: center;
+    cursor: pointer;
     display: flex;
-    justify-content: flex-end;
+    line-height: 24px;
 
-    button.statistics-info-dialog {
-      display: flex;
-      align-items: center;
-      padding: 6px 16px;
-      border: 1px solid #eae6fe;
-      box-shadow: 0px 4px 16px #5947b21a;
-      border-radius: 16px;
-      font-style: normal;
-      font-weight: 600;
-      font-size: $font-size-16;
-      line-height: $font-size-16;
-      text-transform: uppercase;
-
-      mat-icon {
-        margin-right: 10px;
-        color: $cold-violet-color;
-      }
-
-      span {
-        color: $dark-violet-color;
-      }
+    span {
+      margin: 0 8px;
     }
   }
 }
