@@ -1,7 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { DataShareService } from '@shared/services/data-share.service';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,6 +13,8 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ALocaleStorage } from '@shared/storages/local-storage';
+import { TokenService } from '@root/services/token.service';
 
 @Component({
   selector: 'app-users',
@@ -44,7 +45,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   constructor(
     private readonly adminApiService: AdminApiService,
     private activatedRoute: ActivatedRoute,
-    private dataShareService: DataShareService<User>,
+    private tokenService: TokenService,
     private router: Router,
   ) {}
 
@@ -99,8 +100,8 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.dataSource.paginator = this.paginator;
   }
 
-  public navigateToSelectedUser(user): void {
-    this.dataShareService.addData(user);
+  public navigateToSelectedUser(user: User): void {
+    this.tokenService.setToken<User>(user, 'SELECTED_USER');
     this.router.navigate([user.id, 'statistics'], {
       relativeTo: this.activatedRoute,
     });

@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { Router } from '@angular/router';
 import firebase from 'firebase/app';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { TokenService } from '@root/services/token.service';
 import {
   AUTH_PAGE_URL,
   HOME_PAGE_URL,
 } from '@shared/constants/common-constants';
-import { AuthTokenService } from '@root/services/auth-token.service';
 
 @Injectable()
 export class AuthenticationApiService {
@@ -14,8 +14,8 @@ export class AuthenticationApiService {
 
   constructor(
     private readonly angularFireAuth: AngularFireAuth,
-    private readonly authTokenService: AuthTokenService,
     private readonly router: Router,
+    private readonly tokenService: TokenService,
   ) {
     this.initAuth();
   }
@@ -25,7 +25,8 @@ export class AuthenticationApiService {
       if (auth) {
         this.authState = auth;
       } else {
-        this.authTokenService.removeAuthToken();
+        this.tokenService.removeToken();
+        this.tokenService.removeToken('SELECTED_USER');
       }
     });
   }
@@ -58,7 +59,7 @@ export class AuthenticationApiService {
     const provider = new firebase.auth.GoogleAuthProvider();
     return this.oAuthLogin(provider)
       .then(() => {
-        this.authTokenService.setAuthToken(this.authState);
+        this.tokenService.setToken(this.authState);
         this.router.navigateByUrl(HOME_PAGE_URL);
       })
       .catch((error) => {
@@ -76,7 +77,7 @@ export class AuthenticationApiService {
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
         this.authState = user;
-        this.authTokenService.setAuthToken(this.authState);
+        this.tokenService.setToken(this.authState);
         this.router.navigateByUrl(HOME_PAGE_URL);
       })
       .catch((error) => {
@@ -87,7 +88,8 @@ export class AuthenticationApiService {
 
   public signOut(): void {
     this.angularFireAuth.signOut();
-    this.authTokenService.removeAuthToken();
+    this.tokenService.removeToken();
+    this.tokenService.removeToken('SELECTED_USER');
     this.router.navigate([AUTH_PAGE_URL]);
   }
 }

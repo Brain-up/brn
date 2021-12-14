@@ -64,7 +64,7 @@
           }
         },
         "EmptyData": "No users available",
-        
+
         "FavoriteToggler": {
           "AllUsers": "All users",
           "Favorites": "Favorites"
@@ -72,27 +72,32 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
-              "WhatIsIt": "Admin.Modules.Users.Modules.Statistics.Buttons.WhatIsIt"
+              "WhatIsIt": "What is it about?",
+              "Statistics": "Statistics",
+              "Diagnostics": "Diagnostics",
+              "ExportProfile": "Export Profile",
+              "ExportToJson": "Export to JSON",
+              "ExportToCsv": "Export to CSV"
             },
             "Components": {
               "MonthTimeTrack": {
-                "EmptyData": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.EmptyData",
-                "Title [year]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.Title [year]"
+                "EmptyData": "No data",
+                "Title [year]": "Total class time by months for {{ year }}"
               },
               "MonthTimeTrackItem": {
-                "Days [days]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]"
+                "Days [days]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days {{ days }}"
               },
               "StatisticsInfoDialog": {
                 "Buttons": {
-                  "Ok": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Buttons.Ok"
+                  "Ok": "Ok"
                 },
-                "ContentTitle": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.ContentTitle",
-                "Text": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Text",
-                "Title": "Admin.Modules.Users.Modules.Statistics.Components.StatisticsInfoDialog.Title"
+                "ContentTitle": "Check if you exercise regularly enough:",
+                "Text": "According to research, to improve the hearing threshold, you need to practice at least <b>6</b> days a week for <b>20</b> minutes for <b>2</b> years. There must be at least <b>8</b> hours <b>40</b> minutes per month for a total of <b>26</b> days.",
+                "Title": "What is it about?"
               },
               "WeekTimeTrack": {
-                "EmptyData": "Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData",
-                "Title [month]": "Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.Title [month]"
+                "EmptyData": "No data",
+                "Title [month]": "Time of daily activities for <span>{{ month }}</span>"
               }
             }
           }

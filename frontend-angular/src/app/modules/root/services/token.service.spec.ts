@@ -1,20 +1,20 @@
-import { AuthToken } from './../models/auth-token';
+import { AuthToken, UserCredential } from '../models/auth-token';
 import { TestBed } from '@angular/core/testing';
-import { AuthTokenService } from './auth-token.service';
+import { TokenService } from './token.service';
 
 const authToken: AuthToken = {
   access_token: 'A token example',
   expires_in: 123456789,
 };
 
-describe('AuthTokenService', () => {
-  let service: AuthTokenService;
+describe('TokenService', () => {
+  let service: TokenService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AuthTokenService],
+      providers: [TokenService],
     });
-    service = TestBed.inject(AuthTokenService);
+    service = TestBed.inject(TokenService);
   });
 
   it('should be created', () => {
@@ -22,17 +22,17 @@ describe('AuthTokenService', () => {
   });
 
   it('should get auth token from localstore', () => {
-    expect(service.getAuthToken()).toEqual(null);
+    expect(service.getToken<UserCredential>()).toEqual(null);
   });
 
   // it('should set auth token from localstore', () => {
   //   service.setAuthToken(authToken);
-  //   expect(service.getAuthToken()).toEqual(authToken);
+  //   expect(service.getToken<UserCredential>()).toEqual(authToken);
   // });
 
   // it('should remove auth token from localstore', () => {
   //   service.setAuthToken(authToken);
   //   service.removeAuthToken();
-  //   expect(service.getAuthToken()).toEqual(null);
+  //   expect(service.getToken<UserCredential>()).toEqual(null);
   // });
 });

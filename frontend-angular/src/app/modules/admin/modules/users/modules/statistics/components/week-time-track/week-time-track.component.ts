@@ -1,6 +1,6 @@
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 import { secondsTo } from '@shared/helpers/seconds-to';
@@ -102,5 +102,27 @@ export class WeekTimeTrackComponent {
     }
 
     this.barData = data.length ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]] : [];
+  }
+
+  @Output()
+  public loadPrevMonthEvent = new EventEmitter<void>();
+
+  @Output()
+  public loadNextMonthEvent = new EventEmitter<void>();
+
+  public loadPrevMonth(): void {
+    this.loadPrevMonthEvent.emit();
+  }
+
+  public loadNextMonth(): void {
+    if (!this.isAllowNextMonth()) {
+      return;
+    }
+
+    this.loadNextMonthEvent.emit();
+  }
+
+  public isAllowNextMonth(): boolean {
+    return this.selectedMonth.add(1, 'month').month() <= dayjs().month();
   }
 }

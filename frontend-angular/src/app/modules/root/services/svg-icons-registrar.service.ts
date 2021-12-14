@@ -14,6 +14,18 @@ export class SvgIconsRegistrarService {
   public registerIcons(): void {
     this.matIconRegistry
       .addSvgIcon(
+        'arrow-back',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'arrow-back.svg',
+        ),
+      )
+      .addSvgIcon(
+        'file-download',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'file-download.svg',
+        ),
+      )
+      .addSvgIcon(
         'help',
         this.domSanitizer.bypassSecurityTrustResourceUrl(
           SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'help.svg',
@@ -38,15 +50,15 @@ export class SvgIconsRegistrarService {
         ),
       )
       .addSvgIcon(
-        'up-arrow',
-        this.domSanitizer.bypassSecurityTrustResourceUrl(
-          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'up-arrow.svg',
-        ),
-      )
-      .addSvgIcon(
         'star',
         this.domSanitizer.bypassSecurityTrustResourceUrl(
           SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'star.svg',
+        ),
+      )
+      .addSvgIcon(
+        'up-arrow',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'up-arrow.svg',
         ),
       );
   }

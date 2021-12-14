@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { TokenService } from '@root/services/token.service';
+import { UserCredential } from '@root/models/auth-token';
 import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AuthTokenService } from '@root/services/auth-token.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private readonly authTokenService: AuthTokenService) {}
+  constructor(private readonly tokenService: TokenService) {}
 
   public intercept(
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    const authToken = this.authTokenService.getAuthToken();
+    const authToken = this.tokenService.getToken<UserCredential>();
 
     if (authToken) {
       return next.handle(

@@ -16,6 +16,7 @@ export function defaultMethods(key: string): IDefaultMethods {
 
     remove(): void {
       localStorage.removeItem(this.key);
+      // localStorage.clear();
     },
   };
 }
