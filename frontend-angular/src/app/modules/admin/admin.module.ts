@@ -1,31 +1,33 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
+import { AdminApiService } from './services/api/admin-api.service';
 import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from './admin-routing.module';
-import { AdminApiService } from './services/api/admin-api.service';
+import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
 import { CloudApiService } from './services/api/cloud-api.service';
+import { CommonModule } from '@angular/common';
 import { GroupApiService } from './services/api/group-api.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { NgModule } from '@angular/core';
+import { PipesModule } from '@shared/pipes/pipes.module';
 import { SeriesApiService } from './services/api/series-api.service';
 import { SubGroupApiService } from './services/api/sub-group-api.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
-import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
 
 @NgModule({
   declarations: [AdminComponent],
   imports: [
-    CommonModule,
     AdminRoutingModule,
-    TranslateModule,
+    CommonModule,
     MatButtonModule,
-    MatToolbarModule,
     MatIconModule,
+    MatToolbarModule,
+    PipesModule,
+    TranslateModule,
   ],
   providers: [
-    AuthenticationApiService,
     AdminApiService,
+    AuthenticationApiService,
     CloudApiService,
     GroupApiService,
     SeriesApiService,
