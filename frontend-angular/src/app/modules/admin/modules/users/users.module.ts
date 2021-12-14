@@ -1,4 +1,5 @@
 import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
 import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -12,12 +13,12 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NgModule } from '@angular/core';
 import { PaginatorModule } from '@shared/components/paginator/paginator.module';
+import { PipesModule } from '@shared/pipes/pipes.module';
 import { SearchInputModule } from '@shared/components/search-input/search-input.module';
 import { TogglerModule } from '@shared/components/toggler/toggler.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { UsersComponent } from './users.component';
 import { UsersRoutingModule } from './users-routing.module';
-import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
 
 @NgModule({
   declarations: [UsersComponent],
@@ -34,12 +35,12 @@ import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake'
     MatSortModule,
     MatTableModule,
     PaginatorModule,
+    PipesModule,
     SearchInputModule,
     TogglerModule,
     TranslateModule,
     UsersRoutingModule,
   ],
-  // providers: [AdminApiService, ],
-  providers: [{ provide: AdminApiService, useFactory: () => new AdminApiServiceFake() }],
+  providers: [AdminApiService],
 })
 export class UsersModule {}

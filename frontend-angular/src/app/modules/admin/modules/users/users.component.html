@@ -58,7 +58,7 @@
           <a class="mat-row-link" (click)="navigateToSelectedUser(user)"></a>
 
           <div class="wrap">
-            <div class="avatar">AB</div>
+            <div class="avatar">{{ user.name | shortName }}</div>
             <div class="info">
               <div class="item">{{ user.name }}</div>
               <div class="subItem">
