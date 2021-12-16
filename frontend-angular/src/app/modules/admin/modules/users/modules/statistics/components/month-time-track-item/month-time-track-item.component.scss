@@ -1,9 +1,8 @@
 @import 'colors.scss';
 
 :host {
-  $borderRadius: 8px;
 
-  border-radius: $borderRadius;
+  border-radius: $border-radius-8;
   cursor: pointer;
 
   &.selected {
@@ -12,7 +11,7 @@
     .date {
       .month,
       .year {
-        color: #ffffff;
+        color: $white;
       }
     }
   }
@@ -20,13 +19,13 @@
   .calendar {
     color: $charcoal-grey-color;
     width: 70px;
-    border-radius: $borderRadius;
+    border-radius: $border-radius-8;
 
     .header {
+      border-bottom: 1px solid $charcoal-grey-color;
       display: flex;
       justify-content: space-between;
       padding: 6px 14px;
-      border-bottom: 1px solid $charcoal-grey-color;
 
       .dot {
         width: 4px;
@@ -37,33 +36,33 @@
     }
 
     .content {
-      padding: 8px;
-      text-align: center;
+      font-size: $font-size-10;
       font-style: normal;
-      font-size: 10px;
-      line-height: 16px;
       font-weight: normal;
+      line-height: $font-size-16;
+      overflow: hidden;
+      padding: $padding-8;
+      text-align: center;
       text-overflow: ellipsis;
       white-space: nowrap;
-      overflow: hidden;
 
       b.time {
-        font-size: 12px;
+        font-size: $font-size-12;
       }
     }
   }
 
   .date {
-    padding: 2px 0;
+    padding: $padding-2 0;
 
     .month,
     .year {
+      font-size: $font-size-10;
       font-style: normal;
       font-weight: 600;
-      font-size: 10px;
-      line-height: 16px;
-      text-transform: uppercase;
+      line-height: $font-size-16;
       text-align: center;
+      text-transform: uppercase;
     }
   }
 }

@@ -72,6 +72,7 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
+              "Back": "Back to Users",
               "WhatIsIt": "What is it about?",
               "Statistics": "Statistics",
               "Diagnostics": "Diagnostics",

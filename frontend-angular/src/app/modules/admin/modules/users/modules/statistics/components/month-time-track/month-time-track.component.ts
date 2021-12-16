@@ -39,6 +39,8 @@ export class MonthTimeTrackComponent {
         date,
       };
     });
+    console.log('month data',data);
+    console.log('month',this.monthTimeTrackItemsData);
   }
 
   @Output()

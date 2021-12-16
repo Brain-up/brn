@@ -25,14 +25,14 @@
   justify-content: flex-end;
 
   .statistics-info-dialog {
-    padding: 6px 16px;
-    border: 1px solid #eae6fe;
-    box-shadow: 0px 4px 16px #5947b21a;
-    border-radius: 16px;
+    padding: $padding-6 $padding-16;
+    border: 1px solid $dialog-border-grey;
+    box-shadow: 0px 4px 16px $active-grey-color;
+    border-radius: $border-radius-16;
     font-style: normal;
     font-weight: 600;
-    font-size: 12px;
-    line-height: 16px;
+    font-size: $font-size-12;
+    line-height: $font-size-16;
     text-transform: uppercase;
 
     mat-icon {
@@ -48,15 +48,15 @@
 
 .content {
   ::ng-deep .mat-tab-label {
-    font-size: 16px;
+    font-size: $font-size-16;
   }
 
   ::ng-deep .mat-tab-body {
-    padding-top: 48px;
+    padding-top: $padding-48;
   }
 
   ::ng-deep .mat-tab-labels {
-    padding: 16px 0;
+    padding: $padding-16 0;
   }
 
   ::ng-deep .mat-ink-bar {
@@ -74,10 +74,10 @@
     align-items: center;
     cursor: pointer;
     display: flex;
-    line-height: 24px;
+    line-height: $font-size-24;
 
     span {
-      margin: 0 8px;
+      margin: 0 $margin-8;
     }
   }
 }
