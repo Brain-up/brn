@@ -1,9 +1,19 @@
-<div class="admin">
-  <div class="avatar">{{ adminData.user.displayName | shortName }}</div>
-  <div class="name">{{ adminData.user.displayName }}</div>
-  <div class="email">{{ adminData.user.email }}</div>
+<div class="profile" *ngIf="adminData">
+  <mat-card class="content">
+    <div class="avatar-card">
+      <div class="avatar">{{ adminData.user.displayName | shortName }}</div>
+    </div>
+
+    <div class="info">
+      <mat-label class="label">name</mat-label>
+      <mat-form-field>
+        <input matInput disabled value="{{ adminData.user.displayName }}" />
+      </mat-form-field>
+
+      <mat-label class="label">email</mat-label>
+      <mat-form-field>
+        <input matInput disabled value="{{ adminData.user.email }}" />
+      </mat-form-field>
+    </div>
+  </mat-card>
 </div>
-
-
-
-

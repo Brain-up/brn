@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PipesModule } from '@shared/pipes/pipes.module';
 
 import { ProfileComponent } from './profile.component';
 
@@ -8,9 +9,9 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ]
-    })
-    .compileComponents();
+      declarations: [ProfileComponent],
+      imports: [PipesModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {

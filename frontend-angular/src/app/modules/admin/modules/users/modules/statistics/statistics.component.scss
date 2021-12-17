@@ -2,14 +2,14 @@
 @import 'variables.scss';
 
 .user-info {
-  align-items: start;
+  align-items: flex-start;
   display: flex;
   justify-content: space-between;
   position: absolute;
 
   .profile-data {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
 
     .profile-name {
       margin-top: $margin-8;
@@ -17,9 +17,6 @@
   }
 }
 
-// .mat-tab-group {
-//   margin-top: $margin-48;
-// }
 .about-dialog {
   display: flex;
   justify-content: flex-end;

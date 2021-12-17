@@ -42,11 +42,15 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatSort) set sort(sort: MatSort) {
     this.sorting = sort;
-    this.sorting ? (this.dataSource.sort = this.sorting) : null;
+    if (this.sorting) {
+      this.dataSource.sort = this.sorting;
+    }
   }
   @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
     this.paging = paginator;
-    this.paging ? (this.dataSource.paginator = this.paging) : null;
+    if (this.paging) {
+      this.dataSource.paginator = this.paging;
+    }
   }
 
   constructor(

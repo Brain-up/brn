@@ -12,6 +12,12 @@ import { UserCredential } from '@root/models/auth-token';
 })
 export class AdminComponent implements OnInit {
   public adminName: UserCredential;
+  public readonly mainTabs = [
+    { label: marker('Admin.Menu.Users'), link: 'users' },
+    { label: marker('Admin.Menu.Exercises'), link: 'exercises' },
+    { label: marker('Admin.Menu.Resources'), link: 'resources' },
+    { label: marker('Admin.Menu.UploadFile'), link: 'upload-file' },
+  ];
 
   constructor(
     private readonly authenticationApiService: AuthenticationApiService,
@@ -21,13 +27,6 @@ export class AdminComponent implements OnInit {
   public ngOnInit(): void {
     this.getAdminName();
   }
-
-  public readonly mainTabs = [
-    { label: marker('Admin.Menu.Users'), link: 'users' },
-    { label: marker('Admin.Menu.Exercises'), link: 'exercises' },
-    { label: marker('Admin.Menu.Resources'), link: 'resources' },
-    { label: marker('Admin.Menu.UploadFile'), link: 'upload-file' },
-  ];
 
   public logout(): void {
     this.authenticationApiService.signOut();

@@ -57,7 +57,7 @@ $user-right-margin: 80px;
       }
 
       .name {
-        width: 144px;
+        max-width: 144px;
         font-weight: 400;
         white-space: normal;
         line-height: $font-size-16;

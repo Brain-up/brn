@@ -1,5 +1,11 @@
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { MONTHS_IN_YEAR } from '@shared/constants/common-constants';
 import { secondsTo } from '@shared/helpers/seconds-to';
 import * as dayjs from 'dayjs';
@@ -39,8 +45,8 @@ export class MonthTimeTrackComponent {
         date,
       };
     });
-    console.log('month data',data);
-    console.log('month',this.monthTimeTrackItemsData);
+    console.log('month data', data);
+    console.log('month', this.monthTimeTrackItemsData);
   }
 
   @Output()
@@ -69,7 +75,10 @@ export class MonthTimeTrackComponent {
   }
 
   public isSelectedMonth(date: Dayjs): boolean {
-    return date.year() === this.selectedMonth.year() && date.month() === this.selectedMonth.month();
+    return (
+      date.year() === this.selectedMonth.year() &&
+      date.month() === this.selectedMonth.month()
+    );
   }
 
   public isAllowNextYear(): boolean {
