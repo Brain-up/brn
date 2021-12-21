@@ -21,18 +21,17 @@ describe('TokenService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get auth token from localstore', () => {
-    expect(service.getToken<UserCredential>()).toEqual(null);
+  it('should get token from localstore', () => {
+    expect(service.getToken<AuthToken>()).toEqual(null);
   });
 
-  // it('should set auth token from localstore', () => {
-  //   service.setAuthToken(authToken);
-  //   expect(service.getToken<UserCredential>()).toEqual(authToken);
-  // });
+  it('should set token to localstore', () => {
+    service.setToken<AuthToken>(authToken);
+    expect(service.getToken<AuthToken>()).toEqual(authToken);
+  });
 
-  // it('should remove auth token from localstore', () => {
-  //   service.setAuthToken(authToken);
-  //   service.removeAuthToken();
-  //   expect(service.getToken<UserCredential>()).toEqual(null);
-  // });
+  it('should get nothing if no token is set', () => {
+    service.setToken<AuthToken>(undefined);
+    expect(service.getToken<AuthToken>()).toEqual(null);
+  });
 });
