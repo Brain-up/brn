@@ -1,5 +1,10 @@
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { LoginComponent } from './login.component';
 import { Router } from '@angular/router';
@@ -8,8 +13,8 @@ import { TokenService } from '@root/services/token.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
-import firebase from 'firebase'
-require('firebase/auth')
+import firebase from 'firebase';
+require('firebase/auth');
 
 describe('LoginComponent', () => {
   let fixture: ComponentFixture<LoginComponent>;
@@ -17,15 +22,18 @@ describe('LoginComponent', () => {
   const formBuilder: FormBuilder = new FormBuilder();
   const mockSnackbar = jasmine.createSpyObj(['open']);
 
-  let mockAuthenticationApiService: any = {
+  const mockAuthenticationApiService: any = {
     // loginWithEmail: () => true,
     loginWithEmail: () => {
       return { user: 'test user', idToken: 'token' };
     },
   };
 
-const routerStub: Router = jasmine.createSpyObj('Router', ['navigate']);
-const authStub: AuthenticationApiService = jasmine.createSpyObj('RegistrationService', ['loginWithEmail']);
+  const routerStub: Router = jasmine.createSpyObj('Router', ['navigate']);
+  const authStub: AuthenticationApiService = jasmine.createSpyObj(
+    'RegistrationService',
+    ['loginWithEmail'],
+  );
 
   beforeEach(() => {
     TestBed.configureTestingModule({
