@@ -1,0 +1,1 @@
+alter table sub_group add column if not exists with_pictures boolean default false;
