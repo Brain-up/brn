@@ -3,12 +3,9 @@ package com.epam.brn.service
 import com.epam.brn.dto.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
-import com.epam.brn.enums.Role
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Authority
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
-import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
@@ -43,9 +40,6 @@ internal class SubGroupServiceTest {
 
     @MockK
     private lateinit var urlConversionService: UrlConversionService
-
-    @MockK
-    private lateinit var userService: UserAccountService
 
     @Test
     fun `findSubGroupsForSeries should return data when there are subGroups for seriesId`() {
@@ -218,11 +212,9 @@ internal class SubGroupServiceTest {
     fun`updateSubGroupById should update existing subgroup`() {
         // GIVEN
         val subGroupId = 1L
-        val authority = Authority(authorityName = Role.ROLE_ADMIN.name)
         val subGroupChangeRequest = SubGroupChangeRequest(withPictures = true)
         val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
         val subGroupResponseMockk = mockkClass(SubGroupResponse::class, relaxed = true)
-        every { userService.getCurrentUser() } returns createUser(mutableSetOf(authority))
         every { subGroupRepository.findById(subGroupId) } returns Optional.of(subGroupMockk)
         every { subGroupRepository.save(subGroupMockk) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
@@ -236,27 +228,10 @@ internal class SubGroupServiceTest {
     fun`updateSubGroupById should throw exception when subgroup does not exist`() {
         // GIVEN
         val subGroupId = 1L
-        val authority = Authority(authorityName = Role.ROLE_ADMIN.name)
-        every { userService.getCurrentUser() } returns createUser(mutableSetOf(authority))
         every { subGroupRepository.findById(subGroupId) } returns Optional.empty()
         // THEN
         shouldThrow<EntityNotFoundException> {
-            subGroupService.updateSubGroupById(subGroupId, SubGroupChangeRequest())
+            subGroupService.updateSubGroupById(subGroupId, SubGroupChangeRequest(withPictures = false))
         }
-    }
-
-    @Test
-    fun`updateSubGroupById should throw exception when current user is not admin`() {
-        // GIVEN
-        val subGroupId = 1L
-        every { userService.getCurrentUser() } returns createUser(mutableSetOf())
-        // THEN
-        shouldThrow<IllegalArgumentException> {
-            subGroupService.updateSubGroupById(subGroupId, SubGroupChangeRequest())
-        }
-    }
-
-    private fun createUser(authorities: MutableSet<Authority>): UserAccount {
-        return UserAccount(email = null, fullName = null).apply { this.authoritySet = authorities }
     }
 }

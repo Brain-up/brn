@@ -1,5 +1,7 @@
 package com.epam.brn.dto.request
 
-data class SubGroupChangeRequest(
-    var withPictures: Boolean? = null
+import com.fasterxml.jackson.annotation.JsonCreator
+
+data class SubGroupChangeRequest @JsonCreator internal constructor(
+    var withPictures: Boolean
 )

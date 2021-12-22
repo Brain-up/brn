@@ -2,7 +2,6 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.enums.Role
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
@@ -65,10 +64,6 @@ data class UserAccount(
         inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
     )
     var authoritySet: MutableSet<Authority> = hashSetOf()
-
-    fun isAdmin(): Boolean {
-        return authoritySet.any { it.authorityName == Role.ROLE_ADMIN.name }
-    }
 
     override fun toString(): String {
         return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +

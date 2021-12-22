@@ -16,8 +16,7 @@ class SubGroupService(
     private val subGroupRepository: SubGroupRepository,
     private val seriesRepository: SeriesRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val urlConversionService: UrlConversionService,
-    private val userService: UserAccountService
+    private val urlConversionService: UrlConversionService
 ) {
     private val log = logger()
 
@@ -50,19 +49,11 @@ class SubGroupService(
 
     fun updateSubGroupById(subGroupId: Long, subGroupChangeRequest: SubGroupChangeRequest): SubGroupResponse {
         log.debug("try to update SubGroup by Id=$subGroupId")
-        if (isCurrentUserAdmin()) {
-            val subGroup = subGroupRepository.findById(subGroupId)
-                .orElseThrow { EntityNotFoundException("Can not update subGroup because subGroup is not found by this id.") }
-            subGroupChangeRequest.withPictures?.let { subGroup.withPictures = it }
-            subGroupRepository.save(subGroup)
-            return toSubGroupDto(subGroup)
-        } else {
-            throw IllegalArgumentException("It is forbidden to update subGroup.")
-        }
-    }
-
-    private fun isCurrentUserAdmin(): Boolean {
-        return userService.getCurrentUser().isAdmin()
+        val subGroup = subGroupRepository.findById(subGroupId)
+            .orElseThrow { EntityNotFoundException("Can not update subGroup because subGroup is not found by this id.") }
+        subGroup.withPictures = subGroupChangeRequest.withPictures
+        subGroupRepository.save(subGroup)
+        return toSubGroupDto(subGroup)
     }
 
     fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupResponse {

@@ -1,7 +1,6 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.SubGroupResponse
-import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.service.SubGroupService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -9,7 +8,6 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
-import io.mockk.mockkClass
 import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
@@ -56,7 +54,6 @@ internal class SubGroupControllerTest {
         seriesForId.statusCode.value() shouldBe HttpStatus.SC_OK
         seriesForId.body!!.data shouldBe subGroupResponse
     }
-
     @Test
     fun `deleteSubGroupById should delete subGroup by subGroupId`() {
         // GIVEN
@@ -70,21 +67,5 @@ internal class SubGroupControllerTest {
         verify(exactly = 1) { subGroupService.deleteSubGroupById(subGroupId) }
         deleteSubGroupForId.statusCode.value() shouldBe HttpStatus.SC_OK
         deleteSubGroupForId.body!!.data shouldBe Unit
-    }
-
-    @Test
-    fun `updateSubGroupById should update subGroup by subGroupId`() {
-        // GIVEN
-        val subGroupId = 1L
-        val subGroupChangeRequest = SubGroupChangeRequest(withPictures = true)
-        val updatedSubGroup = mockkClass(SubGroupResponse::class, relaxed = true)
-        every { subGroupService.updateSubGroupById(subGroupId, subGroupChangeRequest) } returns updatedSubGroup
-
-        // WHEN
-        val actual = subGroupController.updateSubGroupById(subGroupId, subGroupChangeRequest)
-
-        // THEN
-        actual.statusCode.value() shouldBe HttpStatus.SC_OK
-        actual.body!!.data shouldBe updatedSubGroup
     }
 }

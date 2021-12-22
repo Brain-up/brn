@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
@@ -168,6 +169,14 @@ class AdminController(
     ): ResponseEntity<BaseSingleObjectResponseDto> =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BaseSingleObjectResponseDto(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
+
+    @PatchMapping("/subgroups/{subGroupId}")
+    @ApiOperation("Update subgroup by id")
+    fun updateSubGroupById(
+        @PathVariable(value = "subGroupId") subGroupId: Long,
+        @RequestBody subGroup: SubGroupChangeRequest
+    ): ResponseEntity<BaseSingleObjectResponseDto> =
+        ResponseEntity.ok(BaseSingleObjectResponseDto(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
 
     @GetMapping("/roles")
     @ApiOperation("Get all roles")

@@ -267,14 +267,6 @@ annotationTypes:
               errors: ["Can not delete subGroup because subGroup is not found by this id."],
               meta: []
             }
-    patch:
-      description: Update subgroup by id
-      body:
-        example: !include samples/subgroup_patch_body.json
-      responses:
-        200:
-          body:
-            example: !include samples/subgroup_by_id.json
 
 # EXERCISE ----------------------------
 /exercises:
@@ -738,6 +730,15 @@ annotationTypes:
         201:
           body:
             example: !include samples/add_subgroup_to_series_response.json
+  /subgroups/{subGroupId}:
+    patch:
+      description: Update subgroup by id
+      body:
+        example: !include samples/subgroup_patch_body.json
+      responses:
+        200:
+          body:
+            example: !include samples/subgroup_by_id.json
   /roles:
     get:
       description: Get all roles
