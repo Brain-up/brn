@@ -5,6 +5,6 @@ ADD . /brn
 
 RUN gradle clean bootJar --no-daemon
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:17-ea-22
 WORKDIR /brn
 COPY --from=builder /brn/build/libs/epam-brn.jar /brn/
