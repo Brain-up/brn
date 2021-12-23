@@ -24,7 +24,7 @@ login_form:
   forgot_password: Забыли свой пароль?
 
 password_reset_form:
-  send_recovery_email: Отправить письмо с кодом восстановления
+  send_recovery_email: Отправить письмо с кодом
   recovery_code: Код восстановления
   new_password: Новый пароль
   update_password: Изменить пароль
