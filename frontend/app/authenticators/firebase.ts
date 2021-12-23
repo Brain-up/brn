@@ -4,7 +4,7 @@ import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 import FirebaseService from 'ember-firebase-service/services/firebase';
 import { getOwner } from '@ember/application';
 
-export interface SerializedUser  {
+export interface SerializedUser {
   uid: string;
   displayName: null | string;
   email: string;
@@ -15,7 +15,7 @@ export interface SerializedUser  {
     apiKey: string;
     expirationTime: number;
     refreshToken: string;
-  }
+  };
 }
 
 export default class FirebaseAuthenticator extends BaseAuthenticator {
@@ -26,16 +26,31 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
     return this.firebase.auth().createUserWithEmailAndPassword(email, password);
   }
 
-  public async authenticate(login: string, password: string): Promise<{ user: SerializedUser }> {
+  public async resetPassword(email: string) {
+    return this.firebase.auth().sendPasswordResetEmail(email);
+  }
+
+  public async confirmPasswordReset(code: string, newPassword: string) {
+    return this.firebase.auth().confirmPasswordReset(code, newPassword);
+  }
+
+  public async authenticate(
+    login: string,
+    password: string,
+  ): Promise<{ user: SerializedUser }> {
     // authenticate
 
     try {
-      const result = await this.firebase.auth().signInWithEmailAndPassword(login, password);
+      const result = await this.firebase
+        .auth()
+        .signInWithEmailAndPassword(login, password);
       if (result.user === null) {
         throw new Error('No user');
       }
-      return { user: this.applyTimersToUser(result.user.toJSON() as SerializedUser) };
-    } catch(e) {
+      return {
+        user: this.applyTimersToUser(result.user.toJSON() as SerializedUser),
+      };
+    } catch (e) {
       // https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinandretrievedatawithcredential
       if (e.code === 'auth/internal-error') {
         const { error }: any = JSON.parse(e.message);
@@ -46,7 +61,6 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
         errorObj.message = error.message;
         throw errorObj;
       } else if (e.code === 'auth/user-not-found') {
-
         const { error }: any = e.message;
         const errorObj: any = new Error(error);
         errorObj.errors = e.errors;
@@ -98,7 +112,6 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
         throw errorObj;
       }
     }
-
   }
 
   public invalidate(): Promise<void> {
@@ -110,7 +123,8 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
   private async refreshToken() {
     const auth = await this.firebase.auth();
     await auth.currentUser?.getIdToken(true);
-    const userSnapshot: SerializedUser = getOwner(this).lookup('service:session').data?.authenticated.user;
+    const userSnapshot: SerializedUser =
+      getOwner(this).lookup('service:session').data?.authenticated.user;
     const user = auth.currentUser?.toJSON() as SerializedUser;
     userSnapshot.stsTokenManager = user.stsTokenManager;
     this.applyTimersToUser(user);
@@ -126,7 +140,7 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
     if (interval < 0) {
       this.refreshToken();
     } else {
-      setTimeout(()=> this.refreshToken(), interval);
+      setTimeout(() => this.refreshToken(), interval);
     }
   }
 
@@ -134,28 +148,36 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
     return new Promise((resolve, reject) => {
       const auth = this.firebase.auth();
 
-      const unsubscribe = auth.onAuthStateChanged(async (user) => {
-        unsubscribe();
+      const unsubscribe = auth.onAuthStateChanged(
+        async (user) => {
+          unsubscribe();
 
-        if (user) {
-          const serializedUser: SerializedUser = user.toJSON() as SerializedUser;
-          resolve({ user: this.applyTimersToUser(serializedUser) });
-        } else {
-          auth.getRedirectResult().then((credential) => {
-            if (credential) {
-              const serializedUser: SerializedUser = credential.user?.toJSON() as SerializedUser;
-              resolve({ user: this.applyTimersToUser(serializedUser) });
-            } else {
-              reject();
-            }
-          }).catch(() => {
-            reject();
-          });
-        }
-      }, () => {
-        reject();
-        unsubscribe();
-      });
+          if (user) {
+            const serializedUser: SerializedUser =
+              user.toJSON() as SerializedUser;
+            resolve({ user: this.applyTimersToUser(serializedUser) });
+          } else {
+            auth
+              .getRedirectResult()
+              .then((credential) => {
+                if (credential) {
+                  const serializedUser: SerializedUser =
+                    credential.user?.toJSON() as SerializedUser;
+                  resolve({ user: this.applyTimersToUser(serializedUser) });
+                } else {
+                  reject();
+                }
+              })
+              .catch(() => {
+                reject();
+              });
+          }
+        },
+        () => {
+          reject();
+          unsubscribe();
+        },
+      );
     });
   }
 }
