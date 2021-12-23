@@ -23,6 +23,12 @@ login_form:
   sign_in: Вход
   forgot_password: Забыли свой пароль?
 
+password_reset_form:
+  send_recovery_email: Отправить письмо с кодом восстановления
+  recovery_code: Код восстановления
+  new_password: Новый пароль
+  update_password: Изменить пароль
+
 registration_form:
   birthday: Год рождения
   birthday_placeholder: ГГГГ
