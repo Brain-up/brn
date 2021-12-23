@@ -241,12 +241,14 @@ internal class UserDetailControllerTest {
     internal fun `should get doctor assigned to patient`() {
         // GIVEN
         val patientId: Long = 1
-        val doctor = UserAccountResponse(
-            id = patientId,
-            name = "testName",
-            email = "email",
-            gender = Gender.FEMALE,
-            bornYear = 2000
+        val doctor = listOf(
+            UserAccountResponse(
+                id = patientId,
+                name = "testName",
+                email = "email",
+                gender = Gender.FEMALE,
+                bornYear = 2000
+            )
         )
         every { doctorService.getDoctorAssignedToPatient(patientId) } returns doctor
 
@@ -262,12 +264,13 @@ internal class UserDetailControllerTest {
     internal fun `should delete doctor from patient`() {
         // GIVEN
         val patientId: Long = 1
-        every { doctorService.deleteDoctorFromPatientAsPatient(patientId) } returns Unit
+        val doctorId: Long = 4
+        every { doctorService.deleteDoctorFromPatientAsPatient(doctorId, patientId) } returns Unit
 
         // WHEN
-        userDetailController.deleteDoctorFromPatient(patientId)
+        userDetailController.deleteDoctorFromPatient(patientId, doctorId)
 
         // THEN
-        verify { doctorService.deleteDoctorFromPatientAsPatient(patientId) }
+        verify { doctorService.deleteDoctorFromPatientAsPatient(doctorId, patientId) }
     }
 }

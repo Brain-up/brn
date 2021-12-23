@@ -18,6 +18,7 @@ import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.assertj.core.api.Assertions
+import org.hibernate.validator.internal.util.CollectionHelper
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -118,7 +119,13 @@ class UserDetailsControllerIT : BaseIT() {
         val user = insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            objectMapper.writeValueAsString(
+                HeadphonesDto(
+                    name = "first",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_NO_BLUETOOTH
+                )
+            )
         val resultAction = mockMvc.perform(
             post("$baseUrl/${user.id}/headphones")
                 .content(body)
@@ -134,7 +141,13 @@ class UserDetailsControllerIT : BaseIT() {
         insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            objectMapper.writeValueAsString(
+                HeadphonesDto(
+                    name = "first",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_NO_BLUETOOTH
+                )
+            )
         val resultAction = mockMvc.perform(
             post("$baseUrl/current/headphones")
                 .content(body)
@@ -151,7 +164,13 @@ class UserDetailsControllerIT : BaseIT() {
         insertUser()
         // WHEN
         val body =
-            objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
+            objectMapper.writeValueAsString(
+                HeadphonesDto(
+                    name = "first",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_NO_BLUETOOTH
+                )
+            )
         val resultAction = mockMvc.perform(
             post("$baseUrl/current/headphones")
                 .content(body)
@@ -291,14 +310,19 @@ class UserDetailsControllerIT : BaseIT() {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 email = email_,
-                doctor = doctor_
+                doctorSet = CollectionHelper.asSet(doctor_)
             )
         )
 
     private fun insertThreeHeadphonesForUser(user: UserAccount) {
         headphonesRepository.saveAll(
             listOf(
-                Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH, userAccount = user),
+                Headphones(
+                    name = "first",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_NO_BLUETOOTH,
+                    userAccount = user
+                ),
                 Headphones(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, userAccount = user),
                 Headphones(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user)
             )

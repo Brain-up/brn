@@ -54,10 +54,10 @@ class DoctorService(private val userAccountService: UserAccountService) {
             }
         }
 
-        userAccountService.removeDoctorFromPatient(patientId)
+        userAccountService.removeDoctorFromPatient(patientId, doctorId)
     }
 
-    fun deleteDoctorFromPatientAsPatient(patientId: Long) {
+    fun deleteDoctorFromPatientAsPatient(patientId: Long, doctorId: Long) {
         val currentUser = userAccountService.getCurrentUser().toDto()
         val patient = userAccountService.findUserById(patientId)
 
@@ -66,7 +66,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
         if (!isAdmin(currentUser) && currentUser.id != patientId) {
             throw IllegalArgumentException("It is forbidden to remove a doctor from another patient")
         }
-        userAccountService.removeDoctorFromPatient(patientId)
+        userAccountService.removeDoctorFromPatient(patientId, doctorId)
     }
 
     fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse> {
@@ -76,15 +76,13 @@ class DoctorService(private val userAccountService: UserAccountService) {
         return userAccountService.getPatientsForDoctor(doctorId)
     }
 
-    fun getDoctorAssignedToPatient(patientId: Long): UserAccountResponse {
-        val patient = userAccountService.findUserById(patientId)
+    fun getDoctorAssignedToPatient(patientId: Long): List<UserAccountResponse> {
         val currentUser = userAccountService.getCurrentUser().toDto()
         return when {
             !isAdmin(currentUser) && currentUser.id != patientId -> {
                 throw IllegalArgumentException("It is forbidden to get a doctor from another patient")
             }
-            patient.doctorId == null -> throw IllegalArgumentException("No doctor found")
-            else -> userAccountService.findUserById(patient.doctorId!!)
+            else -> userAccountService.getDoctorsForPatient(patientId)
         }
     }
 

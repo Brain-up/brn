@@ -26,6 +26,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.assertj.core.api.Assertions.assertThat
+import org.hibernate.validator.internal.util.CollectionHelper
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -521,12 +522,13 @@ internal class UserAccountServiceTest {
         fun `should remove doctor from patient`() {
             // GIVEN
             val userId: Long = 1
-            val opDoctor = Optional.of(userAccount.apply { doctor = doctorAccount })
+            val doctorId: Long = 4
+            val opDoctor = Optional.of(userAccount.apply { doctorSet = CollectionHelper.asSet(doctorAccount) })
             every { userAccountRepository.findUserAccountById(userId) } returns opDoctor
             every { userAccountRepository.save(any()) } returns userAccount
 
             // WHEN
-            userAccountService.removeDoctorFromPatient(userId)
+            userAccountService.removeDoctorFromPatient(userId, doctorId)
 
             // THEN
             verify { userAccountRepository.findUserAccountById(userId) }

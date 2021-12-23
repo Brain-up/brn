@@ -19,7 +19,6 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 @Entity
@@ -47,10 +46,15 @@ data class UserAccount(
     var avatar: String? = null,
     var photo: String? = null,
     var description: String? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
-    var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var headphones: MutableSet<Headphones> = hashSetOf()
+    var headphones: MutableSet<Headphones> = hashSetOf(),
+    @ManyToMany(cascade = [(CascadeType.MERGE)])
+    @JoinTable(
+        name = "doctor_patient_mpg",
+        joinColumns = [JoinColumn(name = "patient_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "doctor_id", referencedColumnName = "id")]
+    )
+    var doctorSet: MutableSet<UserAccount> = hashSetOf()
 ) {
     var password: String? = null
 
@@ -65,9 +69,17 @@ data class UserAccount(
     )
     var authoritySet: MutableSet<Authority> = hashSetOf()
 
+    @ManyToMany(cascade = [(CascadeType.MERGE)])
+    @JoinTable(
+        name = "doctor_patient_mpg",
+        joinColumns = [JoinColumn(name = "doctor_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "patient_id", referencedColumnName = "id")]
+    )
+    var patientSet: MutableSet<UserAccount> = hashSetOf()
+
     override fun toString(): String {
-        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
-            " bornYear=$bornYear, gender=$gender, description=$description, doctor=$doctor)"
+        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email', " +
+            "bornYear=$bornYear, gender=$gender, description=$description)"
     }
 
     fun toDto() = UserAccountResponse(
@@ -85,8 +97,7 @@ data class UserAccount(
         description = description,
         headphones = headphones
             .map(Headphones::toDto)
-            .toHashSet(),
-        doctorId = doctor?.id
+            .toHashSet()
     ).also {
         it.authorities = this.authoritySet
             .map(Authority::authorityName)

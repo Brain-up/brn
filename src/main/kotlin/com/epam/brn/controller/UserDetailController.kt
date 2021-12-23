@@ -102,13 +102,12 @@ class UserDetailController(
 
     @GetMapping("/current/{patientId}/doctor")
     @ApiOperation("Get patient's doctor")
-    fun getDoctorAssignedToPatient(@PathVariable patientId: Long) =
-        ResponseEntity.ok()
-            .body(BaseSingleObjectResponseDto(data = doctorService.getDoctorAssignedToPatient(patientId)))
+    fun getDoctorAssignedToPatient(@PathVariable patientId: Long): ResponseEntity<BaseResponseDto> =
+        ResponseEntity.ok(BaseResponseDto(data = doctorService.getDoctorAssignedToPatient(patientId)))
 
-    @DeleteMapping("/current/{patientId}/doctor")
+    @DeleteMapping("/current/{patientId}/doctor/{doctorId}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Delete doctor from patient")
-    fun deleteDoctorFromPatient(@PathVariable patientId: Long) =
-        doctorService.deleteDoctorFromPatientAsPatient(patientId)
+    fun deleteDoctorFromPatient(@PathVariable patientId: Long, @PathVariable doctorId: Long) =
+        doctorService.deleteDoctorFromPatientAsPatient(patientId, doctorId)
 }

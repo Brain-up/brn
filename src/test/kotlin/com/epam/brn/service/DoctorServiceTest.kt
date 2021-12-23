@@ -51,7 +51,7 @@ internal class DoctorServiceTest {
         every { userAccountService.findUserById(fakeDoctorUser.id!!) } returns fakeDoctorUser
 
         every { userAccountService.updateDoctorForPatient(any(), any()) } returns mockk()
-        every { userAccountService.removeDoctorFromPatient(any()) } returns mockk()
+        every { userAccountService.removeDoctorFromPatient(any(), any()) } returns mockk()
     }
 
     // =================================================================================================================
@@ -139,7 +139,7 @@ internal class DoctorServiceTest {
         doctorService.deleteDoctorFromPatientAsDoctor(doctor.id!!, user1.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -154,7 +154,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -169,7 +169,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -181,7 +181,7 @@ internal class DoctorServiceTest {
         doctorService.deleteDoctorFromPatientAsDoctor(doctor.id!!, user1.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     // =================================================================================================================
@@ -193,10 +193,10 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns user1.also { it.doctorId = doctor.id }
 
         // WHEN
-        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!)
+        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!, doctor.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -205,10 +205,10 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns admin
 
         // WHEN
-        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!)
+        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!, doctor.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     // =================================================================================================================
@@ -272,7 +272,7 @@ internal class DoctorServiceTest {
 
         // THEN
         verify { userAccountService.findUserById(doctor.id!!) }
-        doctorAssignedToPatient.id shouldBe doctor.id!!
+        doctorAssignedToPatient[0].id shouldBe doctor.id!!
     }
 
     @Test
@@ -315,7 +315,7 @@ internal class DoctorServiceTest {
 
         // THEN
         verify { userAccountService.findUserById(doctor.id!!) }
-        doctorAssignedToPatient.id shouldBe doctor.id!!
+        doctorAssignedToPatient[0].id shouldBe doctor.id!!
     }
 
     // =================================================================================================================
