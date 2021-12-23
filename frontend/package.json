@@ -26,7 +26,8 @@
     "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
     "remote": "ember s --secure-proxy=false --proxy=http://ecse005003f1.epam.com/",
     "remote:prod": "ember s --secure-proxy=true --proxy=https://brainup.site/",
-    "mirage": "ember s"
+    "mirage": "ember s",
+    "postinstall": "patch-package"
   },
   "husky": {
     "hooks": {
@@ -64,6 +65,7 @@
     "ember-cli-postcss/merge": "2.1.1",
     "*/@babel/types/lodash": ">=4.17.19",
     "**/glob-parent": ">=5.1.2",
+    "**/watch-detector": "1.0.1",
     "**/trim-newlines": ">=3.0.1",
     "**/ws": ">=7.4.6",
     "*/elliptic": "^6.5.3",
@@ -74,7 +76,6 @@
     "**/path-parse": ">=1.0.7",
     "ember-cli/testem": "3.4.2",
     "**/ansi-regex": "5.0.1"
-
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
@@ -115,7 +116,7 @@
     "ember-cli-htmlbars": "^5.3.1",
     "ember-cli-inject-live-reload": "^2.0.2",
     "ember-cli-mirage": "^1.1.8",
-    "ember-cli-page-object": "^1.17.5",
+    "ember-cli-page-object": "^1.17.9",
     "ember-cli-postcss": "^7.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.1",
@@ -172,13 +173,15 @@
     "firebase": "^8.10.0",
     "idle-js": "^1.2.0",
     "luxon": "^1.27.0",
+    "patch-package": "6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "stylelint": "^13.6.1",
     "stylelint-config-recommended": "^3.0.0",
     "tailwindcss": "^1.9.6",
     "tone": "^14.7.60"
   },
   "volta": {
-    "node": "12.22.1",
+    "node": "14.18.2",
     "yarn": "1.22.10"
   }
 }
