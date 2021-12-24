@@ -64,6 +64,9 @@ internal class UserAccountServiceTest {
     @MockK(relaxed = true)
     lateinit var doctorAccount: UserAccount
 
+    @MockK(relaxed = true)
+    lateinit var patientAccount: UserAccount
+
     @MockK
     lateinit var userAccountResponse: UserAccountResponse
 
@@ -524,7 +527,8 @@ internal class UserAccountServiceTest {
             val userId: Long = 1
             val doctorId: Long = 4
             val opDoctor = Optional.of(userAccount.apply { doctorSet = CollectionHelper.asSet(doctorAccount) })
-            every { userAccountRepository.findUserAccountById(userId) } returns opDoctor
+            every { userAccountRepository.findUserAccountById(userId) } returns Optional.of(userAccount)
+            every { userAccountRepository.findUserAccountById(doctorId) } returns opDoctor
             every { userAccountRepository.save(any()) } returns userAccount
 
             // WHEN
@@ -540,15 +544,14 @@ internal class UserAccountServiceTest {
             // GIVEN
             val doctorId: Long = 2
             val patients = listOf(userAccount, userAccount)
+            every { doctorAccount.patientSet } returns mutableSetOf(userAccount, patientAccount)
             every { userAccountRepository.findUserAccountById(doctorId) } returns Optional.of(doctorAccount)
-            every { userAccountRepository.findUserAccountsByDoctor(doctorAccount) } returns patients
 
             // WHEN
             val patientsForDoctor = userAccountService.getPatientsForDoctor(doctorId)
 
             // THEN
             verify { userAccountRepository.findUserAccountById(doctorId) }
-            verify { userAccountRepository.findUserAccountsByDoctor(doctorAccount) }
 
             patientsForDoctor.size shouldBe patients.size
         }

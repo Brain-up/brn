@@ -265,12 +265,12 @@ internal class UserDetailControllerTest {
         // GIVEN
         val patientId: Long = 1
         val doctorId: Long = 4
-        every { doctorService.deleteDoctorFromPatientAsPatient(doctorId, patientId) } returns Unit
+        every { doctorService.deleteDoctorFromPatientAsPatient(patientId, doctorId) } returns Unit
 
         // WHEN
         userDetailController.deleteDoctorFromPatient(patientId, doctorId)
 
         // THEN
-        verify { doctorService.deleteDoctorFromPatientAsPatient(doctorId, patientId) }
+        verify { doctorService.deleteDoctorFromPatientAsPatient(patientId, doctorId) }
     }
 }

@@ -133,9 +133,9 @@ class UserAccountServiceImpl(
     }
 
     override fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount {
-        val doctorAccount = findUserEntityById(doctorId)
-        doctorAccount.patientSet.add(findUserEntityById(userId))
-        return userAccountRepository.save(doctorAccount)
+        val userAccount = findUserEntityById(userId)
+        userAccount.doctorSet.add(findUserEntityById(doctorId))
+        return userAccountRepository.save(userAccount)
     }
 
     override fun removeDoctorFromPatient(patientId: Long, doctorId: Long): UserAccount {

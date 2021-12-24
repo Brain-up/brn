@@ -27,7 +27,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
             isDoctor(patient) -> {
                 throw IllegalArgumentException("The patient you are trying to add is actually a doctor")
             }
-            patient.doctorId != null -> {
+            patient.doctors != null && patient.doctors!!.contains(doctorId) -> {
                 throw IllegalArgumentException(
                     """The patient already has a doctor. You cannot replace another doctor by yourself. 
                     |Please contact the patient (or admin, or another doctor) 
@@ -49,7 +49,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
             !isAdmin(currentUser) && currentUser.id != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
-            !isAdmin(currentUser) && patient.doctorId != doctorId -> {
+            !isAdmin(currentUser) && !patient.doctors?.contains(doctorId)!! -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
         }
@@ -77,11 +77,13 @@ class DoctorService(private val userAccountService: UserAccountService) {
     }
 
     fun getDoctorAssignedToPatient(patientId: Long): List<UserAccountResponse> {
+        val patient = userAccountService.findUserById(patientId)
         val currentUser = userAccountService.getCurrentUser().toDto()
         return when {
             !isAdmin(currentUser) && currentUser.id != patientId -> {
                 throw IllegalArgumentException("It is forbidden to get a doctor from another patient")
             }
+            patient.doctors == null -> throw IllegalArgumentException("No doctor found")
             else -> userAccountService.getDoctorsForPatient(patientId)
         }
     }

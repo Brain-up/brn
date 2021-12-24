@@ -21,7 +21,7 @@ data class UserAccountResponse(
     val photo: String? = null,
     val description: String? = null,
     var headphones: Set<HeadphonesDto>? = null,
-    var doctorId: Long? = null
+    var doctors: MutableSet<Long>? = mutableSetOf()
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
 }
