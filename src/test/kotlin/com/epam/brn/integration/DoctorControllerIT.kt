@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import javax.transaction.Transactional
 
 @WithMockUser(username = "currentDoctor@default.ru", roles = ["DOCTOR"])
 class DoctorControllerIT : BaseIT() {
@@ -54,6 +55,7 @@ class DoctorControllerIT : BaseIT() {
         authorityRepository.deleteAll()
     }
 
+    @Transactional
     @Test
     fun `should add patient to doctor`() {
         // GIVEN
@@ -73,6 +75,7 @@ class DoctorControllerIT : BaseIT() {
         userAccountRepository.findUserAccountById(user1.id!!).get().doctorSet.elementAt(0).id shouldBe currentDoctor.id
     }
 
+    @Transactional
     @Test
     fun `should not add patient to doctor if patient is doctor`() {
         // GIVEN
@@ -89,9 +92,10 @@ class DoctorControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isBadRequest)
 
-        userAccountRepository.findUserAccountById(anotherDoctor.id!!).get().doctorSet shouldBe null
+        userAccountRepository.findUserAccountById(anotherDoctor.id!!).get().doctorSet shouldBe emptySet()
     }
 
+    @Transactional
     @Test
     @WithMockUser(username = "user1@default.ru", roles = ["USER"])
     fun `should not add patient if current user is not a doctor`() {
@@ -110,7 +114,7 @@ class DoctorControllerIT : BaseIT() {
         resultAction
             .andExpect(status().isForbidden)
 
-        userAccountRepository.findUserAccountById(user2.id!!).get().doctorSet shouldBe null
+        userAccountRepository.findUserAccountById(user2.id!!).get().doctorSet shouldBe emptySet()
     }
 
     @Test
@@ -137,6 +141,7 @@ class DoctorControllerIT : BaseIT() {
         users.map { it.email }.contains(user2.email) shouldBe true
     }
 
+    @Transactional
     @Test
     fun `should remove patient from doctor`() {
         // GIVEN
@@ -151,6 +156,6 @@ class DoctorControllerIT : BaseIT() {
         val user1FromDb = userAccountRepository.findUserAccountById(user1.id!!).get()
         user1FromDb.email shouldBe user1.email
         user1FromDb.id shouldBe user1.id
-        user1FromDb.doctorSet shouldBe null
+        user1FromDb.doctorSet shouldBe emptySet()
     }
 }

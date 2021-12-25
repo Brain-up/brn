@@ -152,7 +152,7 @@ internal class DoctorServiceTest {
 
         // WHEN
         assertThrows<IllegalArgumentException> {
-            doctorService.deleteDoctorFromPatientAsDoctor(fakeDoctorUser.id!!, user1.id!!)
+            doctorService.deleteDoctorFromPatientAsDoctor(doctor.id!!, user1.id!!)
         }
 
         // THEN

@@ -49,7 +49,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
             !isAdmin(currentUser) && currentUser.id != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
-            !isAdmin(currentUser) && !patient.doctors?.contains(doctorId)!! -> {
+            !isAdmin(currentUser) && patient.doctors != null && !patient.doctors?.contains(doctorId)!! -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
         }
