@@ -49,13 +49,16 @@ class DoctorService(private val userAccountService: UserAccountService) {
             !isAdmin(currentUser) && currentUser.id != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
-            !isAdmin(currentUser) && !patient.doctors.isNullOrEmpty() && !patient.doctors?.contains(doctorId)!! -> {
+            !isAdmin(currentUser) && isDoctorSubscribePatient(patient, doctorId) -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
         }
 
         userAccountService.removeDoctorFromPatient(patientId, doctorId)
     }
+
+    fun isDoctorSubscribePatient(patient: UserAccountResponse, doctorId: Long): Boolean =
+        !patient.doctors.isNullOrEmpty() && !patient.doctors?.contains(doctorId)!!
 
     fun deleteDoctorFromPatientAsPatient(patientId: Long, doctorId: Long) {
         val currentUser = userAccountService.getCurrentUser().toDto()
