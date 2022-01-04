@@ -62,7 +62,7 @@ describe('AdminComponent', () => {
 
   it('should get logged in user name', () => {
     const authTokenBase64 = JSON.stringify(userCredential);
-    ALocaleStorage['AUTH_TOKEN'].set(authTokenBase64);
+    ALocaleStorage.AUTH_TOKEN.set(authTokenBase64);
     component.ngOnInit();
     expect(component.adminName.user.displayName).toBe('Admin name');
   });
