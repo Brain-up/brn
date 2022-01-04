@@ -1,4 +1,4 @@
-import { User, UserMapped } from '@admin/models/user.model';
+import { User } from '@admin/models/user.model';
 import { Dayjs } from 'dayjs';
 import { AdminApiService } from './admin-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -173,54 +173,6 @@ describe('AdminApiService', () => {
     expect(actualError.status).toBe(status);
     expect(actualError.statusText).toBe(statusText);
   });
-
-  // it('should call get user yearly statistics', () => {
-  //   let userYearlyStatistics: UserWeeklyStatistics[] | undefined;
-  //   const url = `${baseUrlV2}/study/year?userId=${userId}&from=${from.format(
-  //     'YYYY-MM-DDTHH:mm:ss',
-  //   )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
-
-  //   service.getUserYearlyStatistics(userId, from, to).subscribe((data) => {
-  //     userYearlyStatistics = data;
-  //   });
-
-  //   const request = controller.expectOne(url);
-  //   expect(request.request.method).toEqual('GET');
-  //   request.flush('', { status: 204, statusText: 'No Data' });
-  //   controller.verify();
-  // });
-
-  // it('should check call errors on get user yearly statistics', () => {
-  //   const errorEvent = new ErrorEvent('API error');
-  //   const status = 500;
-  //   const statusText = 'Server error';
-  //   const url = `${baseUrlV2}/study/year?userId=${userId}&from=${from.format(
-  //     'YYYY-MM-DDTHH:mm:ss',
-  //   )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
-
-  //   let actualError: HttpErrorResponse | undefined;
-
-  //   service.getUserYearlyStatistics(userId, from, to).subscribe(
-  //     () => {
-  //       fail('Next handler must not be called');
-  //     },
-  //     (error) => {
-  //       actualError = error;
-  //     },
-  //     () => {
-  //       fail('Complete handler must not be called');
-  //     },
-  //   );
-
-  //   controller.expectOne(url).error(errorEvent, { status, statusText });
-
-  //   if (!actualError) {
-  //     throw new Error('Error needs to be defined');
-  //   }
-  //   expect(actualError.error).toBe(errorEvent);
-  //   expect(actualError.status).toBe(status);
-  //   expect(actualError.statusText).toBe(statusText);
-  // });
 
   it('should call get users', () => {
     let usersData: User[] | undefined;

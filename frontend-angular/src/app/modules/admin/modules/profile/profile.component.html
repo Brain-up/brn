@@ -5,12 +5,12 @@
     </div>
 
     <div class="info">
-      <mat-label class="label">name</mat-label>
+      <mat-label class="label">{{ 'Admin.Modules.Profile.Name' | translate }}</mat-label>
       <mat-form-field>
         <input matInput disabled value="{{ adminData.user.displayName }}" />
       </mat-form-field>
 
-      <mat-label class="label">email</mat-label>
+      <mat-label class="label">{{ 'Admin.Modules.Profile.Email' | translate }}</mat-label>
       <mat-form-field>
         <input matInput disabled value="{{ adminData.user.email }}" />
       </mat-form-field>

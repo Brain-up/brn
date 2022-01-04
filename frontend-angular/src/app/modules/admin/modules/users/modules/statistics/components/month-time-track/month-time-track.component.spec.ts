@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import * as dayjs from 'dayjs';
-import { MonthTimeTrackComponent } from './month-time-track.component';
 import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MonthTimeTrackComponent } from './month-time-track.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MonthTimeTrackComponent', () => {
   let fixture: ComponentFixture<MonthTimeTrackComponent>;

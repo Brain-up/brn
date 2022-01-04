@@ -7,6 +7,10 @@
       "Users": "Пользователи"
     },
     "Modules": {
+      "Profile": {
+        "Name": "Имя",
+        "Email": "Электронное письмо"
+      },
       "UploadFile": {
         "Links": {
           "LoadConfigurationFiles": "Загрузить конфигурационные файлы",

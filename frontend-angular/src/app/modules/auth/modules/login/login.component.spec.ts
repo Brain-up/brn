@@ -1,19 +1,11 @@
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
-import {
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { LoginComponent } from './login.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SnackBarService } from '@root/services/snack-bar.service';
-import { TokenService } from '@root/services/token.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { of } from 'rxjs';
-import firebase from 'firebase';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 require('firebase/auth');
 
 describe('LoginComponent', () => {
@@ -23,7 +15,6 @@ describe('LoginComponent', () => {
   const mockSnackbar = jasmine.createSpyObj(['open']);
 
   const mockAuthenticationApiService: any = {
-    // loginWithEmail: () => true,
     loginWithEmail: () => {
       return { user: 'test user', idToken: 'token' };
     },

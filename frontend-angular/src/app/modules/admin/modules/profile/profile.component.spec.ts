@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PipesModule } from '@shared/pipes/pipes.module';
-
 import { ProfileComponent } from './profile.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -10,7 +10,7 @@ describe('ProfileComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProfileComponent],
-      imports: [PipesModule],
+      imports: [PipesModule, TranslateModule.forRoot()],
     }).compileComponents();
   });
 

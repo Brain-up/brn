@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { PipesModule } from '@shared/pipes/pipes.module';
 import { ProfileComponent } from './profile.component';
 import { ProfileRoutingModule } from './profile-routing.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ProfileComponent],
@@ -16,6 +17,7 @@ import { ProfileRoutingModule } from './profile-routing.module';
     MatInputModule,
     PipesModule,
     ProfileRoutingModule,
+    TranslateModule
   ],
 })
 export class ProfileModule {}

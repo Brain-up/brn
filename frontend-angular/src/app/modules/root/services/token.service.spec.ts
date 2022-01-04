@@ -1,4 +1,4 @@
-import { AuthToken, UserCredential } from '../models/auth-token';
+import { AuthToken } from '../models/auth-token';
 import { TestBed } from '@angular/core/testing';
 import { TokenService } from './token.service';
 

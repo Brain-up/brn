@@ -7,6 +7,10 @@
       "Users": "Users"
     },
     "Modules": {
+      "Profile": {
+        "Name": "Name",
+        "Email": "Email"
+      },
       "UploadFile": {
         "Links": {
           "LoadConfigurationFiles": "Load configuration files",
