@@ -89,7 +89,7 @@
                 "Title [year]": "Общее время занятий по месяцам за <span>{{ year }}</span> год"
               },
               "MonthTimeTrackItem": {
-                "Days [days]": "за <b>{{ days }}<b> дней"
+                "Days [days]": "за {{ days }} дней"
               },
               "StatisticsInfoDialog": {
                 "Buttons": {

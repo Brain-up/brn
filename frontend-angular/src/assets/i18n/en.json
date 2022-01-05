@@ -90,7 +90,7 @@
                 "Title [year]": "Total class time by months for {{ year }}"
               },
               "MonthTimeTrackItem": {
-                "Days [days]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days {{ days }}"
+                "Days [days]": "{{ days }} days"
               },
               "StatisticsInfoDialog": {
                 "Buttons": {

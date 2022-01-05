@@ -6,6 +6,11 @@
   border-radius: $border-radius-8;
   cursor: pointer;
 
+  .empty-item {
+    background-color: $white;
+    border: 1px solid $hardly-grey-color;
+  }
+
   &.selected {
     background: $brain-gradient;
 
@@ -19,7 +24,7 @@
 
   .calendar {
     color: $charcoal-grey-color;
-    width: 70px;
+    width: 72px;
     border-radius: $border-radius-8;
 
     .header {
