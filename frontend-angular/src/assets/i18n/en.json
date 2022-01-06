@@ -7,6 +7,25 @@
       "Users": "Users"
     },
     "Modules": {
+      "Exercises": {
+        "Groups": "Groups",
+        "Language": "Language",
+        "Series": "Series",
+        "Topics": "Topics",
+        "AllGroups": "All groups",
+        "AllTopics": "All topics",
+        "AllSeries": "All series",
+        "Table": {
+          "ExerciseId": "Exercise ID",
+          "Series": "Series",
+          "Name": "Name",
+          "Level": "Level",
+          "Noise": "Noise",
+          "NoiseSound": "Noise sound",
+          "Tasks": "Tasks",
+          "Enable": "Enable"
+        }
+      },
       "Profile": {
         "Name": "Name",
         "Email": "Email"
@@ -60,7 +79,9 @@
               "WorkingDaysInLastMonth": "Days in last month"
             },
             "NameColumn": {
-              "CommonInfo [years, gender]": "{{ years }} years old, {{ gender }}"
+              "CommonInfo [years, gender]": "{{ years }} years old",
+              "Female": "Female",
+              "Male": "Male"
             },
             "VisitColumn": {
               "Time [hours]": "{{ hours }} hours"
