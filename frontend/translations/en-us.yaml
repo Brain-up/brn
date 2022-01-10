@@ -3,6 +3,7 @@ header:
   statistics: Statistics
   logout: Logout
   about: About
+  more: More...
 
 login:
   title: Login
