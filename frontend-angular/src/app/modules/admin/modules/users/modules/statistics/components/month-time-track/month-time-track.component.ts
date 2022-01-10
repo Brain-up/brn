@@ -1,3 +1,7 @@
+import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
+import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
+import { secondsTo } from '@shared/helpers/seconds-to';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import {
   ChangeDetectionStrategy,
@@ -6,11 +10,6 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { MONTHS_IN_YEAR } from '@shared/constants/common-constants';
-import { secondsTo } from '@shared/helpers/seconds-to';
-import * as dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
-import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
 
 @Component({
   selector: 'app-month-time-track',
@@ -33,20 +32,19 @@ export class MonthTimeTrackComponent {
       return;
     }
 
-    this.monthTimeTrackItemsData = data.map((rawItem) => {
+    const monthsData: IMonthTimeTrackItemData[] = data.map((rawItem) => {
       const date = dayjs(rawItem.date);
-
       return {
-        progress: rawItem.progress,
-        time: secondsTo(rawItem.exercisingTimeSeconds, 'h:m:s'),
+        date,
         days: rawItem.exercisingDays,
         month: date.format('MMMM'),
+        progress: rawItem.progress,
+        time: secondsTo(rawItem.exercisingTimeSeconds, 'h:m:s'),
         year: date.year(),
-        date,
       };
     });
-    console.log('month data', data);
-    console.log('month', this.monthTimeTrackItemsData);
+
+    this.fillEmptyMonths(monthsData);
   }
 
   @Output()
@@ -58,8 +56,33 @@ export class MonthTimeTrackComponent {
   @Output()
   public loadNextYearEvent = new EventEmitter<void>();
 
-  public selectMonth(date: Dayjs): void {
-    this.selectMonthEvent.emit(date.clone());
+  private fillEmptyMonths(monthsData: IMonthTimeTrackItemData[]): void {
+    const allmonths = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    this.monthTimeTrackItemsData = [];
+
+    allmonths.forEach((month) => {
+      const item = monthsData.find(
+        (monthItem) => monthItem.date.month() === month,
+      );
+      if (item) {
+        this.monthTimeTrackItemsData.push(item);
+      } else {
+        this.monthTimeTrackItemsData.push({
+          date: dayjs(new Date(dayjs().year(), month, 1)),
+          days: 0,
+          month: null,
+          progress: null,
+          time: '00:00:00',
+          year: null,
+        });
+      }
+    });
+  }
+
+  public selectMonth(data: IMonthTimeTrackItemData): void {
+    if (data.days) {
+      this.selectMonthEvent.emit(data.date.clone());
+    }
   }
 
   public loadPrevYear(): void {
@@ -70,14 +93,14 @@ export class MonthTimeTrackComponent {
     if (!this.isAllowNextYear()) {
       return;
     }
-
     this.loadNextYearEvent.emit();
   }
 
-  public isSelectedMonth(date: Dayjs): boolean {
+  public isSelectedMonth(data: IMonthTimeTrackItemData): boolean {
     return (
-      date.year() === this.selectedMonth.year() &&
-      date.month() === this.selectedMonth.month()
+      data.date.year() === this.selectedMonth.year() &&
+      data.date.month() === this.selectedMonth.month() &&
+      data.days !== 0
     );
   }
 
@@ -85,7 +108,7 @@ export class MonthTimeTrackComponent {
     return this.selectedMonth.add(1, 'year').year() <= dayjs().year();
   }
 
-  public isIncompleteYear(): boolean {
-    return this.monthTimeTrackItemsData?.length < MONTHS_IN_YEAR;
+  public hasValidTrackItem(): boolean {
+    return this.monthTimeTrackItemsData.some(item => item.days !== 0);
   }
 }
