@@ -8,6 +8,8 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { WeekTimeTrackComponent } from './week-time-track.component';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
+import * as dayjs from 'dayjs';
+import { CompileTemplateMetadata } from '@angular/compiler';
 
 describe('WeekTimeTrackComponent', () => {
   let fixture: ComponentFixture<WeekTimeTrackComponent>;
@@ -49,4 +51,30 @@ describe('WeekTimeTrackComponent', () => {
     tick();
     expect(component.barData).toBe(data);
   }));
+
+  it('should isAllowNextMonth set to false', () => {
+    component.selectedMonth = dayjs();
+    component.isAllowNextMonth();
+    expect(component.isAllowNextMonth()).toBeFalsy();
+  });
+
+  it('should loadNextMonth not emit event', () => {
+    component.selectedMonth = dayjs();
+    const loadNextMonthEventSpy = spyOn(component.loadNextMonthEvent, 'emit');
+    component.loadNextMonth();
+    expect(loadNextMonthEventSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should loadNextMonth emit event', () => {
+    component.selectedMonth = dayjs().subtract(1, 'month');
+    const loadNextMonthEventSpy = spyOn(component.loadNextMonthEvent, 'emit');
+    component.loadNextMonth();
+    expect(loadNextMonthEventSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should loadPrevMonth emit event', () => {
+    const loadPrevMonthEventSpy = spyOn(component.loadPrevMonthEvent, 'emit');
+    component.loadPrevMonth();
+    expect(loadPrevMonthEventSpy).toHaveBeenCalledTimes(1);
+  });
 });

@@ -16,11 +16,17 @@
       </a>
     </div>
 
-    <div class="user">
-      <div class="icon">{{ 'Александра Василевская' | shortName }}</div>
-
-      <div class="label">Александра Василевская</div>
-    </div>
+    <a
+      routerLinkActive="active"
+      mat-flat-button
+      class="link"
+      [routerLink]="'/profile'"
+    >
+      <div class="admin">
+        <div class="avatar">{{ adminName?.user.displayName | shortName }}</div>
+        <div class="name">{{ adminName?.user.displayName }}</div>
+      </div>
+    </a>
 
     <div class="logout">
       <button mat-button (click)="logout()">

@@ -7,6 +7,29 @@
       "Users": "Пользователи"
     },
     "Modules": {
+      "Exercises": {
+        "Groups": "Группы",
+        "Language": "Язык",
+        "Series": "Серии",
+        "Topics": "Темы",
+        "AllGroups": "Все группы",
+        "AllTopics": "Все темы",
+        "AllSeries": "Все серии",
+        "Table": {
+          "ExerciseId": "Ид упражнения",
+          "Series": "Серии",
+          "Name": "Имя",
+          "Level": "Уровень",
+          "Noise": "Шум",
+          "NoiseSound": "Шумовой звук",
+          "Tasks": "Задачи",
+          "Enable": "Включить"
+        }
+      },
+      "Profile": {
+        "Name": "Имя",
+        "Email": "Электронное письмо"
+      },
       "UploadFile": {
         "Links": {
           "LoadConfigurationFiles": "Загрузить конфигурационные файлы",
@@ -47,19 +70,21 @@
         "Components": {
           "UsersTable": {
             "ColumnsName": {
-              "Favorite": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Favorite",
-              "FirstVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.FirstVisit",
-              "LastVisit": "Admin.Modules.Users.Components.UsersTable.ColumnsName.LastVisit",
-              "CurrentWeek": "Admin.Modules.Users.Components.UsersTable.ColumnsName.CurrentWeek",
-              "Name": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Name",
-              "Progress": "Admin.Modules.Users.Components.UsersTable.ColumnsName.Progress",
-              "WorkingDaysInLastMonth": "Admin.Modules.Users.Components.UsersTable.ColumnsName.WorkingDaysInLastMonth"
+              "Favorite": "Любимый",
+              "FirstVisit": "Первый визит",
+              "LastVisit": "Последнее посещение",
+              "CurrentWeek": "Текущая неделя",
+              "Name": "Имя",
+              "Progress": "Прогресс",
+              "WorkingDaysInLastMonth": "Дней в прошлом месяце"
             },
             "NameColumn": {
-              "CommonInfo [years, gender]": "Admin.Modules.Users.Components.UsersTable.NameColumn.CommonInfo {{ years}} , {{ gender }}"
+              "CommonInfo [years, gender]": " {{ years}} лет",
+              "Female": "Женский",
+              "Male": "Мужской"
             },
             "VisitColumn": {
-              "Time [hours]": "Admin.Modules.Users.Components.UsersTable.VisitColumn.Time {{ hours }}"
+              "Time [hours]": "{{ hours }} часов"
             }
           }
         },
@@ -71,6 +96,7 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
+              "Back": "Вернуться к пользователям",
               "WhatIsIt": "О чем говорит статистика",
               "Statistics": "Статистика",
               "Diagnostics": "Диагностика",
@@ -84,7 +110,7 @@
                 "Title [year]": "Общее время занятий по месяцам за <span>{{ year }}</span> год"
               },
               "MonthTimeTrackItem": {
-                "Days [days]": "за <b>{{ days }}<b> дней"
+                "Days [days]": "за {{ days }} дней"
               },
               "StatisticsInfoDialog": {
                 "Buttons": {

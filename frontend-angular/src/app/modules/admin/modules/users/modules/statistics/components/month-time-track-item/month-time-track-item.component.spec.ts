@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import * as dayjs from 'dayjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MonthTimeTrackItemComponent } from './month-time-track-item.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MonthTimeTrackItemComponent', () => {
   let fixture: ComponentFixture<MonthTimeTrackItemComponent>;
@@ -22,16 +22,16 @@ describe('MonthTimeTrackItemComponent', () => {
   describe('Selected class on host', () => {
     beforeEach(() => {
       component.data = {
-        progress: 'BAD',
-        time: '02:34:12',
+        date: dayjs(),
         days: 23,
         month: 'September',
+        progress: 'BAD',
+        time: '02:34:12',
         year: 2021,
-        date: dayjs(),
       };
     });
 
-    it('should has', () => {
+    it('should element have class', () => {
       component.isSelected = true;
 
       fixture.detectChanges();
