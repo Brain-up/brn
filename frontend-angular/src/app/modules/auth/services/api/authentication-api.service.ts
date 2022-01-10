@@ -55,7 +55,7 @@ export class AuthenticationApiService {
     }
   }
 
-  public googleLogin(): any {
+  public googleLogin(): unknown {
     const provider = new firebase.auth.GoogleAuthProvider();
     return this.oAuthLogin(provider)
       .then(() => {

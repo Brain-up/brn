@@ -20,6 +20,12 @@ export class SvgIconsRegistrarService {
         ),
       )
       .addSvgIcon(
+        'expand-more',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'expand-more.svg',
+        ),
+      )
+      .addSvgIcon(
         'file-download',
         this.domSanitizer.bypassSecurityTrustResourceUrl(
           SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'file-download.svg',
