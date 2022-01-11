@@ -52,13 +52,13 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.userId = Number(this.activatedRoute.snapshot.params.userId);
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getUserInfo();
     this.getWeekTimeTrackData();
     this.getMonthTimeTrackData();
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.statisticsInfoDialogRef?.close();
     this.destroyer$.next();
     this.destroyer$.complete();

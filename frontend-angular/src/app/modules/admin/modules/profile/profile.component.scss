@@ -1,0 +1,45 @@
+@import 'colors';
+@import 'variables';
+
+.profile {
+  display: flex;
+  flex-direction: column;
+
+  .avatar-card {
+    align-items: center;
+    background: $half-gradient;
+    display: flex;
+    height: 160px;
+    justify-content: center;
+
+    .avatar {
+      align-items: center;
+      background-color: $latter-grey-color;
+      border-radius: 50%;
+      display: flex;
+      font-size: $font-size-16;
+      font-weight: 600;
+      height: 128px;
+      justify-content: center;
+      width: 128px;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 25%;
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      padding: $padding-48;
+
+      .label{
+          font-size: $font-size-14;
+          font-weight: bold;
+      }
+    }
+  }
+}

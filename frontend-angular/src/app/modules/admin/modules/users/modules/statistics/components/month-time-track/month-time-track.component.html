@@ -10,7 +10,7 @@
     <mat-icon svgIcon="left-arrow"></mat-icon>
   </button>
 
-  <div class="month-time-track-items-wrap" [class.incomplete-year]="isIncompleteYear()">
+  <div class="month-time-track-items-wrap">
     <mat-progress-bar *ngIf="isLoading; else dataTemplate" mode="indeterminate"></mat-progress-bar>
   </div>
 
@@ -19,14 +19,13 @@
   </button>
 </div>
 
-<!-- #region Templates -->
 <ng-template #dataTemplate>
-  <ng-container *ngIf="monthTimeTrackItemsData?.length; else emptyDataTemplate">
+  <ng-container *ngIf="hasValidTrackItem(); else emptyDataTemplate">
     <app-month-time-track-item
       *ngFor="let data of monthTimeTrackItemsData"
       [data]="data"
-      [isSelected]="isSelectedMonth(data.date)"
-      (click)="selectMonth(data.date)"
+      [isSelected]="isSelectedMonth(data)"
+      (click)="selectMonth(data)"
     ></app-month-time-track-item>
   </ng-container>
 </ng-template>
@@ -36,4 +35,3 @@
     {{ 'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.EmptyData' | translate }}
   </div>
 </ng-template>
-<!-- #endregion -->

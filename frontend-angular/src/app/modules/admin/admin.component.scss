@@ -15,11 +15,11 @@ $user-right-margin: 80px;
     width: 100%;
     padding: 0 $padding-64;
     justify-content: space-between;
-    background: #ffffff;
+    background: $white;
     box-shadow: 0 2px $header-bottom-border rgba(89, 71, 178, 0.15);
 
     * {
-      font-size: 16px;
+      font-size: $font-size-16;
       font-weight: 500;
     }
 
@@ -39,33 +39,31 @@ $user-right-margin: 80px;
       }
     }
 
-    .user {
-      flex-grow: 1;
-      height: 46px;
+    .admin {
+      align-items: center;
       display: flex;
-      justify-content: flex-end;
 
-      > div {
-        display: inline-block;
-      }
-
-      .icon {
-        width: $user-icon-size;
-        height: $user-icon-size;
-        background: $latter-grey-color;
-        border-radius: $user-icon-size;
-        margin-right: 16px;
+      .avatar {
+        align-items: center;
+        background-color: $latter-grey-color;
+        border-radius: 50%;
+        display: flex;
+        font-size: $font-size-16;
         font-weight: 600;
-        line-height: $user-icon-size;
-        text-align: center;
-        float: left;
+        height: 48px;
+        justify-content: center;
+        margin-right: $margin-12;
+        width: 48px;
       }
 
-      .label {
-        width: 130px;
+      .name {
+        max-width: 144px;
         font-weight: 400;
         white-space: normal;
-        line-height: 22px;
+        line-height: $font-size-16;
+        overflow-x: auto;
+        text-align: left;
+        text-overflow: ellipsis;
       }
     }
   }
