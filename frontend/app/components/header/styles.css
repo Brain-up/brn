@@ -55,6 +55,7 @@ a.active {
   }
 
 .dropdown input[type='checkbox'] {
+  cursor: pointer;
   display: block;
   height: 100%;
   left: 0px;
@@ -74,18 +75,18 @@ a.active {
   z-index: +0;
 }
 
-.dropdown ul {
+.dropdown div {
   background: #503dad;
   display: none;
   position: absolute;
   top: 58px;
 }
 
-.dropdown input[type='checkbox']:checked + ul {
+.dropdown input[type='checkbox']:checked + div {
   display: block;
 }
 
-.dropdown ul li {
+.dropdown a {
   color: #ffffff;
   display: block;
   min-width: 100px;
@@ -93,7 +94,7 @@ a.active {
   white-space: nowrap;
 }
 
-.dropdown ul li:hover {
-  background-color: #9f7aea;
+.dropdown a:hover {
   cursor: pointer;
+  opacity: 0.5;
 }

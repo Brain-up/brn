@@ -93,24 +93,24 @@
             EN
           </button>
         </span>
-        <a class="dropdown rounded-full">
+        <div class="dropdown rounded-full">
           <button
-            class="inline-block block px-2 sm:px-4 py-2 mr-0 sm:mr-4 font-bold tracking-wider uppercase rounded-full"
+            class="sm:px-4 sm:mr-4 block inline-block px-2 py-2 mr-0 font-bold tracking-wider uppercase rounded-full" type='button'
           >{{t "header.more"}}</button>
-          <label>
+          {{!-- <label> --}}
             <input type="checkbox" />
-            <ul>
-              <li><a href="https://opencollective.com/brainup">{{t
+              <div>
+              <a href="https://opencollective.com/brainup">{{t
                     "header.donate"
-                  }}</a></li>
-              <li><a href="https://github.com/Brain-up/brn">{{t
+                  }}</a>
+              <a href="https://github.com/Brain-up/brn">{{t
                     "header.github"
-                  }}</a></li>
-              <li><a href="/contact">{{t "header.contact"}}</a></li>
-              <li><a href="/info">{{t "header.info"}}</a></li>
-            </ul>
-          </label>
-        </a>
+                  }}</a>
+              <a href="/description">{{t "header.contact"}}</a>
+              <a href="/description">{{t "header.info"}}</a>
+            </div>
+          {{!-- </label> --}}
+        </div>
       </div>
     </div>
     {{#if this.session.isAuthenticated}}
