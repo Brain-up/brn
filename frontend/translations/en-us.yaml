@@ -4,6 +4,10 @@ header:
   logout: Logout
   about: About
   more: More...
+  donate: Donate
+  github: GitHub
+  contact: Contact
+  info: Info
 
 login:
   title: Login

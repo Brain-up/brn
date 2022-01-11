@@ -63,7 +63,8 @@
           {{t "header.about"}}
         </LinkTo>
         <span
-          class="sm:px-4 block inline-block px-2 py-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full">
+          class="sm:px-4 block inline-block px-2 py-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
+        >
           <button
             type="button"
             class="hover:text-opacity-50 py-2 bg-transparent rounded uppercase
@@ -92,17 +93,24 @@
             EN
           </button>
         </span>
-        <LinkTo
-          @route="description"
-          class="inline-block block px-2 sm:px-4 py-2 mr-0 sm:mr-4 font-bold tracking-wider uppercase rounded-full
-            {{if
-              this.session.isAuthenticated
-              "hover:bg-white hover:text-purple-primary"
-              "hover:bg-purple-primary hover:text-white"
-            }}"
-        >
-          {{t "header.more"}}
-        </LinkTo>
+        <a class="dropdown rounded-full">
+          <button
+            class="inline-block block px-2 sm:px-4 py-2 mr-0 sm:mr-4 font-bold tracking-wider uppercase rounded-full"
+          >{{t "header.more"}}</button>
+          <label>
+            <input type="checkbox" />
+            <ul>
+              <li><a href="https://opencollective.com/brainup">{{t
+                    "header.donate"
+                  }}</a></li>
+              <li><a href="https://github.com/Brain-up/brn">{{t
+                    "header.github"
+                  }}</a></li>
+              <li><a href="/contact">{{t "header.contact"}}</a></li>
+              <li><a href="/info">{{t "header.info"}}</a></li>
+            </ul>
+          </label>
+        </a>
       </div>
     </div>
     {{#if this.session.isAuthenticated}}

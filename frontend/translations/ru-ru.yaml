@@ -4,6 +4,10 @@ header:
   logout: Выйти
   about: Описание
   more: Еще...
+  donate: Пожертвовать
+  github: GitHub
+  contact: Контакт
+  info: Информация
 
 login:
   title: Начать
