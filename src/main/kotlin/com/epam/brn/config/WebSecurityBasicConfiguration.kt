@@ -28,9 +28,14 @@ class WebSecurityBasicConfiguration(
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.csrf()
+        http
+            .csrf()
             .disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v2/**")
+            .permitAll()
             .and()
             .addFilterBefore(firebaseTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
@@ -44,7 +49,8 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/cloud/folders").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/doctors/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_DOCTOR.name)
             .antMatchers("/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
-            .and().formLogin().disable()
+            .and()
+            .formLogin().disable()
             .httpBasic().disable()
             .exceptionHandling()
             .authenticationEntryPoint(authenticationEntryPoint())
