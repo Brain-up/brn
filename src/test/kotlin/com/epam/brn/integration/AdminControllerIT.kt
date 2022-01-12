@@ -38,6 +38,7 @@ import com.google.gson.Gson
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -93,8 +94,6 @@ class AdminControllerIT : BaseIT() {
     private lateinit var gson: Gson
 
     private val legacyDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    private val versionParameterName = "version"
-    private val version = "2"
 
     @AfterEach
     fun deleteAfterTest() {
@@ -458,6 +457,47 @@ class AdminControllerIT : BaseIT() {
             .andExpect(
                 MockMvcResultMatchers.content()
                     .json("{\"errors\":[\"не должно быть пустым\",\"не должно равняться null\",\"не должно быть пустым\"] }")
+            )
+    }
+
+    @Test
+    fun `should update subGroup`() {
+        // GIVEN
+        val series = insertDefaultSeries()
+        val subGroup = insertDefaultSubGroup(series, 1)
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .patch("$baseUrl/subgroups/${subGroup.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"withPictures": true}""")
+        )
+        // THEN
+        resultAction
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(jsonPath("$.data.withPictures").value(true))
+    }
+
+    @Test
+    fun `should trow exception when subGroup is not found`() {
+        // GIVEN
+        val series = insertDefaultSeries()
+        val subGroup = insertDefaultSubGroup(series, 1)
+        // WHEN
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders
+                .patch("$baseUrl/subgroups/${subGroup.id}" + "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"withPictures": true}""")
+        )
+        // THEN
+        resultAction
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(
+                MockMvcResultMatchers.content().string(
+                    CoreMatchers.containsString("Can not update subGroup because subGroup is not found by this id.")
+                )
             )
     }
 

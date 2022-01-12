@@ -7,6 +7,7 @@ import com.epam.brn.dto.ExerciseWithTasksResponse
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.SubGroupResponse
+import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -301,5 +302,21 @@ internal class AdminControllerTest {
         // THEN
         verify(exactly = 1) { exerciseService.createExercise(exerciseSentencesCreateDto) }
         createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
+    }
+
+    @Test
+    fun `updateSubGroupById should update subGroup by subGroupId`() {
+        // GIVEN
+        val subGroupId = 1L
+        val subGroupChangeRequest = SubGroupChangeRequest(withPictures = true)
+        val updatedSubGroup = mockkClass(SubGroupResponse::class, relaxed = true)
+        every { subGroupService.updateSubGroupById(subGroupId, subGroupChangeRequest) } returns updatedSubGroup
+
+        // WHEN
+        val actual = adminController.updateSubGroupById(subGroupId, subGroupChangeRequest)
+
+        // THEN
+        actual.statusCode.value() shouldBe HttpStatus.SC_OK
+        actual.body!!.data shouldBe updatedSubGroup
     }
 }
