@@ -2,19 +2,22 @@
 @import 'variables.scss';
 
 .select-container {
-  width: 100%;
-  padding: 22px $padding-64;
   box-sizing: border-box;
+  width: 100%;
 }
 
-.exercises {
-  &__table-container {
-    padding: 40px $padding-64;
-  }
+table {
+  border-collapse: collapse;
+  margin-bottom: $margin-64;
+  width: 100%;
 
-  &__table {
-    width: 100%;
-    box-shadow: none;
+  th,
+  td {
+    border-bottom: 1px solid $latter-grey-color;
+    font-size: $font-size-14;
+    font-weight: normal;
+    padding: $padding-24 $padding-12;
+    text-align: left;
   }
 }
 
@@ -24,12 +27,12 @@
   }
 
   .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
-    background-color: #ffffff;
+    background-color: $white;
   }
 
   .mat-slide-toggle-bar {
     height: 22px !important;
-    width: 37px !important;
+    width: 36px !important;
     border-radius: 20px !important;
   }
 

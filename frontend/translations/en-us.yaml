@@ -22,6 +22,12 @@ login_form:
   warning_enter_credentials: Please enter your login and password
   forgot_password: Forgot your password?
 
+password_reset_form:
+  send_recovery_email: Send recovery email
+  recovery_code: Recovery code
+  new_password: New password
+  update_password: Update password
+
 registration_form:
   birthday: Year of birth
   birthday_placeholder: YYYY

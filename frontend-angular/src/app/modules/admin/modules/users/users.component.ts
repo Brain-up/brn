@@ -5,6 +5,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TokenService } from '@root/services/token.service';
 import { User, UserMapped } from '@admin/models/user.model';
 import {
   ChangeDetectionStrategy,
@@ -13,8 +14,6 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ALocaleStorage } from '@shared/storages/local-storage';
-import { TokenService } from '@root/services/token.service';
 
 @Component({
   selector: 'app-users',
@@ -25,6 +24,8 @@ import { TokenService } from '@root/services/token.service';
 export class UsersComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
   private getUsersSubscription: Subscription;
+  private sorting: MatSort;
+  private paging: MatPaginator;
 
   public dataSource: MatTableDataSource<UserMapped>;
   public readonly displayedColumns: string[] = [
@@ -39,14 +40,24 @@ export class UsersComponent implements OnInit, OnDestroy {
   public readonly isLoading$ = new BehaviorSubject(true);
   public userList: UserMapped[];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) set sort(sort: MatSort) {
+    this.sorting = sort;
+    if (this.sorting) {
+      this.dataSource.sort = this.sorting;
+    }
+  }
+  @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
+    this.paging = paginator;
+    if (this.paging) {
+      this.dataSource.paginator = this.paging;
+    }
+  }
 
   constructor(
-    private readonly adminApiService: AdminApiService,
     private activatedRoute: ActivatedRoute,
-    private tokenService: TokenService,
+    private readonly adminApiService: AdminApiService,
     private router: Router,
+    private tokenService: TokenService,
   ) {}
 
   public ngOnInit(): void {
@@ -71,11 +82,6 @@ export class UsersComponent implements OnInit, OnDestroy {
       .subscribe((userList) => {
         this.userList = userList;
         this.dataSource = new MatTableDataSource(userList);
-        // Change detection cycle: ViewChild is undefined due *ngIf
-        setTimeout(() => {
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-        });
       });
   }
 
@@ -95,9 +101,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     } else {
       this.dataSource = new MatTableDataSource(this.userList);
     }
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   public navigateToSelectedUser(user: User): void {

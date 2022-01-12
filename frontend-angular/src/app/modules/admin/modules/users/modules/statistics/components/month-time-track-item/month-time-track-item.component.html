@@ -1,4 +1,8 @@
-<div class="calendar" [style.backgroundColor]="USER_EXERCISING_PROGRESS_STATUS_COLOR[data.progress]">
+<div
+  class="calendar"
+  [style.backgroundColor]="USER_EXERCISING_PROGRESS_STATUS_COLOR[data.progress]"
+  [ngClass]="{'empty-item': !data.progress}"
+>
   <div class="header">
     <div class="dot"></div>
     <div class="dot"></div>
@@ -9,12 +13,11 @@
 
   <div class="content">
     <b class="time">{{ data.time }}</b>
-
     <br />
-
     <span
       [innerHTML]="
-        'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]' | translate: { days: data.days }
+        'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days [days]'
+          | translate: { days: data.days }
       "
     ></span>
   </div>
@@ -22,6 +25,5 @@
 
 <div class="date">
   <div class="month">{{ data.month }}</div>
-
   <div class="year">{{ data.year }}</div>
 </div>
