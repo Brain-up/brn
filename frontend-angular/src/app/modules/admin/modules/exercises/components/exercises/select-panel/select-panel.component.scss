@@ -1,22 +1,26 @@
 @import 'colors.scss';
+@import 'variables.scss';
+
+:host {
+  display: flex;
+  justify-content: center;
+}
 
 .select {
-  height: 56px;
-  width: 355px;
-  border-radius: 6px;
   background: $hardly-grey-color;
+  border-radius: 6px;
   box-shadow: 0 2px 2px rgba(89, 71, 178, 0.12);
-
+  color: $dark-violet-color;
   font-family: Montserrat;
+  font-size: $font-size-14;
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
+  height: 56px;
   line-height: 17px;
-  text-transform: uppercase;
-
-  color: $dark-violet-color;
-  margin-right: 38px;
   margin-bottom: 20px;
+  margin-right: 38px;
+  text-transform: uppercase;
+  width: 355px;
 
   &:last-child {
     margin-right: 0;
@@ -24,9 +28,9 @@
 
   &::ng-deep {
     .mat-form-field-flex {
-      padding-left: 24px;
-      padding-right: 24px;
       background: $hardly-grey-color;
+      padding-left: $padding-24;
+      padding-right: $padding-24;
     }
 
     .mat-form-field-underline {
@@ -36,9 +40,9 @@
     .mat-select-value {
       color: $dark-violet-color;
       font-family: Montserrat;
+      font-size: $font-size-14;
       font-style: normal;
       font-weight: 600;
-      font-size: 14px;
       line-height: 17px;
     }
   }

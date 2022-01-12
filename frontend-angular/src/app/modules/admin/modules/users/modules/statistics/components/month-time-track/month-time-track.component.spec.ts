@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import * as dayjs from 'dayjs';
-import { MonthTimeTrackComponent } from './month-time-track.component';
 import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MonthTimeTrackComponent } from './month-time-track.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MonthTimeTrackComponent', () => {
   let fixture: ComponentFixture<MonthTimeTrackComponent>;
@@ -25,8 +25,12 @@ describe('MonthTimeTrackComponent', () => {
   describe('Click on element', () => {
     describe('Prev load year button', () => {
       it('should emit prev event', () => {
-        const prevButtonElem = hostElement.querySelector<HTMLButtonElement>('button.prev');
-        const loadPrevYearEventEmitSpy = spyOn(component.loadPrevYearEvent, 'emit');
+        const prevButtonElem =
+          hostElement.querySelector<HTMLButtonElement>('button.prev');
+        const loadPrevYearEventEmitSpy = spyOn(
+          component.loadPrevYearEvent,
+          'emit',
+        );
 
         prevButtonElem.click();
 
@@ -38,12 +42,16 @@ describe('MonthTimeTrackComponent', () => {
       let nextButtonElem: HTMLButtonElement;
 
       beforeEach(() => {
-        nextButtonElem = hostElement.querySelector<HTMLButtonElement>('button.next');
+        nextButtonElem =
+          hostElement.querySelector<HTMLButtonElement>('button.next');
       });
 
       it('should emit next event', () => {
         component.selectedMonth = dayjs().subtract(1, 'year');
-        const loadNextYearEventEmitSpy = spyOn(component.loadNextYearEvent, 'emit');
+        const loadNextYearEventEmitSpy = spyOn(
+          component.loadNextYearEvent,
+          'emit',
+        );
 
         nextButtonElem.click();
 
@@ -52,7 +60,10 @@ describe('MonthTimeTrackComponent', () => {
 
       it('should NOT emit next event', () => {
         component.selectedMonth = dayjs();
-        const loadNextYearEventEmitSpy = spyOn(component.loadNextYearEvent, 'emit');
+        const loadNextYearEventEmitSpy = spyOn(
+          component.loadNextYearEvent,
+          'emit',
+        );
 
         nextButtonElem.click();
 
@@ -64,18 +75,49 @@ describe('MonthTimeTrackComponent', () => {
       it('should emit select month event', async () => {
         component.isLoading = false;
         component.selectedMonth = dayjs();
-        component.data = await new AdminApiServiceFake({ responseDelayInMs: 100 })
-          .getUserYearlyStatistics(1, component.selectedMonth.startOf('year'), component.selectedMonth.endOf('year'))
+        component.data = await new AdminApiServiceFake({
+          responseDelayInMs: 100,
+        })
+          .getUserYearlyStatistics(
+            1,
+            component.selectedMonth.startOf('year'),
+            component.selectedMonth.endOf('year'),
+          )
           .toPromise();
 
         fixture.detectChanges();
 
-        const appMonthTimeTrackItemElem = hostElement.querySelector<HTMLElement>('app-month-time-track-item');
-        const selectMonthEventEmitSpy = spyOn(component.selectMonthEvent, 'emit');
+        const appMonthTimeTrackItemElem =
+          hostElement.querySelector<HTMLElement>('app-month-time-track-item');
+        const selectMonthEventEmitSpy = spyOn(
+          component.selectMonthEvent,
+          'emit',
+        );
 
         appMonthTimeTrackItemElem.click();
 
-        expect(selectMonthEventEmitSpy).toHaveBeenCalledWith(component.monthTimeTrackItemsData[0].date);
+        expect(selectMonthEventEmitSpy).toHaveBeenCalledWith(
+          component.monthTimeTrackItemsData[0].date,
+        );
+      });
+
+      it('should not emit select month event', async () => {
+        const data = {
+          date: dayjs(),
+          days: 0,
+          month: 'February',
+          progress: null,
+          time: '00:01:39',
+          year: 2021,
+        };
+
+        const selectMonthEventEmitSpy = spyOn(
+          component.selectMonthEvent,
+          'emit',
+        );
+
+        expect(component.selectMonth(data)).toBeFalsy();
+        expect(selectMonthEventEmitSpy).not.toHaveBeenCalled();
       });
     });
   });
@@ -87,7 +129,8 @@ describe('MonthTimeTrackComponent', () => {
 
       fixture.detectChanges();
 
-      const matProgressBarElem = hostElement.querySelector<HTMLElement>('mat-progress-bar');
+      const matProgressBarElem =
+        hostElement.querySelector<HTMLElement>('mat-progress-bar');
 
       expect(matProgressBarElem).toBeTruthy();
     });
@@ -96,12 +139,17 @@ describe('MonthTimeTrackComponent', () => {
       component.isLoading = false;
       component.selectedMonth = dayjs();
       component.data = await new AdminApiServiceFake({ responseDelayInMs: 100 })
-        .getUserYearlyStatistics(1, component.selectedMonth.startOf('year'), component.selectedMonth.endOf('year'))
+        .getUserYearlyStatistics(
+          1,
+          component.selectedMonth.startOf('year'),
+          component.selectedMonth.endOf('year'),
+        )
         .toPromise();
 
       fixture.detectChanges();
 
-      const appMonthTimeTrackItemElem = hostElement.querySelectorAll<HTMLElement>('app-month-time-track-item');
+      const appMonthTimeTrackItemElem =
+        hostElement.querySelectorAll<HTMLElement>('app-month-time-track-item');
 
       expect(appMonthTimeTrackItemElem.length).toBeGreaterThan(0);
     });
@@ -109,13 +157,21 @@ describe('MonthTimeTrackComponent', () => {
     it('should show empty data message', async () => {
       component.isLoading = false;
       component.selectedMonth = dayjs();
-      component.data = await new AdminApiServiceFake({ responseDelayInMs: 100, isUserYearlyStatisticsEmptyData: true })
-        .getUserYearlyStatistics(1, component.selectedMonth.startOf('year'), component.selectedMonth.endOf('year'))
+      component.data = await new AdminApiServiceFake({
+        responseDelayInMs: 100,
+        isUserYearlyStatisticsEmptyData: true,
+      })
+        .getUserYearlyStatistics(
+          1,
+          component.selectedMonth.startOf('year'),
+          component.selectedMonth.endOf('year'),
+        )
         .toPromise();
 
       fixture.detectChanges();
 
-      const emptyDataElem = hostElement.querySelector<HTMLElement>('.empty-data');
+      const emptyDataElem =
+        hostElement.querySelector<HTMLElement>('.empty-data');
 
       expect(emptyDataElem).toBeTruthy();
     });
@@ -136,18 +192,32 @@ describe('MonthTimeTrackComponent', () => {
   });
 
   describe('Method isSelectedMonth', () => {
-    it('should return true', () => {
+    it('should return true', async () => {
       component.selectedMonth = dayjs();
+      const data = {
+        date: dayjs(),
+        days: 2,
+        month: 'February',
+        progress: null,
+        time: '00:01:39',
+        year: 2021,
+      };
 
-      expect(component.isSelectedMonth(component.selectedMonth)).toBeTrue();
-      expect(component.isSelectedMonth(component.selectedMonth)).toBeTrue();
+      expect(component.isSelectedMonth(data)).toBeTrue();
     });
 
     it('should return false', () => {
       component.selectedMonth = dayjs();
+      const monthsData = {
+        date: dayjs(),
+        days: 0,
+        month: 'February',
+        progress: null,
+        time: '00:01:39',
+        year: 2021,
+      };
 
-      expect(component.isSelectedMonth(component.selectedMonth.subtract(1, 'month'))).toBeFalse();
-      expect(component.isSelectedMonth(component.selectedMonth.subtract(1, 'year'))).toBeFalse();
+      expect(component.isSelectedMonth(monthsData)).toBeFalse();
     });
   });
 });

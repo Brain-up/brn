@@ -5,53 +5,54 @@ export class AuthToken {
   public expires_in: number;
 }
 
+export interface UserCredential {
+  additionalUserInfo: AdditionalUserInfo;
+  credential?: any;
+  operationType: string;
+  user: User;
+}
+
+export interface AdditionalUserInfo {
+  providerId: string;
+  isNewUser: boolean;
+}
+
 export interface User {
-  uid: string;
-  displayName: string;
-  photoURL?: any;
-  email: string;
-  emailVerified: boolean;
-  phoneNumber?: any;
-  isAnonymous: boolean;
-  tenantId?: any;
-  providerData: ProviderData[];
   apiKey: string;
   appName: string;
   authDomain: string;
-  stsTokenManager: StsTokenManager;
-  redirectEventId?: any;
-  lastLoginAt: string;
   createdAt: string;
-  multiFactor: MultiFactor;
-}
-
-export interface ProviderData {
-  uid: string;
   displayName: string;
-  photoURL?: any;
   email: string;
+  emailVerified: boolean;
+  isAnonymous: boolean;
+  lastLoginAt: string;
+  multiFactor: MultiFactor;
   phoneNumber?: any;
-  providerId: string;
-}
-
-export interface StsTokenManager {
-  apiKey: string;
-  refreshToken: string;
-  accessToken: string;
-  expirationTime: number;
+  photoURL?: any;
+  providerData: ProviderData[];
+  redirectEventId?: any;
+  stsTokenManager: StsTokenManager;
+  tenantId?: any;
+  uid: string;
 }
 
 export interface MultiFactor {
   enrolledFactors: any[];
 }
 
-export interface UserCredential {
-  user: User;
-  credential?: any;
-  additionalUserInfo: AdditionalUserInfo;
-  operationType: string;
-}
-export interface AdditionalUserInfo {
+export interface ProviderData {
+  displayName: string;
+  email: string;
+  phoneNumber?: any;
+  photoURL?: any;
   providerId: string;
-  isNewUser: boolean;
+  uid: string;
+}
+
+export interface StsTokenManager {
+  apiKey: string;
+  accessToken: string;
+  expirationTime: number;
+  refreshToken: string;
 }
