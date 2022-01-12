@@ -71,7 +71,7 @@ export class AdminApiService {
       .pipe(
         pluck('data'),
         map((userList: UserMapped[]) =>
-          userList.map((user, i) => {
+          userList?.map((user, i) => {
             user.age = dayjs().year() - user.bornYear;
             user.currentWeekChart = {
               data: [

@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -14,15 +14,29 @@ const routes: Routes = [
       },
       {
         path: 'users',
-        loadChildren: () => import('./modules/users/users.module').then((m) => m.UsersModule),
+        loadChildren: () =>
+          import('./modules/users/users.module').then((m) => m.UsersModule),
       },
       {
         path: 'exercises',
-        loadChildren: () => import('./modules/exercises/exercises.module').then((m) => m.ExercisesModule),
+        loadChildren: () =>
+          import('./modules/exercises/exercises.module').then(
+            (m) => m.ExercisesModule,
+          ),
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./modules/profile/profile.module').then(
+            (m) => m.ProfileModule,
+          ),
       },
       {
         path: 'upload-file',
-        loadChildren: () => import('./modules/upload-file/upload-file.module').then((m) => m.UploadFileModule),
+        loadChildren: () =>
+          import('./modules/upload-file/upload-file.module').then(
+            (m) => m.UploadFileModule,
+          ),
       },
     ],
   },
