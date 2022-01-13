@@ -175,9 +175,9 @@
     "luxon": "^1.27.0",
     "patch-package": "6.4.7",
     "postinstall-postinstall": "^2.1.0",
-    "stylelint": "^13.6.1",
+    "stylelint": "^14.0.0",
     "stylelint-config-recommended": "^3.0.0",
-    "tailwindcss": "^1.9.6",
+    "tailwindcss": "^2.2.0",
     "tone": "^14.7.60"
   },
   "volta": {
