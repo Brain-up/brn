@@ -11,13 +11,13 @@ interface UiTabButtonComponentArguments {
 export default class UiTabButtonComponent extends Component<UiTabButtonComponentArguments> {
   get classes() {
     const items = [
-      'focus:outline-none rounded-lg w-full uppercase h-12 overflow-hidden sm:text-sm text-xs',
+      'focus:outline-none rounded-lg w-full uppercase h-12 overflow-hidden',
     ];
-    // if (this.args.small) {
-    //   items.push('text-xs');
-    // } else {
-    //   items.push('text-sm');
-    // }
+    if (this.args.small) {
+      items.push('text-xs');
+    } else {
+      items.push('sm:text-sm text-xs');
+    }
     if (this.args.mode === 'active') {
       items.push('active');
     }
