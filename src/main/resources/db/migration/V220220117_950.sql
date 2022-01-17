@@ -86,7 +86,3 @@ UPDATE resource SET word='боксёр' WHERE word = 'боксер';
 UPDATE resource SET word='василёк' WHERE word = 'василек';
 UPDATE resource SET word='верёвка' WHERE word = 'веревка';
 UPDATE resource SET word='отвёртка' WHERE word = 'отвертка';
-UPDATE resource SET word='' WHERE word = '';
-UPDATE resource SET word='' WHERE word = '';
-UPDATE resource SET word='' WHERE word = '';
-
