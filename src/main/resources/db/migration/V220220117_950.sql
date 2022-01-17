@@ -3,7 +3,6 @@ UPDATE series SET description = 'Распознавание похожих фр�
 UPDATE series SET description = 'Распознавание сигналов по длительности' WHERE description = 'Распознование сигналов по длительности';
 UPDATE series SET description = 'Распознавание сигналов по частоте сигналов' WHERE description = 'Распознование сигналов по частоте сигналов';
 
-
 UPDATE sub_group SET description = 'Слова о школе и учёбе' WHERE description = 'Слова о школе и учебе';
 UPDATE sub_group SET description = 'Математика и её термины' WHERE description = 'Математика и ее термины';
 UPDATE sub_group SET description = 'цвета' WHERE description = 'цета';
