@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.SubGroupResponse
+import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.SubGroupRepository
@@ -21,8 +22,10 @@ class SubGroupService(
 
     fun findSubGroupsForSeries(seriesId: Long): List<SubGroupResponse> {
         log.debug("Try to find subGroups for seriesId=$seriesId")
-        val subGroups = subGroupRepository.findBySeriesId(seriesId)
-        return subGroups.map { subGroup -> toSubGroupDto(subGroup) }
+        return subGroupRepository.findBySeriesId(seriesId).asSequence()
+            .map { subGroup -> toSubGroupDto(subGroup) }
+            .sortedBy { subGroupResponse -> !subGroupResponse.withPictures }
+            .toList()
     }
 
     fun findById(subGroupId: Long): SubGroupResponse {
@@ -42,6 +45,15 @@ class SubGroupService(
         } else {
             throw IllegalArgumentException("Can not delete subGroup because subGroup is not found by this id.")
         }
+    }
+
+    fun updateSubGroupById(subGroupId: Long, subGroupChangeRequest: SubGroupChangeRequest): SubGroupResponse {
+        log.debug("try to update SubGroup by Id=$subGroupId")
+        val subGroup = subGroupRepository.findById(subGroupId)
+            .orElseThrow { EntityNotFoundException("Can not update subGroup because subGroup is not found by this id.") }
+        subGroup.withPictures = subGroupChangeRequest.withPictures
+        subGroupRepository.save(subGroup)
+        return toSubGroupDto(subGroup)
     }
 
     fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupResponse {

@@ -7,5 +7,6 @@ data class SubGroupResponse(
     var name: String,
     var pictureUrl: String,
     var description: String?,
+    var withPictures: Boolean,
     val exercises: MutableList<Long?> = mutableListOf()
 )
