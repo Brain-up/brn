@@ -5,7 +5,7 @@
     disabled={{this.isDisabled}}
     type="button"
     {{did-update this.handleAnswer @isCorrect}}
-    class="task-player__option-button bg-transparent py-2 px-4 rounded
+    class="task-player__option-button bg-transparent py-1 sm:px-2 rounded
       {{if
         (eq @activeWord @answerOption.word)
         "border-2 text-white bg-purple-primary"
@@ -26,12 +26,13 @@
     }}
   >
     {{#if @answerOption.pictureFileUrl}}
-      <img
-        class="sm:h-40 h-16 m-auto rounded-lg"
-        src={{@answerOption.pictureFileUrl}}
-        alt={{@answerOption.word}}
-        {{on "error" this.setDefaultImage}}
-      />
+      <div class="sm:w-24 w-20 m-auto">
+        <img
+          src={{@answerOption.pictureFileUrl}}
+          alt={{@answerOption.word}}
+          {{on "error" this.setDefaultImage}}
+        />
+      </div>
     {{/if}}
     {{@answerOption.word}}
   </button>
