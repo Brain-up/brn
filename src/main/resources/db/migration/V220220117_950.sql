@@ -68,6 +68,7 @@ UPDATE resource SET word='самолёт' WHERE word = 'самолет';
 UPDATE resource SET word='вертолёт' WHERE word = 'вертолет';
 UPDATE resource SET word='ламборгини' WHERE word = 'ламборджини';
 UPDATE resource SET word='фуникулёр' WHERE word = 'фуникулер';
+UPDATE resource SET word='манипулятор' WHERE word = 'маникулер';
 UPDATE resource SET word='черёмуха' WHERE word = 'черемуха';
 UPDATE resource SET word='тёрн' WHERE word = 'терн';
 UPDATE resource SET word='лён' WHERE word = 'лен';
