@@ -1,4 +1,3 @@
-UPDATE series SET name = 'Частота сигналов' WHERE name = 'Часота сигналов';
 UPDATE series SET description = 'Распознавание похожих фраз' WHERE description = 'Распознование похожих фраз';
 UPDATE series SET description = 'Распознавание сигналов по длительности' WHERE description = 'Распознование сигналов по длительности';
 UPDATE series SET description = 'Распознавание сигналов по частоте сигналов' WHERE description = 'Распознование сигналов по частоте сигналов';
