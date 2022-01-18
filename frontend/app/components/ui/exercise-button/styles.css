@@ -62,7 +62,7 @@
 }
 
 .title {
-  font-size: 100px;
+  font-size: 60px;
   color: #4691fd;
   text-align: center;
   min-width: 100%;
@@ -70,7 +70,7 @@
 
 @media (max-width: 640px){
   .title {
-    font-size: 80px;
+    font-size: 40px;
     color: #4691fd;
     text-align: center;
     min-width: 100%;
