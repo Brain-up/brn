@@ -1,6 +1,6 @@
 <ModalDialog
   @overlayClass="z-50 min-h-full w-full fixed bg-blue-400 flex"
-  @containerClass="w-full flex bg-white p-8 rounded-lg text-2xl justify-center"
+  @containerClass="w-full flex bg-white sm:p-2 p-2 rounded-lg text-2xl justify-center"
 >
   <div
     class="series-page--canvas flex flex flex-col flex-grow max-w-screen-xl"
@@ -10,7 +10,7 @@
     {{will-destroy this.stopStatsTracking @model}}
   >
     {{! template-lint-disable no-inline-styles }}
-    <div class="fixed" style="top:25px;right:25px;">
+    <div class="fixed" style="top:25px;right:45px;">
       <LinkTo @route="group.series.subgroup" title={{t "navigation.come_back"}}>
         <svg
           width="32"
@@ -39,12 +39,10 @@
     }}
       <div class="flex items-center justify-between">
         {{! template-lint-disable no-inline-styles }}
-        <div style="width: 100px;"></div>
+        <div class="sm:w-32 w-16"></div>
         {{! template-lint-disable no-inline-styles }}
-        <div style="min-width: 900px" id="progress-slot"></div>
-        <div id="exercise-timer-slot">
-
-        </div>
+        <div class="w-full mr-4" id="progress-slot"></div>
+        <div id="exercise-timer-slot"></div>
       </div>
     {{/if}}
     <div class="exercise-container">

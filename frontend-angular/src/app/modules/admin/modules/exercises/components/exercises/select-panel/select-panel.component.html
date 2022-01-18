@@ -1,30 +1,62 @@
 <mat-form-field appearance="fill" class="language select">
-  <mat-label>Language</mat-label>
+  <mat-label>{{ 'Admin.Modules.Exercises.Language' | translate }}</mat-label>
   <mat-select [formControl]="languagesControl" panelClass="select__panel">
-    <mat-option *ngFor="let language of languages" [value]="language.id">{{language.name}}</mat-option>
+    <mat-option *ngFor="let language of languages" [value]="language.id">{{
+      language.name
+    }}</mat-option>
   </mat-select>
 </mat-form-field>
 
 <mat-form-field appearance="fill" class="groups select">
-  <mat-label>{{groupsControl.value ? 'Groups' : 'All groups'}}</mat-label>
+  <mat-label>{{
+    (groupsControl.value
+      ? 'Admin.Modules.Exercises.Groups'
+      : 'Admin.Modules.Exercises.AllGroups'
+    ) | translate
+  }}</mat-label>
   <mat-select [formControl]="groupsControl" panelClass="select__panel">
-    <mat-option>All groups</mat-option>
-    <mat-option *ngFor="let group of groups$ | async" [value]="group.id">{{group.name}}</mat-option>
+    <mat-option>{{
+      'Admin.Modules.Exercises.AllGroups' | translate
+    }}</mat-option>
+    <mat-option *ngFor="let group of groups$ | async" [value]="group.id">{{
+      group.name
+    }}</mat-option>
   </mat-select>
 </mat-form-field>
 
 <mat-form-field appearance="fill" class="series select">
-  <mat-label>{{seriesControl.value ? 'Series' : 'All series'}}</mat-label>
+  <mat-label>{{
+    (seriesControl.value
+      ? 'Admin.Modules.Exercises.Series'
+      : 'Admin.Modules.Exercises.AllSeries'
+    ) | translate
+  }}</mat-label>
   <mat-select [formControl]="seriesControl" panelClass="select__panel">
-    <mat-option>All series</mat-option>
-    <mat-option *ngFor="let item of series$ | async" [value]="item.id + ';' + item.name">{{item.name}}</mat-option>
+    <mat-option>
+      {{ 'Admin.Modules.Exercises.AllSeries' | translate }}
+    </mat-option>
+    <mat-option
+      *ngFor="let item of series$ | async"
+      [value]="item.id + ';' + item.name"
+      >{{ item.name }}</mat-option
+    >
   </mat-select>
 </mat-form-field>
 
 <mat-form-field appearance="fill" class="sub-groups select">
-  <mat-label>{{subGroupsControl.value ? 'Topics' : 'All topics'}}</mat-label>
+  <mat-label>{{
+    (subGroupsControl.value
+      ? 'Admin.Modules.Exercises.Topics'
+      : 'Admin.Modules.Exercises.AllTopics') | translate
+  }}</mat-label>
   <mat-select [formControl]="subGroupsControl" panelClass="select__panel">
-    <mat-option>All topics</mat-option>
-    <mat-option *ngFor="let subGroup of subGroups$ | async" [value]="subGroup.id">{{subGroup.name}}</mat-option>
+    <mat-option>
+      {{ 'Admin.Modules.Exercises.AllTopics' | translate }}
+    </mat-option>
+    <mat-option
+      *ngFor="let subGroup of subGroups$ | async"
+      [value]="subGroup.id"
+      >{{ subGroup.name }}</mat-option
+    >
   </mat-select>
 </mat-form-field>

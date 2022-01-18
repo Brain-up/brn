@@ -7,6 +7,29 @@
       "Users": "Users"
     },
     "Modules": {
+      "Exercises": {
+        "Groups": "Groups",
+        "Language": "Language",
+        "Series": "Series",
+        "Topics": "Topics",
+        "AllGroups": "All groups",
+        "AllTopics": "All topics",
+        "AllSeries": "All series",
+        "Table": {
+          "ExerciseId": "Exercise ID",
+          "Series": "Series",
+          "Name": "Name",
+          "Level": "Level",
+          "Noise": "Noise",
+          "NoiseSound": "Noise sound",
+          "Tasks": "Tasks",
+          "Enable": "Enable"
+        }
+      },
+      "Profile": {
+        "Name": "Name",
+        "Email": "Email"
+      },
       "UploadFile": {
         "Links": {
           "LoadConfigurationFiles": "Load configuration files",
@@ -56,7 +79,9 @@
               "WorkingDaysInLastMonth": "Days in last month"
             },
             "NameColumn": {
-              "CommonInfo [years, gender]": "{{ years }} years old, {{ gender }}"
+              "CommonInfo [years, gender]": "{{ years }} years old",
+              "Female": "Female",
+              "Male": "Male"
             },
             "VisitColumn": {
               "Time [hours]": "{{ hours }} hours"
@@ -72,6 +97,7 @@
         "Modules": {
           "Statistics": {
             "Buttons": {
+              "Back": "Back to Users",
               "WhatIsIt": "What is it about?",
               "Statistics": "Statistics",
               "Diagnostics": "Diagnostics",
@@ -85,7 +111,7 @@
                 "Title [year]": "Total class time by months for {{ year }}"
               },
               "MonthTimeTrackItem": {
-                "Days [days]": "Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrackItem.Days {{ days }}"
+                "Days [days]": "{{ days }} days"
               },
               "StatisticsInfoDialog": {
                 "Buttons": {
