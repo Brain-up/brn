@@ -17,6 +17,7 @@ export class AdminComponent implements OnInit {
     { label: marker('Admin.Menu.Exercises'), link: 'exercises' },
     { label: marker('Admin.Menu.Resources'), link: 'resources' },
     { label: marker('Admin.Menu.UploadFile'), link: 'upload-file' },
+    { label: marker('Admin.Menu.Swagger'), link: 'swagger' },
   ];
 
   constructor(

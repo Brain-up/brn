@@ -1,4 +1,3 @@
-import { values } from 'fp-ts/lib/Map';
 import { Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
