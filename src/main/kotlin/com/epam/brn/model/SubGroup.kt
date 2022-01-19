@@ -26,6 +26,7 @@ data class SubGroup(
     var code: String,
     var level: Int,
     var description: String? = "",
+    var withPictures: Boolean = false,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_series_id")
     var series: Series,
@@ -40,6 +41,7 @@ data class SubGroup(
         name = record.name,
         description = record.description
     )
+
     fun toDto(pictureUrl: String) = SubGroupResponse(
         seriesId = series.id!!,
         id = id!!,
@@ -47,11 +49,13 @@ data class SubGroup(
         pictureUrl = pictureUrl,
         description = description,
         level = level,
+        withPictures = withPictures,
         exercises = exercises.map { exercise -> exercise.id }.toMutableList()
     )
 
     override fun toString() =
-        "SubGroup(id=$id, name='$name', code='$code', description=$description, level=$level "
+        "SubGroup(id=$id, name='$name', code='$code', description=$description, level=$level, " +
+            "withPictures=$withPictures)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -64,6 +68,7 @@ data class SubGroup(
         if (code != other.code) return false
         if (description != other.description) return false
         if (level != other.level) return false
+        if (withPictures != other.withPictures) return false
 
         return true
     }
@@ -74,6 +79,7 @@ data class SubGroup(
         result = 31 * result + name.hashCode()
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + level
+        result = 31 * result + withPictures.hashCode()
         return result
     }
 }
