@@ -17,7 +17,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwaggerComponent implements AfterViewInit, OnDestroy, OnInit {
-
   private readonly destroyer$ = new Subject<void>();
   public swagger;
 
