@@ -27,7 +27,6 @@ a.active {
 .border-gradient:hover {
   background: linear-gradient(45deg, #428dfc, #9f7aea) border-box; /*3*/
 }
-/*! purgecss end ignore */
 
 .dropdown {
   display: inline-block;
@@ -98,3 +97,5 @@ a.active {
   cursor: pointer;
   opacity: 0.5;
 }
+
+/*! purgecss end ignore */
