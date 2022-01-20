@@ -56,7 +56,7 @@ export default class TaskPlayerSingleWordsComponent extends Component<ITaskPlaye
   }
 
   shuffle() {
-    this.shuffledWords = A(shuffleArray(this.task.words));
+    this.shuffledWords = A(shuffleArray(this.task.words, 10));
     if (typeof this.args.onShuffled === 'function') {
       this.args.onShuffled(this.shuffledWords);
     }
