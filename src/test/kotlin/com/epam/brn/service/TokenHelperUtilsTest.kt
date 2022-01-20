@@ -45,7 +45,7 @@ internal class TokenHelperUtilsTest {
     }
 
     @Test
-    fun `should return null when Authorization header not start with "Bearer "`() {
+    fun `should return null when Authorization header not start with Bearer`() {
         // GIVEN
         every { httpServletRequest.getHeader("Authorization") } returns ("SOME_INFO_TOKEN")
         // WHEN
@@ -56,7 +56,7 @@ internal class TokenHelperUtilsTest {
     }
 
     @Test
-    fun `should return token data when Authorization header start with "Bearer " and has some info`() {
+    fun `should return token data when Authorization header start with Bearer and has some info`() {
         // GIVEN
         val expectedToken = "SOME_INFO_TOKEN"
         every { httpServletRequest.getHeader("Authorization") } returns ("Bearer $expectedToken")
