@@ -47,7 +47,7 @@ export default class WordsSequences extends BaseTask {
     const taskPartsOptions = this.selectedItemsOrder
       .filter((key) => options.includes(key))
       .map((orderItemName) => this.answerOptions[orderItemName] || []);
-    return shuffleArray(createTasks(taskPartsOptions));
+    return shuffleArray(createTasks(taskPartsOptions), 10);
   }
   @cached
   get doubledTasks() {
@@ -58,7 +58,7 @@ export default class WordsSequences extends BaseTask {
   }
   @cached
   get tasksSequence() {
-    return shuffleArray(this.doubledTasks).map((item, index) => {
+    return shuffleArray(this.doubledTasks, 10).map((item, index) => {
       return {
         answer: [...item],
         order: index,
