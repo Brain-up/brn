@@ -1,16 +1,17 @@
 {{page-title (t "header.used_resources")}}
 <section class="container">
-  <h1 class="text-3xl font-bold mb-5">{{t "header.used_resources"}}</h1>
+  <h1 class="mb-5 text-3xl font-bold">{{t "header.used_resources"}}</h1>
   <p class="mb-5">
     {{t "used_resources.subtitle"}}:
   </p>
-  <ul class="list-disc pl-5">
+  <ul class="pl-5 list-disc">
     {{#each @model.resources as |resource|}}
       <li class="text-purple-primary">
         <a
           href={{resource.href}}
-          class="cursor-pointer hover:underline"
+          class="hover:underline cursor-pointer"
           target="_blank"
+          rel="noopener noreferrer"
         >{{resource.title}}</a>
         <svg
           class="inline ml-1 align-text-top"
