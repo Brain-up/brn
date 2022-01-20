@@ -63,11 +63,7 @@ module(
 
       await chooseAnswer(this.model.correctAnswer);
 
-      assert.equal(counter, 3);
-
-      await chooseAnswer(this.model.correctAnswer);
-
-      assert.equal(counter, 3);
+      assert.equal(counter, 2);
     });
   },
 );
