@@ -28,4 +28,5 @@ Router.map(function () {
   this.route('profile', function () {
     this.route('statistics');
   });
+  this.route('used-resources');
 });

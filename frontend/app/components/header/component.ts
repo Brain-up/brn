@@ -29,4 +29,14 @@ export default class HeaderComponent extends Component {
   @action setLocale(localeName: string) {
     this.userData.setLocale(localeName);
   }
+
+  @action closeMenu() {
+    const menu = document.getElementById('other-menu');
+
+    if (menu) {
+      const input = menu.querySelector('input');
+
+      input && (input.checked = false);
+    }
+  }
 }

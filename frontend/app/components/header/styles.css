@@ -51,7 +51,7 @@ a.active {
 .dropdown > a:before,
 .dropdown > button:before {
   position: absolute;
-  }
+}
 
 .dropdown input[type='checkbox'] {
   cursor: pointer;
@@ -96,6 +96,14 @@ a.active {
 .dropdown a:hover {
   cursor: pointer;
   opacity: 0.5;
+}
+
+.dropdown a.active {
+  @apply bg-purple-right !important;
+}
+
+.nav-links a.active {
+  @apply bg-purple-primary text-white;
 }
 
 /*! purgecss end ignore */
