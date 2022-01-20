@@ -38,6 +38,13 @@ const routes: Routes = [
             (m) => m.UploadFileModule,
           ),
       },
+      {
+        path: 'swagger',
+        loadChildren: () =>
+          import('./modules/swagger/swagger.module').then(
+            (m) => m.SwaggerModule,
+          ),
+      },
     ],
   },
 ];

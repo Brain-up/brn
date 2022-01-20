@@ -32,7 +32,7 @@
               "src/assets",
               { "glob": "**/*", "input": "../api-contract/samples", "output": "api" }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": ["src/styles.scss", "node_modules/swagger-ui/dist/swagger-ui.css"],
             "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] },
             "indexTransform": "src/index-transform.ts",
             "customWebpackConfig": {
