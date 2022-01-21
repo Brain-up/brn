@@ -17,6 +17,9 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     if (!task) {
       return null;
     }
+    if (!this.args.task) {
+      return null;
+    }
     const answer = (task as any).answer[0] as AnswerOption;
     const useGeneratedUrl =
       this.args.task.usePreGeneratedAudio && answer.audioFileUrl;
