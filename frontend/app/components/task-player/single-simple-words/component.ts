@@ -9,12 +9,15 @@ import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
-
-export default class SingleSimpleWordsComponent extends Component {
+import SingleSimpleWordTask from 'brn/models/task/single-simple-words';
+export default class SingleSimpleWordsComponent extends Component<SingleSimpleWordTask> {
   @tracked currentAnswer = null;
   get audioFileUrl() {
     const task = this.firstUncompletedTask;
     if (!task) {
+      return null;
+    }
+    if (!this.args.task) {
       return null;
     }
     const answer = (task as any).answer[0] as AnswerOption;

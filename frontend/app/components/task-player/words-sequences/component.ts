@@ -10,6 +10,7 @@ import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
+import WordsSequences from 'brn/models/task/words-sequences';
 
 function getEmptyTemplate(selectedItemsOrder = []): any {
   return selectedItemsOrder.reduce((result, currentKey) => {
@@ -18,8 +19,8 @@ function getEmptyTemplate(selectedItemsOrder = []): any {
   }, {});
 }
 
-interface IWordsSequencesComponentArgs {
-  task: any;
+export interface IWordsSequencesComponentArgs<T> {
+  task: T;
   mode: keyof typeof MODES;
   disableAnswers: boolean;
   activeWord: string;
@@ -29,7 +30,9 @@ interface IWordsSequencesComponentArgs {
   onWrongAnswer(params?: { skipRetry: true }): void;
 }
 
-export default class WordsSequencesComponent extends Component<IWordsSequencesComponentArgs> {
+export default class WordsSequencesComponent<
+  T = WordsSequences,
+> extends Component<IWordsSequencesComponentArgs<T>> {
   @action onInsert() {
     this.updateLocalTasks();
     this.startTask();
