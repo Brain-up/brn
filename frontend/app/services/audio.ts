@@ -27,6 +27,7 @@ import { ToneObject } from 'brn/components/audio-player/component';
 import SignalModel from 'brn/models/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
+import UserDataService from './user-data';
 
 type ISourceCollection = (ISource | IToneSource | null)[];
 export interface IToneSource {
@@ -43,6 +44,7 @@ export default class AudioService extends Service {
   @service('network') declare network: NetworkService;
   @service('stats') declare stats: StatsService;
   @service('intl') declare intl: Intl;
+  @service('user-data') declare userData: UserDataService;
   context = createAudioContext();
   @tracked
   player: null | TimerComponent = null;
@@ -139,7 +141,10 @@ export default class AudioService extends Service {
     return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
+  @tracked audioElements: (string | ToneObject)[] = [];
+
   async setAudioElements(filesToPlay: Array<string | ToneObject>) {
+    this.audioElements = filesToPlay;
     this.context = createAudioContext();
     if (Ember.testing) {
       this.buffers = [];
@@ -324,6 +329,18 @@ export default class AudioService extends Service {
   })
   startNoiseTask!: TaskGenerator<any, any>;
 
+  nativePlayText(txt: string) {
+    const lang = this.userData.activeLocale;
+    const voices = speechSynthesis.getVoices().filter((e) => e.lang === lang);
+    const v = new SpeechSynthesisUtterance(txt);
+    v.voice = voices[0];
+    const p = new Promise((resolve) => {
+      v.onend = resolve;
+    });
+    speechSynthesis.speak(v);
+    return p;
+  }
+
   @(task(function* playAudio(this: AudioService, noizeSeconds = 0) {
     const startedSources = [];
     const hasNoize = false;
@@ -346,7 +363,9 @@ export default class AudioService extends Service {
         startedSources.push(noize);
         yield timeout(toMilliseconds(noizeSeconds / 2));
       }
+      let index = -1;
       for (const item of this.sources) {
+        index++;
         if (item) {
           if (item.source.buffer) {
             const duration = toMilliseconds(item.source.buffer.duration);
@@ -357,6 +376,19 @@ export default class AudioService extends Service {
             console.error('there is no buffer for source');
           }
         } else {
+          // experimental branch to use browser audio api
+          if (typeof this.audioElements[index] === 'string') {
+            // likely we have to move it into method
+            const text = new URL(
+              this.audioElements[index] as string,
+            ).searchParams.get('text');
+            if (text) {
+              yield this.nativePlayText(text);
+            } else {
+              // wrong url;
+            }
+          }
+
           // here is place for await of end of speech
         }
       }
