@@ -17,6 +17,7 @@ import {
   toSeconds,
   toMilliseconds,
   TIMINGS,
+  ISource,
 } from 'brn/utils/audio-api';
 import Service, { inject as service } from '@ember/service';
 import TimerComponent from 'brn/components/timer/component';
@@ -25,6 +26,19 @@ import StatsService, { StatEvents } from './stats';
 import { ToneObject } from 'brn/components/audio-player/component';
 import SignalModel from 'brn/models/signal';
 import Intl from 'ember-intl/services/intl';
+import { PolySynth, Synth, SynthOptions } from 'tone';
+
+type ISourceCollection = (ISource | IToneSource | null)[];
+export interface IToneSource {
+  source: {
+    instance: PolySynth<Synth<SynthOptions>>;
+    buffer: {
+      duration: number;
+    };
+    start: () => void;
+    stop: () => void;
+  };
+}
 export default class AudioService extends Service {
   @service('network') declare network: NetworkService;
   @service('stats') declare stats: StatsService;
@@ -35,11 +49,11 @@ export default class AudioService extends Service {
   register(player: TimerComponent) {
     this.player = player;
   }
-  buffers: any[] = [];
+  buffers: (AudioBuffer | null | ToneObject)[] = [];
   startTime: null | number = 0;
   totalDuration = 0;
   noiseNode!: any;
-  sources!: any[];
+  sources!: ISourceCollection;
   noiseTaskInstance!: TaskInstance<any>;
   @tracked isPlaying = false;
 
@@ -69,9 +83,14 @@ export default class AudioService extends Service {
   trackProgress!: TaskGenerator<any, any>;
 
   audioUrlForText(text: string) {
-    return window.location.protocol + '//' + window.location.host + `/api/audio?text=${encodeURIComponent(
-      text,
-    )}&locale=${encodeURIComponent(this.intl.primaryLocale)}`;
+    return (
+      window.location.protocol +
+      '//' +
+      window.location.host +
+      `/api/audio?text=${encodeURIComponent(text)}&locale=${encodeURIComponent(
+        this.intl.primaryLocale,
+      )}`
+    );
   }
 
   @action async startPlayTask(filesToPlay = this.filesToPlay) {
@@ -130,10 +149,10 @@ export default class AudioService extends Service {
       this.buffers = await loadAudioFiles(
         this.context,
         filesToPlay as string[],
-        () => this.network.token ?? ''
+        () => this.network.token ?? '',
       );
     } else {
-      this.buffers = filesToPlay;
+      this.buffers = filesToPlay as ToneObject[];
     }
   }
 
@@ -181,8 +200,18 @@ export default class AudioService extends Service {
   async getNoise(duration: number, level: number, url: null | string = null) {
     if (url !== null) {
       const noiseContext = createAudioContext();
-      const noiseBuffers = await loadAudioFiles(noiseContext, [url], () => this.network.token ?? '');
-      const source = await createSource(noiseContext, noiseBuffers[0]);
+      const noiseBuffers = await loadAudioFiles(
+        noiseContext,
+        [url],
+        () => this.network.token ?? '',
+      );
+      if (noiseBuffers.some((n) => n === null)) {
+        throw new Error('Unable to resolve noise');
+      }
+      const source = await createSource(
+        noiseContext,
+        noiseBuffers[0] as AudioBuffer,
+      );
       source.source.loop = true;
       source.gainNode.gain.value = level * 0.01;
       return source;
@@ -194,10 +223,11 @@ export default class AudioService extends Service {
     }
   }
 
-  async createToneSources(items: SignalModel[]) {
+  async createToneSources(items: SignalModel[]): Promise<IToneSource[]> {
     const Tone = await import('tone');
     return items.map((el) => {
       const { duration, frequency } = el;
+
       return {
         source: {
           instance: new Tone.PolySynth(Tone.Synth).toDestination(),
@@ -215,17 +245,54 @@ export default class AudioService extends Service {
     });
   }
 
-  async createSources(context: AudioContext, buffers: AudioBuffer[]) {
-    if (buffers.filter((el) => el instanceof AudioBuffer).length) {
-      return buffers.map((buffer) => createSource(context, buffer));
-    } else {
-      return await this.createToneSources(buffers as unknown as SignalModel[]);
+  isToneObject(item: AudioBuffer | ToneObject | null): boolean {
+    if (item === null) {
+      return false;
     }
+    if (this.isAudioBuffer(item)) {
+      return false;
+    }
+    if (item.duration && 'frequency' in item) {
+      return true;
+    }
+    return false;
+  }
+  isAudioBuffer(item: AudioBuffer | ToneObject | null) {
+    return item instanceof AudioBuffer;
   }
 
-  calcDurationForSources(sources: any[]) {
+  async createSources(
+    context: AudioContext,
+    buffers: (AudioBuffer | ToneObject | null)[],
+  ): Promise<ISourceCollection> {
+    const results: ISourceCollection = [];
+    for (const buffer of buffers) {
+      if (this.isAudioBuffer(buffer)) {
+        results.push(createSource(context, buffer as AudioBuffer));
+      } else if (this.isToneObject(buffer)) {
+        results.push(
+          (
+            await this.createToneSources([buffer] as unknown as SignalModel[])
+          )[0],
+        );
+      } else if (buffer === null) {
+        // here is place for auto-generated sound using speech kit
+        results.push(null);
+      }
+    }
+    return results;
+  }
+
+  calcDurationForSources(sources: ISourceCollection) {
     return sources.reduce((result, item) => {
-      return result + toMilliseconds(item.source.buffer.duration);
+      if (item === null) {
+        return result;
+      }
+      if (item.source.buffer) {
+        return result + toMilliseconds(item.source.buffer.duration);
+      } else {
+        return result;
+      }
     }, 0);
   }
 
@@ -280,10 +347,18 @@ export default class AudioService extends Service {
         yield timeout(toMilliseconds(noizeSeconds / 2));
       }
       for (const item of this.sources) {
-        const duration = toMilliseconds(item.source.buffer.duration);
-        item.source.start(0);
-        startedSources.push(item);
-        yield timeout(duration);
+        if (item) {
+          if (item.source.buffer) {
+            const duration = toMilliseconds(item.source.buffer.duration);
+            item.source.start(0);
+            startedSources.push(item);
+            yield timeout(duration);
+          } else {
+            console.error('there is no buffer for source');
+          }
+        } else {
+          // here is place for await of end of speech
+        }
       }
       if (hasNoize) {
         yield timeout(toMilliseconds(noizeSeconds / 2));
