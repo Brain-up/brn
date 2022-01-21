@@ -19,7 +19,7 @@ export default class SingleSimpleWordsComponent extends Component {
     }
     const answer = (task as any).answer[0] as AnswerOption;
     const useGeneratedUrl =
-      this.task.usePreGeneratedAudio && answer.audioFileUrl;
+      this.args.task.usePreGeneratedAudio && answer.audioFileUrl;
     const url = useGeneratedUrl
       ? urlForAudio(answer.audioFileUrl)
       : this.audio.audioUrlForText(answer.word);
