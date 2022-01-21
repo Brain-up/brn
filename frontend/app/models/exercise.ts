@@ -59,6 +59,7 @@ export default class Exercise extends CompletionDependent {
     level?: number;
     url?: string;
   };
+  @attr('boolean') audioFileUrlGenerated!: boolean;
   get noiseLevel() {
     return this.noise?.level || 0;
   }

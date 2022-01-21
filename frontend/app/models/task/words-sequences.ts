@@ -53,7 +53,7 @@ export default class WordsSequences extends BaseTask {
   get doubledTasks() {
     return [].concat(
       deepCopy(this.possibleTasks),
-      deepCopy(this.possibleTasks),
+      shuffleArray(deepCopy(this.possibleTasks), 3),
     );
   }
   @cached

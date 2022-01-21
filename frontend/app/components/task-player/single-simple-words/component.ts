@@ -8,14 +8,22 @@ import { TaskItem } from 'brn/utils/task-item';
 import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { StatEvents } from 'brn/services/stats';
+import AnswerOption from 'brn/utils/answer-option';
 
 export default class SingleSimpleWordsComponent extends Component {
   @tracked currentAnswer = null;
   get audioFileUrl() {
-    return (
-      this.firstUncompletedTask &&
-      urlForAudio((this.firstUncompletedTask as any).answer[0].audioFileUrl)
-    );
+    const task = this.firstUncompletedTask;
+    if (!task) {
+      return null;
+    }
+    const answer = (task as any).answer[0] as AnswerOption;
+    const useGeneratedUrl =
+      this.task.usePreGeneratedAudio && answer.audioFileUrl;
+    const url = useGeneratedUrl
+      ? urlForAudio(answer.audioFileUrl)
+      : this.audio.audioUrlForText(answer.word);
+    return url;
   }
   startTask() {
     this.isCorrect = false;
