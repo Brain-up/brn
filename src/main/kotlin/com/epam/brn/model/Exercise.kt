@@ -36,7 +36,7 @@ data class Exercise(
     var noiseLevel: Int = 0,
     var noiseUrl: String = "",
     var active: Boolean = true,
-    var playWordsCount: Int = 0,
+    var playWordsCount: Int = 1,
     var wordsColumns: Int = 3,
 
     @ManyToOne(fetch = FetchType.LAZY)

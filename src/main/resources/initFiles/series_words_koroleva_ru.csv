@@ -1,34 +1,34 @@
 level,code,exerciseName,words,playWordsCount, wordsColumns
-1,koroleva_words_first_1,Слова1,(круг машина),1,2
-2,koroleva_words_first_1,Слова1,(мышь голова),1,2
-3,koroleva_words_first_1,Слова1,(машина голова),1,2
-4,koroleva_words_first_1,Слова1,(круг мышь),1,2
-5,koroleva_words_first_1,Слова1,(круг машина мышь голова),1,2
-6,koroleva_words_first_2,Слова2,(спать рубашка),1,2
-7,koroleva_words_first_2,Слова2,(ключ горячий),1,2
-8,koroleva_words_first_2,Слова2,(рубашка горячий),1,2
-9,koroleva_words_first_2,Слова2,(спать ключ),1,2
-10,koroleva_words_first_2,Слова2,(спать рубашка ключ горячий),1,2
-11,koroleva_words_first_3,Слова3,(стук самолёт),1,2
-12,koroleva_words_first_3,Слова3,(кот послушай),1,2
-13,koroleva_words_first_3,Слова3,(послушай самолёт),1,2
-14,koroleva_words_first_3,Слова3,(кот стук),1,2
-15,koroleva_words_first_3,Слова3,(стук самолёт кот послушай),1,2
-16,koroleva_words_first_4,Слова4,(пульт компьютер),1,2
-17,koroleva_words_first_4,Слова4,(нос картина),1,2
-18,koroleva_words_first_4,Слова4,(картина компьютер),1,2
-19,koroleva_words_first_4,Слова4,(нос пульт),1,2
-20,koroleva_words_first_4,Слова4,(пульт компьютер нос картина),1,2
-21,koroleva_words_first_5,Слова5,(стул рисовать),1,2
-22,koroleva_words_first_5,Слова5,(глаз хорошо),1,2
-23,koroleva_words_first_5,Слова5,(хорошо рисовать),1,2
-24,koroleva_words_first_5,Слова5,(глаз стул),1,2
-25,koroleva_words_first_5,Слова5,(стул рисовать глаз хорошо),1,2
-26,koroleva_words_first_6,Слова6,(чай телефон),1,2
-27,koroleva_words_first_6,Слова6,(дверь ботинки),1,2
-28,koroleva_words_first_6,Слова6,(ботинки телефон),1,2
-29,koroleva_words_first_6,Слова6,(дверь чай),1,2
-30,koroleva_words_first_6,Слова6,(чай телефон дверь ботинки),1,2
+1,koroleva_words_first_1,1я группа,(круг машина),1,2
+2,koroleva_words_first_1,1я группа,(мышь голова),1,2
+3,koroleva_words_first_1,1я группа,(машина голова),1,2
+4,koroleva_words_first_1,1я группа,(круг мышь),1,2
+5,koroleva_words_first_1,1я группа,(круг машина мышь голова),1,2
+6,koroleva_words_first_2,2я группа,(спать рубашка),1,2
+7,koroleva_words_first_2,2я группа,(ключ горячий),1,2
+8,koroleva_words_first_2,2я группа,(рубашка горячий),1,2
+9,koroleva_words_first_2,2я группа,(спать ключ),1,2
+10,koroleva_words_first_2,2я группа,(спать рубашка ключ горячий),1,2
+11,koroleva_words_first_3,3я группа,(стук самолёт),1,2
+12,koroleva_words_first_3,3я группа,(кот послушай),1,2
+13,koroleva_words_first_3,3я группа,(послушай самолёт),1,2
+14,koroleva_words_first_3,3я группа,(кот стук),1,2
+15,koroleva_words_first_3,3я группа,(стук самолёт кот послушай),1,2
+16,koroleva_words_first_4,4я группа,(пульт компьютер),1,2
+17,koroleva_words_first_4,4я группа,(нос картина),1,2
+18,koroleva_words_first_4,4я группа,(картина компьютер),1,2
+19,koroleva_words_first_4,4я группа,(нос пульт),1,2
+20,koroleva_words_first_4,4я группа,(пульт компьютер нос картина),1,2
+21,koroleva_words_first_5,5я группа,(стул рисовать),1,2
+22,koroleva_words_first_5,5я группа,(глаз хорошо),1,2
+23,koroleva_words_first_5,5я группа,(хорошо рисовать),1,2
+24,koroleva_words_first_5,5я группа,(глаз стул),1,2
+25,koroleva_words_first_5,5я группа,(стул рисовать глаз хорошо),1,2
+26,koroleva_words_first_6,6я группа,(чай телефон),1,2
+27,koroleva_words_first_6,6я группа,(дверь ботинки),1,2
+28,koroleva_words_first_6,6я группа,(ботинки телефон),1,2
+29,koroleva_words_first_6,6я группа,(дверь чай),1,2
+30,koroleva_words_first_6,6я группа,(чай телефон дверь ботинки),1,2
 50,koroleva_words_second_1_4,1 слово из 6и,(круг машина мышь голова спать рубашка),1,2
 51,koroleva_words_second_1_4,1 слово из 6и,(мышь голова спать рубашка ключ горячий),1,2
 52,koroleva_words_second_1_4,1 слово из 6и,(спать рубашка ключ горячий стук самолёт),1,2
