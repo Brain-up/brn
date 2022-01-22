@@ -1,5 +1,6 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
+import com.epam.brn.dto.ResourceDto
 import com.epam.brn.model.ExerciseType
 import com.fasterxml.jackson.annotation.JsonIgnore
 

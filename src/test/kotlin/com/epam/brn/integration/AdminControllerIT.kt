@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -148,7 +148,7 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponse::class.java).data
         val resultStatistic: List<DayStudyStatisticDto> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatisticDto>>() {})
 
@@ -183,7 +183,7 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponse::class.java).data
         val resultStatistic: List<MonthStudyStatisticDto> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatisticDto>>() {})
 
@@ -519,9 +519,9 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseResponseDto::class.java)
+        val baseResponse = objectMapper.readValue(responseJson, BaseResponse::class.java)
         val authorities = objectMapper.readValue(
-            gson.toJson(baseResponseDto.data),
+            gson.toJson(baseResponse.data),
             object : TypeReference<List<Authority>>() {}
         )
         authorities.size shouldBe 3
@@ -563,7 +563,7 @@ class AdminControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BaseResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseResponse::class.java).data
         val users: List<UserAccountResponse> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountResponse>>() {})
 

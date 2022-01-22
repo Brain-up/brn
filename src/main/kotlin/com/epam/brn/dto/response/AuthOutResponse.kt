@@ -1,4 +1,4 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
 import com.fasterxml.jackson.annotation.JsonInclude
 

@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.StudyHistoryService
@@ -31,7 +31,7 @@ class AdminControllerV2(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
+        .body(BaseResponse(data = studyHistoryService.getHistories(userId, from, to)))
 
     @GetMapping("/study/week")
     @ApiOperation("Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format")
@@ -39,9 +39,9 @@ class AdminControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to, userId)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
     }
 
     @GetMapping("/study/year")
@@ -50,8 +50,8 @@ class AdminControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to, userId)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
     }
 }

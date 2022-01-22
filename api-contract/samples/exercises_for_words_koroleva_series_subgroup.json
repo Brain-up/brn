@@ -1,0 +1,28 @@
+{
+  "data": {
+    "seriesId": 117,
+    "id": 76,
+    "name": "3я группа",
+    "level": 11,
+    "noise": {
+      "level": 0,
+      "url": ""
+    },
+    "template": "",
+    "available": true,
+    "tasks": [
+      {
+        "id": 64
+      }
+    ],
+    "signals": [],
+    "active": true,
+    "changedBy": "InitialDataLoader",
+    "changedWhen": "2022-01-22T14:46:10.336085",
+    "playWordsCount": 1,
+    "wordsColumns": 2,
+    "audioFileUrlGenerated": false
+  },
+  "errors": [],
+  "meta": []
+}

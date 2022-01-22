@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.service.AudiometryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -22,12 +22,12 @@ class AudiometryController(private val audiometryService: AudiometryService) {
     fun getAudiometrics(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String) =
         ResponseEntity
             .ok()
-            .body(BaseResponseDto(data = audiometryService.getAudiometrics(locale)))
+            .body(BaseResponse(data = audiometryService.getAudiometrics(locale)))
 
     @GetMapping(value = ["/{audiometryId}"])
     @ApiOperation("Get audiometry for id with tasks")
     fun getAudiometry(@PathVariable("audiometryId") audiometryId: Long) =
         ResponseEntity
             .ok()
-            .body(BaseSingleObjectResponseDto(data = audiometryService.getAudiometry(audiometryId)))
+            .body(BaseSingleObjectResponse(data = audiometryService.getAudiometry(audiometryId)))
 }

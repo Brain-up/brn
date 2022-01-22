@@ -1,12 +1,12 @@
 package com.epam.brn.controller
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.ExerciseWithTasksResponse
+import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.SubGroupResponse
+import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
@@ -15,7 +15,7 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
-import com.epam.brn.dto.response.AuthorityDto
+import com.epam.brn.dto.response.AuthorityResponse
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
@@ -113,7 +113,7 @@ internal class AdminControllerTest {
     private lateinit var monthStudyStatistic: MonthStudyStatistic
 
     @MockK
-    private lateinit var authorityDto: AuthorityDto
+    private lateinit var authorityResponse: AuthorityResponse
 
     @Test
     fun `getUsers should return users with statistic when withAnalytics is true`() {
@@ -128,7 +128,7 @@ internal class AdminControllerTest {
         // THEN
         verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BaseResponseDto).data shouldBe listOf(userWithAnalyticsResponse)
+        (users.body as BaseResponse).data shouldBe listOf(userWithAnalyticsResponse)
     }
 
     @Test
@@ -144,7 +144,7 @@ internal class AdminControllerTest {
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BaseResponseDto).data shouldBe listOf(userAccountResponse)
+        (users.body as BaseResponse).data shouldBe listOf(userAccountResponse)
     }
 
     @Test
@@ -229,7 +229,7 @@ internal class AdminControllerTest {
     fun `getRoles should return http status 200`() {
         // GIVEN
 
-        every { authorityService.findAll() } returns listOf(authorityDto)
+        every { authorityService.findAll() } returns listOf(authorityResponse)
 
         // WHEN
         val authorities = adminController.getRoles()

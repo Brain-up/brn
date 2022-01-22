@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -25,5 +25,5 @@ class StudyHistoryControllerV2(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
+        .body(BaseResponse(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 }
