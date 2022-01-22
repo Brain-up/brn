@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.repo.StudyHistoryRepository
 import com.fasterxml.jackson.core.type.TypeReference
@@ -80,7 +80,7 @@ class StudyHistoryControllerIT : BaseIT() {
             .response
             .getContentAsString(StandardCharsets.UTF_8)
 
-        val singleObjectResponseDto = gson.fromJson(response, BaseSingleObjectResponseDto::class.java)
+        val singleObjectResponseDto = gson.fromJson(response, BaseSingleObjectResponse::class.java)
 
         // THEN
         assertNotNull(singleObjectResponseDto)
@@ -111,7 +111,7 @@ class StudyHistoryControllerIT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         // THEN
-        val data = gson.fromJson(response, BaseResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseResponse::class.java).data
         val studyHistories: List<StudyHistoryDto> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<StudyHistoryDto>>() {})
 

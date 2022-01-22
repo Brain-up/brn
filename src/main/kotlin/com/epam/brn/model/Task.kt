@@ -1,8 +1,8 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.GeneralTaskResponse
-import com.epam.brn.dto.WordsSeriesTaskResponse
-import com.epam.brn.dto.WordsGroupSeriesTaskResponse
+import com.epam.brn.dto.response.GeneralTaskResponse
+import com.epam.brn.dto.response.WordsSeriesTaskResponse
+import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType

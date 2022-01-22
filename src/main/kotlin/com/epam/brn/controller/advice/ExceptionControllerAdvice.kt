@@ -1,6 +1,6 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
@@ -24,73 +24,73 @@ class ExceptionControllerAdvice {
     private val logger = logger()
 
     @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponseDto> {
+    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponse> {
         logger.error("Entity not found exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .body(BaseResponse(errors = listOf(e.message.toString())))
     }
 
     @ExceptionHandler(FileFormatException::class)
-    fun handleFileFormatException(e: FileFormatException): ResponseEntity<BaseResponseDto> {
+    fun handleFileFormatException(e: FileFormatException): ResponseEntity<BaseResponse> {
         logger.error("File format exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .body(BaseResponse(errors = listOf(e.message.toString())))
     }
 
     @ExceptionHandler(CsvParser.ParseException::class)
-    fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<BaseResponseDto> {
+    fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<BaseResponse> {
         logger.error("Csv file parsing exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = e.errors))
+            .body(BaseResponse(errors = e.errors))
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponseDto> {
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponse> {
         logger.error("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .body(BaseResponse(errors = listOf(e.message.toString())))
     }
 
     @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponseDto> {
+    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponse> {
         logger.error("Forbidden: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .body(BaseResponse(errors = listOf(e.message.toString())))
     }
 
     @ExceptionHandler(UninitializedPropertyAccessException::class)
-    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BaseResponseDto> {
+    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BaseResponse> {
         return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleHttpMessageNotReadableException(
         e: HttpMessageNotReadableException
-    ): ResponseEntity<BaseResponseDto> {
+    ): ResponseEntity<BaseResponse> {
         logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .body(BaseResponse(errors = listOf(e.message.toString())))
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BaseResponseDto> {
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BaseResponse> {
         logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = processValidationErrors(e.bindingResult.fieldErrors)))
+            .body(BaseResponse(errors = processValidationErrors(e.bindingResult.fieldErrors)))
     }
 
     private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> {
@@ -98,20 +98,20 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(IOException::class)
-    fun handleIOException(e: IOException): ResponseEntity<BaseResponseDto> {
+    fun handleIOException(e: IOException): ResponseEntity<BaseResponse> {
         return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(Throwable::class)
-    fun handleException(e: Throwable): ResponseEntity<BaseResponseDto> {
+    fun handleException(e: Throwable): ResponseEntity<BaseResponse> {
         return createInternalErrorResponse(e)
     }
 
-    fun createInternalErrorResponse(e: Throwable): ResponseEntity<BaseResponseDto> {
+    fun createInternalErrorResponse(e: Throwable): ResponseEntity<BaseResponse> {
         logger.error("Internal exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponseDto(errors = listOf(e.message.toString())))
+            .body(BaseResponse(errors = listOf(e.message.toString())))
     }
 }

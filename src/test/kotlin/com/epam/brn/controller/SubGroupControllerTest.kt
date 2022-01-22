@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.SubGroupResponse
+import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.service.SubGroupService
 import io.kotest.matchers.shouldBe
 import io.mockk.every

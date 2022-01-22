@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.AudiometryResponse
+import com.epam.brn.dto.response.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.service.AudiometryService
 import io.mockk.every

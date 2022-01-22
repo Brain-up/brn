@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.StudyHistoryDto
 import com.fasterxml.jackson.core.type.TypeReference
 import org.junit.jupiter.api.AfterEach
@@ -52,7 +52,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         // THEN
-        val data = objectMapper.readValue(response, BaseResponseDto::class.java).data
+        val data = objectMapper.readValue(response, BaseResponse::class.java).data
         val studyHistories: List<StudyHistoryDto> =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<List<StudyHistoryDto>>() {})
 

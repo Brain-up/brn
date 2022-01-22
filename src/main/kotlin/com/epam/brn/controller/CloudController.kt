@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.cloud.CloudService
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,28 +25,28 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     @GetMapping("/upload")
     @ApiOperation("Get cloud upload form")
     @Throws(Exception::class)
-    fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BaseSingleObjectResponseDto> {
+    fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BaseSingleObjectResponse> {
         if (filePath.isNullOrEmpty())
             throw IllegalArgumentException("File path should be non empty")
         val signedForm = cloudService.uploadForm(filePath)
-        return ResponseEntity.ok(BaseSingleObjectResponseDto(signedForm))
+        return ResponseEntity.ok(BaseSingleObjectResponse(signedForm))
     }
 
     @GetMapping("/url")
     @ApiOperation("Get cloud bucket url")
     @Throws(Exception::class)
-    fun bucketUrl(): ResponseEntity<BaseSingleObjectResponseDto> =
-        ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.bucketUrl()))
+    fun bucketUrl(): ResponseEntity<BaseSingleObjectResponse> =
+        ResponseEntity.ok(BaseSingleObjectResponse(cloudService.bucketUrl()))
 
     @GetMapping("/baseFileUrl")
     @ApiOperation("Get cloud base file url")
     @Throws(Exception::class)
-    fun baseFileUrl(): ResponseEntity<BaseSingleObjectResponseDto> =
-        ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.baseFileUrl()))
+    fun baseFileUrl(): ResponseEntity<BaseSingleObjectResponse> =
+        ResponseEntity.ok(BaseSingleObjectResponse(cloudService.baseFileUrl()))
 
     @GetMapping("/folders")
     @ApiOperation("Get cloud folder structure")
     @Throws(Exception::class)
-    fun listBucket(): ResponseEntity<BaseSingleObjectResponseDto> =
-        ResponseEntity.ok(BaseSingleObjectResponseDto(cloudService.listBucket()))
+    fun listBucket(): ResponseEntity<BaseSingleObjectResponse> =
+        ResponseEntity.ok(BaseSingleObjectResponse(cloudService.listBucket()))
 }

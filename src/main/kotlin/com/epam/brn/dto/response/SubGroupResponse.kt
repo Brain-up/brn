@@ -1,4 +1,4 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
 data class SubGroupResponse(
     var seriesId: Long,

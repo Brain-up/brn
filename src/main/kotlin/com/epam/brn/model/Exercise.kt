@@ -1,7 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.ExerciseWithTasksResponse
+import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.ShortTaskDto
 import org.springframework.data.annotation.LastModifiedBy

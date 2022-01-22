@@ -1,12 +1,12 @@
 package com.epam.brn.controller
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.ExerciseService
@@ -65,7 +65,7 @@ class AdminController(
     ): ResponseEntity<Any> {
         val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)
         else userAccountService.getUsers(pageable, role)
-        return ResponseEntity.ok().body(BaseResponseDto(data = users))
+        return ResponseEntity.ok().body(BaseResponse(data = users))
     }
 
     @GetMapping("/histories")
@@ -79,7 +79,7 @@ class AdminController(
         @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam("to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getHistories(userId, from, to)))
+        .body(BaseResponse(data = studyHistoryService.getHistories(userId, from, to)))
 
     @GetMapping("/monthHistories")
     @ApiOperation("Get month user's study histories by month and year")
@@ -88,7 +88,7 @@ class AdminController(
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getMonthHistories(userId, month, year)))
+        .body(BaseResponse(data = studyHistoryService.getMonthHistories(userId, month, year)))
 
     @GetMapping("/study/week")
     @ApiOperation("Get user's weekly statistic for the period. Where period is a two dates in the format yyyy-MM-dd")
@@ -100,14 +100,14 @@ class AdminController(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
         @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
         val tempTo = LocalDateTime.of(to, LocalTime.MAX)
         val result = userDayStatisticService.getStatisticForPeriod(tempFrom, tempTo, userId)
         val response = result.map {
             it.toDto()
         }
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = response))
     }
 
     @GetMapping("/study/year")
@@ -120,14 +120,14 @@ class AdminController(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
         @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
         val tempTo = LocalDateTime.of(to, LocalTime.MAX)
         val result = userMonthStatisticService.getStatisticForPeriod(tempFrom, tempTo, userId)
         val response = result.map {
             it.toDto()
         }
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = response))
     }
 
     @PostMapping("/loadTasksFile")
@@ -135,7 +135,7 @@ class AdminController(
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile
-    ): ResponseEntity<BaseResponseDto> {
+    ): ResponseEntity<BaseResponse> {
         csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(HttpStatus.CREATED)
     }
@@ -147,18 +147,18 @@ class AdminController(
             value = "subGroupId",
             required = true
         ) subGroupId: Long
-    ): ResponseEntity<BaseResponseDto> =
+    ): ResponseEntity<BaseResponse> =
         ResponseEntity.ok()
-            .body(BaseResponseDto(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
+            .body(BaseResponse(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 
     @PatchMapping("/resources/{id}")
     @ApiOperation("Update resource description by resource id")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest
-    ): ResponseEntity<BaseSingleObjectResponseDto> =
+    ): ResponseEntity<BaseSingleObjectResponse> =
         ResponseEntity.ok()
-            .body(BaseSingleObjectResponseDto(data = resourceService.updateDescription(id, request.description!!)))
+            .body(BaseSingleObjectResponse(data = resourceService.updateDescription(id, request.description!!)))
 
     @PostMapping("/subgroup")
     @ApiOperation("Add new subgroup for existing series")
@@ -166,23 +166,23 @@ class AdminController(
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
         @Valid @RequestBody subGroupRequest: SubGroupRequest
-    ): ResponseEntity<BaseSingleObjectResponseDto> =
+    ): ResponseEntity<BaseSingleObjectResponse> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponseDto(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
+            .body(BaseSingleObjectResponse(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
     @PatchMapping("/subgroups/{subGroupId}")
     @ApiOperation("Update subgroup by id")
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
         @RequestBody subGroup: SubGroupChangeRequest
-    ): ResponseEntity<BaseSingleObjectResponseDto> =
-        ResponseEntity.ok(BaseSingleObjectResponseDto(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
+    ): ResponseEntity<BaseSingleObjectResponse> =
+        ResponseEntity.ok(BaseSingleObjectResponse(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
 
     @GetMapping("/roles")
     @ApiOperation("Get all roles")
-    fun getRoles(): ResponseEntity<BaseResponseDto> {
+    fun getRoles(): ResponseEntity<BaseResponse> {
         val authorities = authorityService.findAll()
-        return ResponseEntity.ok().body(BaseResponseDto(data = authorities))
+        return ResponseEntity.ok().body(BaseResponse(data = authorities))
     }
 
     @PostMapping("/create/exercise")
@@ -190,7 +190,7 @@ class AdminController(
     fun createExercise(
         @ApiParam(value = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
-    ): ResponseEntity<BaseSingleObjectResponseDto> =
+    ): ResponseEntity<BaseSingleObjectResponse> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponseDto(data = exerciseService.createExercise(exerciseCreateDto)))
+            .body(BaseSingleObjectResponse(data = exerciseService.createExercise(exerciseCreateDto)))
 }

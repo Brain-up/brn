@@ -1,4 +1,4 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
 import com.epam.brn.enums.AudiometryType
 import javax.validation.constraints.NotBlank
