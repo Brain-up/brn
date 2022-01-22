@@ -36,6 +36,8 @@ data class Exercise(
     var noiseLevel: Int = 0,
     var noiseUrl: String = "",
     var active: Boolean = true,
+    var playWordsCount: Int = 0,
+    var wordsColumns: Int = 3,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_group_id")
@@ -64,7 +66,9 @@ data class Exercise(
         signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
         active = active,
         changedBy = changedBy,
-        changedWhen = changedWhen
+        changedWhen = changedWhen,
+        playWordsCount = playWordsCount,
+        wordsColumns = wordsColumns,
     )
 
     fun toDtoWithTasks() = ExerciseWithTasksResponse(
@@ -78,12 +82,14 @@ data class Exercise(
         signals = signals.map { signal -> signal.toSignalDto() },
         active = active,
         changedBy = changedBy,
-        changedWhen = changedWhen
+        changedWhen = changedWhen,
+        playWordsCount = playWordsCount,
+        wordsColumns = wordsColumns,
     )
 
     override fun toString() =
-        "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, " +
-            "noiseUrl=$noiseUrl, template=$template, active=$active)"
+        "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, noiseUrl=$noiseUrl, " +
+            "template=$template, active=$active, playWordsCount=$playWordsCount, wordsColumns=$wordsColumns)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -97,6 +103,8 @@ data class Exercise(
         if (level != other.level) return false
         if (noiseLevel != other.noiseLevel) return false
         if (noiseUrl != other.noiseUrl) return false
+        if (playWordsCount != other.playWordsCount) return false
+        if (wordsColumns != other.wordsColumns) return false
 
         return true
     }
@@ -107,6 +115,8 @@ data class Exercise(
         result = 31 * result + level.hashCode()
         result = 31 * result + (template?.hashCode() ?: 0)
         result = 31 * result + (noiseLevel)
+        result = 31 * result + (playWordsCount)
+        result = 31 * result + (wordsColumns)
         return result
     }
 

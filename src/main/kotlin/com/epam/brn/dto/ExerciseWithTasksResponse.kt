@@ -15,5 +15,8 @@ data class ExerciseWithTasksResponse(
     var signals: List<SignalTaskDto>,
     var active: Boolean = true,
     var changedBy: String? = "",
-    var changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
+    var changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+    var isAudioFileUrlGenerated: Boolean = false,
+    var playWordsCount: Int? = 1,
+    var wordsColumns: Int? = 3,
 )
