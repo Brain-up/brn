@@ -9,18 +9,24 @@
 
 .task-player__option {
   flex-basis: 33.33%;
-  padding: 0 10px 10px 0;
+  padding: 0 1px 1px 1px;
   box-sizing: border-box;
 }
 
 .task-player__option-button {
   width: 100%;
   display: block;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 9px;
+  line-height: 17px;
   text-transform: uppercase;
   transition: all 0.5s ease;
   font-weight: 600;
+}
+@media (min-width: 768px) {
+  .task-player__option-button {
+    font-size: 20px;
+    line-height: 25px;
+  }
 }
 
 .task-player__option-button:active {

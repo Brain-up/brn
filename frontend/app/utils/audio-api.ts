@@ -61,7 +61,15 @@ export function createAudioContext() {
   return new AudioContext();
 }
 
-export function createSource(context: BaseAudioContext, buffer: AudioBuffer) {
+export interface ISource {
+  source: AudioBufferSourceNode;
+  gainNode: GainNode;
+}
+
+export function createSource(
+  context: BaseAudioContext,
+  buffer: AudioBuffer,
+): ISource {
   const source = context.createBufferSource();
   const gainNode: GainNode = context.createGain
     ? context.createGain()
@@ -80,14 +88,14 @@ export function createSource(context: BaseAudioContext, buffer: AudioBuffer) {
 export class BufferLoader {
   context!: BaseAudioContext;
   urlList!: string[];
-  onload!: (results: AudioBuffer[]) => void;
+  onload!: (results: (AudioBuffer | null)[]) => void;
   getTokenCallback!: () => string;
   bufferList = [];
   constructor(
     context: BaseAudioContext,
     urlList: string[],
     callback: (results: AudioBuffer[]) => void,
-    getTokenCallback: () => string
+    getTokenCallback: () => string,
   ) {
     this.context = context;
     this.urlList = urlList;
@@ -96,14 +104,22 @@ export class BufferLoader {
   }
   async load() {
     const files = await Promise.all(
-      this.urlList.map((url) => arrayBufferRequest(url, this.getTokenCallback())),
+      this.urlList.map((url) =>
+        arrayBufferRequest(url, this.getTokenCallback()),
+      ),
     );
     try {
-      const results: AudioBuffer[] = await Promise.all(
+      const results: (AudioBuffer | null)[] = await Promise.all(
         files.map((file) => {
-          return new Promise((resolve, reject) => {
-            this.context.decodeAudioData(file as ArrayBuffer, resolve, reject);
-          }) as Promise<AudioBuffer>;
+          return new Promise((resolve) => {
+            if (file === null) {
+              resolve(null);
+            } else {
+              this.context.decodeAudioData(file, resolve, () => {
+                resolve(null);
+              });
+            }
+          }) as Promise<AudioBuffer | null>;
         }),
       );
       return this.onload(results);
@@ -116,9 +132,12 @@ export class BufferLoader {
 
 const AudioCache = new Map();
 
-function arrayBufferRequest(url: string, token: string) {
+function arrayBufferRequest(
+  url: string,
+  token: string,
+): Promise<ArrayBuffer | null> {
   const urlObj = new URL(url);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (AudioCache.has(url)) {
       return resolve(AudioCache.get(url).slice());
     }
@@ -134,7 +153,7 @@ function arrayBufferRequest(url: string, token: string) {
       resolve(request.response);
     };
     request.onerror = function () {
-      reject(new Error('BufferLoader: XHR error'));
+      resolve(null);
     };
     request.send();
   });
@@ -143,10 +162,15 @@ function arrayBufferRequest(url: string, token: string) {
 export function loadAudioFiles(
   context: BaseAudioContext,
   files: string[],
-  getToken: () => string
-): Promise<AudioBuffer[]> {
+  getToken: () => string,
+): Promise<(AudioBuffer | null)[]> {
   return new Promise((resolve) => {
-    const bufferLoader = new BufferLoader(context, [...files], resolve, getToken);
+    const bufferLoader = new BufferLoader(
+      context,
+      [...files],
+      resolve,
+      getToken,
+    );
     bufferLoader.load();
   });
 }

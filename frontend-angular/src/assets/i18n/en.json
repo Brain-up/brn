@@ -3,6 +3,7 @@
     "Menu": {
       "Exercises": "Exercises",
       "Resources": "Resources",
+      "Swagger": "Swagger",
       "UploadFile": "Upload file",
       "Users": "Users"
     },

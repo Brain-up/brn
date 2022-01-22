@@ -1,13 +1,13 @@
 groupCode, level, type, name, description
 SPEECH_RU_RU, 1, SINGLE_SIMPLE_WORDS, Слова, Распознавание слов
-SPEECH_RU_RU, 2, PHRASES, Похожие фразы, Распознование похожих фраз
+SPEECH_RU_RU, 2, PHRASES, Похожие фразы, Распознавание похожих фраз
 SPEECH_RU_RU, 3, WORDS_SEQUENCES, Группа слов, Распознавание последовательности слов
 SPEECH_RU_RU, 5, SENTENCE, Предложения, Распознавание предложений
 SPEECH_RU_RU, 6, DI, Дихотическое слушание, Дихотическое слушание
 SPEECH_RU_RU, 7, FREQUENCY_WORDS, Слова с частотной группировкой, Слова с частотной группировкой
 SPEECH_RU_RU, 8, SINGLE_WORDS_KOROLEVA, Слова Королёва, Слова по методическому пособию Инны Васильевны Королевой Учусь слушать и говорить
-NON_SPEECH_RU_RU, 1, DURATION_SIGNALS, Длительность сигналов, Распознование сигналов по длительности
-NON_SPEECH_RU_RU, 2, FREQUENCY_SIGNALS, Часота сигналов, Распознование сигналов по частоте сигналов
+NON_SPEECH_RU_RU, 1, DURATION_SIGNALS, Длительность сигналов, Распознавание сигналов по длительности
+NON_SPEECH_RU_RU, 2, FREQUENCY_SIGNALS, Частота сигналов, Распознавание сигналов по частоте сигналов
 SPEECH_EN_US, 1, SINGLE_SIMPLE_WORDS, Words, Hearing and understanding simple words
 SPEECH_EN_US, 2, PHRASES, Similar phrases, Hearing and understanding
 SPEECH_EN_US, 3, WORDS_SEQUENCES, Words group, Hearing and understanding group of words

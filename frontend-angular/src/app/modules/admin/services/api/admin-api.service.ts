@@ -2,7 +2,7 @@ import * as dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
 import { Exercise } from '@admin/models/exercise';
 import { GetUsers } from '@admin/models/endpoints.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -119,5 +119,11 @@ export class AdminApiService {
         pluck('data'),
         map((userList: UserWithNoAnalytics[]) => userList),
       );
+  }
+
+  public getSwaggerUi(): Observable<any> {
+    return this.httpClient.get('/api/v2/api-docs?group=all', {
+      responseType: 'text',
+    });
   }
 }
