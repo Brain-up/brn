@@ -102,6 +102,7 @@ export default class TaskPlayerComponent extends Component {
     if (
       modelName === 'task/frequency-words' ||
       modelName === 'task/single-words' ||
+      modelName === 'task/single-words-koroleva' ||
       modelName === 'task/single-simple-words' ||
       modelName === 'task/phrase'
     ) {
