@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint", 
+        "esbenp.prettier-vscode", 
+        "bradlc.vscode-tailwindcss",
+        "lifeart.vscode-ember-unstable",
+        "lifeart.vscode-glimmer-syntax"
+    ]
+}
