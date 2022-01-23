@@ -144,6 +144,7 @@ docker rm $(docker ps -a -q) # Remove all stopped containers
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project maintainer. 
 7. check that build job on jenkins passes successfully.
+8. Before load config files check them with https://orfogrammka.ru/ service.
 
 ### Code style:
 1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
