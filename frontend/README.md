@@ -14,6 +14,8 @@ You will need the following things properly installed on your computer.
 
 ## Installation
 
+* install [volta.sh](https://volta.sh/)
+* install [watchman](https://facebook.github.io/watchman/docs/install.html)
 * `git clone <repository-url>` this repository
 * `cd brn/frontend`
 * `yarn install`
@@ -21,7 +23,8 @@ You will need the following things properly installed on your computer.
 ## Running / Development
 
 * `yarn local` starts DEV incremental build pointed to localhost:8081 as API 
-* `yarn mirage` starts DEV incremental build with mock server (see ./mirage folder)
+* `yarn remote:prod` starts DEV build pointing to production BE
+
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
