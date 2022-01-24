@@ -5,10 +5,11 @@ import GroupModel from 'brn/models/group';
 import type Transition from '@ember/routing/-private/transition';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
-
+import type Store from '@ember-data/store';
 // @ts-expect-error mixin
 export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
   @service('network') network!: NetworkService;
+  @service('store') store!: Store;
 
   async model({ group_id }: { group_id: string }) {
     await this.network.loadCurrentUser();
