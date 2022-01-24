@@ -1,5 +1,5 @@
 /* eslint-disable  ember/no-get, ember/classic-decorator-no-classic-methods */
-import { belongsTo, hasMany, attr } from '@ember-data/model';
+import { belongsTo, hasMany, attr, AsyncHasMany } from '@ember-data/model';
 import CompletionDependent from './completion-dependent';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { inject as service } from '@ember/service';
@@ -46,7 +46,7 @@ export default class Exercise extends CompletionDependent {
   @attr('string') exerciseType!: string;
   @belongsTo('series', { async: false }) series!: SeriesModel;
   @hasMany('signal', { async: false }) signals!: SignalModel[];
-  @hasMany('task', { async: true, 'inverse': 'exercise', polymorphic: true }) tasks!: TaskModel[];
+  @hasMany('task', { async: true, 'inverse': 'exercise', polymorphic: true }) tasks!: AsyncHasMany<TaskModel>;
   // @ts-expect-error owerriden property
   get children() {
     return this.tasks;
