@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -32,9 +32,9 @@ class UserStatisticController(
     @ApiOperation("Get user's subgroup statistics")
     fun getUserSubGroupStatistic(
         @RequestParam(value = "ids", required = true) ids: List<Long>
-    ): ResponseEntity<BaseResponseDto> {
+    ): ResponseEntity<BaseResponse> {
         val userStatistic = userStatisticService.getSubGroupStatistic(ids)
-        return ResponseEntity.ok().body(BaseResponseDto(data = userStatistic))
+        return ResponseEntity.ok().body(BaseResponse(data = userStatistic))
     }
 
     @GetMapping("/study/week")
@@ -46,14 +46,14 @@ class UserStatisticController(
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
         val tempTo = LocalDateTime.of(to, LocalTime.MAX)
         val result = userDayStatisticService.getStatisticForPeriod(tempFrom, tempTo)
         val response = result.map {
             it.toDto()
         }
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = response))
     }
 
     @GetMapping("/study/year")
@@ -65,13 +65,13 @@ class UserStatisticController(
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
         val tempTo = LocalDateTime.of(to, LocalTime.MAX)
         val result = userMonthStatisticService.getStatisticForPeriod(tempFrom, tempTo)
         val response = result.map {
             it.toDto()
         }
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = response))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = response))
     }
 }

@@ -53,7 +53,7 @@
         {{/if}}
         <LinkTo
           @route="description"
-          class="inline-block block px-2 sm:px-4 py-2 mr-0 sm:mr-4 font-bold tracking-wider uppercase rounded-full
+          class="inline-block block px-2 sm:px-4 py-2 mr-0 font-bold tracking-wider uppercase rounded-full
             {{if
               this.session.isAuthenticated
               "hover:bg-white hover:text-purple-primary"
@@ -62,33 +62,55 @@
         >
           {{t "header.about"}}
         </LinkTo>
-        <button
-          type="button"
-          class="hover:text-opacity-50 py-2 bg-transparent rounded uppercase
-            {{if (eq this.activeLocale "ru-ru") "font-bold"}}
-            {{if
-              this.session.isAuthenticated
-              "text-white"
-              "text-purple-primary"
-            }}"
-          {{on "click" (fn this.setLocale "ru")}}
+        <span
+          class="sm:px-4 block inline-block px-2 py-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
         >
-          RU
-        </button>
-        /
-        <button
-          type="button"
-          class="inline-block hover:text-opacity-50 py-2 bg-transparent rounded uppercase
-            {{if (eq this.activeLocale "en-us") "font-bold"}}
-            {{if
-              this.session.isAuthenticated
-              "text-white"
-              "text-purple-primary"
-            }}"
-          {{on "click" (fn this.setLocale "en")}}
-        >
-          EN
-        </button>
+          <button
+            type="button"
+            class="hover:text-opacity-50 py-2 bg-transparent rounded uppercase
+              {{if (eq this.activeLocale "ru-ru") "font-bold"}}
+              {{if
+                this.session.isAuthenticated
+                "text-white"
+                "text-purple-primary"
+              }}"
+            {{on "click" (fn this.setLocale "ru")}}
+          >
+            RU
+          </button>
+          /
+          <button
+            type="button"
+            class="inline-block hover:text-opacity-50 py-2 bg-transparent rounded uppercase
+              {{if (eq this.activeLocale "en-us") "font-bold"}}
+              {{if
+                this.session.isAuthenticated
+                "text-white"
+                "text-purple-primary"
+              }}"
+            {{on "click" (fn this.setLocale "en")}}
+          >
+            EN
+          </button>
+        </span>
+        <div class="dropdown rounded-full">
+          <button
+            class="sm:px-4 sm:mr-4 block inline-block px-2 py-2 mr-0 font-bold tracking-wider uppercase rounded-full" type='button'
+          >{{t "header.more"}}</button>
+          {{!-- <label> --}}
+            <input type="checkbox" />
+              <div class="sm:text-base text-xs">
+              <a href="https://opencollective.com/brainup">{{t
+                    "header.donate"
+                  }}</a>
+              <a href="https://github.com/Brain-up/brn">{{t
+                    "header.github"
+                  }}</a>
+              <a href="/description">{{t "header.contact"}}</a>
+              <a href="/description">{{t "header.info"}}</a>
+            </div>
+          {{!-- </label> --}}
+        </div>
       </div>
     </div>
     {{#if this.session.isAuthenticated}}

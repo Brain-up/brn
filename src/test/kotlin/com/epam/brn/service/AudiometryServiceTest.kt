@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.AudiometryResponse
+import com.epam.brn.dto.response.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.Locale
 import com.epam.brn.model.Audiometry

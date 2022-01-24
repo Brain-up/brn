@@ -67,6 +67,7 @@ class InitialDataLoader(
             ExerciseType.FREQUENCY_WORDS.name to SINGLE_FREQUENCY_WORDS_FILE_NAME,
             ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
             ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
+            ExerciseType.SINGLE_WORDS_KOROLEVA.name to SINGLE_WORDS_KOROLEVA_FILE_NAME,
         )
 
         fun getInputStreamFromSeriesInitFile(seriesType: String): InputStream {
@@ -90,6 +91,7 @@ class InitialDataLoader(
             "$devSubFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
             "$devSubFolder$WORDS_SEQUENCES_FILE_NAME.csv",
             "$devSubFolder$PHRASES_FILE_NAME.csv",
+            "$SINGLE_WORDS_KOROLEVA_FILE_NAME.csv",
             "signal_exercises_ru.csv",
             "signal_exercises_en.csv",
             "$devSubFolder$SENTENCES_FILE_NAME.csv",
@@ -212,3 +214,4 @@ const val WORDS_SEQUENCES_FILE_NAME = "series_word_groups_ru"
 const val SENTENCES_FILE_NAME = "series_sentences_ru"
 const val SENTENCES_EN_FILE_NAME = "series_sentences_en"
 const val SIGNALS_FILE_NAME = "signal_exercises_"
+const val SINGLE_WORDS_KOROLEVA_FILE_NAME = "series_words_koroleva_ru"

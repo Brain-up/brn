@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.AudiometryResponse
+import com.epam.brn.dto.response.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import javax.persistence.CascadeType
 import javax.persistence.Column

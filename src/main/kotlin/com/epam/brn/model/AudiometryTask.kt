@@ -1,8 +1,8 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.AudiometryLopotkoTaskResponse
-import com.epam.brn.dto.AudiometryMatrixTaskResponse
-import com.epam.brn.dto.AudiometrySignalsTaskResponse
+import com.epam.brn.dto.response.AudiometryLopotkoTaskResponse
+import com.epam.brn.dto.response.AudiometryMatrixTaskResponse
+import com.epam.brn.dto.response.AudiometrySignalsTaskResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.EAR
 import javax.persistence.CascadeType

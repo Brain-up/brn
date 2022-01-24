@@ -22,7 +22,7 @@ export default class AudioPlayerComponent extends Component<IAudioPlayerArgument
   @service('stats') stats!: StatsService;
 
   willDestroy() {
-    super.willDestroy(...arguments);
+    super.willDestroy();
     this.audio.stop();
   }
 

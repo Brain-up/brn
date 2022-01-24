@@ -29,6 +29,7 @@ export default class ApplicationAdapter extends RESTAdapter {
     let actualModelName = modelName;
     if (
       modelName === 'task/single-words' ||
+      modelName === 'task/single-words-koroleva' ||
       modelName === 'task/words-sequences' ||
       modelName === 'task/sentence' ||
       modelName === 'task/single-simple-words' ||

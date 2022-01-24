@@ -10,20 +10,21 @@ import { TIMINGS } from 'brn/utils/audio-api';
 import { tracked } from '@glimmer/tracking';
 import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
+import SingleWordTask from 'brn/models/task/single-words';
 
 interface ITaskPlayerSingleWordsComponent {
-  task: any;
+  task: SingleWordTask;
   onShuffled(items: string[]): void;
   onRightAnswer(): void;
   onWrongAnswer(): void;
 }
 
 export default class TaskPlayerSingleWordsComponent extends Component<ITaskPlayerSingleWordsComponent> {
-  @tracked shuffledWords: null | string[] = null;
+  @tracked shuffledWords: string[] = [];
   @tracked lastAnswer: null | string = null;
   @tracked exerciseResultIsVisible = false;
   @tracked taskResultIsVisible = false;
-  @tracked previousTaskWords = null;
+  @tracked previousTaskWords: string[] = [];
 
   @service('audio') audio!: AudioService;
   @service('stats') stats!: StatsService;
@@ -56,7 +57,7 @@ export default class TaskPlayerSingleWordsComponent extends Component<ITaskPlaye
   }
 
   shuffle() {
-    this.shuffledWords = A(shuffleArray(this.task.words));
+    this.shuffledWords = A(shuffleArray(this.task.words, 10)) as string[];
     if (typeof this.args.onShuffled === 'function') {
       this.args.onShuffled(this.shuffledWords);
     }

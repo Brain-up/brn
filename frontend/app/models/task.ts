@@ -1,5 +1,5 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
-import { belongsTo, attr, AsyncBelongsTo } from '@ember-data/model';
+import { belongsTo, attr } from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -9,7 +9,12 @@ import Exercise from './exercise';
 import TasksManagerService from 'brn/services/tasks-manager';
 import StudyingTimerService from 'brn/services/studying-timer';
 import { tracked } from '@glimmer/tracking';
+import AnswerOption from 'brn/utils/answer-option';
 export default class Task extends CompletionDependent {
+  get usePreGeneratedAudio() {
+    return this.exercise.audioFileUrlGenerated;
+  }
+
   @service('tasks-manager') tasksManager!: TasksManagerService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
 
@@ -26,14 +31,14 @@ export default class Task extends CompletionDependent {
       return [];
     },
   })
-  normalizedAnswerOptions!: any;
+  normalizedAnswerOptions!: AnswerOption[];
 
   @belongsTo('exercise', {
     async: false,
     inverse: 'tasks',
     polymorphic: true,
   })
-  exercise!: AsyncBelongsTo<Exercise>;
+  exercise!: Exercise;
 
   @tracked
   _completedInCurrentCycle = false;

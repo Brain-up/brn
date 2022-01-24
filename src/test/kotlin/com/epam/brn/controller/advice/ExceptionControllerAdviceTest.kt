@@ -1,6 +1,6 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
@@ -37,7 +37,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleEntityNotFoundException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("tasks were not found"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("tasks were not found"))
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -64,14 +64,14 @@ internal class ExceptionControllerAdviceTest {
 
         // THEN
         assertTrue(
-            (responseEntity.body as BaseResponseDto).errors.containsAll(
+            (responseEntity.body as BaseResponse).errors.containsAll(
                 listOf(
                     "INCORRECT_FIELD_FORMAT",
                     "FIRST_NAME_MUST_NOT_HAVE_SPACES"
                 )
             )
         )
-        assertNotNull((responseEntity.body as BaseResponseDto).errors)
+        assertNotNull((responseEntity.body as BaseResponse).errors)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -83,7 +83,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleCsvFileParseException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("Csv file parsing exception"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("Csv file parsing exception"))
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -95,7 +95,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleIllegalArgumentException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("IllegalArgumentException"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("IllegalArgumentException"))
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -107,7 +107,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleBadCredentialsException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("Forbidden"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("Forbidden"))
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -119,7 +119,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleUninitializedPropertyAccessException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some exception"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("some exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -131,7 +131,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleIOException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some exception"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("some exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -143,7 +143,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some exception"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("some exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
@@ -158,7 +158,7 @@ internal class ExceptionControllerAdviceTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
         assertTrue(
-            (responseEntity.body as BaseResponseDto).errors
+            (responseEntity.body as BaseResponse).errors
                 .contains("Formatting error. Please upload file with csv extension.")
         )
     }
@@ -170,7 +170,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.createInternalErrorResponse(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponseDto).errors.toString().contains("some test exception"))
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("some test exception"))
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }

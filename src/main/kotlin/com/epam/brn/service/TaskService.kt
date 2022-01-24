@@ -2,7 +2,13 @@ package com.epam.brn.service
 
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.ExerciseType.FREQUENCY_WORDS
+import com.epam.brn.model.ExerciseType.PHRASES
+import com.epam.brn.model.ExerciseType.SENTENCE
+import com.epam.brn.model.ExerciseType.SINGLE_SIMPLE_WORDS
+import com.epam.brn.model.ExerciseType.SINGLE_WORDS_KOROLEVA
+import com.epam.brn.model.ExerciseType.WORDS_SEQUENCES
+import com.epam.brn.model.ExerciseType.valueOf
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
@@ -31,15 +37,12 @@ class TaskService(
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
-        return when (val type = ExerciseType.valueOf(exercise.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> tasks.map { task ->
-                task.toWordsSeriesTaskDto(
-                    type
-                )
-            }
-            ExerciseType.WORDS_SEQUENCES -> tasks.map { task -> task.toWordsGroupSeriesTaskDto(task.exercise?.template) }
-            ExerciseType.SENTENCE -> tasks.map { task -> task.toSentenceSeriesTaskDto(task.exercise?.template) }
-            ExerciseType.PHRASES -> tasks.map { task -> task.toPhraseSeriesTaskDto() }
+        return when (val type = valueOf(exercise.subGroup!!.series.type)) {
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SINGLE_WORDS_KOROLEVA ->
+                tasks.map { task -> task.toWordsSeriesTaskDto(type) }
+            WORDS_SEQUENCES -> tasks.map { task -> task.toWordsGroupSeriesTaskDto(task.exercise?.template) }
+            SENTENCE -> tasks.map { task -> task.toSentenceSeriesTaskDto(task.exercise?.template) }
+            PHRASES -> tasks.map { task -> task.toPhraseSeriesTaskDto() }
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
@@ -51,11 +54,11 @@ class TaskService(
 
         processAnswerOptions(task)
 
-        return when (val type = ExerciseType.valueOf(task.exercise!!.subGroup!!.series.type)) {
-            ExerciseType.SINGLE_SIMPLE_WORDS, ExerciseType.FREQUENCY_WORDS -> task.toWordsSeriesTaskDto(type)
-            ExerciseType.WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)
-            ExerciseType.SENTENCE -> task.toSentenceSeriesTaskDto(task.exercise?.template)
-            ExerciseType.PHRASES -> task.toPhraseSeriesTaskDto()
+        return when (val type = valueOf(task.exercise!!.subGroup!!.series.type)) {
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SINGLE_WORDS_KOROLEVA -> task.toWordsSeriesTaskDto(type)
+            WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)
+            SENTENCE -> task.toSentenceSeriesTaskDto(task.exercise?.template)
+            PHRASES -> task.toPhraseSeriesTaskDto()
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }

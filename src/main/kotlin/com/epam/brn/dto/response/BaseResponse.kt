@@ -1,12 +1,12 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
-data class BaseResponseDto(
+data class BaseResponse(
     val data: List<Any> = emptyList(),
     val errors: List<Any> = emptyList(),
     val meta: List<Any> = emptyList()
 )
 
-data class BaseSingleObjectResponseDto(
+data class BaseSingleObjectResponse(
     val data: Any,
     val errors: List<Any> = emptyList(),
     val meta: List<Any> = emptyList()

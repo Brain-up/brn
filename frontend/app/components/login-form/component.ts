@@ -77,7 +77,7 @@ export default class LoginFormComponent extends Component {
         this.errorMessage = key;
       }
 
-      this.loginTask.cancelAll();
+      yield this.loginTask.cancelAll();
     }
 
     if (this.session.isAuthenticated) {

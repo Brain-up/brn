@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountResponse
@@ -79,7 +79,7 @@ class UserDetailsControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponse::class.java)
         val resultUser: UserAccountResponse =
             objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
         resultUser.id shouldBe user.id
@@ -102,7 +102,7 @@ class UserDetailsControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponse::class.java)
         val resultUser: UserAccountResponse =
             objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
         resultUser.id shouldBe user.id
@@ -183,7 +183,7 @@ class UserDetailsControllerIT : BaseIT() {
     private fun assertHeadphonesAreCreated(resultAction: ResultActions) {
         resultAction.andExpect(status().isCreated)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponse::class.java)
         val addedHeadphones: HeadphonesDto =
             objectMapper.readValue(gson.toJson(baseResponseDto.data), HeadphonesDto::class.java)
         addedHeadphones.id shouldNotBe null
@@ -227,7 +227,7 @@ class UserDetailsControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isCreated)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponseDto::class.java)
+        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponse::class.java)
         val addedHeadphones: HeadphonesDto =
             objectMapper.readValue(objectMapper.writeValueAsString(baseResponseDto.data), HeadphonesDto::class.java)
         addedHeadphones.id shouldNotBe null
@@ -248,9 +248,9 @@ class UserDetailsControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseResponseDto::class.java)
+        val baseResponse = objectMapper.readValue(responseJson, BaseResponse::class.java)
         val returnedHeadphones = objectMapper.readValue(
-            gson.toJson(baseResponseDto.data),
+            gson.toJson(baseResponse.data),
             object : TypeReference<List<HeadphonesDto>>() {}
         )
         Assertions.assertThat(returnedHeadphones)
@@ -278,9 +278,9 @@ class UserDetailsControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseResponseDto::class.java)
+        val baseResponse = objectMapper.readValue(responseJson, BaseResponse::class.java)
         val returnedHeadphones = objectMapper.readValue(
-            gson.toJson(baseResponseDto.data),
+            gson.toJson(baseResponse.data),
             object : TypeReference<List<HeadphonesDto>>() {}
         )
         returnedHeadphones shouldNotBe null

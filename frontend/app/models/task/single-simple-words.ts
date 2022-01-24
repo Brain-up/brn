@@ -9,8 +9,9 @@ export default class TaskSingleSimpleWordsModel extends BaseTask {
   @cached
   get tasksToSolve() {
     return [
-      ...shuffleArray(this.answerOptions),
-      ...shuffleArray(this.answerOptions),
+      ...shuffleArray(this.answerOptions, 1),
+      ...shuffleArray(this.answerOptions, 2),
+      ...shuffleArray(this.answerOptions, 3),
     ].map((item, index) => {
       return {
         answer: [item],

@@ -1,7 +1,7 @@
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/Brain-up/brn)
 
 
-# Brain Up! 
+# Brain Up!
 This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
 It is projected to contain several series of media exercises, which should be added incrementally. 
 The tool structure and usage is organized as other tools like www.uchi.ru.
@@ -144,6 +144,7 @@ docker rm $(docker ps -a -q) # Remove all stopped containers
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project maintainer. 
 7. check that build job on jenkins passes successfully.
+8. Before load config files check them with https://orfogrammka.ru/ service.
 
 ### Code style:
 1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
