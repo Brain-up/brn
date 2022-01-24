@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.BaseResponse
@@ -103,8 +102,8 @@ class UserDetailController(
 
     @GetMapping("/current/{patientId}/doctor")
     @ApiOperation("Get patient's doctor")
-    fun getDoctorAssignedToPatient(@PathVariable patientId: Long): ResponseEntity<BaseResponseDto> =
-        ResponseEntity.ok(BaseResponseDto(data = doctorService.getDoctorAssignedToPatient(patientId)))
+    fun getDoctorAssignedToPatient(@PathVariable patientId: Long): ResponseEntity<BaseResponse> =
+        ResponseEntity.ok(BaseResponse(data = doctorService.getDoctorAssignedToPatient(patientId)))
 
     @DeleteMapping("/current/{patientId}/doctor/{doctorId}")
     @ResponseStatus(HttpStatus.OK)
