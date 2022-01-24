@@ -1,6 +1,10 @@
 import Component from '@glimmer/component';
 
-export default class ProgressBarCircleComponent extends Component {
+interface IProgressBarCircleArgs {
+  percent: number;
+}
+
+export default class ProgressBarCircleComponent extends Component<IProgressBarCircleArgs> {
   get dasharrayValue() {
     let progress = this.args.percent;
     if (isNaN(progress)) {

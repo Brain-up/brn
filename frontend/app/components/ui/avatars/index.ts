@@ -15,7 +15,10 @@ export default class UiAvatarsComponent extends Component<IComponentArguments> {
   @tracked selectedAvatar = 0;
 
   get activeTab() {
-    return this.selectedAvatar || parseInt(this.userData.selectedAvatarId, 10);
+    return (
+      this.selectedAvatar ||
+      parseInt(this.userData.selectedAvatarId.toString(), 10)
+    );
   }
 
   @action onSelect(id: number) {

@@ -7,8 +7,12 @@ import Ember from 'ember';
 import { action } from '@ember/object';
 import Session from 'ember-simple-auth/services/session';
 
-export default class GlobalTimerComponent extends Component {
-  constructor(owner: any, args: any) {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface IGlobalTimerArgs {
+  // EOL
+}
+export default class GlobalTimerComponent extends Component<IGlobalTimerArgs> {
+  constructor(owner: any, args: IGlobalTimerArgs) {
     super(owner, args);
     this.syncTask.perform();
     window.addEventListener('blur', this.disableTimer);
