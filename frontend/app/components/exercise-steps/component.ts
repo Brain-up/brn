@@ -9,9 +9,17 @@ const BUTTONS = {
   DISABLED: 'disabled',
 };
 
-export default class ExerciseStepsComponent extends Component {
-  @tracked modes = [];
-  MODES = MODES;
+type ValueOf<T> = T[keyof T];
+
+interface IExerciseStepsComponentArgs {
+  activeStep: ValueOf<typeof MODES>;
+  visible: boolean;
+  onClick: (key: string) => unknown;
+}
+
+export default class ExerciseStepsComponent extends Component<IExerciseStepsComponentArgs> {
+  @tracked modes: ValueOf<typeof MODES>[] = [];
+  MODES: Record<keyof typeof MODES, string> = MODES;
   get modeForListen() {
     if (this.args.activeStep === MODES.LISTEN) {
       return BUTTONS.ACTIVE;
@@ -33,13 +41,13 @@ export default class ExerciseStepsComponent extends Component {
       ? BUTTONS.ENABLED
       : BUTTONS.DISABLED;
   }
-  @action onClick(key, mode) {
+  @action onClick(key: string, mode: string) {
     if (mode === BUTTONS.DISABLED || mode === BUTTONS.ACTIVE) {
       return;
     }
     this.args.onClick(key);
   }
-  @action setLastMode(_, [mode]) {
+  @action setLastMode(_: unknown, [mode]: string[]) {
     if (mode === MODES.LISTEN) {
       this.modes = [mode];
     } else if (!this.modes.includes(mode)) {

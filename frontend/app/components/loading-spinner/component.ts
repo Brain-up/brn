@@ -1,8 +1,8 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 export default class LoadingSpinnerComponent extends Component {
-  @action fadeOut(node) {
-    let animation = node.animate(
+  @action fadeOut(node: HTMLDivElement) {
+    const animation = node.animate(
       [
         // keyframes
         { opacity: '0' },
