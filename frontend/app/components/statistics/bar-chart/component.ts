@@ -1,6 +1,5 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
-import { trackedRef } from 'ember-ref-bucket';
 import type { Chart, ChartOptions, Data } from 'billboard.js';
 import { isNone } from '@ember/utils';
 
@@ -19,8 +18,9 @@ interface IBarChartComponentArgs {
 
 export default class BarChartComponent extends Component<IBarChartComponentArgs> {
   private chart: Chart | undefined;
-  @trackedRef('chartContainer') chartElemRef!: HTMLDivElement;
-
+  get chartElemRef(): HTMLDivElement {
+    return document.getElementById('chart') as HTMLDivElement;
+  }
   get chartOptions(): BarOptionsType {
     return this.args.options;
   }

@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import waitFor from '@ember/test-helpers/dom/wait-for';
 
 module('Integration | Component | statistics/bar-chart', function (hooks) {
   setupRenderingTest(hooks);
@@ -17,6 +18,7 @@ module('Integration | Component | statistics/bar-chart', function (hooks) {
       hbs`<Statistics::BarChart @data={{this.data}} @options={{this.options}} />`,
     );
 
+    await waitFor('#chart');
     assert.dom('#chart').exists();
   });
 });
