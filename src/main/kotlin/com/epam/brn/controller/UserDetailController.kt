@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.BaseResponseDto
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.BaseResponse
