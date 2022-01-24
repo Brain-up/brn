@@ -2,9 +2,13 @@
 <Header />
 <main
   class="{{if
-      (or (not (is-active "index")))
+      (not (is-active "index"))
       "flex-col mx-auto mt-2 sm:mt-4 rounded pl-1 pr-1 pt-1 pb-1 relative"
     }}"
+  {{! template-lint-disable no-inline-styles }}
+  {{! template-lint-disable style-concatenation }}
+  style="
+    {{if (not (is-active "index")) "width: 80vw; max-width: 1280px;"}}"
 >
   {{outlet}}
 </main>

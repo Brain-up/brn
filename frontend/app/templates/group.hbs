@@ -13,12 +13,18 @@
   }}
     <aside
       class="bg-gradient-to-b from-white sticky top-0 rounded-bl rounded-br"
+      {{! template-lint-disable no-inline-styles }}
+      style="max-width: 80vw;"
     >
       <GroupNavigation @group={{@model}} />
     </aside>
   {{/if}}
   {{#if (is-active "group.series.subgroup.index")}}
-    <aside class="bg-gradient-to-b from-white rounded-bl rounded-br">
+    <aside
+      class="bg-gradient-to-b from-white rounded-bl rounded-br"
+      {{! template-lint-disable no-inline-styles }}
+      style="max-width: 80vw;"
+    >
       <SubgroupNavigation @group={{model-for-route "group.series"}} />
     </aside>
   {{/if}}
