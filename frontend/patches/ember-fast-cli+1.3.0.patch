@@ -1,0 +1,35 @@
+diff --git a/node_modules/ember-fast-cli/index.js b/node_modules/ember-fast-cli/index.js
+index f4f6ac9..5a43c0f 100644
+--- a/node_modules/ember-fast-cli/index.js
++++ b/node_modules/ember-fast-cli/index.js
+@@ -13,7 +13,6 @@ const UI_PATCH_ID = "PATCH_9cf61e15-5685-4308-8938-e5c991825bc6";
+ const path = require("path");
+ const fs = require("fs");
+ const express = require("express");
+-const fetch = require("node-fetch");
+ let capturing = false;
+ let results = [];
+ async function executeCommand(cli, commandName, commandArgs) {
+@@ -86,13 +85,15 @@ const methodsToPatch = [
+ ];
+ 
+ function postData(url = "/", data = {}) {
+-  return fetch(url, {
+-    method: "POST",
+-    headers: {
+-      "Content-Type": "application/json;charset=utf-8",
+-    },
+-    body: JSON.stringify({ data }),
+-  }).then((response) => response.json());
++  return import('node-fetch').then(fetch => {
++    return fetch(url, {
++      method: "POST",
++      headers: {
++        "Content-Type": "application/json;charset=utf-8",
++      },
++      body: JSON.stringify({ data }),
++    }).then((response) => response.json());
++  });
+ }
+ 
+ module.exports = {
