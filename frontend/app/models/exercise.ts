@@ -46,7 +46,7 @@ export default class Exercise extends CompletionDependent {
   @attr('string') exerciseType!: string;
   @belongsTo('series', { async: false }) series!: SeriesModel;
   @hasMany('signal', { async: false }) signals!: SignalModel[];
-  @hasMany('task', { async: false, 'inverse': 'exercise', polymorphic: true }) tasks!: TaskModel[];
+  @hasMany('task', { async: true, 'inverse': 'exercise', polymorphic: true }) tasks!: TaskModel[];
   // @ts-expect-error owerriden property
   get children() {
     return this.tasks;
