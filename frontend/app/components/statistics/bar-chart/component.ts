@@ -51,6 +51,9 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
   @action
   async buildChart() {
     const { bar, bb } = await import('billboard.js');
+    if (!this.chartElemRef) {
+      return;
+    }
     this.chart = bb.generate({
       bindto: this.chartElemRef,
 
