@@ -194,11 +194,11 @@ export default class AudioService extends Service {
   }
 
   @action
-  stop() {
+  async stop() {
     if (!Ember.testing) {
-      this.playTask.cancelAll();
+      await this.playTask.cancelAll();
     } else {
-      this.fakePlayTask.cancelAll();
+      await this.fakePlayTask.cancelAll();
     }
   }
 

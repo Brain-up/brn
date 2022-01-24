@@ -5,8 +5,10 @@ import type Transition from '@ember/routing/-private/transition';
 import TasksManagerService from 'brn/services/tasks-manager';
 import NetworkService from 'brn/services/network';
 import Ember from 'ember';
+import type Store from '@ember-data/store';
 
 export default class GroupSeriesSubgroupExerciseRoute extends Route {
+  @service('store') store!: Store;
   @service('tasks-manager')
   tasksManager!: TasksManagerService;
   @service('network')

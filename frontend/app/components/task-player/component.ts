@@ -74,8 +74,8 @@ export default class TaskPlayerComponent extends Component {
     // EOL
   }
 
-  @action onWrongAnswer({ skipRetry } = { skipRetry: false }) {
-    this.taskModeTask.cancelAll();
+  @action async onWrongAnswer({ skipRetry } = { skipRetry: false }) {
+    await this.taskModeTask.cancelAll();
     if (!skipRetry) {
       this.audio.startPlayTask();
     }

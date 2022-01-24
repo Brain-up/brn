@@ -111,7 +111,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       yield auth.registerUser(user.email, user.password);
     } catch(e) {
       this.errorMessage = e.message;
-      this.registrationTask.cancelAll();
+      yield this.registrationTask.cancelAll();
       return
     }
 
@@ -131,7 +131,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
             ? this.intl.t(ERRORS_MAP[key as keyof typeof ERRORS_MAP])
             : key;
       }
-      this.registrationTask.cancelAll();
+      yield this.registrationTask.cancelAll();
     }
   }).drop())
   registrationTask!: Task<any, any>;
