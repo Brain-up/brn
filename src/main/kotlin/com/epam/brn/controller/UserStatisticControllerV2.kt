@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -26,9 +26,9 @@ class UserStatisticControllerV2(
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
     }
 
     @GetMapping("/study/year")
@@ -36,8 +36,8 @@ class UserStatisticControllerV2(
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime
-    ): ResponseEntity<BaseSingleObjectResponseDto> {
+    ): ResponseEntity<BaseSingleObjectResponse> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = result))
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
     }
 }

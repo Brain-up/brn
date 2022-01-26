@@ -1,5 +1,7 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
+import com.epam.brn.dto.NoiseDto
+import com.epam.brn.dto.SignalTaskDto
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -15,5 +17,8 @@ data class ExerciseWithTasksResponse(
     var signals: List<SignalTaskDto>,
     var active: Boolean = true,
     var changedBy: String? = "",
-    var changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
+    var changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+    var isAudioFileUrlGenerated: Boolean = false,
+    var playWordsCount: Int? = 1,
+    var wordsColumns: Int? = 3,
 )

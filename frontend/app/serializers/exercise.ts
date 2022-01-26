@@ -1,6 +1,7 @@
 import ApplicationSerializer from './application';
 import { getOwner } from '@ember/application';
 import Store from '@ember-data/store';
+import Series from 'brn/models/series';
 export default class ExerciseSerializer extends ApplicationSerializer {
   ATTR_NAMES_MAP = Object.freeze({
     order: 'level',
@@ -60,10 +61,10 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     const appRouter = getOwner(this).lookup('route:application');
     const model = appRouter.modelFor('group.series');
     const seriaId = model.toArray().firstObject.seriesId;
-    const seria = this.store.peekRecord('series', seriaId);
+    const seria = this.store.peekRecord('series', seriaId) as Series;
     const kind = seria.kind;
     items.forEach((el) => {
-      el.tasks.forEach((task) => {
+      el.tasks.forEach((task: { type: string }) => {
         task.type = `task/${kind}`;
       });
     });

@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.SubGroupResponse
+import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.exception.EntityNotFoundException

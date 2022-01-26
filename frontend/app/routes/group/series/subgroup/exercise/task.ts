@@ -1,7 +1,11 @@
 import Route from '@ember/routing/route';
 import Task from 'brn/models/task';
+import { inject as service } from '@ember/service';
+import type Store from '@ember-data/store';
 
 export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
+  @service('store') store!: Store;
+
   async model({ task_id }: { task_id: string }) {
     const tasks = await this.modelFor('group.series.subgroup.exercise').tasks;
     return tasks.toArray().find(({ id }) => task_id === id);

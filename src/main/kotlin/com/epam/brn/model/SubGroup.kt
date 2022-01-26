@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.SubGroupResponse
+import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.upload.csv.subgroup.SubgroupGenericRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column

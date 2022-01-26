@@ -102,6 +102,14 @@ footer:
   info_about_helper: and
   contact_us: Contact us
 
+about_us:
+  advantages: Advantages
+
+index:
+  app_info: BrainUP - online classes for children and adults
+  app_description: Our site is a platform of interactive exercises for adults and children from the age of seven with cognitive speech perception problems, which helps to train the ability to listen and understand.
+
+
 start_task_button:
   label: Start exercise
 
@@ -163,19 +171,20 @@ description:
       exercise_groups: The block of classes consists of two groups of exercises - non-speech and speech exercises.
       non_speech_group: The non-speech block is still in development, but there are already several exercises.
       speech_group:
-        'There are several series of the same type in the speech block: Words, Group of words, Phrases. They have already been practically completed
-        technically. Series will soon be supplemented with exercises. It is already possible to study these series.'
+        "There are several series of the same type in the speech block: Words, Group of words, Phrases. They have already been practically completed
+        technically. Series will soon be supplemented with exercises. It is already possible to study these series."
     series:
       0:
-        'The "Words" series is the first one to start with. This series is aimed to help the user to train the ability to hear words spoken in
-        silence and words with the imposition of various noises (more difficult version).'
+        "The \"Words\" series is the first one to start with. This series is aimed to help the user to train the ability to hear words spoken in
+        silence and words with the imposition of various noises (more difficult version)."
       1:
-        'The matrix form of the exercises of the "Group of words" series was created by Inna Vasilievna Koroleva, professor of the Department
+        "The matrix form of the exercises of the \"Group of words\" series was created by Inna Vasilievna Koroleva, professor of the Department
         of Hearing and Speech, LORNII. This successful methodology has already proven itself for many years. The user sees the matrix and hears
         words from each column in random order. As a result, there is a grammatically correct sentence with no meaning. The goal is for the
-        brain to concentrate on the words, and not guess the meaning. For example, the following sentences can be generated: "A girl reads
-        cherries", "Grandmother draws books", "A woman dances money", "A girl draws money", etc.'
-      2: 'A series of "Phrases" teaches the user to focus on such difficulties as endings, prepositions and the particle "not" in a sentence.'
+        brain to concentrate on the words, and not guess the meaning. For example, the following sentences can be generated: \"A girl reads
+        cherries\", \"Grandmother draws books\", \"A woman dances money\", \"A girl draws money\", etc."
+      2:
+        "A series of \"Phrases\" teaches the user to focus on such difficulties as endings, prepositions and the particle \"not\" in a sentence."
   contribute:
     header: How to support our project
     details: We ask users to actively participate in the tasks and inform us about possible errors
@@ -184,11 +193,11 @@ description:
       title: using the link
       goal: ', so that we can quickly fix these.'
     contact_us:
-      'We are open to new volunteers as a developer (Kotlin, Ember, Angular), a tester, a painter and as a content volunteer. If you want to
-      become a part of the team, write to our project email: '
+      "We are open to new volunteers as a developer (Kotlin, Ember, Angular), a tester, a painter and as a content volunteer. If you want to
+      become a part of the team, write to our project email: "
     motivation:
-      'Only our joint efforts can make this project "alive" and, possibly, we can help many people discover or return for themselves
-      "the world of understandable sounds".'
+      "Only our joint efforts can make this project \"alive\" and, possibly, we can help many people discover or return for themselves
+      \"the world of understandable sounds\"."
   links:
     header: Useful links
     articles:
@@ -236,7 +245,7 @@ description:
     header: 'Join ''<span class="text-indigo-600">''Brain-Up''</span>''!'
     description: We will be glad to everyone who wants to join and contribute to our project.
     contact:
-      start: 'If you want to join our team, you can write to our lead Elena Moshnikova: '
+      start: "If you want to join our team, you can write to our lead Elena Moshnikova: "
       end: Elena will be happy to answer all your questions and to cooperate.
     motivation: 'Our joint efforts make this project "alive" and, perhaps, we will be able to help many people discover or return the world of understandable sounds.'
 
@@ -254,9 +263,8 @@ profile:
       empty_data: No data for period {period}
     info_dialog:
       title: What is it about?
-      sub_title: 'Check if you exercise regularly enough:'
-      info: 'According to research, to improve the hearing threshold, you need to practice at least ''<span class="font-bold">''6''</span>'' days a week for ''<span class="font-bold">''20''</span>'' minutes for ''<span class="font-bold">''2''</span>'' years.<br/>There must be at least ''<span class="font-bold">''8''</span>'' hours ''<span class="font-bold">''40''</span>'' minutes per month for a total of ''<span class="font-bold">''26''</span>'' days.'
+      sub_title: "Check if you exercise regularly enough:"
+      info: "According to research, to improve the hearing threshold, you need to practice at least '<span class=\"font-bold\">'6'</span>' days a week for '<span class=\"font-bold\">'20'</span>' minutes for '<span class=\"font-bold\">'2'</span>' years.<br/>There must be at least '<span class=\"font-bold\">'8'</span>' hours '<span class=\"font-bold\">'40'</span>' minutes per month for a total of '<span class=\"font-bold\">'26'</span>' days."
       button_ok: Ok
-
 used_resources:
   subtitle: Exercise pictures in the application are taken from the following platforms

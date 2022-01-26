@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.dto.statistic.DayStudyStatisticDto
 import com.epam.brn.dto.statistic.MonthStudyStatisticDto
@@ -82,8 +82,8 @@ class UserStatisticControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val baseResponseDto = objectMapper.readValue(response, BaseResponseDto::class.java)
-        val baseResponseJson = gson.toJson(baseResponseDto.data)
+        val baseResponse = objectMapper.readValue(response, BaseResponse::class.java)
+        val baseResponseJson = gson.toJson(baseResponse.data)
         val resultStatistic: List<SubGroupStatisticResponse> =
             objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticResponse>>() {})
 
@@ -115,7 +115,7 @@ class UserStatisticControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponse::class.java).data
         val resultStatistic: List<DayStudyStatisticDto> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatisticDto>>() {})
 
@@ -147,7 +147,7 @@ class UserStatisticControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BaseSingleObjectResponseDto::class.java).data
+        val data = gson.fromJson(response, BaseSingleObjectResponse::class.java).data
         val resultStatistic: List<MonthStudyStatisticDto> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatisticDto>>() {})
 

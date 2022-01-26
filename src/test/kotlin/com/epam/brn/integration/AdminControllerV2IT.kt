@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.repo.AuthorityRepository
@@ -110,7 +110,7 @@ class AdminControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseSingleObjectResponseDto::class.java).data
+        val data = objectMapper.readValue(response, BaseSingleObjectResponse::class.java).data
         val resultStatistic: List<DayStudyStatistic> =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
@@ -143,7 +143,7 @@ class AdminControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseSingleObjectResponseDto::class.java).data
+        val data = objectMapper.readValue(response, BaseSingleObjectResponse::class.java).data
         val resultStatistic: List<MonthStudyStatistic> =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 

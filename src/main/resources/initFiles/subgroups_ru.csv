@@ -69,3 +69,13 @@ FREQUENCY_SIGNALS,1,frequencySignals,Частота сигналов,
 FREQUENCY_WORDS,1,low_frequency,Низкочастотные слова,Низкочастотные слова
 FREQUENCY_WORDS,2,medium_frequency,Среднечастотные слова,Среднечастотные слова
 FREQUENCY_WORDS,3,high_frequency,Высокочастотные слова,Высокочастотные слова
+SINGLE_WORDS_KOROLEVA,1,koroleva_words_first_1,1я группа,1я группа слов: по одному
+SINGLE_WORDS_KOROLEVA,2,koroleva_words_first_2,2я группа,2я группа слов: по одному
+SINGLE_WORDS_KOROLEVA,3,koroleva_words_first_3,3я группа,3я группа слов: по одному
+SINGLE_WORDS_KOROLEVA,4,koroleva_words_first_4,4я группа,4я группа слов: по одному
+SINGLE_WORDS_KOROLEVA,5,koroleva_words_first_5,5я группа,5я группа слов: по одному
+SINGLE_WORDS_KOROLEVA,6,koroleva_words_first_6,6я группа,6я группа слов: по одному
+SINGLE_WORDS_KOROLEVA,20,koroleva_words_second_1_4,1я Группа 1/4 Слов,Одно слово из 4
+SINGLE_WORDS_KOROLEVA,21,koroleva_words_second_2_4,2я Группа 1/4 Слов,Два слово из 4
+SINGLE_WORDS_KOROLEVA,21,koroleva_words_second_2_6,1я Группа 2/6 Слов,Два слово из 6
+SINGLE_WORDS_KOROLEVA,21,koroleva_words_second_3_6,1я Группа 3/6 Слов,Три слово из 6

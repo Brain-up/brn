@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseResponseDto
-import com.epam.brn.dto.BaseSingleObjectResponseDto
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
@@ -31,8 +31,8 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
 
     @GetMapping("/todayTimer")
     @ApiOperation("Get current user's today work time: execution seconds")
-    fun getTodayWorkDurationInSeconds(): ResponseEntity<BaseSingleObjectResponseDto> {
-        return ResponseEntity.ok().body(BaseSingleObjectResponseDto(data = studyHistoryService.getTodayTimer()))
+    fun getTodayWorkDurationInSeconds(): ResponseEntity<BaseSingleObjectResponse> {
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = studyHistoryService.getTodayTimer()))
     }
 
     @GetMapping("/histories")
@@ -45,7 +45,7 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
         @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
         @RequestParam("to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
+        .body(BaseResponse(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 
     @GetMapping("/monthHistories")
     @ApiOperation("Get current user's month study histories by month and year")
@@ -53,5 +53,5 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int
     ) = ResponseEntity.ok()
-        .body(BaseResponseDto(data = studyHistoryService.getMonthHistoriesForCurrentUser(month, year)))
+        .body(BaseResponse(data = studyHistoryService.getMonthHistoriesForCurrentUser(month, year)))
 }

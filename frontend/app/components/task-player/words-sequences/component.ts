@@ -10,16 +10,20 @@ import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
+import WordsSequences from 'brn/models/task/words-sequences';
+import AnswerOption from 'brn/utils/answer-option';
 
-function getEmptyTemplate(selectedItemsOrder = []): any {
+function getEmptyTemplate(
+  selectedItemsOrder: string[] = [],
+): Record<string, null> {
   return selectedItemsOrder.reduce((result, currentKey) => {
-    (result as any)[currentKey] = null;
+    result[currentKey] = null;
     return result;
-  }, {});
+  }, {} as Record<string, null>);
 }
 
-interface IWordsSequencesComponentArgs {
-  task: any;
+export interface IWordsSequencesComponentArgs<T> {
+  task: T;
   mode: keyof typeof MODES;
   disableAnswers: boolean;
   activeWord: string;
@@ -29,17 +33,19 @@ interface IWordsSequencesComponentArgs {
   onWrongAnswer(params?: { skipRetry: true }): void;
 }
 
-export default class WordsSequencesComponent extends Component<IWordsSequencesComponentArgs> {
+export default class WordsSequencesComponent<
+  T extends WordsSequences = WordsSequences,
+> extends Component<IWordsSequencesComponentArgs<T>> {
   @action onInsert() {
     this.updateLocalTasks();
     this.startTask();
   }
   @service audio!: AudioService;
   @service stats!: StatsService;
-  @tracked tasksCopy = [];
-  @tracked currentAnswerObject: null | Record<string, string> = null;
+  @tracked tasksCopy: TaskItem[] = [];
+  @tracked currentAnswerObject: null | Record<string, string | null> = null;
   @tracked isCorrect = false;
-  get task() {
+  get task(): T {
     return this.args.task;
   }
   get mode() {
@@ -51,12 +57,12 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
   get onRightAnswer() {
     return this.args.onRightAnswer;
   }
-  get uncompletedTasks() {
+  get uncompletedTasks(): TaskItem[] {
     return this.tasksCopy.filter(
       ({ completedInCurrentCycle }) => completedInCurrentCycle === false,
     );
   }
-  get firstUncompletedTask(): any {
+  get firstUncompletedTask() {
     return this.uncompletedTasks.firstObject;
   }
   get audioFiles() {
@@ -79,14 +85,14 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     );
   }
   startNewTask() {
-    this.markCompleted(this.firstUncompletedTask);
+    this.markCompleted(this.firstUncompletedTask as TaskItem);
     this.startTask();
   }
-  markCompleted(task: any) {
+  markCompleted(task: TaskItem) {
     set(task, 'completedInCurrentCycle', true);
     set(task, 'nextAttempt', false);
   }
-  markNextAttempt(task: any) {
+  markNextAttempt(task: TaskItem) {
     set(task, 'nextAttempt', true);
   }
   startTask() {
@@ -100,13 +106,10 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
     const completedOrders = this.tasksCopy
       .filterBy('completedInCurrentCycle', true)
       .mapBy('order');
-    const tasksCopy = deepCopy(this.task.tasksToSolve).map(
+    const tasksCopy: TaskItem[] = deepCopy(this.task.tasksToSolve).map(
       (copy: { order: number }) => {
         const completedInCurrentCycle = completedOrders.includes(copy.order);
-        const copyEquivalent = this.tasksCopy.findBy(
-          'order',
-          copy.order,
-        ) as any;
+        const copyEquivalent = this.tasksCopy.findBy('order', copy.order);
         return new TaskItem({
           ...copy,
           completedInCurrentCycle,
@@ -132,7 +135,7 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
           (orderName: string) =>
             (this.currentAnswerObject as any)[orderName] as string,
         ),
-        this.firstUncompletedTask.answer.mapBy('word'),
+        this.firstUncompletedTask?.answer.mapBy('word'),
       );
 
       this.isCorrect = isCorrect;
@@ -149,13 +152,13 @@ export default class WordsSequencesComponent extends Component<IWordsSequencesCo
   showTaskResult!: TaskGenerator<any, any>;
 
   @action
-  async checkMaybe(selectedData: any) {
+  async checkMaybe(selectedData: AnswerOption) {
     this.showTaskResult.perform(selectedData);
   }
 
   async handleWrongAnswer() {
-    this.task.wrongAnswers.pushObject(this.firstUncompletedTask.serialize());
-    this.markNextAttempt(this.firstUncompletedTask);
+    this.task.wrongAnswers.pushObject(this.firstUncompletedTask?.serialize());
+    this.markNextAttempt(this.firstUncompletedTask as TaskItem);
     this.updateLocalTasks();
     await customTimeout(300);
     this.startTask();

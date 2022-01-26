@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.WordsGroupSeriesTaskResponse
-import com.epam.brn.dto.WordsSeriesTaskResponse
+import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
+import com.epam.brn.dto.response.WordsSeriesTaskResponse
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise

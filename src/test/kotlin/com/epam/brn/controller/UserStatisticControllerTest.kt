@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.BaseResponseDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -49,6 +49,6 @@ internal class UserStatisticControllerTest {
         // THEN
         verify(exactly = 1) { userStatisticService.getSubGroupStatistic(ids) }
         assertEquals(HttpStatus.SC_OK, userSubGroupStatistic.statusCodeValue)
-        assertEquals(subGroupStatisticDtoList, (userSubGroupStatistic.body as BaseResponseDto).data)
+        assertEquals(subGroupStatisticDtoList, (userSubGroupStatistic.body as BaseResponse).data)
     }
 }

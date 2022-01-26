@@ -74,20 +74,18 @@ export default class TaskPlayerComponent extends Component {
     // EOL
   }
 
-  @action onWrongAnswer({ skipRetry } = { skipRetry: false }) {
-    this.taskModeTask.cancelAll();
+  @action async onWrongAnswer({ skipRetry } = { skipRetry: false }) {
+    await this.taskModeTask.cancelAll();
     if (!skipRetry) {
       this.audio.startPlayTask();
     }
   }
 
-  @action onShuffled(words: any) {
+  @action onShuffled(words: string[]) {
     // we need this callback, because of singlw-words component shuffle logic
-    const sortedWords = this.task.normalizedAnswerOptions.sort(
-      (a: any, b: any) => {
-        return words.indexOf(a.word) - words.indexOf(b.word);
-      },
-    );
+    const sortedWords = this.task.normalizedAnswerOptions.sort((a, b) => {
+      return words.indexOf(a.word) - words.indexOf(b.word);
+    });
     this.task.set('normalizedAnswerOptions', sortedWords);
   }
   get taskModelName() {
@@ -104,6 +102,7 @@ export default class TaskPlayerComponent extends Component {
     if (
       modelName === 'task/frequency-words' ||
       modelName === 'task/single-words' ||
+      modelName === 'task/single-words-koroleva' ||
       modelName === 'task/single-simple-words' ||
       modelName === 'task/phrase'
     ) {
@@ -131,7 +130,13 @@ export default class TaskPlayerComponent extends Component {
       this.mode = MODES.LISTEN;
       for (const option of this.orderedPlaylist) {
         this.activeWord = option.word;
-        yield this.audio.setAudioElements([option.audioFileUrl]);
+        const useGeneratedUrl =
+          option.audioFileUrl && this.task.usePreGeneratedAudio;
+        yield this.audio.setAudioElements([
+          useGeneratedUrl
+            ? option.audioFileUrl
+            : this.audio.audioUrlForText(option.word),
+        ]);
         yield this.audio.playAudio();
         yield timeout(1500);
         this.activeWord = null;
@@ -177,7 +182,13 @@ export default class TaskPlayerComponent extends Component {
             ({ word }: any) => word === playText,
           );
           if (option) {
-            yield this.audio.setAudioElements([option.audioFileUrl]);
+            const useGeneratedUrl =
+              option.audioFileUrl && this.task.usePreGeneratedAudio;
+            yield this.audio.setAudioElements([
+              useGeneratedUrl
+                ? (option.audioFileUrl as string)
+                : this.audio.audioUrlForText(option.word),
+            ]);
             yield this.audio.playAudio();
           }
         }
