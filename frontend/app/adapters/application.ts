@@ -6,7 +6,9 @@ export default class ApplicationAdapter extends RESTAdapter {
   @service('session')
   session!: Session;
   get token() {
-    return this.session.data?.authenticated?.user?.stsTokenManager?.accessToken ?? '';
+    return (
+      this.session.data?.authenticated?.user?.stsTokenManager?.accessToken ?? ''
+    );
   }
   get headers() {
     if (!this.session.isAuthenticated) {

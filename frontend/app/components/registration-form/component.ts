@@ -107,19 +107,21 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       password: this.password,
     };
     try {
-      const auth = getOwner(this).lookup('authenticator:firebase') as FirebaseAuthenticator;
+      const auth = getOwner(this).lookup(
+        'authenticator:firebase',
+      ) as FirebaseAuthenticator;
       yield auth.registerUser(user.email, user.password);
-    } catch(e) {
+    } catch (e) {
       this.errorMessage = e.message;
       yield this.registrationTask.cancelAll();
-      return
+      return;
     }
 
     yield this.loginTask.perform();
 
     const result = yield this.network.patchUserInfo(user);
     if (result.ok) {
-        return;
+      return;
     } else {
       const error = yield result.json();
       const key = error.errors.pop();

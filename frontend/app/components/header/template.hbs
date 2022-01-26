@@ -1,6 +1,6 @@
 <div
   class="{{style-namespace "header"}}
-    header
+    header relative z-20
     {{if this.session.isAuthenticated "bg-purple-primary"}}"
   ...attributes
 >
@@ -25,7 +25,9 @@
         </svg>
       </LinkTo>
     </div>
-    <div class="relative z-10 flex items-center self-stretch block w-auto">
+    <div
+      class="nav-links relative z-10 flex items-center self-stretch block w-auto"
+    >
       <div
         class="text-xss sm:text-xs
           {{if
@@ -93,23 +95,23 @@
             EN
           </button>
         </span>
-        <div class="dropdown rounded-full">
+        <div id="other-menu" class="dropdown relative rounded-full">
           <button
-            class="sm:px-4 sm:mr-4 block inline-block px-2 py-2 mr-0 font-bold tracking-wider uppercase rounded-full" type='button'
+            class="sm:px-4 sm:mr-4 block inline-block px-2 py-2 mr-0 font-bold tracking-wider uppercase rounded-full"
+            type="button"
           >{{t "header.more"}}</button>
-          {{!-- <label> --}}
-            <input type="checkbox" />
-              <div class="sm:text-base text-xs">
-              <a href="https://opencollective.com/brainup">{{t
-                    "header.donate"
-                  }}</a>
-              <a href="https://github.com/Brain-up/brn">{{t
-                    "header.github"
-                  }}</a>
-              <a href="/description">{{t "header.contact"}}</a>
-              <a href="/description">{{t "header.info"}}</a>
-            </div>
-          {{!-- </label> --}}
+          <input type="checkbox" />
+          <div class="sm:text-base bottom absolute z-10 py-2 text-xs rounded">
+            <a href="https://opencollective.com/brainup">{{t
+                "header.donate"
+              }}</a>
+            <a href="https://github.com/Brain-up/brn">{{t "header.github"}}</a>
+            <a href="/description">{{t "header.contact"}}</a>
+            <a href="/description">{{t "header.info"}}</a>
+            <LinkTo @route="used-resources" {{on "click" this.closeMenu}}>{{t
+                "header.used_resources"
+              }}</LinkTo>
+          </div>
         </div>
       </div>
     </div>

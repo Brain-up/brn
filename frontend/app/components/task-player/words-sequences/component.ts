@@ -13,7 +13,9 @@ import StatsService, { StatEvents } from 'brn/services/stats';
 import WordsSequences from 'brn/models/task/words-sequences';
 import AnswerOption from 'brn/utils/answer-option';
 
-function getEmptyTemplate(selectedItemsOrder: string[] = []): Record<string, null> {
+function getEmptyTemplate(
+  selectedItemsOrder: string[] = [],
+): Record<string, null> {
   return selectedItemsOrder.reduce((result, currentKey) => {
     result[currentKey] = null;
     return result;
@@ -107,10 +109,7 @@ export default class WordsSequencesComponent<
     const tasksCopy: TaskItem[] = deepCopy(this.task.tasksToSolve).map(
       (copy: { order: number }) => {
         const completedInCurrentCycle = completedOrders.includes(copy.order);
-        const copyEquivalent = this.tasksCopy.findBy(
-          'order',
-          copy.order,
-        );
+        const copyEquivalent = this.tasksCopy.findBy('order', copy.order);
         return new TaskItem({
           ...copy,
           completedInCurrentCycle,
