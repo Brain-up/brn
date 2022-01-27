@@ -13,6 +13,22 @@
   box-sizing: border-box;
 }
 
+.task-player__option[data-cols="1"] {
+  flex-basis: 100%;
+}
+.task-player__option[data-cols="2"] {
+  flex-basis: 50%;
+}
+.task-player__option[data-cols="3"] {
+  flex-basis: 33.33%;
+}
+.task-player__option[data-cols="4"] {
+  flex-basis: 25%;
+}
+.task-player__option[data-cols="5"] {
+  flex-basis: 20%;
+}
+
 .task-player__option-button {
   width: 100%;
   display: block;

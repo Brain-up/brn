@@ -15,7 +15,10 @@ module(
 
     hooks.beforeEach(async function () {
       const store = this.owner.lookup('service:store');
-      let model = store.createRecord('task/single-simple-words', data.task);
+      let model = store.createRecord('task/single-simple-words', {
+        ...data.task,
+        exercise: store.createRecord('exercise')
+      });
       this.set('model', model);
 
       this.set('mockTimerService', {

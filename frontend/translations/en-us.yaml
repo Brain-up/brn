@@ -18,6 +18,7 @@ registration:
 
 audio_player:
   listen: Listen one more time
+  selected_words_of: Selected {selected} words of {total}
 
 login_form:
   error_bad_credentials: Incorrect login or password
