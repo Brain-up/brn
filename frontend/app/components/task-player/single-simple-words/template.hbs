@@ -22,6 +22,12 @@
           />
         {{/each}}
       </ul>
+
+      {{#if this.showTip}}
+        <div class="flex self-end px-4 py-3 mx-8 mt-8 text-sm leading-normal text-blue-700 bg-blue-100 rounded-md" role="alert">
+          {{t 'audio_player.selected_words_of' total=this.firstUncompletedTask.answer.length  selected=this.currentAnswer.length}}
+        </div>
+      {{/if}}
     </Ui::TaskContent>
 
     {{yield (hash audioFileUrl=this.audioFileUrl) to="footer"}}

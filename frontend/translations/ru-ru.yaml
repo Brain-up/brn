@@ -18,6 +18,7 @@ registration:
 
 audio_player:
   listen: Прослушать ещё раз
+  selected_words_of: Выбрано {selected} слов из {total}
 
 login_form:
   login: Логин
@@ -267,6 +268,6 @@ profile:
       sub_title: "Проверьте, достаточно ли регулярно вы делаете занятия:"
       info: "По данным исследований, чтобы улучшить порог слышимости, нужно заниматься не менее '<span class=\"font-bold\">'6'</span>' дней в неделю по '<span class=\"font-bold\">'20'</span>' минут в течение '<span class=\"font-bold\">'2'</span>' лет.'<br/>'В месяц должно быть не менее '<span class=\"font-bold\">'8'</span>' часов '<span class=\"font-bold\">'40'</span>' минут в сумме за '<span class=\"font-bold\">'26'</span>' дней."
       button_ok: Хорошо
-      
+
 used_resources:
   subtitle: Фотографии упражнений в приложении взяты со следующих платформ
