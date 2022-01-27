@@ -38,6 +38,8 @@ export default class Exercise extends CompletionDependent {
   @service('network') network!: NetworkService;
   @attr('string') name!: string;
   @attr('boolean') available!: boolean;
+  @attr('number', { defaultValue: 1 }) playWordsCount!: number;
+  @attr('number', { defaultValue: 3 }) wordsColumns!: number;
   @attr('string') description!: string;
   @attr('number') level!: number;
   @attr('string') pictureUrl!: string;

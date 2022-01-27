@@ -34,6 +34,9 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
       this.audio.startPlayTask(this.audioFiles);
     }
   }
+  get amountOfColumns() {
+    return this.task.exercise.wordsColumns;
+  }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
       .filterBy('completedInCurrentCycle', true)

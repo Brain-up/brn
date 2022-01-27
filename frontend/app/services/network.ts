@@ -85,7 +85,9 @@ export default class NetworkService extends Service {
       const { data } = await result.json();
       return fromLatestUserDto(Array.isArray(data) ? data[0] : data);
     } catch (e) {
-      await this.session.invalidate();
+      if (this.session.isAuthenticated) {
+        await this.session.invalidate();
+      }
       throw e;
     }
   }

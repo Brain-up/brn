@@ -11,6 +11,7 @@
       <ul class="task-player__options sm:mx-8 mx-2 mt-2">
         {{#each this.task.answerOptions key="word" as |answerOption|}}
           <TaskPlayer::SingleSimpleWords::Option
+            data-cols={{this.amountOfColumns}}
             @activeWord={{@activeWord}}
             @answerOption={{answerOption}}
             @checkMaybe={{this.checkMaybe}}
