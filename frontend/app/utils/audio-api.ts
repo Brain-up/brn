@@ -1,4 +1,38 @@
+import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import Ember from 'ember';
+
+let ffmpeg: FFmpeg | null = null;
+
+
+async function initFFmpeg() {
+  if (globalThis.crossOriginIsolated === false) {
+    return;
+  }
+  const { createFFmpeg } = await import('@ffmpeg/ffmpeg');
+  if (ffmpeg === null) {
+    ffmpeg = createFFmpeg({ log: false, corePath: '/assets/ffmpeg-core.js' });
+  }
+  if (!ffmpeg.isLoaded()) {
+    await ffmpeg.load();
+  }
+}
+
+export async function transcodeFile(file: ArrayBuffer) {
+  if (!ffmpeg) {
+    return file;
+  }
+
+  const inputName = `${Math.random().toString(16).slice(2,8)}.ogg`;
+  const outputName = `${Math.random().toString(16).slice(2,8)}.wav`;
+
+  ffmpeg.FS('writeFile', inputName, new Uint8Array(file));
+  await ffmpeg.run('-i', inputName,  outputName);
+  const data = ffmpeg.FS('readFile', outputName);
+  ffmpeg.FS('unlink', inputName);
+  ffmpeg.FS('unlink', outputName);
+
+  return await new Blob([data.buffer], { type: 'audio/wav' }).arrayBuffer();
+}
 
 export const TIMINGS = {
   _step: 100,
@@ -103,11 +137,20 @@ export class BufferLoader {
     this.getTokenCallback = getTokenCallback;
   }
   async load() {
-    const files = await Promise.all(
+    await initFFmpeg();
+    const _files = await Promise.all(
       this.urlList.map((url) =>
         arrayBufferRequest(url, this.getTokenCallback()),
       ),
     );
+    const files = [];
+    for (const file of _files) {
+      if (file) {
+        files.push(await transcodeFile(file));
+      } else {
+        files.push(file);
+      }
+    }
     try {
       const results: (AudioBuffer | null)[] = await Promise.all(
         files.map((file) => {
@@ -148,9 +191,10 @@ function arrayBufferRequest(
       request.setRequestHeader('Authorization', `Bearer ${token}`);
     }
     request.responseType = 'arraybuffer';
-    request.onload = function () {
+    request.onload = async function () {
       AudioCache.set(url, request.response.slice());
-      resolve(request.response);
+      const result = await transcodeFile(request.response);
+      resolve(result);
     };
     request.onerror = function () {
       resolve(null);
