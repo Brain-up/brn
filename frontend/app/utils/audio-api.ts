@@ -191,10 +191,9 @@ function arrayBufferRequest(
       request.setRequestHeader('Authorization', `Bearer ${token}`);
     }
     request.responseType = 'arraybuffer';
-    request.onload = async function () {
+    request.onload = function () {
       AudioCache.set(url, request.response.slice());
-      const result = await transcodeFile(request.response);
-      resolve(result);
+      resolve(request.response);
     };
     request.onerror = function () {
       resolve(null);
