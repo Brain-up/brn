@@ -2,6 +2,7 @@ import Service, { inject as service } from '@ember/service';
 import UserDataService from 'brn/services/user-data';
 
 export default class ImageLocatorService extends Service {
+  cache: Map<string, string> = new Map();
   @service('user-data') userData!: UserDataService;
   async getPictureForWordAsDataURL(word: string): Promise<string|null> {
     const url = await this.getPictureForWord(word);
@@ -25,6 +26,17 @@ export default class ImageLocatorService extends Service {
     });
   }
   async getPictureForWord(word: string): Promise<string | null> {
+    if (!this.cache.has(word)) {
+      const result = await this._getPictureForWord(word);
+      if (result) {
+        this.cache.set(word, result);
+      }
+      return result;
+    } else {
+      return this.cache.get(word) as string;
+    }
+  }
+  private async _getPictureForWord(word: string): Promise<string | null> {
     const images = await Promise.all([
       this.getImageFromOpensymbols(word),
       this.getImageFromArasaac(word),
