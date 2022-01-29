@@ -29,6 +29,15 @@ export default class ImageLocatorService extends Service {
         fixedWord = fixedWord.endsWith('ла')
           ? fixedWord.slice(0, -2) + 'ть'
           : fixedWord;
+        fixedWord = fixedWord.endsWith('ны')
+          ? fixedWord.slice(0, -2) + 'н'
+          : fixedWord;
+        fixedWord = fixedWord.endsWith('ов')
+          ? fixedWord.slice(0, -2)
+          : fixedWord;
+        fixedWord = fixedWord.endsWith('ли')
+          ? fixedWord.slice(0, -2)
+          : fixedWord;
         fixedWord = fixedWord.endsWith('ует')
           ? fixedWord.slice(0, -3) + 'вать'
           : fixedWord;
