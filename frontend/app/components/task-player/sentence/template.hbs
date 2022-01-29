@@ -28,7 +28,7 @@
                   (fn @onPlayText answerOption.word)
                   (fn this.checkMaybe answerOption)
                 }}
-                @pictureFileUrl={{concat "/" answerOption.pictureFileUrl}}
+                @pictureFileUrl={{answerOption.pictureFileUrl}}
                 @word={{answerOption.word}}
               />
             {{/each}}

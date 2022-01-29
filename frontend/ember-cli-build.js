@@ -34,13 +34,14 @@ module.exports = function (defaults) {
       plugins: [ require.resolve('ember-auto-import/babel-plugin') ]
     },
     autoImport: {
-      exclude: ['firebase']
+      exclude: ['firebase', '@ffmpeg/core']
     },
     'ember-test-selectors': {
       strip: false
     },
     fingerprint: {
-      exclude: ['pictures/'],
+      ignore: ['ffmpeg'],
+      exclude: ['pictures/', 'assets/ffmpeg-core.wasm', 'assets/ffmpeg-core.js', 'assets/ffmpeg-core.worker.js'],
     },
     'ember-cli-babel': {
       enableTypeScriptTransform: true
@@ -76,6 +77,22 @@ module.exports = function (defaults) {
   // along with the exports of each module as its value.
 
   app.import('vendor/ember-firebase-service/firebase/firebase-auth.js');
+
+  app.import('node_modules/@ffmpeg/core/dist/ffmpeg-core.js', {
+    destDir: 'assets',
+    type: 'vendor',
+    outputFile: 'assets/ffmpeg-core.js'
+  });
+  app.import('node_modules/@ffmpeg/core/dist/ffmpeg-core.wasm', {
+    destDir: 'assets',
+    type: 'vendor',
+    outputFile: 'assets/ffmpeg-core.wasm'
+  });
+  app.import('node_modules/@ffmpeg/core/dist/ffmpeg-core.worker.js', {
+    destDir: 'assets',
+    type: 'vendor',
+    outputFile: 'assets/ffmpeg-core.worker.js'
+  });
 
   return app.toTree();
 };

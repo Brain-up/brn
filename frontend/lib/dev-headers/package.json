@@ -1,0 +1,9 @@
+{
+  "name": "dev-headers",
+  "ember-addon": {
+    "before": "broccoli-serve-files"
+  },
+  "keywords": [
+    "ember-addon"
+  ]
+}
