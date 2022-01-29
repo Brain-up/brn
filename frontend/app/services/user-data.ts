@@ -55,6 +55,10 @@ export default class UserDataService extends Service {
     return this.selectedLocale || this.intl.primaryLocale;
   }
 
+  get activeLocaleShort() {
+    return this.activeLocale.split('-')[0];
+  }
+
   shouldUpdateRoute() {
     return (
       this.router.currentRouteName !== 'description' &&

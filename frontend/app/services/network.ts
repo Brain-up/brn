@@ -120,7 +120,7 @@ export default class NetworkService extends Service {
     const { data } = await result.json();
     return data[0];
   }
-  async availableExercises(ids: string[]) {
+  async availableExercises(ids: string[]): Promise<string[]> {
     const result = await this.postRequest(`exercises/byIds`, {
       ids: ids.map((el) => parseInt(el, 10)),
     });
