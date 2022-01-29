@@ -407,7 +407,7 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
 
-            val returnedListOfHeadphones = userAccountService.getAllHeadphonesForCurrentUser()
+            val returnedListOfHeadphones = userAccountService.getAllHeadphonesForCurrentUser().toList()
 
             // THEN
             assertThat(returnedListOfHeadphones)
