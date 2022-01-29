@@ -3,17 +3,25 @@ import Ember from 'ember';
 
 let ffmpeg: FFmpeg | null = null;
 
-
 async function initFFmpeg() {
-  if (globalThis.crossOriginIsolated === false) {
+  if (!globalThis.crossOriginIsolated) {
     return;
   }
   const { createFFmpeg } = await import('@ffmpeg/ffmpeg');
   if (ffmpeg === null) {
-    ffmpeg = createFFmpeg({ log: false, corePath: '/assets/ffmpeg-core.js' });
+    const corePath =
+      window.location.protocol +
+      '//' +
+      window.location.host +
+      '/assets/ffmpeg-core.js';
+    ffmpeg = createFFmpeg({ log: false, corePath });
   }
   if (!ffmpeg.isLoaded()) {
-    await ffmpeg.load();
+    try {
+      await ffmpeg.load();
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
@@ -22,11 +30,11 @@ export async function transcodeFile(file: ArrayBuffer) {
     return file;
   }
 
-  const inputName = `${Math.random().toString(16).slice(2,8)}.ogg`;
-  const outputName = `${Math.random().toString(16).slice(2,8)}.wav`;
+  const inputName = `${Math.random().toString(16).slice(2, 8)}.ogg`;
+  const outputName = `${Math.random().toString(16).slice(2, 8)}.wav`;
 
   ffmpeg.FS('writeFile', inputName, new Uint8Array(file));
-  await ffmpeg.run('-i', inputName,  outputName);
+  await ffmpeg.run('-i', inputName, outputName);
   const data = ffmpeg.FS('readFile', outputName);
   ffmpeg.FS('unlink', inputName);
   ffmpeg.FS('unlink', outputName);
@@ -137,34 +145,34 @@ export class BufferLoader {
     this.getTokenCallback = getTokenCallback;
   }
   async load() {
-    await initFFmpeg();
-    const _files = await Promise.all(
+    const files = await Promise.all(
       this.urlList.map((url) =>
         arrayBufferRequest(url, this.getTokenCallback()),
       ),
     );
-    const files = [];
-    for (const file of _files) {
-      if (file) {
-        files.push(await transcodeFile(file));
-      } else {
-        files.push(file);
-      }
-    }
     try {
-      const results: (AudioBuffer | null)[] = await Promise.all(
-        files.map((file) => {
-          return new Promise((resolve) => {
-            if (file === null) {
-              resolve(null);
-            } else {
-              this.context.decodeAudioData(file, resolve, () => {
-                resolve(null);
-              });
+      const results: (AudioBuffer | null)[] = [];
+
+      for (const file of files) {
+        if (file === null) {
+          results.push(null);
+        } else {
+          let result = null;
+          try {
+            result = await this.context.decodeAudioData(file);
+          } catch (e) {
+            try {
+              await initFFmpeg();
+              result = await this.context.decodeAudioData(
+                await transcodeFile(file),
+              );
+            } catch (e) {
+              // EOL
             }
-          }) as Promise<AudioBuffer | null>;
-        }),
-      );
+          }
+          results.push(result);
+        }
+      }
       return this.onload(results);
     } catch (e) {
       console.error(e, files, this.urlList);
