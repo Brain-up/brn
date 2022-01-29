@@ -10,8 +10,8 @@ module.exports = {
     app.use(function(_, res, next) {
       res.set({
         'Access-Control-Allow-Origin': '*',
-        'Cross-Origin-Opener-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp'
+        // 'Cross-Origin-Opener-Policy': 'same-origin',
+        // 'Cross-Origin-Embedder-Policy': 'require-corp'
       });
       next();
     });
