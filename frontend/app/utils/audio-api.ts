@@ -158,13 +158,14 @@ export class BufferLoader {
           results.push(null);
         } else {
           let result = null;
+          const fileClone = file.slice(0);
           try {
             result = await this.context.decodeAudioData(file);
           } catch (e) {
             try {
               await initFFmpeg();
               result = await this.context.decodeAudioData(
-                await transcodeFile(file),
+                await transcodeFile(fileClone),
               );
             } catch (e) {
               // EOL
