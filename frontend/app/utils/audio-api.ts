@@ -2,6 +2,8 @@ import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import Ember from 'ember';
 
 let ffmpeg: FFmpeg | null = null;
+let hasFFmpegError = false;
+let hasOGGDecodingError = false;
 
 async function initFFmpeg() {
   if (!globalThis.crossOriginIsolated) {
@@ -20,6 +22,7 @@ async function initFFmpeg() {
     try {
       await ffmpeg.load();
     } catch (e) {
+      hasFFmpegError = true;
       console.error(e);
     }
   }
@@ -154,7 +157,8 @@ export class BufferLoader {
       const results: (AudioBuffer | null)[] = [];
 
       for (const file of files) {
-        if (file === null) {
+        const fallackToSpeechKit = hasOGGDecodingError && hasFFmpegError;
+        if (file === null || fallackToSpeechKit) {
           results.push(null);
         } else {
           let result = null;
@@ -162,13 +166,16 @@ export class BufferLoader {
           try {
             result = await this.context.decodeAudioData(file);
           } catch (e) {
-            try {
-              await initFFmpeg();
-              result = await this.context.decodeAudioData(
-                await transcodeFile(fileClone),
-              );
-            } catch (e) {
-              // EOL
+            hasOGGDecodingError = true;
+            if (!hasFFmpegError) {
+              try {
+                await initFFmpeg();
+                result = await this.context.decodeAudioData(
+                  await transcodeFile(fileClone),
+                );
+              } catch (e) {
+                hasFFmpegError = true;
+              }
             }
           }
           results.push(result);
