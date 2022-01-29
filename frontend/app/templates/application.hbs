@@ -8,7 +8,7 @@
   {{! template-lint-disable no-inline-styles }}
   {{! template-lint-disable style-concatenation }}
   style="
-    {{if (not (is-active "index")) "width: 80vw; max-width: 1280px;"}}"
+    {{if (not (is-active "index")) (html-safe "width: 80vw; max-width: 1280px;")}}"
 >
   {{outlet}}
 </main>
