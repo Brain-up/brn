@@ -1,8 +1,8 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { MODES } from 'brn/utils/task-modes';
-import UserDataService from 'brn/services/user-data';
 import { inject as service } from '@ember/service';
+import ImageLocatorService from 'brn/services/image-locator';
 interface ITaskPlayerSingleWordsOptionComponentArguments {
   mode: keyof typeof MODES;
   disableAnswers: boolean;
@@ -10,7 +10,7 @@ interface ITaskPlayerSingleWordsOptionComponentArguments {
   activeWord: string;
 }
 export default class TaskPlayerSingleWordsOptionComponent extends Component<ITaskPlayerSingleWordsOptionComponentArguments> {
-  @service('user-data') userData!: UserDataService;
+  @service('image-locator') imageLocator!: ImageLocatorService;
   isClicked = false;
   shouldLoadSymbol(word: string) {
     return word.trim().split(' ').length === 1;
@@ -27,16 +27,10 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<ITas
       'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 
     if (this.shouldLoadSymbol(word)) {
-      const symbols = await fetch(
-        'https://www.opensymbols.org/api/v1/symbols/search?q=' +
-          encodeURIComponent(word) +
-          '&locale=' +
-          encodeURIComponent(this.userData.activeLocale.split('-')[0]),
-      );
-      const data = await symbols.json();
-      if (data.length) {
+      const url = await this.imageLocator.getPictureForWord(word);
+      if (url) {
         e.target.crossOrigin = 'anonymous';
-        e.target.src = data[0].image_url;
+        e.target.src = url;
       }
     }
   }

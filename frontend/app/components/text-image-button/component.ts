@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import UserDataService from 'brn/services/user-data';
 import { inject as service } from '@ember/service';
+import ImageLocatorService from 'brn/services/image-locator';
 
 interface ITextImageButtonArgs {
   pictureFileUrl: string;
@@ -10,7 +10,7 @@ interface ITextImageButtonArgs {
 }
 
 export default class TextImageButton extends Component<ITextImageButtonArgs> {
-  @service('user-data') userData!: UserDataService;
+  @service('image-locator') imageLocator!: ImageLocatorService;
   declare element: HTMLDivElement;
   shouldLoadSymbol() {
     return this.args.word.trim().split(' ').length === 1;
@@ -22,27 +22,22 @@ export default class TextImageButton extends Component<ITextImageButtonArgs> {
     img.src = pictureFileUrl;
     img.onerror = async () => {
       if (this.shouldLoadSymbol()) {
-        const symbols = await fetch(
-          'https://www.opensymbols.org/api/v1/symbols/search?q=' +
-            encodeURIComponent(this.args.word) +
-            '&locale=' +
-            encodeURIComponent(this.userData.activeLocale.split('-')[0]),
-        );
-        const data = await symbols.json();
-        if (data.length) {
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          img.src = data[0].image_url;
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx?.drawImage(img, 0, 0);
-            const dataURL = canvas.toDataURL('image/png');
-            element.style.setProperty('--word-picture-url', `url(${dataURL})`);
-          };
+        const url = await this.imageLocator.getPictureForWord(this.args.word);
+        if (!url) {
+          return;
         }
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = url;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0);
+          const dataURL = canvas.toDataURL('image/png');
+          element.style.setProperty('--word-picture-url', `url(${dataURL})`);
+        };
       }
     };
   }
