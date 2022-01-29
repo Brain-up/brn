@@ -6,6 +6,7 @@
   "name": "Семья",
   "pictureUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/pictures/theme/family.svg",
   "description": "Слова про семью",
+  "withPictures":false,
   "exercises": [
    1,
    2,
