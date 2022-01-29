@@ -63,6 +63,7 @@ internal class LopotkoProcessorTest {
         400,
         words
     )
+
     @BeforeEach
     internal fun setUp() {
         lopotkoRecordProcessor = LopotkoRecordProcessor(
@@ -87,7 +88,7 @@ internal class LopotkoProcessorTest {
                 ofType(String::class)
             )
         } returns Optional.empty()
-        every { resourceRepositoryMock.saveAll(any()) } returns emptySet()
+        every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
         every {
             audiometryTaskRepository.findByAudiometryAndFrequencyZoneAndAudiometryGroup(
                 ofType(Audiometry::class),
