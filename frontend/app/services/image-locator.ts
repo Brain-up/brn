@@ -8,11 +8,75 @@ export default class ImageLocatorService extends Service {
       this.getImageFromOpensymbols(word),
       this.getImageFromArasaac(word),
     ]);
-    return images.find((img) => typeof img === 'string');
+    const image = images.find((img) => typeof img === 'string');
+    if (!image) {
+      let trWords = await this.translateWord(word);
+      if (!trWords.length) {
+        trWords = await this.translateWord(this.fixWord(word));
+      }
+      for (const trWord of trWords) {
+        const result =  await this.getImageFromArasaac(trWord, 'en');
+        if (result) {
+          return result;
+        }
+      }
+      for (const trWord of trWords) {
+        const result =  await this.getImageFromOpensymbols(trWord, 'en');
+        if (result) {
+          return result;
+        }
+      }
+      return null;
+    } else {
+      return image;
+    }
+
   }
-  async getImageFromArasaac(word: string) {
+  async translateWord(word: string, from = 'ru', to = 'en'): Promise<string[]> {
     try {
-      const lang = this.userData.activeLocale.split('-')[0];
+      // https://yandex.ru/dev/dictionary/doc/dg/reference/lookup.html
+      const key = 'dict.1.1.20220129T132020Z.f45a308545a3656b.25a8dceae9820a28d7c8a0d14d464c0bb47953b5';
+      const lang = encodeURIComponent(`${from}-${to}`);
+      const request = await fetch(`https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=${key}&lang=${lang}&text=${encodeURIComponent(word)}&flags=4`);
+      const data = await request.json();
+      return data.def[0].tr.map((e: any) => e.text);
+    } catch (e) {
+      return [];
+    }
+  }
+  fixWord(word: string) {
+    let fixedWord = word.endsWith('у') ? word.slice(0, -1) + 'а' : word;
+    fixedWord = fixedWord.endsWith('л')
+      ? fixedWord.slice(0, -1) + 'ть'
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ла')
+      ? fixedWord.slice(0, -2) + 'ть'
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ны')
+      ? fixedWord.slice(0, -2) + 'н'
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ов')
+      ? fixedWord.slice(0, -2)
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ли')
+      ? fixedWord.slice(0, -2)
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ует')
+      ? fixedWord.slice(0, -3) + 'вать'
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ет')
+      ? fixedWord.slice(0, -2) + 'ть'
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ит')
+      ? fixedWord.slice(0, -2) + 'ать'
+      : fixedWord;
+    fixedWord = fixedWord.endsWith('ву')
+      ? fixedWord.slice(0, -2) + 'ва'
+      : fixedWord;
+    return fixedWord;
+  }
+  async getImageFromArasaac(word: string, lang = this.userData.activeLocale.split('-')[0]) {
+    try {
       let symbols2 = await fetch(
         'https://api.arasaac.org/api/pictograms/' +
           lang +
@@ -22,34 +86,7 @@ export default class ImageLocatorService extends Service {
       let data2 = await symbols2.json();
 
       if (!data2.length) {
-        let fixedWord = word.endsWith('у') ? word.slice(0, -1) + 'а' : word;
-        fixedWord = fixedWord.endsWith('л')
-          ? fixedWord.slice(0, -1) + 'ть'
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ла')
-          ? fixedWord.slice(0, -2) + 'ть'
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ны')
-          ? fixedWord.slice(0, -2) + 'н'
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ов')
-          ? fixedWord.slice(0, -2)
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ли')
-          ? fixedWord.slice(0, -2)
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ует')
-          ? fixedWord.slice(0, -3) + 'вать'
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ет')
-          ? fixedWord.slice(0, -2) + 'ть'
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ит')
-          ? fixedWord.slice(0, -2) + 'ать'
-          : fixedWord;
-        fixedWord = fixedWord.endsWith('ву')
-          ? fixedWord.slice(0, -2) + 'ва'
-          : fixedWord;
+        const fixedWord = this.fixWord(word);
         symbols2 = await fetch(
           'https://api.arasaac.org/api/pictograms/' +
             lang +
@@ -78,13 +115,13 @@ export default class ImageLocatorService extends Service {
       return null;
     }
   }
-  async getImageFromOpensymbols(word: string) {
+  async getImageFromOpensymbols(word: string, lang = this.userData.activeLocale.split('-')[0]) {
     try {
       const symbols = await fetch(
         'https://www.opensymbols.org/api/v1/symbols/search?q=' +
           encodeURIComponent(word) +
           '&locale=' +
-          encodeURIComponent(this.userData.activeLocale.split('-')[0]),
+          encodeURIComponent(lang),
       );
       const data = await symbols.json();
       if (data.length) {
