@@ -9,6 +9,8 @@ header:
   contact: Контакт
   info: Информация
   used_resources: Используемые ресурсы
+  specialists: Специалисты
+  contributors: Наша команда
 
 login:
   title: Начать
@@ -271,3 +273,39 @@ profile:
 
 used_resources:
   subtitle: Фотографии упражнений в приложении взяты со следующих платформ
+
+specialists:
+  title: Специалисты
+  subtitle: Обучающая программа BrainUp разработана совместно с лучшими специалистами в области сурдопедагогики из России и Беларуси
+  people:
+    0:
+      fullName: Королева Инна Васильевна
+      jobTitle: Научный руководитель реабилитационного отделения, доктор психологических наук, профессор. Главный научный сотрудник СПб НИИ ЛОР.
+      description: Ведущий российский эксперт в области реабилитации пациентов с тугоухостью и глухотой, автор многочисленных книг для родителей и специалистов.
+    1:
+      fullName: Прошина Любовь Александровна
+      jobTitle: Сурдопедагог, РНПЦ оторинолорнглогии, опыт работы 12 лет.
+      description: На протяжении всей своей профессиональной деятельности я стараюсь сделать этот путь более простым и понятным, более интересным и увлекательным. Я верю в успех и в то, что наша совместная работа обязательно поможет взрослым и детям услышать мир лучше.
+  all: все специалисты
+
+contributors:
+  title: "Наша команда"
+  subtitle: "Мы собрались все вместе, чтобы сделать вашу жизнь проще!"
+  people:
+    0: 
+      fullName: Канунников Александр
+      jobTitle: Senior Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 5.png
+    1: 
+      fullName: Мошникова Елена
+      jobTitle: Senior Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 1.png
+    2: 
+      fullName: Чуркина Ирина
+      jobTitle: Senior Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 1.png
+    3: 
+      fullName: Miguel Osorio
+      jobTitle: Lead Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 5.png
+  all: вся команда

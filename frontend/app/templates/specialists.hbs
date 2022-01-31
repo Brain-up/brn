@@ -1,0 +1,47 @@
+{{page-title (t "header.specialists")}}
+<section class="py-16">
+  <h2 class="mb-6 text-4xl font-semibold text-center">
+    {{t "specialists.title"}}
+  </h2>
+  <div class="font-openSans max-w-screen-lg m-auto mb-16 text-lg text-center">
+    {{t "specialists.subtitle"}}
+  </div>
+  <div class="lg:flex max-w-screen-xl m-auto">
+    {{#each (range 0 1 true) as |i|}}
+      <div
+        class="lg:mb-0 lg:flex-1 md:flex lg:mr-12 p-12 mb-12 border-4 border-gray-200 rounded-lg"
+      >
+        <div class="flex-initial w-24 mr-4">
+          <img
+            src="/pictures/avatars/avatar 1.png"
+            alt="user avatar"
+            class="rounded-full"
+          />
+        </div>
+        <div class="flex-1">
+          <div class="mb-4 font-semibold">
+            {{t (concat "specialists.people." i ".fullName")}}
+          </div>
+          <div class="font-openSans">
+            <p class="mb-2">
+              {{t (concat "specialists.people." i ".jobTitle")}}
+            </p>
+            <p>
+              {{t (concat "specialists.people." i ".description")}}
+            </p>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+  <div class="mt-20 text-center">
+    <a
+      href="#"
+      target="blank"
+      rel="noopener"
+      class="hover:text-blue-600 text-blue-light text-lg font-semibold underline capitalize"
+    >
+      {{t "specialists.all"}}
+    </a>
+  </div>
+</section>
