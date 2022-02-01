@@ -1,0 +1,118 @@
+diff --git a/node_modules/fs-updater/index.js b/node_modules/fs-updater/index.js
+index fcf5627..4f75a50 100644
+--- a/node_modules/fs-updater/index.js
++++ b/node_modules/fs-updater/index.js
+@@ -11,6 +11,8 @@ let loggerGen = require("heimdalljs-logger");
+ let cleanUpResolvedPath = cleanUpPath.cleanUpResolvedPath;
+ let isResolved = cleanUpPath.isResolved;
+ 
++const GLOBAL_CACHE = new Map();
++
+ class DirectoryIndex extends Map {}
+ 
+ class Directory extends String {
+@@ -27,8 +29,8 @@ class Directory extends String {
+     if (base[base.length - 1] !== path.sep && base[base.length - 1] !== "/") {
+       base += path.sep;
+     }
+-    for (let entry of fs.readdirSync(p).sort()) {
+-      index.set(entry, new makeFSObjectCleanedUp(base + entry));
++    for (let entry of fs.readdirSync(p, { withFileTypes: true }).sort()) {
++      index.set(entry.name, new makeFSObjectCleanedUp(base + entry.name, entry));
+     }
+     this._index = index;
+     return index;
+@@ -42,8 +44,12 @@ class Directory extends String {
+ class File extends String {
+   constructor(p, _cleanedUp, _stats) {
+     if (!_cleanedUp) p = cleanUpPath(p);
++
+     super(p);
+-    if (_stats != null) this._stats = _stats;
++
++    if (_stats != null) {
++      this._stats = _stats;
++    }
+   }
+ 
+   inspect() {
+@@ -64,15 +70,61 @@ function makeFSObject(p) {
+   return makeFSObjectCleanedUp(cleanUpPath(p));
+ }
+ 
+-function makeFSObjectCleanedUp(p) {
+-  let stats = fs.lstatSync(p);
+-  if (stats.isDirectory()) return new Directory(p, true);
+-  if (stats.isFile()) return new File(p, true, stats);
+-  // Return FSObject pointing to target of symbolic link. This is so you can use
+-  // the returned FSObject to create a symlink without symlink indirection
+-  // growing out of control.
+-  if (!stats.isSymbolicLink())
+-    throw new Error("File has unexpected type: " + p);
++function getDirectoryClass(p) {
++  if (GLOBAL_CACHE.has(p)) {
++    return GLOBAL_CACHE.get(p);
++  }
++
++  let directory = new Directory(p, true);
++
++  GLOBAL_CACHE.set(p, directory);
++
++  return directory;
++}
++
++function getFileClass(p, stats) {
++  if (GLOBAL_CACHE.has(p)) {
++    return GLOBAL_CACHE.get(p);
++  }
++
++  let directory = new File(p, true, stats);
++
++  GLOBAL_CACHE.set(p, directory);
++
++  return directory;
++}
++
++function makeFSObjectCleanedUp(p, dirent) {
++  if (dirent) {
++    if (dirent.isDirectory()) {
++      return getDirectoryClass(p);
++    }
++
++    if (dirent.isFile()) {
++      return getFileClass(p);
++    }
++
++    if (!dirent.isSymbolicLink()) {
++      throw new Error("File has unexpected type: " + p);
++    }
++  } else {
++    let stats = fs.lstatSync(p);
++
++    if (stats.isDirectory()) {
++      return getDirectoryClass(p);
++    }
++
++    if (stats.isFile()) {
++      return getFileClass(p, stats);
++    }
++    // Return FSObject pointing to target of symbolic link. This is so you can use
++    // the returned FSObject to create a symlink without symlink indirection
++    // growing out of control.
++    if (!stats.isSymbolicLink()) {
++      throw new Error("File has unexpected type: " + p);
++    }
++  }
++
+   let target = fs.readlinkSync(p);
+   if (!isResolved(target)) {
+     // We expect most symlinks coming from other plugins to be resolved already,
+@@ -226,7 +278,7 @@ function fileStatsEqual(a, b) {
+   // Note that stats.mtimeMs is only available as of Node 9
+   return (
+     a.ino === b.ino &&
+-    a.mtime.getTime() === b.mtime.getTime() &&
++    // a.mtime.getTime() === b.mtime.getTime() &&
+     a.size === b.size &&
+     a.mode === b.mode
+   );
