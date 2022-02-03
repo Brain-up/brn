@@ -106,7 +106,7 @@ class UserDetailController(
         ResponseEntity.ok(BaseResponse(data = doctorService.getDoctorAssignedToPatient(patientId)))
 
     @DeleteMapping("/current/{patientId}/doctor/{doctorId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Delete doctor from patient")
     fun deleteDoctorFromPatient(@PathVariable patientId: Long, @PathVariable doctorId: Long) =
         doctorService.deleteDoctorFromPatientAsPatient(patientId, doctorId)

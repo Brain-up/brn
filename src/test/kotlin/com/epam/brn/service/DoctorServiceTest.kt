@@ -378,8 +378,10 @@ internal class DoctorServiceTest {
             email = email,
             gender = Gender.MALE,
             bornYear = 2000,
-            active = true,
-            doctors = null
-        ).apply { this.authorities = authorities }
+            active = true
+        ).apply {
+            this.authorities = authorities
+            this.doctors = doctors
+        }
     }
 }

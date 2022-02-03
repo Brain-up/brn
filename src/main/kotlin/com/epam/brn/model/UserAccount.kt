@@ -102,6 +102,9 @@ data class UserAccount(
         it.authorities = this.authoritySet
             .map(Authority::authorityName)
             .toMutableSet()
+        it.doctors = doctorSet
+            .map(UserAccount::id)
+            .toMutableSet()
     }
 
     fun toAnalyticsDto() = UserWithAnalyticsResponse(

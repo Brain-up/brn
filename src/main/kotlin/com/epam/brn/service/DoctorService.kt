@@ -57,7 +57,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
         userAccountService.removeDoctorFromPatient(patientId, doctorId)
     }
 
-    fun isDoctorSubscribePatient(patient: UserAccountResponse, doctorId: Long): Boolean =
+    private fun isDoctorSubscribePatient(patient: UserAccountResponse, doctorId: Long): Boolean =
         !patient.doctors.isNullOrEmpty() && !patient.doctors?.contains(doctorId)!!
 
     fun deleteDoctorFromPatientAsPatient(patientId: Long, doctorId: Long) {
