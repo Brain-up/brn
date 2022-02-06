@@ -108,6 +108,12 @@
             <a href="https://github.com/Brain-up/brn">{{t "header.github"}}</a>
             <a href="/description">{{t "header.contact"}}</a>
             <a href="/description">{{t "header.info"}}</a>
+            <LinkTo @route="specialists" {{on "click" this.closeMenu}}>{{t
+                "header.specialists"
+              }}</LinkTo>
+            <LinkTo @route="contributors" {{on "click" this.closeMenu}}>{{t
+                "header.contributors"
+              }}</LinkTo>
             <LinkTo @route="used-resources" {{on "click" this.closeMenu}}>{{t
                 "header.used_resources"
               }}</LinkTo>
