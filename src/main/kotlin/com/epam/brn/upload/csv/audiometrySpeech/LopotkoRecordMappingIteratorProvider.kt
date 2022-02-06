@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.seriesWords
+package com.epam.brn.upload.csv.audiometrySpeech
 
 import com.epam.brn.upload.csv.MappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator

@@ -1,7 +1,5 @@
 package com.epam.brn.upload.csv.audiometrySpeech
 
-import com.epam.brn.upload.csv.seriesWords.LopotkoRecord
-import com.epam.brn.upload.csv.seriesWords.LopotkoRecordMappingIteratorProvider
 import com.fasterxml.jackson.databind.MappingIterator
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
