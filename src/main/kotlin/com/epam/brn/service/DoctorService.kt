@@ -80,13 +80,11 @@ class DoctorService(private val userAccountService: UserAccountService) {
     }
 
     fun getDoctorAssignedToPatient(patientId: Long): List<UserAccountResponse> {
-        val patient = userAccountService.findUserById(patientId)
         val currentUser = userAccountService.getCurrentUser().toDto()
         return when {
             !isAdmin(currentUser) && currentUser.id != patientId -> {
                 throw IllegalArgumentException("It is forbidden to get a doctor from another patient")
             }
-            patient.doctors == null -> throw IllegalArgumentException("No doctor found")
             else -> userAccountService.getDoctorsForPatient(patientId)
         }
     }
