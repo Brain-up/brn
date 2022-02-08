@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.MappingIterator
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.BufferedInputStream
+import org.springframework.mock.web.MockMultipartFile
+import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import kotlin.test.assertEquals
@@ -20,9 +21,11 @@ internal class LopotkoRecordMappingIteratorProviderTest {
 
     @BeforeEach
     fun setUp() {
-        inputStream = BufferedInputStream(
-            FileInputStream("src/test/resources/inputData.lopotko-record/right_example.csv")
+        val taskFile = MockMultipartFile(
+            "series_words_en.csv",
+            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}lopotko-record${File.separator}right_example.csv")
         )
+        inputStream = taskFile.inputStream
     }
 
     @AfterEach

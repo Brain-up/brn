@@ -21,7 +21,7 @@ import kotlin.test.assertEquals
 internal class GroupLocalePostprocessorImplIT {
 
     @Autowired
-    lateinit var groupLocalePostprocessor: LocalePostprocessor<ExerciseGroupDto>
+    lateinit var groupLocalePostprocessor: GroupLocalePostprocessorImpl
 
     @ParameterizedTest(name = "Method with sourceDto {0} should return ExerciseGroupDto with name {1}")
     @MethodSource("getEnUsLocaleExerciseGroupsData")
