@@ -92,7 +92,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             )
         } returns Optional.empty()
         every { wordsServiceMock.addWordsToDictionary(ofType(Locale::class), any()) } returns Unit
-        every { wordsServiceMock.getDefaultWomanVoiceForLocale(Locale.RU.locale) } returns Voice.OKSANA
+        every { wordsServiceMock.getDefaultWomanVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, level) } returns Optional.empty()
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
         every { exerciseRepositoryMock.save(ofType(Exercise::class)) } returns Exercise()
@@ -160,14 +160,14 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             resource_дуб()
         )
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock
-        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
+        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, 1) } returns Optional.empty()
         every {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "бал",
                     Locale.RU.locale,
-                    Voice.FILIPP
+                    Voice.ALYSS
                 )
             )
         } returns "/test/бал.ogg"
@@ -176,7 +176,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "бум",
                     Locale.RU.locale,
-                    Voice.FILIPP
+                    Voice.ALYSS
                 )
             )
         } returns "/test/бум.ogg"
@@ -185,7 +185,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "быль",
                     Locale.RU.locale,
-                    Voice.FILIPP
+                    Voice.ALYSS
                 )
             )
         } returns "/test/быль.ogg"
@@ -194,7 +194,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "вить",
                     Locale.RU.locale,
-                    Voice.FILIPP
+                    Voice.ALYSS
                 )
             )
         } returns "/test/вить.ogg"
@@ -203,7 +203,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "гад",
                     Locale.RU.locale,
-                    Voice.FILIPP
+                    Voice.ALYSS
                 )
             )
         } returns "/test/гад.ogg"
@@ -212,7 +212,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "дуб",
                     Locale.RU.locale,
-                    Voice.FILIPP
+                    Voice.ALYSS
                 )
             )
         } returns "/test/дуб.ogg"
