@@ -4,7 +4,7 @@ import com.epam.brn.dto.ResourceDto
 import com.epam.brn.model.ExerciseType
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-data class WordsSeriesTaskResponse(
+data class WordsTaskResponse(
     val id: Long,
     val exerciseType: ExerciseType,
     @JsonIgnore
