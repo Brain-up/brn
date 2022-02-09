@@ -1,4 +1,49 @@
+import type { FFmpeg } from '@ffmpeg/ffmpeg';
 import Ember from 'ember';
+
+let ffmpeg: FFmpeg | null = null;
+let hasFFmpegError = false;
+let hasOGGDecodingError = false;
+
+async function initFFmpeg() {
+  if (!globalThis.crossOriginIsolated) {
+    return;
+  }
+  const { createFFmpeg } = await import('@ffmpeg/ffmpeg');
+  if (ffmpeg === null) {
+    const corePath =
+      window.location.protocol +
+      '//' +
+      window.location.host +
+      '/assets/ffmpeg-core.js';
+    ffmpeg = createFFmpeg({ log: false, corePath });
+  }
+  if (!ffmpeg.isLoaded()) {
+    try {
+      await ffmpeg.load();
+    } catch (e) {
+      hasFFmpegError = true;
+      console.error(e);
+    }
+  }
+}
+
+export async function transcodeFile(file: ArrayBuffer) {
+  if (!ffmpeg) {
+    return file;
+  }
+
+  const inputName = `${Math.random().toString(16).slice(2, 8)}.ogg`;
+  const outputName = `${Math.random().toString(16).slice(2, 8)}.wav`;
+
+  ffmpeg.FS('writeFile', inputName, new Uint8Array(file));
+  await ffmpeg.run('-i', inputName, outputName);
+  const data = ffmpeg.FS('readFile', outputName);
+  ffmpeg.FS('unlink', inputName);
+  ffmpeg.FS('unlink', outputName);
+
+  return await new Blob([data.buffer], { type: 'audio/wav' }).arrayBuffer();
+}
 
 export const TIMINGS = {
   _step: 100,
@@ -109,19 +154,33 @@ export class BufferLoader {
       ),
     );
     try {
-      const results: (AudioBuffer | null)[] = await Promise.all(
-        files.map((file) => {
-          return new Promise((resolve) => {
-            if (file === null) {
-              resolve(null);
-            } else {
-              this.context.decodeAudioData(file, resolve, () => {
-                resolve(null);
-              });
+      const results: (AudioBuffer | null)[] = [];
+
+      for (const file of files) {
+        const fallackToSpeechKit = hasOGGDecodingError && hasFFmpegError;
+        if (file === null || fallackToSpeechKit) {
+          results.push(null);
+        } else {
+          let result = null;
+          const fileClone = file.slice(0);
+          try {
+            result = await this.context.decodeAudioData(file);
+          } catch (e) {
+            hasOGGDecodingError = true;
+            if (!hasFFmpegError) {
+              try {
+                await initFFmpeg();
+                result = await this.context.decodeAudioData(
+                  await transcodeFile(fileClone),
+                );
+              } catch (e) {
+                hasFFmpegError = true;
+              }
             }
-          }) as Promise<AudioBuffer | null>;
-        }),
-      );
+          }
+          results.push(result);
+        }
+      }
       return this.onload(results);
     } catch (e) {
       console.error(e, files, this.urlList);

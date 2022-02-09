@@ -8,6 +8,9 @@ header:
   github: GitHub
   contact: Contact
   info: Info
+  used_resources: Used Resources
+  specialists: Specialists
+  contributors: Contributors
 
 login:
   title: Login
@@ -17,12 +20,13 @@ registration:
 
 audio_player:
   listen: Listen one more time
+  selected_words_of: Selected {selected} words of {total}
 
 login_form:
   error_bad_credentials: Incorrect login or password
   login: Login
   password: Password
-  registration:  Registration
+  registration: Registration
   sign_in: Sign in
   warning_enter_credentials: Please enter your login and password
   forgot_password: Forgot your password?
@@ -108,7 +112,6 @@ index:
   app_info: BrainUP - online classes for children and adults
   app_description: Our site is a platform of interactive exercises for adults and children from the age of seven with cognitive speech perception problems, which helps to train the ability to listen and understand.
 
-
 start_task_button:
   label: Start exercise
 
@@ -132,7 +135,7 @@ avatar_controls:
   title: Avatar selection
 
 description:
-  header: "About the '<span class=\"text-indigo-600\">'Brain-Up'</span>'"
+  header: 'About the ''<span class="text-indigo-600">''Brain-Up''</span>'''
   intro:
     A team of volunteers started to develop the Brain-Up interactive audio exercise platform for people with cognitive speech problems.
     The ability to hear and to understand speech can be significantly improved thanks to these special and regular activities. Welcome!
@@ -157,12 +160,11 @@ description:
       3:
         In the history of this draft more than 40 people have taken part in the development of apps from different countries (Russia, Ukraine,
         Belarus, Poland, Netherlands, Mexico) since 2019.
-      4:
-        The working version of the Brain-Up program is already ready, where one can register and practice right now."
+      4: The working version of the Brain-Up program is already ready, where one can register and practice right now."
   exercises:
     header: Training plan and exercise program
     us_recomendations:
-      title: "Lesson recommendations given by American colleagues:"
+      title: 'Lesson recommendations given by American colleagues:'
       0: it is necessary to exercise regularly (at least 6 times a week 30 minutes a day)
       1: it is necessary to listen to audio material, heed and complete tasks
       2: if you feel that the task is not very easy for you, do it again and again
@@ -189,9 +191,9 @@ description:
     header: How to support our project
     details: We ask users to actively participate in the tasks and inform us about possible errors
     bug_tracking:
-      link: "https://docs.google.com/document/d/1ihOrk7RRmz92teGMsw068KifR5MWpoBo8wq2Lb7gL44/edit"
+      link: 'https://docs.google.com/document/d/1ihOrk7RRmz92teGMsw068KifR5MWpoBo8wq2Lb7gL44/edit'
       title: using the link
-      goal: ", so that we can quickly fix these."
+      goal: ', so that we can quickly fix these.'
     contact_us:
       "We are open to new volunteers as a developer (Kotlin, Ember, Angular), a tester, a painter and as a content volunteer. If you want to
       become a part of the team, write to our project email: "
@@ -201,53 +203,53 @@ description:
   links:
     header: Useful links
     articles:
-      title: "Articles about the project:"
-      link: "https://habr.com/ru/company/epam_systems/blog/530824/"
-      link_title: "follow us on habr.ru"
+      title: 'Articles about the project:'
+      link: 'https://habr.com/ru/company/epam_systems/blog/530824/'
+      link_title: 'follow us on habr.ru'
     foreign_programs:
-      title: "Foreign programs for the development of auditory perception:"
+      title: 'Foreign programs for the development of auditory perception:'
       0:
         title: Advanced Brain Technologies
-        link: "https://advancedbrain.com/"
-        description: "― exercises to improve brain, emotional, and mental health through melodies and sounds"
+        link: 'https://advancedbrain.com/'
+        description: '― exercises to improve brain, emotional, and mental health through melodies and sounds'
       1:
         title: Musical Auditory Training
-        link: "http://musicalauditorytraining.com/"
-        description: "― development of auditory perception through music"
+        link: 'http://musicalauditorytraining.com/'
+        description: '― development of auditory perception through music'
       2:
         title: Fast ForWord Reading Program
-        link: "https://www.scilearn.com/program/"
-        description: "― program for the development of brain abilities and speech understanding"
+        link: 'https://www.scilearn.com/program/'
+        description: '― program for the development of brain abilities and speech understanding'
     scientific_basis:
-      header: "Scientific basis:"
+      header: 'Scientific basis:'
       0:
         title: The Brain That Changes Itself I (2008)
-        link: "https://youtu.be/BMNrFENZ4Rw"
+        link: 'https://youtu.be/BMNrFENZ4Rw'
       1:
         title: The Brain That Changes Itself II (2010)
-        link: "https://youtu.be/QUoBMSKq7zg"
+        link: 'https://youtu.be/QUoBMSKq7zg'
       2:
         title: Hearing complaints among veterans following traumatic brain injury
-        link: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/"
+        link: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/'
       3:
         title: The official website of I.V. Koroleva (professor, doctor of psychological sciences)
-        link: "https://profkoroleva.ru/"
+        link: 'https://profkoroleva.ru/'
   team:
     header: Meet our team
-    thanks_words: "We are glad to all the contributors who have helped at different times and those who continue to develop the platform today."
+    thanks_words: 'We are glad to all the contributors who have helped at different times and those who continue to develop the platform today.'
     image_alt: Team member photo {i}
   doctors:
-    thanks_words: "Also, we are very grateful to our medical specialists, consultants and authors of the exercises!"
+    thanks_words: 'Also, we are very grateful to our medical specialists, consultants and authors of the exercises!'
   support:
     header: With the support
     thanks_words: We would like to thank everyone who participates and supports our project!
   join_us:
-    header: "Join '<span class=\"text-indigo-600\">'Brain-Up'</span>'!"
+    header: 'Join ''<span class="text-indigo-600">''Brain-Up''</span>''!'
     description: We will be glad to everyone who wants to join and contribute to our project.
     contact:
       start: "If you want to join our team, you can write to our lead Elena Moshnikova: "
       end: Elena will be happy to answer all your questions and to cooperate.
-    motivation: "Our joint efforts make this project \"alive\" and, perhaps, we will be able to help many people discover or return the world of understandable sounds."
+    motivation: 'Our joint efforts make this project "alive" and, perhaps, we will be able to help many people discover or return the world of understandable sounds.'
 
 profile:
   statistics:
@@ -266,3 +268,41 @@ profile:
       sub_title: "Check if you exercise regularly enough:"
       info: "According to research, to improve the hearing threshold, you need to practice at least '<span class=\"font-bold\">'6'</span>' days a week for '<span class=\"font-bold\">'20'</span>' minutes for '<span class=\"font-bold\">'2'</span>' years.<br/>There must be at least '<span class=\"font-bold\">'8'</span>' hours '<span class=\"font-bold\">'40'</span>' minutes per month for a total of '<span class=\"font-bold\">'26'</span>' days."
       button_ok: Ok
+used_resources:
+  subtitle: Exercise pictures in the application are taken from the following platforms
+
+specialists:
+  title: Specialists
+  subtitle: The BrainUp training program was developed jointly with the best specialists in the field of deaf education from Russia and Belarus
+  people:
+    0:
+      fullName: Koroleva Inna Vasilevna
+      jobTitle: Scientific director of the rehabilitation department, doctor of psychological sciences, professor. Chief Researcher, St. Petersburg Research Institute of ENT.
+      description: Leading Russian expert in the field of rehabilitation of patients with hearing loss and deafness, author of numerous books for parents and specialists.
+    1:
+      fullName: Proshina Lyubov Aleksandrovna
+      jobTitle: Deaf teacher, Republican Scientific and Practical Center for Otorhinolorngology, 12 years of experience.
+      description: Throughout my professional career, I have been trying to make this path simpler and more understandable, more interesting and exciting. I believe in success and that our joint work will definitely help adults and children hear the world better.
+  all: all specialists
+
+contributors:
+  title: "Our Team"
+  subtitle: "We are all here to make your life easier!"
+  people:
+    0: 
+      fullName: Kannunikov Aleksandr
+      jobTitle: Senior Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 5.png
+    1: 
+      fullName: Moshnikova Elana
+      jobTitle: Senior Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 1.png
+    2: 
+      fullName: Churkina Irina
+      jobTitle: Senior Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 1.png
+    3: 
+      fullName: Miguel Osorio
+      jobTitle: Lead Software Engineer, Epam
+      imgSrc: /pictures/avatars/avatar 5.png
+  all: all team

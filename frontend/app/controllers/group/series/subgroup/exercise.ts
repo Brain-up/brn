@@ -88,7 +88,8 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     await getOwner(this)
       .lookup(`controller:group.series.subgroup`)
       .exerciseAvailabilityCalculationTask.perform();
-
+    this.showExerciseStats = false;
+    this.exerciseStats = {};
     this.goToSeries();
   }
 

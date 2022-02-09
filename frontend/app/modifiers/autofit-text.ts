@@ -45,13 +45,24 @@ export default modifier(function autofitText(element: HTMLDivElement) {
   }
 
   const font = `${fontStyle} ${fontVariant} ${fontWeight} ${fontSize} ${fontFamily}`;
+  const elementWidth = element.clientWidth;
   const newFontSize = fitTextSize(
     text,
-    element.clientWidth - 20,
+    elementWidth - 20,
     font,
     fontSize,
   );
-  if (newFontSize) {
-    element.style.fontSize = `${newFontSize - 1}px`;
+
+  if (!newFontSize) {
+    return;
   }
+
+  const sizeToApply = newFontSize - 1;
+
+  if (sizeToApply >= 10) {
+    element.style.fontSize = `${sizeToApply}px`;
+  } else {
+    element.style.width = `${elementWidth*(12/newFontSize)}px`;
+  }
+
 });
