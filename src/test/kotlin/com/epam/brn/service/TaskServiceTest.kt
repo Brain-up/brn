@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
-import com.epam.brn.dto.response.WordsSeriesTaskResponse
+import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -11,6 +11,7 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
+import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
@@ -41,6 +42,9 @@ internal class TaskServiceTest {
     lateinit var taskRepositoryMock: TaskRepository
 
     @MockK
+    lateinit var wordAnalyzingService: WordAnalyzingService
+
+    @MockK
     lateinit var exerciseRepositoryMock: ExerciseRepository
 
     @MockK
@@ -62,10 +66,10 @@ internal class TaskServiceTest {
     lateinit var resourceMock: Resource
 
     @MockK
-    lateinit var taskDto1Mock: WordsSeriesTaskResponse
+    lateinit var taskDto1Mock: WordsTaskResponse
 
     @MockK
-    lateinit var taskDto2Mock: WordsSeriesTaskResponse
+    lateinit var taskDto2Mock: WordsTaskResponse
 
     @MockK
     lateinit var wordsGroupSeriesTaskResponse1Mock: WordsGroupSeriesTaskResponse
@@ -101,8 +105,8 @@ internal class TaskServiceTest {
 
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
             every { task2Mock.answerOptions } returns mutableSetOf()
-            every { task1Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
-            every { task2Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
+            every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
+            every { task2Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -152,6 +156,47 @@ internal class TaskServiceTest {
             // THEN
             verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
             foundTasks.size shouldBe expectedTaskSize
+        }
+
+        @Test
+        fun `should return tasks by exerciseId(SINGLE_WORDS_KOROLEVA)`() {
+            // GIVEN
+            val template = ""
+            val resource1 = Resource(word = "мак", locale = Locale.RU.locale, wordType = WordType.OBJECT.name)
+            val resource2 = Resource(word = "маки", locale = Locale.RU.locale, wordType = WordType.OBJECT.name)
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
+                listOf(task1Mock)
+            every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
+            every { task1Mock.answerOptions } returns mutableSetOf(resource1, resource2)
+            every { task1Mock.exercise } returns exerciseMock
+            every { task1Mock.id } returns 1
+            every { task1Mock.name } returns "name"
+            every { task1Mock.serialNumber } returns 2
+            // every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
+
+            every { exerciseMock.template } returns template
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.SINGLE_WORDS_KOROLEVA.name
+            every { wordAnalyzingService.findSyllableCount("мак") } returns 1
+            every { wordAnalyzingService.findSyllableCount("маки") } returns 2
+
+            every { wordsServiceMock.getFullS3UrlForWord(any(), any()) } returns "fullUrl"
+            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
+
+            // WHEN isAudioFileUrlGenerated = false
+            val foundTasks = taskService.getTasksByExerciseId(LONG_ONE) as List<WordsTaskResponse>
+
+            // THEN
+            foundTasks.size shouldBe 1
+            val answers = foundTasks.first().answerOptions
+            val taskMak = answers.first { it.word == "мак" }
+            val taskMaki = answers.first { it.word == "маки" }
+            taskMak.soundsCount shouldBe 1
+            taskMaki.soundsCount shouldBe 2
+            taskMak.columnNumber shouldBe 0
+            taskMaki.columnNumber shouldBe 1
+            answers.size shouldBe 2
         }
 
         @Test
@@ -235,8 +280,8 @@ internal class TaskServiceTest {
             )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
-            every { task2Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
+            every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
+            every { task2Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
             every { task2Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto1Mock
@@ -297,14 +342,14 @@ internal class TaskServiceTest {
         @Test
         fun `should return task by id(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
-            val taskDto = WordsSeriesTaskResponse(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
+            val taskDto = WordsTaskResponse(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-            every { task1Mock.toWordsSeriesTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto
+            every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
@@ -362,7 +407,7 @@ internal class TaskServiceTest {
         @Test
         fun `should return task by id(PHRASES)`() {
             // GIVEN
-            val taskDto = WordsSeriesTaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
+            val taskDto = WordsTaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.exercise } returns exerciseMock

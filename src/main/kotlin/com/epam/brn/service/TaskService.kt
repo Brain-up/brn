@@ -1,7 +1,10 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.ExerciseType.FREQUENCY_WORDS
 import com.epam.brn.model.ExerciseType.PHRASES
 import com.epam.brn.model.ExerciseType.SENTENCE
@@ -25,7 +28,8 @@ class TaskService(
     private val exerciseRepository: ExerciseRepository,
     private val resourceRepository: ResourceRepository,
     private val wordsService: WordsService,
-    private val urlConversionService: UrlConversionService
+    private val urlConversionService: UrlConversionService,
+    private val wordAnalyzingService: WordAnalyzingService,
 ) {
     private val log = logger()
 
@@ -38,8 +42,8 @@ class TaskService(
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
         return when (val type = valueOf(exercise.subGroup!!.series.type)) {
-            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SINGLE_WORDS_KOROLEVA ->
-                tasks.map { task -> task.toWordsSeriesTaskDto(type) }
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS -> tasks.map { task -> task.toWordsTaskDto(type) }
+            SINGLE_WORDS_KOROLEVA -> tasks.map { task -> task.toDetailWordsTaskDto(type) }
             WORDS_SEQUENCES -> tasks.map { task -> task.toWordsGroupSeriesTaskDto(task.exercise?.template) }
             SENTENCE -> tasks.map { task -> task.toSentenceSeriesTaskDto(task.exercise?.template) }
             PHRASES -> tasks.map { task -> task.toPhraseSeriesTaskDto() }
@@ -51,11 +55,10 @@ class TaskService(
         log.debug("Searching task with id=$taskId")
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
-
         processAnswerOptions(task)
-
         return when (val type = valueOf(task.exercise!!.subGroup!!.series.type)) {
-            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SINGLE_WORDS_KOROLEVA -> task.toWordsSeriesTaskDto(type)
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS -> task.toWordsTaskDto(type)
+            SINGLE_WORDS_KOROLEVA -> task.toDetailWordsTaskDto(type)
             WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)
             SENTENCE -> task.toSentenceSeriesTaskDto(task.exercise?.template)
             PHRASES -> task.toPhraseSeriesTaskDto()
@@ -78,5 +81,27 @@ class TaskService(
         task.correctAnswer?.let { resources.add(it) }
         resourceRepository.saveAll(resources)
         return taskRepository.save(task)
+    }
+
+    fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
+        id = id!!,
+        exerciseType = exerciseType,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.toResourceDtoSet()
+    )
+
+    fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceDto> {
+        val mapVowelCountToWord = this.groupBy { resource -> wordAnalyzingService.findSyllableCount(resource.word) }
+        val resultDtoSet = mutableSetOf<ResourceDto>()
+        mapVowelCountToWord.keys.forEachIndexed { index, vowelCount ->
+            val resources = mapVowelCountToWord[vowelCount]?.map { it.toDto() }
+            resources?.forEach {
+                it.columnNumber = index
+                it.soundsCount = vowelCount
+            }
+            resultDtoSet.addAll(resources ?: emptySet())
+        }
+        return resultDtoSet.toHashSet()
     }
 }
