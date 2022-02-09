@@ -2,6 +2,7 @@ package com.epam.brn.upload.csv.seriesWordsKoroleva
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Resource
@@ -21,6 +22,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -236,6 +238,25 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             assertThat(it.answerOptions).containsExactlyElementsOf(expected)
         }
         verify { resourceRepositoryMock.saveAll(expected) }
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException`() {
+        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns null
+        assertThrows(EntityNotFoundException::class.java) {
+            seriesWordsKorolevaRecordProcessor.process(
+                mutableListOf(
+                    SeriesWordsKorolevaRecord(
+                        level = level,
+                        code = "pictureUrl",
+                        exerciseName = exerciseName,
+                        words = words,
+                        playWordsCount = playWordsCount,
+                        wordsColumns = wordsColumns
+                    )
+                )
+            )
+        }
     }
 
     private fun createExercise(): Exercise {
