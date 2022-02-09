@@ -284,12 +284,10 @@ internal class DoctorServiceTest {
         user1.doctors = null
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
-            doctorService.getDoctorAssignedToPatient(user1.id!!)
-        }
+        doctorService.getDoctorAssignedToPatient(user1.id!!)
 
         // THEN
-        verify(exactly = 0) { userAccountService.findUserById(doctor.id!!) }
+        verify(exactly = 1) { userAccountService.getDoctorsForPatient(user1.id!!) }
     }
 
     @Test
