@@ -8,7 +8,7 @@
       {
         "id": 2,
         "audioFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/audio/ru-ru/filipp/1/9950f95013b0017a62cf88ea7684e928.ogg",
-        "word": "ребёнок",
+        "word": "реб+ёнок",
         "wordType": "OBJECT",
         "pictureFileUrl": "https://brain-up.s3.eu-north-1.amazonaws.com/pictures/ребёнок.png",
         "soundsCount": 0,

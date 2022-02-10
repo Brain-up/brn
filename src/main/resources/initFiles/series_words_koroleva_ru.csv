@@ -1,9 +1,9 @@
 level,code,exerciseName,words,playWordsCount, wordsColumns
-1,koroleva_words_first_1,1я группа,(круг машина),1,2
+1,koroleva_words_first_1,1я группа,(круг маш+ина),1,2
 2,koroleva_words_first_1,1я группа,(мышь голова),1,2
-3,koroleva_words_first_1,1я группа,(машина голова),1,2
+3,koroleva_words_first_1,1я группа,(маш+ина голова),1,2
 4,koroleva_words_first_1,1я группа,(круг мышь),1,2
-5,koroleva_words_first_1,1я группа,(круг машина мышь голова),1,2
+5,koroleva_words_first_1,1я группа,(круг маш+ина мышь голова),1,2
 6,koroleva_words_first_2,2я группа,(спать рубашка),1,2
 7,koroleva_words_first_2,2я группа,(ключ горячий),1,2
 8,koroleva_words_first_2,2я группа,(рубашка горячий),1,2
@@ -35,7 +35,7 @@ level,code,exerciseName,words,playWordsCount, wordsColumns
 53,koroleva_words_second_1_4,1 слово из 6и,(ключ горячий стук самолёт кот послушай),1,2
 54,koroleva_words_second_1_4,1 слово из 6и,(стук самолёт кот послушай пульт компьютер),1,2
 55,koroleva_words_second_1_4,1 слово из 6и,(кот послушай пульт компьютер нос картина),1,2
-70,koroleva_words_second_2_4,2 слова из 4х,(круг машина мышь голова),2,2
+70,koroleva_words_second_2_4,2 слова из 4х,(круг маш+ина мышь голова),2,2
 71,koroleva_words_second_2_4,2 слова из 4х,(спать рубашка ключ горячий),2,2
 72,koroleva_words_second_2_4,2 слова из 4х,(стук самолёт кот послушай),2,2
 73,koroleva_words_second_2_4,2 слова из 4х,(пульт компьютер нос картина),2,2
