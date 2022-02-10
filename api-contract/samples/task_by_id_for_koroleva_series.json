@@ -1,0 +1,32 @@
+{
+  "data": {
+    "id": 1,
+    "exerciseType": "SINGLE_WORDS_KOROLEVA",
+    "name": "",
+    "serialNumber": 1,
+    "answerOptions": [
+      {
+        "id": 2,
+        "audioFileUrl": "",
+        "word": "мак",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 1,
+        "description": "",
+        "columnNumber": 0
+      },
+      {
+        "id": 3,
+        "audioFileUrl": "",
+        "word": "маки",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 2,
+        "description": "",
+        "columnNumber": 1
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

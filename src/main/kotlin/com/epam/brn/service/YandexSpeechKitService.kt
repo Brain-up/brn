@@ -147,7 +147,7 @@ class YandexSpeechKitService(
             AudioFileMetaData(
                 text,
                 locale,
-                wordsService.getDefaultManVoiceForLocale(locale)
+                wordsService.getDefaultWomanVoiceForLocale(locale)
             )
         )
     }

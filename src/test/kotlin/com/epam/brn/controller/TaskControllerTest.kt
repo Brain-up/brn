@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.WordsSeriesTaskResponse
+import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.service.TaskService
 import io.mockk.every
@@ -34,7 +34,7 @@ class TaskControllerTest {
         fun `should get task by id`() {
             // GIVEN
             val taskId = LONG_ONE
-            val task = WordsSeriesTaskResponse(
+            val task = WordsTaskResponse(
                 id = LONG_ONE,
                 serialNumber = INTEGER_ONE,
                 exerciseId = LONG_ONE,
@@ -43,7 +43,7 @@ class TaskControllerTest {
             every { taskService.getTaskById(taskId) } returns task
 
             // WHEN
-            val actualResult: WordsSeriesTaskResponse = taskController.getTaskById(taskId).body?.data as WordsSeriesTaskResponse
+            val actualResult: WordsTaskResponse = taskController.getTaskById(taskId).body?.data as WordsTaskResponse
 
             // THEN
             verify(exactly = 1) { taskService.getTaskById(taskId) }
@@ -54,13 +54,13 @@ class TaskControllerTest {
         fun `should get tasks by exerciseId`() {
             // GIVEN
             val exerciseId = LONG_ONE
-            val taskFirst = WordsSeriesTaskResponse(
+            val taskFirst = WordsTaskResponse(
                 id = LONG_ONE,
                 serialNumber = INTEGER_ONE,
                 exerciseId = LONG_ONE,
                 exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS
             )
-            val taskSecond = WordsSeriesTaskResponse(
+            val taskSecond = WordsTaskResponse(
                 id = 2L,
                 serialNumber = INTEGER_TWO,
                 exerciseId = LONG_ONE,
@@ -70,8 +70,8 @@ class TaskControllerTest {
 
             // WHEN
             @Suppress("UNCHECKED_CAST")
-            val actualResult: List<WordsSeriesTaskResponse> =
-                taskController.getTasksByExerciseId(exerciseId).body?.data as List<WordsSeriesTaskResponse>
+            val actualResult: List<WordsTaskResponse> =
+                taskController.getTasksByExerciseId(exerciseId).body?.data as List<WordsTaskResponse>
 
             // THEN
             verify(exactly = 1) { taskService.getTasksByExerciseId(exerciseId) }
