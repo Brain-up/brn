@@ -1,7 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.response.GeneralTaskResponse
-import com.epam.brn.dto.response.WordsSeriesTaskResponse
+import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -43,13 +43,14 @@ data class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
-    fun toWordsSeriesTaskDto(exerciseType: ExerciseType) = WordsSeriesTaskResponse(
+    fun toWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
         id = id!!,
         exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
     )
+
     fun toWordsGroupSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskResponse(
         id = id!!,
         exerciseType = ExerciseType.WORDS_SEQUENCES,
@@ -67,7 +68,7 @@ data class Task(
         answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
         template = template,
     )
-    fun toPhraseSeriesTaskDto() = WordsSeriesTaskResponse(
+    fun toPhraseSeriesTaskDto() = WordsTaskResponse(
         id = id!!,
         exerciseType = ExerciseType.PHRASES,
         name = name,

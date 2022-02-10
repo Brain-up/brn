@@ -12,6 +12,7 @@
         {{#each this.task.answerOptions key="word" as |answerOption|}}
           <TaskPlayer::SingleSimpleWords::Option
             data-cols={{this.amountOfColumns}}
+            class="flex"
             @activeWord={{@activeWord}}
             @answerOption={{answerOption}}
             @checkMaybe={{this.checkMaybe}}

@@ -6,6 +6,7 @@ import TasksManagerService from 'brn/services/tasks-manager';
 import NetworkService from 'brn/services/network';
 import Ember from 'ember';
 import type Store from '@ember-data/store';
+import GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
 
 export default class GroupSeriesSubgroupExerciseRoute extends Route {
   @service('store') store!: Store;
@@ -53,9 +54,10 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
       );
     }
   }
-  resetController(controller, isExiting: boolean) {
+  resetController(controller: GroupSeriesSubgroupExerciseController, isExiting: boolean) {
     if (isExiting) {
       controller.showExerciseStats = false;
+      controller.exerciseStats = {};
       controller.correctnessWidgetIsShown = false;
     }
   }

@@ -29,4 +29,6 @@ Router.map(function () {
     this.route('statistics');
   });
   this.route('used-resources');
+  this.route('specialists');
+  this.route('contributors');
 });
