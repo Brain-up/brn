@@ -32,11 +32,11 @@ internal class SeriesWordsKorolevaRecordMappingIteratorProviderTest {
         val actualIterator: MappingIterator<SeriesWordsKorolevaRecord> =
             seriesWordsKorolevaRecordMappingIteratorProvider.iterator(inputStream)
         assertNotNull(actualIterator)
-        val lopotkoRecords: List<SeriesWordsKorolevaRecord> = actualIterator.readAll()
-        assertTrue(lopotkoRecords.isNotEmpty())
-        assertEquals(3, lopotkoRecords[0].wordsColumns)
-        assertEquals(1, lopotkoRecords[0].playWordsCount)
-        assertEquals("быль", lopotkoRecords[0].words[2])
+        val seriesWordsKorolevaRecords: List<SeriesWordsKorolevaRecord> = actualIterator.readAll()
+        assertTrue(seriesWordsKorolevaRecords.isNotEmpty())
+        assertEquals(3, seriesWordsKorolevaRecords[0].wordsColumns)
+        assertEquals(1, seriesWordsKorolevaRecords[0].playWordsCount)
+        assertEquals("быль", seriesWordsKorolevaRecords[0].words[2])
     }
 
     @Test
