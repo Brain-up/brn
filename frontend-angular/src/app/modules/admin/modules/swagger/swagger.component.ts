@@ -6,7 +6,6 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  AfterViewInit,
   OnDestroy,
 } from '@angular/core';
 
@@ -16,10 +15,8 @@ import {
   styleUrls: ['./swagger.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SwaggerComponent implements AfterViewInit, OnDestroy, OnInit {
+export class SwaggerComponent implements OnDestroy, OnInit {
   private readonly destroyer$ = new Subject<void>();
-  public swagger;
-
   constructor(private readonly adminApiService: AdminApiService) {}
 
   ngOnInit(): void {
@@ -31,18 +28,23 @@ export class SwaggerComponent implements AfterViewInit, OnDestroy, OnInit {
       });
   }
 
-  // Use adminApiService, SwaggerUI would GET without the Auth token
-  ngAfterViewInit(): void {
-    SwaggerUI({
+  _swagger: any = undefined;
+
+  set swagger(value: string) {
+    this._swagger = SwaggerUI({
       docExpansion: 'none',
       domNode: document.getElementById('swagger-ui-item'),
       layout: 'BaseLayout',
-      spec: JSON.parse(this.swagger),
+      spec: JSON.parse(value),
     });
+  }
+  get swagger() {
+    return this._swagger;
   }
 
   public ngOnDestroy(): void {
     this.destroyer$.next();
     this.destroyer$.complete();
+    // have no idea how to destroy swagger-ui
   }
 }

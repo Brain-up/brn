@@ -56,7 +56,7 @@ data class ExerciseWordsCreateDto(
     @ApiModelProperty(value = "Exercise name", required = true, example = "Семья /+голоса/")
     @field:NotBlank
     override val exerciseName: String,
-    @ApiModelProperty(value = "Words for creating exercise", required = true, example = "[сын, ребёнок, мама]")
+    @ApiModelProperty(value = "Words for creating exercise", required = true, example = "[\"сын\", \"ребёнок\", \"мама\"]")
     @field:NotEmpty
     val words: List<String>,
     @ApiModelProperty(value = "Noise level", required = true, example = "50")
