@@ -22,13 +22,13 @@ export class SwaggerComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(private readonly adminApiService: AdminApiService) {}
 
-  ngOnInit(): void {
-    this.adminApiService
+  async ngOnInit(): Promise<void> {
+    await this.adminApiService
       .getSwaggerUi()
       .pipe(takeUntil(this.destroyer$))
       .subscribe((swagger) => {
         this.swagger = swagger;
-      });
+      }).toPromise();
   }
 
   // Use adminApiService, SwaggerUI would GET without the Auth token
