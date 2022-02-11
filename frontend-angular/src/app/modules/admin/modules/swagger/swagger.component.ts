@@ -6,7 +6,6 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  AfterViewInit,
   OnDestroy,
 } from '@angular/core';
 
@@ -16,7 +15,7 @@ import {
   styleUrls: ['./swagger.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SwaggerComponent implements AfterViewInit, OnDestroy, OnInit {
+export class SwaggerComponent implements OnDestroy, OnInit {
   private readonly destroyer$ = new Subject<void>();
   constructor(private readonly adminApiService: AdminApiService) {}
 
