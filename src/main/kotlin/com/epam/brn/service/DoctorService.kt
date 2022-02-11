@@ -36,7 +36,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
                 )
             }
         }
-        userAccountService.updateDoctorForPatient(patientId, doctorId)
+        userAccountService.addDoctorForPatient(patientId, doctorId)
     }
 
     fun deleteDoctorFromPatientAsDoctor(doctorId: Long, patientId: Long) {

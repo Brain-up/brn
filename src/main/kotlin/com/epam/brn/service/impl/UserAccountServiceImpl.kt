@@ -132,15 +132,15 @@ class UserAccountServiceImpl(
         }.toDto()
     }
 
-    override fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount {
+    override fun addDoctorForPatient(userId: Long, doctorId: Long): UserAccount {
         val userAccount = findUserEntityById(userId)
-        userAccount.doctorSet.add(findUserEntityById(doctorId))
+        userAccount.doctors.add(findUserEntityById(doctorId))
         return userAccountRepository.save(userAccount)
     }
 
     override fun removeDoctorFromPatient(patientId: Long, doctorId: Long): UserAccount {
         val patientAccount = findUserEntityById(patientId)
-        patientAccount.doctorSet.remove(findUserEntityById(doctorId))
+        patientAccount.doctors.remove(findUserEntityById(doctorId))
         return userAccountRepository.save(patientAccount)
     }
 
@@ -148,7 +148,7 @@ class UserAccountServiceImpl(
         findUserEntityById(doctorId).patientSet.map { it.toDto() }
 
     override fun getDoctorsForPatient(patientId: Long): List<UserAccountResponse> =
-        findUserEntityById(patientId).doctorSet.map { it.toDto() }
+        findUserEntityById(patientId).doctors.map { it.toDto() }
 
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
         (!this.name.isNullOrBlank())

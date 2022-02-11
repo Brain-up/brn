@@ -310,7 +310,7 @@ class UserDetailsControllerIT : BaseIT() {
                 gender = Gender.MALE.toString(),
                 bornYear = 2000,
                 email = email_,
-                doctorSet = CollectionHelper.asSet(doctor_)
+                doctors = CollectionHelper.asSet(doctor_)
             )
         )
 

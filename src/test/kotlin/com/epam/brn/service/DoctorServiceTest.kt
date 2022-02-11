@@ -50,7 +50,7 @@ internal class DoctorServiceTest {
         every { userAccountService.findUserById(user2.id!!) } returns user2
         every { userAccountService.findUserById(fakeDoctorUser.id!!) } returns fakeDoctorUser
 
-        every { userAccountService.updateDoctorForPatient(any(), any()) } returns mockk()
+        every { userAccountService.addDoctorForPatient(any(), any()) } returns mockk()
         every { userAccountService.removeDoctorFromPatient(any(), any()) } returns mockk()
 
         every { userAccountService.getDoctorsForPatient(user1.id!!) } returns listOf(doctor)
@@ -68,7 +68,7 @@ internal class DoctorServiceTest {
         doctorService.addPatientToDoctorAsDoctor(doctor.id!!, user1.id!!)
 
         // THEN
-        verify { userAccountService.updateDoctorForPatient(user1.id!!, doctor.id!!) }
+        verify { userAccountService.addDoctorForPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -82,7 +82,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(user1.id!!, doctor.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -96,7 +96,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(fakeDoctorUser.id!!, user1.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(fakeDoctorUser.id!!, user1.id!!) }
     }
 
     @Test
@@ -111,7 +111,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(user1.id!!, doctor.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -125,7 +125,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(anotherDoctor.id!!, doctor.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(anotherDoctor.id!!, doctor.id!!) }
     }
 
     // =================================================================================================================

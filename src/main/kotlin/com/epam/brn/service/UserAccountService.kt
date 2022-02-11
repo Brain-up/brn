@@ -27,7 +27,7 @@ interface UserAccountService {
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
     fun getAllHeadphonesForCurrentUser(): Set<HeadphonesDto>
     fun findUserByUuid(uuid: String): UserAccountResponse?
-    fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount
+    fun addDoctorForPatient(userId: Long, doctorId: Long): UserAccount
     fun removeDoctorFromPatient(userId: Long, doctorId: Long): UserAccount
     fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse>
     fun getDoctorsForPatient(patientId: Long): List<UserAccountResponse>

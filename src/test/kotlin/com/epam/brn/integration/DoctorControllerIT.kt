@@ -72,7 +72,7 @@ class DoctorControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isOk)
 
-        userAccountRepository.findUserAccountById(user1.id!!).get().doctorSet.elementAt(0).id shouldBe currentDoctor.id
+        userAccountRepository.findUserAccountById(user1.id!!).get().doctors.elementAt(0).id shouldBe currentDoctor.id
     }
 
     @Transactional
@@ -92,7 +92,7 @@ class DoctorControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isBadRequest)
 
-        userAccountRepository.findUserAccountById(anotherDoctor.id!!).get().doctorSet shouldBe emptySet()
+        userAccountRepository.findUserAccountById(anotherDoctor.id!!).get().doctors shouldBe emptySet()
     }
 
     @Transactional
@@ -114,14 +114,14 @@ class DoctorControllerIT : BaseIT() {
         resultAction
             .andExpect(status().isForbidden)
 
-        userAccountRepository.findUserAccountById(user2.id!!).get().doctorSet shouldBe emptySet()
+        userAccountRepository.findUserAccountById(user2.id!!).get().doctors shouldBe emptySet()
     }
 
     @Test
     fun `should get all patients for doctor`() {
         // GIVEN
-        userAccountRepository.save(user1.apply { doctorSet = CollectionHelper.asSet(currentDoctor) })
-        userAccountRepository.save(user2.apply { doctorSet = CollectionHelper.asSet(currentDoctor) })
+        userAccountRepository.save(user1.apply { doctors = CollectionHelper.asSet(currentDoctor) })
+        userAccountRepository.save(user2.apply { doctors = CollectionHelper.asSet(currentDoctor) })
 
         // WHEN
         val resultAction = mockMvc.perform(get("/doctors/${currentDoctor.id}/patients"))
@@ -145,7 +145,7 @@ class DoctorControllerIT : BaseIT() {
     @Test
     fun `should remove patient from doctor`() {
         // GIVEN
-        userAccountRepository.save(user1.apply { doctorSet = CollectionHelper.asSet(currentDoctor) })
+        userAccountRepository.save(user1.apply { doctors = CollectionHelper.asSet(currentDoctor) })
 
         // WHEN
         val resultAction = mockMvc.perform(delete("/doctors/${currentDoctor.id}/patients/${user1.id}"))
@@ -156,6 +156,6 @@ class DoctorControllerIT : BaseIT() {
         val user1FromDb = userAccountRepository.findUserAccountById(user1.id!!).get()
         user1FromDb.email shouldBe user1.email
         user1FromDb.id shouldBe user1.id
-        user1FromDb.doctorSet shouldBe emptySet()
+        user1FromDb.doctors shouldBe emptySet()
     }
 }

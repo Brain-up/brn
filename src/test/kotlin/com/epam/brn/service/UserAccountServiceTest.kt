@@ -513,7 +513,7 @@ internal class UserAccountServiceTest {
             every { userAccountRepository.save(any()) } returns userAccount
 
             // WHEN
-            userAccountService.updateDoctorForPatient(userId, doctorId)
+            userAccountService.addDoctorForPatient(userId, doctorId)
 
             // THEN
             verify { userAccountRepository.findUserAccountById(userId) }
@@ -526,7 +526,7 @@ internal class UserAccountServiceTest {
             // GIVEN
             val userId: Long = 1
             val doctorId: Long = 4
-            val opDoctor = Optional.of(userAccount.apply { doctorSet = CollectionHelper.asSet(doctorAccount) })
+            val opDoctor = Optional.of(userAccount.apply { doctors = CollectionHelper.asSet(doctorAccount) })
             every { userAccountRepository.findUserAccountById(userId) } returns Optional.of(userAccount)
             every { userAccountRepository.findUserAccountById(doctorId) } returns opDoctor
             every { userAccountRepository.save(any()) } returns userAccount

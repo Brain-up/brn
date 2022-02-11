@@ -50,11 +50,11 @@ data class UserAccount(
     var headphones: MutableSet<Headphones> = hashSetOf(),
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
-        name = "doctor_patient_mpg",
+        name = "patients_doctors",
         joinColumns = [JoinColumn(name = "patient_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "doctor_id", referencedColumnName = "id")]
     )
-    var doctorSet: MutableSet<UserAccount> = hashSetOf()
+    var doctors: MutableSet<UserAccount> = hashSetOf()
 ) {
     var password: String? = null
 
@@ -71,7 +71,7 @@ data class UserAccount(
 
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
-        name = "doctor_patient_mpg",
+        name = "patients_doctors",
         joinColumns = [JoinColumn(name = "doctor_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "patient_id", referencedColumnName = "id")]
     )
@@ -102,7 +102,7 @@ data class UserAccount(
         it.authorities = this.authoritySet
             .map(Authority::authorityName)
             .toMutableSet()
-        it.doctors = doctorSet
+        it.doctors = doctors
             .map(UserAccount::id)
             .toMutableSet()
     }
