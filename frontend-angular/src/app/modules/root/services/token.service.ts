@@ -5,7 +5,14 @@ import { Injectable } from '@angular/core';
 export class TokenService {
   public getToken<T>(localKey: string = 'AUTH_TOKEN'): T | null {
     const authTokenBase64 = ALocaleStorage[localKey].get();
-    return authTokenBase64 ? JSON.parse(authTokenBase64) : null;
+    if (!authTokenBase64) {
+      return null;
+    }
+    try {
+      return JSON.parse(authTokenBase64);
+    } catch (e) {
+      return null;
+    }
   }
 
   public setToken<T>(token: T, localKey: string = 'AUTH_TOKEN'): void {
