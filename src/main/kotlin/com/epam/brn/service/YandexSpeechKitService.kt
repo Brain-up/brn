@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
 import com.epam.brn.exception.YandexServiceException
 import org.apache.commons.io.FileUtils
 import org.apache.http.NameValuePair
@@ -141,13 +142,14 @@ class YandexSpeechKitService(
             throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
     }
 
-    fun generateAudioOggFileWithValidation(text: String, locale: String): InputStream {
+    fun generateAudioOggFileWithValidation(text: String, locale: String, voice: String, speed: String): InputStream {
         validateLocale(locale)
         return generateAudioStream(
             AudioFileMetaData(
                 text,
                 locale,
-                wordsService.getDefaultWomanVoiceForLocale(locale)
+                if (voice.isEmpty()) wordsService.getDefaultWomanVoiceForLocale(locale) else Voice.valueOf(voice),
+                if (speed.isEmpty()) "1" else speed,
             )
         )
     }
