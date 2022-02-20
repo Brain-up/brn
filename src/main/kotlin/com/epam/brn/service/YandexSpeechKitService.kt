@@ -137,19 +137,27 @@ class YandexSpeechKitService(
         return fileOgg
     }
 
-    fun validateLocale(locale: String) {
+    fun validateLocaleAndVoice(locale: String, voice: String) {
         if (!Locale.values().map { it.locale }.contains(locale.toLowerCase()))
             throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
+        val localeVoices = wordsService.getVoicesForLocale(locale)
+        if (voice.isNotEmpty() && !localeVoices.contains(voice)) {
+            throw IllegalArgumentException("Locale $locale does not support voice $voice, only $localeVoices.")
+        }
     }
 
     fun generateAudioOggFileWithValidation(text: String, locale: String, voice: String, speed: String): InputStream {
-        validateLocale(locale)
+        validateLocaleAndVoice(locale, voice)
+        val calcSpeed = if (speed.isNotEmpty())
+            speed
+        else if (text.contains(" ")) "0.9"
+        else "0.8"
         return generateAudioStream(
             AudioFileMetaData(
                 text,
                 locale,
                 if (voice.isEmpty()) wordsService.getDefaultWomanVoiceForLocale(locale) else Voice.valueOf(voice),
-                if (speed.isEmpty()) "1" else speed,
+                calcSpeed,
             )
         )
     }
