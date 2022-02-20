@@ -37,8 +37,8 @@ class ExerciseService(
     @Value("#{'\${yandex.speeds}'.split(',')}")
     lateinit var speeds: List<String>
 
-    @Value(value = "\${brn.audio.file.url.generate.dynamically}")
-    private var isAudioFileUrlGenerated: Boolean = false
+    @Value(value = "\${brn.audio.file.getFromStorage}")
+    private var getAudioFileFromStorage: Boolean = false
 
     private val log = logger()
 
@@ -134,7 +134,7 @@ class ExerciseService(
 
     fun updateExerciseDto(exerciseDto: ExerciseDto): ExerciseDto {
         exerciseDto.noise.url = urlConversionService.makeUrlForNoise(exerciseDto.noise.url)
-        exerciseDto.isAudioFileUrlGenerated = isAudioFileUrlGenerated
+        exerciseDto.isAudioFileUrlGenerated = getAudioFileFromStorage
         return exerciseDto
     }
 
