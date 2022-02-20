@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.YandexSpeechKitService
+import com.epam.brn.service.TextToSpeechService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -21,7 +21,7 @@ internal class AudioControllerTest {
     lateinit var controller: AudioController
 
     @MockK
-    private lateinit var yandex: YandexSpeechKitService
+    private lateinit var textToSpeechService: TextToSpeechService
 
     @Test
     fun `should get audio byte array`() {
@@ -29,13 +29,13 @@ internal class AudioControllerTest {
         val text = "Testing_text"
         val locale = "locale"
         val stream: InputStream = ByteArrayInputStream(byteArrayOf(10, 20, 30, 40, 50))
-        every { yandex.generateAudioOggFileWithValidation(text, locale, "", "1") } returns stream
+        every { textToSpeechService.generateAudioOggFileWithValidation(text, locale, "", "1") } returns stream
 
         // WHEN
         val audioByteArray = controller.getAudioByteArray(text, locale, "", "1")
 
         // THEN
         assertEquals(HttpStatus.SC_OK, audioByteArray.statusCode.value())
-        verify(exactly = 1) { yandex.generateAudioOggFileWithValidation(text, locale, "", "1") }
+        verify(exactly = 1) { textToSpeechService.generateAudioOggFileWithValidation(text, locale, "", "1") }
     }
 }

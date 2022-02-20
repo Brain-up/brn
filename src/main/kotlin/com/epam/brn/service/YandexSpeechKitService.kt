@@ -14,6 +14,8 @@ import org.apache.http.util.EntityUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,10 +25,12 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 @Service
+@Primary
+@ConditionalOnProperty(name = ["default.tts.provider"], havingValue = "yandex")
 class YandexSpeechKitService(
     private val wordsService: WordsService,
     private val timeService: TimeService
-) {
+) : TextToSpeechService {
 
     @Value("\${yandex.getTokenLink}")
     lateinit var uriGetIamToken: String
@@ -123,7 +127,7 @@ class YandexSpeechKitService(
      * Generate .ogg audio file from yandex cloud speech kit service if it is absent locally
      */
     @Transactional
-    fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
+    override fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
         val fileName = wordsService.getLocalFilePathForWord(audioFileMetaData)
         log.info("For word $audioFileMetaData started creation audio file with name `$fileName`")
         val fileOgg = File(fileName)
@@ -146,7 +150,15 @@ class YandexSpeechKitService(
         }
     }
 
-    fun generateAudioOggFileWithValidation(text: String, locale: String, voice: String, speed: String): InputStream {
+    override fun generateAudioOggFileWithValidation(
+        text: String,
+        locale: String,
+        voice: String,
+        speed: String,
+        gender: String?,
+        pitch: String?,
+        style: String?
+    ): InputStream {
         validateLocaleAndVoice(locale, voice)
         val calcSpeed = if (speed.isNotEmpty())
             speed

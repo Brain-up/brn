@@ -1,0 +1,62 @@
+[
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (en-US, AmberNeural)",
+    "DisplayName": "Amber",
+    "LocalName": "Amber",
+    "ShortName": "en-US-AmberNeural",
+    "Gender": "Female",
+    "Locale": "en-US",
+    "LocaleName": "English (United States)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (en-ZA, LukeNeural)",
+    "DisplayName": "Luke",
+    "LocalName": "Luke",
+    "ShortName": "en-ZA-LukeNeural",
+    "Gender": "Male",
+    "Locale": "en-ZA",
+    "LocaleName": "English (South Africa)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (af-ZA, AdriNeural)",
+    "DisplayName": "Adri",
+    "LocalName": "Adri",
+    "ShortName": "af-ZA-AdriNeural",
+    "Gender": "Female",
+    "Locale": "af-ZA",
+    "LocaleName": "Afrikaans (South Africa)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (af-ZA, WillemNeural)",
+    "DisplayName": "Willem",
+    "LocalName": "Willem",
+    "ShortName": "af-ZA-WillemNeural",
+    "Gender": "Male",
+    "Locale": "af-ZA",
+    "LocaleName": "Afrikaans (South Africa)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (am-ET, AmehaNeural)",
+    "DisplayName": "Ameha",
+    "LocalName": "አምሀ",
+    "ShortName": "am-ET-AmehaNeural",
+    "Gender": "Male",
+    "Locale": "am-ET",
+    "LocaleName": "Amharic (Ethiopia)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  }
+]

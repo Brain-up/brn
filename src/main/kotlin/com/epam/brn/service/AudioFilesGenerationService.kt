@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class AudioFilesGenerationService(
     @Autowired val wordsService: WordsService,
     @Autowired val awsConfig: AwsConfig,
-    @Autowired val yandexSpeechKitService: YandexSpeechKitService
+    private val textToSpeechService: TextToSpeechService
 ) {
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForLocalFiles: String
@@ -97,7 +97,7 @@ class AudioFilesGenerationService(
      */
     @Transactional
     fun processWord(audioFileMetaData: AudioFileMetaData): File {
-        val fileOgg = yandexSpeechKitService.generateAudioOggFile(audioFileMetaData)
+        val fileOgg = textToSpeechService.generateAudioOggFile(audioFileMetaData)
         if (withSavingToS3) {
             val subPath = wordsService.getSubPathForWord(audioFileMetaData)
             awsConfig.amazonS3.putObject(awsConfig.bucketName + subPath, fileOgg.name, fileOgg)
