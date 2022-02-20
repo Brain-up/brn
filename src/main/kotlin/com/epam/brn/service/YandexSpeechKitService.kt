@@ -150,8 +150,8 @@ class YandexSpeechKitService(
         validateLocaleAndVoice(locale, voice)
         val calcSpeed = if (speed.isNotEmpty())
             speed
-        else if (text.contains(" ")) "0.9"
-        else "0.8"
+        else if (text.contains(" ")) "0.8"
+        else "0.9"
         return generateAudioStream(
             AudioFileMetaData(
                 text,
