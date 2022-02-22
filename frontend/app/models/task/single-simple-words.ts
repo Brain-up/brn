@@ -7,10 +7,11 @@ interface IRawAnswerOption {
   audioFileUrl: string;
   description: string;
   id: number;
+  columnNumber: number;
   pictureFileUrl: string;
   soundsCount: number;
   word: string;
-  wordType: "OBJECT"
+  wordType: 'OBJECT';
 }
 export default class TaskSingleSimpleWordsModel extends BaseTask {
   @attr() answerOptions!: IRawAnswerOption[];
@@ -27,7 +28,11 @@ export default class TaskSingleSimpleWordsModel extends BaseTask {
       if (playWordsCount === 1) {
         answers.push(item);
       } else {
-        const refs = [...shuffleArray(this.answerOptions, 4),...shuffleArray(this.answerOptions, 5),...shuffleArray(this.answerOptions, 6)];
+        const refs = [
+          ...shuffleArray(this.answerOptions, 4),
+          ...shuffleArray(this.answerOptions, 5),
+          ...shuffleArray(this.answerOptions, 6),
+        ];
         answers = refs.slice(0, playWordsCount);
       }
       return {
