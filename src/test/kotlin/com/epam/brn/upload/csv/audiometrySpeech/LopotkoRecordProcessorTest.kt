@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.seriesWords
+package com.epam.brn.upload.csv.audiometrySpeech
 
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.FrequencyZone
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
-internal class LopotkoProcessorTest {
+internal class LopotkoRecordProcessorTest {
     @MockK
     private lateinit var audiometryRepository: AudiometryRepository
 

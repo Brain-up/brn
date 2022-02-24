@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.enums.Locale
+import com.epam.brn.enums.Voice
 import com.epam.brn.exception.YandexServiceException
 import org.apache.commons.io.FileUtils
 import org.apache.http.NameValuePair
@@ -136,18 +137,27 @@ class YandexSpeechKitService(
         return fileOgg
     }
 
-    fun validateLocale(locale: String) {
+    fun validateLocaleAndVoice(locale: String, voice: String) {
         if (!Locale.values().map { it.locale }.contains(locale.toLowerCase()))
             throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
+        val localeVoices = wordsService.getVoicesForLocale(locale)
+        if (voice.isNotEmpty() && !localeVoices.contains(voice)) {
+            throw IllegalArgumentException("Locale $locale does not support voice $voice, only $localeVoices.")
+        }
     }
 
-    fun generateAudioOggFileWithValidation(text: String, locale: String): InputStream {
-        validateLocale(locale)
+    fun generateAudioOggFileWithValidation(text: String, locale: String, voice: String, speed: String): InputStream {
+        validateLocaleAndVoice(locale, voice)
+        val calcSpeed = if (speed.isNotEmpty())
+            speed
+        else if (text.contains(" ")) "0.8"
+        else "0.9"
         return generateAudioStream(
             AudioFileMetaData(
                 text,
                 locale,
-                wordsService.getDefaultWomanVoiceForLocale(locale)
+                if (voice.isEmpty()) wordsService.getDefaultWomanVoiceForLocale(locale) else Voice.valueOf(voice),
+                calcSpeed,
             )
         )
     }

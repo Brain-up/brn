@@ -21,9 +21,11 @@ class AudioController(@Autowired private val yandexSpeechKitService: YandexSpeec
     @ApiOperation("Get audio resource for string")
     fun getAudioByteArray(
         @RequestParam("text", required = true) text: String,
-        @RequestParam("locale", required = false, defaultValue = "ru-ru") locale: String
+        @RequestParam("locale", required = false, defaultValue = "ru-ru") locale: String,
+        @RequestParam("voice", required = false, defaultValue = "") voice: String,
+        @RequestParam("speed", required = false, defaultValue = "") speed: String
     ): ResponseEntity<ByteArray> {
-        val inputStream = yandexSpeechKitService.generateAudioOggFileWithValidation(text, locale)
+        val inputStream = yandexSpeechKitService.generateAudioOggFileWithValidation(text, locale, voice, speed)
         val out = IOUtils.toByteArray(inputStream)
         return ResponseEntity
             .ok()

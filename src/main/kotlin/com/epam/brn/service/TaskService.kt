@@ -33,8 +33,8 @@ class TaskService(
 ) {
     private val log = logger()
 
-    @Value(value = "\${brn.audio.file.url.generate.dynamically}")
-    private var isAudioFileUrlGenerated: Boolean = false
+    @Value(value = "\${brn.audio.file.getFromStorage}")
+    private var getAudioFileFromStorage: Boolean = false
 
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
@@ -68,7 +68,7 @@ class TaskService(
 
     private fun processAnswerOptions(task: Task) {
         task.answerOptions.forEach { resource ->
-            if (!isAudioFileUrlGenerated)
+            if (getAudioFileFromStorage)
                 resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale)
             resource.pictureFileUrl = urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl)
         }

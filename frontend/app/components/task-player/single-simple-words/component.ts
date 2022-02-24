@@ -25,7 +25,9 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
       this.args.task.usePreGeneratedAudio && answer.audioFileUrl;
     const url = useGeneratedUrl
       ? urlForAudio(answer.audioFileUrl)
-      : this.audio.audioUrlForText(task.answer.map((e: AnswerOption) => e.word).join(' '));
+      : this.audio.audioUrlForText(
+          task.answer.map((e: AnswerOption) => e.word).join(' '),
+        );
     return url;
   }
   startTask() {
@@ -34,6 +36,47 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
       this.audio.startPlayTask(this.audioFiles);
     }
   }
+  get sortedAnswerOptions() {
+    const opts = this.task.answerOptions;
+    type Answers = typeof this.task.answerOptions;
+    const acc: Record<string, Answers> = {};
+    const groupedOptions = opts.reduce((acc, option) => {
+      const colId = (option.columnNumber ?? 0).toString();
+      if (!acc[colId]) {
+        acc[colId] = [];
+      }
+      acc[colId].push(option);
+      return acc;
+    }, acc);
+    const groupIds = Object.keys(groupedOptions)
+      .map((el) => parseInt(el))
+      .sort();
+    const amountOfColumns = groupIds.length;
+    if (this.amountOfColumns !== amountOfColumns) {
+      console.warn(
+        `Incorrect amount of group options resolved: ${this.amountOfColumns} vs ${amountOfColumns}`,
+      );
+      return opts;
+    }
+    const itemsPerGroup = groupedOptions[groupIds[0].toString()].length;
+
+    if (groupIds.some((el) => groupedOptions[el].length !== itemsPerGroup)) {
+      console.warn(`Incorrect amount of options per groups`);
+      return opts;
+    }
+    const results: Answers = [];
+
+    for (let i = 0; i < itemsPerGroup; i++) {
+      groupIds.forEach((id) => {
+        const option = groupedOptions[id].shift();
+        if (option) {
+          results.push(option);
+        }
+      });
+    }
+
+    return results;
+  }
   get amountOfColumns() {
     return this.task.exercise.wordsColumns;
   }
@@ -41,7 +84,9 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     if (!this.firstUncompletedTask) {
       return;
     }
-    return this.mode === MODES.TASK && this.firstUncompletedTask?.answer.length > 1;
+    return (
+      this.mode === MODES.TASK && this.firstUncompletedTask?.answer.length > 1
+    );
   }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
@@ -63,15 +108,19 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
   }
 
   @(task(function* (this: SingleSimpleWordsComponent, selected) {
-    this.currentAnswer = [...this.currentAnswer, selected].filter(e => e.length);
+    this.currentAnswer = [...this.currentAnswer, selected].filter(
+      (e) => e.length,
+    );
 
-    if (this.currentAnswer.length !==  this.firstUncompletedTask?.answer.length) {
+    if (
+      this.currentAnswer.length !== this.firstUncompletedTask?.answer.length
+    ) {
       return;
     }
 
     const isCorrect = deepEqual(
       this.currentAnswer.join(''),
-      this.firstUncompletedTask.answer.map(e => e.word).join(''),
+      this.firstUncompletedTask.answer.map((e) => e.word).join(''),
     );
 
     this.isCorrect = isCorrect;
@@ -89,7 +138,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
   showTaskResult!: TaskGenerator<any, any>;
 
   async handleWrongAnswer() {
-    this.markNextAttempt(this.firstUncompletedTask);
+    this.markNextAttempt(this.firstUncompletedTask as TaskItem);
     this.updateLocalTasks();
     await customTimeout(1000);
     this.startTask();
