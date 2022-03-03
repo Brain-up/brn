@@ -92,7 +92,8 @@ class TaskService(
     )
 
     fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceDto> {
-        val mapVowelCountToWord = this.groupBy { resource -> wordAnalyzingService.findSyllableCount(resource.word) }
+        val mapVowelCountToWord: Map<Int, List<Resource>> =
+            this.groupBy { resource -> wordAnalyzingService.findSyllableCount(resource.word) }
         val resultDtoSet = mutableSetOf<ResourceDto>()
         mapVowelCountToWord.keys.forEachIndexed { index, vowelCount ->
             val resources = mapVowelCountToWord[vowelCount]?.map { it.toDto() }
