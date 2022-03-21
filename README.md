@@ -42,7 +42,7 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 ## HOW TO JOIN?
 You can send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) 
 or directly to [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
-Our project Skype chat: https://join.skype.com/jxSiWkgwT2x1  
+Our project Telegram group : https://t.me/+R-6ThlxgP5QyZmMy  
 Project on epam plus (for epamers): https://plus.epam.com/projects/115
 
 # GETTING STARTED!
