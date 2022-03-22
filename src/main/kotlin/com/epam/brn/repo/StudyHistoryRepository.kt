@@ -120,10 +120,16 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
-            "WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
-            "AND EXTRACT(MONTH FROM s.startTime) = :month " +
-            "AND EXTRACT(DAY FROM s.startTime) = :day " +
-            "AND s.userAccount.id = :userId"
+                "WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
+                "AND EXTRACT(MONTH FROM s.startTime) = :month " +
+                "AND EXTRACT(DAY FROM s.startTime) = :day " +
+                "AND s.userAccount.id = :userId"
     )
     fun getDayStatistic(userId: Long, year: Int, month: Int, day: Int): List<StudyHistory>
+
+    @Query(
+        "select case when count (s) > 0 then true else false end " +
+                "from StudyHistory s where s.userAccount.id = :userId"
+    )
+    fun isUserHasStatistics(userId: Long): Boolean
 }

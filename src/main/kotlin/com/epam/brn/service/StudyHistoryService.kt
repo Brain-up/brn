@@ -71,4 +71,8 @@ class StudyHistoryService(
         return studyHistoryRepository.getMonthHistories(userId, month, year)
             .map { it.toDto() }
     }
+
+    fun isUserHasStatistics(userId: Long): Boolean {
+        return studyHistoryRepository.isUserHasStatistics(userId)
+    }
 }
