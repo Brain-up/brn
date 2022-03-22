@@ -58,7 +58,8 @@ class StudyHistoryControllerV2IT : BaseIT() {
         val studyHistories: List<StudyHistoryDto> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
-                object : TypeReference<List<StudyHistoryDto>>() {})
+                object : TypeReference<List<StudyHistoryDto>>() {}
+            )
 
         assertNotNull(studyHistories)
         assertEquals(expectedStudyHistories, studyHistories)
@@ -71,8 +72,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
         val exercise = insertDefaultExercise()
         val exercisingYear = 2019
         val exercisingMonth = 3
-        val studyHistoryFirst =
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
+        insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25)
 
         // WHEN
         val response = mockMvc.perform(
