@@ -129,7 +129,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "select case when count (s) > 0 then true else false end " +
-                "from StudyHistory s where s.userAccount.id = :userId"
+            "from StudyHistory s where s.userAccount.id = :userId"
     )
     fun isUserHasStatistics(userId: Long): Boolean
 }
