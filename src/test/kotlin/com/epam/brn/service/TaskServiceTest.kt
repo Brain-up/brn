@@ -23,10 +23,13 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 import kotlin.test.assertSame
@@ -40,9 +43,6 @@ internal class TaskServiceTest {
 
     @MockK
     lateinit var taskRepositoryMock: TaskRepository
-
-    @MockK
-    lateinit var wordAnalyzingService: WordAnalyzingService
 
     @MockK
     lateinit var exerciseRepositoryMock: ExerciseRepository
@@ -176,8 +176,6 @@ internal class TaskServiceTest {
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_WORDS_KOROLEVA.name
-            every { wordAnalyzingService.findSyllableCount("мак") } returns 1
-            every { wordAnalyzingService.findSyllableCount("маки") } returns 2
 
             every { wordsServiceMock.getFullS3UrlForWord(any(), any()) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
@@ -471,6 +469,45 @@ internal class TaskServiceTest {
 
             // THEN
             task shouldBe task1Mock
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = ["мышь", "кот", "смрад"])
+        fun `should find Syllable 1 Count`(word: String) {
+            Assertions.assertThat(word.findSyllableCount()).isEqualTo(1)
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = ["мышка", "кошка", "муан", "портфель"])
+        fun `should find Syllable 2 Count`(word: String) {
+            Assertions.assertThat(word.findSyllableCount()).isEqualTo(2)
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = ["машина", "королёв", "моошка"])
+        fun `should find Syllable 3 Count`(word: String) {
+            Assertions.assertThat(word.findSyllableCount()).isEqualTo(3)
+        }
+
+        @Test
+        fun `should calculate columns for Koroleva tasks`() {
+            // GIVEN
+            val resource1 = Resource(word = "круг", wordType = WordType.OBJECT.name)
+            val resource2 = Resource(word = "спать", wordType = WordType.OBJECT.name)
+            val resource3 = Resource(word = "мышь", wordType = WordType.OBJECT.name)
+            val resource4 = Resource(word = "машина", wordType = WordType.OBJECT.name)
+            val resource5 = Resource(word = "рубашка", wordType = WordType.OBJECT.name)
+            val resource6 = Resource(word = "голова", wordType = WordType.OBJECT.name)
+            val words = mutableSetOf(resource5, resource2, resource1, resource3, resource4, resource6)
+            // WHEN
+            val result = words.toResourceDtoSet()
+            // THEN
+            Assertions.assertThat(result.first { it.word == "круг" }.columnNumber).isEqualTo(0)
+            Assertions.assertThat(result.first { it.word == "спать" }.columnNumber).isEqualTo(0)
+            Assertions.assertThat(result.first { it.word == "мышь" }.columnNumber).isEqualTo(0)
+            Assertions.assertThat(result.first { it.word == "машина" }.columnNumber).isEqualTo(1)
+            Assertions.assertThat(result.first { it.word == "рубашка" }.columnNumber).isEqualTo(1)
+            Assertions.assertThat(result.first { it.word == "голова" }.columnNumber).isEqualTo(1)
         }
     }
 }
