@@ -1,14 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotestAssertionsVerstion: String by properties
+val kotestAssertionsVersion: String by properties
 val kotlinVersion: String by properties
 val flywayVersion: String by properties
 val log4jApiKotlinVersion: String by properties
-val jsonVersoin: String by properties
+val jsonVersion: String by properties
 val junitVersion: String by properties
 val mockkVersion: String by properties
 val testContainersVersion: String by properties
 val kotlinxCoroutinesCoreVersion: String by properties
+val springCloudContractWiremockVersion: String by properties
 
 val ktlint by configurations.creating
 
@@ -37,6 +38,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-batch")
@@ -50,7 +52,9 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:7.3.0")
 
     implementation("com.auth0:java-jwt:3.10.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
     implementation("org.apache.logging.log4j:log4j-api-kotlin:$log4jApiKotlinVersion")
@@ -61,14 +65,15 @@ dependencies {
     implementation("com.amazonaws:aws-java-sdk:1.11.808")
     implementation("com.google.cloud:google-cloud-storage:1.110.0")
 
-    implementation("org.json:json:$jsonVersoin")
+    implementation("org.json:json:$jsonVersion")
     implementation("net.bramp.ffmpeg:ffmpeg:0.6.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
     testImplementation("org.amshove.kluent:kluent:1.68") //should be deleted after kotest move all of it
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72") //should be deleted after kotest move all of it
-    testImplementation("io.kotest:kotest-assertions:$kotestAssertionsVerstion")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestAssertionsVerstion")
+    testImplementation("io.kotest:kotest-assertions:$kotestAssertionsVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestAssertionsVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude("junit")
@@ -154,7 +159,8 @@ tasks.withType<JacocoReport> {
                     "com/epam/brn/model/**",
                     "com/epam/brn/config/**",
                     "com/epam/brn/exception/**",
-                    "com/epam/brn/Application*"
+                    "com/epam/brn/Application*",
+                    "com/epam/brn/service/azure/tts/config/**"
                 )
             }
         }))
@@ -187,7 +193,9 @@ sonarqube {
                     "**/com/epam/brn/exception/**," +
                     "**/com/epam/brn/Application*," +
                     "**/com/epam/brn/service/load/InitialDataLoader*," +
-                    "**/com/epam/brn/service/load/FirebaseUserDataLoader*"
+                    "**/com/epam/brn/service/load/FirebaseUserDataLoader*," +
+                    "**/com/epam/brn/service/azure/tts/AzureVoiceLoader*," +
+                    "**/com/epam/brn/service/azure/tts/config/**"
         )
     }
 }
