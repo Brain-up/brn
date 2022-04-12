@@ -12,11 +12,11 @@ class UrlConversionService(private val awsConfig: AwsConfig) {
     fun makeUrlForNoise(noiseUrl: String?): String {
         if (noiseUrl.isNullOrEmpty())
             return ""
-        return awsConfig.baseFileUrl + noiseUrl
+        return (awsConfig.baseFileUrl + noiseUrl).lowercase()
     }
 
     fun makeUrlForSubGroupPicture(subGroupCode: String): String =
-        awsConfig.baseFileUrl + folderForThemePictures + "/" + subGroupCode + ".svg"
+        (awsConfig.baseFileUrl + folderForThemePictures + "/" + subGroupCode + ".svg").lowercase()
 
     fun makeUrlForTaskPicture(pictureTaskUrl: String?): String =
         awsConfig.baseFileUrl + "/" + pictureTaskUrl?.replace("jpg", "png")?.lowercase()
