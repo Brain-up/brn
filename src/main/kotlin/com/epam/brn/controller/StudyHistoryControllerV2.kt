@@ -30,6 +30,7 @@ class StudyHistoryControllerV2(
         .body(BaseResponse(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 
     @GetMapping("/user/{userId}/has/statistics")
+    @ApiOperation("Check if user has statistics")
     fun isUserHasStatistics(
         @PathVariable("userId") userId: Long
     ) = ResponseEntity.ok()
