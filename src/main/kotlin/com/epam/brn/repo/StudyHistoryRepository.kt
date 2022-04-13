@@ -126,4 +126,9 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             "AND s.userAccount.id = :userId"
     )
     fun getDayStatistic(userId: Long, year: Int, month: Int, day: Int): List<StudyHistory>
+
+    @Query(
+        "select count (s) > 0 from StudyHistory s where s.userAccount.id = :userId"
+    )
+    fun isUserHasStatistics(userId: Long): Boolean
 }
