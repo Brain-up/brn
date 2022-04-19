@@ -119,7 +119,6 @@ internal class TaskServiceTest {
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
             foundTasks.size shouldBe expectedTaskSize
         }
 
@@ -154,7 +153,6 @@ internal class TaskServiceTest {
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
             foundTasks.size shouldBe expectedTaskSize
         }
 
@@ -226,7 +224,7 @@ internal class TaskServiceTest {
             every { urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl) } returns "fullPictureUrl"
 
             // WHEN  isAudioFileUrlGenerated = true
-            ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
+            ReflectionTestUtils.setField(taskService, "getAudioFileFromStorage", true)
 
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
@@ -265,7 +263,6 @@ internal class TaskServiceTest {
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
             foundTasks.size shouldBe expectedTaskSize
         }
 
@@ -299,11 +296,10 @@ internal class TaskServiceTest {
             var foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
             foundTasks.size shouldBe expectedTaskSize
 
             // WHEN  isAudioFileUrlGenerated = true
-            ReflectionTestUtils.setField(taskService, "isAudioFileUrlGenerated", true)
+            ReflectionTestUtils.setField(taskService, "getAudioFileFromStorage", true)
             foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN

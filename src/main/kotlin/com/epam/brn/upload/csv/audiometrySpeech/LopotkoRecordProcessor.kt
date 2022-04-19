@@ -1,4 +1,4 @@
-package com.epam.brn.upload.csv.seriesWords
+package com.epam.brn.upload.csv.audiometrySpeech
 
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.Locale
