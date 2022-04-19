@@ -3,7 +3,7 @@ FROM gradle:jdk8 as builder
 WORKDIR /brn
 ADD . /brn
 
-RUN gradle clean bootJar --no-daemon
+RUN ./gradlew clean bootJar --no-daemon
 
 FROM openjdk:17-ea-22
 WORKDIR /brn

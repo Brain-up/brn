@@ -26,14 +26,15 @@ internal class YandexSpeechKitServiceTest {
     @ValueSource(strings = ["ru-ru", "en-us", "tr-tr"])
     fun `should success pass locale validation without Exceptions`(locale: String) {
         every { timeService.now() } returns LocalDateTime.now()
+        every { wordsService.getVoicesForLocale(locale) } returns emptyList()
         // WHENv
-        yandexSpeechKitService.validateLocale(locale)
+        yandexSpeechKitService.validateLocaleAndVoice(locale, "")
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["ruru", "en-en", "tr"])
     fun `should failed on locale validation`(locale: String) {
         // WHEN
-        assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocale(locale) }
+        assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice(locale, "") }
     }
 }

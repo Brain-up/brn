@@ -396,6 +396,14 @@ annotationTypes:
         200:
           body:
             example: !include samples/study_histories_dto_response.json
+   /user/{userId}/has/statistics
+      get:
+       description: Check if user has statistics
+        responses:
+          200:
+            body:
+              example: true
+
 
 # USERS ----------------------
 /users:

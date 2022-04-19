@@ -35,6 +35,9 @@ class WordsService {
     fun getDefaultManVoiceForLocale(locale: String): Voice = mapLocaleManVoice[locale]!!
     fun getDefaultWomanVoiceForLocale(locale: String): Voice = mapLocaleWomanVoice[locale]!!
 
+    fun getVoicesForLocale(locale: String): List<String?> =
+        listOf(mapLocaleManVoice[locale]?.name, mapLocaleWomanVoice[locale]?.name)
+
     val dictionaryByLocale =
         mutableMapOf(Locale.RU to mutableMapOf<String, String>(), Locale.EN to mutableMapOf<String, String>())
 

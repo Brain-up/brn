@@ -14,6 +14,8 @@ import org.apache.http.util.EntityUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,10 +25,12 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 @Service
+@Primary
+@ConditionalOnProperty(name = ["default.tts.provider"], havingValue = "yandex")
 class YandexSpeechKitService(
     private val wordsService: WordsService,
     private val timeService: TimeService
-) {
+) : TextToSpeechService {
 
     @Value("\${yandex.getTokenLink}")
     lateinit var uriGetIamToken: String
@@ -123,7 +127,7 @@ class YandexSpeechKitService(
      * Generate .ogg audio file from yandex cloud speech kit service if it is absent locally
      */
     @Transactional
-    fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
+    override fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
         val fileName = wordsService.getLocalFilePathForWord(audioFileMetaData)
         log.info("For word $audioFileMetaData started creation audio file with name `$fileName`")
         val fileOgg = File(fileName)
@@ -137,19 +141,35 @@ class YandexSpeechKitService(
         return fileOgg
     }
 
-    fun validateLocale(locale: String) {
+    fun validateLocaleAndVoice(locale: String, voice: String) {
         if (!Locale.values().map { it.locale }.contains(locale.toLowerCase()))
             throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
+        val localeVoices = wordsService.getVoicesForLocale(locale)
+        if (voice.isNotEmpty() && !localeVoices.contains(voice)) {
+            throw IllegalArgumentException("Locale $locale does not support voice $voice, only $localeVoices.")
+        }
     }
 
-    fun generateAudioOggFileWithValidation(text: String, locale: String, voice: String, speed: String): InputStream {
-        validateLocale(locale)
+    override fun generateAudioOggFileWithValidation(
+        text: String,
+        locale: String,
+        voice: String,
+        speed: String,
+        gender: String?,
+        pitch: String?,
+        style: String?
+    ): InputStream {
+        validateLocaleAndVoice(locale, voice)
+        val calcSpeed = if (speed.isNotEmpty())
+            speed
+        else if (text.contains(" ")) "0.8"
+        else "0.9"
         return generateAudioStream(
             AudioFileMetaData(
                 text,
                 locale,
                 if (voice.isEmpty()) wordsService.getDefaultWomanVoiceForLocale(locale) else Voice.valueOf(voice),
-                if (speed.isEmpty()) "1" else speed,
+                calcSpeed,
             )
         )
     }
