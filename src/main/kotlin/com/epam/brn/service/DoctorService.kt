@@ -27,7 +27,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
             isDoctor(patient) -> {
                 throw IllegalArgumentException("The patient you are trying to add is actually a doctor")
             }
-            patient.doctors != null && patient.doctors!!.contains(doctorId) -> {
+            !patient.doctors.isNullOrEmpty() && patient.doctors!!.contains(doctorId) -> {
                 throw IllegalArgumentException(
                     """The patient already has a doctor. You cannot replace another doctor by yourself. 
                     |Please contact the patient (or admin, or another doctor) 
