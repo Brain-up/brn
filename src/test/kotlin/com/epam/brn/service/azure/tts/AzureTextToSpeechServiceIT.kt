@@ -1,5 +1,6 @@
 package com.epam.brn.service.azure.tts
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.repo.azure.tts.AzureVoiceInfoRepository
 import com.epam.brn.wiremock.BaseWireMockIT
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
@@ -27,7 +28,7 @@ class AzureTextToSpeechServiceIT : BaseWireMockIT() {
     @Autowired
     private lateinit var azureVoiceRepo: AzureVoiceInfoRepository
 
-    private val params = AzureTextToSpeechService.TextToSpeechParams(
+    private val params = AudioFileMetaData(
         voice = "af-ZA-AdriNeural",
         gender = "Female",
         locale = "af-ZA",

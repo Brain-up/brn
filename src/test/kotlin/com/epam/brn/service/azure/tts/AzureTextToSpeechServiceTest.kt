@@ -1,9 +1,9 @@
 package com.epam.brn.service.azure.tts
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.model.azure.tts.AzureVoiceInfo
 import com.epam.brn.repo.azure.tts.AzureVoiceInfoRepository
 import com.epam.brn.service.WordsService
-import com.epam.brn.service.azure.tts.AzureTextToSpeechService.TextToSpeechParams
 import com.epam.brn.service.azure.tts.config.AzureTtsProperties
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -39,11 +39,11 @@ class AzureTextToSpeechServiceTest {
     @MockK
     lateinit var azureTtsProperties: AzureTtsProperties
 
-    private val params = TextToSpeechParams(
+    private val params = AudioFileMetaData(
         voice = "en-US-ChristopherNeural",
         gender = "Male",
         locale = "en-US",
-        text = "text"
+        text = "text",
     )
 
     @Test
@@ -115,7 +115,7 @@ class AzureTextToSpeechServiceTest {
         val textToSpeechRequest = ttsService.getTextToSpeechRequest(params)
 
         textToSpeechRequest shouldBe """
-            <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="en-US-ChristopherNeural" xml:lang="en-US" xml:gender="Male"><prosody pitch="default" rate="default"><mstts:express-as styledegree="1">text</mstts:express-as></prosody></voice></speak>
+            <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="en-US-ChristopherNeural" xml:lang="en-US" xml:gender="Male"><prosody pitch="default" rate="1"><mstts:express-as styledegree="1">text</mstts:express-as></prosody></voice></speak>
         """.trimIndent()
 
         // THEN
@@ -133,7 +133,7 @@ class AzureTextToSpeechServiceTest {
         val pitch = "pitch"
         val style = "style"
 
-        val params = TextToSpeechParams(
+        val audioFileMetaData = AudioFileMetaData(
             text = text,
             locale = locale,
             voice = voice,
@@ -145,21 +145,13 @@ class AzureTextToSpeechServiceTest {
 
         val audioBytes = "audio-input-stream".toByteArray()
         val mockInputStream = ByteArrayInputStream(audioBytes)
-        every { ttsService.textToSpeech(params) } returns mockInputStream
+        every { ttsService.textToSpeech(audioFileMetaData) } returns mockInputStream
 
         // WHEN
-        val file = ttsService.generateAudioOggFileWithValidation(
-            text,
-            locale,
-            voice,
-            speed,
-            gender,
-            pitch,
-            style
-        )
+        val file = ttsService.generateAudioOggFileWithValidation(audioFileMetaData)
 
         // THEN
         file.readBytes() shouldBe audioBytes
-        verify { ttsService.textToSpeech(params) }
+        verify { ttsService.textToSpeech(audioFileMetaData) }
     }
 }

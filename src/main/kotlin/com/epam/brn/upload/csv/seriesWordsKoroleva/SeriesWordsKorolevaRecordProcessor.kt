@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.seriesWordsKoroleva
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -10,7 +11,6 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.lang3.StringUtils

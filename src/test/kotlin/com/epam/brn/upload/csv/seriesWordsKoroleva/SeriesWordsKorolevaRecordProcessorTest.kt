@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.seriesWordsKoroleva
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
 import com.epam.brn.exception.EntityNotFoundException
@@ -14,7 +15,6 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -94,7 +94,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             )
         } returns Optional.empty()
         every { wordsServiceMock.addWordsToDictionary(ofType(Locale::class), any()) } returns Unit
-        every { wordsServiceMock.getDefaultWomanVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS
+        every { wordsServiceMock.getDefaultWomanVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, level) } returns Optional.empty()
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
         every { exerciseRepositoryMock.save(ofType(Exercise::class)) } returns Exercise()
@@ -162,14 +162,14 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             resource_дуб()
         )
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock
-        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS
+        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, 1) } returns Optional.empty()
         every {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "бал",
                     Locale.RU.locale,
-                    Voice.ALYSS
+                    Voice.ALYSS.name
                 )
             )
         } returns "/test/бал.ogg"
@@ -178,7 +178,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "бум",
                     Locale.RU.locale,
-                    Voice.ALYSS
+                    Voice.ALYSS.name
                 )
             )
         } returns "/test/бум.ogg"
@@ -187,7 +187,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "быль",
                     Locale.RU.locale,
-                    Voice.ALYSS
+                    Voice.ALYSS.name
                 )
             )
         } returns "/test/быль.ogg"
@@ -196,7 +196,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "вить",
                     Locale.RU.locale,
-                    Voice.ALYSS
+                    Voice.ALYSS.name
                 )
             )
         } returns "/test/вить.ogg"
@@ -205,7 +205,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "гад",
                     Locale.RU.locale,
-                    Voice.ALYSS
+                    Voice.ALYSS.name
                 )
             )
         } returns "/test/гад.ogg"
@@ -214,7 +214,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "дуб",
                     Locale.RU.locale,
-                    Voice.ALYSS
+                    Voice.ALYSS.name
                 )
             )
         } returns "/test/дуб.ogg"

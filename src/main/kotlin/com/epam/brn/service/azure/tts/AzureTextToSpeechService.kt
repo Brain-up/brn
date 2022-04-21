@@ -1,6 +1,7 @@
 package com.epam.brn.service.azure.tts
 
 import com.epam.brn.config.ExcludeFromJacocoGeneratedReport
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.azure.tts.AzureJsonVoiceInfo
 import com.epam.brn.dto.azure.tts.AzurePitches
 import com.epam.brn.dto.azure.tts.AzureRates
@@ -11,7 +12,6 @@ import com.epam.brn.dto.azure.tts.Voice
 import com.epam.brn.exception.AzureTtsException
 import com.epam.brn.model.azure.tts.AzureVoiceInfo
 import com.epam.brn.repo.azure.tts.AzureVoiceInfoRepository
-import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.WordsService
 import com.epam.brn.service.azure.tts.config.AzureTtsProperties
@@ -41,7 +41,7 @@ class AzureTextToSpeechService(
      * Makes call to Azure TTS service to get InputStream with audio by provided parameters
      */
     @ExcludeFromJacocoGeneratedReport
-    fun textToSpeech(params: TextToSpeechParams): InputStream {
+    fun textToSpeech(params: AudioFileMetaData): InputStream {
         val textToSpeechRequest = getTextToSpeechRequest(params)
         return azureTtsWebClient.post()
             .headers { headers ->
@@ -85,10 +85,10 @@ class AzureTextToSpeechService(
             return fileOgg
         }
         val inputStream = textToSpeech(
-            TextToSpeechParams(
+            AudioFileMetaData(
                 text = audioFileMetaData.text,
                 locale = audioFileMetaData.locale,
-                voice = audioFileMetaData.voice.name
+                voice = audioFileMetaData.voice
             )
         )
         FileUtils.copyInputStreamToFile(inputStream, fileOgg)
@@ -109,31 +109,13 @@ class AzureTextToSpeechService(
      * @param pitch See description in [AzurePitches]
      * @param style Closely related to chosen voice. See azure_speech_style table [AzureVoiceInfo.styleList]
      */
-    override fun generateAudioOggFileWithValidation(
-        text: String,
-        locale: String,
-        voice: String,
-        speed: String,
-        gender: String?,
-        pitch: String?,
-        style: String?
-    ): InputStream =
-        textToSpeech(
-            TextToSpeechParams(
-                text = text,
-                locale = locale,
-                voice = voice,
-                gender = gender,
-                speed = speed,
-                pitch = pitch,
-                style = style
-            )
-        )
+    override fun generateAudioOggFileWithValidation(audioFileMetaData: AudioFileMetaData): InputStream =
+        textToSpeech(audioFileMetaData)
 
     /**
      * Creates XML request to Azure TTS service
      */
-    fun getTextToSpeechRequest(params: TextToSpeechParams): String {
+    fun getTextToSpeechRequest(params: AudioFileMetaData): String {
         val voiceInfo = getVoiceInfo(params)
 
         return XmlMapper().writeValueAsString(
@@ -147,7 +129,7 @@ class AzureTextToSpeechService(
                         rate = defaultIfBlank(params.speed, AzureRates.DEFAULT.code),
                         expressAs = ExpressAs(
                             style = voiceInfo.styleList.find { it.name == params.style }?.name,
-                            styledegree = params.styledegree,
+                            styledegree = params.styleDegree,
                             text = params.text
                         )
                     ),
@@ -163,7 +145,7 @@ class AzureTextToSpeechService(
      *  2. by locale + gender from DB (gender is optional, by default it's azure.tts.default-gender)
      *  3. from properties
      */
-    fun getVoiceInfo(params: TextToSpeechParams): AzureVoiceInfo =
+    fun getVoiceInfo(params: AudioFileMetaData): AzureVoiceInfo =
         defaultIfBlank(params.voice, null)
             ?.let { azureVoiceRepo.findByShortName(it) }
             ?: getVoiceInfoByLocalAndGender(params.locale, params.gender)
@@ -179,15 +161,4 @@ class AzureTextToSpeechService(
 
     private fun defaultIfBlank(text: String?, defaultValue: String?): String? =
         if (text == null || text.isBlank()) defaultValue else text
-
-    data class TextToSpeechParams(
-        val text: String,
-        val locale: String,
-        val voice: String,
-        val gender: String? = null,
-        val speed: String? = null,
-        val pitch: String? = null,
-        val style: String? = null,
-        val styledegree: String = "1"
-    )
 }

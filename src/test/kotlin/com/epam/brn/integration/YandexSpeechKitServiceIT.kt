@@ -2,7 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
-import com.epam.brn.service.AudioFileMetaData
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.service.YandexSpeechKitService
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Disabled
@@ -41,7 +41,7 @@ internal class YandexSpeechKitServiceIT {
     @Test
     fun `should generate ogg audio file`() {
         val locale = Locale.RU.locale
-        val voice = Voice.OKSANA
+        val voice = Voice.OKSANA.name
         val speed = "1"
         val meta1 = AudioFileMetaData("бабушкааа", locale, voice, speed)
         val meta2 = AudioFileMetaData("доктор моет чёрные грушиии", locale, voice, speed)

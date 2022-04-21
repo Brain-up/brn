@@ -34,6 +34,9 @@ internal class UserAnalyticsServiceTest {
     lateinit var timeService: TimeService
 
     @MockK
+    lateinit var textToSpeechService: TextToSpeechService
+
+    @MockK
     lateinit var pageable: Pageable
 
     @MockK(relaxed = true)
