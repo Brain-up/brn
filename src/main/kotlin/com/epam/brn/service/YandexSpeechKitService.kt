@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.Locale
-import com.epam.brn.enums.Voice
 import com.epam.brn.exception.YandexServiceException
 import org.apache.commons.io.FileUtils
 import org.apache.http.NameValuePair
@@ -90,7 +90,7 @@ class YandexSpeechKitService(
             add(BasicNameValuePair("folderId", folderId))
             add(BasicNameValuePair("lang", audioFileMetaData.locale))
             add(BasicNameValuePair("format", format))
-            add(BasicNameValuePair("voice", audioFileMetaData.voice.name.toLowerCase()))
+            add(BasicNameValuePair("voice", audioFileMetaData.voice.toLowerCase()))
             add(BasicNameValuePair("emotion", emotion))
             add(BasicNameValuePair("speed", audioFileMetaData.speed))
             add(BasicNameValuePair("text", audioFileMetaData.text))
@@ -145,30 +145,21 @@ class YandexSpeechKitService(
         if (!Locale.values().map { it.locale }.contains(locale.toLowerCase()))
             throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
         val localeVoices = wordsService.getVoicesForLocale(locale)
-        if (voice.isNotEmpty() && !localeVoices.contains(voice)) {
+        if (voice.isNotEmpty() && !localeVoices.contains(voice))
             throw IllegalArgumentException("Locale $locale does not support voice $voice, only $localeVoices.")
-        }
     }
 
-    override fun generateAudioOggFileWithValidation(
-        text: String,
-        locale: String,
-        voice: String,
-        speed: String,
-        gender: String?,
-        pitch: String?,
-        style: String?
-    ): InputStream {
-        validateLocaleAndVoice(locale, voice)
-        val calcSpeed = if (speed.isNotEmpty())
-            speed
-        else if (text.contains(" ")) "0.8"
+    override fun generateAudioOggFileWithValidation(audioFileMetaData: AudioFileMetaData): InputStream {
+        validateLocaleAndVoice(audioFileMetaData.locale, audioFileMetaData.voice)
+        val calcSpeed = if (audioFileMetaData.speed.isNotEmpty())
+            audioFileMetaData.speed
+        else if (audioFileMetaData.text.contains(" ")) "0.8"
         else "0.9"
         return generateAudioStream(
             AudioFileMetaData(
-                text,
-                locale,
-                if (voice.isEmpty()) wordsService.getDefaultWomanVoiceForLocale(locale) else Voice.valueOf(voice),
+                audioFileMetaData.text,
+                audioFileMetaData.locale,
+                audioFileMetaData.voice.ifEmpty { wordsService.getDefaultWomanVoiceForLocale(audioFileMetaData.locale) },
                 calcSpeed,
             )
         )

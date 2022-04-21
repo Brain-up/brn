@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.audiometrySpeech
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.FrequencyZone
 import com.epam.brn.enums.Locale
@@ -11,7 +12,6 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -73,7 +73,7 @@ internal class LopotkoRecordProcessorTest {
             wordsService,
         )
 
-        every { wordsService.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP
+        every { wordsService.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP.name
         every { wordsService.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } returns String()
         every {
             audiometryRepository.findByAudiometryTypeAndLocale(

@@ -412,7 +412,7 @@ internal class ExerciseServiceTest {
         every { wordsRecordProcessor.isApplicable(any()) } returns true
         every { wordsRecordProcessor.process(any(), any()) } returns listOf(exercise)
         ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
 
         // WHEN
         val exerciseDto = exerciseService.createExercise(exerciseWordsCreateDto)
@@ -468,7 +468,7 @@ internal class ExerciseServiceTest {
         every { seriesPhrasesRecordProcessor.isApplicable(any()) } returns true
         every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf(exercise)
         ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
 
         // WHEN
         val exerciseDto = exerciseService.createExercise(exercisePhrasesCreateDto)
@@ -524,7 +524,7 @@ internal class ExerciseServiceTest {
         every { seriesMatrixRecordProcessor.isApplicable(any()) } returns true
         every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf(exercise)
         ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
 
         // WHEN
         val exerciseDto = exerciseService.createExercise(exerciseSentencesCreateDto)

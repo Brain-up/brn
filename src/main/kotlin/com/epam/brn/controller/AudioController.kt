@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.TextToSpeechService
+import com.epam.brn.dto.AudioFileMetaData
+import com.epam.brn.service.UserAnalyticsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.apache.commons.io.IOUtils.toByteArray
@@ -16,30 +17,34 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/audio")
 @Api(value = "/audio", description = "Contains actions for getting audio file for words")
 @ConditionalOnProperty(name = ["default.tts.provider"])
-class AudioController(private val textToSpeechService: TextToSpeechService) {
+class AudioController(private val userAnalyticsService: UserAnalyticsService) {
 
     @GetMapping(produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    @ApiOperation("Get audio resource for string")
+    @ApiOperation("Get audio resource for text and exerciseId")
     fun getAudioByteArray(
         @RequestParam text: String,
+        @RequestParam(required = false, defaultValue = "0") exerciseId: Long,
         @RequestParam(required = false, defaultValue = "ru-ru") locale: String,
         @RequestParam(required = false, defaultValue = "") voice: String,
         @RequestParam(required = false, defaultValue = "") speed: String,
         @RequestParam(required = false) gender: String? = null,
         @RequestParam(required = false) pitch: String? = null,
-        @RequestParam(required = false) style: String? = null
+        @RequestParam(required = false) style: String? = null,
     ): ResponseEntity<ByteArray> {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(
                 toByteArray(
-                    textToSpeechService.generateAudioOggFileWithValidation(
-                        text = text,
-                        locale = locale,
-                        voice = voice,
-                        gender = gender,
-                        speed = speed,
-                        pitch = pitch,
-                        style = style
+                    userAnalyticsService.prepareAudioFileForUser(
+                        exerciseId,
+                        AudioFileMetaData(
+                            text = text,
+                            locale = locale,
+                            voice = voice,
+                            gender = gender,
+                            speed = speed,
+                            pitch = pitch,
+                            style = style
+                        )
                     )
                 )
             )
