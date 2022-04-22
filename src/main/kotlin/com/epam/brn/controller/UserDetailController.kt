@@ -101,9 +101,9 @@ class UserDetailController(
         .body(BaseResponse(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
 
     @GetMapping("/current/{patientId}/doctor")
-    @ApiOperation("Get patient's doctor")
+    @ApiOperation("Get patient's doctors")
     fun getDoctorAssignedToPatient(@PathVariable patientId: Long): ResponseEntity<BaseResponse> =
-        ResponseEntity.ok(BaseResponse(data = doctorService.getDoctorAssignedToPatient(patientId)))
+        ResponseEntity.ok(BaseResponse(data = doctorService.getDoctorsAssignedToPatient(patientId)))
 
     @DeleteMapping("/current/{patientId}/doctor/{doctorId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

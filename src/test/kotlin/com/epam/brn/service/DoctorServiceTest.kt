@@ -270,11 +270,11 @@ internal class DoctorServiceTest {
         user1.doctors = mutableSetOf(doctor.id!!)
 
         // WHEN
-        val doctorAssignedToPatient = doctorService.getDoctorAssignedToPatient(user1.id!!)
+        val doctorsAssignedToPatient = doctorService.getDoctorsAssignedToPatient(user1.id!!)
 
         // THEN
         verify { userAccountService.getDoctorsForPatient(user1.id!!) }
-        doctorAssignedToPatient[0].id shouldBe doctor.id!!
+        doctorsAssignedToPatient[0].id shouldBe doctor.id!!
     }
 
     @Test
@@ -284,7 +284,7 @@ internal class DoctorServiceTest {
         user1.doctors = null
 
         // WHEN
-        doctorService.getDoctorAssignedToPatient(user1.id!!)
+        doctorService.getDoctorsAssignedToPatient(user1.id!!)
 
         // THEN
         verify(exactly = 1) { userAccountService.getDoctorsForPatient(user1.id!!) }
@@ -297,7 +297,7 @@ internal class DoctorServiceTest {
 
         // WHEN
         assertThrows<IllegalArgumentException> {
-            doctorService.getDoctorAssignedToPatient(user2.id!!)
+            doctorService.getDoctorsAssignedToPatient(user2.id!!)
         }
 
         // THEN
@@ -311,11 +311,11 @@ internal class DoctorServiceTest {
         user1.doctors = mutableSetOf(doctor.id!!)
 
         // WHEN
-        val doctorAssignedToPatient = doctorService.getDoctorAssignedToPatient(user1.id!!)
+        val doctorsAssignedToPatient = doctorService.getDoctorsAssignedToPatient(user1.id!!)
 
         // THEN
         verify { userAccountService.getDoctorsForPatient(user1.id!!) }
-        doctorAssignedToPatient[0].id shouldBe doctor.id!!
+        doctorsAssignedToPatient[0].id shouldBe doctor.id!!
     }
 
     // =================================================================================================================

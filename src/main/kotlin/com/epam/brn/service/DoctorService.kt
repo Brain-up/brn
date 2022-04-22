@@ -79,7 +79,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
         return userAccountService.getPatientsForDoctor(doctorId)
     }
 
-    fun getDoctorAssignedToPatient(patientId: Long): List<UserAccountResponse> {
+    fun getDoctorsAssignedToPatient(patientId: Long): List<UserAccountResponse> {
         val currentUser = userAccountService.getCurrentUser().toDto()
         return when {
             !isAdmin(currentUser) && currentUser.id != patientId -> {

@@ -241,7 +241,7 @@ internal class UserDetailControllerTest {
     internal fun `should get doctor assigned to patient`() {
         // GIVEN
         val patientId: Long = 1
-        val doctor = listOf(
+        val doctors = listOf(
             UserAccountResponse(
                 id = patientId,
                 name = "testName",
@@ -250,14 +250,14 @@ internal class UserDetailControllerTest {
                 bornYear = 2000
             )
         )
-        every { doctorService.getDoctorAssignedToPatient(patientId) } returns doctor
+        every { doctorService.getDoctorsAssignedToPatient(patientId) } returns doctors
 
         // WHEN
         val response = userDetailController.getDoctorAssignedToPatient(patientId).body?.data
 
         // THEN
-        verify { doctorService.getDoctorAssignedToPatient(patientId) }
-        response shouldBe doctor
+        verify { doctorService.getDoctorsAssignedToPatient(patientId) }
+        response shouldBe doctors
     }
 
     @Test
