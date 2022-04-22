@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.config.AwsConfig
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.exception.ConversionOggToMp3Exception
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -104,7 +105,7 @@ class AudioFilesGenerationService(
             log.info("Aws saving `${audioFileMetaData.text}`: ogg audio file `${fileOgg.name}` saved in S3 ${awsConfig.bucketName + subPath + fileOgg.name}")
         }
         if (withMp3Conversion)
-            convertOggFileToMp3(fileOgg, audioFileMetaData.voice.name)
+            convertOggFileToMp3(fileOgg, audioFileMetaData.voice)
         return fileOgg
     }
 

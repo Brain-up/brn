@@ -65,7 +65,7 @@ internal class SeriesPhrasesRecordProcessorTest {
         val exercise = mockk<Exercise>()
         every { exerciseRepository.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns subGroup
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP
+        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
         every { wordsService.getSubFilePathForWord(any()) } returns ""
         every { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) } returns Optional.empty()
         every { wordsService.addWordsToDictionary(any(), any()) } returns Unit
