@@ -1,13 +1,16 @@
 package com.epam.brn.service.impl
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.TextToSpeechService
+import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
-import com.epam.brn.service.TimeService
-import com.epam.brn.repo.UserAccountRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.io.InputStream
 import java.time.LocalTime
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -16,7 +19,8 @@ import java.util.Locale
 class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
-    private val timeService: TimeService
+    private val timeService: TimeService,
+    private val textToSpeechService: TextToSpeechService
 ) : UserAnalyticsService {
 
     override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
@@ -31,5 +35,10 @@ class UserAnalyticsServiceImpl(
         users.onEach { it.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, it.id) }
 
         return users
+    }
+
+    override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream {
+        // todo add later logic how to generate audio base on user study history
+        return textToSpeechService.generateAudioOggFileWithValidation(audioFileMetaData)
     }
 }

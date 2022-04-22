@@ -2,6 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
+import com.epam.brn.dto.AudioFileMetaData
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -26,14 +27,17 @@ class WordsService {
     @Value("\${aws.baseFileUrl}")
     private lateinit var baseFileUrl: String
 
-    private val mapLocaleManVoice =
+    private val mapYandexLocaleManVoice =
         mapOf(Locale.RU.locale to Voice.FILIPP, Locale.EN.locale to Voice.NICK, Locale.TR.locale to Voice.ERKANYAVAS)
 
-    private val mapLocaleWomanVoice =
+    private val mapYandexLocaleWomanVoice =
         mapOf(Locale.RU.locale to Voice.OKSANA, Locale.EN.locale to Voice.ALYSS, Locale.TR.locale to Voice.SILAERKAN)
 
-    fun getDefaultManVoiceForLocale(locale: String): Voice = mapLocaleManVoice[locale]!!
-    fun getDefaultWomanVoiceForLocale(locale: String): Voice = mapLocaleWomanVoice[locale]!!
+    fun getDefaultManVoiceForLocale(locale: String): String = mapYandexLocaleManVoice[locale]!!.name
+    fun getDefaultWomanVoiceForLocale(locale: String): String = mapYandexLocaleWomanVoice[locale]!!.name
+
+    fun getVoicesForLocale(locale: String): List<String?> =
+        listOf(mapYandexLocaleManVoice[locale]?.name, mapYandexLocaleWomanVoice[locale]?.name)
 
     val dictionaryByLocale =
         mutableMapOf(Locale.RU to mutableMapOf<String, String>(), Locale.EN to mutableMapOf<String, String>())
@@ -44,12 +48,6 @@ class WordsService {
     private fun init() {
         mapLocaleFile = mapOf(Locale.RU to wordsFileNameRu, Locale.EN to wordsFileNameEn)
     }
-
-    fun addWordToDictionary(locale: Locale, word: String, wordHash: String) =
-        dictionaryByLocale[locale]!!.put(word, wordHash)
-
-    fun addWordToDictionary(locale: Locale, word: String) =
-        dictionaryByLocale[locale]!!.put(word, DigestUtils.md5Hex(word))
 
     fun addWordsToDictionary(locale: Locale, words: Collection<String>) =
         words.forEach { dictionaryByLocale[locale]!![it] = DigestUtils.md5Hex(it) }
@@ -92,9 +90,5 @@ class WordsService {
         "${getSubPathForWord(meta)}/${DigestUtils.md5Hex(meta.text)}.ogg"
 
     fun getSubPathForWord(meta: AudioFileMetaData) =
-        "/audio/${meta.locale}/${meta.voice.name.toLowerCase()}/${meta.speed}"
-}
-
-data class AudioFileMetaData(val text: String, val locale: String, val voice: Voice, val speed: String = "1") {
-    override fun toString() = "(text = `$text`, locale=$locale, voice=${voice.name.toLowerCase()} speed=$speed)"
+        "/audio/${meta.locale}/${meta.voice.toLowerCase()}/${meta.speed}"
 }

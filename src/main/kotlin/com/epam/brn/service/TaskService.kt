@@ -29,7 +29,6 @@ class TaskService(
     private val resourceRepository: ResourceRepository,
     private val wordsService: WordsService,
     private val urlConversionService: UrlConversionService,
-    private val wordAnalyzingService: WordAnalyzingService,
 ) {
     private val log = logger()
 
@@ -82,19 +81,31 @@ class TaskService(
         resourceRepository.saveAll(resources)
         return taskRepository.save(task)
     }
+}
 
-    fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
-        id = id!!,
-        exerciseType = exerciseType,
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.toResourceDtoSet()
-    )
+val vowels = "а,е,ё,и,о,у,э,ы,ю,я".toCharArray()
 
-    fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceDto> {
-        val mapVowelCountToWord = this.groupBy { resource -> wordAnalyzingService.findSyllableCount(resource.word) }
-        val resultDtoSet = mutableSetOf<ResourceDto>()
-        mapVowelCountToWord.keys.forEachIndexed { index, vowelCount ->
+fun String.findSyllableCount(): Int {
+    var syllableCount = 0
+    this.toCharArray().forEach { if (vowels.contains(it)) syllableCount++ }
+    return syllableCount
+}
+
+fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
+    id = id!!,
+    exerciseType = exerciseType,
+    name = name,
+    serialNumber = serialNumber,
+    answerOptions = answerOptions.toResourceDtoSet()
+)
+
+fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceDto> {
+    val mapVowelCountToWord: Map<Int, List<Resource>> =
+        this.groupBy { resource -> resource.word.findSyllableCount() }
+    val resultDtoSet = mutableSetOf<ResourceDto>()
+    mapVowelCountToWord.keys
+        .sorted()
+        .forEachIndexed { index, vowelCount ->
             val resources = mapVowelCountToWord[vowelCount]?.map { it.toDto() }
             resources?.forEach {
                 it.columnNumber = index
@@ -102,6 +113,5 @@ class TaskService(
             }
             resultDtoSet.addAll(resources ?: emptySet())
         }
-        return resultDtoSet.toHashSet()
-    }
+    return resultDtoSet.toHashSet()
 }

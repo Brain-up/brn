@@ -1,10 +1,11 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.YandexSpeechKitService
+import com.epam.brn.dto.AudioFileMetaData
+import com.epam.brn.service.UserAnalyticsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.apache.commons.io.IOUtils
-import org.springframework.beans.factory.annotation.Autowired
+import org.apache.commons.io.IOUtils.toByteArray
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,21 +16,37 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/audio")
 @Api(value = "/audio", description = "Contains actions for getting audio file for words")
-class AudioController(@Autowired private val yandexSpeechKitService: YandexSpeechKitService) {
+@ConditionalOnProperty(name = ["default.tts.provider"])
+class AudioController(private val userAnalyticsService: UserAnalyticsService) {
 
     @GetMapping(produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    @ApiOperation("Get audio resource for string")
+    @ApiOperation("Get audio resource for text and exerciseId")
     fun getAudioByteArray(
-        @RequestParam("text", required = true) text: String,
-        @RequestParam("locale", required = false, defaultValue = "ru-ru") locale: String,
-        @RequestParam("voice", required = false, defaultValue = "") voice: String,
-        @RequestParam("speed", required = false, defaultValue = "0.8") speed: String
+        @RequestParam text: String,
+        @RequestParam(required = false, defaultValue = "0") exerciseId: Long,
+        @RequestParam(required = false, defaultValue = "ru-ru") locale: String,
+        @RequestParam(required = false, defaultValue = "") voice: String,
+        @RequestParam(required = false, defaultValue = "") speed: String,
+        @RequestParam(required = false) gender: String? = null,
+        @RequestParam(required = false) pitch: String? = null,
+        @RequestParam(required = false) style: String? = null,
     ): ResponseEntity<ByteArray> {
-        val inputStream = yandexSpeechKitService.generateAudioOggFileWithValidation(text, locale, voice, speed)
-        val out = IOUtils.toByteArray(inputStream)
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(out)
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(
+                toByteArray(
+                    userAnalyticsService.prepareAudioFileForUser(
+                        exerciseId,
+                        AudioFileMetaData(
+                            text = text,
+                            locale = locale,
+                            voice = voice,
+                            gender = gender,
+                            speed = speed,
+                            pitch = pitch,
+                            style = style
+                        )
+                    )
+                )
+            )
     }
 }

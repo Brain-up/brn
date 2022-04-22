@@ -28,6 +28,7 @@ import SignalModel from 'brn/models/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
 import UserDataService from './user-data';
+import Exercise from 'brn/models/exercise';
 
 type ISourceCollection = (ISource | IToneSource | null)[];
 export interface IToneSource {
@@ -85,13 +86,14 @@ export default class AudioService extends Service {
   trackProgress!: TaskGenerator<any, any>;
 
   audioUrlForText(text: string) {
+    const exercise = this.currentExercise;
     return (
       window.location.protocol +
       '//' +
       window.location.host +
       `/api/audio?text=${encodeURIComponent(text)}&locale=${encodeURIComponent(
         this.intl.primaryLocale,
-      )}`
+      )}&exerciseId=${encodeURIComponent(exercise?.get('id') ?? '0')}`
     );
   }
 
@@ -106,29 +108,28 @@ export default class AudioService extends Service {
 
   get currentExerciseNoiseUrl() {
     if (Ember.testing) {
-      return 0;
+      return null;
+    }
+    return this.currentExercise?.noiseUrl ?? null;
+  }
+  get currentExercise(): Exercise | null {
+    if (Ember.testing) {
+      return null;
     }
     const owner = getOwner(this);
     const model = owner
       .lookup('route:application')
       .modelFor('group.series.subgroup.exercise');
     if (!model) {
-      return 0;
+      return null;
     }
-    return model.noiseUrl;
+    return model as Exercise;
   }
   get currentExerciseNoiseLevel() {
     if (Ember.testing) {
       return 0;
     }
-    const owner = getOwner(this);
-    const model = owner
-      .lookup('route:application')
-      .modelFor('group.series.subgroup.exercise');
-    if (!model) {
-      return 0;
-    }
-    return model.noiseLevel;
+    return this.currentExercise?.noiseLevel ?? 0;
   }
 
   updatePlayingProgress() {

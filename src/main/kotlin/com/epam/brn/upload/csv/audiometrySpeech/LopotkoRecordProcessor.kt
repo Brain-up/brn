@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.audiometrySpeech
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.Locale
 import com.epam.brn.model.AudiometryTask
@@ -8,7 +9,6 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository
-import com.epam.brn.service.AudioFileMetaData
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.commons.codec.digest.DigestUtils

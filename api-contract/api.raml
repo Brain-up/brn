@@ -163,6 +163,10 @@ annotationTypes:
         required: true
         type: string
         example: "London is the capital"
+      exerciseId:
+        required: true
+        type: integer
+        example: 1
       locale:
         required: false
         type: string
@@ -396,6 +400,14 @@ annotationTypes:
         200:
           body:
             example: !include samples/study_histories_dto_response.json
+   /user/{userId}/has/statistics
+      get:
+       description: Check if user has statistics
+        responses:
+          200:
+            body:
+              example: true
+
 
 # USERS ----------------------
 /users:
