@@ -10,6 +10,7 @@ export interface UserDTO {
   lastName: string;
   email: string;
   avatar: string;
+  gender: 'MALE' | 'FEMALE';
   birthday: string;
   password?: string;
   id?: string;
@@ -27,12 +28,17 @@ export interface LatestUserDTO {
 
 function fromLatestUserDto(user: LatestUserDTO): UserDTO {
   const [firstName = '', lastName = ''] = (user.name || '').split(' ');
+  const bDate = new Date();
+
+  bDate.setFullYear(user.bornYear);
+
   return {
     firstName: firstName || '',
     lastName: lastName || '',
     avatar: user.avatar,
     email: user.email,
-    birthday: new Date().setFullYear(user.bornYear).toString(),
+    gender: user.gender,
+    birthday: bDate.getFullYear().toString(),
     id: user.id as string,
   };
 }
@@ -91,7 +97,9 @@ export default class NetworkService extends Service {
       throw e;
     }
   }
-  async patchUserInfo(userInfo: LatestUserDTO): Promise<LatestUserDTO> {
+  async patchUserInfo(
+    userInfo: Partial<LatestUserDTO>,
+  ): Promise<LatestUserDTO> {
     const result = await this.patch('users/current', userInfo);
     const { data } = await result.json();
     return data;

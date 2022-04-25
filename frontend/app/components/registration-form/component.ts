@@ -4,6 +4,7 @@ import { task, Task } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 import FirebaseAuthenticator from 'brn/authenticators/firebase';
+import { isBornYearValid } from 'brn/utils/validators';
 
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
@@ -31,9 +32,6 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked gender!: 'MALE' | 'FEMALE';
   @tracked agreed = false;
 
-  maxDate = new Date().getFullYear();
-  minDate = new Date().getFullYear() - 100;
-
   get warningPasswordsEquality() {
     if (this.repeatPassword === undefined) {
       return false;
@@ -50,13 +48,13 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   }
 
   get warningErrorDate() {
-    const { birthday, maxDate, minDate } = this;
+    const { birthday } = this;
 
     if (birthday === undefined) {
       return false;
     }
 
-    if (parseInt(birthday, 10) > maxDate || minDate > parseInt(birthday, 10)) {
+    if (!isBornYearValid(birthday)) {
       return this.intl.t('registration_form.invalid_date');
     }
 
