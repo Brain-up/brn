@@ -253,7 +253,7 @@ internal class UserDetailControllerTest {
         every { doctorService.getDoctorsAssignedToPatient(patientId) } returns doctors
 
         // WHEN
-        val response = userDetailController.getDoctorAssignedToPatient(patientId).body?.data
+        val response = userDetailController.getDoctorsAssignedToPatient(patientId).body?.data
 
         // THEN
         verify { doctorService.getDoctorsAssignedToPatient(patientId) }

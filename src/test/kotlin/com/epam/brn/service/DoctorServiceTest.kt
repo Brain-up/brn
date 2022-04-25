@@ -261,10 +261,10 @@ internal class DoctorServiceTest {
     }
 
     // =================================================================================================================
-    // Tests for getDoctorAssignedToPatient
+    // Tests for getDoctorsAssignedToPatient
     // =================================================================================================================
     @Test
-    fun `should get doctor assigned to patient`() {
+    fun `should get doctors assigned to patient`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns user1
         user1.doctors = mutableSetOf(doctor.id!!)
@@ -281,7 +281,6 @@ internal class DoctorServiceTest {
     fun `should not get doctor assigned to patient if no doctor`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns user1
-        user1.doctors = null
 
         // WHEN
         doctorService.getDoctorsAssignedToPatient(user1.id!!)
