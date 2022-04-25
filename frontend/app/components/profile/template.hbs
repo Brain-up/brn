@@ -28,9 +28,20 @@
   <div class="p-12">
     <div class="mb-4">
       <LoginForm::Input
-        @model={{this.session.data.user}}
+        @model={{this.user}}
         @name="firstName"
         @label={{t "registration_form.name"}}
+        @warning={{this.warningErrorFirstName}}
+        @trimRight={{false}}
+        {{on "change" (fn this.onInput "firstName")}}
+      />
+      <LoginForm::Input
+        @model={{this.user}}
+        @name="lastName"
+        @label={{false}}
+        @warning={{this.warningErrorLastName}}
+        @trimRight={{false}}
+        {{on "change" (fn this.onInput "lastName")}}
       />
     </div>
     <div class="mb-4">
@@ -39,26 +50,64 @@
         minlength="4"
         maxlength="4"
         pattern="[0-9]{4}"
+        {{on "change" (fn this.onInput "birthday")}}
         @warning={{this.warningErrorDate}}
-        @model={{this.session.data.user}}
+        @model={{this.user}}
         @label={{t "registration_form.birthday"}}
         @name="birthday"
       />
 
     </div>
     <div class="mb-4">
+      <p class="mb-2 text-sm font-bold text-gray-700">
+        {{t "registration_form.gender"}}
+      </p>
+
+      <label class="ml-1 text-sm cursor-pointer" for="female">
+        <input
+          required
+          name="gender"
+          value="FEMALE"
+          type="radio"
+          checked={{eq this.user.gender "FEMALE"}}
+          class="w-3 h-3 border-gray-300"
+          id="female"
+          {{on "change" (fn this.onInput "gender")}}
+        />
+        {{t "registration_form.gender_female"}}
+      </label>
+
+      <label class="ml-1 text-sm cursor-pointer" for="male">
+        <input
+          required
+          name="gender"
+          type="radio"
+          value="MALE"
+          checked={{eq this.user.gender "MALE"}}
+          class="w-3 h-3 ml-4"
+          id="male"
+          {{on "change" (fn this.onInput "gender")}}
+        />
+        {{t "registration_form.gender_male"}}
+      </label>
+    </div>
+
+    <div class="mb-4">
       <LoginForm::Input
-        @model={{this.session.data.user}}
+        disabled
+        @model={{this.user}}
         @name="email"
         @label={{t "registration_form.email"}}
       />
     </div>
     <div class="mb-4">
-      <LoginForm::Input
-        @model={{this.session.data.user}}
-        @name="password"
-        @label={{t "registration_form.password"}}
-      />
+      <LinkTo
+        @route="password-recovery"
+        class="hover:text-indigo-600 text-md focus:outline-none focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out"
+      >
+        {{t "password_reset_form.update_password"}}
+      </LinkTo>
+
     </div>
   </div>
 </section>

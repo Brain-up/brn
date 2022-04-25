@@ -5,13 +5,15 @@ import type FirebaseAuthenticator from 'brn/authenticators/firebase';
 import { tracked } from '@glimmer/tracking';
 import type Router from '@ember/routing/router-service';
 import { inject as service } from '@ember/service';
+import UserDataService from 'brn/services/user-data';
 
 export default class PasswordRecoveryController extends Controller {
-  @service router!: Router;
+  @service('router') router!: Router;
+  @service('user-data') userData!: UserDataService;
 
   @tracked isConfirmationEmailSend = false;
 
-  @tracked email = '';
+  @tracked email = this.userData?.userModel?.email ?? '';
   @tracked code = '';
   @tracked newPassword = '';
   @tracked error = '';
