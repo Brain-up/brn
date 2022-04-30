@@ -63,10 +63,15 @@ class UserAnalyticsServiceImpl(
         val text = audioFileMetaData.text
         if (seriesType != ExerciseType.SENTENCE)
             audioFileMetaData.text = text.replace(" ", ", ")
-        if (isDoneBad(lastExerciseHistory))
-            audioFileMetaData.setSpeedSlowest()
-        else if (text.contains(" "))
+
+        if (text.contains(" ")) {
+            if (isDoneBad(lastExerciseHistory))
+                audioFileMetaData.setSpeedSlowest()
+            else
+                audioFileMetaData.setSpeedSlow()
+        } else if (isDoneBad(lastExerciseHistory)) {
             audioFileMetaData.setSpeedSlow()
+        }
         return audioFileMetaData
     }
 
