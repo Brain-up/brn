@@ -53,7 +53,7 @@ class UserAnalyticsServiceImpl(
     override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
         val currentUserId = userAccountService.getCurrentUserId()
         val lastExerciseHistory = studyHistoryRepository
-            .findLastByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
+            .findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
         val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
 //        when {
 //            isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlowest()

@@ -37,7 +37,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun findByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): List<StudyHistory>
 
     fun findLast1ByOrderByStartTime(): StudyHistory?
-    fun findLastByUserAccountIdAndExerciseIdOrderByStartTime(userId: Long, exerciseId: Long): StudyHistory?
+    fun findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(userId: Long, exerciseId: Long): StudyHistory?
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE (s.userAccount.id, s.startTime) " +
