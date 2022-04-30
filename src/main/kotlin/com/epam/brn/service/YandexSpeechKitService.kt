@@ -151,16 +151,12 @@ class YandexSpeechKitService(
 
     override fun generateAudioOggFileWithValidation(audioFileMetaData: AudioFileMetaData): InputStream {
         validateLocaleAndVoice(audioFileMetaData.locale, audioFileMetaData.voice)
-        val calcSpeed = if (audioFileMetaData.speedFloat.isNotEmpty())
-            audioFileMetaData.speedFloat
-        else if (audioFileMetaData.text.contains(" ")) "0.8"
-        else "0.9"
         return generateAudioStream(
             AudioFileMetaData(
                 audioFileMetaData.text,
                 audioFileMetaData.locale,
                 audioFileMetaData.voice.ifEmpty { wordsService.getDefaultWomanVoiceForLocale(audioFileMetaData.locale) },
-                calcSpeed,
+                audioFileMetaData.speedFloat,
             )
         )
     }
