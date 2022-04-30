@@ -3,7 +3,7 @@ package com.epam.brn.dto
 import com.epam.brn.dto.azure.tts.AzureRates
 
 data class AudioFileMetaData(
-    val text: String,
+    var text: String,
     val locale: String,
     val voice: String,
     var speedFloat: String = "1",

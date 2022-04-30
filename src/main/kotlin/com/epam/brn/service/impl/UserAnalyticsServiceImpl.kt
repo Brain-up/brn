@@ -54,16 +54,19 @@ class UserAnalyticsServiceImpl(
         val currentUserId = userAccountService.getCurrentUserId()
         val lastExerciseHistory = studyHistoryRepository
             .findLastByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
-//        val exercise = exerciseService.findExerciseById(exerciseId)
-//        val seriesType = ExerciseType.valueOf(seriesRepository.findById(exercise.seriesId!!).get().type)
+        val exercise = exerciseService.findExerciseById(exerciseId)
+        val seriesType = ExerciseType.valueOf(seriesRepository.findById(exercise.seriesId!!).get().type)
 //        when {
 //            isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlowest()
 //            isMultiWords(seriesType) && !isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlow()
 //            !isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlow()
 //        }
+        val text = audioFileMetaData.text
+        if (seriesType != ExerciseType.SENTENCE)
+            audioFileMetaData.text = text.replace(" ", ", ")
         if (isDoneBad(lastExerciseHistory))
             audioFileMetaData.setSpeedSlowest()
-        else
+        else if (text.contains(" "))
             audioFileMetaData.setSpeedSlow()
         return audioFileMetaData
     }

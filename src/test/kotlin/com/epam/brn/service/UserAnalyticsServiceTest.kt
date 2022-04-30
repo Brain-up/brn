@@ -110,7 +110,33 @@ internal class UserAnalyticsServiceTest {
     val exercise = Exercise(exerciseId)
 
     @Test
-    fun `should prepareAudioFileMetaData slow correctly`() {
+    fun `should prepareAudioFileMetaData with adding comma for several words`() {
+        // GIVEN
+        val studyHistory = mockk<StudyHistory>()
+        val series = mockk<Series>()
+
+        every { userAccountService.getCurrentUserId() } returns currentUserId
+        every {
+            studyHistoryRepository
+                .findLastByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
+        } returns studyHistory
+        every { exerciseService.findExerciseById(exerciseId) } returns exerciseDto
+        every { exerciseService.isDoneWell(studyHistory) } returns true
+        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
+        every { series.type } returns ExerciseType.PHRASES.name
+
+        val audioFileMetaData = AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        // WHEN
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+
+        // THEN
+        metaDataResult.speedFloat shouldBe "0.8"
+        metaDataResult.speedCode shouldBe AzureRates.SLOW
+        metaDataResult.text shouldBe "мама, папа"
+    }
+
+    @Test
+    fun `should prepareAudioFileMetaData default correctly for one word`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
         val series = mockk<Series>()
@@ -125,13 +151,14 @@ internal class UserAnalyticsServiceTest {
         every { seriesRepository.findById(seriesId) } returns Optional.of(series)
         every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
-        val audioFileMetaData = AudioFileMetaData("text", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        val audioFileMetaData = AudioFileMetaData("мама", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
-        metaDataResult.speedFloat shouldBe "0.8"
-        metaDataResult.speedCode shouldBe AzureRates.SLOW
+        metaDataResult.speedFloat shouldBe "1"
+        metaDataResult.speedCode shouldBe AzureRates.DEFAULT
+        metaDataResult.text shouldBe "мама"
     }
 
     @Test
