@@ -1,4 +1,4 @@
-package com.epam.brn.integration
+package com.epam.brn.integration.service
 
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.FrequencyZone
