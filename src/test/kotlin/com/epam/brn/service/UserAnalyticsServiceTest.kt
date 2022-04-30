@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
-import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserAnalyticsService test using MockK")
