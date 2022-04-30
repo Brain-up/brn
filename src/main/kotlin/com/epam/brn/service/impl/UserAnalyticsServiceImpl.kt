@@ -5,7 +5,7 @@ import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.StudyHistory
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.ExerciseService
@@ -25,7 +25,7 @@ import java.util.Locale
 class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
-    private val seriesRepository: SeriesRepository,
+    private val exerciseRepository: ExerciseRepository,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
@@ -54,8 +54,7 @@ class UserAnalyticsServiceImpl(
         val currentUserId = userAccountService.getCurrentUserId()
         val lastExerciseHistory = studyHistoryRepository
             .findLastByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
-        val exercise = exerciseService.findExerciseById(exerciseId)
-        val seriesType = ExerciseType.valueOf(seriesRepository.findById(exercise.seriesId!!).get().type)
+        val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
 //        when {
 //            isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlowest()
 //            isMultiWords(seriesType) && !isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlow()

@@ -10,10 +10,9 @@ import com.epam.brn.enums.Role.ROLE_ADMIN
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
-import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAnalyticsServiceImpl
@@ -29,7 +28,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
-import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserAnalyticsService test using MockK")
@@ -45,7 +43,7 @@ internal class UserAnalyticsServiceTest {
     lateinit var studyHistoryRepository: StudyHistoryRepository
 
     @MockK
-    lateinit var seriesRepository: SeriesRepository
+    lateinit var exerciseRepository: ExerciseRepository
 
     @MockK
     lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
@@ -113,7 +111,6 @@ internal class UserAnalyticsServiceTest {
     fun `should prepareAudioFileMetaData with adding comma for several words`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        val series = mockk<Series>()
 
         every { userAccountService.getCurrentUserId() } returns currentUserId
         every {
@@ -122,8 +119,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.findExerciseById(exerciseId) } returns exerciseDto
         every { exerciseService.isDoneWell(studyHistory) } returns true
-        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
-        every { series.type } returns ExerciseType.PHRASES.name
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.PHRASES.name
 
         val audioFileMetaData = AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
@@ -139,7 +135,6 @@ internal class UserAnalyticsServiceTest {
     fun `should prepareAudioFileMetaData default correctly for one word`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        val series = mockk<Series>()
 
         every { userAccountService.getCurrentUserId() } returns currentUserId
         every {
@@ -148,8 +143,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.findExerciseById(exerciseId) } returns exerciseDto
         every { exerciseService.isDoneWell(studyHistory) } returns true
-        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
-        every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
         val audioFileMetaData = AudioFileMetaData("мама", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
@@ -165,7 +159,6 @@ internal class UserAnalyticsServiceTest {
     fun `should prepareAudioFileMetaData slowest correctly`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        val series = mockk<Series>()
 
         every { userAccountService.getCurrentUserId() } returns currentUserId
         every {
@@ -174,8 +167,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.findExerciseById(exerciseId) } returns exerciseDto
         every { exerciseService.isDoneWell(studyHistory) } returns false
-        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
-        every { series.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
         val audioFileMetaData = AudioFileMetaData("text", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
