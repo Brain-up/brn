@@ -115,7 +115,7 @@ internal class UserAnalyticsServiceTest {
         every { userAccountService.getCurrentUserId() } returns currentUserId
         every {
             studyHistoryRepository
-                .findLastByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
+                .findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
         } returns studyHistory
         every { exerciseService.findExerciseById(exerciseId) } returns exerciseDto
         every { exerciseService.isDoneWell(studyHistory) } returns true
@@ -139,7 +139,7 @@ internal class UserAnalyticsServiceTest {
         every { userAccountService.getCurrentUserId() } returns currentUserId
         every {
             studyHistoryRepository
-                .findLastByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
+                .findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
         } returns studyHistory
         every { exerciseService.findExerciseById(exerciseId) } returns exerciseDto
         every { exerciseService.isDoneWell(studyHistory) } returns true
@@ -163,7 +163,7 @@ internal class UserAnalyticsServiceTest {
         every { userAccountService.getCurrentUserId() } returns currentUserId
         every {
             studyHistoryRepository
-                .findLastByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
+                .findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(currentUserId, exerciseId)
         } returns studyHistory
         every { exerciseService.findExerciseById(exerciseId) } returns exerciseDto
         every { exerciseService.isDoneWell(studyHistory) } returns false
