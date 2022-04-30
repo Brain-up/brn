@@ -41,7 +41,7 @@ class AudioController(private val userAnalyticsService: UserAnalyticsService) {
                             locale = locale,
                             voice = voice,
                             gender = gender,
-                            speed = speed,
+                            speedFloat = speed,
                             pitch = pitch,
                             style = style
                         )

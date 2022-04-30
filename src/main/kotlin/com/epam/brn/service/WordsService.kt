@@ -90,5 +90,5 @@ class WordsService {
         "${getSubPathForWord(meta)}/${DigestUtils.md5Hex(meta.text)}.ogg"
 
     fun getSubPathForWord(meta: AudioFileMetaData) =
-        "/audio/${meta.locale}/${meta.voice.toLowerCase()}/${meta.speed}"
+        "/audio/${meta.locale}/${meta.voice.toLowerCase()}/${meta.speedFloat}"
 }

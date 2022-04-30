@@ -92,7 +92,7 @@ class YandexSpeechKitService(
             add(BasicNameValuePair("format", format))
             add(BasicNameValuePair("voice", audioFileMetaData.voice.toLowerCase()))
             add(BasicNameValuePair("emotion", emotion))
-            add(BasicNameValuePair("speed", audioFileMetaData.speed))
+            add(BasicNameValuePair("speed", audioFileMetaData.speedFloat))
             add(BasicNameValuePair("text", audioFileMetaData.text))
         }
 
@@ -151,16 +151,12 @@ class YandexSpeechKitService(
 
     override fun generateAudioOggFileWithValidation(audioFileMetaData: AudioFileMetaData): InputStream {
         validateLocaleAndVoice(audioFileMetaData.locale, audioFileMetaData.voice)
-        val calcSpeed = if (audioFileMetaData.speed.isNotEmpty())
-            audioFileMetaData.speed
-        else if (audioFileMetaData.text.contains(" ")) "0.8"
-        else "0.9"
         return generateAudioStream(
             AudioFileMetaData(
                 audioFileMetaData.text,
                 audioFileMetaData.locale,
                 audioFileMetaData.voice.ifEmpty { wordsService.getDefaultWomanVoiceForLocale(audioFileMetaData.locale) },
-                calcSpeed,
+                audioFileMetaData.speedFloat,
             )
         )
     }
