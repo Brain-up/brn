@@ -36,7 +36,7 @@ class UserMonthStatisticService(
                 date = it.startTime,
                 exercisingTimeSeconds = filteredHistories.sumBy { studyHistory -> studyHistory.executionSeconds },
                 progress = progressManager.getStatus(UserExercisingPeriod.WEEK, filteredHistories),
-                exercisingDays = filteredHistories.size
+                exercisingDays = filteredHistories.distinctBy { studyHistory -> studyHistory.startTime }.size
             )
         }.distinctBy {
             listOf(
