@@ -2,6 +2,7 @@ package com.epam.brn.repo
 
 import com.epam.brn.model.Exercise
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.Optional
 
@@ -17,4 +18,7 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
     fun existsBySubGroupId(subGroupId: Long): Boolean
 
     override fun findById(id: Long): Optional<Exercise>
+
+    @Query("SELECT e.subGroup.series.type FROM Exercise e WHERE e.id = :id")
+    fun findTypeByExerciseId(id: Long): String
 }

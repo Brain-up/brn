@@ -94,6 +94,8 @@ class UserAccountServiceImpl(
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
+    override fun getCurrentUserId(): Long = getCurrentUser().id!!
+
     override fun getUsers(pageable: Pageable, role: String): List<UserAccountResponse> =
         userAccountRepository.findUsersAccountsByRole(role).map { it.toDto() }
 

@@ -3,9 +3,15 @@ package com.epam.brn.service.impl
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.StudyHistory
+import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
+import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import org.springframework.data.domain.Pageable
@@ -18,9 +24,13 @@ import java.util.Locale
 @Service
 class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
+    private val studyHistoryRepository: StudyHistoryRepository,
+    private val exerciseRepository: ExerciseRepository,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
     private val timeService: TimeService,
-    private val textToSpeechService: TextToSpeechService
+    private val textToSpeechService: TextToSpeechService,
+    private val userAccountService: UserAccountService,
+    private val exerciseService: ExerciseService,
 ) : UserAnalyticsService {
 
     override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
@@ -37,8 +47,37 @@ class UserAnalyticsServiceImpl(
         return users
     }
 
-    override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream {
-        // todo add later logic how to generate audio base on user study history
-        return textToSpeechService.generateAudioOggFileWithValidation(audioFileMetaData)
+    override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
+        textToSpeechService.generateAudioOggFileWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
+
+    override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
+        val currentUserId = userAccountService.getCurrentUserId()
+        val lastExerciseHistory = studyHistoryRepository
+            .findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+        val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
+//        when {
+//            isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlowest()
+//            isMultiWords(seriesType) && !isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlow()
+//            !isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlow()
+//        }
+        val text = audioFileMetaData.text
+        if (seriesType != ExerciseType.SENTENCE)
+            audioFileMetaData.text = text.replace(" ", ", ")
+
+        if (text.contains(" ")) {
+            if (isDoneBad(lastExerciseHistory))
+                audioFileMetaData.setSpeedSlowest()
+            else
+                audioFileMetaData.setSpeedSlow()
+        } else if (isDoneBad(lastExerciseHistory)) {
+            audioFileMetaData.setSpeedSlow()
+        }
+        return audioFileMetaData
     }
+
+    fun isDoneBad(lastHistory: StudyHistory?): Boolean =
+        lastHistory != null && !exerciseService.isDoneWell(lastHistory)
+
+    fun isMultiWords(seriesType: ExerciseType): Boolean =
+        seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
 }

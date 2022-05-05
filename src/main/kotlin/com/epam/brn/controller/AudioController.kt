@@ -26,7 +26,7 @@ class AudioController(private val userAnalyticsService: UserAnalyticsService) {
         @RequestParam(required = false, defaultValue = "0") exerciseId: Long,
         @RequestParam(required = false, defaultValue = "ru-ru") locale: String,
         @RequestParam(required = false, defaultValue = "") voice: String,
-        @RequestParam(required = false, defaultValue = "") speed: String,
+        @RequestParam(required = false, defaultValue = "1.0") speed: String,
         @RequestParam(required = false) gender: String? = null,
         @RequestParam(required = false) pitch: String? = null,
         @RequestParam(required = false) style: String? = null,
@@ -41,7 +41,7 @@ class AudioController(private val userAnalyticsService: UserAnalyticsService) {
                             locale = locale,
                             voice = voice,
                             gender = gender,
-                            speed = speed,
+                            speedFloat = speed,
                             pitch = pitch,
                             style = style
                         )

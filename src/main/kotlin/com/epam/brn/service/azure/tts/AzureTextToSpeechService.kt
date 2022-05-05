@@ -126,7 +126,7 @@ class AzureTextToSpeechService(
                     lang = voiceInfo.locale,
                     prosody = Prosody(
                         pitch = defaultIfBlank(params.pitch, AzurePitches.DEFAULT.code),
-                        rate = defaultIfBlank(params.speed, AzureRates.DEFAULT.code),
+                        rate = params.speedCode.code,
                         expressAs = ExpressAs(
                             style = voiceInfo.styleList.find { it.name == params.style }?.name,
                             styledegree = params.styleDegree,
