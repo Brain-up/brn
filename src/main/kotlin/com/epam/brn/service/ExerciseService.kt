@@ -2,14 +2,15 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.enums.Locale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.upload.csv.RecordProcessor
@@ -73,7 +74,8 @@ class ExerciseService(
         if (userId == 1L)
             return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
-        val openSubGroupExercises = getAvailableExercisesForSubGroup(doneSubGroupExercises, subGroupExercises, userId, subGroupId)
+        val openSubGroupExercises =
+            getAvailableExercisesForSubGroup(doneSubGroupExercises, subGroupExercises, userId, subGroupId)
         return subGroupExercises.map { exercise ->
             updateExerciseDto(exercise.toDto(openSubGroupExercises.contains(exercise)))
         }
@@ -97,40 +99,43 @@ class ExerciseService(
     ): Set<Exercise> {
         if (doneSubGroupExercises.size == subGroupExercises.size)
             return doneSubGroupExercises.toSet()
-        val mapDone = doneSubGroupExercises.groupBy({ it.name }, { it })
-        val available = mutableSetOf<Exercise>()
+        val mapDoneNameToExercise = doneSubGroupExercises.groupBy({ it.name }, { it })
+        val availableExercises = mutableSetOf<Exercise>()
         val lastHistoryMap = studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId)
             .groupBy({ it.exercise }, { it })
         subGroupExercises
             .groupBy({ it.name }, { it })
             .forEach { (name, currentNameExercises) ->
                 run {
-                    available.add(currentNameExercises[0])
-                    val currentDone = mapDone[name]
-                    if (currentDone.isNullOrEmpty()) {
-                        available.add(currentNameExercises[0])
+                    availableExercises.add(currentNameExercises[0])
+                    val currentDoneExercises = mapDoneNameToExercise[name]
+                    if (currentDoneExercises.isNullOrEmpty()) {
+                        availableExercises.add(currentNameExercises[0])
                         return@forEach
                     }
-                    val lastDone = currentDone.last()
-                    val lastHistory = lastHistoryMap[lastDone]
+                    val lastDoneExercise = currentDoneExercises.last()
+                    val lastHistory = lastHistoryMap[lastDoneExercise]
                     if (lastHistory.isNullOrEmpty()) {
-                        available.addAll(currentDone)
+                        availableExercises.addAll(currentDoneExercises)
                         return@forEach
                     }
-                    val repetitionIndex =
-                        lastHistory[0].tasksCount.toFloat() / (lastHistory[0].replaysCount + lastHistory[0].tasksCount)
-                    val rightAnswersIndex = 1F - lastHistory[0].wrongAnswers.toFloat() / lastHistory[0].tasksCount
-                    if (repetitionIndex < minRepetitionIndex.toFloat() || rightAnswersIndex < minRightAnswersIndex.toFloat()) {
-                        available.addAll(currentDone)
+                    if (!isDoneWell(lastHistory[0])) {
+                        availableExercises.addAll(currentDoneExercises)
                         return@forEach
                     }
-                    available.addAll(currentDone)
-                    val closed = currentNameExercises.minus(doneSubGroupExercises)
-                    if (closed.isNotEmpty())
-                        available.add(closed.first())
+                    availableExercises.addAll(currentDoneExercises)
+                    val closedExercises = currentNameExercises.minus(doneSubGroupExercises)
+                    if (closedExercises.isNotEmpty())
+                        availableExercises.add(closedExercises.first())
                 }
             }
-        return available
+        return availableExercises
+    }
+
+    fun isDoneWell(studyHistory: StudyHistory): Boolean {
+        val repetitionIndex = studyHistory.tasksCount.toFloat() / (studyHistory.replaysCount + studyHistory.tasksCount)
+        val rightAnswersIndex = 1F - studyHistory.wrongAnswers.toFloat() / studyHistory.tasksCount
+        return (repetitionIndex >= minRepetitionIndex.toFloat() && rightAnswersIndex >= minRightAnswersIndex.toFloat())
     }
 
     fun updateExerciseDto(exerciseDto: ExerciseDto): ExerciseDto {
@@ -196,7 +201,7 @@ class ExerciseService(
                             text = word,
                             locale = locale.locale,
                             voice = wordsService.getDefaultManVoiceForLocale(locale.locale),
-                            speed = speed
+                            speedFloat = speed
                         )
                         log.debug("create and save AudioFile: $audioFileMetaData")
                         audioFilesGenerationService.processWord(audioFileMetaData)

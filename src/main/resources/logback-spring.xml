@@ -27,6 +27,6 @@
         <appender-ref ref="FILE" />
     </root>
     <!-- start of custom settings besides root appenders -->
-    <logger name="com.epam.brn" level="DEBUG"/>
+    <logger name="com.epam.brn" level="INFO"/>
 
 </configuration>
