@@ -34,10 +34,9 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     )
     fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
 
-    fun findByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): List<StudyHistory>
-
-    fun findLast1ByOrderByStartTime(): StudyHistory?
-    fun findLastByUserAccountIdAndExerciseIdOrderByStartTime(userId: Long, exerciseId: Long): StudyHistory?
+//    fun findByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): List<StudyHistory>
+//    fun findLast1ByOrderByStartTime(): StudyHistory?
+//    fun findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(userId: Long, exerciseId: Long): StudyHistory?
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE (s.userAccount.id, s.startTime) " +
@@ -68,6 +67,16 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             "       HAVING userAccount.id = :userId and exercise.id in (:exerciseIds))"
     )
     fun findLastByUserAccountIdAndExercises(userId: Long, exerciseIds: List<Long>): List<StudyHistory>
+
+    @Query(
+        "SELECT s FROM StudyHistory s " +
+            " WHERE (s.userAccount.id, s.exercise.id, s.startTime) " +
+            " IN (SELECT userAccount.id, exercise.id, max(startTime) " +
+            "       FROM StudyHistory " +
+            "       GROUP BY exercise.id, userAccount.id " +
+            "       HAVING userAccount.id = :userId and exercise.id = :exerciseId)"
+    )
+    fun findLastByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): StudyHistory?
 
     @Query(
         "SELECT COALESCE(sum(s.executionSeconds), 0) FROM StudyHistory s " +
