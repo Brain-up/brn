@@ -87,7 +87,7 @@ internal class UserMonthStatisticServiceTest {
         val expectedStatistic = MonthStudyStatistic(
             date = studyHistory.startTime,
             exercisingTimeSeconds = executionSeconds * 2,
-            exercisingDays = 2,
+            exercisingDays = 1,
             progress = progress
         )
 
