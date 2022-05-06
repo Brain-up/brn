@@ -115,7 +115,7 @@ class AzureTextToSpeechServiceTest {
         val textToSpeechRequest = ttsService.getTextToSpeechRequest(params)
 
         textToSpeechRequest shouldBe """
-            <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="en-US-ChristopherNeural" xml:lang="en-US" xml:gender="Male"><prosody pitch="default" rate="1"><mstts:express-as styledegree="1">text</mstts:express-as></prosody></voice></speak>
+            <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="en-US-ChristopherNeural" xml:lang="en-US" xml:gender="Male"><prosody pitch="default" rate="default"><mstts:express-as styledegree="1">text</mstts:express-as></prosody></voice></speak>
         """.trimIndent()
 
         // THEN
@@ -138,7 +138,7 @@ class AzureTextToSpeechServiceTest {
             locale = locale,
             voice = voice,
             gender = gender,
-            speed = speed,
+            speedFloat = speed,
             pitch = pitch,
             style = style
         )

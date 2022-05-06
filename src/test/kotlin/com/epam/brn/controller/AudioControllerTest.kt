@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.AudioFileMetaData
+import com.epam.brn.dto.azure.tts.AzureRates
 import com.epam.brn.service.UserAnalyticsService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -30,7 +31,7 @@ internal class AudioControllerTest {
         val text = "Testing_text"
         val locale = "locale"
         val stream: InputStream = ByteArrayInputStream(byteArrayOf(10, 20, 30, 40, 50))
-        val audioFileMetaData = AudioFileMetaData(text, locale, "", "1", null, null, null)
+        val audioFileMetaData = AudioFileMetaData(text, locale, "", "1", AzureRates.DEFAULT, null, null, null)
         every { userAnalyticsService.prepareAudioFileForUser(1, audioFileMetaData) } returns stream
 
         // WHEN

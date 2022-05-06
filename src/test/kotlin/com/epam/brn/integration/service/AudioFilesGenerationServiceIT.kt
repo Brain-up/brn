@@ -1,4 +1,4 @@
-package com.epam.brn.integration
+package com.epam.brn.integration.service
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.Locale
