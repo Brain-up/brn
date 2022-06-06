@@ -1,9 +1,5 @@
 package com.epam.brn.service.impl
 
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.model.ListObjectsV2Request
-import com.amazonaws.services.s3.model.ListObjectsV2Result
-import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.epam.brn.cloud.AwsCloudService
 import com.epam.brn.config.AwsConfig
 import io.mockk.every
@@ -15,6 +11,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.CommonPrefix
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response
 
 @ExtendWith(MockKExtension::class)
 class AwsCloudServiceTest {
@@ -39,15 +39,17 @@ class AwsCloudServiceTest {
         const val TEST_CREDENTIAL = "AKIAI7KLKATWVCMEKGPA/20200130/us-east-2/s3/aws4_request"
         const val TEST_FILEPATH = "tasks/\${filename}"
         const val TEST_DATE = "20200130"
-
-        const val FILE = "file"
         const val FOLDER = "folder/"
-        const val SUBFILE = "folder/file"
-        const val SUBFOLDER = "folder/folder/"
-        const val ANOTHER_FILE = "file3"
-        const val ANOTHER_FOLDER = "folder3/"
-        const val ANOTHER_SUBFILE = "folder3/file3"
-        const val ANOTHER_SUBFOLDER = "folder3/folder3/"
+        const val FOLDER_2 = "folder2/"
+        const val FOLDER_3 = "folder3/"
+        const val FOLDER_SUBFOLDER = "$FOLDER/subfolder/"
+        const val FOLDER_SUBFOLDER_2 = "$FOLDER/subfolder2/"
+        const val FOLDER_SUBFOLDER_3 = "$FOLDER/subfolder3/"
+        const val FOLDER_SUBFOLDER_4 = "$FOLDER/subfolder4/"
+        const val FOLDER_SUBFOLDER_SUBDIR = "$FOLDER_SUBFOLDER/subdir/"
+        const val FOLDER_SUBFOLDER_SUBDIR2 = "$FOLDER_SUBFOLDER/subdir2/"
+        const val FOLDER_SUBFOLDER_3_SUBDIR = "$FOLDER_SUBFOLDER_3/subdir/"
+        const val FOLDER_SUBFOLDER_3_SUBDIR2 = "$FOLDER_SUBFOLDER_3/subdir2/"
     }
 
     @InjectMockKs
@@ -56,13 +58,16 @@ class AwsCloudServiceTest {
     @MockK
     lateinit var awsConfig: AwsConfig
 
+    @MockK
+    lateinit var s3Client: S3Client
+
     @Test
     fun `should get correct signature for client upload`() {
         // GIVEN
         every { awsConfig.secretAccessKey } returns "99999999999999999999999999999"
         every { awsConfig.region } returns "us-east-2"
         every { awsConfig.serviceName } returns "s3"
-        every { awsConfig.bucketLink } returns "http://somebucket.s3.amazonaws.com"
+        every { awsConfig.bucketLink } returns "https://somebucket.s3.amazonaws.com"
 
         val conditions: AwsConfig.Conditions = AwsConfig.Conditions(
             TEST_DATE,
@@ -81,7 +86,7 @@ class AwsCloudServiceTest {
 
         // THEN
         val expected: Map<String, Any> = mapOf(
-            "action" to "http://somebucket.s3.amazonaws.com",
+            "action" to "https://somebucket.s3.amazonaws.com",
             "input" to listOf(
                 mapOf("policy" to "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="),
                 mapOf(X_AMZ_SIGNATURE to "4d39e2b2ac5833352544d379dadad1ffba3148d9936d814f36f50b7af2cd8e8e"),
@@ -125,55 +130,44 @@ class AwsCloudServiceTest {
     }
 
     @Test
-    fun `should get folder list without pagination`() {
+    fun `should get folder list`() {
         // GIVEN
-        val mockS3 = mockk<AmazonS3>()
-        val result: ListObjectsV2Result = listObjectsV2Result(listOf(FILE, FOLDER, SUBFILE, SUBFOLDER))
-        every { result.isTruncated } returns false
-        every { awsConfig.amazonS3 } returns mockS3
+        val returnFolders = mutableListOf<ListObjectsV2Response>()
+        returnFolders.add(listObjectsV2Result(listOf(FOLDER, FOLDER_2, FOLDER_3)))
+        returnFolders.add(listObjectsV2Result(listOf(FOLDER_SUBFOLDER, FOLDER_SUBFOLDER_2, FOLDER_SUBFOLDER_3, FOLDER_SUBFOLDER_4)))
+        returnFolders.add(listObjectsV2Result(listOf(FOLDER_SUBFOLDER_SUBDIR, FOLDER_SUBFOLDER_SUBDIR2)))
+        returnFolders.add(listObjectsV2Result(listOf()))
+        returnFolders.add(listObjectsV2Result(listOf()))
+        returnFolders.add(listObjectsV2Result(listOf()))
+        returnFolders.add(listObjectsV2Result(listOf(FOLDER_SUBFOLDER_3_SUBDIR, FOLDER_SUBFOLDER_3_SUBDIR2)))
+        returnFolders.add(listObjectsV2Result(listOf()))
+        returnFolders.add(listObjectsV2Result(listOf()))
+        returnFolders.add(listObjectsV2Result(listOf()))
+        returnFolders.add(listObjectsV2Result(listOf()))
+
         every { awsConfig.bucketName } returns TEST_BUCKET
-        every { mockS3.listObjectsV2(any<ListObjectsV2Request>()) } returns result
+        every { s3Client.listObjectsV2(any<ListObjectsV2Request>()) } returnsMany returnFolders
 
         // WHEN
-        val listBucket = awsCloudService.listBucket()
+        val listBucket = awsCloudService.getListFolder()
 
         // THEN
-        val expected: List<String> = listOf(FOLDER, SUBFOLDER)
+        val expected: List<String> = listOf(
+            FOLDER, FOLDER_SUBFOLDER, FOLDER_SUBFOLDER_SUBDIR, FOLDER_SUBFOLDER_SUBDIR2,
+            FOLDER_SUBFOLDER_2, FOLDER_SUBFOLDER_3, FOLDER_SUBFOLDER_3_SUBDIR, FOLDER_SUBFOLDER_3_SUBDIR2,
+            FOLDER_SUBFOLDER_4, FOLDER_2, FOLDER_3
+        )
         assertEquals(expected, listBucket)
     }
 
-    @Test
-    fun `should get folder list with pagination`() {
-        // GIVEN
-        val mockS3 = mockk<AmazonS3>()
-        val result: ListObjectsV2Result = listObjectsV2Result(listOf(FILE, FOLDER, SUBFILE, SUBFOLDER))
-        every { result.isTruncated } returns true
-        every { result.nextContinuationToken } returns "asd"
+    private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Response {
+        val result = mockk<ListObjectsV2Response>()
+        val objectSummaries: List<CommonPrefix> = toObjectSummaries(keys)
 
-        val result2: ListObjectsV2Result =
-            listObjectsV2Result(listOf(ANOTHER_FILE, ANOTHER_FOLDER, ANOTHER_SUBFILE, ANOTHER_SUBFOLDER))
-        every { result2.isTruncated } returns false
-
-        every { awsConfig.amazonS3 } returns mockS3
-        every { awsConfig.bucketName } returns TEST_BUCKET
-        every { mockS3.listObjectsV2(any<ListObjectsV2Request>()) } returnsMany listOf(result, result2)
-
-        // WHEN
-        val listBucket = awsCloudService.listBucket()
-
-        // THEN
-        val expected: List<String> = listOf(FOLDER, SUBFOLDER, ANOTHER_FOLDER, ANOTHER_SUBFOLDER)
-        assertEquals(expected, listBucket)
-    }
-
-    private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Result {
-        val result = mockk<ListObjectsV2Result>()
-        val objectSummaries: List<S3ObjectSummary> = toObjectSummaries(keys)
-
-        every { result.objectSummaries } returns objectSummaries
+        every { result.commonPrefixes() } returns objectSummaries
         return result
     }
 
-    private fun toObjectSummaries(keys: List<String>): List<S3ObjectSummary> =
-        keys.map { S3ObjectSummary().apply { key = it } }.toList()
+    private fun toObjectSummaries(keys: List<String>): List<CommonPrefix> =
+        keys.map { CommonPrefix.builder().prefix(it).build() }.toList()
 }

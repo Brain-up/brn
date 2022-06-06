@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
@@ -32,11 +33,12 @@ class CloudControllerAwsIT {
                 .get("/cloud/upload").queryParam("filePath", filePath)
                 .contentType(MediaType.APPLICATION_JSON)
         )
+
         // THEN
         val response =
             """{
             "data": {
-                "action": "http://somebucket.s3.amazonaws.com",
+                "action": "https://somebucket.s3.amazonaws.com",
                 "input": [
                   {
                     "policy": "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
@@ -73,5 +75,28 @@ class CloudControllerAwsIT {
         resultAction
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().string(response.replace(Regex("\\s"), "")))
+    }
+
+    @Test
+    fun `should upload file to S3`() {
+        val filePath = "audio/folder"
+        val fileName = "fileName.ogg"
+        val fileData = "some text"
+        val file = MockMultipartFile(
+            "file",
+            "file.ogg",
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            fileData.toByteArray()
+        )
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders.multipart("/cloud/upload/unverified")
+                .file(file)
+                .param("path", filePath)
+                .param("filename", fileName)
+        )
+
+        // THEN
+        resultAction
+            .andExpect(MockMvcResultMatchers.status().isCreated)
     }
 }

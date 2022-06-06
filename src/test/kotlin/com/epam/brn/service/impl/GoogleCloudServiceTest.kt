@@ -50,7 +50,7 @@ class GoogleCloudServiceTest {
         every { storage.get(any<String>()) } returns bucket
 
         // WHEN
-        val bucketContent = googleCloudService.listBucket()
+        val bucketContent = googleCloudService.getListFolder()
         val expected = listOf("folder0/", "folder2/", "folder2/folder3/", "folder7/")
         // THEN
         Assertions.assertEquals(expected, bucketContent)

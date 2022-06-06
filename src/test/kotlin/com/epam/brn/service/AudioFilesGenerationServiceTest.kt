@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.config.AwsConfig
+import com.epam.brn.cloud.CloudService
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
@@ -15,6 +15,7 @@ import org.amshove.kluent.internal.assertSame
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+
 import org.springframework.test.util.ReflectionTestUtils
 import java.io.File
 
@@ -28,10 +29,10 @@ internal class AudioFilesGenerationServiceTest {
     lateinit var wordsService: WordsService
 
     @MockK
-    lateinit var awsConfig: AwsConfig
+    lateinit var yandexSpeechKitService: YandexSpeechKitService
 
     @MockK
-    lateinit var yandexSpeechKitService: YandexSpeechKitService
+    private lateinit var cloudService: CloudService
 
     @Test
     fun `should process file`() {
@@ -45,6 +46,27 @@ internal class AudioFilesGenerationServiceTest {
 
         // THEN
         assertSame(fileMock, actualResult)
+        verify(exactly = 0) { wordsService.getSubPathForWord(audioFileMetaData) }
+        verify(exactly = 0) { cloudService.uploadFile(any(), any(), fileMock) }
+    }
+
+    @Test
+    fun `should process file and save into cloud storage`() {
+        // GIVEN
+        val fileMock = mockk<File>()
+        val audioFileMetaData = AudioFileMetaData("word", "ru-ru", Voice.FILIPP.name)
+        every { yandexSpeechKitService.generateAudioOggFile(audioFileMetaData) } returns fileMock
+        every { wordsService.getSubPathForWord(audioFileMetaData) } returns "/audio/${audioFileMetaData.locale}/${audioFileMetaData.voice.toLowerCase()}/${audioFileMetaData.speedFloat}"
+        every { cloudService.uploadFile(any(), any(), fileMock) } returns Unit
+        every { fileMock.name } returns "filename.ogg"
+        audioFilesGenerationService.withSavingToS3 = true
+        // WHEN
+        val actualResult = audioFilesGenerationService.processWord(audioFileMetaData)
+
+        // THEN
+        assertSame(fileMock, actualResult)
+        verify(exactly = 1) { wordsService.getSubPathForWord(audioFileMetaData) }
+        verify(exactly = 1) { cloudService.uploadFile(any(), any(), fileMock) }
     }
 
     @Test

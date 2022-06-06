@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.cloud.CloudService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -13,11 +14,16 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import org.apache.http.HttpStatus
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.mock.web.MockMultipartFile
 import java.time.LocalDateTime
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 @ExtendWith(MockKExtension::class)
+@DisplayName("AdminControllerTestV2 test using MockK")
 class AdminControllerTestV2 {
 
     @InjectMockKs
@@ -31,6 +37,9 @@ class AdminControllerTestV2 {
 
     @MockK
     private lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
+
+    @MockK
+    private lateinit var cloudService: CloudService
 
     @Test
     fun `getHistories should return histories`() {
@@ -87,5 +96,23 @@ class AdminControllerTestV2 {
         verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(date, date, userId) }
         userYearlyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
         userYearlyStatistic.body!!.data shouldBe listOf(monthStudyStatistic)
+    }
+
+    @Test
+    fun `uploadFile should call cloud service upload file and return status OK`() {
+        // GIVEN
+        val path = "path/folder/"
+        val fileName = "audio/ogg"
+        val data = ByteArray(0)
+        val multipartFile = MockMultipartFile("file.ogg", data)
+        every { cloudService.uploadFile(path, fileName, multipartFile) } returns Unit
+
+        // WHEN
+        val response = adminController.upload(path, fileName, multipartFile)
+
+        // THEN
+        verify(exactly = 1) { cloudService.uploadFile(path, fileName, multipartFile) }
+        assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
+        assertNull(response.body)
     }
 }

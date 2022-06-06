@@ -1,24 +1,42 @@
 package com.epam.brn.cloud
 
-import com.amazonaws.services.s3.model.ListObjectsV2Request
-import com.amazonaws.util.Base64
 import com.epam.brn.config.AwsConfig
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
+import org.apache.commons.lang3.StringUtils
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
+import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.utils.BinaryUtils
+import java.io.File
+import java.io.InputStream
 import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
+private const val FOLDER_DELIMETER = "/"
+
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
-class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudService {
+class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired private val s3Client: S3Client) : CloudService {
+
+    private val log = logger()
+
     private final val mapperIndented: ObjectWriter
+
+    @Value("\${aws.resources.path.unverified:}")
+    private val unverifiedPath: String = ""
 
     init {
         val indenter = DefaultIndenter().withLinefeed("\r\n")
@@ -35,23 +53,108 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
     override fun uploadForm(filePath: String): Map<String, Any> =
         signature(awsConfig.buildConditions(filePath))
 
-    override fun listBucket(): List<String> {
-        val amazonS3 = awsConfig.amazonS3
-        val folders: ArrayList<String> = ArrayList()
+    override fun uploadFile(filePath: String, fileName: String?, multipartFile: MultipartFile, isVerified: Boolean) {
+        val fullFileName = createFullFileName(filePath, fileName ?: multipartFile.originalFilename, isVerified)
+        uploadFile(fullFileName, multipartFile.inputStream)
+    }
 
-        var continuationToken: String? = null
-        while (true) {
-            val listObjectsV2Request = ListObjectsV2Request()
-            listObjectsV2Request.bucketName = awsConfig.bucketName
-            listObjectsV2Request.continuationToken = continuationToken
-            val result = amazonS3.listObjectsV2(listObjectsV2Request)
-            val matchingKeys = result.objectSummaries.stream().map { it.key }.filter { it.endsWith("/") }
-            matchingKeys.forEach { folders.add(it) }
-            if (!result.isTruncated)
-                break
-            continuationToken = result.nextContinuationToken
+    override fun uploadFile(filePath: String, fileName: String?, file: File, isVerified: Boolean) {
+        val fullFileName = createFullFileName(filePath, fileName ?: file.name, isVerified)
+        uploadFile(fullFileName, file.inputStream())
+    }
+
+    override fun getListFolder(): List<String> {
+        return getFolders("")
+    }
+
+    override fun createFolder(folderPath: String) {
+        val fullFolderName = appendDelimiter(folderPath)
+        val objectRequest = PutObjectRequest.builder()
+            .bucket(awsConfig.bucketName)
+            .key(fullFolderName)
+            .contentLength(0)
+            .build()
+
+        s3Client.putObject(objectRequest, RequestBody.empty())
+
+        waitRequestDone(fullFolderName)
+        log.info("Folder $fullFolderName is ready")
+    }
+
+    override fun isFolderExists(folderPath: String): Boolean {
+        val fullFolderName = appendDelimiter(folderPath)
+
+        val request = ListObjectsV2Request.builder()
+            .bucket(awsConfig.bucketName)
+            .prefix(fullFolderName)
+            .build()
+        val result = s3Client.listObjectsV2(request)
+        return result.hasContents()
+    }
+
+    private fun createFullFileName(
+        path: String,
+        filename: String?,
+        isVerified: Boolean
+    ): String {
+        var fullFileName: String = if (!isVerified) {
+            "$unverifiedPath$path"
+        } else {
+            path
         }
 
+        if (StringUtils.endsWith(fullFileName, "/")) {
+            fullFileName += filename
+        }
+        return fullFileName
+    }
+
+    private fun uploadFile(filePath: String, inputStream: InputStream) {
+        val objectRequest = PutObjectRequest.builder()
+            .bucket(awsConfig.bucketName)
+            .key(filePath)
+            .build()
+
+        val byteArray = inputStream.readAllBytes()
+
+        s3Client.putObject(objectRequest, RequestBody.fromBytes(byteArray))
+        waitRequestDone(filePath)
+        val fileName = filePath.substring(filePath.indexOfLast { it == '/' })
+        log.info("File `$fileName` saved in S3 ${awsConfig.bucketName + filePath}")
+    }
+
+    private fun waitRequestDone(key: String) {
+        val waiter = s3Client.waiter()
+        val requestWait = HeadObjectRequest.builder()
+            .bucket(awsConfig.bucketName)
+            .key(key)
+            .build()
+        val waiterResponse = waiter.waitUntilObjectExists(requestWait)
+        waiterResponse.matched().response().ifPresent(log::debug)
+    }
+
+    private fun appendDelimiter(folderPath: String): String {
+        var key = folderPath
+        if (!StringUtils.endsWith(key, FOLDER_DELIMETER)) {
+            key += FOLDER_DELIMETER
+        }
+        return key
+    }
+
+    private fun getFolders(prefix: String): ArrayList<String> {
+        val listObjectsV2Request = ListObjectsV2Request.builder()
+            .delimiter(FOLDER_DELIMETER)
+            .prefix(prefix)
+            .bucket(awsConfig.bucketName)
+            .build()
+        val result = s3Client.listObjectsV2(listObjectsV2Request)
+        val matchingKeys = result.commonPrefixes()
+        val folders: ArrayList<String> = ArrayList()
+        matchingKeys.forEach {
+            val currentPrefix = it.prefix()
+            folders.add(currentPrefix)
+            folders.addAll(getFolders(prefix + currentPrefix))
+        }
         return folders
     }
 
@@ -111,7 +214,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig) : CloudServic
         return toJsonBase64(policy)
     }
 
-    fun toJsonBase64(rawObject: Any): String = Base64.encodeAsString(*mapperIndented.writeValueAsBytes(rawObject))
+    fun toJsonBase64(rawObject: Any): String = BinaryUtils.toBase64(mapperIndented.writeValueAsBytes(rawObject))
 
     private fun sign(date: String, policy: String): String {
         val signature = getSignatureKey(awsConfig.secretAccessKey, date, awsConfig.region, awsConfig.serviceName)

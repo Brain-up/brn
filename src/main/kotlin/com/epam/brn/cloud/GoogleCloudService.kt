@@ -8,6 +8,8 @@ import com.google.cloud.storage.Storage
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.net.URL
 import java.util.TreeSet
 import java.util.concurrent.TimeUnit
@@ -16,7 +18,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) : CloudService {
 
-    override fun listBucket(): List<String> {
+    override fun getListFolder(): List<String> {
         val blobs = cloudConfig.storage!!.get(cloudConfig.bucketName).list()
 
         val folders: MutableSet<String> = TreeSet()
@@ -45,4 +47,20 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
     override fun bucketUrl(): String = cloudConfig.bucketLink
 
     override fun baseFileUrl(): String = ""
+
+    override fun uploadFile(filePath: String, fileName: String?, multipartFile: MultipartFile, isVerified: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun uploadFile(filePath: String, fileName: String?, file: File, isVerified: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun createFolder(folderPath: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun isFolderExists(folderPath: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }

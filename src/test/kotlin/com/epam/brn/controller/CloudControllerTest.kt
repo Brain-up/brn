@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.mock.web.MockMultipartFile
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
@@ -75,14 +78,34 @@ internal class CloudControllerTest {
 
         // GIVEN
         val listBucket = listOf("folderName")
-        every { cloudService.listBucket() } returns listBucket
+        every { cloudService.getListFolder() } returns listBucket
 
         // WHEN
         val actualListBucket = cloudController.listBucket()
 
         // THEN
-        verify(exactly = 1) { cloudService.listBucket() }
+        verify(exactly = 1) { cloudService.getListFolder() }
         assertEquals(HttpStatus.SC_OK, actualListBucket.statusCodeValue)
         assertEquals(listBucket, actualListBucket.body!!.data)
+    }
+
+    @Test
+    fun `loadUnverifiedPicture should call cloud service upload file and return status OK`() {
+
+        // GIVEN
+        val path = "path/folder/"
+        val fileName = "audio/ogg"
+        val data = ByteArray(0)
+        val multipartFile = MockMultipartFile("file.ogg", data)
+        every { cloudService.uploadFile(path, fileName, multipartFile, false) } returns Unit
+
+        // WHEN
+        val response = cloudController.loadUnverifiedPicture(path, fileName, multipartFile)
+
+        // THEN
+        assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
+        verify(exactly = 1) { cloudService.uploadFile(path, fileName, multipartFile, false) }
+        verify(exactly = 0) { cloudService.uploadFile(any(), any(), any<MultipartFile>(), true) }
+        verify(exactly = 0) { cloudService.uploadFile(any(), any(), any<File>(), true) }
     }
 }

@@ -1,15 +1,16 @@
 package com.epam.brn.config
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.services.glacier.model.CannedACL
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL
 import java.io.FileInputStream
 import java.io.IOException
 import java.time.Duration
@@ -37,17 +38,17 @@ class AwsConfig(
     val bucketName: String = ""
 
     @Value("\${aws.xamzCredential}")
-    val xamzCredential: String = ""
+    private val xamzCredential: String = ""
 
     // optional
     @Value("\${aws.successActionRedirect:}")
-    val successActionRedirect: String = ""
+    private val successActionRedirect: String = ""
 
     @Value("\${aws.contentTypeStartsWith:}")
-    val contentTypeStartsWith: String = ""
+    private val contentTypeStartsWith: String = ""
 
     @Value("\${aws.metaTagStartsWith:}")
-    val metaTagStartsWith: String = ""
+    private val metaTagStartsWith: String = ""
 
     // signature calc
     @Value("\${aws.serviceName}")
@@ -62,9 +63,8 @@ class AwsConfig(
     fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
     fun uuid(): String = UUID.randomUUID().toString()
 
-    lateinit var accessKeyId: String
+    private lateinit var accessKeyId: String
     lateinit var secretAccessKey: String
-    lateinit var amazonS3: AmazonS3
 
     init {
         accessKeyId = accessKeyIdProperty
@@ -81,23 +81,26 @@ class AwsConfig(
                 log.info("Could not load aws properties from path $credentialsPath")
             }
         }
+    }
 
-        val credentials = AWSStaticCredentialsProvider(
-            BasicAWSCredentials(
+    @Bean
+    fun s3Client(): S3Client {
+        val credentials = StaticCredentialsProvider.create(
+            AwsBasicCredentials.create(
                 accessKeyId,
                 secretAccessKey
             )
         )
-        amazonS3 = AmazonS3ClientBuilder.standard()
-            .withCredentials(credentials)
-            .withRegion(region)
+        return S3Client.builder()
+            .credentialsProvider(credentials)
+            .region(Region.of(region))
             .build()
     }
 
     fun buildConditions(filePath: String): Conditions {
         val date = DateTimeFormatter.ofPattern("yyyyMMdd")!!.format(instant())
         val credential = String.format(xamzCredential, accessKeyId, date)
-        val accessRule = CannedACL.valueOf(accessRuleCanned).toString()
+        val accessRule = ObjectCannedACL.valueOf(accessRuleCanned).toString()
         val expiration = DateTimeFormatter.ISO_DATE_TIME!!.format(instant().plus(Duration.parse(expireAfterDuration)))
         val amzDateTime = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!.format(instant())
 
