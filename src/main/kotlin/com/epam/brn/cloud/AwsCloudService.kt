@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
+import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
@@ -115,7 +116,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
             .key(filePath)
             .build()
 
-        val byteArray = inputStream.readAllBytes()
+        val byteArray = IOUtils.toByteArray(inputStream)
 
         s3Client.putObject(objectRequest, RequestBody.fromBytes(byteArray))
         waitRequestDone(filePath)
