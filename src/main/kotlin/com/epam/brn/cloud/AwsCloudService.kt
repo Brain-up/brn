@@ -26,11 +26,14 @@ import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-private const val FOLDER_DELIMETER = "/"
-
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
-class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired private val s3Client: S3Client) : CloudService {
+class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired private val s3Client: S3Client) :
+    CloudService {
+
+    companion object {
+        private const val FOLDER_DELIMITER = "/"
+    }
 
     private val log = logger()
 
@@ -103,10 +106,10 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         } else {
             path
         }
-
-        if (StringUtils.endsWith(fullFileName, "/")) {
-            fullFileName += filename
+        if (!StringUtils.endsWith(fullFileName, FOLDER_DELIMITER)) {
+            fullFileName += FOLDER_DELIMITER
         }
+        fullFileName += filename
         return fullFileName
     }
 
@@ -136,15 +139,15 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     private fun appendDelimiter(folderPath: String): String {
         var key = folderPath
-        if (!StringUtils.endsWith(key, FOLDER_DELIMETER)) {
-            key += FOLDER_DELIMETER
+        if (!StringUtils.endsWith(key, FOLDER_DELIMITER)) {
+            key += FOLDER_DELIMITER
         }
         return key
     }
 
     private fun getFolders(prefix: String): ArrayList<String> {
         val listObjectsV2Request = ListObjectsV2Request.builder()
-            .delimiter(FOLDER_DELIMETER)
+            .delimiter(FOLDER_DELIMITER)
             .prefix(prefix)
             .bucket(awsConfig.bucketName)
             .build()

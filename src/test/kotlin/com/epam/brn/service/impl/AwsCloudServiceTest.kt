@@ -7,14 +7,29 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
+import io.mockk.slot
+import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.mock.web.MockMultipartFile
+import org.springframework.util.ReflectionUtils
+import software.amazon.awssdk.core.internal.waiters.DefaultWaiterResponse
+import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.CommonPrefix
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response
+import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.model.PutObjectResponse
+import software.amazon.awssdk.services.s3.model.S3Object
+import software.amazon.awssdk.services.s3.waiters.S3Waiter
+import java.io.File
+import java.util.Arrays
 
 @ExtendWith(MockKExtension::class)
 class AwsCloudServiceTest {
@@ -50,6 +65,8 @@ class AwsCloudServiceTest {
         const val FOLDER_SUBFOLDER_SUBDIR2 = "$FOLDER_SUBFOLDER/subdir2/"
         const val FOLDER_SUBFOLDER_3_SUBDIR = "$FOLDER_SUBFOLDER_3/subdir/"
         const val FOLDER_SUBFOLDER_3_SUBDIR2 = "$FOLDER_SUBFOLDER_3/subdir2/"
+
+        const val UNVERIFIED_PATH = "unverified/"
     }
 
     @InjectMockKs
@@ -60,6 +77,17 @@ class AwsCloudServiceTest {
 
     @MockK
     lateinit var s3Client: S3Client
+
+    @BeforeEach
+    fun init() {
+        val field = AwsCloudService::class.java.getDeclaredField("unverifiedPath")
+        field.isAccessible = true
+        ReflectionUtils.setField(
+            field,
+            awsCloudService,
+            UNVERIFIED_PATH
+        )
+    }
 
     @Test
     fun `should get correct signature for client upload`() {
@@ -109,17 +137,16 @@ class AwsCloudServiceTest {
             "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
         val conditions = hashMapOf(
             "expiration" to TEST_EXPIRATION_DATE,
-            "conditions" to
-                listOf(
-                    hashMapOf(BUCKET to TEST_BUCKET),
-                    hashMapOf(ACL to TEST_ACCESS_RULE),
-                    arrayOf("starts-with", "\$key", TEST_FILEPATH),
-                    hashMapOf(X_AMZ_META_UUID to TEST_UUID),
-                    hashMapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
-                    hashMapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
-                    hashMapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
-                    hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE)
-                )
+            "conditions" to listOf(
+                hashMapOf(BUCKET to TEST_BUCKET),
+                hashMapOf(ACL to TEST_ACCESS_RULE),
+                arrayOf("starts-with", "\$key", TEST_FILEPATH),
+                hashMapOf(X_AMZ_META_UUID to TEST_UUID),
+                hashMapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
+                hashMapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
+                hashMapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
+                hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE)
+            )
         )
 
         // WHEN
@@ -134,7 +161,16 @@ class AwsCloudServiceTest {
         // GIVEN
         val returnFolders = mutableListOf<ListObjectsV2Response>()
         returnFolders.add(listObjectsV2Result(listOf(FOLDER, FOLDER_2, FOLDER_3)))
-        returnFolders.add(listObjectsV2Result(listOf(FOLDER_SUBFOLDER, FOLDER_SUBFOLDER_2, FOLDER_SUBFOLDER_3, FOLDER_SUBFOLDER_4)))
+        returnFolders.add(
+            listObjectsV2Result(
+                listOf(
+                    FOLDER_SUBFOLDER,
+                    FOLDER_SUBFOLDER_2,
+                    FOLDER_SUBFOLDER_3,
+                    FOLDER_SUBFOLDER_4
+                )
+            )
+        )
         returnFolders.add(listObjectsV2Result(listOf(FOLDER_SUBFOLDER_SUBDIR, FOLDER_SUBFOLDER_SUBDIR2)))
         returnFolders.add(listObjectsV2Result(listOf()))
         returnFolders.add(listObjectsV2Result(listOf()))
@@ -158,6 +194,324 @@ class AwsCloudServiceTest {
             FOLDER_SUBFOLDER_4, FOLDER_2, FOLDER_3
         )
         assertEquals(expected, listBucket)
+    }
+
+    @Test
+    fun `should create folder`() {
+        // GIVEN
+        val folderPath = "new-folder/"
+        val putObjectResponse = PutObjectResponse.builder()
+            .eTag("tag")
+            .build()
+        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
+            .response(
+                HeadObjectResponse.builder()
+                    .eTag("tag")
+                    .build()
+            )
+            .attemptsExecuted(1)
+            .build()
+        val putObjectRequestSlot = slot<PutObjectRequest>()
+        val waitObjectRequestSlot = slot<HeadObjectRequest>()
+        val requestBodySlot = slot<RequestBody>()
+        val waiter = mockk<S3Waiter>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
+        every { s3Client.waiter() } returns waiter
+        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
+
+        // WHEN
+        awsCloudService.createFolder(folderPath)
+
+        // THEN
+        assert(requestBodySlot.captured.optionalContentLength().isPresent)
+        assertEquals(0, requestBodySlot.captured.optionalContentLength().get())
+        assertEquals(0, putObjectRequestSlot.captured.contentLength())
+        assertEquals(folderPath, putObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
+        assertEquals(folderPath, waitObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+    }
+
+    @Test
+    fun `should create folder with correct delimiter for folder`() {
+        // GIVEN
+        val folderPath = "new-folder"
+        val putObjectResponse = PutObjectResponse.builder()
+            .eTag("tag")
+            .build()
+        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
+            .response(
+                HeadObjectResponse.builder()
+                    .eTag("tag")
+                    .build()
+            )
+            .attemptsExecuted(1)
+            .build()
+        val putObjectRequestSlot = slot<PutObjectRequest>()
+        val waitObjectRequestSlot = slot<HeadObjectRequest>()
+        val requestBodySlot = slot<RequestBody>()
+        val waiter = mockk<S3Waiter>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
+        every { s3Client.waiter() } returns waiter
+        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
+
+        // WHEN
+        awsCloudService.createFolder(folderPath)
+
+        // THEN
+        assert(requestBodySlot.captured.optionalContentLength().isPresent)
+        assertEquals(0, requestBodySlot.captured.optionalContentLength().get())
+        assertEquals(0, putObjectRequestSlot.captured.contentLength())
+        assertEquals("$folderPath/", putObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
+        assertEquals("$folderPath/", waitObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+    }
+
+    @Test
+    fun `should return true when folder is exist`() {
+        // GIVEN
+        val folderPath = "new-folder/"
+        val listObjectsV2Response = ListObjectsV2Response.builder()
+            .contents(S3Object.builder().build())
+            .build()
+        val listObjectsV2RequestSlot = slot<ListObjectsV2Request>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.listObjectsV2(capture(listObjectsV2RequestSlot)) } returns listObjectsV2Response
+
+        // WHEN
+        awsCloudService.isFolderExists(folderPath)
+
+        // THEN
+        assertEquals(folderPath, listObjectsV2RequestSlot.captured.prefix())
+        assertEquals(BUCKET, listObjectsV2RequestSlot.captured.bucket())
+    }
+
+    @Test
+    fun `should return true when folder is exist and folder name without delimiter`() {
+        // GIVEN
+        val folderPath = "new-folder"
+        val listObjectsV2Response = ListObjectsV2Response.builder()
+            .contents(S3Object.builder().build())
+            .build()
+        val listObjectsV2RequestSlot = slot<ListObjectsV2Request>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.listObjectsV2(capture(listObjectsV2RequestSlot)) } returns listObjectsV2Response
+
+        // WHEN
+        awsCloudService.isFolderExists(folderPath)
+
+        // THEN
+        assertEquals("$folderPath/", listObjectsV2RequestSlot.captured.prefix())
+        assertEquals(BUCKET, listObjectsV2RequestSlot.captured.bucket())
+    }
+
+    @Test
+    fun `should return false when folder is not exist`() {
+        // GIVEN
+        val folderPath = "new-folder/"
+        val listObjectsV2Response = ListObjectsV2Response.builder().build()
+        val listObjectsV2RequestSlot = slot<ListObjectsV2Request>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.listObjectsV2(capture(listObjectsV2RequestSlot)) } returns listObjectsV2Response
+
+        // WHEN
+        awsCloudService.isFolderExists(folderPath)
+
+        // THEN
+        assertEquals(folderPath, listObjectsV2RequestSlot.captured.prefix())
+        assertEquals(BUCKET, listObjectsV2RequestSlot.captured.bucket())
+    }
+
+    @Test
+    fun `should return bucket url`() {
+        // GIVEN
+        val bucketUrl = "bucket-url"
+        every { awsConfig.bucketLink } returns bucketUrl
+
+        // WHEN
+        val bucketUrlActual = awsCloudService.bucketUrl()
+
+        // THEN
+        assertEquals(bucketUrl, bucketUrlActual)
+    }
+
+    @Test
+    fun `should return base file url`() {
+        // GIVEN
+        val baseFileUrl = "base-file-url"
+        every { awsConfig.baseFileUrl } returns baseFileUrl
+
+        // WHEN
+        val baseFileUrlActual = awsCloudService.baseFileUrl()
+
+        // THEN
+        assertEquals(baseFileUrl, baseFileUrlActual)
+    }
+
+    @Test
+    fun `should upload file to verified folder`() {
+        // GIVEN
+        val verified = true
+        val fileName = "file.name"
+        val filePath = "some/path/"
+        val file = File(this.javaClass.classLoader.getResource("inputData/test-file.txt")!!.file)
+        val putObjectResponse = PutObjectResponse.builder()
+            .eTag("tag")
+            .build()
+        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
+            .response(
+                HeadObjectResponse.builder()
+                    .eTag("tag")
+                    .build()
+            )
+            .attemptsExecuted(1)
+            .build()
+        val putObjectRequestSlot = slot<PutObjectRequest>()
+        val waitObjectRequestSlot = slot<HeadObjectRequest>()
+        val requestBodySlot = slot<RequestBody>()
+        val waiter = mockk<S3Waiter>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
+        every { s3Client.waiter() } returns waiter
+        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
+
+        // WHEN
+        awsCloudService.uploadFile(filePath, fileName, file, verified)
+
+        // THEN
+        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
+        assertEquals("$filePath$fileName", putObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+        assertEquals("$filePath$fileName", waitObjectRequestSlot.captured.key())
+        val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
+        val expectedBody = IOUtils.toByteArray(file.inputStream())
+        val actualBody = IOUtils.toByteArray(newStream)
+        assert(Arrays.equals(expectedBody, actualBody))
+    }
+
+    @Test
+    fun `should upload file to unverified folder`() {
+        // GIVEN
+        val verified = false
+        val fileName = "file.name"
+        val filePath = "some/path"
+        val file = File(this.javaClass.classLoader.getResource("inputData/test-file.txt")!!.file)
+        val putObjectResponse = PutObjectResponse.builder()
+            .eTag("tag")
+            .build()
+        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
+            .response(
+                HeadObjectResponse.builder()
+                    .eTag("tag")
+                    .build()
+            )
+            .attemptsExecuted(1)
+            .build()
+        val putObjectRequestSlot = slot<PutObjectRequest>()
+        val waitObjectRequestSlot = slot<HeadObjectRequest>()
+        val requestBodySlot = slot<RequestBody>()
+        val waiter = mockk<S3Waiter>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
+        every { s3Client.waiter() } returns waiter
+        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
+
+        // WHEN
+        awsCloudService.uploadFile(filePath, fileName, file, verified)
+
+        // THEN
+        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
+        assertEquals("$UNVERIFIED_PATH$filePath/$fileName", putObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+        assertEquals("$UNVERIFIED_PATH$filePath/$fileName", waitObjectRequestSlot.captured.key())
+        val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
+        val expectedBody = IOUtils.toByteArray(file.inputStream())
+        val actualBody = IOUtils.toByteArray(newStream)
+        assert(Arrays.equals(expectedBody, actualBody))
+    }
+
+    @Test
+    fun `should upload file with filename from file`() {
+        // GIVEN
+        val verified = true
+        val filePath = "some/path"
+        val file = File(this.javaClass.classLoader.getResource("inputData/test-file.txt")!!.file)
+        val putObjectResponse = PutObjectResponse.builder()
+            .eTag("tag")
+            .build()
+        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
+            .response(
+                HeadObjectResponse.builder()
+                    .eTag("tag")
+                    .build()
+            )
+            .attemptsExecuted(1)
+            .build()
+        val putObjectRequestSlot = slot<PutObjectRequest>()
+        val waitObjectRequestSlot = slot<HeadObjectRequest>()
+        val requestBodySlot = slot<RequestBody>()
+        val waiter = mockk<S3Waiter>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
+        every { s3Client.waiter() } returns waiter
+        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
+
+        // WHEN
+        awsCloudService.uploadFile(filePath, null, file, verified)
+
+        // THEN
+        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
+        assertEquals("$filePath/${file.name}", putObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+        assertEquals("$filePath/${file.name}", waitObjectRequestSlot.captured.key())
+        val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
+        val expectedBody = IOUtils.toByteArray(file.inputStream())
+        val actualBody = IOUtils.toByteArray(newStream)
+        assert(Arrays.equals(expectedBody, actualBody))
+    }
+
+    @Test
+    fun `should upload multipart file to verified folder`() {
+        // GIVEN
+        val verified = true
+        val fileName = "file.name"
+        val filePath = "some/path/"
+        val expectedBody = "some-file-data".toByteArray()
+        val file = MockMultipartFile("mock-file.txt", expectedBody)
+        val putObjectResponse = PutObjectResponse.builder()
+            .eTag("tag")
+            .build()
+        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
+            .response(
+                HeadObjectResponse.builder()
+                    .eTag("tag")
+                    .build()
+            )
+            .attemptsExecuted(1)
+            .build()
+        val putObjectRequestSlot = slot<PutObjectRequest>()
+        val waitObjectRequestSlot = slot<HeadObjectRequest>()
+        val requestBodySlot = slot<RequestBody>()
+        val waiter = mockk<S3Waiter>()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
+        every { s3Client.waiter() } returns waiter
+        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
+
+        // WHEN
+        awsCloudService.uploadFile(filePath, fileName, file, verified)
+
+        // THEN
+        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
+        assertEquals("$filePath$fileName", putObjectRequestSlot.captured.key())
+        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+        assertEquals("$filePath$fileName", waitObjectRequestSlot.captured.key())
+        val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
+        val actualBody = IOUtils.toByteArray(newStream)
+        assert(Arrays.equals(expectedBody, actualBody))
     }
 
     private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Response {
