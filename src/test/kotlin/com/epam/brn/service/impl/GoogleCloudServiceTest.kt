@@ -13,7 +13,10 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.mock.web.MockMultipartFile
+import java.io.File
 
 @ExtendWith(MockKExtension::class)
 class GoogleCloudServiceTest {
@@ -54,6 +57,44 @@ class GoogleCloudServiceTest {
         val expected = listOf("folder0/", "folder2/", "folder2/folder3/", "folder7/")
         // THEN
         Assertions.assertEquals(expected, bucketContent)
+    }
+
+    @Test
+    fun `should throw TODO when call uploadFile with MultipartFile`() {
+        assertThrows<NotImplementedError> {
+            googleCloudService.uploadFile(
+                "picture/",
+                "file.jpg",
+                MockMultipartFile("file.jpg", "data".toByteArray()),
+                false
+            )
+        }
+    }
+
+    @Test
+    fun `should throw TODO when call uploadFile with File`() {
+        assertThrows<NotImplementedError> {
+            googleCloudService.uploadFile(
+                "picture/",
+                "file.jpg",
+                File("file.jpj"),
+                false
+            )
+        }
+    }
+
+    @Test
+    fun `should throw TODO when call isFolderExists`() {
+        assertThrows<NotImplementedError> {
+            googleCloudService.isFolderExists("folder/")
+        }
+    }
+
+    @Test
+    fun `should throw TODO when call createFolder`() {
+        assertThrows<NotImplementedError> {
+            googleCloudService.createFolder("folder/")
+        }
     }
 
     private fun mockBlob(fileName: String): Blob {
