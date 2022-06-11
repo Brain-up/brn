@@ -80,6 +80,10 @@ class AwsConfig(
             } catch (ex: IOException) {
                 log.info("Could not load aws properties from path $credentialsPath")
             }
+            if (accessKeyId.isNullOrEmpty() || secretAccessKey.isNullOrEmpty()) {
+                accessKeyId = "UNKNOWN"
+                secretAccessKey = "UNKNOWN"
+            }
         }
     }
 
