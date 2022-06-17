@@ -56,6 +56,17 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="listenWordsCount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.ListenWordsCount'
+          | translate
+        }}
+      </th>
+      <td class="name-column" mat-cell *matCellDef="let statistic">
+        <div class="item">{{ statistic.listenWordsCount }}</div>
+      </td>
+    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr

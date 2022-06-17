@@ -5,4 +5,5 @@ export class UserDailyDetailStatistics {
   public doneExercise: number;
   public attempts: number;
   public doneExercisesSuccessfullyFromFirstTime: number;
+  public listenWordsCount: number;
 }

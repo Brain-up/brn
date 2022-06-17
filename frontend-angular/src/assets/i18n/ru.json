@@ -130,7 +130,8 @@
                   "SeriesName": "Имя серии",
                   "DoneExercise": "Сделано упражнений",
                   "Attempts": "Попыток",
-                  "DoneExercisesSuccessfullyFromFirstTime": "Успешно с первого раза"
+                  "DoneExercisesSuccessfullyFromFirstTime": "Успешно с первого раза",
+                  "ListenWordsCount": "Количество прослушанных слов"
                 }
               }
             }

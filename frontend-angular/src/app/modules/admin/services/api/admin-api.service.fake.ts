@@ -18,7 +18,7 @@ import { getRandomString } from '@shared/helpers/get-random-string';
 
 export class AdminApiServiceFake
   implements Pick<AdminApiService,
-    'getUserWeeklyStatistics' | 'getUserYearlyStatistics' | 'getUserDailyDetailStatistics' | 'getUsers'> {
+    'getUserWeeklyStatistics' | 'getUserYearlyStatistics' | 'getUserDailyDetailStatistics' | 'getUsers' | 'getUserDailyDetailStatistics'> {
   private readonly options: IOptions = {};
 
   constructor(o?: IOptions) {
@@ -171,13 +171,15 @@ export class AdminApiServiceFake
       seriesName: 'Слова Королёвой',
       doneExercise: 5,
       attempts: 8,
-      doneExercisesSuccessfullyFromFirstTime: 1
+      doneExercisesSuccessfullyFromFirstTime: 1,
+      listenWordsCount: 10
     });
     response.push({
       seriesName: 'Слова тестовые',
       doneExercise: 50,
       attempts: 50,
-      doneExercisesSuccessfullyFromFirstTime: 50
+      doneExercisesSuccessfullyFromFirstTime: 50,
+      listenWordsCount: 25
     });
 
     return of(

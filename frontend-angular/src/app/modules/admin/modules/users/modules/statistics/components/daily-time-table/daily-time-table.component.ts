@@ -40,6 +40,7 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
     'doneExercise',
     'attempts',
     'doneExercisesSuccessfullyFromFirstTime',
+    'listenWordsCount'
   ];
 
   constructor(
