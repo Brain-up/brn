@@ -2,7 +2,7 @@ import * as dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
 import { Exercise } from '@admin/models/exercise';
 import { GetUsers } from '@admin/models/endpoints.model';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -11,6 +11,7 @@ import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exerci
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { UserMapped, UserWithNoAnalytics } from '@admin/models/user.model';
+import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
 
 @Injectable()
 export class AdminApiService {
@@ -125,5 +126,18 @@ export class AdminApiService {
     return this.httpClient.get('/api/v2/api-docs?group=all', {
       responseType: 'text',
     });
+  }
+
+  public getUserDailyDetailStatistics(
+    userId: number,
+    day: Dayjs
+  ): Observable<UserDailyDetailStatistics[]> {
+    return this.httpClient
+      .get<{ data: UserDailyDetailStatistics[] }>(
+        `/api/v2/admin/study/day?userId=${userId}&day=${day.format(
+          'YYYY-MM-DDTHH:mm:ss',
+        )}`,
+      )
+      .pipe(pluck('data'));
   }
 }

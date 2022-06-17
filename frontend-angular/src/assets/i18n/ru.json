@@ -124,6 +124,14 @@
               "WeekTimeTrack": {
                 "EmptyData": "Нет данных",
                 "Title [month]": "Время ежедневных занятий за <span>{{ month }}</span>"
+              },
+              "DailyTimeTable": {
+                "ColumnsName": {
+                  "SeriesName": "Имя серии",
+                  "DoneExercise": "Сделано упражнений",
+                  "Attempts": "Попыток",
+                  "DoneExercisesSuccessfullyFromFirstTime": "Успешно с первого раза"
+                }
               }
             }
           }
