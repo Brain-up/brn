@@ -16,8 +16,24 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwaggerComponent implements OnDestroy, OnInit {
-  private readonly destroyer$ = new Subject<void>();
   constructor(private readonly adminApiService: AdminApiService) {}
+
+  set swagger(value: string) {
+    this.swaggerUI = SwaggerUI({
+      docExpansion: 'none',
+      domNode: document.getElementById('swagger-ui-item'),
+      layout: 'BaseLayout',
+      spec: JSON.parse(value),
+    });
+  }
+
+  get swagger() {
+    return this.swaggerUI;
+  }
+
+  private readonly destroyer$ = new Subject<void>();
+
+  swaggerUI: any = undefined;
 
   ngOnInit(): void {
     this.adminApiService
@@ -26,20 +42,6 @@ export class SwaggerComponent implements OnDestroy, OnInit {
       .subscribe((swagger) => {
         this.swagger = swagger;
       });
-  }
-
-  _swagger: any = undefined;
-
-  set swagger(value: string) {
-    this._swagger = SwaggerUI({
-      docExpansion: 'none',
-      domNode: document.getElementById('swagger-ui-item'),
-      layout: 'BaseLayout',
-      spec: JSON.parse(value),
-    });
-  }
-  get swagger() {
-    return this._swagger;
   }
 
   public ngOnDestroy(): void {
