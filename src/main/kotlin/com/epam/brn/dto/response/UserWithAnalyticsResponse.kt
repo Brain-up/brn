@@ -19,6 +19,6 @@ data class UserWithAnalyticsResponse(
     var firstDone: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     var lastDone: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     var lastWeek: List<DayStudyStatistic> = emptyList(),
-    var workDayByLastMonth: Int = 2, // todo fill by user
+    var studyDaysInLastMonth: Int = 0,
     var diagnosticProgress: Map<AudiometryType, Boolean> = mapOf(AudiometryType.SIGNALS to true), // todo fill by user
 )

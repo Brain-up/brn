@@ -41,8 +41,15 @@ class UserAnalyticsServiceImpl(
         val startDay = now.with(firstWeekDay, 1L)
         val from = startDay.with(LocalTime.MIN)
         val to = startDay.plusDays(7L).with(LocalTime.MAX)
+        val startOfLastMonth = now.minusMonths(1).withDayOfMonth(1).with(LocalTime.MIN)
+        val endOfLastMonth = now.withDayOfMonth(1).minusDays(1).with(LocalTime.MAX)
 
-        users.onEach { it.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, it.id) }
+        users.onEach {
+            it.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, it.id)
+            it.studyDaysInLastMonth = countWorkDaysForMonth(
+                userDayStatisticService.getStatisticForPeriod(startOfLastMonth, endOfLastMonth, it.id)
+            )
+        }
 
         return users
     }
@@ -80,4 +87,10 @@ class UserAnalyticsServiceImpl(
 
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
+
+    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistic>): Int =
+        dayStudyStatistics
+            .map { it.date }
+            .groupBy { it.dayOfMonth }
+            .keys.size
 }
