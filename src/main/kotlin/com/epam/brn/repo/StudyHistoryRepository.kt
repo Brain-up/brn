@@ -101,7 +101,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     @Deprecated(message = "This is a legacy method. Use findAllByUserAccountIdAndStartTimeBetween instead")
     fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
 
-    fun findAllByUserAccountIdAndStartTimeBetween(
+    fun findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
         userId: Long,
         from: LocalDateTime,
         to: LocalDateTime

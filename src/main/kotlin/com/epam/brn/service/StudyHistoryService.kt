@@ -59,7 +59,7 @@ class StudyHistoryService(
     }
 
     fun getHistories(userId: Long, from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
-        return studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to).map { it.toDto() }
+        return studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, from, to).map { it.toDto() }
     }
 
     fun getMonthHistoriesForCurrentUser(month: Int, year: Int): List<StudyHistoryDto> {

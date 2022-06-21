@@ -73,7 +73,7 @@ internal class UserDayStatisticServiceTest {
         } returns userProgress
         every { studyHistory.executionSeconds } returns exercisingSeconds
         every {
-            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userAccountId, from, to)
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userAccountId, from, to)
         } returns studyHistories
         val expectedStatistic = DayStudyStatistic(
             date = studyHistoryDate,
@@ -92,7 +92,7 @@ internal class UserDayStatisticServiceTest {
     fun `getStatisticForPeriod should return empty list when there are not histories for the period`() {
         // GIVEN
         every {
-            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userAccountId, from, to)
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userAccountId, from, to)
         } returns emptyList()
 
         // WHEN

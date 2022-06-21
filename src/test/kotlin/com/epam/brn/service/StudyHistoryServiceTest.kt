@@ -147,7 +147,7 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val expectedStudyHistory = listOf(studyHistoryMock)
         every { studyHistoryMock.toDto() } returns studyHistoryDtoMock
-        every { studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetween(1L, fromMock, toMock) } returns expectedStudyHistory
+        every { studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(1L, fromMock, toMock) } returns expectedStudyHistory
 
         // WHEN
         val histories = studyHistoryService.getHistories(1L, fromMock, toMock)
