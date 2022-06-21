@@ -67,7 +67,7 @@ class AdminControllerV2(
         @RequestParam(value = "filename", required = false) fileName: String?,
         @RequestParam(value = "file") multipartFile: MultipartFile
     ): ResponseEntity<BaseResponse> {
-        cloudService.uploadFile(path, fileName, multipartFile)
+        cloudService.uploadFile(path, fileName ?: multipartFile.name, multipartFile.inputStream)
         return ResponseEntity(HttpStatus.CREATED)
     }
 }

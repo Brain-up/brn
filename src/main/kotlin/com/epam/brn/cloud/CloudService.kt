@@ -1,7 +1,6 @@
 package com.epam.brn.cloud
 
-import org.springframework.web.multipart.MultipartFile
-import java.io.File
+import java.io.InputStream
 
 interface CloudService {
 
@@ -16,22 +15,12 @@ interface CloudService {
     /**
      * Upload multipart file to cloud storage
      */
-    fun uploadFile(filePath: String, fileName: String?, multipartFile: MultipartFile, isVerified: Boolean = true)
-
-    /**
-     * Upload file to cloud storage
-     */
-    fun uploadFile(filePath: String, fileName: String?, file: File, isVerified: Boolean = true)
+    fun uploadFile(path: String, fileName: String, inputStream: InputStream, isVerified: Boolean = true)
 
     /**
      * Create folder in cloud storage
      */
     fun createFolder(folderPath: String)
-
-    /**
-     * Check if folder exists in cloud storage
-     */
-    fun isFolderExists(folderPath: String): Boolean
 
     /**
      * Returns url to be used by frontend to list bucket contents

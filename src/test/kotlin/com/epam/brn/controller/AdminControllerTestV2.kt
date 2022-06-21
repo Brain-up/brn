@@ -17,7 +17,7 @@ import org.apache.http.HttpStatus
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.mock.web.MockMultipartFile
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -103,15 +103,16 @@ class AdminControllerTestV2 {
         // GIVEN
         val path = "path/folder/"
         val fileName = "audio/ogg"
-        val data = ByteArray(0)
-        val multipartFile = MockMultipartFile("file.ogg", data)
-        every { cloudService.uploadFile(path, fileName, multipartFile) } returns Unit
+        val data = "SOMEDATA".toByteArray().inputStream()
+        val multipartFile = mockk<MultipartFile>()
+        every { multipartFile.inputStream } returns data
+        every { cloudService.uploadFile(path, fileName, multipartFile.inputStream) } returns Unit
 
         // WHEN
         val response = adminController.upload(path, fileName, multipartFile)
 
         // THEN
-        verify(exactly = 1) { cloudService.uploadFile(path, fileName, multipartFile) }
+        verify(exactly = 1) { cloudService.uploadFile(path, fileName, multipartFile.inputStream) }
         assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
         assertNull(response.body)
     }

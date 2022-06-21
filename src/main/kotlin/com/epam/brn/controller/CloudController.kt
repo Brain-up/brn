@@ -55,14 +55,12 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     fun listBucket(): ResponseEntity<BaseSingleObjectResponse> =
         ResponseEntity.ok(BaseSingleObjectResponse(cloudService.getListFolder()))
 
-    @PostMapping(value = ["/upload/unverified"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
+    @PostMapping(value = ["/upload"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
     @ApiOperation("Load unverified files to cloud storage")
     fun loadUnverifiedPicture(
-        @RequestParam(value = "path") path: String,
-        @RequestParam(value = "filename", required = false) fileName: String?,
         @RequestParam(value = "file") multipartFile: MultipartFile
     ): ResponseEntity<BaseResponse> {
-        cloudService.uploadFile(path, fileName, multipartFile, false)
+        cloudService.uploadFile("", multipartFile.name, multipartFile.inputStream, false)
         return ResponseEntity(HttpStatus.CREATED)
     }
 }

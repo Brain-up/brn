@@ -13,14 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
-import java.io.File
 import java.io.InputStream
 import java.io.Serializable
 import javax.crypto.Mac
@@ -57,14 +55,9 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
     override fun uploadForm(filePath: String): Map<String, Any> =
         signature(awsConfig.buildConditions(filePath))
 
-    override fun uploadFile(filePath: String, fileName: String?, multipartFile: MultipartFile, isVerified: Boolean) {
-        val fullFileName = createFullFileName(filePath, fileName ?: multipartFile.originalFilename, isVerified)
-        uploadFile(fullFileName, multipartFile.inputStream)
-    }
-
-    override fun uploadFile(filePath: String, fileName: String?, file: File, isVerified: Boolean) {
-        val fullFileName = createFullFileName(filePath, fileName ?: file.name, isVerified)
-        uploadFile(fullFileName, file.inputStream())
+    override fun uploadFile(path: String, fileName: String, inputStream: InputStream, isVerified: Boolean) {
+        val fullFileName = createFullFileName(path, fileName, isVerified)
+        uploadFile(fullFileName, inputStream)
     }
 
     override fun getListFolder(): List<String> {
@@ -85,20 +78,9 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         log.info("Folder $fullFolderName is ready")
     }
 
-    override fun isFolderExists(folderPath: String): Boolean {
-        val fullFolderName = appendDelimiter(folderPath)
-
-        val request = ListObjectsV2Request.builder()
-            .bucket(awsConfig.bucketName)
-            .prefix(fullFolderName)
-            .build()
-        val result = s3Client.listObjectsV2(request)
-        return result.hasContents()
-    }
-
     private fun createFullFileName(
         path: String,
-        filename: String?,
+        filename: String,
         isVerified: Boolean
     ): String {
         var fullFileName: String = if (!isVerified) {

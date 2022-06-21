@@ -532,22 +532,11 @@ annotationTypes:
             examples:
               example_for_aws_upload_form: !include samples/example_for_aws_upload_form.json
               example_for_google_upload_form: !include samples/example_for_google_upload_form.json
-  /upload/unverified:
     post:
       description: Load unverified files to cloud storage
       body:
         multipart/form-data:
           properties:
-            path:
-              description: "Path to S3 storage file folder"
-              required: true
-              type: string
-              example: "pictures/"
-            filename:
-              description: "Filename"
-              required: false
-              type: string
-              example: "file1.jpg"
             file:
               description: "File content"
               required: true

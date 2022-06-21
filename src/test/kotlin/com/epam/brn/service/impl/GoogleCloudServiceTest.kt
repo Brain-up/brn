@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.mock.web.MockMultipartFile
-import java.io.File
 
 @ExtendWith(MockKExtension::class)
 class GoogleCloudServiceTest {
@@ -65,28 +64,21 @@ class GoogleCloudServiceTest {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
-                MockMultipartFile("file.jpg", "data".toByteArray()),
+                MockMultipartFile("file.jpg", "data".toByteArray()).inputStream,
                 false
             )
         }
     }
 
     @Test
-    fun `should throw TODO when call uploadFile with File`() {
+    fun `should throw TODO when call uploadFile on GoogleCloudService`() {
         assertThrows<NotImplementedError> {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
-                File("file.jpj"),
+                "filedata".toByteArray().inputStream(),
                 false
             )
-        }
-    }
-
-    @Test
-    fun `should throw TODO when call isFolderExists`() {
-        assertThrows<NotImplementedError> {
-            googleCloudService.isFolderExists("folder/")
         }
     }
 

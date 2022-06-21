@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.mock.web.MockMultipartFile
 import org.springframework.util.ReflectionUtils
 import software.amazon.awssdk.core.internal.waiters.DefaultWaiterResponse
 import software.amazon.awssdk.core.sync.RequestBody
@@ -26,7 +25,6 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectResponse
-import software.amazon.awssdk.services.s3.model.S3Object
 import software.amazon.awssdk.services.s3.waiters.S3Waiter
 import java.io.File
 import java.util.Arrays
@@ -271,61 +269,6 @@ class AwsCloudServiceTest {
     }
 
     @Test
-    fun `should return true when folder is exist`() {
-        // GIVEN
-        val folderPath = "new-folder/"
-        val listObjectsV2Response = ListObjectsV2Response.builder()
-            .contents(S3Object.builder().build())
-            .build()
-        val listObjectsV2RequestSlot = slot<ListObjectsV2Request>()
-        every { awsConfig.bucketName } returns BUCKET
-        every { s3Client.listObjectsV2(capture(listObjectsV2RequestSlot)) } returns listObjectsV2Response
-
-        // WHEN
-        awsCloudService.isFolderExists(folderPath)
-
-        // THEN
-        assertEquals(folderPath, listObjectsV2RequestSlot.captured.prefix())
-        assertEquals(BUCKET, listObjectsV2RequestSlot.captured.bucket())
-    }
-
-    @Test
-    fun `should return true when folder is exist and folder name without delimiter`() {
-        // GIVEN
-        val folderPath = "new-folder"
-        val listObjectsV2Response = ListObjectsV2Response.builder()
-            .contents(S3Object.builder().build())
-            .build()
-        val listObjectsV2RequestSlot = slot<ListObjectsV2Request>()
-        every { awsConfig.bucketName } returns BUCKET
-        every { s3Client.listObjectsV2(capture(listObjectsV2RequestSlot)) } returns listObjectsV2Response
-
-        // WHEN
-        awsCloudService.isFolderExists(folderPath)
-
-        // THEN
-        assertEquals("$folderPath/", listObjectsV2RequestSlot.captured.prefix())
-        assertEquals(BUCKET, listObjectsV2RequestSlot.captured.bucket())
-    }
-
-    @Test
-    fun `should return false when folder is not exist`() {
-        // GIVEN
-        val folderPath = "new-folder/"
-        val listObjectsV2Response = ListObjectsV2Response.builder().build()
-        val listObjectsV2RequestSlot = slot<ListObjectsV2Request>()
-        every { awsConfig.bucketName } returns BUCKET
-        every { s3Client.listObjectsV2(capture(listObjectsV2RequestSlot)) } returns listObjectsV2Response
-
-        // WHEN
-        awsCloudService.isFolderExists(folderPath)
-
-        // THEN
-        assertEquals(folderPath, listObjectsV2RequestSlot.captured.prefix())
-        assertEquals(BUCKET, listObjectsV2RequestSlot.captured.bucket())
-    }
-
-    @Test
     fun `should return bucket url`() {
         // GIVEN
         val bucketUrl = "bucket-url"
@@ -379,7 +322,7 @@ class AwsCloudServiceTest {
         every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
 
         // WHEN
-        awsCloudService.uploadFile(filePath, fileName, file, verified)
+        awsCloudService.uploadFile(filePath, fileName, file.inputStream(), verified)
 
         // THEN
         assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
@@ -420,7 +363,7 @@ class AwsCloudServiceTest {
         every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
 
         // WHEN
-        awsCloudService.uploadFile(filePath, fileName, file, verified)
+        awsCloudService.uploadFile(filePath, fileName, file.inputStream(), verified)
 
         // THEN
         assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
@@ -429,87 +372,6 @@ class AwsCloudServiceTest {
         assertEquals("$UNVERIFIED_PATH$filePath/$fileName", waitObjectRequestSlot.captured.key())
         val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
         val expectedBody = IOUtils.toByteArray(file.inputStream())
-        val actualBody = IOUtils.toByteArray(newStream)
-        assert(Arrays.equals(expectedBody, actualBody))
-    }
-
-    @Test
-    fun `should upload file with filename from file`() {
-        // GIVEN
-        val verified = true
-        val filePath = "some/path"
-        val file = File(this.javaClass.classLoader.getResource("inputData/test-file.txt")!!.file)
-        val putObjectResponse = PutObjectResponse.builder()
-            .eTag("tag")
-            .build()
-        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
-            .response(
-                HeadObjectResponse.builder()
-                    .eTag("tag")
-                    .build()
-            )
-            .attemptsExecuted(1)
-            .build()
-        val putObjectRequestSlot = slot<PutObjectRequest>()
-        val waitObjectRequestSlot = slot<HeadObjectRequest>()
-        val requestBodySlot = slot<RequestBody>()
-        val waiter = mockk<S3Waiter>()
-        every { awsConfig.bucketName } returns BUCKET
-        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
-        every { s3Client.waiter() } returns waiter
-        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
-
-        // WHEN
-        awsCloudService.uploadFile(filePath, null, file, verified)
-
-        // THEN
-        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath/${file.name}", putObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath/${file.name}", waitObjectRequestSlot.captured.key())
-        val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
-        val expectedBody = IOUtils.toByteArray(file.inputStream())
-        val actualBody = IOUtils.toByteArray(newStream)
-        assert(Arrays.equals(expectedBody, actualBody))
-    }
-
-    @Test
-    fun `should upload multipart file to verified folder`() {
-        // GIVEN
-        val verified = true
-        val fileName = "file.name"
-        val filePath = "some/path/"
-        val expectedBody = "some-file-data".toByteArray()
-        val file = MockMultipartFile("mock-file.txt", expectedBody)
-        val putObjectResponse = PutObjectResponse.builder()
-            .eTag("tag")
-            .build()
-        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
-            .response(
-                HeadObjectResponse.builder()
-                    .eTag("tag")
-                    .build()
-            )
-            .attemptsExecuted(1)
-            .build()
-        val putObjectRequestSlot = slot<PutObjectRequest>()
-        val waitObjectRequestSlot = slot<HeadObjectRequest>()
-        val requestBodySlot = slot<RequestBody>()
-        val waiter = mockk<S3Waiter>()
-        every { awsConfig.bucketName } returns BUCKET
-        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
-        every { s3Client.waiter() } returns waiter
-        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
-
-        // WHEN
-        awsCloudService.uploadFile(filePath, fileName, file, verified)
-
-        // THEN
-        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath$fileName", putObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath$fileName", waitObjectRequestSlot.captured.key())
-        val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
         val actualBody = IOUtils.toByteArray(newStream)
         assert(Arrays.equals(expectedBody, actualBody))
     }

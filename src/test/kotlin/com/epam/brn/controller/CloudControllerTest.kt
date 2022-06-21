@@ -5,15 +5,13 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import org.apache.http.HttpStatus
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
@@ -93,19 +91,19 @@ internal class CloudControllerTest {
     fun `loadUnverifiedPicture should call cloud service upload file and return status OK`() {
 
         // GIVEN
-        val path = "path/folder/"
-        val fileName = "audio/ogg"
-        val data = ByteArray(0)
-        val multipartFile = MockMultipartFile("file.ogg", data)
-        every { cloudService.uploadFile(path, fileName, multipartFile, false) } returns Unit
+        val path = ""
+        val data = "SOMEDATA".toByteArray().inputStream()
+        val multipartFile = mockk <MultipartFile>()
+        val fileName = "filename.png"
+        every { multipartFile.name } returns fileName
+        every { multipartFile.inputStream } returns data
+        every { cloudService.uploadFile(path, fileName, data, false) } returns Unit
 
         // WHEN
-        val response = cloudController.loadUnverifiedPicture(path, fileName, multipartFile)
+        val response = cloudController.loadUnverifiedPicture(multipartFile)
 
         // THEN
         assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
-        verify(exactly = 1) { cloudService.uploadFile(path, fileName, multipartFile, false) }
-        verify(exactly = 0) { cloudService.uploadFile(any(), any(), any<MultipartFile>(), true) }
-        verify(exactly = 0) { cloudService.uploadFile(any(), any(), any<File>(), true) }
+        verify(exactly = 1) { cloudService.uploadFile(path, fileName, data, false) }
     }
 }

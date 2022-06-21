@@ -89,7 +89,7 @@ class CloudControllerAwsIT {
             fileData.toByteArray()
         )
         val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/cloud/upload/unverified")
+            MockMvcRequestBuilders.multipart("/cloud/upload")
                 .file(file)
                 .param("path", filePath)
                 .param("filename", fileName)

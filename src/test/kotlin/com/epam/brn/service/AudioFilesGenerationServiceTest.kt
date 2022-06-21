@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.cloud.CloudService
+import com.epam.brn.cloud.AwsCloudService
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice
@@ -15,9 +15,9 @@ import org.amshove.kluent.internal.assertSame
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-
 import org.springframework.test.util.ReflectionTestUtils
 import java.io.File
+import java.nio.file.Files
 
 @ExtendWith(MockKExtension::class)
 internal class AudioFilesGenerationServiceTest {
@@ -32,7 +32,7 @@ internal class AudioFilesGenerationServiceTest {
     lateinit var yandexSpeechKitService: YandexSpeechKitService
 
     @MockK
-    private lateinit var cloudService: CloudService
+    private lateinit var awsCloudService: AwsCloudService
 
     @Test
     fun `should process file`() {
@@ -47,26 +47,27 @@ internal class AudioFilesGenerationServiceTest {
         // THEN
         assertSame(fileMock, actualResult)
         verify(exactly = 0) { wordsService.getSubPathForWord(audioFileMetaData) }
-        verify(exactly = 0) { cloudService.uploadFile(any(), any(), fileMock) }
+        verify(exactly = 0) { awsCloudService.uploadFile(any(), any(), any()) }
     }
 
     @Test
     fun `should process file and save into cloud storage`() {
         // GIVEN
-        val fileMock = mockk<File>()
+        val createTempFile = Files.createTempFile("", "")
+        val file = createTempFile.toFile()
+        file.writeBytes("SOMEDATA".toByteArray())
         val audioFileMetaData = AudioFileMetaData("word", "ru-ru", Voice.FILIPP.name)
-        every { yandexSpeechKitService.generateAudioOggFile(audioFileMetaData) } returns fileMock
-        every { wordsService.getSubPathForWord(audioFileMetaData) } returns "/audio/${audioFileMetaData.locale}/${audioFileMetaData.voice.toLowerCase()}/${audioFileMetaData.speedFloat}"
-        every { cloudService.uploadFile(any(), any(), fileMock) } returns Unit
-        every { fileMock.name } returns "filename.ogg"
+        every { awsCloudService.uploadFile(any(), any(), any()) } returns Unit
+        every { yandexSpeechKitService.generateAudioOggFile(audioFileMetaData) } returns file
+        every { wordsService.getSubPathForWord(audioFileMetaData) } returns "/audio/${audioFileMetaData.locale}/${audioFileMetaData.voice.lowercase()}/${audioFileMetaData.speedFloat}"
         audioFilesGenerationService.withSavingToS3 = true
         // WHEN
         val actualResult = audioFilesGenerationService.processWord(audioFileMetaData)
 
         // THEN
-        assertSame(fileMock, actualResult)
+        assertSame(file, actualResult)
         verify(exactly = 1) { wordsService.getSubPathForWord(audioFileMetaData) }
-        verify(exactly = 1) { cloudService.uploadFile(any(), any(), fileMock) }
+        verify(exactly = 1) { awsCloudService.uploadFile(any(), any(), any()) }
     }
 
     @Test
