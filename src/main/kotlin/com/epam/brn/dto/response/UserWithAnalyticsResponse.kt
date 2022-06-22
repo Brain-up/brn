@@ -5,7 +5,6 @@ import com.epam.brn.enums.AudiometryType
 import com.epam.brn.model.Gender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserWithAnalyticsResponse(
@@ -16,9 +15,9 @@ data class UserWithAnalyticsResponse(
     val bornYear: Int?,
     val gender: Gender?,
     var active: Boolean = true,
-    var firstDone: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
-    var lastDone: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+    var firstDone: LocalDateTime? = null, // generally first done exercise
+    var lastDone: LocalDateTime? = null, // generally last done exercise
     var lastWeek: List<DayStudyStatistic> = emptyList(),
-    var studyDaysInLastMonth: Int = 0,
+    var studyDaysInLastMonth: Int = 0, // amount of days in last month when user made any exercises
     var diagnosticProgress: Map<AudiometryType, Boolean> = mapOf(AudiometryType.SIGNALS to true), // todo fill by user
 )
