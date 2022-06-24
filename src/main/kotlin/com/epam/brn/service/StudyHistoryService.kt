@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
@@ -60,6 +61,21 @@ class StudyHistoryService(
 
     fun getHistories(userId: Long, from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
         return studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, from, to).map { it.toDto() }
+    }
+
+    fun getUserDailyStatistics(day: LocalDateTime, userId: Long? = null): List<UserDailyDetailStatisticsDto> {
+        val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
+        val startDay = day.truncatedTo(ChronoUnit.DAYS)
+        val endDay = startDay.plusDays(1).minusNanos(1)
+        return studyHistoryRepository.getDailyStatistics(tempUserId!!, startDay, endDay).map {
+            UserDailyDetailStatisticsDto(
+                it.seriesName,
+                it.doneExercises ?: 0,
+                it.attempts ?: 0,
+                it.doneExercisesSuccessfullyFromFirstTime ?: 0,
+                it.listenWordsCount ?: 0
+            )
+        }
     }
 
     fun getMonthHistoriesForCurrentUser(month: Int, year: Int): List<StudyHistoryDto> {

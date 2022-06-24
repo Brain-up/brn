@@ -2,10 +2,12 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Gender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
+import com.epam.brn.model.UserDailyDetailStatisticsProjection
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import io.kotest.matchers.shouldBe
@@ -14,11 +16,14 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 import java.util.Optional
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryServiceTest {
@@ -185,5 +190,57 @@ internal class StudyHistoryServiceTest {
         // THEN
         val expectedStudyHistoryDto = expectedStudyHistory.map { it.toDto() }
         histories shouldBe expectedStudyHistoryDto
+    }
+
+    @Test
+    fun `getDailyStatistics should return statistic for day`() {
+        // GIVEN
+        val userId = 1L
+        val day = LocalDateTime.now()
+        val seriesName = "seriesName"
+        val doneExercises = 4
+        val attempts = 1
+        val doneExercisesSuccessfullyFromFirstTime = 2
+        val listenWordsCount = 15
+
+        val userDailyDetailStatisticsProjection = mockk<UserDailyDetailStatisticsProjection>()
+        every { userDailyDetailStatisticsProjection.seriesName } returns seriesName
+        every { userDailyDetailStatisticsProjection.doneExercises } returns doneExercises
+        every { userDailyDetailStatisticsProjection.attempts } returns attempts
+        every { userDailyDetailStatisticsProjection.doneExercisesSuccessfullyFromFirstTime } returns doneExercisesSuccessfullyFromFirstTime
+        every { userDailyDetailStatisticsProjection.listenWordsCount } returns listenWordsCount
+        val userDailyDetailStatistics = listOf(userDailyDetailStatisticsProjection)
+        every {
+            studyHistoryRepositoryMock.getDailyStatistics(userId, any(), any())
+        } returns userDailyDetailStatistics
+
+        val expectedStatistic = UserDailyDetailStatisticsDto(
+            seriesName = seriesName,
+            doneExercises = doneExercises,
+            attempts = attempts,
+            doneExercisesSuccessfullyFromFirstTime = doneExercisesSuccessfullyFromFirstTime,
+            listenWordsCount = listenWordsCount,
+        )
+
+        // WHEN
+        val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(day, userId)
+        val statistic = statisticsForPeriod.first()
+
+        // THEN
+        assertEquals(expectedStatistic, statistic)
+    }
+
+    @Test
+    fun `getDailyStatistics should return empty list when there are not study histories for the day`() {
+        // GIVEN
+        val userId = 1L
+        val day = LocalDateTime.now()
+        every { studyHistoryRepositoryMock.getDailyStatistics(userId, any(), any()) } returns emptyList()
+
+        // WHEN
+        val statisticForPeriod = studyHistoryService.getUserDailyStatistics(day, userId)
+
+        // THEN
+        assertTrue(statisticForPeriod.isEmpty())
     }
 }

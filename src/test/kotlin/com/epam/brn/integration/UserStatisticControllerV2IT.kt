@@ -3,7 +3,9 @@ package com.epam.brn.integration
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.fasterxml.jackson.core.type.TypeReference
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -21,6 +23,7 @@ class UserStatisticControllerV2IT : BaseIT() {
     private val baseUrl = "/v2/statistics"
     private val exercisingYear = 2020
     private val exercisingMonth = 11
+    private val dayParamName = "day"
     private val fromParamName = "from"
     private val toParameterName = "to"
 
@@ -93,5 +96,62 @@ class UserStatisticControllerV2IT : BaseIT() {
         Assertions.assertEquals(exercisingMonth, monthStatistic.date.monthValue)
         assertNotNull(monthStatistic.exercisingTimeSeconds)
         assertNotNull(monthStatistic.progress)
+    }
+
+    @Test
+    fun `should return user daily details statistic`() {
+        // GIVEN
+        val seriesName1 = "seriesName1"
+        val seriesName2 = "seriesName2"
+        val user = insertDefaultUser()
+        val series1 = insertDefaultSeries(seriesName1)
+        val subGroup1 = insertDefaultSubGroup(series1, 0)
+        val subGroup2 = insertDefaultSubGroup(series1, 1)
+        val series2 = insertDefaultSeries(seriesName2)
+        val subGroup3 = insertDefaultSubGroup(series2, 0)
+
+        val exercise1 = insertDefaultExercise(subGroup1, "exercise1")
+        val exercise2 = insertDefaultExercise(subGroup1, "exercise2")
+        val exercise3 = insertDefaultExercise(subGroup2, "exercise3")
+        val exercise4 = insertDefaultExercise(subGroup3, "exercise4")
+
+        insertDefaultStudyHistory(user, exercise1, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 10, 0), 25, 2, 0, 0)
+        insertDefaultStudyHistory(user, exercise2, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 11, 0), 25, 4, 1, 1)
+        insertDefaultStudyHistory(user, exercise3, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 14, 0), 25, 3, 0, 1)
+        insertDefaultStudyHistory(user, exercise3, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 15, 0), 25, 3, 0, 0)
+        insertDefaultStudyHistory(user, exercise4, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 16, 0), 30, 5, 5, 5)
+        insertDefaultStudyHistory(user, exercise3, LocalDateTime.of(exercisingYear, exercisingMonth, 2, 15, 0), 25, 3, 0, 0)
+        insertDefaultStudyHistory(user, exercise1, LocalDateTime.of(exercisingYear, exercisingMonth, 3, 13, 0), 5, 2, 1, 1)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUrl/study/day")
+                .param(dayParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = objectMapper.readValue(response, BaseSingleObjectResponse::class.java).data
+        val resultStatistic: List<UserDailyDetailStatisticsDto> =
+            objectMapper.readValue(
+                objectMapper.writeValueAsString(data),
+                object : TypeReference<List<UserDailyDetailStatisticsDto>>() {}
+            )
+
+        // THEN
+        resultStatistic.size shouldBe 2
+        val userDailyDetailStatisticsDto1 = resultStatistic[0]
+        val userDailyDetailStatisticsDto2 = resultStatistic[1]
+        userDailyDetailStatisticsDto1.seriesName shouldBe seriesName1
+        userDailyDetailStatisticsDto1.doneExercises shouldBe 3
+        userDailyDetailStatisticsDto1.attempts shouldBe 2
+        userDailyDetailStatisticsDto1.doneExercisesSuccessfullyFromFirstTime shouldBe 2
+        userDailyDetailStatisticsDto1.listenWordsCount shouldBe 9
+
+        userDailyDetailStatisticsDto2.seriesName shouldBe seriesName2
+        userDailyDetailStatisticsDto2.doneExercises shouldBe 1
+        userDailyDetailStatisticsDto2.attempts shouldBe 5
+        userDailyDetailStatisticsDto2.doneExercisesSuccessfullyFromFirstTime shouldBe 1
+        userDailyDetailStatisticsDto2.listenWordsCount shouldBe 5
     }
 }

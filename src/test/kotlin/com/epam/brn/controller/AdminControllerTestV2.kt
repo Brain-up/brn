@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.kotest.matchers.shouldBe
@@ -87,5 +88,22 @@ class AdminControllerTestV2 {
         verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(date, date, userId) }
         userYearlyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
         userYearlyStatistic.body!!.data shouldBe listOf(monthStudyStatistic)
+    }
+
+    @Test
+    fun `getUserWeeklyStatistic should return daily details statistic`() {
+        // GIVEN
+        val userId = 1L
+        val date = LocalDateTime.now()
+        val userDailyDetailStatisticsDto = mockk<UserDailyDetailStatisticsDto>()
+        every { studyHistoryService.getUserDailyStatistics(date, userId) } returns listOf(userDailyDetailStatisticsDto)
+
+        // WHEN
+        val userWeeklyStatistic = adminController.getUserDailyDetailsStatistics(date, userId)
+
+        // THEN
+        verify(exactly = 1) { studyHistoryService.getUserDailyStatistics(date, userId) }
+        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userWeeklyStatistic.body!!.data shouldBe listOf(userDailyDetailStatisticsDto)
     }
 }
