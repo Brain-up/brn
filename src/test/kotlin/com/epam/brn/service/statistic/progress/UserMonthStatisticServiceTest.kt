@@ -42,6 +42,9 @@ internal class UserMonthStatisticServiceTest {
     private lateinit var studyHistorySecond: StudyHistory
 
     @MockK
+    private lateinit var studyHistoryThird: StudyHistory
+
+    @MockK
     private lateinit var progressStatusManager: ProgressStatusManager<List<StudyHistory>>
 
     private val month: Int = 2
@@ -84,7 +87,7 @@ internal class UserMonthStatisticServiceTest {
         val expectedStatistic = MonthStudyStatistic(
             date = studyHistory.startTime,
             exercisingTimeSeconds = executionSeconds * 2,
-            exercisingDays = 2,
+            exercisingDays = 1,
             progress = progress
         )
 
@@ -105,6 +108,10 @@ internal class UserMonthStatisticServiceTest {
         // GIVEN
         every { studyHistorySecond.startTime } returns secondStudyHistoryDate
         every { studyHistorySecond.executionSeconds } returns executionSeconds
+
+        every { studyHistoryThird.startTime } returns secondStudyHistoryDate
+        every { studyHistoryThird.executionSeconds } returns executionSeconds
+
         every { progressStatusManager.getStatus(UserExercisingPeriod.WEEK, listOf(studyHistory)) } returns progress
         every {
             progressStatusManager.getStatus(
@@ -133,7 +140,7 @@ internal class UserMonthStatisticServiceTest {
         val statisticForPeriod = userMonthStatisticService.getStatisticForPeriod(from, to)
 
         // THEN
-        assertTrue(statisticForPeriod.size > 1)
+        assertEquals(2, statisticForPeriod.size)
         assertEquals(
             firstExpectedStudyStatistic,
             statisticForPeriod.first { it.date.month == firstExpectedStudyStatistic.date.month }

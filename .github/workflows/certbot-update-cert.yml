@@ -25,5 +25,5 @@ jobs:
         run: |
           docker-compose pull
           docker-compose run --rm certbot renew --allow-subset-of-names
-          docker-compose up -d --no-deps brn_fe_with_tls
+          docker-compose restart brn_fe_with_tls
           docker image prune -af
