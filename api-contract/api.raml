@@ -905,6 +905,41 @@ annotationTypes:
           200:
             body:
               example: !include samples/study_histories_dto_response.json
+    /study/day:
+      get:
+        description: Get user's details daily statistic for the day. Where day is a date in the ISO date time format
+        queryParameters:
+          userId:
+            required: true
+            type: integer
+            format: int64
+            example: 1
+          day:
+            required: true
+            type: datetime-only
+            example: 2000-10-21T15:00:00
+        responses:
+          200:
+            body:
+              example: {
+                data: [
+                  {
+                    seriesName: "Seria 1",
+                    doneExercises: 10,
+                    attempts: 1,
+                    doneExercisesSuccessfullyFromFirstTime: 5,
+                    listenWordsCount: 50
+                  }, {
+                    seriesName: "Seria 2",
+                    doneExercises: 5,
+                    attempts: 0,
+                    doneExercisesSuccessfullyFromFirstTime: 5,
+                    listenWordsCount: 25
+                  }
+                ],
+                errors: [ ],
+                meta: [ ]
+              }
     /study/week:
       get:
         description: Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format

@@ -3,6 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.exception.EntityNotFoundException
+import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.springframework.stereotype.Service
@@ -67,15 +68,14 @@ class StudyHistoryService(
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
         val startDay = day.truncatedTo(ChronoUnit.DAYS)
         val endDay = startDay.plusDays(1).minusNanos(1)
-        return studyHistoryRepository.getDailyStatistics(tempUserId!!, startDay, endDay).map {
-            UserDailyDetailStatisticsDto(
-                it.seriesName,
-                it.doneExercises ?: 0,
-                it.attempts ?: 0,
-                it.doneExercisesSuccessfullyFromFirstTime ?: 0,
-                it.listenWordsCount ?: 0
+        val statistics =
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
+                tempUserId!!,
+                startDay,
+                endDay
             )
-        }
+
+        return calculateUserDailyDetailStatistics(statistics)
     }
 
     fun getMonthHistoriesForCurrentUser(month: Int, year: Int): List<StudyHistoryDto> {
@@ -90,5 +90,52 @@ class StudyHistoryService(
 
     fun isUserHasStatistics(userId: Long): Boolean {
         return studyHistoryRepository.isUserHasStatistics(userId)
+    }
+
+    private fun calculateUserDailyDetailStatistics(studyHistories: List<StudyHistory>): MutableList<UserDailyDetailStatisticsDto> {
+        val seriesIdToIndex = mutableMapOf<Long?, Int>()
+        val exerciseIdToIndex = mutableMapOf<Long?, Int>()
+        val repeatedExerciseIdToIndex = mutableSetOf<Long?>()
+        val result = mutableListOf<UserDailyDetailStatisticsDto>()
+        var index = 0
+        studyHistories.forEach {
+            val exerciseId = it.exercise.id
+            val exerciseIndex = exerciseIdToIndex[exerciseId]
+            if (exerciseIndex == null) {
+                // New exercise
+                val seriesId = it.exercise.subGroup!!.series.id
+                val seriesIndex = seriesIdToIndex[seriesId]
+                if (seriesIndex == null) {
+                    // New series -> create user statistic and fill it
+                    val userDailyDetailStatisticsDto = UserDailyDetailStatisticsDto(
+                        seriesName = it.exercise.subGroup!!.series.name,
+                        doneExercises = 1,
+                        attempts = it.replaysCount,
+                        doneExercisesSuccessfullyFromFirstTime = 1,
+                        listenWordsCount = it.tasksCount.toInt()
+                    )
+                    seriesIdToIndex[seriesId] = index
+                    exerciseIdToIndex[exerciseId] = index
+                    result.add(index++, userDailyDetailStatisticsDto)
+                } else {
+                    // Repeat series -> upgrade count of done exercises, attempts and listen words
+                    val userDailyDetailStatisticsDto = result[seriesIndex]
+                    userDailyDetailStatisticsDto.doneExercisesSuccessfullyFromFirstTime += 1
+                    userDailyDetailStatisticsDto.doneExercises += 1
+                    userDailyDetailStatisticsDto.attempts += it.replaysCount
+                    userDailyDetailStatisticsDto.listenWordsCount += it.tasksCount.toInt()
+                    exerciseIdToIndex[exerciseId] = index - 1
+                }
+            } else {
+                // Repeat exercise -> upgrade count of attempts and clear done exercise from first time
+                val userDailyDetailStatisticsDto = result[exerciseIndex]
+                userDailyDetailStatisticsDto.attempts += it.replaysCount
+                if (!repeatedExerciseIdToIndex.contains(exerciseId)) {
+                    userDailyDetailStatisticsDto.doneExercisesSuccessfullyFromFirstTime -= 1
+                }
+                repeatedExerciseIdToIndex.add(exerciseId)
+            }
+        }
+        return result
     }
 }

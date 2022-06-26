@@ -2,7 +2,6 @@ package com.epam.brn.repo
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.UserDailyDetailStatisticsProjection
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
@@ -101,31 +100,6 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     )
     @Deprecated(message = "This is a legacy method. Use findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime instead")
     fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
-
-    @Query(
-        value =
-            """select
-                s.name as series_name,
-                count(1) as done_exercises,
-                (select count(0) from (
-                        select sh.exercise_id
-                        from study_history sh, exercise e, sub_group sg, series ser
-                        where sh.user_id = :userId and sh.start_time >= :from and sh.start_time <= :to
-                        and sh.exercise_id = e.id and e.sub_group_id = sg.id and sg.exercise_series_id = ser.id and ser.id = s.id
-                        group by sh.exercise_id
-                        having sum(1) = 1) i) as done_exercises_successfully_from_first_time,
-                sum(replays_count) as attempts,
-                sum(t.tasks_count) as listen_words_count
-                from (
-                    select sh.exercise_id, sh.tasks_count, sum(sh.replays_count) replays_count
-                    from study_history sh
-                    where sh.user_id = :userId and sh.start_time >= :from and sh.start_time <= :to
-                    group by sh.exercise_id, sh.tasks_count) t, exercise e, sub_group sg, series s
-                where t.exercise_id = e.id and e.sub_group_id = sg.id and sg.exercise_series_id = s.id
-                group by s.id, s.name """,
-        nativeQuery = true
-    )
-    fun getDailyStatistics(userId: Long, from: LocalDateTime, to: LocalDateTime): List<UserDailyDetailStatisticsProjection>
 
     fun findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
         userId: Long,

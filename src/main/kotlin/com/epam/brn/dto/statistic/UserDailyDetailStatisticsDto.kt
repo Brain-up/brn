@@ -2,13 +2,18 @@ package com.epam.brn.dto.statistic
 
 data class UserDailyDetailStatisticsDto(
 
-    val seriesName: String,
+    /** Name of series */
+    var seriesName: String,
 
-    val doneExercises: Int,
+    /** Count of done exercise. */
+    var doneExercises: Int,
 
-    val attempts: Int,
+    /** Count attempts to done exercise */
+    var attempts: Int,
 
-    val doneExercisesSuccessfullyFromFirstTime: Int,
+    /** Count of success exercise from first time */
+    var doneExercisesSuccessfullyFromFirstTime: Int,
 
-    val listenWordsCount: Int
+    /** Count listened words */
+    var listenWordsCount: Int
 )
