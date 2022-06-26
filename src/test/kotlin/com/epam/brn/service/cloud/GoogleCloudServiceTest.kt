@@ -63,8 +63,7 @@ class GoogleCloudServiceTest {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
-                MockMultipartFile("file.jpg", "data".toByteArray()).inputStream,
-                false
+                MockMultipartFile("file.jpg", "data".toByteArray()).inputStream
             )
         }
     }
@@ -75,8 +74,7 @@ class GoogleCloudServiceTest {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
-                "filedata".toByteArray().inputStream(),
-                false
+                "filedata".toByteArray().inputStream()
             )
         }
     }

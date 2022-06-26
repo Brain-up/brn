@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.cloud.CloudService
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
@@ -9,14 +8,11 @@ import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 
 @RestController
@@ -25,8 +21,7 @@ import java.time.LocalDateTime
 class AdminControllerV2(
     private val studyHistoryService: StudyHistoryService,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
-    private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,
-    private val cloudService: CloudService,
+    private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
 ) {
 
     @GetMapping("/histories")
@@ -58,16 +53,5 @@ class AdminControllerV2(
     ): ResponseEntity<BaseSingleObjectResponse> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to, userId)
         return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
-    }
-
-    @PostMapping("/upload")
-    @ApiOperation("Load verified files to cloud storage")
-    fun upload(
-        @RequestParam(value = "path") path: String,
-        @RequestParam(value = "filename", required = false) fileName: String?,
-        @RequestParam(value = "file") multipartFile: MultipartFile
-    ): ResponseEntity<BaseResponse> {
-        cloudService.uploadFile(path, fileName ?: multipartFile.name, multipartFile.inputStream)
-        return ResponseEntity(HttpStatus.CREATED)
     }
 }

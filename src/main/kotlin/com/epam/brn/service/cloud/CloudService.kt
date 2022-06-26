@@ -15,7 +15,7 @@ interface CloudService {
     /**
      * Upload multipart file to cloud storage
      */
-    fun uploadFile(path: String, fileName: String, inputStream: InputStream, isVerified: Boolean = true)
+    fun uploadFile(path: String, fileName: String, inputStream: InputStream)
 
     /**
      * Create folder in cloud storage
@@ -36,4 +36,9 @@ interface CloudService {
      * Get all folders in cloud storage
      */
     fun getStorageFolders(): List<String>
+
+    /**
+     * Check that file is exist in cloud storage
+     */
+    fun isFileExist(filePath: String, fileName: String): Boolean
 }

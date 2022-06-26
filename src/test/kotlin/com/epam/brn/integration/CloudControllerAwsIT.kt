@@ -1,5 +1,8 @@
 package com.epam.brn.integration
 
+import com.epam.brn.model.Resource
+import com.epam.brn.service.ResourceService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
+private const val WORD = "fileName"
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
@@ -24,6 +29,16 @@ class CloudControllerAwsIT {
 
     @Autowired
     lateinit var mockMvc: MockMvc
+
+    @Autowired
+    lateinit var resourceService: ResourceService
+
+    @BeforeEach
+    fun setup() {
+        if (resourceService.findFirstResourceByWord(WORD) == null) {
+            resourceService.save(Resource(word = WORD, description = "description", wordType = "OBJECT"))
+        }
+    }
 
     @Test
     fun `should get correct signature and policy for S3 upload`() {
@@ -78,25 +93,42 @@ class CloudControllerAwsIT {
     }
 
     @Test
-    fun `should upload file to S3`() {
-        val filePath = "audio/folder"
-        val fileName = "fileName.ogg"
+    fun `should upload allowed file to S3`() {
+        val fileName = "$WORD.png"
         val fileData = "some text"
         val file = MockMultipartFile(
             "file",
-            "file.ogg",
+            fileName,
             MediaType.APPLICATION_OCTET_STREAM_VALUE,
             fileData.toByteArray()
         )
         val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/cloud/upload")
+            MockMvcRequestBuilders.multipart("/cloud/upload/picture")
                 .file(file)
-                .param("path", filePath)
-                .param("filename", fileName)
         )
 
         // THEN
         resultAction
             .andExpect(MockMvcResultMatchers.status().isCreated)
+    }
+
+    @Test
+    fun `should not upload non allowed file by extension file to S3`() {
+        val fileName = "$WORD.not-allowed-ext"
+        val fileData = "some text"
+        val file = MockMultipartFile(
+            "file",
+            fileName,
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            fileData.toByteArray()
+        )
+        val resultAction = mockMvc.perform(
+            MockMvcRequestBuilders.multipart("/cloud/upload/picture")
+                .file(file)
+        )
+
+        // THEN
+        resultAction
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError)
     }
 }

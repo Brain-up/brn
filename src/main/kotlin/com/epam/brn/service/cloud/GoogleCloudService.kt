@@ -47,11 +47,15 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
 
     override fun baseFileUrl(): String = ""
 
-    override fun uploadFile(path: String, fileName: String, inputStream: InputStream, isVerified: Boolean) {
+    override fun uploadFile(path: String, fileName: String, inputStream: InputStream) {
         TODO("Not yet implemented")
     }
 
     override fun createFolder(folderPath: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun isFileExist(filePath: String, fileName: String): Boolean {
         TODO("Not yet implemented")
     }
 }

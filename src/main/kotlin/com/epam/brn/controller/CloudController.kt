@@ -1,8 +1,9 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.cloud.CloudService
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
+import com.epam.brn.service.CloudUploadService
+import com.epam.brn.service.cloud.CloudService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +26,10 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/cloud")
 @Api(value = "/cloud", description = "Contains actions for cloud upload and bucket listing")
 @ConditionalOnProperty(name = ["cloud.provider"])
-class CloudController(@Autowired private val cloudService: CloudService) {
+class CloudController(
+    @Autowired private val cloudService: CloudService,
+    @Autowired private val cloudUploadService: CloudUploadService
+) {
 
     @GetMapping("/upload")
     @ApiOperation("Get cloud upload form")
@@ -55,12 +59,12 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     fun listBucket(): ResponseEntity<BaseSingleObjectResponse> =
         ResponseEntity.ok(BaseSingleObjectResponse(cloudService.getStorageFolders()))
 
-    @PostMapping(value = ["/upload"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
-    @ApiOperation("Load unverified files to cloud storage")
+    @PostMapping(value = ["/upload/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
+    @ApiOperation("Load unverified picture file to cloud storage")
     fun loadUnverifiedPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile
     ): ResponseEntity<BaseResponse> {
-        cloudService.uploadFile("", multipartFile.name, multipartFile.inputStream, false)
+        cloudUploadService.uploadUnverifiedPictureFile(multipartFile)
         return ResponseEntity(HttpStatus.CREATED)
     }
 }

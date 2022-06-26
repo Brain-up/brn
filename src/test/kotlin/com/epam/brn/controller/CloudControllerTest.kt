@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.service.CloudUploadService
 import com.epam.brn.service.cloud.CloudService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -23,6 +24,9 @@ internal class CloudControllerTest {
 
     @MockK
     lateinit var cloudService: CloudService
+
+    @MockK
+    lateinit var cloudUploadService: CloudUploadService
 
     @Test
     fun `should upload signature for client direct`() {
@@ -91,19 +95,18 @@ internal class CloudControllerTest {
     fun `loadUnverifiedPicture should call cloud service upload file and return status OK`() {
 
         // GIVEN
-        val path = ""
         val data = "SOMEDATA".toByteArray().inputStream()
         val multipartFile = mockk <MultipartFile>()
         val fileName = "filename.png"
-        every { multipartFile.name } returns fileName
+        every { multipartFile.originalFilename } returns fileName
         every { multipartFile.inputStream } returns data
-        every { cloudService.uploadFile(path, fileName, data, false) } returns Unit
+        every { cloudUploadService.uploadUnverifiedPictureFile(multipartFile) } returns Unit
 
         // WHEN
         val response = cloudController.loadUnverifiedPicture(multipartFile)
 
         // THEN
         assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
-        verify(exactly = 1) { cloudService.uploadFile(path, fileName, data, false) }
+        verify(exactly = 1) { cloudUploadService.uploadUnverifiedPictureFile(multipartFile) }
     }
 }

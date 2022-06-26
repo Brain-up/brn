@@ -10,10 +10,8 @@ import io.mockk.slot
 import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.util.ReflectionUtils
 import software.amazon.awssdk.core.internal.waiters.DefaultWaiterResponse
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
@@ -74,17 +72,6 @@ class AwsCloudServiceTest {
 
     @MockK
     lateinit var s3Client: S3Client
-
-    @BeforeEach
-    fun init() {
-        val field = AwsCloudService::class.java.getDeclaredField("unverifiedPath")
-        field.isAccessible = true
-        ReflectionUtils.setField(
-            field,
-            awsCloudService,
-            UNVERIFIED_PATH
-        )
-    }
 
     @Test
     fun `should get correct signature for client upload`() {
@@ -294,9 +281,8 @@ class AwsCloudServiceTest {
     }
 
     @Test
-    fun `should upload file to verified folder`() {
+    fun `should upload file to folder`() {
         // GIVEN
-        val verified = true
         val fileName = "file.name"
         val filePath = "some/path/"
         val file = File(this.javaClass.classLoader.getResource("inputData/test-file.txt")!!.file)
@@ -321,54 +307,13 @@ class AwsCloudServiceTest {
         every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
 
         // WHEN
-        awsCloudService.uploadFile(filePath, fileName, file.inputStream(), verified)
+        awsCloudService.uploadFile(filePath, fileName, file.inputStream())
 
         // THEN
         assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
         assertEquals("$filePath$fileName", putObjectRequestSlot.captured.key())
         assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
         assertEquals("$filePath$fileName", waitObjectRequestSlot.captured.key())
-        val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
-        val expectedBody = IOUtils.toByteArray(file.inputStream())
-        val actualBody = IOUtils.toByteArray(newStream)
-        assert(Arrays.equals(expectedBody, actualBody))
-    }
-
-    @Test
-    fun `should upload file to unverified folder`() {
-        // GIVEN
-        val verified = false
-        val fileName = "file.name"
-        val filePath = "some/path"
-        val file = File(this.javaClass.classLoader.getResource("inputData/test-file.txt")!!.file)
-        val putObjectResponse = PutObjectResponse.builder()
-            .eTag("tag")
-            .build()
-        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
-            .response(
-                HeadObjectResponse.builder()
-                    .eTag("tag")
-                    .build()
-            )
-            .attemptsExecuted(1)
-            .build()
-        val putObjectRequestSlot = slot<PutObjectRequest>()
-        val waitObjectRequestSlot = slot<HeadObjectRequest>()
-        val requestBodySlot = slot<RequestBody>()
-        val waiter = mockk<S3Waiter>()
-        every { awsConfig.bucketName } returns BUCKET
-        every { s3Client.putObject(capture(putObjectRequestSlot), capture(requestBodySlot)) } returns putObjectResponse
-        every { s3Client.waiter() } returns waiter
-        every { waiter.waitUntilObjectExists(capture(waitObjectRequestSlot)) } returns waiterResponse
-
-        // WHEN
-        awsCloudService.uploadFile(filePath, fileName, file.inputStream(), verified)
-
-        // THEN
-        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
-        assertEquals("$UNVERIFIED_PATH$filePath/$fileName", putObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
-        assertEquals("$UNVERIFIED_PATH$filePath/$fileName", waitObjectRequestSlot.captured.key())
         val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
         val expectedBody = IOUtils.toByteArray(file.inputStream())
         val actualBody = IOUtils.toByteArray(newStream)

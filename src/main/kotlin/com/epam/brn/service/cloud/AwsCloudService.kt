@@ -10,7 +10,6 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.core.sync.RequestBody
@@ -37,9 +36,6 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     private final val mapperIndented: ObjectWriter
 
-    @Value("\${aws.resources.path.unverified:}")
-    private val unverifiedPath: String = ""
-
     init {
         val indenter = DefaultIndenter().withLinefeed("\r\n")
         val printer = DefaultPrettyPrinter().withObjectIndenter(indenter)
@@ -55,8 +51,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
     override fun uploadForm(filePath: String): Map<String, Any> =
         signature(awsConfig.buildConditions(filePath))
 
-    override fun uploadFile(path: String, fileName: String, inputStream: InputStream, isVerified: Boolean) {
-        val fullFileName = createFullFileName(path, fileName, isVerified)
+    override fun uploadFile(path: String, fileName: String, inputStream: InputStream) {
+        val fullFileName = createFullFileName(path, fileName)
         uploadFile(fullFileName, inputStream)
     }
 
@@ -78,16 +74,22 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         log.info("Folder $fullFolderName is ready")
     }
 
+    override fun isFileExist(filePath: String, fileName: String): Boolean {
+        val fullFileName = createFullFileName(filePath, fileName)
+
+        val request = ListObjectsV2Request.builder()
+            .bucket(awsConfig.bucketName)
+            .prefix(fullFileName)
+            .build()
+        val result = s3Client.listObjectsV2(request)
+        return result.hasContents()
+    }
+
     private fun createFullFileName(
         path: String,
-        filename: String,
-        isVerified: Boolean
+        filename: String
     ): String {
-        var fullFileName: String = if (!isVerified) {
-            "$unverifiedPath$path"
-        } else {
-            path
-        }
+        var fullFileName = path
         if (!StringUtils.endsWith(fullFileName, FOLDER_DELIMITER)) {
             fullFileName += FOLDER_DELIMITER
         }
