@@ -1,6 +1,5 @@
-package com.epam.brn.service.impl
+package com.epam.brn.service.cloud
 
-import com.epam.brn.cloud.AwsCloudService
 import com.epam.brn.config.AwsConfig
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -183,7 +182,7 @@ class AwsCloudServiceTest {
         every { s3Client.listObjectsV2(any<ListObjectsV2Request>()) } returnsMany returnFolders
 
         // WHEN
-        val listBucket = awsCloudService.getListFolder()
+        val listBucket = awsCloudService.getStorageFolders()
 
         // THEN
         val expected: List<String> = listOf(

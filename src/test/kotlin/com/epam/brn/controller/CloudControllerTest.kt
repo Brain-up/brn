@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.cloud.CloudService
+import com.epam.brn.service.cloud.CloudService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -76,13 +76,13 @@ internal class CloudControllerTest {
 
         // GIVEN
         val listBucket = listOf("folderName")
-        every { cloudService.getListFolder() } returns listBucket
+        every { cloudService.getStorageFolders() } returns listBucket
 
         // WHEN
         val actualListBucket = cloudController.listBucket()
 
         // THEN
-        verify(exactly = 1) { cloudService.getListFolder() }
+        verify(exactly = 1) { cloudService.getStorageFolders() }
         assertEquals(HttpStatus.SC_OK, actualListBucket.statusCodeValue)
         assertEquals(listBucket, actualListBucket.body!!.data)
     }

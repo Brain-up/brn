@@ -1,4 +1,4 @@
-package com.epam.brn.cloud
+package com.epam.brn.service.cloud
 
 import com.epam.brn.config.AwsConfig
 import com.fasterxml.jackson.core.util.DefaultIndenter
@@ -60,7 +60,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         uploadFile(fullFileName, inputStream)
     }
 
-    override fun getListFolder(): List<String> {
+    override fun getStorageFolders(): List<String> {
         return getFolders("")
     }
 

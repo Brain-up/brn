@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.cloud.CloudService
+import com.epam.brn.service.cloud.CloudService
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import io.swagger.annotations.Api
@@ -53,7 +53,7 @@ class CloudController(@Autowired private val cloudService: CloudService) {
     @ApiOperation("Get cloud folder structure")
     @Throws(Exception::class)
     fun listBucket(): ResponseEntity<BaseSingleObjectResponse> =
-        ResponseEntity.ok(BaseSingleObjectResponse(cloudService.getListFolder()))
+        ResponseEntity.ok(BaseSingleObjectResponse(cloudService.getStorageFolders()))
 
     @PostMapping(value = ["/upload"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
     @ApiOperation("Load unverified files to cloud storage")

@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.cloud.CloudService
+import com.epam.brn.service.cloud.CloudService
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic

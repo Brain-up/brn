@@ -1,6 +1,5 @@
-package com.epam.brn.service.impl
+package com.epam.brn.service.cloud
 
-import com.epam.brn.cloud.GoogleCloudService
 import com.epam.brn.config.GoogleCloudConfig
 import com.google.api.gax.paging.Page
 import com.google.cloud.storage.Blob
@@ -52,7 +51,7 @@ class GoogleCloudServiceTest {
         every { storage.get(any<String>()) } returns bucket
 
         // WHEN
-        val bucketContent = googleCloudService.getListFolder()
+        val bucketContent = googleCloudService.getStorageFolders()
         val expected = listOf("folder0/", "folder2/", "folder2/folder3/", "folder7/")
         // THEN
         Assertions.assertEquals(expected, bucketContent)

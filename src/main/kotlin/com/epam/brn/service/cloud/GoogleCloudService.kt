@@ -1,4 +1,4 @@
-package com.epam.brn.cloud
+package com.epam.brn.service.cloud
 
 import com.epam.brn.config.GoogleCloudConfig
 import com.google.cloud.storage.BlobId
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) : CloudService {
 
-    override fun getListFolder(): List<String> {
+    override fun getStorageFolders(): List<String> {
         val blobs = cloudConfig.storage!!.get(cloudConfig.bucketName).list()
 
         val folders: MutableSet<String> = TreeSet()
@@ -50,10 +50,6 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
     override fun uploadFile(path: String, fileName: String, inputStream: InputStream, isVerified: Boolean) {
         TODO("Not yet implemented")
     }
-//
-//    override fun uploadFile(filePath: String, fileName: String?, file: File, isVerified: Boolean) {
-//        TODO("Not yet implemented")
-//    }
 
     override fun createFolder(folderPath: String) {
         TODO("Not yet implemented")

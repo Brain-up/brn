@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.cloud.AwsCloudService
+import com.epam.brn.service.cloud.AwsCloudService
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Voice

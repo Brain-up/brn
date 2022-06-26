@@ -1,4 +1,4 @@
-package com.epam.brn.cloud
+package com.epam.brn.service.cloud
 
 import java.io.InputStream
 
@@ -35,5 +35,5 @@ interface CloudService {
     /**
      * Get all folders in cloud storage
      */
-    fun getListFolder(): List<String>
+    fun getStorageFolders(): List<String>
 }
