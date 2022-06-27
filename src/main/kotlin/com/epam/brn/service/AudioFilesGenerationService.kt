@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.config.AwsConfig
+import com.epam.brn.service.cloud.AwsCloudService
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.exception.ConversionOggToMp3Exception
 import kotlinx.coroutines.GlobalScope
@@ -19,9 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @Service
 class AudioFilesGenerationService(
-    @Autowired val wordsService: WordsService,
-    @Autowired val awsConfig: AwsConfig,
-    private val textToSpeechService: TextToSpeechService
+    @Autowired private val wordsService: WordsService,
+    @Autowired(required = false) private val awsCloudService: AwsCloudService?,
+    @Autowired private val textToSpeechService: TextToSpeechService
 ) {
     @Value(value = "\${yandex.folderForFiles}")
     private lateinit var folderForLocalFiles: String
@@ -99,10 +99,9 @@ class AudioFilesGenerationService(
     @Transactional
     fun processWord(audioFileMetaData: AudioFileMetaData): File {
         val fileOgg = textToSpeechService.generateAudioOggFile(audioFileMetaData)
-        if (withSavingToS3) {
-            val subPath = wordsService.getSubPathForWord(audioFileMetaData)
-            awsConfig.amazonS3.putObject(awsConfig.bucketName + subPath, fileOgg.name, fileOgg)
-            log.info("Aws saving `${audioFileMetaData.text}`: ogg audio file `${fileOgg.name}` saved in S3 ${awsConfig.bucketName + subPath + fileOgg.name}")
+        if (withSavingToS3 && awsCloudService != null) {
+            val filePath = wordsService.getSubPathForWord(audioFileMetaData)
+            awsCloudService.uploadFile(filePath, fileOgg.name, fileOgg.inputStream())
         }
         if (withMp3Conversion)
             convertOggFileToMp3(fileOgg, audioFileMetaData.voice)

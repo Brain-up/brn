@@ -1,4 +1,4 @@
-package com.epam.brn.cloud
+package com.epam.brn.service.cloud
 
 import com.epam.brn.config.GoogleCloudConfig
 import com.google.cloud.storage.BlobId
@@ -8,6 +8,7 @@ import com.google.cloud.storage.Storage
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
+import java.io.InputStream
 import java.net.URL
 import java.util.TreeSet
 import java.util.concurrent.TimeUnit
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) : CloudService {
 
-    override fun listBucket(): List<String> {
+    override fun getStorageFolders(): List<String> {
         val blobs = cloudConfig.storage!!.get(cloudConfig.bucketName).list()
 
         val folders: MutableSet<String> = TreeSet()
@@ -45,4 +46,16 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
     override fun bucketUrl(): String = cloudConfig.bucketLink
 
     override fun baseFileUrl(): String = ""
+
+    override fun uploadFile(path: String, fileName: String, inputStream: InputStream) {
+        TODO("Not yet implemented")
+    }
+
+    override fun createFolder(folderPath: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun isFileExist(filePath: String, fileName: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }

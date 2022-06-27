@@ -8,6 +8,8 @@ import java.util.Optional
 @Repository
 interface ResourceRepository : CrudRepository<Resource, Long> {
 
+    fun findByWord(word: String): List<Resource>
+
     fun findByWordLike(word: String): List<Resource>
 
     fun findFirstByWordLike(word: String): Optional<Resource>
