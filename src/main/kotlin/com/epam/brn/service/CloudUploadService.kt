@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.util.unit.DataSize
 import org.springframework.web.multipart.MultipartFile
+import javax.annotation.PostConstruct
 
 @Service
 class CloudUploadService(
@@ -28,7 +29,14 @@ class CloudUploadService(
     @Value("\${brn.resources.unverified-pictures.max-size:}")
     lateinit var pictureMaxSize: DataSize
 
+    lateinit var humanReadablePictureMaxSize: String
+
     private val log = logger()
+
+    @PostConstruct
+    fun init() {
+        humanReadablePictureMaxSize = FileUtils.byteCountToDisplaySize(pictureMaxSize.toBytes())
+    }
 
     fun uploadUnverifiedPictureFile(multipartFile: MultipartFile) {
         val fileName = FilenameUtils.getBaseName(multipartFile.originalFilename)
@@ -39,18 +47,18 @@ class CloudUploadService(
 
         if (!pictureExtensions.contains(fileExtension)) {
             throw IllegalArgumentException("File extension should be one of $pictureExtensions")
-        }
-        if (fileSize > pictureMaxSize.toBytes()) {
-            val maxFileSize = FileUtils.byteCountToDisplaySize(pictureMaxSize.toBytes())
-            throw IllegalArgumentException("File size [$fileSize] should be less than max file size [$maxFileSize]")
-        }
-        resourceService.findFirstResourceByWord(fileName)
-            ?: throw IllegalArgumentException("The world \"$fileName\" is not found in database")
-        if (cloudService.isFileExist(defaultPicturesPath, fileName)) {
-            throw IllegalArgumentException("File \"$fullFileName\" is exist in cloud default path")
-        }
-        if (cloudService.isFileExist(unverifiedPicturesPath, fileName)) {
-            throw IllegalArgumentException("File \"$fullFileName\" is exist in cloud path \"$unverifiedPicturesPath\"")
+        } else if (fileSize > pictureMaxSize.toBytes()) {
+            throw IllegalArgumentException(
+                "File size [$fileSize] should be less than max file size [$humanReadablePictureMaxSize]"
+            )
+        } else {
+            resourceService.findFirstResourceByWord(fileName)
+                ?: throw IllegalArgumentException("The world \"$fileName\" is not found in database")
+            if (cloudService.isFileExist(defaultPicturesPath, fileName)) {
+                throw IllegalArgumentException("File \"$fullFileName\" is exist in cloud default path")
+            } else if (cloudService.isFileExist(unverifiedPicturesPath, fileName)) {
+                throw IllegalArgumentException("File \"$fullFileName\" is exist in cloud path \"$unverifiedPicturesPath\"")
+            }
         }
 
         cloudService.uploadFile(unverifiedPicturesPath, fullFileName, multipartFile.inputStream)

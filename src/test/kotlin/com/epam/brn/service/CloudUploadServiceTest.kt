@@ -20,7 +20,7 @@ import org.springframework.util.unit.DataSize
 import org.springframework.web.multipart.MultipartFile
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("SomeServiceTest test using MockK")
+@DisplayName("CloudUploadServiceTest test using MockK")
 internal class CloudUploadServiceTest {
 
     @InjectMockKs
@@ -43,6 +43,7 @@ internal class CloudUploadServiceTest {
         cloudUploadService.pictureMaxSize = DataSize.ofBytes(maxSize)
         cloudUploadService.defaultPicturesPath = defaultPicturesPath
         cloudUploadService.unverifiedPicturesPath = unverifiedPicturesPath
+        cloudUploadService.init()
     }
 
     @Test
