@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service
 @Service
 class ResourceService(private val resourceRepository: ResourceRepository) {
 
+    fun findFirstResourceByWord(word: String): Resource? {
+        val resources = resourceRepository.findByWord(word)
+        return if (resources.isNotEmpty()) resources.first() else null
+    }
     fun findFirstResourceByWordLike(word: String): Resource? {
         val resources = resourceRepository.findByWordLike(word)
         return if (resources.isNotEmpty()) resources.first() else null

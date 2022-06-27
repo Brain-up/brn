@@ -34,6 +34,12 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("software.amazon.awssdk:bom:2.17.198")
+    }
+}
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -49,7 +55,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
 
-    implementation("com.google.firebase:firebase-admin:7.3.0")
+    implementation("com.google.firebase:firebase-admin:8.1.0")
 
     implementation("com.auth0:java-jwt:3.10.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -62,11 +68,11 @@ dependencies {
     implementation("io.springfox:springfox-swagger-ui:2.10.5")
     implementation("io.springfox:springfox-swagger2:2.9.2")
 
-    implementation("com.amazonaws:aws-java-sdk:1.11.808")
+    implementation("software.amazon.awssdk:s3")
     implementation("com.google.cloud:google-cloud-storage:1.110.0")
 
     implementation("org.json:json:$jsonVersion")
-    implementation("net.bramp.ffmpeg:ffmpeg:0.6.2")
+    implementation("net.bramp.ffmpeg:ffmpeg:0.7.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
@@ -87,6 +93,8 @@ dependencies {
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
     testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:localstack:$testContainersVersion")
+    testImplementation("com.amazonaws:aws-java-sdk:1.11.808")
 }
 
 tasks.withType<KotlinCompile> {
