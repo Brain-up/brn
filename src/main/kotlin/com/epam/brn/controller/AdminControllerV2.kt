@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 class AdminControllerV2(
     private val studyHistoryService: StudyHistoryService,
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
-    private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
+    private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,
 ) {
 
     @GetMapping("/histories")
