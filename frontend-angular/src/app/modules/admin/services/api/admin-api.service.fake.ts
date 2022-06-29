@@ -122,7 +122,7 @@ export class AdminApiServiceFake
           progress: this.getRandomUserExercisingProgressStatusColor(),
         })),
         name,
-        workDayByLastMonth: getRandomIntInclusive(
+        studyDaysInLastMonth: getRandomIntInclusive(
           0,
           dayjs().subtract(1, 'month').daysInMonth(),
         ),

@@ -46,7 +46,7 @@
           "progress": "GREAT"
         }
       ],
-      "workDayByLastMonth": 2,
+      "studyDaysInLastMonth": 2,
       "diagnosticProgress": {
         "SIGNALS": true
       }
@@ -97,7 +97,7 @@
           "progress": "GREAT"
         }
       ],
-      "workDayByLastMonth": 2,
+      "studyDaysInLastMonth": 2,
       "diagnosticProgress": {
         "SIGNALS": true
       }
@@ -148,7 +148,7 @@
           "progress": "GREAT"
         }
       ],
-      "workDayByLastMonth": 2,
+      "studyDaysInLastMonth": 2,
       "diagnosticProgress": {
         "SIGNALS": true
       }
