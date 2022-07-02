@@ -20,7 +20,7 @@ export interface User {
   }[];
   name: string;
   userId: string;
-  workDayByLastMonth: number;
+  studyDaysInLastMonth: number;
 }
 
 export interface UserMapped extends User {
