@@ -12,10 +12,10 @@ module('Unit | Service | study-config', function(hooks) {
 
   test('it toggles image visibility', function(assert) {
     let service = this.owner.lookup('service:study-config');
-    assert(service.showImages).toBe(true);
+    assert.true(service.showImages);
     service.toggleImageVisibility();
-    assert(service.showImages).toBe(false);
+    assert.false(service.showImages);
     service.toggleImageVisibility();
-    assert(service.showImages).toBe(true);
+    assert.true(service.showImages);
   });
 });
