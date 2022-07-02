@@ -27,7 +27,7 @@ import {
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
-  private readonly userId: number;
+  public readonly userId: number;
 
   private statisticsInfoDialogRef: MatDialogRef<
     StatisticsInfoDialogComponent,
@@ -54,7 +54,6 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.getUserInfo();
-    this.getWeekTimeTrackData();
     this.getMonthTimeTrackData();
   }
 
@@ -82,14 +81,12 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   public loadPrevYear(): void {
     this.selectedMonth = this.selectedMonth.subtract(1, 'year');
 
-    this.getWeekTimeTrackData();
     this.getMonthTimeTrackData();
   }
 
   public loadNextYear(): void {
     this.selectedMonth = this.selectedMonth.add(1, 'year');
 
-    this.getWeekTimeTrackData();
     this.getMonthTimeTrackData();
   }
 
@@ -97,7 +94,6 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.selectedMonth = this.selectedMonth.subtract(1, 'month');
 
     this.getWeekTimeTrackData();
-    // this.getHistoriesData();
   }
 
   public loadNextMonth(): void {
@@ -149,10 +145,6 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         const lastMonth = dayjs(
           monthTimeTrackData[monthTimeTrackData.length - 1].date,
         );
-
-        if (lastMonth.month() >= this.selectedMonth.month()) {
-          return;
-        }
 
         this.selectedMonth = lastMonth;
         this.getWeekTimeTrackData();
