@@ -1,6 +1,9 @@
 <SlotTo @selector="#exercise-timer-slot">
   <Timer @hideControls={{this.justEnteredTask}} />
 </SlotTo>
+<SlotTo @selector="#exercise-config-slot">
+  <ExerciseStudyConfig />
+</SlotTo>
 <div class="{{style-namespace "task-player"}} flex flex-1" ...attributes>
 
   {{#let
