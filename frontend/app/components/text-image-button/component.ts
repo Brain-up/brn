@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import ImageLocatorService from 'brn/services/image-locator';
+import StudyConfigService from 'brn/services/study-config';
 
 interface ITextImageButtonArgs {
   pictureFileUrl: string;
@@ -11,8 +12,12 @@ interface ITextImageButtonArgs {
 
 export default class TextImageButton extends Component<ITextImageButtonArgs> {
   @service('image-locator') imageLocator!: ImageLocatorService;
+  @service('study-config') studyConfig!: StudyConfigService;
   declare element: HTMLDivElement;
   shouldLoadSymbol() {
+    if (!this.studyConfig.showImages) {
+      return false;
+    }
     return this.args.word.trim().split(' ').length === 1;
   }
   @action setStyle(element: HTMLDivElement, [pictureFileUrl]: string[]) {

@@ -67,6 +67,7 @@
     "tailwindcss/@fullhuman/postcss-purgecss/purgecss/postcss/nanoid": ">=3.1.31",
     "ember-fast-cli/node-fetch": ">=2.6.7",
     "firebase/@firebase/firestore/node-fetch": ">=2.6.7",
+    "firebase/@firebase/firestore/@grpc/proto-loader/protobufjs": ">=6.11.3",
     "*/@babel/types/lodash": ">=4.17.19",
     "**/glob-parent": ">=5.1.2",
     "**/@embroider/macros": "1.0.0",
