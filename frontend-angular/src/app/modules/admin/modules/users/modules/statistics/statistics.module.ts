@@ -15,6 +15,8 @@ import { StatisticsInfoDialogComponent } from './components/statistics-info-dial
 import { StatisticsRoutingModule } from './statistics-routing.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { WeekTimeTrackComponent } from './components/week-time-track/week-time-track.component';
+import { DailyTimeTableComponent } from './components/daily-time-table/daily-time-table.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { WeekTimeTrackComponent } from './components/week-time-track/week-time-t
     StatisticsComponent,
     StatisticsInfoDialogComponent,
     WeekTimeTrackComponent,
+    DailyTimeTableComponent,
   ],
   imports: [
     BarChartModule,
@@ -35,6 +38,7 @@ import { WeekTimeTrackComponent } from './components/week-time-track/week-time-t
     MatTabsModule,
     StatisticsRoutingModule,
     TranslateModule,
+    MatTableModule,
   ],
   providers: [AdminApiService],
 })

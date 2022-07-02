@@ -3,11 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
+  Output,
   ViewChild,
 } from '@angular/core';
-import { bar, bb, Chart } from 'billboard.js';
+import { bar, bb, Chart, DataItem } from 'billboard.js';
 import { BarDataType } from './models/bar-data';
 import { BarOptionsType } from './models/bar-options';
 
@@ -18,12 +20,6 @@ import { BarOptionsType } from './models/bar-options';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarChartComponent implements AfterViewInit, OnDestroy {
-  private chart: Chart;
-  private chartOptions: BarOptionsType;
-  private chartColumns: BarDataType = [];
-
-  @ViewChild('chart')
-  private chartElemRef: ElementRef;
 
   @Input()
   public set data(data: BarDataType) {
@@ -33,7 +29,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
     this.chartColumns = data;
 
-    this.chart?.load({ columns: this.chartColumns });
+    this.chart?.load({columns: this.chartColumns});
   }
 
   @Input()
@@ -46,19 +42,27 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
     if (this.chartElemRef) {
       this.chart?.destroy();
-      this.buildChart();
+      this.buildChart(this.clickItem);
     }
   }
+  private chart: Chart;
+  private chartOptions: BarOptionsType;
+  private chartColumns: BarDataType = [];
+
+  @ViewChild('chart')
+  private chartElemRef: ElementRef;
+
+  @Output() clickItem = new EventEmitter<DataItem>();
 
   ngAfterViewInit(): void {
-    this.buildChart();
+    this.buildChart(this.clickItem);
   }
 
   ngOnDestroy(): void {
     this.chart?.destroy();
   }
 
-  private buildChart(): void {
+  private buildChart(onClickItem): void {
     this.chart = bb.generate({
       bindto: this.chartElemRef.nativeElement,
 
@@ -67,6 +71,16 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
         columns: this.chartColumns,
         colors: this.chartOptions?.colors,
         labels: this.chartOptions?.labels,
+        onclick(dataItem: DataItem, element: SVGElement) {
+          const childrenElements = element.parentElement.children;
+          const selectedBarClassName = 'selected-bar';
+          for (let i = 0; i < childrenElements.length; i++) {
+            const item = childrenElements.item(i);
+            item.classList.remove(selectedBarClassName);
+          }
+          element.classList.add(selectedBarClassName);
+          onClickItem.emit(dataItem);
+        }
       },
 
       axis: this.chartOptions?.axis,

@@ -1,0 +1,80 @@
+<div class="content">
+  <mat-progress-bar *ngIf="isLoadingWeekTimeTrackData" mode="indeterminate"></mat-progress-bar>
+  <div class="table-content" *ngIf="!isLoadingWeekTimeTrackData">
+    <ng-container *ngTemplateOutlet="dataTemplate"></ng-container>
+  </div>
+</div>
+
+<!-- #region Templates -->
+<ng-template #dataTemplate>
+  <table mat-table [dataSource]="dataSource" [trackBy]="">
+    <ng-container matColumnDef="seriesName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.SeriesName'
+          | translate
+        }}
+      </th>
+      <td class="name-column" mat-cell *matCellDef="let statistic">
+        <div class="item">{{ statistic.seriesName }}</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="doneExercise">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.DoneExercise'
+          | translate
+        }}
+      </th>
+      <td class="name-column" mat-cell *matCellDef="let statistic">
+        <div class="item">{{ statistic.doneExercise }}</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="attempts">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.Attempts'
+          | translate
+        }}
+      </th>
+      <td class="name-column" mat-cell *matCellDef="let statistic">
+        <div class="item">{{ statistic.attempts }}</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="doneExercisesSuccessfullyFromFirstTime">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.DoneExercisesSuccessfullyFromFirstTime'
+          | translate
+        }}
+      </th>
+      <td class="name-column" mat-cell *matCellDef="let statistic">
+        <div class="item">{{ statistic.doneExercisesSuccessfullyFromFirstTime }}</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="listenWordsCount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.ListenWordsCount'
+          | translate
+        }}
+      </th>
+      <td class="name-column" mat-cell *matCellDef="let statistic">
+        <div class="item">{{ statistic.listenWordsCount }}</div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      matRipple
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+  </table>
+</ng-template>
+
+<!-- #endregion -->

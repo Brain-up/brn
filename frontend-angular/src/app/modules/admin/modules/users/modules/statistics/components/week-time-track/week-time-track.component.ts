@@ -7,6 +7,7 @@ import { secondsTo } from '@shared/helpers/seconds-to';
 import * as dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
 import { IWeekChartDataItem } from '../../models/week-char-data-item';
+import { DataItem } from 'billboard.js';
 
 @Component({
   selector: 'app-week-time-track',
@@ -36,7 +37,7 @@ export class WeekTimeTrackComponent {
       },
       y: {
         tick: {
-          text: { show: false },
+          text: {show: false},
           culling: false,
           show: false,
           outer: false,
@@ -77,6 +78,11 @@ export class WeekTimeTrackComponent {
   public selectedMonth: Dayjs;
 
   @Input()
+  public userId: number;
+
+  public selectedDay: Dayjs;
+
+  @Input()
   public set data(data: UserWeeklyStatistics[] | undefined) {
     if (!data) {
       return;
@@ -89,15 +95,15 @@ export class WeekTimeTrackComponent {
       this.chartData.push(
         realRawItem
           ? {
-              x: dayjs(realRawItem.date).format('dd'),
-              y: realRawItem.exercisingTimeSeconds,
-              progress: realRawItem.progress,
-            }
+            x: dayjs(realRawItem.date).format('dd'),
+            y: realRawItem.exercisingTimeSeconds,
+            progress: realRawItem.progress,
+          }
           : {
-              x: dayjs(this.selectedMonth.set('date', dayNumber)).format('dd'),
-              y: 0,
-              progress: 'BAD',
-            }
+            x: dayjs(this.selectedMonth.set('date', dayNumber)).format('dd'),
+            y: 0,
+            progress: 'BAD',
+          }
       );
     }
 
@@ -124,5 +130,11 @@ export class WeekTimeTrackComponent {
 
   public isAllowNextMonth(): boolean {
     return this.selectedMonth.add(1, 'month').month() <= dayjs().month();
+  }
+
+  onClickItem(event: DataItem) {
+    const day = this.selectedMonth.clone();
+    day.set('date', event.index + 1);
+    this.selectedDay = day;
   }
 }

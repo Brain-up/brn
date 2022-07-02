@@ -10,12 +10,20 @@
   <mat-progress-bar *ngIf="isLoading; else dataTemplate" mode="indeterminate"></mat-progress-bar>
 </div>
 
+<div *ngIf="selectedDay">
+  <app-daily-time-table
+    [userId]="userId"
+    [day]="selectedDay"
+  ></app-daily-time-table>
+</div>
+
 <!-- #region Templates -->
 <ng-template #dataTemplate>
   <app-bar-chart
     *ngIf="barData?.length; else emptyDataTemplate"
     [data]="barData"
     [options]="barOptions"
+    (clickItem)="onClickItem($event)"
   ></app-bar-chart>
 </ng-template>
 
