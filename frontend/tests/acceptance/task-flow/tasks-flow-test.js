@@ -123,6 +123,8 @@ module('Acceptance | tasks flow', function (hooks) {
     await customTimeout();
 
     assert.dom('[data-test-right-answer-notification]').exists();
+    await customTimeout();
+
     await waitFor('[data-test-answer-correctness-widget]');
 
     assert

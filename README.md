@@ -41,9 +41,9 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 - TestContainers for running integration tests.
 
 ## HOW TO JOIN?
-You can send an email to [elena_moshnikova@epam.com](mailto:elena_moshnikova@epam.com) 
-or directly to [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
-Our project Telegram group : https://t.me/+R-6ThlxgP5QyZmMy  
+You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) https://t.me/ElenaLovesSpb
+or to project emaeil [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
+Also we have project team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
 Project on epam plus (for epamers): https://plus.epam.com/projects/115
 
 # GETTING STARTED!
@@ -171,16 +171,14 @@ Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number
  2.2 command line: `gradle jacocoTestReport`
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
-### Thanks for support
+### Thanks companies for support
 - EPAM for Jira/Confluence, test instance and Jenkins, for contribution support program.
 - JetBrains for IDEA licenses
 - Selectel for public instance
 - GitHub for code place and actions where we run CICD
 - Yandex for Yandex Speech Kit service and free account to use it
 
-### Thanks for contribution!
-
+### Thanks all volunteerы for contribution!
 
 ### License
 CC0 1.0 Universal https://joinup.ec.europa.eu/licence/cc0-10-universal-cc0-10-public-domain-dedication  
-

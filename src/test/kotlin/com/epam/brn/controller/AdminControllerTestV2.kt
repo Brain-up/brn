@@ -5,6 +5,7 @@ import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.service.StudyHistoryService
+import com.epam.brn.service.cloud.CloudService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -14,11 +15,13 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import org.apache.http.HttpStatus
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
+@DisplayName("AdminControllerTestV2 test using MockK")
 class AdminControllerTestV2 {
 
     @InjectMockKs
@@ -32,6 +35,9 @@ class AdminControllerTestV2 {
 
     @MockK
     private lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
+
+    @MockK
+    private lateinit var cloudService: CloudService
 
     @Test
     fun `getHistories should return histories`() {

@@ -77,7 +77,7 @@
               "CurrentWeek": "Current week",
               "Name": "Name",
               "Progress": "Progress",
-              "WorkingDaysInLastMonth": "Days in last month"
+              "StudyDaysInLastMonth": "Days in last month"
             },
             "NameColumn": {
               "CommonInfo [years, gender]": "{{ years }} years old",
@@ -125,6 +125,15 @@
               "WeekTimeTrack": {
                 "EmptyData": "No data",
                 "Title [month]": "Time of daily activities for <span>{{ month }}</span>"
+              },
+              "DailyTimeTable": {
+                "ColumnsName": {
+                  "SeriesName": "Series name",
+                  "DoneExercise": "Done exercise",
+                  "Attempts": "Attempts",
+                  "DoneExercisesSuccessfullyFromFirstTime": "Success exercises from first time",
+                  "ListenWordsCount": "Listen words count"
+                }
               }
             }
           }

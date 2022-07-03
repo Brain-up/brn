@@ -1,6 +1,5 @@
-package com.epam.brn.service.impl
+package com.epam.brn.service.cloud
 
-import com.epam.brn.cloud.GoogleCloudService
 import com.epam.brn.config.GoogleCloudConfig
 import com.google.api.gax.paging.Page
 import com.google.cloud.storage.Blob
@@ -13,7 +12,9 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.mock.web.MockMultipartFile
 
 @ExtendWith(MockKExtension::class)
 class GoogleCloudServiceTest {
@@ -50,10 +51,39 @@ class GoogleCloudServiceTest {
         every { storage.get(any<String>()) } returns bucket
 
         // WHEN
-        val bucketContent = googleCloudService.listBucket()
+        val bucketContent = googleCloudService.getStorageFolders()
         val expected = listOf("folder0/", "folder2/", "folder2/folder3/", "folder7/")
         // THEN
         Assertions.assertEquals(expected, bucketContent)
+    }
+
+    @Test
+    fun `should throw TODO when call uploadFile with MultipartFile`() {
+        assertThrows<NotImplementedError> {
+            googleCloudService.uploadFile(
+                "picture/",
+                "file.jpg",
+                MockMultipartFile("file.jpg", "data".toByteArray()).inputStream
+            )
+        }
+    }
+
+    @Test
+    fun `should throw TODO when call uploadFile on GoogleCloudService`() {
+        assertThrows<NotImplementedError> {
+            googleCloudService.uploadFile(
+                "picture/",
+                "file.jpg",
+                "filedata".toByteArray().inputStream()
+            )
+        }
+    }
+
+    @Test
+    fun `should throw TODO when call createFolder`() {
+        assertThrows<NotImplementedError> {
+            googleCloudService.createFolder("folder/")
+        }
     }
 
     private fun mockBlob(fileName: String): Blob {

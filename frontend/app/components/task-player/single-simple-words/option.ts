@@ -3,6 +3,10 @@ import { action } from '@ember/object';
 import { MODES } from 'brn/utils/task-modes';
 import { inject as service } from '@ember/service';
 import ImageLocatorService from 'brn/services/image-locator';
+import StudyConfigService from 'brn/services/study-config';
+
+
+
 interface ITaskPlayerSingleWordsOptionComponentArguments {
   mode: keyof typeof MODES;
   disableAnswers: boolean;
@@ -11,8 +15,12 @@ interface ITaskPlayerSingleWordsOptionComponentArguments {
 }
 export default class TaskPlayerSingleWordsOptionComponent extends Component<ITaskPlayerSingleWordsOptionComponentArguments> {
   @service('image-locator') imageLocator!: ImageLocatorService;
+  @service('study-config') studyConfig!: StudyConfigService;
   isClicked = false;
   shouldLoadSymbol(word: string) {
+    if (!this.studyConfig.showImages) { 
+      return false;
+    }
     return word.trim().split(' ').length === 1;
   }
   @action async setDefaultImage(e: Error & { target: HTMLImageElement }) {

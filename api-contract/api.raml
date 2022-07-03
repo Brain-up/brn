@@ -532,6 +532,18 @@ annotationTypes:
             examples:
               example_for_aws_upload_form: !include samples/example_for_aws_upload_form.json
               example_for_google_upload_form: !include samples/example_for_google_upload_form.json
+    /picture:
+      post:
+        description: Load unverified files to cloud storage
+        body:
+          multipart/form-data:
+            properties:
+              file:
+                description: "File content"
+                required: true
+                type: file
+        responses:
+          200:
   /url:
     get:
       description: Get cloud bucket url

@@ -1,16 +1,18 @@
 package com.epam.brn.controller
 
-import com.epam.brn.cloud.CloudService
+import com.epam.brn.service.CloudUploadService
+import com.epam.brn.service.cloud.CloudService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import org.apache.http.HttpStatus
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.web.multipart.MultipartFile
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
@@ -22,6 +24,9 @@ internal class CloudControllerTest {
 
     @MockK
     lateinit var cloudService: CloudService
+
+    @MockK
+    lateinit var cloudUploadService: CloudUploadService
 
     @Test
     fun `should upload signature for client direct`() {
@@ -75,14 +80,33 @@ internal class CloudControllerTest {
 
         // GIVEN
         val listBucket = listOf("folderName")
-        every { cloudService.listBucket() } returns listBucket
+        every { cloudService.getStorageFolders() } returns listBucket
 
         // WHEN
         val actualListBucket = cloudController.listBucket()
 
         // THEN
-        verify(exactly = 1) { cloudService.listBucket() }
+        verify(exactly = 1) { cloudService.getStorageFolders() }
         assertEquals(HttpStatus.SC_OK, actualListBucket.statusCodeValue)
         assertEquals(listBucket, actualListBucket.body!!.data)
+    }
+
+    @Test
+    fun `loadUnverifiedPicture should call cloud service upload file and return status OK`() {
+
+        // GIVEN
+        val data = "SOMEDATA".toByteArray().inputStream()
+        val multipartFile = mockk <MultipartFile>()
+        val fileName = "filename.png"
+        every { multipartFile.originalFilename } returns fileName
+        every { multipartFile.inputStream } returns data
+        every { cloudUploadService.uploadUnverifiedPictureFile(multipartFile) } returns Unit
+
+        // WHEN
+        val response = cloudController.loadUnverifiedPicture(multipartFile)
+
+        // THEN
+        assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
+        verify(exactly = 1) { cloudUploadService.uploadUnverifiedPictureFile(multipartFile) }
     }
 }
