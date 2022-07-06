@@ -3,17 +3,20 @@ package com.epam.brn.dto.statistic
 data class UserDailyDetailStatisticsDto(
 
     /** Name of series */
-    var seriesName: String,
+    val seriesName: String,
 
-    /** Count of done exercise. */
-    var doneExercises: Int,
+    /** Count of all done exercises */
+    val allDoneExercises: Int,
 
-    /** Count attempts to done exercise */
-    var attempts: Int,
+    /** Count of unique done exercises */
+    val uniqueDoneExercises: Int,
+
+    /** Repeated exercises count */
+    val repeatedExercises: Int,
 
     /** Count of success exercise from first time */
-    var doneExercisesSuccessfullyFromFirstTime: Int,
+    val doneExercisesSuccessfullyFromFirstTime: Int,
 
-    /** Count listened words */
-    var listenWordsCount: Int
+    /** Count listened words in a day */
+    val listenWordsCount: Int
 )

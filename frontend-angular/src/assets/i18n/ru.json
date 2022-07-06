@@ -128,8 +128,9 @@
               "DailyTimeTable": {
                 "ColumnsName": {
                   "SeriesName": "Имя серии",
-                  "DoneExercise": "Сделано упражнений",
-                  "Attempts": "Попыток",
+                  "AllDoneExercises": "Сделано всего упражнений",
+                  "UniqueDoneExercises": "Сделано уникальных упражнений",
+                  "RepeatedExercises": "Повторы упражнений",
                   "DoneExercisesSuccessfullyFromFirstTime": "Успешно с первого раза",
                   "ListenWordsCount": "Количество прослушанных слов"
                 }

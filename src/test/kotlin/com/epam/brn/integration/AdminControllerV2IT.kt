@@ -179,7 +179,8 @@ class AdminControllerV2IT : BaseIT() {
         insertDefaultStudyHistory(user, exercise3, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 14, 0), 25, 3, 0, 1)
         insertDefaultStudyHistory(user, exercise3, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 15, 0), 25, 3, 0, 0)
         insertDefaultStudyHistory(user, exercise4, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 16, 0), 30, 5, 5, 5)
-        insertDefaultStudyHistory(user, exercise3, LocalDateTime.of(exercisingYear, exercisingMonth, 2, 15, 0), 25, 3, 0, 0)
+        // statistic for other days
+        // insertDefaultStudyHistory(user, exercise3, LocalDateTime.of(exercisingYear, exercisingMonth, 2, 15, 0), 25, 3, 0, 0)
         insertDefaultStudyHistory(user, exercise1, LocalDateTime.of(exercisingYear, exercisingMonth, 3, 13, 0), 5, 2, 1, 1)
 
         // WHEN
@@ -203,14 +204,16 @@ class AdminControllerV2IT : BaseIT() {
         val userDailyDetailStatisticsDto1 = resultStatistic[0]
         val userDailyDetailStatisticsDto2 = resultStatistic[1]
         userDailyDetailStatisticsDto1.seriesName shouldBe seriesName1
-        userDailyDetailStatisticsDto1.doneExercises shouldBe 3
-        userDailyDetailStatisticsDto1.attempts shouldBe 2
+        userDailyDetailStatisticsDto1.allDoneExercises shouldBe 4
+        userDailyDetailStatisticsDto1.uniqueDoneExercises shouldBe 3
+        userDailyDetailStatisticsDto1.repeatedExercises shouldBe 2
         userDailyDetailStatisticsDto1.doneExercisesSuccessfullyFromFirstTime shouldBe 2
-        userDailyDetailStatisticsDto1.listenWordsCount shouldBe 9
+        userDailyDetailStatisticsDto1.listenWordsCount shouldBe 12
 
         userDailyDetailStatisticsDto2.seriesName shouldBe seriesName2
-        userDailyDetailStatisticsDto2.doneExercises shouldBe 1
-        userDailyDetailStatisticsDto2.attempts shouldBe 5
+        userDailyDetailStatisticsDto2.allDoneExercises shouldBe 1
+        userDailyDetailStatisticsDto2.uniqueDoneExercises shouldBe 1
+        userDailyDetailStatisticsDto2.repeatedExercises shouldBe 0
         userDailyDetailStatisticsDto2.doneExercisesSuccessfullyFromFirstTime shouldBe 1
         userDailyDetailStatisticsDto2.listenWordsCount shouldBe 5
     }

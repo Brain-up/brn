@@ -199,14 +199,12 @@ internal class StudyHistoryServiceTest {
         val seriesId = 1L
         val exerciseId = 1L
         val seriesName = "seriesName"
-        val attempts = 1
         val listenWordsCount = 15
 
         val studyHistoryMockK = mockk<StudyHistory>()
         every { studyHistoryMockK.exercise.subGroup!!.series.name } returns seriesName
         every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
-        every { studyHistoryMockK.replaysCount } returns attempts
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
@@ -216,8 +214,9 @@ internal class StudyHistoryServiceTest {
 
         val expectedStatistic = UserDailyDetailStatisticsDto(
             seriesName = seriesName,
-            doneExercises = 1,
-            attempts = attempts,
+            allDoneExercises = 1,
+            uniqueDoneExercises = 1,
+            repeatedExercises = 0,
             doneExercisesSuccessfullyFromFirstTime = 1,
             listenWordsCount = listenWordsCount,
         )
@@ -238,14 +237,13 @@ internal class StudyHistoryServiceTest {
         val seriesId = 1L
         val exerciseId = 1L
         val seriesName = "seriesName"
-        val attempts = 1
+        val repeatedExercises = 0
         val listenWordsCount = 15
 
         val studyHistoryMockK = mockk<StudyHistory>()
         every { studyHistoryMockK.exercise.subGroup!!.series.name } returns seriesName
         every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
-        every { studyHistoryMockK.replaysCount } returns attempts
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { userAccountServiceMock.getUserFromTheCurrentSession().id } returns userId
 
@@ -256,8 +254,9 @@ internal class StudyHistoryServiceTest {
 
         val expectedStatistic = UserDailyDetailStatisticsDto(
             seriesName = seriesName,
-            doneExercises = 1,
-            attempts = attempts,
+            allDoneExercises = 1,
+            uniqueDoneExercises = 1,
+            repeatedExercises = repeatedExercises,
             doneExercisesSuccessfullyFromFirstTime = 1,
             listenWordsCount = listenWordsCount,
         )
@@ -278,14 +277,12 @@ internal class StudyHistoryServiceTest {
         val seriesId = 1L
         val exerciseId = 1L
         val seriesName = "seriesName"
-        val attempts = 1
         val listenWordsCount = 15
 
         val studyHistoryMockK = mockk<StudyHistory>()
         every { studyHistoryMockK.exercise.subGroup!!.series.name } returns seriesName
         every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
-        every { studyHistoryMockK.replaysCount } returns attempts
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK, studyHistoryMockK)
@@ -295,10 +292,11 @@ internal class StudyHistoryServiceTest {
 
         val expectedStatistic = UserDailyDetailStatisticsDto(
             seriesName = seriesName,
-            doneExercises = 1,
-            attempts = 2 * attempts,
+            allDoneExercises = userDailyDetailStatistics.size,
+            uniqueDoneExercises = 1,
+            repeatedExercises = userDailyDetailStatistics.size,
             doneExercisesSuccessfullyFromFirstTime = 0,
-            listenWordsCount = listenWordsCount,
+            listenWordsCount = userDailyDetailStatistics.size * listenWordsCount,
         )
 
         // WHEN
@@ -318,17 +316,14 @@ internal class StudyHistoryServiceTest {
         val seriesId = 1L
         val exerciseId = 1L
         val seriesName = "seriesName"
-        val attempts = 1
         val listenWordsCount = 15
 
         val seriesId2 = 2L
         val exerciseId2 = 10L
         val seriesName2 = "seriesName2"
-        val attempts2 = 3
         val listenWordsCount2 = 5
 
         val exerciseId3 = 5L
-        val attempts3 = 5
         val listenWordsCount3 = 10
 
         val studyHistoryMockK = mockk<StudyHistory>()
@@ -345,7 +340,6 @@ internal class StudyHistoryServiceTest {
             seriesId2
         )
         every { studyHistoryMockK.exercise.id }.returnsMany(exerciseId, exerciseId2, exerciseId3, exerciseId2)
-        every { studyHistoryMockK.replaysCount }.returnsMany(attempts, attempts2, attempts3, attempts2)
         every { studyHistoryMockK.tasksCount }.returnsMany(
             listenWordsCount.toShort(),
             listenWordsCount2.toShort(),
@@ -365,18 +359,20 @@ internal class StudyHistoryServiceTest {
 
         val expectedStatistic1 = UserDailyDetailStatisticsDto(
             seriesName = seriesName,
-            doneExercises = 1,
-            attempts = attempts,
+            allDoneExercises = 1,
+            uniqueDoneExercises = 1,
+            repeatedExercises = 0,
             doneExercisesSuccessfullyFromFirstTime = 1,
             listenWordsCount = listenWordsCount,
         )
 
         val expectedStatistic2 = UserDailyDetailStatisticsDto(
             seriesName = seriesName2,
-            doneExercises = 2,
-            attempts = 2 * attempts2 + attempts3,
+            allDoneExercises = 3,
+            uniqueDoneExercises = 2,
+            repeatedExercises = 2,
             doneExercisesSuccessfullyFromFirstTime = 1,
-            listenWordsCount = listenWordsCount2 + listenWordsCount3,
+            listenWordsCount = 2 * listenWordsCount2 + listenWordsCount3,
         )
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)

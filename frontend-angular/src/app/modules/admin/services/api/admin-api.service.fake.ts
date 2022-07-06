@@ -169,15 +169,17 @@ export class AdminApiServiceFake
     const response: UserDailyDetailStatistics[] = [];
     response.push({
       seriesName: 'Слова Королёвой',
-      doneExercise: 5,
-      attempts: 8,
+      allDoneExercises: 10,
+      uniqueDoneExercises: 5,
+      repeatedExercises: 8,
       doneExercisesSuccessfullyFromFirstTime: 1,
       listenWordsCount: 10
     });
     response.push({
       seriesName: 'Слова тестовые',
-      doneExercise: 50,
-      attempts: 50,
+      allDoneExercises: 100,
+      uniqueDoneExercises: 50,
+      repeatedExercises: 50,
       doneExercisesSuccessfullyFromFirstTime: 50,
       listenWordsCount: 25
     });

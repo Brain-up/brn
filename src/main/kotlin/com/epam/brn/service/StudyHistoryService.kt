@@ -95,49 +95,28 @@ class StudyHistoryService(
 
     private fun calculateUserDailyDetailStatistics(studyHistories: List<StudyHistory>):
         MutableList<UserDailyDetailStatisticsDto> {
-            val seriesIdToIndex = mutableMapOf<Long?, Int>()
-            val exerciseIdToIndex = mutableMapOf<Long?, Int>()
-            val repeatedExerciseIdToIndex = mutableSetOf<Long?>()
             val result = mutableListOf<UserDailyDetailStatisticsDto>()
-            var index = 0
-            studyHistories.forEach {
-                val exerciseId = it.exercise.id
-                val exerciseIndex = exerciseIdToIndex[exerciseId]
-                if (exerciseIndex == null) {
-                    // New exercise
-                    val seriesId = it.exercise.subGroup!!.series.id
-                    val seriesIndex = seriesIdToIndex[seriesId]
-                    if (seriesIndex == null) {
-                        // New series -> create user statistic and fill it
-                        val userDailyDetailStatisticsDto = UserDailyDetailStatisticsDto(
-                            seriesName = it.exercise.subGroup!!.series.name,
-                            doneExercises = 1,
-                            attempts = it.replaysCount,
-                            doneExercisesSuccessfullyFromFirstTime = 1,
-                            listenWordsCount = it.tasksCount.toInt()
-                        )
-                        seriesIdToIndex[seriesId] = index
-                        exerciseIdToIndex[exerciseId] = index
-                        result.add(index++, userDailyDetailStatisticsDto)
-                    } else {
-                        // Repeat series -> upgrade count of done exercises, attempts and listen words
-                        val userDailyDetailStatisticsDto = result[seriesIndex]
-                        userDailyDetailStatisticsDto.doneExercisesSuccessfullyFromFirstTime += 1
-                        userDailyDetailStatisticsDto.doneExercises += 1
-                        userDailyDetailStatisticsDto.attempts += it.replaysCount
-                        userDailyDetailStatisticsDto.listenWordsCount += it.tasksCount.toInt()
-                        exerciseIdToIndex[exerciseId] = index - 1
-                    }
-                } else {
-                    // Repeat exercise -> upgrade count of attempts and clear done exercise from first time
-                    val userDailyDetailStatisticsDto = result[exerciseIndex]
-                    userDailyDetailStatisticsDto.attempts += it.replaysCount
-                    if (!repeatedExerciseIdToIndex.contains(exerciseId)) {
-                        userDailyDetailStatisticsDto.doneExercisesSuccessfullyFromFirstTime -= 1
-                    }
-                    repeatedExerciseIdToIndex.add(exerciseId)
+            studyHistories
+                .groupBy { it.exercise.subGroup!!.series.name }
+                .forEach { (seriesName, histories) ->
+                    val allDoneExercisesCount = histories.size
+                    val studyHistoryByExercise = histories
+                        .groupBy { it.exercise.id }
+                    val uniqueDoneExercisesCount = studyHistoryByExercise
+                        .count()
+                    val doneExercisesSuccessfullyFromFirstTime = studyHistoryByExercise
+                        .count { it.value.size == 1 }
+                    val listenWordsCount = histories.sumOf { it.tasksCount.toInt() }
+                    val userDailyDetailStatisticsDto = UserDailyDetailStatisticsDto(
+                        seriesName = seriesName,
+                        allDoneExercises = allDoneExercisesCount,
+                        uniqueDoneExercises = uniqueDoneExercisesCount,
+                        doneExercisesSuccessfullyFromFirstTime = doneExercisesSuccessfullyFromFirstTime,
+                        repeatedExercises = allDoneExercisesCount - doneExercisesSuccessfullyFromFirstTime,
+                        listenWordsCount = listenWordsCount
+                    )
+                    result.add(userDailyDetailStatisticsDto)
                 }
-            }
             return result
         }
 }
