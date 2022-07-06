@@ -38,6 +38,16 @@ interface CloudService {
     fun getStorageFolders(): List<String>
 
     /**
+     * Get list of files in specified folder
+     */
+    fun getFileNames(folderPath: String): List<String>
+
+    /**
+     * Delete specified files
+     */
+    fun deleteFiles(fileNames: List<String>)
+
+    /**
      * Check that file is exist in cloud storage
      */
     fun isFileExist(filePath: String, fileName: String): Boolean

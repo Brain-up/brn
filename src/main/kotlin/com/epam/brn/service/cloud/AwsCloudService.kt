@@ -14,8 +14,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.Delete
+import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
 import java.io.InputStream
@@ -58,6 +61,33 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     override fun getStorageFolders(): List<String> {
         return getFolders("")
+    }
+
+    override fun getFileNames(folderPath: String): List<String> {
+        val request = ListObjectsV2Request.builder()
+            .bucket(awsConfig.bucketName)
+            .prefix(folderPath)
+            .build()
+        return s3Client.listObjectsV2(request).contents().map {
+            it.key().substring(it.key().lastIndexOf(FOLDER_DELIMITER))
+        }
+    }
+
+    override fun deleteFiles(fileNames: List<String>) {
+        val objectIdentifiersToDelete = fileNames.map {
+            ObjectIdentifier.builder().key(it).build()
+        }
+
+        val request = DeleteObjectsRequest.builder()
+            .bucket(awsConfig.bucketName)
+            .delete(Delete.builder().objects(objectIdentifiersToDelete).build())
+            .build()
+        val response = s3Client.deleteObjects(request)
+
+        if (response.errors().size > 0)
+            log.warn("Deletion of $fileNames failed.")
+        else
+            log.info("Files $fileNames are deleted")
     }
 
     override fun createFolder(folderPath: String) {
