@@ -129,8 +129,9 @@
               "DailyTimeTable": {
                 "ColumnsName": {
                   "SeriesName": "Series name",
-                  "DoneExercise": "Done exercise",
-                  "Attempts": "Attempts",
+                  "AllDoneExercises": "All done exercises",
+                  "UniqueDoneExercises": "Unique done exercises",
+                  "RepeatedExercises": "Repeated exercises",
                   "DoneExercisesSuccessfullyFromFirstTime": "Success exercises from first time",
                   "ListenWordsCount": "Listen words count"
                 }

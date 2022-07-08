@@ -70,9 +70,12 @@ abstract class BaseIT {
      */
     fun deleteInsertedTestData() {
         studyHistoryRepository.deleteAll()
-        exerciseGroupRepository.deleteAll()
         exerciseRepository.deleteAll()
+        subGroupRepository.deleteAll()
+        seriesRepository.deleteAll()
+        exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
+        authorityRepository.deleteAll()
     }
 
     fun insertDefaultUser(): UserAccount = createUser(fullName = "testUserFirstName", email = "test@test.test")
@@ -81,7 +84,10 @@ abstract class BaseIT {
         userAccount: UserAccount,
         exercise: Exercise,
         time: LocalDateTime? = null,
-        trainFor: Long = 5
+        trainFor: Long = 5,
+        taskCount: Short = 5,
+        wrongAnswers: Int = 0,
+        replaysCount: Int = 1,
     ): StudyHistory {
         val startTime = time ?: LocalDateTime.now()
         return studyHistoryRepository.save(
@@ -91,9 +97,9 @@ abstract class BaseIT {
                 endTime = startTime.plusMinutes(trainFor),
                 executionSeconds = ChronoUnit.SECONDS.between(startTime, startTime.plusMinutes(trainFor)).toInt(),
                 exercise = exercise,
-                tasksCount = 5,
-                wrongAnswers = 0,
-                replaysCount = 1
+                tasksCount = taskCount,
+                wrongAnswers = wrongAnswers,
+                replaysCount = replaysCount
             )
         )
     }
@@ -106,10 +112,10 @@ abstract class BaseIT {
             )
         )
 
-    fun insertDefaultExercise(subGroup: SubGroup? = null): Exercise =
+    fun insertDefaultExercise(subGroup: SubGroup? = null, name: String = "Test exercise"): Exercise =
         exerciseRepository.save(
             Exercise(
-                name = "Test exercise",
+                name = name,
                 subGroup = subGroup
             )
         )
@@ -120,26 +126,26 @@ abstract class BaseIT {
                 series = series,
                 level = level,
                 code = "code",
-                name = "subGroupName$level"
+                name = "${series.name}subGroupName$level"
             )
         )
 
-    fun insertDefaultSeries(): Series =
+    fun insertDefaultSeries(seriesName: String = "Series for ${platformClassName()}"): Series =
         seriesRepository.save(
             Series(
-                name = "Series for ${platformClassName()}",
-                exerciseGroup = insertDefaultExerciseGroup(),
+                name = seriesName,
+                exerciseGroup = insertDefaultExerciseGroup("${seriesName}ExerciseGroup"),
                 type = "Type",
                 level = 1
             )
         )
 
-    fun insertDefaultExerciseGroup(): ExerciseGroup =
+    fun insertDefaultExerciseGroup(name: String = "Test exercise group for ${platformClassName()}"): ExerciseGroup =
         exerciseGroupRepository.save(
             ExerciseGroup(
                 code = "CODE",
                 description = "Description",
-                name = "Test exercise group for ${platformClassName()}"
+                name = name
             )
         )
 

@@ -3,7 +3,10 @@ package com.epam.brn.controller
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
+import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -29,6 +32,9 @@ internal class UserStatisticControllerV2Test {
 
     @MockK
     private lateinit var userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
+
+    @MockK
+    private lateinit var studyHistoryService: StudyHistoryService
 
     @Test
     fun `should get user weekly statistic`() {
@@ -66,5 +72,21 @@ internal class UserStatisticControllerV2Test {
         verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(from, to) }
         assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
         assertEquals(monthStudyStatisticList, (userYearlyStatistic.body as BaseSingleObjectResponse).data)
+    }
+
+    @Test
+    fun `getUserWeeklyStatistic should return daily details statistic`() {
+        // GIVEN
+        val date = LocalDateTime.now()
+        val userDailyDetailStatisticsDto = mockk<UserDailyDetailStatisticsDto>()
+        every { studyHistoryService.getUserDailyStatistics(date, null) } returns listOf(userDailyDetailStatisticsDto)
+
+        // WHEN
+        val userWeeklyStatistic = userStatisticControllerV2.getUserDailyDetailsStatistics(date)
+
+        // THEN
+        verify(exactly = 1) { studyHistoryService.getUserDailyStatistics(date, null) }
+        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userWeeklyStatistic.body!!.data shouldBe listOf(userDailyDetailStatisticsDto)
     }
 }
