@@ -20,27 +20,39 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="doneExercise">
+    <ng-container matColumnDef="allDoneExercises">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
-        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.DoneExercise'
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.AllDoneExercises'
           | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">
-        <div class="item">{{ statistic.doneExercise }}</div>
+        <div class="item">{{ statistic.allDoneExercises }}</div>
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="attempts">
+    <ng-container matColumnDef="uniqueDoneExercises">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
-        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.Attempts'
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.UniqueDoneExercises'
           | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">
-        <div class="item">{{ statistic.attempts }}</div>
+        <div class="item">{{ statistic.uniqueDoneExercises }}</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="repeatedExercises">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{
+        'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.RepeatedExercises'
+          | translate
+        }}
+      </th>
+      <td class="name-column" mat-cell *matCellDef="let statistic">
+        <div class="item">{{ statistic.repeatedExercises }}</div>
       </td>
     </ng-container>
 

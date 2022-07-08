@@ -18,7 +18,7 @@ class UserDayStatisticService(
 ) : UserPeriodStatisticService<DayStudyStatistic> {
     override fun getStatisticForPeriod(from: LocalDateTime, to: LocalDateTime, userId: Long?): List<DayStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
-        val studyHistories = studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(
+        val studyHistories = studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
             userId = tempUserId!!,
             from = from,
             to = to

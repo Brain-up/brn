@@ -75,7 +75,7 @@ internal class UserMonthStatisticServiceTest {
         every { studyHistorySecond.executionSeconds } returns executionSeconds
         val studyHistories = listOf(studyHistory, studyHistorySecond)
         every {
-            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, from, to)
         } returns studyHistories
         every {
             progressStatusManager.getStatus(
@@ -120,7 +120,7 @@ internal class UserMonthStatisticServiceTest {
             )
         } returns progress
         every {
-            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to)
+            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, from, to)
         } returns studyHistories
 
         val firstExpectedStudyStatistic = MonthStudyStatistic(
@@ -154,7 +154,7 @@ internal class UserMonthStatisticServiceTest {
     @Test
     fun `getStatisticForPeriod should return empty list when there are not study histories for the period`() {
         // GIVEN
-        every { studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetween(userId, from, to) } returns emptyList()
+        every { studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, from, to) } returns emptyList()
 
         // WHEN
         val statisticForPeriod = userMonthStatisticService.getStatisticForPeriod(from, to)

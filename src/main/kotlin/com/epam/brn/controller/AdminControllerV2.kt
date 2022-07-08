@@ -33,6 +33,16 @@ class AdminControllerV2(
     ) = ResponseEntity.ok()
         .body(BaseResponse(data = studyHistoryService.getHistories(userId, from, to)))
 
+    @GetMapping("/study/day")
+    @ApiOperation("Get user's details daily statistic for the day. Where day is a date in the ISO date time format")
+    fun getUserDailyDetailsStatistics(
+        @RequestParam(name = "day", required = true) day: LocalDateTime,
+        @RequestParam(name = "userId", required = true) userId: Long
+    ): ResponseEntity<BaseSingleObjectResponse> {
+        val result = studyHistoryService.getUserDailyStatistics(day, userId)
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+    }
+
     @GetMapping("/study/week")
     @ApiOperation("Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format")
     fun getUserWeeklyStatistic(

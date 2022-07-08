@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -18,7 +19,8 @@ import java.time.LocalDateTime
 @Api(value = "/statistics", description = "Contains actions over user statistic details")
 class UserStatisticControllerV2(
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
-    private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>
+    private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,
+    private val historyService: StudyHistoryService
 ) {
 
     @GetMapping("/study/week")
@@ -38,6 +40,15 @@ class UserStatisticControllerV2(
         @RequestParam(name = "to", required = true) to: LocalDateTime
     ): ResponseEntity<BaseSingleObjectResponse> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
+        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+    }
+
+    @GetMapping("/study/day")
+    @ApiOperation("Get current user's details daily statistic for day. Where day is a date in the ISO date time format")
+    fun getUserDailyDetailsStatistics(
+        @RequestParam(name = "day", required = true) day: LocalDateTime
+    ): ResponseEntity<BaseSingleObjectResponse> {
+        val result = historyService.getUserDailyStatistics(day = day)
         return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
     }
 }

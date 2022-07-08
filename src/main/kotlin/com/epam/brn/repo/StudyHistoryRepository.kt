@@ -104,10 +104,10 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " AND date_trunc('day', s.startTime) < :to " +
             " AND s.userAccount.id = :userId"
     )
-    @Deprecated(message = "This is a legacy method. Use findAllByUserAccountIdAndStartTimeBetween instead")
+    @Deprecated(message = "This is a legacy method. Use findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime instead")
     fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
 
-    fun findAllByUserAccountIdAndStartTimeBetween(
+    fun findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
         userId: Long,
         from: LocalDateTime,
         to: LocalDateTime
