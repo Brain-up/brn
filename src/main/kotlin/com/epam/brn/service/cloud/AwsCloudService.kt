@@ -84,9 +84,10 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
             .build()
         val response = s3Client.deleteObjects(request)
 
-        if (response.errors().size > 0)
-            log.warn("Deletion of $fileNames failed.")
-        else
+        if (response.hasErrors()) {
+            val errorMessage = response.errors().map { it.message() }
+            log.error("Deletion of $fileNames failed. Error message: $errorMessage}")
+        } else
             log.info("Files $fileNames are deleted")
     }
 
