@@ -52,6 +52,7 @@ class UserAnalyticsServiceImpl(
             user.id?.let {
                 val firstAndLastVisitTimeByUserAccount =
                     studyHistoryRepository.findFirstAndLastVisitTimeByUserAccount(it)
+                println(firstAndLastVisitTimeByUserAccount)
                 user.firstDone = firstAndLastVisitTimeByUserAccount.firstStudy
                 user.lastDone = firstAndLastVisitTimeByUserAccount.lastStudy
             }
