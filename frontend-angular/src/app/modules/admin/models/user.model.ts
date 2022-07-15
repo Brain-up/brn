@@ -8,11 +8,11 @@ export interface User {
   bornYear: number;
   diagnosticProgress: { SIGNALS: boolean };
   email: string;
-  firstDone: string;
+  firstDone: Date;
   gender: 'MALE' | 'FEMALE';
   id: number;
   isFavorite?: boolean;
-  lastDone: string;
+  lastDone: Date;
   lastWeek: {
     date: string;
     exercisingTimeSeconds: number;
