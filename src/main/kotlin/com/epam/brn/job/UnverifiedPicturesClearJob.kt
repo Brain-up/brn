@@ -13,7 +13,7 @@ class UnverifiedPicturesClearJob(private val cloudService: CloudService) {
     @Value("\${brn.resources.unverified-pictures.path}")
     lateinit var unverifiedPicturesPath: String
 
-    @Scheduled(cron = "\${brn.resources.unverified-pictures-clean-job.cron}")
+    @Scheduled(cron = "\${brn.resources.unverified-pictures.clean-job.cron}")
     fun clearUnusedPictures() {
         val defaultFolderPictures = cloudService.getFileNames(defaultPicturesPath)
         val unverifiedFolderPictures = cloudService.getFileNames(unverifiedPicturesPath)
