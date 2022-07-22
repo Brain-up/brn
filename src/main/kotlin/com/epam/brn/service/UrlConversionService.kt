@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UrlConversionService(private val cloudService: CloudService) {
-    @Value(value = "\${aws.folderForThemePictures}")
+    @Value("\${aws.folderForThemePictures}")
     private lateinit var folderForThemePictures: String
 
     @Value("\${brn.resources.default-pictures.path}")
