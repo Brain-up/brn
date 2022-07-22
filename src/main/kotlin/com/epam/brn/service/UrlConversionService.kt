@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UrlConversionService(private val cloudService: CloudService) {
-    @Value(value = "\${aws.folderForThemePictures}")
+    @Value("\${aws.folderForThemePictures}")
     private lateinit var folderForThemePictures: String
 
     @Value("\${brn.resources.default-pictures.path}")
@@ -38,5 +38,5 @@ class UrlConversionService(private val cloudService: CloudService) {
         pictureTaskUrl?.substring(pictureTaskUrl.lastIndexOf("/") + 1).orEmpty()
 
     private fun createFullPictureTaskUrl(filePath: String, fileName: String): String =
-        cloudService.baseFileUrl() + "/" + filePath + "/" + fileName.replace("jpg", "png").lowercase()
+        cloudService.baseFileUrl() + "/" + filePath + fileName.replace("jpg", "png").lowercase()
 }
