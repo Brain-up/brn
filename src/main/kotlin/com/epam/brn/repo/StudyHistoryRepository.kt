@@ -80,7 +80,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun findLastByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): StudyHistory?
 
     @Query(
-        "SELECT MIN(s.startTime) as firstVisit, MAX(s.startTime) as lastVisit FROM StudyHistory s WHERE user_id=:userId"
+        "SELECT MIN(s.startTime) as firstStudy, MAX(s.startTime) as lastStudy FROM StudyHistory s WHERE user_id=:userId"
     )
     fun findFirstAndLastVisitTimeByUserAccount(userId: Long?): FirstLastStudyView
 
