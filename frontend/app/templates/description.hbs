@@ -108,17 +108,21 @@
       <ol class="space-y-3 list-decimal list-inside">
         <li>
           {{t "description.links.articles.title"}}
-
-          <a
-            href={{t "description.links.articles.link"}}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hover:no-underline text-blue-light underline"
-          >
-            {{t "description.links.articles.link_title"}}
-          </a>
+          <ul class="mt-3 ml-8 space-y-3 list-disc list-inside">
+            {{#each (range 0 1 true) as |i|}}
+              <li>
+                <a
+                  href={{t (concat "description.links.articles." i ".link")}}
+                  class="hover:no-underline text-blue-light underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{t (concat "description.links.articles." i ".title")}}
+                </a>
+              </li>
+            {{/each}}
+          </ul>
         </li>
-
         <li>
           {{t "description.links.foreign_programs.title"}}
           <ul class="mt-3 ml-8 space-y-3 list-disc list-inside">
