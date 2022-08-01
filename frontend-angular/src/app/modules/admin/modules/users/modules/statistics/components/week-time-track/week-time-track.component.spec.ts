@@ -9,7 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { WeekTimeTrackComponent } from './week-time-track.component';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import * as dayjs from 'dayjs';
-import { CompileTemplateMetadata } from '@angular/compiler';
+import { DataItem } from 'billboard.js';
 
 describe('WeekTimeTrackComponent', () => {
   let fixture: ComponentFixture<WeekTimeTrackComponent>;
@@ -76,5 +76,23 @@ describe('WeekTimeTrackComponent', () => {
     const loadPrevMonthEventSpy = spyOn(component.loadPrevMonthEvent, 'emit');
     component.loadPrevMonth();
     expect(loadPrevMonthEventSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should onClickItem return right selected day of month', () => {
+    const selectedMonth = Date.UTC(2022, 0, 10);
+    component.selectedMonth = dayjs(selectedMonth);
+    for (let i = 0; i < 31; i++) {
+      const dataItem: DataItem = {
+        id: 'test',
+        x: 0,
+        value: 0,
+        index: i,
+        name: 'name',
+        ratio: 0
+      };
+      component.onClickItem(dataItem);
+      const date = component.selectedMonth.clone();
+      expect(component.selectedDay).toEqual(date.set('date', i + 1));
+    }
   });
 });
