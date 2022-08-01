@@ -1,6 +1,7 @@
 package com.epam.brn.job
 
 import com.epam.brn.service.cloud.CloudService
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -13,6 +14,8 @@ class UnverifiedPicturesClearJob(private val cloudService: CloudService) {
     @Value("\${brn.resources.unverified-pictures.path}")
     lateinit var unverifiedPicturesPath: String
 
+    private val log = logger()
+
     @Scheduled(cron = "\${brn.resources.unverified-pictures.clean-job.cron}")
     fun clearUnusedPictures() {
         val defaultFolderPictures = cloudService.getFileNames(defaultPicturesPath)
@@ -23,5 +26,6 @@ class UnverifiedPicturesClearJob(private val cloudService: CloudService) {
         }
 
         cloudService.deleteFiles(fileNamesToDelete)
+        log.info("Files are deleted from \"$unverifiedPicturesPath\"")
     }
 }
