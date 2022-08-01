@@ -7,6 +7,7 @@ data class ResourceDto(
     var audioFileUrl: String? = "",
     val word: String? = "",
     val wordType: WordType?,
+    @Deprecated("Will be removed since it's not needed anymore")
     val pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
     val description: String? = "",
