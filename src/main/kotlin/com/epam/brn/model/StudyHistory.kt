@@ -2,6 +2,7 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.StudyHistoryDto
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -32,6 +33,8 @@ data class StudyHistory(
     var exercise: Exercise,
     var startTime: LocalDateTime,
     var endTime: LocalDateTime? = null,
+    var spentTime: Long? = endTime?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
+        ?.minus(startTime.toInstant(ZoneOffset.UTC).toEpochMilli()),
     var executionSeconds: Int,
     var tasksCount: Short,
     var wrongAnswers: Int,
@@ -41,7 +44,7 @@ data class StudyHistory(
 
 ) {
     override fun toString() =
-        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, wrongAnswers=$wrongAnswers)"
+        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, spentTime=$spentTime, tasksCount=$tasksCount, wrongAnswers=$wrongAnswers)"
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
