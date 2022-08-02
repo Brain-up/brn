@@ -85,7 +85,7 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         return result.hasContents()
     }
 
-    override fun createFullFileName(
+    private fun createFullFileName(
         path: String,
         filename: String
     ): String {
