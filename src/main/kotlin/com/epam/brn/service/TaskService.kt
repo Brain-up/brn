@@ -69,7 +69,7 @@ class TaskService(
         task.answerOptions.forEach { resource ->
             if (getAudioFileFromStorage)
                 resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale)
-            resource.pictureFileUrl = urlConversionService.makeUrlForTaskPicture(resource.word)
+            resource.pictureFileUrl = urlConversionService.makeUrlForTaskPicture(resource.pictureFileUrl)
         }
     }
 

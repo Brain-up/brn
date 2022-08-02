@@ -41,9 +41,4 @@ interface CloudService {
      * Check that file is exist in cloud storage
      */
     fun isFileExist(filePath: String, fileName: String): Boolean
-
-    /**
-     * Create full name of file
-     */
-    fun createFullFileName(path: String, filename: String): String
 }
