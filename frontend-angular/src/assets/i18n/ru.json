@@ -77,7 +77,9 @@
               "CurrentWeek": "Текущая неделя",
               "Name": "Имя",
               "Progress": "Прогресс",
-              "StudyDaysInLastMonth": "Дней в прошлом месяце"
+              "StudyDaysInLastMonth": "Дней в прошлом месяце",
+              "SpentTime": "Время занятий",
+              "DoneExercises": "Выполненных упражнений"
             },
             "NameColumn": {
               "CommonInfo [years, gender]": " {{ years}} лет",

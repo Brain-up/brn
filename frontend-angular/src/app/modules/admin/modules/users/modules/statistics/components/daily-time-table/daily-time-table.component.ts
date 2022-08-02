@@ -35,6 +35,7 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
   public userDailyDetailsData: UserDailyDetailStatistics[];
 
   public dataSource: MatTableDataSource<UserDailyDetailStatistics>;
+
   public readonly displayedColumns: string[] = [
     'seriesName',
     'allDoneExercises',

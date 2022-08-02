@@ -84,6 +84,7 @@ export class WeekTimeTrackComponent {
 
   @Input()
   public set data(data: UserWeeklyStatistics[] | undefined) {
+    this.selectedDay = null;
     if (!data) {
       return;
     }
@@ -133,8 +134,6 @@ export class WeekTimeTrackComponent {
   }
 
   onClickItem(event: DataItem) {
-    const day = this.selectedMonth.clone();
-    day.set('date', event.index + 1);
-    this.selectedDay = day;
+    this.selectedDay = this.selectedMonth.clone().set('date', event.index + 1);
   }
 }
