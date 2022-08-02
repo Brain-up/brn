@@ -84,7 +84,7 @@ export class WeekTimeTrackComponent {
 
   @Input()
   public set data(data: UserWeeklyStatistics[] | undefined) {
-    this.selectedDay = undefined;
+    this.selectedDay = null;
     if (!data) {
       return;
     }
