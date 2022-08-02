@@ -7,6 +7,7 @@ export interface User {
   active: boolean;
   bornYear: number;
   diagnosticProgress: { SIGNALS: boolean };
+  doneExercises: number;
   email: string;
   firstDone: string;
   gender: 'MALE' | 'FEMALE';
@@ -19,8 +20,9 @@ export interface User {
     progress: UserExercisingProgressStatusType;
   }[];
   name: string;
-  userId: string;
+  spentTime: number;
   studyDaysInLastMonth: number;
+  userId: string;
 }
 
 export interface UserMapped extends User {
