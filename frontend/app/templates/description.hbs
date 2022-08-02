@@ -109,7 +109,7 @@
         <li>
           {{t "description.links.articles.title"}}
           <ul class="mt-3 ml-8 space-y-3 list-disc list-inside">
-            {{#each (range 0 1 true) as |i|}}
+            {{#each (array 0 1) as |i|}}
               <li>
                 <a
                   href={{t (concat "description.links.articles." i ".link")}}
