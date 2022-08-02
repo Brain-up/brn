@@ -30,7 +30,7 @@ class UrlConversionService(private val cloudService: CloudService) {
     fun makeUrlForTaskPicture(word: String): String {
         listOf(defaultPicturesPath, unverifiedPicturesPath).forEach { picturesPath ->
             pictureExtensions.forEach { ext ->
-                val fileName = word.plus(".").plus(ext)
+                val fileName = "$word.$ext"
                 if (cloudService.isFileExist(picturesPath, fileName))
                     return cloudService.createFullFileName(picturesPath, fileName)
             }
