@@ -134,8 +134,6 @@ export class WeekTimeTrackComponent {
   }
 
   onClickItem(event: DataItem) {
-    let day = this.selectedMonth.clone();
-    day = day.set('date', event.index + 1);
-    this.selectedDay = day;
+    this.selectedDay = this.selectedMonth.clone().set('date', event.index + 1);
   }
 }
