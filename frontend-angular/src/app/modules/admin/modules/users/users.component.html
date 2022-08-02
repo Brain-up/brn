@@ -82,7 +82,7 @@
         </th>
         <td mat-cell *matCellDef="let user">
           <div class="item">{{ user.firstDone | date: 'longDate' }}</div>
-          <div class="subItem">
+          <div *ngIf="user.firstDone" class="subItem">
             {{
               'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
                 | translate: { hours: user.firstDone | date: 'H' }
@@ -100,7 +100,7 @@
         </th>
         <td mat-cell *matCellDef="let user">
           <div class="item">{{ user.lastDone | date }}</div>
-          <div class="subItem">
+          <div *ngIf="user.lastDone" class="subItem">
             {{
               'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
                 | translate: { hours: user.lastDone | date: 'H' }
@@ -123,6 +123,31 @@
               [options]="user.currentWeekChart.option"
             ></app-bar-chart>
           </ng-container>
+        </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="spentTime">
+        <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+          'Admin.Modules.Users.Components.UsersTable.ColumnsName.SpentTime'
+            | translate
+          }}
+        </th>
+        <td class="center" mat-cell *matCellDef="let user">
+          {{ user.spentTime }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="doneExercises">
+        <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+          'Admin.Modules.Users.Components.UsersTable.ColumnsName.DoneExercises'
+            | translate
+          }}
+        </th>
+        <td class="center" mat-cell *matCellDef="let user">
+          {{ user.doneExercises }}
         </td>
       </ng-container>
 
