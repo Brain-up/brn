@@ -2,7 +2,7 @@ package com.epam.brn.repo
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
-import com.epam.brn.model.projection.FirstLastStudyView
+import com.epam.brn.model.projection.UserStatisticView
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
@@ -80,11 +80,6 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun findLastByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): StudyHistory?
 
     @Query(
-        "SELECT MIN(s.startTime) as firstStudy, MAX(s.startTime) as lastStudy FROM StudyHistory s WHERE user_id=:userId"
-    )
-    fun findFirstAndLastVisitTimeByUserAccount(userId: Long?): FirstLastStudyView
-
-    @Query(
         "SELECT COALESCE(sum(s.executionSeconds), 0) FROM StudyHistory s " +
             " WHERE date_trunc('day', s.startTime) = :day" +
             " AND s.userAccount.id = :userId"
@@ -113,7 +108,12 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
         to: LocalDateTime
     ): List<StudyHistory>
 
-    fun findAllByUserAccountId(userId: Long?): List<StudyHistory>
+    @Query(
+        "SELECT MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
+            " SUM(s.spentTime) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
+            " FROM StudyHistory s WHERE user_id = :userId"
+    )
+    fun getStatisticByUserAccountId(userId: Long?): UserStatisticView
 
     @Query(
         "SELECT s FROM StudyHistory s " +

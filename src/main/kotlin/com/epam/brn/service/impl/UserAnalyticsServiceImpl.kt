@@ -50,20 +50,12 @@ class UserAnalyticsServiceImpl(
                 userDayStatisticService.getStatisticForPeriod(startOfLastMonth, endOfLastMonth, user.id)
             )
 
-            val allHistoriesByUserId = studyHistoryRepository.findAllByUserAccountId(user.id)
+            val userStatistic = studyHistoryRepository.getStatisticByUserAccountId(user.id)
             user.apply {
-                this.firstDone = allHistoriesByUserId
-                    .maxByOrNull { it.startTime }
-                    ?.startTime
-                this.lastDone = allHistoriesByUserId
-                    .minByOrNull { it.startTime }
-                    ?.startTime
-                this.spentTime = allHistoriesByUserId
-                    .filter { it.spentTime != null }
-                    .sumOf { it.spentTime!! }
-                this.doneExercises = allHistoriesByUserId
-                    .distinctBy { it.exercise.id }
-                    .size
+                this.firstDone = userStatistic.firstStudy
+                this.lastDone = userStatistic.lastStudy
+                this.spentTime = userStatistic.spentTime
+                this.doneExercises = userStatistic.doneExercises
             }
         }
 
