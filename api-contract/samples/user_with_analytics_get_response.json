@@ -47,6 +47,8 @@
         }
       ],
       "studyDaysInLastMonth": 2,
+      "spentTime": 10000,
+      "doneExercises": 1,
       "diagnosticProgress": {
         "SIGNALS": true
       }
@@ -98,6 +100,8 @@
         }
       ],
       "studyDaysInLastMonth": 2,
+      "spentTime": 20000,
+      "doneExercises": 2,
       "diagnosticProgress": {
         "SIGNALS": true
       }
