@@ -206,8 +206,12 @@ description:
     header: Полезные ссылки
     articles:
       title: 'Статьи о проекте:'
-      link: 'https://habr.com/ru/company/epam_systems/blog/530824/'
-      link_title: 'читать наш блог на habr.ru'
+      0:
+        title: Читать наш блог на habr.ru
+        link: 'https://habr.com/ru/company/epam_systems/blog/530824/'
+      1:
+        title: Читать статью на wearecommunity.io
+        link: 'https://wearecommunity.io/communities/community-platform/articles/753'
     foreign_programs:
       title: 'Зарубежные программы для развития слухового восприятия:'
       0:
@@ -292,19 +296,19 @@ contributors:
   title: "Наша команда"
   subtitle: "Мы собрались все вместе, чтобы сделать вашу жизнь проще!"
   people:
-    0: 
+    0:
       fullName: Канунников Александр
       jobTitle: Senior Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 5.png
-    1: 
+    1:
       fullName: Мошникова Елена
       jobTitle: Senior Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 1.png
-    2: 
+    2:
       fullName: Чуркина Ирина
       jobTitle: Senior Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 1.png
-    3: 
+    3:
       fullName: Miguel Osorio
       jobTitle: Lead Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 5.png
