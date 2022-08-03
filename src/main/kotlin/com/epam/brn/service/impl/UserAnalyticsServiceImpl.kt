@@ -49,11 +49,21 @@ class UserAnalyticsServiceImpl(
             user.studyDaysInLastMonth = countWorkDaysForMonth(
                 userDayStatisticService.getStatisticForPeriod(startOfLastMonth, endOfLastMonth, user.id)
             )
-            user.id?.let {
-                val firstAndLastVisitTimeByUserAccount =
-                    studyHistoryRepository.findFirstAndLastVisitTimeByUserAccount(it)
-                user.firstDone = firstAndLastVisitTimeByUserAccount.firstStudy
-                user.lastDone = firstAndLastVisitTimeByUserAccount.lastStudy
+
+            val allHistoriesByUserId = studyHistoryRepository.findAllByUserAccountId(user.id)
+            user.apply {
+                this.firstDone = allHistoriesByUserId
+                    .maxByOrNull { it.startTime }
+                    ?.startTime
+                this.lastDone = allHistoriesByUserId
+                    .minByOrNull { it.startTime }
+                    ?.startTime
+                this.spentTime = allHistoriesByUserId
+                    .filter { it.spentTime != null }
+                    .sumOf { it.spentTime!! }
+                this.doneExercises = allHistoriesByUserId
+                    .distinctBy { it.exercise.id }
+                    .size
             }
         }
 

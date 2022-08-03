@@ -113,6 +113,8 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
         to: LocalDateTime
     ): List<StudyHistory>
 
+    fun findAllByUserAccountId(userId: Long?): List<StudyHistory>
+
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE EXTRACT(MONTH FROM s.startTime) = :month " +

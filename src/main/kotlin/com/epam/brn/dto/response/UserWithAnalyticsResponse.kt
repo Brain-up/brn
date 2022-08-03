@@ -5,7 +5,6 @@ import com.epam.brn.enums.AudiometryType
 import com.epam.brn.model.Gender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
-import kotlin.time.Duration
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserWithAnalyticsResponse(
@@ -22,5 +21,5 @@ data class UserWithAnalyticsResponse(
     var studyDaysInLastMonth: Int = 0, // amount of days in last month when user made any exercises
     var diagnosticProgress: Map<AudiometryType, Boolean> = mapOf(AudiometryType.SIGNALS to true), // todo fill by user
     var doneExercises: Int = 0, // for all time
-    var spentTime: Duration = Duration.ZERO, // spent time by doing exercises for all time
+    var spentTime: Long = 0L, // spent time by doing exercises for all time in milliseconds
 )
