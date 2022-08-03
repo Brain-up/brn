@@ -9,6 +9,7 @@ import com.epam.brn.enums.Voice
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
+import com.epam.brn.model.projection.UserStatisticView
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -66,20 +67,23 @@ internal class UserAnalyticsServiceTest {
     @MockK(relaxed = true)
     lateinit var dayStudyStatistic: DayStudyStatistic
 
-    @MockK(relaxed = true)
-    lateinit var studyHistory: StudyHistory
+    @MockK
+    lateinit var userStatisticView: UserStatisticView
 
     @Test
     fun `should return all users with analytics`() {
 
         val usersList = listOf(doctorAccount, doctorAccount)
         val dayStatisticList = listOf(dayStudyStatistic, dayStudyStatistic)
-        val studyHistoryList = listOf(studyHistory, studyHistory)
+        every { userStatisticView.firstStudy } returns LocalDateTime.now()
+        every { userStatisticView.lastStudy } returns LocalDateTime.now()
+        every { userStatisticView.spentTime } returns 10000L
+        every { userStatisticView.doneExercises } returns 1
 
         every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
-        every { studyHistoryRepository.findAllByUserAccountId(any()) } returns studyHistoryList
+        every { studyHistoryRepository.getStatisticByUserAccountId(any()) } returns userStatisticView
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
 
@@ -91,12 +95,15 @@ internal class UserAnalyticsServiceTest {
 
         val usersList = listOf(doctorAccount)
         val dayStatisticList = emptyList<DayStudyStatistic>()
-        val studyHistoryList = listOf(studyHistory, studyHistory)
+        every { userStatisticView.firstStudy } returns LocalDateTime.now()
+        every { userStatisticView.lastStudy } returns LocalDateTime.now()
+        every { userStatisticView.spentTime } returns 10000L
+        every { userStatisticView.doneExercises } returns 1
 
         every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
-        every { studyHistoryRepository.findAllByUserAccountId(any()) } returns studyHistoryList
+        every { studyHistoryRepository.getStatisticByUserAccountId(any()) } returns userStatisticView
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
 
