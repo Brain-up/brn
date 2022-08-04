@@ -68,19 +68,6 @@ class AdminController(
         return ResponseEntity.ok().body(BaseResponse(data = users))
     }
 
-    @GetMapping("/histories")
-    @ApiOperation("Get user's study histories for period from <= startTime < to. Where period is a two dates in the format yyyy-MM-dd")
-    @Deprecated(
-        message = "Use the method with LocalDateTime as the dates type instead",
-        replaceWith = ReplaceWith("getHistories(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
-    )
-    fun getHistories(
-        @RequestParam("userId", required = true) userId: Long,
-        @RequestParam("from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
-        @RequestParam("to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate
-    ) = ResponseEntity.ok()
-        .body(BaseResponse(data = studyHistoryService.getHistories(userId, from, to)))
-
     @GetMapping("/monthHistories")
     @ApiOperation("Get month user's study histories by month and year")
     fun getMonthHistories(

@@ -365,25 +365,6 @@ annotationTypes:
               errors: [],
               meta: []
             }
-  /histories:
-    get:
-      (deprecated):
-        replaceWith: /v2/study-history/histories
-      description: |
-        Get current user's study histories for period from <= startTime < to. Where from and to are dates in yyyy-MM-dd format
-      queryParameters:
-        from:
-          required: true
-          type: date-only
-          example: 2020-11-05
-        to:
-          required: true
-          type: date-only
-          example: 2020-11-06
-      responses:
-        200:
-          body:
-            example: !include samples/study_histories_dto_response.json
   /monthHistories:
     get:
       description: Get current user's month study histories by month and year
@@ -621,28 +602,6 @@ annotationTypes:
             examples:
               example1: !include samples/users_get_response.json
               example2: !include samples/users_with_analytics_get_response.json
-  /histories:
-    get:
-      (deprecated):
-        replaceWith: /v2/admin/histories
-      description: Get user's study histories for period from <= startTime < to where time is a date in format yyyy-MM-dd
-      queryParameters:
-        userId:
-          required: true
-          type: integer
-          example: 1
-        from:
-          required: true
-          type: date-only
-          example: "2020-11-05"
-        to:
-          required: true
-          type: date-only
-          example: "2020-11-06"
-      responses:
-        200:
-          body:
-            example: !include samples/study_histories_dto_response.json
   /monthHistories:
     get:
       description: Get month user's study histories by month and yea

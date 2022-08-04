@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.sql.Date
 import java.time.LocalDateTime
 
 @Repository
@@ -100,14 +99,12 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
-            " WHERE date_trunc('day', s.startTime) >= :from " +
-            " AND date_trunc('day', s.startTime) < :to " +
-            " AND s.userAccount.id = :userId"
+            " WHERE s.startTime >= :from " +
+            " AND s.startTime < :to " +
+            " AND s.userAccount.id = :userId " +
+            "ORDER BY s.startTime"
     )
-    @Deprecated(message = "This is a legacy method. Use findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime instead")
-    fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
-
-    fun findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
+    fun getHistories(
         userId: Long,
         from: LocalDateTime,
         to: LocalDateTime

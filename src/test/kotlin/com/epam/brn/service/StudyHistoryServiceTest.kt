@@ -151,7 +151,7 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val expectedStudyHistory = listOf(studyHistoryMock)
         every { studyHistoryMock.toDto() } returns studyHistoryDtoMock
-        every { studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(1L, fromMock, toMock) } returns expectedStudyHistory
+        every { studyHistoryRepositoryMock.getHistories(1L, fromMock, toMock) } returns expectedStudyHistory
 
         // WHEN
         val histories = studyHistoryService.getHistories(1L, fromMock, toMock)
@@ -209,7 +209,7 @@ internal class StudyHistoryServiceTest {
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
         every {
-            studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, any(), any())
+            studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
         val expectedStatistic = UserDailyDetailStatisticsDto(
@@ -249,7 +249,7 @@ internal class StudyHistoryServiceTest {
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
         every {
-            studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, any(), any())
+            studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
         val expectedStatistic = UserDailyDetailStatisticsDto(
@@ -287,7 +287,7 @@ internal class StudyHistoryServiceTest {
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK, studyHistoryMockK)
         every {
-            studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, any(), any())
+            studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
         val expectedStatistic = UserDailyDetailStatisticsDto(
@@ -354,7 +354,7 @@ internal class StudyHistoryServiceTest {
             studyHistoryMockK
         )
         every {
-            studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, any(), any())
+            studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
         val expectedStatistic1 = UserDailyDetailStatisticsDto(
@@ -390,7 +390,7 @@ internal class StudyHistoryServiceTest {
         val userId = 1L
         val day = LocalDateTime.now()
         every {
-            studyHistoryRepositoryMock.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
+            studyHistoryRepositoryMock.getHistories(
                 userId,
                 any(),
                 any()

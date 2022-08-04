@@ -48,7 +48,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.nio.charset.StandardCharsets
-import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -196,68 +195,6 @@ class AdminControllerIT : BaseIT() {
     }
 
     @Test
-    fun `test repo get histories for user by period`() {
-        // GIVEN
-        val existingUser = insertUser()
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val subGroup = insertSubGroup(existingSeries)
-        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
-        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
-        val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
-        val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        val historyTomorrowOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusDays(1))
-        val historyTomorrowTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.plusDays(1))
-        studyHistoryRepository
-            .saveAll(
-                listOf(
-                    historyYesterdayOne,
-                    historyYesterdayTwo,
-                    historyFirstExerciseOne,
-                    historyFirstExerciseTwo,
-                    historySecondExerciseOne,
-                    historySecondExerciseTwo,
-                    historyTomorrowOne,
-                    historyTomorrowTwo
-                )
-            )
-        // WHEN
-        val result = studyHistoryRepository.getHistories(
-            existingUser.id!!,
-            Date.valueOf(now.toLocalDate()),
-            Date.valueOf(now.plusDays(1).toLocalDate())
-        )
-        // THEN
-        result.size shouldBe 4
-        result.map { it.id }.shouldContainExactlyInAnyOrder(
-            historyFirstExerciseOne.id,
-            historyFirstExerciseTwo.id,
-            historySecondExerciseOne.id,
-            historySecondExerciseTwo.id
-        )
-    }
-
-    @Test
-    fun `test repo get histories for user by period without histories`() {
-        // GIVEN
-        val existingUser = insertUser()
-        // WHEN
-        val result = studyHistoryRepository.getHistories(
-            existingUser.id!!,
-            Date.valueOf(LocalDate.now()),
-            Date.valueOf(LocalDate.now().plusDays(1))
-        )
-        // THEN
-        result.size shouldBe 0
-    }
-
-    @Test
     fun `test repo get month histories for user`() {
         // GIVEN
         val existingUser = insertUser()
@@ -331,61 +268,6 @@ class AdminControllerIT : BaseIT() {
             historySecondExerciseOne.id,
             historySecondExerciseTwo.id
         )
-    }
-
-    @Test
-    fun `test get histories for user by period`() {
-        // GIVEN
-        val existingUser = insertUser()
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val subGroup = insertSubGroup(existingSeries)
-        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
-        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
-        val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
-        val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        val historyTomorrowOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusDays(1))
-        val historyTomorrowTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.plusDays(1))
-        studyHistoryRepository
-            .saveAll(
-                listOf(
-                    historyYesterdayOne,
-                    historyYesterdayTwo,
-                    historyFirstExerciseOne,
-                    historyFirstExerciseTwo,
-                    historySecondExerciseOne,
-                    historySecondExerciseTwo,
-                    historyTomorrowOne,
-                    historyTomorrowTwo
-                )
-            )
-        val today = now
-
-        // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/histories")
-                .param(fromParamName, today.format(legacyDateFormatter))
-                .param(toParameterName, today.plusDays(1).format(legacyDateFormatter))
-                .param(userIdParameterName, existingUser.id.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-
-        resultAction.andReturn().response
-        // THEN
-        resultAction
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data[0].id").value(historyFirstExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
-            .andExpect(jsonPath("$.data[2].id").value(historySecondExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[3].id").value(historySecondExerciseTwo.id!!))
     }
 
     @Test

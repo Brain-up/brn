@@ -7,8 +7,6 @@ import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import org.springframework.stereotype.Service
-import java.sql.Date
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -39,29 +37,13 @@ class StudyHistoryService(
         return ChronoUnit.SECONDS.between(start, end).toInt()
     }
 
-    @Deprecated(message = "This is a legacy method. Use the same method with LocalDateTime as args for the dates instead")
-    fun getHistoriesForCurrentUser(from: LocalDate, to: LocalDate): List<StudyHistoryDto> {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
-        return getHistories(currentUser.id!!, from, to)
-    }
-
-    @Deprecated(message = "This is a legacy method. Use the same method with LocalDateTime as args for the dates instead")
-    fun getHistories(userId: Long, from: LocalDate, to: LocalDate): List<StudyHistoryDto> {
-        return studyHistoryRepository.getHistories(
-            userId,
-            Date.valueOf(from),
-            Date.valueOf(to)
-        )
-            .map { it.toDto() }
-    }
-
     fun getHistoriesForCurrentUser(from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
         val currentUser = userAccountService.getUserFromTheCurrentSession()
         return getHistories(currentUser.id!!, from, to)
     }
 
     fun getHistories(userId: Long, from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
-        return studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(userId, from, to)
+        return studyHistoryRepository.getHistories(userId, from, to)
             .map { it.toDto() }
     }
 
@@ -70,7 +52,7 @@ class StudyHistoryService(
         val startDay = day.truncatedTo(ChronoUnit.DAYS)
         val endDay = startDay.plusDays(1).minusNanos(1)
         val statistics =
-            studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
+            studyHistoryRepository.getHistories(
                 tempUserId!!,
                 startDay,
                 endDay
