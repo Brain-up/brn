@@ -11,10 +11,6 @@ import java.time.LocalDateTime
 
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
-//    @Query("SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
-//                " WHERE s.exercise.series.id = :seriesId and s.userAccount.id = :userId"
-//    )
-//    fun getDoneExercisesIdList(@Param("seriesId") seriesId: Long, @Param("userId") userId: Long): List<Long>
 
     @Query(
         "SELECT DISTINCT s.exercise FROM StudyHistory s " +
@@ -23,20 +19,11 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun getDoneExercises(@Param("subGroupId") subGroupId: Long, @Param("userId") userId: Long): List<Exercise>
 
     @Query(
-        "SELECT DISTINCT s.exercise FROM StudyHistory s " +
-            " WHERE s.exercise.name = :name and s.userAccount.id = :userId"
-    )
-    fun getDoneExercisesByName(@Param("name") name: String, @Param("userId") userId: Long): List<Exercise>
-
-    @Query(
         "SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
             " WHERE s.userAccount.id = :userId"
     )
     fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
 
-//    fun findByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): List<StudyHistory>
-//    fun findLast1ByOrderByStartTime(): StudyHistory?
-//    fun findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(userId: Long, exerciseId: Long): StudyHistory?
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE (s.userAccount.id, s.startTime) " +
@@ -100,7 +87,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE s.startTime >= :from " +
-            " AND s.startTime < :to " +
+            " AND s.startTime <= :to " +
             " AND s.userAccount.id = :userId " +
             "ORDER BY s.startTime"
     )
@@ -124,22 +111,6 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " AND s.userAccount.id = :userId"
     )
     fun getTodayHistories(userId: Long): List<StudyHistory>
-
-    @Query(
-        "SELECT s FROM StudyHistory s " +
-            " WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
-            " AND s.userAccount.id = :userId"
-    )
-    fun getYearStatistic(userId: Long, year: Int): List<StudyHistory>
-
-    @Query(
-        "SELECT s FROM StudyHistory s " +
-            "WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
-            "AND EXTRACT(MONTH FROM s.startTime) = :month " +
-            "AND EXTRACT(DAY FROM s.startTime) = :day " +
-            "AND s.userAccount.id = :userId"
-    )
-    fun getDayStatistic(userId: Long, year: Int, month: Int, day: Int): List<StudyHistory>
 
     @Query(
         "select count (s) > 0 from StudyHistory s where s.userAccount.id = :userId"

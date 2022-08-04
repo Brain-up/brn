@@ -269,7 +269,7 @@ class AdminControllerV2IT : BaseIT() {
             MockMvcRequestBuilders
                 .get("$baseUrl/histories")
                 .param(fromParamName, today.format(dateFormat))
-                .param(toParameterName, today.plusDays(1).format(dateFormat))
+                .param(toParameterName, today.plusDays(1).minusSeconds(1).format(dateFormat))
                 .param(userIdParameterName, existingUser.id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -321,7 +321,7 @@ class AdminControllerV2IT : BaseIT() {
         val result = studyHistoryRepository.getHistories(
             existingUser.id!!,
             now.toLocalDate().atStartOfDay(),
-            now.plusDays(1).toLocalDate().atStartOfDay()
+            now.plusDays(1).toLocalDate().atStartOfDay().minusSeconds(1)
         )
         // THEN
         result.size shouldBe 4
