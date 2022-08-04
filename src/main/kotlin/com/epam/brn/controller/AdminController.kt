@@ -77,26 +77,6 @@ class AdminController(
     ) = ResponseEntity.ok()
         .body(BaseResponse(data = studyHistoryService.getMonthHistories(userId, month, year)))
 
-    @GetMapping("/study/week")
-    @ApiOperation("Get user's weekly statistic for the period. Where period is a two dates in the format yyyy-MM-dd")
-    @Deprecated(
-        message = "Use the method with LocalDateTime as the dates type instead",
-        replaceWith = ReplaceWith("getUserWeeklyStatistic(from, to)", imports = ["com.epam.brn.controller.AdminControllerV2"])
-    )
-    fun getUserWeeklyStatistic(
-        @RequestParam(name = "from", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") from: LocalDate,
-        @RequestParam(name = "to", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") to: LocalDate,
-        @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponse> {
-        val tempFrom = LocalDateTime.of(from, LocalTime.MIN)
-        val tempTo = LocalDateTime.of(to, LocalTime.MAX)
-        val result = userDayStatisticService.getStatisticForPeriod(tempFrom, tempTo, userId)
-        val response = result.map {
-            it.toDto()
-        }
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = response))
-    }
-
     @GetMapping("/study/year")
     @ApiOperation("Get user's yearly statistic for the period. Where period is a two dates in the format yyyy-MM-dd")
     @Deprecated(

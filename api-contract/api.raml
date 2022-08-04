@@ -58,34 +58,6 @@ annotationTypes:
               errors: [],
               meta: []
             }
-  /study/week:
-    get:
-      (deprecated):
-        replaceWith: /v2/statistics/study/week
-      description: Get user's weekly statistic for period. Where period is a two dates in the format yyyy-MM-dd
-      queryParameters:
-        from:
-          required: true
-          type: date-only
-          example: 2000-11-23
-        to:
-          required: true
-          type: date-only
-          example: 2000-11-23
-      responses:
-        200:
-          body:
-            example: {
-              data: [
-                {
-                  date: 2000-11-23,
-                  exercisingTimeSeconds: 3000,
-                  progress: GREAT
-                }
-              ],
-              errors: [],
-              meta: []
-            }
   /study/year:
     get:
       (deprecated):
@@ -622,39 +594,6 @@ annotationTypes:
         200:
           body:
             example: !include samples/study_histories_dto_response.json
-  /study/week:
-    get:
-      (deprecated):
-        replaceWith: /v2/admin/study/week
-      description: Get user's weekly statistic for the period. Where period is a two dates in the format yyyy-MM-dd
-      queryParameters:
-        userId:
-          required: true
-          type: integer
-          format: int64
-          example: 1
-        from:
-          required: true
-          type: date-only
-          example: 2000-11-23
-        to:
-          required: true
-          type: date-only
-          example: 2000-11-23
-      responses:
-          200:
-            body:
-              example: {
-                data: [
-                  {
-                    date: 2000-10-23,
-                    exercisingTimeSeconds: 3000,
-                    progress: GREAT
-                  }
-                ],
-                errors: [],
-                meta: []
-              }
   /study/year:
     get:
       (deprecated):
