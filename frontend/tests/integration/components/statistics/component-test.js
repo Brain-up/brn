@@ -21,7 +21,7 @@ module('Integration | Component | statistics', function (hooks) {
       return { data: [] };
     });
 
-    server.get('/statistics/study/year', function (schema, request) {
+    server.get('/v2/statistics/study/year', function (schema, request) {
       stubGetStatsByYear(request.queryParams.from, request.queryParams.to);
       return { data: [] };
     });
@@ -44,7 +44,7 @@ module('Integration | Component | statistics', function (hooks) {
       stubGetStatsByYear.calledOnce,
       'getUserStatisticsByYear called on init',
     );
-    assert.ok(stubGetStatsByYear.calledWith('2021-01-01', '2021-12-31'));
+    assert.ok(stubGetStatsByYear.calledWith('2021-01-01T00:00:00', '2021-12-31T23:59:59'));
   });
 
   test('it shows info dialog', async function (assert) {
@@ -55,7 +55,7 @@ module('Integration | Component | statistics', function (hooks) {
       return { data: [] };
     });
 
-    server.get('/statistics/study/year', function () {
+    server.get('/v2/statistics/study/year', function () {
       return { data: [] };
     });
 

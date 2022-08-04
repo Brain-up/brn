@@ -1,7 +1,6 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.response.BaseResponse
-import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -10,7 +9,6 @@ import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.dto.statistic.MonthStudyStatisticDto
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Role.ROLE_ADMIN
 import com.epam.brn.enums.Role.ROLE_DOCTOR
@@ -36,7 +34,6 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -49,7 +46,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
@@ -103,41 +99,6 @@ class AdminControllerIT : BaseIT() {
         userAccountRepository.deleteAll()
         resourceRepository.deleteAll()
         authorityRepository.deleteAll()
-    }
-
-    @Test
-    fun `should return user year statistic`() {
-        // GIVEN
-        val user = insertDefaultUser()
-        val exercise = insertDefaultExercise()
-        val studyHistories: List<StudyHistory> = listOf(
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-        )
-
-        // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/year")
-                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(legacyDateFormatter))
-                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(legacyDateFormatter))
-                .param(userIdParameterName, user.id.toString())
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-
-        val data = gson.fromJson(response, BaseSingleObjectResponse::class.java).data
-        val resultStatistic: List<MonthStudyStatisticDto> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatisticDto>>() {})
-
-        // THEN
-        resultStatistic.size shouldBe 1
-        val monthStatistic = resultStatistic.first()
-        YearMonth.parse(monthStatistic.date).monthValue shouldBe exercisingMonth
-        monthStatistic.exercisingTimeSeconds shouldNotBe null
-        monthStatistic.progress shouldNotBe null
     }
 
     @Test

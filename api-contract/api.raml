@@ -58,35 +58,6 @@ annotationTypes:
               errors: [],
               meta: []
             }
-  /study/year:
-    get:
-      (deprecated):
-        replaceWith: /v2/statistics/study/year
-      description: Get user's yearly statistic for period. Where period is a two dates in the format yyyy-MM-dd
-      queryParameters:
-        from:
-          required: true
-          type: date-only
-          example: 2000-11-23
-        to:
-          required: true
-          type: date-only
-          example: 2000-11-23
-      responses:
-        200:
-          body:
-            example: {
-              data: [
-                {
-                  date: 2000-11,
-                  exercisingDays: 15,
-                  exercisingTimeSeconds: 3000,
-                  progress: GREAT
-                }
-              ],
-              errors: [],
-              meta: []
-            }
 
 # AUDIOMETRY-----------------------------------
 /audiometrics:
@@ -594,40 +565,6 @@ annotationTypes:
         200:
           body:
             example: !include samples/study_histories_dto_response.json
-  /study/year:
-    get:
-      (deprecated):
-        replaceWith: /v2/admin/study/year
-      description: Get user's yearly statistic for the period. Where period is a two dates in the format yyyy-MM-dd
-      queryParameters:
-        userId:
-          required: true
-          type: integer
-          format: int64
-          example: 1
-        from:
-          required: true
-          type: date-only
-          example: 2000-11-23
-        to:
-          required: true
-          type: date-only
-          example: 2000-11-23
-      responses:
-        200:
-          body:
-            example: {
-              data: [
-                {
-                  date: 2000-11,
-                  exercisingDays: 15,
-                  exercisingTimeSeconds: 3000,
-                  progress: GREAT
-                }
-              ],
-              errors: [],
-              meta: []
-            }
   /resources/{id}:
     patch:
       description: Update resource description by resource id
