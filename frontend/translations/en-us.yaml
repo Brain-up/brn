@@ -204,8 +204,12 @@ description:
     header: Useful links
     articles:
       title: 'Articles about the project:'
-      link: 'https://habr.com/ru/company/epam_systems/blog/530824/'
-      link_title: 'follow us on habr.ru'
+      0:
+        title: Follow us on habr.ru
+        link: 'https://habr.com/ru/company/epam_systems/blog/530824/'
+      1:
+        title: Follow us on wearecommunity.io
+        link: 'https://wearecommunity.io/communities/community-platform/articles/753'
     foreign_programs:
       title: 'Foreign programs for the development of auditory perception:'
       0:
@@ -289,19 +293,19 @@ contributors:
   title: "Our Team"
   subtitle: "We are all here to make your life easier!"
   people:
-    0: 
+    0:
       fullName: Kannunikov Aleksandr
       jobTitle: Senior Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 5.png
-    1: 
+    1:
       fullName: Moshnikova Elana
       jobTitle: Senior Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 1.png
-    2: 
+    2:
       fullName: Churkina Irina
       jobTitle: Senior Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 1.png
-    3: 
+    3:
       fullName: Miguel Osorio
       jobTitle: Lead Software Engineer, Epam
       imgSrc: /pictures/avatars/avatar 5.png
