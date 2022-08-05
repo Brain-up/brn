@@ -123,10 +123,17 @@ module('Acceptance | tasks flow', function (hooks) {
     await customTimeout();
 
     assert.dom('[data-test-right-answer-notification]').exists();
-    await customTimeout();
 
-    await waitFor('[data-test-answer-correctness-widget]');
+    console.log("1 HERE " + Date.now(), Date.now())
+    for (let i = 0; i < 3000; i++) {
+      await customTimeout();
+      console.log("2 HERE " + Date.now(), Date.now())
+    }
+    console.log("3 HERE " + Date.now(), Date.now())
 
+    await waitFor('[data-test-answer-correctness-widget]', { timeout: 5000 });
+
+    console.log("4 HERE " + Date.now(), Date.now())
     assert
       .dom('[data-test-answer-correctness-widget]')
       .hasAttribute('data-test-is-correct');
