@@ -42,4 +42,11 @@ export default class ExerciseGroup extends Component<IExerciseGroupArgs> {
     const stats = await this.network.subgroupStats(this.group);
     return stats;
   }
+
+  get completedStats() {
+    if (!this.stats) {
+      return '';
+    }
+    return `${this.stats.completedExercises}/${this.stats.totalExercises}`;
+  }
 }

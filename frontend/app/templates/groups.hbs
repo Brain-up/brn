@@ -6,7 +6,7 @@
   class="series-container sm:flex-row flex flex-col items-center justify-center mt-3"
 >
   <li class="list-item sm:mr-6 mr-0">
-    <LinkTo @route="group" @model={{@model.lastObject}}>
+    <LinkTo @route="group" @model={{@model.lastObject}} title={{@model.lastObject.description}}>
       <ExerciseType
         @initial={{@model.lastObject.name}}
         class="speech-exercise"
@@ -14,7 +14,7 @@
     </LinkTo>
   </li>
   <li class="list-item sm:mt-0 mt-3">
-    <LinkTo @route="group" @model={{@model.firstObject}}>
+    <LinkTo @route="group" @model={{@model.firstObject}} title={{@model.lastObject.description}}>
       <ExerciseType
         @initial={{@model.firstObject.name}}
         class="non-speech-exercises"
