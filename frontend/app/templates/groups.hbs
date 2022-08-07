@@ -14,7 +14,7 @@
     </LinkTo>
   </li>
   <li class="list-item sm:mt-0 mt-3">
-    <LinkTo @route="group" @model={{@model.firstObject}} title={{@model.lastObject.description}}>
+    <LinkTo @route="group" @model={{@model.firstObject}} title={{@model.firstObject.description}}>
       <ExerciseType
         @initial={{@model.firstObject.name}}
         class="non-speech-exercises"
