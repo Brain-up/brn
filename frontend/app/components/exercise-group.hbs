@@ -3,6 +3,7 @@
   {{on "mouseenter" this.mouseEnter}}
   {{on "mouseleave" this.mouseLeave}}
   href={{href-to "group.series.subgroup" @group.id}}
+  title={{@group.description}}
 >
   {{! template-lint-disable no-inline-styles style-concatenation }}
   <div
@@ -13,8 +14,8 @@
       {{! @ts-ignore }}
       <div
         class="sm:text-6xl w-full h-full pt-5 text-2xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75"
-        title={{t "exercise.progress"}}
-      >{{this.stats.completedExercises}}/{{this.stats.totalExercises}}</div>
+        title={{concat @group.description ' / ' (t "exercise.progress") ': ' this.completedStats}}
+      >{{this.completedStats}}</div>
     {{/if}}
   </div>
   <div class="sm:px-2 sm:py-2 h-full px-0 py-1 bg-gray-200">
