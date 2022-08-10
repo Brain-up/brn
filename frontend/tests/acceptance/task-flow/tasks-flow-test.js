@@ -101,7 +101,7 @@ module('Acceptance | tasks flow', function (hooks) {
     await chooseAnswer(targetTask.correctAnswer.word);
 
     await rightAnswerOneNotificationPromise;
-    
+
     await waitFor('[data-test-task-id="2"]');
 
     const targetTask2 = setupAfterPageVisit().targetTask;

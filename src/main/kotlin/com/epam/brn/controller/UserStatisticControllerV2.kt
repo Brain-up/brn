@@ -37,7 +37,7 @@ class UserStatisticControllerV2(
     @ApiOperation("Get user's yearly statistic for period. Where period is a two dates in the ISO date time format")
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
-        @RequestParam(name = "to", required = true) to: LocalDateTime
+        @RequestParam(name = "to", required = true) to: LocalDateTime,
     ): ResponseEntity<BaseSingleObjectResponse> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
         return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))

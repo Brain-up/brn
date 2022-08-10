@@ -24,7 +24,7 @@ class UserMonthStatisticService(
         userId: Long?
     ): List<MonthStudyStatistic> {
         val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
-        val histories = studyHistoryRepository.findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
+        val histories = studyHistoryRepository.getHistories(
             userId = tempUserId!!,
             from = from,
             to = to
