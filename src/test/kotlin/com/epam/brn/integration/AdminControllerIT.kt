@@ -1,7 +1,6 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.response.BaseResponse
-import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -10,8 +9,6 @@ import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.dto.statistic.DayStudyStatisticDto
-import com.epam.brn.dto.statistic.MonthStudyStatisticDto
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Role.ROLE_ADMIN
 import com.epam.brn.enums.Role.ROLE_DOCTOR
@@ -37,7 +34,6 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -48,10 +44,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.nio.charset.StandardCharsets
-import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
@@ -105,156 +99,6 @@ class AdminControllerIT : BaseIT() {
         userAccountRepository.deleteAll()
         resourceRepository.deleteAll()
         authorityRepository.deleteAll()
-    }
-
-    @Test
-    fun `testing get user week statistic`() {
-        // GIVEN
-        val userAccount = insertDefaultUser()
-        val exercise = insertDefaultExercise()
-        insertDefaultStudyHistory(
-            userAccount,
-            exercise,
-            LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0),
-            25
-        )
-        insertDefaultStudyHistory(
-            userAccount,
-            exercise,
-            LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0),
-            25
-        )
-        insertDefaultStudyHistory(
-            userAccount,
-            exercise,
-            LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0),
-            25
-        )
-        insertDefaultStudyHistory(
-            userAccount,
-            exercise,
-            LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0),
-            30
-        )
-        insertDefaultStudyHistory(userAccount, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-
-        // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/week")
-                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(legacyDateFormatter))
-                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(legacyDateFormatter))
-                .param(userIdParameterName, userAccount.id.toString())
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-
-        val data = gson.fromJson(response, BaseSingleObjectResponse::class.java).data
-        val resultStatistic: List<DayStudyStatisticDto> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<DayStudyStatisticDto>>() {})
-
-        // THEN
-        resultStatistic.size shouldBe 3
-        resultStatistic.forEach {
-            it.progress shouldNotBe null
-            it.exercisingTimeSeconds shouldNotBe null
-        }
-    }
-
-    @Test
-    fun `should return user year statistic`() {
-        // GIVEN
-        val user = insertDefaultUser()
-        val exercise = insertDefaultExercise()
-        val studyHistories: List<StudyHistory> = listOf(
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 13, 0), 25),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 20, 14, 0), 25),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 21, 15, 0), 25),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 16, 0), 30),
-            insertDefaultStudyHistory(user, exercise, LocalDateTime.of(exercisingYear, exercisingMonth, 23, 13, 0))
-        )
-
-        // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/year")
-                .param(fromParamName, LocalDate.of(exercisingYear, exercisingMonth, 1).format(legacyDateFormatter))
-                .param(toParameterName, LocalDate.of(exercisingYear, exercisingMonth, 27).format(legacyDateFormatter))
-                .param(userIdParameterName, user.id.toString())
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-
-        val data = gson.fromJson(response, BaseSingleObjectResponse::class.java).data
-        val resultStatistic: List<MonthStudyStatisticDto> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<MonthStudyStatisticDto>>() {})
-
-        // THEN
-        resultStatistic.size shouldBe 1
-        val monthStatistic = resultStatistic.first()
-        YearMonth.parse(monthStatistic.date).monthValue shouldBe exercisingMonth
-        monthStatistic.exercisingTimeSeconds shouldNotBe null
-        monthStatistic.progress shouldNotBe null
-    }
-
-    @Test
-    fun `test repo get histories for user by period`() {
-        // GIVEN
-        val existingUser = insertUser()
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val subGroup = insertSubGroup(existingSeries)
-        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
-        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
-        val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
-        val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        val historyTomorrowOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusDays(1))
-        val historyTomorrowTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.plusDays(1))
-        studyHistoryRepository
-            .saveAll(
-                listOf(
-                    historyYesterdayOne,
-                    historyYesterdayTwo,
-                    historyFirstExerciseOne,
-                    historyFirstExerciseTwo,
-                    historySecondExerciseOne,
-                    historySecondExerciseTwo,
-                    historyTomorrowOne,
-                    historyTomorrowTwo
-                )
-            )
-        // WHEN
-        val result = studyHistoryRepository.getHistories(
-            existingUser.id!!,
-            Date.valueOf(now.toLocalDate()),
-            Date.valueOf(now.plusDays(1).toLocalDate())
-        )
-        // THEN
-        result.size shouldBe 4
-        result.map { it.id }.shouldContainExactlyInAnyOrder(
-            historyFirstExerciseOne.id,
-            historyFirstExerciseTwo.id,
-            historySecondExerciseOne.id,
-            historySecondExerciseTwo.id
-        )
-    }
-
-    @Test
-    fun `test repo get histories for user by period without histories`() {
-        // GIVEN
-        val existingUser = insertUser()
-        // WHEN
-        val result = studyHistoryRepository.getHistories(
-            existingUser.id!!,
-            Date.valueOf(LocalDate.now()),
-            Date.valueOf(LocalDate.now().plusDays(1))
-        )
-        // THEN
-        result.size shouldBe 0
     }
 
     @Test
@@ -331,61 +175,6 @@ class AdminControllerIT : BaseIT() {
             historySecondExerciseOne.id,
             historySecondExerciseTwo.id
         )
-    }
-
-    @Test
-    fun `test get histories for user by period`() {
-        // GIVEN
-        val existingUser = insertUser()
-        val exerciseFirstName = "FirstName"
-        val exerciseSecondName = "SecondName"
-        val existingSeries = insertSeries()
-        val subGroup = insertSubGroup(existingSeries)
-        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
-        val existingExerciseSecond = insertExercise(exerciseSecondName, subGroup)
-        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
-        val historyYesterdayOne = insertStudyHistory(existingUser, existingExerciseFirst, now.minusDays(1))
-        val historyYesterdayTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.minusDays(1))
-        val historyFirstExerciseOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusHours(1))
-        val historyFirstExerciseTwo = insertStudyHistory(existingUser, existingExerciseFirst, now)
-        val historySecondExerciseOne = insertStudyHistory(existingUser, existingExerciseSecond, now.plusHours(1))
-        val historySecondExerciseTwo = insertStudyHistory(existingUser, existingExerciseSecond, now)
-        val historyTomorrowOne = insertStudyHistory(existingUser, existingExerciseFirst, now.plusDays(1))
-        val historyTomorrowTwo = insertStudyHistory(existingUser, existingExerciseSecond, now.plusDays(1))
-        studyHistoryRepository
-            .saveAll(
-                listOf(
-                    historyYesterdayOne,
-                    historyYesterdayTwo,
-                    historyFirstExerciseOne,
-                    historyFirstExerciseTwo,
-                    historySecondExerciseOne,
-                    historySecondExerciseTwo,
-                    historyTomorrowOne,
-                    historyTomorrowTwo
-                )
-            )
-        val today = now
-
-        // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/histories")
-                .param(fromParamName, today.format(legacyDateFormatter))
-                .param(toParameterName, today.plusDays(1).format(legacyDateFormatter))
-                .param(userIdParameterName, existingUser.id.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-
-        resultAction.andReturn().response
-        // THEN
-        resultAction
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data[0].id").value(historyFirstExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[1].id").value(historyFirstExerciseTwo.id!!))
-            .andExpect(jsonPath("$.data[2].id").value(historySecondExerciseOne.id!!))
-            .andExpect(jsonPath("$.data[3].id").value(historySecondExerciseTwo.id!!))
     }
 
     @Test

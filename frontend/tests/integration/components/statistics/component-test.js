@@ -16,12 +16,12 @@ module('Integration | Component | statistics', function (hooks) {
     const stubGetStatsByYear = sinon.stub();
     const stubGetStatsByWeek = sinon.stub();
 
-    server.get('/statistics/study/week', function (schema, request) {
+    server.get('/v2/statistics/study/week', function (schema, request) {
       stubGetStatsByWeek(request.queryParams.from, request.queryParams.to);
       return { data: [] };
     });
 
-    server.get('/statistics/study/year', function (schema, request) {
+    server.get('/v2/statistics/study/year', function (schema, request) {
       stubGetStatsByYear(request.queryParams.from, request.queryParams.to);
       return { data: [] };
     });
@@ -39,23 +39,23 @@ module('Integration | Component | statistics', function (hooks) {
       stubGetStatsByWeek.calledOnce,
       'getUserStatisticsByWeek called on init',
     );
-    assert.ok(stubGetStatsByWeek.calledWith('2021-01-01', '2021-01-31'));
+    assert.ok(stubGetStatsByWeek.calledWith('2021-01-01T00:00:00', '2021-01-31T23:59:59'));
     assert.ok(
       stubGetStatsByYear.calledOnce,
       'getUserStatisticsByYear called on init',
     );
-    assert.ok(stubGetStatsByYear.calledWith('2021-01-01', '2021-12-31'));
+    assert.ok(stubGetStatsByYear.calledWith('2021-01-01T00:00:00', '2021-12-31T23:59:59'));
   });
 
   test('it shows info dialog', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    server.get('/statistics/study/week', function () {
+    server.get('/v2/statistics/study/week', function () {
       return { data: [] };
     });
 
-    server.get('/statistics/study/year', function () {
+    server.get('/v2/statistics/study/year', function () {
       return { data: [] };
     });
 

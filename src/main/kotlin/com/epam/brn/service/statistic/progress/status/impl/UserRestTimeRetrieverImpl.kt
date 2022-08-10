@@ -5,7 +5,6 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistic.progress.status.UserRestTimeRetriever
 import org.springframework.stereotype.Component
-import java.sql.Date
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.TreeSet
@@ -18,7 +17,11 @@ class UserRestTimeRetrieverImpl(
 ) : UserRestTimeRetriever {
     override fun getMaximalUserRestTime(userId: Long?, from: LocalDate, to: LocalDate): Int {
         val userTempId = userId ?: userAccountService.getUserFromTheCurrentSession().id
-        val histories = studyHistoryRepository.getHistories(userTempId!!, Date.valueOf(from), Date.valueOf(to))
+        val histories = studyHistoryRepository.getHistories(
+            userTempId!!,
+            from.atStartOfDay(),
+            to.atStartOfDay()
+        )
         val period = TreeSet(studyHistoryTimeComparator)
         period.addAll(histories)
         val coolDowns: ArrayList<Int> = ArrayList()
