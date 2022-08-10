@@ -59,7 +59,13 @@ internal class UserRestTimeRetrieverImplTest {
         val progress = listOf(studyHistory1, studyHistory3, studyHistory2)
         val sqlDate = Date.valueOf(LocalDate.now())
         val date = LocalDate.now()
-        every { studyHistoryRepository.getHistories(userId, sqlDate, sqlDate) } returns progress
+        every {
+            studyHistoryRepository.getHistories(
+                userId,
+                sqlDate.toLocalDate().atStartOfDay(),
+                sqlDate.toLocalDate().atStartOfDay()
+            )
+        } returns progress
         every { studyHistory1.startTime } returns time
         every { studyHistory2.startTime } returns time.plusDays(1)
         every { studyHistory3.startTime } returns time.plusDays(2)
@@ -77,7 +83,13 @@ internal class UserRestTimeRetrieverImplTest {
         val sqlDate = Date.valueOf(LocalDate.now())
         val date = LocalDate.now()
         val progress = listOf(studyHistory1, studyHistory3, studyHistory2)
-        every { studyHistoryRepository.getHistories(userId, sqlDate, sqlDate) } returns progress
+        every {
+            studyHistoryRepository.getHistories(
+                userId,
+                sqlDate.toLocalDate().atStartOfDay(),
+                sqlDate.toLocalDate().atStartOfDay()
+            )
+        } returns progress
         every { studyHistory1.startTime } returns time
         every { studyHistory2.startTime } returns time.plusDays(1)
         every { studyHistory3.startTime } returns time.plusDays(4)

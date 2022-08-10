@@ -7,15 +7,10 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.sql.Date
 import java.time.LocalDateTime
 
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
-//    @Query("SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
-//                " WHERE s.exercise.series.id = :seriesId and s.userAccount.id = :userId"
-//    )
-//    fun getDoneExercisesIdList(@Param("seriesId") seriesId: Long, @Param("userId") userId: Long): List<Long>
 
     @Query(
         "SELECT DISTINCT s.exercise FROM StudyHistory s " +
@@ -24,20 +19,11 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun getDoneExercises(@Param("subGroupId") subGroupId: Long, @Param("userId") userId: Long): List<Exercise>
 
     @Query(
-        "SELECT DISTINCT s.exercise FROM StudyHistory s " +
-            " WHERE s.exercise.name = :name and s.userAccount.id = :userId"
-    )
-    fun getDoneExercisesByName(@Param("name") name: String, @Param("userId") userId: Long): List<Exercise>
-
-    @Query(
         "SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
             " WHERE s.userAccount.id = :userId"
     )
     fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
 
-//    fun findByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): List<StudyHistory>
-//    fun findLast1ByOrderByStartTime(): StudyHistory?
-//    fun findLast1ByUserAccountIdAndExerciseIdOrderByStartTime(userId: Long, exerciseId: Long): StudyHistory?
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE (s.userAccount.id, s.startTime) " +
@@ -100,14 +86,12 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
-            " WHERE date_trunc('day', s.startTime) >= :from " +
-            " AND date_trunc('day', s.startTime) < :to " +
-            " AND s.userAccount.id = :userId"
+            " WHERE s.startTime >= :from " +
+            " AND s.startTime <= :to " +
+            " AND s.userAccount.id = :userId " +
+            "ORDER BY s.startTime"
     )
-    @Deprecated(message = "This is a legacy method. Use findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime instead")
-    fun getHistories(userId: Long, from: Date, to: Date): List<StudyHistory>
-
-    fun findAllByUserAccountIdAndStartTimeBetweenOrderByStartTime(
+    fun getHistories(
         userId: Long,
         from: LocalDateTime,
         to: LocalDateTime
@@ -127,22 +111,6 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " AND s.userAccount.id = :userId"
     )
     fun getTodayHistories(userId: Long): List<StudyHistory>
-
-    @Query(
-        "SELECT s FROM StudyHistory s " +
-            " WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
-            " AND s.userAccount.id = :userId"
-    )
-    fun getYearStatistic(userId: Long, year: Int): List<StudyHistory>
-
-    @Query(
-        "SELECT s FROM StudyHistory s " +
-            "WHERE EXTRACT(YEAR FROM s.startTime) = :year " +
-            "AND EXTRACT(MONTH FROM s.startTime) = :month " +
-            "AND EXTRACT(DAY FROM s.startTime) = :day " +
-            "AND s.userAccount.id = :userId"
-    )
-    fun getDayStatistic(userId: Long, year: Int, month: Int, day: Int): List<StudyHistory>
 
     @Query(
         "select count (s) > 0 from StudyHistory s where s.userAccount.id = :userId"

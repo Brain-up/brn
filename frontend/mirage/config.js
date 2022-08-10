@@ -35,12 +35,12 @@ export default function() {
       }
     }
   });
-  this.get('/statistics/study/week', () => {});
-  this.get('/statistics/study/year', () => {} );
+  this.get('/v2/statistics/study/week', () => {});
+  this.get('/v2/statistics/study/year', () => {} );
   this.resource('groups');
   this.resource('series');
   this.resource('exercises');
   this.resource('tasks');
   this.resource('study-history');
-  
+
 }
