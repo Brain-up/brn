@@ -58,12 +58,12 @@ SENTENCE,2,sentence_with_3_words,Из 3 слов, Пойми предложен�
 SENTENCE,3,sentence_with_4_words,Из 4 слов, Пойми предложение из 4 слов
 SENTENCE,4,sentence_with_5_words,Из 5 слов, Пойми предложение из 5 слов
 SENTENCE,5,sentence_with_6_words,Из 6 слов, Пойми предложение из 6 слов
-PHRASES,1,longShortPhrases,Фразы разной длительности,
-PHRASES,2,noPhrases,Фразы с частицей Не,
-PHRASES,3,similarPhrases,Похожие фразы,
-PHRASES,4,differentEndPhrases,Фразы с разным окончанием,
-PHRASES,5,shortWords,Короткие слова,
-PHRASES,6,prepositionPhrases,Предлоги,
+PHRASES,1,longShortPhrases,Разной длительности,
+PHRASES,2,noPhrases,С частицей Не,
+PHRASES,3,similarPhrases,Похожие,
+PHRASES,4,differentEndPhrases,С разным окончанием,
+PHRASES,5,shortWords,Из коротких слов,
+PHRASES,6,prepositionPhrases,С разными предлогами,
 DURATION_SIGNALS,1,durationSignals,Длительность сигналов,
 FREQUENCY_SIGNALS,1,frequencySignals,Частота сигналов,
 FREQUENCY_WORDS,1,low_frequency,Низкочастотные слова,Низкочастотные слова
