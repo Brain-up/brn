@@ -1,0 +1,40 @@
+<div
+  class={{style-namespace "statistics/daily-time-table"}}
+  ...attributes
+  {{did-insert this.didInit}}
+  {{did-update this.didInit @day}}
+>
+  <div class="h-200px box-content flex items-center justify-center px-5 py-6">
+    {{#if this.isLoading}}
+      <LoadingSpinner />
+    {{else}}
+      <div>
+        <table class="table-auto">
+          <thead>
+          <tr>
+            <th class="px-4 py-2">{{t "profile.statistics.daily_time_table.series_name"}}</th>
+            <th class="px-4 py-2">{{t "profile.statistics.daily_time_table.all_done_exercises"}}</th>
+            <th class="px-4 py-2">{{t "profile.statistics.daily_time_table.unique_done_exercises"}}</th>
+            <th class="px-4 py-2">{{t "profile.statistics.daily_time_table.repeated_exercises"}}</th>
+            <th class="px-4 py-2">{{t "profile.statistics.daily_time_table.done_exercises_successfully_from_first_time"}}</th>
+            <th class="px-4 py-2">{{t "profile.statistics.daily_time_table.listen_words_count"}}</th>
+          </tr>
+          </thead>
+          <tbody>
+            {{#each this.userDailyDetailsData as |element|}}
+              <tr>
+                <td class="border px-4 py-2">{{element.seriesName}}</td>
+                <td class="border px-4 py-2">{{element.allDoneExercises}}</td>
+                <td class="border px-4 py-2">{{element.uniqueDoneExercises}}</td>
+                <td class="border px-4 py-2">{{element.repeatedExercises}}</td>
+                <td class="border px-4 py-2">{{element.doneExercisesSuccessfullyFromFirstTime}}</td>
+                <td class="border px-4 py-2">{{element.listenWordsCount}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{/if}}
+
+  </div>
+</div>

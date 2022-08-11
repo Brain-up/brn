@@ -94,12 +94,15 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
 
   @tracked barData: BarDataType = [];
 
+  @tracked selectedDay?: DateTime | null;
+
   get selectedMonth(): DateTime {
     return this.args.selectedMonth;
   }
 
   @action
   didUpdateData(): void {
+    this.selectedDay = null;
     this.chartData = [];
     const data: UserWeeklyStatisticsModel[] | null = this.args.data;
     if (isNone(data)) {
@@ -136,5 +139,13 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
     this.barData = data.length
       ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]]
       : [];
+  }
+
+  @action
+  onBarChartItemClicked(index: number) {
+    if (index) {
+       this.selectedDay = this.selectedMonth
+         .set({day: index})
+    }
   }
 }

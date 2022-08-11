@@ -269,6 +269,13 @@ profile:
     week_time_track:
       title_weeks: Время ежедневных занятий по неделям
       empty_data: Нет данных за период {period}
+    daily_time_table:
+      series_name: Имя серии
+      all_done_exercises: Сделано всего упражнений
+      unique_done_exercises: Сделано уникальных упражнений
+      repeated_exercises: Повторы упражнений
+      done_exercises_successfully_from_first_time: Успешно с первого раза
+      listen_words_count: Количество прослушанных слов
     info_dialog:
       title: О чем говорит статистика
       sub_title: "Проверьте, достаточно ли регулярно вы делаете занятия:"

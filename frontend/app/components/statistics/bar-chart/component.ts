@@ -1,7 +1,8 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
-import type { Chart, ChartOptions, Data } from 'billboard.js';
+import type {Chart, ChartOptions, Data, DataItem} from 'billboard.js';
 import { isNone } from '@ember/utils';
+import {tracked} from "@glimmer/tracking";
 
 export type BarDataType = [...[string, ...number[]][]];
 
@@ -14,6 +15,7 @@ export type BarOptionsType = Pick<
 interface IBarChartComponentArgs {
   data: BarDataType;
   options: BarOptionsType;
+  onClickItem(index: number): void;
 }
 
 export default class BarChartComponent extends Component<IBarChartComponentArgs> {
@@ -28,6 +30,8 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
   get chartColumns(): BarDataType {
     return this.args.data;
   }
+
+  @tracked selectedIndex?: number | null;
 
   @action
   didUpdateData() {
@@ -50,6 +54,7 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
 
   @action
   async buildChart() {
+    const onClickItemFunction = this.args.onClickItem;
     const { bar, bb } = await import('billboard.js');
     if (!this.chartElemRef) {
       return;
@@ -62,6 +67,18 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
         columns: this.chartColumns,
         colors: this.chartOptions?.colors,
         labels: this.chartOptions?.labels,
+        onclick(dataItem: DataItem, element: SVGElement) {
+          const childrenElements = element?.parentElement?.children;
+          if (childrenElements) {
+            const selectedBarClassName = 'selected-bar';
+            for (let i = 0; i < childrenElements.length; i++) {
+              const item = childrenElements.item(i);
+              item?.classList.remove(selectedBarClassName);
+            }
+            element.classList.add(selectedBarClassName);
+            onClickItemFunction(dataItem.index + 1);
+          }
+        }
       },
 
       axis: this.chartOptions?.axis,
