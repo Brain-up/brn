@@ -16,8 +16,6 @@ export default class DailyTimeTableComponent extends Component<IDailyTimeTableCo
   @tracked userDailyDetailsData: UserDailyTimeTableStatisticsModel[] | null = null;
   @service('store') store!: Store;
 
-  // TODO: Нужен метод, который при получении нового дня делал запрос на бэк по получению статистики
-  //  и наполнял таблицу
   @action
   didInit() {
     this.loadData();
