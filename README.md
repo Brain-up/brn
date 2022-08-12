@@ -56,18 +56,12 @@ Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 ## Resources:
 ### Documentation
 https://github.com/Brain-up/brn/wiki  
-https://kb.epam.com/display/EPMLABSBRN/Business+Domain+Info
 
 ### Jira
 https://github.com/Brain-up/brn/issues  
-https://jira.epam.com/jira/secure/RapidBoard.jspa?rapidView=103360&view=planning
-
-### Jenkins (only for epamers now)
-https://kb.epam.com/pages/viewpage.action?pageId=885110636
 
 ### Coding standards
 https://github.com/Brain-up/brn/wiki/Coding-Standards  
-https://kb.epam.com/display/EPMLABSBRN/Coding+Guidelines
 
 ## Development:
 
