@@ -9,6 +9,7 @@ Our current version is here : http://brainup.site && http://31.184.253.199/ (tes
 Now you as a user can register and start doing exercises.
 
 Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
+Product Vision https://github.com/Brain-up/brn/wiki/Product-Vision.
 
 ## SCIENTIFIC SOURCES
 - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit
