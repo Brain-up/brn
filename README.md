@@ -15,6 +15,7 @@ Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
 - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/
 
 ## Published ARTICLES about our project
+- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english)
 - https://wearecommunity.io/communities/community-platform/articles/753 01.12.2020 russian 
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
@@ -28,9 +29,13 @@ Most importantly being an open source project you can show your work in it to an
 ## WE ARE LOOKING FOR
 1. Front-end developers: Ember, Angular. 
 2. Server-side developers: Kotlin and Java. Components, REST and algorithms.
-3. DevOps: Continuous integration and delivery.
-4. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
-5. Paintest: for creation pictures for exercises. 
+3. IoS developers.
+4. Android developers.
+5. DevOps: Continuous integration and delivery.
+6. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
+7. Paintest: for creation pictures for exercises. 
+8. Sign language specialist to create/improve content.
+9. QA engeniers. 
 
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
@@ -44,7 +49,7 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) https://t.me/ElenaLovesSpb
 or to project emaeil [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
 Also we have project team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
-Project on epam plus (for epamers): https://plus.epam.com/projects/115
+Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 
 # GETTING STARTED!
 ## Resources:
