@@ -16,7 +16,7 @@ Prepare content for 3 series by speech specialists.
 Implement second Series `Group of words`.
 Fill content for 2 exist series - so users can start doing exercises.
 
-✔️ 2021 Quarter 1 
+✔️ 2021 
 Implement third Series `Sentences`.
 Implement `https`.
 Implement first English application version.
@@ -24,13 +24,11 @@ Start to move from basic to firebase auth.
 Start to implement new design for application.
 Start to implement mobile version of application.
 
-2021 Quarter 2
+2022
 Implement `Diagnostic` module with 3 tests for user to measure their progress in application regularly.
 Implement `Statistic` module for analysing how regular user make exercises.
 Implement new design for site.
 
-2021 Quarter 3
 Platform updates and requirements gathering.
 
-2021 Quarter 4 
 Launch Machine learning
