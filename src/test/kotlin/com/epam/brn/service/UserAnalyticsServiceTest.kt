@@ -113,7 +113,28 @@ internal class UserAnalyticsServiceTest {
     private val exerciseId = 11L
 
     @Test
-    fun `should prepareAudioFileMetaData with adding comma and slow speed for several words with good stat`() {
+    fun `should prepareAudioFileMetaData with adding comma and slow speed for words with good stat WORDS`() {
+        // GIVEN
+        val studyHistory = mockk<StudyHistory>()
+        every { userAccountService.getCurrentUserId() } returns currentUserId
+        every {
+            studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+        } returns studyHistory
+        every { exerciseService.isDoneWell(studyHistory) } returns true
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        val audioFileMetaData =
+            AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        // WHEN
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+
+        // THEN
+        metaDataResult.speedFloat shouldBe "0.8"
+        metaDataResult.speedCode shouldBe AzureRates.SLOW
+        metaDataResult.text shouldBe "мама, папа"
+    }
+
+    @Test
+    fun `should prepareAudioFileMetaData without adding comma and slow speed for words with good stat PHRASES`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
         every { userAccountService.getCurrentUserId() } returns currentUserId
@@ -130,11 +151,33 @@ internal class UserAnalyticsServiceTest {
         // THEN
         metaDataResult.speedFloat shouldBe "0.8"
         metaDataResult.speedCode shouldBe AzureRates.SLOW
+        metaDataResult.text shouldBe "мама папа"
+    }
+
+    @Test
+    fun `should prepareAudioFileMetaData with adding comma and slowest speed for words with bad stat WORDS`() {
+        // GIVEN
+        val studyHistory = mockk<StudyHistory>()
+        every { userAccountService.getCurrentUserId() } returns currentUserId
+        every {
+            studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+        } returns studyHistory
+        every { exerciseService.isDoneWell(studyHistory) } returns false
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        val audioFileMetaData =
+            AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+
+        // WHEN
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+
+        // THEN
+        metaDataResult.speedFloat shouldBe "0.65"
+        metaDataResult.speedCode shouldBe AzureRates.X_SLOW
         metaDataResult.text shouldBe "мама, папа"
     }
 
     @Test
-    fun `should prepareAudioFileMetaData with adding comma and slowest speed for several words with bad stat`() {
+    fun `should prepareAudioFileMetaData without adding comma and slowest speed for words with bad stat PHRASES`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
         every { userAccountService.getCurrentUserId() } returns currentUserId
@@ -152,7 +195,7 @@ internal class UserAnalyticsServiceTest {
         // THEN
         metaDataResult.speedFloat shouldBe "0.65"
         metaDataResult.speedCode shouldBe AzureRates.X_SLOW
-        metaDataResult.text shouldBe "мама, папа"
+        metaDataResult.text shouldBe "мама папа"
     }
 
     @Test
