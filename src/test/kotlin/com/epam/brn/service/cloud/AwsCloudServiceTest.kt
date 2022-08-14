@@ -16,12 +16,16 @@ import software.amazon.awssdk.core.internal.waiters.DefaultWaiterResponse
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.CommonPrefix
+import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
+import software.amazon.awssdk.services.s3.model.DeleteObjectsResponse
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response
+import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectResponse
+import software.amazon.awssdk.services.s3.model.S3Object
 import software.amazon.awssdk.services.s3.waiters.S3Waiter
 import java.io.File
 import java.util.Arrays
@@ -320,11 +324,52 @@ class AwsCloudServiceTest {
         assert(Arrays.equals(expectedBody, actualBody))
     }
 
+    @Test
+    fun `should return fileNames for specified folder`() {
+        // GIVEN
+        val folderPath = "folder/path"
+        val listObjectsV2Result = listObjectsV2Result(
+            mutableListOf("folder/path/file1.png", "folder/path/file2.png")
+        )
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.listObjectsV2(any<ListObjectsV2Request>()) } returns listObjectsV2Result
+
+        // WHEN
+        val actual = awsCloudService.getFileNames(folderPath)
+
+        // THEN
+        assertEquals(listOf("/file1.png", "/file2.png"), actual)
+    }
+
+    @Test
+    fun `should delete specified files`() {
+        // GIVEN
+        val filesToDelete = mutableListOf("folder/path/file1.png", "folder/path/file2.png")
+        val expectedObjectIdentifiers = filesToDelete.map {
+            ObjectIdentifier.builder().key(it).build()
+        }
+        val deleteRequestSlot = slot<DeleteObjectsRequest>()
+        val deleteObjectsResponse = DeleteObjectsResponse.builder().build()
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.deleteObjects(capture(deleteRequestSlot)) } returns deleteObjectsResponse
+
+        // WHEN
+        awsCloudService.deleteFiles(filesToDelete)
+
+        // THEN
+        assertEquals(deleteRequestSlot.captured.delete().objects(), expectedObjectIdentifiers)
+    }
+
     private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Response {
         val result = mockk<ListObjectsV2Response>()
         val objectSummaries: List<CommonPrefix> = toObjectSummaries(keys)
 
+        val contents = keys.map {
+            S3Object.builder().key(it).build()
+        }
+
         every { result.commonPrefixes() } returns objectSummaries
+        every { result.contents() } returns contents
         return result
     }
 
