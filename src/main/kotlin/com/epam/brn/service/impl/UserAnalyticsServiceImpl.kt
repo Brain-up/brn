@@ -33,6 +33,8 @@ class UserAnalyticsServiceImpl(
     private val exerciseService: ExerciseService,
 ) : UserAnalyticsService {
 
+    private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
+
     override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
         val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
 
@@ -68,13 +70,9 @@ class UserAnalyticsServiceImpl(
         val lastExerciseHistory = studyHistoryRepository
             .findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
-//        when {
-//            isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlowest()
-//            isMultiWords(seriesType) && !isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlow()
-//            !isMultiWords(seriesType) && isDoneBad(lastExerciseHistory) -> audioFileMetaData.setSpeedSlow()
-//        }
+
         val text = audioFileMetaData.text
-        if (seriesType != ExerciseType.SENTENCE)
+        if (!listTextExercises.contains(seriesType))
             audioFileMetaData.text = text.replace(" ", ", ")
 
         if (text.contains(" ")) {
