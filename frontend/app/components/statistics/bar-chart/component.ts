@@ -4,6 +4,8 @@ import type {Chart, ChartOptions, Data, DataItem} from 'billboard.js';
 import { isNone } from '@ember/utils';
 import {tracked} from "@glimmer/tracking";
 
+const SELECTED_BAR_CLASS_NAME = 'selected-bar';
+
 export type BarDataType = [...[string, ...number[]][]];
 
 export type BarOptionsType = Pick<
@@ -15,6 +17,7 @@ export type BarOptionsType = Pick<
 interface IBarChartComponentArgs {
   data: BarDataType;
   options: BarOptionsType;
+  lastBarIndex: number | null;
   onClickItem(index: number): void;
 }
 
@@ -70,12 +73,11 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
         onclick(dataItem: DataItem, element: SVGElement) {
           const childrenElements = element?.parentElement?.children;
           if (childrenElements) {
-            const selectedBarClassName = 'selected-bar';
             for (let i = 0; i < childrenElements.length; i++) {
               const item = childrenElements.item(i);
-              item?.classList.remove(selectedBarClassName);
+              item?.classList.remove(SELECTED_BAR_CLASS_NAME);
             }
-            element.classList.add(selectedBarClassName);
+            element.classList.add(SELECTED_BAR_CLASS_NAME);
             onClickItemFunction(dataItem.index + 1);
           }
         }
@@ -88,6 +90,11 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
       tooltip: this.chartOptions?.tooltip,
       bar: this.chartOptions?.bar,
     });
+
+    const barItem = document.querySelector('.bb-bar-' + this.args.lastBarIndex);
+    if (this.args.lastBarIndex && barItem) {
+      barItem.classList.add(SELECTED_BAR_CLASS_NAME);
+    }
   }
 
   @action

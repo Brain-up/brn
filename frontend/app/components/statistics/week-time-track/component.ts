@@ -96,6 +96,8 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
 
   @tracked selectedDay?: DateTime | null;
 
+  @tracked lastBarIndex?: number | null;
+
   get selectedMonth(): DateTime {
     return this.args.selectedMonth;
   }
@@ -109,6 +111,8 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
       return;
     }
 
+    let lastDay = null;
+    let lastDayIndex = -1;
     let dayNumber: number;
     for (
       dayNumber = 1;
@@ -119,6 +123,10 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
         (statisticsItem: UserWeeklyStatisticsModel) =>
           statisticsItem.date.day === dayNumber,
       );
+      if (dataItem) {
+        lastDay = dataItem.date;
+        lastDayIndex = dayNumber;
+      }
       this.chartData.push(
         dataItem
           ? {
@@ -139,6 +147,12 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
     this.barData = data.length
       ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]]
       : [];
+
+    if (lastDay) {
+      this.selectedDay = lastDay;
+      this.lastBarIndex = lastDayIndex - 1;
+
+    }
   }
 
   @action
