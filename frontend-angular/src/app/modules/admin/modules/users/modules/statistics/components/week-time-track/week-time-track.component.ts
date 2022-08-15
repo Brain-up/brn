@@ -71,6 +71,8 @@ export class WeekTimeTrackComponent {
 
   public barData: BarDataType;
 
+  public initialIndex: number;
+
   @Input()
   public isLoading = true;
 
@@ -90,9 +92,15 @@ export class WeekTimeTrackComponent {
     }
 
     this.chartData = [];
+    let lastDay = null;
+    let lastIndex = null;
     for (let dayNumber = 1; dayNumber <= this.selectedMonth.daysInMonth(); dayNumber++) {
       const realRawItem = data.find((rawItem) => dayjs(rawItem.date).date() === dayNumber);
 
+      if (realRawItem) {
+        lastDay = dayjs(realRawItem.date);
+        lastIndex = dayNumber - 1;
+      }
       this.chartData.push(
         realRawItem
           ? {
@@ -109,6 +117,8 @@ export class WeekTimeTrackComponent {
     }
 
     this.barData = data.length ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]] : [];
+    this.initialIndex = lastIndex;
+    this.selectedDay = lastDay;
   }
 
   @Output()
@@ -133,7 +143,7 @@ export class WeekTimeTrackComponent {
     return this.selectedMonth.add(1, 'month').month() <= dayjs().month();
   }
 
-  onClickItem(event: DataItem) {
-    this.selectedDay = this.selectedMonth.clone().set('date', event.index + 1);
+  onClickItem(index: number) {
+    this.selectedDay = this.selectedMonth.clone().set('date', index);
   }
 }
