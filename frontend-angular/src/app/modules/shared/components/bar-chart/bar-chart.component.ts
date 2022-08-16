@@ -13,7 +13,7 @@ import { bar, bb, Chart, DataItem } from 'billboard.js';
 import { BarDataType } from './models/bar-data';
 import { BarOptionsType } from './models/bar-options';
 
-const SELECTED_BAR_CLASS_NAME = 'selected-bar';
+export const SELECTED_BAR_CLASS_NAME = 'selected-bar';
 
 @Component({
   selector: 'app-bar-chart',
@@ -25,7 +25,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   public set initialBarIndex(initialIndex: number) {
-    if (!initialIndex) {
+    if (initialIndex == null) {
       return;
     }
 
@@ -58,11 +58,11 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
   }
   private chart: Chart;
   private chartOptions: BarOptionsType;
-  private barIndex: number;
+  private barIndex: number | null;
   private chartColumns: BarDataType = [];
 
   @ViewChild('chart')
-  private chartElemRef: ElementRef;
+  chartElemRef: ElementRef;
 
   @Output() clickItem = new EventEmitter<number>();
 
@@ -102,8 +102,8 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
       bar: this.chartOptions?.bar,
     });
 
-    if (this.barIndex) {
-      const barItem = document.querySelector('.bb-bar-' + this.barIndex);
+    if (this.barIndex != null) {
+      const barItem = this.chartElemRef.nativeElement.querySelector('.bb-bar-' + this.barIndex);
       if (barItem) {
         barItem.classList.add(SELECTED_BAR_CLASS_NAME);
       }

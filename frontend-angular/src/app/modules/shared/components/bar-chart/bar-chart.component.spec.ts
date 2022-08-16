@@ -1,7 +1,8 @@
 import { BarDataType } from './models/bar-data';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BarChartComponent } from './bar-chart.component';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { BarChartComponent, SELECTED_BAR_CLASS_NAME } from './bar-chart.component';
 import { BarOptionsType } from './models/bar-options';
+import { ElementRef } from '@angular/core';
 
 describe('BarChartComponent', () => {
   let fixture: ComponentFixture<BarChartComponent>;
@@ -47,5 +48,38 @@ describe('BarChartComponent', () => {
     component.options = options;
     fixture.detectChanges();
     expect(component[`chartOptions`]).toBeTruthy();
+  });
+
+  it('should not be add class SELECTED_BAR_CLASS_NAME to bar when no initialBarIndex setted', () => {
+    const daysInMonth = 31;
+    const daysData = Array.from({length: daysInMonth}, (v, i) => i);
+    const barData: BarDataType = [
+      ['data', ...daysData],
+    ];
+    const childViewElement: HTMLElement = document.createElement('div');
+    component.chartElemRef = new ElementRef<any>(childViewElement);
+    component.data = barData;
+    component.ngAfterViewInit();
+    for (let i = 0; i < daysInMonth; i++) {
+      const querySelector = childViewElement.querySelector('.bb-bar-' + i);
+      const hasSelectedClass = querySelector.classList.contains(SELECTED_BAR_CLASS_NAME);
+      expect(hasSelectedClass).toBeFalse();
+    }
+  });
+
+  it('should be add class SELECTED_BAR_CLASS_NAME to bar when receive initialBarIndex', () => {
+    const daysInMonth = 31;
+    const daysData = Array.from({length: daysInMonth}, (v, i) => i);
+    const barData: BarDataType = [['data', ...daysData]];
+    const childViewElement: HTMLElement = document.createElement('div');
+    component.chartElemRef = new ElementRef<any>(childViewElement);
+    component.data = barData;
+    for (let i = 0; i < daysInMonth; i++) {
+      component.initialBarIndex = i;
+      component.ngAfterViewInit();
+      const element = childViewElement.querySelector('.bb-bar-' + i);
+      const hasSelectedClass = element.classList?.contains(SELECTED_BAR_CLASS_NAME);
+      expect(hasSelectedClass).toBeTrue();
+    }
   });
 });
