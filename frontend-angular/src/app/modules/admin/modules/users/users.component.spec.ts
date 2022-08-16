@@ -17,9 +17,6 @@ import { PipesModule } from '@shared/pipes/pipes.module';
 import {  MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { TokenService } from '@root/services/token.service';
-import { MatSortHarness } from '@angular/material/sort/testing';
-import { MatPaginatorHarness } from '@angular/material/paginator/testing';
-import { MatTableHarness } from '@angular/material/table/testing';
 import { UserMapped } from '@admin/models/user.model';
 
 describe('UsersComponent', () => {
@@ -57,6 +54,8 @@ describe('UsersComponent', () => {
       diagnosticProgress: {
         SIGNALS: true,
       },
+      spentTime: 10,
+      doneExercises: 2,
     },
     {
       age: 22,
@@ -76,6 +75,8 @@ describe('UsersComponent', () => {
       diagnosticProgress: {
         SIGNALS: false,
       },
+      spentTime: 10,
+      doneExercises: 2,
     },
   ];
 
