@@ -91,9 +91,9 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
       bar: this.chartOptions?.bar,
     });
 
-    const barItem = document.querySelector('.bb-bar-' + this.args.lastBarIndex);
-    if (this.args.lastBarIndex && barItem) {
-      barItem.classList.add(SELECTED_BAR_CLASS_NAME);
+    if (!isNone(this.args.lastBarIndex)) {
+      const barItem = this.chartElemRef.querySelector('.bb-bar-' + this.args.lastBarIndex);
+      barItem?.classList.add(SELECTED_BAR_CLASS_NAME);
     }
   }
 

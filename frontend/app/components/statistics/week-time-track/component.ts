@@ -148,7 +148,7 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
       ? [['data', ...this.chartData.map((dataItem) => dataItem.y)]]
       : [];
 
-    if (lastDay) {
+    if (!isNone(lastDay)) {
       this.selectedDay = lastDay;
       this.lastBarIndex = lastDayIndex - 1;
 
