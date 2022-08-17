@@ -34,8 +34,6 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
     return this.args.data;
   }
 
-  @tracked selectedIndex?: number | null;
-
   @action
   didUpdateData() {
     if (isNone(this.chartColumns)) {
