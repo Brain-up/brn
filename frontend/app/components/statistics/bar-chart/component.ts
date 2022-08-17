@@ -78,7 +78,9 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
               item?.classList.remove(SELECTED_BAR_CLASS_NAME);
             }
             element.classList.add(SELECTED_BAR_CLASS_NAME);
-            onClickItemFunction(dataItem.index + 1);
+            if (!isNone(dataItem) && !isNone(dataItem.index)) {
+              onClickItemFunction(dataItem.index + 1);
+            }
           }
         }
       },
@@ -93,7 +95,9 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
 
     if (!isNone(this.args.lastBarIndex)) {
       const barItem = this.chartElemRef.querySelector('.bb-bar-' + this.args.lastBarIndex);
-      barItem?.classList.add(SELECTED_BAR_CLASS_NAME);
+      if (!isNone(barItem)) {
+        barItem.classList.add(SELECTED_BAR_CLASS_NAME);
+      }
     }
   }
 

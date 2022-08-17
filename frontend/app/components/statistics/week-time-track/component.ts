@@ -104,7 +104,6 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
 
   @action
   didUpdateData(): void {
-    this.selectedDay = null;
     this.chartData = [];
     const data: UserWeeklyStatisticsModel[] | null = this.args.data;
     if (isNone(data)) {
@@ -151,7 +150,6 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
     if (!isNone(lastDay)) {
       this.selectedDay = lastDay;
       this.lastBarIndex = lastDayIndex - 1;
-
     }
   }
 
