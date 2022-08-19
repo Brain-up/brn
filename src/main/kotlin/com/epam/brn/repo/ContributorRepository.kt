@@ -1,7 +1,7 @@
 package com.epam.brn.repo
 
+import com.epam.brn.enums.ContributorType
 import com.epam.brn.model.Contributor
-import com.epam.brn.model.ContributorType
 import com.epam.brn.model.GitHubUser
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.enums.ContributorType
 import com.epam.brn.service.ContributorServer
-import com.epam.brn.model.ContributorType
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired

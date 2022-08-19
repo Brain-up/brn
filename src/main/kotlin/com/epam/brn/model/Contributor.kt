@@ -2,6 +2,7 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.ContributorAdminDto
 import com.epam.brn.dto.ContributorUserDto
+import com.epam.brn.enums.ContributorType
 import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.CascadeType
 import javax.persistence.Entity

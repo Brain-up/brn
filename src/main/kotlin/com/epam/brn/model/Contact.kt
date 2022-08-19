@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ContactDto
+import com.epam.brn.enums.ContactType
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated

@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ContributorUserDto
-import com.epam.brn.model.ContributorType
+import com.epam.brn.enums.ContributorType
 
 interface ContributorServer {
 
