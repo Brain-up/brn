@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.enums.ContributorType
-import com.epam.brn.service.ContributorServer
+import com.epam.brn.service.ContributorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/contributor")
 @Api(value = "/contributor", description = "Contains actions over contributors of this project")
-class ContributorController(@Autowired val contributorServer: ContributorServer) {
+class ContributorController(@Autowired val contributorService: ContributorService) {
 
     @GetMapping
     @ApiOperation("Get all contributors by type")
@@ -24,6 +24,6 @@ class ContributorController(@Autowired val contributorServer: ContributorServer)
         @RequestParam(name = "type") type: ContributorType,
     ): ResponseEntity<BaseResponse> {
         return ResponseEntity.ok()
-            .body(BaseResponse(data = contributorServer.getContributors(locale, type)))
+            .body(BaseResponse(data = contributorService.getContributors(locale, type)))
     }
 }

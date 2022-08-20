@@ -1,7 +1,7 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.ContributorAdminDto
-import com.epam.brn.dto.ContributorUserDto
+import com.epam.brn.dto.response.ContributorDetailsResponse
+import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.enums.ContributorType
 import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.CascadeType
@@ -32,7 +32,7 @@ data class Contributor(
     @Enumerated(EnumType.STRING)
     var type: ContributorType = ContributorType.DEVELOPER,
     var pictureUrl: String? = null,
-    var contribution: Long? = null,
+    var contribution: Long = 0,
     var active: Boolean = true,
 ) {
 
@@ -44,9 +44,9 @@ data class Contributor(
     @JoinColumn(name = "contributor_id")
     var contacts: MutableSet<Contact> = mutableSetOf()
 
-    fun toContributorUserDto(locale: String = "ru-ru"): ContributorUserDto {
+    fun toContributorDto(locale: String = "ru-ru"): ContributorResponse {
         if (locale == "ru-ru") {
-            return ContributorUserDto(
+            return ContributorResponse(
                 id = id,
                 name = name ?: gitHubUser?.name,
                 description = description ?: gitHubUser?.bio,
@@ -57,7 +57,7 @@ data class Contributor(
                 }.toSet()
             )
         } else {
-            return ContributorUserDto(
+            return ContributorResponse(
                 id = id,
                 name = nameEn ?: gitHubUser?.name,
                 description = descriptionEn ?: gitHubUser?.bio,
@@ -70,8 +70,8 @@ data class Contributor(
         }
     }
 
-    fun toContributorAdminDto(): ContributorAdminDto {
-        return ContributorAdminDto(
+    fun toContributorDetailsDto(): ContributorDetailsResponse {
+        return ContributorDetailsResponse(
             id = id,
             type = type.name,
             name = name,

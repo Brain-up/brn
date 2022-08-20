@@ -1,6 +1,6 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
-data class GitHubUserDto(
+data class GitHubUserResponse(
     var id: Long? = null,
     var name: String? = null,
     var email: String? = null,

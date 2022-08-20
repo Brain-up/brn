@@ -1,10 +1,10 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
-data class ContributorUserDto(
+data class ContributorResponse(
     var id: Long?,
     var name: String?,
     var description: String?,
     var company: String?,
     var pictureUrl: String?,
-    var contacts: Set<ContactDto>,
+    var contacts: Set<ContactResponse>,
 )

@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.ContributorUserDto
+import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.repo.ContributorRepository
 import org.springframework.stereotype.Service
@@ -10,12 +10,12 @@ import java.util.stream.Collectors
 @Service
 class GitHubContributorService(
     val contributorRepository: ContributorRepository
-) : ContributorServer {
+) : ContributorService {
 
     @Transactional(readOnly = true)
-    override fun getContributors(locale: String, type: ContributorType): List<ContributorUserDto> {
+    override fun getContributors(locale: String, type: ContributorType): List<ContributorResponse> {
         return contributorRepository.findAllByType(type).stream()
-            .map { e -> e.toContributorUserDto(locale) }
+            .map { e -> e.toContributorDto(locale) }
             .collect(Collectors.toList())
     }
 }

@@ -1,6 +1,6 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
-data class ContactDto(
+data class ContactResponse(
     var id: Long?,
     var type: String,
     var value: String

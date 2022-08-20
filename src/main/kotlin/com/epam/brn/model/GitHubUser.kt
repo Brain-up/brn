@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.GitHubUserDto
+import com.epam.brn.dto.response.GitHubUserResponse
 import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -21,7 +21,7 @@ data class GitHubUser(
     var contributions: Long
 ) {
 
-    fun toDto(): GitHubUserDto = GitHubUserDto(
+    fun toDto(): GitHubUserResponse = GitHubUserResponse(
         id = id,
         name = name,
         avatarUrl = avatarUrl,
