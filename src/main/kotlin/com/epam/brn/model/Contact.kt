@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.response.ContactResponse
+import com.epam.brn.dto.ContactDto
 import com.epam.brn.enums.ContactType
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -36,9 +36,9 @@ data class Contact(
         return "Contact(id=$id, type=$type, value='$value')"
     }
 
-    fun toDto(): ContactResponse {
-        return ContactResponse(
-            id = id,
+    fun toDto(): ContactDto {
+        return ContactDto(
+            id = id!!,
             type = type.name,
             value = value
         )

@@ -47,7 +47,7 @@ data class Contributor(
     fun toContributorDto(locale: String = "ru-ru"): ContributorResponse {
         if (locale == "ru-ru") {
             return ContributorResponse(
-                id = id,
+                id = id!!,
                 name = name ?: gitHubUser?.name,
                 description = description ?: gitHubUser?.bio,
                 company = company ?: gitHubUser?.company,
@@ -58,7 +58,7 @@ data class Contributor(
             )
         } else {
             return ContributorResponse(
-                id = id,
+                id = id!!,
                 name = nameEn ?: gitHubUser?.name,
                 description = descriptionEn ?: gitHubUser?.bio,
                 company = companyEn ?: gitHubUser?.company,
@@ -72,7 +72,7 @@ data class Contributor(
 
     fun toContributorDetailsDto(): ContributorDetailsResponse {
         return ContributorDetailsResponse(
-            id = id,
+            id = id!!,
             type = type.name,
             name = name,
             description = description,
