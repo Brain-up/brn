@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/contributor")
-@Api(value = "/contributor", description = "Contains actions over contributors of this project")
+@RequestMapping("/contributors")
+@Api(value = "/contributors", description = "Contains actions over contributors of this project")
 class ContributorController(@Autowired val contributorService: ContributorService) {
 
     @GetMapping
