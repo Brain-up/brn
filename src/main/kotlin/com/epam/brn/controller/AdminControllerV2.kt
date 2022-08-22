@@ -1,9 +1,9 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseResponse
-import com.epam.brn.dto.response.BaseSingleObjectResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.swagger.annotations.Api
@@ -31,16 +31,16 @@ class AdminControllerV2(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
     ) = ResponseEntity.ok()
-        .body(BaseResponse(data = studyHistoryService.getHistories(userId, from, to)))
+        .body(Response(data = studyHistoryService.getHistories(userId, from, to)))
 
     @GetMapping("/study/day")
     @ApiOperation("Get user's details daily statistic for the day. Where day is a date in the ISO date time format")
     fun getUserDailyDetailsStatistics(
         @RequestParam(name = "day", required = true) day: LocalDateTime,
         @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponse> {
+    ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
         val result = studyHistoryService.getUserDailyStatistics(day, userId)
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 
     @GetMapping("/study/week")
@@ -49,9 +49,9 @@ class AdminControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponse> {
+    ): ResponseEntity<Response<List<DayStudyStatistic>>> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to, userId)
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 
     @GetMapping("/study/year")
@@ -60,8 +60,8 @@ class AdminControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId", required = true) userId: Long
-    ): ResponseEntity<BaseSingleObjectResponse> {
+    ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to, userId)
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 }

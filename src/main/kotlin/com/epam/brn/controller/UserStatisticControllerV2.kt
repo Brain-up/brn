@@ -1,8 +1,9 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseSingleObjectResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.swagger.annotations.Api
@@ -28,9 +29,9 @@ class UserStatisticControllerV2(
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime
-    ): ResponseEntity<BaseSingleObjectResponse> {
+    ): ResponseEntity<Response<List<DayStudyStatistic>>> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 
     @GetMapping("/study/year")
@@ -38,17 +39,17 @@ class UserStatisticControllerV2(
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
-    ): ResponseEntity<BaseSingleObjectResponse> {
+    ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 
     @GetMapping("/study/day")
     @ApiOperation("Get current user's details daily statistic for day. Where day is a date in the ISO date time format")
     fun getUserDailyDetailsStatistics(
         @RequestParam(name = "day", required = true) day: LocalDateTime
-    ): ResponseEntity<BaseSingleObjectResponse> {
+    ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
         val result = historyService.getUserDailyStatistics(day = day)
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 }
