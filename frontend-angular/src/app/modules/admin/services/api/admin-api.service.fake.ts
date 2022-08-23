@@ -124,6 +124,8 @@ export class AdminApiServiceFake
         ),
         isFavorite: getRandomBool(),
         userId: '1234',
+        spentTime: 10,
+        doneExercises: 2,
       });
     }
 
