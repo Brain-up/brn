@@ -33,7 +33,7 @@ data class StudyHistory(
     var exercise: Exercise,
     var startTime: LocalDateTime,
     var endTime: LocalDateTime? = null,
-    var spentTime: Long? = endTime?.toInstant(ZoneOffset.UTC)?.epochSecond
+    var spentTimeInSeconds: Long? = endTime?.toInstant(ZoneOffset.UTC)?.epochSecond
         ?.minus(startTime.toInstant(ZoneOffset.UTC).epochSecond),
     var executionSeconds: Int,
     var tasksCount: Short,
@@ -44,7 +44,7 @@ data class StudyHistory(
 
 ) {
     override fun toString() =
-        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, spentTime=$spentTime, tasksCount=$tasksCount, wrongAnswers=$wrongAnswers)"
+        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, spentTime=$spentTimeInSeconds, tasksCount=$tasksCount, wrongAnswers=$wrongAnswers)"
 
     fun toDto() = StudyHistoryDto(
         id = this.id,
