@@ -23,6 +23,7 @@
     *ngIf="barData?.length; else emptyDataTemplate"
     [data]="barData"
     [options]="barOptions"
+    [initialBarIndex]="initialIndex"
     (clickItem)="onClickItem($event)"
   ></app-bar-chart>
 </ng-template>
