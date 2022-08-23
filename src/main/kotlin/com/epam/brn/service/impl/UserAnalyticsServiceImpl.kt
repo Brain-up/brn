@@ -20,6 +20,8 @@ import java.io.InputStream
 import java.time.LocalTime
 import java.time.temporal.WeekFields
 import java.util.Locale
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Service
 class UserAnalyticsServiceImpl(
@@ -56,7 +58,7 @@ class UserAnalyticsServiceImpl(
             user.apply {
                 this.firstDone = userStatistic.firstStudy
                 this.lastDone = userStatistic.lastStudy
-                this.spentTime = userStatistic.spentTime
+                this.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
                 this.doneExercises = userStatistic.doneExercises
             }
         }
