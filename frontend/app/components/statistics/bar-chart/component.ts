@@ -2,7 +2,6 @@ import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import type {Chart, ChartOptions, Data, DataItem} from 'billboard.js';
 import { isNone } from '@ember/utils';
-import {tracked} from "@glimmer/tracking";
 
 const SELECTED_BAR_CLASS_NAME = 'selected-bar';
 
