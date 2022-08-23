@@ -33,8 +33,8 @@ data class StudyHistory(
     var exercise: Exercise,
     var startTime: LocalDateTime,
     var endTime: LocalDateTime? = null,
-    var spentTime: Long? = endTime?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
-        ?.minus(startTime.toInstant(ZoneOffset.UTC).toEpochMilli()),
+    var spentTime: Long? = endTime?.toInstant(ZoneOffset.UTC)?.epochSecond
+        ?.minus(startTime.toInstant(ZoneOffset.UTC).epochSecond),
     var executionSeconds: Int,
     var tasksCount: Short,
     var wrongAnswers: Int,
