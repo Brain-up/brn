@@ -9,7 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { WeekTimeTrackComponent } from './week-time-track.component';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import * as dayjs from 'dayjs';
-import { DataItem } from 'billboard.js';
+import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 
 describe('WeekTimeTrackComponent', () => {
   let fixture: ComponentFixture<WeekTimeTrackComponent>;
@@ -36,6 +36,19 @@ describe('WeekTimeTrackComponent', () => {
       ['2', 5678],
     ];
     component.barData = data;
+    component.initialIndex = 1;
+    const selectedDay = dayjs();
+    component.selectedDay = selectedDay;
+    component.data = undefined;
+    tick();
+    expect(component.barData).toBe(data);
+    expect(component.initialIndex).toBe(1);
+    expect(component.selectedDay).toBe(selectedDay);
+  }));
+
+  it('should return on input property data if null', fakeAsync(() => {
+    const data: BarDataType = null;
+    component.barData = data;
     component.data = undefined;
     tick();
     expect(component.barData).toBe(data);
@@ -50,6 +63,32 @@ describe('WeekTimeTrackComponent', () => {
     component.data = undefined;
     tick();
     expect(component.barData).toBe(data);
+  }));
+
+  it('should calculate initial bar indexz and selected day on input property data', fakeAsync(() => {
+    const lastStatisticDayInMonth = '2022-01-25T00:00:00';
+    const data: UserWeeklyStatistics[] = [
+      {
+        date: '2022-01-01T00:00:00',
+        exercisingTimeSeconds: 10,
+        progress: 'GOOD',
+      },
+      {
+        date: '2022-01-15T00:00:00',
+        exercisingTimeSeconds: 10,
+        progress: 'GOOD',
+      },
+      {
+        date: lastStatisticDayInMonth,
+        exercisingTimeSeconds: 10,
+        progress: 'GOOD',
+      },
+    ];
+    component.selectedMonth = dayjs(lastStatisticDayInMonth);
+    component.data = data;
+    tick();
+    expect(component.initialIndex).toBe(24);
+    expect(component.selectedDay.date).toBe(dayjs(lastStatisticDayInMonth).date);
   }));
 
   it('should isAllowNextMonth set to false', () => {
@@ -82,17 +121,9 @@ describe('WeekTimeTrackComponent', () => {
     const selectedMonth = Date.UTC(2022, 0, 10);
     component.selectedMonth = dayjs(selectedMonth);
     for (let i = 0; i < 31; i++) {
-      const dataItem: DataItem = {
-        id: 'test',
-        x: 0,
-        value: 0,
-        index: i,
-        name: 'name',
-        ratio: 0
-      };
-      component.onClickItem(dataItem);
+      component.onClickItem(i);
       const date = component.selectedMonth.clone();
-      expect(component.selectedDay).toEqual(date.set('date', i + 1));
+      expect(component.selectedDay).toEqual(date.set('date', i));
     }
   });
 });

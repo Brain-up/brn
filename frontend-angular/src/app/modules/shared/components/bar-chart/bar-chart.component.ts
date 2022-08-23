@@ -13,6 +13,8 @@ import { bar, bb, Chart, DataItem } from 'billboard.js';
 import { BarDataType } from './models/bar-data';
 import { BarOptionsType } from './models/bar-options';
 
+export const SELECTED_BAR_CLASS_NAME = 'selected-bar';
+
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
@@ -20,6 +22,15 @@ import { BarOptionsType } from './models/bar-options';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarChartComponent implements AfterViewInit, OnDestroy {
+
+  @Input()
+  public set initialBarIndex(initialIndex: number) {
+    if (initialIndex == null) {
+      return;
+    }
+
+    this.barIndex = initialIndex;
+  }
 
   @Input()
   public set data(data: BarDataType) {
@@ -47,12 +58,13 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
   }
   private chart: Chart;
   private chartOptions: BarOptionsType;
+  private barIndex: number | null;
   private chartColumns: BarDataType = [];
 
   @ViewChild('chart')
-  private chartElemRef: ElementRef;
+  chartElemRef: ElementRef;
 
-  @Output() clickItem = new EventEmitter<DataItem>();
+  @Output() clickItem = new EventEmitter<number>();
 
   ngAfterViewInit(): void {
     this.buildChart(this.clickItem);
@@ -68,21 +80,20 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
       data: {
         type: bar(),
+
         columns: this.chartColumns,
         colors: this.chartOptions?.colors,
         labels: this.chartOptions?.labels,
         onclick(dataItem: DataItem, element: SVGElement) {
           const childrenElements = element.parentElement.children;
-          const selectedBarClassName = 'selected-bar';
           for (let i = 0; i < childrenElements.length; i++) {
             const item = childrenElements.item(i);
-            item.classList.remove(selectedBarClassName);
+            item.classList.remove(SELECTED_BAR_CLASS_NAME);
           }
-          element.classList.add(selectedBarClassName);
-          onClickItem.emit(dataItem);
+          element.classList.add(SELECTED_BAR_CLASS_NAME);
+          onClickItem.emit(dataItem.index + 1);
         }
       },
-
       axis: this.chartOptions?.axis,
       grid: this.chartOptions?.grid,
       size: this.chartOptions?.size,
@@ -90,5 +101,12 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
       tooltip: this.chartOptions?.tooltip,
       bar: this.chartOptions?.bar,
     });
+
+    if (this.barIndex != null) {
+      const barItem = this.chartElemRef.nativeElement.querySelector('.bb-bar-' + this.barIndex);
+      if (barItem) {
+        barItem.classList.add(SELECTED_BAR_CLASS_NAME);
+      }
+    }
   }
 }
