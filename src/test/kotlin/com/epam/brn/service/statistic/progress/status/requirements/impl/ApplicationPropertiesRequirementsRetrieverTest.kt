@@ -35,8 +35,8 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val period = UserExercisingPeriod.DAY
         val minimalRequirements = 0
         val maximalRequirements = 15
-        val periodName = period.name.toLowerCase()
-        val statusName = status.name.toLowerCase()
+        val periodName = period.name.lowercase()
+        val statusName = status.name.lowercase()
         every { env.getProperty("$basePath.$periodName.status.$statusName.maximal") } returns maximalRequirements.toString()
         every { env.getProperty("$basePath.$periodName.status.$statusName.minimal") } returns minimalRequirements.toString()
         val expectedRequirements = StatusRequirements(
@@ -58,8 +58,8 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val period = UserExercisingPeriod.DAY
         val status = UserExercisingProgressStatus.GOOD
         val maximalRequirements = 15
-        val periodName = period.name.toLowerCase()
-        val statusName = status.name.toLowerCase()
+        val periodName = period.name.lowercase()
+        val statusName = status.name.lowercase()
         every { env.getProperty("$basePath.$periodName.status.$statusName.maximal") } returns maximalRequirements.toString()
         every { env.getProperty("$basePath.$periodName.status.$statusName.minimal") } returns null
 

@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/statistics")
 @Api(value = "/statistics", description = "Contains actions over user statistic details")
-class UserStatisticController(
+class UserSubGroupStatisticController(
     private val userStatisticService: UserStatisticService<SubGroupStatisticResponse>,
 ) {
-
     @GetMapping("/subgroups")
     @ApiOperation("Get user's subgroup statistics")
     fun getUserSubGroupStatistic(

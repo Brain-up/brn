@@ -14,6 +14,8 @@
       <Statistics::BarChart
         @data={{this.barData}}
         @options={{this.barOptions}}
+        @lastBarIndex={{this.lastBarIndex}}
+        @onClickItem={{this.onBarChartItemClicked}}
       />
     {{else}}
       <div
@@ -24,4 +26,11 @@
       </div>
     {{/if}}
   </div>
+  {{#if this.selectedDay}}
+    <div>
+      <Statistics::DailyTimeTable
+        @day={{this.selectedDay}}
+      />
+    </div>
+  {{/if}}
 </div>
