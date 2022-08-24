@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.test.assertNotNull
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-class UserStatisticControllerV2IT : BaseIT() {
+class UserSubGroupStatisticControllerV2IT : BaseIT() {
 
     private val baseUrl = "/v2/statistics"
     private val exercisingYear = 2020

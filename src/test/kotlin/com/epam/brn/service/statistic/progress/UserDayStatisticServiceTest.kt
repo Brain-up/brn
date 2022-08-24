@@ -62,7 +62,6 @@ internal class UserDayStatisticServiceTest {
     @Test
     fun `getStatisticForPeriod should return statistic for a day`() {
         // GIVEN
-        val date = LocalDateTime.now()
         val studyHistories = listOf(studyHistory)
         every { studyHistory.startTime } returns studyHistoryDate
         every {
