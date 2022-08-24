@@ -1,7 +1,9 @@
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
-import type { Chart, ChartOptions, Data } from 'billboard.js';
+import type {Chart, ChartOptions, Data, DataItem} from 'billboard.js';
 import { isNone } from '@ember/utils';
+
+const SELECTED_BAR_CLASS_NAME = 'selected-bar';
 
 export type BarDataType = [...[string, ...number[]][]];
 
@@ -14,6 +16,8 @@ export type BarOptionsType = Pick<
 interface IBarChartComponentArgs {
   data: BarDataType;
   options: BarOptionsType;
+  lastBarIndex: number | null;
+  onClickItem(index: number): void;
 }
 
 export default class BarChartComponent extends Component<IBarChartComponentArgs> {
@@ -50,6 +54,7 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
 
   @action
   async buildChart() {
+    const onClickItemFunction = this.args.onClickItem;
     const { bar, bb } = await import('billboard.js');
     if (!this.chartElemRef) {
       return;
@@ -62,6 +67,19 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
         columns: this.chartColumns,
         colors: this.chartOptions?.colors,
         labels: this.chartOptions?.labels,
+        onclick(dataItem: DataItem, element: SVGElement) {
+          const childrenElements = element?.parentElement?.children;
+          if (childrenElements) {
+            for (let i = 0; i < childrenElements.length; i++) {
+              const item = childrenElements.item(i);
+              item?.classList.remove(SELECTED_BAR_CLASS_NAME);
+            }
+            element.classList.add(SELECTED_BAR_CLASS_NAME);
+            if (!isNone(dataItem) && !isNone(dataItem.index)) {
+              onClickItemFunction(dataItem.index + 1);
+            }
+          }
+        }
       },
 
       axis: this.chartOptions?.axis,
@@ -71,6 +89,13 @@ export default class BarChartComponent extends Component<IBarChartComponentArgs>
       tooltip: this.chartOptions?.tooltip,
       bar: this.chartOptions?.bar,
     });
+
+    if (!isNone(this.args.lastBarIndex)) {
+      const barItem = this.chartElemRef.querySelector('.bb-bar-' + this.args.lastBarIndex);
+      if (!isNone(barItem)) {
+        barItem.classList.add(SELECTED_BAR_CLASS_NAME);
+      }
+    }
   }
 
   @action

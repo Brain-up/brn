@@ -267,6 +267,13 @@ profile:
     week_time_track:
       title_weeks: Weekly exersize time
       empty_data: No data for period {period}
+    daily_time_table:
+      series_name: Series name
+      all_done_exercises: All done exercises
+      unique_done_exercises: Unique done exercises
+      repeated_exercises: Repeated exercises
+      done_exercises_successfully_from_first_time: Success exercises from first time
+      listen_words_count: Listen words count
     info_dialog:
       title: What is it about?
       sub_title: "Check if you exercise regularly enough:"

@@ -5,4 +5,9 @@
 & .bb-ygrid-line line {
   stroke: #ffb3bf;
 }
+
+& .selected-bar {
+    stroke: black;
+    stroke-width: 2px;
+  }
 /*! purgecss end ignore */
