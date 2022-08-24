@@ -5,12 +5,10 @@ import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
 import { setupAfterPageVisit } from './test-support/helpers';
 import { getServerResponses, chooseAnswer } from '../general-helpers';
-import { click, settled, waitFor } from '@ember/test-helpers';
-import { timeout } from 'ember-concurrency';
+import { click, waitFor } from '@ember/test-helpers';
 import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
 import { getData } from './test-support/data-storage';
-import { TIMINGS } from 'brn/utils/audio-api';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 
 module('Acceptance | tasks flow', function (hooks) {

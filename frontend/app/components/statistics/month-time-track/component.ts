@@ -1,5 +1,4 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
 import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
 import { DateTime } from 'luxon';
 import { action } from '@ember/object';
@@ -14,7 +13,6 @@ interface IMonthTimeTrackComponentArgs {
 }
 
 export default class MonthTimeTrackComponent extends Component<IMonthTimeTrackComponentArgs> {
-  @tracked isLoading = true;
 
   get monthTimeTrackItemsData(): UserYearlyStatisticsModel[] | null {
     return this.args.data;
