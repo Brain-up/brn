@@ -9,4 +9,5 @@ data class ContributorResponse(
     var company: String?,
     var pictureUrl: String?,
     var contacts: Set<ContactDto>,
+    var contribution: Long
 )

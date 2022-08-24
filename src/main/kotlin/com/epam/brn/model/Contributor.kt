@@ -52,6 +52,7 @@ data class Contributor(
                 description = description ?: gitHubUser?.bio,
                 company = company ?: gitHubUser?.company,
                 pictureUrl = pictureUrl,
+                contribution = contribution,
                 contacts = contacts.map {
                     it.toDto()
                 }.toSet()
@@ -63,6 +64,7 @@ data class Contributor(
                 description = descriptionEn ?: gitHubUser?.bio,
                 company = companyEn ?: gitHubUser?.company,
                 pictureUrl = pictureUrl,
+                contribution = contribution,
                 contacts = contacts.map {
                     it.toDto()
                 }.toSet()

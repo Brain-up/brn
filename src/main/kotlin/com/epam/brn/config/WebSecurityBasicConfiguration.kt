@@ -6,6 +6,7 @@ import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.auth.filter.FirebaseTokenAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -46,6 +47,9 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/cloud/upload").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/cloud/folders").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/doctors/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_DOCTOR.name)
+            .antMatchers(HttpMethod.GET, "/contributors/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/contributors/**").hasAuthority(ROLE_ADMIN.name)
+            .antMatchers(HttpMethod.PUT, "/contributors/**").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
             .and()
             .formLogin().disable()
