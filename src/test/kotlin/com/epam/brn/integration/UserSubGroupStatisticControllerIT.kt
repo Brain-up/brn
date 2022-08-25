@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-class UserStatisticControllerIT : BaseIT() {
+class UserSubGroupStatisticControllerIT : BaseIT() {
 
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
