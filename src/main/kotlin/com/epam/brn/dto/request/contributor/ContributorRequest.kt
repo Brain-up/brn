@@ -20,9 +20,11 @@ data class ContributorRequest(
     @field:Length(max = 255)
     val company: String?,
 
+    @field:NotBlank
     @field:Length(max = 255)
     val nameEn: String?,
 
+    @field:NotBlank
     @field:Length(max = 255)
     val descriptionEn: String?,
 

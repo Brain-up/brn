@@ -45,31 +45,25 @@ data class Contributor(
     var contacts: MutableSet<Contact> = mutableSetOf()
 
     fun toContributorDto(locale: String = "ru-ru"): ContributorResponse {
+        val dto = ContributorResponse(
+            id = id!!,
+            pictureUrl = pictureUrl,
+            contribution = contribution,
+            type = type,
+            contacts = contacts.map {
+                it.toDto()
+            }.toSet()
+        )
         if (locale == "ru-ru") {
-            return ContributorResponse(
-                id = id!!,
-                name = name ?: gitHubUser?.name,
-                description = description ?: gitHubUser?.bio,
-                company = company ?: gitHubUser?.company,
-                pictureUrl = pictureUrl,
-                contribution = contribution,
-                contacts = contacts.map {
-                    it.toDto()
-                }.toSet()
-            )
+            dto.name = name ?: gitHubUser?.name
+            dto.description = description ?: gitHubUser?.bio
+            dto.company = company ?: gitHubUser?.company
         } else {
-            return ContributorResponse(
-                id = id!!,
-                name = nameEn ?: gitHubUser?.name,
-                description = descriptionEn ?: gitHubUser?.bio,
-                company = companyEn ?: gitHubUser?.company,
-                pictureUrl = pictureUrl,
-                contribution = contribution,
-                contacts = contacts.map {
-                    it.toDto()
-                }.toSet()
-            )
+            dto.name = nameEn ?: gitHubUser?.name
+            dto.description = descriptionEn ?: gitHubUser?.bio
+            dto.company = companyEn ?: gitHubUser?.company
         }
+        return dto
     }
 
     fun toContributorDetailsDto(): ContributorDetailsResponse {

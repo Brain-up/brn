@@ -20,6 +20,8 @@ import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import javax.servlet.http.HttpServletResponse
 
+private const val URL_CONTRIBUTORS = "/contributors/**"
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
@@ -47,9 +49,9 @@ class WebSecurityBasicConfiguration(
             .antMatchers("/cloud/upload").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/cloud/folders").hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/doctors/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_DOCTOR.name)
-            .antMatchers(HttpMethod.GET, "/contributors/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/contributors/**").hasAuthority(ROLE_ADMIN.name)
-            .antMatchers(HttpMethod.PUT, "/contributors/**").hasAuthority(ROLE_ADMIN.name)
+            .antMatchers(HttpMethod.GET, URL_CONTRIBUTORS).permitAll()
+            .antMatchers(HttpMethod.POST, URL_CONTRIBUTORS).hasAuthority(ROLE_ADMIN.name)
+            .antMatchers(HttpMethod.PUT, URL_CONTRIBUTORS).hasAuthority(ROLE_ADMIN.name)
             .antMatchers("/**").hasAnyAuthority(ROLE_ADMIN.name, ROLE_USER.name)
             .and()
             .formLogin().disable()
