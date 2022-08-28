@@ -51,7 +51,7 @@ import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 
 @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
-class AdminControllerIT : BaseIT() {
+class AdminExerciseFlowControllerIT : BaseIT() {
 
     private val baseUrl = "/admin"
     private val fromParamName = "from"

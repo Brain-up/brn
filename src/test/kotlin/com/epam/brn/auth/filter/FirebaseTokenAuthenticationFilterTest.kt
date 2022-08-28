@@ -78,7 +78,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         val token = "firebaseTokenMock"
         request.addHeader("Authorization", "Bearer $token")
         val response = MockHttpServletResponse()
-        val filterChain = FilterChain { filterRequest, filterResponse -> }
+        val filterChain = FilterChain { _, _ -> }
         val customUserDetailsMock = CustomUserDetails(createUserAccountMock())
 
         every { tokenHelperUtils.getBearerToken(request) } returns token
@@ -108,7 +108,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
-        val filterChain = FilterChain { filterRequest, filterResponse -> }
+        val filterChain = FilterChain { _, _ -> }
         val customUserDetailsMock = CustomUserDetails(createUserAccountMock())
         val userRecordMock = mockk<UserRecord>()
 
@@ -148,7 +148,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
-        val filterChain = FilterChain { filterRequest, filterResponse -> }
+        val filterChain = FilterChain { _, _ -> }
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
         every { firebaseAuth.verifyIdToken(tokenMock, true) } throws (FirebaseAuthException(FirebaseException(ErrorCode.INVALID_ARGUMENT, "Token invalid", null)))
@@ -172,7 +172,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
-        val filterChain = FilterChain { filterRequest, filterResponse -> }
+        val filterChain = FilterChain { _, _ -> }
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
         every { firebaseAuth.verifyIdToken(tokenMock, true) } throws (IllegalArgumentException())
@@ -196,7 +196,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
-        val filterChain = FilterChain { filterRequest, filterResponse -> }
+        val filterChain = FilterChain { _, _ -> }
         val customUserDetailsMock = CustomUserDetails(createUserAccountMock())
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock

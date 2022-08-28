@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("AdminControllerTestV2 test using MockK")
-class AdminControllerTestV2 {
+class AdminControllerV2Test {
 
     @InjectMockKs
     private lateinit var adminController: AdminControllerV2
