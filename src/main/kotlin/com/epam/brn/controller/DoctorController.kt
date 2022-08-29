@@ -1,7 +1,8 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
+import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.service.DoctorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -32,7 +33,7 @@ class DoctorController(private val doctorService: DoctorService) {
 
     @GetMapping("/{doctorId}/patients")
     @ApiOperation("Get all patients for doctor")
-    fun getAllPatientForDoctor(@PathVariable doctorId: Long): ResponseEntity<BaseResponse> =
+    fun getAllPatientForDoctor(@PathVariable doctorId: Long): ResponseEntity<BaseResponse<List<UserAccountResponse>>> =
         ResponseEntity.ok(BaseResponse(data = doctorService.getPatientsForDoctor(doctorId)))
 
     @DeleteMapping("/{doctorId}/patients/{patientId}")

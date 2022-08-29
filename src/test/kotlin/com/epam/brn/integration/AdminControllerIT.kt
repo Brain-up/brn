@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -8,6 +7,7 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Role.ROLE_ADMIN

@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.repo.StudyHistoryRepository
 import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
@@ -77,7 +77,7 @@ class StudyHistoryControllerIT : BaseIT() {
             .response
             .getContentAsString(StandardCharsets.UTF_8)
 
-        val singleObjectResponseDto = gson.fromJson(response, BaseSingleObjectResponse::class.java)
+        val singleObjectResponseDto = gson.fromJson(response, BaseResponse::class.java)
 
         // THEN
         assertNotNull(singleObjectResponseDto)

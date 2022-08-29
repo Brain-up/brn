@@ -22,7 +22,7 @@ class UserStatisticController(
     @ApiOperation("Get user's subgroup statistics")
     fun getUserSubGroupStatistic(
         @RequestParam(value = "ids", required = true) ids: List<Long>
-    ): ResponseEntity<BaseResponse> {
+    ): ResponseEntity<BaseResponse<List<SubGroupStatisticResponse>>> {
         val userStatistic = userStatisticService.getSubGroupStatistic(ids)
         return ResponseEntity.ok().body(BaseResponse(data = userStatistic))
     }

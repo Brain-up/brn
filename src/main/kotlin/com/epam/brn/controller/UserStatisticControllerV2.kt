@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
@@ -29,9 +29,9 @@ class UserStatisticControllerV2(
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime
-    ): ResponseEntity<Response<List<DayStudyStatistic>>> {
+    ): ResponseEntity<BaseResponse<List<DayStudyStatistic>>> {
         val result = userDayStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BaseResponse(data = result))
     }
 
     @GetMapping("/study/year")
@@ -39,17 +39,17 @@ class UserStatisticControllerV2(
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
-    ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
+    ): ResponseEntity<BaseResponse<List<MonthStudyStatistic>>> {
         val result = userMonthStatisticService.getStatisticForPeriod(from, to)
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BaseResponse(data = result))
     }
 
     @GetMapping("/study/day")
     @ApiOperation("Get current user's details daily statistic for day. Where day is a date in the ISO date time format")
     fun getUserDailyDetailsStatistics(
         @RequestParam(name = "day", required = true) day: LocalDateTime
-    ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
+    ): ResponseEntity<BaseResponse<List<UserDailyDetailStatisticsDto>>> {
         val result = historyService.getUserDailyStatistics(day = day)
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BaseResponse(data = result))
     }
 }
