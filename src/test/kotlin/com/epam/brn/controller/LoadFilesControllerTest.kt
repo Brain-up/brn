@@ -28,7 +28,7 @@ import java.io.FileInputStream
 internal class LoadFilesControllerTest {
 
     @InjectMockKs
-    lateinit var adminController: AdminController
+    lateinit var adminExerciseFlowController: AdminExerciseFlowController
 
     @RelaxedMockK
     lateinit var csvUploadService: CsvUploadService
@@ -69,7 +69,7 @@ internal class LoadFilesControllerTest {
         )
 
         // WHEN
-        val result = adminController.loadExercises(1, taskFile)
+        val result = adminExerciseFlowController.loadExercises(1, taskFile)
 
         // THEN
         verify(exactly = 1) { csvUploadService.loadExercises(1, taskFile) }

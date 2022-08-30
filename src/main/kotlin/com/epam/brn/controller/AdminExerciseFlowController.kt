@@ -15,14 +15,10 @@ import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.SubGroupService
-import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
-import org.springframework.data.domain.Pageable
-import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -40,28 +36,13 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/admin")
 @Api(value = "/admin", description = "Contains actions for admin")
-class AdminController(
+class AdminExerciseFlowController(
     private val studyHistoryService: StudyHistoryService,
-    private val userAccountService: UserAccountService,
-    private val userAnalyticsService: UserAnalyticsService,
     private val exerciseService: ExerciseService,
     private val csvUploadService: CsvUploadService,
     private val resourceService: ResourceService,
     private val subGroupService: SubGroupService,
-    private val authorityService: AuthorityService
 ) {
-
-    @GetMapping("/users")
-    @ApiOperation("Get all users")
-    fun getUsers(
-        @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
-        @RequestParam("role", defaultValue = "ROLE_USER") role: String,
-        @PageableDefault pageable: Pageable,
-    ): ResponseEntity<Response<List<Any>>> {
-        val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)
-        else userAccountService.getUsers(pageable, role)
-        return ResponseEntity.ok().body(Response(data = users))
-    }
 
     @GetMapping("/monthHistories")
     @ApiOperation("Get month user's study histories by month and year")
@@ -119,13 +100,6 @@ class AdminController(
         @RequestBody subGroup: SubGroupChangeRequest
     ): ResponseEntity<Response<SubGroupResponse>> =
         ResponseEntity.ok(Response(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
-
-    @GetMapping("/roles")
-    @ApiOperation("Get all roles")
-    fun getRoles(): ResponseEntity<Response<List<AuthorityResponse>>> {
-        val authorities = authorityService.findAll()
-        return ResponseEntity.ok().body(Response(data = authorities))
-    }
 
     @PostMapping("/create/exercise")
     @ApiOperation("Create new exercise for exist subgroup")
