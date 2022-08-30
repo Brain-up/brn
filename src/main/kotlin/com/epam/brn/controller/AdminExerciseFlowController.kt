@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.response.Response
@@ -8,7 +7,6 @@ import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
-import com.epam.brn.dto.response.AuthorityResponse
 import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.service.ExerciseService

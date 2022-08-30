@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.StudyHistoryDto
@@ -12,12 +11,6 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
-import com.epam.brn.dto.response.AuthorityResponse
-import com.epam.brn.dto.response.Response
-import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.dto.statistic.DayStudyStatistic
-import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.enums.Locale

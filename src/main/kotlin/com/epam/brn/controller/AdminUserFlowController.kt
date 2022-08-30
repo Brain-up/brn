@@ -1,7 +1,8 @@
 package com.epam.brn.controller
 
 import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.AuthorityResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import io.swagger.annotations.Api
@@ -29,16 +30,16 @@ class AdminUserFlowController(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
         @RequestParam("role", defaultValue = "ROLE_USER") role: String,
         @PageableDefault pageable: Pageable,
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<Response<List<Any>>> {
         val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)
         else userAccountService.getUsers(pageable, role)
-        return ResponseEntity.ok().body(BaseResponse(data = users))
+        return ResponseEntity.ok().body(Response(data = users))
     }
 
     @GetMapping("/roles")
     @ApiOperation("Get all roles")
-    fun getRoles(): ResponseEntity<BaseResponse> {
+    fun getRoles(): ResponseEntity<Response<List<AuthorityResponse>>> {
         val authorities = authorityService.findAll()
-        return ResponseEntity.ok().body(BaseResponse(data = authorities))
+        return ResponseEntity.ok().body(Response(data = authorities))
     }
 }
