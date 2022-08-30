@@ -1,21 +1,29 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.service.ContributorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.beans.factory.annotation.Autowired
+import io.swagger.annotations.ApiParam
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/contributors")
 @Api(value = "/contributors", description = "Contains actions over contributors of this project")
-class ContributorController(@Autowired val contributorService: ContributorService) {
+class ContributorController(val contributorService: ContributorService) {
 
     @GetMapping
     @ApiOperation("Get all contributors by type")
@@ -26,4 +34,23 @@ class ContributorController(@Autowired val contributorService: ContributorServic
         return ResponseEntity.ok()
             .body(BaseResponse(data = contributorService.getContributors(locale, type)))
     }
+
+    @PostMapping
+    @ApiOperation("Add a new contributor")
+    fun createContributor(
+        @ApiParam(value = "Contributor data", required = true)
+        @Valid @RequestBody contributorDto: ContributorRequest
+    ): ResponseEntity<BaseSingleObjectResponse> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponse(data = contributorService.createContributor(contributorDto)))
+
+    @PutMapping("/{contributorId}")
+    @ApiOperation("Update an existing contributor")
+    fun updateContributor(
+        @PathVariable("contributorId") contributorId: Long,
+        @ApiParam(value = "Contributor data", required = true)
+        @Valid @RequestBody contributorDto: ContributorRequest
+    ): ResponseEntity<BaseSingleObjectResponse> =
+        ResponseEntity.ok()
+            .body(BaseSingleObjectResponse(data = contributorService.updateContributor(contributorId, contributorDto)))
 }
