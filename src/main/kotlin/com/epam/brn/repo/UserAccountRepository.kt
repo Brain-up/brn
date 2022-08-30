@@ -31,13 +31,15 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
 
     @Query(
         """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet 
-            left JOIN FETCH u.headphones where u.doctor = ?1"""
+            left JOIN FETCH u.headphones left JOIN FETCH u.doctors doctors 
+            where doctors = ?1"""
     )
     fun findUserAccountsByDoctor(doctor: UserAccount): List<UserAccount>
 
     @Query(
         """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet 
-            left JOIN FETCH u.headphones where u.doctor.id = ?1"""
+            left JOIN FETCH u.headphones left JOIN FETCH u.doctors doctors 
+            where doctors.id = ?1"""
     )
     fun findUserAccountsByDoctorId(doctorId: Long): List<UserAccount>
 

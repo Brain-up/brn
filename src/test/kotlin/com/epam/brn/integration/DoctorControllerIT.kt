@@ -8,6 +8,7 @@ import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.databind.type.TypeFactory
 import io.kotest.matchers.shouldBe
+import org.hibernate.validator.internal.util.CollectionHelper
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import javax.transaction.Transactional
 
 @WithMockUser(username = "currentDoctor@default.ru", roles = ["DOCTOR"])
 class DoctorControllerIT : BaseIT() {
@@ -53,6 +55,7 @@ class DoctorControllerIT : BaseIT() {
         authorityRepository.deleteAll()
     }
 
+    @Transactional
     @Test
     fun `should add patient to doctor`() {
         // GIVEN
@@ -69,9 +72,10 @@ class DoctorControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isOk)
 
-        userAccountRepository.findUserAccountById(user1.id!!).get().doctor?.id shouldBe currentDoctor.id
+        userAccountRepository.findUserAccountById(user1.id!!).get().doctors.elementAt(0).id shouldBe currentDoctor.id
     }
 
+    @Transactional
     @Test
     fun `should not add patient to doctor if patient is doctor`() {
         // GIVEN
@@ -88,9 +92,10 @@ class DoctorControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isBadRequest)
 
-        userAccountRepository.findUserAccountById(anotherDoctor.id!!).get().doctor shouldBe null
+        userAccountRepository.findUserAccountById(anotherDoctor.id!!).get().doctors shouldBe emptySet()
     }
 
+    @Transactional
     @Test
     @WithMockUser(username = "user1@default.ru", roles = ["USER"])
     fun `should not add patient if current user is not a doctor`() {
@@ -109,14 +114,14 @@ class DoctorControllerIT : BaseIT() {
         resultAction
             .andExpect(status().isForbidden)
 
-        userAccountRepository.findUserAccountById(user2.id!!).get().doctor shouldBe null
+        userAccountRepository.findUserAccountById(user2.id!!).get().doctors shouldBe emptySet()
     }
 
     @Test
     fun `should get all patients for doctor`() {
         // GIVEN
-        userAccountRepository.save(user1.apply { doctor = currentDoctor })
-        userAccountRepository.save(user2.apply { doctor = currentDoctor })
+        userAccountRepository.save(user1.apply { doctors = CollectionHelper.asSet(currentDoctor) })
+        userAccountRepository.save(user2.apply { doctors = CollectionHelper.asSet(currentDoctor) })
 
         // WHEN
         val resultAction = mockMvc.perform(get("/doctors/${currentDoctor.id}/patients"))
@@ -136,10 +141,11 @@ class DoctorControllerIT : BaseIT() {
         users.map { it.email }.contains(user2.email) shouldBe true
     }
 
+    @Transactional
     @Test
     fun `should remove patient from doctor`() {
         // GIVEN
-        userAccountRepository.save(user1.apply { doctor = currentDoctor })
+        userAccountRepository.save(user1.apply { doctors = CollectionHelper.asSet(currentDoctor) })
 
         // WHEN
         val resultAction = mockMvc.perform(delete("/doctors/${currentDoctor.id}/patients/${user1.id}"))
@@ -150,6 +156,6 @@ class DoctorControllerIT : BaseIT() {
         val user1FromDb = userAccountRepository.findUserAccountById(user1.id!!).get()
         user1FromDb.email shouldBe user1.email
         user1FromDb.id shouldBe user1.id
-        user1FromDb.doctor shouldBe null
+        user1FromDb.doctors shouldBe emptySet()
     }
 }

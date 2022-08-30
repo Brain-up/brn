@@ -20,8 +20,8 @@ data class UserAccountResponse(
     var avatar: String? = null,
     val photo: String? = null,
     val description: String? = null,
-    var headphones: Set<HeadphonesDto>? = null,
-    var doctorId: Long? = null
+    var headphones: Set<HeadphonesDto>? = null
 ) {
     var authorities: MutableSet<String>? = mutableSetOf()
+    var doctors: MutableSet<Long?> = mutableSetOf()
 }

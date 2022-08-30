@@ -50,8 +50,10 @@ internal class DoctorServiceTest {
         every { userAccountService.findUserById(user2.id!!) } returns user2
         every { userAccountService.findUserById(fakeDoctorUser.id!!) } returns fakeDoctorUser
 
-        every { userAccountService.updateDoctorForPatient(any(), any()) } returns mockk()
-        every { userAccountService.removeDoctorFromPatient(any()) } returns mockk()
+        every { userAccountService.addDoctorForPatient(any(), any()) } returns mockk()
+        every { userAccountService.removeDoctorFromPatient(any(), any()) } returns mockk()
+
+        every { userAccountService.getDoctorsForPatient(user1.id!!) } returns listOf(doctor)
     }
 
     // =================================================================================================================
@@ -66,7 +68,7 @@ internal class DoctorServiceTest {
         doctorService.addPatientToDoctorAsDoctor(doctor.id!!, user1.id!!)
 
         // THEN
-        verify { userAccountService.updateDoctorForPatient(user1.id!!, doctor.id!!) }
+        verify { userAccountService.addDoctorForPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -80,7 +82,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(user1.id!!, doctor.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -94,14 +96,14 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(fakeDoctorUser.id!!, user1.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(fakeDoctorUser.id!!, user1.id!!) }
     }
 
     @Test
-    fun `should not add doctor to user if user already has a doctor`() {
+    fun `should not add doctor to user if user already has a same doctor`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns doctor
-        user1.doctorId = anotherDoctor.id
+        user1.doctors = mutableSetOf(doctor.id!!)
 
         // WHEN
         assertThrows<IllegalArgumentException> {
@@ -109,7 +111,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(user1.id!!, doctor.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -123,7 +125,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.updateDoctorForPatient(anotherDoctor.id!!, doctor.id!!) }
+        verify(exactly = 0) { userAccountService.addDoctorForPatient(anotherDoctor.id!!, doctor.id!!) }
     }
 
     // =================================================================================================================
@@ -133,35 +135,20 @@ internal class DoctorServiceTest {
     fun `should remove doctor from patient as doctor`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns doctor
-        user1.doctorId = doctor.id
+        user1.doctors = mutableSetOf(doctor.id!!)
 
         // WHEN
         doctorService.deleteDoctorFromPatientAsDoctor(doctor.id!!, user1.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
     fun `should not remove doctor from patient as doctor if requester is not a doctor`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns fakeDoctorUser
-        user1.doctorId = doctor.id
-
-        // WHEN
-        assertThrows<IllegalArgumentException> {
-            doctorService.deleteDoctorFromPatientAsDoctor(fakeDoctorUser.id!!, user1.id!!)
-        }
-
-        // THEN
-        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!) }
-    }
-
-    @Test
-    fun `should not remove doctor from patient as doctor if user has another doctor`() {
-        // GIVEN
-        every { userAccountService.getCurrentUser().toDto() } returns doctor
-        user1.doctorId = anotherDoctor.id
+        user1.doctors = mutableSetOf(doctor.id!!)
 
         // WHEN
         assertThrows<IllegalArgumentException> {
@@ -169,7 +156,22 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
+    }
+
+    @Test
+    fun `should not remove doctor from patient as doctor if user has another doctor`() {
+        // GIVEN
+        every { userAccountService.getCurrentUser().toDto() } returns doctor
+        user1.doctors = mutableSetOf(anotherDoctor.id!!)
+
+        // WHEN
+        assertThrows<IllegalArgumentException> {
+            doctorService.deleteDoctorFromPatientAsDoctor(doctor.id!!, user1.id!!)
+        }
+
+        // THEN
+        verify(exactly = 0) { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -181,7 +183,7 @@ internal class DoctorServiceTest {
         doctorService.deleteDoctorFromPatientAsDoctor(doctor.id!!, user1.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     // =================================================================================================================
@@ -190,13 +192,13 @@ internal class DoctorServiceTest {
     @Test
     fun `should remove doctor from patient as patient`() {
         // GIVEN
-        every { userAccountService.getCurrentUser().toDto() } returns user1.also { it.doctorId = doctor.id }
+        every { userAccountService.getCurrentUser().toDto() } returns user1.also { it.doctors?.contains(doctor.id!!) }
 
         // WHEN
-        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!)
+        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!, doctor.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     @Test
@@ -205,10 +207,10 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns admin
 
         // WHEN
-        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!)
+        doctorService.deleteDoctorFromPatientAsPatient(user1.id!!, doctor.id!!)
 
         // THEN
-        verify { userAccountService.removeDoctorFromPatient(user1.id!!) }
+        verify { userAccountService.removeDoctorFromPatient(user1.id!!, doctor.id!!) }
     }
 
     // =================================================================================================================
@@ -259,45 +261,42 @@ internal class DoctorServiceTest {
     }
 
     // =================================================================================================================
-    // Tests for getDoctorAssignedToPatient
+    // Tests for getDoctorsAssignedToPatient
     // =================================================================================================================
     @Test
-    fun `should get doctor assigned to patient`() {
+    fun `should get doctors assigned to patient`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns user1
-        user1.doctorId = doctor.id
+        user1.doctors = mutableSetOf(doctor.id!!)
 
         // WHEN
-        val doctorAssignedToPatient = doctorService.getDoctorAssignedToPatient(user1.id!!)
+        val doctorsAssignedToPatient = doctorService.getDoctorsAssignedToPatient(user1.id!!)
 
         // THEN
-        verify { userAccountService.findUserById(doctor.id!!) }
-        doctorAssignedToPatient.id shouldBe doctor.id!!
+        verify { userAccountService.getDoctorsForPatient(user1.id!!) }
+        doctorsAssignedToPatient[0].id shouldBe doctor.id!!
     }
 
     @Test
     fun `should not get doctor assigned to patient if no doctor`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns user1
-        user1.doctorId = null
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
-            doctorService.getDoctorAssignedToPatient(user1.id!!)
-        }
+        doctorService.getDoctorsAssignedToPatient(user1.id!!)
 
         // THEN
-        verify(exactly = 0) { userAccountService.findUserById(doctor.id!!) }
+        verify(exactly = 1) { userAccountService.getDoctorsForPatient(user1.id!!) }
     }
 
     @Test
     fun `should not get doctor assigned to another patient`() {
         // GIVEN
-        every { userAccountService.getCurrentUser().toDto() } returns user1.also { it.doctorId = doctor.id }
+        every { userAccountService.getCurrentUser().toDto() } returns user1.also { it.doctors?.contains(doctor.id!!) }
 
         // WHEN
         assertThrows<IllegalArgumentException> {
-            doctorService.getDoctorAssignedToPatient(user2.id!!)
+            doctorService.getDoctorsAssignedToPatient(user2.id!!)
         }
 
         // THEN
@@ -308,14 +307,14 @@ internal class DoctorServiceTest {
     fun `should get doctor assigned any patient if current user is admin`() {
         // GIVEN
         every { userAccountService.getCurrentUser().toDto() } returns admin
-        user1.doctorId = doctor.id
+        user1.doctors = mutableSetOf(doctor.id!!)
 
         // WHEN
-        val doctorAssignedToPatient = doctorService.getDoctorAssignedToPatient(user1.id!!)
+        val doctorsAssignedToPatient = doctorService.getDoctorsAssignedToPatient(user1.id!!)
 
         // THEN
-        verify { userAccountService.findUserById(doctor.id!!) }
-        doctorAssignedToPatient.id shouldBe doctor.id!!
+        verify { userAccountService.getDoctorsForPatient(user1.id!!) }
+        doctorsAssignedToPatient[0].id shouldBe doctor.id!!
     }
 
     // =================================================================================================================
@@ -369,7 +368,6 @@ internal class DoctorServiceTest {
         id: Long?,
         email: String?,
         authorities: MutableSet<String>?,
-        doctorId: Long? = null
     ): UserAccountResponse {
         return UserAccountResponse(
             id = id,
@@ -377,8 +375,10 @@ internal class DoctorServiceTest {
             email = email,
             gender = Gender.MALE,
             bornYear = 2000,
-            active = true,
-            doctorId = doctorId
-        ).apply { this.authorities = authorities }
+            active = true
+        ).apply {
+            this.authorities = authorities
+            this.doctors = doctors
+        }
     }
 }

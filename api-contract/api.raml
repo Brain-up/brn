@@ -418,9 +418,9 @@ annotationTypes:
         description: Delete headphone by id
         responses:
           200
-    /{patientId}/doctor:
+    /{patientId}/doctor/{doctorId}:
       get:
-        description: Get patient's doctor
+        description: Get patient's doctor by doctorId
         responses:
           200:
             body:

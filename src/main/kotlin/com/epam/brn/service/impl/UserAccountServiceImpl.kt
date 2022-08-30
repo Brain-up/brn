@@ -134,14 +134,23 @@ class UserAccountServiceImpl(
         }.toDto()
     }
 
-    override fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount =
-        userAccountRepository.save(findUserEntityById(userId).apply { doctor = findUserEntityById(doctorId) })
+    override fun addDoctorForPatient(userId: Long, doctorId: Long): UserAccount {
+        val userAccount = findUserEntityById(userId)
+        userAccount.doctors.add(findUserEntityById(doctorId))
+        return userAccountRepository.save(userAccount)
+    }
 
-    override fun removeDoctorFromPatient(userId: Long): UserAccount =
-        userAccountRepository.save(findUserEntityById(userId).apply { doctor = null })
+    override fun removeDoctorFromPatient(patientId: Long, doctorId: Long): UserAccount {
+        val patientAccount = findUserEntityById(patientId)
+        patientAccount.doctors.remove(findUserEntityById(doctorId))
+        return userAccountRepository.save(patientAccount)
+    }
 
     override fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse> =
-        userAccountRepository.findUserAccountsByDoctor(findUserEntityById(doctorId)).map { it.toDto() }
+        findUserEntityById(doctorId).patientSet.map { it.toDto() }
+
+    override fun getDoctorsForPatient(patientId: Long): List<UserAccountResponse> =
+        findUserEntityById(patientId).doctors.map { it.toDto() }
 
     private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
         (!this.name.isNullOrBlank())
