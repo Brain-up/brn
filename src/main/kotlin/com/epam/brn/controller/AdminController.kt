@@ -3,7 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.ResourceDto
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
@@ -57,10 +57,10 @@ class AdminController(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
         @RequestParam("role", defaultValue = "ROLE_USER") role: String,
         @PageableDefault pageable: Pageable,
-    ): ResponseEntity<BaseResponse<List<Any>>> {
+    ): ResponseEntity<Response<List<Any>>> {
         val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)
         else userAccountService.getUsers(pageable, role)
-        return ResponseEntity.ok().body(BaseResponse(data = users))
+        return ResponseEntity.ok().body(Response(data = users))
     }
 
     @GetMapping("/monthHistories")
@@ -70,7 +70,7 @@ class AdminController(
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int
     ) = ResponseEntity.ok()
-        .body(BaseResponse(data = studyHistoryService.getMonthHistories(userId, month, year)))
+        .body(Response(data = studyHistoryService.getMonthHistories(userId, month, year)))
 
     @PostMapping("/loadTasksFile")
     @ApiOperation("Load task file to series")
@@ -89,18 +89,18 @@ class AdminController(
             value = "subGroupId",
             required = true
         ) subGroupId: Long
-    ): ResponseEntity<BaseResponse<List<ExerciseWithTasksResponse>>> =
+    ): ResponseEntity<Response<List<ExerciseWithTasksResponse>>> =
         ResponseEntity.ok()
-            .body(BaseResponse(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
+            .body(Response(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 
     @PatchMapping("/resources/{id}")
     @ApiOperation("Update resource description by resource id")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest
-    ): ResponseEntity<BaseResponse<ResourceDto>> =
+    ): ResponseEntity<Response<ResourceDto>> =
         ResponseEntity.ok()
-            .body(BaseResponse(data = resourceService.updateDescription(id, request.description!!)))
+            .body(Response(data = resourceService.updateDescription(id, request.description!!)))
 
     @PostMapping("/subgroup")
     @ApiOperation("Add new subgroup for existing series")
@@ -108,23 +108,23 @@ class AdminController(
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
         @Valid @RequestBody subGroupRequest: SubGroupRequest
-    ): ResponseEntity<BaseResponse<SubGroupResponse>> =
+    ): ResponseEntity<Response<SubGroupResponse>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseResponse(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
+            .body(Response(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
     @PatchMapping("/subgroups/{subGroupId}")
     @ApiOperation("Update subgroup by id")
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
         @RequestBody subGroup: SubGroupChangeRequest
-    ): ResponseEntity<BaseResponse<SubGroupResponse>> =
-        ResponseEntity.ok(BaseResponse(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
+    ): ResponseEntity<Response<SubGroupResponse>> =
+        ResponseEntity.ok(Response(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
 
     @GetMapping("/roles")
     @ApiOperation("Get all roles")
-    fun getRoles(): ResponseEntity<BaseResponse<List<AuthorityResponse>>> {
+    fun getRoles(): ResponseEntity<Response<List<AuthorityResponse>>> {
         val authorities = authorityService.findAll()
-        return ResponseEntity.ok().body(BaseResponse(data = authorities))
+        return ResponseEntity.ok().body(Response(data = authorities))
     }
 
     @PostMapping("/create/exercise")
@@ -132,7 +132,7 @@ class AdminController(
     fun createExercise(
         @ApiParam(value = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
-    ): ResponseEntity<BaseResponse<ExerciseDto>> =
+    ): ResponseEntity<Response<ExerciseDto>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseResponse(data = exerciseService.createExercise(exerciseCreateDto)))
+            .body(Response(data = exerciseService.createExercise(exerciseCreateDto)))
 }

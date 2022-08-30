@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.service.statistic.UserStatisticService
 import io.swagger.annotations.Api
@@ -22,8 +22,8 @@ class UserStatisticController(
     @ApiOperation("Get user's subgroup statistics")
     fun getUserSubGroupStatistic(
         @RequestParam(value = "ids", required = true) ids: List<Long>
-    ): ResponseEntity<BaseResponse<List<SubGroupStatisticResponse>>> {
+    ): ResponseEntity<Response<List<SubGroupStatisticResponse>>> {
         val userStatistic = userStatisticService.getSubGroupStatistic(ids)
-        return ResponseEntity.ok().body(BaseResponse(data = userStatistic))
+        return ResponseEntity.ok().body(Response(data = userStatistic))
     }
 }

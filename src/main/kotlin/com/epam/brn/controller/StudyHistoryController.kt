@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -28,8 +28,8 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
 
     @GetMapping("/todayTimer")
     @ApiOperation("Get current user's today work time: execution seconds")
-    fun getTodayWorkDurationInSeconds(): ResponseEntity<BaseResponse<Int>> {
-        return ResponseEntity.ok().body(BaseResponse(data = studyHistoryService.getTodayTimer()))
+    fun getTodayWorkDurationInSeconds(): ResponseEntity<Response<Int>> {
+        return ResponseEntity.ok().body(Response(data = studyHistoryService.getTodayTimer()))
     }
 
     @GetMapping("/monthHistories")
@@ -38,5 +38,5 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int
     ) = ResponseEntity.ok()
-        .body(BaseResponse(data = studyHistoryService.getMonthHistoriesForCurrentUser(month, year)))
+        .body(Response(data = studyHistoryService.getMonthHistoriesForCurrentUser(month, year)))
 }

@@ -1,6 +1,6 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
@@ -24,7 +24,7 @@ class ExceptionControllerAdvice {
     private val logger = logger()
 
     @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BaseResponse<Unit>> {
+    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<Response<Unit>> {
         logger.error("Entity not found exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
@@ -33,7 +33,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(FileFormatException::class)
-    fun handleFileFormatException(e: FileFormatException): ResponseEntity<BaseResponse<Unit>> {
+    fun handleFileFormatException(e: FileFormatException): ResponseEntity<Response<Unit>> {
         logger.error("File format exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -42,7 +42,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(CsvParser.ParseException::class)
-    fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<BaseResponse<Unit>> {
+    fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<Response<Unit>> {
         logger.error("Csv file parsing exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -51,7 +51,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BaseResponse<Unit>> {
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<Response<Unit>> {
         logger.error("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -60,7 +60,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BaseResponse<Unit>> {
+    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<Response<Unit>> {
         logger.error("Forbidden: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
@@ -69,14 +69,14 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(UninitializedPropertyAccessException::class)
-    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BaseResponse<Unit>> {
+    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<Response<Unit>> {
         return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleHttpMessageNotReadableException(
         e: HttpMessageNotReadableException
-    ): ResponseEntity<BaseResponse<Unit>> {
+    ): ResponseEntity<Response<Unit>> {
         logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -85,7 +85,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BaseResponse<Unit>> {
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<Response<Unit>> {
         logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -98,16 +98,16 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(IOException::class)
-    fun handleIOException(e: IOException): ResponseEntity<BaseResponse<Unit>> {
+    fun handleIOException(e: IOException): ResponseEntity<Response<Unit>> {
         return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(Throwable::class)
-    fun handleException(e: Throwable): ResponseEntity<BaseResponse<Unit>> {
+    fun handleException(e: Throwable): ResponseEntity<Response<Unit>> {
         return createInternalErrorResponse(e)
     }
 
-    fun createInternalErrorResponse(e: Throwable): ResponseEntity<BaseResponse<Unit>> {
+    fun createInternalErrorResponse(e: Throwable): ResponseEntity<Response<Unit>> {
         logger.error("Internal exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -115,5 +115,5 @@ class ExceptionControllerAdvice {
             .body(response(errors = listOf(e.message.toString())))
     }
 
-    private fun response(errors: List<String>) = BaseResponse(data = Unit, errors = errors)
+    private fun response(errors: List<String>) = Response(data = Unit, errors = errors)
 }

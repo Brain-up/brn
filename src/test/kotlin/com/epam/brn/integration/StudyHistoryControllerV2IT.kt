@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.fasterxml.jackson.core.type.TypeReference
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -53,7 +53,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         // THEN
-        val data = objectMapper.readValue(response, BaseResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val studyHistories: List<StudyHistoryDto> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
@@ -80,7 +80,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         // THEN
-        val data = objectMapper.readValue(response, BaseResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val isUserHasStatistics: Boolean =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<Boolean>() {})
         assertTrue(isUserHasStatistics)

@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.service.SubGroupService
 import io.swagger.annotations.Api
@@ -20,22 +20,22 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @GetMapping
     @ApiOperation("Get subgroups for series")
-    fun getAllGroups(@RequestParam(value = "seriesId", required = true) seriesId: Long): ResponseEntity<BaseResponse<List<SubGroupResponse>>> {
+    fun getAllGroups(@RequestParam(value = "seriesId", required = true) seriesId: Long): ResponseEntity<Response<List<SubGroupResponse>>> {
         val data = subGroupsService.findSubGroupsForSeries(seriesId)
-        return ResponseEntity.ok().body(BaseResponse(data = data))
+        return ResponseEntity.ok().body(Response(data = data))
     }
 
     @GetMapping("{subGroupId}")
     @ApiOperation("Get subgroup for id")
-    fun getSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BaseResponse<SubGroupResponse>> {
+    fun getSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<Response<SubGroupResponse>> {
         val subGroupDto = subGroupsService.findById(subGroupId)
-        return ResponseEntity.ok(BaseResponse(data = subGroupDto))
+        return ResponseEntity.ok(Response(data = subGroupDto))
     }
 
     @DeleteMapping("{subGroupId}")
     @ApiOperation("Delete subgroup by id without exercises")
-    fun deleteSubGroupById(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BaseResponse<Unit>> {
+    fun deleteSubGroupById(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<Response<Unit>> {
         subGroupsService.deleteSubGroupById(subGroupId)
-        return ResponseEntity.ok(BaseResponse(data = Unit))
+        return ResponseEntity.ok(Response(data = Unit))
     }
 }

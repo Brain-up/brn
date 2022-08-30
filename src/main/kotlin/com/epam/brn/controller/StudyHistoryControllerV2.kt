@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -26,12 +26,12 @@ class StudyHistoryControllerV2(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
     ) = ResponseEntity.ok()
-        .body(BaseResponse(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
+        .body(Response(data = studyHistoryService.getHistoriesForCurrentUser(from, to)))
 
     @GetMapping("/user/{userId}/has/statistics")
     @ApiOperation("Check if user has statistics")
     fun isUserHasStatistics(
         @PathVariable("userId") userId: Long
     ) = ResponseEntity.ok()
-        .body(BaseResponse(data = studyHistoryService.isUserHasStatistics(userId)))
+        .body(Response(data = studyHistoryService.isUserHasStatistics(userId)))
 }

@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
@@ -52,7 +52,7 @@ class UserStatisticControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val resultStatistic: List<DayStudyStatistic> =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
@@ -86,7 +86,7 @@ class UserStatisticControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val resultStatistic: List<MonthStudyStatistic> =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 
@@ -132,7 +132,7 @@ class UserStatisticControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val resultStatistic: List<UserDailyDetailStatisticsDto> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),

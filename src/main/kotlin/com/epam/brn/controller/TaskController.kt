@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.service.TaskService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -23,17 +23,17 @@ class TaskController(private val taskService: TaskService) {
     @ApiOperation("Get all tasks by exercise id")
     fun getTasksByExerciseId(
         @RequestParam(value = "exerciseId") exerciseId: Long
-    ): ResponseEntity<BaseResponse<List<Any>>> {
+    ): ResponseEntity<Response<List<Any>>> {
         log.debug("Getting tasks for exercisedId $exerciseId")
         return ResponseEntity
             .ok()
-            .body(BaseResponse(data = taskService.getTasksByExerciseId(exerciseId)))
+            .body(Response(data = taskService.getTasksByExerciseId(exerciseId)))
     }
 
     @GetMapping(value = ["/{taskId}"])
     @ApiOperation("Get task by id")
-    fun getTaskById(@PathVariable("taskId") taskId: Long): ResponseEntity<BaseResponse<Any>> {
+    fun getTaskById(@PathVariable("taskId") taskId: Long): ResponseEntity<Response<Any>> {
         return ResponseEntity.ok()
-            .body(BaseResponse(data = taskService.getTaskById(taskId)))
+            .body(Response(data = taskService.getTaskById(taskId)))
     }
 }
