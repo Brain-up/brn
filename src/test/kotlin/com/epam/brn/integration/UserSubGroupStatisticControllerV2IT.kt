@@ -86,7 +86,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseSingleObjectResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val resultStatistic: List<DayStudyStatistic> =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<List<DayStudyStatistic>>() {})
 
@@ -155,7 +155,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseSingleObjectResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val resultStatistic: List<MonthStudyStatistic> =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<List<MonthStudyStatistic>>() {})
 
@@ -263,7 +263,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = objectMapper.readValue(response, BaseSingleObjectResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val resultStatistic: List<UserDailyDetailStatisticsDto> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),

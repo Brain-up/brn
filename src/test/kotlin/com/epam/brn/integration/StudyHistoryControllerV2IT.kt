@@ -91,7 +91,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         // THEN
-        val data = objectMapper.readValue(response, BaseResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val studyHistories: List<StudyHistoryDto> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
@@ -142,7 +142,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         // THEN
-        val data = objectMapper.readValue(response, BaseSingleObjectResponse::class.java).data
+        val data = objectMapper.readValue(response, Response::class.java).data
         val isUserHasStatistics: Boolean =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<Boolean>() {})
         assertTrue(isUserHasStatistics)
