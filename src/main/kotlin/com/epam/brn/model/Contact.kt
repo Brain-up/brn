@@ -38,7 +38,6 @@ data class Contact(
 
     fun toDto(): ContactDto {
         return ContactDto(
-            id = id!!,
             type = type.name,
             value = value
         )

@@ -1,12 +1,15 @@
 package com.epam.brn.dto.response
 
 import com.epam.brn.dto.ContactDto
+import com.epam.brn.enums.ContributorType
 
 data class ContributorResponse(
     var id: Long,
-    var name: String?,
-    var description: String?,
-    var company: String?,
-    var pictureUrl: String?,
-    var contacts: Set<ContactDto>,
+    var name: String? = null,
+    var description: String? = null,
+    var company: String? = null,
+    var pictureUrl: String? = null,
+    var contacts: Set<ContactDto>? = null,
+    var type: ContributorType? = null,
+    var contribution: Long
 )
