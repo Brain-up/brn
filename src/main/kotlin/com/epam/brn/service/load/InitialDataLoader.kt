@@ -1,10 +1,8 @@
 package com.epam.brn.service.load
 
 import com.epam.brn.auth.AuthorityService
+import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.Locale
-import com.epam.brn.enums.Role.ROLE_ADMIN
-import com.epam.brn.enums.Role.ROLE_DOCTOR
-import com.epam.brn.enums.Role.ROLE_USER
 import com.epam.brn.model.Authority
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
@@ -104,10 +102,10 @@ class InitialDataLoader(
     @Order(Ordered.HIGHEST_PRECEDENCE)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
         if (authorityService.findAll().isEmpty()) {
-            val adminAuthority = authorityService.save(Authority(authorityName = ROLE_ADMIN.name))
-            val userAuthority = authorityService.save(Authority(authorityName = ROLE_USER.name))
-            authorityService.save(Authority(authorityName = ROLE_DOCTOR.name))
-            val admin = addAdminUser(adminAuthority)
+            val adminAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_ADMIN.name))
+            val userAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_USER.name))
+            val doctorAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_DOCTOR.name))
+            val admin = addAdminUser(setOf(adminAuthority, userAuthority, doctorAuthority))
             val listOfUsers = mutableListOf(admin)
             listOfUsers.addAll(addDefaultUsers(userAuthority))
             userAccountRepository.saveAll(listOfUsers)
@@ -166,7 +164,7 @@ class InitialDataLoader(
         }
     }
 
-    private fun addAdminUser(adminAuthority: Authority): UserAccount {
+    private fun addAdminUser(adminAuthorities: Set<Authority>): UserAccount {
         val password = passwordEncoder.encode("admin")
         val userAccount =
             UserAccount(
@@ -177,7 +175,7 @@ class InitialDataLoader(
                 gender = Gender.MALE.toString()
             )
         userAccount.password = password
-        userAccount.authoritySet.addAll(setOf(adminAuthority))
+        userAccount.authoritySet.addAll(adminAuthorities)
         return userAccount
     }
 

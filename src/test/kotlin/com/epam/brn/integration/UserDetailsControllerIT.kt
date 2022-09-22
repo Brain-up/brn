@@ -5,7 +5,10 @@ import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.HeadphonesType
+import com.epam.brn.enums.RoleConstants
+import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
@@ -31,7 +35,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [RoleConstants.ADMIN, RoleConstants.USER])
 class UserDetailsControllerIT : BaseIT() {
 
     @Autowired
@@ -145,7 +149,7 @@ class UserDetailsControllerIT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `add headphones to current user not as admin`() {
         // GIVEN
         insertUser()
@@ -193,7 +197,7 @@ class UserDetailsControllerIT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `add default headphones to current user`() {
         // GIVEN
         insertUser()
@@ -277,6 +281,50 @@ class UserDetailsControllerIT : BaseIT() {
             )
     }
 
+    @Test
+    fun `should get users by role`() {
+        // GIVEN
+        val authorityAdmin = insertRole(AuthorityType.ROLE_ADMIN.name)
+        val authorityUser = insertRole(AuthorityType.ROLE_USER.name)
+
+        val user1 = UserAccount(
+            fullName = "testUserFirstName",
+            email = "test@test.test",
+            gender = Gender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user1.authoritySet = mutableSetOf(authorityAdmin, authorityUser)
+
+        val user2 = UserAccount(
+            fullName = "testUserFirstName2",
+            email = "test2@test.test",
+            gender = Gender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user2.authoritySet = mutableSetOf(authorityUser)
+
+        userAccountRepository.save(user1)
+        userAccountRepository.save(user2)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders.get("$baseUrl/search")
+                .param("role", AuthorityType.ROLE_ADMIN.name)
+
+        )
+            .andExpect(status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BaseResponse::class.java).data
+        val users: List<UserAccountResponse> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountResponse>>() {})
+
+        // THEN
+        users.size shouldBe 1
+    }
+
     @AfterEach
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()
@@ -301,6 +349,14 @@ class UserDetailsControllerIT : BaseIT() {
                 Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH, userAccount = user),
                 Headphones(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, userAccount = user),
                 Headphones(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user)
+            )
+        )
+    }
+
+    private fun insertRole(authorityName: String): Authority {
+        return authorityRepository.save(
+            Authority(
+                authorityName = authorityName
             )
         )
     }

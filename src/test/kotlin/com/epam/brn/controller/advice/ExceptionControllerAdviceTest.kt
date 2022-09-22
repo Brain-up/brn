@@ -187,4 +187,16 @@ internal class ExceptionControllerAdviceTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }
+
+    @Test
+    fun `should handle AccessDeniedException`() {
+        // GIVEN
+        val exception = org.springframework.security.access.AccessDeniedException("some exception")
+        // WHEN
+        val responseEntity = exceptionControllerAdvice.handleAccessDeniedException(exception)
+        // THEN
+        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("some exception"))
+        assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
+        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+    }
 }

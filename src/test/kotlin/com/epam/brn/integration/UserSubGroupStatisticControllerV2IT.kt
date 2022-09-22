@@ -4,6 +4,7 @@ import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
+import com.epam.brn.enums.RoleConstants
 import com.fasterxml.jackson.core.type.TypeReference
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
@@ -17,7 +18,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.test.assertNotNull
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
 class UserSubGroupStatisticControllerV2IT : BaseIT() {
 
     private val baseUrl = "/v2/statistics"
@@ -32,7 +33,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
         deleteInsertedTestData()
     }
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `should return user statistic for days API version 2`() {
         // GIVEN
         val user = insertDefaultUser()
@@ -65,7 +66,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
         }
     }
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `should return user statistic for days API version 2 for user with role user`() {
         // GIVEN
         val user = insertDefaultUser()
@@ -98,7 +99,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
         }
     }
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `should return user statistic for month API version 2`() {
         // GIVEN
         val user = insertDefaultUser()
@@ -133,7 +134,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `should return user statistic for month API version 2 for user with role user`() {
         // GIVEN
         val user = insertDefaultUser()
@@ -168,7 +169,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `should return user daily details statistic`() {
         // GIVEN
         val seriesName1 = "seriesName1"
@@ -229,7 +230,7 @@ class UserSubGroupStatisticControllerV2IT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
     fun `should return user daily details statistic for user with role user`() {
         // GIVEN
         val seriesName1 = "seriesName1"

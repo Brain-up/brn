@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.enums.Locale
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.model.ExerciseGroup
 import org.junit.jupiter.api.AfterEach
@@ -14,7 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.assertFalse
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
 class GroupControllerIT : BaseIT() {
 
     private val baseUrl = "/groups"

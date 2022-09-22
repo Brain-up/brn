@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.CloudUploadService
 import com.epam.brn.service.cloud.CloudService
 import io.swagger.annotations.Api
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import javax.annotation.security.RolesAllowed
 
 /**
  * Provides form parameters for client direct file upload to cloud and url for client to list bucket contents
@@ -24,8 +26,9 @@ import org.springframework.web.multipart.MultipartFile
  */
 @RestController
 @RequestMapping("/cloud")
-@Api(value = "/cloud", description = "Contains actions for cloud upload and bucket listing")
+@Api(value = "/cloud", tags = ["Cloud"], description = "Contains actions for cloud upload and bucket listing")
 @ConditionalOnProperty(name = ["cloud.provider"])
+@RolesAllowed(RoleConstants.USER)
 class CloudController(
     @Autowired private val cloudService: CloudService,
     @Autowired private val cloudUploadService: CloudUploadService
@@ -33,6 +36,7 @@ class CloudController(
 
     @GetMapping("/upload")
     @ApiOperation("Get cloud upload form")
+    @RolesAllowed(RoleConstants.ADMIN)
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BaseSingleObjectResponse> {
         if (filePath.isNullOrEmpty())
@@ -55,6 +59,7 @@ class CloudController(
 
     @GetMapping("/folders")
     @ApiOperation("Get cloud folder structure")
+    @RolesAllowed(RoleConstants.ADMIN)
     @Throws(Exception::class)
     fun listBucket(): ResponseEntity<BaseSingleObjectResponse> =
         ResponseEntity.ok(BaseSingleObjectResponse(cloudService.getStorageFolders()))

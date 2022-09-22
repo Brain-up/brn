@@ -2,6 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.SubGroupStatisticResponse
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.fasterxml.jackson.core.type.TypeReference
@@ -17,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
 class UserSubGroupStatisticControllerIT : BaseIT() {
 
     @Autowired

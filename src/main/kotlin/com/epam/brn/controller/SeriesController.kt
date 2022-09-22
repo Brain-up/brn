@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/series")
-@Api(value = "/series", description = "Contains actions over series")
+@Api(value = "/series", tags = ["Series"], description = "Contains actions over series")
+@RolesAllowed(RoleConstants.USER)
 class SeriesController(@Autowired val seriesService: SeriesService, @Autowired val csvUploadService: CsvUploadService) {
 
     @GetMapping

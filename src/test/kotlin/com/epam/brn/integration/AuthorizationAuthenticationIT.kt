@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.enums.Role
+import com.epam.brn.enums.AuthorityType
 import com.epam.brn.integration.firebase.FirebaseWebClientTestMock
 import com.epam.brn.integration.firebase.model.FirebaseVerifyPasswordRequest
 import com.epam.brn.model.Authority
@@ -35,7 +35,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     lateinit var firebaseWebClientTestMock: FirebaseWebClientTestMock
 
     internal val baseUrl = "/groups"
-    internal val adminUsersPath = "/admin/users"
+    internal val searchUsersPath = "/users/search"
 
     internal val email: String = "testAdmin@admin.com"
     internal val fullName = "testUserFirstName"
@@ -58,11 +58,11 @@ class AuthorizationAuthenticationIT : BaseIT() {
         uuidFirebaseNewUser = saveFirebaseUser(newUserFullName, newUserEmail, newUserPassword)!!.uid
         uuidFirebaseUserRole = saveFirebaseUser(userRoleFullName, userRoleEmail, userRolePassword)!!.uid
 
-        val roleUserName = Role.ROLE_USER.name
-        val userAuthority = authorityRepository.findAuthorityByAuthorityName(roleUserName)
-            ?: authorityRepository.save(Authority(authorityName = roleUserName))
+        val authorityUserName = AuthorityType.ROLE_USER.name
+        val userAuthority = authorityRepository.findAuthorityByAuthorityName(authorityUserName)
+            ?: authorityRepository.save(Authority(authorityName = authorityUserName))
 
-        val authName = Role.ROLE_ADMIN.name
+        val authName = AuthorityType.ROLE_ADMIN.name
         val adminAuthority = authorityRepository.findAuthorityByAuthorityName(authName)
             ?: authorityRepository.save(Authority(authorityName = authName))
         createUserInLocalDatabase(fullName, email, uuidFirebaseAdmin, adminAuthority)
@@ -81,7 +81,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     @Test
     fun `test get groups authentication`() {
         val verifyPasswordResponse =
-            firebaseWebClientTestMock.verifyPassword(FirebaseVerifyPasswordRequest(email, password, true))
+            firebaseWebClientTestMock.verifyPassword(FirebaseVerifyPasswordRequest(userRoleEmail, userRolePassword, true))
         val idToken = "Bearer ${verifyPasswordResponse?.idToken}"
         // WHEN
         val resultAction = this.mockMvc
@@ -102,7 +102,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
                 get(baseUrl).header("Authorization", badToken)
             )
         // THEN
-        resultAction.andExpect(status().isUnauthorized)
+        resultAction.andExpect(status().isForbidden)
     }
 
     @Test
@@ -132,7 +132,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
         // WHEN
         val resultAction = this.mockMvc
             .perform(
-                get(adminUsersPath).header("Authorization", idToken)
+                get(searchUsersPath).header("Authorization", idToken)
             )
         // THEN
         resultAction.andExpect(status().isForbidden)

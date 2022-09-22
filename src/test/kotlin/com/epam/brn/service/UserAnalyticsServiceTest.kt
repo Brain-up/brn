@@ -4,7 +4,7 @@ import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.azure.tts.AzureRates
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.enums.Locale
-import com.epam.brn.enums.Role.ROLE_ADMIN
+import com.epam.brn.enums.AuthorityType.ROLE_ADMIN
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.StudyHistory

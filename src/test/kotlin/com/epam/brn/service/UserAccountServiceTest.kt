@@ -6,7 +6,7 @@ import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.enums.Role.ROLE_USER
+import com.epam.brn.enums.AuthorityType.ROLE_USER
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender

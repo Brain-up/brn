@@ -1,5 +1,7 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.request.SubGroupChangeRequest
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.service.SubGroupService
 import io.kotest.matchers.shouldBe
@@ -8,6 +10,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
+import io.mockk.mockkClass
 import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
@@ -67,5 +70,37 @@ internal class SubGroupControllerTest {
         verify(exactly = 1) { subGroupService.deleteSubGroupById(subGroupId) }
         deleteSubGroupForId.statusCode.value() shouldBe HttpStatus.SC_OK
         deleteSubGroupForId.body!!.data shouldBe Unit
+    }
+
+    @Test
+    fun `addSubGroupToSeries should return http status 204`() {
+        // GIVEN
+        val seriesId = 1L
+        val subGroupRequest = SubGroupRequest("Test name", 1, "shortWords", "Test description")
+        val subGroupResponse = mockkClass(SubGroupResponse::class, relaxed = true)
+
+        every { subGroupService.addSubGroupToSeries(subGroupRequest, seriesId) } returns subGroupResponse
+
+        // WHEN
+        val createdSubGroup = subGroupController.addSubGroupToSeries(seriesId, subGroupRequest)
+
+        // THEN
+        createdSubGroup.statusCodeValue shouldBe HttpStatus.SC_CREATED
+    }
+
+    @Test
+    fun `updateSubGroupById should update subGroup by subGroupId`() {
+        // GIVEN
+        val subGroupId = 1L
+        val subGroupChangeRequest = SubGroupChangeRequest(withPictures = true)
+        val updatedSubGroup = mockkClass(SubGroupResponse::class, relaxed = true)
+        every { subGroupService.updateSubGroupById(subGroupId, subGroupChangeRequest) } returns updatedSubGroup
+
+        // WHEN
+        val actual = subGroupController.updateSubGroupById(subGroupId, subGroupChangeRequest)
+
+        // THEN
+        actual.statusCode.value() shouldBe HttpStatus.SC_OK
+        actual.body!!.data shouldBe updatedSubGroup
     }
 }

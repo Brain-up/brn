@@ -1,10 +1,13 @@
 package com.epam.brn.auth
 
 import com.epam.brn.dto.response.AuthorityResponse
+import com.epam.brn.enums.AuthorityType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.repo.AuthorityRepository
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,6 +29,11 @@ class AuthorityServiceImpl(private val authorityRepository: AuthorityRepository)
     }
 
     override fun save(authority: Authority) = authorityRepository.save(authority)
+
+    override fun hasAuthority(authorityType: AuthorityType): Boolean {
+        val auth = SecurityContextHolder.getContext().authentication
+        return auth.authorities.contains(SimpleGrantedAuthority(authorityType.name))
+    }
 
     override fun findAll(): List<AuthorityResponse> = authorityRepository.findAll().map { authority -> authority.toDto() }
 }

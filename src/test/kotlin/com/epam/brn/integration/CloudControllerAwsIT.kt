@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.model.Resource
 import com.epam.brn.service.ResourceService
 import org.junit.jupiter.api.BeforeEach
@@ -22,7 +23,7 @@ private const val WORD = "fileName"
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
-@WithMockUser(username = "admin", roles = ["ADMIN"])
+@WithMockUser(username = "admin", roles = [RoleConstants.ADMIN, RoleConstants.USER])
 @Tag("integration-test")
 @TestPropertySource(properties = ["cloud.provider=aws"])
 class CloudControllerAwsIT {

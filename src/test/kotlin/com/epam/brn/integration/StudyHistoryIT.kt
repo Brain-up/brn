@@ -1,5 +1,6 @@
 package com.epam.brn.integration
 
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -30,7 +31,7 @@ import java.util.Date
 import kotlin.random.Random
 import kotlin.test.assertEquals
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
 class StudyHistoryIT : BaseIT() {
 
     private val baseUrl = "/study-history"

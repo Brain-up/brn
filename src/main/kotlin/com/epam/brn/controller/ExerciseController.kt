@@ -3,10 +3,15 @@ package com.epam.brn.controller
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.request.ExerciseRequest
+import com.epam.brn.dto.request.exercise.ExerciseCreateDto
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.ExerciseService
+import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,11 +22,40 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
+import javax.annotation.security.RolesAllowed
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/exercises")
-@Api(value = "/exercises", description = "Contains actions over exercises")
-class ExerciseController(@Autowired val exerciseService: ExerciseService) {
+@Api(value = "/exercises", tags = ["Exercises"], description = "Contains actions over exercises")
+@RolesAllowed(RoleConstants.USER)
+class ExerciseController(
+    @Autowired val exerciseService: ExerciseService,
+    @Autowired val csvUploadService: CsvUploadService
+) {
+
+    @PostMapping
+    @ApiOperation("Create new exercise for existing subgroup")
+    @RolesAllowed(RoleConstants.ADMIN)
+    fun createExercise(
+        @ApiParam(value = "Exercise data", required = true)
+        @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
+    ): ResponseEntity<BaseSingleObjectResponse> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(BaseSingleObjectResponse(data = exerciseService.createExercise(exerciseCreateDto)))
+
+    @GetMapping("/search")
+    @ApiOperation("Get exercises for subgroup with tasks")
+    @RolesAllowed(RoleConstants.ADMIN)
+    fun searchExercisesBySubGroup(
+        @RequestParam(
+            value = "subGroupId",
+            required = true
+        ) subGroupId: Long
+    ): ResponseEntity<BaseResponse> =
+        ResponseEntity.ok()
+            .body(BaseResponse(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 
     @GetMapping
     @ApiOperation("Get exercises for subgroup and current user with availability calculation")
@@ -52,5 +86,16 @@ class ExerciseController(@Autowired val exerciseService: ExerciseService) {
     @ApiOperation("Update active status of the exercise")
     fun updateExerciseStatus(@PathVariable("exerciseId") exerciseId: Long, @PathVariable("active") active: Boolean) {
         exerciseService.updateActiveStatus(exerciseId, active)
+    }
+
+    @PostMapping("/loadTasksFile")
+    @ApiOperation("Load task file to series")
+    @RolesAllowed(RoleConstants.ADMIN)
+    fun loadExercises(
+        @RequestParam(value = "seriesId") seriesId: Long,
+        @RequestParam(value = "taskFile") file: MultipartFile
+    ): ResponseEntity<BaseResponse> {
+        csvUploadService.loadExercises(seriesId, file)
+        return ResponseEntity(HttpStatus.CREATED)
     }
 }

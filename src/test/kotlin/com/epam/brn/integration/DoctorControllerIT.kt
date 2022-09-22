@@ -2,7 +2,8 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.Role
+import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -20,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WithMockUser(username = "currentDoctor@default.ru", roles = ["DOCTOR"])
+@WithMockUser(username = "currentDoctor@default.ru", roles = [RoleConstants.DOCTOR])
 class DoctorControllerIT : BaseIT() {
 
     @Autowired
@@ -36,8 +37,8 @@ class DoctorControllerIT : BaseIT() {
 
     @BeforeEach
     fun setUp() {
-        val userAuthority = createAuthority(Role.ROLE_USER.name)
-        val doctorAuthority = createAuthority(Role.ROLE_DOCTOR.name)
+        val userAuthority = createAuthority(AuthorityType.ROLE_USER.name)
+        val doctorAuthority = createAuthority(AuthorityType.ROLE_DOCTOR.name)
 
         user1 = createUser(email = "user1@default.ru", authorities = mutableSetOf(userAuthority))
         user2 = createUser(email = "user2@default.ru", authorities = mutableSetOf(userAuthority))
@@ -92,7 +93,7 @@ class DoctorControllerIT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "user1@default.ru", roles = ["USER"])
+    @WithMockUser(username = "user1@default.ru", roles = [RoleConstants.USER])
     fun `should not add patient if current user is not a doctor`() {
         // GIVEN
         val requestJson = objectMapper.writeValueAsString(AddPatientToDoctorRequest(user2.id!!, "user"))

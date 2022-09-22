@@ -4,6 +4,7 @@ import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.enums.ContributorType
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.ContributorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -18,11 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.annotation.security.RolesAllowed
 import javax.validation.Valid
 
 @RestController
 @RequestMapping("/contributors")
-@Api(value = "/contributors", description = "Contains actions over contributors of this project")
+@Api(value = "/contributors", tags = ["Contributors"], description = "Contains actions over contributors of this project")
 class ContributorController(val contributorService: ContributorService) {
 
     @GetMapping
@@ -37,6 +39,7 @@ class ContributorController(val contributorService: ContributorService) {
 
     @PostMapping
     @ApiOperation("Add a new contributor")
+    @RolesAllowed(RoleConstants.ADMIN)
     fun createContributor(
         @ApiParam(value = "Contributor data", required = true)
         @Valid @RequestBody contributorDto: ContributorRequest
@@ -46,6 +49,7 @@ class ContributorController(val contributorService: ContributorService) {
 
     @PutMapping("/{contributorId}")
     @ApiOperation("Update an existing contributor")
+    @RolesAllowed(RoleConstants.ADMIN)
     fun updateContributor(
         @PathVariable("contributorId") contributorId: Long,
         @ApiParam(value = "Contributor data", required = true)

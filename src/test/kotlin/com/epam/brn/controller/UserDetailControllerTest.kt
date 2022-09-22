@@ -3,11 +3,15 @@ package com.epam.brn.controller
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
+import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.response.UserWithAnalyticsResponse
+import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
+import com.epam.brn.service.UserAnalyticsService
 import com.google.firebase.auth.FirebaseAuth
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -15,6 +19,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
+import io.mockk.mockk
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
@@ -25,6 +30,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.Pageable
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
@@ -41,6 +47,9 @@ internal class UserDetailControllerTest {
 
     @MockK
     private lateinit var doctorService: DoctorService
+
+    @MockK
+    private lateinit var userAnalyticsService: UserAnalyticsService
 
     lateinit var userAccountResponse: UserAccountResponse
 
@@ -269,5 +278,40 @@ internal class UserDetailControllerTest {
 
         // THEN
         verify { doctorService.deleteDoctorFromPatientAsPatient(patientId) }
+    }
+
+    @Test
+    fun `getUsers should return users with statistic when withAnalytics is true`() {
+        // GIVEN
+        val withAnalytics = true
+        val authority = AuthorityType.ROLE_USER.name
+        val pageable = mockk<Pageable>()
+        val userWithAnalyticsResponse = mockk<UserWithAnalyticsResponse>()
+        every { userAnalyticsService.getUsersWithAnalytics(pageable, authority) } returns listOf(userWithAnalyticsResponse)
+
+        // WHEN
+        val users = userDetailController.getUsers(withAnalytics, authority, pageable)
+
+        // THEN
+        verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, authority) }
+        users.statusCodeValue shouldBe HttpStatus.SC_OK
+        (users.body as BaseResponse).data shouldBe listOf(userWithAnalyticsResponse)
+    }
+
+    @Test
+    fun `getUsers should return users when withAnalytics is false`() {
+        // GIVEN
+        val withAnalytics = false
+        val authority = AuthorityType.ROLE_USER.name
+        val pageable = mockk<Pageable>()
+        every { userAccountService.getUsers(pageable, authority) } returns listOf(userAccountResponse)
+
+        // WHEN
+        val users = userDetailController.getUsers(withAnalytics, authority, pageable)
+
+        // THEN
+        verify(exactly = 1) { userAccountService.getUsers(pageable, authority) }
+        users.statusCodeValue shouldBe HttpStatus.SC_OK
+        (users.body as BaseResponse).data shouldBe listOf(userAccountResponse)
     }
 }

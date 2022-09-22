@@ -2,6 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.repo.StudyHistoryRepository
 import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
@@ -14,16 +15,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import kotlin.test.assertNotNull
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
 class StudyHistoryControllerIT : BaseIT() {
 
     private val baseUrl = "/study-history"
-    private val fromParameterName = "from"
-    private val toParameterName = "to"
-    private val legacyDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     @Autowired
     private lateinit var gson: Gson
