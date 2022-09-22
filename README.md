@@ -58,6 +58,7 @@ Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 https://github.com/Brain-up/brn/wiki  
 
 ### Jira
+https://awclub.atlassian.net/jira/software/c/projects/EPMLABSBRN/issues
 https://github.com/Brain-up/brn/issues  
 
 ### Coding standards
