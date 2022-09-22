@@ -24,7 +24,7 @@ export class AdminApiService {
   public getExercisesBySubGroupId(subGroupId: number): Observable<Exercise[]> {
     return this.httpClient
       .get<{ data: Exercise[] }>(
-        `/api/admin/exercises?subGroupId=${subGroupId}`,
+        `/api/exercises/search?subGroupId=${subGroupId}`,
       )
       .pipe(pluck('data'));
   }
@@ -36,7 +36,7 @@ export class AdminApiService {
   ): Observable<UserWeeklyStatistics[]> {
     return this.httpClient
       .get<{ data: UserWeeklyStatistics[] }>(
-        `/api/v2/admin/study/week?userId=${userId}&from=${from.format(
+        `/api/v2/statistics/study/week?userId=${userId}&from=${from.format(
           'YYYY-MM-DDTHH:mm:ss',
         )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`,
       )
@@ -50,7 +50,7 @@ export class AdminApiService {
   ): Observable<UserYearlyStatistics[]> {
     return this.httpClient
       .get<{ data: UserYearlyStatistics[] }>(
-        `/api/v2/admin/study/year?userId=${userId}&from=${from.format(
+        `/api/v2/statistics/study/year?userId=${userId}&from=${from.format(
           'YYYY-MM-DDTHH:mm:ss',
         )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`,
       )
@@ -66,7 +66,7 @@ export class AdminApiService {
     params = params.append('withAnalytics', String(withAnalytics));
 
     return this.httpClient
-      .get<GetUsers>('/api/admin/users', {
+      .get<GetUsers>('/api/users/search', {
         params,
       })
       .pipe(
@@ -113,7 +113,7 @@ export class AdminApiService {
     params = params.append('withAnalytics', String(withAnalytics));
 
     return this.httpClient
-      .get<GetUsers>('/api/admin/users', {
+      .get<GetUsers>('/api/users/search', {
         params,
       })
       .pipe(
@@ -134,7 +134,7 @@ export class AdminApiService {
   ): Observable<UserDailyDetailStatistics[]> {
     return this.httpClient
       .get<{ data: UserDailyDetailStatistics[] }>(
-        `/api/v2/admin/study/day?userId=${userId}&day=${day.format(
+        `/api/v2/statistics/study/day?userId=${userId}&day=${day.format(
           'YYYY-MM-DDTHH:mm:ss',
         )}`,
       )
