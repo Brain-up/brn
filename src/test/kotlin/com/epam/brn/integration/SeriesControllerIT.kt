@@ -2,8 +2,8 @@ package com.epam.brn.integration
 
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
-import com.epam.brn.dto.response.BaseSingleObjectResponse
 import com.epam.brn.dto.SeriesDto
+import com.epam.brn.dto.response.Response
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
@@ -69,7 +69,7 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponse::class.java)
+        val baseResponseDto = objectMapper.readValue(responseJson, Response::class.java)
         val seriesJson = gson.toJson(baseResponseDto.data)
         val resultSeries: List<SeriesDto> =
             objectMapper.readValue(seriesJson, object : TypeReference<List<SeriesDto>>() {})
@@ -94,7 +94,7 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponseDto = objectMapper.readValue(responseJson, BaseSingleObjectResponse::class.java)
+        val baseResponseDto = objectMapper.readValue(responseJson, Response::class.java)
         val resultSeries: SeriesDto = objectMapper.readValue(gson.toJson(baseResponseDto.data), SeriesDto::class.java)
         Assertions.assertEquals(series.toDto(), resultSeries)
     }
