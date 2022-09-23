@@ -134,6 +134,24 @@ avatar_controls:
   submit: Submit
   title: Avatar selection
 
+contact:
+  header: Contacts
+  text:
+    0:
+      title: Telegram chat for users
+      link: 'https://t.me/BrainUpPlatform'
+      description: 'https://t.me/BrainUpPlatform'
+    1:
+      title: In any questions, ideas please write to project email
+      link: 'mailto:brainupproject@yandex.ru'
+      description: 'brainupproject@yandex.ru'
+    2:
+      title: project founder and tech lead in Telegram Elena Moshnikova
+      link: 'https://t.me/ElenaLovesSpb'
+      description: 'https://t.me/ElenaLovesSpb'
+  for_users: 'Contacts for users:'
+  for_developers: 'Contacts for developers:'
+
 description:
   header: 'About the ''<span class="text-indigo-600">''Brain-Up''</span>'''
   intro:

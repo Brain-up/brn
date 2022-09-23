@@ -1,8 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.BaseResponse
-import com.epam.brn.dto.response.BaseSingleObjectResponse
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.dto.ExerciseGroupDto
+import com.epam.brn.dto.response.Response
 import com.epam.brn.service.ExerciseGroupsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -24,14 +23,14 @@ class GroupController(val exerciseGroupsService: ExerciseGroupsService) {
     // group being a reserved word in db.
     @GetMapping
     @ApiOperation("Get all groups by locale if it was set")
-    fun getGroups(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String): ResponseEntity<BaseResponse> {
-        return ResponseEntity.ok().body(BaseResponse(data = exerciseGroupsService.findByLocale(locale)))
+    fun getGroups(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String): ResponseEntity<Response<List<ExerciseGroupDto>>> {
+        return ResponseEntity.ok().body(Response(data = exerciseGroupsService.findByLocale(locale)))
     }
 
     @GetMapping(value = ["/{groupId}"])
     @ApiOperation("Get group by id")
-    fun getGroupById(@PathVariable("groupId") groupId: Long): ResponseEntity<BaseSingleObjectResponse> {
+    fun getGroupById(@PathVariable("groupId") groupId: Long): ResponseEntity<Response<ExerciseGroupDto>> {
         return ResponseEntity.ok()
-            .body(BaseSingleObjectResponse(data = exerciseGroupsService.findGroupDtoById(groupId)))
+            .body(Response(data = exerciseGroupsService.findGroupDtoById(groupId)))
     }
 }

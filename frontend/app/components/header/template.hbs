@@ -114,7 +114,9 @@
               href="https://github.com/Brain-up/brn"
               rel="noopener noreferrer"
             >{{t "header.github"}}</a>
-            <a href="/description">{{t "header.contact"}}</a>
+            <LinkTo @route="contact" {{on "click" this.closeMenu}}>{{t
+                "header.contact"
+            }}</LinkTo>
             <a href="/description">{{t "header.info"}}</a>
             <LinkTo @route="specialists" {{on "click" this.closeMenu}}>{{t
                 "header.specialists"

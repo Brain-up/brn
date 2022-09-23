@@ -1,11 +1,9 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.response.BaseSingleObjectResponse
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
-import com.epam.brn.enums.AuthorityType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.swagger.annotations.Api
