@@ -30,7 +30,7 @@ class AuthorityServiceImpl(private val authorityRepository: AuthorityRepository)
 
     override fun save(authority: Authority) = authorityRepository.save(authority)
 
-    override fun hasAuthority(authorityType: AuthorityType): Boolean {
+    override fun isCurrentUserHasAuthority(authorityType: AuthorityType): Boolean {
         val auth = SecurityContextHolder.getContext().authentication
         return auth.authorities.contains(SimpleGrantedAuthority(authorityType.name))
     }

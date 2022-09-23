@@ -60,7 +60,7 @@ internal class StudyHistoryControllerTest {
         val year = 2021
         val studyHistoryDto = mockk<StudyHistoryDto>()
         every { studyHistoryService.getMonthHistories(userId, month, year) } returns listOf(studyHistoryDto)
-        every { authorityService.hasAuthority(ofType(AuthorityType::class)) } returns true
+        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns true
 
         // WHEN
         val monthHistories = studyHistoryController.getMonthHistories(month, year, userId)

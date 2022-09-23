@@ -1,7 +1,10 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.request.SubGroupChangeRequest
+import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.SubGroupResponse
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.SubGroupService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -54,9 +57,9 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
         @Valid @RequestBody subGroupRequest: SubGroupRequest
-    ): ResponseEntity<BaseSingleObjectResponse> =
+    ): ResponseEntity<Response<SubGroupResponse>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponse(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
+            .body(Response(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
     @PatchMapping("/{subGroupId}")
     @ApiOperation("Update subgroup by id")
@@ -64,6 +67,6 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
         @RequestBody subGroup: SubGroupChangeRequest
-    ): ResponseEntity<BaseSingleObjectResponse> =
-        ResponseEntity.ok(BaseSingleObjectResponse(data = subGroupsService.updateSubGroupById(subGroupId, subGroup)))
+    ): ResponseEntity<Response<SubGroupResponse>> =
+        ResponseEntity.ok(Response(data = subGroupsService.updateSubGroupById(subGroupId, subGroup)))
 }

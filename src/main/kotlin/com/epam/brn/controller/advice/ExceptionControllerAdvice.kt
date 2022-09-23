@@ -94,11 +94,11 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException::class)
-    fun handleAccessDeniedException(e: org.springframework.security.access.AccessDeniedException): ResponseEntity<BaseResponse> {
+    fun handleAccessDeniedException(e: org.springframework.security.access.AccessDeniedException): ResponseEntity<Response<Unit>> {
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(BaseResponse(errors = listOf(e.message.toString())))
+            .body(response(errors = listOf(e.message.toString())))
     }
 
     private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> {

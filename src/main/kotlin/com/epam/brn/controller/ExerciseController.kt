@@ -2,6 +2,8 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
+import com.epam.brn.dto.request.exercise.ExerciseCreateDto
+import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.ExerciseService
@@ -40,9 +42,9 @@ class ExerciseController(
     fun createExercise(
         @ApiParam(value = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
-    ): ResponseEntity<BaseSingleObjectResponse> =
+    ): ResponseEntity<Response<ExerciseDto>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponse(data = exerciseService.createExercise(exerciseCreateDto)))
+            .body(Response(data = exerciseService.createExercise(exerciseCreateDto)))
 
     @GetMapping("/search")
     @ApiOperation("Get exercises for subgroup with tasks")
@@ -52,9 +54,9 @@ class ExerciseController(
             value = "subGroupId",
             required = true
         ) subGroupId: Long
-    ): ResponseEntity<BaseResponse> =
+    ): ResponseEntity<Response<List<ExerciseWithTasksResponse>>> =
         ResponseEntity.ok()
-            .body(BaseResponse(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
+            .body(Response(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 
     @GetMapping
     @ApiOperation("Get exercises for subgroup and current user with availability calculation")
@@ -93,7 +95,7 @@ class ExerciseController(
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile
-    ): ResponseEntity<BaseResponse> {
+    ): ResponseEntity<Response<Any>> {
         csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(HttpStatus.CREATED)
     }

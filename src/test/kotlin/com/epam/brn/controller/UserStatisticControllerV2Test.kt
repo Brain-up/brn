@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -101,7 +102,7 @@ internal class UserStatisticControllerV2Test {
         val date = LocalDateTime.now()
         val dayStudyStatistic = mockk<DayStudyStatistic>()
         every { userDayStatisticService.getStatisticForPeriod(date, date, userId) } returns listOf(dayStudyStatistic)
-        every { authorityService.hasAuthority(ofType(AuthorityType::class)) } returns true
+        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns true
 
         // WHEN
         val userWeeklyStatistic = userStatisticControllerV2.getUserWeeklyStatistic(date, date, userId)
@@ -125,7 +126,7 @@ internal class UserStatisticControllerV2Test {
                 userId
             )
         } returns listOf(monthStudyStatistic)
-        every { authorityService.hasAuthority(ofType(AuthorityType::class)) } returns true
+        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns true
 
         // WHEN
         val userYearlyStatistic = userStatisticControllerV2.getUserYearlyStatistic(date, date, userId)
@@ -143,7 +144,7 @@ internal class UserStatisticControllerV2Test {
         val date = LocalDateTime.now()
         val userDailyDetailStatisticsDto = mockk<UserDailyDetailStatisticsDto>()
         every { studyHistoryService.getUserDailyStatistics(date, userId) } returns listOf(userDailyDetailStatisticsDto)
-        every { authorityService.hasAuthority(ofType(AuthorityType::class)) } returns true
+        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns true
 
         // WHEN
         val userWeeklyStatistic = userStatisticControllerV2.getUserDailyDetailsStatistics(date, userId)

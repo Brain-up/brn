@@ -195,7 +195,7 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleAccessDeniedException(exception)
         // THEN
-        assertTrue((responseEntity.body as BaseResponse).errors.toString().contains("some exception"))
+        assertTrue((responseEntity.body as Response).errors.toString().contains("some exception"))
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
     }

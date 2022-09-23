@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.dto.response.Response
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.ExerciseGroupsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation

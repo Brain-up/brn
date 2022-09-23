@@ -4,6 +4,7 @@ import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
@@ -46,7 +47,7 @@ class UserDetailController(
     ): ResponseEntity<Any> {
         val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)
         else userAccountService.getUsers(pageable, role)
-        return ResponseEntity.ok().body(BaseResponse(data = users))
+        return ResponseEntity.ok().body(Response(data = users))
     }
 
     @GetMapping(value = ["/{userId}"])

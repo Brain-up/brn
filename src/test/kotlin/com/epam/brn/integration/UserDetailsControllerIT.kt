@@ -316,7 +316,7 @@ class UserDetailsControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BaseResponse::class.java).data
+        val data = gson.fromJson(response, Response::class.java).data
         val users: List<UserAccountResponse> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountResponse>>() {})
 

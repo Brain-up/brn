@@ -2,6 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
+import com.epam.brn.enums.RoleConstants
 import com.fasterxml.jackson.core.type.TypeReference
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test

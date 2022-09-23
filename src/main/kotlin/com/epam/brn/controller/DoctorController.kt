@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.DoctorService

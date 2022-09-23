@@ -4,6 +4,7 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.dto.response.Response
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series

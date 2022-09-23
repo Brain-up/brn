@@ -1,9 +1,12 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
+import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.swagger.annotations.Api
@@ -32,13 +35,13 @@ class UserStatisticControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
-    ): ResponseEntity<BaseSingleObjectResponse> {
-        val result = if (userId != null && authorityService.hasAuthority(AuthorityType.ROLE_ADMIN)) {
+    ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
+        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
             userMonthStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userMonthStatisticService.getStatisticForPeriod(from, to)
         }
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 
     @GetMapping("/study/week")
@@ -47,13 +50,13 @@ class UserStatisticControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
-    ): ResponseEntity<BaseSingleObjectResponse> {
-        val result = if (userId != null && authorityService.hasAuthority(AuthorityType.ROLE_ADMIN)) {
+    ): ResponseEntity<Response<List<DayStudyStatistic>>> {
+        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
             userDayStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userDayStatisticService.getStatisticForPeriod(from, to)
         }
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 
     @GetMapping("/study/day")
@@ -61,12 +64,12 @@ class UserStatisticControllerV2(
     fun getUserDailyDetailsStatistics(
         @RequestParam(name = "day", required = true) day: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
-    ): ResponseEntity<BaseSingleObjectResponse> {
-        val result = if (userId != null && authorityService.hasAuthority(AuthorityType.ROLE_ADMIN)) {
+    ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
+        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
             historyService.getUserDailyStatistics(day, userId)
         } else {
             historyService.getUserDailyStatistics(day = day)
         }
-        return ResponseEntity.ok().body(BaseSingleObjectResponse(data = result))
+        return ResponseEntity.ok().body(Response(data = result))
     }
 }

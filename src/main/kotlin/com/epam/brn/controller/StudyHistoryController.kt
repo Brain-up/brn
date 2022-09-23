@@ -1,7 +1,10 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
+import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.RoleConstants
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -43,8 +46,8 @@ class StudyHistoryController(
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int,
         @RequestParam("userId") userId: Long?
-    ): ResponseEntity<Response> {
-        val result = if (userId != null && authorityService.hasAuthority(AuthorityType.ROLE_ADMIN)) {
+    ): ResponseEntity<Response<List<StudyHistoryDto>>> {
+        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
             studyHistoryService.getMonthHistories(userId, month, year)
         } else {
             studyHistoryService.getMonthHistoriesForCurrentUser(month, year)
