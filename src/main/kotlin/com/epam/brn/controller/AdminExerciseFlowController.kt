@@ -1,11 +1,14 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.ExerciseDto
+import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
-import com.epam.brn.dto.response.BaseResponse
-import com.epam.brn.dto.response.BaseSingleObjectResponse
+import com.epam.brn.dto.response.ExerciseWithTasksResponse
+import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.StudyHistoryService
@@ -46,14 +49,14 @@ class AdminExerciseFlowController(
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int
     ) = ResponseEntity.ok()
-        .body(BaseResponse(data = studyHistoryService.getMonthHistories(userId, month, year)))
+        .body(Response(data = studyHistoryService.getMonthHistories(userId, month, year)))
 
     @PostMapping("/loadTasksFile")
     @ApiOperation("Load task file to series")
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile
-    ): ResponseEntity<BaseResponse> {
+    ): ResponseEntity<Any> {
         csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(HttpStatus.CREATED)
     }
@@ -65,18 +68,18 @@ class AdminExerciseFlowController(
             value = "subGroupId",
             required = true
         ) subGroupId: Long
-    ): ResponseEntity<BaseResponse> =
+    ): ResponseEntity<Response<List<ExerciseWithTasksResponse>>> =
         ResponseEntity.ok()
-            .body(BaseResponse(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
+            .body(Response(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
 
     @PatchMapping("/resources/{id}")
     @ApiOperation("Update resource description by resource id")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest
-    ): ResponseEntity<BaseSingleObjectResponse> =
+    ): ResponseEntity<Response<ResourceDto>> =
         ResponseEntity.ok()
-            .body(BaseSingleObjectResponse(data = resourceService.updateDescription(id, request.description!!)))
+            .body(Response(data = resourceService.updateDescription(id, request.description!!)))
 
     @PostMapping("/subgroup")
     @ApiOperation("Add new subgroup for existing series")
@@ -84,24 +87,24 @@ class AdminExerciseFlowController(
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
         @Valid @RequestBody subGroupRequest: SubGroupRequest
-    ): ResponseEntity<BaseSingleObjectResponse> =
+    ): ResponseEntity<Response<SubGroupResponse>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponse(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
+            .body(Response(data = subGroupService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
     @PatchMapping("/subgroups/{subGroupId}")
     @ApiOperation("Update subgroup by id")
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
         @RequestBody subGroup: SubGroupChangeRequest
-    ): ResponseEntity<BaseSingleObjectResponse> =
-        ResponseEntity.ok(BaseSingleObjectResponse(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
+    ): ResponseEntity<Response<SubGroupResponse>> =
+        ResponseEntity.ok(Response(data = subGroupService.updateSubGroupById(subGroupId, subGroup)))
 
     @PostMapping("/create/exercise")
     @ApiOperation("Create new exercise for exist subgroup")
     fun createExercise(
         @ApiParam(value = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
-    ): ResponseEntity<BaseSingleObjectResponse> =
+    ): ResponseEntity<Response<ExerciseDto>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(BaseSingleObjectResponse(data = exerciseService.createExercise(exerciseCreateDto)))
+            .body(Response(data = exerciseService.createExercise(exerciseCreateDto)))
 }
