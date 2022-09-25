@@ -21,9 +21,9 @@ class OperationRolesAllowedReader(
         try {
             var allowedRoles: Array<String>? = null
             val rolesAllowedAnnotation = context.findAnnotation(RolesAllowed::class.java)
-            if (rolesAllowedAnnotation.isPresent) {
+            if (rolesAllowedAnnotation.isPresent)
                 allowedRoles = rolesAllowedAnnotation.get().value
-            } else {
+            else {
                 val rolesAllowedControllerAnnotation = context.findControllerAnnotation(RolesAllowed::class.java)
                 if (rolesAllowedControllerAnnotation.isPresent) {
                     allowedRoles = rolesAllowedControllerAnnotation.get().value
