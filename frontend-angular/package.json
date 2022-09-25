@@ -4,6 +4,7 @@
   "scripts": {
     "start": "ng serve --port 4201",
     "start:local": "ng serve --port 4201 --disable-host-check",
+    "start:dev": "ng serve --configuration=dev --port 4201 --disable-host-check",
     "build": "ng build --prod --base-href /admin/",
     "test": "ng test --no-watch",
     "test:start": "ng test --watch --browsers Chrome",
