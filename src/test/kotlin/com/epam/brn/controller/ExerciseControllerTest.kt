@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -7,8 +8,8 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
-import com.epam.brn.dto.response.ExerciseWithTasksResponse
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe
@@ -39,6 +40,9 @@ internal class ExerciseControllerTest {
     @MockK
     lateinit var csvUploadService: CsvUploadService
 
+    @MockK
+    lateinit var authorityService: AuthorityService
+
     @Test
     fun `should get exercises for user and series`() {
         // GIVEN
@@ -46,6 +50,7 @@ internal class ExerciseControllerTest {
         val exercise = ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
         val listExercises = listOf(exercise)
         every { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) } returns listExercises
+        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns false
 
         // WHEN
         @Suppress("UNCHECKED_CAST")
@@ -91,7 +96,7 @@ internal class ExerciseControllerTest {
     fun `createExerciseWords should return http status 204`() {
         // GIVEN
         val exerciseWordsCreateDto = ExerciseWordsCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -113,7 +118,7 @@ internal class ExerciseControllerTest {
     fun `createExercisePhrases should return http status 204`() {
         // GIVEN
         val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -135,7 +140,7 @@ internal class ExerciseControllerTest {
     fun `createExerciseSentences should return http status 204`() {
         // GIVEN
         val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -157,15 +162,16 @@ internal class ExerciseControllerTest {
     fun `getExercisesBySubGroup should return data with http status 200`() {
         // GIVEN
         val subGroupId = 1L
-        val exerciseWithTasksResponse = mockk<ExerciseWithTasksResponse>()
-        every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseWithTasksResponse)
+        val exerciseResponse = mockk<ExerciseDto>()
+        every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseResponse)
+        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns true
 
         // WHEN
-        val exercises = exerciseController.searchExercisesBySubGroup(subGroupId)
+        val exercises = exerciseController.getExercisesBySubGroup(subGroupId)
 
         // THEN
         verify(exactly = 1) { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) }
         exercises.statusCodeValue shouldBe HttpStatus.SC_OK
-        exercises.body!!.data shouldBe listOf(exerciseWithTasksResponse)
+        exercises.body!!.data shouldBe listOf(exerciseResponse)
     }
 }

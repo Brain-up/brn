@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.response.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.repo.AudiometryHistoryRepository
@@ -43,14 +43,14 @@ internal class AudiometryServiceTest {
         // GIVEN
         val audiometryMock = mockk<Audiometry>()
         val audiometryResponseMock = mockk<AudiometryResponse>()
-        every { audiometryRepository.findByLocale(Locale.RU.locale) } returns listOf(audiometryMock)
+        every { audiometryRepository.findByLocale(BrnLocale.RU.locale) } returns listOf(audiometryMock)
         every { audiometryMock.toDtoWithoutTasks() } returns audiometryResponseMock
 
         // WHEN
-        val audiometrics = audiometryService.getAudiometrics(Locale.RU.locale)
+        val audiometrics = audiometryService.getAudiometrics(BrnLocale.RU.locale)
 
         // THEN
-        verify(exactly = 1) { audiometryRepository.findByLocale(Locale.RU.locale) }
+        verify(exactly = 1) { audiometryRepository.findByLocale(BrnLocale.RU.locale) }
         verify(exactly = 1) { audiometryMock.toDtoWithoutTasks() }
         assertEquals(1, audiometrics.size)
         assertTrue(audiometrics.contains(audiometryResponseMock))
@@ -59,7 +59,7 @@ internal class AudiometryServiceTest {
     @Test
     fun `should get audiometry with tasks`() {
         // GIVEN
-        val audiometry = Audiometry(1, Locale.RU.locale, "audiometry test", AudiometryType.SIGNALS.name)
+        val audiometry = Audiometry(1, BrnLocale.RU.locale, "audiometry test", AudiometryType.SIGNALS.name)
         val audiometryTask = AudiometryTask(1, audiometry = audiometry, frequencies = "[100, 200, 300]")
         every { audiometryRepository.findById(1L) } returns Optional.of(audiometry)
         every { audiometryTaskRepository.findByAudiometry(audiometry) } returns listOf(audiometryTask)

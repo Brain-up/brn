@@ -1,12 +1,12 @@
 package com.epam.brn.enums
 
 enum class AuthorityType(val roleName: String) {
-    ROLE_ADMIN(RoleConstants.ADMIN),
-    ROLE_USER(RoleConstants.USER),
-    ROLE_DOCTOR(RoleConstants.DOCTOR);
+    ROLE_ADMIN(BrnRole.ADMIN),
+    ROLE_USER(BrnRole.USER),
+    ROLE_DOCTOR(BrnRole.DOCTOR);
 }
 
-class RoleConstants {
+class BrnRole {
     companion object {
         const val ADMIN = "ADMIN"
         const val USER = "USER"

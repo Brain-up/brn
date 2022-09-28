@@ -2,7 +2,7 @@ package com.epam.brn.upload.csv.audiometrySpeech
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.AudiometryType
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
 import com.epam.brn.model.WordType
@@ -29,7 +29,7 @@ class LopotkoRecordProcessor(
     override fun isApplicable(record: Any): Boolean = record is LopotkoRecord
 
     @Transactional
-    override fun process(records: List<LopotkoRecord>, locale: Locale): List<AudiometryTask> {
+    override fun process(records: List<LopotkoRecord>, locale: BrnLocale): List<AudiometryTask> {
         val audiometryTasks = mutableSetOf<AudiometryTask>()
 
         records.forEach { record ->
@@ -49,7 +49,7 @@ class LopotkoRecordProcessor(
         return audiometryTasks.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: LopotkoRecord, locale: Locale): MutableSet<Resource> {
+    private fun extractAnswerOptions(record: LopotkoRecord, locale: BrnLocale): MutableSet<Resource> {
 //      todo: think about voice gender! if (record.exerciseName.startsWith("М")) audioPath = audioPathAlena
         return record.words
             .asSequence()
@@ -58,7 +58,7 @@ class LopotkoRecordProcessor(
             .toMutableSet()
     }
 
-    private fun toResource(word: String, locale: Locale): Resource {
+    private fun toResource(word: String, locale: BrnLocale): Resource {
         val hashWord = DigestUtils.md5Hex(word)
         mapHashWord[word] = hashWord
         val wordType = WordType.AUDIOMETRY_WORD.toString()

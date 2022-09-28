@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.subgroup
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
@@ -20,7 +20,7 @@ class SubgroupGenericRecordProcessor(
     }
 
     @Transactional
-    override fun process(records: List<SubgroupGenericRecord>, locale: Locale): List<SubGroup> {
+    override fun process(records: List<SubgroupGenericRecord>, locale: BrnLocale): List<SubGroup> {
         val subGroups = records
             .map {
                 val series = seriesRepository

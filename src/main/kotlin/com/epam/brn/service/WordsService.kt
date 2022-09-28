@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.dto.AudioFileMetaData
 import org.apache.commons.codec.digest.DigestUtils
@@ -28,10 +28,10 @@ class WordsService {
     private lateinit var baseFileUrl: String
 
     private val mapYandexLocaleManVoice =
-        mapOf(Locale.RU.locale to Voice.FILIPP, Locale.EN.locale to Voice.NICK, Locale.TR.locale to Voice.ERKANYAVAS)
+        mapOf(BrnLocale.RU.locale to Voice.FILIPP, BrnLocale.EN.locale to Voice.NICK, BrnLocale.TR.locale to Voice.ERKANYAVAS)
 
     private val mapYandexLocaleWomanVoice =
-        mapOf(Locale.RU.locale to Voice.OKSANA, Locale.EN.locale to Voice.ALYSS, Locale.TR.locale to Voice.SILAERKAN)
+        mapOf(BrnLocale.RU.locale to Voice.OKSANA, BrnLocale.EN.locale to Voice.ALYSS, BrnLocale.TR.locale to Voice.SILAERKAN)
 
     fun getDefaultManVoiceForLocale(locale: String): String = mapYandexLocaleManVoice[locale]!!.name
     fun getDefaultWomanVoiceForLocale(locale: String): String = mapYandexLocaleWomanVoice[locale]!!.name
@@ -40,16 +40,16 @@ class WordsService {
         listOf(mapYandexLocaleManVoice[locale]?.name, mapYandexLocaleWomanVoice[locale]?.name)
 
     val dictionaryByLocale =
-        mutableMapOf(Locale.RU to mutableMapOf<String, String>(), Locale.EN to mutableMapOf<String, String>())
+        mutableMapOf(BrnLocale.RU to mutableMapOf<String, String>(), BrnLocale.EN to mutableMapOf<String, String>())
 
-    lateinit var mapLocaleFile: Map<Locale, String>
+    lateinit var mapLocaleFile: Map<BrnLocale, String>
 
     @PostConstruct
     private fun init() {
-        mapLocaleFile = mapOf(Locale.RU to wordsFileNameRu, Locale.EN to wordsFileNameEn)
+        mapLocaleFile = mapOf(BrnLocale.RU to wordsFileNameRu, BrnLocale.EN to wordsFileNameEn)
     }
 
-    fun addWordsToDictionary(locale: Locale, words: Collection<String>) =
+    fun addWordsToDictionary(locale: BrnLocale, words: Collection<String>) =
         words.forEach { dictionaryByLocale[locale]!![it] = DigestUtils.md5Hex(it) }
 
     fun createTxtFilesWithExerciseWordsMap() {
@@ -69,7 +69,7 @@ class WordsService {
         File(lopotkoFileName).writeText(multilineText.toString())
     }
 
-    fun getExistWordFilesCount(locale: Locale) =
+    fun getExistWordFilesCount(locale: BrnLocale) =
         File(localFolderForFiles + "/${locale.locale}").walkTopDown().filter { file -> file.isFile }.count()
 
     fun isFileExistLocal(audioFileMetaData: AudioFileMetaData): Boolean {

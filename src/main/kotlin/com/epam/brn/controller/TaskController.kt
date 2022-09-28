@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.TaskService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -17,7 +17,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/tasks")
 @Api(value = "/tasks", tags = ["Tasks"], description = "Contains actions over tasks")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class TaskController(private val taskService: TaskService) {
 
     private val log = logger()

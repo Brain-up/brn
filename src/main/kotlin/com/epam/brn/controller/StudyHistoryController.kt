@@ -4,7 +4,7 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.AuthorityType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -22,7 +22,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/study-history")
 @Api(value = "/study-history", tags = ["Study History"], description = "Contains actions over the results of finished exercise")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class StudyHistoryController(
     @Autowired val studyHistoryService: StudyHistoryService,
     @Autowired val authorityService: AuthorityService

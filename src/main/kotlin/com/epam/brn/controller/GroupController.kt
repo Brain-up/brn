@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseGroupsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -17,7 +17,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/groups")
 @Api(value = "/groups", tags = ["Groups"], description = "Contains actions over groups")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class GroupController(val exerciseGroupsService: ExerciseGroupsService) {
 
     // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to

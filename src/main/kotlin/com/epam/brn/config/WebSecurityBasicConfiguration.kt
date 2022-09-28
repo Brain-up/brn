@@ -1,7 +1,7 @@
 package com.epam.brn.config
 
 import com.epam.brn.auth.filter.FirebaseTokenAuthenticationFilter
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -33,7 +33,7 @@ class WebSecurityBasicConfiguration(
             .and()
             .addFilterBefore(firebaseTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
-            .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**").hasRole(RoleConstants.ADMIN)
+            .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**").hasRole(BrnRole.ADMIN)
             .and()
             .formLogin().disable()
             .httpBasic().disable()

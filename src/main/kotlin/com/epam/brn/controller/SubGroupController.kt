@@ -4,7 +4,7 @@ import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.SubGroupResponse
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.SubGroupService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -26,7 +26,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/subgroups")
 @Api(value = "/subgroups", tags = ["Sub Groups"], description = "Contains actions over subgroup")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @GetMapping
@@ -52,7 +52,7 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @PostMapping
     @ApiOperation("Add new subgroup for existing series")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun addSubGroupToSeries(
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
@@ -63,7 +63,7 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @PatchMapping("/{subGroupId}")
     @ApiOperation("Update subgroup by id")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
         @RequestBody subGroup: SubGroupChangeRequest

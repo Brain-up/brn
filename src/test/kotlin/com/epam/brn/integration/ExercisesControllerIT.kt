@@ -6,8 +6,8 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
-import com.epam.brn.enums.Locale
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -37,7 +37,7 @@ import java.time.LocalDateTime
 import kotlin.random.Random
 import kotlin.test.assertFalse
 
-@WithMockUser(username = "test@test.test", roles = [RoleConstants.ADMIN, RoleConstants.USER])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class ExercisesControllerIT : BaseIT() {
 
     private val baseUrl = "/exercises"
@@ -164,7 +164,7 @@ class ExercisesControllerIT : BaseIT() {
     fun `should not be validated ExerciseWordsCreateDto`() {
         // GIVEN
         val exerciseWordsCreateDto = ExerciseWordsCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "",
             level = 0,
             exerciseName = "",
@@ -192,7 +192,7 @@ class ExercisesControllerIT : BaseIT() {
     fun `should not be validated ExercisePhrasesCreateDto`() {
         // GIVEN
         val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "",
             level = 0,
             exerciseName = "",
@@ -220,7 +220,7 @@ class ExercisesControllerIT : BaseIT() {
     fun `should not be validated ExerciseSentencesCreateDto`() {
         // GIVEN
         val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "",
             level = 0,
             exerciseName = "",

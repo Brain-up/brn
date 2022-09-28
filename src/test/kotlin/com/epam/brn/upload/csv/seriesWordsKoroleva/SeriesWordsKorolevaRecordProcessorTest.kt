@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.seriesWordsKoroleva
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -84,7 +84,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
         ReflectionTestUtils.setField(seriesWordsKorolevaRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
-        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock
+        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", BrnLocale.RU.locale) } returns subGroupMock
         every { wordsServiceMock.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } returns String()
         every {
             resourceRepositoryMock.findFirstByWordAndLocaleAndWordType(
@@ -93,8 +93,8 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 ofType(String::class)
             )
         } returns Optional.empty()
-        every { wordsServiceMock.addWordsToDictionary(ofType(Locale::class), any()) } returns Unit
-        every { wordsServiceMock.getDefaultWomanVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS.name
+        every { wordsServiceMock.addWordsToDictionary(ofType(BrnLocale::class), any()) } returns Unit
+        every { wordsServiceMock.getDefaultWomanVoiceForLocale(BrnLocale.RU.locale) } returns Voice.ALYSS.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, level) } returns Optional.empty()
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
         every { exerciseRepositoryMock.save(ofType(Exercise::class)) } returns Exercise()
@@ -161,14 +161,14 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             resource_гад(),
             resource_дуб()
         )
-        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns subGroupMock
-        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.ALYSS.name
+        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", BrnLocale.RU.locale) } returns subGroupMock
+        every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.ALYSS.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, 1) } returns Optional.empty()
         every {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "бал",
-                    Locale.RU.locale,
+                    BrnLocale.RU.locale,
                     Voice.ALYSS.name
                 )
             )
@@ -177,7 +177,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "бум",
-                    Locale.RU.locale,
+                    BrnLocale.RU.locale,
                     Voice.ALYSS.name
                 )
             )
@@ -186,7 +186,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "быль",
-                    Locale.RU.locale,
+                    BrnLocale.RU.locale,
                     Voice.ALYSS.name
                 )
             )
@@ -195,7 +195,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "вить",
-                    Locale.RU.locale,
+                    BrnLocale.RU.locale,
                     Voice.ALYSS.name
                 )
             )
@@ -204,7 +204,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "гад",
-                    Locale.RU.locale,
+                    BrnLocale.RU.locale,
                     Voice.ALYSS.name
                 )
             )
@@ -213,7 +213,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             wordsServiceMock.getSubFilePathForWord(
                 AudioFileMetaData(
                     "дуб",
-                    Locale.RU.locale,
+                    BrnLocale.RU.locale,
                     Voice.ALYSS.name
                 )
             )
@@ -242,7 +242,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
 
     @Test
     fun `should throw EntityNotFoundException`() {
-        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", Locale.RU.locale) } returns null
+        every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", BrnLocale.RU.locale) } returns null
         assertThrows(EntityNotFoundException::class.java) {
             seriesWordsKorolevaRecordProcessor.process(
                 mutableListOf(

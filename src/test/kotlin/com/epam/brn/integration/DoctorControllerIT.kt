@@ -3,7 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.AuthorityType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AuthorityRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WithMockUser(username = "currentDoctor@default.ru", roles = [RoleConstants.DOCTOR])
+@WithMockUser(username = "currentDoctor@default.ru", roles = [BrnRole.DOCTOR])
 class DoctorControllerIT : BaseIT() {
 
     @Autowired
@@ -93,7 +93,7 @@ class DoctorControllerIT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "user1@default.ru", roles = [RoleConstants.USER])
+    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
     fun `should not add patient if current user is not a doctor`() {
         // GIVEN
         val requestJson = objectMapper.writeValueAsString(AddPatientToDoctorRequest(user2.id!!, "user"))

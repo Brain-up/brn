@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.seriesWordsKoroleva
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -32,7 +32,7 @@ class SeriesWordsKorolevaRecordProcessor(
     override fun isApplicable(record: Any): Boolean = record is SeriesWordsKorolevaRecord
 
     @Transactional
-    override fun process(records: List<SeriesWordsKorolevaRecord>, locale: Locale): List<Exercise> {
+    override fun process(records: List<SeriesWordsKorolevaRecord>, locale: BrnLocale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
         records.forEach { record ->
             val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
@@ -52,14 +52,14 @@ class SeriesWordsKorolevaRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesWordsKorolevaRecord, locale: Locale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesWordsKorolevaRecord, locale: BrnLocale): MutableSet<Resource> =
         record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .map { toResource(it, locale) }
             .toMutableSet()
 
-    private fun toResource(word: String, locale: Locale): Resource {
+    private fun toResource(word: String, locale: BrnLocale): Resource {
         val audioPath = wordsService.getSubFilePathForWord(
             AudioFileMetaData(
                 word,

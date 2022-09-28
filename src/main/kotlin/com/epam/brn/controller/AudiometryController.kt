@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.AudiometryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -16,7 +16,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/audiometrics")
 @Api(value = "/audiometrics", tags = ["Audio Metrics"], description = "Contains actions for audiometry")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class AudiometryController(private val audiometryService: AudiometryService) {
 
     @GetMapping

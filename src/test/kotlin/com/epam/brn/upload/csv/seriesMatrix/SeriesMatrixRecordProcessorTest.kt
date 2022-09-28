@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.seriesMatrix
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
@@ -85,8 +85,8 @@ internal class SeriesMatrixRecordProcessorTest {
             wordsServiceMock
         )
         ReflectionTestUtils.setField(seriesMatrixRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
-        every { subGroupRepositoryMock.findByCodeAndLocale("code", Locale.RU.locale) } returns subGroupMock
-        every { wordsServiceMock.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP.name
+        every { subGroupRepositoryMock.findByCodeAndLocale("code", BrnLocale.RU.locale) } returns subGroupMock
+        every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
         every {
             resourceRepositoryMock.findFirstByWordAndLocaleAndWordType(

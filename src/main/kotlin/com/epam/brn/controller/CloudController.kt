@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.CloudUploadService
 import com.epam.brn.service.cloud.CloudService
 import io.swagger.annotations.Api
@@ -27,7 +27,7 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/cloud")
 @Api(value = "/cloud", tags = ["Cloud"], description = "Contains actions for cloud upload and bucket listing")
 @ConditionalOnProperty(name = ["cloud.provider"])
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class CloudController(
     @Autowired private val cloudService: CloudService,
     @Autowired private val cloudUploadService: CloudUploadService
@@ -35,7 +35,7 @@ class CloudController(
 
     @GetMapping("/upload")
     @ApiOperation("Get cloud upload form")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<Response<Map<String, Any>>> {
         if (filePath.isNullOrEmpty())
@@ -58,7 +58,7 @@ class CloudController(
 
     @GetMapping("/folders")
     @ApiOperation("Get cloud folder structure")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     @Throws(Exception::class)
     fun listBucket(): ResponseEntity<Response<List<String>>> =
         ResponseEntity.ok(Response(cloudService.getStorageFolders()))

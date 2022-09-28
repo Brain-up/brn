@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.request.AudiometryHistoryRequest
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.AudiometryHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -17,7 +17,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/audiometry-history")
 @Api(value = "/audiometryHistory", tags = ["Audiometry History"], description = "Contains actions for audiometry history")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class AudiometryHistoryController(private val audiometryHistoryService: AudiometryHistoryService) {
 
     @PostMapping

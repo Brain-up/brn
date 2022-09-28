@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.request.SubGroupRequest
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 
-@WithMockUser(username = "test@test.test", roles = [RoleConstants.ADMIN, RoleConstants.USER])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN, BrnRole.USER])
 class SubGroupControllerIT : BaseIT() {
 
     @Autowired

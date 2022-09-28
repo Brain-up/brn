@@ -3,7 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.ResourceDto
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ResourceService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -19,7 +19,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/resources")
 @Api(value = "/resources", tags = ["Resources"], description = "Contains actions over resources")
-@RolesAllowed(RoleConstants.ADMIN)
+@RolesAllowed(BrnRole.ADMIN)
 class ResourceController(val resourceService: ResourceService) {
 
     @PatchMapping("/resources/{id}")

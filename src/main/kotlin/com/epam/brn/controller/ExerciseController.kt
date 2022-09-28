@@ -1,11 +1,12 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
-import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
@@ -30,15 +31,16 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/exercises")
 @Api(value = "/exercises", tags = ["Exercises"], description = "Contains actions over exercises")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class ExerciseController(
     @Autowired val exerciseService: ExerciseService,
-    @Autowired val csvUploadService: CsvUploadService
+    @Autowired val csvUploadService: CsvUploadService,
+    @Autowired val authorityService: AuthorityService
 ) {
 
     @PostMapping
     @ApiOperation("Create new exercise for existing subgroup")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun createExercise(
         @ApiParam(value = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
@@ -46,23 +48,15 @@ class ExerciseController(
         ResponseEntity.status(HttpStatus.CREATED)
             .body(Response(data = exerciseService.createExercise(exerciseCreateDto)))
 
-    @GetMapping("/search")
-    @ApiOperation("Get exercises for subgroup with tasks")
-    @RolesAllowed(RoleConstants.ADMIN)
-    fun searchExercisesBySubGroup(
-        @RequestParam(
-            value = "subGroupId",
-            required = true
-        ) subGroupId: Long
-    ): ResponseEntity<Response<List<ExerciseWithTasksResponse>>> =
-        ResponseEntity.ok()
-            .body(Response(data = exerciseService.findExercisesWithTasksBySubGroup(subGroupId)))
-
     @GetMapping
-    @ApiOperation("Get exercises for subgroup and current user with availability calculation")
+    @ApiOperation("Get exercises for subgroup with tasks. If called by current user, availability calculation is included")
     fun getExercisesBySubGroup(@RequestParam(value = "subGroupId", required = true) subGroupId: Long): ResponseEntity<Response<List<ExerciseDto>>> {
-        return ResponseEntity.ok()
-            .body(Response(data = exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)))
+        val result = if (authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
+            exerciseService.findExercisesWithTasksBySubGroup(subGroupId)
+        } else {
+            exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)
+        }
+        return ResponseEntity.ok().body(Response(data = result))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
@@ -91,7 +85,7 @@ class ExerciseController(
 
     @PostMapping("/loadTasksFile")
     @ApiOperation("Load task file to series")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile

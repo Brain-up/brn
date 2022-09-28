@@ -4,7 +4,7 @@ import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.ContributorType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ContributorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -39,7 +39,7 @@ class ContributorController(val contributorService: ContributorService) {
 
     @PostMapping
     @ApiOperation("Add a new contributor")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun createContributor(
         @ApiParam(value = "Contributor data", required = true)
         @Valid @RequestBody contributorDto: ContributorRequest
@@ -49,7 +49,7 @@ class ContributorController(val contributorService: ContributorService) {
 
     @PutMapping("/{contributorId}")
     @ApiOperation("Update an existing contributor")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun updateContributor(
         @PathVariable("contributorId") contributorId: Long,
         @ApiParam(value = "Contributor data", required = true)

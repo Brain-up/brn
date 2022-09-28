@@ -2,7 +2,7 @@ package com.epam.brn.service.load
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.enums.AuthorityType
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.Authority
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
@@ -148,7 +148,7 @@ class InitialDataLoader(
         }
     }
 
-    private fun loadFromInputStream(inputStream: InputStream, locale: Locale) {
+    private fun loadFromInputStream(inputStream: InputStream, locale: BrnLocale) {
         try {
             uploadService.load(inputStream, locale)
         } finally {

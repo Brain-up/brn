@@ -24,7 +24,7 @@ export class AdminApiService {
   public getExercisesBySubGroupId(subGroupId: number): Observable<Exercise[]> {
     return this.httpClient
       .get<{ data: Exercise[] }>(
-        `/api/exercises/search?subGroupId=${subGroupId}`,
+        `/api/exercises?subGroupId=${subGroupId}`,
       )
       .pipe(pluck('data'));
   }

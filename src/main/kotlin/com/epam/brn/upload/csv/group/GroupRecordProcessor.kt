@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.group
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.upload.csv.RecordProcessor
@@ -16,7 +16,7 @@ class GroupRecordProcessor(private val groupRepository: ExerciseGroupRepository)
     }
 
     @Transactional
-    override fun process(records: List<GroupRecord>, locale: Locale): List<ExerciseGroup> {
+    override fun process(records: List<GroupRecord>, locale: BrnLocale): List<ExerciseGroup> {
         val groups = records
             .map {
                 ExerciseGroup(it)

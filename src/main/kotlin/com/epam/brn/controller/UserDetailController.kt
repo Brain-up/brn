@@ -4,7 +4,7 @@ import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
@@ -31,7 +31,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/users")
 @Api(value = "/users", tags = ["Users"], description = "Contains actions over user details and accounts")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class UserDetailController(
     private val userAccountService: UserAccountService,
     private val doctorService: DoctorService,
@@ -39,7 +39,7 @@ class UserDetailController(
 ) {
     @GetMapping("/search")
     @ApiOperation("Get all users with/without analytic data")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
         @RequestParam("role", defaultValue = "ROLE_USER") role: String,
@@ -52,7 +52,7 @@ class UserDetailController(
 
     @GetMapping(value = ["/{userId}"])
     @ApiOperation("Get user by id")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<Response<List<UserAccountResponse>>> {
         return ResponseEntity.ok()
             .body(Response(data = listOf(userAccountService.findUserById(id))))
@@ -71,7 +71,7 @@ class UserDetailController(
 
     @GetMapping
     @ApiOperation("Get user by name")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun findUserByName(
         @RequestParam("name", required = true) name: String
     ) = ResponseEntity.ok()
@@ -86,7 +86,7 @@ class UserDetailController(
 
     @PostMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Add headphones to the user")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun addHeadphonesToUser(
         @PathVariable("userId", required = true) userId: Long,
         @Validated @RequestBody headphones: HeadphonesDto
@@ -110,7 +110,7 @@ class UserDetailController(
 
     @GetMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Get all user's headphones")
-    @RolesAllowed(RoleConstants.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN)
     fun getAllHeadphonesForUser(
         @PathVariable("userId", required = true) userId: Long
     ) = ResponseEntity

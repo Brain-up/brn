@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.UserAnalyticsService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -19,7 +19,7 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/audio")
 @Api(value = "/audio", tags = ["Audio"], description = "Contains actions for getting audio file for words")
 @ConditionalOnProperty(name = ["default.tts.provider"])
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class AudioController(private val userAnalyticsService: UserAnalyticsService) {
 
     @GetMapping(produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])

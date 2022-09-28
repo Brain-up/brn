@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
 import org.junit.jupiter.api.AfterEach
@@ -12,7 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
-@WithMockUser(username = "test@test.test", roles = [RoleConstants.ADMIN])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN])
 class ResourceControllerIT : BaseIT() {
 
     private val baseUrl = "/resources"

@@ -1,6 +1,6 @@
 package com.epam.brn.dto.request.exercise
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.upload.csv.seriesMatrix.SeriesMatrixRecord
 import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecord
@@ -30,7 +30,7 @@ sealed class ExerciseCreateDto(
     open val typeOfExercise: ExerciseType,
     @ApiModelProperty(value = "Locale", required = true, example = "RU")
     @field:NotNull
-    open val locale: Locale,
+    open val locale: BrnLocale,
     @ApiModelProperty(value = "Subgroup code", required = true, example = "longShortPhrases")
     @field:NotBlank
     open val subGroup: String,
@@ -46,7 +46,7 @@ sealed class ExerciseCreateDto(
 data class ExerciseWordsCreateDto(
     @ApiModelProperty(value = "Locale", required = true, example = "RU")
     @field:NotNull
-    override val locale: Locale,
+    override val locale: BrnLocale,
     @ApiModelProperty(value = "Subgroup code", required = true, example = "family")
     @field:NotBlank
     override val subGroup: String,
@@ -79,7 +79,7 @@ data class ExerciseWordsCreateDto(
 data class ExercisePhrasesCreateDto(
     @ApiModelProperty(value = "Locale", required = true, example = "RU")
     @field:NotNull
-    override val locale: Locale,
+    override val locale: BrnLocale,
     @ApiModelProperty(value = "Subgroup code", required = true, example = "longShortPhrases")
     @field:NotBlank
     override val subGroup: String,
@@ -112,7 +112,7 @@ data class ExercisePhrasesCreateDto(
 data class ExerciseSentencesCreateDto(
     @ApiModelProperty(value = "Locale", required = true, example = "RU")
     @field:NotNull
-    override val locale: Locale,
+    override val locale: BrnLocale,
     @ApiModelProperty(value = "Subgroup code", required = true, example = "sentence_with_6_words")
     @field:NotBlank
     override val subGroup: String,

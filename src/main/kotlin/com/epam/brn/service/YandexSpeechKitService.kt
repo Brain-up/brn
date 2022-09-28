@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.YandexServiceException
 import org.apache.commons.io.FileUtils
 import org.apache.http.NameValuePair
@@ -142,7 +142,7 @@ class YandexSpeechKitService(
     }
 
     fun validateLocaleAndVoice(locale: String, voice: String) {
-        if (!Locale.values().map { it.locale }.contains(locale.toLowerCase()))
+        if (!BrnLocale.values().map { it.locale }.contains(locale.toLowerCase()))
             throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
         val localeVoices = wordsService.getVoicesForLocale(locale)
         if (voice.isNotEmpty() && !localeVoices.contains(voice))

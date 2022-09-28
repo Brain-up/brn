@@ -6,7 +6,7 @@ import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.enums.AuthorityType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.swagger.annotations.Api
@@ -22,7 +22,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/v2/statistics")
 @Api(value = "/statistics", tags = ["Statistics"], description = "Contains actions over user statistic details")
-@RolesAllowed(RoleConstants.USER)
+@RolesAllowed(BrnRole.USER)
 class UserStatisticControllerV2(
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
     private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,

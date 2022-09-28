@@ -6,8 +6,7 @@ import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
-import com.epam.brn.dto.response.ExerciseWithTasksResponse
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
@@ -150,9 +149,9 @@ class ExerciseService(
         exerciseRepository.save(exercise)
     }
 
-    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseWithTasksResponse> {
+    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> {
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
-        return subGroupExercises.map { it.toDtoWithTasks() }
+        return subGroupExercises.map { it.toDto() }
     }
 
     @Transactional(rollbackFor = [Exception::class])
@@ -184,7 +183,7 @@ class ExerciseService(
         return exercise.toDto()
     }
 
-    private fun createExercise(exerciseRecord: Any, locale: Locale): Exercise? =
+    private fun createExercise(exerciseRecord: Any, locale: BrnLocale): Exercise? =
         recordProcessors.stream()
             .filter { it.isApplicable(exerciseRecord) }
             .findFirst()
@@ -192,7 +191,7 @@ class ExerciseService(
             .process(listOf(exerciseRecord) as List<Nothing>, locale)
             .firstOrNull() as Exercise?
 
-    private fun generateAudioFilesAndSave(words: List<String>, locale: Locale) {
+    private fun generateAudioFilesAndSave(words: List<String>, locale: BrnLocale) {
         speeds.forEach { speed ->
             run {
                 words.forEach { word ->

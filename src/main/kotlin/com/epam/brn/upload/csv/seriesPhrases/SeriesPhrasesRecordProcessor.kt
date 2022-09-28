@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.seriesPhrases
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -37,7 +37,7 @@ class SeriesPhrasesRecordProcessor(
     }
 
     @Transactional
-    override fun process(records: List<SeriesPhrasesRecord>, locale: Locale): List<Exercise> {
+    override fun process(records: List<SeriesPhrasesRecord>, locale: BrnLocale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
 
         records.forEach { record ->
@@ -60,7 +60,7 @@ class SeriesPhrasesRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesPhrasesRecord, locale: Locale): MutableSet<Resource> {
+    private fun extractAnswerOptions(record: SeriesPhrasesRecord, locale: BrnLocale): MutableSet<Resource> {
         val words = record.phrases
             .asSequence()
             .map { toPhrasesWithoutBraces(it) }
@@ -73,7 +73,7 @@ class SeriesPhrasesRecordProcessor(
         return mutableSetOf(toResource(phraseFirst, locale), toResource(phraseSecond, locale))
     }
 
-    private fun toResource(phrase: String, locale: Locale): Resource {
+    private fun toResource(phrase: String, locale: BrnLocale): Resource {
         val audioPath = wordsService.getSubFilePathForWord(
             AudioFileMetaData(
                 phrase,

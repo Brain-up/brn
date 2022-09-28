@@ -84,7 +84,7 @@ describe('AdminApiService', () => {
 
   it('should call get exercises by subgroup id', () => {
     let exercise: Exercise[] | undefined;
-    const url = `${baseUrl}/exercises/search?subGroupId=${subGroupId}`;
+    const url = `${baseUrl}/exercises?subGroupId=${subGroupId}`;
 
     service.getExercisesBySubGroupId(subGroupId).subscribe((data) => {
       exercise = data;
@@ -100,7 +100,7 @@ describe('AdminApiService', () => {
     const errorEvent = new ErrorEvent('API error');
     const status = 500;
     const statusText = 'Server error';
-    const url = `${baseUrl}/exercises/search?subGroupId=${subGroupId}`;
+    const url = `${baseUrl}/exercises?subGroupId=${subGroupId}`;
 
     let actualError: HttpErrorResponse | undefined;
 

@@ -2,7 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.AuthorityType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Authority
 import com.epam.brn.repo.AuthorityRepository
 import com.fasterxml.jackson.core.type.TypeReference
@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
 
-@WithMockUser(username = "test@test.test", roles = [RoleConstants.ADMIN])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN])
 class RoleControllerIT : BaseIT() {
 
     private val baseUrl = "/roles"

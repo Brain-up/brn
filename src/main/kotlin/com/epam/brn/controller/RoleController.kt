@@ -3,7 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.response.AuthorityResponse
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.ResponseEntity
@@ -15,7 +15,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/roles")
 @Api(value = "/roles", tags = ["Roles"], description = "Contains actions over roles")
-@RolesAllowed(RoleConstants.ADMIN)
+@RolesAllowed(BrnRole.ADMIN)
 class RoleController(val authorityService: AuthorityService) {
 
     @GetMapping

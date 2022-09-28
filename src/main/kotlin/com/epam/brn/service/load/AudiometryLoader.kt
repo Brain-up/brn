@@ -2,7 +2,7 @@ package com.epam.brn.service.load
 
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.EAR
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.repo.AudiometryRepository
@@ -26,37 +26,37 @@ class AudiometryLoader(
 
     fun loadInitialAudiometricsWithTasks() {
         val audiometrySignal = Audiometry(
-            locale = Locale.RU.locale,
+            locale = BrnLocale.RU.locale,
             name = "Частотная диагностика",
             description = "Частотная диагностика",
             audiometryType = AudiometryType.SIGNALS.name
         )
         val audiometrySpeech = Audiometry(
-            locale = Locale.RU.locale,
+            locale = BrnLocale.RU.locale,
             name = "Речевая диагностика",
             description = "Речевая диагностика методом Лопотко",
             audiometryType = AudiometryType.SPEECH.name
         )
         val audiometryMatrix = Audiometry(
-            locale = Locale.RU.locale,
+            locale = BrnLocale.RU.locale,
             name = "Матриксная диагностика",
             description = "Матриксная диагностика",
             audiometryType = AudiometryType.MATRIX.name
         )
         val audiometrySignalEn = Audiometry(
-            locale = Locale.EN.locale,
+            locale = BrnLocale.EN.locale,
             name = "Frequency diagnostic",
             description = "Frequency diagnostic",
             audiometryType = AudiometryType.SIGNALS.name
         )
         val audiometrySpeechEn = Audiometry(
-            locale = Locale.EN.locale,
+            locale = BrnLocale.EN.locale,
             name = "Speech diagnostic",
             description = "Speech diagnostic with Lopotko words sequences",
             audiometryType = AudiometryType.SPEECH.name
         )
         val audiometryMatrixEn = Audiometry(
-            locale = Locale.EN.locale,
+            locale = BrnLocale.EN.locale,
             name = "Matrix diagnostic",
             description = "Matrix diagnostic",
             audiometryType = AudiometryType.MATRIX.name

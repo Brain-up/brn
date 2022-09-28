@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.nonspeech
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.ExerciseType
@@ -59,7 +59,7 @@ internal class SignalSeriesRecordProcessorTest {
         name = "subGroup frequencySignals"
     )
 
-    private val locale = Locale.RU.locale
+    private val locale = BrnLocale.RU.locale
 
     @BeforeEach
     internal fun setUp() {
@@ -133,7 +133,7 @@ internal class SignalSeriesRecordProcessorTest {
     @Test
     fun `should create correct signals for subGroupDuration`() {
         // GIVEN
-        val locale = Locale.RU
+        val locale = BrnLocale.RU
         val code = "subGroupDuration"
         val record = SignalSeriesRecord(
             exerciseName = "По 2 сигнала разной длительности.",

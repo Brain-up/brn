@@ -6,7 +6,7 @@ import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Headphones
@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 
-@WithMockUser(username = "test@test.test", roles = [RoleConstants.ADMIN, RoleConstants.USER])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN, BrnRole.USER])
 class UserDetailsControllerIT : BaseIT() {
 
     @Autowired
@@ -148,7 +148,7 @@ class UserDetailsControllerIT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
+    @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `add headphones to current user not as admin`() {
         // GIVEN
         insertUser()
@@ -196,7 +196,7 @@ class UserDetailsControllerIT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = [RoleConstants.USER])
+    @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `add default headphones to current user`() {
         // GIVEN
         insertUser()

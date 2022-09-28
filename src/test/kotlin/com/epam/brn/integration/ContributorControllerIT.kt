@@ -5,7 +5,7 @@ import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.ContributorType
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Contact
 import com.epam.brn.model.Contributor
 import com.epam.brn.repo.ContributorRepository
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 import kotlin.test.assertEquals
 
-@WithMockUser(username = "test@test.test", roles = [RoleConstants.ADMIN])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN])
 class ContributorControllerIT : BaseIT() {
 
     private val baseUrl = "/contributors"

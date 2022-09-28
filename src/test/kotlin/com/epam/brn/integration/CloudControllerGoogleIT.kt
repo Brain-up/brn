@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.enums.RoleConstants
+import com.epam.brn.enums.BrnRole
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.junit.jupiter.api.Tag
@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integration-tests")
-@WithMockUser(username = "admin", roles = [RoleConstants.ADMIN])
+@WithMockUser(username = "admin", roles = [BrnRole.ADMIN])
 @Tag("integration-test")
 @TestPropertySource(properties = ["cloud.provider=google"])
 class CloudControllerGoogleIT {

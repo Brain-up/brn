@@ -3,7 +3,7 @@ package com.epam.brn.service
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
 import com.epam.brn.dto.response.WordsTaskResponse
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseType
@@ -96,7 +96,7 @@ internal class TaskServiceTest {
         fun `should return tasks by exerciseId(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
             val expectedTaskSize = 2
-            val resource = Resource(word = "word", locale = Locale.RU.locale)
+            val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
                 task1Mock,
                 task2Mock
@@ -127,7 +127,7 @@ internal class TaskServiceTest {
             // GIVEN
             val expectedTaskSize = 2
             val template = ""
-            val resource = Resource(word = "word", locale = Locale.RU.locale)
+            val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
                 task1Mock,
                 task2Mock
@@ -160,8 +160,8 @@ internal class TaskServiceTest {
         fun `should return tasks by exerciseId(SINGLE_WORDS_KOROLEVA)`() {
             // GIVEN
             val template = ""
-            val resource1 = Resource(word = "мак", locale = Locale.RU.locale, wordType = WordType.OBJECT.name)
-            val resource2 = Resource(word = "маки", locale = Locale.RU.locale, wordType = WordType.OBJECT.name)
+            val resource1 = Resource(word = "мак", locale = BrnLocale.RU.locale, wordType = WordType.OBJECT.name)
+            val resource2 = Resource(word = "маки", locale = BrnLocale.RU.locale, wordType = WordType.OBJECT.name)
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
                 listOf(task1Mock)
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
@@ -198,7 +198,7 @@ internal class TaskServiceTest {
         @Test
         fun `should return tasks by exerciseId(isAudioFileUrlGenerated`() {
             val template = ""
-            val resource = Resource(word = "word", locale = Locale.RU.locale)
+            val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
             val expectedTaskSize = 2
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
                 task1Mock,
@@ -235,7 +235,7 @@ internal class TaskServiceTest {
             // GIVEN
             val expectedTaskSize = 2
             val template = ""
-            val resource = Resource(word = "word", locale = Locale.RU.locale)
+            val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
                 task1Mock,
                 task2Mock
@@ -268,7 +268,7 @@ internal class TaskServiceTest {
         fun `should return tasks by exerciseId(PHRASES)`() {
             // GIVEN
             val expectedTaskSize = 2
-            val resource = Resource(word = "word", locale = Locale.RU.locale)
+            val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
                 task1Mock,
                 task2Mock
@@ -308,7 +308,7 @@ internal class TaskServiceTest {
         @Test
         fun `should throw an exception when there is no task for this signal exercise type`() {
             // GIVEN
-            val resource = Resource(word = "word", locale = Locale.RU.locale)
+            val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
                 task1Mock,
                 task2Mock

@@ -3,7 +3,7 @@ package com.epam.brn.upload.csv.audiometrySpeech
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.FrequencyZone
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryTask
@@ -44,7 +44,7 @@ internal class LopotkoRecordProcessorTest {
     private val words = listOf("(бал", "бум", "быль", "вить", "гад", "дуб)")
 
     private val audiometry =
-        Audiometry(name = "Audiometry", audiometryType = AudiometryType.SPEECH.name, locale = Locale.RU.locale)
+        Audiometry(name = "Audiometry", audiometryType = AudiometryType.SPEECH.name, locale = BrnLocale.RU.locale)
     private val audiometryTask = AudiometryTask(
         level = 1,
         audiometryGroup = "A",
@@ -54,7 +54,7 @@ internal class LopotkoRecordProcessorTest {
     )
     private val savedAudiometryTask = audiometryTask.copy(id = 1)
     private val lopotkoRecord = LopotkoRecord(
-        Locale.RU,
+        BrnLocale.RU,
         AudiometryType.SPEECH.name,
         1,
         "A",
@@ -73,12 +73,12 @@ internal class LopotkoRecordProcessorTest {
             wordsService,
         )
 
-        every { wordsService.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP.name
+        every { wordsService.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
         every { wordsService.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } returns String()
         every {
             audiometryRepository.findByAudiometryTypeAndLocale(
                 AudiometryType.SPEECH.name,
-                Locale.RU.locale
+                BrnLocale.RU.locale
             )
         } returns audiometry
         every {
