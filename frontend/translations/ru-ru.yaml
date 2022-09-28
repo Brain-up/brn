@@ -149,8 +149,8 @@ contact:
       title: Основатель проекта и технический руководитель Telegram Елена Мошникова
       link: 'https://t.me/ElenaLovesSpb'
       description: 'https://t.me/ElenaLovesSpb'
-  for_users: 'Контакты для пользователей:'
-  for_developers: 'Контакты для разработчиков:'
+  for_users: 'Для пользователей:'
+  for_developers: 'Для разработчиков:'
 
 description:
   header: "О проекте '<span class=\"text-indigo-600\">'Brain-Up'</span>'"
