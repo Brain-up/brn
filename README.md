@@ -55,11 +55,12 @@ Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 # GETTING STARTED!
 ## Resources:
 ### Documentation
-https://github.com/Brain-up/brn/wiki  
+https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview
+(https://github.com/Brain-up/brn/wiki)
 
 ### Jira
 https://awclub.atlassian.net/jira/software/c/projects/EPMLABSBRN/issues
-https://github.com/Brain-up/brn/issues  
+(https://github.com/Brain-up/brn/issues)
 
 ### Coding standards
 https://github.com/Brain-up/brn/wiki/Coding-Standards  
