@@ -10,62 +10,64 @@
 <section
     class="space-y-5"
     role="contentinfo"
-    aria-labelledby="usefulLinksHeader"
+    aria-labelledby="contacts"
 >
-  <p class="font-openSans">
-  <ol class="space-y-3 list-decimal list-inside">
-    <li>
+  <div class="font-openSans space-y-5">
+    <h2 id="contacts" class="text-2xl font-semibold">
       {{t "contact.for_users"}}
-      <ul class="mt-3 ml-8 space-y-3 list-disc list-inside">
-        {{#each (array 0 1) as |i|}}
-          <li>
+    </h2>
+    <p>
+    <ul class="space-y-2 list-disc list-inside">
+      {{#each (array 0 1) as |i|}}
+        <li>
+          {{t
+              (concat
+                  "contact.text." i ".title"
+              )
+          }}
+          <a
+              href={{t
+              (concat "contact.text." i ".link")
+          }}
+              class="hover:no-underline text-blue-light underline"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
             {{t
-                (concat
-                    "contact.text." i ".title"
-                )
+                (concat "contact.text." i ".description")
             }}
-            <a
-                href={{t
-                (concat "contact.text." i ".link")
-            }}
-                class="hover:no-underline text-blue-light underline"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              {{t
-                  (concat "contact.text." i ".description")
-              }}
-            </a>
-          </li>
-        {{/each}}
-      </ul>
-    </li>
-    <li>
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+    </p>
+    <h2 id="contacts" class="text-2xl font-semibold">
       {{t "contact.for_developers"}}
-      <ul class="mt-3 ml-8 space-y-3 list-disc list-inside">
-        {{#each (range 2 2 true) as |i|}}
-          <li>
+    </h2>
+    <p>
+    <ul class="space-y-2 list-disc list-inside">
+      {{#each (range 2 2 true) as |i|}}
+        <li>
+          {{t
+              (concat
+                  "contact.text." i ".title"
+              )
+          }}
+          <a
+              href={{t
+              (concat "contact.text." i ".link")
+          }}
+              class="hover:no-underline text-blue-light underline"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
             {{t
-                (concat
-                    "contact.text." i ".title"
-                )
+                (concat "contact.text." i ".description")
             }}
-            <a
-                href={{t
-                (concat "contact.text." i ".link")
-            }}
-                class="hover:no-underline text-blue-light underline"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              {{t
-                  (concat "contact.text." i ".description")
-              }}
-            </a>
-          </li>
-        {{/each}}
-      </ul>
-    </li>
-  </ol>
-  </p>
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+    </p>
+  </div>
 </section>
