@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.service.cloud.CloudService
+import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -18,6 +19,8 @@ class UrlConversionService(private val cloudService: CloudService) {
     @Value("\${brn.resources.pictures.ext}")
     lateinit var pictureExtensions: Set<String>
 
+    private val log = logger()
+
     fun makeUrlForNoise(noiseUrl: String?): String {
         if (noiseUrl.isNullOrEmpty())
             return ""
@@ -28,12 +31,19 @@ class UrlConversionService(private val cloudService: CloudService) {
         cloudService.baseFileUrl() + folderForThemePictures + "/" + subGroupCode + ".svg"
 
     fun makeUrlForTaskPicture(word: String): String {
-        listOf(defaultPicturesPath, unverifiedPicturesPath).forEach { picturesPath ->
-            pictureExtensions.forEach { ext ->
-                val fileName = "$word.$ext"
-                if (cloudService.isFileExist(picturesPath, fileName))
-                    return cloudService.baseFileUrl() + "/" + cloudService.createFullFileName(picturesPath, fileName)
+        try {
+            listOf(defaultPicturesPath, unverifiedPicturesPath).forEach { picturesPath ->
+                pictureExtensions.forEach { ext ->
+                    val fileName = "$word.$ext"
+                    if (cloudService.isFileExist(picturesPath, fileName))
+                        return cloudService.baseFileUrl() + "/" + cloudService.createFullFileName(
+                            picturesPath,
+                            fileName
+                        )
+                }
             }
+        } catch (e: Exception) {
+            log.error("Some exception with cloud service: ", e)
         }
         return ""
     }

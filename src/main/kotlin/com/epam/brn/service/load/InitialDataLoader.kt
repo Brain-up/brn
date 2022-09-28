@@ -78,7 +78,7 @@ class InitialDataLoader(
     }
 
     fun getSourceFiles(): List<String> {
-        var profile: String = environment.activeProfiles[0].toLowerCase()
+        var profile: String = environment.activeProfiles[0].lowercase()
         val devSubFolder = if (profile == "dev") "dev/" else ""
         return listOf(
             "groups_.csv",
