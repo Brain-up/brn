@@ -28,7 +28,7 @@
     "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
-    "billboard.js": "^3.0.3",
+    "billboard.js": "^3.6.0",
     "dayjs": "^1.10.4",
     "firebase": "^8.10.0",
     "fp-ts": "^2.5.3",
