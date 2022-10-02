@@ -1,6 +1,5 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.response.BaseResponse
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -8,6 +7,7 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.Locale
 import com.epam.brn.enums.Role.ROLE_ADMIN
@@ -308,7 +308,7 @@ class AdminExerciseFlowControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponse = objectMapper.readValue(responseJson, BaseResponse::class.java)
+        val baseResponse = objectMapper.readValue(responseJson, Response::class.java)
         val authorities = objectMapper.readValue(
             gson.toJson(baseResponse.data),
             object : TypeReference<List<Authority>>() {}
@@ -352,7 +352,7 @@ class AdminExerciseFlowControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BaseResponse::class.java).data
+        val data = gson.fromJson(response, Response::class.java).data
         val users: List<UserAccountResponse> =
             objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountResponse>>() {})
 

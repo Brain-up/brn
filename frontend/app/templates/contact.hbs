@@ -1,0 +1,73 @@
+{{page-title (t "header.contact")}}
+<section class="space-y-5">
+  <h1 class="text-3xl font-semibold">
+    {{t "contact.header"}}
+  </h1>
+</section>
+
+<hr class="my-10"/>
+
+<section
+    class="space-y-5"
+    role="contentinfo"
+    aria-labelledby="contacts"
+>
+  <div class="font-openSans space-y-5">
+    <h2 id="contacts" class="text-2xl font-semibold">
+      {{t "contact.for_users"}}
+    </h2>
+    <p>
+    <ul class="space-y-2 list-disc list-inside">
+      {{#each (array 0 1) as |i|}}
+        <li>
+          {{t
+              (concat
+                  "contact.text." i ".title"
+              )
+          }}
+          <a
+              href={{t
+              (concat "contact.text." i ".link")
+          }}
+              class="hover:no-underline text-blue-light underline"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            {{t
+                (concat "contact.text." i ".description")
+            }}
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+    </p>
+    <h2 id="contacts" class="text-2xl font-semibold">
+      {{t "contact.for_developers"}}
+    </h2>
+    <p>
+    <ul class="space-y-2 list-disc list-inside">
+      {{#each (range 2 2 true) as |i|}}
+        <li>
+          {{t
+              (concat
+                  "contact.text." i ".title"
+              )
+          }}
+          <a
+              href={{t
+              (concat "contact.text." i ".link")
+          }}
+              class="hover:no-underline text-blue-light underline"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            {{t
+                (concat "contact.text." i ".description")
+            }}
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+    </p>
+  </div>
+</section>

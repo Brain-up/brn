@@ -55,10 +55,12 @@ Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 # GETTING STARTED!
 ## Resources:
 ### Documentation
-https://github.com/Brain-up/brn/wiki  
+https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview
+(https://github.com/Brain-up/brn/wiki)
 
 ### Jira
-https://github.com/Brain-up/brn/issues  
+https://awclub.atlassian.net/jira/software/c/projects/EPMLABSBRN/issues
+(https://github.com/Brain-up/brn/issues)
 
 ### Coding standards
 https://github.com/Brain-up/brn/wiki/Coding-Standards  
@@ -75,10 +77,10 @@ https://github.com/Brain-up/brn/wiki/Coding-Standards
 ### Start Front Angular Part - admin application
 Go to location where the project is download for example C:\brn\brn\frontend-angular
 
-📄 [See here](https://github.com/Brain-up/brn/tree/master/frontend-angular#readme)
+📄 [See here](./frontend-angular/README.md)
 
 ### Start Front Ember Part - user application
-📄 [See here](https://github.com/Brain-up/brn/tree/master/frontend#readme)
+📄 [See here](./frontend/README.md)
 
 ### Database running:
 1. Install docker to your machine.

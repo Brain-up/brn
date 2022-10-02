@@ -134,6 +134,24 @@ avatar_controls:
   submit: Сохранить
   title: Выбор аватара
 
+contact:
+  header: Контакты
+  text:
+    0:
+      title: Telegram чат для пользователей
+      link: 'https://t.me/BrainUpPlatform'
+      description: 'https://t.me/BrainUpPlatform'
+    1:
+      title: По любым вопросам, идеям, пожалуйста, пишите на электронную почту проекта
+      link: 'mailto:brainupproject@yandex.ru'
+      description: 'brainupproject@yandex.ru'
+    2:
+      title: Основатель проекта и технический руководитель Telegram Елена Мошникова
+      link: 'https://t.me/ElenaLovesSpb'
+      description: 'https://t.me/ElenaLovesSpb'
+  for_users: 'Для пользователей:'
+  for_developers: 'Для разработчиков:'
+
 description:
   header: "О проекте '<span class=\"text-indigo-600\">'Brain-Up'</span>'"
   intro:

@@ -67,6 +67,33 @@
                   "maximumError": "20kb"
                 }
               ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ],
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": false,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "15kb",
+                  "maximumError": "20kb"
+                }
+              ]
             }
           }
         },
@@ -80,6 +107,10 @@
           "configurations": {
             "production": {
               "browserTarget": "frontend-angular:build:production"
+            },
+            "dev": {
+              "browserTarget": "frontend-angular:build:dev",
+              "proxyConfig": "src/proxy.conf.dev.json"
             }
           }
         },
