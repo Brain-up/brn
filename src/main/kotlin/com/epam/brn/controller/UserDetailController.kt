@@ -37,7 +37,7 @@ class UserDetailController(
     private val doctorService: DoctorService,
     private val userAnalyticsService: UserAnalyticsService
 ) {
-    @GetMapping("/search")
+    @GetMapping
     @ApiOperation("Get all users with/without analytic data")
     @RolesAllowed(BrnRole.ADMIN)
     fun getUsers(
@@ -68,14 +68,6 @@ class UserDetailController(
     fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) =
         ResponseEntity.ok()
             .body(Response(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
-
-    @GetMapping
-    @ApiOperation("Get user by name")
-    @RolesAllowed(BrnRole.ADMIN)
-    fun findUserByName(
-        @RequestParam("name", required = true) name: String
-    ) = ResponseEntity.ok()
-        .body(Response(data = listOf(userAccountService.findUserByName(name))))
 
     @PutMapping(value = ["/current/avatar"])
     @ApiOperation("Update avatar current user")

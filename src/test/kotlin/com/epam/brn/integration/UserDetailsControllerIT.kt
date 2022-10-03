@@ -309,7 +309,7 @@ class UserDetailsControllerIT : BaseIT() {
 
         // WHEN
         val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/search")
+            MockMvcRequestBuilders.get(baseUrl)
                 .param("role", AuthorityType.ROLE_ADMIN.name)
 
         )

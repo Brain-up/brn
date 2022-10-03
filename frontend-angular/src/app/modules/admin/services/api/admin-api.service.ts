@@ -66,7 +66,7 @@ export class AdminApiService {
     params = params.append('withAnalytics', String(withAnalytics));
 
     return this.httpClient
-      .get<GetUsers>('/api/users/search', {
+      .get<GetUsers>('/api/users', {
         params,
       })
       .pipe(
@@ -113,7 +113,7 @@ export class AdminApiService {
     params = params.append('withAnalytics', String(withAnalytics));
 
     return this.httpClient
-      .get<GetUsers>('/api/users/search', {
+      .get<GetUsers>('/api/users', {
         params,
       })
       .pipe(

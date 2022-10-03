@@ -176,7 +176,7 @@ describe('AdminApiService', () => {
 
   it('should call get users', () => {
     let usersData: User[] | undefined;
-    const url = `${baseUrl}/users/search`;
+    const url = `${baseUrl}/users`;
 
     service.getUsers().subscribe((data) => {
       usersData = data;
@@ -194,7 +194,7 @@ describe('AdminApiService', () => {
     const errorEvent = new ErrorEvent('API error');
     const status = 500;
     const statusText = 'Server error';
-    const url = `${baseUrl}/users/search`;
+    const url = `${baseUrl}/users`;
 
     let actualError: HttpErrorResponse | undefined;
 
