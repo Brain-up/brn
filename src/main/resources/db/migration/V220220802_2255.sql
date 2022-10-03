@@ -1,0 +1,1 @@
+ALTER TABLE study_history ADD COLUMN spent_time_in_seconds bigint;
