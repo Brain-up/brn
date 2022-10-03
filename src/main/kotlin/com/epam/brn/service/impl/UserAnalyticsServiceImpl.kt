@@ -20,6 +20,8 @@ import java.io.InputStream
 import java.time.LocalTime
 import java.time.temporal.WeekFields
 import java.util.Locale
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Service
 class UserAnalyticsServiceImpl(
@@ -51,11 +53,13 @@ class UserAnalyticsServiceImpl(
             user.studyDaysInLastMonth = countWorkDaysForMonth(
                 userDayStatisticService.getStatisticForPeriod(startOfLastMonth, endOfLastMonth, user.id)
             )
-            user.id?.let {
-                val firstAndLastVisitTimeByUserAccount =
-                    studyHistoryRepository.findFirstAndLastVisitTimeByUserAccount(it)
-                user.firstDone = firstAndLastVisitTimeByUserAccount.firstStudy
-                user.lastDone = firstAndLastVisitTimeByUserAccount.lastStudy
+
+            val userStatistic = studyHistoryRepository.getStatisticByUserAccountId(user.id)
+            user.apply {
+                this.firstDone = userStatistic.firstStudy
+                this.lastDone = userStatistic.lastStudy
+                this.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
+                this.doneExercises = userStatistic.doneExercises
             }
         }
 
