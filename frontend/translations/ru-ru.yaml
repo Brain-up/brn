@@ -139,8 +139,8 @@ contact:
   text:
     0:
       title: Telegram чат для пользователей
-      link: 'https://t.me/BrainUpPlatform'
-      description: 'https://t.me/BrainUpPlatform'
+      link: 'https://t.me/BrainUpUsers'
+      description: 'https://t.me/BrainUpUsers'
     1:
       title: По любым вопросам, идеям, пожалуйста, пишите на электронную почту проекта
       link: 'mailto:brainupproject@yandex.ru'
