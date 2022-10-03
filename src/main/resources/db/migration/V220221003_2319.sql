@@ -1,0 +1,1 @@
+UPDATE study_history SET spent_time_in_seconds = EXTRACT(epoch FROM end_time)-extract(epoch FROM start_time);

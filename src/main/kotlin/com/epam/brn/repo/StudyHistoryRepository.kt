@@ -94,7 +94,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
-            " SUM(s.spentTimeInSeconds) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
+            " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
             " FROM StudyHistory s WHERE user_id = :userId"
     )
     fun getStatisticByUserAccountId(userId: Long?): UserStatisticView
