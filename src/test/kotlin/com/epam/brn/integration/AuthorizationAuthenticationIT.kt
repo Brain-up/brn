@@ -35,7 +35,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     lateinit var firebaseWebClientTestMock: FirebaseWebClientTestMock
 
     internal val baseUrl = "/groups"
-    internal val searchUsersPath = "/users/search"
+    internal val searchUsersPath = "/users"
 
     internal val email: String = "testAdmin@admin.com"
     internal val fullName = "testUserFirstName"
