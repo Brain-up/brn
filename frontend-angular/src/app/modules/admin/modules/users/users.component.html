@@ -81,12 +81,8 @@
           }}
         </th>
         <td mat-cell *matCellDef="let user">
-          <div class="item">{{ user.firstDone | date: 'longDate' }}</div>
           <div *ngIf="user.firstDone" class="subItem">
-            {{
-              'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
-                | translate: { hours: user.firstDone | date: 'H' }
-            }}
+           {{ user.firstDone | date: 'medium' }}
           </div>
         </td>
       </ng-container>
@@ -99,12 +95,8 @@
           }}
         </th>
         <td mat-cell *matCellDef="let user">
-          <div class="item">{{ user.lastDone | date }}</div>
           <div *ngIf="user.lastDone" class="subItem">
-            {{
-              'Admin.Modules.Users.Components.UsersTable.VisitColumn.Time [hours]'
-                | translate: { hours: user.lastDone | date: 'H' }
-            }}
+            {{ user.lastDone | date: 'medium' }}
           </div>
         </td>
       </ng-container>
@@ -135,7 +127,7 @@
           }}
         </th>
         <td class="center" mat-cell *matCellDef="let user">
-          {{ user.spentTime }}
+          {{ user.spentTime | durationTransform }}
         </td>
       </ng-container>
 
