@@ -4,7 +4,7 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.Role
+import com.epam.brn.enums.AuthorityType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.Headphones
@@ -172,9 +172,7 @@ class UserAccountServiceImpl(
     }
 
     private fun getDefaultAuthoritySet(): MutableSet<Authority> {
-        var authorityNames = mutableSetOf<String>()
-        if (authorityNames.isEmpty())
-            authorityNames = mutableSetOf(Role.ROLE_USER.name)
+        val authorityNames = mutableSetOf(AuthorityType.ROLE_USER.name)
 
         return authorityNames
             .filter(::isNotEmpty)

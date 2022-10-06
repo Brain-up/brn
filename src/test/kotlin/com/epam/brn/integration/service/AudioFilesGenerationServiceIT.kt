@@ -1,7 +1,7 @@
 package com.epam.brn.integration.service
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.service.AudioFilesGenerationService
 import org.apache.commons.codec.digest.DigestUtils
@@ -31,7 +31,7 @@ internal class AudioFilesGenerationServiceIT {
         ReflectionTestUtils.setField(audioFilesGenerationService, "withMp3Conversion", true)
         ReflectionTestUtils.setField(audioFilesGenerationService, "withSavingToS3", false)
 
-        val locale = Locale.RU.locale
+        val locale = BrnLocale.RU.locale
         val voice = Voice.OKSANA.name
         val speed = "1"
         val meta1 = AudioFileMetaData("бабушкааа", locale, voice, speed)

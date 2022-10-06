@@ -1,11 +1,13 @@
 package com.epam.brn.upload
 
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -60,6 +62,41 @@ internal class CsvUploadServiceTest {
             uploadService.getSampleStringForSeriesExerciseFile(
                 invalidSeriesId
             )
+        }
+    }
+
+    @Test
+    fun `should get locale from file name`() {
+        // given
+        val fileName = "file_en.csv"
+
+        // when
+        val result = uploadService.getLocaleFromFileName(fileName)
+
+        // then
+        result shouldBe BrnLocale.EN
+    }
+
+    @Test
+    fun `should get default locale from file name`() {
+        // given
+        val fileName = "file_.csv"
+
+        // when
+        val result = uploadService.getLocaleFromFileName(fileName)
+
+        // then
+        result shouldBe BrnLocale.RU
+    }
+
+    @Test
+    fun `should throw exception for not support locale`() {
+        // given
+        val fileName = "file_es.csv"
+
+        // when & then
+        assertThrows(IllegalArgumentException::class.java) {
+            uploadService.getLocaleFromFileName(fileName)
         }
     }
 }

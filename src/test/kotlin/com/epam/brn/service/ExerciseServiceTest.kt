@@ -1,14 +1,13 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -172,11 +171,11 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
         val subGroupId = 1L
-        val exerciseDtoMock: ExerciseWithTasksResponse = mockkClass(ExerciseWithTasksResponse::class)
+        val exerciseDtoMock = mockkClass(ExerciseDto::class)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exerciseMock)
-        every { exerciseMock.toDtoWithTasks() } returns (exerciseDtoMock)
+        every { exerciseMock.toDto() } returns (exerciseDtoMock)
         // WHEN
-        val actualResults: List<ExerciseWithTasksResponse> = exerciseService.findExercisesWithTasksBySubGroup(1)
+        val actualResults = exerciseService.findExercisesWithTasksBySubGroup(1)
         // THEN
         actualResults shouldContain exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
@@ -399,7 +398,7 @@ internal class ExerciseServiceTest {
     fun `should be return new exercise from ExerciseWordsCreateDto`() {
         // GIVEN
         val exerciseWordsCreateDto = ExerciseWordsCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -429,7 +428,7 @@ internal class ExerciseServiceTest {
     fun `should be throw IllegalArgumentException in createAndGenerateExerciseWords`() {
         // GIVEN
         val exerciseWordsCreateDto = ExerciseWordsCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -455,7 +454,7 @@ internal class ExerciseServiceTest {
     fun `should be return new exercise from ExercisePhrasesCreateDto`() {
         // GIVEN
         val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -485,7 +484,7 @@ internal class ExerciseServiceTest {
     fun `should be throw IllegalArgumentException in createAndGenerateExercisePhrases`() {
         // GIVEN
         val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -511,7 +510,7 @@ internal class ExerciseServiceTest {
     fun `should be return new exercise from ExerciseSentencesCreateDto`() {
         // GIVEN
         val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",
@@ -541,7 +540,7 @@ internal class ExerciseServiceTest {
     fun `should be IllegalArgumentException in createAndGenerateExerciseSentences`() {
         // GIVEN
         val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
-            locale = Locale.RU,
+            locale = BrnLocale.RU,
             subGroup = "subGroup",
             level = 1,
             exerciseName = "exerciseName",

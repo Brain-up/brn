@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.seriesMatrix
 
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -34,7 +34,7 @@ class SeriesMatrixRecordProcessor(
     override fun isApplicable(record: Any): Boolean = record is SeriesMatrixRecord
 
     @Transactional
-    override fun process(records: List<SeriesMatrixRecord>, locale: Locale): List<Exercise> {
+    override fun process(records: List<SeriesMatrixRecord>, locale: BrnLocale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
         records.forEach { record ->
             val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
@@ -55,7 +55,7 @@ class SeriesMatrixRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesMatrixRecord, locale: Locale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesMatrixRecord, locale: BrnLocale): MutableSet<Resource> =
         extractWordGroups(record)
             .map {
                 splitOnWords(it.second).map { word: String ->
@@ -75,7 +75,7 @@ class SeriesMatrixRecordProcessor(
 
     private fun splitOnWords(sentence: String): List<String> = sentence.split(' ').map { it.trim() }
 
-    private fun toResource(word: String, wordType: WordType, locale: Locale): Resource {
+    private fun toResource(word: String, wordType: WordType, locale: BrnLocale): Resource {
         val audioPath = wordsService.getSubFilePathForWord(
             AudioFileMetaData(
                 word,

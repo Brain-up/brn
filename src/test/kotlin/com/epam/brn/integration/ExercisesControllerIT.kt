@@ -1,6 +1,13 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.request.ExerciseRequest
+import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
+import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.request.exercise.Phrases
+import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -14,6 +21,7 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.google.gson.Gson
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -22,14 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 import kotlin.random.Random
 import kotlin.test.assertFalse
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class ExercisesControllerIT : BaseIT() {
 
     private val baseUrl = "/exercises"
@@ -51,6 +59,9 @@ class ExercisesControllerIT : BaseIT() {
 
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
+    @Autowired
+    lateinit var gson: Gson
 
     @AfterEach
     fun deleteAfterTest() {
@@ -82,7 +93,7 @@ class ExercisesControllerIT : BaseIT() {
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data[0].name").value(exerciseName))
     }
 
@@ -102,7 +113,7 @@ class ExercisesControllerIT : BaseIT() {
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONObject("data")
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
@@ -127,7 +138,7 @@ class ExercisesControllerIT : BaseIT() {
         // THEN
         resultAction
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONArray("data").getLong(0)
         Assertions.assertTrue(jsonDataObject == exercise.id!!)
@@ -147,6 +158,90 @@ class ExercisesControllerIT : BaseIT() {
             .andExpect(status().isOk)
         exerciseRepository.findById(existingExercise.id!!)
         assertFalse(exerciseRepository.findById(existingExercise.id!!).get().active)
+    }
+
+    @Test
+    fun `should not be validated ExerciseWordsCreateDto`() {
+        // GIVEN
+        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
+            locale = BrnLocale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            words = emptyList(),
+            noiseLevel = 0
+        )
+        val requestBody = objectMapper.writeValueAsString(exerciseWordsCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post(baseUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(3))
+    }
+
+    @Test
+    fun `should not be validated ExercisePhrasesCreateDto`() {
+        // GIVEN
+        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
+            locale = BrnLocale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            phrases = Phrases("short phrase.", "long phrase"),
+            noiseLevel = 0
+        )
+        val requestBody = objectMapper.writeValueAsString(exercisePhrasesCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post(baseUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(3))
+    }
+
+    @Test
+    fun `should not be validated ExerciseSentencesCreateDto`() {
+        // GIVEN
+        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
+            locale = BrnLocale.RU,
+            subGroup = "",
+            level = 0,
+            exerciseName = "",
+            orderNumber = 1,
+            words = SetOfWords(emptyList())
+        )
+        val requestBody = objectMapper.writeValueAsString(exerciseSentencesCreateDto)
+
+        // WHEN
+        val response = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post(baseUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+
+        // THEN
+        response
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errors.length()").value(2))
     }
 
     private fun insertStudyHistory(

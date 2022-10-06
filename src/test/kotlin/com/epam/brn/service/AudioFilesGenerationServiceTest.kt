@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.service.cloud.AwsCloudService
 import com.epam.brn.dto.AudioFileMetaData
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -88,21 +88,21 @@ internal class AudioFilesGenerationServiceTest {
         val wordTwoRu = "два"
         val wordOneEn = "one"
         val dictionaryByLocale = mutableMapOf(
-            Locale.RU to mutableMapOf(wordTwoRu to DigestUtils.md5Hex(wordTwoRu)),
-            Locale.EN to mutableMapOf(wordOneEn to DigestUtils.md5Hex(wordOneEn))
+            BrnLocale.RU to mutableMapOf(wordTwoRu to DigestUtils.md5Hex(wordTwoRu)),
+            BrnLocale.EN to mutableMapOf(wordOneEn to DigestUtils.md5Hex(wordOneEn))
         )
-        val metaTwoRu08M = AudioFileMetaData(wordTwoRu, Locale.RU.locale, Voice.FILIPP.name, "0.8")
-        val metaTwoRu1M = AudioFileMetaData(wordTwoRu, Locale.RU.locale, Voice.FILIPP.name, "1")
-        val metaTwoRu12M = AudioFileMetaData(wordTwoRu, Locale.RU.locale, Voice.FILIPP.name, "1.2")
-        val metaTwoRu08W = AudioFileMetaData(wordTwoRu, Locale.RU.locale, Voice.OKSANA.name, "0.8")
-        val metaTwoRu1W = AudioFileMetaData(wordTwoRu, Locale.RU.locale, Voice.OKSANA.name, "1")
-        val metaTwoRu12W = AudioFileMetaData(wordTwoRu, Locale.RU.locale, Voice.OKSANA.name, "1.2")
-        val metaOneEn08M = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.NICK.name, "0.8")
-        val metaOneEn1M = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.NICK.name, "1")
-        val metaOneEn12M = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.NICK.name, "1.2")
-        val metaOneEn08W = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.ALYSS.name, "0.8")
-        val metaOneEn1W = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.ALYSS.name, "1")
-        val metaOneEn12W = AudioFileMetaData(wordOneEn, Locale.EN.locale, Voice.ALYSS.name, "1.2")
+        val metaTwoRu08M = AudioFileMetaData(wordTwoRu, BrnLocale.RU.locale, Voice.FILIPP.name, "0.8")
+        val metaTwoRu1M = AudioFileMetaData(wordTwoRu, BrnLocale.RU.locale, Voice.FILIPP.name, "1")
+        val metaTwoRu12M = AudioFileMetaData(wordTwoRu, BrnLocale.RU.locale, Voice.FILIPP.name, "1.2")
+        val metaTwoRu08W = AudioFileMetaData(wordTwoRu, BrnLocale.RU.locale, Voice.OKSANA.name, "0.8")
+        val metaTwoRu1W = AudioFileMetaData(wordTwoRu, BrnLocale.RU.locale, Voice.OKSANA.name, "1")
+        val metaTwoRu12W = AudioFileMetaData(wordTwoRu, BrnLocale.RU.locale, Voice.OKSANA.name, "1.2")
+        val metaOneEn08M = AudioFileMetaData(wordOneEn, BrnLocale.EN.locale, Voice.NICK.name, "0.8")
+        val metaOneEn1M = AudioFileMetaData(wordOneEn, BrnLocale.EN.locale, Voice.NICK.name, "1")
+        val metaOneEn12M = AudioFileMetaData(wordOneEn, BrnLocale.EN.locale, Voice.NICK.name, "1.2")
+        val metaOneEn08W = AudioFileMetaData(wordOneEn, BrnLocale.EN.locale, Voice.ALYSS.name, "0.8")
+        val metaOneEn1W = AudioFileMetaData(wordOneEn, BrnLocale.EN.locale, Voice.ALYSS.name, "1")
+        val metaOneEn12W = AudioFileMetaData(wordOneEn, BrnLocale.EN.locale, Voice.ALYSS.name, "1.2")
 
         every { wordsService.dictionaryByLocale } returns dictionaryByLocale
         every { wordsService.getExistWordFilesCount(any()) } returns 1
@@ -120,10 +120,10 @@ internal class AudioFilesGenerationServiceTest {
         every { wordsService.isFileExistLocal(metaOneEn1W) } returns false
         every { wordsService.isFileExistLocal(metaOneEn12W) } returns false
 
-        every { wordsService.getDefaultManVoiceForLocale(Locale.RU.locale) } returns Voice.FILIPP.name
-        every { wordsService.getDefaultWomanVoiceForLocale(Locale.RU.locale) } returns Voice.OKSANA.name
-        every { wordsService.getDefaultManVoiceForLocale(Locale.EN.locale) } returns Voice.NICK.name
-        every { wordsService.getDefaultWomanVoiceForLocale(Locale.EN.locale) } returns Voice.ALYSS.name
+        every { wordsService.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
+        every { wordsService.getDefaultWomanVoiceForLocale(BrnLocale.RU.locale) } returns Voice.OKSANA.name
+        every { wordsService.getDefaultManVoiceForLocale(BrnLocale.EN.locale) } returns Voice.NICK.name
+        every { wordsService.getDefaultWomanVoiceForLocale(BrnLocale.EN.locale) } returns Voice.ALYSS.name
 
         every { yandexSpeechKitService.generateAudioOggFile(metaTwoRu08M) } returns fileMockOne1
         every { yandexSpeechKitService.generateAudioOggFile(metaTwoRu1M) } returns fileMockOne08

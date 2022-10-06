@@ -1,11 +1,15 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.enums.AuthorityType
 import com.epam.brn.service.StudyHistoryService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,6 +25,9 @@ internal class StudyHistoryControllerTest {
 
     @MockK
     lateinit var studyHistoryService: StudyHistoryService
+
+    @MockK
+    lateinit var authorityService: AuthorityService
 
     @Test
     fun `should create new study history`() {
@@ -43,5 +50,24 @@ internal class StudyHistoryControllerTest {
         // THEN
         verify(exactly = 1) { studyHistoryService.save(dto) }
         assertEquals(HttpStatus.OK, result.statusCode)
+    }
+
+    @Test
+    fun `getMonthHistories should return month histories`() {
+        // GIVEN
+        val userId = 1L
+        val month = 1
+        val year = 2021
+        val studyHistoryDto = mockk<StudyHistoryDto>()
+        every { studyHistoryService.getMonthHistories(userId, month, year) } returns listOf(studyHistoryDto)
+        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns true
+
+        // WHEN
+        val monthHistories = studyHistoryController.getMonthHistories(month, year, userId)
+
+        // THEN
+        verify(exactly = 1) { studyHistoryService.getMonthHistories(userId, month, year) }
+        monthHistories.statusCodeValue shouldBe org.apache.http.HttpStatus.SC_OK
+        monthHistories.body!!.data shouldBe listOf(studyHistoryDto)
     }
 }

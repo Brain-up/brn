@@ -1,6 +1,6 @@
 package com.epam.brn.integration.service
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.service.YandexSpeechKitService
@@ -40,7 +40,7 @@ internal class YandexSpeechKitServiceIT {
 
     @Test
     fun `should generate ogg audio file`() {
-        val locale = Locale.RU.locale
+        val locale = BrnLocale.RU.locale
         val voice = Voice.OKSANA.name
         val speed = "1"
         val meta1 = AudioFileMetaData("бабушкааа", locale, voice, speed)

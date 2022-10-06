@@ -3,8 +3,8 @@ package com.epam.brn.service
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.azure.tts.AzureRates
 import com.epam.brn.dto.statistic.DayStudyStatistic
-import com.epam.brn.enums.Locale
-import com.epam.brn.enums.Role.ROLE_ADMIN
+import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.AuthorityType.ROLE_ADMIN
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.StudyHistory
@@ -125,7 +125,7 @@ internal class UserAnalyticsServiceTest {
         every { exerciseService.isDoneWell(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         val audioFileMetaData =
-            AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+            AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
@@ -146,7 +146,7 @@ internal class UserAnalyticsServiceTest {
         every { exerciseService.isDoneWell(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.PHRASES.name
         val audioFileMetaData =
-            AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+            AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
@@ -167,7 +167,7 @@ internal class UserAnalyticsServiceTest {
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         val audioFileMetaData =
-            AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+            AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
@@ -189,7 +189,7 @@ internal class UserAnalyticsServiceTest {
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.PHRASES.name
         val audioFileMetaData =
-            AudioFileMetaData("мама папа", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+            AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
@@ -210,7 +210,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-        val audioFileMetaData = AudioFileMetaData("мама", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        val audioFileMetaData = AudioFileMetaData("мама", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
@@ -231,7 +231,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-        val audioFileMetaData = AudioFileMetaData("text", Locale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        val audioFileMetaData = AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)

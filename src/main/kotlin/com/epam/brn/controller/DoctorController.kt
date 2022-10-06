@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/doctors")
-@Api(value = "/doctors", description = "Contains actions for doctor")
+@Api(value = "/doctors", tags = ["Doctors"], description = "Contains actions for doctor")
+@RolesAllowed(BrnRole.DOCTOR)
 class DoctorController(private val doctorService: DoctorService) {
 
     @PostMapping("/{doctorId}/patients")

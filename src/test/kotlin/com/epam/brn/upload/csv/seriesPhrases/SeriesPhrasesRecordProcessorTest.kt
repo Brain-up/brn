@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.seriesPhrases
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -73,7 +73,7 @@ internal class SeriesPhrasesRecordProcessorTest {
         every { exerciseRepository.save(any()) } returns exercise
 
         // WHEN
-        val exercises = seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), Locale.RU)
+        val exercises = seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), BrnLocale.RU)
 
         // THEN
         verify(exactly = 1) { exerciseRepository.findExerciseByNameAndLevel(any(), any()) }
@@ -108,7 +108,7 @@ internal class SeriesPhrasesRecordProcessorTest {
         every { exerciseRepository.findExerciseByNameAndLevel(any(), any()) } returns Optional.of(exerciseMock)
 
         // WHEN
-        val exercises = seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), Locale.RU)
+        val exercises = seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), BrnLocale.RU)
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findByCodeAndLocale(any(), any()) }
@@ -127,7 +127,7 @@ internal class SeriesPhrasesRecordProcessorTest {
             noiseLevel = 0,
             noiseUrl = ""
         )
-        val locale = Locale.RU
+        val locale = BrnLocale.RU
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns null
 
         // WHEN

@@ -11,8 +11,8 @@ import { Exercise } from '@admin/models/exercise';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import * as dayjs from 'dayjs';
 
-const baseUrl = '/api/admin';
-const baseUrlV2 = '/api/v2/admin';
+const baseUrl = '/api';
+const baseUrlV2 = '/api/v2';
 const action = 'action';
 const body: FormData = new FormData();
 const subGroupId = 1234;
@@ -128,7 +128,7 @@ describe('AdminApiService', () => {
 
   it('should call get user weekly statistics', () => {
     let userWeeklyStatistics: UserWeeklyStatistics[] | undefined;
-    const url = `${baseUrlV2}/study/week?userId=${userId}&from=${from.format(
+    const url = `${baseUrlV2}/statistics/study/week?userId=${userId}&from=${from.format(
       'YYYY-MM-DDTHH:mm:ss',
     )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
 
@@ -146,7 +146,7 @@ describe('AdminApiService', () => {
     const errorEvent = new ErrorEvent('API error');
     const status = 500;
     const statusText = 'Server error';
-    const url = `${baseUrlV2}/study/week?userId=${userId}&from=${from.format(
+    const url = `${baseUrlV2}/statistics/study/week?userId=${userId}&from=${from.format(
       'YYYY-MM-DDTHH:mm:ss',
     )}&to=${to.format('YYYY-MM-DDTHH:mm:ss')}`;
 

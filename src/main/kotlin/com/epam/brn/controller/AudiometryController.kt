@@ -1,6 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.response.Response
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.AudiometryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/audiometrics")
-@Api(value = "/audiometrics", description = "Contains actions for audiometry")
+@Api(value = "/audiometrics", tags = ["Audio Metrics"], description = "Contains actions for audiometry")
+@RolesAllowed(BrnRole.USER)
 class AudiometryController(private val audiometryService: AudiometryService) {
 
     @GetMapping

@@ -1,9 +1,9 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.Role.ROLE_ADMIN
-import com.epam.brn.enums.Role.ROLE_DOCTOR
-import com.epam.brn.enums.Role.ROLE_USER
+import com.epam.brn.enums.AuthorityType.ROLE_ADMIN
+import com.epam.brn.enums.AuthorityType.ROLE_DOCTOR
+import com.epam.brn.enums.AuthorityType.ROLE_USER
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import io.kotest.matchers.shouldBe

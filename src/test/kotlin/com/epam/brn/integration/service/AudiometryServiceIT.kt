@@ -3,7 +3,7 @@ package com.epam.brn.integration.service
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.FrequencyZone
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
@@ -95,7 +95,7 @@ internal class AudiometryServiceIT {
     private fun insertSpeechAudiometry(): Audiometry =
         audiometryRepository.save(
             Audiometry(
-                locale = Locale.EN.locale,
+                locale = BrnLocale.EN.locale,
                 name = "Speech diagnostic",
                 description = "Speech diagnostic with Lopotko words sequences",
                 audiometryType = AudiometryType.SPEECH.name

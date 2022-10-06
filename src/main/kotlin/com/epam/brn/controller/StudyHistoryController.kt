@@ -1,7 +1,10 @@
 package com.epam.brn.controller
 
+import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
+import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -14,11 +17,16 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/study-history")
-@Api(value = "/study-history", description = "Contains actions over the results of finished exercise")
-class StudyHistoryController(@Autowired val studyHistoryService: StudyHistoryService) {
+@Api(value = "/study-history", tags = ["Study History"], description = "Contains actions over the results of finished exercise")
+@RolesAllowed(BrnRole.USER)
+class StudyHistoryController(
+    @Autowired val studyHistoryService: StudyHistoryService,
+    @Autowired val authorityService: AuthorityService
+) {
 
     @PostMapping
     @ApiOperation("Save current user's study history")
@@ -36,7 +44,14 @@ class StudyHistoryController(@Autowired val studyHistoryService: StudyHistorySer
     @ApiOperation("Get current user's month study histories by month and year")
     fun getMonthHistories(
         @RequestParam("month", required = true) month: Int,
-        @RequestParam("year", required = true) year: Int
-    ) = ResponseEntity.ok()
-        .body(Response(data = studyHistoryService.getMonthHistoriesForCurrentUser(month, year)))
+        @RequestParam("year", required = true) year: Int,
+        @RequestParam("userId") userId: Long?
+    ): ResponseEntity<Response<List<StudyHistoryDto>>> {
+        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
+            studyHistoryService.getMonthHistories(userId, month, year)
+        } else {
+            studyHistoryService.getMonthHistoriesForCurrentUser(month, year)
+        }
+        return ResponseEntity.ok().body(Response(data = result))
+    }
 }

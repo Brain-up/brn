@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.Role
+import com.epam.brn.enums.AuthorityType
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
@@ -97,8 +97,8 @@ class DoctorService(private val userAccountService: UserAccountService) {
         }
     }
 
-    fun isDoctor(user: UserAccountResponse) = userHasAuthority(user, Role.ROLE_DOCTOR.name)
-    fun isAdmin(user: UserAccountResponse) = userHasAuthority(user, Role.ROLE_ADMIN.name)
+    fun isDoctor(user: UserAccountResponse) = userHasAuthority(user, AuthorityType.ROLE_DOCTOR.name)
+    fun isAdmin(user: UserAccountResponse) = userHasAuthority(user, AuthorityType.ROLE_ADMIN.name)
     fun userHasAuthority(user: UserAccountResponse, role: String) = user.authorities?.contains(role) ?: false
 
     companion object {

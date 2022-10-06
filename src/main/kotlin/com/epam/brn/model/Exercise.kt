@@ -1,9 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.response.ExerciseWithTasksResponse
 import com.epam.brn.dto.NoiseDto
-import com.epam.brn.dto.ShortTaskDto
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -62,24 +60,8 @@ data class Exercise(
         level = level,
         noise = NoiseDto(noiseLevel, noiseUrl),
         available = available,
-        tasks = tasks.map { task -> ShortTaskDto(task.id) }.toMutableList(),
-        signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
-        active = active,
-        changedBy = changedBy,
-        changedWhen = changedWhen,
-        playWordsCount = playWordsCount,
-        wordsColumns = wordsColumns,
-    )
-
-    fun toDtoWithTasks() = ExerciseWithTasksResponse(
-        seriesId = subGroup?.id,
-        id = id,
-        name = name,
-        template = template,
-        level = level,
-        noise = NoiseDto(noiseLevel, noiseUrl),
         tasks = tasks.map { task -> task.toGeneralTaskDto() },
-        signals = signals.map { signal -> signal.toSignalDto() },
+        signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
         active = active,
         changedBy = changedBy,
         changedWhen = changedWhen,

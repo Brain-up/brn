@@ -1,6 +1,7 @@
 package com.epam.brn.integration
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.model.ExerciseGroup
 import org.junit.jupiter.api.AfterEach
@@ -14,7 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.assertFalse
 
-@WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+@WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class GroupControllerIT : BaseIT() {
 
     private val baseUrl = "/groups"
@@ -53,14 +54,14 @@ class GroupControllerIT : BaseIT() {
     fun `test find ru groups`() {
         // GIVEN
         val exerciseGroupName1 = "GroupName1"
-        val groupRu = insertExerciseGroup(exerciseGroupName1, Locale.RU.locale)
+        val groupRu = insertExerciseGroup(exerciseGroupName1, BrnLocale.RU.locale)
         val exerciseGroupName2 = "GroupName2"
-        val groupEn = insertExerciseGroup(exerciseGroupName2, Locale.EN.locale)
+        val groupEn = insertExerciseGroup(exerciseGroupName2, BrnLocale.EN.locale)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(baseUrl)
-                .param("locale", Locale.RU.locale)
+                .param("locale", BrnLocale.RU.locale)
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
@@ -91,7 +92,7 @@ class GroupControllerIT : BaseIT() {
         assertTrue(response.contains(existingExerciseGroup.name))
     }
 
-    private fun insertExerciseGroup(exerciseGroupName: String, locale: String = Locale.RU.locale): ExerciseGroup {
+    private fun insertExerciseGroup(exerciseGroupName: String, locale: String = BrnLocale.RU.locale): ExerciseGroup {
         return exerciseGroupRepository.save(
             ExerciseGroup(
                 code = "CODE",

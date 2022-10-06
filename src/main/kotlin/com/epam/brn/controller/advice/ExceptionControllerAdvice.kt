@@ -93,6 +93,14 @@ class ExceptionControllerAdvice {
             .body(response(errors = processValidationErrors(e.bindingResult.fieldErrors)))
     }
 
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException::class)
+    fun handleAccessDeniedException(e: org.springframework.security.access.AccessDeniedException): ResponseEntity<Response<Unit>> {
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response(errors = listOf(e.message.toString())))
+    }
+
     private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> {
         return fieldErrors.mapNotNull { fieldError -> fieldError.defaultMessage }.toList()
     }

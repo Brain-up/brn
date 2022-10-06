@@ -1,6 +1,6 @@
 package com.epam.brn.upload
 
-import com.epam.brn.enums.Locale
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.repo.SeriesRepository
@@ -22,7 +22,7 @@ class CsvUploadService(
     private val seriesRepository: SeriesRepository
 ) {
 
-    val localeSuffixMap = mapOf("ru" to Locale.RU, "en" to Locale.EN, "tr" to Locale.TR)
+    val localeSuffixMap = mapOf("ru" to BrnLocale.RU, "en" to BrnLocale.EN, "tr" to BrnLocale.TR)
 
     companion object {
 
@@ -47,7 +47,7 @@ class CsvUploadService(
     val dataFormatLinesCount = 5
 
     @Suppress("UNCHECKED_CAST")
-    fun load(inputStream: InputStream, locale: Locale) {
+    fun load(inputStream: InputStream, locale: BrnLocale) {
         val records = csvParser.parse(inputStream)
         recordProcessors.stream()
             .filter { it.isApplicable(records.first()) }.findFirst()
@@ -65,7 +65,7 @@ class CsvUploadService(
 
         @Suppress("UNCHECKED_CAST")
         when (seriesId.toInt()) {
-            1, 2, 3, 4 -> load(file.inputStream, Locale.RU)
+            1, 2, 3, 4 -> load(file.inputStream, BrnLocale.RU)
             else -> throw IllegalArgumentException("Loading for seriesId = $seriesId is not supported yet.")
         }
     }
@@ -74,11 +74,11 @@ class CsvUploadService(
     @Throws(FileFormatException::class)
     fun load(file: File) = load(file.inputStream(), getLocaleFromFileName(file.nameWithoutExtension))
 
-    fun getLocaleFromFileName(fileNameWithExtension: String): Locale {
+    fun getLocaleFromFileName(fileNameWithExtension: String): BrnLocale {
         val fileName = fileNameWithExtension.substringBefore(".")
         val suffix = if (fileName.endsWith("_")) "" else fileName.substring(fileName.length - 2)
         return when {
-            suffix.isEmpty() -> Locale.RU
+            suffix.isEmpty() -> BrnLocale.RU
             localeSuffixMap[suffix] == null -> throw IllegalArgumentException("There no supported locale for $suffix file. Ask to tech support.")
             else -> localeSuffixMap[suffix]!!
         }

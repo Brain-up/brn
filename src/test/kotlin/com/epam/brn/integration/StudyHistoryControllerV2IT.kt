@@ -2,6 +2,7 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
+import com.epam.brn.enums.BrnRole
 import com.fasterxml.jackson.core.type.TypeReference
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -27,7 +28,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+    @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `getHistories should return histories for period of time`() {
         // GIVEN
         val user = insertDefaultUser()
@@ -65,7 +66,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `getHistories should return histories for period of time for user with role user`() {
         // GIVEN
         val user = insertDefaultUser()
@@ -103,7 +104,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["ADMIN"])
+    @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `isUserHasStatistics should return true when user has statistics`() {
         // GIVEN
         val user = insertDefaultUser()
@@ -126,7 +127,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
     }
 
     @Test
-    @WithMockUser(username = "test@test.test", roles = ["USER"])
+    @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `isUserHasStatistics should return true when user has statistics for user with role user`() {
         // GIVEN
         val user = insertDefaultUser()
