@@ -97,7 +97,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
         }
     }
 
-    fun isDoctor(user: UserAccountResponse) = userHasAuthority(user, AuthorityType.ROLE_DOCTOR.name)
+    fun isDoctor(user: UserAccountResponse) = userHasAuthority(user, AuthorityType.ROLE_SPECIALIST.name)
     fun isAdmin(user: UserAccountResponse) = userHasAuthority(user, AuthorityType.ROLE_ADMIN.name)
     fun userHasAuthority(user: UserAccountResponse, role: String) = user.authorities?.contains(role) ?: false
 

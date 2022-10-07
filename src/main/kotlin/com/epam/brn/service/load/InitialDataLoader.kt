@@ -3,6 +3,7 @@ package com.epam.brn.service.load
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
@@ -44,11 +45,10 @@ class InitialDataLoader(
     private val audioFilesGenerationService: AudioFilesGenerationService,
     private val wordsService: WordsService,
 ) {
+    private val log = logger()
 
     @Autowired
     private lateinit var environment: Environment
-
-    private val log = logger()
 
     @Value("\${init.folder:#{null}}")
     var directoryPath: Path? = null
@@ -104,11 +104,21 @@ class InitialDataLoader(
         if (authorityService.findAll().isEmpty()) {
             val adminAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_ADMIN.name))
             val userAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_USER.name))
-            val doctorAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_DOCTOR.name))
-            val admin = addAdminUser(setOf(adminAuthority, userAuthority, doctorAuthority))
+            val specialistAuthority =
+                authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
+            val admin = addAdminUser(setOf(adminAuthority, userAuthority, specialistAuthority))
             val listOfUsers = mutableListOf(admin)
             listOfUsers.addAll(addDefaultUsers(userAuthority))
             userAccountRepository.saveAll(listOfUsers)
+        }
+        try {
+            authorityService.findAuthorityByAuthorityName(AuthorityType.ROLE_SPECIALIST.name)
+        } catch (e: EntityNotFoundException) {
+            val specialistAuthority =
+                authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
+            val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
+            admin.authoritySet.add(specialistAuthority)
+            userAccountRepository.save(admin)
         }
         audiometryLoader.loadInitialAudiometricsWithTasks()
         initExercisesFromFiles()
@@ -169,7 +179,7 @@ class InitialDataLoader(
         val userAccount =
             UserAccount(
                 fullName = "admin",
-                email = "admin@admin.com",
+                email = ADMIN_EMAIL,
                 active = true,
                 bornYear = 1999,
                 gender = Gender.MALE.toString()
@@ -202,6 +212,8 @@ class InitialDataLoader(
         return mutableListOf(firstUser, secondUser)
     }
 }
+
+const val ADMIN_EMAIL = "admin@admin.com"
 
 const val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words_ru"
 const val SINGLE_SIMPLE_WORDS_EN_FILE_NAME = "series_words_en"
