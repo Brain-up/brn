@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WithMockUser(username = "currentDoctor@default.ru", roles = [BrnRole.DOCTOR])
+@WithMockUser(username = "currentDoctor@default.ru", roles = [BrnRole.SPECIALIST])
 class DoctorControllerIT : BaseIT() {
 
     @Autowired
@@ -38,7 +38,7 @@ class DoctorControllerIT : BaseIT() {
     @BeforeEach
     fun setUp() {
         val userAuthority = createAuthority(AuthorityType.ROLE_USER.name)
-        val doctorAuthority = createAuthority(AuthorityType.ROLE_DOCTOR.name)
+        val doctorAuthority = createAuthority(AuthorityType.ROLE_SPECIALIST.name)
 
         user1 = createUser(email = "user1@default.ru", authorities = mutableSetOf(userAuthority))
         user2 = createUser(email = "user2@default.ru", authorities = mutableSetOf(userAuthority))

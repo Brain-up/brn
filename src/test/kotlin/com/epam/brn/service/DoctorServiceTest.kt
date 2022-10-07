@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.AuthorityType.ROLE_ADMIN
-import com.epam.brn.enums.AuthorityType.ROLE_DOCTOR
+import com.epam.brn.enums.AuthorityType.ROLE_SPECIALIST
 import com.epam.brn.enums.AuthorityType.ROLE_USER
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
@@ -37,8 +37,8 @@ internal class DoctorServiceTest {
     @BeforeEach
     fun setUp() {
         admin = prepareUser(0, "admin@doctor.test", mutableSetOf(ROLE_ADMIN.name))
-        doctor = prepareUser(1, "doctor1@doctor.test", mutableSetOf(ROLE_USER.name, ROLE_DOCTOR.name))
-        anotherDoctor = prepareUser(2, "doctor2@doctor.test", mutableSetOf(ROLE_USER.name, ROLE_DOCTOR.name))
+        doctor = prepareUser(1, "doctor1@doctor.test", mutableSetOf(ROLE_USER.name, ROLE_SPECIALIST.name))
+        anotherDoctor = prepareUser(2, "doctor2@doctor.test", mutableSetOf(ROLE_USER.name, ROLE_SPECIALIST.name))
         user1 = prepareUser(3, "user1@doctor.test", mutableSetOf(ROLE_USER.name))
         user2 = prepareUser(4, "user2@doctor.test", mutableSetOf(ROLE_USER.name))
         fakeDoctorUser = prepareUser(5, "user2@doctor.test", mutableSetOf(ROLE_USER.name))
@@ -359,9 +359,9 @@ internal class DoctorServiceTest {
 
         doctorService.userHasAuthority(user1, ROLE_USER.name) shouldBe true
         doctorService.userHasAuthority(user1, ROLE_ADMIN.name) shouldBe false
-        doctorService.userHasAuthority(user1, ROLE_DOCTOR.name) shouldBe false
+        doctorService.userHasAuthority(user1, ROLE_SPECIALIST.name) shouldBe false
 
-        doctorService.userHasAuthority(doctor, ROLE_DOCTOR.name) shouldBe true
+        doctorService.userHasAuthority(doctor, ROLE_SPECIALIST.name) shouldBe true
         doctorService.userHasAuthority(doctor, ROLE_USER.name) shouldBe true
     }
 

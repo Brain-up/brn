@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.response.AuthorityResponse
+import com.epam.brn.model.Authority
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -24,8 +25,10 @@ internal class RoleControllerTest {
     @Test
     fun `getRoles should return http status 200`() {
         // GIVEN
+        val authority = mockk<Authority>()
         val authorityResponse = mockk<AuthorityResponse>()
-        every { authorityService.findAll() } returns listOf(authorityResponse)
+        every { authorityService.findAll() } returns listOf(authority)
+        every { authority.toDto() } returns authorityResponse
 
         // WHEN
         val authorities = roleController.getRoles()

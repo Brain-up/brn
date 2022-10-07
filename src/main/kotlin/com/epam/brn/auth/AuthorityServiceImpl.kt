@@ -1,6 +1,5 @@
 package com.epam.brn.auth
 
-import com.epam.brn.dto.response.AuthorityResponse
 import com.epam.brn.enums.AuthorityType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Authority
@@ -35,5 +34,5 @@ class AuthorityServiceImpl(private val authorityRepository: AuthorityRepository)
         return auth.authorities.contains(SimpleGrantedAuthority(authorityType.name))
     }
 
-    override fun findAll(): List<AuthorityResponse> = authorityRepository.findAll().map { authority -> authority.toDto() }
+    override fun findAll(): List<Authority> = authorityRepository.findAll()
 }

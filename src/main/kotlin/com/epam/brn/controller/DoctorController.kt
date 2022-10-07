@@ -23,7 +23,7 @@ import javax.annotation.security.RolesAllowed
 @RestController
 @RequestMapping("/doctors")
 @Api(value = "/doctors", tags = ["Doctors"], description = "Contains actions for doctor")
-@RolesAllowed(BrnRole.DOCTOR)
+@RolesAllowed(BrnRole.SPECIALIST)
 class DoctorController(private val doctorService: DoctorService) {
 
     @PostMapping("/{doctorId}/patients")

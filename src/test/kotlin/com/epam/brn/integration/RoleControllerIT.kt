@@ -38,7 +38,7 @@ class RoleControllerIT : BaseIT() {
         // GIVEN
         insertRole(AuthorityType.ROLE_ADMIN.name)
         insertRole(AuthorityType.ROLE_USER.name)
-        insertRole(AuthorityType.ROLE_DOCTOR.name)
+        insertRole(AuthorityType.ROLE_SPECIALIST.name)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
