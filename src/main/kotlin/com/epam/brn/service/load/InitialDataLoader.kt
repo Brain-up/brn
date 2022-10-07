@@ -114,18 +114,22 @@ class InitialDataLoader(
         try {
             authorityService.findAuthorityByAuthorityName(AuthorityType.ROLE_SPECIALIST.name)
         } catch (e: EntityNotFoundException) {
-            val specialistAuthority =
-                authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
-            val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
-            admin.authoritySet.add(specialistAuthority)
-            userAccountRepository.save(admin)
+            authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
         }
+        addAdminAllAuthorities()
         audiometryLoader.loadInitialAudiometricsWithTasks()
         initExercisesFromFiles()
         wordsService.createTxtFilesWithExerciseWordsMap()
 
         if (withAudioFilesGeneration)
             audioFilesGenerationService.generateAudioFiles()
+    }
+
+    private fun addAdminAllAuthorities() {
+        val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
+        val allAuths = authorityService.findAll()
+        admin.authoritySet.addAll(allAuths.minus(admin.authoritySet))
+        userAccountRepository.save(admin)
     }
 
     private fun initExercisesFromFiles() {

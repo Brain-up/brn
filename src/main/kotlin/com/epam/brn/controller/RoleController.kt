@@ -21,7 +21,7 @@ class RoleController(val authorityService: AuthorityService) {
     @GetMapping
     @ApiOperation("Get all roles")
     fun getRoles(): ResponseEntity<Response<List<AuthorityResponse>>> {
-        val authorities = authorityService.findAll()
+        val authorities = authorityService.findAll().map { authority -> authority.toDto() }
         return ResponseEntity.ok().body(Response(data = authorities))
     }
 }
