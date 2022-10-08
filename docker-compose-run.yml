@@ -26,6 +26,8 @@ services:
       GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/firebase_config_json
       YANDEX_AUTH_TOKEN: _YANDEX_AUTH_TOKEN_
       YANDEX_FOLDER_ID: _YANDEX_FOLDER_ID_
+      API_GITHUB_USERNAME: _API_GITHUB_USERNAME_
+      API_GITHUB_TOKEN: _API_GITHUB_TOKEN_
     secrets:
       - aws-key
       - firebase_config_json
