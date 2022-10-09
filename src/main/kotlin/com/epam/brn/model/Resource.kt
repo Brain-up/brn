@@ -20,7 +20,7 @@ import javax.persistence.UniqueConstraint
         Index(name = "audio_file_idx", columnList = "audioFileUrl")
     ]
 )
-data class Resource(
+class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

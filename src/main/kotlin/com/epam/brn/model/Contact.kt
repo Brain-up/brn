@@ -12,7 +12,7 @@ import javax.persistence.Table
 
 @Entity
 @Table
-data class Contact(
+class Contact(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

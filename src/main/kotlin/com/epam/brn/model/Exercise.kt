@@ -24,7 +24,7 @@ import javax.persistence.UniqueConstraint
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
 @EntityListeners(AuditingEntityListener::class)
-data class Exercise(
+class Exercise(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

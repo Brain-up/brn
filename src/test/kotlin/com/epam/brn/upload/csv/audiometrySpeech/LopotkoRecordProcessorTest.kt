@@ -194,3 +194,13 @@ internal class LopotkoRecordProcessorTest {
         )
     }
 }
+
+private fun AudiometryTask.copy(id: Long? = this.id, answerOptions: MutableSet<Resource> = this.answerOptions) = AudiometryTask(
+    id = id,
+    level = 1,
+    audiometryGroup = "A",
+    frequencyZone = FrequencyZone.LOW.name,
+    minFrequency = 200,
+    maxFrequency = 400,
+    answerOptions = answerOptions
+)

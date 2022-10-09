@@ -19,7 +19,7 @@ import javax.persistence.Table
 @Entity
 @Table
 @DynamicUpdate
-data class Contributor(
+class Contributor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "userId"])])
-data class Headphones(
+class Headphones(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

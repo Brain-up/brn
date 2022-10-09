@@ -24,7 +24,7 @@ import javax.persistence.OneToMany
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-data class UserAccount(
+class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

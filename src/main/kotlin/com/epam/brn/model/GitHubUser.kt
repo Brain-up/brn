@@ -9,7 +9,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "github_user")
 @DynamicUpdate
-data class GitHubUser(
+class GitHubUser(
     @Id
     var id: Long? = null,
     var login: String,
