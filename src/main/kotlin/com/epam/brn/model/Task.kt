@@ -99,13 +99,4 @@ class Task(
 
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (serialNumber ?: 0)
-        result = 31 * result + (exercise?.hashCode() ?: 0)
-        result = 31 * result + (correctAnswer?.hashCode() ?: 0)
-        return result
-    }
 }

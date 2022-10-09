@@ -67,13 +67,6 @@ class AudiometryTask(
         return true
     }
 
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + audiometryGroup.hashCode()
-        result = 31 * result + frequencyZone.hashCode()
-        return result
-    }
-
     fun toDto(): Any {
         return when (audiometry!!.audiometryType) {
             AudiometryType.SIGNALS.name -> AudiometrySignalsTaskResponse(

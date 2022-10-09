@@ -30,12 +30,5 @@ class SinAudiometryResult(
         return true
     }
 
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + frequency.hashCode()
-        result = 31 * result + soundLevel.hashCode()
-        return result
-    }
-
     override fun toString() = "SinAudiometryResult(id=$id, frequency=$frequency, soundLevel=$soundLevel, audiometryHistoryId=${audiometryHistory?.id})"
 }

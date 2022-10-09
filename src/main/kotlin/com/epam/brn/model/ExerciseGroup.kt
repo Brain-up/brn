@@ -55,14 +55,5 @@ class ExerciseGroup(
         if (description != other.description) return false
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + locale.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        return result
-    }
-
     override fun toString() = "ExerciseGroup(id=$id, name='$name', locale = $locale, description=$description)"
 }

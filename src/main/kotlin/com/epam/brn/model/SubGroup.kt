@@ -72,14 +72,4 @@ class SubGroup(
 
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + code.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + level
-        result = 31 * result + withPictures.hashCode()
-        return result
-    }
 }

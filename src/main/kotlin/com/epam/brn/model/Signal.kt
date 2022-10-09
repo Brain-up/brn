@@ -46,13 +46,4 @@ class Signal(
         if (length != other.length) return false
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (url?.hashCode() ?: 0)
-        result = 31 * result + (frequency ?: 0)
-        result = 31 * result + (length ?: 0)
-        return result
-    }
 }

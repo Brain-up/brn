@@ -63,6 +63,4 @@ class AudiometryHistory(
         if (startTime != other.startTime) return false
         return true
     }
-
-    override fun hashCode(): Int = id?.hashCode() ?: 0
 }

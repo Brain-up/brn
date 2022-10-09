@@ -91,17 +91,6 @@ class Exercise(
         return true
     }
 
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + name.hashCode()
-        result = 31 * result + level.hashCode()
-        result = 31 * result + (template?.hashCode() ?: 0)
-        result = 31 * result + (noiseLevel)
-        result = 31 * result + (playWordsCount)
-        result = 31 * result + (wordsColumns)
-        return result
-    }
-
     fun addTask(task: Task) {
         tasks.add(task)
     }

@@ -28,10 +28,6 @@ class Contact(
         return id != null && id == other.id
     }
 
-    override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
-    }
-
     override fun toString(): String {
         return "Contact(id=$id, type=$type, value='$value')"
     }

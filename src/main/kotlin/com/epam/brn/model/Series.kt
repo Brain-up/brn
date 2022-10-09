@@ -65,12 +65,4 @@ class Series(
 
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + exerciseGroup.hashCode()
-        return result
-    }
 }

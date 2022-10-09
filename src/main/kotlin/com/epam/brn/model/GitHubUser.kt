@@ -52,16 +52,4 @@ class GitHubUser(
 
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + login.hashCode()
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (email?.hashCode() ?: 0)
-        result = 31 * result + (avatarUrl?.hashCode() ?: 0)
-        result = 31 * result + (bio?.hashCode() ?: 0)
-        result = 31 * result + (company?.hashCode() ?: 0)
-        result = 31 * result + contributions.hashCode()
-        return result
-    }
 }

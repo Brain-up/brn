@@ -65,15 +65,4 @@ class Resource(
 
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (audioFileUrl?.hashCode() ?: 0)
-        result = 31 * result + (word.hashCode())
-        result = 31 * result + wordType.hashCode()
-        result = 31 * result + (pictureFileUrl?.hashCode() ?: 0)
-        result = 31 * result + (soundsCount ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        return result
-    }
 }

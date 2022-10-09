@@ -107,16 +107,4 @@ class Contributor(
         if (pictureUrl != other.pictureUrl) return false
         return true
     }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + (company?.hashCode() ?: 0)
-        result = 31 * result + (nameEn?.hashCode() ?: 0)
-        result = 31 * result + (descriptionEn?.hashCode() ?: 0)
-        result = 31 * result + (companyEn?.hashCode() ?: 0)
-        result = 31 * result + (pictureUrl?.hashCode() ?: 0)
-        return result
-    }
 }
