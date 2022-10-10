@@ -11,5 +11,5 @@ data class ContributorResponse(
     var pictureUrl: String? = null,
     var contacts: Set<ContactDto>? = null,
     var type: ContributorType? = null,
-    var contribution: Long
+    var contribution: Long? = null
 )
