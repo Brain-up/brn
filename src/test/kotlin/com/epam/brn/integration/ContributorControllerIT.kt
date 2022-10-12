@@ -64,16 +64,17 @@ class ContributorControllerIT : BaseIT() {
     }
 
     @Test
-    fun `test get contributors by type SPECIALIST`() {
+    fun `test get contributors by type QA`() {
         // GIVEN
-        val contributorSpecialist = insertContributor("Specialist", ContributorType.SPECIALIST)
+        insertContributor("Specialist", ContributorType.SPECIALIST)
         insertContributor("Developer", ContributorType.DEVELOPER)
+        insertContributor("QA", ContributorType.QA)
 
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
                 .get(baseUrl)
-                .param("type", ContributorType.SPECIALIST.name)
+                .param("type", ContributorType.QA.name)
                 .contentType(MediaType.APPLICATION_JSON)
         )
 
@@ -89,7 +90,7 @@ class ContributorControllerIT : BaseIT() {
                 object : TypeReference<List<ContributorResponse>>() {}
             )
         assertEquals(1, contributors.size)
-        assertEquals(contributorSpecialist.name, contributors[0].name)
+        assertEquals("QA", contributors[0].name)
     }
 
     @Test
