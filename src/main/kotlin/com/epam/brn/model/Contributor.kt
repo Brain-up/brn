@@ -32,7 +32,7 @@ data class Contributor(
     @Enumerated(EnumType.STRING)
     var type: ContributorType = ContributorType.DEVELOPER,
     var pictureUrl: String? = null,
-    var contribution: Long? = null,
+    var contribution: Long = 0,
     var active: Boolean = true,
 ) {
 
@@ -48,7 +48,7 @@ data class Contributor(
         val dto = ContributorResponse(
             id = id!!,
             pictureUrl = pictureUrl,
-            contribution = contribution ?: 0,
+            contribution = contribution,
             type = type,
             contacts = contacts.map {
                 it.toDto()
