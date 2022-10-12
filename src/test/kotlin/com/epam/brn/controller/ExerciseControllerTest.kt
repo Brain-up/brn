@@ -8,7 +8,6 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
-import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
@@ -50,7 +49,7 @@ internal class ExerciseControllerTest {
         val exercise = ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
         val listExercises = listOf(exercise)
         every { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) } returns listExercises
-        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns false
+        every { authorityService.isCurrentUserAdmin() } returns false
 
         // WHEN
         @Suppress("UNCHECKED_CAST")
@@ -164,7 +163,7 @@ internal class ExerciseControllerTest {
         val subGroupId = 1L
         val exerciseResponse = mockk<ExerciseDto>()
         every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseResponse)
-        every { authorityService.isCurrentUserHasAuthority(ofType(AuthorityType::class)) } returns true
+        every { authorityService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val exercises = exerciseController.getExercisesBySubGroup(subGroupId)

@@ -5,7 +5,6 @@ import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
-import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
@@ -36,7 +35,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
-        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
+        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
             userMonthStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userMonthStatisticService.getStatisticForPeriod(from, to)
@@ -51,7 +50,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<DayStudyStatistic>>> {
-        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
+        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
             userDayStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userDayStatisticService.getStatisticForPeriod(from, to)
@@ -65,7 +64,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "day", required = true) day: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
-        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
+        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
             historyService.getUserDailyStatistics(day, userId)
         } else {
             historyService.getUserDailyStatistics(day = day)

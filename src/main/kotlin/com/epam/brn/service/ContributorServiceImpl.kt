@@ -8,11 +8,19 @@ import com.epam.brn.repo.ContributorRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
+import kotlin.streams.toList
 
 @Service
 class ContributorServiceImpl(
     val contributorRepository: ContributorRepository
 ) : ContributorService {
+
+    @Transactional(readOnly = true)
+    override fun getAllContributors(): List<ContributorResponse> {
+        return contributorRepository.findAll().stream()
+            .map { e -> e.toContributorDto() }
+            .toList()
+    }
 
     @Transactional(readOnly = true)
     override fun getContributors(locale: String, type: ContributorType): List<ContributorResponse> {

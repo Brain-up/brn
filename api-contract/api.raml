@@ -120,6 +120,23 @@ annotationTypes:
         body:
           example: !include samples/audio.ogg
 
+# CONTRIBUTORS ----
+/contributors
+  get:
+    queryParameters:
+      locale:
+        required: false
+        type: string
+        example: "ru-ru"
+      type:
+        required: false
+        type: string
+        example: "DEVELOPER"
+    responses:
+      200:
+        body:
+          example: !include samples/contributors.json
+
 # GROUP ----------------------------
 /groups:
   description: Contains actions over groups
