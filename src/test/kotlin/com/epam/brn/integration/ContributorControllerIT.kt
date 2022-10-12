@@ -62,7 +62,7 @@ class ContributorControllerIT : BaseIT() {
     }
 
     @Test
-    fun `test get contributors by type Specialist`() {
+    fun `test get contributors by type SPECIALIST`() {
         // GIVEN
         val contributorSpecialist = insertContributor("Specialist", ContributorType.SPECIALIST)
         insertContributor("Developer", ContributorType.DEVELOPER)
