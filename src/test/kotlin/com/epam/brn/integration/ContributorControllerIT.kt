@@ -59,6 +59,7 @@ class ContributorControllerIT : BaseIT() {
                 object : TypeReference<List<ContributorResponse>>() {}
             )
         assertEquals(2, contributors.size)
+        contributorRepository.deleteAll()
     }
 
     @Test
