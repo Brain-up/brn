@@ -34,5 +34,10 @@ class AuthorityServiceImpl(private val authorityRepository: AuthorityRepository)
         return auth.authorities.contains(SimpleGrantedAuthority(authorityType.name))
     }
 
+    override fun isCurrentUserAdmin(): Boolean {
+        val auth = SecurityContextHolder.getContext().authentication
+        return auth.authorities.contains(SimpleGrantedAuthority(AuthorityType.ROLE_ADMIN.name))
+    }
+
     override fun findAll(): List<Authority> = authorityRepository.findAll()
 }

@@ -3,8 +3,8 @@ package com.epam.brn.controller
 import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.ContributorType
 import com.epam.brn.enums.BrnRole
+import com.epam.brn.enums.ContributorType
 import com.epam.brn.service.ContributorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -24,17 +24,28 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/contributors")
-@Api(value = "/contributors", tags = ["Contributors"], description = "Contains actions over contributors of this project")
+@Api(
+    value = "/contributors",
+    tags = ["Contributors"],
+    description = "Contains actions over contributors of this project"
+)
 class ContributorController(val contributorService: ContributorService) {
 
     @GetMapping
     @ApiOperation("Get all contributors by type")
     fun getContributors(
         @RequestParam(name = "locale", required = false, defaultValue = "ru-ru") locale: String,
-        @RequestParam(name = "type") type: ContributorType,
+        @RequestParam(name = "type", required = false) type: ContributorType?,
     ): ResponseEntity<Response<List<ContributorResponse>>> {
         return ResponseEntity.ok()
-            .body(Response(data = contributorService.getContributors(locale, type)))
+            .body(
+                Response(
+                    data = if (type == null)
+                        contributorService.getAllContributors()
+                    else
+                        contributorService.getContributors(locale, type!!)
+                )
+            )
     }
 
     @PostMapping
