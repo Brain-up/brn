@@ -43,7 +43,7 @@ class ContributorController(val contributorService: ContributorService) {
                     data = if (type == null)
                         contributorService.getAllContributors()
                     else
-                        contributorService.getContributors(locale, type!!)
+                        contributorService.getContributors(locale, type)
                 )
             )
     }

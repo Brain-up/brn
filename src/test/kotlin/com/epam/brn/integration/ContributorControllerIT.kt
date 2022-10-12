@@ -12,6 +12,7 @@ import com.epam.brn.repo.ContributorRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets
 import kotlin.test.assertEquals
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN])
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class ContributorControllerIT : BaseIT() {
 
     private val baseUrl = "/contributors"
@@ -59,7 +61,6 @@ class ContributorControllerIT : BaseIT() {
                 object : TypeReference<List<ContributorResponse>>() {}
             )
         assertEquals(2, contributors.size)
-        contributorRepository.deleteAll()
     }
 
     @Test
