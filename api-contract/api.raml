@@ -204,9 +204,31 @@ annotationTypes:
       200:
         body:
           example: !include samples/subgroup_by_series.json
+  post:
+     description: Add new subgroup for existing series
+     queryParameters:
+       seriesId:
+         description: "ID of the series"
+         type: integer
+         format: int64
+         example: 1
+     body:
+       example: !include samples/add_subgroup_to_series.json
+     responses:
+       201:
+         body:
+           example: !include samples/add_subgroup_to_series_response.json
   /{subGroupId}:
     get:
       description: Get subgroup for id
+      responses:
+        200:
+          body:
+            example: !include samples/subgroup_by_id.json
+    patch:
+      description: Update subgroup by id
+      body:
+        example: !include samples/subgroup_patch_body.json
       responses:
         200:
           body:
@@ -236,7 +258,7 @@ annotationTypes:
 /exercises:
   description: Contains actions over exercises
   get:
-    description: Get exercises for subgroup and current user with availability calculation
+    description: Get exercises for subgroup with tasks. If called by current user, availability calculation is included
     queryParameters:
       subGroupId:
         description: "ID of the subgroup exercises belongs to"
@@ -251,6 +273,20 @@ annotationTypes:
             example2: !include samples/exercises_for_2_series_subgroup.json
             example3: !include samples/exercises_for_3_series_subgroup.json
             example4: !include samples/exercises_for_4_series_subgroup.json
+  post:
+    description: Create new exercise for exist subgroup
+    body:
+      examples:
+        example_words: !include samples/exerciseWordsCreateRequest.json
+        example_phrases: !include samples/exercisePhrasesCreateRequest.json
+        example_sentences: !include samples/exerciseSentencesCreateRequest.json
+    responses:
+      201:
+        body:
+          examples:
+            example_words: !include samples/exerciseWordsResponse.json
+            example_phrases: !include samples/exercisePhrasesResponse.json
+            example_sentences: !include samples/exerciseSentencesResponse.json
   /{exerciseId}:
     get:
       descritpion: Get exercise by id
@@ -272,6 +308,30 @@ annotationTypes:
   /{exerciseId}/active/{active}:
     put:
       description: Update active status of the exercise
+  /loadTasksFile:
+    post:
+      description: Load task file to series
+      body:
+        multipart/form-data:
+          properties:
+            seriesId:
+              description: "ID of the series created exercises belongs to"
+              required: true
+              type: string
+              example: "42"
+            taskFile:
+              description: |
+                File with tasks to be uploaded
+                - format for series 1:
+                  orderNumber word audioFileName pictureFileName words wordType
+                  1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
+                - format for series 2
+                  orderNumber words
+                  1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]
+              required: true
+              type: file
+        responses:
+          201:
 
 # TASK ----------------------------
 /tasks:
@@ -337,6 +397,10 @@ annotationTypes:
           required: true
           type: integer
           example: 2020
+        userId:
+          type: integer
+          format: int64
+          example: 1
       responses:
         200:
           body:
@@ -354,17 +418,26 @@ annotationTypes:
 /users:
   description: Contains actions over user details and accounts
   get:
-    description: Get the user by name
+    description: Get all users
     queryParameters:
-      name:
-        description: "Name of the user"
-        required: true
+      withAnalytics:
+        required: false
+        default: false
+        type: boolean
+        example: true
+      role:
+        required: false
+        default: "ROLE_USER"
         type: string
-        example: "userName"
+      pageable:
+        required: false
+        type: pageable
     responses:
       200:
         body:
-          example: !include samples/user_get_response.json
+          examples:
+            example1: !include samples/users_get_response.json
+            example2: !include samples/users_with_analytics_get_response.json
   /{userId}:
     get:
       description: Get user by id
@@ -524,65 +597,19 @@ annotationTypes:
         responses:
           200:
 
-# ADMIN  ----------------------
-/admin:
-  description: Contains actions for admin
-  /exercises:
-    get:
-      description: Get exercises for subgroup with tasks
-      queryParameters:
-        subGroupId:
-          description: "ID of the subgroup exercises belongs to"
-          required: true
-          type: integer
-          example: 42
-      responses:
-        200:
-          body:
-            example: !include samples/exercises_with_tasks.json
-  /users:
-    get:
-      description: Get all users
-      queryParameters:
-        withAnalytics:
-          required: false
-          default: false
-          type: boolean
-          example: true
-        role:
-          required: false
-          default: "ROLE_USER"
-          type: string
-        pageable:
-          required: false
-          type: pageable
-      responses:
-        200:
-          body:
-            examples:
-              example1: !include samples/users_get_response.json
-              example2: !include samples/users_with_analytics_get_response.json
-  /monthHistories:
-    get:
-      description: Get month user's study histories by month and yea
-      queryParameters:
-        userId:
-          required: true
-          type: integer
-          example: 1
-        month:
-          required: true
-          type: integer
-          example: 11
-        year:
-          required: true
-          type: integer
-          example: 2020
-      responses:
-        200:
-          body:
-            example: !include samples/study_histories_dto_response.json
-  /resources/{id}:
+# ROLES  ----------------------
+/roles:
+  description: Contains actions over roles
+  get:
+    description: Get all roles
+    responses:
+      200:
+        body:
+          example: !include samples/roles_get_response.json
+
+# RESOURCES  ----------------------
+/resources:
+  /{id}:
     patch:
       description: Update resource description by resource id
       body:
@@ -591,77 +618,6 @@ annotationTypes:
         200:
           body:
             example: !include samples/resource_dto_response.json
-  /subgroup:
-    post:
-      description: Add new subgroup for existing series
-      queryParameters:
-        seriesId:
-          description: "ID of the series"
-          type: integer
-          format: int64
-          example: 1
-      body:
-        example: !include samples/add_subgroup_to_series.json
-      responses:
-        201:
-          body:
-            example: !include samples/add_subgroup_to_series_response.json
-  /subgroups/{subGroupId}:
-    patch:
-      description: Update subgroup by id
-      body:
-        example: !include samples/subgroup_patch_body.json
-      responses:
-        200:
-          body:
-            example: !include samples/subgroup_by_id.json
-  /roles:
-    get:
-      description: Get all roles
-      responses:
-        200:
-          body:
-            example: !include samples/roles_get_response.json
-  /create/exercise:
-    post:
-      description: Create new exercise for exist subgroup
-      body:
-        examples:
-          example_words: !include samples/exerciseWordsCreateRequest.json
-          example_phrases: !include samples/exercisePhrasesCreateRequest.json
-          example_sentences: !include samples/exerciseSentencesCreateRequest.json
-      responses:
-        201:
-          body:
-            examples:
-              example_words: !include samples/exerciseWordsResponse.json
-              example_phrases: !include samples/exercisePhrasesResponse.json
-              example_sentences: !include samples/exerciseSentencesResponse.json
-
-  /loadTasksFile:
-    post:
-      description: Load task file to series
-      body:
-        multipart/form-data:
-          properties:
-            seriesId:
-              description: "ID of the series created exercises belongs to"
-              required: true
-              type: string
-              example: "42"
-            taskFile:
-              description: |
-                File with tasks to be uploaded
-                - format for series 1:
-                  orderNumber word audioFileName pictureFileName words wordType
-                  1 бал no_noise/бал.mp3 pictures/бал.jpg (бам,сам,дам,зал,бак) OBJECT
-                - format for series 2
-                  orderNumber words
-                  1 [(),(),(мальчик, девочка), (сидит, слушает),(),()]
-              required: true
-              type: file
-        responses:
-          201:
 
 ################################
 # V2 API ----------------------#
@@ -683,6 +639,10 @@ annotationTypes:
             required: true
             type: datetime-only
             example: 2000-11-23T15:00:00
+          userId:
+            type: integer
+            format: int64
+            example: 1
         responses:
           200:
             body:
@@ -709,6 +669,10 @@ annotationTypes:
             required: true
             type: datetime-only
             example: 2000-11-23T15:00:00
+          userId:
+            type: integer
+            format: int64
+            example: 1
         responses:
           200:
             body:
@@ -731,30 +695,9 @@ annotationTypes:
     /histories:
       get:
         description: |
-          Get current user's study histories for period from <= startTime < to.
-          Where from and to are dates in ISO format
-        queryParameters:
-          from:
-            required: true
-            type: datetime-only
-            example: 2000-10-21T15:00:00
-          to:
-            required: true
-            type: datetime-only
-            example: 2000-10-21T15:00:00
-        responses:
-          200:
-            body:
-              example: !include samples/study_histories_dto_response.json
-  # ADMIN  ----------------------
-  /admin:
-    description: Contains actions for admin
-    /histories:
-      get:
-        description: Get user's study histories for period from <= startTime <= to where startTime is a date in ISO date time format
+          Get user's study histories for period from <= startTime <= to where startTime is a date in ISO date time format
         queryParameters:
           userId:
-            required: true
             type: integer
             example: 1
           from:
@@ -769,101 +712,3 @@ annotationTypes:
           200:
             body:
               example: !include samples/study_histories_dto_response.json
-    /study/day:
-      get:
-        description: Get user's details daily statistic for the day. Where day is a date in the ISO date time format
-        queryParameters:
-          userId:
-            required: true
-            type: integer
-            format: int64
-            example: 1
-          day:
-            required: true
-            type: datetime-only
-            example: 2000-10-21T15:00:00
-        responses:
-          200:
-            body:
-              example: {
-                data: [
-                  {
-                    seriesName: "Seria 1",
-                    doneExercises: 10,
-                    attempts: 1,
-                    doneExercisesSuccessfullyFromFirstTime: 5,
-                    listenWordsCount: 50
-                  }, {
-                    seriesName: "Seria 2",
-                    doneExercises: 5,
-                    attempts: 0,
-                    doneExercisesSuccessfullyFromFirstTime: 5,
-                    listenWordsCount: 25
-                  }
-                ],
-                errors: [ ],
-                meta: [ ]
-              }
-    /study/week:
-      get:
-        description: Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format
-        queryParameters:
-          userId:
-            required: true
-            type: integer
-            format: int64
-            example: 1
-          from:
-            required: true
-            type: datetime-only
-            example: 2000-10-21T15:00:00
-          to:
-            required: true
-            type: datetime-only
-            example: 2000-10-21T15:00:00
-        responses:
-          200:
-            body:
-              example: {
-                data: [
-                  {
-                    date: 2000-10-21T15:00:00,
-                    exercisingTimeSeconds: 3000,
-                    progress: GREAT
-                  }
-                ],
-                errors: [],
-                meta: []
-              }
-    /study/year:
-      get:
-        description: Get user's yearly statistic for the period. Where period is a two dates in the ISO date time format
-        queryParameters:
-          userId:
-            required: true
-            type: integer
-            format: int64
-            example: 1
-          from:
-            required: true
-            type: datetime-only
-            example: 2000-11-23T15:00:00
-          to:
-            required: true
-            type: datetime-only
-            example: 2000-11-23T15:00:00
-        responses:
-          200:
-            body:
-              example: {
-                data: [
-                  {
-                    date: 2000-11-23T15:00:00,
-                    exercisingDays: 15,
-                    exercisingTimeSeconds: 3000,
-                    progress: GREAT
-                  }
-                ],
-                errors: [],
-                meta: []
-              }

@@ -22,7 +22,7 @@ import javax.annotation.security.RolesAllowed
 @RolesAllowed(BrnRole.ADMIN)
 class ResourceController(val resourceService: ResourceService) {
 
-    @PatchMapping("/resources/{id}")
+    @PatchMapping("/{id}")
     @ApiOperation("Update resource description by resource id")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
