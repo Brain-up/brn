@@ -4,7 +4,7 @@ import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.azure.tts.AzureRates
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.enums.BrnLocale
-import com.epam.brn.enums.AuthorityType.ROLE_ADMIN
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.StudyHistory
@@ -80,12 +80,12 @@ internal class UserAnalyticsServiceTest {
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
-        every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
+        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
         every { studyHistoryRepository.getStatisticByUserAccountId(any()) } returns userStatisticView
 
-        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
+        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
         userAnalyticsDtos.size shouldBe 2
     }
@@ -100,12 +100,12 @@ internal class UserAnalyticsServiceTest {
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
-        every { userAccountRepository.findUsersAccountsByRole(ROLE_ADMIN.name) } returns usersList
+        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
         every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
         every { studyHistoryRepository.getStatisticByUserAccountId(any()) } returns userStatisticView
 
-        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, ROLE_ADMIN.name)
+        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
         userAnalyticsDtos.size shouldBe 1
         userAnalyticsDtos[0].lastWeek.size shouldBe 0

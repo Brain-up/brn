@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.BrnRole
@@ -23,7 +23,7 @@ import javax.annotation.security.RolesAllowed
 @RolesAllowed(BrnRole.USER)
 class StudyHistoryControllerV2(
     @Autowired val studyHistoryService: StudyHistoryService,
-    @Autowired val authorityService: AuthorityService
+    @Autowired val roleService: RoleService
 ) {
     @GetMapping("/histories")
     @ApiOperation("Get user's study histories for period from <= startTime <= to where startTime is a date in ISO date time format")
@@ -32,7 +32,7 @@ class StudyHistoryControllerV2(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
     ): ResponseEntity<Response<List<StudyHistoryDto>>> {
-        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
+        val result = if (userId != null && roleService.isUserHasRole(BrnRole.ADMIN)) {
             studyHistoryService.getHistories(userId, from, to)
         } else {
             studyHistoryService.getHistoriesForCurrentUser(from, to)

@@ -1,10 +1,10 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.BrnRole
-import com.epam.brn.model.Authority
-import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.enums.BrnRole
+import com.epam.brn.model.Role
+import com.epam.brn.repo.RoleRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import io.kotest.matchers.shouldBe
@@ -23,22 +23,22 @@ class RoleControllerIT : BaseIT() {
     private val baseUrl = "/roles"
 
     @Autowired
-    lateinit var authorityRepository: AuthorityRepository
+    lateinit var roleRepository: RoleRepository
 
     @Autowired
     lateinit var gson: Gson
 
     @AfterEach
     fun deleteAfterTest() {
-        authorityRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     @Test
     fun `should return authorities list`() {
         // GIVEN
-        insertRole(AuthorityType.ROLE_ADMIN.name)
-        insertRole(AuthorityType.ROLE_USER.name)
-        insertRole(AuthorityType.ROLE_SPECIALIST.name)
+        insertRole(BrnRole.ADMIN.name)
+        insertRole(BrnRole.USER.name)
+        insertRole(BrnRole.SPECIALIST.name)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -54,15 +54,15 @@ class RoleControllerIT : BaseIT() {
         val baseResponse = objectMapper.readValue(responseJson, Response::class.java)
         val authorities = objectMapper.readValue(
             gson.toJson(baseResponse.data),
-            object : TypeReference<List<Authority>>() {}
+            object : TypeReference<List<Role>>() {}
         )
         authorities.size shouldBe 3
     }
 
-    private fun insertRole(authorityName: String): Authority {
-        return authorityRepository.save(
-            Authority(
-                authorityName = authorityName
+    private fun insertRole(authorityName: String): Role {
+        return roleRepository.save(
+            Role(
+                name = authorityName
             )
         )
     }

@@ -2,10 +2,10 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.databind.type.TypeFactory
 import io.kotest.matchers.shouldBe
@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class DoctorControllerIT : BaseIT() {
 
     @Autowired
-    lateinit var authorityRepository: AuthorityRepository
+    lateinit var roleRepository: RoleRepository
 
     @Autowired
     private lateinit var userAccountRepository: UserAccountRepository
@@ -37,8 +37,8 @@ class DoctorControllerIT : BaseIT() {
 
     @BeforeEach
     fun setUp() {
-        val userAuthority = createAuthority(AuthorityType.ROLE_USER.name)
-        val doctorAuthority = createAuthority(AuthorityType.ROLE_SPECIALIST.name)
+        val userAuthority = createAuthority(BrnRole.USER.name)
+        val doctorAuthority = createAuthority(BrnRole.SPECIALIST.name)
 
         user1 = createUser(email = "user1@default.ru", authorities = mutableSetOf(userAuthority))
         user2 = createUser(email = "user2@default.ru", authorities = mutableSetOf(userAuthority))
@@ -51,7 +51,7 @@ class DoctorControllerIT : BaseIT() {
     @AfterEach
     fun tearDown() {
         userAccountRepository.deleteAll()
-        authorityRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     @Test

@@ -1,9 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.AuthorityType.ROLE_ADMIN
-import com.epam.brn.enums.AuthorityType.ROLE_SPECIALIST
-import com.epam.brn.enums.AuthorityType.ROLE_USER
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import io.kotest.matchers.shouldBe
@@ -36,12 +34,12 @@ internal class DoctorServiceTest {
 
     @BeforeEach
     fun setUp() {
-        admin = prepareUser(0, "admin@doctor.test", mutableSetOf(ROLE_ADMIN.name))
-        doctor = prepareUser(1, "doctor1@doctor.test", mutableSetOf(ROLE_USER.name, ROLE_SPECIALIST.name))
-        anotherDoctor = prepareUser(2, "doctor2@doctor.test", mutableSetOf(ROLE_USER.name, ROLE_SPECIALIST.name))
-        user1 = prepareUser(3, "user1@doctor.test", mutableSetOf(ROLE_USER.name))
-        user2 = prepareUser(4, "user2@doctor.test", mutableSetOf(ROLE_USER.name))
-        fakeDoctorUser = prepareUser(5, "user2@doctor.test", mutableSetOf(ROLE_USER.name))
+        admin = prepareUser(0, "admin@doctor.test", mutableSetOf(BrnRole.ADMIN))
+        doctor = prepareUser(1, "doctor1@doctor.test", mutableSetOf(BrnRole.USER, BrnRole.SPECIALIST))
+        anotherDoctor = prepareUser(2, "doctor2@doctor.test", mutableSetOf(BrnRole.USER, BrnRole.SPECIALIST))
+        user1 = prepareUser(3, "user1@doctor.test", mutableSetOf(BrnRole.USER))
+        user2 = prepareUser(4, "user2@doctor.test", mutableSetOf(BrnRole.USER))
+        fakeDoctorUser = prepareUser(5, "user2@doctor.test", mutableSetOf(BrnRole.USER))
 
         every { userAccountService.findUserById(admin.id!!) } returns admin
         every { userAccountService.findUserById(doctor.id!!) } returns doctor
@@ -319,25 +317,6 @@ internal class DoctorServiceTest {
     }
 
     // =================================================================================================================
-    @Test
-    fun `should check user is doctor`() {
-        doctorService.isDoctor(doctor) shouldBe true
-    }
-
-    @Test
-    fun `should not check user is doctor`() {
-        doctorService.isDoctor(user1) shouldBe false
-    }
-
-    @Test
-    fun `should check user is admin`() {
-        doctorService.isAdmin(admin) shouldBe true
-    }
-
-    @Test
-    fun `should not check user is admin`() {
-        doctorService.isAdmin(user1) shouldBe false
-    }
 
     @Test
     fun `checkUserIsNotAdmin should throw exception if user used admin ID`() {
@@ -351,18 +330,6 @@ internal class DoctorServiceTest {
         assertThrows<IllegalArgumentException> {
             doctorService.checkUserIsNotAdmin(admin, DoctorService.USING_ADMIN_ID_FOR_PATIENT_WARN)
         }
-    }
-
-    @Test
-    fun `should test userHasAuthority`() {
-        doctorService.userHasAuthority(admin, ROLE_ADMIN.name) shouldBe true
-
-        doctorService.userHasAuthority(user1, ROLE_USER.name) shouldBe true
-        doctorService.userHasAuthority(user1, ROLE_ADMIN.name) shouldBe false
-        doctorService.userHasAuthority(user1, ROLE_SPECIALIST.name) shouldBe false
-
-        doctorService.userHasAuthority(doctor, ROLE_SPECIALIST.name) shouldBe true
-        doctorService.userHasAuthority(doctor, ROLE_USER.name) shouldBe true
     }
 
     private fun prepareUser(
@@ -379,6 +346,6 @@ internal class DoctorServiceTest {
             bornYear = 2000,
             active = true,
             doctorId = doctorId
-        ).apply { this.authorities = authorities }
+        ).apply { this.roles = authorities }
     }
 }

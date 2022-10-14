@@ -87,6 +87,6 @@ internal class DoctorControllerTest {
             bornYear = 2000,
             active = true,
             doctorId = doctorId
-        ).apply { this.authorities = authorities }
+        ).apply { this.roles = authorities }
     }
 }

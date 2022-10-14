@@ -63,7 +63,7 @@ data class UserAccount(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
     )
-    var authoritySet: MutableSet<Authority> = hashSetOf()
+    var roleSet: MutableSet<Role> = hashSetOf()
 
     override fun toString(): String {
         return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
@@ -88,8 +88,8 @@ data class UserAccount(
             .toHashSet(),
         doctorId = doctor?.id
     ).also {
-        it.authorities = this.authoritySet
-            .map(Authority::authorityName)
+        it.roles = this.roleSet
+            .map(Role::name)
             .toMutableSet()
     }
 

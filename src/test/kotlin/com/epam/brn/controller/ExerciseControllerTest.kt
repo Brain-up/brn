@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -40,7 +40,7 @@ internal class ExerciseControllerTest {
     lateinit var csvUploadService: CsvUploadService
 
     @MockK
-    lateinit var authorityService: AuthorityService
+    lateinit var roleService: RoleService
 
     @Test
     fun `should get exercises for user and series`() {
@@ -49,7 +49,7 @@ internal class ExerciseControllerTest {
         val exercise = ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
         val listExercises = listOf(exercise)
         every { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) } returns listExercises
-        every { authorityService.isCurrentUserAdmin() } returns false
+        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns false
 
         // WHEN
         @Suppress("UNCHECKED_CAST")
@@ -163,7 +163,7 @@ internal class ExerciseControllerTest {
         val subGroupId = 1L
         val exerciseResponse = mockk<ExerciseDto>()
         every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseResponse)
-        every { authorityService.isCurrentUserAdmin() } returns true
+        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns true
 
         // WHEN
         val exercises = exerciseController.getExercisesBySubGroup(subGroupId)

@@ -1,14 +1,12 @@
 package com.epam.brn.service
 
-import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.enums.AuthorityType.ROLE_USER
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Authority
+import com.epam.brn.model.Role
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
@@ -55,7 +53,7 @@ internal class UserAccountServiceTest {
     lateinit var passwordEncoder: PasswordEncoder
 
     @MockK
-    lateinit var authorityService: AuthorityService
+    lateinit var roleService: RoleService
 
     @MockK(relaxed = true)
     lateinit var userAccount: UserAccount
@@ -73,7 +71,7 @@ internal class UserAccountServiceTest {
     lateinit var firebaseUserRecord: UserRecord
 
     @MockK
-    lateinit var authority: Authority
+    lateinit var role: Role
 
     @MockK
     lateinit var authentication: Authentication
@@ -172,9 +170,9 @@ internal class UserAccountServiceTest {
             val userName = "Tested"
             val uid = "UID"
             val email = "test@gmail.com"
-            every { authorityService.findAuthorityByAuthorityName(ofType(String::class)) } returns Authority(
+            every { roleService.findByName(ofType(String::class)) } returns Role(
                 id = 1L,
-                authorityName = ROLE_USER.name
+                name = ROLE_USER.name
             )
             every { firebaseUserRecord.uid } returns uid
             every { firebaseUserRecord.email } returns email
@@ -188,8 +186,8 @@ internal class UserAccountServiceTest {
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
             assertThat(userAccountDtoReturned.userId).isEqualTo(uid)
             assertThat(userAccountDtoReturned.email).isEqualTo(email)
-            assertNotNull(userAccountDtoReturned.authorities)
-            assertThat(userAccountDtoReturned.authorities!!.size).isEqualTo(1)
+            assertNotNull(userAccountDtoReturned.roles)
+            assertThat(userAccountDtoReturned.roles!!.size).isEqualTo(1)
 
             verify(exactly = 1) { userAccountRepository.findUserAccountByEmail(email) }
             verify(exactly = 1) { userAccountRepository.save(captureMyObject.captured) }

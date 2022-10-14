@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import io.kotest.matchers.shouldBe
@@ -25,7 +25,7 @@ internal class StudyHistoryControllerV2Test {
     lateinit var studyHistoryService: StudyHistoryService
 
     @MockK
-    lateinit var authorityService: AuthorityService
+    lateinit var roleService: RoleService
 
     @Test
     fun `getHistories should return histories`() {
@@ -34,7 +34,7 @@ internal class StudyHistoryControllerV2Test {
         val date = LocalDateTime.now()
         val studyHistoryDto = mockk<StudyHistoryDto>()
         every { studyHistoryService.getHistories(userId, date, date) } returns listOf(studyHistoryDto)
-        every { authorityService.isCurrentUserAdmin() } returns true
+        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns true
 
         // WHEN
         val histories = studyHistoryControllerV2.getHistories(userId, date, date)

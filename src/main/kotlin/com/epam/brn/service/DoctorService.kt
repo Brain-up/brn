@@ -1,12 +1,15 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnRole
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 
 @Service
-class DoctorService(private val userAccountService: UserAccountService) {
+class DoctorService(
+    private val userAccountService: UserAccountService,
+    private val roleService: RoleService
+) {
     private val log = logger()
 
     fun addPatientToDoctorAsDoctor(doctorId: Long, patientId: Long) {
@@ -18,13 +21,13 @@ class DoctorService(private val userAccountService: UserAccountService) {
         checkUserIsNotAdmin(doctor, USING_ADMIN_ID_FOR_DOCTOR_WARN)
 
         when {
-            !isAdmin(currentUser) && currentUser.id != doctorId -> {
+            !roleService.isUserHasRole(BrnRole.ADMIN) && currentUser.id != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
-            !isDoctor(doctor) -> {
+            !roleService.isUserHasRole(BrnRole.SPECIALIST) -> {
                 throw IllegalArgumentException("You are trying to assign patient to user that is not a doctor")
             }
-            isDoctor(patient) -> {
+            roleService.isUserHasRole(BrnRole.SPECIALIST) -> {
                 throw IllegalArgumentException("The patient you are trying to add is actually a doctor")
             }
             patient.doctorId != null -> {
@@ -46,10 +49,10 @@ class DoctorService(private val userAccountService: UserAccountService) {
         checkUserIsNotAdmin(patient, USING_ADMIN_ID_FOR_PATIENT_WARN)
 
         when {
-            !isAdmin(currentUser) && currentUser.id != doctorId -> {
+            !roleService.isUserHasRole(currentUser, BrnRole.ADMIN) && currentUser.id != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
-            !isAdmin(currentUser) && patient.doctorId != doctorId -> {
+            !roleService.isUserHasRole(currentUser, BrnRole.ADMIN) && patient.doctorId != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
         }
@@ -63,7 +66,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
 
         checkUserIsNotAdmin(patient, USING_ADMIN_ID_FOR_PATIENT_WARN)
 
-        if (!isAdmin(currentUser) && currentUser.id != patientId) {
+        if (!roleService.isUserHasRole(currentUser, BrnRole.ADMIN) && currentUser.id != patientId) {
             throw IllegalArgumentException("It is forbidden to remove a doctor from another patient")
         }
         userAccountService.removeDoctorFromPatient(patientId)
@@ -71,7 +74,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
 
     fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse> {
         val currentUser = userAccountService.getCurrentUser().toDto()
-        if (!isAdmin(currentUser) && currentUser.id != doctorId)
+        if (!roleService.isUserHasRole(currentUser, BrnRole.ADMIN) && currentUser.id != doctorId)
             throw IllegalArgumentException("It is forbidden to get patients of another doctor")
         return userAccountService.getPatientsForDoctor(doctorId)
     }
@@ -80,7 +83,7 @@ class DoctorService(private val userAccountService: UserAccountService) {
         val patient = userAccountService.findUserById(patientId)
         val currentUser = userAccountService.getCurrentUser().toDto()
         return when {
-            !isAdmin(currentUser) && currentUser.id != patientId -> {
+            !roleService.isUserHasRole(currentUser, BrnRole.ADMIN) && currentUser.id != patientId -> {
                 throw IllegalArgumentException("It is forbidden to get a doctor from another patient")
             }
             patient.doctorId == null -> throw IllegalArgumentException("No doctor found")
@@ -89,17 +92,13 @@ class DoctorService(private val userAccountService: UserAccountService) {
     }
 
     fun checkUserIsNotAdmin(user: UserAccountResponse, message: String) {
-        if (isAdmin(user)) {
+        if (roleService.isUserHasRole(user, BrnRole.ADMIN)) {
             val currentUser = userAccountService.getCurrentUser()
             log.error("Current user '${currentUser.id}' is trying to use admin id '${user.id}'. $message")
             // We should not disclose that the user used the admin ID. So I used such strange error message
             throw IllegalArgumentException("Unexpected error. Please try again or contact admin.")
         }
     }
-
-    fun isDoctor(user: UserAccountResponse) = userHasAuthority(user, AuthorityType.ROLE_SPECIALIST.name)
-    fun isAdmin(user: UserAccountResponse) = userHasAuthority(user, AuthorityType.ROLE_ADMIN.name)
-    fun userHasAuthority(user: UserAccountResponse, role: String) = user.authorities?.contains(role) ?: false
 
     companion object {
         const val USING_ADMIN_ID_FOR_PATIENT_WARN = "Using admin ID for patient"

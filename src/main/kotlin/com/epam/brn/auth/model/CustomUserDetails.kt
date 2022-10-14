@@ -13,8 +13,8 @@ class CustomUserDetails(userAccount: UserAccount) : UserDetails {
     private val authorities: List<GrantedAuthority>
 
     init {
-        authorities = userAccount.authoritySet
-            .map { it.authorityName }
+        authorities = userAccount.roleSet
+            .map { "ROLE_$it.name" }
             .map { SimpleGrantedAuthority(it) }
     }
 
