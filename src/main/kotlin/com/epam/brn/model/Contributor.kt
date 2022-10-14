@@ -32,7 +32,7 @@ data class Contributor(
     @Enumerated(EnumType.STRING)
     var type: ContributorType = ContributorType.DEVELOPER,
     var pictureUrl: String? = null,
-    var contribution: Long? = null,
+    var contribution: Long = 0,
     var active: Boolean = true,
 ) {
 
