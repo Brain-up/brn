@@ -32,7 +32,7 @@ class SwaggerConfig {
         return ApiInfoBuilder()
             .title("Brain up project")
             .description("REST API for brn")
-            .contact(Contact("Elena.Moshnikova", "https://www.epam.com/", "elena_moshnikova@epam.com"))
+            .contact(Contact("Elena.Moshnikova", "https://www.epam.com/", "brainupproject@yandex.ru"))
             .build()
     }
 

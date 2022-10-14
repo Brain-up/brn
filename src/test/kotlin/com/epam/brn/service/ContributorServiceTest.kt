@@ -14,8 +14,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.amshove.kluent.internal.assertEquals
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
 
@@ -29,7 +29,25 @@ internal class ContributorServiceTest {
     private lateinit var contributorRepository: ContributorRepository
 
     @Test
-    fun `should get contributors`() {
+    fun `should get all contributors`() {
+        // GIVEN
+        val contributor = createContributor(id = 1, name = "Contributor", contribution = 5)
+        val contributorList = listOf(contributor)
+        every { contributorRepository.findAll() } returns contributorList
+
+        // WHEN
+        val actualResult = contributorService.getAllContributors()
+
+        // THEN
+        assertEquals(1, actualResult.size)
+        val actualContributor = actualResult[0]
+        assertEquals(contributor.name, actualContributor.name)
+        assertEquals(contributor.contribution, actualContributor.contribution)
+        assertEquals(contributor.type, actualContributor.type)
+    }
+
+    @Test
+    fun `should get contributors by type`() {
         // GIVEN
         val contributor = createContributor(id = 1, name = "Contributor", contribution = 5)
         val contributorList = listOf(contributor)

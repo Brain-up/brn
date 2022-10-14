@@ -140,16 +140,17 @@ docker rm $(docker ps -a -q) # Remove all stopped containers
 ```
 ## Development tips:
 1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused it with @ElenaSpb, send your githubnick to her.
-2. Create branch from dev with the codename of your task, i.e. EPAMLABSBRN-1.
-3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards or https://kb.epam.com/display/EPMLABSBRN/Coding+Guidelines .
+2. Create branch from dev with the codename of your task, i.e. #GitHub_TaskNumber#.
+3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards.
 4. Create pull request with task name and description about what was done. 
 5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project maintainer. 
 7. check that build job on jenkins passes successfully.
 8. Before load config files check them with https://orfogrammka.ru/ service.
+9. Integration tests does not run in build process, it can/should be run locally with run job verification/integrationTests.
 
 ### Code style:
-1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style or https://kb.epam.com/display/EPMCOSRINT/Code+style
+1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style
 2. Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
 3. Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
 4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
@@ -164,7 +165,7 @@ use `V2yearmonthday_taskNumber`
 for example `V220210804_899`.
 
 ### Branches:
-Use format 'EPMLABSBRN-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
+Use format '#GitHub_TaskNumber-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
 
 ### Sonar:
 1. https://sonarcloud.io/code?id=Brain-up_brn our project sonar cloud.
