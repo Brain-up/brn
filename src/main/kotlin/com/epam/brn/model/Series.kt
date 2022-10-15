@@ -46,7 +46,9 @@ data class Series(
         name = name,
         type = ExerciseType.valueOf(type),
         description = description,
-        subGroups = subGroups.map { subGroup -> subGroup.id }.toMutableSet()
+        subGroups = subGroups
+            .sortedBy { it.withPictures }
+            .map { subGroup -> subGroup.id!! }
     )
 
     override fun toString() = "Series(id=$id, type=$type, level=$level, name='$name', description='$description')"
