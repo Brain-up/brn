@@ -35,7 +35,7 @@ class ResourceControllerIT : BaseIT() {
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
-                .patch("$baseUrl/resources/${resource.id}")
+                .patch("$baseUrl/${resource.id}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         )
