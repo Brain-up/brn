@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.security.Principal
 
@@ -36,16 +35,6 @@ class UserAccountServiceImpl(
         return userAccountRepository.findUserAccountByEmail(email)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
-    }
-
-    override fun findUserByName(name: String): UserAccountResponse {
-        return userAccountRepository
-            .findUserAccountByName(name)
-            .map(UserAccount::toDto)
-            .orElseThrow {
-                log.warn("User with `$name` is not found")
-                UsernameNotFoundException("User: `$name` is not found")
-            }
     }
 
     override fun findUserByUuid(uuid: String): UserAccountResponse? {
