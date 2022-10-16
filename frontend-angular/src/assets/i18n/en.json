@@ -5,7 +5,8 @@
       "Resources": "Resources",
       "Swagger": "Swagger",
       "UploadFile": "Upload file",
-      "Users": "Users"
+      "Users": "Users",
+      "Contributors": "Contributors"
     },
     "Modules": {
       "Exercises": {
@@ -144,6 +145,25 @@
         "NoMatchForSearch": "No users matching the filter",
         "Search": "Search",
         "SelectPage": "Select page of users"
+      },
+      "Contributors": {
+        "Components": {
+          "ContributorsTable": {
+            "ColumnsName": {
+              "Name": "Name",
+              "Description": "Description",
+              "Type": "Type",
+              "Company": "Company",
+              "Contact": "Contact",
+              "Contribution": "Contribution"
+            }
+          }
+        },
+        "EmptyData": "No contributor available",
+        "NoMatchForSearch": "No contributors matching the filter",
+        "Search": "Search",
+        "SelectPage": "Select page of contributors",
+        "AddButton": "ADD CONTRIBUTOR"
       }
     }
   },
