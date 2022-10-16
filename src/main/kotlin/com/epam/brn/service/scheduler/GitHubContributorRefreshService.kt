@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import javax.annotation.PostConstruct
 
 @Service
 class GitHubContributorRefreshService(
@@ -34,10 +35,17 @@ class GitHubContributorRefreshService(
     @Value("\${github.contributors.default-page-size}")
     private val pageSize: Int = 30
 
+    @PostConstruct
+    @Transactional
+    fun runOnceAtStartup() {
+        if (gitHubUserRepository.count() <= 0) {
+            synchronizeContributors()
+        }
+    }
+
     @Scheduled(cron = "\${github.contributors.sync.cron}")
     @Transactional
     fun synchronizeContributors() {
-        println("$gitHubOrganizationName, $gitHubRepositoryName, $pageSize")
         val contributors = gitHubApiClient.getContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
 
         contributors.forEach {
