@@ -6,6 +6,7 @@ import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
 import com.epam.brn.repo.GitHubUserRepository
 import com.epam.brn.webclient.GitHubApiClient
+import com.epam.brn.webclient.model.GitHubContributor
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
@@ -40,30 +41,15 @@ class GitHubContributorRefreshService(
         val contributors = gitHubApiClient.getContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
 
         contributors.forEach {
-            val user = gitHubApiClient.getUser(it.login)
+            if (botLogins.contains(it.login).not()) {
+                val user = gitHubApiClient.getUser(it.login)
 
-            user?.apply {
-                if (botLogins.contains(this.login).not()) {
+                user?.apply {
                     val foundedGitHubUser = gitHubUserRepository.findById(this.id)
                     val gitHubUser: GitHubUser
                     if (foundedGitHubUser.isPresent) {
                         gitHubUser = foundedGitHubUser.get()
-                        gitHubUser.let { usr ->
-                            if (usr.name != this.name)
-                                usr.name = this.name
-                            if (usr.login != this.login)
-                                usr.login = this.login
-                            if (usr.email != this.email)
-                                usr.email = this.email
-                            if (usr.avatarUrl != this.avatarUrl)
-                                usr.avatarUrl = this.avatarUrl
-                            if (usr.bio != this.bio)
-                                usr.bio = this.bio
-                            if (usr.company != this.company)
-                                usr.company = this.company
-                            if (usr.contributions != it.contributions)
-                                usr.contributions = it.contributions
-                        }
+                        updateGitHubUser(this, gitHubUser, it)
                     } else {
                         gitHubUser = GitHubUser(
                             id = this.id,
@@ -98,6 +84,29 @@ class GitHubContributorRefreshService(
                     }
                 }
             }
+        }
+    }
+
+    private fun updateGitHubUser(
+        gitHubUserClient: com.epam.brn.webclient.model.GitHubUser,
+        gitHubUser: GitHubUser,
+        gitHubContributor: GitHubContributor
+    ) {
+        gitHubUser.let { usr ->
+            if (usr.name != gitHubUserClient.name)
+                usr.name = gitHubUserClient.name
+            if (usr.login != gitHubUserClient.login)
+                usr.login = gitHubUserClient.login
+            if (usr.email != gitHubUserClient.email)
+                usr.email = gitHubUserClient.email
+            if (usr.avatarUrl != gitHubUserClient.avatarUrl)
+                usr.avatarUrl = gitHubUserClient.avatarUrl
+            if (usr.bio != gitHubUserClient.bio)
+                usr.bio = gitHubUserClient.bio
+            if (usr.company != gitHubUserClient.company)
+                usr.company = gitHubUserClient.company
+            if (usr.contributions != gitHubContributor.contributions)
+                usr.contributions = gitHubContributor.contributions
         }
     }
 }

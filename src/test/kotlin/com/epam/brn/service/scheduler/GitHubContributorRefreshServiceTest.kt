@@ -253,7 +253,7 @@ internal class GitHubContributorRefreshServiceTest {
         }
 
         every { gitHubApiClient.getUser(any()) } returns gitHubUsers[0]
-        every { gitHubUserRepository.findById(any()) } returns Optional.empty()
+        every { gitHubUserRepository.findById(any()) } returns Optional.of(savedGithubUser[0])
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
         every { contributorRepository.findByGitHubUser(any()) } returns Optional.of(contributors.first())
         every { contributorRepository.save(any()) } returnsMany contributors
@@ -272,6 +272,49 @@ internal class GitHubContributorRefreshServiceTest {
             gitHubUserRepository.findById(any())
         }
         verify(exactly = gitHubContributors.size) {
+            contributorRepository.findByGitHubUser(any())
+        }
+        verify(exactly = 0) {
+            contributorRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `should call needed method when user in bot list from github`() {
+        // GIVEN
+        val organizationName = "organization"
+        val repositoryName = "repository"
+        val pageSize = 10
+        val botLogin = "bot"
+        ReflectionTestUtils.setField(service, "gitHubOrganizationName", organizationName)
+        ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
+        ReflectionTestUtils.setField(service, "botLogins", setOf(botLogin))
+        ReflectionTestUtils.setField(service, "pageSize", pageSize)
+        val gitHubContributors = listOf(
+            GitHubContributor(
+                id = 1,
+                login = botLogin,
+                contributions = 10
+            )
+        )
+        every {
+            gitHubApiClient.getContributors(organizationName, repositoryName, pageSize)
+        } returns gitHubContributors
+
+        // WHEN
+        service.synchronizeContributors()
+
+        // THEN
+        verify(exactly = 1) {
+            gitHubApiClient.getContributors(any(), any(), any())
+        }
+        verify(exactly = 0) {
+            gitHubApiClient.getUser(any())
+        }
+        verify(exactly = 0) {
+            gitHubUserRepository.findById(any())
+        }
+        verify(exactly = 0) {
             contributorRepository.findByGitHubUser(any())
         }
         verify(exactly = 0) {
