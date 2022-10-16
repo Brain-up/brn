@@ -39,7 +39,7 @@ class Resource(
     fun toDto() = ResourceDto(
         id = id,
         audioFileUrl = audioFileUrl,
-        word = word,
+        word = word.replace("+", ""),
         pictureFileUrl = pictureFileUrl,
         soundsCount = soundsCount,
         wordType = WordType.valueOf(wordType),

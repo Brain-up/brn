@@ -3,7 +3,6 @@ package com.epam.brn.controller
 import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
@@ -33,7 +32,7 @@ class StudyHistoryControllerV2(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
     ): ResponseEntity<Response<List<StudyHistoryDto>>> {
-        val result = if (userId != null && authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
+        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
             studyHistoryService.getHistories(userId, from, to)
         } else {
             studyHistoryService.getHistoriesForCurrentUser(from, to)
