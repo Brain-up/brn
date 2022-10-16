@@ -6,12 +6,12 @@ data class GitHubUser(
     val id: Long,
     val login: String,
     @JsonProperty("avatar_url")
-    val avatarUrl: String?,
+    val avatarUrl: String? = null,
     @JsonProperty("gravatar_id")
-    val gravatarId: String?,
-    val name: String?,
-    val company: String?,
-    val location: String?,
-    val email: String?,
-    val bio: String?,
+    val gravatarId: String? = null,
+    val name: String? = null,
+    val company: String? = null,
+    val location: String? = null,
+    val email: String? = null,
+    val bio: String? = null,
 )

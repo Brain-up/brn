@@ -8,6 +8,7 @@ val jsonVersion: String by properties
 val junitVersion: String by properties
 val mockkVersion: String by properties
 val testContainersVersion: String by properties
+val okhttp3Version: String by properties
 val kotlinxCoroutinesCoreVersion: String by properties
 val springCloudContractWiremockVersion: String by properties
 
@@ -96,6 +97,8 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
     testImplementation("org.testcontainers:localstack:$testContainersVersion")
     testImplementation("com.amazonaws:aws-java-sdk:1.11.808")
+    testImplementation("com.squareup.okhttp3:okhttp:$okhttp3Version")
+    testImplementation("com.squareup.okhttp3:mockwebserver:$okhttp3Version")
 }
 
 tasks.withType<KotlinCompile> {
