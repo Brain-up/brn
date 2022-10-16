@@ -18,6 +18,10 @@ const routes: Routes = [
           import('./modules/users/users.module').then((m) => m.UsersModule),
       },
       {
+        path: 'contributors',
+        loadChildren: () => import('./modules/contributors/contributors.module').then(m => m.ContributorsModule)
+      },
+      {
         path: 'exercises',
         loadChildren: () =>
           import('./modules/exercises/exercises.module').then(
