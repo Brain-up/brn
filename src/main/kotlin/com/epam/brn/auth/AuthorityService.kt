@@ -10,4 +10,5 @@ interface AuthorityService {
     fun findAll(): List<Authority>
     fun save(authority: Authority): Authority
     fun isCurrentUserHasAuthority(authorityType: AuthorityType): Boolean
+    fun isCurrentUserAdmin(): Boolean
 }

@@ -27,6 +27,25 @@ internal class ContributorControllerTest {
     @Test
     fun `should get all contributors`() {
         // GIVEN
+        val contributor1 = mockk<ContributorResponse>()
+        val contributor2 = mockk<ContributorResponse>()
+        val contributorList = listOf(contributor1, contributor2)
+        val locale = "ru-ru"
+        every { contributorService.getAllContributors() } returns contributorList
+
+        // WHEN
+        @Suppress("UNCHECKED_CAST")
+        val actualResultData: List<ContributorResponse> =
+            contributorController.getContributors(locale, null).body?.data as List<ContributorResponse>
+
+        // THEN
+        verify(exactly = 1) { contributorService.getAllContributors() }
+        assertTrue(actualResultData.containsAll(contributorList))
+    }
+
+    @Test
+    fun `should get all contributors by type`() {
+        // GIVEN
         val contributor = mockk<ContributorResponse>()
         val contributorList = listOf(contributor)
         val locale = "ru-ru"

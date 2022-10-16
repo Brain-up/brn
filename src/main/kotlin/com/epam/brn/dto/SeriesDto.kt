@@ -13,5 +13,5 @@ data class SeriesDto(
     val name: String,
     val level: Int,
     val description: String? = "",
-    val subGroups: MutableSet<Long?> = HashSet()
+    val subGroups: List<Long> = emptyList()
 )
