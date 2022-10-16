@@ -8,7 +8,6 @@ import com.google.firebase.auth.UserRecord
 import org.springframework.data.domain.Pageable
 
 interface UserAccountService {
-    fun findUserByName(name: String): UserAccountResponse
     fun findUserByEmail(email: String): UserAccountResponse
     fun createUser(
         firebaseUserRecord: UserRecord
