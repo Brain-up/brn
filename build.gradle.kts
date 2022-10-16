@@ -90,6 +90,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("com.natpryce:hamkrest:1.8.0.1")

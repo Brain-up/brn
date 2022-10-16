@@ -5,7 +5,6 @@ import com.epam.brn.model.Contributor
 import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
 import com.epam.brn.repo.GitHubUserRepository
-import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.webclient.GitHubApiClient
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
@@ -18,7 +17,6 @@ class GitHubContributorRefreshService(
     val gitHubApiClient: GitHubApiClient,
     val gitHubUserRepository: GitHubUserRepository,
     val contributorRepository: ContributorRepository,
-    val resourceRepository: ResourceRepository,
 ) {
 
     private val log = logger()
@@ -38,6 +36,7 @@ class GitHubContributorRefreshService(
     @Scheduled(cron = "\${github.contributors.sync.cron}")
     @Transactional
     fun synchronizeContributors() {
+        println("$gitHubOrganizationName, $gitHubRepositoryName, $pageSize")
         val contributors = gitHubApiClient.getContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
 
         contributors.forEach {
@@ -101,35 +100,4 @@ class GitHubContributorRefreshService(
             }
         }
     }
-/*
-    //    @Transactional(readOnly = true)
-    fun getContributors(locale: String): List<ContributorUserDto> {
-        return contributorRepository.findAllByType(ContributorType.DEVELOPER).stream()
-            .map { e -> e.toContributorUserDto() }
-            .collect(Collectors.toList())
-    }
-
-    fun updateContributor(contributor: ContributorAdminDto): ContributorAdminDto? {
-        val savedContributor: Contributor? = null
-        contributor.id?.let {
-            val findById = contributorRepository.findById(it)
-            findById.ifPresent { entity ->
-                if (StringUtils.hasText(contributor.name)) {
-                    entity.name = contributor.name
-                }
-                if (StringUtils.hasText(contributor.pictureUrl)) {
-                    entity.pictureUrl = contributor.pictureUrl
-                }
-                if (StringUtils.hasText(contributor.description)) {
-                    entity.description = contributor.description
-                }
-                if (StringUtils.hasText(contributor.company)) {
-                    entity.company = contributor.company
-                }
-                contributorRepository.save(entity)
-            }
-        }
-        return savedContributor?.toContributorAdminDto()
-    }
- */
 }
