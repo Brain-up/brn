@@ -4,7 +4,7 @@ import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { of } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 
-fdescribe('ContributorsComponent', () => {
+describe('ContributorsComponent', () => {
   let component: ContributorsComponent;
   let fixture: ComponentFixture<ContributorsComponent>;
   const mockContributors = [
