@@ -132,6 +132,9 @@ internal class ContributorServiceTest {
         val contributorMockK = mockk<Contributor>()
         every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns null
         every { contributorRepository.save(any()) } returns contributorMockK
+        every { gitHunUserMockK.name } returns "name"
+        every { gitHunUserMockK.company } returns "company"
+        every { gitHunUserMockK.avatarUrl } returns "avatarUrl"
         every { gitHunUserMockK.email } returns "mail"
         every { gitHunUserMockK.contributions } returns 1
         // WHEN
