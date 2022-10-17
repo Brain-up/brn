@@ -40,71 +40,60 @@ class GitHubContributorRefreshJob(
     @Transactional
     fun runOnceAtStartup() {
         try {
-            if (gitHubUserRepository.count() <= 0) {
+            if (gitHubUserRepository.count() <= 0)
                 synchronizeContributors()
-            }
         } catch (e: Exception) {
-            log.error("Some error occurr+ed: ${e.message}", e)
+            log.error("Some error occurred: ${e.message}", e)
         }
     }
 
     @Scheduled(cron = "\${github.contributors.sync.cron}")
     @Transactional
     fun synchronizeContributors() {
-        val contributors = gitHubApiClient.getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
+        val gitHubContributors: List<GitHubContributorDto> = gitHubApiClient
+            .getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
+            .filter { !botLogins.contains(it.login) }
 
-        contributors.forEach {
-            if (botLogins.contains(it.login).not()) {
-                val user = gitHubApiClient.getGitHubUser(it.login)
+        gitHubContributors.forEach { gitHubContributor ->
+            val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
+            val existGitHubUser = gitHubUserRepository.findById(gitHubUserDto.id)
+            val updatedGitHubUser = if (existGitHubUser.isPresent)
+                updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
+            else
+                createGitHubUser(gitHubUserDto, gitHubContributor)
+            updateOrCreateContributor(updatedGitHubUser)
+        }
+    }
 
-                user?.apply {
-                    val foundedGitHubUser = gitHubUserRepository.findById(this.id)
-                    val gitHubUser: GitHubUser
-                    if (foundedGitHubUser.isPresent) {
-                        gitHubUser = foundedGitHubUser.get()
-                        updateGitHubUser(this, gitHubUser, it)
-                    } else {
-                        gitHubUser = GitHubUser(
-                            id = this.id,
-                            name = this.name,
-                            login = this.login,
-                            email = this.email,
-                            avatarUrl = this.avatarUrl,
-                            bio = this.bio,
-                            company = this.company,
-                            contributions = it.contributions
-                        )
-                    }
-                    val savedGitHubUser = gitHubUserRepository.save(gitHubUser)
-                    val foundedContributor = contributorRepository.findByGitHubUser(savedGitHubUser)
-                    if (foundedContributor.isEmpty) {
-                        val contributor = Contributor(
-                            contribution = gitHubUser.contributions
-                        )
-                        contributor.gitHubUser = savedGitHubUser
-                        savedGitHubUser.email?.let { email ->
-                            contributor.contacts.add(
-                                Contact(value = email)
-                            )
-                        }
-                        contributorRepository.save(contributor)
-                    } else {
-                        val contributor = foundedContributor.get()
-                        if (contributor.contribution != gitHubUser.contributions) {
-                            contributor.contribution = gitHubUser.contributions
-                            contributorRepository.save(contributor)
-                        }
-                    }
-                }
+    private fun updateOrCreateContributor(gitHubUser: GitHubUser) {
+        val existContributor = contributorRepository.findByGitHubUser(gitHubUser)
+        if (existContributor.isEmpty) {
+            val contributor = Contributor(contribution = gitHubUser.contributions)
+            contributor.gitHubUser = gitHubUser
+            gitHubUser.email?.let { email ->
+                contributor.contacts.add(
+                    Contact(value = email)
+                )
+            }
+            contributorRepository.save(contributor)
+        } else {
+            val contributor = existContributor.get()
+            if (contributor.contribution != gitHubUser.contributions) {
+                contributor.contribution = gitHubUser.contributions
+                contributorRepository.save(contributor)
             }
         }
+    }
+
+    private fun createGitHubUser(gitHubUserDto: GitHubUserDto, gitHubContributorDto: GitHubContributorDto): GitHubUser {
+        return gitHubUserRepository.save(gitHubUserDto.toEntity(gitHubContributorDto.contributions))
     }
 
     private fun updateGitHubUser(
         gitHubUserDto: GitHubUserDto,
         gitHubUser: GitHubUser,
         gitHubContributorDto: GitHubContributorDto
-    ) {
+    ): GitHubUser {
         gitHubUser.let { usr ->
             if (usr.name != gitHubUserDto.name)
                 usr.name = gitHubUserDto.name
@@ -121,5 +110,6 @@ class GitHubContributorRefreshJob(
             if (usr.contributions != gitHubContributorDto.contributions)
                 usr.contributions = gitHubContributorDto.contributions
         }
+        return gitHubUserRepository.save(gitHubUser)
     }
 }
