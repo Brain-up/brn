@@ -7,12 +7,14 @@ import com.epam.brn.enums.ContributorType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Contact
 import com.epam.brn.model.Contributor
+import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
+import io.mockk.verify
 import org.amshove.kluent.internal.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -121,6 +123,40 @@ internal class ContributorServiceTest {
         assertThrows(EntityNotFoundException::class.java) {
             contributorService.updateContributor(contributorId, contributorRequest)
         }
+    }
+
+    @Test
+    fun `should create contributor by github user`() {
+        // GIVEN
+        val gitHunUserMockK = mockk<GitHubUser>()
+        val contributorMockK = mockk<Contributor>()
+        every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns null
+        every { contributorRepository.save(any()) } returns contributorMockK
+        every { gitHunUserMockK.email } returns "mail"
+        every { gitHunUserMockK.contributions } returns 1
+        // WHEN
+        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK)
+        // THEN
+        assertEquals(resultContributor, contributorMockK)
+        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
+        verify(exactly = 1) { contributorRepository.save(any()) }
+    }
+
+    @Test
+    fun `should update contributor by github user`() {
+        // GIVEN
+        val gitHunUserMockK = mockk<GitHubUser>()
+        val existContributor = Contributor()
+        val updatedContributor = mockk<Contributor>()
+        every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns existContributor
+        every { contributorRepository.save(existContributor) } returns updatedContributor
+        every { gitHunUserMockK.contributions } returns 1
+        // WHEN
+        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK)
+        // THEN
+        assertEquals(updatedContributor, resultContributor)
+        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
+        verify(exactly = 1) { contributorRepository.save(existContributor) }
     }
 
     private fun createContributorRequest(

@@ -4,6 +4,9 @@ import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.exception.EntityNotFoundException
+import com.epam.brn.model.Contact
+import com.epam.brn.model.Contributor
+import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,7 +15,7 @@ import kotlin.streams.toList
 
 @Service
 class ContributorServiceImpl(
-    val contributorRepository: ContributorRepository
+    val contributorRepository: ContributorRepository,
 ) : ContributorService {
 
     @Transactional(readOnly = true)
@@ -50,5 +53,27 @@ class ContributorServiceImpl(
         contributor.contacts.clear()
         contributor.contacts.addAll(dto.contacts.map { it.toEntity() }.toMutableSet())
         return contributorRepository.save(contributor).toContributorDto()
+    }
+
+    @Transactional
+    override fun createOrUpdateByGitHubUser(gitHubUser: GitHubUser): Contributor {
+        val existContributor = contributorRepository.findByGitHubUser(gitHubUser)
+        return existContributor?.updateByGitHubUser(gitHubUser) ?: createContributor(gitHubUser)
+    }
+
+    private fun createContributor(gitHubUser: GitHubUser): Contributor {
+        val contributor = Contributor(contribution = gitHubUser.contributions)
+        contributor.gitHubUser = gitHubUser
+        gitHubUser.email?.let { email ->
+            contributor.contacts.add(Contact(value = email))
+        }
+        return contributorRepository.save(contributor)
+    }
+
+    private fun Contributor.updateByGitHubUser(gitHubUser: GitHubUser): Contributor {
+        return if (this.contribution != gitHubUser.contributions) {
+            this.contribution = gitHubUser.contributions
+            contributorRepository.save(this)
+        } else this
     }
 }

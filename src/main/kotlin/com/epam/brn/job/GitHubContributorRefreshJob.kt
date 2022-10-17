@@ -2,24 +2,23 @@ package com.epam.brn.job
 
 import com.epam.brn.dto.github.GitHubContributorDto
 import com.epam.brn.dto.github.GitHubUserDto
-import com.epam.brn.model.Contact
-import com.epam.brn.model.Contributor
 import com.epam.brn.model.GitHubUser
-import com.epam.brn.repo.ContributorRepository
 import com.epam.brn.repo.GitHubUserRepository
+import com.epam.brn.service.ContributorService
 import com.epam.brn.webclient.GitHubApiClient
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.Optional
 import javax.annotation.PostConstruct
 
 @Service
 class GitHubContributorRefreshJob(
     val gitHubApiClient: GitHubApiClient,
     val gitHubUserRepository: GitHubUserRepository,
-    val contributorRepository: ContributorRepository,
+    val contributorService: ContributorService,
 ) {
 
     private val log = logger()
@@ -43,7 +42,7 @@ class GitHubContributorRefreshJob(
             if (gitHubUserRepository.count() <= 0)
                 synchronizeContributors()
         } catch (e: Exception) {
-            log.error("Some error occurred: ${e.message}", e)
+            log.error("Some error occurred on getting gitHub users: ${e.message}", e)
         }
     }
 
@@ -56,32 +55,12 @@ class GitHubContributorRefreshJob(
 
         gitHubContributors.forEach { gitHubContributor ->
             val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
-            val existGitHubUser = gitHubUserRepository.findById(gitHubUserDto.id)
-            val updatedGitHubUser = if (existGitHubUser.isPresent)
+            val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
+            val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent)
                 updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
             else
                 createGitHubUser(gitHubUserDto, gitHubContributor)
-            updateOrCreateContributor(updatedGitHubUser)
-        }
-    }
-
-    private fun updateOrCreateContributor(gitHubUser: GitHubUser) {
-        val existContributor = contributorRepository.findByGitHubUser(gitHubUser)
-        if (existContributor.isEmpty) {
-            val contributor = Contributor(contribution = gitHubUser.contributions)
-            contributor.gitHubUser = gitHubUser
-            gitHubUser.email?.let { email ->
-                contributor.contacts.add(
-                    Contact(value = email)
-                )
-            }
-            contributorRepository.save(contributor)
-        } else {
-            val contributor = existContributor.get()
-            if (contributor.contribution != gitHubUser.contributions) {
-                contributor.contribution = gitHubUser.contributions
-                contributorRepository.save(contributor)
-            }
+            contributorService.createOrUpdateByGitHubUser(savedGitHubUser)
         }
     }
 
