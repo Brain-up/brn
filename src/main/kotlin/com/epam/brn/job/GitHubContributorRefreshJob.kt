@@ -49,19 +49,18 @@ class GitHubContributorRefreshJob(
     @Scheduled(cron = "\${github.contributors.sync.cron}")
     @Transactional
     fun synchronizeContributors() {
-        val gitHubContributors: List<GitHubContributorDto> = gitHubApiClient
+        gitHubApiClient
             .getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
             .filter { !botLogins.contains(it.login) }
-
-        gitHubContributors.forEach { gitHubContributor ->
-            val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
-            val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
-            val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent)
-                updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
-            else
-                createGitHubUser(gitHubUserDto, gitHubContributor)
-            contributorService.createOrUpdateByGitHubUser(savedGitHubUser)
-        }
+            .forEach { gitHubContributor ->
+                val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
+                val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
+                val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent)
+                    updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
+                else
+                    createGitHubUser(gitHubUserDto, gitHubContributor)
+                contributorService.createOrUpdateByGitHubUser(savedGitHubUser)
+            }
     }
 
     private fun createGitHubUser(gitHubUserDto: GitHubUserDto, gitHubContributorDto: GitHubContributorDto): GitHubUser {
