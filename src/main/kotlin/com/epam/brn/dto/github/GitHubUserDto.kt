@@ -1,5 +1,6 @@
 package com.epam.brn.dto.github
 
+import com.epam.brn.model.GitHubUser
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class GitHubUserDto(
@@ -14,4 +15,15 @@ data class GitHubUserDto(
     val location: String? = null,
     val email: String? = null,
     val bio: String? = null,
-)
+) {
+    fun toEntity(contributionsLevel: Long) = GitHubUser(
+        id = id,
+        name = name,
+        login = login,
+        email = email,
+        avatarUrl = avatarUrl,
+        bio = bio,
+        company = company,
+        contributions = contributionsLevel
+    )
+}

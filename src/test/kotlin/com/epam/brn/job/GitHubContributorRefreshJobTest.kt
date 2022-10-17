@@ -1,15 +1,16 @@
 package com.epam.brn.job
 
-import com.epam.brn.model.Contributor
-import com.epam.brn.repo.ContributorRepository
-import com.epam.brn.repo.GitHubUserRepository
-import com.epam.brn.webclient.GitHubApiClient
 import com.epam.brn.dto.github.GitHubContributorDto
 import com.epam.brn.dto.github.GitHubUserDto
+import com.epam.brn.model.Contributor
+import com.epam.brn.repo.GitHubUserRepository
+import com.epam.brn.service.ContributorService
+import com.epam.brn.webclient.GitHubApiClient
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -29,7 +30,7 @@ internal class GitHubContributorRefreshJobTest {
     private lateinit var gitHubUserRepository: GitHubUserRepository
 
     @MockK
-    private lateinit var contributorRepository: ContributorRepository
+    private lateinit var contributorService: ContributorService
 
     @Test
     fun `should call needed method when new user income from github`() {
@@ -89,12 +90,11 @@ internal class GitHubContributorRefreshJobTest {
                 )
             )
         }
-
+        val contributorMockK = mockk<Contributor>()
         every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.empty()
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
-        every { contributorRepository.findByGitHubUser(any()) } returns Optional.empty()
-        every { contributorRepository.save(any()) } returnsMany contributors
+        every { contributorService.createOrUpdateByGitHubUser(any()) } returns contributorMockK
 
         // WHEN
         service.synchronizeContributors()
@@ -108,12 +108,6 @@ internal class GitHubContributorRefreshJobTest {
         }
         verify(exactly = gitHubContributorDtos.size) {
             gitHubUserRepository.findById(any())
-        }
-        verify(exactly = gitHubContributorDtos.size) {
-            contributorRepository.findByGitHubUser(any())
-        }
-        verify(exactly = gitHubContributorDtos.size) {
-            contributorRepository.save(any())
         }
     }
 
@@ -170,12 +164,11 @@ internal class GitHubContributorRefreshJobTest {
                 )
             )
         }
-
+        val contributorMockK = mockk<Contributor>()
         every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.empty()
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
-        every { contributorRepository.findByGitHubUser(any()) } returns Optional.of(contributors.first())
-        every { contributorRepository.save(any()) } returnsMany contributors
+        every { contributorService.createOrUpdateByGitHubUser(any()) } returns contributorMockK
 
         // WHEN
         service.synchronizeContributors()
@@ -191,10 +184,7 @@ internal class GitHubContributorRefreshJobTest {
             gitHubUserRepository.findById(any())
         }
         verify(exactly = gitHubContributorDtos.size) {
-            contributorRepository.findByGitHubUser(any())
-        }
-        verify(exactly = gitHubContributorDtos.size) {
-            contributorRepository.save(any())
+            contributorService.createOrUpdateByGitHubUser(any())
         }
     }
 
@@ -251,12 +241,11 @@ internal class GitHubContributorRefreshJobTest {
                 )
             )
         }
-
+        val contributorMockK = mockk<Contributor>()
         every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.of(savedGithubUser[0])
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
-        every { contributorRepository.findByGitHubUser(any()) } returns Optional.of(contributors.first())
-        every { contributorRepository.save(any()) } returnsMany contributors
+        every { contributorService.createOrUpdateByGitHubUser(any()) } returns contributorMockK
 
         // WHEN
         service.synchronizeContributors()
@@ -272,10 +261,7 @@ internal class GitHubContributorRefreshJobTest {
             gitHubUserRepository.findById(any())
         }
         verify(exactly = gitHubContributorDtos.size) {
-            contributorRepository.findByGitHubUser(any())
-        }
-        verify(exactly = 0) {
-            contributorRepository.save(any())
+            contributorService.createOrUpdateByGitHubUser(any())
         }
     }
 
@@ -315,10 +301,7 @@ internal class GitHubContributorRefreshJobTest {
             gitHubUserRepository.findById(any())
         }
         verify(exactly = 0) {
-            contributorRepository.findByGitHubUser(any())
-        }
-        verify(exactly = 0) {
-            contributorRepository.save(any())
+            contributorService.createOrUpdateByGitHubUser(any())
         }
     }
 }
