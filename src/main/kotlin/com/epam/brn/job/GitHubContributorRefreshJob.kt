@@ -43,7 +43,7 @@ class GitHubContributorRefreshJob(
             if (gitHubUserRepository.count() <= 0) {
                 synchronizeContributors()
             }
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             log.error("Some error occurr+ed: ${e.message}", e)
         }
     }
