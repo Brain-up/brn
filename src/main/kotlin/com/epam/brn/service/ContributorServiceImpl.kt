@@ -64,6 +64,9 @@ class ContributorServiceImpl(
     private fun createContributor(gitHubUser: GitHubUser): Contributor {
         val contributor = Contributor(contribution = gitHubUser.contributions)
         contributor.gitHubUser = gitHubUser
+        contributor.name = gitHubUser.name
+        contributor.company = gitHubUser.company
+        contributor.pictureUrl = gitHubUser.avatarUrl
         gitHubUser.email?.let { email ->
             contributor.contacts.add(Contact(value = email))
         }
