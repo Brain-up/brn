@@ -67,6 +67,7 @@ class ContributorServiceImpl(
         contributor.name = gitHubUser.name
         contributor.company = gitHubUser.company
         contributor.pictureUrl = gitHubUser.avatarUrl
+        contributor.description = gitHubUser.bio
         gitHubUser.email?.let { email ->
             contributor.contacts.add(Contact(value = email))
         }
@@ -74,9 +75,18 @@ class ContributorServiceImpl(
     }
 
     private fun Contributor.updateByGitHubUser(gitHubUser: GitHubUser): Contributor {
-        return if (this.contribution != gitHubUser.contributions) {
+        if (this.contribution != gitHubUser.contributions)
             this.contribution = gitHubUser.contributions
-            contributorRepository.save(this)
-        } else this
+        if (this.name.isNullOrEmpty())
+            this.name = gitHubUser.name
+        if (this.company.isNullOrEmpty())
+            this.company = gitHubUser.company
+        if (this.description.isNullOrEmpty())
+            this.description = gitHubUser.bio
+        if (this.pictureUrl.isNullOrEmpty())
+            this.pictureUrl = gitHubUser.avatarUrl
+        if (this.contacts.isEmpty() && gitHubUser.email != null)
+            this.contacts.add(Contact(value = gitHubUser.email!!))
+        return contributorRepository.save(this)
     }
 }
