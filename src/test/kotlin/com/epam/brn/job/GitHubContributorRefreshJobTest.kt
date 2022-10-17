@@ -1,11 +1,11 @@
-package com.epam.brn.service.scheduler
+package com.epam.brn.job
 
 import com.epam.brn.model.Contributor
 import com.epam.brn.repo.ContributorRepository
 import com.epam.brn.repo.GitHubUserRepository
 import com.epam.brn.webclient.GitHubApiClient
-import com.epam.brn.webclient.model.GitHubContributor
-import com.epam.brn.webclient.model.GitHubUser
+import com.epam.brn.dto.github.GitHubContributorDto
+import com.epam.brn.dto.github.GitHubUserDto
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -17,10 +17,10 @@ import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
-internal class GitHubContributorRefreshServiceTest {
+internal class GitHubContributorRefreshJobTest {
 
     @InjectMockKs
-    private lateinit var service: GitHubContributorRefreshService
+    private lateinit var service: GitHubContributorRefreshJob
 
     @MockK
     private lateinit var gitHubApiClient: GitHubApiClient
@@ -41,27 +41,27 @@ internal class GitHubContributorRefreshServiceTest {
         ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributors = listOf(
-            GitHubContributor(
+        val gitHubContributorDtos = listOf(
+            GitHubContributorDto(
                 id = 1,
                 login = "login",
                 contributions = 10
             ),
-            GitHubContributor(
+            GitHubContributorDto(
                 id = 2,
                 login = "login2",
                 contributions = 20
             ),
         )
         every {
-            gitHubApiClient.getContributors(organizationName, repositoryName, pageSize)
-        } returns gitHubContributors
+            gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
+        } returns gitHubContributorDtos
 
-        val gitHubUsers = mutableListOf<GitHubUser>()
+        val gitHubUserDtos = mutableListOf<GitHubUserDto>()
         val contributors = mutableListOf<Contributor>()
-        for ((i, gitHubContributor) in gitHubContributors.withIndex()) {
-            gitHubUsers.add(
-                GitHubUser(
+        for ((i, gitHubContributor) in gitHubContributorDtos.withIndex()) {
+            gitHubUserDtos.add(
+                GitHubUserDto(
                     id = gitHubContributor.id,
                     login = gitHubContributor.login,
                 )
@@ -75,12 +75,12 @@ internal class GitHubContributorRefreshServiceTest {
             )
         }
         val savedGithubUser = mutableListOf<com.epam.brn.model.GitHubUser>()
-        for ((i, gitHubUser) in gitHubUsers.withIndex()) {
+        for ((i, gitHubUser) in gitHubUserDtos.withIndex()) {
             savedGithubUser.add(
                 com.epam.brn.model.GitHubUser(
                     id = gitHubUser.id,
                     login = gitHubUser.login,
-                    contributions = gitHubContributors[i].contributions,
+                    contributions = gitHubContributorDtos[i].contributions,
                     name = null,
                     email = null,
                     avatarUrl = null,
@@ -90,7 +90,7 @@ internal class GitHubContributorRefreshServiceTest {
             )
         }
 
-        every { gitHubApiClient.getUser(any()) } returns gitHubUsers[0]
+        every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.empty()
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
         every { contributorRepository.findByGitHubUser(any()) } returns Optional.empty()
@@ -101,18 +101,18 @@ internal class GitHubContributorRefreshServiceTest {
 
         // THEN
         verify(exactly = 1) {
-            gitHubApiClient.getContributors(any(), any(), any())
+            gitHubApiClient.getGitHubContributors(any(), any(), any())
         }
-        verify(exactly = gitHubContributors.size) {
-            gitHubApiClient.getUser(any())
+        verify(exactly = gitHubContributorDtos.size) {
+            gitHubApiClient.getGitHubUser(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             gitHubUserRepository.findById(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             contributorRepository.findByGitHubUser(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             contributorRepository.save(any())
         }
     }
@@ -127,22 +127,22 @@ internal class GitHubContributorRefreshServiceTest {
         ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributors = listOf(
-            GitHubContributor(
+        val gitHubContributorDtos = listOf(
+            GitHubContributorDto(
                 id = 1,
                 login = "login",
                 contributions = 10
             )
         )
         every {
-            gitHubApiClient.getContributors(organizationName, repositoryName, pageSize)
-        } returns gitHubContributors
+            gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
+        } returns gitHubContributorDtos
 
-        val gitHubUsers = mutableListOf<GitHubUser>()
+        val gitHubUserDtos = mutableListOf<GitHubUserDto>()
         val contributors = mutableListOf<Contributor>()
-        for ((i, gitHubContributor) in gitHubContributors.withIndex()) {
-            gitHubUsers.add(
-                GitHubUser(
+        for ((i, gitHubContributor) in gitHubContributorDtos.withIndex()) {
+            gitHubUserDtos.add(
+                GitHubUserDto(
                     id = gitHubContributor.id,
                     login = gitHubContributor.login,
                 )
@@ -156,12 +156,12 @@ internal class GitHubContributorRefreshServiceTest {
             )
         }
         val savedGithubUser = mutableListOf<com.epam.brn.model.GitHubUser>()
-        for ((i, gitHubUser) in gitHubUsers.withIndex()) {
+        for ((i, gitHubUser) in gitHubUserDtos.withIndex()) {
             savedGithubUser.add(
                 com.epam.brn.model.GitHubUser(
                     id = gitHubUser.id,
                     login = gitHubUser.login,
-                    contributions = gitHubContributors[i].contributions,
+                    contributions = gitHubContributorDtos[i].contributions,
                     name = null,
                     email = null,
                     avatarUrl = null,
@@ -171,7 +171,7 @@ internal class GitHubContributorRefreshServiceTest {
             )
         }
 
-        every { gitHubApiClient.getUser(any()) } returns gitHubUsers[0]
+        every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.empty()
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
         every { contributorRepository.findByGitHubUser(any()) } returns Optional.of(contributors.first())
@@ -182,18 +182,18 @@ internal class GitHubContributorRefreshServiceTest {
 
         // THEN
         verify(exactly = 1) {
-            gitHubApiClient.getContributors(any(), any(), any())
+            gitHubApiClient.getGitHubContributors(any(), any(), any())
         }
-        verify(exactly = gitHubContributors.size) {
-            gitHubApiClient.getUser(any())
+        verify(exactly = gitHubContributorDtos.size) {
+            gitHubApiClient.getGitHubUser(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             gitHubUserRepository.findById(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             contributorRepository.findByGitHubUser(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             contributorRepository.save(any())
         }
     }
@@ -208,22 +208,22 @@ internal class GitHubContributorRefreshServiceTest {
         ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributors = listOf(
-            GitHubContributor(
+        val gitHubContributorDtos = listOf(
+            GitHubContributorDto(
                 id = 1,
                 login = "login",
                 contributions = 10
             )
         )
         every {
-            gitHubApiClient.getContributors(organizationName, repositoryName, pageSize)
-        } returns gitHubContributors
+            gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
+        } returns gitHubContributorDtos
 
-        val gitHubUsers = mutableListOf<GitHubUser>()
+        val gitHubUserDtos = mutableListOf<GitHubUserDto>()
         val contributors = mutableListOf<Contributor>()
-        for ((i, gitHubContributor) in gitHubContributors.withIndex()) {
-            gitHubUsers.add(
-                GitHubUser(
+        for ((i, gitHubContributor) in gitHubContributorDtos.withIndex()) {
+            gitHubUserDtos.add(
+                GitHubUserDto(
                     id = gitHubContributor.id,
                     login = gitHubContributor.login,
                 )
@@ -237,12 +237,12 @@ internal class GitHubContributorRefreshServiceTest {
             )
         }
         val savedGithubUser = mutableListOf<com.epam.brn.model.GitHubUser>()
-        for ((i, gitHubUser) in gitHubUsers.withIndex()) {
+        for ((i, gitHubUser) in gitHubUserDtos.withIndex()) {
             savedGithubUser.add(
                 com.epam.brn.model.GitHubUser(
                     id = gitHubUser.id,
                     login = gitHubUser.login,
-                    contributions = gitHubContributors[i].contributions,
+                    contributions = gitHubContributorDtos[i].contributions,
                     name = null,
                     email = null,
                     avatarUrl = null,
@@ -252,7 +252,7 @@ internal class GitHubContributorRefreshServiceTest {
             )
         }
 
-        every { gitHubApiClient.getUser(any()) } returns gitHubUsers[0]
+        every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.of(savedGithubUser[0])
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
         every { contributorRepository.findByGitHubUser(any()) } returns Optional.of(contributors.first())
@@ -263,15 +263,15 @@ internal class GitHubContributorRefreshServiceTest {
 
         // THEN
         verify(exactly = 1) {
-            gitHubApiClient.getContributors(any(), any(), any())
+            gitHubApiClient.getGitHubContributors(any(), any(), any())
         }
-        verify(exactly = gitHubContributors.size) {
-            gitHubApiClient.getUser(any())
+        verify(exactly = gitHubContributorDtos.size) {
+            gitHubApiClient.getGitHubUser(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             gitHubUserRepository.findById(any())
         }
-        verify(exactly = gitHubContributors.size) {
+        verify(exactly = gitHubContributorDtos.size) {
             contributorRepository.findByGitHubUser(any())
         }
         verify(exactly = 0) {
@@ -290,26 +290,26 @@ internal class GitHubContributorRefreshServiceTest {
         ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
         ReflectionTestUtils.setField(service, "botLogins", setOf(botLogin))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributors = listOf(
-            GitHubContributor(
+        val gitHubContributorDtos = listOf(
+            GitHubContributorDto(
                 id = 1,
                 login = botLogin,
                 contributions = 10
             )
         )
         every {
-            gitHubApiClient.getContributors(organizationName, repositoryName, pageSize)
-        } returns gitHubContributors
+            gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
+        } returns gitHubContributorDtos
 
         // WHEN
         service.synchronizeContributors()
 
         // THEN
         verify(exactly = 1) {
-            gitHubApiClient.getContributors(any(), any(), any())
+            gitHubApiClient.getGitHubContributors(any(), any(), any())
         }
         verify(exactly = 0) {
-            gitHubApiClient.getUser(any())
+            gitHubApiClient.getGitHubUser(any())
         }
         verify(exactly = 0) {
             gitHubUserRepository.findById(any())

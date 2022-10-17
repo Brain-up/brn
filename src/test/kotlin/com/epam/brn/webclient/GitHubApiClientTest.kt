@@ -1,8 +1,8 @@
 package com.epam.brn.webclient
 
 import com.epam.brn.webclient.config.GitHubApiClientConfig
-import com.epam.brn.webclient.model.GitHubContributor
-import com.epam.brn.webclient.model.GitHubUser
+import com.epam.brn.dto.github.GitHubContributorDto
+import com.epam.brn.dto.github.GitHubUserDto
 import com.epam.brn.webclient.property.GitHubApiClientProperty
 import io.mockk.junit5.MockKExtension
 import okhttp3.mockwebserver.MockResponse
@@ -63,7 +63,7 @@ internal class GitHubApiClientTest {
     @Test
     fun getContributorsWhenOKShouldReturnContributors() {
 
-        val contributor = GitHubContributor(
+        val contributor = GitHubContributorDto(
             login = "lifeart",
             id = 1360552,
             gravatarId = "",
@@ -85,12 +85,12 @@ internal class GitHubApiClientTest {
                 .setBody(readResourceAsString("contributors-2.json"))
         )
 
-        val contributors = client.getContributors("Brain-Up", "brn", 50)
+        val contributors = client.getGitHubContributors("Brain-Up", "brn", 50)
 
         assertAll(
             { assertThat(contributors).isNotEmpty },
             { assertThat(contributors.size).isEqualTo(56) },
-            { assertThat(contributors[0]).isInstanceOf(GitHubContributor::class.java) },
+            { assertThat(contributors[0]).isInstanceOf(GitHubContributorDto::class.java) },
             { assertThat(contributors[0]).isEqualTo(contributor) },
         )
     }
@@ -104,7 +104,7 @@ internal class GitHubApiClientTest {
                 .setBody(readResourceAsString("http-error.json"))
         )
 
-        val contributors = client.getContributors("Brain-Up", "brn", 50)
+        val contributors = client.getGitHubContributors("Brain-Up", "brn", 50)
 
         assertAll(
             { assertThat(contributors).isEmpty() }
@@ -113,7 +113,7 @@ internal class GitHubApiClientTest {
 
     @Test
     fun getUserWhenOKShouldReturnGotHubUserInfo() {
-        val expectedUser = GitHubUser(
+        val expectedUser = GitHubUserDto(
             id = 7206824,
             login = "test-user",
             avatarUrl = "https://avatars.githubusercontent.com/u/test-user?v=4",
@@ -130,11 +130,11 @@ internal class GitHubApiClientTest {
                 .setBody(readResourceAsString("user.json"))
         )
 
-        val user = client.getUser("test-user")
+        val user = client.getGitHubUser("test-user")
 
         assertAll(
             { assertThat(user).isNotNull },
-            { assertThat(user).isInstanceOf(GitHubUser::class.java) },
+            { assertThat(user).isInstanceOf(GitHubUserDto::class.java) },
             { assertThat(user).isEqualTo(expectedUser) },
         )
     }
@@ -148,7 +148,7 @@ internal class GitHubApiClientTest {
                 .setBody(readResourceAsString("http-error.json"))
         )
 
-        val user = client.getUser("test-user")
+        val user = client.getGitHubUser("test-user")
 
         assertAll(
             { assertThat(user).isNull() }

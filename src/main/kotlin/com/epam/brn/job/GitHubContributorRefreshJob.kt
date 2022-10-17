@@ -1,12 +1,13 @@
-package com.epam.brn.service.scheduler
+package com.epam.brn.job
 
+import com.epam.brn.dto.github.GitHubContributorDto
+import com.epam.brn.dto.github.GitHubUserDto
 import com.epam.brn.model.Contact
 import com.epam.brn.model.Contributor
 import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
 import com.epam.brn.repo.GitHubUserRepository
 import com.epam.brn.webclient.GitHubApiClient
-import com.epam.brn.webclient.model.GitHubContributor
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 import javax.annotation.PostConstruct
 
 @Service
-class GitHubContributorRefreshService(
+class GitHubContributorRefreshJob(
     val gitHubApiClient: GitHubApiClient,
     val gitHubUserRepository: GitHubUserRepository,
     val contributorRepository: ContributorRepository,
@@ -38,19 +39,23 @@ class GitHubContributorRefreshService(
     @PostConstruct
     @Transactional
     fun runOnceAtStartup() {
-        if (gitHubUserRepository.count() <= 0) {
-            synchronizeContributors()
+        try {
+            if (gitHubUserRepository.count() <= 0) {
+                synchronizeContributors()
+            }
+        } catch(e: Exception) {
+            log.error("Some error occurr+ed: ${e.message}", e)
         }
     }
 
     @Scheduled(cron = "\${github.contributors.sync.cron}")
     @Transactional
     fun synchronizeContributors() {
-        val contributors = gitHubApiClient.getContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
+        val contributors = gitHubApiClient.getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
 
         contributors.forEach {
             if (botLogins.contains(it.login).not()) {
-                val user = gitHubApiClient.getUser(it.login)
+                val user = gitHubApiClient.getGitHubUser(it.login)
 
                 user?.apply {
                     val foundedGitHubUser = gitHubUserRepository.findById(this.id)
@@ -96,25 +101,25 @@ class GitHubContributorRefreshService(
     }
 
     private fun updateGitHubUser(
-        gitHubUserClient: com.epam.brn.webclient.model.GitHubUser,
+        gitHubUserDto: GitHubUserDto,
         gitHubUser: GitHubUser,
-        gitHubContributor: GitHubContributor
+        gitHubContributorDto: GitHubContributorDto
     ) {
         gitHubUser.let { usr ->
-            if (usr.name != gitHubUserClient.name)
-                usr.name = gitHubUserClient.name
-            if (usr.login != gitHubUserClient.login)
-                usr.login = gitHubUserClient.login
-            if (usr.email != gitHubUserClient.email)
-                usr.email = gitHubUserClient.email
-            if (usr.avatarUrl != gitHubUserClient.avatarUrl)
-                usr.avatarUrl = gitHubUserClient.avatarUrl
-            if (usr.bio != gitHubUserClient.bio)
-                usr.bio = gitHubUserClient.bio
-            if (usr.company != gitHubUserClient.company)
-                usr.company = gitHubUserClient.company
-            if (usr.contributions != gitHubContributor.contributions)
-                usr.contributions = gitHubContributor.contributions
+            if (usr.name != gitHubUserDto.name)
+                usr.name = gitHubUserDto.name
+            if (usr.login != gitHubUserDto.login)
+                usr.login = gitHubUserDto.login
+            if (usr.email != gitHubUserDto.email)
+                usr.email = gitHubUserDto.email
+            if (usr.avatarUrl != gitHubUserDto.avatarUrl)
+                usr.avatarUrl = gitHubUserDto.avatarUrl
+            if (usr.bio != gitHubUserDto.bio)
+                usr.bio = gitHubUserDto.bio
+            if (usr.company != gitHubUserDto.company)
+                usr.company = gitHubUserDto.company
+            if (usr.contributions != gitHubContributorDto.contributions)
+                usr.contributions = gitHubContributorDto.contributions
         }
     }
 }

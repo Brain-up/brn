@@ -1,8 +1,8 @@
-package com.epam.brn.webclient.model
+package com.epam.brn.dto.github
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class GitHubContributor(
+data class GitHubContributorDto(
     var id: Long,
     var login: String,
     @JsonProperty("avatar_url")

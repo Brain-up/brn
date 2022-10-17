@@ -1,7 +1,7 @@
 package com.epam.brn.webclient
 
-import com.epam.brn.webclient.model.GitHubContributor
-import com.epam.brn.webclient.model.GitHubUser
+import com.epam.brn.dto.github.GitHubContributorDto
+import com.epam.brn.dto.github.GitHubUserDto
 import com.epam.brn.webclient.property.GitHubApiClientProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
@@ -16,8 +16,8 @@ class GitHubApiClient @Autowired constructor(
     private val gitHubApiWebClient: WebClient
 ) {
 
-    fun getContributors(organizationName: String, repositoryName: String, pageSize: Int): List<GitHubContributor> {
-        val gitHubContributors = mutableListOf<GitHubContributor>()
+    fun getGitHubContributors(organizationName: String, repositoryName: String, pageSize: Int): List<GitHubContributorDto> {
+        val gitHubContributorDtos = mutableListOf<GitHubContributorDto>()
         var page = 1
         while (true) {
             val portions = gitHubApiWebClient.get()
@@ -30,33 +30,33 @@ class GitHubApiClient @Autowired constructor(
                 .header("Accept", "application/vnd.github+json")
                 .header("Authorization", gitHubApiClientProperty.token)
                 .retrieve()
-                .bodyToMono(object : ParameterizedTypeReference<List<GitHubContributor>>() {})
+                .bodyToMono(object : ParameterizedTypeReference<List<GitHubContributorDto>>() {})
                 .onErrorResume {
                     println("onErrorResume $it")
                     Mono.empty()
                 }
                 .block()
-            if (portions.isNullOrEmpty()) {
+            if (portions.isNullOrEmpty())
                 break
-            } else {
-                gitHubContributors.addAll(portions)
+            else {
+                gitHubContributorDtos.addAll(portions)
                 page++
                 if (portions.size < pageSize) {
                     break
                 }
             }
         }
-        return gitHubContributors
+        return gitHubContributorDtos
     }
 
-    fun getUser(username: String): GitHubUser? {
+    fun getGitHubUser(username: String): GitHubUserDto? {
         return gitHubApiWebClient.get()
             .uri(gitHubApiClientProperty.url.path.users, username)
             .header("Accept", "application/vnd.github+json")
             .header("Authorization", gitHubApiClientProperty.token)
             .retrieve()
             .onStatus(HttpStatus::isError) { Mono.empty() }
-            .bodyToMono(GitHubUser::class.java)
+            .bodyToMono(GitHubUserDto::class.java)
             .onErrorResume { Mono.empty() }
             .block()
     }
