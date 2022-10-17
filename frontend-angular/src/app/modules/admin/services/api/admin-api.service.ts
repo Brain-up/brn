@@ -1,17 +1,18 @@
 import * as dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
 import { Exercise } from '@admin/models/exercise';
-import { GetUsers } from '@admin/models/endpoints.model';
+import { GetContributors, GetUsers } from '@admin/models/endpoints.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, pluck } from 'rxjs/operators';
+import { map, pluck, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Roles } from '@admin/models/roles.type';
+import { ContributorsRole, Roles } from '@admin/models/roles.type';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { UserMapped, UserWithNoAnalytics } from '@admin/models/user.model';
 import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
+import { Contributor } from '@admin/models/contrubutor.model';
 
 @Injectable()
 export class AdminApiService {
@@ -139,5 +140,14 @@ export class AdminApiService {
         )}`,
       )
       .pipe(pluck('data'));
+  }
+
+  public getContributors(): Observable<Contributor[]> {
+    return this.httpClient
+      .get<GetContributors>('/api/contributors')
+      .pipe(
+        pluck('data'),
+        map((contributorsList: Contributor[]) => contributorsList),
+      );
   }
 }
