@@ -16,7 +16,11 @@ class GitHubApiClient @Autowired constructor(
     private val gitHubApiWebClient: WebClient
 ) {
 
-    fun getGitHubContributors(organizationName: String, repositoryName: String, pageSize: Int): List<GitHubContributorDto> {
+    fun getGitHubContributors(
+        organizationName: String,
+        repositoryName: String,
+        pageSize: Int
+    ): List<GitHubContributorDto> {
         val gitHubContributorDtos = mutableListOf<GitHubContributorDto>()
         var page = 1
         while (true) {
