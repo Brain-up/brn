@@ -49,17 +49,25 @@ class GitHubContributorRefreshJob(
     @Scheduled(cron = "\${github.contributors.sync.cron}")
     @Transactional
     fun synchronizeContributors() {
+        log.info("Start sync contributor with GitHub")
         gitHubApiClient
             .getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
             .filter { !botLogins.contains(it.login) }
+            .stream()
+            .peek {
+                log.debug("Synchronize user ${it.login}")
+            }
             .forEach { gitHubContributor ->
                 val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
+                log.debug("Gotten user from GitHubApi $gitHubUserDto")
                 val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
+                log.debug("User in database $existGitHubUser")
                 val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent)
                     updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
                 else
                     createGitHubUser(gitHubUserDto, gitHubContributor)
-                contributorService.createOrUpdateByGitHubUser(savedGitHubUser)
+                val contributor = contributorService.createOrUpdateByGitHubUser(savedGitHubUser)
+                log.debug("Created\\Updated contributor in database $contributor")
             }
     }
 

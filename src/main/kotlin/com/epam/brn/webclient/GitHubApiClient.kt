@@ -31,8 +31,11 @@ class GitHubApiClient @Autowired constructor(
                         .queryParam("page", page)
                         .build(organizationName, repositoryName)
                 }
-                .header("Accept", "application/vnd.github+json")
-                .header("Authorization", gitHubApiClientProperty.token)
+                .headers {
+                    it.set("Accept", "application/vnd.github+json")
+                    if (gitHubApiClientProperty.token.isNotEmpty())
+                        it.set("Authorization", gitHubApiClientProperty.token)
+                }
                 .retrieve()
                 .bodyToMono(object : ParameterizedTypeReference<List<GitHubContributorDto>>() {})
                 .onErrorResume {
@@ -56,8 +59,11 @@ class GitHubApiClient @Autowired constructor(
     fun getGitHubUser(username: String): GitHubUserDto? {
         return gitHubApiWebClient.get()
             .uri(gitHubApiClientProperty.url.path.users, username)
-            .header("Accept", "application/vnd.github+json")
-            .header("Authorization", gitHubApiClientProperty.token)
+            .headers {
+                it.set("Accept", "application/vnd.github+json")
+                if (gitHubApiClientProperty.token.isNotEmpty())
+                    it.set("Authorization", gitHubApiClientProperty.token)
+            }
             .retrieve()
             .onStatus(HttpStatus::isError) { Mono.empty() }
             .bodyToMono(GitHubUserDto::class.java)
