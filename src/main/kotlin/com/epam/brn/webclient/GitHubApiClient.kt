@@ -34,7 +34,7 @@ class GitHubApiClient @Autowired constructor(
                 .headers {
                     it.set("Accept", "application/vnd.github+json")
                     if (gitHubApiClientProperty.token.isNotEmpty())
-                        it.set("Authorization", gitHubApiClientProperty.token)
+                        it.set("Authorization", "token $gitHubApiClientProperty.token")
                 }
                 .retrieve()
                 .bodyToMono(object : ParameterizedTypeReference<List<GitHubContributorDto>>() {})
@@ -62,7 +62,7 @@ class GitHubApiClient @Autowired constructor(
             .headers {
                 it.set("Accept", "application/vnd.github+json")
                 if (gitHubApiClientProperty.token.isNotEmpty())
-                    it.set("Authorization", gitHubApiClientProperty.token)
+                    it.set("Authorization", "token $gitHubApiClientProperty.token")
             }
             .retrieve()
             .onStatus(HttpStatus::isError) { Mono.empty() }

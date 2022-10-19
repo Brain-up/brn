@@ -55,7 +55,7 @@ class GitHubContributorRefreshJob(
         var updatedContributorsCount = 0
         gitHubApiClient
             .getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
-            .also { logger().info("From GitHub repo was got ${it.size} contributors.") }
+            .also { log.info("From GitHub repo was got ${it.size} contributors.") }
             .filter { !botLogins.contains(it.login) }
             .also { gitHubContributorsCount = it.count() }
             .forEach { gitHubContributor ->
