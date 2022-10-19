@@ -8,11 +8,12 @@ import com.epam.brn.service.ContributorService
 import com.epam.brn.webclient.GitHubApiClient
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Optional
-import javax.annotation.PostConstruct
 
 @Service
 class GitHubContributorRefreshJob(
@@ -35,7 +36,7 @@ class GitHubContributorRefreshJob(
     @Value("\${github.contributors.default-page-size}")
     private val pageSize: Int = 30
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent::class)
     @Transactional
     fun runOnceAtStartup() {
         try {
