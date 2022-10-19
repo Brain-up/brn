@@ -55,11 +55,11 @@ data class Contributor(
             }.toSet()
         )
         if (locale == "ru-ru") {
-            dto.name = name ?: gitHubUser?.name
+            dto.name = name ?: gitHubUser?.name ?: gitHubUser?.login
             dto.description = description ?: gitHubUser?.bio
             dto.company = company ?: gitHubUser?.company
         } else {
-            dto.name = nameEn ?: gitHubUser?.name
+            dto.name = nameEn ?: gitHubUser?.name ?: gitHubUser?.login
             dto.description = descriptionEn ?: gitHubUser?.bio
             dto.company = companyEn ?: gitHubUser?.company
         }

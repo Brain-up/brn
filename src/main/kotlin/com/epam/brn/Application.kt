@@ -9,7 +9,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 @SpringBootApplication
 @EnableScheduling
 class Application
-
 fun main(args: Array<String>) {
     SpringApplication.run(Application::class.java, *args)
 }

@@ -1,4 +1,4 @@
-FROM gradle:jdk8 as builder
+FROM gradle:jdk11 as builder
 
 WORKDIR /brn
 ADD . /brn
