@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConfigurationProperties(prefix = "github.api")
 data class GitHubApiClientProperty(
     val token: String,
+    val typeToken: String,
     val url: GitHubApiUrl,
     val codecMaxSize: Int,
     val loggingEnabled: Boolean,
