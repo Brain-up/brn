@@ -49,31 +49,40 @@ class GitHubContributorRefreshJob(
     @Scheduled(cron = "\${github.contributors.sync.cron}")
     @Transactional
     fun synchronizeContributors() {
-        log.info("Start sync contributor with GitHub")
+        log.info("Start sync contributors from GitHub.")
+        var gitHubContributorsCount: Int
+        var createdContributorsCount = 0
+        var updatedContributorsCount = 0
         gitHubApiClient
             .getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
+            .also { logger().info("From GitHub repo was got ${it.size} contributors.") }
             .filter { !botLogins.contains(it.login) }
-            .stream()
-            .peek {
-                log.debug("Synchronize user ${it.login}")
-            }
+            .also { gitHubContributorsCount = it.count() }
             .forEach { gitHubContributor ->
                 val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
                 log.debug("Gotten user from GitHubApi $gitHubUserDto")
                 val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
                 log.debug("User in database $existGitHubUser")
-                val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent)
+                val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent) {
+                    updatedContributorsCount++
                     updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
-                else
+                } else {
+                    createdContributorsCount++
                     createGitHubUser(gitHubUserDto, gitHubContributor)
+                }
                 val contributor = contributorService.createOrUpdateByGitHubUser(savedGitHubUser)
                 log.debug("Created\\Updated contributor in database $contributor")
             }
+        log.info(
+            "GitHubUsers synchronization job end: " +
+                "gitHubContributorsCount=$gitHubContributorsCount, " +
+                "createdContributorsCount=$createdContributorsCount, " +
+                "updatedContributorsCount=$updatedContributorsCount."
+        )
     }
 
-    private fun createGitHubUser(gitHubUserDto: GitHubUserDto, gitHubContributorDto: GitHubContributorDto): GitHubUser {
-        return gitHubUserRepository.save(gitHubUserDto.toEntity(gitHubContributorDto.contributions))
-    }
+    private fun createGitHubUser(gitHubUserDto: GitHubUserDto, gitHubContributorDto: GitHubContributorDto): GitHubUser =
+        gitHubUserRepository.save(gitHubUserDto.toEntity(gitHubContributorDto.contributions))
 
     private fun updateGitHubUser(
         gitHubUserDto: GitHubUserDto,
