@@ -38,6 +38,7 @@ internal class GitHubApiClientTest {
         val rootUrl = server.url(baseRoot).toString()
         gitHubApiClientProperty = GitHubApiClientProperty(
             "token",
+            "type",
             GitHubApiClientProperty.GitHubApiUrl(
                 rootUrl,
                 GitHubApiClientProperty.GitHubApiUrl.GitHubApiPath(
