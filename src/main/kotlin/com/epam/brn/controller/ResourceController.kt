@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.BrnRole
@@ -27,7 +27,7 @@ class ResourceController(val resourceService: ResourceService) {
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest
-    ): ResponseEntity<Response<ResourceDto>> =
+    ): ResponseEntity<Response<ResourceResponse>> =
         ResponseEntity.ok()
             .body(Response(data = resourceService.updateDescription(id, request.description!!)))
 }

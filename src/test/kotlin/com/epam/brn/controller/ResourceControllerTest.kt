@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.service.ResourceService
 import io.kotest.matchers.shouldBe
@@ -29,9 +29,9 @@ internal class ResourceControllerTest {
         val id = 1L
         val description = "description"
         val request = mockk<UpdateResourceDescriptionRequest>()
-        val resourceDto = mockk<ResourceDto>()
+        val resourceResponse = mockk<ResourceResponse>()
         every { request.description } returns description
-        every { resourceService.updateDescription(id, description) } returns resourceDto
+        every { resourceService.updateDescription(id, description) } returns resourceResponse
 
         // WHEN
         val updated = resourceController.updateResourceDescription(id, request)
@@ -39,6 +39,6 @@ internal class ResourceControllerTest {
         // THEN
         verify(exactly = 1) { resourceService.updateDescription(id, description) }
         updated.statusCodeValue shouldBe HttpStatus.SC_OK
-        updated.body!!.data shouldBe resourceDto
+        updated.body!!.data shouldBe resourceResponse
     }
 }
