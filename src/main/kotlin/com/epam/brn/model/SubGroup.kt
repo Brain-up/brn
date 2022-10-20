@@ -42,7 +42,7 @@ data class SubGroup(
         description = record.description
     )
 
-    fun toDto(pictureUrl: String) = SubGroupResponse(
+    fun toResponse(pictureUrl: String) = SubGroupResponse(
         seriesId = series.id!!,
         id = id!!,
         name = name,

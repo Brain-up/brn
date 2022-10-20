@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.ResourceResponse
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -36,10 +36,11 @@ data class Resource(
     var tasks: MutableSet<Task> = HashSet(),
     var description: String? = ""
 ) {
-    fun toDto() = ResourceDto(
+    fun toResponse() = ResourceResponse(
         id = id,
         audioFileUrl = audioFileUrl,
-        word = word,
+        word = word.replace("+", ""),
+        wordPronounce = word,
         pictureFileUrl = pictureFileUrl,
         soundsCount = soundsCount,
         wordType = WordType.valueOf(wordType),

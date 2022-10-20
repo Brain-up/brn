@@ -179,7 +179,6 @@ class ExerciseService(
                 exercise
             }
         }
-
         return exercise.toDto()
     }
 
