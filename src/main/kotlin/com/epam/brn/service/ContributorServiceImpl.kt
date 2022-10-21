@@ -21,53 +21,56 @@ class ContributorServiceImpl(
     @Transactional(readOnly = true)
     override fun getAllContributors(): List<ContributorResponse> {
         return contributorRepository.findAll().stream()
-            .map { e -> e.toContributorDto() }
+            .map { e -> e.toContributorResponse() }
             .toList()
     }
 
     @Transactional(readOnly = true)
     override fun getContributors(locale: String, type: ContributorType): List<ContributorResponse> {
         return contributorRepository.findAllByType(type).stream()
-            .map { e -> e.toContributorDto(locale) }
+            .map { e -> e.toContributorResponse(locale) }
             .collect(Collectors.toList())
     }
 
     @Transactional
-    override fun createContributor(dto: ContributorRequest): ContributorResponse {
-        return contributorRepository.save(dto.toEntity()).toContributorDto()
-    }
+    override fun createContributor(request: ContributorRequest): ContributorResponse =
+        contributorRepository.save(request.toEntity()).toContributorResponse()
 
     @Transactional
-    override fun updateContributor(id: Long, dto: ContributorRequest): ContributorResponse {
+    override fun updateContributor(id: Long, contributorRequest: ContributorRequest): ContributorResponse {
         val contributor = contributorRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Contributor with id=$id was not found") }
-        contributor.name = dto.name
-        contributor.nameEn = dto.nameEn
-        contributor.description = dto.description
-        contributor.descriptionEn = dto.descriptionEn
-        contributor.company = dto.company
-        contributor.companyEn = dto.companyEn
-        contributor.contribution = dto.contribution!!
-        contributor.pictureUrl = dto.pictureUrl
-        contributor.type = dto.type!!
+        contributor.name = contributorRequest.name
+        contributor.nameEn = contributorRequest.nameEn
+        contributor.description = contributorRequest.description
+        contributor.descriptionEn = contributorRequest.descriptionEn
+        contributor.company = contributorRequest.company
+        contributor.companyEn = contributorRequest.companyEn
+        contributor.contribution = contributorRequest.contribution!!
+        contributor.pictureUrl = contributorRequest.pictureUrl
+        contributor.type = contributorRequest.type!!
         contributor.contacts.clear()
-        contributor.contacts.addAll(dto.contacts.map { it.toEntity() }.toMutableSet())
-        return contributorRepository.save(contributor).toContributorDto()
+        contributor.contacts.addAll(contributorRequest.contacts.map { it.toEntity() }.toMutableSet())
+        return contributorRepository.save(contributor).toContributorResponse()
     }
 
     @Transactional
     override fun createOrUpdateByGitHubUser(gitHubUser: GitHubUser): Contributor {
         val existContributor = contributorRepository.findByGitHubUser(gitHubUser)
-        return existContributor?.updateByGitHubUser(gitHubUser) ?: createContributor(gitHubUser)
+        return existContributor
+            ?.updateByGitHubUser(gitHubUser)
+            ?: createContributor(gitHubUser)
     }
 
     private fun createContributor(gitHubUser: GitHubUser): Contributor {
-        val contributor = Contributor(contribution = gitHubUser.contributions)
+        val contributor = Contributor(
+            contribution = gitHubUser.contributions,
+            name = gitHubUser.name ?: "gitHubNick:${gitHubUser.login}",
+            company = gitHubUser.company,
+            pictureUrl = gitHubUser.avatarUrl,
+            description = gitHubUser.bio
+        )
         contributor.gitHubUser = gitHubUser
-        contributor.name = gitHubUser.name
-        contributor.company = gitHubUser.company
-        contributor.pictureUrl = gitHubUser.avatarUrl
-        contributor.description = gitHubUser.bio
         gitHubUser.email?.let { email ->
             contributor.contacts.add(Contact(value = email))
         }
@@ -77,8 +80,8 @@ class ContributorServiceImpl(
     private fun Contributor.updateByGitHubUser(gitHubUser: GitHubUser): Contributor {
         if (this.contribution != gitHubUser.contributions)
             this.contribution = gitHubUser.contributions
-        if (this.name.isNullOrEmpty())
-            this.name = gitHubUser.name
+        if (this.name.isNullOrEmpty() || this.name != gitHubUser.name)
+            this.name = gitHubUser.name ?: gitHubUser.login
         if (this.company.isNullOrEmpty())
             this.company = gitHubUser.company
         if (this.description.isNullOrEmpty())
