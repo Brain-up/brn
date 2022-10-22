@@ -11,7 +11,7 @@ import javax.validation.constraints.Positive
 data class ContributorRequest(
     @field:NotBlank
     @field:Length(max = 255)
-    val name: String?,
+    val name: String,
 
     @field:NotBlank
     @field:Length(max = 255)

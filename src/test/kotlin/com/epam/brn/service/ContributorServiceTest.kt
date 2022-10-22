@@ -152,7 +152,7 @@ internal class ContributorServiceTest {
     fun `should update contributor by github user without contacts`() {
         // GIVEN
         val gitHunUserMockK = mockk<GitHubUser>()
-        val existContributor = Contributor()
+        val existContributor = Contributor(name = "Contributor")
         val updatedContributor = mockk<Contributor>()
         val capturedContributor = slot<Contributor>()
         every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns existContributor
@@ -176,7 +176,7 @@ internal class ContributorServiceTest {
     fun `should update contributor by github user`() {
         // GIVEN
         val gitHunUserMockK = mockk<GitHubUser>()
-        val existContributor = Contributor()
+        val existContributor = Contributor(name = "Contributor")
         val updatedContributor = mockk<Contributor>()
         every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns existContributor
         every { gitHunUserMockK.name } returns "name"
@@ -199,7 +199,7 @@ internal class ContributorServiceTest {
     fun `should update contributor by github user on the same values`() {
         // GIVEN
         val gitHunUserMockK = mockk<GitHubUser>()
-        val existContributor = Contributor()
+        val existContributor = Contributor(name = "Contributor")
         existContributor.contribution = 0
         existContributor.name = "name"
         existContributor.company = "company"
@@ -246,7 +246,7 @@ internal class ContributorServiceTest {
 
     private fun createContributor(
         id: Long?,
-        name: String?,
+        name: String,
         contribution: Long,
         contacts: MutableSet<Contact> = mutableSetOf()
     ): Contributor {

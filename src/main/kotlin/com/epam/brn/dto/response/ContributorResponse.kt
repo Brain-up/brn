@@ -4,12 +4,16 @@ import com.epam.brn.dto.ContactDto
 import com.epam.brn.enums.ContributorType
 
 data class ContributorResponse(
-    var id: Long,
-    var name: String? = null,
-    var description: String? = null,
-    var company: String? = null,
-    var pictureUrl: String? = null,
-    var contacts: Set<ContactDto>? = null,
-    var type: ContributorType? = null,
-    var contribution: Long
+    val id: Long,
+    val name: String,
+    val nameEn: String?,
+    val description: String? = null,
+    val descriptionEn: String? = null,
+    val company: String? = null,
+    val companyEn: String? = null,
+    val pictureUrl: String? = null,
+    val contacts: Set<ContactDto> = emptySet(),
+    val type: ContributorType,
+    val contribution: Long = 0,
+    val active: Boolean = true,
 )
