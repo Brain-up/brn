@@ -8,6 +8,7 @@ val jsonVersion: String by properties
 val junitVersion: String by properties
 val mockkVersion: String by properties
 val testContainersVersion: String by properties
+val okhttp3Version: String by properties
 val kotlinxCoroutinesCoreVersion: String by properties
 val springCloudContractWiremockVersion: String by properties
 
@@ -63,6 +64,7 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinxCoroutinesCoreVersion")
     implementation("org.apache.logging.log4j:log4j-api-kotlin:$log4jApiKotlinVersion")
 
     implementation("io.springfox:springfox-swagger-ui:2.10.5")
@@ -88,6 +90,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
@@ -95,12 +98,14 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
     testImplementation("org.testcontainers:localstack:$testContainersVersion")
     testImplementation("com.amazonaws:aws-java-sdk:1.11.808")
+    testImplementation("com.squareup.okhttp3:okhttp:$okhttp3Version")
+    testImplementation("com.squareup.okhttp3:mockwebserver:$okhttp3Version")
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 
@@ -168,7 +173,9 @@ tasks.withType<JacocoReport> {
                     "com/epam/brn/config/**",
                     "com/epam/brn/exception/**",
                     "com/epam/brn/Application*",
-                    "com/epam/brn/service/azure/tts/config/**"
+                    "com/epam/brn/service/azure/tts/config/**",
+                    "com/epam/brn/webclient/customizer/**",
+                    "com/epam/brn/webclient/model/**"
                 )
             }
         }))
@@ -203,7 +210,9 @@ sonarqube {
                     "**/com/epam/brn/service/load/InitialDataLoader*," +
                     "**/com/epam/brn/service/load/FirebaseUserDataLoader*," +
                     "**/com/epam/brn/service/azure/tts/AzureVoiceLoader*," +
-                    "**/com/epam/brn/service/azure/tts/config/**"
+                    "**/com/epam/brn/service/azure/tts/config/**," +
+                    "**/com/epam/brn/webclient/customizer/**," +
+                    "**/com/epam/brn/webclient/model/**"
         )
     }
 }

@@ -5,7 +5,6 @@ import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.response.Response
-import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
@@ -50,8 +49,13 @@ class ExerciseController(
 
     @GetMapping
     @ApiOperation("Get exercises for subgroup with tasks. If called by current user, availability calculation is included")
-    fun getExercisesBySubGroup(@RequestParam(value = "subGroupId", required = true) subGroupId: Long): ResponseEntity<Response<List<ExerciseDto>>> {
-        val result = if (authorityService.isCurrentUserHasAuthority(AuthorityType.ROLE_ADMIN)) {
+    fun getExercisesBySubGroup(
+        @RequestParam(
+            value = "subGroupId",
+            required = true
+        ) subGroupId: Long
+    ): ResponseEntity<Response<List<ExerciseDto>>> {
+        val result = if (authorityService.isCurrentUserAdmin()) {
             exerciseService.findExercisesWithTasksBySubGroup(subGroupId)
         } else {
             exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)

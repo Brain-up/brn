@@ -104,19 +104,6 @@ internal class UserAccountServiceTest {
         }
 
         @Test
-        fun `should find a user by name`() {
-            // GIVEN
-            val fullName = "Ivan"
-            every { userAccount.toDto() } returns userAccountResponse
-            every { userAccountResponse.name } returns fullName
-            every { userAccountRepository.findUserAccountByName(fullName) } returns Optional.of(userAccount)
-            // WHEN
-            val userAccountDtoReturned = userAccountService.findUserByName(fullName)
-            // THEN
-            assertThat(userAccountDtoReturned.name).isEqualTo(fullName)
-        }
-
-        @Test
         fun `should find a user by email`() {
             // GIVEN
             val email = "email"

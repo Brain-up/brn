@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
@@ -27,11 +27,11 @@ class ResourceService(private val resourceRepository: ResourceRepository) {
 
     fun save(resource: Resource): Resource = resourceRepository.save(resource)
 
-    fun updateDescription(id: Long, description: String): ResourceDto {
+    fun updateDescription(id: Long, description: String): ResourceResponse {
         return resourceRepository.findByIdOrNull(id)?.let {
             it.description = description
             resourceRepository.save(it)
-            it.toDto()
+            it.toResponse()
         } ?: throw EntityNotFoundException("Resource not found by id=$id")
     }
 }

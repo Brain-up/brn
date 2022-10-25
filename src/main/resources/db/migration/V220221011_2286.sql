@@ -1,0 +1,1 @@
+ALTER TABLE contributor ALTER COLUMN contribution SET NOT NULL

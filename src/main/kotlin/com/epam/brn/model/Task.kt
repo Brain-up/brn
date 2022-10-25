@@ -48,7 +48,7 @@ class Task(
         exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet()
     )
 
     fun toWordsGroupSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskResponse(
@@ -56,7 +56,7 @@ class Task(
         exerciseType = ExerciseType.WORDS_SEQUENCES,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
         template = template
     )
 
@@ -65,7 +65,7 @@ class Task(
         exerciseType = ExerciseType.SENTENCE,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toDto() }.groupBy { it.wordType },
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
         template = template,
     )
     fun toPhraseSeriesTaskDto() = WordsTaskResponse(
@@ -73,14 +73,14 @@ class Task(
         exerciseType = ExerciseType.PHRASES,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet()
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet()
     )
     fun toGeneralTaskDto(template: String? = "") = GeneralTaskResponse(
         id = id!!,
         exerciseType = ExerciseType.WORDS_SEQUENCES,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toDto() }.toHashSet(),
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"

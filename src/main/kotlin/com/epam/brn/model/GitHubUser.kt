@@ -11,18 +11,18 @@ import javax.persistence.Table
 @DynamicUpdate
 class GitHubUser(
     @Id
-    var id: Long? = null,
+    var id: Long,
     var login: String,
-    var name: String,
-    var email: String,
-    var avatarUrl: String,
-    var bio: String,
-    var company: String,
+    var name: String?,
+    var email: String?,
+    var avatarUrl: String?,
+    var bio: String?,
+    var company: String?,
     var contributions: Long
 ) {
 
     fun toDto(): GitHubUserDto = GitHubUserDto(
-        id = id!!,
+        id = id,
         login = login,
         name = name,
         email = email,
@@ -32,7 +32,7 @@ class GitHubUser(
     )
 
     override fun toString() =
-        "Exercise(id=$id, login='$login', name=$name, email=$email, avatarUrl=$avatarUrl, bio=$bio, " +
+        "GitHubUser(id=$id, login='$login', name=$name, email=$email, avatarUrl=$avatarUrl, bio=$bio, " +
             "company=$company, contributions=$contributions)"
 
     override fun equals(other: Any?): Boolean {
