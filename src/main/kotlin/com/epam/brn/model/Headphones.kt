@@ -54,6 +54,13 @@ class Headphones(
         return true
     }
 
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + name.hashCode()
+        result = 31 * result + type.hashCode()
+        return result
+    }
+
     override fun toString(): String {
         return "Headphones(id=$id, name='$name', type=$type, description='$description')"
     }
