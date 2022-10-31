@@ -31,5 +31,4 @@ class Signal(
     )
 
     override fun toString() = "Signal(id=$id, name=$name, url=$url, frequency=$frequency, length=$length)"
-
 }

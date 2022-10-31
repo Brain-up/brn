@@ -160,12 +160,12 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    private fun getDefaultAuthoritySet(): MutableSet<Authority> {
+    private fun getDefaultAuthoritySet(): MutableList<Authority> {
         val authorityNames = mutableSetOf(AuthorityType.ROLE_USER.name)
 
         return authorityNames
             .filter(::isNotEmpty)
-            .mapTo(mutableSetOf()) {
+            .mapTo(mutableListOf()) {
                 authorityService.findAuthorityByAuthorityName(it)
             }
     }

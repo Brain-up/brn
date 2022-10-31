@@ -202,7 +202,7 @@ internal class SeriesMatrixRecordProcessorTest {
         return Task(
             serialNumber = 2,
             exercise = exercise,
-            answerOptions = mutableSetOf(
+            answerOptions = mutableListOf(
                 resource_девочка(),
                 resource_бабушка(),
                 resource_дедушка(),

@@ -34,7 +34,7 @@ class Task(
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
-    var answerOptions: MutableSet<Resource> = hashSetOf(),
+    var answerOptions: MutableList<Resource> = mutableListOf(),
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "answer_parts_resources",

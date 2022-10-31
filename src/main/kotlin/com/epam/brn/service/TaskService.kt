@@ -99,7 +99,7 @@ fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
     answerOptions = answerOptions.toResourceDtoSet()
 )
 
-fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
+fun Iterable<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
     val mapVowelCountToWord: Map<Int, List<Resource>> =
         this.groupBy { resource -> resource.word.findSyllableCount() }
     val resultDtoSet = mutableSetOf<ResourceResponse>()

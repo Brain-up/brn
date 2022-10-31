@@ -245,37 +245,37 @@ internal class SeriesWordsRecordProcessorTest {
             Task(
                 exercise = exercise,
                 serialNumber = 1,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 2,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 3,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_быль()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 4,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 5,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 6,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_быль()
             )
         )

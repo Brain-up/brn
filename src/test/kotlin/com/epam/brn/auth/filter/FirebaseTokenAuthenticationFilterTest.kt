@@ -226,7 +226,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
             email = email,
             fullName = fullName
         )
-        userAccount.authoritySet = mutableSetOf(
+        userAccount.authoritySet = mutableListOf(
             Authority(
                 id = 1L,
                 authorityName = AuthorityType.ROLE_USER.name

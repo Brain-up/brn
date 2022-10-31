@@ -103,8 +103,8 @@ internal class TaskServiceTest {
             )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1Mock.answerOptions } returns mutableSetOf(resource)
-            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf(resource)
+            every { task2Mock.answerOptions } returns mutableListOf()
             every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
             every { task2Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
 
@@ -134,8 +134,8 @@ internal class TaskServiceTest {
             )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1Mock.answerOptions } returns mutableSetOf(resource)
-            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf(resource)
+            every { task2Mock.answerOptions } returns mutableListOf()
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
@@ -165,7 +165,7 @@ internal class TaskServiceTest {
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
                 listOf(task1Mock)
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
-            every { task1Mock.answerOptions } returns mutableSetOf(resource1, resource2)
+            every { task1Mock.answerOptions } returns mutableListOf(resource1, resource2)
             every { task1Mock.exercise } returns exerciseMock
             every { task1Mock.id } returns 1
             every { task1Mock.name } returns "name"
@@ -206,8 +206,8 @@ internal class TaskServiceTest {
             )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1Mock.answerOptions } returns mutableSetOf(resource)
-            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf(resource)
+            every { task2Mock.answerOptions } returns mutableListOf()
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
@@ -242,8 +242,8 @@ internal class TaskServiceTest {
             )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1Mock.answerOptions } returns mutableSetOf(resource)
-            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf(resource)
+            every { task2Mock.answerOptions } returns mutableListOf()
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
@@ -277,8 +277,8 @@ internal class TaskServiceTest {
 
             every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
             every { task2Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
-            every { task1Mock.answerOptions } returns mutableSetOf(resource)
-            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf(resource)
+            every { task2Mock.answerOptions } returns mutableListOf()
             every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto1Mock
             every { task2Mock.toPhraseSeriesTaskDto() } returns taskDto2Mock
             every { exerciseMock.toDto() } returns exerciseDtoMock
@@ -315,8 +315,8 @@ internal class TaskServiceTest {
             )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1Mock.answerOptions } returns mutableSetOf(resource)
-            every { task2Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf(resource)
+            every { task2Mock.answerOptions } returns mutableListOf()
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
 
@@ -338,7 +338,7 @@ internal class TaskServiceTest {
             // GIVEN
             val taskDto = WordsTaskResponse(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
-            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf()
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -358,7 +358,7 @@ internal class TaskServiceTest {
             val template = ""
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
 
-            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf()
 
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
@@ -381,7 +381,7 @@ internal class TaskServiceTest {
             val template = ""
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
 
-            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf()
 
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
@@ -403,7 +403,7 @@ internal class TaskServiceTest {
             // GIVEN
             val taskDto = WordsTaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
-            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf()
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -421,7 +421,7 @@ internal class TaskServiceTest {
         fun `should throw an exception when there is no tasks for this exercise type`() {
             // GIVEN
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
-            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf()
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -459,7 +459,7 @@ internal class TaskServiceTest {
         fun `should save task`() {
             // GIVEN
             val resources = mutableSetOf<Resource>()
-            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { task1Mock.answerOptions } returns mutableListOf()
             every { task1Mock.correctAnswer } returns resourceMock
             every { taskRepositoryMock.save(task1Mock) } returns task1Mock
             every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns resources
