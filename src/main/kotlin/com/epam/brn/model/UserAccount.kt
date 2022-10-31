@@ -63,7 +63,7 @@ class UserAccount(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
     )
-    var authoritySet: MutableSet<Authority> = hashSetOf()
+    var authoritySet: MutableList<Authority> = mutableListOf()
 
     override fun toString(): String {
         return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
@@ -102,17 +102,4 @@ class UserAccount(
         bornYear = bornYear,
         gender = gender?.let { Gender.valueOf(it) },
     )
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as UserAccount
-
-        if (id != other.id) return false
-        if (userId != other.userId) return false
-        if (email != other.email) return false
-
-        return true
-    }
 }

@@ -128,7 +128,7 @@ class InitialDataLoader(
     private fun addAdminAllAuthorities() {
         val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
         val allAuths = authorityService.findAll()
-        admin.authoritySet.addAll(allAuths.minus(admin.authoritySet))
+        admin.authoritySet = allAuths.toMutableList()
         userAccountRepository.save(admin)
     }
 
