@@ -15,6 +15,14 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
 
     fun findExerciseByNameAndLevel(name: String, level: Int): Optional<Exercise>
 
+    @Query(
+        "SELECT e FROM Exercise e " +
+            "JOIN e.tasks t " +
+            "JOIN t.answerOptions ao " +
+            "WHERE UPPER(ao.word) like UPPER(concat('%',:word,'%'))"
+    )
+    fun findExercisesByWord(word: String): List<Exercise>
+
     fun existsBySubGroupId(subGroupId: Long): Boolean
 
     override fun findById(id: Long): Optional<Exercise>

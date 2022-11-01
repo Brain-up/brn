@@ -6,6 +6,7 @@ import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -152,6 +153,11 @@ class ExerciseService(
     fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> {
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
         return subGroupExercises.map { it.toDto() }
+    }
+
+    fun findExerciseByWord(word: String): List<ExerciseWithWordsResponse> {
+        val exercises = exerciseRepository.findExercisesByWord(word)
+        return exercises.map { it.toDtoWithWords() }
     }
 
     @Transactional(rollbackFor = [Exception::class])
