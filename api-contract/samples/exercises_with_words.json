@@ -1,0 +1,102 @@
+{
+  "data": [
+    {
+      "id": 4,
+      "name": "Семья",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:33.456314",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "tasks": [
+        {
+          "id": 4,
+          "level": 0,
+          "exerciseType": "WORDS_SEQUENCES",
+          "name": "",
+          "serialNumber": 1,
+          "answerOptions": [
+            {
+              "id": 2,
+              "audioFileUrl": "/audio/ru-ru/filipp/1/9950f95013b0017a62cf88ea7684e928.ogg",
+              "word": "ребёнок",
+              "wordPronounce": "ребёнок",
+              "wordType": "OBJECT",
+              "pictureFileUrl": "pictures/ребёнок.jpg",
+              "soundsCount": 0,
+              "description": "",
+              "columnNumber": -1
+            },
+            {
+              "id": 11,
+              "audioFileUrl": "/audio/ru-ru/filipp/1/ae661cd6c9dc66e248740648bfe30753.ogg",
+              "word": "дочь",
+              "wordPronounce": "дочь",
+              "wordType": "OBJECT",
+              "pictureFileUrl": "pictures/дочь.jpg",
+              "soundsCount": 0,
+              "description": "",
+              "columnNumber": -1
+            },
+            {
+              "id": 3,
+              "audioFileUrl": "/audio/ru-ru/filipp/1/79a359ea4ac3a4abb45fd93c3b17ec97.ogg",
+              "word": "мама",
+              "wordPronounce": "мама",
+              "wordType": "OBJECT",
+              "pictureFileUrl": "pictures/мама.jpg",
+              "soundsCount": 0,
+              "description": "",
+              "columnNumber": -1
+            },
+            {
+              "id": 10,
+              "audioFileUrl": "/audio/ru-ru/filipp/1/6f03caad502d11488b66b7073c7b0353.ogg",
+              "word": "родители",
+              "wordPronounce": "родители",
+              "wordType": "OBJECT",
+              "pictureFileUrl": "pictures/родители.jpg",
+              "soundsCount": 0,
+              "description": "",
+              "columnNumber": -1
+            },
+            {
+              "id": 12,
+              "audioFileUrl": "/audio/ru-ru/filipp/1/333b01903aec2b287799cfc02fda18e3.ogg",
+              "word": "папа",
+              "wordPronounce": "папа",
+              "wordType": "OBJECT",
+              "pictureFileUrl": "pictures/папа.jpg",
+              "soundsCount": 0,
+              "description": "",
+              "columnNumber": -1
+            },
+            {
+              "id": 1,
+              "audioFileUrl": "/audio/ru-ru/filipp/1/00540ac38fd85a46e095d6fc13fc0e94.ogg",
+              "word": "сын",
+              "wordPronounce": "сын",
+              "wordType": "OBJECT",
+              "pictureFileUrl": "pictures/сын.jpg",
+              "soundsCount": 0,
+              "description": "",
+              "columnNumber": -1
+            }
+          ]
+        }
+      ],
+      "words": [
+        "мама",
+        "родители",
+        "ребёнок",
+        "папа",
+        "сын",
+        "дочь"
+      ],
+      "subGroupName": "Семья",
+      "seriesName": "Слова"
+    }
+  ],
+  "errors": [],
+  "meta": []
+}
