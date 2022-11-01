@@ -7,6 +7,7 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
@@ -179,6 +180,21 @@ internal class ExerciseServiceTest {
         // THEN
         actualResults shouldContain exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+    }
+
+    @Test
+    fun`should get exercises by word`() {
+        // GIVEN
+        val word = "word"
+        val exerciseMock: Exercise = mockkClass(Exercise::class)
+        val exerciseWithWordsResponseMock = mockkClass(ExerciseWithWordsResponse::class)
+        every { exerciseRepository.findExercisesByWord(word) } returns listOf(exerciseMock)
+        every { exerciseMock.toDtoWithWords() } returns exerciseWithWordsResponseMock
+        // WHEN
+        val actualResults = exerciseService.findExerciseByWord(word)
+        // THEN
+        actualResults shouldContain exerciseWithWordsResponseMock
+        verify(exactly = 1) { exerciseRepository.findExercisesByWord(word) }
     }
 
     @Test

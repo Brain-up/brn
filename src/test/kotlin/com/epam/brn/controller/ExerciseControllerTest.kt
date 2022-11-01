@@ -8,6 +8,7 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
@@ -170,6 +171,22 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) }
+        exercises.statusCodeValue shouldBe HttpStatus.SC_OK
+        exercises.body!!.data shouldBe listOf(exerciseResponse)
+    }
+
+    @Test
+    fun`getExercisesByWord should return data with http status 200`() {
+        // GIVEN
+        val word = "word"
+        val exerciseResponse = mockk<ExerciseWithWordsResponse>()
+        every { exerciseService.findExerciseByWord(word) } returns listOf(exerciseResponse)
+
+        // WHEN
+        val exercises = exerciseController.getExercisesByWord(word)
+
+        // THEN
+        verify(exactly = 1) { exerciseService.findExerciseByWord(word) }
         exercises.statusCodeValue shouldBe HttpStatus.SC_OK
         exercises.body!!.data shouldBe listOf(exerciseResponse)
     }
