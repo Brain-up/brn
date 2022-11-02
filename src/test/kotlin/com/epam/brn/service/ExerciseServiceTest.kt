@@ -191,7 +191,7 @@ internal class ExerciseServiceTest {
         every { exerciseRepository.findExercisesByWord(word) } returns listOf(exerciseMock)
         every { exerciseMock.toDtoWithWords() } returns exerciseWithWordsResponseMock
         // WHEN
-        val actualResults = exerciseService.findExerciseByWord(word)
+        val actualResults = exerciseService.findExercisesByWord(word)
         // THEN
         actualResults shouldContain exerciseWithWordsResponseMock
         verify(exactly = 1) { exerciseRepository.findExercisesByWord(word) }

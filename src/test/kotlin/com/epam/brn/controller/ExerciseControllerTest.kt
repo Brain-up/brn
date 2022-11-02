@@ -180,13 +180,13 @@ internal class ExerciseControllerTest {
         // GIVEN
         val word = "word"
         val exerciseResponse = mockk<ExerciseWithWordsResponse>()
-        every { exerciseService.findExerciseByWord(word) } returns listOf(exerciseResponse)
+        every { exerciseService.findExercisesByWord(word) } returns listOf(exerciseResponse)
 
         // WHEN
         val exercises = exerciseController.getExercisesByWord(word)
 
         // THEN
-        verify(exactly = 1) { exerciseService.findExerciseByWord(word) }
+        verify(exactly = 1) { exerciseService.findExercisesByWord(word) }
         exercises.statusCodeValue shouldBe HttpStatus.SC_OK
         exercises.body!!.data shouldBe listOf(exerciseResponse)
     }

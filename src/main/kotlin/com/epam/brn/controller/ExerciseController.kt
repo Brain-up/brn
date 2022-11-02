@@ -81,7 +81,7 @@ class ExerciseController(
             required = true
         ) word: String
     ): ResponseEntity<Response<List<ExerciseWithWordsResponse>>> {
-        return ResponseEntity.ok().body(Response(data = exerciseService.findExerciseByWord(word)))
+        return ResponseEntity.ok().body(Response(data = exerciseService.findExercisesByWord(word)))
     }
 
     @PostMapping(value = ["/byIds"])

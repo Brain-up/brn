@@ -155,7 +155,7 @@ class ExerciseService(
         return subGroupExercises.map { it.toDto() }
     }
 
-    fun findExerciseByWord(word: String): List<ExerciseWithWordsResponse> {
+    fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> {
         val exercises = exerciseRepository.findExercisesByWord(word)
         return exercises.map { it.toDtoWithWords() }
     }
