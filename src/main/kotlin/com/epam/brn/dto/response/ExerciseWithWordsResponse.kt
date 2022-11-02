@@ -11,7 +11,7 @@ data class ExerciseWithWordsResponse(
     val changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     val playWordsCount: Int? = 1,
     val wordsColumns: Int? = 3,
-    val words: List<String>,
+    val words: Map<Long, String> = emptyMap(),
     val subGroupName: String?,
     val seriesName: String?
 )

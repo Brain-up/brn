@@ -78,7 +78,7 @@ data class Exercise(
         changedWhen = changedWhen,
         playWordsCount = playWordsCount,
         wordsColumns = wordsColumns,
-        words = tasks.flatMap { it.answerOptions }.map { it.word },
+        words = tasks.flatMap { it.answerOptions }.associate { it.id!! to it.word },
         subGroupName = subGroup?.name,
         seriesName = subGroup?.series?.name
     )

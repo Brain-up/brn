@@ -8,93 +8,122 @@
       "changedWhen": "2022-10-03T14:20:33.456314",
       "playWordsCount": 1,
       "wordsColumns": 3,
-      "tasks": [
-        {
-          "id": 4,
-          "level": 0,
-          "exerciseType": "WORDS_SEQUENCES",
-          "name": "",
-          "serialNumber": 1,
-          "answerOptions": [
-            {
-              "id": 2,
-              "audioFileUrl": "/audio/ru-ru/filipp/1/9950f95013b0017a62cf88ea7684e928.ogg",
-              "word": "ребёнок",
-              "wordPronounce": "ребёнок",
-              "wordType": "OBJECT",
-              "pictureFileUrl": "pictures/ребёнок.jpg",
-              "soundsCount": 0,
-              "description": "",
-              "columnNumber": -1
-            },
-            {
-              "id": 11,
-              "audioFileUrl": "/audio/ru-ru/filipp/1/ae661cd6c9dc66e248740648bfe30753.ogg",
-              "word": "дочь",
-              "wordPronounce": "дочь",
-              "wordType": "OBJECT",
-              "pictureFileUrl": "pictures/дочь.jpg",
-              "soundsCount": 0,
-              "description": "",
-              "columnNumber": -1
-            },
-            {
-              "id": 3,
-              "audioFileUrl": "/audio/ru-ru/filipp/1/79a359ea4ac3a4abb45fd93c3b17ec97.ogg",
-              "word": "мама",
-              "wordPronounce": "мама",
-              "wordType": "OBJECT",
-              "pictureFileUrl": "pictures/мама.jpg",
-              "soundsCount": 0,
-              "description": "",
-              "columnNumber": -1
-            },
-            {
-              "id": 10,
-              "audioFileUrl": "/audio/ru-ru/filipp/1/6f03caad502d11488b66b7073c7b0353.ogg",
-              "word": "родители",
-              "wordPronounce": "родители",
-              "wordType": "OBJECT",
-              "pictureFileUrl": "pictures/родители.jpg",
-              "soundsCount": 0,
-              "description": "",
-              "columnNumber": -1
-            },
-            {
-              "id": 12,
-              "audioFileUrl": "/audio/ru-ru/filipp/1/333b01903aec2b287799cfc02fda18e3.ogg",
-              "word": "папа",
-              "wordPronounce": "папа",
-              "wordType": "OBJECT",
-              "pictureFileUrl": "pictures/папа.jpg",
-              "soundsCount": 0,
-              "description": "",
-              "columnNumber": -1
-            },
-            {
-              "id": 1,
-              "audioFileUrl": "/audio/ru-ru/filipp/1/00540ac38fd85a46e095d6fc13fc0e94.ogg",
-              "word": "сын",
-              "wordPronounce": "сын",
-              "wordType": "OBJECT",
-              "pictureFileUrl": "pictures/сын.jpg",
-              "soundsCount": 0,
-              "description": "",
-              "columnNumber": -1
-            }
-          ]
-        }
-      ],
-      "words": [
-        "мама",
-        "родители",
-        "ребёнок",
-        "папа",
-        "сын",
-        "дочь"
-      ],
+      "words": {
+        "3": "мама",
+        "10": "родители",
+        "2": "ребёнок",
+        "12": "папа",
+        "1": "сын",
+        "11": "дочь"
+      },
       "subGroupName": "Семья",
       "seriesName": "Слова"
+    },
+    {
+      "id": 38,
+      "name": "По 2 слова из 6",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:35.358864",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "66": "думает",
+        "64": "Аркадий",
+        "12": "папа",
+        "63": "Витя",
+        "67": "слушает",
+        "65": "работает"
+      },
+      "subGroupName": "По 2 слова из 6",
+      "seriesName": "Группа слов"
+    },
+    {
+      "id": 41,
+      "name": "Фразы разной длительности",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:35.525348",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "76": "Папа моет",
+        "77": "Папа моет грязную машину"
+      },
+      "subGroupName": "Разной длительности",
+      "seriesName": "Похожие фразы"
+    },
+    {
+      "id": 41,
+      "name": "Фразы разной длительности",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:35.525348",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "76": "Папа моет",
+        "77": "Папа моет грязную машину"
+      },
+      "subGroupName": "Разной длительности",
+      "seriesName": "Похожие фразы"
+    },
+    {
+      "id": 94,
+      "name": "2 слова из 6и",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:37.019083",
+      "playWordsCount": 2,
+      "wordsColumns": 3,
+      "words": {
+        "110": "мяч",
+        "113": "собака",
+        "104": "ботинки",
+        "112": "стол",
+        "12": "папа",
+        "111": "ноги"
+      },
+      "subGroupName": "2 слова из 6",
+      "seriesName": "Слова Королёвой"
+    },
+    {
+      "id": 95,
+      "name": "2 слова из 6и",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:37.049085",
+      "playWordsCount": 2,
+      "wordsColumns": 3,
+      "words": {
+        "114": "чашка",
+        "82": "круг",
+        "113": "собака",
+        "112": "стол",
+        "12": "папа",
+        "115": "тарелка"
+      },
+      "subGroupName": "2 слова из 6",
+      "seriesName": "Слова Королёвой"
+    },
+    {
+      "id": 131,
+      "name": "Пойми предложение из 2 слов",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:38.285885",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "66": "думает",
+        "64": "Аркадий",
+        "12": "папа",
+        "63": "Витя",
+        "67": "слушает",
+        "65": "работает"
+      },
+      "subGroupName": "Из 2 слов",
+      "seriesName": "Предложения"
     }
   ],
   "errors": [],
