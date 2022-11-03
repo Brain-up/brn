@@ -71,7 +71,7 @@ class CloudUploadService(
         verifyPictureSize(multipartFile, contributorPictureMaxSize)
 
         cloudService.uploadFile(contributorPicturesPath, fullFileName, multipartFile.inputStream)
-        return "$contributorPicturesPath/$fullFileName"
+        return "${cloudService.baseFileUrl()}/$contributorPicturesPath/$fullFileName"
     }
 
     private fun verifyFileExtension(file: MultipartFile, extensions: Set<String>) {
