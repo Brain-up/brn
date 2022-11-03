@@ -4,6 +4,7 @@ import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
@@ -172,7 +173,7 @@ internal class UserAccountServiceTest {
             val email = "test@gmail.com"
             every { roleService.findByName(ofType(String::class)) } returns Role(
                 id = 1L,
-                name = ROLE_USER.name
+                name = BrnRole.USER
             )
             every { firebaseUserRecord.uid } returns uid
             every { firebaseUserRecord.email } returns email
@@ -471,9 +472,9 @@ internal class UserAccountServiceTest {
         fun `should return all users`() {
             // GIVEN
             val usersList = listOf(userAccount, userAccount, userAccount)
-            every { userAccountRepository.findUsersAccountsByRole(ROLE_USER.name) } returns usersList
+            every { userAccountRepository.findUsersAccountsByRole(BrnRole.USER) } returns usersList
             // WHEN
-            val userAccountDtos = userAccountService.getUsers(pageable = pageable, ROLE_USER.name)
+            val userAccountDtos = userAccountService.getUsers(pageable = pageable, BrnRole.USER)
             // THEN
             userAccountDtos.size shouldBe 3
         }

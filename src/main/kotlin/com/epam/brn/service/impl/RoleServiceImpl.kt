@@ -17,12 +17,12 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
     private val log = logger()
 
     override fun findById(id: Long): Role {
-        log.debug("getting the authority with authorityId=$id")
+        log.debug("getting the role with roleId=$id")
         return roleRepository.findById(id).orElseThrow { EntityNotFoundException("Role with id = $id is not found") }
     }
 
     override fun findByName(name: String): Role {
-        log.debug("getting the authority with authorityName=$name")
+        log.debug("getting the role with roleName=$name")
         return roleRepository.findByName(name)
             ?: throw EntityNotFoundException("Role with name = $name is not found")
     }

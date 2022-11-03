@@ -116,7 +116,7 @@ class InitialDataLoader(
         } catch (e: EntityNotFoundException) {
             roleService.save(Role(name = BrnRole.SPECIALIST))
         }
-        addAdminAllAuthorities()
+        addAdminAllRoles()
         audiometryLoader.loadInitialAudiometricsWithTasks()
         initExercisesFromFiles()
         wordsService.createTxtFilesWithExerciseWordsMap()
@@ -125,10 +125,10 @@ class InitialDataLoader(
             audioFilesGenerationService.generateAudioFiles()
     }
 
-    private fun addAdminAllAuthorities() {
+    private fun addAdminAllRoles() {
         val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
-        val allAuths = roleService.findAll()
-        admin.roleSet.addAll(allAuths.minus(admin.roleSet))
+        val allRoles = roleService.findAll()
+        admin.roleSet.addAll(allRoles.minus(admin.roleSet))
         userAccountRepository.save(admin)
     }
 
@@ -178,7 +178,7 @@ class InitialDataLoader(
         }
     }
 
-    private fun addAdminUser(adminAuthorities: Set<Role>): UserAccount {
+    private fun addAdminUser(adminRoles: Set<Role>): UserAccount {
         val password = passwordEncoder.encode("admin")
         val userAccount =
             UserAccount(
@@ -189,7 +189,7 @@ class InitialDataLoader(
                 gender = Gender.MALE.toString()
             )
         userAccount.password = password
-        userAccount.roleSet.addAll(adminAuthorities)
+        userAccount.roleSet.addAll(adminRoles)
         return userAccount
     }
 

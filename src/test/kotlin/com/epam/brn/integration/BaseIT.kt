@@ -155,7 +155,7 @@ abstract class BaseIT {
         active: Boolean = true,
         bornYear: Int = 2000,
         gender: String = Gender.FEMALE.toString(),
-        authorities: MutableSet<Role> = mutableSetOf()
+        roles: MutableSet<Role> = mutableSetOf()
     ): UserAccount {
         return userAccountRepository.save(
             UserAccount(
@@ -164,11 +164,11 @@ abstract class BaseIT {
                 active = active,
                 bornYear = bornYear,
                 gender = gender
-            ).apply { authorities.isNotEmpty().let { roleSet.addAll(authorities) } }
+            ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } }
         )
     }
 
-    fun createAuthority(authorityName: String): Role =
-        roleRepository.findByName(authorityName)
-            ?: roleRepository.save(Role(name = authorityName))
+    fun createRole(roleName: String): Role =
+        roleRepository.findByName(roleName)
+            ?: roleRepository.save(Role(name = roleName))
 }

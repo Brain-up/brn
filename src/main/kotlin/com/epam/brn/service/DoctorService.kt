@@ -24,10 +24,10 @@ class DoctorService(
             !roleService.isUserHasRole(BrnRole.ADMIN) && currentUser.id != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
-            !roleService.isUserHasRole(BrnRole.SPECIALIST) -> {
+            !roleService.isUserHasRole(doctor, BrnRole.SPECIALIST) -> {
                 throw IllegalArgumentException("You are trying to assign patient to user that is not a doctor")
             }
-            roleService.isUserHasRole(BrnRole.SPECIALIST) -> {
+            roleService.isUserHasRole(patient, BrnRole.SPECIALIST) -> {
                 throw IllegalArgumentException("The patient you are trying to add is actually a doctor")
             }
             patient.doctorId != null -> {

@@ -31,10 +31,10 @@ internal class RoleControllerTest {
         every { role.toDto() } returns roleResponse
 
         // WHEN
-        val authorities = roleController.getRoles()
+        val roles = roleController.getRoles()
 
         // THEN
-        authorities.statusCodeValue shouldBe HttpStatus.SC_OK
-        authorities.body!!.data.size shouldBe 1
+        roles.statusCodeValue shouldBe HttpStatus.SC_OK
+        roles.body!!.data.size shouldBe 1
     }
 }

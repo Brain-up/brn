@@ -25,6 +25,9 @@ internal class DoctorServiceTest {
     @MockK
     private lateinit var userAccountService: UserAccountService
 
+    @MockK
+    private lateinit var roleService: RoleService
+
     private lateinit var admin: UserAccountResponse
     private lateinit var doctor: UserAccountResponse
     private lateinit var anotherDoctor: UserAccountResponse
@@ -34,12 +37,12 @@ internal class DoctorServiceTest {
 
     @BeforeEach
     fun setUp() {
-        admin = prepareUser(0, "admin@doctor.test", mutableSetOf(BrnRole.ADMIN))
-        doctor = prepareUser(1, "doctor1@doctor.test", mutableSetOf(BrnRole.USER, BrnRole.SPECIALIST))
-        anotherDoctor = prepareUser(2, "doctor2@doctor.test", mutableSetOf(BrnRole.USER, BrnRole.SPECIALIST))
-        user1 = prepareUser(3, "user1@doctor.test", mutableSetOf(BrnRole.USER))
-        user2 = prepareUser(4, "user2@doctor.test", mutableSetOf(BrnRole.USER))
-        fakeDoctorUser = prepareUser(5, "user2@doctor.test", mutableSetOf(BrnRole.USER))
+        admin = prepareUser(0, "admin@doctor.test")
+        doctor = prepareUser(1, "doctor1@doctor.test")
+        anotherDoctor = prepareUser(2, "doctor2@doctor.test")
+        user1 = prepareUser(3, "user1@doctor.test")
+        user2 = prepareUser(4, "user2@doctor.test")
+        fakeDoctorUser = prepareUser(5, "user2@doctor.test")
 
         every { userAccountService.findUserById(admin.id!!) } returns admin
         every { userAccountService.findUserById(doctor.id!!) } returns doctor
@@ -47,6 +50,19 @@ internal class DoctorServiceTest {
         every { userAccountService.findUserById(user1.id!!) } returns user1
         every { userAccountService.findUserById(user2.id!!) } returns user2
         every { userAccountService.findUserById(fakeDoctorUser.id!!) } returns fakeDoctorUser
+
+        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns false
+        every { roleService.isUserHasRole(admin, BrnRole.ADMIN) } returns true
+        every { roleService.isUserHasRole(doctor, BrnRole.ADMIN) } returns false
+        every { roleService.isUserHasRole(doctor, BrnRole.SPECIALIST) } returns true
+        every { roleService.isUserHasRole(anotherDoctor, BrnRole.ADMIN) } returns false
+        every { roleService.isUserHasRole(anotherDoctor, BrnRole.SPECIALIST) } returns true
+        every { roleService.isUserHasRole(user1, BrnRole.ADMIN) } returns false
+        every { roleService.isUserHasRole(user1, BrnRole.SPECIALIST) } returns false
+        every { roleService.isUserHasRole(user2, BrnRole.ADMIN) } returns false
+        every { roleService.isUserHasRole(user2, BrnRole.SPECIALIST) } returns false
+        every { roleService.isUserHasRole(fakeDoctorUser, BrnRole.ADMIN) } returns false
+        every { roleService.isUserHasRole(fakeDoctorUser, BrnRole.SPECIALIST) } returns false
 
         every { userAccountService.updateDoctorForPatient(any(), any()) } returns mockk()
         every { userAccountService.removeDoctorFromPatient(any()) } returns mockk()
@@ -335,7 +351,6 @@ internal class DoctorServiceTest {
     private fun prepareUser(
         id: Long?,
         email: String?,
-        authorities: MutableSet<String>?,
         doctorId: Long? = null
     ): UserAccountResponse {
         return UserAccountResponse(
@@ -346,6 +361,6 @@ internal class DoctorServiceTest {
             bornYear = 2000,
             active = true,
             doctorId = doctorId
-        ).apply { this.roles = authorities }
+        )
     }
 }

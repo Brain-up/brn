@@ -76,7 +76,7 @@ internal class DoctorControllerTest {
     private fun prepareUser(
         id: Long?,
         email: String?,
-        authorities: MutableSet<String>? = mutableSetOf(),
+        roles: MutableSet<String>? = mutableSetOf(),
         doctorId: Long? = null
     ): UserAccountResponse {
         return UserAccountResponse(
@@ -87,6 +87,6 @@ internal class DoctorControllerTest {
             bornYear = 2000,
             active = true,
             doctorId = doctorId
-        ).apply { this.roles = authorities }
+        ).apply { this.roles = roles }
     }
 }

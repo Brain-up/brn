@@ -47,7 +47,7 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
 
     @Query(
         """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet authorities 
-            left JOIN FETCH u.headphones where authorities.name = :authorityName"""
+            left JOIN FETCH u.headphones where authorities.name = :roleName"""
     )
-    fun findUsersAccountsByRole(authorityName: String): List<UserAccount>
+    fun findUsersAccountsByRole(roleName: String): List<UserAccount>
 }

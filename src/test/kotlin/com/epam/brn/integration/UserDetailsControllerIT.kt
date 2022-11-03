@@ -6,7 +6,6 @@ import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Role
 import com.epam.brn.model.Gender
 import com.epam.brn.model.Headphones
@@ -283,8 +282,8 @@ class UserDetailsControllerIT : BaseIT() {
     @Test
     fun `should get users by role`() {
         // GIVEN
-        val authorityAdmin = insertRole(BrnRole.ADMIN.name)
-        val authorityUser = insertRole(BrnRole.USER.name)
+        val roleAdmin = insertRole(BrnRole.ADMIN)
+        val roleUser = insertRole(BrnRole.USER)
 
         val user1 = UserAccount(
             fullName = "testUserFirstName",
@@ -293,7 +292,7 @@ class UserDetailsControllerIT : BaseIT() {
             bornYear = 2000,
             active = true,
         )
-        user1.roleSet = mutableSetOf(authorityAdmin, authorityUser)
+        user1.roleSet = mutableSetOf(roleAdmin, roleUser)
 
         val user2 = UserAccount(
             fullName = "testUserFirstName2",
@@ -302,7 +301,7 @@ class UserDetailsControllerIT : BaseIT() {
             bornYear = 2000,
             active = true,
         )
-        user2.roleSet = mutableSetOf(authorityUser)
+        user2.roleSet = mutableSetOf(roleUser)
 
         userAccountRepository.save(user1)
         userAccountRepository.save(user2)
@@ -310,7 +309,7 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get(baseUrl)
-                .param("role", BrnRole.ADMIN.name)
+                .param("role", BrnRole.ADMIN)
 
         )
             .andExpect(status().isOk)
@@ -352,10 +351,10 @@ class UserDetailsControllerIT : BaseIT() {
         )
     }
 
-    private fun insertRole(authorityName: String): Role {
+    private fun insertRole(roleName: String): Role {
         return roleRepository.save(
             Role(
-                name = authorityName
+                name = roleName
             )
         )
     }

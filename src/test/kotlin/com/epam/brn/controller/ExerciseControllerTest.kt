@@ -9,6 +9,7 @@ import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe

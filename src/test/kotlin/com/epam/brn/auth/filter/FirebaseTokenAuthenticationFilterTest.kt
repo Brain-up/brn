@@ -229,7 +229,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         userAccount.roleSet = mutableSetOf(
             Role(
                 id = 1L,
-                name = BrnRole.USER.name
+                name = BrnRole.USER
             )
         )
         return userAccount

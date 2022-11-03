@@ -54,7 +54,7 @@ class UserAccountServiceImpl(
             email = firebaseUserRecord.email,
             userId = firebaseUserRecord.uid
         )
-        userAccount.roleSet = getDefaultAuthoritySet()
+        userAccount.roleSet = getDefaultRoleSet()
         return userAccountRepository.save(userAccount).toDto()
     }
 
@@ -160,10 +160,10 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    private fun getDefaultAuthoritySet(): MutableSet<Role> {
-        val authorityNames = mutableSetOf(BrnRole.USER)
+    private fun getDefaultRoleSet(): MutableSet<Role> {
+        val roleNames = mutableSetOf(BrnRole.USER)
 
-        return authorityNames
+        return roleNames
             .filter(::isNotEmpty)
             .mapTo(mutableSetOf()) {
                 roleService.findByName(it)

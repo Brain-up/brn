@@ -2,7 +2,6 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.BrnRole
-import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Role
 import com.epam.brn.repo.RoleRepository
 import com.fasterxml.jackson.core.type.TypeReference
@@ -34,11 +33,11 @@ class RoleControllerIT : BaseIT() {
     }
 
     @Test
-    fun `should return authorities list`() {
+    fun `should return roles list`() {
         // GIVEN
-        insertRole(BrnRole.ADMIN.name)
-        insertRole(BrnRole.USER.name)
-        insertRole(BrnRole.SPECIALIST.name)
+        insertRole(BrnRole.ADMIN)
+        insertRole(BrnRole.USER)
+        insertRole(BrnRole.SPECIALIST)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -52,17 +51,17 @@ class RoleControllerIT : BaseIT() {
 
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponse = objectMapper.readValue(responseJson, Response::class.java)
-        val authorities = objectMapper.readValue(
+        val roles = objectMapper.readValue(
             gson.toJson(baseResponse.data),
             object : TypeReference<List<Role>>() {}
         )
-        authorities.size shouldBe 3
+        roles.size shouldBe 3
     }
 
-    private fun insertRole(authorityName: String): Role {
+    private fun insertRole(roleName: String): Role {
         return roleRepository.save(
             Role(
-                name = authorityName
+                name = roleName
             )
         )
     }
