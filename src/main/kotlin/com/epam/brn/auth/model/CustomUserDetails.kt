@@ -14,8 +14,7 @@ class CustomUserDetails(userAccount: UserAccount) : UserDetails {
 
     init {
         authorities = userAccount.roleSet
-            .map { "ROLE_$it.name" }
-            .map { SimpleGrantedAuthority(it) }
+            .map { SimpleGrantedAuthority("ROLE_${it.name}") }
     }
 
     override fun getAuthorities() = this.authorities.toMutableList()
