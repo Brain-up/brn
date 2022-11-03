@@ -558,6 +558,20 @@ annotationTypes:
                 type: file
         responses:
           200:
+    /upload/contributor/picture:
+      post:
+        description: Upload unverified files for contributor pictures
+        body:
+          multipart/form-data:
+            properties:
+              file:
+                description: "File content"
+                required: true
+                type: file
+        responses:
+          201:
+            body:
+              example: ""
   /url:
     get:
       description: Get cloud bucket url
