@@ -74,6 +74,7 @@ class ExerciseController(
     }
 
     @GetMapping(value = ["/byWord"])
+    @ApiOperation("Get exercises containing specified word")
     @RolesAllowed(BrnRole.ADMIN)
     fun getExercisesByWord(
         @RequestParam(
