@@ -36,18 +36,21 @@ internal class CloudUploadServiceTest {
     val allowedExtensions = setOf("png", "jpg")
     val defaultPicturesPath = "default/"
     val unverifiedPicturesPath = "path/"
+    val contributorPicturesPath = "contributors/"
 
     @BeforeEach
     fun setup() {
-        cloudUploadService.pictureExtensions = allowedExtensions
-        cloudUploadService.pictureMaxSize = DataSize.ofBytes(maxSize)
+        cloudUploadService.unverifiedPictureExtensions = allowedExtensions
+        cloudUploadService.contributorPictureExtensions = allowedExtensions
+        cloudUploadService.unverifiedPictureMaxSize = DataSize.ofBytes(maxSize)
+        cloudUploadService.contributorPictureMaxSize = DataSize.ofBytes(maxSize)
         cloudUploadService.defaultPicturesPath = defaultPicturesPath
         cloudUploadService.unverifiedPicturesPath = unverifiedPicturesPath
-        cloudUploadService.init()
+        cloudUploadService.contributorPicturesPath = contributorPicturesPath
     }
 
     @Test
-    fun `should throw IllegalArgumentException when file extension is not supported`() {
+    fun `should throw IllegalArgumentException when unverified picture file extension is not supported`() {
         // GIVEN
         val mockMultipartFile = mockk<MultipartFile>()
         every { mockMultipartFile.size } returns maxSize
@@ -64,7 +67,24 @@ internal class CloudUploadServiceTest {
     }
 
     @Test
-    fun `should throw IllegalArgumentException when file size is too big`() {
+    fun `should throw IllegalArgumentException when contributor picture file extension is not supported`() {
+        // GIVEN
+        val mockMultipartFile = mockk<MultipartFile>()
+        every { mockMultipartFile.size } returns maxSize
+        every { mockMultipartFile.originalFilename } returns "filename.not-allowed-ext"
+
+        // WHEN
+        val exception = shouldThrowExactly<IllegalArgumentException> {
+            cloudUploadService.uploadContributorPicture(mockMultipartFile)
+        }
+
+        // THEN
+        exception.message shouldBe "File extension should be one of $allowedExtensions"
+        verify(exactly = 0) { cloudService.isFileExist(any(), any()) }
+    }
+
+    @Test
+    fun `should throw IllegalArgumentException when unverified picture file size is too big`() {
         // GIVEN
         val fileSize = 150L
         val mockMultipartFile = mockk<MultipartFile>()
@@ -83,7 +103,26 @@ internal class CloudUploadServiceTest {
     }
 
     @Test
-    fun `should throw IllegalArgumentException when file name not exist in database as word`() {
+    fun `should throw IllegalArgumentException when contributor picture file size is too big`() {
+        // GIVEN
+        val fileSize = 150L
+        val mockMultipartFile = mockk<MultipartFile>()
+        every { mockMultipartFile.size } returns fileSize
+        every { mockMultipartFile.originalFilename } returns "fileName.png"
+
+        // WHEN
+        val exception = shouldThrowExactly<IllegalArgumentException> {
+            cloudUploadService.uploadContributorPicture(mockMultipartFile)
+        }
+
+        // THEN
+        exception.message shouldBe "File size [$fileSize] should be less than max file size " +
+            "[${FileUtils.byteCountToDisplaySize(maxSize)}]"
+        verify(exactly = 0) { cloudService.isFileExist(any(), any()) }
+    }
+
+    @Test
+    fun `should throw IllegalArgumentException when unverified picture file name not exist in database as word`() {
         // GIVEN
         val word = "Word"
         val fullFileName = "$word.png"
@@ -104,7 +143,7 @@ internal class CloudUploadServiceTest {
     }
 
     @Test
-    fun `should throw IllegalArgumentException when file is exist in cloud default picture folder`() {
+    fun `should throw IllegalArgumentException when unverified picture file is exist in cloud default picture folder`() {
         // GIVEN
         val word = "Word"
         val fullFileName = "$word.png"
@@ -151,7 +190,7 @@ internal class CloudUploadServiceTest {
     }
 
     @Test
-    fun `should call uploadFile on cloudService when all OK`() {
+    fun `should call uploadFile on cloudService for unverified pictures when all OK`() {
         // GIVEN
         val word = "Word"
         val fullFileName = "$word.png"
@@ -173,5 +212,27 @@ internal class CloudUploadServiceTest {
         // THEN
         verify(exactly = 2) { cloudService.isFileExist(any(), any()) }
         verify(exactly = 1) { cloudService.uploadFile(unverifiedPicturesPath, fullFileName, inputStream) }
+    }
+
+    @Test
+    fun `should call uploadFile on cloudService for contributor pictures when all OK`() {
+        // GIVEN
+        val word = "Word"
+        val fullFileName = "$word.png"
+
+        val fileContent = "some test data for my input stream"
+        val inputStream = IOUtils.toInputStream(fileContent, Charsets.UTF_8)
+        val mockMultipartFile = mockk<MultipartFile>()
+        every { mockMultipartFile.size } returns maxSize
+        every { mockMultipartFile.originalFilename } returns fullFileName
+        every { mockMultipartFile.inputStream } returns inputStream
+        every { cloudService.uploadFile(contributorPicturesPath, fullFileName, inputStream) } returns Unit
+
+        // WHEN
+        val filePath = cloudUploadService.uploadContributorPicture(mockMultipartFile)
+
+        // THEN
+        verify(exactly = 1) { cloudService.uploadFile(contributorPicturesPath, fullFileName, inputStream) }
+        filePath shouldBe "$contributorPicturesPath/$fullFileName"
     }
 }
