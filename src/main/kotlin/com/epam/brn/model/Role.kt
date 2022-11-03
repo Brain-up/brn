@@ -12,7 +12,7 @@ data class Role(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    @Column(unique = true, nullable = false, name = "AUTHORITY_NAME")
+    @Column(unique = true, nullable = false)
     val name: String
 
 ) {

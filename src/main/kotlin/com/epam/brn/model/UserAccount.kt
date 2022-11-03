@@ -59,9 +59,9 @@ data class UserAccount(
 
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
-        name = "user_authorities",
+        name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
     var roleSet: MutableSet<Role> = hashSetOf()
 
