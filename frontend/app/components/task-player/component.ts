@@ -250,6 +250,10 @@ export default class TaskPlayerComponent extends Component {
     }
   }
 
+  @action async preloadNoise() {
+    await this.audio.preloadNoiseAudio();
+  }
+
   @action
   async startTask() {
     this.justEnteredTask = false;
