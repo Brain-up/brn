@@ -8,23 +8,13 @@
   .team-member {
     flex-basis: calc(50% - 3rem);
   }
-  .team-member:nth-last-child(1),
-  .team-member:nth-last-child(2) {
-    margin-bottom: 0;
-  }
-  .team-member:nth-child(odd) {
-    margin-right: 40px;
-  }
 }
 
 @media (min-width: 1366px) {
   .team-member {
     flex-basis: calc(25% - 3rem);
-    margin-bottom: 0;
+    margin-bottom: 40px;
     margin-right: 40px;
-  }
-  .team-member:last-child {
-    margin-right: 0;
   }
 }
 

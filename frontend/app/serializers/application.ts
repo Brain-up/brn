@@ -69,6 +69,21 @@ type TaskDTO = {
   serialNumber: number;
 };
 
+export interface IContributorDTO {
+  "id": number;
+  "name": string;
+  "nameEn": string;
+  "description": string;
+  "descriptionEn": string;
+  "company": null;
+  "companyEn": null;
+  "pictureUrl": string;
+  "contacts": [];
+  "type": "SPECIALIST" | "DEVELOPER";
+  "contribution": number;
+  "active": boolean;
+}
+
 type UserWeeklyStatisticsDTO = {
   date: Date;
   excersizingTimeSeconds: number;

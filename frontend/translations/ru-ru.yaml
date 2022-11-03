@@ -311,21 +311,4 @@ specialists:
 contributors:
   title: "Наша команда"
   subtitle: "Мы собрались все вместе, чтобы сделать вашу жизнь проще!"
-  people:
-    0:
-      fullName: Канунников Александр
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 5.png
-    1:
-      fullName: Мошникова Елена
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 1.png
-    2:
-      fullName: Чуркина Ирина
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 1.png
-    3:
-      fullName: Miguel Osorio
-      jobTitle: Lead Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 5.png
   all: вся команда
