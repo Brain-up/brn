@@ -59,7 +59,7 @@ export class AdminApiService {
   }
 
   public getUsers(
-    role: Roles = 'ROLE_USER',
+    role: Roles = 'USER',
     withAnalytics: boolean = true,
   ): Observable<UserMapped[]> {
     let params = new HttpParams();
@@ -106,7 +106,7 @@ export class AdminApiService {
   }
 
   public getUsersWithNoAnalytics(
-    role: Roles = 'ROLE_USER',
+    role: Roles = 'USER',
     withAnalytics: boolean = false,
   ): Observable<UserWithNoAnalytics[]> {
     let params = new HttpParams();
