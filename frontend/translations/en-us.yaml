@@ -308,21 +308,4 @@ specialists:
 contributors:
   title: "Our Team"
   subtitle: "We are all here to make your life easier!"
-  people:
-    0:
-      fullName: Kannunikov Aleksandr
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 5.png
-    1:
-      fullName: Moshnikova Elana
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 1.png
-    2:
-      fullName: Churkina Irina
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 1.png
-    3:
-      fullName: Miguel Osorio
-      jobTitle: Lead Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 5.png
   all: all team
