@@ -135,7 +135,7 @@ export default class TaskPlayerComponent extends Component {
         yield this.audio.setAudioElements([
           useGeneratedUrl
             ? option.audioFileUrl
-            : this.audio.audioUrlForText(option.word),
+            : this.audio.audioUrlForText(option.wordPronounce ?? option.word),
         ]);
         yield this.audio.playAudio();
         yield timeout(1500);
@@ -187,7 +187,7 @@ export default class TaskPlayerComponent extends Component {
             yield this.audio.setAudioElements([
               useGeneratedUrl
                 ? (option.audioFileUrl as string)
-                : this.audio.audioUrlForText(option.word),
+                : this.audio.audioUrlForText(option.wordPronounce),
             ]);
             yield this.audio.playAudio();
           }
