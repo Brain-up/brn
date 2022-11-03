@@ -71,4 +71,15 @@ class CloudController(
         cloudUploadService.uploadUnverifiedPictureFile(multipartFile)
         return ResponseEntity(HttpStatus.CREATED)
     }
+
+    @PostMapping(value = ["/upload/contributor/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
+    @ApiOperation("Upload picture of contributor")
+    @RolesAllowed(BrnRole.ADMIN)
+    fun uploadContributorPicture(
+        @RequestParam(value = "file") multipartFile: MultipartFile
+    ): ResponseEntity<Response<String>> {
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(Response(cloudUploadService.uploadContributorPicture(multipartFile)))
+    }
 }
