@@ -18,6 +18,7 @@ import {
   toMilliseconds,
   TIMINGS,
   ISource,
+  preloadAudioFile,
 } from 'brn/utils/audio-api';
 import Service, { inject as service } from '@ember/service';
 import TimerComponent from 'brn/components/timer/component';
@@ -201,6 +202,14 @@ export default class AudioService extends Service {
     } else {
       await this.fakePlayTask.cancelAll();
     }
+  }
+
+  async preloadNoiseAudio() {
+    const url = this.currentExerciseNoiseUrl;
+    if (!url) {
+      return;
+    }
+    await preloadAudioFile(url, this.network.token ?? '');
   }
 
   async getNoise(duration: number, level: number, url: null | string = null) {
