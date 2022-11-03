@@ -226,6 +226,7 @@ internal class CloudUploadServiceTest {
         every { mockMultipartFile.size } returns maxSize
         every { mockMultipartFile.originalFilename } returns fullFileName
         every { mockMultipartFile.inputStream } returns inputStream
+        every { cloudService.baseFileUrl() } returns "baseFileUrl"
         every { cloudService.uploadFile(contributorPicturesPath, fullFileName, inputStream) } returns Unit
 
         // WHEN
@@ -233,6 +234,6 @@ internal class CloudUploadServiceTest {
 
         // THEN
         verify(exactly = 1) { cloudService.uploadFile(contributorPicturesPath, fullFileName, inputStream) }
-        filePath shouldBe "$contributorPicturesPath/$fullFileName"
+        filePath shouldBe "baseFileUrl/$contributorPicturesPath/$fullFileName"
     }
 }
