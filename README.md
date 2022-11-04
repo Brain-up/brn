@@ -56,6 +56,8 @@ Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 ### Documentation
 https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview
 (https://github.com/Brain-up/brn/wiki)
+### RoadMap: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap
+### Product Vision: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision
 
 ### Jira
 https://awclub.atlassian.net/jira/software/c/projects/EPMLABSBRN/issues
@@ -150,7 +152,7 @@ docker rm $(docker ps -a -q) # Remove all stopped containers
 9. Integration tests does not run in build process, it can/should be run locally with run job verification/integrationTests.
 
 ### Code style:
-1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Code-Style
+1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Coding-Standards
 2. Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
 3. Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
 4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
