@@ -1,0 +1,131 @@
+{
+  "data": [
+    {
+      "id": 4,
+      "name": "Семья",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:33.456314",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "3": "мама",
+        "10": "родители",
+        "2": "ребёнок",
+        "12": "папа",
+        "1": "сын",
+        "11": "дочь"
+      },
+      "subGroupName": "Семья",
+      "seriesName": "Слова"
+    },
+    {
+      "id": 38,
+      "name": "По 2 слова из 6",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:35.358864",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "66": "думает",
+        "64": "Аркадий",
+        "12": "папа",
+        "63": "Витя",
+        "67": "слушает",
+        "65": "работает"
+      },
+      "subGroupName": "По 2 слова из 6",
+      "seriesName": "Группа слов"
+    },
+    {
+      "id": 41,
+      "name": "Фразы разной длительности",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:35.525348",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "76": "Папа моет",
+        "77": "Папа моет грязную машину"
+      },
+      "subGroupName": "Разной длительности",
+      "seriesName": "Похожие фразы"
+    },
+    {
+      "id": 41,
+      "name": "Фразы разной длительности",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:35.525348",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "76": "Папа моет",
+        "77": "Папа моет грязную машину"
+      },
+      "subGroupName": "Разной длительности",
+      "seriesName": "Похожие фразы"
+    },
+    {
+      "id": 94,
+      "name": "2 слова из 6и",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:37.019083",
+      "playWordsCount": 2,
+      "wordsColumns": 3,
+      "words": {
+        "110": "мяч",
+        "113": "собака",
+        "104": "ботинки",
+        "112": "стол",
+        "12": "папа",
+        "111": "ноги"
+      },
+      "subGroupName": "2 слова из 6",
+      "seriesName": "Слова Королёвой"
+    },
+    {
+      "id": 95,
+      "name": "2 слова из 6и",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:37.049085",
+      "playWordsCount": 2,
+      "wordsColumns": 3,
+      "words": {
+        "114": "чашка",
+        "82": "круг",
+        "113": "собака",
+        "112": "стол",
+        "12": "папа",
+        "115": "тарелка"
+      },
+      "subGroupName": "2 слова из 6",
+      "seriesName": "Слова Королёвой"
+    },
+    {
+      "id": 131,
+      "name": "Пойми предложение из 2 слов",
+      "active": true,
+      "changedBy": "InitialDataLoader",
+      "changedWhen": "2022-10-03T14:20:38.285885",
+      "playWordsCount": 1,
+      "wordsColumns": 3,
+      "words": {
+        "66": "думает",
+        "64": "Аркадий",
+        "12": "папа",
+        "63": "Витя",
+        "67": "слушает",
+        "65": "работает"
+      },
+      "subGroupName": "Из 2 слов",
+      "seriesName": "Предложения"
+    }
+  ],
+  "errors": [],
+  "meta": []
+}
