@@ -296,6 +296,20 @@ annotationTypes:
             examples:
               example1: !include samples/exercise_for_id_1.json
               example2: !include samples/exercise_for_frequency_words_series.json
+  /byWord
+    get:
+      description: Get exercises by word
+      queryParameters:
+        word:
+          description: "Word which should be contained by exercise answers"
+          required: true
+          type: string
+          example: "table"
+      responses:
+        200:
+          body:
+            examples: !include samples/exercises_with_words.json
+
   /byIds:
     post:
         description: Get available exercise ids for current user by input ids which have same subgroup

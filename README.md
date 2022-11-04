@@ -3,7 +3,6 @@
 # Brain Up!
 This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
 It is projected to contain several series of media exercises, which should be added incrementally. 
-The tool structure and usage is organized as other tools like www.uchi.ru.
 
 Our current version is here : http://brainup.site && http://31.184.253.199/ (test user default@default.ru password).
 Now you as a user can register and start doing exercises.
@@ -113,7 +112,7 @@ docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PA
 4. Make post request from "Firebase" folder "Get Authorization Token" using credentials. 
 5. Then you can call all other end-points from this Postman collection
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
-
+6. use https://brainup.site/admin/swagger
 
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
@@ -130,7 +129,8 @@ Alternatively, use daemon mode (no console output):
 ```bash
 docker-compose up --build -d
 ```
-REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
+Local REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
+Public is always here https://brainup.site/admin/swagger (login with ADMIN role user)
 
 docker useful command:
 ```shell

@@ -2,6 +2,7 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -67,6 +68,19 @@ data class Exercise(
         changedWhen = changedWhen,
         playWordsCount = playWordsCount,
         wordsColumns = wordsColumns,
+    )
+
+    fun toDtoWithWords() = ExerciseWithWordsResponse(
+        id = id,
+        name = name,
+        active = active,
+        changedBy = changedBy,
+        changedWhen = changedWhen,
+        playWordsCount = playWordsCount,
+        wordsColumns = wordsColumns,
+        words = tasks.flatMap { it.answerOptions }.associate { it.id!! to it.word },
+        subGroupName = subGroup?.name,
+        seriesName = subGroup?.series?.name
     )
 
     override fun toString() =

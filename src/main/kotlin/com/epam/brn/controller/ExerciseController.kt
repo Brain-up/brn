@@ -4,6 +4,7 @@ import com.epam.brn.auth.AuthorityService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
@@ -70,6 +71,18 @@ class ExerciseController(
     ): ResponseEntity<Response<ExerciseDto>> {
         return ResponseEntity.ok()
             .body(Response(data = exerciseService.findExerciseById(exerciseId)))
+    }
+
+    @GetMapping(value = ["/byWord"])
+    @ApiOperation("Get exercises containing specified word")
+    @RolesAllowed(BrnRole.ADMIN)
+    fun getExercisesByWord(
+        @RequestParam(
+            value = "word",
+            required = true
+        ) word: String
+    ): ResponseEntity<Response<List<ExerciseWithWordsResponse>>> {
+        return ResponseEntity.ok().body(Response(data = exerciseService.findExercisesByWord(word)))
     }
 
     @PostMapping(value = ["/byIds"])
