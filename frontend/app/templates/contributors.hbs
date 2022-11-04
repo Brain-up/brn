@@ -6,31 +6,36 @@
   <div class="font-openSans mb-16 text-lg text-center">
     {{t "contributors.subtitle"}}
   </div>
-  <div
-    class="md:flex max-w-screen-xl m-auto flex-wrap
-      {{style-namespace "about-us"}}"
-  >
-    {{#each this.model as |i|}}
-      <div
-        class="team-member md:flex-1 px-6 py-10 text-center bg-white rounded-lg"
-      >
-        <div>
-          <img
-            src={{i.avatar}}
-            alt="user avatar"
-            class="w-24 m-auto mb-2 rounded-full"
-          />
+
+  {{#each-in (group-by "kind" this.model) as |kindType group|}}
+    <h3 class="pb-2 text-xl font-medium">{{t (concat "contributors.kinds." kindType)}}</h3>
+    <div
+      class="md:flex max-w-screen-xl m-auto flex-wrap
+        {{style-namespace "about-us"}}"
+    >
+      {{#each group as |i|}}
+        <div
+          class="team-member md:flex-1 px-6 py-10 text-center bg-white rounded-lg"
+        >
+          <div>
+            <img
+              src={{i.avatar}}
+              alt="user avatar"
+              class="w-24 m-auto mb-2 rounded-full"
+            />
+          </div>
+          <div class="mb-1 text-lg font-medium">
+            {{i.name}}
+          </div>
+          <div class="font-openSans leading-5">
+            {{i.company}}<br />
+            {{i.description}}
+          </div>
         </div>
-        <div class="mb-1 text-lg font-medium">
-          {{i.name}}
-        </div>
-        <div class="font-openSans leading-5">
-          {{i.company}}<br>
-          {{i.description}}
-        </div>
-      </div>
-    {{/each}}
-  </div>
+      {{/each}}
+    </div>
+  {{/each-in}}
+
   <div class="mt-20 text-center">
     <a
       href="#"

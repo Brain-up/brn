@@ -3,25 +3,39 @@ import ApplicationSerializer, { IContributorDTO } from './application';
 
 export default class ContributorSerializer extends ApplicationSerializer {
   normalize(typeClass: Model, rawPayload: IContributorDTO) {
+    const {
+      id,
+      name,
+      nameEn,
+      description,
+      descriptionEn,
+      company,
+      companyEn,
+      pictureUrl,
+      contribution,
+      active,
+      type,
+      contacts,
+    } = rawPayload;
     const payload = {
-      id: rawPayload.id.toString(),
+      id: id.toString(),
       rawName: {
-        'ru-ru': rawPayload.name,
-        'en-us': rawPayload.nameEn,
+        'ru-ru': name ?? '',
+        'en-us': nameEn ?? name ?? '',
       },
       rawDescription: {
-        'ru-ru': rawPayload.description,
-        'en-us': rawPayload.descriptionEn,
+        'ru-ru': description ?? '',
+        'en-us': descriptionEn ?? description ?? '',
       },
       rawCompany: {
-        'ru-ru': rawPayload.company,
-        'en-us': rawPayload.companyEn,
+        'ru-ru': company ?? '',
+        'en-us': companyEn ?? company ?? '',
       },
-      avatar: rawPayload.pictureUrl,
-      contribution: rawPayload.contribution,
-      isActive: rawPayload.active,
-      kind: rawPayload.type,
-      contacts: rawPayload.contacts,
+      avatar: pictureUrl,
+      contribution: contribution,
+      isActive: active,
+      kind: type,
+      contacts: contacts,
     };
     return super.normalize(typeClass, payload);
   }

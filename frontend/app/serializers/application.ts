@@ -71,12 +71,12 @@ type TaskDTO = {
 
 export interface IContributorDTO {
   "id": number;
-  "name": string;
-  "nameEn": string;
-  "description": string;
-  "descriptionEn": string;
-  "company": null;
-  "companyEn": null;
+  "name": string | null;
+  "nameEn": string | null;
+  "description": string | null;
+  "descriptionEn": string | null;
+  "company": null | null;
+  "companyEn": null | null;
   "pictureUrl": string;
   "contacts": [];
   "type": "SPECIALIST" | "DEVELOPER";

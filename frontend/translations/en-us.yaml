@@ -309,3 +309,9 @@ contributors:
   title: "Our Team"
   subtitle: "We are all here to make your life easier!"
   all: all team
+  kinds:
+    DEVELOPER: 'Developers'
+    SPECIALIST: 'Specialists'
+    QA: 'Quality Assurance'
+    DESIGNER: 'Designers'
+    OTHER: 'Other'
