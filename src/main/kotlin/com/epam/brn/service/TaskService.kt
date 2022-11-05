@@ -96,13 +96,13 @@ fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
     exerciseType = exerciseType,
     name = name,
     serialNumber = serialNumber,
-    answerOptions = answerOptions.toResourceDtoSet()
+    answerOptions = answerOptions.toResourceDtos()
 )
 
-fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
+fun Iterable<Resource>.toResourceDtos(): MutableList<ResourceResponse> {
     val mapVowelCountToWord: Map<Int, List<Resource>> =
         this.groupBy { resource -> resource.word.findSyllableCount() }
-    val resultDtoSet = mutableSetOf<ResourceResponse>()
+    val resultDtoSet = mutableListOf<ResourceResponse>()
     mapVowelCountToWord.keys
         .sorted()
         .forEachIndexed { index, vowelCount ->
@@ -113,5 +113,5 @@ fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
             }
             resultDtoSet.addAll(resources ?: emptySet())
         }
-    return resultDtoSet.toHashSet()
+    return resultDtoSet
 }

@@ -10,12 +10,12 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
+import com.epam.brn.utils.resource
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -99,12 +99,12 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
         every { exerciseRepositoryMock.save(ofType(Exercise::class)) } returns Exercise()
 
-        mockFindResourceByWordLike("бал", resource_бал())
-        mockFindResourceByWordLike("бум", resource_бум())
-        mockFindResourceByWordLike("быль", resource_быль())
-        mockFindResourceByWordLike("вить", resource_вить())
-        mockFindResourceByWordLike("гад", resource_гад())
-        mockFindResourceByWordLike("дуб", resource_дуб())
+        mockFindResourceByWordLike("бал", resource("бал"))
+        mockFindResourceByWordLike("бум", resource("бум"))
+        mockFindResourceByWordLike("быль", resource("быль"))
+        mockFindResourceByWordLike("вить", resource("вить"))
+        mockFindResourceByWordLike("гад", resource("гад"))
+        mockFindResourceByWordLike("дуб", resource("дуб"))
     }
 
     private fun mockFindResourceByWordLike(word: String, result: Resource) {
@@ -153,13 +153,13 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
 
     @Test
     fun `should create correct answer options`() {
-        val expected = setOf(
-            resource_бал(),
-            resource_бум(),
-            resource_быль(),
-            resource_вить(),
-            resource_гад(),
-            resource_дуб()
+        val expected = listOf(
+            resource("бал"),
+            resource("бум"),
+            resource("быль"),
+            resource("вить"),
+            resource("гад"),
+            resource("дуб")
         )
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", BrnLocale.RU.locale) } returns subGroupMock
         every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.ALYSS.name
@@ -235,9 +235,9 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             .first().tasks
 
         tasks.forEach {
-            assertThat(it.answerOptions).containsExactlyElementsOf(expected)
+            assertThat(it.answerOptions).usingRecursiveComparison().isEqualTo(expected)
+            verify { resourceRepositoryMock.saveAll(it.answerOptions) }
         }
-        verify { resourceRepositoryMock.saveAll(expected) }
     }
 
     @Test
@@ -274,93 +274,39 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             Task(
                 exercise = exercise,
                 serialNumber = 1,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бал()
+                answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
+                correctAnswer = resource("бал")
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 2,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бум()
+                answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
+                correctAnswer = resource("бум")
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 3,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_быль()
+                answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
+                correctAnswer = resource("быль")
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 4,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бал()
+                answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
+                correctAnswer = resource("бал")
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 5,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бум()
+                answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
+                correctAnswer = resource("бум")
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 6,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_быль()
+                answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
+                correctAnswer = resource("быль")
             )
-        )
-    }
-
-    private fun resource_бал(): Resource {
-        return Resource(
-            word = "бал",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бал.ogg",
-            pictureFileUrl = "pictures/бал.jpg"
-        )
-    }
-
-    private fun resource_бум(): Resource {
-        return Resource(
-            word = "бум",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бум.ogg",
-            pictureFileUrl = "pictures/бум.jpg"
-        )
-    }
-
-    private fun resource_быль(): Resource {
-        return Resource(
-            word = "быль",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/быль.ogg",
-            pictureFileUrl = "pictures/быль.jpg"
-        )
-    }
-
-    private fun resource_вить(): Resource {
-        return Resource(
-            word = "вить",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/вить.ogg",
-            pictureFileUrl = "pictures/вить.jpg"
-        )
-    }
-
-    private fun resource_гад(): Resource {
-        return Resource(
-            word = "гад",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/гад.ogg",
-            pictureFileUrl = "pictures/гад.jpg"
-        )
-    }
-
-    private fun resource_дуб(): Resource {
-        return Resource(
-            word = "дуб",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/дуб.ogg",
-            pictureFileUrl = "pictures/дуб.jpg"
         )
     }
 }

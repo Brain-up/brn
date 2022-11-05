@@ -293,7 +293,7 @@ class UserDetailsControllerIT : BaseIT() {
             bornYear = 2000,
             active = true,
         )
-        user1.authoritySet = mutableSetOf(authorityAdmin, authorityUser)
+        user1.authoritySet = mutableListOf(authorityAdmin, authorityUser)
 
         val user2 = UserAccount(
             fullName = "testUserFirstName2",
@@ -302,7 +302,7 @@ class UserDetailsControllerIT : BaseIT() {
             bornYear = 2000,
             active = true,
         )
-        user2.authoritySet = mutableSetOf(authorityUser)
+        user2.authoritySet = mutableListOf(authorityUser)
 
         userAccountRepository.save(user1)
         userAccountRepository.save(user2)

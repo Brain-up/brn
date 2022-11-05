@@ -34,7 +34,7 @@ class Task(
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
-    var answerOptions: MutableSet<Resource> = hashSetOf(),
+    var answerOptions: MutableList<Resource> = mutableListOf(),
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "answer_parts_resources",
@@ -48,7 +48,7 @@ class Task(
         exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet()
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toMutableList()
     )
 
     fun toWordsGroupSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskResponse(
@@ -73,7 +73,7 @@ class Task(
         exerciseType = ExerciseType.PHRASES,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet()
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toMutableList()
     )
     fun toGeneralTaskDto(template: String? = "") = GeneralTaskResponse(
         id = id!!,

@@ -58,12 +58,12 @@ class SeriesWordsRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesWordsRecord, locale: BrnLocale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesWordsRecord, locale: BrnLocale): MutableList<Resource> =
         record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .map { toResource(it, locale) }
-            .toMutableSet()
+            .toMutableList()
 
     private fun toResource(word: String, locale: BrnLocale): Resource {
         val audioPath = wordsService.getSubFilePathForWord(
@@ -101,6 +101,6 @@ class SeriesWordsRecordProcessor(
             ) else ""
         )
 
-    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
+    private fun generateOneTask(exercise: Exercise, answerOptions: MutableList<Resource>) =
         Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
 }

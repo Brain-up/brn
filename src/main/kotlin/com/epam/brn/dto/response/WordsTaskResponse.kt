@@ -10,5 +10,5 @@ data class WordsTaskResponse(
     val exerciseId: Long? = null,
     val name: String? = "",
     val serialNumber: Int? = 0,
-    val answerOptions: Set<ResourceResponse> = HashSet()
+    val answerOptions: List<ResourceResponse> = emptyList()
 )

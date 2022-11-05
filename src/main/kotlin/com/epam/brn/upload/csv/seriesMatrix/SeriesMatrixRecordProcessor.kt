@@ -48,7 +48,7 @@ class SeriesMatrixRecordProcessor(
                 val newExercise = generateExercise(record, subGroup)
                 val savedExercise = exerciseRepository.save(newExercise)
 
-                taskRepository.save(extractTask(savedExercise, savedResources.toMutableSet()))
+                taskRepository.save(extractTask(savedExercise, savedResources.toMutableList()))
                 exercises.add(savedExercise)
             }
         }
@@ -110,7 +110,7 @@ class SeriesMatrixRecordProcessor(
         extractWordGroups(record)
             .joinToString(StringUtils.SPACE, "<", ">") { it.first.toString() }
 
-    private fun extractTask(exercise: Exercise, answerOptions: MutableSet<Resource>): Task {
+    private fun extractTask(exercise: Exercise, answerOptions: MutableList<Resource>): Task {
         return Task(
             serialNumber = 2,
             answerOptions = answerOptions,
