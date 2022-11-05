@@ -60,11 +60,9 @@ export default class UserDataService extends Service {
   }
 
   shouldUpdateRoute() {
-    return (
-      this.router.currentRouteName !== 'description' &&
-      this.router.currentRouteName !== 'profile.statistics' &&
-      this.router.currentRouteName !== 'index'
-    );
+    const prefix = this.router.currentRouteName.split('.')[0];
+    
+    return prefix === 'groups' || prefix === 'group';
   }
 
   @action setLocale(localeName: string) {
