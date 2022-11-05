@@ -1,9 +1,8 @@
 import Model, { attr } from '@ember-data/model';
 import { inject as service } from '@ember/service';
-import Intl from 'ember-intl/services/intl';
-
+import UserDataService from 'brn/services/user-data';
 export default class Contributor extends Model {
-  @service('intl') intl!: Intl;
+  @service('user-data') userData!: UserDataService;
   @attr() rawName!: Record<string, string>;
   @attr() rawDescription!: Record<string, string>;
   @attr() rawCompany!: Record<string, string>;
@@ -19,7 +18,7 @@ export default class Contributor extends Model {
   @attr('array') contacts!: {type: string, value: string}[];
 
   get locale() {
-    return this.intl.locale[0];
+    return this.userData.activeLocale;
   }
   get name() {
     return this.rawName[this.locale] ?? '';
