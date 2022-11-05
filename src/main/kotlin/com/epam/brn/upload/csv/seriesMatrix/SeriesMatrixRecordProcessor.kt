@@ -55,14 +55,16 @@ class SeriesMatrixRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesMatrixRecord, locale: BrnLocale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesMatrixRecord, locale: BrnLocale): MutableList<Resource> =
         extractWordGroups(record)
             .map {
                 splitOnWords(it.second).map { word: String ->
                     toResource(word, it.first, locale)
                 }
             }
-            .flatten().toMutableSet()
+            .flatten()
+            .distinct()
+            .toMutableList()
 
     private fun extractWordGroups(record: SeriesMatrixRecord): Sequence<Pair<WordType, String>> =
         record.words

@@ -63,6 +63,7 @@ class SeriesWordsRecordProcessor(
             .asSequence()
             .map { toStringWithoutBraces(it) }
             .map { toResource(it, locale) }
+            .distinct()
             .toMutableList()
 
     private fun toResource(word: String, locale: BrnLocale): Resource {
