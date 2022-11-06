@@ -47,6 +47,7 @@ data class Contributor(
     fun toContributorResponse(locale: String = "ru-ru"): ContributorResponse {
         val dto = ContributorResponse(
             id = id!!,
+            gitHubLogin = gitHubUser?.login ?: "",
             name = name,
             nameEn = nameEn,
             company = company,
@@ -84,7 +85,7 @@ data class Contributor(
     }
 
     override fun toString() =
-        "Exercise(id=$id, name=$name, description=$description, company=$company, nameEn=$nameEn, " +
+        "Contributor(id=$id, name=$name, description=$description, company=$company, nameEn=$nameEn, " +
             "descriptionEn=$descriptionEn, companyEn=$companyEn, type=$type, pictureUrl=$pictureUrl," +
             "contribution=$contribution, gitHubUser=$gitHubUser)"
 

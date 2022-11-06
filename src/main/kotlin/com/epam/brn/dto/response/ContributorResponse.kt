@@ -5,6 +5,7 @@ import com.epam.brn.enums.ContributorType
 
 data class ContributorResponse(
     val id: Long,
+    val gitHubLogin: String = "",
     val name: String,
     val nameEn: String?,
     val description: String? = null,
