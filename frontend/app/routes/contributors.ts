@@ -7,6 +7,7 @@ export default class SpecialistsRoute extends Route {
     @service('store') store!: Store;
     async model() {
         const request = await this.store.findAll('contributor');
-        return request.filterBy('kind', 'DEVELOPER').filterBy('isActive', true).sortBy('contribution').reverse();
+        const kinds = ['DEVELOPER', 'QA', 'DESIGNER', 'OTHER'];
+        return request.filterBy('isActive', true).sortBy('contribution').reverse().filter(e => kinds.includes(e.kind)).toArray();
     }
 }
