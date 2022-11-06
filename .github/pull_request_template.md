@@ -1,3 +1,3 @@
-[EPMLABSBRN-XX](https://jira.epam.com/jira/browse/EPMLABSBRN-XX)
+##GithubTaskNumber
 
-**Description**:
+**Description what actually was done in task**:
