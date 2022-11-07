@@ -9,6 +9,7 @@ export default class Contributor extends Model {
   @attr('string') avatar!: string;
   @attr('number') contribution!: number;
   @attr('boolean') isActive!: boolean;
+  @attr('string') login!: string;
   @attr('string') kind!:
     | 'DEVELOPER'
     | 'SPECIALIST'

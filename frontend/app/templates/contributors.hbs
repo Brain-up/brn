@@ -8,7 +8,9 @@
   </div>
 
   {{#each-in (group-by "kind" this.model) as |kindType group|}}
-    <h3 class="pb-2 text-xl font-medium">{{t (concat "contributors.kinds." kindType)}}</h3>
+    <h3 class="pb-2 text-xl font-medium">{{t
+        (concat "contributors.kinds." kindType)
+      }}</h3>
     <div
       class="md:flex max-w-screen-xl m-auto flex-wrap
         {{style-namespace "about-us"}}"
@@ -24,9 +26,18 @@
               class="w-24 m-auto mb-2 rounded-full"
             />
           </div>
-          <div class="mb-1 text-lg font-medium">
-            {{i.name}}
-          </div>
+          {{#if i.login}}
+            <a
+              class="mb-1 text-lg font-medium"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={{concat "https://github.com/" i.login}}
+            >{{i.name}}</a>
+          {{else}}
+            <div class="mb-1 text-lg font-medium">
+              {{i.name}}
+            </div>
+          {{/if}}
           <div class="font-openSans leading-5">
             {{i.company}}<br />
             {{i.description}}
