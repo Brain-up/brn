@@ -117,6 +117,11 @@ class ExercisesControllerIT : BaseIT() {
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONObject("data")
         Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
+        Assertions.assertEquals(50, jsonDataObject.getJSONObject("noise").get("level"))
+        Assertions.assertEquals(
+            "https://somebucket.s3.us-east-2.amazonaws.com/testNoiseUrl",
+            jsonDataObject.getJSONObject("noise").get("url")
+        )
     }
 
     @Test
@@ -303,7 +308,9 @@ class ExercisesControllerIT : BaseIT() {
             Exercise(
                 subGroup = subGroup,
                 level = 0,
-                name = exerciseName
+                name = exerciseName,
+                noiseLevel = 50,
+                noiseUrl = "/testNoiseUrl"
             )
         )
     }

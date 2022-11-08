@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -99,14 +99,14 @@ fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
     answerOptions = answerOptions.toResourceDtoSet()
 )
 
-fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceDto> {
+fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
     val mapVowelCountToWord: Map<Int, List<Resource>> =
         this.groupBy { resource -> resource.word.findSyllableCount() }
-    val resultDtoSet = mutableSetOf<ResourceDto>()
+    val resultDtoSet = mutableSetOf<ResourceResponse>()
     mapVowelCountToWord.keys
         .sorted()
         .forEachIndexed { index, vowelCount ->
-            val resources = mapVowelCountToWord[vowelCount]?.map { it.toDto() }
+            val resources = mapVowelCountToWord[vowelCount]?.map { it.toResponse() }
             resources?.forEach {
                 it.columnNumber = index
                 it.soundsCount = vowelCount

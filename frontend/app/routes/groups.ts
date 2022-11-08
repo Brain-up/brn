@@ -3,13 +3,13 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
-import Intl from 'ember-intl/services/intl';
 import type Store from '@ember-data/store';
+import UserDataService from 'brn/services/user-data';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   @service('network') network!: NetworkService;
   @service('store') store!: Store;
-  @service('intl') intl!: Intl;
+  @service('user-data') userData!: UserDataService;
   queryParams = {
     locale: {
       type: 'string',
@@ -19,7 +19,7 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   async model() {
     await this.network.loadCurrentUser();
     return await this.store.query('group', {
-      locale: this.intl.locale[0],
+      locale: this.userData.activeLocale,
     });
   }
 }

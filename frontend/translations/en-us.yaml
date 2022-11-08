@@ -303,35 +303,15 @@ used_resources:
 specialists:
   title: Specialists
   subtitle: The BrainUp training program was developed jointly with the best specialists in the field of deaf education from Russia and Belarus
-  people:
-    0:
-      fullName: Koroleva Inna Vasilevna
-      jobTitle: Scientific director of the rehabilitation department, doctor of psychological sciences, professor. Chief Researcher, St. Petersburg Research Institute of ENT.
-      description: Leading Russian expert in the field of rehabilitation of patients with hearing loss and deafness, author of numerous books for parents and specialists.
-    1:
-      fullName: Proshina Lyubov Aleksandrovna
-      jobTitle: Deaf teacher, Republican Scientific and Practical Center for Otorhinolorngology, 12 years of experience.
-      description: Throughout my professional career, I have been trying to make this path simpler and more understandable, more interesting and exciting. I believe in success and that our joint work will definitely help adults and children hear the world better.
   all: all specialists
 
 contributors:
   title: "Our Team"
   subtitle: "We are all here to make your life easier!"
-  people:
-    0:
-      fullName: Kannunikov Aleksandr
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 5.png
-    1:
-      fullName: Moshnikova Elana
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 1.png
-    2:
-      fullName: Churkina Irina
-      jobTitle: Senior Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 1.png
-    3:
-      fullName: Miguel Osorio
-      jobTitle: Lead Software Engineer, Epam
-      imgSrc: /pictures/avatars/avatar 5.png
   all: all team
+  kinds:
+    DEVELOPER: 'Developers'
+    SPECIALIST: 'Specialists'
+    QA: 'Quality Assurance'
+    DESIGNER: 'Designers'
+    OTHER: 'Other'

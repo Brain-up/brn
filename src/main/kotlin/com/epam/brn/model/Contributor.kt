@@ -23,7 +23,7 @@ data class Contributor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    var name: String? = null,
+    var name: String,
     var description: String? = null,
     var company: String? = null,
     var nameEn: String? = null,
@@ -44,25 +44,24 @@ data class Contributor(
     @JoinColumn(name = "contributor_id")
     var contacts: MutableSet<Contact> = mutableSetOf()
 
-    fun toContributorDto(locale: String = "ru-ru"): ContributorResponse {
+    fun toContributorResponse(locale: String = "ru-ru"): ContributorResponse {
         val dto = ContributorResponse(
             id = id!!,
+            gitHubLogin = gitHubUser?.login ?: "",
+            name = name,
+            nameEn = nameEn,
+            company = company,
+            companyEn = companyEn,
+            description = description,
+            descriptionEn = descriptionEn,
             pictureUrl = pictureUrl,
             contribution = contribution,
             type = type,
+            active = active,
             contacts = contacts.map {
                 it.toDto()
             }.toSet()
         )
-        if (locale == "ru-ru") {
-            dto.name = name ?: gitHubUser?.name
-            dto.description = description ?: gitHubUser?.bio
-            dto.company = company ?: gitHubUser?.company
-        } else {
-            dto.name = nameEn ?: gitHubUser?.name
-            dto.description = descriptionEn ?: gitHubUser?.bio
-            dto.company = companyEn ?: gitHubUser?.company
-        }
         return dto
     }
 
@@ -86,7 +85,7 @@ data class Contributor(
     }
 
     override fun toString() =
-        "Exercise(id=$id, name=$name, description=$description, company=$company, nameEn=$nameEn, " +
+        "Contributor(id=$id, name=$name, description=$description, company=$company, nameEn=$nameEn, " +
             "descriptionEn=$descriptionEn, companyEn=$companyEn, type=$type, pictureUrl=$pictureUrl," +
             "contribution=$contribution, gitHubUser=$gitHubUser)"
 

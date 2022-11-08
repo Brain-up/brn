@@ -4,7 +4,10 @@
 <SlotTo @selector="#exercise-config-slot">
   <ExerciseStudyConfig />
 </SlotTo>
-<div class="{{style-namespace "task-player"}} flex flex-1" ...attributes>
+<div 
+  {{did-insert this.preloadNoise @task}}
+  {{did-update this.preloadNoise @task}}
+  class="{{style-namespace "task-player"}} flex flex-1" ...attributes>
 
   {{#let
     (component

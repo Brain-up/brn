@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.ResourceDto
+import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
@@ -104,13 +104,14 @@ internal class ResourceServiceTest {
         // GIVEN
         val resource = Resource(
             id = id,
-            wordType = "OBJECT"
+            wordType = "OBJECT",
+            word = "вил+ок"
         )
         every { resourceRepositoryMock.findByIdOrNull(id) } returns resource
         every { resourceRepositoryMock.save(resource) } returns resource
 
         // WHEN
-        val result: ResourceDto = resourceService.updateDescription(id, description)
+        val result: ResourceResponse = resourceService.updateDescription(id, description)
 
         // THEN
         verify(exactly = 1) { resourceRepositoryMock.findByIdOrNull(id) }
@@ -118,6 +119,8 @@ internal class ResourceServiceTest {
 
         id shouldBe result.id
         description shouldBe result.description
+        "вилок" shouldBe result.word
+        "вил+ок" shouldBe result.wordPronounce
     }
 
     @Test

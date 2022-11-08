@@ -18,9 +18,10 @@
           }}
             <div
               data-test-exercises-name-group
-              class="sm:grid-cols-4 md:grid-cols-5 gap-y-2 sm:gap-y-3 grid justify-center grid-cols-3 mx-2 ml-0"
             >
-              {{#each slices as |exercise|}}
+              <h3 class="pl-4">{{get (get slices '0') 'name'}}</h3>
+              <div class="sm:grid-cols-4 md:grid-cols-5 gap-y-2 sm:gap-y-3 grid justify-center grid-cols-3 mx-2 ml-0">
+                {{#each slices as |exercise|}}
                 {{#let
                   (contains exercise.id (or @available (array)))
                   as |isAvailable|
@@ -38,7 +39,9 @@
                   </div>
                 {{/let}}
               {{/each}}
-            </div>
+            
+              </div>
+              </div>
           {{/let}}
         </div>
       </div>
