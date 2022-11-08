@@ -10,7 +10,6 @@ import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.stream.Collectors
 import kotlin.streams.toList
 
 @Service
@@ -29,7 +28,7 @@ class ContributorServiceImpl(
     override fun getContributors(locale: String, type: ContributorType): List<ContributorResponse> {
         return contributorRepository.findAllByType(type).stream()
             .map { e -> e.toContributorResponse(locale) }
-            .collect(Collectors.toList())
+            .toList()
     }
 
     @Transactional

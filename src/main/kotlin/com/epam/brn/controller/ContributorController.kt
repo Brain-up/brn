@@ -36,17 +36,15 @@ class ContributorController(val contributorService: ContributorService) {
     fun getContributors(
         @RequestParam(name = "locale", required = false, defaultValue = "ru-ru") locale: String,
         @RequestParam(name = "type", required = false) type: ContributorType?,
-    ): ResponseEntity<Response<List<ContributorResponse>>> {
-        return ResponseEntity.ok()
-            .body(
-                Response(
-                    data = if (type == null)
-                        contributorService.getAllContributors()
-                    else
-                        contributorService.getContributors(locale, type)
-                )
+    ): ResponseEntity<Response<List<ContributorResponse>>> = ResponseEntity.ok()
+        .body(
+            Response(
+                data = if (type == null)
+                    contributorService.getAllContributors()
+                else
+                    contributorService.getContributors(locale, type)
             )
-    }
+        )
 
     @PostMapping
     @ApiOperation("Add a new contributor")

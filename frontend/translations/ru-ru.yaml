@@ -312,3 +312,9 @@ contributors:
   title: "Наша команда"
   subtitle: "Мы собрались все вместе, чтобы сделать вашу жизнь проще!"
   all: вся команда
+  kinds:
+    DEVELOPER: Разработчики
+    SPECIALIST: Специалисты
+    QA: Тестировщики
+    DESIGNER: Дизайнеры
+    OTHER: Другие
