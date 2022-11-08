@@ -16,6 +16,7 @@ export default class ContributorSerializer extends ApplicationSerializer {
       active,
       type,
       contacts,
+      gitHubLogin
     } = rawPayload;
     const payload = {
       id: id.toString(),
@@ -32,6 +33,7 @@ export default class ContributorSerializer extends ApplicationSerializer {
         'en-us': companyEn ?? company ?? '',
       },
       avatar: pictureUrl,
+      login: gitHubLogin,
       contribution: contribution,
       isActive: active,
       kind: type,

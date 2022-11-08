@@ -12,32 +12,24 @@ data class ContributorRequest(
     @field:NotBlank
     @field:Length(max = 255)
     val name: String,
-
     @field:NotBlank
     @field:Length(max = 255)
     val description: String?,
-
     @field:Length(max = 255)
     val company: String?,
-
     @field:NotBlank
     @field:Length(max = 255)
     val nameEn: String?,
-
     @field:NotBlank
     @field:Length(max = 255)
     val descriptionEn: String?,
-
     @field:Length(max = 255)
     val companyEn: String?,
-
     @field:Length(max = 255)
     val pictureUrl: String?,
-
     @field:NotNull
     @field:Positive
     val contribution: Long?,
-
     @field:NotNull
     val type: ContributorType?,
 
