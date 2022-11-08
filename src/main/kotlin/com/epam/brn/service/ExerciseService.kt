@@ -50,10 +50,10 @@ class ExerciseService(
             .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
-    fun findExerciseByNameAndLevel(name: String, level: Int): Exercise {
-        return exerciseRepository.findExerciseByNameAndLevel(name, level)
+    fun findExerciseByNameAndLevel(name: String, level: Int): Exercise =
+        exerciseRepository
+            .findExerciseByNameAndLevel(name, level)
             .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
-    }
 
     fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId")
@@ -150,10 +150,10 @@ class ExerciseService(
         exerciseRepository.save(exercise)
     }
 
-    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> {
-        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
-        return subGroupExercises.map { updateExerciseDto(it.toDto()) }
-    }
+    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> =
+        exerciseRepository
+            .findExercisesBySubGroupId(subGroupId)
+            .map { updateExerciseDto(it.toDto()) }
 
     fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> {
         val exercises = exerciseRepository.findExercisesByWord(word)
