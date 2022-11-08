@@ -155,10 +155,10 @@ class ExerciseService(
             .findExercisesBySubGroupId(subGroupId)
             .map { updateExerciseDto(it.toDto()) }
 
-    fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> {
-        val exercises = exerciseRepository.findExercisesByWord(word)
-        return exercises.map { it.toDtoWithWords() }
-    }
+    fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> =
+        exerciseRepository
+            .findExercisesByWord(word)
+            .map { it.toDtoWithWords() }
 
     @Transactional(rollbackFor = [Exception::class])
     fun createExercise(exerciseCreateDto: ExerciseCreateDto): ExerciseDto {
