@@ -152,7 +152,7 @@ class ExerciseService(
 
     fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> {
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
-        return subGroupExercises.map { it.toDto() }
+        return subGroupExercises.map { updateExerciseDto(it.toDto()) }
     }
 
     fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> {

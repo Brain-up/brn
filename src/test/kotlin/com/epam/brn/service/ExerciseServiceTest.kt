@@ -172,13 +172,15 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
         val subGroupId = 1L
-        val exerciseDtoMock = mockkClass(ExerciseDto::class)
+        val exerciseDto = ExerciseDto(id = 1, seriesId = 1, name = "name", noise = NoiseDto(url = "url"))
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exerciseMock)
-        every { exerciseMock.toDto() } returns (exerciseDtoMock)
+        every { exerciseMock.toDto() } returns (exerciseDto)
+        every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns "updatedNoiseUrl"
         // WHEN
         val actualResults = exerciseService.findExercisesWithTasksBySubGroup(1)
         // THEN
-        actualResults shouldContain exerciseDtoMock
+        actualResults shouldContain exerciseDto
+        exerciseDto.noise.url shouldBe "updatedNoiseUrl"
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
     }
 
