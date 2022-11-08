@@ -1,11 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { Contributor } from '@admin/models/contrubutor.model';
 import { MatTableDataSource } from '@angular/material/table';
-import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { Contributor } from '@admin/models/contrubutor.model';
+import { ContributorApiService } from '@admin/services/api/contributor-api.service';
 
 @Component({
   selector: 'app-contributors',
@@ -46,10 +47,14 @@ export class ContributorsComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private readonly adminApiService: AdminApiService,
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private readonly contributorApiService: ContributorApiService,
+    private router: Router,
+  ) {
+  }
 
   ngOnInit(): void {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.getContributors();
   }
 
@@ -62,7 +67,7 @@ export class ContributorsComponent implements OnInit, OnDestroy {
     this.getContributorsSubscription?.unsubscribe();
     this.isLoading$.next(true);
 
-    this.getContributorsSubscription = this.adminApiService
+    this.getContributorsSubscription = this.contributorApiService
       .getContributors()
       .pipe(
         finalize(() => this.isLoading$.next(false)),
@@ -79,8 +84,16 @@ export class ContributorsComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  // will be implemented in the next story
-  public navigateToSelectedContributor(user: Contributor): void {
-    console.log(user);
+  public navigateToSelectedContributor(contributor: Contributor): void {
+    this.router.navigate(['contributor', contributor.id], {
+      relativeTo: this.activatedRoute,
+      state: {data: contributor},
+    });
+  }
+
+  public addContributor(): void {
+    this.router.navigate(['contributor'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }
