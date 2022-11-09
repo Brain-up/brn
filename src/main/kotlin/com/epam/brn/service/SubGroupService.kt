@@ -22,29 +22,28 @@ class SubGroupService(
 
     fun findSubGroupsForSeries(seriesId: Long): List<SubGroupResponse> {
         log.debug("Try to find subGroups for seriesId=$seriesId")
-        return subGroupRepository.findBySeriesId(seriesId).asSequence()
-            .map { subGroup -> toSubGroupDto(subGroup) }
-            .sortedBy { subGroupResponse -> !subGroupResponse.withPictures }
+        return subGroupRepository.findBySeriesId(seriesId)
+            .map { subGroup -> toSubGroupResponse(subGroup) }
             .toList()
+            .sortedBy { !it.withPictures }
+            .sortedBy { it.level }
     }
 
     fun findById(subGroupId: Long): SubGroupResponse {
         log.debug("try to find SubGroup by Id=$subGroupId")
         val subGroup = subGroupRepository.findById(subGroupId)
             .orElseThrow { EntityNotFoundException("No subGroup was found by id=$subGroupId.") }
-        return toSubGroupDto(subGroup)
+        return toSubGroupResponse(subGroup)
     }
 
     fun deleteSubGroupById(subGroupId: Long) {
         log.debug("try to delete SubGroup by Id=$subGroupId")
         if (subGroupRepository.existsById(subGroupId)) {
-            if (exerciseRepository.existsBySubGroupId(subGroupId)) {
+            if (exerciseRepository.existsBySubGroupId(subGroupId))
                 throw IllegalArgumentException("Can not delete subGroup because there are exercises that refer to the subGroup.")
-            }
             subGroupRepository.deleteById(subGroupId)
-        } else {
+        } else
             throw IllegalArgumentException("Can not delete subGroup because subGroup is not found by this id.")
-        }
     }
 
     fun updateSubGroupById(subGroupId: Long, subGroupChangeRequest: SubGroupChangeRequest): SubGroupResponse {
@@ -53,7 +52,7 @@ class SubGroupService(
             .orElseThrow { EntityNotFoundException("Can not update subGroup because subGroup is not found by this id.") }
         subGroup.withPictures = subGroupChangeRequest.withPictures
         subGroupRepository.save(subGroup)
-        return toSubGroupDto(subGroup)
+        return toSubGroupResponse(subGroup)
     }
 
     fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupResponse {
@@ -66,11 +65,11 @@ class SubGroupService(
             .orElseThrow { EntityNotFoundException("No series was found by id=$seriesId.") }
         val subGroup = subGroupRequest.toModel(series)
         val savedSubGroup = subGroupRepository.save(subGroup)
-        return toSubGroupDto(savedSubGroup)
+        return toSubGroupResponse(savedSubGroup)
     }
 
-    fun toSubGroupDto(subGroup: SubGroup): SubGroupResponse {
+    fun toSubGroupResponse(subGroup: SubGroup): SubGroupResponse {
         val pictureUrl = urlConversionService.makeUrlForSubGroupPicture(subGroup.code)
-        return subGroup.toDto(pictureUrl)
+        return subGroup.toResponse(pictureUrl)
     }
 }

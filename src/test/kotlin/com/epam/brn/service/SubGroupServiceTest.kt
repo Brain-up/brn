@@ -42,26 +42,29 @@ internal class SubGroupServiceTest {
     private lateinit var urlConversionService: UrlConversionService
 
     @Test
-    fun `findSubGroupsForSeries should return data when there are subGroups for seriesId`() {
+    fun `findSubGroupsForSeries should return sorted data when there are subGroups for seriesId`() {
         // GIVEN
         val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
-        val subGroupMockkWithPictures = mockkClass(SubGroup::class, relaxed = true)
+        val subGroupMockkWithPictures1 = mockkClass(SubGroup::class, relaxed = true)
+        val subGroupMockkWithPictures2 = mockkClass(SubGroup::class, relaxed = true)
         val seriesId = 1L
         val pictureUrl = "url/code"
         val subGroupResponse = SubGroupResponse(seriesId, 1L, 5, "name", pictureUrl, "description", false)
-        val subGroupResponseWithPictures = SubGroupResponse(seriesId, 2L, 5, "name", pictureUrl, "description", true)
-        every { subGroupRepository.findBySeriesId(seriesId) } returns listOf(subGroupMockk, subGroupMockkWithPictures)
+        val subGroupResponseWithPictures1 = SubGroupResponse(seriesId, 2L, 1, "name", pictureUrl, "description", true)
+        val subGroupResponseWithPictures2 = SubGroupResponse(seriesId, 2L, 2, "name", pictureUrl, "description", true)
+        every { subGroupRepository.findBySeriesId(seriesId) } returns listOf(subGroupMockk, subGroupMockkWithPictures2, subGroupMockkWithPictures1)
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns pictureUrl
-        every { subGroupMockk.toDto(pictureUrl) } returns subGroupResponse
-        every { subGroupMockkWithPictures.toDto(pictureUrl) } returns subGroupResponseWithPictures
+        every { subGroupMockk.toResponse(pictureUrl) } returns subGroupResponse
+        every { subGroupMockkWithPictures1.toResponse(pictureUrl) } returns subGroupResponseWithPictures1
+        every { subGroupMockkWithPictures2.toResponse(pictureUrl) } returns subGroupResponseWithPictures2
         every { subGroupMockk.code } returns "code"
-        every { subGroupMockkWithPictures.code } returns "code"
+        every { subGroupMockkWithPictures1.code } returns "code"
+        every { subGroupMockkWithPictures2.code } returns "code"
         // WHEN
         val allGroups = subGroupService.findSubGroupsForSeries(seriesId)
-
         // THEN
         verify(exactly = 1) { subGroupRepository.findBySeriesId(seriesId) }
-        allGroups shouldBe listOf(subGroupResponseWithPictures, subGroupResponse)
+        allGroups shouldBe listOf(subGroupResponseWithPictures1, subGroupResponseWithPictures2, subGroupResponse)
     }
 
     @Test
@@ -71,10 +74,8 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.existsById(subGroupId) } returns true
         every { exerciseRepository.existsBySubGroupId(subGroupId) } returns false
         justRun { subGroupRepository.deleteById(subGroupId) }
-
         // WHEN
         subGroupService.deleteSubGroupById(subGroupId)
-
         // THEN
         verify(exactly = 1) { exerciseRepository.existsBySubGroupId(subGroupId) }
     }
@@ -86,7 +87,6 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.existsById(subGroupId) } returns true
         every { exerciseRepository.existsBySubGroupId(subGroupId) } returns true
         justRun { subGroupRepository.deleteById(subGroupId) }
-
         // THEN
         shouldThrow<IllegalArgumentException> {
             subGroupService.deleteSubGroupById(subGroupId)
@@ -98,7 +98,6 @@ internal class SubGroupServiceTest {
         // GIVEN
         val subGroupId = 1L
         every { subGroupRepository.existsById(subGroupId) } returns false
-
         // THEN
         shouldThrow<IllegalArgumentException> {
             subGroupService.deleteSubGroupById(subGroupId)
@@ -112,12 +111,11 @@ internal class SubGroupServiceTest {
         val subGroupId = 1L
         val subGroupResponse = SubGroupResponse(subGroupId, 1L, 5, "name", "url/code", "description", false)
         every { subGroupRepository.findById(subGroupId) } returns Optional.of(subGroupMockk)
-        every { subGroupMockk.toDto("url/code") } returns subGroupResponse
+        every { subGroupMockk.toResponse("url/code") } returns subGroupResponse
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
         every { subGroupMockk.code } returns "code"
         // WHEN
         val resultSubGroupDto = subGroupService.findById(subGroupId)
-
         // THEN
         verify(exactly = 1) { subGroupRepository.findById(subGroupId) }
         resultSubGroupDto shouldBe subGroupResponse
@@ -142,13 +140,12 @@ internal class SubGroupServiceTest {
         val subGroup = spyk(SubGroup(1, "", code = code, 2, "", false, seriesMockk))
         val subGroupResponse = SubGroupResponse(2, 2, 2, "name", pictureUrl, "description", false)
         every { seriesMockk.id } returns seriesId
-        every { subGroup.toDto(pictureUrl) } returns subGroupResponse
+        every { subGroup.toResponse(pictureUrl) } returns subGroupResponse
         every { urlConversionService.makeUrlForSubGroupPicture(code) } returns pictureUrl
         // WHEN
-        val resultSubGroupDto = subGroupService.toSubGroupDto(subGroup)
-
+        val resultSubGroupDto = subGroupService.toSubGroupResponse(subGroup)
         // THEN
-        verify(exactly = 1) { subGroup.toDto(pictureUrl) }
+        verify(exactly = 1) { subGroup.toResponse(pictureUrl) }
         resultSubGroupDto.pictureUrl shouldBe "url/code"
     }
 
@@ -164,10 +161,8 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
-
         // WHEN
         subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest)
-
         // THEN
         verify(exactly = 1) { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) }
     }
@@ -181,7 +176,6 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level!!) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/shortWords"
-
         // THEN
         shouldThrow<IllegalArgumentException> {
             subGroupService.addSubGroupToSeries(
@@ -219,7 +213,7 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.save(subGroupMockk) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "someUrl"
-        every { subGroupMockk.toDto("someUrl") } returns subGroupResponseMockk
+        every { subGroupMockk.toResponse("someUrl") } returns subGroupResponseMockk
         // THEN
         subGroupService.updateSubGroupById(subGroupId, subGroupChangeRequest) shouldBe subGroupResponseMockk
     }

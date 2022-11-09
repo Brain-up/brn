@@ -7,6 +7,7 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
@@ -171,14 +172,31 @@ internal class ExerciseServiceTest {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
         val subGroupId = 1L
-        val exerciseDtoMock = mockkClass(ExerciseDto::class)
+        val exerciseDto = ExerciseDto(id = 1, seriesId = 1, name = "name", noise = NoiseDto(url = "url"))
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exerciseMock)
-        every { exerciseMock.toDto() } returns (exerciseDtoMock)
+        every { exerciseMock.toDto() } returns (exerciseDto)
+        every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns "updatedNoiseUrl"
         // WHEN
         val actualResults = exerciseService.findExercisesWithTasksBySubGroup(1)
         // THEN
-        actualResults shouldContain exerciseDtoMock
+        actualResults shouldContain exerciseDto
+        exerciseDto.noise.url shouldBe "updatedNoiseUrl"
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+    }
+
+    @Test
+    fun`should get exercises by word`() {
+        // GIVEN
+        val word = "word"
+        val exerciseMock: Exercise = mockkClass(Exercise::class)
+        val exerciseWithWordsResponseMock = mockkClass(ExerciseWithWordsResponse::class)
+        every { exerciseRepository.findExercisesByWord(word) } returns listOf(exerciseMock)
+        every { exerciseMock.toDtoWithWords() } returns exerciseWithWordsResponseMock
+        // WHEN
+        val actualResults = exerciseService.findExercisesByWord(word)
+        // THEN
+        actualResults shouldContain exerciseWithWordsResponseMock
+        verify(exactly = 1) { exerciseRepository.findExercisesByWord(word) }
     }
 
     @Test

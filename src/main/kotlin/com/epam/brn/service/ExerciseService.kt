@@ -6,6 +6,7 @@ import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -49,10 +50,10 @@ class ExerciseService(
             .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
     }
 
-    fun findExerciseByNameAndLevel(name: String, level: Int): Exercise {
-        return exerciseRepository.findExerciseByNameAndLevel(name, level)
+    fun findExerciseByNameAndLevel(name: String, level: Int): Exercise =
+        exerciseRepository
+            .findExerciseByNameAndLevel(name, level)
             .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
-    }
 
     fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId")
@@ -149,10 +150,15 @@ class ExerciseService(
         exerciseRepository.save(exercise)
     }
 
-    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> {
-        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId)
-        return subGroupExercises.map { it.toDto() }
-    }
+    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> =
+        exerciseRepository
+            .findExercisesBySubGroupId(subGroupId)
+            .map { updateExerciseDto(it.toDto()) }
+
+    fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> =
+        exerciseRepository
+            .findExercisesByWord(word)
+            .map { it.toDtoWithWords() }
 
     @Transactional(rollbackFor = [Exception::class])
     fun createExercise(exerciseCreateDto: ExerciseCreateDto): ExerciseDto {
@@ -179,7 +185,6 @@ class ExerciseService(
                 exercise
             }
         }
-
         return exercise.toDto()
     }
 

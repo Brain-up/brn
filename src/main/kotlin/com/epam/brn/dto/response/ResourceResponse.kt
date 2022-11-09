@@ -1,11 +1,12 @@
-package com.epam.brn.dto
+package com.epam.brn.dto.response
 
 import com.epam.brn.model.WordType
 
-data class ResourceDto(
+data class ResourceResponse(
     var id: Long? = null,
     var audioFileUrl: String? = "",
     val word: String? = "",
+    val wordPronounce: String? = "",
     val wordType: WordType?,
     @Deprecated("Will be removed since it's not needed anymore")
     val pictureFileUrl: String? = "",
