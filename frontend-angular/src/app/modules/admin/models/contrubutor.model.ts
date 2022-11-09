@@ -12,7 +12,7 @@ export interface Contributor {
   description: string;
   descriptionEn?: string;
   id: number;
-  github_user_id?: string,
+  github_user_id?: string;
   name: string;
   nameEn?: string;
   pictureUrl: string;

@@ -101,8 +101,6 @@ export class ContributorComponent implements OnInit {
 
   public convertContactsForForm(): void {
     this.contributor = history.state.data;
-    console.log(history.state.data);
-    console.log(this.contributor);
     if (this.contributor.contacts.length) {
       const convertContactsForForm = {};
       this.contributor.contacts.forEach(item => {
@@ -134,8 +132,8 @@ export class ContributorComponent implements OnInit {
     if (this.contributorForm.valid) {
       this.convertFormValueForSave();
       this.id ?
-        this.contributorApiService.updateContributor(this.id, this.contributor).subscribe(res => console.log(res))
-        : this.contributorApiService.createContributor(this.contributor).subscribe(res => console.log(res));
+        this.contributorApiService.updateContributor(this.id, this.contributor).subscribe(res => res)
+        : this.contributorApiService.createContributor(this.contributor).subscribe(res => res);
       this.router.navigate(['contributors']);
     }
   }
