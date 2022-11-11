@@ -1,6 +1,7 @@
 package com.epam.brn.service.impl
 
 import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
 import com.epam.brn.repo.RoleRepository
@@ -29,9 +30,9 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
 
     override fun save(role: Role) = roleRepository.save(role)
 
-    override fun isUserHasRole(role: String): Boolean {
+    override fun isCurrentUserAdmin(): Boolean {
         val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
-        return request.isUserInRole(role)
+        return request.isUserInRole(BrnRole.ADMIN)
     }
 
     override fun isUserHasRole(user: UserAccountResponse, role: String) = user.roles?.contains(role) ?: false

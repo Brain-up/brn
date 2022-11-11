@@ -51,7 +51,7 @@ internal class DoctorServiceTest {
         every { userAccountService.findUserById(user2.id!!) } returns user2
         every { userAccountService.findUserById(fakeDoctorUser.id!!) } returns fakeDoctorUser
 
-        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns false
+        every { roleService.isCurrentUserAdmin() } returns false
         every { roleService.isUserHasRole(admin, BrnRole.ADMIN) } returns true
         every { roleService.isUserHasRole(doctor, BrnRole.ADMIN) } returns false
         every { roleService.isUserHasRole(doctor, BrnRole.SPECIALIST) } returns true

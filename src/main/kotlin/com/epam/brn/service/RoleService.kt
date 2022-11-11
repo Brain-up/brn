@@ -8,6 +8,6 @@ interface RoleService {
     fun findByName(name: String): Role
     fun findAll(): List<Role>
     fun save(role: Role): Role
-    fun isUserHasRole(role: String): Boolean
+    fun isCurrentUserAdmin(): Boolean
     fun isUserHasRole(user: UserAccountResponse, role: String): Boolean
 }

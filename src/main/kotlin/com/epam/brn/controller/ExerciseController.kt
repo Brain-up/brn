@@ -56,7 +56,7 @@ class ExerciseController(
             required = true
         ) subGroupId: Long
     ): ResponseEntity<Response<List<ExerciseDto>>> {
-        val result = if (roleService.isUserHasRole(BrnRole.ADMIN)) {
+        val result = if (roleService.isCurrentUserAdmin()) {
             exerciseService.findExercisesWithTasksBySubGroup(subGroupId)
         } else {
             exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)

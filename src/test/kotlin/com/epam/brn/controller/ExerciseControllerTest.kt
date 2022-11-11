@@ -10,7 +10,6 @@ import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
-import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe
@@ -51,7 +50,7 @@ internal class ExerciseControllerTest {
         val exercise = ExerciseDto(subGroupId, 1, "name", 1, NoiseDto(0, ""))
         val listExercises = listOf(exercise)
         every { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) } returns listExercises
-        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns false
+        every { roleService.isCurrentUserAdmin() } returns false
 
         // WHEN
         @Suppress("UNCHECKED_CAST")
@@ -165,7 +164,7 @@ internal class ExerciseControllerTest {
         val subGroupId = 1L
         val exerciseResponse = mockk<ExerciseDto>()
         every { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) } returns listOf(exerciseResponse)
-        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val exercises = exerciseController.getExercisesBySubGroup(subGroupId)

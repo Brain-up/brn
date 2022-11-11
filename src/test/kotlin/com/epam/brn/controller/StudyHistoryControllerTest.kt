@@ -2,7 +2,6 @@ package com.epam.brn.controller
 
 import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -60,7 +59,7 @@ internal class StudyHistoryControllerTest {
         val year = 2021
         val studyHistoryDto = mockk<StudyHistoryDto>()
         every { studyHistoryService.getMonthHistories(userId, month, year) } returns listOf(studyHistoryDto)
-        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val monthHistories = studyHistoryController.getMonthHistories(month, year, userId)

@@ -32,7 +32,7 @@ class StudyHistoryControllerV2(
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
     ): ResponseEntity<Response<List<StudyHistoryDto>>> {
-        val result = if (userId != null && roleService.isUserHasRole(BrnRole.ADMIN)) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             studyHistoryService.getHistories(userId, from, to)
         } else {
             studyHistoryService.getHistoriesForCurrentUser(from, to)

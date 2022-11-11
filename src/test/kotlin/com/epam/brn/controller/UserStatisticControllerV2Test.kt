@@ -5,7 +5,6 @@ import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
-import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
 import io.kotest.matchers.shouldBe
@@ -102,7 +101,7 @@ internal class UserStatisticControllerV2Test {
         val date = LocalDateTime.now()
         val dayStudyStatistic = mockk<DayStudyStatistic>()
         every { userDayStatisticService.getStatisticForPeriod(date, date, userId) } returns listOf(dayStudyStatistic)
-        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val userWeeklyStatistic = userStatisticControllerV2.getUserWeeklyStatistic(date, date, userId)
@@ -126,7 +125,7 @@ internal class UserStatisticControllerV2Test {
                 userId
             )
         } returns listOf(monthStudyStatistic)
-        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val userYearlyStatistic = userStatisticControllerV2.getUserYearlyStatistic(date, date, userId)
@@ -144,7 +143,7 @@ internal class UserStatisticControllerV2Test {
         val date = LocalDateTime.now()
         val userDailyDetailStatisticsDto = mockk<UserDailyDetailStatisticsDto>()
         every { studyHistoryService.getUserDailyStatistics(date, userId) } returns listOf(userDailyDetailStatisticsDto)
-        every { roleService.isUserHasRole(BrnRole.ADMIN) } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val userWeeklyStatistic = userStatisticControllerV2.getUserDailyDetailsStatistics(date, userId)

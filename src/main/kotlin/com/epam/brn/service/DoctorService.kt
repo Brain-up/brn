@@ -21,7 +21,7 @@ class DoctorService(
         checkUserIsNotAdmin(doctor, USING_ADMIN_ID_FOR_DOCTOR_WARN)
 
         when {
-            !roleService.isUserHasRole(BrnRole.ADMIN) && currentUser.id != doctorId -> {
+            !roleService.isCurrentUserAdmin() && currentUser.id != doctorId -> {
                 throw IllegalArgumentException(CHANGE_PERMISSION_WARN)
             }
             !roleService.isUserHasRole(doctor, BrnRole.SPECIALIST) -> {

@@ -35,7 +35,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
-        val result = if (userId != null && roleService.isUserHasRole(BrnRole.ADMIN)) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             userMonthStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userMonthStatisticService.getStatisticForPeriod(from, to)
@@ -50,7 +50,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<DayStudyStatistic>>> {
-        val result = if (userId != null && roleService.isUserHasRole(BrnRole.ADMIN)) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             userDayStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userDayStatisticService.getStatisticForPeriod(from, to)
@@ -64,7 +64,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "day", required = true) day: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
-        val result = if (userId != null && roleService.isUserHasRole(BrnRole.ADMIN)) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             historyService.getUserDailyStatistics(day, userId)
         } else {
             historyService.getUserDailyStatistics(day = day)

@@ -50,7 +50,7 @@ class StudyHistoryController(
         @RequestParam("year", required = true) year: Int,
         @RequestParam("userId") userId: Long?
     ): ResponseEntity<Response<List<StudyHistoryDto>>> {
-        val result = if (userId != null && roleService.isUserHasRole(BrnRole.ADMIN)) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             studyHistoryService.getMonthHistories(userId, month, year)
         } else {
             studyHistoryService.getMonthHistoriesForCurrentUser(month, year)
