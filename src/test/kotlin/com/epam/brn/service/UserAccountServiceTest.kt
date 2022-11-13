@@ -14,6 +14,7 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import com.epam.brn.utils.copy
 import com.google.firebase.auth.UserRecord
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -539,15 +540,3 @@ internal class UserAccountServiceTest {
         }
     }
 }
-
-private fun UserAccount.copy() = UserAccount(
-    id = this.id,
-    fullName = this.fullName,
-    email = this.email,
-    gender = this.gender,
-    bornYear = this.bornYear,
-    changed = this.changed,
-    avatar = this.avatar,
-    photo = this.photo,
-    description = this.description
-)

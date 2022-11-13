@@ -13,6 +13,7 @@ import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.service.WordsService
+import com.epam.brn.utils.copy
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -195,12 +196,4 @@ internal class LopotkoRecordProcessorTest {
     }
 }
 
-private fun AudiometryTask.copy(id: Long? = this.id, answerOptions: MutableSet<Resource> = this.answerOptions) = AudiometryTask(
-    id = id,
-    level = 1,
-    audiometryGroup = "A",
-    frequencyZone = FrequencyZone.LOW.name,
-    minFrequency = 200,
-    maxFrequency = 400,
-    answerOptions = answerOptions
-)
+
