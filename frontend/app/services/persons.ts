@@ -1,5 +1,5 @@
 import Service, { inject as service } from '@ember/service';
-import IntlService from 'ember-intl/services/intl';
+import UserDataService from './user-data';
 
 interface IDoctorInfo {
   [key: string]: {
@@ -34,7 +34,7 @@ class TeamMember {
 }
 
 export default class PersonsService extends Service {
-  @service('intl') intl!: IntlService;
+  @service('user-data') userData!: UserDataService;
 
   get persons() {
     return {
@@ -44,7 +44,7 @@ export default class PersonsService extends Service {
   }
 
   get doctors() {
-    const locale = this.intl.locale[0];
+    const locale = this.userData.activeLocale;
 
     return this.personsData.doctors.map((doctor) => {
       const { name, bio } = doctor.lang[locale];

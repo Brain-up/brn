@@ -191,31 +191,40 @@ export class BufferLoader {
 
 const AudioCache = new Map();
 
+export function preloadAudioFile(url: string, token: string) {
+  return arrayBufferRequest(url, token);
+}
+
 function arrayBufferRequest(
   url: string,
   token: string,
 ): Promise<ArrayBuffer | null> {
-  const urlObj = new URL(url);
-  return new Promise((resolve) => {
-    if (AudioCache.has(url)) {
-      return resolve(AudioCache.get(url).slice());
-    }
-    const request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    if (urlObj.search !== '') {
-      // we don't need it for amazon api, we use it without query params
-      request.setRequestHeader('Authorization', `Bearer ${token}`);
-    }
-    request.responseType = 'arraybuffer';
-    request.onload = function () {
-      AudioCache.set(url, request.response.slice());
-      resolve(request.response);
-    };
-    request.onerror = function () {
-      resolve(null);
-    };
-    request.send();
-  });
+  try {
+    const urlObj = new URL(url);
+    return new Promise((resolve) => {
+      if (AudioCache.has(url)) {
+        return resolve(AudioCache.get(url).slice());
+      }
+      const request = new XMLHttpRequest();
+      request.open('GET', url, true);
+      if (urlObj.search !== '') {
+        // we don't need it for amazon api, we use it without query params
+        request.setRequestHeader('Authorization', `Bearer ${token}`);
+      }
+      request.responseType = 'arraybuffer';
+      request.onload = function () {
+        AudioCache.set(url, request.response.slice());
+        resolve(request.response);
+      };
+      request.onerror = function () {
+        resolve(null);
+      };
+      request.send();
+    });
+  } catch(e) {
+    console.error(e, `Unable to load URL: ${url}`);
+    return Promise.resolve(null);
+  }
 }
 
 export function loadAudioFiles(

@@ -71,7 +71,7 @@ export default class WordsSequencesComponent<
     }
 
     const text = this.firstUncompletedTask.answer
-      .map(({ word }) => word)
+      .map(({ wordPronounce }) => wordPronounce)
       .join(' ');
     return [this.audio.audioUrlForText(text)];
   }
