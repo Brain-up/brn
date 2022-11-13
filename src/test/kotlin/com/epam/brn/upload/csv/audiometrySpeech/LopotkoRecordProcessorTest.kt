@@ -195,5 +195,3 @@ internal class LopotkoRecordProcessorTest {
         )
     }
 }
-
-
