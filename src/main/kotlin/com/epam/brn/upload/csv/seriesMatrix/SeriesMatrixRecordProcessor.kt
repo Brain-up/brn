@@ -58,9 +58,11 @@ class SeriesMatrixRecordProcessor(
     private fun extractAnswerOptions(record: SeriesMatrixRecord, locale: BrnLocale): MutableList<Resource> =
         extractWordGroups(record)
             .map {
-                splitOnWords(it.second).map { word: String ->
-                    toResource(word, it.first, locale)
-                }
+                splitOnWords(it.second)
+                    .distinct()
+                    .map { word: String ->
+                        toResource(word, it.first, locale)
+                    }
             }
             .flatten()
             .distinct()

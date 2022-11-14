@@ -54,6 +54,7 @@ class LopotkoRecordProcessor(
         return record.words
             .asSequence()
             .map { it.replace("[()]".toRegex(), StringUtils.EMPTY) }
+            .distinct()
             .map { toResource(it, locale) }
             .toMutableSet()
     }

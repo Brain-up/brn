@@ -56,8 +56,8 @@ class SeriesWordsKorolevaRecordProcessor(
         record.words
             .asSequence()
             .map { toStringWithoutBraces(it) }
-            .map { toResource(it, locale) }
             .distinct()
+            .map { toResource(it, locale) }
             .toMutableList()
 
     private fun toResource(word: String, locale: BrnLocale): Resource {
