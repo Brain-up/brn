@@ -45,11 +45,9 @@ module('Unit | Service | persons', function (hooks) {
 
   test('has doctors data in ru language', function (assert) {
     this.owner.register(
-      'service:intl',
+      'service:user-data',
       class MockService extends Service {
-        get locale() {
-          return ['ru-ru'];
-        }
+        activeLocale = 'ru-ru'
       },
     );
     let service = this.owner.lookup('service:persons');
@@ -58,11 +56,9 @@ module('Unit | Service | persons', function (hooks) {
 
   test('has doctors data in en language', function (assert) {
     this.owner.register(
-      'service:intl',
+      'service:user-data',
       class MockService extends Service {
-        get locale() {
-          return ['en-us'];
-        }
+        activeLocale = 'en-us'
       },
     );
     let service = this.owner.lookup('service:persons');
