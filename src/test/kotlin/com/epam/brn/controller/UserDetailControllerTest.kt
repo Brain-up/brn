@@ -6,7 +6,7 @@ import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Gender
 import com.epam.brn.service.DoctorService
@@ -284,16 +284,16 @@ internal class UserDetailControllerTest {
     fun `getUsers should return users with statistic when withAnalytics is true`() {
         // GIVEN
         val withAnalytics = true
-        val authority = AuthorityType.ROLE_USER.name
+        val role = BrnRole.USER
         val pageable = mockk<Pageable>()
         val userWithAnalyticsResponse = mockk<UserWithAnalyticsResponse>()
-        every { userAnalyticsService.getUsersWithAnalytics(pageable, authority) } returns listOf(userWithAnalyticsResponse)
+        every { userAnalyticsService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
 
         // WHEN
-        val users = userDetailController.getUsers(withAnalytics, authority, pageable)
+        val users = userDetailController.getUsers(withAnalytics, role, pageable)
 
         // THEN
-        verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, authority) }
+        verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as Response<*>).data shouldBe listOf(userWithAnalyticsResponse)
     }
@@ -302,15 +302,15 @@ internal class UserDetailControllerTest {
     fun `getUsers should return users when withAnalytics is false`() {
         // GIVEN
         val withAnalytics = false
-        val authority = AuthorityType.ROLE_USER.name
+        val role = BrnRole.USER
         val pageable = mockk<Pageable>()
-        every { userAccountService.getUsers(pageable, authority) } returns listOf(userAccountResponse)
+        every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountResponse)
 
         // WHEN
-        val users = userDetailController.getUsers(withAnalytics, authority, pageable)
+        val users = userDetailController.getUsers(withAnalytics, role, pageable)
 
         // THEN
-        verify(exactly = 1) { userAccountService.getUsers(pageable, authority) }
+        verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as Response<*>).data shouldBe listOf(userAccountResponse)
     }

@@ -1,13 +1,13 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.integration.firebase.FirebaseWebClientTestMock
 import com.epam.brn.integration.firebase.model.FirebaseVerifyPasswordRequest
-import com.epam.brn.model.Authority
+import com.epam.brn.model.Role
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserRecord
@@ -26,7 +26,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
     lateinit var userAccountRepository: UserAccountRepository
 
     @Autowired
-    lateinit var authorityRepository: AuthorityRepository
+    lateinit var roleRepository: RoleRepository
 
     @Autowired
     lateinit var firebaseAuth: FirebaseAuth
@@ -58,21 +58,21 @@ class AuthorizationAuthenticationIT : BaseIT() {
         uuidFirebaseNewUser = saveFirebaseUser(newUserFullName, newUserEmail, newUserPassword)!!.uid
         uuidFirebaseUserRole = saveFirebaseUser(userRoleFullName, userRoleEmail, userRolePassword)!!.uid
 
-        val authorityUserName = AuthorityType.ROLE_USER.name
-        val userAuthority = authorityRepository.findAuthorityByAuthorityName(authorityUserName)
-            ?: authorityRepository.save(Authority(authorityName = authorityUserName))
+        val roleUserName = BrnRole.USER
+        val userRole = roleRepository.findByName(roleUserName)
+            ?: roleRepository.save(Role(name = roleUserName))
 
-        val authName = AuthorityType.ROLE_ADMIN.name
-        val adminAuthority = authorityRepository.findAuthorityByAuthorityName(authName)
-            ?: authorityRepository.save(Authority(authorityName = authName))
-        createUserInLocalDatabase(fullName, email, uuidFirebaseAdmin, adminAuthority)
-        createUserInLocalDatabase(userRoleFullName, userRoleEmail, uuidFirebaseUserRole, userAuthority)
+        val roleName = BrnRole.ADMIN
+        val adminRole = roleRepository.findByName(roleName)
+            ?: roleRepository.save(Role(name = roleName))
+        createUserInLocalDatabase(fullName, email, uuidFirebaseAdmin, adminRole)
+        createUserInLocalDatabase(userRoleFullName, userRoleEmail, uuidFirebaseUserRole, userRole)
     }
 
     @AfterEach
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()
-        authorityRepository.deleteAll()
+        roleRepository.deleteAll()
         deleteFirebaseUser(uuidFirebaseAdmin)
         deleteFirebaseUser(uuidFirebaseNewUser)
         deleteFirebaseUser(uuidFirebaseUserRole)
@@ -156,7 +156,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
         return addFirebaseUser(firebaseUser)
     }
 
-    private fun createUserInLocalDatabase(fullName: String, email: String, uuid: String, authority: Authority) {
+    private fun createUserInLocalDatabase(fullName: String, email: String, uuid: String, role: Role) {
         val userAccount =
             UserAccount(
                 fullName = fullName,
@@ -166,7 +166,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
                 active = true,
                 userId = uuid
             )
-        userAccount.authoritySet.add(authority)
+        userAccount.roleSet.add(role)
         userAccountRepository.save(userAccount)
     }
 

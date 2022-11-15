@@ -35,7 +35,7 @@ export interface UserMapped extends User {
 
 export interface UserWithNoAnalytics {
   active: boolean;
-  authorities: string[];
+  roles: string[];
   avatar: string;
   bornYear: number;
   changed: string;

@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.model.Authority
+import com.epam.brn.model.Role
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Gender
@@ -8,7 +8,7 @@ import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
@@ -60,7 +60,7 @@ abstract class BaseIT {
     private lateinit var seriesRepository: SeriesRepository
 
     @Autowired
-    private lateinit var authorityRepository: AuthorityRepository
+    private lateinit var roleRepository: RoleRepository
 
     protected val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
@@ -75,7 +75,7 @@ abstract class BaseIT {
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
-        authorityRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     fun insertDefaultUser(): UserAccount = createUser(fullName = "testUserFirstName", email = "test@test.test")
@@ -155,7 +155,7 @@ abstract class BaseIT {
         active: Boolean = true,
         bornYear: Int = 2000,
         gender: String = Gender.FEMALE.toString(),
-        authorities: MutableSet<Authority> = mutableSetOf()
+        roles: MutableSet<Role> = mutableSetOf()
     ): UserAccount {
         return userAccountRepository.save(
             UserAccount(
@@ -164,11 +164,11 @@ abstract class BaseIT {
                 active = active,
                 bornYear = bornYear,
                 gender = gender
-            ).apply { authorities.isNotEmpty().let { authoritySet.addAll(authorities) } }
+            ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } }
         )
     }
 
-    fun createAuthority(authorityName: String): Authority =
-        authorityRepository.findAuthorityByAuthorityName(authorityName)
-            ?: authorityRepository.save(Authority(authorityName = authorityName))
+    fun createRole(roleName: String): Role =
+        roleRepository.findByName(roleName)
+            ?: roleRepository.save(Role(name = roleName))
 }

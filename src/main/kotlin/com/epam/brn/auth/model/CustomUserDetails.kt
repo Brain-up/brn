@@ -13,9 +13,8 @@ class CustomUserDetails(userAccount: UserAccount) : UserDetails {
     private val authorities: List<GrantedAuthority>
 
     init {
-        authorities = userAccount.authoritySet
-            .map { it.authorityName }
-            .map { SimpleGrantedAuthority(it) }
+        authorities = userAccount.roleSet
+            .map { SimpleGrantedAuthority("ROLE_${it.name}") }
     }
 
     override fun getAuthorities() = this.authorities.toMutableList()
