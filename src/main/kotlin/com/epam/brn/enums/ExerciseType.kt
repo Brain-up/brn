@@ -10,6 +10,5 @@ enum class ExerciseType {
     DI,
     DURATION_SIGNALS,
     FREQUENCY_SIGNALS,
-    SYLLABLES_KOROLEVA,
-    NOT_DEFINED;
+    SYLLABLES_KOROLEVA;
 }
