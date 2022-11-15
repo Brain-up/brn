@@ -1,4 +1,4 @@
-package com.epam.brn.model
+package com.epam.brn.enums
 
 enum class ExerciseType {
     WORDS_SEQUENCES,
@@ -9,5 +9,7 @@ enum class ExerciseType {
     FREQUENCY_WORDS,
     DI,
     DURATION_SIGNALS,
-    FREQUENCY_SIGNALS;
+    FREQUENCY_SIGNALS,
+    SYLLABLES_KOROLEVA,
+    NOT_DEFINED;
 }

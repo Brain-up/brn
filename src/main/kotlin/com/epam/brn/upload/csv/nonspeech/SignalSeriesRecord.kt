@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv.nonspeech
 
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class SignalSeriesRecord(

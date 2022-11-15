@@ -3,6 +3,7 @@ package com.epam.brn.model
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
+import com.epam.brn.enums.ExerciseType
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -61,7 +62,7 @@ data class Exercise(
         level = level,
         noise = NoiseDto(noiseLevel, noiseUrl),
         available = available,
-        tasks = tasks.map { task -> task.toGeneralTaskDto() },
+        tasks = tasks.map { task -> task.toGeneralTaskDto(ExerciseType.valueOf(this.subGroup!!.series.type)) },
         signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
         active = active,
         changedBy = changedBy,

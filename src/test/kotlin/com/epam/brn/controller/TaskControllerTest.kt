@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.response.WordsTaskResponse
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.service.TaskService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs

@@ -1,6 +1,6 @@
 package com.epam.brn.upload.csv
 
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.upload.csv.group.GroupRecord
 import com.epam.brn.upload.csv.group.GroupRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.nonspeech.SignalSeriesRecord

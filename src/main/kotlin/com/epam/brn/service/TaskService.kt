@@ -4,14 +4,15 @@ import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
-import com.epam.brn.model.ExerciseType.FREQUENCY_WORDS
-import com.epam.brn.model.ExerciseType.PHRASES
-import com.epam.brn.model.ExerciseType.SENTENCE
-import com.epam.brn.model.ExerciseType.SINGLE_SIMPLE_WORDS
-import com.epam.brn.model.ExerciseType.SINGLE_WORDS_KOROLEVA
-import com.epam.brn.model.ExerciseType.WORDS_SEQUENCES
-import com.epam.brn.model.ExerciseType.valueOf
+import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.ExerciseType.FREQUENCY_WORDS
+import com.epam.brn.enums.ExerciseType.PHRASES
+import com.epam.brn.enums.ExerciseType.SENTENCE
+import com.epam.brn.enums.ExerciseType.SINGLE_SIMPLE_WORDS
+import com.epam.brn.enums.ExerciseType.SINGLE_WORDS_KOROLEVA
+import com.epam.brn.enums.ExerciseType.SYLLABLES_KOROLEVA
+import com.epam.brn.enums.ExerciseType.WORDS_SEQUENCES
+import com.epam.brn.enums.ExerciseType.valueOf
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
@@ -41,7 +42,7 @@ class TaskService(
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
         return when (val type = valueOf(exercise.subGroup!!.series.type)) {
-            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS -> tasks.map { task -> task.toWordsTaskDto(type) }
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA -> tasks.map { task -> task.toWordsTaskDto(type) }
             SINGLE_WORDS_KOROLEVA -> tasks.map { task -> task.toDetailWordsTaskDto(type) }
             WORDS_SEQUENCES -> tasks.map { task -> task.toWordsGroupSeriesTaskDto(task.exercise?.template) }
             SENTENCE -> tasks.map { task -> task.toSentenceSeriesTaskDto(task.exercise?.template) }
@@ -56,7 +57,7 @@ class TaskService(
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         processAnswerOptions(task)
         return when (val type = valueOf(task.exercise!!.subGroup!!.series.type)) {
-            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS -> task.toWordsTaskDto(type)
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA -> task.toWordsTaskDto(type)
             SINGLE_WORDS_KOROLEVA -> task.toDetailWordsTaskDto(type)
             WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)
             SENTENCE -> task.toSentenceSeriesTaskDto(task.exercise?.template)

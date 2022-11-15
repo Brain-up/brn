@@ -15,3 +15,4 @@ SPEECH_EN_US, 5, SENTENCE, Sentences, Hearing and understanding sentences
 SPEECH_EN_US, 7, FREQUENCY_WORDS, Words group by frequency, Hearing and understanding words group by frequency
 NON_SPEECH_EN_US, 1, DURATION_SIGNALS, Length signals, Hearing and understanding signals with different length
 NON_SPEECH_EN_US, 2, FREQUENCY_SIGNALS, Frequency signals, Hearing and understanding signals with different frequency
+NON_SPEECH_RU_RU, 3, SYLLABLES_KOROLEVA, Слоги Королёвой, Учимся распозновать гласные и согласные в слогах
