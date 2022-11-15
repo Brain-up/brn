@@ -2,10 +2,9 @@ package com.epam.brn.integration
 
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.AuthorityType
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.databind.type.TypeFactory
 import io.kotest.matchers.shouldBe
@@ -25,33 +24,33 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class DoctorControllerIT : BaseIT() {
 
     @Autowired
-    lateinit var authorityRepository: AuthorityRepository
+    lateinit var roleRepository: RoleRepository
 
     @Autowired
     private lateinit var userAccountRepository: UserAccountRepository
 
     private lateinit var user1: UserAccount
     private lateinit var user2: UserAccount
-    private lateinit var currentDoctor: UserAccount
-    private lateinit var anotherDoctor: UserAccount
+    private lateinit var currentSpecialist: UserAccount
+    private lateinit var anotherSpecialist: UserAccount
 
     @BeforeEach
     fun setUp() {
-        val userAuthority = createAuthority(AuthorityType.ROLE_USER.name)
-        val doctorAuthority = createAuthority(AuthorityType.ROLE_SPECIALIST.name)
+        val userRole = createRole(BrnRole.USER)
+        val specialistRole = createRole(BrnRole.SPECIALIST)
 
-        user1 = createUser(email = "user1@default.ru", authorities = mutableSetOf(userAuthority))
-        user2 = createUser(email = "user2@default.ru", authorities = mutableSetOf(userAuthority))
-        currentDoctor =
-            createUser(email = "currentDoctor@default.ru", authorities = mutableSetOf(userAuthority, doctorAuthority))
-        anotherDoctor =
-            createUser(email = "anotherDoctor@default.ru", authorities = mutableSetOf(userAuthority, doctorAuthority))
+        user1 = createUser(email = "user1@default.ru", roles = mutableSetOf(userRole))
+        user2 = createUser(email = "user2@default.ru", roles = mutableSetOf(userRole))
+        currentSpecialist =
+            createUser(email = "currentDoctor@default.ru", roles = mutableSetOf(userRole, specialistRole))
+        anotherSpecialist =
+            createUser(email = "anotherDoctor@default.ru", roles = mutableSetOf(userRole, specialistRole))
     }
 
     @AfterEach
     fun tearDown() {
         userAccountRepository.deleteAll()
-        authorityRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     @Test
@@ -62,7 +61,7 @@ class DoctorControllerIT : BaseIT() {
         // WHEN
         val resultAction = mockMvc
             .perform(
-                post("/doctors/${currentDoctor.id}/patients")
+                post("/doctors/${currentSpecialist.id}/patients")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestJson)
             )
@@ -70,18 +69,18 @@ class DoctorControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isOk)
 
-        userAccountRepository.findUserAccountById(user1.id!!).get().doctor?.id shouldBe currentDoctor.id
+        userAccountRepository.findUserAccountById(user1.id!!).get().doctor?.id shouldBe currentSpecialist.id
     }
 
     @Test
     fun `should not add patient to doctor if patient is doctor`() {
         // GIVEN
-        val requestJson = objectMapper.writeValueAsString(AddPatientToDoctorRequest(anotherDoctor.id!!, "user"))
+        val requestJson = objectMapper.writeValueAsString(AddPatientToDoctorRequest(anotherSpecialist.id!!, "user"))
 
         // WHEN
         val resultAction = mockMvc
             .perform(
-                post("/doctors/${currentDoctor.id}/patients")
+                post("/doctors/${currentSpecialist.id}/patients")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestJson)
             )
@@ -89,7 +88,7 @@ class DoctorControllerIT : BaseIT() {
         // THEN
         resultAction.andExpect(status().isBadRequest)
 
-        userAccountRepository.findUserAccountById(anotherDoctor.id!!).get().doctor shouldBe null
+        userAccountRepository.findUserAccountById(anotherSpecialist.id!!).get().doctor shouldBe null
     }
 
     @Test
@@ -116,11 +115,11 @@ class DoctorControllerIT : BaseIT() {
     @Test
     fun `should get all patients for doctor`() {
         // GIVEN
-        userAccountRepository.save(user1.apply { doctor = currentDoctor })
-        userAccountRepository.save(user2.apply { doctor = currentDoctor })
+        userAccountRepository.save(user1.apply { doctor = currentSpecialist })
+        userAccountRepository.save(user2.apply { doctor = currentSpecialist })
 
         // WHEN
-        val resultAction = mockMvc.perform(get("/doctors/${currentDoctor.id}/patients"))
+        val resultAction = mockMvc.perform(get("/doctors/${currentSpecialist.id}/patients"))
 
         // THEN
         resultAction
@@ -140,10 +139,10 @@ class DoctorControllerIT : BaseIT() {
     @Test
     fun `should remove patient from doctor`() {
         // GIVEN
-        userAccountRepository.save(user1.apply { doctor = currentDoctor })
+        userAccountRepository.save(user1.apply { doctor = currentSpecialist })
 
         // WHEN
-        val resultAction = mockMvc.perform(delete("/doctors/${currentDoctor.id}/patients/${user1.id}"))
+        val resultAction = mockMvc.perform(delete("/doctors/${currentSpecialist.id}/patients/${user1.id}"))
 
         // THEN
         resultAction.andExpect(status().isOk)

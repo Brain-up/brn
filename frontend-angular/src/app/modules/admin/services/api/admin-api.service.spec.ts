@@ -183,7 +183,7 @@ describe('AdminApiService', () => {
     });
 
     const request = controller.expectOne(
-      `${url}?role=ROLE_USER&withAnalytics=true`,
+      `${url}?role=USER&withAnalytics=true`,
     );
     expect(request.request.method).toEqual('GET');
     request.flush('', { status: 204, statusText: 'No Data' });
@@ -212,7 +212,7 @@ describe('AdminApiService', () => {
 
     controller
       .expectOne(
-        `${url}?role=ROLE_USER&withAnalytics=true`,
+        `${url}?role=USER&withAnalytics=true`,
       )
       .error(errorEvent, { status, statusText });
 

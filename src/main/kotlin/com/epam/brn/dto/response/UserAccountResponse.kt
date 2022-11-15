@@ -23,5 +23,5 @@ data class UserAccountResponse(
     var headphones: Set<HeadphonesDto>? = null,
     var doctorId: Long? = null
 ) {
-    var authorities: MutableSet<String>? = mutableSetOf()
+    var roles: MutableSet<String>? = mutableSetOf()
 }

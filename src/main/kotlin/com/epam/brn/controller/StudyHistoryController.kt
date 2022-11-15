@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.Response
 import com.epam.brn.enums.BrnRole
@@ -28,7 +28,7 @@ import javax.annotation.security.RolesAllowed
 @RolesAllowed(BrnRole.USER)
 class StudyHistoryController(
     @Autowired val studyHistoryService: StudyHistoryService,
-    @Autowired val authorityService: AuthorityService
+    @Autowired val roleService: RoleService
 ) {
 
     @PostMapping
@@ -50,7 +50,7 @@ class StudyHistoryController(
         @RequestParam("year", required = true) year: Int,
         @RequestParam("userId") userId: Long?
     ): ResponseEntity<Response<List<StudyHistoryDto>>> {
-        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             studyHistoryService.getMonthHistories(userId, month, year)
         } else {
             studyHistoryService.getMonthHistoriesForCurrentUser(month, year)

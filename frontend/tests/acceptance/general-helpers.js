@@ -60,7 +60,7 @@ export function getServerResponses({
   server.get('users/current', () => {
     return {"data":[
         {
-          "authorities":["ROLE_ADMIN"],
+          "roles":["ADMIN"],
           "id":1,
           "userId":"f89e5760-0caf-4a95-9810-cd6aa4a8261e",
           "name":"admin",

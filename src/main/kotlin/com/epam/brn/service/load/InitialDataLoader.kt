@@ -1,10 +1,10 @@
 package com.epam.brn.service.load
 
-import com.epam.brn.auth.AuthorityService
-import com.epam.brn.enums.AuthorityType
+import com.epam.brn.service.RoleService
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Authority
+import com.epam.brn.model.Role
 import com.epam.brn.model.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
@@ -40,7 +40,7 @@ class InitialDataLoader(
     private val userAccountRepository: UserAccountRepository,
     private val audiometryLoader: AudiometryLoader,
     private val passwordEncoder: PasswordEncoder,
-    private val authorityService: AuthorityService,
+    private val roleService: RoleService,
     private val uploadService: CsvUploadService,
     private val audioFilesGenerationService: AudioFilesGenerationService,
     private val wordsService: WordsService,
@@ -101,22 +101,22 @@ class InitialDataLoader(
     @EventListener(ApplicationReadyEvent::class)
     @Order(Ordered.HIGHEST_PRECEDENCE)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        if (authorityService.findAll().isEmpty()) {
-            val adminAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_ADMIN.name))
-            val userAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_USER.name))
-            val specialistAuthority =
-                authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
-            val admin = addAdminUser(setOf(adminAuthority, userAuthority, specialistAuthority))
+        if (roleService.findAll().isEmpty()) {
+            val adminRole = roleService.save(Role(name = BrnRole.ADMIN))
+            val userRole = roleService.save(Role(name = BrnRole.USER))
+            val specialistRole =
+                roleService.save(Role(name = BrnRole.SPECIALIST))
+            val admin = addAdminUser(setOf(adminRole, userRole, specialistRole))
             val listOfUsers = mutableListOf(admin)
-            listOfUsers.addAll(addDefaultUsers(userAuthority))
+            listOfUsers.addAll(addDefaultUsers(userRole))
             userAccountRepository.saveAll(listOfUsers)
         }
         try {
-            authorityService.findAuthorityByAuthorityName(AuthorityType.ROLE_SPECIALIST.name)
+            roleService.findByName(BrnRole.SPECIALIST)
         } catch (e: EntityNotFoundException) {
-            authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
+            roleService.save(Role(name = BrnRole.SPECIALIST))
         }
-        addAdminAllAuthorities()
+        addAdminAllRoles()
         audiometryLoader.loadInitialAudiometricsWithTasks()
         initExercisesFromFiles()
         wordsService.createTxtFilesWithExerciseWordsMap()
@@ -125,10 +125,10 @@ class InitialDataLoader(
             audioFilesGenerationService.generateAudioFiles()
     }
 
-    private fun addAdminAllAuthorities() {
+    private fun addAdminAllRoles() {
         val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
-        val allAuths = authorityService.findAll()
-        admin.authoritySet.addAll(allAuths.minus(admin.authoritySet))
+        val allRoles = roleService.findAll()
+        admin.roleSet.addAll(allRoles.minus(admin.roleSet))
         userAccountRepository.save(admin)
     }
 
@@ -178,7 +178,7 @@ class InitialDataLoader(
         }
     }
 
-    private fun addAdminUser(adminAuthorities: Set<Authority>): UserAccount {
+    private fun addAdminUser(adminRoles: Set<Role>): UserAccount {
         val password = passwordEncoder.encode("admin")
         val userAccount =
             UserAccount(
@@ -189,11 +189,11 @@ class InitialDataLoader(
                 gender = Gender.MALE.toString()
             )
         userAccount.password = password
-        userAccount.authoritySet.addAll(adminAuthorities)
+        userAccount.roleSet.addAll(adminRoles)
         return userAccount
     }
 
-    private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
+    private fun addDefaultUsers(userRole: Role): MutableList<UserAccount> {
         val password = passwordEncoder.encode("password")
         val firstUser = UserAccount(
             fullName = "Name1",
@@ -211,8 +211,8 @@ class InitialDataLoader(
         )
         firstUser.password = password
         secondUser.password = password
-        firstUser.authoritySet.addAll(setOf(userAuthority))
-        secondUser.authoritySet.addAll(setOf(userAuthority))
+        firstUser.roleSet.addAll(setOf(userRole))
+        secondUser.roleSet.addAll(setOf(userRole))
         return mutableListOf(firstUser, secondUser)
     }
 }
