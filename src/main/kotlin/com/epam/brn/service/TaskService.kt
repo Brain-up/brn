@@ -66,11 +66,13 @@ class TaskService(
     }
 
     private fun processAnswerOptions(task: Task) {
-        task.answerOptions.forEach { resource ->
-            if (getAudioFileFromStorage)
-                resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale)
-            resource.pictureFileUrl = urlConversionService.makeUrlForTaskPicture(resource.word)
-        }
+        task.answerOptions
+            .parallelStream()
+            .forEach { resource ->
+                if (getAudioFileFromStorage)
+                    resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale)
+                resource.pictureFileUrl = urlConversionService.makeUrlForTaskPicture(resource.word)
+            }
     }
 
     @Transactional
