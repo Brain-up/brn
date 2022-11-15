@@ -5,8 +5,6 @@ import { inject as service } from '@ember/service';
 import ImageLocatorService from 'brn/services/image-locator';
 import StudyConfigService from 'brn/services/study-config';
 
-
-
 interface ITaskPlayerSingleWordsOptionComponentArguments {
   mode: keyof typeof MODES;
   disableAnswers: boolean;
@@ -18,9 +16,10 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<ITas
   @service('study-config') studyConfig!: StudyConfigService;
   isClicked = false;
   shouldLoadSymbol(word: string) {
-    if (!this.studyConfig.showImages) { 
+    if (!this.studyConfig.showImages) {
       return false;
     }
+
     return word.trim().split(' ').length === 1;
   }
   @action async setDefaultImage(e: Error & { target: HTMLImageElement }) {

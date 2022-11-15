@@ -1,8 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContributorsComponent } from './contributors.component';
-import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { of } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
+import { ContributorApiService } from '@admin/services/api/contributor-api.service';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
+
+
+@Component({
+  template: '',
+})
+class DummyComponent {
+}
 
 describe('ContributorsComponent', () => {
   let component: ContributorsComponent;
@@ -24,21 +34,33 @@ describe('ContributorsComponent', () => {
       contribution: 100
     }
   ];
+  const mockedRoutes =
+    {
+      path: 'contributor',
+      component: DummyComponent,
+    };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ContributorsComponent ],
-      imports: [TranslateModule.forRoot()],
+      declarations: [ContributorsComponent],
+      imports: [
+        TranslateModule.forRoot(),
+        RouterTestingModule.withRoutes([mockedRoutes])
+      ],
       providers: [
         {
-          provide: AdminApiService,
+          provide: ActivatedRoute,
+          useValue: {}
+        },
+        {
+          provide: ContributorApiService,
           useValue: {
             getContributors: () => of(mockContributors),
           },
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
@@ -51,7 +73,7 @@ describe('ContributorsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it ('should get contributors from server', () => {
+  it('should get contributors from server', () => {
     expect(component.contributorsList).toEqual(mockContributors);
   });
 });

@@ -1,0 +1,126 @@
+@import 'colors.scss';
+@import 'variables.scss';
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.inform {
+  font-size: $font-size-12;
+  position: absolute;
+  right: 6%;
+}
+
+form, .contacts {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 15px;
+  justify-content: flex-end;
+}
+
+.icon-group {
+  align-self: center;
+  margin: auto;
+}
+
+button.load {
+  background: none;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.avatar {
+  align-items: center;
+  border-radius: 50%;
+  height: 80px;
+  width: auto;
+}
+
+mat-icon {
+  width: 80px;
+  height: 80px;
+}
+
+label, .avatar-label {
+  font-weight: 400;
+  font-size: $font-size-14;
+  line-height: 30px;
+  color: $active-grey-color;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  margin-top: $margin-20;
+}
+
+input, textarea, select {
+  height: 40px;
+  background: $hardly-grey-color;
+  box-shadow: 0px 2px 2px rgba(89, 71, 178, 0.12);
+  border-radius: $border-radius-6;
+  border: 0px;
+  max-width: 421px;
+  min-width: 250px;
+  padding-left: $padding-6;
+  font-weight: 500;
+  font-size: $font-size-14;
+}
+
+textarea {
+  height: 60px;
+}
+
+.cross-validation-error {
+  margin-top: $margin-4;
+  color: red;
+  font-size: $font-size-12;
+  font-style: italic;
+}
+
+.bottom-buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cancel-button {
+  border-radius: $border-radius-8;
+  border: 1px solid $mouse-grey-color;
+  background: none;
+  cursor: pointer;
+  color: $cold-violet-color;
+  font-size: $font-size-12;
+  font-weight: 600;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  width: 130px;
+}
+
+.save-button {
+  background: $brain-gradient;
+  color: $hardly-grey-color !important;
+  cursor: pointer;
+  border-radius: $border-radius-8;
+  border: 1px solid $mouse-grey-color;
+  font-size: $font-size-12;
+  font-weight: 600;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  padding: $padding-12 $padding-24;
+  margin-left: $margin-20;
+}
+
+.cancel-button:hover {
+  background: #F0F0F0;
+}
+
+.disabled {
+  background: $latter-grey-color;
+}
