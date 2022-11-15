@@ -6,7 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, pluck, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ContributorsRole, Roles } from '@admin/models/roles.type';
+import { Roles } from '@admin/models/roles.type';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
@@ -140,14 +140,5 @@ export class AdminApiService {
         )}`,
       )
       .pipe(pluck('data'));
-  }
-
-  public getContributors(): Observable<Contributor[]> {
-    return this.httpClient
-      .get<GetContributors>('/api/contributors')
-      .pipe(
-        pluck('data'),
-        map((contributorsList: Contributor[]) => contributorsList),
-      );
   }
 }
