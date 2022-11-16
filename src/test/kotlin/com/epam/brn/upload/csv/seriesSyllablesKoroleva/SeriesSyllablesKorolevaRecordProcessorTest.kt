@@ -116,25 +116,6 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         verify { exerciseRepositoryMock.save(expected) }
     }
 
-    // @Test
-    fun `should create correct task`() {
-        val expected = createExercise().tasks.first()
-
-        val actual = seriesSyllablesKorolevaProcessor.process(
-            mutableListOf(
-                SeriesSyllablesKorolevaRecord(
-                    level = 1,
-                    code = "code",
-                    exerciseName = exerciseName,
-                    wordsColumns = 3,
-                    words = listOf("(бал", "бум", "быль)")
-                )
-            )
-        ).first().tasks.first()
-
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "answerOptions")
-    }
-
     @Test
     fun `should create correct answer options`() {
         val expected = setOf(
