@@ -13,7 +13,7 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
-import org.apache.commons.lang3.StringUtils
+import com.epam.brn.upload.toStringWithoutBraces
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -61,7 +61,7 @@ class SeriesWordsRecordProcessor(
     private fun extractAnswerOptions(record: SeriesWordsRecord, locale: BrnLocale): MutableSet<Resource> =
         record.words
             .asSequence()
-            .map { toStringWithoutBraces(it) }
+            .map { it.toStringWithoutBraces() }
             .map { toResource(it, locale) }
             .toMutableSet()
 
@@ -86,8 +86,6 @@ class SeriesWordsRecordProcessor(
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }
-
-    private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
     private fun generateExercise(record: SeriesWordsRecord, subGroup: SubGroup) =
         Exercise(

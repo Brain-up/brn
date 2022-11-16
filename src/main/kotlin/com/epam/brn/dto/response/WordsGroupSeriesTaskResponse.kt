@@ -1,6 +1,6 @@
 package com.epam.brn.dto.response
 
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.WordType
 import com.fasterxml.jackson.annotation.JsonIgnore
 

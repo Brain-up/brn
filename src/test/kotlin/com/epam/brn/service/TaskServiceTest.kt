@@ -6,7 +6,7 @@ import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup

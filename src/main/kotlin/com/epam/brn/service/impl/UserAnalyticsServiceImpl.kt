@@ -3,7 +3,7 @@ package com.epam.brn.service.impl
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository

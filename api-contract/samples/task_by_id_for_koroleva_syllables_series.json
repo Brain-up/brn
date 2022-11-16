@@ -1,0 +1,45 @@
+{
+  "data": {
+    "id": 147,
+    "exerciseType": "SYLLABLES_KOROLEVA",
+    "name": "",
+    "serialNumber": 0,
+    "answerOptions": [
+      {
+        "id": 217,
+        "audioFileUrl": "",
+        "word": "чич",
+        "wordPronounce": "чич",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0,
+        "description": "",
+        "columnNumber": -1
+      },
+      {
+        "id": 218,
+        "audioFileUrl": "",
+        "word": "чуч",
+        "wordPronounce": "чуч",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0,
+        "description": "",
+        "columnNumber": -1
+      },
+      {
+        "id": 216,
+        "audioFileUrl": "",
+        "word": "чач",
+        "wordPronounce": "чач",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0,
+        "description": "",
+        "columnNumber": -1
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

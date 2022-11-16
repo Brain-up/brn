@@ -1,6 +1,5 @@
-package com.epam.brn.upload.csv.seriesWordsKoroleva
+package com.epam.brn.upload.csv.seriesSyllablesKoroleva
 
-import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
@@ -11,28 +10,22 @@ import com.epam.brn.model.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import com.epam.brn.upload.toStringWithoutBraces
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class SeriesWordsKorolevaRecordProcessor(
+class SeriesSyllablesKorolevaRecordProcessor(
     private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val wordsService: WordsService
-) : RecordProcessor<SeriesWordsKorolevaRecord, Exercise> {
+) : RecordProcessor<SeriesSyllablesKorolevaRecord, Exercise> {
 
-    @Value(value = "\${brn.picture.file.default.path}")
-    private lateinit var pictureDefaultPath: String
-
-    override fun isApplicable(record: Any): Boolean = record is SeriesWordsKorolevaRecord
+    override fun isApplicable(record: Any): Boolean = record is SeriesSyllablesKorolevaRecord
 
     @Transactional
-    override fun process(records: List<SeriesWordsKorolevaRecord>, locale: BrnLocale): List<Exercise> {
+    override fun process(records: List<SeriesSyllablesKorolevaRecord>, locale: BrnLocale): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
         records.forEach { record ->
             val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
@@ -40,11 +33,10 @@ class SeriesWordsKorolevaRecordProcessor(
             val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
                 val answerOptions = extractAnswerOptions(record, locale)
-                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 resourceRepository.saveAll(answerOptions)
-
                 val newExercise = generateExercise(record, subGroup)
-                newExercise.addTask(generateOneTask(newExercise, answerOptions))
+                val newTask = Task(exercise = newExercise, answerOptions = answerOptions)
+                newExercise.addTask(newTask)
                 exerciseRepository.save(newExercise)
                 exercises.add(newExercise)
             }
@@ -52,7 +44,7 @@ class SeriesWordsKorolevaRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesWordsKorolevaRecord, locale: BrnLocale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesSyllablesKorolevaRecord, locale: BrnLocale): MutableSet<Resource> =
         record.words
             .asSequence()
             .map { it.toStringWithoutBraces() }
@@ -60,36 +52,23 @@ class SeriesWordsKorolevaRecordProcessor(
             .toMutableSet()
 
     private fun toResource(word: String, locale: BrnLocale): Resource {
-        val audioPath = wordsService.getSubFilePathForWord(
-            AudioFileMetaData(
-                word,
-                locale.locale,
-                wordsService.getDefaultWomanVoiceForLocale(locale.locale)
-            )
-        )
         val resource =
             resourceRepository.findFirstByWordAndLocaleAndWordType(word, locale.locale, WordType.OBJECT.toString())
                 .orElse(
                     Resource(
                         word = word,
-                        pictureFileUrl = pictureDefaultPath.format(word),
                         locale = locale.locale,
                     )
                 )
-        resource.audioFileUrl = audioPath
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }
 
-    private fun generateExercise(record: SeriesWordsKorolevaRecord, subGroup: SubGroup) =
+    private fun generateExercise(record: SeriesSyllablesKorolevaRecord, subGroup: SubGroup) =
         Exercise(
             subGroup = subGroup,
             name = record.exerciseName,
             level = record.level,
-            playWordsCount = record.playWordsCount,
             wordsColumns = record.wordsColumns,
         )
-
-    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
-        Task(exercise = exercise, answerOptions = answerOptions)
 }

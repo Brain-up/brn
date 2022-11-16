@@ -13,7 +13,7 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
-import org.apache.commons.lang3.StringUtils
+import com.epam.brn.upload.toStringWithoutBraces
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -63,7 +63,7 @@ class SeriesPhrasesRecordProcessor(
     private fun extractAnswerOptions(record: SeriesPhrasesRecord, locale: BrnLocale): MutableSet<Resource> {
         val words = record.phrases
             .asSequence()
-            .map { toPhrasesWithoutBraces(it) }
+            .map { it.toStringWithoutBraces() }
             .toMutableList()
         val lastWordOnFirstPhrase = words.find { w -> w.contains(".") }
         var phraseFirst = words.subList(0, words.indexOf(lastWordOnFirstPhrase) + 1)
@@ -94,8 +94,6 @@ class SeriesPhrasesRecordProcessor(
         resource.wordType = wordType
         return resource
     }
-
-    private fun toPhrasesWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
     private fun generateExercise(record: SeriesPhrasesRecord, subGroup: SubGroup) =
         Exercise(
