@@ -3,6 +3,8 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators }
 import { Contributor, contributorTypes } from '@admin/models/contrubutor.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
+import { finalize } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-contributor',
@@ -14,6 +16,7 @@ export class ContributorComponent implements OnInit {
   public contributorForm: FormGroup;
   public contributor;
   public contributorTypes = contributorTypes;
+  public readonly isLoading$ = new BehaviorSubject(false);
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -130,11 +133,23 @@ export class ContributorComponent implements OnInit {
       this.cancelInput();
     }
     if (this.contributorForm.valid) {
+      this.isLoading$.next(true);
       this.convertFormValueForSave();
       this.id ?
-        this.contributorApiService.updateContributor(this.id, this.contributor).subscribe(res => res)
-        : this.contributorApiService.createContributor(this.contributor).subscribe(res => res);
-      this.router.navigate(['contributors']);
+        this.contributorApiService.updateContributor(this.id, this.contributor)
+          .pipe(
+            finalize(() => this.isLoading$.next(false)),
+           )
+          .subscribe(
+            () =>  this.router.navigate(['contributors'])
+          )
+        : this.contributorApiService.createContributor(this.contributor)
+          .pipe(
+            finalize(() => this.isLoading$.next(false)),
+          )
+          .subscribe(
+            () =>  this.router.navigate(['contributors'])
+          );
     }
   }
 
