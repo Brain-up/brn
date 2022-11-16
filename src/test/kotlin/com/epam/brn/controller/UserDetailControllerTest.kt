@@ -3,7 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.enums.BrnRole
@@ -295,7 +295,7 @@ internal class UserDetailControllerTest {
         // THEN
         verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as Response<*>).data shouldBe listOf(userWithAnalyticsResponse)
+        (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
     }
 
     @Test
@@ -312,6 +312,6 @@ internal class UserDetailControllerTest {
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as Response<*>).data shouldBe listOf(userAccountResponse)
+        (users.body as BrnResponse<*>).data shouldBe listOf(userAccountResponse)
     }
 }

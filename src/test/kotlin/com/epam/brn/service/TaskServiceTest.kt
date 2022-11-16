@@ -1,12 +1,13 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.ExerciseDto
-import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
-import com.epam.brn.dto.response.WordsTaskResponse
+import com.epam.brn.dto.response.TaskResponse
+import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.ExerciseMechanism
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
-import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
@@ -21,7 +22,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 import kotlin.test.assertSame
 
@@ -51,9 +50,6 @@ internal class TaskServiceTest {
     lateinit var resourceRepositoryMock: ResourceRepository
 
     @MockK
-    lateinit var wordsServiceMock: WordsService
-
-    @MockK
     lateinit var urlConversionService: UrlConversionService
 
     @MockK
@@ -66,16 +62,16 @@ internal class TaskServiceTest {
     lateinit var resourceMock: Resource
 
     @MockK
-    lateinit var taskDto1Mock: WordsTaskResponse
+    lateinit var taskDto1Mock: TaskResponse
 
     @MockK
-    lateinit var taskDto2Mock: WordsTaskResponse
+    lateinit var taskDto2Mock: TaskResponse
 
     @MockK
-    lateinit var wordsGroupSeriesTaskResponse1Mock: WordsGroupSeriesTaskResponse
+    lateinit var taskWordsGroupResponse1Mock: TaskWordsGroupResponse
 
     @MockK
-    lateinit var wordsGroupSeriesTaskResponse2Mock: WordsGroupSeriesTaskResponse
+    lateinit var taskWordsGroupResponse2Mock: TaskWordsGroupResponse
 
     @MockK
     lateinit var exerciseMock: Exercise
@@ -105,14 +101,13 @@ internal class TaskServiceTest {
 
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
             every { task2Mock.answerOptions } returns mutableSetOf()
-            every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
-            every { task2Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
+            every { task1Mock.toTaskResponse(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
+            every { task2Mock.toTaskResponse(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
-            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // WHEN
@@ -139,17 +134,16 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
-            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
+            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
 
-            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
-            // WHEN isAudioFileUrlGenerated = false
+            // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
@@ -170,18 +164,16 @@ internal class TaskServiceTest {
             every { task1Mock.id } returns 1
             every { task1Mock.name } returns "name"
             every { task1Mock.serialNumber } returns 2
-            // every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
 
             every { exerciseMock.template } returns template
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_WORDS_KOROLEVA.name
 
-            every { wordsServiceMock.getFullS3UrlForWord(any(), any()) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
 
-            // WHEN isAudioFileUrlGenerated = false
-            val foundTasks = taskService.getTasksByExerciseId(LONG_ONE) as List<WordsTaskResponse>
+            // WHEN
+            val foundTasks = taskService.getTasksByExerciseId(LONG_ONE) as List<TaskResponse>
 
             // THEN
             foundTasks.size shouldBe 1
@@ -212,18 +204,15 @@ internal class TaskServiceTest {
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
             every { exerciseMock.toDto() } returns exerciseDtoMock
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
-            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
+            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
-            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
-            // WHEN  isAudioFileUrlGenerated = true
-            ReflectionTestUtils.setField(taskService, "getAudioFileFromStorage", true)
-
+            // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
@@ -247,14 +236,12 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
-            every { task2Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse2Mock
+            every { task1Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
+            every { task2Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
-
-            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // WHEN
@@ -275,18 +262,17 @@ internal class TaskServiceTest {
             )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
-            every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
-            every { task2Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
+            every { task1Mock.toTaskResponse(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
+            every { task2Mock.toTaskResponse(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto2Mock
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
             every { task2Mock.answerOptions } returns mutableSetOf()
-            every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto1Mock
-            every { task2Mock.toPhraseSeriesTaskDto() } returns taskDto2Mock
+            every { task1Mock.toTaskResponse(ExerciseType.PHRASES) } returns taskDto1Mock
+            every { task2Mock.toTaskResponse(ExerciseType.PHRASES) } returns taskDto2Mock
             every { exerciseMock.toDto() } returns exerciseDtoMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name
 
-            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
             every { task1Mock.exercise } returns exerciseMock
 
@@ -296,12 +282,10 @@ internal class TaskServiceTest {
             // THEN
             foundTasks.size shouldBe expectedTaskSize
 
-            // WHEN  isAudioFileUrlGenerated = true
-            ReflectionTestUtils.setField(taskService, "getAudioFileFromStorage", true)
+            // WHEN
             foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
 
             // THEN
-            verify(exactly = 1) { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) }
             foundTasks.size shouldBe expectedTaskSize
         }
 
@@ -324,7 +308,6 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.DI.name
 
-            every { wordsServiceMock.getFullS3UrlForWord(resource.word, resource.locale) } returns "fullUrl"
             every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // THEN
@@ -336,20 +319,21 @@ internal class TaskServiceTest {
         @Test
         fun `should return task by id(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
-            val taskDto = WordsTaskResponse(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
+            val taskDto = TaskResponse(id = 1L, exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-            every { task1Mock.toWordsTaskDto(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto
+            every { task1Mock.toTaskResponse(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
             taskById shouldBe taskDto
+            (taskById as TaskResponse).exerciseMechanism shouldBe ExerciseMechanism.WORDS
         }
 
         @Test
@@ -366,13 +350,13 @@ internal class TaskServiceTest {
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
+            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            assertSame(wordsGroupSeriesTaskResponse1Mock, taskById)
+            assertSame(taskWordsGroupResponse1Mock, taskById)
         }
 
         @Test
@@ -389,32 +373,33 @@ internal class TaskServiceTest {
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns wordsGroupSeriesTaskResponse1Mock
+            every { task1Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            taskById shouldBe wordsGroupSeriesTaskResponse1Mock
+            taskById shouldBe taskWordsGroupResponse1Mock
         }
 
         @Test
         fun `should return task by id(PHRASES)`() {
             // GIVEN
-            val taskDto = WordsTaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
+            val taskDto = TaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name
-            every { task1Mock.toPhraseSeriesTaskDto() } returns taskDto
+            every { task1Mock.toTaskResponse(ExerciseType.PHRASES) } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
             taskById shouldBe taskDto
+            (taskById as TaskResponse).exerciseMechanism shouldBe ExerciseMechanism.WORDS
         }
 
         @Test

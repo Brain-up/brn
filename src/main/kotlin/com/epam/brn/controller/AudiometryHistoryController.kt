@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.request.AudiometryHistoryRequest
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.AudiometryHistoryService
 import io.swagger.annotations.Api
@@ -22,6 +22,6 @@ class AudiometryHistoryController(private val audiometryHistoryService: Audiomet
 
     @PostMapping
     @ApiOperation("Save speech audiometry history")
-    fun save(@Validated @RequestBody audiometryHistory: AudiometryHistoryRequest): ResponseEntity<Response<Long>> =
-        ResponseEntity.ok().body(Response(data = audiometryHistoryService.save(audiometryHistory)))
+    fun save(@Validated @RequestBody audiometryHistory: AudiometryHistoryRequest): ResponseEntity<BrnResponse<Long>> =
+        ResponseEntity.ok().body(BrnResponse(data = audiometryHistoryService.save(audiometryHistory)))
 }

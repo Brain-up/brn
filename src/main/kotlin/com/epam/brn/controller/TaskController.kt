@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.TaskService
 import io.swagger.annotations.Api
@@ -26,17 +26,17 @@ class TaskController(private val taskService: TaskService) {
     @ApiOperation("Get all tasks by exercise id")
     fun getTasksByExerciseId(
         @RequestParam(value = "exerciseId") exerciseId: Long
-    ): ResponseEntity<Response<List<Any>>> {
+    ): ResponseEntity<BrnResponse<List<Any>>> {
         log.debug("Getting tasks for exercisedId $exerciseId")
         return ResponseEntity
             .ok()
-            .body(Response(data = taskService.getTasksByExerciseId(exerciseId)))
+            .body(BrnResponse(data = taskService.getTasksByExerciseId(exerciseId)))
     }
 
     @GetMapping(value = ["/{taskId}"])
     @ApiOperation("Get task by id")
-    fun getTaskById(@PathVariable("taskId") taskId: Long): ResponseEntity<Response<Any>> {
+    fun getTaskById(@PathVariable("taskId") taskId: Long): ResponseEntity<BrnResponse<Any>> {
         return ResponseEntity.ok()
-            .body(Response(data = taskService.getTaskById(taskId)))
+            .body(BrnResponse(data = taskService.getTaskById(taskId)))
     }
 }

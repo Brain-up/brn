@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.ResourceResponse
-import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.enums.ExerciseType
@@ -13,13 +13,13 @@ import com.epam.brn.enums.ExerciseType.SINGLE_WORDS_KOROLEVA
 import com.epam.brn.enums.ExerciseType.SYLLABLES_KOROLEVA
 import com.epam.brn.enums.ExerciseType.WORDS_SEQUENCES
 import com.epam.brn.enums.ExerciseType.valueOf
+import com.epam.brn.enums.toMechanism
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -28,13 +28,9 @@ class TaskService(
     private val taskRepository: TaskRepository,
     private val exerciseRepository: ExerciseRepository,
     private val resourceRepository: ResourceRepository,
-    private val wordsService: WordsService,
     private val urlConversionService: UrlConversionService,
 ) {
     private val log = logger()
-
-    @Value(value = "\${brn.audio.file.getFromStorage}")
-    private var getAudioFileFromStorage: Boolean = false
 
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
@@ -42,11 +38,11 @@ class TaskService(
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
         return when (val type = valueOf(exercise.subGroup!!.series.type)) {
-            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA -> tasks.map { task -> task.toWordsTaskDto(type) }
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA -> tasks.map { task -> task.toTaskResponse(type) }
             SINGLE_WORDS_KOROLEVA -> tasks.map { task -> task.toDetailWordsTaskDto(type) }
             WORDS_SEQUENCES -> tasks.map { task -> task.toWordsGroupSeriesTaskDto(task.exercise?.template) }
             SENTENCE -> tasks.map { task -> task.toSentenceSeriesTaskDto(task.exercise?.template) }
-            PHRASES -> tasks.map { task -> task.toPhraseSeriesTaskDto() }
+            PHRASES -> tasks.map { task -> task.toTaskResponse(PHRASES) }
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
@@ -57,11 +53,11 @@ class TaskService(
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         processAnswerOptions(task)
         return when (val type = valueOf(task.exercise!!.subGroup!!.series.type)) {
-            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA -> task.toWordsTaskDto(type)
+            SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA -> task.toTaskResponse(type)
             SINGLE_WORDS_KOROLEVA -> task.toDetailWordsTaskDto(type)
             WORDS_SEQUENCES -> task.toWordsGroupSeriesTaskDto(task.exercise?.template)
             SENTENCE -> task.toSentenceSeriesTaskDto(task.exercise?.template)
-            PHRASES -> task.toPhraseSeriesTaskDto()
+            PHRASES -> task.toTaskResponse(PHRASES)
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
@@ -70,8 +66,6 @@ class TaskService(
         task.answerOptions
             .parallelStream()
             .forEach { resource ->
-                if (getAudioFileFromStorage)
-                    resource.audioFileUrl = wordsService.getFullS3UrlForWord(resource.word, resource.locale)
                 resource.pictureFileUrl = urlConversionService.makeUrlForTaskPicture(resource.word)
             }
     }
@@ -94,9 +88,10 @@ fun String.findSyllableCount(): Int {
     return syllableCount
 }
 
-fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
+fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
     id = id!!,
     exerciseType = exerciseType,
+    exerciseMechanism = exerciseType.toMechanism(),
     name = name,
     serialNumber = serialNumber,
     answerOptions = answerOptions.toResourceDtoSet()

@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ResourceService
 import io.swagger.annotations.Api
@@ -27,7 +27,7 @@ class ResourceController(val resourceService: ResourceService) {
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest
-    ): ResponseEntity<Response<ResourceResponse>> =
+    ): ResponseEntity<BrnResponse<ResourceResponse>> =
         ResponseEntity.ok()
-            .body(Response(data = resourceService.updateDescription(id, request.description!!)))
+            .body(BrnResponse(data = resourceService.updateDescription(id, request.description!!)))
 }
