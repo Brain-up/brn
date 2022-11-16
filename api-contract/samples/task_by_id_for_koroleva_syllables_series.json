@@ -1,15 +1,17 @@
 {
   "data": {
-    "id": 147,
+    "id": 49,
+    "level": 0,
     "exerciseType": "SYLLABLES_KOROLEVA",
+    "exerciseMechanism": "WORDS",
     "name": "",
     "serialNumber": 0,
     "answerOptions": [
       {
-        "id": 217,
+        "id": 98,
         "audioFileUrl": "",
-        "word": "чич",
-        "wordPronounce": "чич",
+        "word": "ву",
+        "wordPronounce": "ву",
         "wordType": "OBJECT",
         "pictureFileUrl": "",
         "soundsCount": 0,
@@ -17,10 +19,10 @@
         "columnNumber": -1
       },
       {
-        "id": 218,
+        "id": 96,
         "audioFileUrl": "",
-        "word": "чуч",
-        "wordPronounce": "чуч",
+        "word": "ва",
+        "wordPronounce": "ва",
         "wordType": "OBJECT",
         "pictureFileUrl": "",
         "soundsCount": 0,
@@ -28,10 +30,10 @@
         "columnNumber": -1
       },
       {
-        "id": 216,
+        "id": 97,
         "audioFileUrl": "",
-        "word": "чач",
-        "wordPronounce": "чач",
+        "word": "ви",
+        "wordPronounce": "ви",
         "wordType": "OBJECT",
         "pictureFileUrl": "",
         "soundsCount": 0,
