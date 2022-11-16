@@ -84,3 +84,37 @@ level,code,exerciseName,words,wordsColumns
 32,koroleva_syllables_aiuo,Гласные А-И-У-О,(щащ щощ щищ щущ),2
 33,koroleva_syllables_aiuo,Гласные А-И-У-О,(хах хох хих хух),2
 34,koroleva_syllables_aiuo,Гласные А-И-У-О,(сас сос сис сус),2
+1,koroleva_syllables_aeeii,Гласные А-Э-Ы,(за зэ зы),3
+2,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ва вэ вы),3
+3,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ба бэ бы),3
+4,koroleva_syllables_aeeii,Гласные А-Э-Ы,(да дэ ды),3
+5,koroleva_syllables_aeeii,Гласные А-Э-Ы,(га гэ гы),3
+6,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ма мэ мы),3
+7,koroleva_syllables_aeeii,Гласные А-Э-Ы,(на нэ ны),3
+8,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ла лэ лы),3
+9,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ра рэ ры),3
+10,koroleva_syllables_aeeii,Гласные А-Э-Ы,(фа фэ фы),3
+11,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ка кэ кы),3
+12,koroleva_syllables_aeeii,Гласные А-Э-Ы,(та тэ ты),3
+13,koroleva_syllables_aeeii,Гласные А-Э-Ы,(па пэ пы),3
+14,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ча чэ чы),3
+15,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ща щэ щы),3
+16,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ха хэ хы),3
+17,koroleva_syllables_aeeii,Гласные А-Э-Ы,(са сэ сы),3
+18,koroleva_syllables_aeeii,Гласные А-Э-Ы,(зас зэс зыс),3
+19,koroleva_syllables_aeeii,Гласные А-Э-Ы,(ваф вэф выф),3
+20,koroleva_syllables_aeeii,Гласные А-Э-Ы,(бап бэп бып),3
+21,koroleva_syllables_aeeii,Гласные А-Э-Ы,(дат дэт дыт),3
+22,koroleva_syllables_aeeii,Гласные А-Э-Ы,(гак гэк гык),3
+23,koroleva_syllables_aeeii,Гласные А-Э-Ы,(мам мэм мым),3
+24,koroleva_syllables_aeeii,Гласные А-Э-Ы,(нан нэн нын),3
+25,koroleva_syllables_aeeii,Гласные А-Э-Ы,(лал лэл лыл),3
+26,koroleva_syllables_aeeii,Гласные А-Э-Ы,(рар рэр рыр),3
+27,koroleva_syllables_aeeii,Гласные А-Э-Ы,(фаф фэф фыф),3
+28,koroleva_syllables_aeeii,Гласные А-Э-Ы,(как кэк кык),3
+29,koroleva_syllables_aeeii,Гласные А-Э-Ы,(тат тэт тыт),3
+30,koroleva_syllables_aeeii,Гласные А-Э-Ы,(пап пэп пып),3
+31,koroleva_syllables_aeeii,Гласные А-Э-Ы,(чач чэч чыч),3
+32,koroleva_syllables_aeeii,Гласные А-Э-Ы,(щащ щэщ щыщ),3
+33,koroleva_syllables_aeeii,Гласные А-Э-Ы,(хах хэх хых),3
+34,koroleva_syllables_aeeii,Гласные А-Э-Ы,(сас сэс сыс),3
