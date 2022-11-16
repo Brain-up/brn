@@ -5,7 +5,7 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
@@ -66,6 +66,7 @@ class InitialDataLoader(
             ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
             ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
             ExerciseType.SINGLE_WORDS_KOROLEVA.name to SINGLE_WORDS_KOROLEVA_FILE_NAME,
+            ExerciseType.SYLLABLES_KOROLEVA.name to SYLLABLES_KOROLEVA_FILE_NAME,
         )
 
         fun getInputStreamFromSeriesInitFile(seriesType: String): InputStream {
@@ -77,23 +78,24 @@ class InitialDataLoader(
 
     fun getSourceFiles(): List<String> {
         var profile: String = environment.activeProfiles[0].lowercase()
-        val devSubFolder = if (profile == "dev") "dev/" else ""
+        val subFolder = if (profile == "dev") "dev/" else ""
         return listOf(
             "groups_.csv",
             "series_.csv",
             "subgroups_ru.csv",
             "subgroups_en.csv",
-            "$devSubFolder$SINGLE_SIMPLE_WORDS_FILE_NAME.csv",
-            "$devSubFolder$SINGLE_SIMPLE_WORDS_EN_FILE_NAME.csv",
-            "$devSubFolder$SINGLE_FREQUENCY_WORDS_FILE_NAME.csv",
-            "$devSubFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
-            "$devSubFolder$WORDS_SEQUENCES_FILE_NAME.csv",
-            "$devSubFolder$PHRASES_FILE_NAME.csv",
-            "$SINGLE_WORDS_KOROLEVA_FILE_NAME.csv",
+            "$subFolder$SINGLE_SIMPLE_WORDS_FILE_NAME.csv",
+            "$subFolder$SINGLE_SIMPLE_WORDS_EN_FILE_NAME.csv",
+            "$subFolder$SINGLE_FREQUENCY_WORDS_FILE_NAME.csv",
+            "$subFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
+            "$subFolder$WORDS_SEQUENCES_FILE_NAME.csv",
+            "$subFolder$PHRASES_FILE_NAME.csv",
+            "$subFolder$SINGLE_WORDS_KOROLEVA_FILE_NAME.csv",
+            "$subFolder$SYLLABLES_KOROLEVA_FILE_NAME.csv",
             "signal_exercises_ru.csv",
             "signal_exercises_en.csv",
-            "$devSubFolder$SENTENCES_FILE_NAME.csv",
-            "$devSubFolder$SENTENCES_EN_FILE_NAME.csv",
+            "$subFolder$SENTENCES_FILE_NAME.csv",
+            "$subFolder$SENTENCES_EN_FILE_NAME.csv",
             "lopotko_ru.csv"
         )
     }
@@ -229,3 +231,4 @@ const val SENTENCES_FILE_NAME = "series_sentences_ru"
 const val SENTENCES_EN_FILE_NAME = "series_sentences_en"
 const val SIGNALS_FILE_NAME = "signal_exercises_"
 const val SINGLE_WORDS_KOROLEVA_FILE_NAME = "series_words_koroleva_ru"
+const val SYLLABLES_KOROLEVA_FILE_NAME = "series_syllables_koroleva_ru"

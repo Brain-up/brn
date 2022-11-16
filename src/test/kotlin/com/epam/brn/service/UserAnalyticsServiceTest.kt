@@ -6,7 +6,7 @@ import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.Voice
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.model.projection.UserStatisticView
