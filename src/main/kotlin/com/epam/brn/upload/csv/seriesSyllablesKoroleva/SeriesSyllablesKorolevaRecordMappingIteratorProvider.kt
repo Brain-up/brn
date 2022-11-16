@@ -29,7 +29,6 @@ class SeriesSyllablesKorolevaRecordMappingIteratorProvider :
             .readValues(inputStream)
     }
 
-    override fun isApplicable(format: String): Boolean {
-        return SeriesSyllablesKorolevaRecord.FORMAT == format
-    }
+    override fun isApplicable(format: String): Boolean =
+        SeriesSyllablesKorolevaRecord.FORMAT == format
 }

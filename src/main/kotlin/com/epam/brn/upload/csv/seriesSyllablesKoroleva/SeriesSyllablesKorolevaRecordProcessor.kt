@@ -34,9 +34,9 @@ class SeriesSyllablesKorolevaRecordProcessor(
             if (!existExercise.isPresent) {
                 val answerOptions = extractAnswerOptions(record, locale)
                 resourceRepository.saveAll(answerOptions)
-
                 val newExercise = generateExercise(record, subGroup)
-                newExercise.addTask(generateOneTask(newExercise, answerOptions))
+                val newTask = Task(exercise = newExercise, answerOptions = answerOptions)
+                newExercise.addTask(newTask)
                 exerciseRepository.save(newExercise)
                 exercises.add(newExercise)
             }
@@ -73,7 +73,4 @@ class SeriesSyllablesKorolevaRecordProcessor(
             level = record.level,
             wordsColumns = record.wordsColumns,
         )
-
-    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
-        Task(exercise = exercise, answerOptions = answerOptions)
 }
