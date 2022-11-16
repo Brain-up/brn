@@ -13,9 +13,7 @@ class SeriesSyllablesKorolevaRecordMappingIteratorProvider :
     MappingIteratorProvider<SeriesSyllablesKorolevaRecord> {
 
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesSyllablesKorolevaRecord> {
-        val csvMapper = CsvMapper().apply {
-            enable(CsvParser.Feature.TRIM_SPACES)
-        }
+        val csvMapper = CsvMapper().apply { enable(CsvParser.Feature.TRIM_SPACES) }
 
         val csvSchema = csvMapper
             .schemaFor(SeriesSyllablesKorolevaRecord::class.java)
