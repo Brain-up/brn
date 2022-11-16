@@ -19,5 +19,5 @@ fun ExerciseType.toMechanism(): ExerciseMechanism =
         ExerciseType.SENTENCE -> ExerciseMechanism.SENTENCES
         ExerciseType.WORDS_SEQUENCES -> ExerciseMechanism.MATRIX
         ExerciseType.DURATION_SIGNALS, ExerciseType.FREQUENCY_SIGNALS -> ExerciseMechanism.SIGNALS
-        else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException("No ExerciseMechanism is defined for $this.")
     }
