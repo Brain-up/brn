@@ -11,7 +11,7 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.upload.csv.RecordProcessor
-import org.apache.commons.lang3.StringUtils
+import com.epam.brn.upload.toStringWithoutBraces
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -47,7 +47,7 @@ class SeriesSyllablesKorolevaRecordProcessor(
     private fun extractAnswerOptions(record: SeriesSyllablesKorolevaRecord, locale: BrnLocale): MutableSet<Resource> =
         record.words
             .asSequence()
-            .map { toStringWithoutBraces(it) }
+            .map { it.toStringWithoutBraces() }
             .map { toResource(it, locale) }
             .toMutableSet()
 
@@ -63,8 +63,6 @@ class SeriesSyllablesKorolevaRecordProcessor(
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }
-
-    private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
     private fun generateExercise(record: SeriesSyllablesKorolevaRecord, subGroup: SubGroup) =
         Exercise(
