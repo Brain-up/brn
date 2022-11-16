@@ -42,7 +42,7 @@ class UserDetailController(
     @RolesAllowed(BrnRole.ADMIN)
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
-        @RequestParam("role", defaultValue = "ROLE_USER") role: String,
+        @RequestParam("role", defaultValue = "USER") role: String,
         @PageableDefault pageable: Pageable,
     ): ResponseEntity<Any> {
         val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)

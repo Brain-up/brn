@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
@@ -35,7 +35,7 @@ import javax.validation.Valid
 class ExerciseController(
     @Autowired val exerciseService: ExerciseService,
     @Autowired val csvUploadService: CsvUploadService,
-    @Autowired val authorityService: AuthorityService
+    @Autowired val roleService: RoleService
 ) {
 
     @PostMapping
@@ -56,7 +56,7 @@ class ExerciseController(
             required = true
         ) subGroupId: Long
     ): ResponseEntity<Response<List<ExerciseDto>>> {
-        val result = if (authorityService.isCurrentUserAdmin()) {
+        val result = if (roleService.isCurrentUserAdmin()) {
             exerciseService.findExercisesWithTasksBySubGroup(subGroupId)
         } else {
             exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)

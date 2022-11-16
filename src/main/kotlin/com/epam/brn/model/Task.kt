@@ -3,6 +3,7 @@ package com.epam.brn.model
 import com.epam.brn.dto.response.GeneralTaskResponse
 import com.epam.brn.dto.response.WordsTaskResponse
 import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
+import com.epam.brn.enums.ExerciseType
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -75,9 +76,9 @@ data class Task(
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet()
     )
-    fun toGeneralTaskDto(template: String? = "") = GeneralTaskResponse(
+    fun toGeneralTaskDto(exerciseType: ExerciseType, template: String? = "") = GeneralTaskResponse(
         id = id!!,
-        exerciseType = ExerciseType.WORDS_SEQUENCES,
+        exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),

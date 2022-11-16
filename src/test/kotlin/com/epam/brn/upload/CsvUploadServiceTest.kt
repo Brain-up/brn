@@ -2,7 +2,7 @@ package com.epam.brn.upload
 
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.CsvParser

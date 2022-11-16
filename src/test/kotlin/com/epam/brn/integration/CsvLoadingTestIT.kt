@@ -1,9 +1,9 @@
 package com.epam.brn.integration
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
-import com.epam.brn.repo.AuthorityRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
@@ -35,7 +35,7 @@ class CsvLoadingTestIT : BaseIT() {
             userAccountRepository: UserAccountRepository,
             audiometryLoader: AudiometryLoader,
             passwordEncoder: PasswordEncoder,
-            authorityService: AuthorityService,
+            roleService: RoleService,
             uploadService: CsvUploadService,
             audioFilesGenerationService: AudioFilesGenerationService,
             wordsService: WordsService,
@@ -44,7 +44,7 @@ class CsvLoadingTestIT : BaseIT() {
             userAccountRepository,
             audiometryLoader,
             passwordEncoder,
-            authorityService,
+            roleService,
             uploadService,
             audioFilesGenerationService,
             wordsService,
@@ -73,7 +73,7 @@ class CsvLoadingTestIT : BaseIT() {
     private lateinit var resourceRepository: ResourceRepository
 
     @Autowired
-    private lateinit var authorityRepository: AuthorityRepository
+    private lateinit var roleRepository: RoleRepository
 
     @Autowired
     private lateinit var audiometryRepository: AudiometryRepository
@@ -86,13 +86,13 @@ class CsvLoadingTestIT : BaseIT() {
         audiometryRepository.findAll() shouldHaveSize 6
         audiometryTaskRepository.findAll() shouldHaveSize 24
         exerciseGroupRepository.findAll() shouldHaveSize 4
-        seriesRepository.findAll() shouldHaveSize 16
-        subGroupRepository.findAll() shouldHaveSize 124
+        seriesRepository.findAll() shouldHaveSize 17
+        subGroupRepository.findAll() shouldHaveSize 128
 //        exerciseRepository.findAll() shouldHaveSize 188
 //        taskRepository.findAll() shouldHaveSize 188
 //        resourceRepository.findAll() shouldHaveSize 881
         userAccountRepository.findAll() shouldHaveSize 3
-        authorityRepository.findAll() shouldHaveSize 3
+        roleRepository.findAll() shouldHaveSize 3
     }
 
     @AfterEach

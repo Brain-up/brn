@@ -34,7 +34,7 @@ data class UserAccountCreateRequest(
     val photo: String? = null,
     val description: String? = null
 ) {
-    var authorities: MutableSet<String>? = mutableSetOf()
+    var roles: MutableSet<String>? = mutableSetOf()
     fun toModel() = UserAccount(
         fullName = name,
         email = email,

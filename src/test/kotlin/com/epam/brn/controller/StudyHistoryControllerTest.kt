@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.service.StudyHistoryService
 import io.kotest.matchers.shouldBe
@@ -26,7 +26,7 @@ internal class StudyHistoryControllerTest {
     lateinit var studyHistoryService: StudyHistoryService
 
     @MockK
-    lateinit var authorityService: AuthorityService
+    lateinit var roleService: RoleService
 
     @Test
     fun `should create new study history`() {
@@ -59,7 +59,7 @@ internal class StudyHistoryControllerTest {
         val year = 2021
         val studyHistoryDto = mockk<StudyHistoryDto>()
         every { studyHistoryService.getMonthHistories(userId, month, year) } returns listOf(studyHistoryDto)
-        every { authorityService.isCurrentUserAdmin() } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val monthHistories = studyHistoryController.getMonthHistories(month, year, userId)

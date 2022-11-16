@@ -1,3 +1,3 @@
-export type Roles = 'ROLE_ADMIN' | 'ROLE_DOCTOR' | 'ROLE_USER';
+export type Roles = 'ADMIN' | 'SPECIALIST' | 'USER';
 
-export type ContributorsRole = 'DEVELOPER' | 'SPECIALIST';
+export type ContributorsRole = 'DEVELOPER' | 'SPECIALIST'| 'DESIGNER' | 'QA' | 'OTHER';

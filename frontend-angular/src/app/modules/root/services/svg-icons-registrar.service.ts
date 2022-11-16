@@ -32,6 +32,12 @@ export class SvgIconsRegistrarService {
         ),
       )
       .addSvgIcon(
+        'foto-download',
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'foto-download.svg',
+        ),
+      )
+      .addSvgIcon(
         'help',
         this.domSanitizer.bypassSecurityTrustResourceUrl(
           SvgIconsRegistrarService.ICONS_FOLDER_PATH + 'help.svg',

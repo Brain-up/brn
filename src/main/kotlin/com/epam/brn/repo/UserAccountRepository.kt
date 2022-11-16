@@ -12,31 +12,31 @@ import java.util.Optional
 interface UserAccountRepository : JpaRepository<UserAccount, Long> {
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet 
+        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
             left JOIN FETCH u.headphones where u.fullName = ?1"""
     )
     fun findUserAccountByName(fullName: String): Optional<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet 
+        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
             left JOIN FETCH u.headphones where LOWER(u.email) = LOWER( ?1)"""
     )
     fun findUserAccountByEmail(email: String): Optional<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet
+        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet
             left JOIN FETCH u.headphones where u.id = ?1"""
     )
     fun findUserAccountById(id: Long): Optional<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet 
+        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
             left JOIN FETCH u.headphones where u.doctor = ?1"""
     )
     fun findUserAccountsByDoctor(doctor: UserAccount): List<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet 
+        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
             left JOIN FETCH u.headphones where u.doctor.id = ?1"""
     )
     fun findUserAccountsByDoctorId(doctorId: Long): List<UserAccount>
@@ -46,8 +46,8 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
     fun findAllByUserIdIsNullAndIsFirebaseErrorIsFalse(pageable: Pageable): Page<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.authoritySet authorities 
-            left JOIN FETCH u.headphones where authorities.authorityName = :authorityName"""
+        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet roles 
+            left JOIN FETCH u.headphones where roles.name = :roleName"""
     )
-    fun findUsersAccountsByRole(authorityName: String): List<UserAccount>
+    fun findUsersAccountsByRole(roleName: String): List<UserAccount>
 }

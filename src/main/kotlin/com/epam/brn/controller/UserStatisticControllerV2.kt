@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.response.Response
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
@@ -26,7 +26,7 @@ class UserStatisticControllerV2(
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
     private val userMonthStatisticService: UserPeriodStatisticService<MonthStudyStatistic>,
     private val historyService: StudyHistoryService,
-    private val authorityService: AuthorityService
+    private val roleService: RoleService
 ) {
     @GetMapping("/study/year")
     @ApiOperation("Get user's yearly statistic for the period. Where period is a two dates in the ISO date time format")
@@ -35,7 +35,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
-        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             userMonthStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userMonthStatisticService.getStatisticForPeriod(from, to)
@@ -50,7 +50,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<DayStudyStatistic>>> {
-        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             userDayStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userDayStatisticService.getStatisticForPeriod(from, to)
@@ -64,7 +64,7 @@ class UserStatisticControllerV2(
         @RequestParam(name = "day", required = true) day: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
     ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
-        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             historyService.getUserDailyStatistics(day, userId)
         } else {
             historyService.getUserDailyStatistics(day = day)

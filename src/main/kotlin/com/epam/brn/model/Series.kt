@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.SeriesDto
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.upload.csv.series.SeriesGenericRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column

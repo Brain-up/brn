@@ -1,11 +1,11 @@
 package com.epam.brn.service.load
 
-import com.epam.brn.auth.AuthorityService
-import com.epam.brn.enums.AuthorityType
+import com.epam.brn.service.RoleService
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Authority
-import com.epam.brn.model.ExerciseType
+import com.epam.brn.model.Role
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Gender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
@@ -40,7 +40,7 @@ class InitialDataLoader(
     private val userAccountRepository: UserAccountRepository,
     private val audiometryLoader: AudiometryLoader,
     private val passwordEncoder: PasswordEncoder,
-    private val authorityService: AuthorityService,
+    private val roleService: RoleService,
     private val uploadService: CsvUploadService,
     private val audioFilesGenerationService: AudioFilesGenerationService,
     private val wordsService: WordsService,
@@ -66,6 +66,7 @@ class InitialDataLoader(
             ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
             ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
             ExerciseType.SINGLE_WORDS_KOROLEVA.name to SINGLE_WORDS_KOROLEVA_FILE_NAME,
+            ExerciseType.SYLLABLES_KOROLEVA.name to SYLLABLES_KOROLEVA_FILE_NAME,
         )
 
         fun getInputStreamFromSeriesInitFile(seriesType: String): InputStream {
@@ -77,23 +78,24 @@ class InitialDataLoader(
 
     fun getSourceFiles(): List<String> {
         var profile: String = environment.activeProfiles[0].lowercase()
-        val devSubFolder = if (profile == "dev") "dev/" else ""
+        val subFolder = if (profile == "dev") "dev/" else ""
         return listOf(
             "groups_.csv",
             "series_.csv",
             "subgroups_ru.csv",
             "subgroups_en.csv",
-            "$devSubFolder$SINGLE_SIMPLE_WORDS_FILE_NAME.csv",
-            "$devSubFolder$SINGLE_SIMPLE_WORDS_EN_FILE_NAME.csv",
-            "$devSubFolder$SINGLE_FREQUENCY_WORDS_FILE_NAME.csv",
-            "$devSubFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
-            "$devSubFolder$WORDS_SEQUENCES_FILE_NAME.csv",
-            "$devSubFolder$PHRASES_FILE_NAME.csv",
-            "$SINGLE_WORDS_KOROLEVA_FILE_NAME.csv",
+            "$subFolder$SINGLE_SIMPLE_WORDS_FILE_NAME.csv",
+            "$subFolder$SINGLE_SIMPLE_WORDS_EN_FILE_NAME.csv",
+            "$subFolder$SINGLE_FREQUENCY_WORDS_FILE_NAME.csv",
+            "$subFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
+            "$subFolder$WORDS_SEQUENCES_FILE_NAME.csv",
+            "$subFolder$PHRASES_FILE_NAME.csv",
+            "$subFolder$SINGLE_WORDS_KOROLEVA_FILE_NAME.csv",
+            "$subFolder$SYLLABLES_KOROLEVA_FILE_NAME.csv",
             "signal_exercises_ru.csv",
             "signal_exercises_en.csv",
-            "$devSubFolder$SENTENCES_FILE_NAME.csv",
-            "$devSubFolder$SENTENCES_EN_FILE_NAME.csv",
+            "$subFolder$SENTENCES_FILE_NAME.csv",
+            "$subFolder$SENTENCES_EN_FILE_NAME.csv",
             "lopotko_ru.csv"
         )
     }
@@ -101,22 +103,22 @@ class InitialDataLoader(
     @EventListener(ApplicationReadyEvent::class)
     @Order(Ordered.HIGHEST_PRECEDENCE)
     fun onApplicationEvent(event: ApplicationReadyEvent) {
-        if (authorityService.findAll().isEmpty()) {
-            val adminAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_ADMIN.name))
-            val userAuthority = authorityService.save(Authority(authorityName = AuthorityType.ROLE_USER.name))
-            val specialistAuthority =
-                authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
-            val admin = addAdminUser(setOf(adminAuthority, userAuthority, specialistAuthority))
+        if (roleService.findAll().isEmpty()) {
+            val adminRole = roleService.save(Role(name = BrnRole.ADMIN))
+            val userRole = roleService.save(Role(name = BrnRole.USER))
+            val specialistRole =
+                roleService.save(Role(name = BrnRole.SPECIALIST))
+            val admin = addAdminUser(setOf(adminRole, userRole, specialistRole))
             val listOfUsers = mutableListOf(admin)
-            listOfUsers.addAll(addDefaultUsers(userAuthority))
+            listOfUsers.addAll(addDefaultUsers(userRole))
             userAccountRepository.saveAll(listOfUsers)
         }
         try {
-            authorityService.findAuthorityByAuthorityName(AuthorityType.ROLE_SPECIALIST.name)
+            roleService.findByName(BrnRole.SPECIALIST)
         } catch (e: EntityNotFoundException) {
-            authorityService.save(Authority(authorityName = AuthorityType.ROLE_SPECIALIST.name))
+            roleService.save(Role(name = BrnRole.SPECIALIST))
         }
-        addAdminAllAuthorities()
+        addAdminAllRoles()
         audiometryLoader.loadInitialAudiometricsWithTasks()
         initExercisesFromFiles()
         wordsService.createTxtFilesWithExerciseWordsMap()
@@ -125,10 +127,10 @@ class InitialDataLoader(
             audioFilesGenerationService.generateAudioFiles()
     }
 
-    private fun addAdminAllAuthorities() {
+    private fun addAdminAllRoles() {
         val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
-        val allAuths = authorityService.findAll()
-        admin.authoritySet.addAll(allAuths.minus(admin.authoritySet))
+        val allRoles = roleService.findAll()
+        admin.roleSet.addAll(allRoles.minus(admin.roleSet))
         userAccountRepository.save(admin)
     }
 
@@ -178,7 +180,7 @@ class InitialDataLoader(
         }
     }
 
-    private fun addAdminUser(adminAuthorities: Set<Authority>): UserAccount {
+    private fun addAdminUser(adminRoles: Set<Role>): UserAccount {
         val password = passwordEncoder.encode("admin")
         val userAccount =
             UserAccount(
@@ -189,11 +191,11 @@ class InitialDataLoader(
                 gender = Gender.MALE.toString()
             )
         userAccount.password = password
-        userAccount.authoritySet.addAll(adminAuthorities)
+        userAccount.roleSet.addAll(adminRoles)
         return userAccount
     }
 
-    private fun addDefaultUsers(userAuthority: Authority): MutableList<UserAccount> {
+    private fun addDefaultUsers(userRole: Role): MutableList<UserAccount> {
         val password = passwordEncoder.encode("password")
         val firstUser = UserAccount(
             fullName = "Name1",
@@ -211,8 +213,8 @@ class InitialDataLoader(
         )
         firstUser.password = password
         secondUser.password = password
-        firstUser.authoritySet.addAll(setOf(userAuthority))
-        secondUser.authoritySet.addAll(setOf(userAuthority))
+        firstUser.roleSet.addAll(setOf(userRole))
+        secondUser.roleSet.addAll(setOf(userRole))
         return mutableListOf(firstUser, secondUser)
     }
 }
@@ -229,3 +231,4 @@ const val SENTENCES_FILE_NAME = "series_sentences_ru"
 const val SENTENCES_EN_FILE_NAME = "series_sentences_en"
 const val SIGNALS_FILE_NAME = "signal_exercises_"
 const val SINGLE_WORDS_KOROLEVA_FILE_NAME = "series_words_koroleva_ru"
+const val SYLLABLES_KOROLEVA_FILE_NAME = "series_syllables_koroleva_ru"
