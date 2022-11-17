@@ -3,7 +3,7 @@ package com.epam.brn.dto.response
 import com.epam.brn.enums.ExerciseMechanism
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.toMechanism
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 
 data class TaskWordsGroupResponse(
     val id: Long,

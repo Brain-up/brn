@@ -7,7 +7,7 @@ import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Role
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.RoleRepository
@@ -288,7 +288,7 @@ class UserDetailsControllerIT : BaseIT() {
         val user1 = UserAccount(
             fullName = "testUserFirstName",
             email = "test@test.test",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             active = true,
         )
@@ -297,7 +297,7 @@ class UserDetailsControllerIT : BaseIT() {
         val user2 = UserAccount(
             fullName = "testUserFirstName2",
             email = "test2@test.test",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             active = true,
         )
@@ -334,7 +334,7 @@ class UserDetailsControllerIT : BaseIT() {
         userAccountRepository.save(
             UserAccount(
                 fullName = "testUserFirstName",
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = email_,
                 doctor = doctor_

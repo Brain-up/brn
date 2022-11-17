@@ -1,7 +1,7 @@
 package com.epam.brn.integration.service
 
 import com.epam.brn.integration.BaseIT
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.BrainUpUserDetailsService
@@ -31,7 +31,7 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
         val userAccount = UserAccount(
             id = null,
             fullName = "testUserFirstName",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             email = "default@gmail.com",
             active = true
@@ -39,7 +39,7 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
         val userAccount1 = UserAccount(
             id = null,
             fullName = "testUserFirstName",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             email = "default1@gmail.com",
             active = true
@@ -47,7 +47,7 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
         val userAccount2 = UserAccount(
             id = null,
             fullName = "testUserFirstName",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             email = "default2@gmail.com",
             active = true

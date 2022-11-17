@@ -7,7 +7,7 @@ import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
@@ -85,7 +85,7 @@ internal class AudiometryServiceIT {
     private fun insertUser(): UserAccount = userAccountRepository.save(
         UserAccount(
             fullName = "testUserFirstName",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             email = "test@test.test",
             active = true

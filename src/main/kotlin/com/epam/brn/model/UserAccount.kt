@@ -2,6 +2,7 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
+import com.epam.brn.enums.BrnGender
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
@@ -77,7 +78,7 @@ data class UserAccount(
         active = active,
         email = email,
         bornYear = bornYear,
-        gender = gender?.let { Gender.valueOf(it) },
+        gender = gender?.let { BrnGender.valueOf(it) },
         created = created,
         changed = changed,
         avatar = avatar,
@@ -100,7 +101,7 @@ data class UserAccount(
         active = active,
         email = email,
         bornYear = bornYear,
-        gender = gender?.let { Gender.valueOf(it) },
+        gender = gender?.let { BrnGender.valueOf(it) },
     )
 
     override fun equals(other: Any?): Boolean {
