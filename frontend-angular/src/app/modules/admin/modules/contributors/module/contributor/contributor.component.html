@@ -24,6 +24,18 @@
         </button>
       </div>
 
+      <div class="input-box-active">
+        <label for="status"
+        >{{
+          'Admin.Modules.Contributors.Module.Contributor.Form.Active'
+            | translate
+          }}</label>
+        <mat-slide-toggle
+           formControlName="active" ngDefaultControl
+           id="status"
+        ></mat-slide-toggle>
+      </div>
+
       <div class="input-box">
         <label for="name"
         >{{

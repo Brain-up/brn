@@ -159,6 +159,6 @@ export class ContributorComponent implements OnInit {
 
   // will be implemented in the next story
   public chooseFoto() {
-    console.log('foto should be chosen');
+    console.log(this.contributorForm.getRawValue());
   }
 }

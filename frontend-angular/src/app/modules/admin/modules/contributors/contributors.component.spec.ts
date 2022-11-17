@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Component } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 
 
 @Component({
@@ -31,7 +31,8 @@ describe('ContributorsComponent', () => {
         }
       ],
       type: 'DEVELOPER',
-      contribution: 100
+      contribution: 100,
+      active: true,
     }
   ];
   const mockedRoutes =
@@ -58,7 +59,8 @@ describe('ContributorsComponent', () => {
             getContributors: () => of(mockContributors),
           },
         }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     })
       .compileComponents();
   });
