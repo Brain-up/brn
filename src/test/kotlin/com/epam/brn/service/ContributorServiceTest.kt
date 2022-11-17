@@ -240,7 +240,8 @@ internal class ContributorServiceTest {
             companyEn = null,
             description = null,
             descriptionEn = null,
-            pictureUrl = null
+            pictureUrl = null,
+            active = true,
         )
     }
 
