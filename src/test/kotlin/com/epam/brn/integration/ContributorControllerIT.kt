@@ -182,7 +182,8 @@ class ContributorControllerIT : BaseIT() {
             contacts = contacts,
             company = null,
             companyEn = null,
-            pictureUrl = null
+            pictureUrl = null,
+            active = true,
         )
     }
 }
