@@ -5,7 +5,7 @@ import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
@@ -44,9 +44,9 @@ class ExerciseController(
     fun createExercise(
         @ApiParam(value = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
-    ): ResponseEntity<Response<ExerciseDto>> =
+    ): ResponseEntity<BrnResponse<ExerciseDto>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(Response(data = exerciseService.createExercise(exerciseCreateDto)))
+            .body(BrnResponse(data = exerciseService.createExercise(exerciseCreateDto)))
 
     @GetMapping
     @ApiOperation("Get exercises for subgroup with tasks. If called by current user, availability calculation is included")
@@ -55,22 +55,22 @@ class ExerciseController(
             value = "subGroupId",
             required = true
         ) subGroupId: Long
-    ): ResponseEntity<Response<List<ExerciseDto>>> {
+    ): ResponseEntity<BrnResponse<List<ExerciseDto>>> {
         val result = if (roleService.isCurrentUserAdmin()) {
             exerciseService.findExercisesWithTasksBySubGroup(subGroupId)
         } else {
             exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)
         }
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BrnResponse(data = result))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
     @ApiOperation("Get exercise by id")
     fun getExercisesByID(
         @PathVariable("exerciseId") exerciseId: Long
-    ): ResponseEntity<Response<ExerciseDto>> {
+    ): ResponseEntity<BrnResponse<ExerciseDto>> {
         return ResponseEntity.ok()
-            .body(Response(data = exerciseService.findExerciseById(exerciseId)))
+            .body(BrnResponse(data = exerciseService.findExerciseById(exerciseId)))
     }
 
     @GetMapping(value = ["/byWord"])
@@ -81,17 +81,17 @@ class ExerciseController(
             value = "word",
             required = true
         ) word: String
-    ): ResponseEntity<Response<List<ExerciseWithWordsResponse>>> {
-        return ResponseEntity.ok().body(Response(data = exerciseService.findExercisesByWord(word)))
+    ): ResponseEntity<BrnResponse<List<ExerciseWithWordsResponse>>> {
+        return ResponseEntity.ok().body(BrnResponse(data = exerciseService.findExercisesByWord(word)))
     }
 
     @PostMapping(value = ["/byIds"])
     @ApiOperation("Get available exercise ids for current user by input ids which have same subgroup")
     fun getExercisesByIds(
         @Validated @RequestBody exerciseRequest: ExerciseRequest
-    ): ResponseEntity<Response<List<Long>>> {
+    ): ResponseEntity<BrnResponse<List<Long>>> {
         return ResponseEntity.ok()
-            .body(Response(data = exerciseService.getAvailableExerciseIds(exerciseRequest.ids)))
+            .body(BrnResponse(data = exerciseService.getAvailableExerciseIds(exerciseRequest.ids)))
     }
 
     @PutMapping(value = ["/{exerciseId}/active/{active}"])
@@ -106,7 +106,7 @@ class ExerciseController(
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile
-    ): ResponseEntity<Response<Any>> {
+    ): ResponseEntity<BrnResponse<Any>> {
         csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(HttpStatus.CREATED)
     }

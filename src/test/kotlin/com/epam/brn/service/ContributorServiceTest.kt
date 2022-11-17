@@ -109,7 +109,7 @@ internal class ContributorServiceTest {
         // THEN
         assertEquals(contributorRequest.name, actualResult.name)
         assertEquals(contributorRequest.contribution, actualResult.contribution)
-        val updatedContacts = actualResult.contacts!!
+        val updatedContacts = actualResult.contacts
         assertEquals(1, updatedContacts.size)
         assertEquals(updatedContact.value, updatedContacts.elementAt(0).value)
     }

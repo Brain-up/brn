@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.CloudUploadService
 import com.epam.brn.service.cloud.CloudService
@@ -37,37 +37,37 @@ class CloudController(
     @ApiOperation("Get cloud upload form")
     @RolesAllowed(BrnRole.ADMIN)
     @Throws(Exception::class)
-    fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<Response<Map<String, Any>>> {
+    fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BrnResponse<Map<String, Any>>> {
         if (filePath.isNullOrEmpty())
             throw IllegalArgumentException("File path should be non empty")
         val signedForm = cloudService.uploadForm(filePath)
-        return ResponseEntity.ok(Response(signedForm))
+        return ResponseEntity.ok(BrnResponse(signedForm))
     }
 
     @GetMapping("/url")
     @ApiOperation("Get cloud bucket url")
     @Throws(Exception::class)
-    fun bucketUrl(): ResponseEntity<Response<String>> =
-        ResponseEntity.ok(Response(cloudService.bucketUrl()))
+    fun bucketUrl(): ResponseEntity<BrnResponse<String>> =
+        ResponseEntity.ok(BrnResponse(cloudService.bucketUrl()))
 
     @GetMapping("/baseFileUrl")
     @ApiOperation("Get cloud base file url")
     @Throws(Exception::class)
-    fun baseFileUrl(): ResponseEntity<Response<String>> =
-        ResponseEntity.ok(Response(cloudService.baseFileUrl()))
+    fun baseFileUrl(): ResponseEntity<BrnResponse<String>> =
+        ResponseEntity.ok(BrnResponse(cloudService.baseFileUrl()))
 
     @GetMapping("/folders")
     @ApiOperation("Get cloud folder structure")
     @RolesAllowed(BrnRole.ADMIN)
     @Throws(Exception::class)
-    fun listBucket(): ResponseEntity<Response<List<String>>> =
-        ResponseEntity.ok(Response(cloudService.getStorageFolders()))
+    fun listBucket(): ResponseEntity<BrnResponse<List<String>>> =
+        ResponseEntity.ok(BrnResponse(cloudService.getStorageFolders()))
 
     @PostMapping(value = ["/upload/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
     @ApiOperation("Load unverified picture file to cloud storage")
     fun loadUnverifiedPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile
-    ): ResponseEntity<Response<Any>> {
+    ): ResponseEntity<BrnResponse<Any>> {
         cloudUploadService.uploadUnverifiedPictureFile(multipartFile)
         return ResponseEntity(HttpStatus.CREATED)
     }

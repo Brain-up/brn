@@ -4,7 +4,7 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.model.Exercise
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
@@ -78,7 +78,7 @@ internal class StudyHistoryServiceTest {
         val userAccount = UserAccount(
             id = 1L,
             fullName = "testUserFirstName",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             email = "test@gmail.com",
             active = true

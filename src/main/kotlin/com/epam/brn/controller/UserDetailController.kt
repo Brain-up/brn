@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
@@ -47,34 +47,34 @@ class UserDetailController(
     ): ResponseEntity<Any> {
         val users = if (withAnalytics) userAnalyticsService.getUsersWithAnalytics(pageable, role)
         else userAccountService.getUsers(pageable, role)
-        return ResponseEntity.ok().body(Response(data = users))
+        return ResponseEntity.ok().body(BrnResponse(data = users))
     }
 
     @GetMapping(value = ["/{userId}"])
     @ApiOperation("Get user by id")
     @RolesAllowed(BrnRole.ADMIN)
-    fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<Response<List<UserAccountResponse>>> {
+    fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<BrnResponse<List<UserAccountResponse>>> {
         return ResponseEntity.ok()
-            .body(Response(data = listOf(userAccountService.findUserById(id))))
+            .body(BrnResponse(data = listOf(userAccountService.findUserById(id))))
     }
 
     @GetMapping(value = ["/current"])
     @ApiOperation("Get current logged in user")
     fun getCurrentUser() = ResponseEntity.ok()
-        .body(Response(data = listOf(userAccountService.getUserFromTheCurrentSession())))
+        .body(BrnResponse(data = listOf(userAccountService.getUserFromTheCurrentSession())))
 
     @PatchMapping(value = ["/current"])
     @ApiOperation("Update current logged in user")
     fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) =
         ResponseEntity.ok()
-            .body(Response(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
+            .body(BrnResponse(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
 
     @PutMapping(value = ["/current/avatar"])
     @ApiOperation("Update avatar current user")
     fun updateAvatarCurrentUser(
         @RequestParam("avatar", required = true) avatar: String
     ) = ResponseEntity.ok()
-        .body(Response(data = userAccountService.updateAvatarForCurrentUser(avatar)))
+        .body(BrnResponse(data = userAccountService.updateAvatarForCurrentUser(avatar)))
 
     @PostMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Add headphones to the user")
@@ -83,21 +83,21 @@ class UserDetailController(
         @PathVariable("userId", required = true) userId: Long,
         @Validated @RequestBody headphones: HeadphonesDto
     ) = ResponseEntity.status(HttpStatus.CREATED)
-        .body(Response(data = userAccountService.addHeadphonesToUser(userId, headphones)))
+        .body(BrnResponse(data = userAccountService.addHeadphonesToUser(userId, headphones)))
 
     @PostMapping(value = ["/current/headphones"])
     @ApiOperation("Add headphones to current user")
     fun addHeadphonesToCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(Response(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
+            .body(BrnResponse(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
 
     @DeleteMapping(value = ["/current/headphones/{headphonesId}"])
     @ApiOperation("Delete headphone by id")
     fun deleteHeadphonesForCurrentUser(
         @PathVariable(value = "headphonesId") headphonesId: Long
-    ): ResponseEntity<Response<Any>> {
+    ): ResponseEntity<BrnResponse<Any>> {
         userAccountService.deleteHeadphonesForCurrentUser(headphonesId)
-        return ResponseEntity.ok(Response(data = Unit))
+        return ResponseEntity.ok(BrnResponse(data = Unit))
     }
 
     @GetMapping(value = ["/{userId}/headphones"])
@@ -107,19 +107,19 @@ class UserDetailController(
         @PathVariable("userId", required = true) userId: Long
     ) = ResponseEntity
         .ok()
-        .body(Response(data = userAccountService.getAllHeadphonesForUser(userId).toList()))
+        .body(BrnResponse(data = userAccountService.getAllHeadphonesForUser(userId).toList()))
 
     @GetMapping(value = ["/current/headphones"])
     @ApiOperation("Get all headphones for current user")
     fun getAllHeadphonesForUser() = ResponseEntity
         .ok()
-        .body(Response(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
+        .body(BrnResponse(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
 
     @GetMapping("/current/{patientId}/doctor")
     @ApiOperation("Get patient's doctor")
     fun getDoctorAssignedToPatient(@PathVariable patientId: Long) =
         ResponseEntity.ok()
-            .body(Response(data = doctorService.getDoctorAssignedToPatient(patientId)))
+            .body(BrnResponse(data = doctorService.getDoctorAssignedToPatient(patientId)))
 
     @DeleteMapping("/current/{patientId}/doctor")
     @ResponseStatus(HttpStatus.OK)

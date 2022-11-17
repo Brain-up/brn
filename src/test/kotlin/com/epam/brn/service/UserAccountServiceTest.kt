@@ -8,7 +8,7 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
@@ -228,7 +228,7 @@ internal class UserAccountServiceTest {
                 id = 1L,
                 fullName = "testUserFirstName",
                 email = email,
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
@@ -265,7 +265,7 @@ internal class UserAccountServiceTest {
                 id = 1L,
                 fullName = "testUserFirstName",
                 email = email,
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null,
@@ -342,7 +342,7 @@ internal class UserAccountServiceTest {
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = "test@gmail.com",
                 active = true
@@ -380,7 +380,7 @@ internal class UserAccountServiceTest {
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = "test@gmail.com",
                 active = true,
@@ -417,7 +417,7 @@ internal class UserAccountServiceTest {
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = "test@gmail.com",
                 active = true,
@@ -452,7 +452,7 @@ internal class UserAccountServiceTest {
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = "test@gmail.com",
                 active = true,

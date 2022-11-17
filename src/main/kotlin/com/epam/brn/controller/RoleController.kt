@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.service.RoleService
 import com.epam.brn.dto.response.RoleResponse
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -20,8 +20,8 @@ class RoleController(val roleService: RoleService) {
 
     @GetMapping
     @ApiOperation("Get all roles")
-    fun getRoles(): ResponseEntity<Response<List<RoleResponse>>> {
+    fun getRoles(): ResponseEntity<BrnResponse<List<RoleResponse>>> {
         val roles = roleService.findAll().map { role -> role.toDto() }
-        return ResponseEntity.ok().body(Response(data = roles))
+        return ResponseEntity.ok().body(BrnResponse(data = roles))
     }
 }

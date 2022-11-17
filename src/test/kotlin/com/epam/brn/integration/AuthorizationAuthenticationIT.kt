@@ -5,7 +5,7 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.integration.firebase.FirebaseWebClientTestMock
 import com.epam.brn.integration.firebase.model.FirebaseVerifyPasswordRequest
 import com.epam.brn.model.Role
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -143,7 +143,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
             name = fullName,
             email = email,
             password = password,
-            gender = Gender.MALE,
+            gender = BrnGender.MALE,
             bornYear = 2000
         )
         try {
@@ -161,7 +161,7 @@ class AuthorizationAuthenticationIT : BaseIT() {
             UserAccount(
                 fullName = fullName,
                 email = email,
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 active = true,
                 userId = uuid

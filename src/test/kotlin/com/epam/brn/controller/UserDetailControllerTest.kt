@@ -3,12 +3,12 @@ package com.epam.brn.controller
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
@@ -61,7 +61,7 @@ internal class UserDetailControllerTest {
             id = userId,
             name = "testUserFirstName",
             email = "unittest@test.ru",
-            gender = Gender.MALE,
+            gender = BrnGender.MALE,
             bornYear = 2000,
             active = true
         )
@@ -111,7 +111,7 @@ internal class UserDetailControllerTest {
                 name = "testName",
                 email = "email",
                 active = true,
-                gender = Gender.FEMALE,
+                gender = BrnGender.FEMALE,
                 bornYear = 2000
             )
             every { userAccountService.updateAvatarForCurrentUser(avatarUrl) } returns userAccountResponse
@@ -130,7 +130,7 @@ internal class UserDetailControllerTest {
             // GIVEN
             val changeRequest = UserAccountChangeRequest(
                 name = "testNewName",
-                gender = Gender.FEMALE,
+                gender = BrnGender.FEMALE,
                 bornYear = 2000
             )
             val userAccountResponse = UserAccountResponse(
@@ -138,7 +138,7 @@ internal class UserDetailControllerTest {
                 avatar = null,
                 name = "testName",
                 email = "email",
-                gender = Gender.FEMALE,
+                gender = BrnGender.FEMALE,
                 active = true,
                 bornYear = 2000
             )
@@ -254,7 +254,7 @@ internal class UserDetailControllerTest {
             id = patientId,
             name = "testName",
             email = "email",
-            gender = Gender.FEMALE,
+            gender = BrnGender.FEMALE,
             bornYear = 2000
         )
         every { doctorService.getDoctorAssignedToPatient(patientId) } returns doctor
@@ -295,7 +295,7 @@ internal class UserDetailControllerTest {
         // THEN
         verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as Response<*>).data shouldBe listOf(userWithAnalyticsResponse)
+        (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
     }
 
     @Test
@@ -312,6 +312,6 @@ internal class UserDetailControllerTest {
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as Response<*>).data shouldBe listOf(userAccountResponse)
+        (users.body as BrnResponse<*>).data shouldBe listOf(userAccountResponse)
     }
 }

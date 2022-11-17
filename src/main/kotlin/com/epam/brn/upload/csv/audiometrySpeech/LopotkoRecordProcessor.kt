@@ -5,7 +5,7 @@ import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository

@@ -3,7 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.model.Role
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
@@ -154,7 +154,7 @@ abstract class BaseIT {
         email: String,
         active: Boolean = true,
         bornYear: Int = 2000,
-        gender: String = Gender.FEMALE.toString(),
+        gender: String = BrnGender.FEMALE.toString(),
         roles: MutableSet<Role> = mutableSetOf()
     ): UserAccount {
         return userAccountRepository.save(

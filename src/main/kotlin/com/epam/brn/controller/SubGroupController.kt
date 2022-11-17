@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.SubGroupService
@@ -31,23 +31,23 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @GetMapping
     @ApiOperation("Get subgroups for series")
-    fun getAllGroups(@RequestParam(value = "seriesId", required = true) seriesId: Long): ResponseEntity<Response<List<SubGroupResponse>>> {
+    fun getAllGroups(@RequestParam(value = "seriesId", required = true) seriesId: Long): ResponseEntity<BrnResponse<List<SubGroupResponse>>> {
         val data = subGroupsService.findSubGroupsForSeries(seriesId)
-        return ResponseEntity.ok().body(Response(data = data))
+        return ResponseEntity.ok().body(BrnResponse(data = data))
     }
 
     @GetMapping("{subGroupId}")
     @ApiOperation("Get subgroup for id")
-    fun getSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<Response<SubGroupResponse>> {
+    fun getSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BrnResponse<SubGroupResponse>> {
         val subGroupDto = subGroupsService.findById(subGroupId)
-        return ResponseEntity.ok(Response(data = subGroupDto))
+        return ResponseEntity.ok(BrnResponse(data = subGroupDto))
     }
 
     @DeleteMapping("{subGroupId}")
     @ApiOperation("Delete subgroup by id without exercises")
-    fun deleteSubGroupById(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<Response<Unit>> {
+    fun deleteSubGroupById(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BrnResponse<Unit>> {
         subGroupsService.deleteSubGroupById(subGroupId)
-        return ResponseEntity.ok(Response(data = Unit))
+        return ResponseEntity.ok(BrnResponse(data = Unit))
     }
 
     @PostMapping
@@ -57,9 +57,9 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
         @Valid @RequestBody subGroupRequest: SubGroupRequest
-    ): ResponseEntity<Response<SubGroupResponse>> =
+    ): ResponseEntity<BrnResponse<SubGroupResponse>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(Response(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
+            .body(BrnResponse(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
     @PatchMapping("/{subGroupId}")
     @ApiOperation("Update subgroup by id")
@@ -67,6 +67,6 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
         @RequestBody subGroup: SubGroupChangeRequest
-    ): ResponseEntity<Response<SubGroupResponse>> =
-        ResponseEntity.ok(Response(data = subGroupsService.updateSubGroupById(subGroupId, subGroup)))
+    ): ResponseEntity<BrnResponse<SubGroupResponse>> =
+        ResponseEntity.ok(BrnResponse(data = subGroupsService.updateSubGroupById(subGroupId, subGroup)))
 }

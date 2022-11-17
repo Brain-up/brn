@@ -62,7 +62,7 @@ data class Exercise(
         level = level,
         noise = NoiseDto(noiseLevel, noiseUrl),
         available = available,
-        tasks = tasks.map { task -> task.toGeneralTaskDto(ExerciseType.valueOf(this.subGroup!!.series.type)) },
+        tasks = tasks.map { task -> task.toTaskResponse(ExerciseType.valueOf(this.subGroup!!.series.type)) },
         signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
         active = active,
         changedBy = changedBy,

@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.service.RoleService
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
@@ -34,13 +34,13 @@ class UserStatisticControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
-    ): ResponseEntity<Response<List<MonthStudyStatistic>>> {
+    ): ResponseEntity<BrnResponse<List<MonthStudyStatistic>>> {
         val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             userMonthStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userMonthStatisticService.getStatisticForPeriod(from, to)
         }
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BrnResponse(data = result))
     }
 
     @GetMapping("/study/week")
@@ -49,13 +49,13 @@ class UserStatisticControllerV2(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
-    ): ResponseEntity<Response<List<DayStudyStatistic>>> {
+    ): ResponseEntity<BrnResponse<List<DayStudyStatistic>>> {
         val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             userDayStatisticService.getStatisticForPeriod(from, to, userId)
         } else {
             userDayStatisticService.getStatisticForPeriod(from, to)
         }
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BrnResponse(data = result))
     }
 
     @GetMapping("/study/day")
@@ -63,12 +63,12 @@ class UserStatisticControllerV2(
     fun getUserDailyDetailsStatistics(
         @RequestParam(name = "day", required = true) day: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?
-    ): ResponseEntity<Response<List<UserDailyDetailStatisticsDto>>> {
+    ): ResponseEntity<BrnResponse<List<UserDailyDetailStatisticsDto>>> {
         val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             historyService.getUserDailyStatistics(day, userId)
         } else {
             historyService.getUserDailyStatistics(day = day)
         }
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BrnResponse(data = result))
     }
 }
