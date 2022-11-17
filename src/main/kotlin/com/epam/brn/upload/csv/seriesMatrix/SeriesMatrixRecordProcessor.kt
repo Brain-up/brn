@@ -7,13 +7,14 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
+import com.epam.brn.upload.toStringWithoutBraces
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -67,7 +68,7 @@ class SeriesMatrixRecordProcessor(
     private fun extractWordGroups(record: SeriesMatrixRecord): Sequence<Pair<WordType, String>> =
         record.words
             .asSequence()
-            .map { toStringWithoutBraces(it) }
+            .map { it.toStringWithoutBraces() }
             .mapIndexed { wordGroupPosition, wordGroup ->
                 WordType.of(wordGroupPosition) to wordGroup
             }
@@ -95,8 +96,6 @@ class SeriesMatrixRecordProcessor(
         resource.wordType = wordType.name
         return resource
     }
-
-    private fun toStringWithoutBraces(it: String) = it.replace("[()]".toRegex(), StringUtils.EMPTY)
 
     private fun generateExercise(record: SeriesMatrixRecord, subGroup: SubGroup) =
         Exercise(

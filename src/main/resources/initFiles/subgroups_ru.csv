@@ -79,3 +79,7 @@ SINGLE_WORDS_KOROLEVA,20,koroleva_words_second_1_4,1 слово из 6,Одно 
 SINGLE_WORDS_KOROLEVA,21,koroleva_words_second_2_4,2 слова из 4,Два слово из 4
 SINGLE_WORDS_KOROLEVA,21,koroleva_words_second_2_6,2 слова из 6,Два слово из 6
 SINGLE_WORDS_KOROLEVA,21,koroleva_words_second_3_6,3 слова из 6,Три слово из 6
+SYLLABLES_KOROLEVA,1,koroleva_syllables_aiu,Гласные А-И-У,Учимся распознавать гласные А-И-У в слогах
+SYLLABLES_KOROLEVA,2,koroleva_syllables_oiu,Гласные О-И-У,Учимся распознавать гласные О-И-У в слогах
+SYLLABLES_KOROLEVA,3,koroleva_syllables_aiuo,Гласные А-И-У-О,Учимся распознавать гласные А-И-У-О в слогах
+SYLLABLES_KOROLEVA,3,koroleva_syllables_aeeii,Гласные А-Э-Ы,Учимся распознавать гласные А-Э-Ы в слогах

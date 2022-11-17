@@ -1,8 +1,8 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.response.GeneralTaskResponse
-import com.epam.brn.dto.response.WordsTaskResponse
-import com.epam.brn.dto.response.WordsGroupSeriesTaskResponse
+import com.epam.brn.dto.response.TaskResponse
+import com.epam.brn.dto.response.TaskWordsGroupResponse
+import com.epam.brn.enums.ExerciseType
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -43,15 +43,15 @@ data class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf()
 ) {
-    fun toWordsTaskDto(exerciseType: ExerciseType) = WordsTaskResponse(
+    fun toTaskResponse(exerciseType: ExerciseType) = TaskResponse(
         id = id!!,
         exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet()
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
     )
 
-    fun toWordsGroupSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskResponse(
+    fun toWordsGroupSeriesTaskDto(template: String? = "") = TaskWordsGroupResponse(
         id = id!!,
         exerciseType = ExerciseType.WORDS_SEQUENCES,
         name = name,
@@ -60,27 +60,13 @@ data class Task(
         template = template
     )
 
-    fun toSentenceSeriesTaskDto(template: String? = "") = WordsGroupSeriesTaskResponse(
+    fun toSentenceSeriesTaskDto(template: String? = "") = TaskWordsGroupResponse(
         id = id!!,
         exerciseType = ExerciseType.SENTENCE,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
         template = template,
-    )
-    fun toPhraseSeriesTaskDto() = WordsTaskResponse(
-        id = id!!,
-        exerciseType = ExerciseType.PHRASES,
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet()
-    )
-    fun toGeneralTaskDto(template: String? = "") = GeneralTaskResponse(
-        id = id!!,
-        exerciseType = ExerciseType.WORDS_SEQUENCES,
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"

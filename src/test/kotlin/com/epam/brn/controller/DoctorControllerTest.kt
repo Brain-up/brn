@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.service.DoctorService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -83,7 +83,7 @@ internal class DoctorControllerTest {
             id = id,
             name = email,
             email = email,
-            gender = Gender.MALE,
+            gender = BrnGender.MALE,
             bornYear = 2000,
             active = true,
             doctorId = doctorId

@@ -3,8 +3,8 @@ package com.epam.brn.integration.service
 import com.epam.brn.integration.BaseIT
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.model.ExerciseType
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
@@ -107,7 +107,7 @@ class UserAnalyticServiceIT : BaseIT() {
         return userAccountRepository.save(
             UserAccount(
                 fullName = "testUserFirstName",
-                gender = Gender.MALE.toString(),
+                gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = "test@test.test",
                 active = true

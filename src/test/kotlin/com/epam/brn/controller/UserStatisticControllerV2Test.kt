@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.service.RoleService
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
@@ -56,7 +56,7 @@ internal class UserStatisticControllerV2Test {
         // THEN
         verify(exactly = 1) { userDayStatisticService.getStatisticForPeriod(from, to) }
         assertEquals(HttpStatus.SC_OK, userWeeklyStatistic.statusCodeValue)
-        assertEquals(dayStudyStatisticList, (userWeeklyStatistic.body as Response).data)
+        assertEquals(dayStudyStatisticList, (userWeeklyStatistic.body as BrnResponse).data)
     }
 
     @Test
@@ -75,7 +75,7 @@ internal class UserStatisticControllerV2Test {
         // THEN
         verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(from, to) }
         assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
-        assertEquals(monthStudyStatisticList, (userYearlyStatistic.body as Response).data)
+        assertEquals(monthStudyStatisticList, (userYearlyStatistic.body as BrnResponse).data)
     }
 
     @Test

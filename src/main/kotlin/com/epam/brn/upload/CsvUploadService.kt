@@ -7,6 +7,7 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.load.InitialDataLoader
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -25,7 +26,6 @@ class CsvUploadService(
     val localeSuffixMap = mapOf("ru" to BrnLocale.RU, "en" to BrnLocale.EN, "tr" to BrnLocale.TR)
 
     companion object {
-
         private val csvContentTypes = listOf(
             "text/csv",
             "application/vnd.ms-excel",
@@ -34,13 +34,11 @@ class CsvUploadService(
             "application/octet-stream"
         )
 
-        fun isCsvContentType(contentType: String?): Boolean {
-            return contentType != null && csvContentTypes.contains(contentType)
-        }
+        fun isCsvContentType(contentType: String?): Boolean =
+            contentType != null && csvContentTypes.contains(contentType)
 
-        fun isNotCsvContentType(contentType: String?): Boolean {
-            return !isCsvContentType(contentType)
-        }
+        fun isNotCsvContentType(contentType: String?): Boolean =
+            !isCsvContentType(contentType)
     }
 
     @Value("\${brn.dataFormatNumLines}")
@@ -107,3 +105,5 @@ class CsvUploadService(
         }
     }
 }
+
+fun String.toStringWithoutBraces() = this.replace("[()]".toRegex(), StringUtils.EMPTY)

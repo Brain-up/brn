@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.ContributorResponse
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.service.ContributorService
@@ -36,9 +36,9 @@ class ContributorController(val contributorService: ContributorService) {
     fun getContributors(
         @RequestParam(name = "locale", required = false, defaultValue = "ru-ru") locale: String,
         @RequestParam(name = "type", required = false) type: ContributorType?,
-    ): ResponseEntity<Response<List<ContributorResponse>>> = ResponseEntity.ok()
+    ): ResponseEntity<BrnResponse<List<ContributorResponse>>> = ResponseEntity.ok()
         .body(
-            Response(
+            BrnResponse(
                 data = if (type == null)
                     contributorService.getAllContributors()
                 else
@@ -52,9 +52,9 @@ class ContributorController(val contributorService: ContributorService) {
     fun createContributor(
         @ApiParam(value = "Contributor data", required = true)
         @Valid @RequestBody contributorDto: ContributorRequest
-    ): ResponseEntity<Response<ContributorResponse>> =
+    ): ResponseEntity<BrnResponse<ContributorResponse>> =
         ResponseEntity.status(HttpStatus.CREATED)
-            .body(Response(data = contributorService.createContributor(contributorDto)))
+            .body(BrnResponse(data = contributorService.createContributor(contributorDto)))
 
     @PutMapping("/{contributorId}")
     @ApiOperation("Update an existing contributor")
@@ -63,7 +63,7 @@ class ContributorController(val contributorService: ContributorService) {
         @PathVariable("contributorId") contributorId: Long,
         @ApiParam(value = "Contributor data", required = true)
         @Valid @RequestBody contributorDto: ContributorRequest
-    ): ResponseEntity<Response<ContributorResponse>> =
+    ): ResponseEntity<BrnResponse<ContributorResponse>> =
         ResponseEntity.ok()
-            .body(Response(data = contributorService.updateContributor(contributorId, contributorDto)))
+            .body(BrnResponse(data = contributorService.updateContributor(contributorId, contributorDto)))
 }

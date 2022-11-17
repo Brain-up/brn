@@ -1,6 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -26,8 +25,6 @@ class ExerciseService(
     private val userAccountService: UserAccountService,
     private val urlConversionService: UrlConversionService,
     private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
-    private val audioFilesGenerationService: AudioFilesGenerationService,
-    private val wordsService: WordsService
 ) {
 
     @Value(value = "\${minRepetitionIndex}")
@@ -36,18 +33,12 @@ class ExerciseService(
     @Value(value = "\${minRightAnswersIndex}")
     private lateinit var minRightAnswersIndex: Number
 
-    @Value("#{'\${yandex.speeds}'.split(',')}")
-    lateinit var speeds: List<String>
-
-    @Value(value = "\${brn.audio.file.getFromStorage}")
-    private var getAudioFileFromStorage: Boolean = false
-
     private val log = logger()
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
         val exercise = exerciseRepository.findById(exerciseID)
-        return exercise.map { e -> updateExerciseDto(e.toDto()) }
             .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
+        return updateExerciseDto(exercise.toDto())
     }
 
     fun findExerciseByNameAndLevel(name: String, level: Int): Exercise =
@@ -58,8 +49,10 @@ class ExerciseService(
     fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
-        val history = exerciseRepository.findAll()
-        return history.map { x -> updateExerciseDto(x.toDto(exercisesIdList.contains(x.id))) }
+        val exercises = exerciseRepository.findAll()
+        return exercises.map { exercise ->
+            updateExerciseDto(exercise.toDto(exercisesIdList.contains(exercise.id)))
+        }
     }
 
     fun findExercisesBySubGroupForCurrentUser(subGroupId: Long): List<ExerciseDto> {
@@ -70,7 +63,7 @@ class ExerciseService(
     fun findExercisesByUserIdAndSubGroupId(userId: Long, subGroupId: Long): List<ExerciseDto> {
         log.info("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
-        log.info("current user is admin: ${userId == 1L}))")
+        log.info("Current user is admin: ${userId == 1L}))")
         if (userId == 1L)
             return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
@@ -140,7 +133,6 @@ class ExerciseService(
 
     fun updateExerciseDto(exerciseDto: ExerciseDto): ExerciseDto {
         exerciseDto.noise.url = urlConversionService.makeUrlForNoise(exerciseDto.noise.url)
-        exerciseDto.isAudioFileUrlGenerated = getAudioFileFromStorage
         return exerciseDto
     }
 
@@ -167,21 +159,18 @@ class ExerciseService(
                 val seriesWordsRecord = exerciseCreateDto.toSeriesWordsRecord()
                 val exercise = createExercise(seriesWordsRecord, exerciseCreateDto.locale)
                     ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
-                generateAudioFilesAndSave(exerciseCreateDto.words, exerciseCreateDto.locale)
                 exercise
             }
             is ExercisePhrasesCreateDto -> {
                 val seriesPhrasesRecord = exerciseCreateDto.toSeriesPhrasesRecord()
                 val exercise = createExercise(seriesPhrasesRecord, exerciseCreateDto.locale)
                     ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
-                generateAudioFilesAndSave(exerciseCreateDto.phrases.toList(), exerciseCreateDto.locale)
                 exercise
             }
             is ExerciseSentencesCreateDto -> {
                 val seriesMatrixRecord = exerciseCreateDto.toSeriesMatrixRecord()
                 val exercise = createExercise(seriesMatrixRecord, exerciseCreateDto.locale)
                     ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
-                generateAudioFilesAndSave(exerciseCreateDto.words.toFlattenList(), exerciseCreateDto.locale)
                 exercise
             }
         }
@@ -195,23 +184,4 @@ class ExerciseService(
             .orElseThrow { RuntimeException("There is no applicable processor for type '${exerciseRecord.javaClass}'") }
             .process(listOf(exerciseRecord) as List<Nothing>, locale)
             .firstOrNull() as Exercise?
-
-    private fun generateAudioFilesAndSave(words: List<String>, locale: BrnLocale) {
-        speeds.forEach { speed ->
-            run {
-                words.forEach { word ->
-                    run {
-                        val audioFileMetaData = AudioFileMetaData(
-                            text = word,
-                            locale = locale.locale,
-                            voice = wordsService.getDefaultManVoiceForLocale(locale.locale),
-                            speedFloat = speed
-                        )
-                        log.debug("create and save AudioFile: $audioFileMetaData")
-                        audioFilesGenerationService.processWord(audioFileMetaData)
-                    }
-                }
-            }
-        }
-    }
 }
