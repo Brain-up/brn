@@ -14,7 +14,8 @@ enum class ExerciseType {
 }
 
 fun ExerciseType.toMechanism(): ExerciseMechanism = mapExerciseTypeToMechanism
-    .getOrElse(this, throw IllegalArgumentException("No ExerciseMechanism is defined for $this."))
+    .getOrElse(this)
+    { throw IllegalArgumentException("No ExerciseMechanism is defined for $this.") }
 
 val mapExerciseTypeToMechanism =
     mapOf(
