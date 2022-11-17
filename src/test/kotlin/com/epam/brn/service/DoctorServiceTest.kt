@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.BrnRole
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -338,7 +338,7 @@ internal class DoctorServiceTest {
     fun `checkUserIsNotAdmin should throw exception if user used admin ID`() {
         every { userAccountService.getCurrentUser() } returns UserAccount(
             fullName = "testUserFirstName",
-            gender = Gender.MALE.toString(),
+            gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             email = "test@test.test"
         )
@@ -357,7 +357,7 @@ internal class DoctorServiceTest {
             id = id,
             name = email,
             email = email,
-            gender = Gender.MALE,
+            gender = BrnGender.MALE,
             bornYear = 2000,
             active = true,
             doctorId = doctorId

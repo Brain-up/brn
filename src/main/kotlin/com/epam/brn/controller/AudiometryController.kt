@@ -1,6 +1,6 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.AudiometryService
 import io.swagger.annotations.Api
@@ -24,12 +24,12 @@ class AudiometryController(private val audiometryService: AudiometryService) {
     fun getAudiometrics(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String) =
         ResponseEntity
             .ok()
-            .body(Response(data = audiometryService.getAudiometrics(locale)))
+            .body(BrnResponse(data = audiometryService.getAudiometrics(locale)))
 
     @GetMapping(value = ["/{audiometryId}"])
     @ApiOperation("Get audiometry for id with tasks")
     fun getAudiometry(@PathVariable("audiometryId") audiometryId: Long) =
         ResponseEntity
             .ok()
-            .body(Response(data = audiometryService.getAudiometry(audiometryId)))
+            .body(BrnResponse(data = audiometryService.getAudiometry(audiometryId)))
 }

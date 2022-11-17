@@ -2,7 +2,7 @@ package com.epam.brn.dto.response
 
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.enums.AudiometryType
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 import kotlin.time.Duration
@@ -14,7 +14,7 @@ data class UserWithAnalyticsResponse(
     val name: String?,
     val email: String?,
     val bornYear: Int?,
-    val gender: Gender?,
+    val gender: BrnGender?,
     var active: Boolean = true,
     var firstDone: LocalDateTime? = null, // generally first done exercise
     var lastDone: LocalDateTime? = null, // generally last done exercise

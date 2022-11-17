@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
@@ -31,13 +31,13 @@ class StudyHistoryControllerV2(
         @RequestParam("userId") userId: Long?,
         @RequestParam("from", required = true) from: LocalDateTime,
         @RequestParam("to", required = true) to: LocalDateTime
-    ): ResponseEntity<Response<List<StudyHistoryDto>>> {
+    ): ResponseEntity<BrnResponse<List<StudyHistoryDto>>> {
         val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             studyHistoryService.getHistories(userId, from, to)
         } else {
             studyHistoryService.getHistoriesForCurrentUser(from, to)
         }
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BrnResponse(data = result))
     }
 
     @GetMapping("/user/{userId}/has/statistics")
@@ -45,5 +45,5 @@ class StudyHistoryControllerV2(
     fun isUserHasStatistics(
         @PathVariable("userId") userId: Long
     ) = ResponseEntity.ok()
-        .body(Response(data = studyHistoryService.isUserHasStatistics(userId)))
+        .body(BrnResponse(data = studyHistoryService.isUserHasStatistics(userId)))
 }

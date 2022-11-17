@@ -3,7 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.dto.request.contributor.ContactRequest
 import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.ContributorResponse
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.model.Contact
@@ -52,7 +52,7 @@ class ContributorControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val data = objectMapper.readValue(response, Response::class.java).data
+        val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val contributors =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
@@ -81,7 +81,7 @@ class ContributorControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val data = objectMapper.readValue(response, Response::class.java).data
+        val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val contributors =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
@@ -109,7 +109,7 @@ class ContributorControllerIT : BaseIT() {
             .andExpect(status().isCreated)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val data = objectMapper.readValue(response, Response::class.java).data
+        val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val newContributor =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
@@ -138,7 +138,7 @@ class ContributorControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val data = objectMapper.readValue(response, Response::class.java).data
+        val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val updatedContributor =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
@@ -182,7 +182,8 @@ class ContributorControllerIT : BaseIT() {
             contacts = contacts,
             company = null,
             companyEn = null,
-            pictureUrl = null
+            pictureUrl = null,
+            active = true,
         )
     }
 }

@@ -1,7 +1,7 @@
 package com.epam.brn.dto.response
 
 import com.epam.brn.dto.HeadphonesDto
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -13,7 +13,7 @@ data class DoctorAccountResponse(
     val name: String?,
     val email: String?,
     val bornYear: Int?,
-    val gender: Gender?,
+    val gender: BrnGender?,
     var active: Boolean = true,
     val created: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     val changed: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),

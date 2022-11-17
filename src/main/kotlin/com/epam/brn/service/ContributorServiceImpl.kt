@@ -50,6 +50,7 @@ class ContributorServiceImpl(
         contributor.type = contributorRequest.type!!
         contributor.contacts.clear()
         contributor.contacts.addAll(contributorRequest.contacts.map { it.toEntity() }.toMutableSet())
+        contributor.active = contributorRequest.active
         return contributorRepository.save(contributor).toContributorResponse()
     }
 

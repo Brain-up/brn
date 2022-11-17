@@ -1,6 +1,6 @@
 package com.epam.brn.controller.advice
 
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
@@ -24,7 +24,7 @@ class ExceptionControllerAdvice {
     private val logger = logger()
 
     @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<Response<Unit>> {
+    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Entity not found exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
@@ -33,7 +33,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(FileFormatException::class)
-    fun handleFileFormatException(e: FileFormatException): ResponseEntity<Response<Unit>> {
+    fun handleFileFormatException(e: FileFormatException): ResponseEntity<BrnResponse<Unit>> {
         logger.error("File format exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -42,7 +42,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(CsvParser.ParseException::class)
-    fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<Response<Unit>> {
+    fun handleCsvFileParseException(e: CsvParser.ParseException): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Csv file parsing exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -51,7 +51,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<Response<Unit>> {
+    fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<BrnResponse<Unit>> {
         logger.error("IllegalArgumentException: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -60,7 +60,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<Response<Unit>> {
+    fun handleBadCredentialsException(e: BadCredentialsException): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Forbidden: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
@@ -69,14 +69,14 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(UninitializedPropertyAccessException::class)
-    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<Response<Unit>> {
+    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BrnResponse<Unit>> {
         return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleHttpMessageNotReadableException(
         e: HttpMessageNotReadableException
-    ): ResponseEntity<Response<Unit>> {
+    ): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -85,7 +85,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<Response<Unit>> {
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -94,7 +94,7 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException::class)
-    fun handleAccessDeniedException(e: org.springframework.security.access.AccessDeniedException): ResponseEntity<Response<Unit>> {
+    fun handleAccessDeniedException(e: org.springframework.security.access.AccessDeniedException): ResponseEntity<BrnResponse<Unit>> {
         return ResponseEntity
             .status(HttpStatus.FORBIDDEN)
             .contentType(MediaType.APPLICATION_JSON)
@@ -106,16 +106,16 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(IOException::class)
-    fun handleIOException(e: IOException): ResponseEntity<Response<Unit>> {
+    fun handleIOException(e: IOException): ResponseEntity<BrnResponse<Unit>> {
         return createInternalErrorResponse(e)
     }
 
     @ExceptionHandler(Throwable::class)
-    fun handleException(e: Throwable): ResponseEntity<Response<Unit>> {
+    fun handleException(e: Throwable): ResponseEntity<BrnResponse<Unit>> {
         return createInternalErrorResponse(e)
     }
 
-    fun createInternalErrorResponse(e: Throwable): ResponseEntity<Response<Unit>> {
+    fun createInternalErrorResponse(e: Throwable): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Internal exception: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -123,5 +123,5 @@ class ExceptionControllerAdvice {
             .body(response(errors = listOf(e.message.toString())))
     }
 
-    private fun response(errors: List<String>) = Response(data = Unit, errors = errors)
+    private fun response(errors: List<String>) = BrnResponse(data = Unit, errors = errors)
 }
