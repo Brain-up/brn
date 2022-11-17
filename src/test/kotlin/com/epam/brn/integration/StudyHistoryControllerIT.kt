@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.repo.StudyHistoryRepository
 import com.google.gson.Gson
@@ -74,7 +74,7 @@ class StudyHistoryControllerIT : BaseIT() {
             .response
             .getContentAsString(StandardCharsets.UTF_8)
 
-        val singleObjectResponseDto = gson.fromJson(response, Response::class.java)
+        val singleObjectResponseDto = gson.fromJson(response, BrnResponse::class.java)
 
         // THEN
         assertNotNull(singleObjectResponseDto)

@@ -12,3 +12,19 @@ enum class ExerciseType {
     FREQUENCY_SIGNALS,
     SYLLABLES_KOROLEVA;
 }
+
+fun ExerciseType.toMechanism(): ExerciseMechanism = mapExerciseTypeToMechanism
+    .getOrElse(this) { throw IllegalArgumentException("No ExerciseMechanism is defined for $this.") }
+
+val mapExerciseTypeToMechanism =
+    mapOf(
+        ExerciseType.SINGLE_SIMPLE_WORDS to ExerciseMechanism.WORDS,
+        ExerciseType.SINGLE_WORDS_KOROLEVA to ExerciseMechanism.WORDS,
+        ExerciseType.PHRASES to ExerciseMechanism.WORDS,
+        ExerciseType.FREQUENCY_WORDS to ExerciseMechanism.WORDS,
+        ExerciseType.SYLLABLES_KOROLEVA to ExerciseMechanism.WORDS,
+        ExerciseType.SENTENCE to ExerciseMechanism.MATRIX,
+        ExerciseType.WORDS_SEQUENCES to ExerciseMechanism.MATRIX,
+        ExerciseType.DURATION_SIGNALS to ExerciseMechanism.SIGNALS,
+        ExerciseType.FREQUENCY_SIGNALS to ExerciseMechanism.SIGNALS,
+    )

@@ -1,6 +1,7 @@
 package com.epam.brn.model
 
 import com.epam.brn.dto.response.ResourceResponse
+import com.epam.brn.enums.WordType
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity

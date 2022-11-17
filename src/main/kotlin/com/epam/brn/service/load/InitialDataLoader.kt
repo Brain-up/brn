@@ -6,7 +6,7 @@ import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
 import com.epam.brn.enums.ExerciseType
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudioFilesGenerationService
@@ -188,7 +188,7 @@ class InitialDataLoader(
                 email = ADMIN_EMAIL,
                 active = true,
                 bornYear = 1999,
-                gender = Gender.MALE.toString()
+                gender = BrnGender.MALE.toString()
             )
         userAccount.password = password
         userAccount.roleSet.addAll(adminRoles)
@@ -202,14 +202,14 @@ class InitialDataLoader(
             email = "default@default.ru",
             active = true,
             bornYear = 1999,
-            gender = Gender.MALE.toString()
+            gender = BrnGender.MALE.toString()
         )
         val secondUser = UserAccount(
             fullName = "Name2",
             email = "default2@default.ru",
             active = true,
             bornYear = 1999,
-            gender = Gender.FEMALE.toString()
+            gender = BrnGender.FEMALE.toString()
         )
         firstUser.password = password
         secondUser.password = password

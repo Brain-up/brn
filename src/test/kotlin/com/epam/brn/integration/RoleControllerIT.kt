@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Role
 import com.epam.brn.repo.RoleRepository
@@ -50,7 +50,7 @@ class RoleControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
 
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        val baseResponse = objectMapper.readValue(responseJson, Response::class.java)
+        val baseResponse = objectMapper.readValue(responseJson, BrnResponse::class.java)
         val roles = objectMapper.readValue(
             gson.toJson(baseResponse.data),
             object : TypeReference<List<Role>>() {}
