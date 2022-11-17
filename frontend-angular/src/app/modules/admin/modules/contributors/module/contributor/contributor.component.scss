@@ -21,7 +21,14 @@ form, .contacts {
 
 .icon-group {
   align-self: center;
-  margin: auto;
+  margin-right: $margin-20;
+}
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #a179f2;
+}
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+  background-color: #cebaf8;
 }
 
 button.load {
@@ -52,10 +59,13 @@ label, .avatar-label {
   color: $active-grey-color;
 }
 
-.input-box {
+.input-box, .input-box-active {
   display: flex;
   flex-direction: column;
   margin-top: $margin-20;
+}
+.input-box-active {
+  margin-right: $margin-20;
 }
 
 input, textarea, select {

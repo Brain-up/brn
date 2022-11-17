@@ -183,8 +183,8 @@
               "Email": "Email",
               "Telegram": "Telegram",
               "Photo": "Photo",
-              "EmptyNamesWarnings": "Fields \"Name\" or \"Name_en\" could not be blank",
-              "Avatar": "Load avatar"
+              "Avatar": "Load avatar",
+              "Active": "Active"
             }
           }
         }

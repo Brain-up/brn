@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContributorComponent } from './contributor.component';
-import { Component } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -39,8 +39,9 @@ describe('ContributorComponent', () => {
         }
       ],
       type: 'DEVELOPER',
-      contribution: 100
-    }
+      contribution: 100,
+      active: true,
+    },
   ];
 
   beforeEach(async () => {
@@ -57,7 +58,8 @@ describe('ContributorComponent', () => {
           provide: ActivatedRoute,
           useValue: {}
         }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     })
       .compileComponents();
   });
