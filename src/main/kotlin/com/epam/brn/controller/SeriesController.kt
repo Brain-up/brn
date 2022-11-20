@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.SeriesDto
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.CsvUploadService
@@ -25,23 +25,23 @@ class SeriesController(@Autowired val seriesService: SeriesService, @Autowired v
 
     @GetMapping
     @ApiOperation("Get all series for group")
-    fun getSeriesForGroup(@RequestParam(value = "groupId") groupId: Long): ResponseEntity<Response<List<SeriesDto>>> {
+    fun getSeriesForGroup(@RequestParam(value = "groupId") groupId: Long): ResponseEntity<BrnResponse<List<SeriesDto>>> {
         val listDto = seriesService.findSeriesForGroup(groupId)
-        return ok(Response(data = listDto))
+        return ok(BrnResponse(data = listDto))
     }
 
     @GetMapping("{seriesId}")
     @ApiOperation("Get series for id")
-    fun getSeriesForId(@PathVariable(value = "seriesId") seriesId: Long): ResponseEntity<Response<SeriesDto>> {
+    fun getSeriesForId(@PathVariable(value = "seriesId") seriesId: Long): ResponseEntity<BrnResponse<SeriesDto>> {
         val seriesDto = seriesService.findSeriesDtoForId(seriesId)
-        return ok(Response(data = seriesDto))
+        return ok(BrnResponse(data = seriesDto))
     }
 
     @GetMapping("/fileFormat/{seriesId}")
     @ApiOperation("Get series file format by series id")
     fun getSampleStringForSeriesFile(
         @PathVariable(value = "seriesId") seriesId: Long
-    ): ResponseEntity<Response<String>> {
-        return ok(Response(csvUploadService.getSampleStringForSeriesExerciseFile(seriesId)))
+    ): ResponseEntity<BrnResponse<String>> {
+        return ok(BrnResponse(csvUploadService.getSampleStringForSeriesExerciseFile(seriesId)))
     }
 }

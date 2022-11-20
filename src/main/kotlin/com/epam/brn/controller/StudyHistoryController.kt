@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import io.swagger.annotations.Api
@@ -28,7 +28,7 @@ import javax.annotation.security.RolesAllowed
 @RolesAllowed(BrnRole.USER)
 class StudyHistoryController(
     @Autowired val studyHistoryService: StudyHistoryService,
-    @Autowired val authorityService: AuthorityService
+    @Autowired val roleService: RoleService
 ) {
 
     @PostMapping
@@ -39,8 +39,8 @@ class StudyHistoryController(
 
     @GetMapping("/todayTimer")
     @ApiOperation("Get current user's today work time: execution seconds")
-    fun getTodayWorkDurationInSeconds(): ResponseEntity<Response<Int>> {
-        return ResponseEntity.ok().body(Response(data = studyHistoryService.getTodayTimer()))
+    fun getTodayWorkDurationInSeconds(): ResponseEntity<BrnResponse<Int>> {
+        return ResponseEntity.ok().body(BrnResponse(data = studyHistoryService.getTodayTimer()))
     }
 
     @GetMapping("/monthHistories")
@@ -49,12 +49,12 @@ class StudyHistoryController(
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int,
         @RequestParam("userId") userId: Long?
-    ): ResponseEntity<Response<List<StudyHistoryDto>>> {
-        val result = if (userId != null && authorityService.isCurrentUserAdmin()) {
+    ): ResponseEntity<BrnResponse<List<StudyHistoryDto>>> {
+        val result = if (userId != null && roleService.isCurrentUserAdmin()) {
             studyHistoryService.getMonthHistories(userId, month, year)
         } else {
             studyHistoryService.getMonthHistoriesForCurrentUser(month, year)
         }
-        return ResponseEntity.ok().body(Response(data = result))
+        return ResponseEntity.ok().body(BrnResponse(data = result))
     }
 }

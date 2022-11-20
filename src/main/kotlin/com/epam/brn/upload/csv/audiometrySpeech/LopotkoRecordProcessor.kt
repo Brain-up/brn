@@ -5,14 +5,14 @@ import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
+import com.epam.brn.upload.toStringWithoutBraces
 import org.apache.commons.codec.digest.DigestUtils
-import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -53,7 +53,7 @@ class LopotkoRecordProcessor(
 //      todo: think about voice gender! if (record.exerciseName.startsWith("М")) audioPath = audioPathAlena
         return record.words
             .asSequence()
-            .map { it.replace("[()]".toRegex(), StringUtils.EMPTY) }
+            .map { it.toStringWithoutBraces() }
             .distinct()
             .map { toResource(it, locale) }
             .toMutableSet()
@@ -64,7 +64,13 @@ class LopotkoRecordProcessor(
         mapHashWord[word] = hashWord
         val wordType = WordType.AUDIOMETRY_WORD.toString()
         val audioFileUrl =
-            wordsService.getSubFilePathForWord(AudioFileMetaData(word, locale.locale, wordsService.getDefaultManVoiceForLocale(locale.locale)))
+            wordsService.getSubFilePathForWord(
+                AudioFileMetaData(
+                    word,
+                    locale.locale,
+                    wordsService.getDefaultManVoiceForLocale(locale.locale)
+                )
+            )
         val resource = resourceRepository.findFirstByWordAndWordTypeAndAudioFileUrlLike(word, wordType, audioFileUrl)
             .orElse(
                 Resource(

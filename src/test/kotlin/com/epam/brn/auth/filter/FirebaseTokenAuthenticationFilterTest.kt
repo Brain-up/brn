@@ -1,8 +1,8 @@
 package com.epam.brn.auth.filter
 
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.AuthorityType
-import com.epam.brn.model.Authority
+import com.epam.brn.enums.BrnRole
+import com.epam.brn.model.Role
 import com.epam.brn.auth.model.CustomUserDetails
 import com.epam.brn.model.UserAccount
 import com.epam.brn.service.FirebaseUserService
@@ -226,10 +226,10 @@ internal class FirebaseTokenAuthenticationFilterTest {
             email = email,
             fullName = fullName
         )
-        userAccount.authoritySet = mutableListOf(
-            Authority(
+        userAccount.roleSet = mutableListOf(
+            Role(
                 id = 1L,
-                authorityName = AuthorityType.ROLE_USER.name
+                name = BrnRole.USER
             )
         )
         return userAccount

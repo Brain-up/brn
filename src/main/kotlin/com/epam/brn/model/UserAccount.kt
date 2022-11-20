@@ -2,6 +2,7 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
+import com.epam.brn.enums.BrnGender
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
@@ -59,11 +60,11 @@ class UserAccount(
 
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
-        name = "user_authorities",
+        name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "authority_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    var authoritySet: MutableList<Authority> = mutableListOf()
+    var roleSet: MutableList<Role> = mutableListOf()
 
     override fun toString(): String {
         return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
@@ -77,7 +78,7 @@ class UserAccount(
         active = active,
         email = email,
         bornYear = bornYear,
-        gender = gender?.let { Gender.valueOf(it) },
+        gender = gender?.let { BrnGender.valueOf(it) },
         created = created,
         changed = changed,
         avatar = avatar,
@@ -88,8 +89,8 @@ class UserAccount(
             .toHashSet(),
         doctorId = doctor?.id
     ).also {
-        it.authorities = this.authoritySet
-            .map(Authority::authorityName)
+        it.roles = this.roleSet
+            .map(Role::name)
             .toMutableSet()
     }
 
@@ -100,6 +101,6 @@ class UserAccount(
         active = active,
         email = email,
         bornYear = bornYear,
-        gender = gender?.let { Gender.valueOf(it) },
+        gender = gender?.let { BrnGender.valueOf(it) },
     )
 }

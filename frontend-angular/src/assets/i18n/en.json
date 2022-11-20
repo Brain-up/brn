@@ -163,7 +163,31 @@
         "NoMatchForSearch": "No contributors matching the filter",
         "Search": "Search",
         "SelectPage": "Select page of contributors",
-        "AddButton": "ADD CONTRIBUTOR"
+        "AddButton": "ADD CONTRIBUTOR",
+        "Module": {
+          "Contributor": {
+            "Buttons": {
+              "Save": "Save",
+              "Cancel": "Cancel"
+            },
+            "Form": {
+              "Name": "Name",
+              "NameEn": "Name_en",
+              "Description": "Description",
+              "DescriptionEn": "Description_en",
+              "Company": "Company",
+              "CompanyEn": "Company_en",
+              "Type": "Type",
+              "Contributions": "Contributions",
+              "Phone": "Phone",
+              "Email": "Email",
+              "Telegram": "Telegram",
+              "Photo": "Photo",
+              "Avatar": "Load avatar",
+              "Active": "Active"
+            }
+          }
+        }
       }
     }
   },

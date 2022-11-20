@@ -8,7 +8,7 @@ import com.epam.brn.enums.Voice
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
-import com.epam.brn.model.WordType
+import com.epam.brn.enums.WordType
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository

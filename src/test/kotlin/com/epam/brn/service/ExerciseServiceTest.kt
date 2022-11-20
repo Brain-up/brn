@@ -9,7 +9,6 @@ import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
-import com.epam.brn.enums.Voice
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -30,7 +29,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkClass
@@ -61,12 +59,6 @@ internal class ExerciseServiceTest {
 
     @MockK
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
-
-    @RelaxedMockK
-    lateinit var audioFilesGenerationService: AudioFilesGenerationService
-
-    @MockK
-    lateinit var wordsService: WordsService
 
     private val series = Series(
         id = 1L,
@@ -428,8 +420,6 @@ internal class ExerciseServiceTest {
         every { recordProcessors.stream() } returns Stream.of(wordsRecordProcessor)
         every { wordsRecordProcessor.isApplicable(any()) } returns true
         every { wordsRecordProcessor.process(any(), any()) } returns listOf(exercise)
-        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
 
         // WHEN
         val exerciseDto = exerciseService.createExercise(exerciseWordsCreateDto)
@@ -438,7 +428,6 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { recordProcessors.stream() }
         verify(exactly = 1) { wordsRecordProcessor.isApplicable(any()) }
         verify(exactly = 1) { wordsRecordProcessor.process(any(), any()) }
-        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
         exerciseDto.name shouldBe exercise.name
     }
 
@@ -484,8 +473,6 @@ internal class ExerciseServiceTest {
         every { recordProcessors.stream() } returns Stream.of(seriesPhrasesRecordProcessor)
         every { seriesPhrasesRecordProcessor.isApplicable(any()) } returns true
         every { seriesPhrasesRecordProcessor.process(any(), any()) } returns listOf(exercise)
-        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
 
         // WHEN
         val exerciseDto = exerciseService.createExercise(exercisePhrasesCreateDto)
@@ -494,7 +481,6 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { recordProcessors.stream() }
         verify(exactly = 1) { seriesPhrasesRecordProcessor.isApplicable(any()) }
         verify(exactly = 1) { seriesPhrasesRecordProcessor.process(any(), any()) }
-        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
         exerciseDto.name shouldBe exercise.name
     }
 
@@ -540,8 +526,6 @@ internal class ExerciseServiceTest {
         every { recordProcessors.stream() } returns Stream.of(seriesMatrixRecordProcessor)
         every { seriesMatrixRecordProcessor.isApplicable(any()) } returns true
         every { seriesMatrixRecordProcessor.process(any(), any()) } returns listOf(exercise)
-        ReflectionTestUtils.setField(exerciseService, "speeds", listOf("1"))
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
 
         // WHEN
         val exerciseDto = exerciseService.createExercise(exerciseSentencesCreateDto)
@@ -550,7 +534,6 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { recordProcessors.stream() }
         verify(exactly = 1) { seriesMatrixRecordProcessor.isApplicable(any()) }
         verify(exactly = 1) { seriesMatrixRecordProcessor.process(any(), any()) }
-        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
         exerciseDto.name shouldBe exercise.name
     }
 

@@ -32,6 +32,8 @@ data class ContributorRequest(
     val contribution: Long?,
     @field:NotNull
     val type: ContributorType?,
+    @field:NotNull
+    val active: Boolean,
 
     val contacts: Set<@Valid ContactRequest> = mutableSetOf()
 ) {
@@ -46,7 +48,8 @@ data class ContributorRequest(
             companyEn = this.companyEn,
             pictureUrl = this.pictureUrl,
             contribution = this.contribution!!,
-            type = type!!
+            type = type!!,
+            active = active,
         )
         contributor.contacts = contacts.map { it.toEntity() }.toMutableSet()
         return contributor

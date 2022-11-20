@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-import com.epam.brn.dto.response.GeneralTaskResponse
+import com.epam.brn.dto.response.TaskResponse
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -12,7 +12,7 @@ data class ExerciseDto(
     var noise: NoiseDto,
     var template: String? = "",
     var available: Boolean = true,
-    var tasks: List<GeneralTaskResponse> = mutableListOf(),
+    var tasks: List<TaskResponse> = mutableListOf(),
     var signals: List<SignalTaskDto> = mutableListOf(),
     var active: Boolean = true,
     var changedBy: String? = "InitialDataLoader",

@@ -1,6 +1,6 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.response.Response
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.response.SubGroupStatisticResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Exercise
@@ -76,7 +76,7 @@ class UserSubGroupStatisticControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
-        val baseResponse = objectMapper.readValue(response, Response::class.java)
+        val baseResponse = objectMapper.readValue(response, BrnResponse::class.java)
         val baseResponseJson = gson.toJson(baseResponse.data)
         val resultStatistic: List<SubGroupStatisticResponse> =
             objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticResponse>>() {})

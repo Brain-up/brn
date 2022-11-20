@@ -6,7 +6,7 @@ import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.SinAudiometryResult
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
@@ -52,7 +52,7 @@ internal class AudiometryHistoryServiceTest {
     val userAccount = UserAccount(
         id = 1L,
         fullName = "testUserFirstName",
-        gender = Gender.MALE.toString(),
+        gender = BrnGender.MALE.toString(),
         bornYear = 2000,
         email = "test@gmail.com",
         active = true,

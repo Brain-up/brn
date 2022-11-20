@@ -1,6 +1,6 @@
 package com.epam.brn.dto.request
 
-import com.epam.brn.model.Gender
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
 import javax.validation.constraints.Email
@@ -29,12 +29,12 @@ data class UserAccountCreateRequest(
     @field:NotNull(message = "{validation.field.bornYear.notNull}")
     val bornYear: Int?,
     @field:NotNull(message = "{validation.field.gender.notNull}")
-    val gender: Gender,
+    val gender: BrnGender,
     val avatar: String? = null,
     val photo: String? = null,
     val description: String? = null
 ) {
-    var authorities: MutableSet<String>? = mutableSetOf()
+    var roles: MutableSet<String>? = mutableSetOf()
     fun toModel() = UserAccount(
         fullName = name,
         email = email,

@@ -1,0 +1,47 @@
+{
+  "data": {
+    "id": 49,
+    "level": 0,
+    "exerciseType": "SYLLABLES_KOROLEVA",
+    "exerciseMechanism": "WORDS",
+    "name": "",
+    "serialNumber": 0,
+    "answerOptions": [
+      {
+        "id": 98,
+        "audioFileUrl": "",
+        "word": "ву",
+        "wordPronounce": "ву",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0,
+        "description": "",
+        "columnNumber": -1
+      },
+      {
+        "id": 96,
+        "audioFileUrl": "",
+        "word": "ва",
+        "wordPronounce": "ва",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0,
+        "description": "",
+        "columnNumber": -1
+      },
+      {
+        "id": 97,
+        "audioFileUrl": "",
+        "word": "ви",
+        "wordPronounce": "ви",
+        "wordType": "OBJECT",
+        "pictureFileUrl": "",
+        "soundsCount": 0,
+        "description": "",
+        "columnNumber": -1
+      }
+    ]
+  },
+  "errors": [],
+  "meta": []
+}

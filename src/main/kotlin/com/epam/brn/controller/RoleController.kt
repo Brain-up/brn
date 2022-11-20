@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.response.AuthorityResponse
-import com.epam.brn.dto.response.Response
+import com.epam.brn.service.RoleService
+import com.epam.brn.dto.response.RoleResponse
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -16,12 +16,12 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/roles")
 @Api(value = "/roles", tags = ["Roles"], description = "Contains actions over roles")
 @RolesAllowed(BrnRole.ADMIN)
-class RoleController(val authorityService: AuthorityService) {
+class RoleController(val roleService: RoleService) {
 
     @GetMapping
     @ApiOperation("Get all roles")
-    fun getRoles(): ResponseEntity<Response<List<AuthorityResponse>>> {
-        val authorities = authorityService.findAll().map { authority -> authority.toDto() }
-        return ResponseEntity.ok().body(Response(data = authorities))
+    fun getRoles(): ResponseEntity<BrnResponse<List<RoleResponse>>> {
+        val roles = roleService.findAll().map { role -> role.toDto() }
+        return ResponseEntity.ok().body(BrnResponse(data = roles))
     }
 }

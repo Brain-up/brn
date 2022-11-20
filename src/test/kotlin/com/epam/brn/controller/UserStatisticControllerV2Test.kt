@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.auth.AuthorityService
-import com.epam.brn.dto.response.Response
+import com.epam.brn.service.RoleService
+import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.statistic.DayStudyStatistic
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
@@ -38,7 +38,7 @@ internal class UserStatisticControllerV2Test {
     private lateinit var studyHistoryService: StudyHistoryService
 
     @MockK
-    private lateinit var authorityService: AuthorityService
+    private lateinit var roleService: RoleService
 
     @Test
     fun `should get user weekly statistic`() {
@@ -56,7 +56,7 @@ internal class UserStatisticControllerV2Test {
         // THEN
         verify(exactly = 1) { userDayStatisticService.getStatisticForPeriod(from, to) }
         assertEquals(HttpStatus.SC_OK, userWeeklyStatistic.statusCodeValue)
-        assertEquals(dayStudyStatisticList, (userWeeklyStatistic.body as Response).data)
+        assertEquals(dayStudyStatisticList, (userWeeklyStatistic.body as BrnResponse).data)
     }
 
     @Test
@@ -75,7 +75,7 @@ internal class UserStatisticControllerV2Test {
         // THEN
         verify(exactly = 1) { userMonthStatisticService.getStatisticForPeriod(from, to) }
         assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
-        assertEquals(monthStudyStatisticList, (userYearlyStatistic.body as Response).data)
+        assertEquals(monthStudyStatisticList, (userYearlyStatistic.body as BrnResponse).data)
     }
 
     @Test
@@ -101,7 +101,7 @@ internal class UserStatisticControllerV2Test {
         val date = LocalDateTime.now()
         val dayStudyStatistic = mockk<DayStudyStatistic>()
         every { userDayStatisticService.getStatisticForPeriod(date, date, userId) } returns listOf(dayStudyStatistic)
-        every { authorityService.isCurrentUserAdmin() } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val userWeeklyStatistic = userStatisticControllerV2.getUserWeeklyStatistic(date, date, userId)
@@ -125,7 +125,7 @@ internal class UserStatisticControllerV2Test {
                 userId
             )
         } returns listOf(monthStudyStatistic)
-        every { authorityService.isCurrentUserAdmin() } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val userYearlyStatistic = userStatisticControllerV2.getUserYearlyStatistic(date, date, userId)
@@ -143,7 +143,7 @@ internal class UserStatisticControllerV2Test {
         val date = LocalDateTime.now()
         val userDailyDetailStatisticsDto = mockk<UserDailyDetailStatisticsDto>()
         every { studyHistoryService.getUserDailyStatistics(date, userId) } returns listOf(userDailyDetailStatisticsDto)
-        every { authorityService.isCurrentUserAdmin() } returns true
+        every { roleService.isCurrentUserAdmin() } returns true
 
         // WHEN
         val userWeeklyStatistic = userStatisticControllerV2.getUserDailyDetailsStatistics(date, userId)

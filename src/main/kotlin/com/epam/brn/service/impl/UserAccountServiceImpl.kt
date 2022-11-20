@@ -1,12 +1,12 @@
 package com.epam.brn.service.impl
 
-import com.epam.brn.auth.AuthorityService
+import com.epam.brn.service.RoleService
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.UserAccountResponse
-import com.epam.brn.enums.AuthorityType
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Authority
+import com.epam.brn.model.Role
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
@@ -25,7 +25,7 @@ import java.security.Principal
 @Service
 class UserAccountServiceImpl(
     private val userAccountRepository: UserAccountRepository,
-    private val authorityService: AuthorityService,
+    private val roleService: RoleService,
     private val headphonesService: HeadphonesService
 ) : UserAccountService {
 
@@ -54,7 +54,7 @@ class UserAccountServiceImpl(
             email = firebaseUserRecord.email,
             userId = firebaseUserRecord.uid
         )
-        userAccount.authoritySet = getDefaultAuthorities()
+        userAccount.roleSet = getDefaultRoleSet()
         return userAccountRepository.save(userAccount).toDto()
     }
 
@@ -160,13 +160,13 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    private fun getDefaultAuthorities(): MutableList<Authority> {
-        val authorityNames = mutableSetOf(AuthorityType.ROLE_USER.name)
+    private fun getDefaultRoleSet(): MutableSet<Role> {
+        val roleNames = mutableSetOf(BrnRole.USER)
 
-        return authorityNames
+        return roleNames
             .filter(::isNotEmpty)
             .mapTo(mutableListOf()) {
-                authorityService.findAuthorityByAuthorityName(it)
+                roleService.findByName(it)
             }
     }
 }
