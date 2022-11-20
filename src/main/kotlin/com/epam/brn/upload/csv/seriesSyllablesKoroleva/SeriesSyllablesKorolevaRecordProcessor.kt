@@ -44,12 +44,12 @@ class SeriesSyllablesKorolevaRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesSyllablesKorolevaRecord, locale: BrnLocale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesSyllablesKorolevaRecord, locale: BrnLocale): MutableList<Resource> =
         record.words
             .asSequence()
             .map { it.toStringWithoutBraces() }
             .map { toResource(it, locale) }
-            .toMutableSet()
+            .toMutableList()
 
     private fun toResource(word: String, locale: BrnLocale): Resource {
         val resource =

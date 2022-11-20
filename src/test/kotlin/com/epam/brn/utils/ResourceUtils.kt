@@ -1,7 +1,7 @@
 package com.epam.brn.utils
 
+import com.epam.brn.enums.WordType
 import com.epam.brn.model.Resource
-import com.epam.brn.model.WordType
 
 fun resource(name: String): Resource {
     return Resource(

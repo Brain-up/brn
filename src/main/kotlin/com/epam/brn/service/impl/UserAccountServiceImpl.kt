@@ -160,7 +160,7 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    private fun getDefaultRoleSet(): MutableSet<Role> {
+    private fun getDefaultRoleSet(): MutableList<Role> {
         val roleNames = mutableSetOf(BrnRole.USER)
 
         return roleNames

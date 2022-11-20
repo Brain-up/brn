@@ -48,7 +48,7 @@ class Task(
         exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toMutableList()
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toList()
     )
 
     fun toWordsGroupSeriesTaskDto(template: String? = "") = TaskWordsGroupResponse(

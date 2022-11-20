@@ -145,8 +145,8 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
 
         tasks.forEach {
             assertThat(it.answerOptions).containsExactlyElementsOf(expected)
+            verify { resourceRepositoryMock.saveAll(it.answerOptions) }
         }
-        verify { resourceRepositoryMock.saveAll(expected) }
     }
 
     @Test
@@ -182,37 +182,37 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
             Task(
                 exercise = exercise,
                 serialNumber = 1,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 2,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 3,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_быль()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 4,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бал()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 5,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_бум()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 6,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+                answerOptions = mutableListOf(resource_бал(), resource_бум(), resource_быль()),
                 correctAnswer = resource_быль()
             )
         )
