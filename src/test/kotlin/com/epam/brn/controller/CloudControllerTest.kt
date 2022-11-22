@@ -116,16 +116,17 @@ internal class CloudControllerTest {
         // GIVEN
         val data = "SOMEDATA".toByteArray().inputStream()
         val multipartFile = mockk <MultipartFile>()
-        val fileName = "filename.png"
-        every { multipartFile.originalFilename } returns fileName
+        val fileNameWithExtension = "filename.png"
+        val fileName = "file"
+        every { multipartFile.originalFilename } returns fileNameWithExtension
         every { multipartFile.inputStream } returns data
-        every { cloudUploadService.uploadContributorPicture(multipartFile) } returns "contributor/$fileName"
+        every { cloudUploadService.uploadContributorPicture(multipartFile, fileName) } returns "contributor/$fileNameWithExtension"
 
         // WHEN
-        val response = cloudController.uploadContributorPicture(multipartFile)
+        val response = cloudController.uploadContributorPicture(multipartFile, fileName)
 
         // THEN
         assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
-        verify(exactly = 1) { cloudUploadService.uploadContributorPicture(multipartFile) }
+        verify(exactly = 1) { cloudUploadService.uploadContributorPicture(multipartFile, any()) }
     }
 }

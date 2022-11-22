@@ -70,12 +70,13 @@ internal class CloudUploadServiceTest {
     fun `should throw IllegalArgumentException when contributor picture file extension is not supported`() {
         // GIVEN
         val mockMultipartFile = mockk<MultipartFile>()
+        val fileName = "fileName"
         every { mockMultipartFile.size } returns maxSize
         every { mockMultipartFile.originalFilename } returns "filename.not-allowed-ext"
 
         // WHEN
         val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadContributorPicture(mockMultipartFile)
+            cloudUploadService.uploadContributorPicture(mockMultipartFile, fileName)
         }
 
         // THEN
@@ -107,12 +108,13 @@ internal class CloudUploadServiceTest {
         // GIVEN
         val fileSize = 150L
         val mockMultipartFile = mockk<MultipartFile>()
+        val fileName = "fileName"
         every { mockMultipartFile.size } returns fileSize
         every { mockMultipartFile.originalFilename } returns "fileName.png"
 
         // WHEN
         val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadContributorPicture(mockMultipartFile)
+            cloudUploadService.uploadContributorPicture(mockMultipartFile, fileName)
         }
 
         // THEN
@@ -217,8 +219,8 @@ internal class CloudUploadServiceTest {
     @Test
     fun `should call uploadFile on cloudService for contributor pictures when all OK`() {
         // GIVEN
-        val word = "Word"
-        val fullFileName = "$word.png"
+        val fileName = "Word"
+        val fullFileName = "$fileName.png"
 
         val fileContent = "some test data for my input stream"
         val inputStream = IOUtils.toInputStream(fileContent, Charsets.UTF_8)
@@ -230,7 +232,7 @@ internal class CloudUploadServiceTest {
         every { cloudService.uploadFile(contributorPicturesPath, fullFileName, inputStream) } returns Unit
 
         // WHEN
-        val filePath = cloudUploadService.uploadContributorPicture(mockMultipartFile)
+        val filePath = cloudUploadService.uploadContributorPicture(mockMultipartFile, fileName)
 
         // THEN
         verify(exactly = 1) { cloudService.uploadFile(contributorPicturesPath, fullFileName, inputStream) }

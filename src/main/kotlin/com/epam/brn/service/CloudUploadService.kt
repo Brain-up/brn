@@ -60,8 +60,7 @@ class CloudUploadService(
         cloudService.uploadFile(unverifiedPicturesPath, fullFileName, multipartFile.inputStream)
     }
 
-    fun uploadContributorPicture(multipartFile: MultipartFile): String {
-        val fileName = FilenameUtils.getBaseName(multipartFile.originalFilename)
+    fun uploadContributorPicture(multipartFile: MultipartFile, fileName: String): String {
         val fileExtension = FilenameUtils.getExtension(multipartFile.originalFilename)
         val fullFileName = "$fileName.$fileExtension"
         val fileSize = multipartFile.size
