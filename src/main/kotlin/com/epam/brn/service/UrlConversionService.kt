@@ -30,18 +30,19 @@ class UrlConversionService(private val cloudService: CloudService) {
     fun makeUrlForSubGroupPicture(subGroupCode: String): String =
         cloudService.baseFileUrl() + folderForThemePictures + "/" + subGroupCode + ".svg"
 
-    fun makeUrlForTaskPicture(word: String): String {
+    suspend fun makeUrlForTaskPicture(word: String): String {
         try {
-            listOf(defaultPicturesPath, unverifiedPicturesPath).forEach { picturesPath ->
-                pictureExtensions.forEach { ext ->
-                    val fileName = "$word.$ext"
-                    if (cloudService.isFileExist(picturesPath, fileName))
-                        return cloudService.baseFileUrl() + "/" + cloudService.createFullFileName(
-                            picturesPath,
-                            fileName
-                        )
+            listOf(defaultPicturesPath, unverifiedPicturesPath)
+                .forEach { picturesPath ->
+                    pictureExtensions.forEach { ext ->
+                        val fileName = "$word.$ext"
+                        if (cloudService.isFileExist(picturesPath, fileName))
+                            return cloudService.baseFileUrl() + "/" + cloudService.createFullFileName(
+                                picturesPath,
+                                fileName
+                            )
+                    }
                 }
-            }
         } catch (e: Exception) {
             log.error("Some exception with cloud service: ", e)
         }
