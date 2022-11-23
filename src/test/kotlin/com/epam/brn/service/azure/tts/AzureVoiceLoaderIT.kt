@@ -30,6 +30,7 @@ class AzureVoiceLoaderIT : BaseWireMockIT() {
 
     @BeforeEach
     internal fun setUp() {
+        azureVoiceRepo.deleteAll()
         voiceLoader = AzureVoiceLoader(azureTtsService, azureVoiceRepo, azureTtsProperties)
     }
 
