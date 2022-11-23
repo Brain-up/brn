@@ -51,22 +51,13 @@ data class Task(
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
     )
 
-    fun toWordsGroupSeriesTaskDto(template: String? = "") = TaskWordsGroupResponse(
+    fun toWordsGroupSeriesTaskDto(exerciseType: ExerciseType, template: String? = "") = TaskWordsGroupResponse(
         id = id!!,
-        exerciseType = ExerciseType.WORDS_SEQUENCES,
+        exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
         template = template
-    )
-
-    fun toSentenceSeriesTaskDto(template: String? = "") = TaskWordsGroupResponse(
-        id = id!!,
-        exerciseType = ExerciseType.SENTENCE,
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
-        template = template,
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"

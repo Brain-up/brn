@@ -6,6 +6,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -54,9 +55,11 @@ internal class UrlConversionServiceTest {
         ReflectionTestUtils.setField(urlConversionService, "pictureExtensions", extensions)
 
         // WHEN
-        val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
-        // THEN
-        assertEquals("$baseFileUrl/$fullFileName", resultPictureUrl)
+        runBlocking {
+            val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
+            // THEN
+            assertEquals("$baseFileUrl/$fullFileName", resultPictureUrl)
+        }
     }
 
     @Test
@@ -76,9 +79,11 @@ internal class UrlConversionServiceTest {
         ReflectionTestUtils.setField(urlConversionService, "unverifiedPicturesPath", unverifiedPicturesPath)
         ReflectionTestUtils.setField(urlConversionService, "pictureExtensions", extensions)
         // WHEN
-        val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
-        // THEN
-        assertEquals("$baseFileUrl/$fullFileName", resultPictureUrl)
+        runBlocking {
+            val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
+            // THEN
+            assertEquals("$baseFileUrl/$fullFileName", resultPictureUrl)
+        }
     }
 
     @Test
@@ -94,9 +99,11 @@ internal class UrlConversionServiceTest {
         ReflectionTestUtils.setField(urlConversionService, "unverifiedPicturesPath", unverifiedPicturesPath)
         ReflectionTestUtils.setField(urlConversionService, "pictureExtensions", extensions)
         // WHEN
-        val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
-        // THEN
-        assertEquals("", resultPictureUrl)
+        runBlocking {
+            val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
+            // THEN
+            assertEquals("", resultPictureUrl)
+        }
     }
 
     @Test
