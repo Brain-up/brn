@@ -41,6 +41,22 @@ internal class OptimizationTest {
     }
 
     @Test
+    fun `should use parallel in foreach correctly Recommended variant`() {
+        // GIVEN
+        val words = listOf("one", "two", "three", "four")
+
+        // WHEN
+        val time = measureTimeMillis {
+            words.parallelStream()
+                .forEach { word -> checkPictureSleep(word) }
+        }
+
+        // THEN
+        println("Completed in time=$time ms")
+        time shouldBeInRange 1000L..1300L
+    }
+
+    @Test
     fun `should use async in foreach correctly in doc example`() {
         runBlocking {
             val time = measureTimeMillis {
@@ -112,6 +128,12 @@ internal class OptimizationTest {
 
 suspend fun checkPicture(name: String): Boolean {
     delay(1000L)
+    println("process $name")
+    return true
+}
+
+fun checkPictureSleep(name: String): Boolean {
+    Thread.sleep(1000L)
     println("process $name")
     return true
 }
