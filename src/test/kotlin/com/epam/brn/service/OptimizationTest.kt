@@ -40,7 +40,7 @@ internal class OptimizationTest {
         time shouldBeInRange 1000L..1300L
     }
 
-    @Test
+    // @Test // there are some side effects on server side Integration tests run
     fun `should use parallel in foreach correctly Recommended variant`() {
         // GIVEN
         val words = listOf("one", "two", "three", "four")
