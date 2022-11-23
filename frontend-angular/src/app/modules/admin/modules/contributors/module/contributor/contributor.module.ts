@@ -5,6 +5,8 @@ import { ContributorComponent } from './contributor.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -16,7 +18,9 @@ import { MatIconModule } from '@angular/material/icon';
     ContributorRoutingModule,
     ReactiveFormsModule,
     TranslateModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressBarModule,
+    MatSlideToggleModule
   ]
 })
 export class ContributorModule { }
