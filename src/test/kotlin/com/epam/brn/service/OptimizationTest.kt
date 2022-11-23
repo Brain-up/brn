@@ -53,7 +53,7 @@ internal class OptimizationTest {
 
         // THEN
         println("Completed in time=$time ms")
-        time shouldBeInRange 1000L..1400L
+        time shouldBeInRange 1000L..2000L
     }
 
     @Test
