@@ -6,18 +6,19 @@ import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.ExerciseMechanism
 import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.enums.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -89,7 +90,7 @@ internal class TaskServiceTest {
     @DisplayName("Tests for getting tasks with parameters")
     inner class GetTasks {
         @Test
-        fun `should return tasks by exerciseId(SINGLE_SIMPLE_WORDS)`() {
+        suspend fun `should return tasks by exerciseId(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
             val expectedTaskSize = 2
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
@@ -108,7 +109,7 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            coEvery { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -134,14 +135,24 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
-            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
+            every {
+                task2Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            coEvery { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -170,7 +181,7 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_WORDS_KOROLEVA.name
 
-            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
+            coEvery { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE) as List<TaskResponse>
@@ -204,13 +215,23 @@ internal class TaskServiceTest {
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
             every { exerciseMock.toDto() } returns exerciseDtoMock
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
-            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
+            every {
+                task2Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            coEvery { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -236,13 +257,23 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
-            every { task2Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.SENTENCE,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
+            every {
+                task2Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.SENTENCE,
+                    template
+                )
+            } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            coEvery { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -273,7 +304,7 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name
 
-            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
+            coEvery { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
             every { task1Mock.exercise } returns exerciseMock
 
             // WHEN
@@ -308,7 +339,7 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.DI.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            coEvery { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
@@ -350,7 +381,12 @@ internal class TaskServiceTest {
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
@@ -373,7 +409,12 @@ internal class TaskServiceTest {
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.SENTENCE,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
