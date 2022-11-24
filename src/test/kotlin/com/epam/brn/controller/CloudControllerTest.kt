@@ -109,4 +109,24 @@ internal class CloudControllerTest {
         assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
         verify(exactly = 1) { cloudUploadService.uploadUnverifiedPictureFile(multipartFile) }
     }
+
+    @Test
+    fun `uploadContributorPicture should call cloud service upload file and return status OK`() {
+
+        // GIVEN
+        val data = "SOMEDATA".toByteArray().inputStream()
+        val multipartFile = mockk <MultipartFile>()
+        val fileNameWithExtension = "filename.png"
+        val fileName = "file"
+        every { multipartFile.originalFilename } returns fileNameWithExtension
+        every { multipartFile.inputStream } returns data
+        every { cloudUploadService.uploadContributorPicture(multipartFile, fileName) } returns "contributor/$fileNameWithExtension"
+
+        // WHEN
+        val response = cloudController.uploadContributorPicture(multipartFile, fileName)
+
+        // THEN
+        assertEquals(HttpStatus.SC_CREATED, response.statusCode.value())
+        verify(exactly = 1) { cloudUploadService.uploadContributorPicture(multipartFile, any()) }
+    }
 }
