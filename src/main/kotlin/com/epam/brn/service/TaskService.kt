@@ -76,7 +76,7 @@ class TaskService(
                         urlConversionService.makeUrlForTaskPicture(resource.word)
                 }
         }
-        log.debug("End processAnswerOptions for taskId=${task.id}, time=$time")
+        log.debug("End processAnswerOptions for taskId=$task, time=$time")
     }
 
     @Transactional
