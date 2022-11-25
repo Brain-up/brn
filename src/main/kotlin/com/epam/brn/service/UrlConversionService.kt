@@ -30,9 +30,9 @@ class UrlConversionService(private val cloudService: CloudService) {
     fun makeUrlForSubGroupPicture(subGroupCode: String): String =
         cloudService.baseFileUrl() + folderForThemePictures + "/" + subGroupCode + ".svg"
 
-    suspend fun makeUrlForTaskPicture(word: String): String {
+    fun makeUrlForTaskPicture(word: String): String {
         try {
-            listOf(defaultPicturesPath, unverifiedPicturesPath)
+            listOf(defaultPicturesPath) // ,unverifiedPicturesPath - when on UI part will be implement saving pictures
                 .forEach { picturesPath ->
                     pictureExtensions.forEach { ext ->
                         val fileName = "$word.$ext"
@@ -44,7 +44,7 @@ class UrlConversionService(private val cloudService: CloudService) {
                     }
                 }
         } catch (e: Exception) {
-            log.error("Some exception with cloud service: ", e)
+            log.error("Exception with cloud service on isFileExist check: ", e)
         }
         return ""
     }
