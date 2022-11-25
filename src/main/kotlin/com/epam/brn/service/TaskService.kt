@@ -19,11 +19,10 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.system.measureTimeMillis
 
 @Service
 class TaskService(
@@ -69,16 +68,15 @@ class TaskService(
     }
 
     private fun processAnswerOptions(task: Task) {
-        runBlocking {
+        val time = measureTimeMillis {
             task.answerOptions
-                .map { resource ->
-                    async {
-                        resource.pictureFileUrl =
-                            urlConversionService.makeUrlForTaskPicture(resource.word)
-                    }
+                .parallelStream()
+                .forEach { resource ->
+                    resource.pictureFileUrl =
+                        urlConversionService.makeUrlForTaskPicture(resource.word)
                 }
-                .map { it.await() }
         }
+        log.debug("End processAnswerOptions for taskId=${task.id}, time=$time")
     }
 
     @Transactional

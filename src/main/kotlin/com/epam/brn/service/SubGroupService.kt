@@ -1,15 +1,16 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
+import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.model.SubGroup
-import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.SeriesRepository
+import com.epam.brn.repo.SubGroupRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
 
 @Service
 class SubGroupService(
@@ -22,11 +23,12 @@ class SubGroupService(
 
     fun findSubGroupsForSeries(seriesId: Long): List<SubGroupResponse> {
         log.debug("Try to find subGroups for seriesId=$seriesId")
-        return subGroupRepository.findBySeriesId(seriesId)
+        return subGroupRepository
+            .findBySeriesId(seriesId)
+            .parallelStream()
             .map { subGroup -> toSubGroupResponse(subGroup) }
-            .toList()
-            .sortedBy { !it.withPictures }
-            .sortedBy { it.level }
+            .collect(Collectors.toList())
+            .sortedWith(compareBy({ it.level }, { it.withPictures }))
     }
 
     fun findById(subGroupId: Long): SubGroupResponse {
