@@ -19,12 +19,6 @@ class ResourceService(private val resourceRepository: ResourceRepository) {
         return if (resources.isNotEmpty()) resources.first() else null
     }
 
-    fun findFirstByWordAndAudioFileUrlLike(word: String, audioFileName: String): Resource? {
-        return resourceRepository
-            .findFirstByWordAndAudioFileUrlLike(word, audioFileName)
-            .orElse(null)
-    }
-
     fun save(resource: Resource): Resource = resourceRepository.save(resource)
 
     fun updateDescription(id: Long, description: String): ResourceResponse {

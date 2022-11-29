@@ -82,7 +82,6 @@ class SeriesWordsRecordProcessor(
                         locale = locale.locale,
                     )
                 )
-        resource.audioFileUrl = audioPath
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }

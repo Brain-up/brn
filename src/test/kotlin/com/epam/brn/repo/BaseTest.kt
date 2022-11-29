@@ -50,11 +50,11 @@ abstract class BaseTest {
         subGroup1.exercises.addAll(listOf(exercise1, exercise2))
 
         val firstResource =
-            Resource(audioFileUrl = "audio_f", word = listOfWords[0], pictureFileUrl = "picture_f", soundsCount = 0)
+            Resource(word = listOfWords[0], pictureFileUrl = "picture_f", soundsCount = 0)
         val secondResource =
-            Resource(audioFileUrl = "audio_s", word = listOfWords[1], pictureFileUrl = "picture_s", soundsCount = 0)
+            Resource(word = listOfWords[1], pictureFileUrl = "picture_s", soundsCount = 0)
         val thirdResource =
-            Resource(audioFileUrl = "audio_t", word = listOfWords[2], pictureFileUrl = "picture_t", soundsCount = 0)
+            Resource(word = listOfWords[2], pictureFileUrl = "picture_t", soundsCount = 0)
 
         resourceRepository.saveAll(listOf(firstResource, secondResource, thirdResource))
 

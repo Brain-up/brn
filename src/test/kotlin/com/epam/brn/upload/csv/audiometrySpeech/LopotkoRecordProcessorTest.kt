@@ -82,8 +82,7 @@ internal class LopotkoRecordProcessorTest {
             )
         } returns audiometry
         every {
-            resourceRepositoryMock.findFirstByWordAndWordTypeAndAudioFileUrlLike(
-                ofType(String::class),
+            resourceRepositoryMock.findFirstByWordAndWordType(
                 ofType(String::class),
                 ofType(String::class)
             )
@@ -144,7 +143,6 @@ internal class LopotkoRecordProcessorTest {
         return Resource(
             word = "бал",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/518d3c4523afcd59e2feae1093870f5f.ogg",
             pictureFileUrl = "pictures/бал.jpg"
         )
     }
@@ -153,7 +151,6 @@ internal class LopotkoRecordProcessorTest {
         return Resource(
             word = "бум",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/8e3cba18a3a6a3aa51e160a3d1e1ebcc.ogg",
             pictureFileUrl = "pictures/бум.jpg"
         )
     }
@@ -162,7 +159,6 @@ internal class LopotkoRecordProcessorTest {
         return Resource(
             word = "быль",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/4df3cdbbe2abf27f91f673032c95141e.ogg",
             pictureFileUrl = "pictures/быль.jpg"
         )
     }
@@ -171,7 +167,6 @@ internal class LopotkoRecordProcessorTest {
         return Resource(
             word = "вить",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/77ebaea90791bb15d4f758191aae5930.ogg",
             pictureFileUrl = "pictures/вить.jpg"
         )
     }
@@ -180,7 +175,6 @@ internal class LopotkoRecordProcessorTest {
         return Resource(
             word = "гад",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/2e0b56e224fe469866e1aaa81caaafcc.ogg",
             pictureFileUrl = "pictures/гад.jpg"
         )
     }
@@ -189,7 +183,6 @@ internal class LopotkoRecordProcessorTest {
         return Resource(
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/audio/filipp/494d676049e14da7fd3a9182955287ab.ogg",
             pictureFileUrl = "pictures/дуб.jpg"
         )
     }
