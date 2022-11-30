@@ -52,7 +52,7 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @PostMapping
     @ApiOperation("Add new subgroup for existing series")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun addSubGroupToSeries(
         @ApiParam(name = "seriesId", type = "Long", value = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
@@ -63,7 +63,7 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
 
     @PatchMapping("/{subGroupId}")
     @ApiOperation("Update subgroup by id")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
         @RequestBody subGroup: SubGroupChangeRequest

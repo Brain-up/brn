@@ -35,7 +35,7 @@ class CloudController(
 
     @GetMapping("/upload")
     @ApiOperation("Get cloud upload form")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BrnResponse<Map<String, Any>>> {
         if (filePath.isNullOrEmpty())
@@ -58,7 +58,7 @@ class CloudController(
 
     @GetMapping("/folders")
     @ApiOperation("Get cloud folder structure")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Throws(Exception::class)
     fun listBucket(): ResponseEntity<BrnResponse<List<String>>> =
         ResponseEntity.ok(BrnResponse(cloudService.getStorageFolders()))
@@ -74,7 +74,7 @@ class CloudController(
 
     @PostMapping(value = ["/upload/contributor/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
     @ApiOperation("Upload picture of contributor")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun uploadContributorPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile,
         @RequestParam(value = "fileName") fileName: String

@@ -1,13 +1,13 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
-import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.dto.response.BrnResponse
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.RoleService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -40,7 +40,7 @@ class ExerciseController(
 
     @PostMapping
     @ApiOperation("Create new exercise for existing subgroup")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun createExercise(
         @ApiParam(value = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
@@ -75,7 +75,7 @@ class ExerciseController(
 
     @GetMapping(value = ["/byWord"])
     @ApiOperation("Get exercises containing specified word")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun getExercisesByWord(
         @RequestParam(
             value = "word",
@@ -102,7 +102,7 @@ class ExerciseController(
 
     @PostMapping("/loadTasksFile")
     @ApiOperation("Load task file to series")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
         @RequestParam(value = "taskFile") file: MultipartFile

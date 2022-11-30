@@ -39,7 +39,7 @@ class UserDetailController(
 ) {
     @GetMapping
     @ApiOperation("Get all users with/without analytic data")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
         @RequestParam("role", defaultValue = "USER") role: String,
@@ -52,7 +52,7 @@ class UserDetailController(
 
     @GetMapping(value = ["/{userId}"])
     @ApiOperation("Get user by id")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<BrnResponse<List<UserAccountResponse>>> {
         return ResponseEntity.ok()
             .body(BrnResponse(data = listOf(userAccountService.findUserById(id))))
@@ -78,7 +78,7 @@ class UserDetailController(
 
     @PostMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Add headphones to the user")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun addHeadphonesToUser(
         @PathVariable("userId", required = true) userId: Long,
         @Validated @RequestBody headphones: HeadphonesDto
@@ -102,7 +102,7 @@ class UserDetailController(
 
     @GetMapping(value = ["/{userId}/headphones"])
     @ApiOperation("Get all user's headphones")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun getAllHeadphonesForUser(
         @PathVariable("userId", required = true) userId: Long
     ) = ResponseEntity
