@@ -50,7 +50,7 @@ describe('UsersComponent', () => {
       firstDone: '2021-12-13T19:07:04.832',
       lastDone: '2021-12-15T19:07:04.832',
       lastWeek: [],
-      studyDaysInLastMonth: 1,
+      studyDaysInCurrentMonth: 1,
       diagnosticProgress: {
         SIGNALS: true,
       },
@@ -71,7 +71,7 @@ describe('UsersComponent', () => {
       firstDone: '2021-12-17T19:07:04.832',
       lastDone: '2021-12-20T19:07:04.832',
       lastWeek: [],
-      studyDaysInLastMonth: 2,
+      studyDaysInCurrentMonth: 2,
       diagnosticProgress: {
         SIGNALS: false,
       },
