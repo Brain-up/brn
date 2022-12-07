@@ -139,6 +139,10 @@ export class WeekTimeTrackComponent {
   }
 
   public isAllowNextMonth(): boolean {
+    /// for December
+    if (this.selectedMonth.add(1, 'month').month() === 0 ) {
+      return this.selectedMonth.month() <= dayjs().subtract(1, 'month').month();
+    }
     return this.selectedMonth.add(1, 'month').month() <= dayjs().month();
   }
 
