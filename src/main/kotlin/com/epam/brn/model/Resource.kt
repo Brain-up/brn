@@ -15,18 +15,15 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    uniqueConstraints = [UniqueConstraint(columnNames = ["word", "audioFileUrl", "wordType"])],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["word", "wordType"])],
     indexes = [
-        Index(name = "word_audio_file_idx", columnList = "word, audioFileUrl, wordType"),
-        Index(name = "audio_file_idx", columnList = "audioFileUrl")
+        Index(name = "word_idx", columnList = "word, wordType")
     ]
 )
 data class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    @Column(nullable = false)
-    var audioFileUrl: String? = "",
     @Column(nullable = false)
     var word: String = "",
     var wordType: String = "",
@@ -39,7 +36,6 @@ data class Resource(
 ) {
     fun toResponse() = ResourceResponse(
         id = id,
-        audioFileUrl = audioFileUrl,
         word = word.replace("+", ""),
         wordPronounce = word,
         pictureFileUrl = pictureFileUrl,
@@ -48,7 +44,7 @@ data class Resource(
         description = description
     )
 
-    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word'," +
+    override fun toString() = "Resource(id=$id, word='$word'," +
         " pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
 
     override fun equals(other: Any?): Boolean {
@@ -58,7 +54,6 @@ data class Resource(
         other as Resource
 
         if (id != other.id) return false
-        if (audioFileUrl != other.audioFileUrl) return false
         if (word != other.word) return false
         if (wordType != other.wordType) return false
         if (pictureFileUrl != other.pictureFileUrl) return false
@@ -70,7 +65,6 @@ data class Resource(
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
-        result = 31 * result + (audioFileUrl?.hashCode() ?: 0)
         result = 31 * result + (word.hashCode())
         result = 31 * result + wordType.hashCode()
         result = 31 * result + (pictureFileUrl?.hashCode() ?: 0)
