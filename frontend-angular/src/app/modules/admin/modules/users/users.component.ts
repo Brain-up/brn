@@ -35,7 +35,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     'currentWeek',
     'spentTime',
     'doneExercises',
-    'studyDaysInLastMonth',
+    'studyDaysInCurrentMonth',
     'progress',
     'isFavorite',
   ];

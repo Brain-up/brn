@@ -78,7 +78,7 @@
               "CurrentWeek": "Текущая неделя",
               "Name": "Имя",
               "Progress": "Прогресс",
-              "StudyDaysInLastMonth": "Дней в прошлом месяце",
+              "StudyDaysInCurrentMonth": "Дней в настоящем месяце",
               "SpentTime": "Время занятий",
               "DoneExercises": "Выполненных упражнений"
             },
