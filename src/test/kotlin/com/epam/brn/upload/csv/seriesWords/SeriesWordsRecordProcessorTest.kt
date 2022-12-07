@@ -285,7 +285,6 @@ internal class SeriesWordsRecordProcessorTest {
         return Resource(
             word = "бал",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бал.ogg",
             pictureFileUrl = "pictures/бал.jpg"
         )
     }
@@ -294,7 +293,6 @@ internal class SeriesWordsRecordProcessorTest {
         return Resource(
             word = "бум",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бум.ogg",
             pictureFileUrl = "pictures/бум.jpg"
         )
     }
@@ -303,7 +301,6 @@ internal class SeriesWordsRecordProcessorTest {
         return Resource(
             word = "быль",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/быль.ogg",
             pictureFileUrl = "pictures/быль.jpg"
         )
     }
@@ -312,7 +309,6 @@ internal class SeriesWordsRecordProcessorTest {
         return Resource(
             word = "вить",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/вить.ogg",
             pictureFileUrl = "pictures/вить.jpg"
         )
     }
@@ -321,7 +317,6 @@ internal class SeriesWordsRecordProcessorTest {
         return Resource(
             word = "гад",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/гад.ogg",
             pictureFileUrl = "pictures/гад.jpg"
         )
     }
@@ -330,7 +325,6 @@ internal class SeriesWordsRecordProcessorTest {
         return Resource(
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/дуб.ogg",
             pictureFileUrl = "pictures/дуб.jpg"
         )
     }
