@@ -90,7 +90,6 @@ class SeriesPhrasesRecordProcessor(
                     pictureFileUrl = pictureDefaultPath
                 )
             )
-        resource.audioFileUrl = audioPath
         resource.wordType = wordType
         return resource
     }
