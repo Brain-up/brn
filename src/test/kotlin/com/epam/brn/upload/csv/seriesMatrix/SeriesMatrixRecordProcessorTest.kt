@@ -217,6 +217,7 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "девочка",
             wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "audio/ogg/filipp/девочка.ogg",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
     }
@@ -225,6 +226,7 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "бабушка",
             wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "audio/ogg/filipp/бабушка.ogg",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
     }
@@ -233,6 +235,7 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "дедушка",
             wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "audio/ogg/filipp/дедушка.ogg",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
     }
@@ -241,6 +244,7 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "сидит",
             wordType = WordType.OBJECT_ACTION.toString(),
+            audioFileUrl = "audio/ogg/filipp/сидит.ogg",
             pictureFileUrl = "pictures/withWord/сидит.jpg"
         )
     }
@@ -249,6 +253,7 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "лежит",
             wordType = WordType.OBJECT_ACTION.toString(),
+            audioFileUrl = "audio/ogg/filipp/лежит.ogg",
             pictureFileUrl = "pictures/withWord/лежит.jpg"
         )
     }
@@ -257,6 +262,7 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "идет",
             wordType = WordType.OBJECT_ACTION.toString(),
+            audioFileUrl = "audio/ogg/filipp/идет.ogg",
             pictureFileUrl = "pictures/withWord/идет.jpg"
         )
     }

@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.audiometrySpeech
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.AudiometryTask
@@ -61,11 +62,20 @@ class LopotkoRecordProcessor(
         val hashWord = DigestUtils.md5Hex(word)
         mapHashWord[word] = hashWord
         val wordType = WordType.AUDIOMETRY_WORD.toString()
-        val resource = resourceRepository.findFirstByWordAndWordType(word, wordType)
+        val audioFileUrl =
+            wordsService.getSubFilePathForWord(
+                AudioFileMetaData(
+                    word,
+                    locale.locale,
+                    wordsService.getDefaultManVoiceForLocale(locale.locale)
+                )
+            )
+        val resource = resourceRepository.findFirstByWordAndWordTypeAndAudioFileUrlLike(word, wordType, audioFileUrl)
             .orElse(
                 Resource(
                     word = word,
-                    locale = locale.locale
+                    audioFileUrl = audioFileUrl,
+                    locale = locale.locale,
                 )
             )
         resource.wordType = wordType

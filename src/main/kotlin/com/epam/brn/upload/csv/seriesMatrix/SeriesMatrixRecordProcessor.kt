@@ -92,6 +92,7 @@ class SeriesMatrixRecordProcessor(
                     locale = locale.locale
                 )
             )
+        resource.audioFileUrl = audioPath
         resource.wordType = wordType.name
         return resource
     }
