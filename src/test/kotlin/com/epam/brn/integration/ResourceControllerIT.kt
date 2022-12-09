@@ -28,7 +28,7 @@ class ResourceControllerIT : BaseIT() {
     @Test
     fun `should update resource description successfully`() {
         // GIVEN
-        val resource = resourceRepository.save(Resource(description = "description", wordType = "OBJECT", word = "word"))
+        val resource = resourceRepository.save(Resource(description = "description", wordType = "OBJECT"))
         val descriptionForUpdate = "new description"
         val requestJson = objectMapper.writeValueAsString(UpdateResourceDescriptionRequest(descriptionForUpdate))
 
