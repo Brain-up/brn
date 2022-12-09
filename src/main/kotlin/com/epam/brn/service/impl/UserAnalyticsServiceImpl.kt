@@ -45,13 +45,12 @@ class UserAnalyticsServiceImpl(
         val startDay = now.with(firstWeekDay, 1L)
         val from = startDay.with(LocalTime.MIN)
         val to = startDay.plusDays(7L).with(LocalTime.MAX)
-        val startOfLastMonth = now.minusMonths(1).withDayOfMonth(1).with(LocalTime.MIN)
-        val endOfLastMonth = now.withDayOfMonth(1).minusDays(1).with(LocalTime.MAX)
+        val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
         users.onEach { user ->
             user.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, user.id)
-            user.studyDaysInLastMonth = countWorkDaysForMonth(
-                userDayStatisticService.getStatisticForPeriod(startOfLastMonth, endOfLastMonth, user.id)
+            user.studyDaysInCurrentMonth = countWorkDaysForMonth(
+                userDayStatisticService.getStatisticForPeriod(startOfCurrentMonth, now, user.id)
             )
 
             val userStatistic = studyHistoryRepository.getStatisticByUserAccountId(user.id)

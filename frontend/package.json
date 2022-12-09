@@ -26,7 +26,7 @@
     "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
     "develop": "cross-env FIREBASE_PROJECT_ID=brainup-spb-dev-bb6d0 FIREBASE_AUTH_DOMAIN=brainup-spb-dev-bb6d0.firebaseapp.com FIREBASE_API_KEY=AIzaSyB03Q4ZCxdqaKuN7cJqCQGhkibYD4Q-qsc ember s --secure-proxy=false --proxy=http://localhost:8081",
     "remote": "ember s --secure-proxy=false --proxy=http://ecse005003f1.epam.com/",
-    "remote:prod": "ember s --secure-proxy=true --proxy=https://brainup.site/",
+    "remote:prod": "ember s --secure-proxy=true --proxy=https://brainup.fun/",
     "mirage": "ember s",
     "postinstall": "patch-package"
   },
