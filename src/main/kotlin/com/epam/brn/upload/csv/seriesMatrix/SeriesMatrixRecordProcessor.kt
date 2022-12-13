@@ -2,12 +2,12 @@ package com.epam.brn.upload.csv.seriesMatrix
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.enums.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
@@ -16,7 +16,6 @@ import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import com.epam.brn.upload.toStringWithoutBraces
 import org.apache.commons.lang3.StringUtils
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import javax.transaction.Transactional
 
@@ -28,9 +27,6 @@ class SeriesMatrixRecordProcessor(
     private val taskRepository: TaskRepository,
     private val wordsService: WordsService
 ) : RecordProcessor<SeriesMatrixRecord, Exercise> {
-
-    @Value(value = "\${brn.pictureWithWord.file.default.path}")
-    private lateinit var pictureWithWordFileUrl: String
 
     override fun isApplicable(record: Any): Boolean = record is SeriesMatrixRecord
 
@@ -85,13 +81,7 @@ class SeriesMatrixRecordProcessor(
             )
         )
         val resource = resourceRepository.findFirstByWordAndLocaleAndWordType(word, locale.locale, wordType.name)
-            .orElse(
-                Resource(
-                    word = word,
-                    pictureFileUrl = pictureWithWordFileUrl.format(word),
-                    locale = locale.locale
-                )
-            )
+            .orElse(Resource(word = word, locale = locale.locale))
         resource.audioFileUrl = audioPath
         resource.wordType = wordType.name
         return resource
@@ -109,11 +99,10 @@ class SeriesMatrixRecordProcessor(
         extractWordGroups(record)
             .joinToString(StringUtils.SPACE, "<", ">") { it.first.toString() }
 
-    private fun extractTask(exercise: Exercise, answerOptions: MutableSet<Resource>): Task {
-        return Task(
+    private fun extractTask(exercise: Exercise, answerOptions: MutableSet<Resource>): Task =
+        Task(
             serialNumber = 2,
             answerOptions = answerOptions,
             exercise = exercise
         )
-    }
 }

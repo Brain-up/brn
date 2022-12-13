@@ -27,9 +27,6 @@ class SeriesWordsRecordProcessor(
     private val wordsService: WordsService
 ) : RecordProcessor<SeriesWordsRecord, Exercise> {
 
-    @Value(value = "\${brn.picture.file.default.path}")
-    private lateinit var pictureDefaultPath: String
-
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
 
@@ -78,7 +75,6 @@ class SeriesWordsRecordProcessor(
                 .orElse(
                     Resource(
                         word = word,
-                        pictureFileUrl = pictureDefaultPath.format(word),
                         locale = locale.locale,
                     )
                 )
