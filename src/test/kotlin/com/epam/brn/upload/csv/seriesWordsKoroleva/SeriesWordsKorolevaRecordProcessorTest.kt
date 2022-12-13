@@ -3,6 +3,7 @@ package com.epam.brn.upload.csv.seriesWordsKoroleva
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
+import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -10,7 +11,6 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.enums.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
@@ -80,8 +79,6 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             exerciseRepositoryMock,
             wordsServiceMock
         )
-
-        ReflectionTestUtils.setField(seriesWordsKorolevaRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", BrnLocale.RU.locale) } returns subGroupMock
