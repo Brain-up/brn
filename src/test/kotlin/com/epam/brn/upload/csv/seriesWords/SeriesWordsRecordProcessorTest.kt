@@ -79,7 +79,6 @@ internal class SeriesWordsRecordProcessorTest {
             wordsServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
         ReflectionTestUtils.setField(seriesWordsRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
@@ -286,7 +285,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "бал",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/бал.ogg",
-            pictureFileUrl = "pictures/бал.jpg"
         )
     }
 
@@ -295,7 +293,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "бум",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/бум.ogg",
-            pictureFileUrl = "pictures/бум.jpg"
         )
     }
 
@@ -304,7 +301,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "быль",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/быль.ogg",
-            pictureFileUrl = "pictures/быль.jpg"
         )
     }
 
@@ -313,7 +309,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "вить",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/вить.ogg",
-            pictureFileUrl = "pictures/вить.jpg"
         )
     }
 
@@ -322,7 +317,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "гад",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/гад.ogg",
-            pictureFileUrl = "pictures/гад.jpg"
         )
     }
 
@@ -331,7 +325,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/дуб.ogg",
-            pictureFileUrl = "pictures/дуб.jpg"
         )
     }
 }
