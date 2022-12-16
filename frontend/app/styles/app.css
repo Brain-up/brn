@@ -106,4 +106,13 @@ a[disabled] {
   width: 1200px;
   padding: 25px 40px 40px;
 }
+
+/* Bugfix: #2399 */
+#exercise-timer-slot {
+  margin-right: 100px;
+}
+#modal-close-button {
+  top: 20px;
+  right: 45px;
+}
 /*! purgecss end ignore */

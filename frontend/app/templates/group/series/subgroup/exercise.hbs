@@ -10,7 +10,7 @@
     {{will-destroy this.stopStatsTracking @model}}
   >
     {{! template-lint-disable no-inline-styles }}
-    <div class="fixed" style="top:25px;right:45px;">
+    <div class="fixed" id="modal-close-button">
       <LinkTo @route="group.series.subgroup" title={{t "navigation.come_back"}}>
         <svg
           width="32"
