@@ -6,9 +6,9 @@ import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.service.ContributorService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,15 +24,14 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/contributors")
-@Api(
-    value = "/contributors",
-    tags = ["Contributors"],
+@Tag(
+    name = "Contributors",
     description = "Contains actions over contributors of this project"
 )
 class ContributorController(val contributorService: ContributorService) {
 
     @GetMapping
-    @ApiOperation("Get all contributors by type")
+    @Operation(summary = "Get all contributors by type")
     fun getContributors(
         @RequestParam(name = "locale", required = false, defaultValue = "ru-ru") locale: String,
         @RequestParam(name = "type", required = false) type: ContributorType?,
@@ -47,21 +46,21 @@ class ContributorController(val contributorService: ContributorService) {
         )
 
     @PostMapping
-    @ApiOperation("Add a new contributor")
+    @Operation(summary = "Add a new contributor")
     @RolesAllowed(BrnRole.ADMIN)
     fun createContributor(
-        @ApiParam(value = "Contributor data", required = true)
+        @Parameter(description = "Contributor data", required = true)
         @Valid @RequestBody contributorDto: ContributorRequest
     ): ResponseEntity<BrnResponse<ContributorResponse>> =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BrnResponse(data = contributorService.createContributor(contributorDto)))
 
     @PutMapping("/{contributorId}")
-    @ApiOperation("Update an existing contributor")
+    @Operation(summary = "Update an existing contributor")
     @RolesAllowed(BrnRole.ADMIN)
     fun updateContributor(
         @PathVariable("contributorId") contributorId: Long,
-        @ApiParam(value = "Contributor data", required = true)
+        @Parameter(description = "Contributor data", required = true)
         @Valid @RequestBody contributorDto: ContributorRequest
     ): ResponseEntity<BrnResponse<ContributorResponse>> =
         ResponseEntity.ok()

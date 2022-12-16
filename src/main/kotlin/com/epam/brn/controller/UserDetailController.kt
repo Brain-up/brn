@@ -8,8 +8,8 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
@@ -30,7 +30,7 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/users")
-@Api(value = "/users", tags = ["Users"], description = "Contains actions over user details and accounts")
+@Tag(name = "Users", description = "Contains actions over user details and accounts")
 @RolesAllowed(BrnRole.USER)
 class UserDetailController(
     private val userAccountService: UserAccountService,
@@ -38,7 +38,7 @@ class UserDetailController(
     private val userAnalyticsService: UserAnalyticsService
 ) {
     @GetMapping
-    @ApiOperation("Get all users with/without analytic data")
+    @Operation(summary = "Get all users with/without analytic data")
     @RolesAllowed(BrnRole.ADMIN)
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
@@ -51,7 +51,7 @@ class UserDetailController(
     }
 
     @GetMapping(value = ["/{userId}"])
-    @ApiOperation("Get user by id")
+    @Operation(summary = "Get user by id")
     @RolesAllowed(BrnRole.ADMIN)
     fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<BrnResponse<List<UserAccountResponse>>> {
         return ResponseEntity.ok()
@@ -59,25 +59,25 @@ class UserDetailController(
     }
 
     @GetMapping(value = ["/current"])
-    @ApiOperation("Get current logged in user")
+    @Operation(summary = "Get current logged in user")
     fun getCurrentUser() = ResponseEntity.ok()
         .body(BrnResponse(data = listOf(userAccountService.getUserFromTheCurrentSession())))
 
     @PatchMapping(value = ["/current"])
-    @ApiOperation("Update current logged in user")
+    @Operation(summary = "Update current logged in user")
     fun updateCurrentUser(@Validated @RequestBody userAccountChangeRequest: UserAccountChangeRequest) =
         ResponseEntity.ok()
             .body(BrnResponse(data = userAccountService.updateCurrentUser(userAccountChangeRequest)))
 
     @PutMapping(value = ["/current/avatar"])
-    @ApiOperation("Update avatar current user")
+    @Operation(summary = "Update avatar current user")
     fun updateAvatarCurrentUser(
         @RequestParam("avatar", required = true) avatar: String
     ) = ResponseEntity.ok()
         .body(BrnResponse(data = userAccountService.updateAvatarForCurrentUser(avatar)))
 
     @PostMapping(value = ["/{userId}/headphones"])
-    @ApiOperation("Add headphones to the user")
+    @Operation(summary = "Add headphones to the user")
     @RolesAllowed(BrnRole.ADMIN)
     fun addHeadphonesToUser(
         @PathVariable("userId", required = true) userId: Long,
@@ -86,13 +86,13 @@ class UserDetailController(
         .body(BrnResponse(data = userAccountService.addHeadphonesToUser(userId, headphones)))
 
     @PostMapping(value = ["/current/headphones"])
-    @ApiOperation("Add headphones to current user")
+    @Operation(summary = "Add headphones to current user")
     fun addHeadphonesToCurrentUser(@Validated @RequestBody headphones: HeadphonesDto) =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BrnResponse(data = userAccountService.addHeadphonesToCurrentUser(headphones)))
 
     @DeleteMapping(value = ["/current/headphones/{headphonesId}"])
-    @ApiOperation("Delete headphone by id")
+    @Operation(summary = "Delete headphone by id")
     fun deleteHeadphonesForCurrentUser(
         @PathVariable(value = "headphonesId") headphonesId: Long
     ): ResponseEntity<BrnResponse<Any>> {
@@ -101,7 +101,7 @@ class UserDetailController(
     }
 
     @GetMapping(value = ["/{userId}/headphones"])
-    @ApiOperation("Get all user's headphones")
+    @Operation(summary = "Get all user's headphones")
     @RolesAllowed(BrnRole.ADMIN)
     fun getAllHeadphonesForUser(
         @PathVariable("userId", required = true) userId: Long
@@ -110,20 +110,20 @@ class UserDetailController(
         .body(BrnResponse(data = userAccountService.getAllHeadphonesForUser(userId).toList()))
 
     @GetMapping(value = ["/current/headphones"])
-    @ApiOperation("Get all headphones for current user")
+    @Operation(summary = "Get all headphones for current user")
     fun getAllHeadphonesForUser() = ResponseEntity
         .ok()
         .body(BrnResponse(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
 
     @GetMapping("/current/{patientId}/doctor")
-    @ApiOperation("Get patient's doctor")
+    @Operation(summary = "Get patient's doctor")
     fun getDoctorAssignedToPatient(@PathVariable patientId: Long) =
         ResponseEntity.ok()
             .body(BrnResponse(data = doctorService.getDoctorAssignedToPatient(patientId)))
 
     @DeleteMapping("/current/{patientId}/doctor")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("Delete doctor from patient")
+    @Operation(summary = "Delete doctor from patient")
     fun deleteDoctorFromPatient(@PathVariable patientId: Long) =
         doctorService.deleteDoctorFromPatientAsPatient(patientId)
 }
