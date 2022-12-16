@@ -35,8 +35,8 @@ services:
   brn_fe:
     image: brainup/brn-frontend:latest
     container_name: brn_fe
-    ports:
-      - 80:80
+#    ports:
+#      - 80:80
     depends_on:
       - brn
   brn_fe_with_tls:
