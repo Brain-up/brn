@@ -102,6 +102,7 @@ export default class AudioService extends Service {
     if (this.isPlaying) {
       return;
     }
+    
     this.stats.addEvent(StatEvents.PlayAudio);
     await this.setAudioElements(filesToPlay as string[]);
     await this.playAudio();
@@ -285,6 +286,7 @@ export default class AudioService extends Service {
       if (this.isAudioBuffer(buffer)) {
         results.push(createSource(context, buffer as AudioBuffer));
       } else if (this.isToneObject(buffer)) {
+
         results.push(
           (
             await this.createToneSources([buffer] as unknown as SignalModel[])

@@ -1,6 +1,7 @@
+import type { ToneObject } from 'brn/components/audio-player/component';
 import { urlForImage, urlForAudio } from 'brn/utils/file-url';
 export default class AnswerOption {
-  audioFileUrl: string | null = null;
+  audioFileUrl: string | null | ToneObject = null;
   id: string | null = null;
   word = '';
   wordPronounce = '';

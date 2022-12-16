@@ -12,6 +12,7 @@ import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
 import TaskModel from 'brn/models/task';
+import type AnswerOption from 'brn/utils/answer-option';
 
 export default class TaskPlayerComponent extends Component {
   @service('audio') audio!: AudioService;
@@ -91,7 +92,7 @@ export default class TaskPlayerComponent extends Component {
   get taskModelName() {
     return this.task.constructor.modelName;
   }
-  get orderedPlaylist() {
+  get orderedPlaylist(): AnswerOption[] {
     const { answerOptions, selectedItemsOrder, normalizedAnswerOptions } =
       this.task;
     // for ordered tasks we need to align audio stream with object order;
@@ -130,13 +131,19 @@ export default class TaskPlayerComponent extends Component {
       this.mode = MODES.LISTEN;
       for (const option of this.orderedPlaylist) {
         this.activeWord = option.word;
-        const useGeneratedUrl =
-          option.audioFileUrl && this.task.usePreGeneratedAudio;
-        yield this.audio.setAudioElements([
-          useGeneratedUrl
-            ? option.audioFileUrl
-            : this.audio.audioUrlForText(option.wordPronounce ?? option.word),
-        ]);
+        // tone object case
+        if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
+          yield this.audio.setAudioElements([option.audioFileUrl]);
+        } else {
+          const useGeneratedUrl =
+            option.audioFileUrl && this.task.usePreGeneratedAudio;
+          yield this.audio.setAudioElements([
+            useGeneratedUrl
+              ? option.audioFileUrl!
+              : this.audio.audioUrlForText(option.wordPronounce ?? option.word),
+          ]);
+        }
+
         yield this.audio.playAudio();
         yield timeout(1500);
         this.activeWord = null;
@@ -182,13 +189,20 @@ export default class TaskPlayerComponent extends Component {
             ({ word }: any) => word === playText,
           );
           if (option) {
-            const useGeneratedUrl =
+
+            if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
+              yield this.audio.setAudioElements([option.audioFileUrl]);
+            } else {
+              const useGeneratedUrl =
               option.audioFileUrl && this.task.usePreGeneratedAudio;
-            yield this.audio.setAudioElements([
-              useGeneratedUrl
-                ? (option.audioFileUrl as string)
-                : this.audio.audioUrlForText(option.wordPronounce),
-            ]);
+
+              yield this.audio.setAudioElements([
+                useGeneratedUrl
+                  ? (option.audioFileUrl as string)
+                  : this.audio.audioUrlForText(option.wordPronounce),
+              ]);
+            }
+            
             yield this.audio.playAudio();
           }
         }
