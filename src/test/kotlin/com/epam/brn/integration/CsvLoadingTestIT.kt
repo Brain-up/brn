@@ -11,8 +11,6 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.AudioFilesGenerationService
-import com.epam.brn.service.WordsService
 import com.epam.brn.service.load.AudiometryLoader
 import com.epam.brn.service.load.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
@@ -37,8 +35,6 @@ class CsvLoadingTestIT : BaseIT() {
             passwordEncoder: PasswordEncoder,
             roleService: RoleService,
             uploadService: CsvUploadService,
-            audioFilesGenerationService: AudioFilesGenerationService,
-            wordsService: WordsService,
         ) = InitialDataLoader(
             resourceLoader,
             userAccountRepository,
@@ -46,8 +42,6 @@ class CsvLoadingTestIT : BaseIT() {
             passwordEncoder,
             roleService,
             uploadService,
-            audioFilesGenerationService,
-            wordsService,
         )
     }
 
