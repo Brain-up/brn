@@ -73,7 +73,7 @@ class CloudController(
     }
 
     @PostMapping(value = ["/upload/contributor/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
-    @ApiOperation("Upload picture of contributor")
+    @Operation(summary = "Upload picture of contributor")
     @RolesAllowed(BrnRole.ADMIN)
     fun uploadContributorPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile,
