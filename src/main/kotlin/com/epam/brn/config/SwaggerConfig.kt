@@ -30,21 +30,19 @@ class SwaggerConfig {
         return OperationCustomizer { operation, handlerMethod ->
             var allowedRoles: Array<String>? = null
             var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
-            if (rolesAllowedAnnotation != null) {
+            if (rolesAllowedAnnotation != null)
                 allowedRoles = rolesAllowedAnnotation.value
-            } else {
+            else {
                 rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
-                if (rolesAllowedAnnotation != null) {
+                if (rolesAllowedAnnotation != null)
                     allowedRoles = rolesAllowedAnnotation.value
-                }
             }
 
             val sb = StringBuilder("Roles: ")
-            if (allowedRoles != null) {
+            if (allowedRoles != null)
                 sb.append("**${allowedRoles.joinToString(",")}**")
-            } else {
+            else
                 sb.append("**PUBLIC**")
-            }
 
             operation.description?.let {
                 sb.append("<br/>")
@@ -57,9 +55,5 @@ class SwaggerConfig {
     }
 
     @Bean
-    fun sortTagsCustomiser(): OpenApiCustomiser {
-        return OpenApiCustomiser { openApi ->
-            openApi.tags.sortBy { it.name }
-        }
-    }
+    fun sortTagsCustomiser(): OpenApiCustomiser = OpenApiCustomiser { openApi -> openApi.tags.sortBy { it.name } }
 }
