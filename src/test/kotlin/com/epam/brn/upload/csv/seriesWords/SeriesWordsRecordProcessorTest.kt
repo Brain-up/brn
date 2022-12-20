@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
-import java.util.Random
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesWordsRecordProcessorTest {
@@ -91,7 +90,6 @@ internal class SeriesWordsRecordProcessorTest {
                 ofType(String::class)
             )
         } returns Optional.empty()
-        every { wordsServiceMock.addWordsToDictionary(ofType(BrnLocale::class), any()) } returns Unit
         every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, noiseLevel) } returns Optional.empty()
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
@@ -131,7 +129,6 @@ internal class SeriesWordsRecordProcessorTest {
 
     // @Test
     fun `should create correct task`() {
-        seriesWordsRecordProcessor.random = Random(800)
         val expected = createExercise().tasks.first()
 
         val actual = seriesWordsRecordProcessor.process(

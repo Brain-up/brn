@@ -1,8 +1,8 @@
 level,code,exerciseName,words,noiseLevel,noiseUrl
 1,family,Family,(mom sister grandson),0,
-2,family,Family,(dad brother  grandfather),0,
+2,family,Family,(dad brother grandfather),0,
 3,family,Family,(boy father grandmother),0,
-4,family,Family,(son boy sister mother girlfriend  grandparents),0,
+4,family,Family,(son boy sister mother girlfriend grandparents),0,
 5,family,Family,(girl daddy mommy cousin boyfriend grandchildren),0,
 6,family,Family,(uncle grandpa brother daughter stepsister grandfather),0,
 7,family,Family,(girl aunt grandma grandson stepbrother grandparents),0,
@@ -14,9 +14,9 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 13,family,Family,(aunt wife love bride sibling surname teenager patronymic father-in-law),0,
 14,family,Family,(boy girl child friend toddler orphan parents bridegroom daughter-in-law),0,
 15,family,Family /+voices/,(mom sister grandson),70,voices
-16,family,Family /+voices/,(dad brother  grandfather),70,voices
+16,family,Family /+voices/,(dad brother grandfather),70,voices
 17,family,Family /+voices/,(boy father grandmother),70,voices
-18,family,Family /+voices/,(son boy sister mother girlfriend  grandparents),70,voices
+18,family,Family /+voices/,(son boy sister mother girlfriend grandparents),70,voices
 19,family,Family /+voices/,(girl daddy mommy cousin boyfriend grandchildren),70,voices
 20,family,Family /+voices/,(uncle grandpa brother daughter stepsister grandfather),70,voices
 21,family,Family /+voices/,(girl aunt grandma grandson stepbrother grandparents),70,voices
@@ -69,16 +69,16 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 12,food,Food,(rice chop basil poultry seafood chocolate),0,
 13,food,Food,(crab peel donut eggplant sandwich vegetable mushroom strawberry watermelon),0,
 14,food,Food,(pork steam mustard apricot hamburger milkshake coconut gooseberry redcurrant),0,
-1,clothes,Clothes,(cap skirt  boots),0,
+1,clothes,Clothes,(cap skirt boots),0,
 2,clothes,Clothes,(hat coat scarf),0,
 3,clothes,Clothes,(dress shirt jeans),0,
-4,clothes,Clothes,(tie shorts gloves  buttons pocket mittens),0,
+4,clothes,Clothes,(tie shorts gloves buttons pocket mittens),0,
 5,clothes,Clothes,(bra socks jacket cotton leather collar),0,
 6,clothes,Clothes,(cap belt skirt jumper gloves mittens),0,
 7,clothes,Clothes,(hat vest coat T-shirt jacket bikini),0,
 8,clothes,Clothes,(belt shoes jeans raincoat pyjamas cardigan),0,
 9,clothes,Clothes,(zip bra dress hoodie sweater underwear),0,
-10,clothes,Clothes,(pants skirt gloves trousers sweatshirt  pyjamas),0,
+10,clothes,Clothes,(pants skirt gloves trousers sweatshirt pyjamas),0,
 11,clothes,Clothes,(tights T-shirt jumper sandals mittens footwear),0,
 12,clothes,Clothes,(silk boxers jacket sportswear cardigan trousers),0,
 13,clothes,Clothes,(wool vest shoes tights sneakers cotton leather flowered patterned),0,
@@ -120,25 +120,25 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 7,math,Math,(star cross sum hundred thousand million),0,
 8,math,Math,(arc oval area number divide formula),0,
 9,math,Math,(half angle circle count triangle compare),0,
-10,math,Math,(shape arrow square length  multiply rectangle),0,
+10,math,Math,(shape arrow square length multiply rectangle),0,
 11,math,Math,(cube number equal arithmetic geometry frequency),0,
 12,math,Math,(width numeral column classify division interval),0,
-13,math,Math,(odd even length shape equal  square number perimeter hierarchy),0,
+13,math,Math,(odd even length shape equal square number perimeter hierarchy),0,
 14,math,Math,(graph hundred thousand million frequency arithmetic geometry multiplication measurement),0,
-15,math,Math  /+crowd fon/,(one three seven),70,crowd
-16,math,Math  /+crowd fon/,(two four zero),70,crowd
-17,math,Math  /+crowd fon/,(six nine eight),70,crowd
-18,math,Math  /+crowd fon/,(ten twelve thirteen fifteen seventeen nineteen),70,crowd
-19,math,Math  /+crowd fon/,(eleven fourteen sixteen eighteen twenty forty),70,crowd
-20,math,Math  /+crowd fon/,(sixty eighty thirty fifty seventy ninety),70,crowd
-21,math,Math  /+crowd fon/,(star cross sum hundred thousand million),70,crowd
-22,math,Math  /+crowd fon/,(arc oval area number divide formula),70,crowd
-23,math,Math  /+crowd fon/,(half angle circle count triangle compare),70,crowd
-24,math,Math  /+crowd fon/,(shape arrow square length  multiply rectangle),70,crowd
-25,math,Math  /+crowd fon/,(cube number equal arithmetic geometry frequency),70,crowd
-26,math,Math  /+crowd fon/,(width numeral column classify division interval),70,crowd
-27,math,Math  /+crowd fon/,(odd even length shape equal  square number perimeter hierarchy),70,crowd
-28,math,Math  /+crowd fon/,(graph hundred thousand million frequency arithmetic geometry multiplication measurement),70,crowd
+15,math,Math /+crowd fon/,(one three seven),70,crowd
+16,math,Math /+crowd fon/,(two four zero),70,crowd
+17,math,Math /+crowd fon/,(six nine eight),70,crowd
+18,math,Math /+crowd fon/,(ten twelve thirteen fifteen seventeen nineteen),70,crowd
+19,math,Math /+crowd fon/,(eleven fourteen sixteen eighteen twenty forty),70,crowd
+20,math,Math /+crowd fon/,(sixty eighty thirty fifty seventy ninety),70,crowd
+21,math,Math /+crowd fon/,(star cross sum hundred thousand million),70,crowd
+22,math,Math /+crowd fon/,(arc oval area number divide formula),70,crowd
+23,math,Math /+crowd fon/,(half angle circle count triangle compare),70,crowd
+24,math,Math /+crowd fon/,(shape arrow square length multiply rectangle),70,crowd
+25,math,Math /+crowd fon/,(cube number equal arithmetic geometry frequency),70,crowd
+26,math,Math /+crowd fon/,(width numeral column classify division interval),70,crowd
+27,math,Math /+crowd fon/,(odd even length shape equal square number perimeter hierarchy),70,crowd
+28,math,Math /+crowd fon/,(graph hundred thousand million frequency arithmetic geometry multiplication measurement),70,crowd
 1,pets,Pets,(dog cat pig),0,
 2,pets,Pets,(cow fish duck),0,
 3,pets,Pets,(cat duck turtle goat deer horse),0,
@@ -237,7 +237,7 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 5,walk,Tour,(photo depart settlers postcard monument activities heritage attractions exhibition),0,
 1,weather,Weather,(hot icy coolness),0,
 2,weather,Weather,(cold sunny blizzard),0,
-3,weather,Weather,(fog cool  rainbow),0,
+3,weather,Weather,(fog cool rainbow),0,
 4,weather,Weather,(rain clear raindrop season drought coolness),0,
 5,weather,Weather,(fall heat cool snowstorm cloudy freezing),0,
 6,weather,Weather,(sun hail season thunder sunshine flurries),0,
@@ -269,7 +269,7 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 4,body,Body,(eye neck lips hand chest teeth),0,
 5,body,Body,(toe eat smell hear bone heart),0,
 6,body,Body,(ribs hips brain hair body taste),0,
-7,body,Body,(back hand touch bite head cheek liver),0,
+7,body,Body,(back touch bite head cheek liver),0,
 8,body,Body,(run chin mouth organ waist throat),0,
 9,body,Body,(lift skull carry elbow finger spine),0,
 10,body,Body,(leg brain walk face breathe tongue),0,
@@ -314,9 +314,9 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 7,hospital,Hospital,(flu plaster epilepsy injury abnormal poison),0,
 8,hospital,Hospital,(cold broken failure allergy suffering fracture),0,
 9,hospital,Hospital,(shot mental prescribe immune organism counseling),0,
-10,hospital,Hospital,(hive breech  memory  coroner seizure prevalence),0,
+10,hospital,Hospital,(hive breech memory coroner seizure prevalence),0,
 11,hospital,Hospital,(dose wound backache fracture progressive dehydrate),0,
-12,hospital,Hospital,(brace asthma surgery  bandage concussion infection),0,
+12,hospital,Hospital,(brace asthma surgery bandage concussion infection),0,
 13,hospital,Hospital,(prone swollen nervous converge diagnosis operation respiratory nauseous tranquilizer),0,
 14,hospital,Hospital,(nurse tumor disorder malignant emergency disability deterioration homeostasis intravenous),0,
 15,hospital,Hospital /+crowd fon/,(dull fluid vein),70,crowd
@@ -324,11 +324,11 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 17,hospital,Hospital /+crowd fon/,(lump vomit benign),70,crowd
 18,hospital,Hospital /+crowd fon/,(germ cancer muscle fever throat syringe),70,crowd
 19,hospital,Hospital /+crowd fon/,(ward cough anemic injured bruise patient),70,crowd
-20,hospital,Hospital /+crowd fon/,(rash tablet  acute febrile systemic arthritis),70,crowd
+20,hospital,Hospital /+crowd fon/,(rash tablet acute febrile systemic arthritis),70,crowd
 21,hospital,Hospital /+crowd fon/,(flu plaster epilepsy injury abnormal poison),70,crowd
 22,hospital,Hospital /+crowd fon/,(cold broken failure allergy suffering fracture),70,crowd
 23,hospital,Hospital /+crowd fon/,(shot mental prescribe immune organism counseling),70,crowd
-24,hospital,Hospital /+crowd fon/,(hive breech  memory coroner seizure prevalence),70,crowd
+24,hospital,Hospital /+crowd fon/,(hive breech memory coroner seizure prevalence),70,crowd
 25,hospital,Hospital /+crowd fon/,(dose wound backache fracture progressive dehydrate),70,crowd
 26,hospital,Hospital /+crowd fon/,(brace asthma surgery bandage concussion infection),70,crowd
 27,hospital,Hospital /+crowd fon/,(prone swollen nervous converge diagnosis operation respiratory nauseous tranquilizer),70,crowd
@@ -339,7 +339,7 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 4,feelings,Feelings,(feel amused withdrawn worried astonished combative),0,
 5,feelings,Feelings,(hope respect indignant sneaky miserable determined),0,
 6,feelings,Feelings,(hate tired playful amazing exhausted gratitude),0,
-7,feelings,Feelings,(shock unfair unhappy peaceful  hysterical satisfied),0,
+7,feelings,Feelings,(shock unfair unhappy peaceful hysterical satisfied),0,
 8,feelings,Feelings,(calm thankful serious happiness irritated threatening),0,
 9,feelings,Feelings,(happy afraid dislike loathing serene satisfaction),0,
 10,feelings,Feelings,(modest grateful serene hopeful confused surprised),0,
@@ -360,7 +360,7 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 1,interior,Interior,(hall bed cots),0,
 2,interior,Interior,(rug desk sofa),0,
 3,interior,Interior,(den light cosy),0,
-4,interior,Interior,(sink door screen shower towel  carpeted),0,
+4,interior,Interior,(sink door screen shower towel carpeted),0,
 5,interior,Interior,(loft attic kitchen pillow bureau lounger),0,
 6,interior,Interior,(dark table faucet mirror toilet beanbag),0,
 7,interior,Interior,(lamp vase niche futons cabinet recliner),0,
@@ -386,13 +386,13 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 13,kitchen,Kitchen,(sink pantry toaster barbeque squeeze cookware silverware dishwasher counter-top),0,
 14,kitchen,Kitchen,(fridge kitchen corkscrew container homemade microwave refrigerator tablespoon coffeemaker),0,
 1,music,Music,(drum cello ballad),0,
-2,music,Music,(sing  duet genre),0,
+2,music,Music,(sing duet genre),0,
 3,music,Music,(horn banjo lyric),0,
 4,music,Music,(harp voice piano volume guitar violin),0,
 5,music,Music,(bass dance diction libretto lyrical melody),0,
 6,music,Music,(folk ballet recorder symphony keyboard accordion),0,
 7,music,Music,(pitch program saxophone xylophone harmonica imrovise),0,
-8,music,Music,(rhythm vocal monotone ukulele  baritone orchestra),0,
+8,music,Music,(rhythm vocal monotone ukulele baritone orchestra),0,
 9,music,Music,(trio phrase monotone overture resonate sequence vibration tambourine annotation),0,
 10,music,Music,(beat maracas articulation masterpiece variation virtuoso interpretation impressionistic accompaniment),0,
 1,birds,Birds,(gull owl swan),0,
@@ -424,16 +424,16 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 12,actions,Actions,(turn climb sing dream write sleep),0,
 13,actions,Actions,(think ski draw ride speak close break cough whistle),0,
 14,actions,Actions,(yank wash comb laugh fight teach sneeze create describe),0,
-1,fruit,Fruit,(fig mango banana),0,
-2,fruit,Fruit,(plum lychee orange),0,
-3,fruit,Fruit,(apple melon guava),0,
-4,fruit,Fruit,(fruit grape quince papaya nectarine avocado),0,
-5,fruit,Fruit,(lime olives guava passion jack-fruit dragon-fruit),0,
-6,fruit,Fruit,(fig pear apricot banana raspberry pineapple),0,
-7,fruit,Fruit,(peach quince blackberry tamarind avocado kiwifruit),0,
-8,fruit,Fruit,(cherry melon strawberry nectarine grapefruit passion-fruit),0,
-9,fruit,Fruit,(kiwi apricot papaya blueberry mandarin pineapple jack-fruit watermelon pomegranate),0,
-10,fruit,Fruit,(plum lemon raspberry coconut dragon-fruit watermelon blackcurrant gooseberry boysenberry),0,
+1,fruit,Fruits,(fig mango banana),0,
+2,fruit,Fruits,(plum lychee orange),0,
+3,fruit,Fruits,(apple melon guava),0,
+4,fruit,Fruits,(fruit grape quince papaya nectarine avocado),0,
+5,fruit,Fruits,(lime olives guava passion jack-fruit dragon-fruit),0,
+6,fruit,Fruits,(fig pear apricot banana raspberry pineapple),0,
+7,fruit,Fruits,(peach quince blackberry tamarind avocado kiwifruit),0,
+8,fruit,Fruits,(cherry melon strawberry nectarine grapefruit passion-fruit),0,
+9,fruit,Fruits,(kiwi apricot papaya blueberry mandarin pineapple jack-fruit watermelon pomegranate),0,
+10,fruit,Fruits,(plum lemon raspberry coconut dragon-fruit watermelon blackcurrant gooseberry boysenberry),0,
 1,plants,Plants,(ivy grass flower),0,
 2,plants,Plants,(rose tree poppy),0,
 3,plants,Plants,(herbs bush tulip),0,
@@ -451,7 +451,7 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 1,trees,Trees,(sal neem pith),0,
 2,trees,Trees,(oak palm forest),0,
 3,trees,Trees,(pine jute sandal bamboo walnut acacia),0,
-4,trees,Trees,(tree leaf  peepal banyan rosewood heartwood),0,
+4,trees,Trees,(tree leaf peepal banyan rosewood heartwood),0,
 5,trees,Trees,(teak bark nutmeg polyalthia sandalwood eucalyptus deciduous coniferous underbrush),0,
 1,sport,Sports,(ball fan rugby),0,
 2,sport,Sports,(golf beat snooker),0,
