@@ -32,7 +32,8 @@ class SeriesWordsRecordProcessor(
 
     var random = Random()
 
-    override fun isApplicable(record: Any): Boolean = record is SeriesWordsRecord
+    override fun isApplicable(record: Any): Boolean =
+        record is SeriesWordsRecord
 
     @Transactional
     override fun process(records: List<SeriesWordsRecord>, locale: BrnLocale): List<Exercise> {

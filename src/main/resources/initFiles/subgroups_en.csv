@@ -1,7 +1,7 @@
 seriesType, level, code, name, description
 DURATION_SIGNALS,1,durationSignals,Length signals,
 FREQUENCY_SIGNALS,1,frequencySignals,Frequency signals,
-SINGLE_SIMPLE_WORDS ,1,family,Family,Family words
+SINGLE_SIMPLE_WORDS,1,family,Family,Family words
 SINGLE_SIMPLE_WORDS,2,home,Home,Home words
 SINGLE_SIMPLE_WORDS,3,food,Food,
 SINGLE_SIMPLE_WORDS,4,clothes,Clothes,
@@ -21,6 +21,9 @@ SINGLE_SIMPLE_WORDS,17,game,Game,
 SINGLE_SIMPLE_WORDS,18,adventure,Adventure,
 SINGLE_SIMPLE_WORDS,19,hospital,Hospital,
 SINGLE_SIMPLE_WORDS,20,feelings,Feelings,
+SINGLE_SIMPLE_WORDS,21,toys,Toys,
+SINGLE_SIMPLE_WORDS,22,insects,Insects,
+SINGLE_SIMPLE_WORDS,23,interior,Interior,
 WORDS_SEQUENCES,1,words_2_from_6,2 words from 6, Matrix with 2 columns and 3 rows
 WORDS_SEQUENCES,2,words_3_from_6,3 words from 6, Matrix with 3 columns and 3 rows
 WORDS_SEQUENCES,3,words_3_from_9,3 words from 9, Matrix with 3 columns and 3 rows
