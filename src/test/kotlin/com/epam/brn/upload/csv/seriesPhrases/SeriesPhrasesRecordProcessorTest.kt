@@ -21,10 +21,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
@@ -44,11 +42,6 @@ internal class SeriesPhrasesRecordProcessorTest {
 
     @MockK
     private lateinit var wordsService: WordsService
-
-    @BeforeEach
-    fun setup() {
-        ReflectionTestUtils.setField(seriesPhrasesRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
-    }
 
     @Test
     fun `should create correct exercise`() {

@@ -25,7 +25,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
@@ -84,7 +83,6 @@ internal class SeriesMatrixRecordProcessorTest {
             taskRepositoryMock,
             wordsServiceMock
         )
-        ReflectionTestUtils.setField(seriesMatrixRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
         every { subGroupRepositoryMock.findByCodeAndLocale("code", BrnLocale.RU.locale) } returns subGroupMock
         every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
@@ -192,9 +190,7 @@ internal class SeriesMatrixRecordProcessorTest {
             template = "<OBJECT OBJECT_ACTION>",
             level = 1
         )
-
         exercise.addTask(createTask(exercise))
-
         return exercise
     }
 
@@ -217,7 +213,6 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "девочка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "audio/ogg/filipp/девочка.ogg",
             pictureFileUrl = "pictures/withWord/девочка.jpg"
         )
     }
@@ -226,7 +221,6 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "бабушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "audio/ogg/filipp/бабушка.ogg",
             pictureFileUrl = "pictures/withWord/бабушка.jpg"
         )
     }
@@ -235,7 +229,6 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "дедушка",
             wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "audio/ogg/filipp/дедушка.ogg",
             pictureFileUrl = "pictures/withWord/дедушка.jpg"
         )
     }
@@ -244,7 +237,6 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "сидит",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "audio/ogg/filipp/сидит.ogg",
             pictureFileUrl = "pictures/withWord/сидит.jpg"
         )
     }
@@ -253,7 +245,6 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "лежит",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "audio/ogg/filipp/лежит.ogg",
             pictureFileUrl = "pictures/withWord/лежит.jpg"
         )
     }
@@ -262,7 +253,6 @@ internal class SeriesMatrixRecordProcessorTest {
         return Resource(
             word = "идет",
             wordType = WordType.OBJECT_ACTION.toString(),
-            audioFileUrl = "audio/ogg/filipp/идет.ogg",
             pictureFileUrl = "pictures/withWord/идет.jpg"
         )
     }
