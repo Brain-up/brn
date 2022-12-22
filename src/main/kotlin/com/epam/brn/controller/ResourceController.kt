@@ -5,8 +5,8 @@ import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ResourceService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PatchMapping
@@ -18,12 +18,12 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/resources")
-@Api(value = "/resources", tags = ["Resources"], description = "Contains actions over resources")
+@Tag(name = "Resources", description = "Contains actions over resources")
 @RolesAllowed(BrnRole.ADMIN)
 class ResourceController(val resourceService: ResourceService) {
 
     @PatchMapping("/{id}")
-    @ApiOperation("Update resource description by resource id")
+    @Operation(summary = "Update resource description by resource id")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest

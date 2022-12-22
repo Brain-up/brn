@@ -9,9 +9,9 @@ import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.upload.CsvUploadService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -30,7 +30,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/exercises")
-@Api(value = "/exercises", tags = ["Exercises"], description = "Contains actions over exercises")
+@Tag(name = "Exercises", description = "Contains actions over exercises")
 @RolesAllowed(BrnRole.USER)
 class ExerciseController(
     @Autowired val exerciseService: ExerciseService,
@@ -39,17 +39,17 @@ class ExerciseController(
 ) {
 
     @PostMapping
-    @ApiOperation("Create new exercise for existing subgroup")
+    @Operation(summary = "Create new exercise for existing subgroup")
     @RolesAllowed(BrnRole.ADMIN)
     fun createExercise(
-        @ApiParam(value = "Exercise data", required = true)
+        @Parameter(description = "Exercise data", required = true)
         @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
     ): ResponseEntity<BrnResponse<ExerciseDto>> =
         ResponseEntity.status(HttpStatus.CREATED)
             .body(BrnResponse(data = exerciseService.createExercise(exerciseCreateDto)))
 
     @GetMapping
-    @ApiOperation("Get exercises for subgroup with tasks. If called by current user, availability calculation is included")
+    @Operation(summary = "Get exercises for subgroup with tasks. If called by current user, availability calculation is included")
     fun getExercisesBySubGroup(
         @RequestParam(
             value = "subGroupId",
@@ -65,7 +65,7 @@ class ExerciseController(
     }
 
     @GetMapping(value = ["/{exerciseId}"])
-    @ApiOperation("Get exercise by id")
+    @Operation(summary = "Get exercise by id")
     fun getExercisesByID(
         @PathVariable("exerciseId") exerciseId: Long
     ): ResponseEntity<BrnResponse<ExerciseDto>> {
@@ -74,7 +74,7 @@ class ExerciseController(
     }
 
     @GetMapping(value = ["/byWord"])
-    @ApiOperation("Get exercises containing specified word")
+    @Operation(summary = "Get exercises containing specified word")
     @RolesAllowed(BrnRole.ADMIN)
     fun getExercisesByWord(
         @RequestParam(
@@ -86,7 +86,7 @@ class ExerciseController(
     }
 
     @PostMapping(value = ["/byIds"])
-    @ApiOperation("Get available exercise ids for current user by input ids which have same subgroup")
+    @Operation(summary = "Get available exercise ids for current user by input ids which have same subgroup")
     fun getExercisesByIds(
         @Validated @RequestBody exerciseRequest: ExerciseRequest
     ): ResponseEntity<BrnResponse<List<Long>>> {
@@ -95,13 +95,13 @@ class ExerciseController(
     }
 
     @PutMapping(value = ["/{exerciseId}/active/{active}"])
-    @ApiOperation("Update active status of the exercise")
+    @Operation(summary = "Update active status of the exercise")
     fun updateExerciseStatus(@PathVariable("exerciseId") exerciseId: Long, @PathVariable("active") active: Boolean) {
         exerciseService.updateActiveStatus(exerciseId, active)
     }
 
     @PostMapping("/loadTasksFile")
-    @ApiOperation("Load task file to series")
+    @Operation(summary = "Load task file to series")
     @RolesAllowed(BrnRole.ADMIN)
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,

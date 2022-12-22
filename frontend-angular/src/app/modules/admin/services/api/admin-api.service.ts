@@ -124,7 +124,7 @@ export class AdminApiService {
   }
 
   public getSwaggerUi(): Observable<any> {
-    return this.httpClient.get('/api/v2/api-docs?group=all', {
+    return this.httpClient.get('/api/v3/api-docs', {
       responseType: 'text',
     });
   }
