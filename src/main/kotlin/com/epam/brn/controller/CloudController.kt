@@ -4,8 +4,8 @@ import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.CloudUploadService
 import com.epam.brn.service.cloud.CloudService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.HttpStatus
@@ -25,7 +25,7 @@ import javax.annotation.security.RolesAllowed
  */
 @RestController
 @RequestMapping("/cloud")
-@Api(value = "/cloud", tags = ["Cloud"], description = "Contains actions for cloud upload and bucket listing")
+@Tag(name = "Cloud", description = "Contains actions for cloud upload and bucket listing")
 @ConditionalOnProperty(name = ["cloud.provider"])
 @RolesAllowed(BrnRole.USER)
 class CloudController(
@@ -34,7 +34,7 @@ class CloudController(
 ) {
 
     @GetMapping("/upload")
-    @ApiOperation("Get cloud upload form")
+    @Operation(summary = "Get cloud upload form")
     @RolesAllowed(BrnRole.ADMIN)
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BrnResponse<Map<String, Any>>> {
@@ -45,26 +45,26 @@ class CloudController(
     }
 
     @GetMapping("/url")
-    @ApiOperation("Get cloud bucket url")
+    @Operation(summary = "Get cloud bucket url")
     @Throws(Exception::class)
     fun bucketUrl(): ResponseEntity<BrnResponse<String>> =
         ResponseEntity.ok(BrnResponse(cloudService.bucketUrl()))
 
     @GetMapping("/baseFileUrl")
-    @ApiOperation("Get cloud base file url")
+    @Operation(summary = "Get cloud base file url")
     @Throws(Exception::class)
     fun baseFileUrl(): ResponseEntity<BrnResponse<String>> =
         ResponseEntity.ok(BrnResponse(cloudService.baseFileUrl()))
 
     @GetMapping("/folders")
-    @ApiOperation("Get cloud folder structure")
+    @Operation(summary = "Get cloud folder structure")
     @RolesAllowed(BrnRole.ADMIN)
     @Throws(Exception::class)
     fun listBucket(): ResponseEntity<BrnResponse<List<String>>> =
         ResponseEntity.ok(BrnResponse(cloudService.getStorageFolders()))
 
     @PostMapping(value = ["/upload/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
-    @ApiOperation("Load unverified picture file to cloud storage")
+    @Operation(summary = "Load unverified picture file to cloud storage")
     fun loadUnverifiedPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile
     ): ResponseEntity<BrnResponse<Any>> {
@@ -73,7 +73,7 @@ class CloudController(
     }
 
     @PostMapping(value = ["/upload/contributor/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
-    @ApiOperation("Upload picture of contributor")
+    @Operation(summary = "Upload picture of contributor")
     @RolesAllowed(BrnRole.ADMIN)
     fun uploadContributorPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile,

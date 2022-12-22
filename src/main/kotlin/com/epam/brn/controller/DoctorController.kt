@@ -5,8 +5,8 @@ import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.response.UserAccountResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -22,26 +22,26 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/doctors")
-@Api(value = "/doctors", tags = ["Doctors"], description = "Contains actions for doctor")
+@Tag(name = "Doctors", description = "Contains actions for doctor")
 @RolesAllowed(BrnRole.SPECIALIST)
 class DoctorController(private val doctorService: DoctorService) {
 
     @PostMapping("/{doctorId}/patients")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("Add patient to doctor")
+    @Operation(summary = "Add patient to doctor")
     fun addPatientToDoctor(
         @PathVariable doctorId: Long,
         @Validated @RequestBody addPatientToDoctorRequest: AddPatientToDoctorRequest
     ) = doctorService.addPatientToDoctorAsDoctor(doctorId, addPatientToDoctorRequest.id)
 
     @GetMapping("/{doctorId}/patients")
-    @ApiOperation("Get all patients for doctor")
+    @Operation(summary = "Get all patients for doctor")
     fun getAllPatientForDoctor(@PathVariable doctorId: Long): ResponseEntity<BrnResponse<List<UserAccountResponse>>> =
         ResponseEntity.ok(BrnResponse(data = doctorService.getPatientsForDoctor(doctorId)))
 
     @DeleteMapping("/{doctorId}/patients/{patientId}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("Delete patient from doctor")
+    @Operation(summary = "Delete patient from doctor")
     fun deletePatientFromDoctor(@PathVariable doctorId: Long, @PathVariable patientId: Long) =
         doctorService.deleteDoctorFromPatientAsDoctor(doctorId, patientId)
 }

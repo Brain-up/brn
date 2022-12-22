@@ -5,8 +5,8 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -20,9 +20,8 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/study-history")
-@Api(
-    value = "/study-history",
-    tags = ["Study History"],
+@Tag(
+    name = "Study History",
     description = "Contains actions over the results of finished exercise"
 )
 @RolesAllowed(BrnRole.USER)
@@ -32,19 +31,19 @@ class StudyHistoryController(
 ) {
 
     @PostMapping
-    @ApiOperation("Save current user's study history")
+    @Operation(summary = "Save current user's study history")
     fun save(@Validated @RequestBody studyHistoryDto: StudyHistoryDto): ResponseEntity<StudyHistoryDto> {
         return ResponseEntity.ok().body(studyHistoryService.save(studyHistoryDto))
     }
 
     @GetMapping("/todayTimer")
-    @ApiOperation("Get current user's today work time: execution seconds")
+    @Operation(summary = "Get current user's today work time: execution seconds")
     fun getTodayWorkDurationInSeconds(): ResponseEntity<BrnResponse<Int>> {
         return ResponseEntity.ok().body(BrnResponse(data = studyHistoryService.getTodayTimer()))
     }
 
     @GetMapping("/monthHistories")
-    @ApiOperation("Get current user's month study histories by month and year")
+    @Operation(summary = "Get current user's month study histories by month and year")
     fun getMonthHistories(
         @RequestParam("month", required = true) month: Int,
         @RequestParam("year", required = true) year: Int,
