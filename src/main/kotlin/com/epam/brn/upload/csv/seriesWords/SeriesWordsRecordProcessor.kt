@@ -29,7 +29,7 @@ class SeriesWordsRecordProcessor(
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
 
-    val possibleWordsInExerciseCount = listOf(3, 6, 9)
+    val possibleWordsInExerciseCount = listOf(3, 4, 6, 9)
 
     override fun isApplicable(record: Any): Boolean =
         record is SeriesWordsRecord
