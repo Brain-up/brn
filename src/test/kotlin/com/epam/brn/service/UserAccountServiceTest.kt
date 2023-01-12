@@ -2,7 +2,6 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
@@ -33,7 +32,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertFailsWith
@@ -51,9 +49,6 @@ internal class UserAccountServiceTest {
     lateinit var userAccountRepository: UserAccountRepository
 
     @MockK
-    lateinit var passwordEncoder: PasswordEncoder
-
-    @MockK
     lateinit var roleService: RoleService
 
     @MockK(relaxed = true)
@@ -64,9 +59,6 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var userAccountDto: UserAccountDto
-
-    @MockK
-    lateinit var userAccountCreateRequest: UserAccountCreateRequest
 
     @MockK
     lateinit var firebaseUserRecord: UserRecord

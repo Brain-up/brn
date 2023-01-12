@@ -97,7 +97,7 @@ internal class ExerciseServiceTest {
     }
 
     @Test
-    fun `should get 2 exercises by user and subGroup`() {
+    fun `should get 2 exercises with 2 available by user-admin and subGroup`() {
         // GIVEN
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
@@ -110,25 +110,26 @@ internal class ExerciseServiceTest {
         every { lastStudyHistoryMockk.exercise } returns exercise1
         every { lastStudyHistoryMockk.tasksCount } returns 10
         every { lastStudyHistoryMockk.replaysCount } returns 2
-        every { lastStudyHistoryMockk.wrongAnswers } returns 0
+        every { lastStudyHistoryMockk.wrongAnswers } returns 7
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
         every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastStudyHistoryMockk)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
-        every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
+        every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.ADMIN)
 
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSubGroupId(userId, subGroupId)
 
         // THEN
         actualResult shouldHaveSize 2
+        actualResult.filter { it.available } shouldHaveSize 2
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) { studyHistoryRepository.findLastBySubGroupAndUserAccount(ofType(Long::class), ofType(Long::class)) }
     }
 
     @Test
-    fun `should get 3 exercises with 1 availiable by user and subGroup`() {
+    fun `should get 3 exercises with 1 available by user and subGroup`() {
         // GIVEN
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)

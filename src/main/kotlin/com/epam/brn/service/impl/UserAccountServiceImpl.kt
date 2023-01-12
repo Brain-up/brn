@@ -13,7 +13,6 @@ import com.epam.brn.service.HeadphonesService
 import com.epam.brn.service.RoleService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.UserRecord
-import org.apache.logging.log4j.kotlin.logger
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,22 +27,15 @@ class UserAccountServiceImpl(
     private val headphonesService: HeadphonesService
 ) : UserAccountService {
 
-    private val log = logger()
-
-    override fun findUserByEmail(email: String): UserAccountDto {
-        return userAccountRepository.findUserAccountByEmail(email)
+    override fun findUserByEmail(email: String): UserAccountDto =
+        userAccountRepository.findUserAccountByEmail(email)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
-    }
 
-    override fun findUserDtoByUuid(uuid: String): UserAccountDto? {
-        val user = userAccountRepository.findByUserId(uuid)
-        return user?.toDto()
-    }
+    override fun findUserDtoByUuid(uuid: String): UserAccountDto? =
+        userAccountRepository.findByUserId(uuid)?.toDto()
 
-    override fun createUser(
-        firebaseUserRecord: UserRecord
-    ): UserAccountDto {
+    override fun createUser(firebaseUserRecord: UserRecord): UserAccountDto {
         val existUser = userAccountRepository.findUserAccountByEmail(firebaseUserRecord.email)
         existUser.ifPresent {
             throw IllegalArgumentException("The user already exists!")
@@ -57,23 +49,22 @@ class UserAccountServiceImpl(
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    override fun findUserDtoById(id: Long): UserAccountDto {
-        return userAccountRepository.findUserAccountById(id)
-            .map { it.toDto() }
+    override fun findUserDtoById(id: Long): UserAccountDto =
+        findUserById(id).toDto()
+
+    override fun findUserById(id: Long): UserAccount =
+        userAccountRepository.findUserAccountById(id)
             .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
-    }
 
-    override fun findUserById(id: Long): UserAccount {
-        return userAccountRepository.findUserAccountById(id)
-            .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
-    }
+    override fun getAllHeadphonesForUser(userId: Long) =
+        headphonesService.getAllHeadphonesForUser(userId)
 
-    override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
-
-    override fun getAllHeadphonesForCurrentUser() = getCurrentUser()
-        .headphones.filter { it.active }.map(Headphones::toDto).toSet()
-
-    override fun getCurrentUserDto(): UserAccountDto = getCurrentUser().toDto()
+    override fun getAllHeadphonesForCurrentUser() =
+        getCurrentUser()
+            .headphones
+            .filter { it.active }
+            .map(Headphones::toDto)
+            .toSet()
 
     override fun getCurrentUser(): UserAccount {
         val authentication = SecurityContextHolder.getContext().authentication
@@ -82,13 +73,19 @@ class UserAccountServiceImpl(
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
+    override fun getCurrentUserDto(): UserAccountDto =
+        getCurrentUser().toDto()
+
     override fun getCurrentUserRoles(): Set<String> =
         getCurrentUserDto().roles.toSet()
 
-    override fun getCurrentUserId(): Long = getCurrentUser().id!!
+    override fun getCurrentUserId(): Long =
+        getCurrentUser().id!!
 
     override fun getUsers(pageable: Pageable, role: String): List<UserAccountDto> =
-        userAccountRepository.findUsersAccountsByRole(role).map { it.toDto() }
+        userAccountRepository
+            .findUsersAccountsByRole(role)
+            .map { it.toDto() }
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {
         val currentUserAccount = getCurrentUser()
@@ -158,13 +155,9 @@ class UserAccountServiceImpl(
             return principal.username
         if (principal is Principal)
             return principal.name
-
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    private fun getDefaultRoleSet(): MutableSet<Role> {
-        val roleNames = mutableSetOf(BrnRole.USER)
-        return roleNames
-            .mapTo(mutableSetOf()) { roleService.findByName(it) }
-    }
+    private fun getDefaultRoleSet(): MutableSet<Role> =
+        setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
 }
