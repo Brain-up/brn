@@ -224,6 +224,33 @@ internal class ExerciseServiceTest {
     }
 
     @Test
+    fun `should get 3 exercises with 3 available for user with all exercises done`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val subGroupId = 2L
+        val userId = 2L
+        val exercise1 = Exercise(id = 1, name = "pets")
+        val exercise2 = Exercise(id = 2, name = "pets")
+        val exercise3 = Exercise(id = 3, name = "pets")
+        val allExercises = listOf(exercise1, exercise2, exercise3)
+        val noiseUrl = "noiseUrl"
+        every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns allExercises
+        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns allExercises
+        every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
+        every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
+
+        // WHEN
+        val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSubGroupId(userId, subGroupId)
+
+        // THEN
+        actualResult shouldHaveSize 3
+        actualResult.filter { it.available } shouldHaveSize 3
+        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
+    }
+
+    @Test
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
