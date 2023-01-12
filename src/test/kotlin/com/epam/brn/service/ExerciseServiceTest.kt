@@ -124,8 +124,8 @@ internal class ExerciseServiceTest {
         actualResult shouldHaveSize 2
         actualResult.filter { it.available } shouldHaveSize 2
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
-        verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
-        verify(exactly = 1) { studyHistoryRepository.findLastBySubGroupAndUserAccount(ofType(Long::class), ofType(Long::class)) }
+        verify(exactly = 0) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
+        verify(exactly = 0) { studyHistoryRepository.findLastBySubGroupAndUserAccount(ofType(Long::class), ofType(Long::class)) }
     }
 
     @Test
