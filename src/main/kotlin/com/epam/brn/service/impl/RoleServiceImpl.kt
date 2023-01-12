@@ -35,11 +35,6 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         return request.isUserInRole(BrnRole.ADMIN)
     }
 
-    override fun isCurrentUserSpecialist(): Boolean {
-        val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
-        return request.isUserInRole(BrnRole.SPECIALIST)
-    }
-
     override fun isUserHasRole(user: UserAccountDto, role: String) = user.roles?.contains(role) ?: false
 
     override fun findAll(): List<Role> = roleRepository.findAll()
