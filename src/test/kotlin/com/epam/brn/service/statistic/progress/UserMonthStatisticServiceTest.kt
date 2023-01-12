@@ -1,6 +1,6 @@
 package com.epam.brn.service.statistic.progress
 
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.statistic.MonthStudyStatistic
 import com.epam.brn.dto.statistic.UserExercisingPeriod
 import com.epam.brn.dto.statistic.UserExercisingProgressStatus
@@ -33,7 +33,7 @@ internal class UserMonthStatisticServiceTest {
     private lateinit var studyHistoryRepository: StudyHistoryRepository
 
     @MockK
-    private lateinit var userAccount: UserAccountResponse
+    private lateinit var userAccount: UserAccountDto
 
     @MockK
     private lateinit var studyHistory: StudyHistory
@@ -62,7 +62,7 @@ internal class UserMonthStatisticServiceTest {
 
     @BeforeEach
     fun init() {
-        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+        every { userAccountService.getCurrentUserDto() } returns userAccount
         every { userAccount.id } returns userId
         every { studyHistory.startTime } returns studyHistoryDate
         every { studyHistory.executionSeconds } returns executionSeconds

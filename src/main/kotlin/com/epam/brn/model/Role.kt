@@ -14,13 +14,7 @@ data class Role(
     var id: Long? = null,
     @Column(unique = true, nullable = false)
     val name: String
-
 ) {
-    fun toDto() = RoleResponse(
-        name = name
-    )
-
-    override fun toString(): String {
-        return "Role(id=$id, name='$name')"
-    }
+    fun toDto() = RoleResponse(name = name)
+    override fun toString(): String = "Role(id=$id, name='$name')"
 }

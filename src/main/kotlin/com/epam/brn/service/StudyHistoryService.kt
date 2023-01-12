@@ -18,7 +18,7 @@ class StudyHistoryService(
 ) {
 
     fun getTodayTimer(): Int {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        val currentUser = userAccountService.getCurrentUserDto()
         return studyHistoryRepository.getTodayDayTimer(currentUser.id!!)
     }
 
@@ -38,7 +38,7 @@ class StudyHistoryService(
     }
 
     fun getHistoriesForCurrentUser(from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        val currentUser = userAccountService.getCurrentUserDto()
         return getHistories(currentUser.id!!, from, to)
     }
 
@@ -48,7 +48,7 @@ class StudyHistoryService(
     }
 
     fun getUserDailyStatistics(day: LocalDateTime, userId: Long? = null): List<UserDailyDetailStatisticsDto> {
-        val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
+        val tempUserId = userId ?: userAccountService.getCurrentUserDto().id
         val startDay = day.truncatedTo(ChronoUnit.DAYS)
         val endDay = startDay.plusDays(1).minusNanos(1)
         val statistics =
@@ -62,7 +62,7 @@ class StudyHistoryService(
     }
 
     fun getMonthHistoriesForCurrentUser(month: Int, year: Int): List<StudyHistoryDto> {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
+        val currentUser = userAccountService.getCurrentUserDto()
         return getMonthHistories(currentUser.id!!, month, year)
     }
 

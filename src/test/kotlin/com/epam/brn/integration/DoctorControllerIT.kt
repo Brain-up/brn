@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.RoleRepository
@@ -127,8 +127,8 @@ class DoctorControllerIT : BaseIT() {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
         val collectionType = TypeFactory.defaultInstance()
-            .constructCollectionType(MutableList::class.java, UserAccountResponse::class.java)
-        val users: List<UserAccountResponse> = objectMapper.readerFor(collectionType)
+            .constructCollectionType(MutableList::class.java, UserAccountDto::class.java)
+        val users: List<UserAccountDto> = objectMapper.readerFor(collectionType)
             .readValue(objectMapper.readTree(resultAction.andReturn().response.contentAsString).path("data"))
 
         users.size shouldBe 2

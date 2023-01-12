@@ -3,7 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.BrnResponse
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
@@ -53,15 +53,15 @@ class UserDetailController(
     @GetMapping(value = ["/{userId}"])
     @Operation(summary = "Get user by id")
     @RolesAllowed(BrnRole.ADMIN)
-    fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<BrnResponse<List<UserAccountResponse>>> {
+    fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<BrnResponse<List<UserAccountDto>>> {
         return ResponseEntity.ok()
-            .body(BrnResponse(data = listOf(userAccountService.findUserById(id))))
+            .body(BrnResponse(data = listOf(userAccountService.findUserDtoById(id))))
     }
 
     @GetMapping(value = ["/current"])
     @Operation(summary = "Get current logged in user")
     fun getCurrentUser() = ResponseEntity.ok()
-        .body(BrnResponse(data = listOf(userAccountService.getUserFromTheCurrentSession())))
+        .body(BrnResponse(data = listOf(userAccountService.getCurrentUserDto())))
 
     @PatchMapping(value = ["/current"])
     @Operation(summary = "Update current logged in user")
