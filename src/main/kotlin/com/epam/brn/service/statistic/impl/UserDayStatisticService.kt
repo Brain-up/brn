@@ -17,7 +17,7 @@ class UserDayStatisticService(
     private val progressManager: ProgressStatusManager<List<StudyHistory>>
 ) : UserPeriodStatisticService<DayStudyStatistic> {
     override fun getStatisticForPeriod(from: LocalDateTime, to: LocalDateTime, userId: Long?): List<DayStudyStatistic> {
-        val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
+        val tempUserId = userId ?: userAccountService.getCurrentUserDto().id
         val studyHistories = studyHistoryRepository.getHistories(
             userId = tempUserId!!,
             from = from,

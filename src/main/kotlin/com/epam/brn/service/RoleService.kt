@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.Role
 
 interface RoleService {
@@ -9,5 +9,6 @@ interface RoleService {
     fun findAll(): List<Role>
     fun save(role: Role): Role
     fun isCurrentUserAdmin(): Boolean
-    fun isUserHasRole(user: UserAccountResponse, role: String): Boolean
+    fun isCurrentUserSpecialist(): Boolean
+    fun isUserHasRole(user: UserAccountDto, role: String): Boolean
 }

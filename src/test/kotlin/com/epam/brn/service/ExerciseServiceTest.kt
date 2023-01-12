@@ -9,6 +9,7 @@ import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -114,6 +115,7 @@ internal class ExerciseServiceTest {
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
         every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastStudyHistoryMockk)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
+        every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
 
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserIdAndSubGroupId(userId, subGroupId)

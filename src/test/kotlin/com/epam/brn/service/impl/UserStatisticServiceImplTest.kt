@@ -1,6 +1,6 @@
 package com.epam.brn.service.impl
 
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
@@ -40,7 +40,7 @@ internal class UserStatisticServiceImplTest {
     lateinit var exerciseRepository: ExerciseRepository
 
     @MockK
-    lateinit var userAccount: UserAccountResponse
+    lateinit var userAccount: UserAccountDto
 
     private val userAccountID = 1L
 
@@ -51,7 +51,7 @@ internal class UserStatisticServiceImplTest {
         val subGroupIds: List<Long> = listOf(777)
         val allExercisesForSubGroup: List<Exercise> = listOf(exercise, exercise)
         every { studyHistoryRepository.getDoneExercises(any(), any()) } returns emptyList()
-        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+        every { userAccountService.getCurrentUserDto() } returns userAccount
         every { userAccount.id } returns userAccountID
         every { exerciseRepository.findExercisesBySubGroupId(any()) } returns allExercisesForSubGroup
 
@@ -70,13 +70,13 @@ internal class UserStatisticServiceImplTest {
     @Test
     fun `should return empty map when empty IDs list was passed`() {
         // GIVEN
-        every { userAccountService.getUserFromTheCurrentSession() } returns userAccount
+        every { userAccountService.getCurrentUserDto() } returns userAccount
 
         // WHEN
         val result = userStatisticService.getSubGroupStatistic(emptyList())
 
         // THEN
-        verify(exactly = 1) { userAccountService.getUserFromTheCurrentSession() }
+        verify(exactly = 1) { userAccountService.getCurrentUserDto() }
         Assertions.assertTrue(result.isEmpty())
     }
 }

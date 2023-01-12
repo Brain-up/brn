@@ -1,6 +1,7 @@
 package com.epam.brn.dto.response
 
 import com.epam.brn.dto.HeadphonesDto
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnGender
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
@@ -21,7 +22,7 @@ data class DoctorAccountResponse(
     val photo: String? = null,
     val description: String? = null,
     var headphones: Set<HeadphonesDto>? = null,
-    var patients: MutableList<UserAccountResponse> = mutableListOf(),
+    var patients: MutableList<UserAccountDto> = mutableListOf(),
 ) {
     var roles: MutableSet<String>? = mutableSetOf()
 }
