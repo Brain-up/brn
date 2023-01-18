@@ -17,6 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
+private const val s = "repository1"
+
 @ExtendWith(MockKExtension::class)
 internal class GitHubContributorRefreshJobTest {
 
@@ -36,13 +38,17 @@ internal class GitHubContributorRefreshJobTest {
     fun `should call needed method when new user income from github`() {
         // GIVEN
         val organizationName = "organization"
-        val repositoryName = "repository"
+        val repositoryName1 = "repository1"
+        val repositoryName2 = "repository2"
+        val repositoryNames = setOf(repositoryName1, repositoryName2)
         val pageSize = 10
+
         ReflectionTestUtils.setField(service, "gitHubOrganizationName", organizationName)
-        ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
+        ReflectionTestUtils.setField(service, "gitHubRepositoryNames", repositoryNames)
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributorDtos = listOf(
+
+        val gitHubContributorDtos1 = listOf(
             GitHubContributorDto(
                 id = 1,
                 login = "login",
@@ -54,13 +60,26 @@ internal class GitHubContributorRefreshJobTest {
                 contributions = 20
             ),
         )
+
+        val gitHubContributorDtos2 = listOf(
+            GitHubContributorDto(
+                id = 3,
+                login = "login3",
+                contributions = 30
+            )
+        )
+
         every {
-            gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
-        } returns gitHubContributorDtos
+            gitHubApiClient.getGitHubContributors(organizationName, repositoryName1, pageSize)
+        } returns gitHubContributorDtos1
+
+        every {
+            gitHubApiClient.getGitHubContributors(organizationName, repositoryName2, pageSize)
+        } returns gitHubContributorDtos2
 
         val gitHubUserDtos = mutableListOf<GitHubUserDto>()
         val contributors = mutableListOf<Contributor>()
-        for ((i, gitHubContributor) in gitHubContributorDtos.withIndex()) {
+        for ((i, gitHubContributor) in (gitHubContributorDtos1 + gitHubContributorDtos2).withIndex()) {
             gitHubUserDtos.add(
                 GitHubUserDto(
                     id = gitHubContributor.id,
@@ -81,7 +100,7 @@ internal class GitHubContributorRefreshJobTest {
                 com.epam.brn.model.GitHubUser(
                     id = gitHubUser.id,
                     login = gitHubUser.login,
-                    contributions = gitHubContributorDtos[i].contributions,
+                    contributions = (gitHubContributorDtos1 + gitHubContributorDtos2)[i].contributions,
                     name = null,
                     email = null,
                     avatarUrl = null,
@@ -94,19 +113,19 @@ internal class GitHubContributorRefreshJobTest {
         every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.empty()
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
-        every { contributorService.createOrUpdateByGitHubUser(any()) } returns contributorMockK
+        every { contributorService.createOrUpdateByGitHubUser(any(), any()) } returns contributorMockK
 
         // WHEN
         service.synchronizeContributors()
 
         // THEN
-        verify(exactly = 1) {
+        verify(exactly = 2) {
             gitHubApiClient.getGitHubContributors(any(), any(), any())
         }
-        verify(exactly = gitHubContributorDtos.size) {
+        verify(exactly = gitHubContributorDtos1.size + gitHubContributorDtos2.size) {
             gitHubApiClient.getGitHubUser(any())
         }
-        verify(exactly = gitHubContributorDtos.size) {
+        verify(exactly = gitHubContributorDtos1.size + gitHubContributorDtos2.size) {
             gitHubUserRepository.findById(any())
         }
     }
@@ -118,7 +137,7 @@ internal class GitHubContributorRefreshJobTest {
         val repositoryName = "repository"
         val pageSize = 10
         ReflectionTestUtils.setField(service, "gitHubOrganizationName", organizationName)
-        ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
+        ReflectionTestUtils.setField(service, "gitHubRepositoryNames", setOf(repositoryName))
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
         val gitHubContributorDtos = listOf(
@@ -168,7 +187,7 @@ internal class GitHubContributorRefreshJobTest {
         every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.empty()
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
-        every { contributorService.createOrUpdateByGitHubUser(any()) } returns contributorMockK
+        every { contributorService.createOrUpdateByGitHubUser(any(), any()) } returns contributorMockK
 
         // WHEN
         service.synchronizeContributors()
@@ -184,7 +203,7 @@ internal class GitHubContributorRefreshJobTest {
             gitHubUserRepository.findById(any())
         }
         verify(exactly = gitHubContributorDtos.size) {
-            contributorService.createOrUpdateByGitHubUser(any())
+            contributorService.createOrUpdateByGitHubUser(any(), any())
         }
     }
 
@@ -195,7 +214,7 @@ internal class GitHubContributorRefreshJobTest {
         val repositoryName = "repository"
         val pageSize = 10
         ReflectionTestUtils.setField(service, "gitHubOrganizationName", organizationName)
-        ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
+        ReflectionTestUtils.setField(service, "gitHubRepositoryNames", setOf(repositoryName))
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
         val gitHubContributorDtos = listOf(
@@ -245,7 +264,7 @@ internal class GitHubContributorRefreshJobTest {
         every { gitHubApiClient.getGitHubUser(any()) } returns gitHubUserDtos[0]
         every { gitHubUserRepository.findById(any()) } returns Optional.of(savedGithubUser[0])
         every { gitHubUserRepository.save(any()) } returnsMany savedGithubUser
-        every { contributorService.createOrUpdateByGitHubUser(any()) } returns contributorMockK
+        every { contributorService.createOrUpdateByGitHubUser(any(), any()) } returns contributorMockK
 
         // WHEN
         service.synchronizeContributors()
@@ -261,7 +280,7 @@ internal class GitHubContributorRefreshJobTest {
             gitHubUserRepository.findById(any())
         }
         verify(exactly = gitHubContributorDtos.size) {
-            contributorService.createOrUpdateByGitHubUser(any())
+            contributorService.createOrUpdateByGitHubUser(any(), any())
         }
     }
 
@@ -273,7 +292,7 @@ internal class GitHubContributorRefreshJobTest {
         val pageSize = 10
         val botLogin = "bot"
         ReflectionTestUtils.setField(service, "gitHubOrganizationName", organizationName)
-        ReflectionTestUtils.setField(service, "gitHubRepositoryName", repositoryName)
+        ReflectionTestUtils.setField(service, "gitHubRepositoryNames", setOf(repositoryName))
         ReflectionTestUtils.setField(service, "botLogins", setOf(botLogin))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
         val gitHubContributorDtos = listOf(
@@ -301,7 +320,36 @@ internal class GitHubContributorRefreshJobTest {
             gitHubUserRepository.findById(any())
         }
         verify(exactly = 0) {
-            contributorService.createOrUpdateByGitHubUser(any())
+            contributorService.createOrUpdateByGitHubUser(any(), any())
+        }
+    }
+    @Test
+    fun `should call needed method when repository list is empty`() {
+        // GIVEN
+        val organizationName = "organization"
+        val pageSize = 10
+        val botLogin = "bot"
+        val repositories = emptySet<Any>()
+        ReflectionTestUtils.setField(service, "gitHubOrganizationName", organizationName)
+        ReflectionTestUtils.setField(service, "gitHubRepositoryNames", repositories)
+        ReflectionTestUtils.setField(service, "botLogins", setOf(botLogin))
+        ReflectionTestUtils.setField(service, "pageSize", pageSize)
+
+        // WHEN
+        service.synchronizeContributors()
+
+        // THEN
+        verify(exactly = 0) {
+            gitHubApiClient.getGitHubContributors(any(), any(), any())
+        }
+        verify(exactly = 0) {
+            gitHubApiClient.getGitHubUser(any())
+        }
+        verify(exactly = 0) {
+            gitHubUserRepository.findById(any())
+        }
+        verify(exactly = 0) {
+            contributorService.createOrUpdateByGitHubUser(any(), any())
         }
     }
 }

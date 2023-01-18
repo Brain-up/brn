@@ -1,2 +1,2 @@
 [*.{kt,kts}]
-disabled_rules = import-ordering
+disabled_rules = import-ordering, indent
