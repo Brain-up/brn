@@ -33,6 +33,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Optional
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -77,6 +78,9 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var pageable: Pageable
+
+    @MockK
+    lateinit var timeService: TimeService
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -294,6 +298,42 @@ internal class UserAccountServiceTest {
             assertThat(userForSave.description).isEqualTo(description)
             assertThat(userForSave.fullName).isEqualTo("newName")
             assertThat(userForSave.id).isEqualTo(userAccount.id)
+        }
+
+        @Test
+        fun `should mark visit current session user`() {
+            // GIVEN
+            val email = "test@test.ru"
+            val userAccount = UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                email = email,
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                changed = LocalDateTime.now().minusMinutes(5),
+                avatar = null
+            )
+            val userAccountUpdated = userAccount.copy()
+            val now = LocalDateTime.now(ZoneOffset.UTC)
+            userAccountUpdated.lastVisit = now
+            val userArgumentCaptor = slot<UserAccount>()
+
+            SecurityContextHolder.setContext(securityContext)
+            every { securityContext.authentication } returns authentication
+            every { authentication.name } returns email
+            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
+            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
+            every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
+            every { timeService.now() } returns now
+            // WHEN
+            userAccountService.markVisitForCurrentUser()
+            // THEN
+            verify { userAccountRepository.findUserAccountByEmail(email) }
+            verify { userAccountRepository.save(userArgumentCaptor.captured) }
+            val userForSave = userArgumentCaptor.captured
+            assertThat(userForSave.lastVisit).isEqualTo(now)
+            assertThat(userForSave.id).isEqualTo(userAccount.id)
+            assertThat(userForSave.fullName).isEqualTo(userAccount.fullName)
         }
     }
 

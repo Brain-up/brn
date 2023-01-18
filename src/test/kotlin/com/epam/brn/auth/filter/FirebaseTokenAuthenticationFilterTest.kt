@@ -18,6 +18,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
 import org.amshove.kluent.shouldBeInstanceOf
@@ -85,6 +86,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { brainUpUserDetailsService.loadUserByUsername(email) } returns customUserDetailsMock
+        justRun { userAccountService.markVisitForCurrentUser() }
+
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
         // THEN
@@ -97,6 +100,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
+        verify(exactly = 1) { userAccountService.markVisitForCurrentUser() }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
@@ -124,6 +128,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
             gender = null,
             name = fullName
         )
+        justRun { userAccountService.markVisitForCurrentUser() }
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
@@ -139,6 +144,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 1) { userAccountService.createUser(any()) }
+        verify(exactly = 1) { userAccountService.markVisitForCurrentUser() }
     }
 
     @Test
@@ -163,6 +169,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
+        verify(exactly = 0) { userAccountService.markVisitForCurrentUser() }
     }
 
     @Test
@@ -187,6 +194,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
+        verify(exactly = 0) { userAccountService.markVisitForCurrentUser() }
     }
 
     @Test
@@ -216,6 +224,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
+        verify(exactly = 0) { userAccountService.markVisitForCurrentUser() }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
 

@@ -37,7 +37,14 @@ class FirebaseTokenAuthenticationFilter(
         filterChain: FilterChain
     ) {
         verifyToken(request)
+        markVisit()
         filterChain.doFilter(request, response)
+    }
+
+    private fun markVisit() {
+        if (SecurityContextHolder.getContext().authentication != null) {
+            userAccountService.markVisitForCurrentUser()
+        }
     }
 
     private fun verifyToken(request: HttpServletRequest) {
