@@ -47,11 +47,16 @@ module('Acceptance | tasks flow', function (hooks) {
   test('goest to next task after a right answer picture', async function (assert) {
     await pageObject.goToFirstTask();
 
-    const { targetTask } = setupAfterPageVisit();
+    setupAfterPageVisit();
 
     await pageObject.startTask();
 
-    await chooseAnswer(targetTask.correctAnswer.word);
+    const audio = getOwner(this).lookup('service:audio');
+
+    for (let i = 0; i < 15; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      await chooseAnswer(audio._lastText);
+    }
 
     await waitFor('[data-test-task-id="2"]');
     assert.dom('[data-test-task-id="2"]').exists();
