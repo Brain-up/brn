@@ -11,7 +11,6 @@ import TaskModel from 'brn/models/task';
 import { cached } from 'tracked-toolbox';
 import SubgroupModel from './subgroup';
 import NetworkService from 'brn/services/network';
-import { ExerciseMechanism } from 'brn/serializers/application';
 
 export interface IStatsObject {
   countedSeconds: number;
@@ -46,7 +45,7 @@ export default class Exercise extends CompletionDependent {
   @attr('string') pictureUrl!: string;
   @attr('number') order!: number;
   // @todo - add enum
-  @attr('string') exerciseMechanism!: ExerciseMechanism;
+  @attr('string') exerciseType!: string;
   @belongsTo('series', { async: false }) series!: SeriesModel;
   @hasMany('signal', { async: false }) signals!: SignalModel[];
   @hasMany('task', { async: true, inverse: 'exercise', polymorphic: true })
