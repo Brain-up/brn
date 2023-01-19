@@ -32,6 +32,7 @@ export default class TaskSignalSerializer extends BaseTaskSerializer {
       answerOptions: opts,
       normalizedAnswerOptions: opts,
     };
+    delete attrs.type;
     return {
       id,
       type,

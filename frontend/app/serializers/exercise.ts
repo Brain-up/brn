@@ -54,10 +54,15 @@ export default class ExerciseSerializer extends ApplicationSerializer {
       'WORDS': 'task/single-simple-words',
     }
     items.forEach((el) => {
-      el.tasks.forEach((task: { exerciseMechanism: string }) => {
-        task.type = modelForMechanism[task.exerciseMechanism];
+      el.tasks.forEach((task: { exerciseMechanism?: string }) => {
+        if ('exerciseMechanism' in task) {
+          task.type = modelForMechanism[task.exerciseMechanism];
+        } else {
+          task.type = 'task/signal';
+        }
       });
     });
+
     return super.normalizeResponse(
       store,
       primaryModelClass,
