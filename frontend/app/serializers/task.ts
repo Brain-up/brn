@@ -5,7 +5,6 @@ import Model from '@ember-data/model';
 export default class TaskSerializer extends ApplicationSerializer {
   ATTR_NAMES_MAP = Object.freeze({
     order: 'serialNumber',
-    type: 'exerciseType',
   });
   public normalize(typeClass: Model, hash: any) {
     if (hash.answerOptions) {

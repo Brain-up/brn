@@ -3,6 +3,7 @@ import BaseTask from '../task';
 import shuffleArray from 'brn/utils/shuffle-array';
 import deepCopy from '../../utils/deep-copy';
 import { cached } from 'tracked-toolbox';
+import { ExerciseMechanism } from 'brn/serializers/application';
 
 function createTasks(
   [first, ...tail]: Array<string[]>,
@@ -36,7 +37,7 @@ export default class WordsSequences extends BaseTask {
     },
   })
   wrongAnswers!: unknown[];
-  exerciseType = 'words-sequences';
+  exerciseMechanism = ExerciseMechanism.MATRIX;
   @cached
   get selectedItemsOrder() {
     return this.template.split('<')[1].split('>')[0].split(' ');
