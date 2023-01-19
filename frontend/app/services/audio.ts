@@ -86,7 +86,11 @@ export default class AudioService extends Service {
   }).enqueue())
   trackProgress!: TaskGenerator<any, any>;
 
+  // for tests
+  _lastText: null | string = null;
+
   audioUrlForText(text: string) {
+    this._lastText = text;
     const exercise = this.currentExercise;
     return (
       window.location.protocol +

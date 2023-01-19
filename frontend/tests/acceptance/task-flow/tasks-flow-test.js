@@ -10,6 +10,7 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { currentURL } from '@ember/test-helpers';
 import { getData } from './test-support/data-storage';
 import { authenticateSession } from 'ember-simple-auth/test-support';
+import { getOwner } from '@ember/application';
 
 module('Acceptance | tasks flow', function (hooks) {
   setupApplicationTest(hooks);
@@ -88,15 +89,39 @@ module('Acceptance | tasks flow', function (hooks) {
 
     await pageObject.goToFirstTask();
 
-    let { targetTask } = setupAfterPageVisit();
+    const audio = getOwner(this).lookup('service:audio');
+
+    setupAfterPageVisit();
 
     await pageObject.startTask();
+
+
+  
+
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+
+
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
+    await chooseAnswer(audio._lastText);
 
     const rightAnswerOneNotificationPromise = waitFor('[data-test-right-answer-notification]', {
       timeout: 1000,
     });
-
-    await chooseAnswer(targetTask.correctAnswer.word);
 
     await rightAnswerOneNotificationPromise;
 
