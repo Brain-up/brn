@@ -2,6 +2,7 @@ import { attr } from '@ember-data/model';
 import BaseTask from '../task';
 import shuffleArray from 'brn/utils/shuffle-array';
 import { cached } from 'tracked-toolbox';
+import { ExerciseMechanism } from 'brn/serializers/application';
 
 interface IRawAnswerOption {
   audioFileUrl: string;
@@ -15,7 +16,7 @@ interface IRawAnswerOption {
 }
 export default class TaskSingleSimpleWordsModel extends BaseTask {
   @attr() answerOptions!: IRawAnswerOption[];
-  exerciseMechanism = 'WORDS';
+  exerciseMechanism = ExerciseMechanism.WORDS;
   @cached
   get tasksToSolve() {
     const playWordsCount = this.exercise.playWordsCount ?? 1;
