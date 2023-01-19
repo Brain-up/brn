@@ -1,7 +1,5 @@
 import ApplicationSerializer from './application';
-import { getOwner } from '@ember/application';
 import Store from '@ember-data/store';
-import Series from 'brn/models/series';
 export default class ExerciseSerializer extends ApplicationSerializer {
   ATTR_NAMES_MAP = Object.freeze({
     order: 'level',
@@ -11,15 +9,6 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     signals: { serialize: 'ids-and-types', deserialize: 'records' },
   };
   modelNameFromPayloadKey(key: string) {
-    if (key === 'task/PHRASES') {
-      return 'task/phrase';
-    }
-    if (key === 'task/DURATION_SIGNALS') {
-      return 'task/signal';
-    }
-    if (key === 'task/FREQUENCY_SIGNALS') {
-      return 'task/signal';
-    }
     return super.modelNameFromPayloadKey(key);
   }
   normalizeSignal(store: Store, payloadItem: any) {
@@ -58,14 +47,15 @@ export default class ExerciseSerializer extends ApplicationSerializer {
       });
     }
     const items = Array.isArray(data) ? data : [data];
-    const appRouter = getOwner(this).lookup('route:application');
-    const model = appRouter.modelFor('group.series');
-    const seriaId = model.toArray().firstObject.seriesId;
-    const seria = this.store.peekRecord('series', seriaId) as Series;
-    const kind = seria.kind;
+
+    const modelForMechanism = {
+      'MATRIX': 'task/words-sequences',
+      'SIGNALS': 'task/signal',
+      'WORDS': 'task/single-simple-words',
+    }
     items.forEach((el) => {
-      el.tasks.forEach((task: { type: string }) => {
-        task.type = `task/${kind}`;
+      el.tasks.forEach((task: { exerciseMechanism: string }) => {
+        task.type = modelForMechanism[task.exerciseMechanism];
       });
     });
     return super.normalizeResponse(

@@ -1,18 +1,10 @@
 import BaseTaskSerializer from '../task';
 import Model from '@ember-data/model';
-import { urlForImage, urlForAudio } from 'brn/utils/file-url';
+// import { urlForImage, urlForAudio } from 'brn/utils/file-url';
 
 export default class TaskSingleSimpleWordsSerializer extends BaseTaskSerializer {
   normalize(typeClass: Model, hash: any) {
-    const hashCopy = {
-      ...hash,
-      // todo - refactor it or remove
-      words: hash.answerOptions.mapBy('word').concat(hash.correctAnswer.word),
-      word: hash.correctAnswer.word,
-      audioFileUrl: urlForAudio(hash.correctAnswer.audioFileUrl),
-      pictureFileUrl: urlForImage(hash.correctAnswer.pictureFileUrl),
-    };
-    return super.normalize(typeClass, hashCopy);
+    return super.normalize(typeClass, hash);
   }
 }
 
