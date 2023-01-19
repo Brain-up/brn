@@ -15,7 +15,7 @@ interface IRawAnswerOption {
 }
 export default class TaskSingleSimpleWordsModel extends BaseTask {
   @attr() answerOptions!: IRawAnswerOption[];
-  exerciseType = 'single-simple-words';
+  exerciseMechanism = 'WORDS';
   @cached
   get tasksToSolve() {
     const playWordsCount = this.exercise.playWordsCount ?? 1;

@@ -34,10 +34,19 @@ export default class TaskPlayerComponent extends Component {
 
   @tracked mode = ''; // listen, interact, task
   get componentType() {
-    let postfix = dasherize(this.task.exerciseType);
-    if (postfix === 'sentence') {
+    const mechanism = this.task.exerciseMechanism;
+    let postfix = '';
+
+    if (mechanism === 'SIGNALS') {
+      postfix = 'signal';
+    } else if (mechanism === 'MATRIX') {
       postfix = 'words-sequences';
+    } else if (mechanism === 'WORDS') {
+      postfix = 'single-simple-words';
+    } else {
+      throw new Error('Unknown mechanism: ' + mechanism);
     }
+
     return `task-player/${postfix}`;
   }
   get disableAnswers() {

@@ -1,8 +1,7 @@
 import SingleWordsModel from './single-simple-words';
 
 export default class TaskSingleWordsKorolevaModel extends SingleWordsModel {
-  // exerciseType = 'single-words-koroleva';
-  exerciseType = 'single-simple-words';
+  exerciseMechanism = 'WORDS';
 }
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.

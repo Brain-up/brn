@@ -5,7 +5,7 @@ import { cached } from 'tracked-toolbox';
 
 export default class TaskFrequencyWordsModel extends BaseTask {
   @attr() answerOptions!: any;
-  exerciseType = 'single-simple-words';
+  exerciseMechanism = 'WORDS';
   @cached
   get tasksToSolve() {
     return [

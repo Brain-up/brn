@@ -1,6 +1,7 @@
 import BaseTaskSerializer from '../task';
 import Model from '@ember-data/model';
 import Exercise from 'brn/models/exercise';
+import { ExerciseMechanism } from '../application';
 
 export default class TaskSignalSerializer extends BaseTaskSerializer {
   payloadToTypeId(payload: { id: number }) {
@@ -27,7 +28,7 @@ export default class TaskSignalSerializer extends BaseTaskSerializer {
     });
     const attrs = {
       ...hash,
-      exerciseType: 'signal',
+      exerciseMechanism: ExerciseMechanism.SIGNALS,
       answerOptions: opts,
       normalizedAnswerOptions: opts,
     };

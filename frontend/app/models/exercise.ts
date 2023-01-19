@@ -45,7 +45,7 @@ export default class Exercise extends CompletionDependent {
   @attr('string') pictureUrl!: string;
   @attr('number') order!: number;
   // @todo - add enum
-  @attr('string') exerciseType!: string;
+  @attr('string') exerciseMechanism!: 'WORDS' | 'MATRIX' | 'SIGNALS';
   @belongsTo('series', { async: false }) series!: SeriesModel;
   @hasMany('signal', { async: false }) signals!: SignalModel[];
   @hasMany('task', { async: true, inverse: 'exercise', polymorphic: true })

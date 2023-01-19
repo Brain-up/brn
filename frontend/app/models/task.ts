@@ -19,7 +19,7 @@ export default class Task extends CompletionDependent {
   @service('studying-timer') studyingTimer!: StudyingTimerService;
 
   @attr('string') name!: string;
-  @attr('string') exerciseType!: string;
+  @attr('string') exerciseMechanism!: 'WORDS' | 'MATRIX' | 'SIGNALS';
 
   @attr('number') order!: number;
   @attr('number') repetitionCount!: number;

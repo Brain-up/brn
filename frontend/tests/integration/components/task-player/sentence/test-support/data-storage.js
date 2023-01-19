@@ -1,6 +1,6 @@
 const task = {
-  exerciseType: 'SENTENCE',
-  type: 'task/SENTENCE',
+  exerciseMechanism: 'MATRIX',
+  type: 'task/MATRIX',
   name: '',
   template: '<OBJECT OBJECT_ACTION>',
   correctAnswer: 'вить линь',

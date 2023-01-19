@@ -1,7 +1,7 @@
 import WordsSequences from './words-sequences';
 
 export default class TaskSentenceModel extends WordsSequences {
-  exerciseType = 'sentence';
+  exerciseMechanism = 'MATRIX';
 }
 
 // DO NOT DELETE: this is how TypeScript knows how to look up your models.

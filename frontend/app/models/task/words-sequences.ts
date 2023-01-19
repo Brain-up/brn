@@ -36,7 +36,7 @@ export default class WordsSequences extends BaseTask {
     },
   })
   wrongAnswers!: unknown[];
-  exerciseType = 'words-sequences';
+  exerciseMechanism = 'MATRIX';
   @cached
   get selectedItemsOrder() {
     return this.template.split('<')[1].split('>')[0].split(' ');

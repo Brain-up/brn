@@ -10,6 +10,12 @@ type GroupDTO = {
   series: number[];
 };
 
+export enum ExerciseMechanism {
+  WORDS = 'WORDS', // show words in random places, play one after another min n*2+1 times
+  MATRIX = 'MATRIX', // show words by exercise template, play whole sentence by random words in columns
+  SIGNALS = 'SIGNALS'
+}
+
 type ExerciseDTOType =
   | 'WORDS_SEQUENCES'
   | 'SENTENCE'
@@ -63,6 +69,7 @@ type AnswerDTO = {
 
 type TaskDTO = {
   answerOptions: AnswerDTO[];
+  exerciseMechanism: ExerciseMechanism;
   exerciseType: ExerciseDTOType;
   id: number;
   name: string;
