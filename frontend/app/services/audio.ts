@@ -343,9 +343,15 @@ export default class AudioService extends Service {
 
   nativePlayText(txt: string) {
     const lang = this.userData.activeLocale;
-    const voices = speechSynthesis.getVoices().filter((e) => e.lang === lang);
+    const voices = speechSynthesis.getVoices().filter((e) => e.lang.toLowerCase() === lang);
+    const voicesToPlay: SpeechSynthesisVoice[] = [
+      voices.find(el => el.default === true), // default
+      voices.find(el => el.localService === false), // cloud
+      ...voices,
+    ].filter((el) => el !== undefined) as SpeechSynthesisVoice[];
+
     const v = new SpeechSynthesisUtterance(txt);
-    v.voice = voices[0];
+    v.voice = voicesToPlay[0];
     const p = new Promise((resolve) => {
       v.onend = resolve;
     });
