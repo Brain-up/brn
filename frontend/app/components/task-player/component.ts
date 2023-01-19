@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-component-lifecycle-hooks */
 // eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
-import { dasherize } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
@@ -13,6 +12,7 @@ import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
 import TaskModel from 'brn/models/task';
 import type AnswerOption from 'brn/utils/answer-option';
+import { ExerciseMechanism } from 'brn/serializers/application';
 
 export default class TaskPlayerComponent extends Component {
   @service('audio') audio!: AudioService;
@@ -37,11 +37,11 @@ export default class TaskPlayerComponent extends Component {
     const mechanism = this.task.exerciseMechanism;
     let postfix = '';
 
-    if (mechanism === 'SIGNALS') {
+    if (mechanism === ExerciseMechanism.SIGNALS) {
       postfix = 'signal';
-    } else if (mechanism === 'MATRIX') {
+    } else if (mechanism === ExerciseMechanism.MATRIX) {
       postfix = 'words-sequences';
-    } else if (mechanism === 'WORDS') {
+    } else if (mechanism === ExerciseMechanism.WORDS) {
       postfix = 'single-simple-words';
     } else {
       throw new Error('Unknown mechanism: ' + mechanism);
@@ -62,8 +62,8 @@ export default class TaskPlayerComponent extends Component {
         this.setMode(MODES.TASK);
       } else {
         if (
-          this.taskModelName !== 'task/sentence' &&
-          this.taskModelName !== 'task/signal'
+          this.taskModelName !== ExerciseMechanism.MATRIX &&
+          this.taskModelName !== ExerciseMechanism.SIGNALS
         ) {
           this.setMode(MODES.LISTEN);
         }
@@ -99,26 +99,22 @@ export default class TaskPlayerComponent extends Component {
     this.task.set('normalizedAnswerOptions', sortedWords);
   }
   get taskModelName() {
-    return this.task.constructor.modelName;
+    return this.task.exerciseMechanism;
   }
   get orderedPlaylist(): AnswerOption[] {
     const { answerOptions, selectedItemsOrder, normalizedAnswerOptions } =
       this.task;
     // for ordered tasks we need to align audio stream with object order;
-    const modelName = this.task.constructor.modelName;
-    if (modelName === 'task/signal') {
+    
+
+    if (this.task.exerciseMechanism === ExerciseMechanism.SIGNALS) {
       return answerOptions;
     }
-    if (
-      modelName === 'task/frequency-words' ||
-      modelName === 'task/single-words' ||
-      modelName === 'task/single-words-koroleva' ||
-      modelName === 'task/single-simple-words' ||
-      modelName === 'task/phrase'
-    ) {
+    if (this.task.exerciseMechanism === ExerciseMechanism.WORDS) {
       return normalizedAnswerOptions;
     }
-    if (modelName === 'task/words-sequences' || modelName === 'task/sentence') {
+
+    if (this.task.exerciseMechanism === ExerciseMechanism.MATRIX) {
       const sortedItems: any[] = [];
       const length = answerOptions[selectedItemsOrder[0]].length;
       for (let i = 0; i < length; i++) {
@@ -132,7 +128,8 @@ export default class TaskPlayerComponent extends Component {
       }
       return sortedItems;
     }
-    throw new Error(`Unknown task type - ${modelName}`);
+
+    throw new Error(`Unknown task type - ${this.task.exerciseMechanism}`);
   }
 
   @(task(function* (this: TaskPlayerComponent) {
