@@ -68,10 +68,16 @@ module('Acceptance | tasks flow', function (hooks) {
 
     await pageObject.goToFirstTaskSecondExercise();
 
-    let { targetTask } = setupAfterPageVisit();
+    const audio = getOwner(this).lookup('service:audio');
+
+    setupAfterPageVisit();
 
     await pageObject.startTask();
-    await chooseAnswer(targetTask.correctAnswer.word);
+
+    for (let i = 0; i < 15; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      await chooseAnswer(audio._lastText);
+    }
 
     await customTimeout();
 
