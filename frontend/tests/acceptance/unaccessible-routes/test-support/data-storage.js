@@ -23,8 +23,8 @@ export function getTaskScenarioData() {
       id: 1,
       name: 'default',
       tasks: [
-        { id: 1, type: 'task/SINGLE_WORDS' },
-        { id: 2, type: 'task/SINGLE_WORDS' },
+        { id: 1, type: 'task/single-simple-words' },
+        { id: 2, type: 'task/single-simple-words' },
       ],
     },
   ];
