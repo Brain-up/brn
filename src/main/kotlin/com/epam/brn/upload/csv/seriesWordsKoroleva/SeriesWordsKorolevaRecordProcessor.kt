@@ -14,7 +14,6 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import com.epam.brn.upload.toStringWithoutBraces
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -25,9 +24,6 @@ class SeriesWordsKorolevaRecordProcessor(
     private val exerciseRepository: ExerciseRepository,
     private val wordsService: WordsService
 ) : RecordProcessor<SeriesWordsKorolevaRecord, Exercise> {
-
-    @Value(value = "\${brn.picture.file.default.path}")
-    private lateinit var pictureDefaultPath: String
 
     override fun isApplicable(record: Any): Boolean = record is SeriesWordsKorolevaRecord
 
@@ -72,7 +68,6 @@ class SeriesWordsKorolevaRecordProcessor(
                 .orElse(
                     Resource(
                         word = word,
-                        pictureFileUrl = pictureDefaultPath.format(word),
                         locale = locale.locale,
                     )
                 )

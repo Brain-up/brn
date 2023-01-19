@@ -11,6 +11,7 @@ val testContainersVersion: String by properties
 val okhttp3Version: String by properties
 val kotlinxCoroutinesCoreVersion: String by properties
 val springCloudContractWiremockVersion: String by properties
+val springDocOpenApiVersion: String by properties
 
 val ktlint by configurations.creating
 
@@ -67,8 +68,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinxCoroutinesCoreVersion")
     implementation("org.apache.logging.log4j:log4j-api-kotlin:$log4jApiKotlinVersion")
 
-    implementation("io.springfox:springfox-swagger-ui:2.10.5")
-    implementation("io.springfox:springfox-swagger2:2.9.2")
+    implementation("org.springdoc:springdoc-openapi-ui:$springDocOpenApiVersion")
+    implementation("org.springdoc:springdoc-openapi-kotlin:$springDocOpenApiVersion")
 
     implementation("software.amazon.awssdk:s3")
     implementation("com.google.cloud:google-cloud-storage:1.110.0")

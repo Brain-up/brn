@@ -4,7 +4,7 @@ import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.BrnResponse
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
@@ -51,13 +51,13 @@ internal class UserDetailControllerTest {
     @MockK
     private lateinit var userAnalyticsService: UserAnalyticsService
 
-    lateinit var userAccountResponse: UserAccountResponse
+    lateinit var userAccountDto: UserAccountDto
 
     val userId: Long = NumberUtils.LONG_ONE
 
     @BeforeEach
     fun initBeforeEachTest() {
-        userAccountResponse = UserAccountResponse(
+        userAccountDto = UserAccountDto(
             id = userId,
             name = "testUserFirstName",
             email = "unittest@test.ru",
@@ -73,7 +73,7 @@ internal class UserDetailControllerTest {
         @Test
         fun `should get user by id`() {
             // GIVEN
-            every { userAccountService.findUserById(userId) } returns userAccountResponse
+            every { userAccountService.findUserDtoById(userId) } returns userAccountDto
 
             // WHEN
             @Suppress("UNCHECKED_CAST")
@@ -81,23 +81,23 @@ internal class UserDetailControllerTest {
                 userDetailController.findUserById(userId).body?.data as List<UserAccountCreateRequest>
 
             // THEN
-            verify(exactly = 1) { userAccountService.findUserById(userId) }
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountResponse)
+            verify(exactly = 1) { userAccountService.findUserDtoById(userId) }
+            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
         }
 
         @Test
         fun `should get logged in user from the current session`() {
             // GIVEN
-            every { userAccountService.getUserFromTheCurrentSession() } returns userAccountResponse
+            every { userAccountService.getCurrentUserDto() } returns userAccountDto
 
             // WHEN
             @Suppress("UNCHECKED_CAST")
             val savedUserAccountDto = userDetailController.getCurrentUser().body?.data as List<UserAccountCreateRequest>
 
             // THEN
-            verify(exactly = 1) { userAccountService.getUserFromTheCurrentSession() }
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountResponse)
+            verify(exactly = 1) { userAccountService.getCurrentUserDto() }
+            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
             assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
         }
 
@@ -105,7 +105,7 @@ internal class UserDetailControllerTest {
         fun `should update avatar for current user`() {
             // GIVEN
             val avatarUrl = "xxx/www/eee"
-            val userAccountResponse = UserAccountResponse(
+            val userAccountDto = UserAccountDto(
                 id = NumberUtils.LONG_ONE,
                 avatar = null,
                 name = "testName",
@@ -114,15 +114,15 @@ internal class UserDetailControllerTest {
                 gender = BrnGender.FEMALE,
                 bornYear = 2000
             )
-            every { userAccountService.updateAvatarForCurrentUser(avatarUrl) } returns userAccountResponse
+            every { userAccountService.updateAvatarForCurrentUser(avatarUrl) } returns userAccountDto
 
             // WHEN
-            val response = userDetailController.updateAvatarCurrentUser(avatarUrl).body?.data as UserAccountResponse
+            val response = userDetailController.updateAvatarCurrentUser(avatarUrl).body?.data as UserAccountDto
 
             // THEN
             verify(exactly = 1) { userAccountService.updateAvatarForCurrentUser(avatarUrl) }
-            userAccountResponse.avatar = avatarUrl
-            assertEquals(userAccountResponse, response)
+            userAccountDto.avatar = avatarUrl
+            assertEquals(userAccountDto, response)
         }
 
         @Test
@@ -133,7 +133,7 @@ internal class UserDetailControllerTest {
                 gender = BrnGender.FEMALE,
                 bornYear = 2000
             )
-            val userAccountResponse = UserAccountResponse(
+            val userAccountDto = UserAccountDto(
                 id = NumberUtils.LONG_ONE,
                 avatar = null,
                 name = "testName",
@@ -142,14 +142,14 @@ internal class UserDetailControllerTest {
                 active = true,
                 bornYear = 2000
             )
-            every { userAccountService.updateCurrentUser(changeRequest) } returns userAccountResponse
+            every { userAccountService.updateCurrentUser(changeRequest) } returns userAccountDto
 
             // WHEN
-            val response = userDetailController.updateCurrentUser(changeRequest).body?.data as UserAccountResponse
+            val response = userDetailController.updateCurrentUser(changeRequest).body?.data as UserAccountDto
 
             // THEN
             verify(exactly = 1) { userAccountService.updateCurrentUser(changeRequest) }
-            assertEquals(userAccountResponse, response)
+            assertEquals(userAccountDto, response)
         }
 
         @Test
@@ -250,7 +250,7 @@ internal class UserDetailControllerTest {
     internal fun `should get doctor assigned to patient`() {
         // GIVEN
         val patientId: Long = 1
-        val doctor = UserAccountResponse(
+        val doctor = UserAccountDto(
             id = patientId,
             name = "testName",
             email = "email",
@@ -304,7 +304,7 @@ internal class UserDetailControllerTest {
         val withAnalytics = false
         val role = BrnRole.USER
         val pageable = mockk<Pageable>()
-        every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountResponse)
+        every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountDto)
 
         // WHEN
         val users = userDetailController.getUsers(withAnalytics, role, pageable)
@@ -312,6 +312,6 @@ internal class UserDetailControllerTest {
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BrnResponse<*>).data shouldBe listOf(userAccountResponse)
+        (users.body as BrnResponse<*>).data shouldBe listOf(userAccountDto)
     }
 }

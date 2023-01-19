@@ -1,46 +1,59 @@
 package com.epam.brn.config
 
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Contact
+import io.swagger.v3.oas.models.info.Info
+import org.springdoc.core.customizers.OpenApiCustomiser
+import org.springdoc.core.customizers.OperationCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
-import springfox.documentation.builders.ApiInfoBuilder
-import springfox.documentation.builders.PathSelectors
-import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.service.ApiInfo
-import springfox.documentation.service.Contact
-import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spring.web.plugins.Docket
+import javax.annotation.security.RolesAllowed
 
 @Configuration
 class SwaggerConfig {
-    val basePackage = "com.epam.brn.controller"
 
     @Bean
-    fun toolingApi(): Docket {
-        return Docket(DocumentationType.SWAGGER_2)
-            .groupName("all")
-            .apiInfo(apiInfo())
-            .select()
-            // following line will expose only internal/service APIs
-            // if Actuator endpoints have to be exposed as well - comment it out
-            .apis(RequestHandlerSelectors.basePackage(basePackage))
-            .paths(PathSelectors.any())
-            .build()
+    fun openApi() = OpenAPI().info(apiInfo())
+
+    private fun apiInfo() = Info()
+        .title("Brain Up project")
+        .description("REST API for brn")
+        .contact(
+            Contact()
+                .name("Elena.Moshnikova")
+                .url("https://www.epam.com/")
+                .email("brainupproject@yandex.ru")
+        )
+
+    @Bean
+    fun rolesAllowedCustomizer(): OperationCustomizer? {
+        return OperationCustomizer { operation, handlerMethod ->
+            var allowedRoles: Array<String>? = null
+            var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
+            if (rolesAllowedAnnotation != null)
+                allowedRoles = rolesAllowedAnnotation.value
+            else {
+                rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
+                if (rolesAllowedAnnotation != null)
+                    allowedRoles = rolesAllowedAnnotation.value
+            }
+
+            val sb = StringBuilder("Roles: ")
+            if (allowedRoles != null)
+                sb.append("**${allowedRoles.joinToString(",")}**")
+            else
+                sb.append("**PUBLIC**")
+
+            operation.description?.let {
+                sb.append("<br/>")
+                sb.append(it)
+            }
+
+            operation.description = sb.toString()
+            operation
+        }
     }
 
-    private fun apiInfo(): ApiInfo {
-        return ApiInfoBuilder()
-            .title("Brain up project")
-            .description("REST API for brn")
-            .contact(Contact("Elena.Moshnikova", "https://www.epam.com/", "brainupproject@yandex.ru"))
-            .build()
-    }
-
-    @Override
-    protected fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler("swagger-ui.html")
-            .addResourceLocations("classpath:/META-INF/resources/")
-        registry.addResourceHandler("/webjars/**")
-            .addResourceLocations("classpath:/META-INF/resources/webjars/")
-    }
+    @Bean
+    fun sortTagsCustomiser(): OpenApiCustomiser = OpenApiCustomiser { openApi -> openApi.tags.sortBy { it.name } }
 }

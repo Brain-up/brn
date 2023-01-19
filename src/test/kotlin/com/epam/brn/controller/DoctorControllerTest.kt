@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnGender
 import com.epam.brn.service.DoctorService
 import io.kotest.matchers.shouldBe
@@ -76,10 +76,10 @@ internal class DoctorControllerTest {
     private fun prepareUser(
         id: Long?,
         email: String?,
-        roles: MutableSet<String>? = mutableSetOf(),
+        roles: MutableSet<String> = mutableSetOf(),
         doctorId: Long? = null
-    ): UserAccountResponse {
-        return UserAccountResponse(
+    ): UserAccountDto {
+        return UserAccountDto(
             id = id,
             name = email,
             email = email,

@@ -3,8 +3,8 @@ package com.epam.brn.controller
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.UserAnalyticsService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.commons.io.IOUtils.toByteArray
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.MediaType
@@ -17,13 +17,13 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/audio")
-@Api(value = "/audio", tags = ["Audio"], description = "Contains actions for getting audio file for words")
+@Tag(name = "Audio", description = "Contains actions for getting audio file for words")
 @ConditionalOnProperty(name = ["default.tts.provider"])
 @RolesAllowed(BrnRole.USER)
 class AudioController(private val userAnalyticsService: UserAnalyticsService) {
 
     @GetMapping(produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    @ApiOperation("Get audio resource for text and exerciseId")
+    @Operation(summary = "Get audio resource for text and exerciseId")
     fun getAudioByteArray(
         @RequestParam text: String,
         @RequestParam(required = false, defaultValue = "0") exerciseId: Long,

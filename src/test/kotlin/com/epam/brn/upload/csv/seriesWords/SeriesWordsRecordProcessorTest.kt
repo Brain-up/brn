@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
-import java.util.Random
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesWordsRecordProcessorTest {
@@ -79,7 +78,6 @@ internal class SeriesWordsRecordProcessorTest {
             wordsServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
         ReflectionTestUtils.setField(seriesWordsRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
@@ -92,7 +90,6 @@ internal class SeriesWordsRecordProcessorTest {
                 ofType(String::class)
             )
         } returns Optional.empty()
-        every { wordsServiceMock.addWordsToDictionary(ofType(BrnLocale::class), any()) } returns Unit
         every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, noiseLevel) } returns Optional.empty()
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
@@ -132,7 +129,6 @@ internal class SeriesWordsRecordProcessorTest {
 
     // @Test
     fun `should create correct task`() {
-        seriesWordsRecordProcessor.random = Random(800)
         val expected = createExercise().tasks.first()
 
         val actual = seriesWordsRecordProcessor.process(
@@ -286,7 +282,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "бал",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/бал.ogg",
-            pictureFileUrl = "pictures/бал.jpg"
         )
     }
 
@@ -295,7 +290,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "бум",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/бум.ogg",
-            pictureFileUrl = "pictures/бум.jpg"
         )
     }
 
@@ -304,7 +298,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "быль",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/быль.ogg",
-            pictureFileUrl = "pictures/быль.jpg"
         )
     }
 
@@ -313,7 +306,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "вить",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/вить.ogg",
-            pictureFileUrl = "pictures/вить.jpg"
         )
     }
 
@@ -322,7 +314,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "гад",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/гад.ogg",
-            pictureFileUrl = "pictures/гад.jpg"
         )
     }
 
@@ -331,7 +322,6 @@ internal class SeriesWordsRecordProcessorTest {
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
             audioFileUrl = "/test/дуб.ogg",
-            pictureFileUrl = "pictures/дуб.jpg"
         )
     }
 }

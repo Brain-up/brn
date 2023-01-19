@@ -1,22 +1,21 @@
 package com.epam.brn.dto.request.exercise
 
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import org.apache.commons.lang3.StringUtils
 
-@ApiModel(value = "SetOfWords", description = "Sets of words for creating sentences")
+@Schema(name = "SetOfWords", description = "Sets of words for creating sentences")
 data class SetOfWords(
-    @ApiModelProperty(value = "Words with wordType=COUNT", example = "[пять, шесть, семь]")
+    @Schema(description = "Words with wordType=COUNT", example = "[пять, шесть, семь]")
     val count: List<String> = emptyList(),
-    @ApiModelProperty(value = "Words with wordType=OBJECT_DESCRIPTION", example = "[бабушек, дедушек, девушек]")
+    @Schema(description = "Words with wordType=OBJECT_DESCRIPTION", example = "[бабушек, дедушек, девушек]")
     val objectDescription: List<String> = emptyList(),
-    @ApiModelProperty(value = "Words with wordType=OBJECT", example = "[купили, слепили, продали]")
+    @Schema(description = "Words with wordType=OBJECT", example = "[купили, слепили, продали]")
     val objectWord: List<String> = emptyList(),
-    @ApiModelProperty(value = "Words with wordType=OBJECT_ACTION", example = "[тёте, дяде, папе]")
+    @Schema(description = "Words with wordType=OBJECT_ACTION", example = "[тёте, дяде, папе]")
     val objectAction: List<String> = emptyList(),
-    @ApiModelProperty(value = "Words with wordType=ADDITION_OBJECT_DESCRIPTION", example = "[красные, белые, желтые]")
+    @Schema(description = "Words with wordType=ADDITION_OBJECT_DESCRIPTION", example = "[красные, белые, желтые]")
     val additionObjectDescription: List<String> = emptyList(),
-    @ApiModelProperty(value = "Words with wordType=ADDITION_OBJECT", example = "[шторы, пышки, вилки]")
+    @Schema(description = "Words with wordType=ADDITION_OBJECT", example = "[шторы, пышки, вилки]")
     val additionObject: List<String> = emptyList()
 ) {
     fun toRecordList(): List<String> = listOf(

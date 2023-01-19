@@ -1,16 +1,14 @@
 package com.epam.brn.service.load
 
-import com.epam.brn.service.RoleService
-import com.epam.brn.enums.BrnRole
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
-import com.epam.brn.enums.ExerciseType
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.AudioFilesGenerationService
-import com.epam.brn.service.WordsService
+import com.epam.brn.service.RoleService
 import com.epam.brn.upload.CsvUploadService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,8 +40,6 @@ class InitialDataLoader(
     private val passwordEncoder: PasswordEncoder,
     private val roleService: RoleService,
     private val uploadService: CsvUploadService,
-    private val audioFilesGenerationService: AudioFilesGenerationService,
-    private val wordsService: WordsService,
 ) {
     private val log = logger()
 
@@ -52,9 +48,6 @@ class InitialDataLoader(
 
     @Value("\${init.folder:#{null}}")
     var directoryPath: Path? = null
-
-    @Value("\${withAudioFilesGeneration}")
-    var withAudioFilesGeneration: Boolean = false
 
     companion object {
         private val mapSeriesTypeInitFile = mapOf(
@@ -121,10 +114,6 @@ class InitialDataLoader(
         addAdminAllRoles()
         audiometryLoader.loadInitialAudiometricsWithTasks()
         initExercisesFromFiles()
-        wordsService.createTxtFilesWithExerciseWordsMap()
-
-        if (withAudioFilesGeneration)
-            audioFilesGenerationService.generateAudioFiles()
     }
 
     private fun addAdminAllRoles() {

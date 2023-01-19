@@ -7,6 +7,7 @@ import com.epam.brn.dto.request.exercise.ExerciseSentencesCreateDto
 import com.epam.brn.dto.request.exercise.ExerciseWordsCreateDto
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
@@ -56,15 +57,16 @@ class ExerciseService(
     }
 
     fun findExercisesBySubGroupForCurrentUser(subGroupId: Long): List<ExerciseDto> {
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
-        return findExercisesByUserIdAndSubGroupId(currentUser.id!!, subGroupId)
+        val currentUserId = userAccountService.getCurrentUserId()
+        return findExercisesByUserIdAndSubGroupId(currentUserId, subGroupId)
     }
 
     fun findExercisesByUserIdAndSubGroupId(userId: Long, subGroupId: Long): List<ExerciseDto> {
         log.info("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
+        val currentUserRoles = userAccountService.getCurrentUserRoles()
         log.info("Current user is admin: ${userId == 1L}))")
-        if (userId == 1L)
+        if (currentUserRoles.contains(BrnRole.ADMIN) || currentUserRoles.contains(BrnRole.SPECIALIST))
             return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
         val openSubGroupExercises =
@@ -78,8 +80,8 @@ class ExerciseService(
         if (exerciseIds.isEmpty()) return emptyList()
         val exercise = exerciseRepository.findById(exerciseIds[0])
         if (!exercise.isPresent) throw EntityNotFoundException("There is no one exercise with id = ${exerciseIds[0]}")
-        val currentUser = userAccountService.getUserFromTheCurrentSession()
-        return findExercisesByUserIdAndSubGroupId(currentUser.id!!, exercise.get().subGroup!!.id!!)
+        val currentUserId = userAccountService.getCurrentUserId()
+        return findExercisesByUserIdAndSubGroupId(currentUserId, exercise.get().subGroup!!.id!!)
             .filter(ExerciseDto::available)
             .map { e -> e.id!! }
     }

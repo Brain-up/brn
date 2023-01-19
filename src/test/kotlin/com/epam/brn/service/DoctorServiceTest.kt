@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
@@ -28,12 +28,12 @@ internal class DoctorServiceTest {
     @MockK
     private lateinit var roleService: RoleService
 
-    private lateinit var admin: UserAccountResponse
-    private lateinit var doctor: UserAccountResponse
-    private lateinit var anotherDoctor: UserAccountResponse
-    private lateinit var user1: UserAccountResponse
-    private lateinit var user2: UserAccountResponse
-    private lateinit var fakeDoctorUser: UserAccountResponse
+    private lateinit var admin: UserAccountDto
+    private lateinit var doctor: UserAccountDto
+    private lateinit var anotherDoctor: UserAccountDto
+    private lateinit var user1: UserAccountDto
+    private lateinit var user2: UserAccountDto
+    private lateinit var fakeDoctorUser: UserAccountDto
 
     @BeforeEach
     fun setUp() {
@@ -44,12 +44,12 @@ internal class DoctorServiceTest {
         user2 = prepareUser(4, "user2@doctor.test")
         fakeDoctorUser = prepareUser(5, "user2@doctor.test")
 
-        every { userAccountService.findUserById(admin.id!!) } returns admin
-        every { userAccountService.findUserById(doctor.id!!) } returns doctor
-        every { userAccountService.findUserById(anotherDoctor.id!!) } returns anotherDoctor
-        every { userAccountService.findUserById(user1.id!!) } returns user1
-        every { userAccountService.findUserById(user2.id!!) } returns user2
-        every { userAccountService.findUserById(fakeDoctorUser.id!!) } returns fakeDoctorUser
+        every { userAccountService.findUserDtoById(admin.id!!) } returns admin
+        every { userAccountService.findUserDtoById(doctor.id!!) } returns doctor
+        every { userAccountService.findUserDtoById(anotherDoctor.id!!) } returns anotherDoctor
+        every { userAccountService.findUserDtoById(user1.id!!) } returns user1
+        every { userAccountService.findUserDtoById(user2.id!!) } returns user2
+        every { userAccountService.findUserDtoById(fakeDoctorUser.id!!) } returns fakeDoctorUser
 
         every { roleService.isCurrentUserAdmin() } returns false
         every { roleService.isUserHasRole(admin, BrnRole.ADMIN) } returns true
@@ -285,7 +285,7 @@ internal class DoctorServiceTest {
         val doctorAssignedToPatient = doctorService.getDoctorAssignedToPatient(user1.id!!)
 
         // THEN
-        verify { userAccountService.findUserById(doctor.id!!) }
+        verify { userAccountService.findUserDtoById(doctor.id!!) }
         doctorAssignedToPatient.id shouldBe doctor.id!!
     }
 
@@ -301,7 +301,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.findUserById(doctor.id!!) }
+        verify(exactly = 0) { userAccountService.findUserDtoById(doctor.id!!) }
     }
 
     @Test
@@ -315,7 +315,7 @@ internal class DoctorServiceTest {
         }
 
         // THEN
-        verify(exactly = 0) { userAccountService.findUserById(doctor.id!!) }
+        verify(exactly = 0) { userAccountService.findUserDtoById(doctor.id!!) }
     }
 
     @Test
@@ -328,7 +328,7 @@ internal class DoctorServiceTest {
         val doctorAssignedToPatient = doctorService.getDoctorAssignedToPatient(user1.id!!)
 
         // THEN
-        verify { userAccountService.findUserById(doctor.id!!) }
+        verify { userAccountService.findUserDtoById(doctor.id!!) }
         doctorAssignedToPatient.id shouldBe doctor.id!!
     }
 
@@ -352,8 +352,8 @@ internal class DoctorServiceTest {
         id: Long?,
         email: String?,
         doctorId: Long? = null
-    ): UserAccountResponse {
-        return UserAccountResponse(
+    ): UserAccountDto {
+        return UserAccountDto(
             id = id,
             name = email,
             email = email,

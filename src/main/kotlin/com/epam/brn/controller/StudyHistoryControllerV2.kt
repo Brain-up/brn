@@ -5,8 +5,8 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,14 +19,14 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/v2/study-history")
-@Api(value = "/v2/study-history", tags = ["Study History"], description = "Contains actions over the results of finished exercise")
+@Tag(name = "Study History", description = "Contains actions over the results of finished exercise")
 @RolesAllowed(BrnRole.USER)
 class StudyHistoryControllerV2(
     @Autowired val studyHistoryService: StudyHistoryService,
     @Autowired val roleService: RoleService
 ) {
     @GetMapping("/histories")
-    @ApiOperation("Get user's study histories for period from <= startTime <= to where startTime is a date in ISO date time format")
+    @Operation(summary = "Get user's study histories for period from <= startTime <= to where startTime is a date in ISO date time format")
     fun getHistories(
         @RequestParam("userId") userId: Long?,
         @RequestParam("from", required = true) from: LocalDateTime,
@@ -41,7 +41,7 @@ class StudyHistoryControllerV2(
     }
 
     @GetMapping("/user/{userId}/has/statistics")
-    @ApiOperation("Check if user has statistics")
+    @Operation(summary = "Check if user has statistics")
     fun isUserHasStatistics(
         @PathVariable("userId") userId: Long
     ) = ResponseEntity.ok()
