@@ -47,7 +47,7 @@ export default class AudioService extends Service {
   @service('stats') declare stats: StatsService;
   @service('intl') declare intl: Intl;
   @service('user-data') declare userData: UserDataService;
-  context = createAudioContext();
+  context!: AudioContext;
   @tracked
   player: null | TimerComponent = null;
   register(player: TimerComponent) {
