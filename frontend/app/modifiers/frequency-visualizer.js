@@ -3,10 +3,10 @@ import { modifier } from 'ember-modifier';
 function draw(canvas, frequency, duration, amplitude, width, height, text) {
   canvas.width = width * window.devicePixelRatio;
   canvas.height = height * window.devicePixelRatio;
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext('2d');
 
-  canvas.style.width = width + "px";
-  canvas.style.height = height + "px";
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
 
   ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
@@ -16,23 +16,19 @@ function draw(canvas, frequency, duration, amplitude, width, height, text) {
   let cancelFrame;
 
   const render = () => {
-    ctx.fillStyle = "white";
+    ctx.fillStyle = 'white';
 
     // white text on the top of canvas
 
-
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-
-    ctx.font = "10px Arial";
-    ctx.fillStyle = "grey";
-    ctx.textAlign = "center";
+    ctx.font = '10px Arial';
+    ctx.fillStyle = 'grey';
+    ctx.textAlign = 'center';
     // fill text in the bottom of canvas
-    ctx.fillText(text, 100, window.devicePixelRatio*6, 300);
+    ctx.fillText(text, 100, window.devicePixelRatio * 6, 300);
 
     // ctx.fillText(text, canvas.width / 2, canvas.height - 40, 300);
-
-
 
     ctx.lineWidth = 1;
 
@@ -42,59 +38,71 @@ function draw(canvas, frequency, duration, amplitude, width, height, text) {
     const tick = Date.now();
     const timePassed = tick - startTime;
     const progress = timePassed / duration;
-    const start = Math.round(progress * canvas.width);
-    const center = (canvas.height / window.devicePixelRatio) / 2;
-    const end = start + duration/100 // canvas.width
+    const fullWidth = canvas.width / window.devicePixelRatio;
+    const start = Math.round(progress * fullWidth);
+    const center = canvas.height / window.devicePixelRatio / 2;
+    const width = duration / 100;
+    const end = start + width; // canvas.width
+    const leftPad = end - fullWidth;
 
     // console.log(start, end);
     const speed = 0;
     // console.log(progress, start, end);
     ctx.beginPath();
 
-    for (let i = start; i <= end; i += 1) {
-      console.log(i);
-      ctx.lineTo(i, center
-         + (Math.sin(tick * speed + i * frequency) * amplitude)
-         );
+    for (let i = start; i <= Math.min(end, fullWidth); i += 1) {
+      const isStart = i === start;
+      const isEnd = i === Math.min(end, fullWidth);
+      if (isStart) {
+        ctx.moveTo(i, center);
+      }
+      ctx.lineTo(
+        i,
+        center + Math.sin(tick * speed + (i * frequency) / 5) * amplitude,
+      );
+      if (isEnd) {
+        ctx.lineTo(i, center);
+      }
     }
-    ctx.strokeStyle = `rgb(129, 213, 249)`
+    ctx.strokeStyle = `rgb(129, 213, 249)`;
 
     ctx.stroke();
-    // ctx.endPath();
+
+    if (leftPad > 0) {
+      ctx.beginPath();
+      for (let i = 0; i <= leftPad; i += 1) {
+        const isEnd = i === leftPad;
+        ctx.lineTo(
+          i,
+          center + Math.sin(tick * speed + i * (frequency / 5)) * amplitude,
+        );
+        if (isEnd) {
+          ctx.lineTo(i, center);
+        }
+      }
+      ctx.strokeStyle = `rgb(129, 213, 249)`;
+      ctx.stroke();
+    }
 
     ctx.beginPath();
-    for (let i = 0; i <= start; i += 1) {
-      ctx.lineTo(i, 
-        center 
-        // +  (Math.sin(tick * 0.0003 + i * frequency) * amplitude)
-        );
+    for (let i = leftPad > 0 ? leftPad : 0; i <= start; i += 1) {
+      ctx.lineTo(i, center);
     }
-    ctx.strokeStyle = `gray`
+    ctx.strokeStyle = `gray`;
     ctx.stroke();
-
 
     ctx.beginPath();
     for (let i = end; i <= canvas.width; i += 1) {
-      const center = (canvas.height / window.devicePixelRatio) / 2;
-      ctx.lineTo(i, center 
-        // +  (Math.sin(tick * 0.0003 + i * frequency) * amplitude)
-        );
+      ctx.lineTo(i, center);
     }
-    ctx.strokeStyle = `gray`
+    ctx.strokeStyle = `gray`;
     ctx.stroke();
-    // ctx.endPath();
-
-    
-    //ctx.fillStyle = progress < 0.9 ? "black" : "white";
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (timePassed < duration) {
       cancelFrame = requestAnimationFrame(render);
     } else {
       startTime = Date.now();
       cancelFrame = requestAnimationFrame(render);
-      // ctx.fillStyle = "white";
-      // ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   };
 
@@ -105,18 +113,24 @@ function draw(canvas, frequency, duration, amplitude, width, height, text) {
   return () => {
     // oscillator.stop();
     cancelAnimationFrame(cancelFrame);
-  }
+  };
 }
-
 
 // Example usage:
 
 export default modifier(function frequencyVisualizer(element, [option]) {
   const { duration, frequency } = option.signal;
-  const cancel = draw(element, frequency * 1000, duration * 100, 60, element.parentNode.clientWidth - 40, element.parentNode.clientHeight, option.word.split(':').pop());
-
+  const cancel = draw(
+    element,
+    frequency * 1000,
+    duration * 100,
+    60,
+    element.parentNode.clientWidth - 40,
+    element.parentNode.clientHeight,
+    option.word.split(':').pop(),
+  );
 
   return () => {
     cancel();
-  }
+  };
 });
