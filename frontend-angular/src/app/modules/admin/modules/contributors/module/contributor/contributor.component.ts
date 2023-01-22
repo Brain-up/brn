@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
 import { finalize } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationRef } from '@angular/core';
 
 @Component({
   selector: 'app-contributor',
@@ -16,13 +17,15 @@ export class ContributorComponent implements OnInit {
   public contributorForm: FormGroup;
   public contributor;
   public contributorTypes = contributorTypes;
+  public file: File;
+  public showErrormessage: boolean;
   public readonly isLoading$ = new BehaviorSubject(false);
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private router: Router,
-    private contributorApiService: ContributorApiService
+    private contributorApiService: ContributorApiService,
   ) {
   }
 
@@ -61,8 +64,8 @@ export class ContributorComponent implements OnInit {
     this.contributorForm.patchValue(contributor);
   }
 
-  public get pictureUrl(): string {
-    return this.contributorForm.get('pictureUrl').value;
+  public get pictureUrl(): AbstractControl {
+    return this.contributorForm.get('pictureUrl');
   }
 
   public get id(): string {
@@ -74,7 +77,7 @@ export class ContributorComponent implements OnInit {
   }
 
   public get nameEn(): AbstractControl {
-    return this.contributorForm.get('name');
+    return this.contributorForm.get('nameEn');
   }
 
   public get description(): AbstractControl {
@@ -157,8 +160,20 @@ export class ContributorComponent implements OnInit {
     this.router.navigate(['contributors']);
   }
 
-  // will be implemented in the next story
-  public chooseFoto() {
-    console.log(this.contributorForm.getRawValue());
+  public uploadImage(event): void {
+    this.file = event.target.files[0];
+    if (!this.nameEn.value) {
+      this.showErrormessage = true;
+      return;
+    }
+    if (this.file) {
+      const formatData = new FormData();
+      formatData.append('file', this.file);
+      formatData.append('fileName', this.nameEn.value.trim().split(' ').join('_'));
+      this.contributorApiService.uploadContributorImage(formatData).subscribe(resp => {
+        this.pictureUrl.setValue(resp.data);
+        this.showErrormessage = false;
+      });
+    }
   }
 }

@@ -52,6 +52,10 @@ mat-icon {
   height: 80px;
 }
 
+.file-input {
+  display: none;
+}
+
 label, .avatar-label {
   font-weight: 400;
   font-size: $font-size-14;

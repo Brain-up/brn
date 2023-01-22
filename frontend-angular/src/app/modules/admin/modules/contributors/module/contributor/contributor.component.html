@@ -1,20 +1,23 @@
+<div *ngIf="showErrormessage" calss="show-error">Please fill "Name_en" field before upload image</div>
 <div class="content">
   <mat-progress-bar
     *ngIf="isLoading$ | async; else contributorsTable"
     mode="indeterminate"
   ></mat-progress-bar>
 </div>
-
 <ng-template #contributorsTable>
   <div class="container">
     <span class="inform"> (*) required field </span>
     <form [formGroup]="contributorForm">
       <div class="icon-group">
-        <button mat-fab class="load" color="primary" (click)="chooseFoto()">
-          <ng-container *ngIf="pictureUrl">
-            <img class=avatar src="{{ pictureUrl }}" alt="picture"/>
+        <button mat-fab class="load" color="primary" (click)="fileUpload.click()">
+          <ng-container *ngIf="pictureUrl.value">
+            <img
+              class=avatar
+              formControlName="pictureUrl"
+              src="{{ pictureUrl.value }}" alt="picture"/>
           </ng-container>
-          <mat-icon *ngIf="!pictureUrl" class="icon-load" svgIcon="foto-download"></mat-icon>
+          <mat-icon *ngIf="!pictureUrl.value" class="icon-load" svgIcon="foto-download"></mat-icon>
           <span
             class="avatar-label"
           > {{
@@ -23,6 +26,13 @@
             }}</span>
         </button>
       </div>
+      <input
+        class="file-input"
+        type="file"
+        accept=".png, .jpg, .jpeg, .svg"
+        (change)="uploadImage($event)"
+        #fileUpload
+      >
 
       <div class="input-box-active">
         <label for="status"
@@ -31,8 +41,8 @@
             | translate
           }}</label>
         <mat-slide-toggle
-           formControlName="active" ngDefaultControl
-           id="status"
+          formControlName="active" ngDefaultControl
+          id="status"
         ></mat-slide-toggle>
       </div>
 
@@ -51,7 +61,7 @@
               class="cross-validation-error"
         >
         {{ getErrorMessage(name.errors) }}
-      </span>
+        </span>
 
       </div>
 
