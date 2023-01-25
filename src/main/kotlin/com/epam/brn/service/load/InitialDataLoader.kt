@@ -52,7 +52,7 @@ class InitialDataLoader(
     companion object {
         private val mapSeriesTypeInitFile = mapOf(
             ExerciseType.SINGLE_SIMPLE_WORDS.name to SINGLE_SIMPLE_WORDS_FILE_NAME,
-            ExerciseType.PHRASES.name to PHRASES_FILE_NAME_RU,
+            ExerciseType.PHRASES.name to PHRASES_FILE_NAME,
             ExerciseType.WORDS_SEQUENCES.name to WORDS_SEQUENCES_FILE_NAME,
             ExerciseType.SENTENCE.name to SENTENCES_FILE_NAME,
             ExerciseType.FREQUENCY_WORDS.name to SINGLE_FREQUENCY_WORDS_FILE_NAME,
@@ -82,8 +82,7 @@ class InitialDataLoader(
             "$subFolder$SINGLE_FREQUENCY_WORDS_FILE_NAME.csv",
             "$subFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
             "$subFolder$WORDS_SEQUENCES_FILE_NAME.csv",
-            "$subFolder$PHRASES_FILE_NAME_RU.csv",
-            "$subFolder$PHRASES_FILE_NAME_EN.csv",
+            "$subFolder$PHRASES_FILE_NAME.csv",
             "$subFolder$SINGLE_WORDS_KOROLEVA_FILE_NAME.csv",
             "$subFolder$SYLLABLES_KOROLEVA_FILE_NAME.csv",
             "signal_exercises_ru.csv",
@@ -215,8 +214,7 @@ const val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words_ru"
 const val SINGLE_SIMPLE_WORDS_EN_FILE_NAME = "series_words_en"
 const val SINGLE_FREQUENCY_WORDS_FILE_NAME = "series_frequency_words_ru"
 const val SINGLE_FREQUENCY_WORDS_EN_FILE_NAME = "series_frequency_words_en"
-const val PHRASES_FILE_NAME_RU = "series_phrases_ru"
-const val PHRASES_FILE_NAME_EN = "series_phrases_en"
+const val PHRASES_FILE_NAME = "series_phrases_ru"
 const val WORDS_SEQUENCES_FILE_NAME = "series_word_groups_ru"
 const val SENTENCES_FILE_NAME = "series_sentences_ru"
 const val SENTENCES_EN_FILE_NAME = "series_sentences_en"
