@@ -50,7 +50,7 @@ data class Task(
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
-        shouldBeWithPicture = exerciseType.shouldBeWithPictures(),
+        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
     fun toWordsGroupSeriesTaskDto(exerciseType: ExerciseType, template: String? = "") = TaskWordsGroupResponse(
@@ -60,7 +60,7 @@ data class Task(
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
         template = template,
-        shouldBeWithPicture = exerciseType.shouldBeWithPictures(),
+        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
