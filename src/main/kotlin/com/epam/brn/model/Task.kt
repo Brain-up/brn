@@ -3,6 +3,7 @@ package com.epam.brn.model
 import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.shouldBeWithPictures
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -49,6 +50,7 @@ data class Task(
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
+        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
     fun toWordsGroupSeriesTaskDto(exerciseType: ExerciseType, template: String? = "") = TaskWordsGroupResponse(
@@ -57,7 +59,8 @@ data class Task(
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
-        template = template
+        template = template,
+        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
