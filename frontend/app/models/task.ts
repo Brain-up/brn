@@ -10,6 +10,7 @@ import TasksManagerService from 'brn/services/tasks-manager';
 import StudyingTimerService from 'brn/services/studying-timer';
 import { tracked } from '@glimmer/tracking';
 import AnswerOption from 'brn/utils/answer-option';
+import { ExerciseMechanism } from 'brn/serializers/application';
 export default class Task extends CompletionDependent {
   get usePreGeneratedAudio() {
     return this.exercise.audioFileUrlGenerated;
@@ -20,6 +21,7 @@ export default class Task extends CompletionDependent {
 
   @attr('string') name!: string;
   @attr('string') exerciseType!: string;
+  @attr('string') exerciseMechanism!: ExerciseMechanism;
 
   @attr('number') order!: number;
   @attr('number') repetitionCount!: number;

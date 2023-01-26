@@ -26,7 +26,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     const url = useGeneratedUrl
       ? urlForAudio(answer.audioFileUrl)
       : this.audio.audioUrlForText(
-          task.answer.map((e: AnswerOption) => e.wordPronounce).join(' '),
+          task.answer.map((e: AnswerOption) => e.wordPronounce || e.word).join(' '),
         );
     return url;
   }

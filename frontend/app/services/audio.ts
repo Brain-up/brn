@@ -47,7 +47,7 @@ export default class AudioService extends Service {
   @service('stats') declare stats: StatsService;
   @service('intl') declare intl: Intl;
   @service('user-data') declare userData: UserDataService;
-  context = createAudioContext();
+  context!: AudioContext;
   @tracked
   player: null | TimerComponent = null;
   register(player: TimerComponent) {
@@ -86,7 +86,11 @@ export default class AudioService extends Service {
   }).enqueue())
   trackProgress!: TaskGenerator<any, any>;
 
+  // for tests
+  _lastText: null | string = null;
+
   audioUrlForText(text: string) {
+    this._lastText = text;
     const exercise = this.currentExercise;
     return (
       window.location.protocol +
@@ -102,6 +106,7 @@ export default class AudioService extends Service {
     if (this.isPlaying) {
       return;
     }
+    
     this.stats.addEvent(StatEvents.PlayAudio);
     await this.setAudioElements(filesToPlay as string[]);
     await this.playAudio();
@@ -285,6 +290,7 @@ export default class AudioService extends Service {
       if (this.isAudioBuffer(buffer)) {
         results.push(createSource(context, buffer as AudioBuffer));
       } else if (this.isToneObject(buffer)) {
+
         results.push(
           (
             await this.createToneSources([buffer] as unknown as SignalModel[])
@@ -341,9 +347,15 @@ export default class AudioService extends Service {
 
   nativePlayText(txt: string) {
     const lang = this.userData.activeLocale;
-    const voices = speechSynthesis.getVoices().filter((e) => e.lang === lang);
+    const voices = speechSynthesis.getVoices().filter((e) => e.lang.toLowerCase() === lang);
+    const voicesToPlay: SpeechSynthesisVoice[] = [
+      voices.find(el => el.default === true), // default
+      voices.find(el => el.localService === false), // cloud
+      ...voices,
+    ].filter((el) => el !== undefined) as SpeechSynthesisVoice[];
+
     const v = new SpeechSynthesisUtterance(txt);
-    v.voice = voices[0];
+    v.voice = voicesToPlay[0];
     const p = new Promise((resolve) => {
       v.onend = resolve;
     });
