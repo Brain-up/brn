@@ -428,22 +428,19 @@ internal class TaskServiceTest {
         @Test
         fun `should return correct task by id(PHRASES)`() {
             // GIVEN
-            val taskDto = TaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
-            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
-            every { task1Mock.answerOptions } returns mutableSetOf()
-            every { task1Mock.exercise } returns exerciseMock
+            val task1 = Task(exercise = exerciseMock, id = LONG_ONE)
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1)
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name
-            every { task1Mock.toTaskResponse(ExerciseType.PHRASES) } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            taskById shouldBe taskDto
             (taskById as TaskResponse).exerciseMechanism shouldBe ExerciseMechanism.WORDS
-            taskById.shouldBeWithPictures shouldBe true
+            taskById.id shouldBe LONG_ONE
+            taskById.shouldBeWithPictures shouldBe false
         }
 
         @Test
