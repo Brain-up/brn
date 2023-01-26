@@ -12,5 +12,6 @@ data class TaskWordsGroupResponse(
     val name: String? = "",
     val serialNumber: Int? = 0,
     val template: String? = "",
-    val answerOptions: Map<WordType?, List<ResourceResponse>> = HashMap()
+    val answerOptions: Map<WordType?, List<ResourceResponse>> = HashMap(),
+    val shouldBeWithPicture: Boolean = true,
 )

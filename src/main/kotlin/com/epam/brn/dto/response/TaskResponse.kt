@@ -12,4 +12,5 @@ data class TaskResponse(
     val name: String? = "",
     val serialNumber: Int? = 0,
     val answerOptions: Set<ResourceResponse> = HashSet(),
+    val shouldBeWithPicture: Boolean = true,
 )

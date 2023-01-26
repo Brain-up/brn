@@ -89,7 +89,7 @@ internal class TaskServiceTest {
     @DisplayName("Tests for getting tasks with parameters")
     inner class GetTasks {
         @Test
-        suspend fun `should return tasks by exerciseId(SINGLE_SIMPLE_WORDS)`() {
+        fun `should return tasks by exerciseId(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
             val expectedTaskSize = 2
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
@@ -188,12 +188,12 @@ internal class TaskServiceTest {
             // THEN
             foundTasks.size shouldBe 1
             val answers = foundTasks.first().answerOptions
-            val taskMak = answers.first { it.word == "мак" }
-            val taskMaki = answers.first { it.word == "маки" }
-            taskMak.soundsCount shouldBe 1
-            taskMaki.soundsCount shouldBe 2
-            taskMak.columnNumber shouldBe 0
-            taskMaki.columnNumber shouldBe 1
+            val wordMak = answers.first { it.word == "мак" }
+            val wordMaki = answers.first { it.word == "маки" }
+            wordMak.soundsCount shouldBe 1
+            wordMaki.soundsCount shouldBe 2
+            wordMak.columnNumber shouldBe 0
+            wordMaki.columnNumber shouldBe 1
             answers.size shouldBe 2
         }
 
