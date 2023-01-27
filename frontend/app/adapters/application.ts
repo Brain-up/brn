@@ -29,14 +29,7 @@ export default class ApplicationAdapter extends RESTAdapter {
 
   urlForFindRecord(id: string, modelName: string, snapshot: any): string {
     let actualModelName = modelName;
-    if (
-      modelName === 'task/single-words' ||
-      modelName === 'task/single-words-koroleva' ||
-      modelName === 'task/words-sequences' ||
-      modelName === 'task/sentence' ||
-      modelName === 'task/single-simple-words' ||
-      modelName === 'task/phrase' ||
-      modelName === 'task/frequency-words'
+    if (modelName.startsWith('task/')
     ) {
       actualModelName = 'tasks';
     }

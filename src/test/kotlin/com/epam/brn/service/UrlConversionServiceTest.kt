@@ -59,7 +59,7 @@ internal class UrlConversionServiceTest {
         assertEquals("$baseFileUrl/$fullFileName", resultPictureUrl)
     }
 
-    @Test
+    // @Test after 2243 task will be implemented
     fun `should return correct url for task picture when picture exists in unverified pictures folder`() {
         // GIVEN
         val word = "word"

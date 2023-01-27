@@ -1,16 +1,14 @@
 package com.epam.brn.service.load
 
-import com.epam.brn.service.RoleService
-import com.epam.brn.enums.BrnRole
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
-import com.epam.brn.enums.ExerciseType
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.AudioFilesGenerationService
-import com.epam.brn.service.WordsService
+import com.epam.brn.service.RoleService
 import com.epam.brn.upload.CsvUploadService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,8 +40,6 @@ class InitialDataLoader(
     private val passwordEncoder: PasswordEncoder,
     private val roleService: RoleService,
     private val uploadService: CsvUploadService,
-    private val audioFilesGenerationService: AudioFilesGenerationService,
-    private val wordsService: WordsService,
 ) {
     private val log = logger()
 
@@ -53,13 +49,10 @@ class InitialDataLoader(
     @Value("\${init.folder:#{null}}")
     var directoryPath: Path? = null
 
-    @Value("\${withAudioFilesGeneration}")
-    var withAudioFilesGeneration: Boolean = false
-
     companion object {
         private val mapSeriesTypeInitFile = mapOf(
             ExerciseType.SINGLE_SIMPLE_WORDS.name to SINGLE_SIMPLE_WORDS_FILE_NAME,
-            ExerciseType.PHRASES.name to PHRASES_FILE_NAME,
+            ExerciseType.PHRASES.name to PHRASES_FILE_NAME_RU,
             ExerciseType.WORDS_SEQUENCES.name to WORDS_SEQUENCES_FILE_NAME,
             ExerciseType.SENTENCE.name to SENTENCES_FILE_NAME,
             ExerciseType.FREQUENCY_WORDS.name to SINGLE_FREQUENCY_WORDS_FILE_NAME,
@@ -89,7 +82,8 @@ class InitialDataLoader(
             "$subFolder$SINGLE_FREQUENCY_WORDS_FILE_NAME.csv",
             "$subFolder$SINGLE_FREQUENCY_WORDS_EN_FILE_NAME.csv",
             "$subFolder$WORDS_SEQUENCES_FILE_NAME.csv",
-            "$subFolder$PHRASES_FILE_NAME.csv",
+            "$subFolder$PHRASES_FILE_NAME_RU.csv",
+            "$subFolder$PHRASES_FILE_NAME_EN.csv",
             "$subFolder$SINGLE_WORDS_KOROLEVA_FILE_NAME.csv",
             "$subFolder$SYLLABLES_KOROLEVA_FILE_NAME.csv",
             "signal_exercises_ru.csv",
@@ -121,10 +115,6 @@ class InitialDataLoader(
         addAdminAllRoles()
         audiometryLoader.loadInitialAudiometricsWithTasks()
         initExercisesFromFiles()
-        wordsService.createTxtFilesWithExerciseWordsMap()
-
-        if (withAudioFilesGeneration)
-            audioFilesGenerationService.generateAudioFiles()
     }
 
     private fun addAdminAllRoles() {
@@ -225,7 +215,8 @@ const val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words_ru"
 const val SINGLE_SIMPLE_WORDS_EN_FILE_NAME = "series_words_en"
 const val SINGLE_FREQUENCY_WORDS_FILE_NAME = "series_frequency_words_ru"
 const val SINGLE_FREQUENCY_WORDS_EN_FILE_NAME = "series_frequency_words_en"
-const val PHRASES_FILE_NAME = "series_phrases_ru"
+const val PHRASES_FILE_NAME_RU = "series_phrases_ru"
+const val PHRASES_FILE_NAME_EN = "series_phrases_en"
 const val WORDS_SEQUENCES_FILE_NAME = "series_word_groups_ru"
 const val SENTENCES_FILE_NAME = "series_sentences_ru"
 const val SENTENCES_EN_FILE_NAME = "series_sentences_en"

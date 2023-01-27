@@ -23,7 +23,7 @@ class UserMonthStatisticService(
         to: LocalDateTime,
         userId: Long?
     ): List<MonthStudyStatistic> {
-        val tempUserId = userId ?: userAccountService.getUserFromTheCurrentSession().id
+        val tempUserId = userId ?: userAccountService.getCurrentUserDto().id
         val histories = studyHistoryRepository.getHistories(
             userId = tempUserId!!,
             from = from,

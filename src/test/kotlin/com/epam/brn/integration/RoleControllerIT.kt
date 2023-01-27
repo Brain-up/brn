@@ -35,6 +35,7 @@ class RoleControllerIT : BaseIT() {
     @Test
     fun `should return roles list`() {
         // GIVEN
+        roleRepository.deleteAll()
         insertRole(BrnRole.ADMIN)
         insertRole(BrnRole.USER)
         insertRole(BrnRole.SPECIALIST)

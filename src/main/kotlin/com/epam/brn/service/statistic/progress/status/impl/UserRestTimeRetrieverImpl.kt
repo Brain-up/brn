@@ -16,7 +16,7 @@ class UserRestTimeRetrieverImpl(
     private val studyHistoryTimeComparator: Comparator<StudyHistory>
 ) : UserRestTimeRetriever {
     override fun getMaximalUserRestTime(userId: Long?, from: LocalDate, to: LocalDate): Int {
-        val userTempId = userId ?: userAccountService.getUserFromTheCurrentSession().id
+        val userTempId = userId ?: userAccountService.getCurrentUserDto().id
         val histories = studyHistoryRepository.getHistories(
             userTempId!!,
             from.atStartOfDay(),

@@ -143,15 +143,15 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="studyDaysInLastMonth">
+      <ng-container matColumnDef="studyDaysInCurrentMonth">
         <th class="center" mat-header-cell *matHeaderCellDef mat-sort-header>
           {{
-            'Admin.Modules.Users.Components.UsersTable.ColumnsName.StudyDaysInLastMonth'
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.StudyDaysInCurrentMonth'
               | translate
           }}
         </th>
         <td class="center" mat-cell *matCellDef="let user">
-          {{ user.studyDaysInLastMonth }}
+          {{ user.studyDaysInCurrentMonth }}
         </td>
       </ng-container>
 

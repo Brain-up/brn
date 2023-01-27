@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
-import java.util.Random
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesWordsRecordProcessorTest {
@@ -79,7 +78,6 @@ internal class SeriesWordsRecordProcessorTest {
             wordsServiceMock
         )
 
-        ReflectionTestUtils.setField(seriesWordsRecordProcessor, "pictureDefaultPath", "pictures/%s.jpg")
         ReflectionTestUtils.setField(seriesWordsRecordProcessor, "fonAudioPath", "/fon/%s.ogg")
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
@@ -92,7 +90,6 @@ internal class SeriesWordsRecordProcessorTest {
                 ofType(String::class)
             )
         } returns Optional.empty()
-        every { wordsServiceMock.addWordsToDictionary(ofType(BrnLocale::class), any()) } returns Unit
         every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, noiseLevel) } returns Optional.empty()
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()
@@ -132,7 +129,6 @@ internal class SeriesWordsRecordProcessorTest {
 
     // @Test
     fun `should create correct task`() {
-        seriesWordsRecordProcessor.random = Random(800)
         val expected = createExercise().tasks.first()
 
         val actual = seriesWordsRecordProcessor.process(
@@ -278,6 +274,54 @@ internal class SeriesWordsRecordProcessorTest {
                 answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
                 correctAnswer = resource("быль")
             )
+        )
+    }
+
+    private fun resource_бал(): Resource {
+        return Resource(
+            word = "бал",
+            wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "/test/бал.ogg",
+        )
+    }
+
+    private fun resource_бум(): Resource {
+        return Resource(
+            word = "бум",
+            wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "/test/бум.ogg",
+        )
+    }
+
+    private fun resource_быль(): Resource {
+        return Resource(
+            word = "быль",
+            wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "/test/быль.ogg",
+        )
+    }
+
+    private fun resource_вить(): Resource {
+        return Resource(
+            word = "вить",
+            wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "/test/вить.ogg",
+        )
+    }
+
+    private fun resource_гад(): Resource {
+        return Resource(
+            word = "гад",
+            wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "/test/гад.ogg",
+        )
+    }
+
+    private fun resource_дуб(): Resource {
+        return Resource(
+            word = "дуб",
+            wordType = WordType.OBJECT.toString(),
+            audioFileUrl = "/test/дуб.ogg",
         )
     }
 }

@@ -1,6 +1,6 @@
 package com.epam.brn.model
 
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.enums.BrnGender
 import org.springframework.data.annotation.CreatedDate
@@ -71,7 +71,7 @@ class UserAccount(
             " bornYear=$bornYear, gender=$gender, description=$description, doctor=$doctor)"
     }
 
-    fun toDto() = UserAccountResponse(
+    fun toDto() = UserAccountDto(
         id = id,
         userId = userId,
         name = fullName,

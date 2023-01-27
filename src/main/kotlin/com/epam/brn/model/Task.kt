@@ -3,6 +3,7 @@ package com.epam.brn.model
 import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.shouldBeWithPictures
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -48,25 +49,18 @@ class Task(
         exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toList()
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toList(),
+        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
-    fun toWordsGroupSeriesTaskDto(template: String? = "") = TaskWordsGroupResponse(
+    fun toWordsGroupSeriesTaskDto(exerciseType: ExerciseType, template: String? = "") = TaskWordsGroupResponse(
         id = id!!,
-        exerciseType = ExerciseType.WORDS_SEQUENCES,
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
-        template = template
-    )
-
-    fun toSentenceSeriesTaskDto(template: String? = "") = TaskWordsGroupResponse(
-        id = id!!,
-        exerciseType = ExerciseType.SENTENCE,
+        exerciseType = exerciseType,
         name = name,
         serialNumber = serialNumber,
         answerOptions = answerOptions.map { answer -> answer.toResponse() }.groupBy { it.wordType },
         template = template,
+        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
     override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"

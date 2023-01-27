@@ -9,7 +9,7 @@ module('Integration | Component | footer', function (hooks) {
   test('it renders', async function (assert) {
     await render(hbs`<Footer />`);
 
-    assert.dom('[data-test-support-logo]').exists({ count: 4 });
+    assert.dom('[data-test-support-logo]').exists({ count: 5 });
     assert.dom('[data-test-support-message]').exists();
   });
 });

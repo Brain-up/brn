@@ -25,7 +25,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
@@ -84,7 +83,6 @@ internal class SeriesMatrixRecordProcessorTest {
             taskRepositoryMock,
             wordsServiceMock
         )
-        ReflectionTestUtils.setField(seriesMatrixRecordProcessor, "pictureWithWordFileUrl", "pictures/withWord/%s.jpg")
         every { subGroupRepositoryMock.findByCodeAndLocale("code", BrnLocale.RU.locale) } returns subGroupMock
         every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.FILIPP.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
@@ -192,9 +190,7 @@ internal class SeriesMatrixRecordProcessorTest {
             template = "<OBJECT OBJECT_ACTION>",
             level = 1
         )
-
         exercise.addTask(createTask(exercise))
-
         return exercise
     }
 
@@ -210,6 +206,54 @@ internal class SeriesMatrixRecordProcessorTest {
                 resource("лежит"),
                 resource("идет")
             )
+        )
+    }
+
+    private fun resource_девочка(): Resource {
+        return Resource(
+            word = "девочка",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/withWord/девочка.jpg"
+        )
+    }
+
+    private fun resource_бабушка(): Resource {
+        return Resource(
+            word = "бабушка",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/withWord/бабушка.jpg"
+        )
+    }
+
+    private fun resource_дедушка(): Resource {
+        return Resource(
+            word = "дедушка",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/withWord/дедушка.jpg"
+        )
+    }
+
+    private fun resource_сидит(): Resource {
+        return Resource(
+            word = "сидит",
+            wordType = WordType.OBJECT_ACTION.toString(),
+            pictureFileUrl = "pictures/withWord/сидит.jpg"
+        )
+    }
+
+    private fun resource_лежит(): Resource {
+        return Resource(
+            word = "лежит",
+            wordType = WordType.OBJECT_ACTION.toString(),
+            pictureFileUrl = "pictures/withWord/лежит.jpg"
+        )
+    }
+
+    private fun resource_идет(): Resource {
+        return Resource(
+            word = "идет",
+            wordType = WordType.OBJECT_ACTION.toString(),
+            pictureFileUrl = "pictures/withWord/идет.jpg"
         )
     }
 }

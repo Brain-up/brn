@@ -32,18 +32,19 @@ class UrlConversionService(private val cloudService: CloudService) {
 
     fun makeUrlForTaskPicture(word: String): String {
         try {
-            listOf(defaultPicturesPath, unverifiedPicturesPath).forEach { picturesPath ->
-                pictureExtensions.forEach { ext ->
-                    val fileName = "$word.$ext"
-                    if (cloudService.isFileExist(picturesPath, fileName))
-                        return cloudService.baseFileUrl() + "/" + cloudService.createFullFileName(
-                            picturesPath,
-                            fileName
-                        )
+            listOf(defaultPicturesPath) // ,unverifiedPicturesPath - when on UI part will be implement saving pictures
+                .forEach { picturesPath ->
+                    pictureExtensions.forEach { ext ->
+                        val fileName = "$word.$ext"
+                        if (cloudService.isFileExist(picturesPath, fileName))
+                            return cloudService.baseFileUrl() + "/" + cloudService.createFullFileName(
+                                picturesPath,
+                                fileName
+                            )
+                    }
                 }
-            }
         } catch (e: Exception) {
-            log.error("Some exception with cloud service: ", e)
+            log.error("Exception with cloud service on isFileExist check: ", e)
         }
         return ""
     }

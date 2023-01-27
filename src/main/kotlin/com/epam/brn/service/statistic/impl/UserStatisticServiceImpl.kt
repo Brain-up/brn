@@ -19,7 +19,7 @@ class UserStatisticServiceImpl(
 ) : UserStatisticService<SubGroupStatisticResponse> {
 
     override fun getSubGroupStatistic(subGroupsIds: List<Long>): List<SubGroupStatisticResponse> {
-        val userAccount = userAccountService.getUserFromTheCurrentSession()
+        val userAccount = userAccountService.getCurrentUserDto()
         return subGroupsIds.map {
             SubGroupStatisticResponse(
                 subGroupId = it,

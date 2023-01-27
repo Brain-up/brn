@@ -2,8 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
-import com.epam.brn.dto.request.UserAccountCreateRequest
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
@@ -34,7 +33,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertFailsWith
@@ -52,9 +50,6 @@ internal class UserAccountServiceTest {
     lateinit var userAccountRepository: UserAccountRepository
 
     @MockK
-    lateinit var passwordEncoder: PasswordEncoder
-
-    @MockK
     lateinit var roleService: RoleService
 
     @MockK(relaxed = true)
@@ -64,10 +59,7 @@ internal class UserAccountServiceTest {
     lateinit var doctorAccount: UserAccount
 
     @MockK
-    lateinit var userAccountResponse: UserAccountResponse
-
-    @MockK
-    lateinit var userAccountCreateRequest: UserAccountCreateRequest
+    lateinit var userAccountDto: UserAccountDto
 
     @MockK
     lateinit var firebaseUserRecord: UserRecord
@@ -94,11 +86,11 @@ internal class UserAccountServiceTest {
         fun `should find a user by id`() {
             // GIVEN
             val userName = "Tested"
-            every { userAccount.toDto() } returns userAccountResponse
-            every { userAccountResponse.name } returns userName
+            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountDto.name } returns userName
             every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.of(userAccount)
             // WHEN
-            val userAccountDtoReturned = userAccountService.findUserById(NumberUtils.LONG_ONE)
+            val userAccountDtoReturned = userAccountService.findUserDtoById(NumberUtils.LONG_ONE)
             // THEN
             assertThat(userAccountDtoReturned.name).isEqualTo(userName)
         }
@@ -107,8 +99,8 @@ internal class UserAccountServiceTest {
         fun `should find a user by email`() {
             // GIVEN
             val email = "email"
-            every { userAccount.toDto() } returns userAccountResponse
-            every { userAccountResponse.email } returns email
+            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountDto.email } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByEmail(email)
@@ -129,11 +121,11 @@ internal class UserAccountServiceTest {
         fun `should find a user by uuid`() {
             // GIVEN
             val uuid = "uuid"
-            every { userAccount.toDto() } returns userAccountResponse
-            every { userAccountResponse.userId } returns uuid
+            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountDto.userId } returns uuid
             every { userAccountRepository.findByUserId(uuid) } returns userAccount
             // WHEN
-            val userAccountDtoReturned = userAccountService.findUserByUuid(uuid)
+            val userAccountDtoReturned = userAccountService.findUserDtoByUuid(uuid)
             // THEN
             assertNotNull(userAccountDtoReturned)
             assertThat(userAccountDtoReturned.userId).isEqualTo(uuid)
@@ -143,11 +135,11 @@ internal class UserAccountServiceTest {
         fun `should return NULL while get user by uuid`() {
             // GIVEN
             val uuid = "uuid"
-            every { userAccount.toDto() } returns userAccountResponse
-            every { userAccountResponse.userId } returns uuid
+            every { userAccount.toDto() } returns userAccountDto
+            every { userAccountDto.userId } returns uuid
             every { userAccountRepository.findByUserId(uuid) } returns null
             // WHEN
-            val userAccountDtoReturned = userAccountService.findUserByUuid(uuid)
+            val userAccountDtoReturned = userAccountService.findUserDtoByUuid(uuid)
             // THEN
             assertNull(userAccountDtoReturned)
         }
@@ -158,7 +150,7 @@ internal class UserAccountServiceTest {
             every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.empty()
             // THEN
             assertFailsWith<EntityNotFoundException> {
-                userAccountService.findUserById(NumberUtils.LONG_ONE)
+                userAccountService.findUserDtoById(NumberUtils.LONG_ONE)
             }
         }
     }

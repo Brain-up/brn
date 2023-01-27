@@ -1,6 +1,6 @@
 package com.epam.brn.auth.filter
 
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Role
 import com.epam.brn.auth.model.CustomUserDetails
@@ -118,7 +118,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseTokenMock.uid } returns uuid
         every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen customUserDetailsMock
         every { firebaseUserService.getUserByUuid(uuid) } returns userRecordMock
-        every { userAccountService.createUser(userRecordMock) } returns UserAccountResponse(
+        every { userAccountService.createUser(userRecordMock) } returns UserAccountDto(
             email = email,
             bornYear = 0,
             gender = null,

@@ -1,17 +1,16 @@
 package com.epam.brn.dto.request.exercise
 
 import com.epam.brn.validator.WithoutPunctuation
-import io.swagger.annotations.ApiModel
-import io.swagger.annotations.ApiModelProperty
+import io.swagger.v3.oas.annotations.media.Schema
 import javax.validation.constraints.NotEmpty
 
-@ApiModel(value = "Phrases", description = "Phrases for creating exercise. Phrases should not contain punctuation marks.")
+@Schema(name = "Phrases", description = "Phrases for creating exercise. Phrases should not contain punctuation marks.")
 data class Phrases(
-    @ApiModelProperty(value = "Short phrases", required = true, example = "Мамочка идёт", position = 1)
+    @Schema(description = "Short phrases", required = true, example = "Мамочка идёт")
     @field:NotEmpty
     @field:WithoutPunctuation
     val shortPhrase: String,
-    @ApiModelProperty(value = "Long phrases", required = true, example = "Мамочка быстро идёт в магазин", position = 2)
+    @Schema(description = "Long phrases", required = true, example = "Мамочка быстро идёт в магазин")
     @field:NotEmpty
     @field:WithoutPunctuation
     val longPhrase: String

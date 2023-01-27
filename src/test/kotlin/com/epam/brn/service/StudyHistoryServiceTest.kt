@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.model.Exercise
 import com.epam.brn.enums.BrnGender
@@ -44,7 +44,7 @@ internal class StudyHistoryServiceTest {
     lateinit var studyHistoryDtoMock: StudyHistoryDto
 
     @MockK
-    lateinit var currentUserMock: UserAccountResponse
+    lateinit var currentUserMock: UserAccountDto
 
     @MockK
     lateinit var studyHistoryMock: StudyHistory
@@ -59,7 +59,7 @@ internal class StudyHistoryServiceTest {
     fun `should return today timer`() {
         // GIVEN
         val timer = 1
-        every { userAccountServiceMock.getUserFromTheCurrentSession() } returns currentUserMock
+        every { userAccountServiceMock.getCurrentUserDto() } returns currentUserMock
         every { currentUserMock.id } returns 1L
         every { studyHistoryRepositoryMock.getTodayDayTimer(1L) } returns timer
 
@@ -135,7 +135,7 @@ internal class StudyHistoryServiceTest {
     fun `should return histories for current user`() {
         // GIVEN
         val expectedStudyHistoryDto = listOf(studyHistoryDtoMock)
-        every { userAccountServiceMock.getUserFromTheCurrentSession() } returns currentUserMock
+        every { userAccountServiceMock.getCurrentUserDto() } returns currentUserMock
         every { currentUserMock.id } returns 1L
         every { studyHistoryService.getHistories(1L, fromMock, toMock) } returns expectedStudyHistoryDto
 
@@ -165,7 +165,7 @@ internal class StudyHistoryServiceTest {
     fun `should return month histories for current user`() {
         // GIVEN
         val expectedStudyHistoryDto = listOf(studyHistoryDtoMock)
-        every { userAccountServiceMock.getUserFromTheCurrentSession() } returns currentUserMock
+        every { userAccountServiceMock.getCurrentUserDto() } returns currentUserMock
         every { currentUserMock.id } returns 1L
         every { studyHistoryService.getMonthHistories(1L, 1, 1) } returns expectedStudyHistoryDto
 
@@ -245,7 +245,7 @@ internal class StudyHistoryServiceTest {
         every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
-        every { userAccountServiceMock.getUserFromTheCurrentSession().id } returns userId
+        every { userAccountServiceMock.getCurrentUserDto().id } returns userId
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
         every {

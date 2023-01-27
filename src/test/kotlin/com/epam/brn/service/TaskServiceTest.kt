@@ -6,13 +6,13 @@ import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.ExerciseMechanism
 import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.enums.WordType
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
@@ -134,8 +134,18 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
-            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
+            every {
+                task2Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -178,12 +188,12 @@ internal class TaskServiceTest {
             // THEN
             foundTasks.size shouldBe 1
             val answers = foundTasks.first().answerOptions
-            val taskMak = answers.first { it.word == "мак" }
-            val taskMaki = answers.first { it.word == "маки" }
-            taskMak.soundsCount shouldBe 1
-            taskMaki.soundsCount shouldBe 2
-            taskMak.columnNumber shouldBe 0
-            taskMaki.columnNumber shouldBe 1
+            val wordMak = answers.first { it.word == "мак" }
+            val wordMaki = answers.first { it.word == "маки" }
+            wordMak.soundsCount shouldBe 1
+            wordMaki.soundsCount shouldBe 2
+            wordMak.columnNumber shouldBe 0
+            wordMaki.columnNumber shouldBe 1
             answers.size shouldBe 2
         }
 
@@ -204,8 +214,18 @@ internal class TaskServiceTest {
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
             every { exerciseMock.toDto() } returns exerciseDtoMock
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
-            every { task2Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
+            every {
+                task2Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -236,8 +256,18 @@ internal class TaskServiceTest {
             every { task1Mock.exercise } returns exerciseMock
             every { task2Mock.exercise } returns exerciseMock
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
-            every { task2Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse2Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.SENTENCE,
+                    template
+                )
+            } returns taskWordsGroupResponse1Mock
+            every {
+                task2Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.SENTENCE,
+                    template
+                )
+            } returns taskWordsGroupResponse2Mock
 
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
@@ -334,72 +364,83 @@ internal class TaskServiceTest {
             // THEN
             taskById shouldBe taskDto
             (taskById as TaskResponse).exerciseMechanism shouldBe ExerciseMechanism.WORDS
+            taskById.shouldBeWithPictures shouldBe true
         }
 
         @Test
         fun `should return task by id(WORDS_SEQUENCES)`() {
             // GIVEN
             val template = ""
+            val taskDto = TaskWordsGroupResponse(id = 1L, exerciseType = ExerciseType.WORDS_SEQUENCES)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
-
             every { task1Mock.answerOptions } returns mutableListOf()
-
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toWordsGroupSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.WORDS_SEQUENCES,
+                    template
+                )
+            } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            assertSame(taskWordsGroupResponse1Mock, taskById)
+            assertSame(taskDto, taskById)
+            (taskById as TaskWordsGroupResponse).exerciseMechanism shouldBe ExerciseMechanism.MATRIX
+            taskById.shouldBeWithPictures shouldBe true
         }
 
         @Test
         fun `should return task by id(SENTENCE)`() {
             // GIVEN
             val template = ""
+            val taskDto = TaskWordsGroupResponse(id = 1L, exerciseType = ExerciseType.SENTENCE)
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
-
             every { task1Mock.answerOptions } returns mutableListOf()
-
             every { task1Mock.exercise } returns exerciseMock
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { task1Mock.id } returns 1L
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
             every { exerciseMock.template } returns template
-            every { task1Mock.toSentenceSeriesTaskDto(template) } returns taskWordsGroupResponse1Mock
-
-            // WHEN
-            val taskById = taskService.getTaskById(LONG_ONE)
-
-            // THEN
-            taskById shouldBe taskWordsGroupResponse1Mock
-        }
-
-        @Test
-        fun `should return task by id(PHRASES)`() {
-            // GIVEN
-            val taskDto = TaskResponse(id = 1L, exerciseType = ExerciseType.PHRASES)
-            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
-            every { task1Mock.answerOptions } returns mutableListOf()
-            every { task1Mock.exercise } returns exerciseMock
-            every { exerciseMock.subGroup } returns subGroupMock
-            every { subGroupMock.series } returns seriesMock
-            every { seriesMock.type } returns ExerciseType.PHRASES.name
-            every { task1Mock.toTaskResponse(ExerciseType.PHRASES) } returns taskDto
+            every {
+                task1Mock.toWordsGroupSeriesTaskDto(
+                    ExerciseType.SENTENCE,
+                    template
+                )
+            } returns taskDto
 
             // WHEN
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
             taskById shouldBe taskDto
+            (taskById as TaskWordsGroupResponse).exerciseMechanism shouldBe ExerciseMechanism.MATRIX
+            taskById.shouldBeWithPictures shouldBe true
+        }
+
+        @Test
+        fun `should return correct task by id(PHRASES)`() {
+            // GIVEN
+            val task1 = Task(exercise = exerciseMock, id = LONG_ONE)
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1)
+            every { exerciseMock.subGroup } returns subGroupMock
+            every { subGroupMock.series } returns seriesMock
+            every { seriesMock.type } returns ExerciseType.PHRASES.name
+
+            // WHEN
+            val taskById = taskService.getTaskById(LONG_ONE)
+
+            // THEN
             (taskById as TaskResponse).exerciseMechanism shouldBe ExerciseMechanism.WORDS
+            taskById.id shouldBe LONG_ONE
+            taskById.shouldBeWithPictures shouldBe false
         }
 
         @Test

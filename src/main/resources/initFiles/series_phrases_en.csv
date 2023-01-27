@@ -1,0 +1,609 @@
+level,code,exerciseName,phrases,noiseLevel,noiseUrl
+1,longShortPhrases,Different length phrases,(Mommy is coming. Mommy is going to the shop quickly.),0,
+2,longShortPhrases,Different length phrases,(Dad is washing. Dad is washing a dirty car.),0,
+3,longShortPhrases,Different length phrases,(Grandma is singing. Grandma is singing a sad song.),0,
+4,longShortPhrases,Different length phrases,(Grandpa is digging. Grandpa is digging a deep hole.),0,
+5,longShortPhrases,Different length phrases,(Brother is riding. Brother is riding a big bicycle.),0,
+6,longShortPhrases,Different length phrases,(Sister is jumping. Sister is jumping a new rope.),0,
+7,longShortPhrases,Different length phrases,(A baby is running. A baby is running on the road.),0,
+8,longShortPhrases,Different length phrases,(A child is crying. A child is crying loudly in the street.),0,
+9,longShortPhrases,Different length phrases,(The girl is sleeping. The girl is sleeping in a small bed.),0,
+10,longShortPhrases,Different length phrases,(The boy is playing. The boy is playing the piano.),0,
+11,longShortPhrases,Different length phrases,(The heron is walking. The heron is walking along the swamp.),0,
+12,longShortPhrases,Different length phrases,(The bee is flying. The bee is flying to the field.),0,
+13,longShortPhrases,Different length phrases,(The ant is dragging. The ant is dragging a grain to the ant-hill.),0,
+14,longShortPhrases,Different length phrases,(The cheff is cooking. The cheff is cooking a new dish.),0,
+15,longShortPhrases,Different length phrases,(The hairdresser is cutting. The hairdresser is cutting long hair.),0,
+16,longShortPhrases,Different length phrases,(The salesperson is selling. The salesperson is selling fresh fruits.),0,
+17,longShortPhrases,Different length phrases,(The caregiver is educating. The caregiver is educating little children.),0,
+18,longShortPhrases,Different length phrases,(The teacher is teaching. The teacher is teaching diligent pupils.),0,
+19,longShortPhrases,Different length phrases,(The pupil is writing. The pupil is writing a dictation thoughtfully.),0,
+20,longShortPhrases,Different length phrases,(The children are reading. The children are reading an amusing book.),0,
+21,longShortPhrases,Different length phrases,(The sportsman is winning. The sportsman is winning the race.),0,
+22,longShortPhrases,Different length phrases,(The children are playing. The children are playing at the stadium.),0,
+23,longShortPhrases,Different length phrases,(The train is going. The train is going along the railway.),0,
+24,longShortPhrases,Different length phrases,(The van is tearing. The van is tearing along the motorway.),0,
+25,longShortPhrases,Different length phrases,(The elephant is carrying. The elephant is carrying an old handler.),0,
+26,longShortPhrases,Different length phrases,(The mother is eating. The mother is eating a tasty bun.),0,
+27,longShortPhrases,Different length phrases,(Mary returned. Mary returned late from school.),0,
+28,longShortPhrases,Different length phrases,(I am eating. I am eating delicious jam.),0,
+29,longShortPhrases,Different length phrases,(The sun is shining. The sun is shining brightly outside.),0,
+30,longShortPhrases,Different length phrases,(Went out for a walk. Peter went out for a walk early in the morning.),0,
+31,longShortPhrases,Different length phrases,(Mother is washing. Mother is washing dirty dishes.),0,
+32,longShortPhrases,Different length phrases,(The dog is barking. The dog is barking at a passer-by.),0,
+33,longShortPhrases,Different length phrases,(I am tired. I am tired of work.),0,
+34,longShortPhrases,Different length phrases,(A beautiful picture. Kate drew a beautiful picture.),0,
+35,longShortPhrases,Different length phrases,(Completed the courses. Mike completed the programming courses.),0,
+36,longShortPhrases,Different length phrases,(Turned eighting years. My sister turned eighting years.),0,
+37,longShortPhrases,Different length phrases,(Left the house. Father left the house early in the morning.),0,
+38,longShortPhrases,Different length phrases,(The birds are signing. The birds sing at drawn.),0,
+39,longShortPhrases,Different length phrases,(The postman brought. The postman brought home a letter.),0,
+40,longShortPhrases,Different length phrases,(Lights went out. Lights went out in the room.),0,
+41,longShortPhrases,Different length phrases,(I love eating. I love eating ice-cream.),0,
+42,longShortPhrases,Different length phrases,(Came out of the forest. Grandpa came out of the forest.),0,
+43,longShortPhrases,Different length phrases,(Is drinking tea. Is drinking tea with lemon.),0,
+44,longShortPhrases,Different length phrases,(Everyone fell asleep. Everyone fell asleep late at night.),0,
+45,longShortPhrases,Different length phrases,(We are playing. We are playing voleyball.),0,
+46,longShortPhrases,Different length phrases,(Fifteen students. Fifteen students went outside.),0,
+47,longShortPhrases,Different length phrases,(I am typing. I am typing quickly.),0,
+48,longShortPhrases,Different length phrases,(Half past eight. Returned half past eight.),0,
+49,longShortPhrases,Different length phrases,(Parents gave. Parents gave a present.),0,
+50,longShortPhrases,Different length phrases,(I am going to school. I am going to school tomorrow.),0,
+101,longShortPhrases,Different length phrases,(Mommy is coming. Mommy is going to the shop quickly.),70,crowd
+102,longShortPhrases,Different length phrases,(Dad is washing. Dad is washing a dirty car.),70,crowd
+103,longShortPhrases,Different length phrases,(Grandma is singing. Grandma is singing a sad song.),70,crowd
+104,longShortPhrases,Different length phrases,(Grandpa is digging. Grandpa is digging a deep hole.),70,crowd
+105,longShortPhrases,Different length phrases,(Brother is riding. Brother is riding a big bicycle.),70,crowd
+106,longShortPhrases,Different length phrases,(Sister is jumping. Sister is jumping a new rope.),70,crowd
+107,longShortPhrases,Different length phrases,(A baby is running. A baby is running on the road.),70,crowd
+108,longShortPhrases,Different length phrases,(A child is crying. A child is crying loudly in the street.),70,crowd
+109,longShortPhrases,Different length phrases,(The girl is sleeping. The girl is sleeping in a small bed.),70,crowd
+110,longShortPhrases,Different length phrases,(The boy is playing. The boy is playing the piano.),70,crowd
+111,longShortPhrases,Different length phrases,(The heron is walking. The heron is walking along the swamp.),70,crowd
+112,longShortPhrases,Different length phrases,(The bee is flying. The bee is flying to the field.),70,crowd
+113,longShortPhrases,Different length phrases,(The ant is dragging. The ant is dragging a grain to the ant-hill.),70,crowd
+114,longShortPhrases,Different length phrases,(The cheff is cooking. The cheff is cooking a new dish.),70,crowd
+115,longShortPhrases,Different length phrases,(The hairdresser is cutting. The hairdresser is cutting long hair.),70,crowd
+116,longShortPhrases,Different length phrases,(The salesperson is selling. The salesperson is selling fresh fruits.),70,crowd
+117,longShortPhrases,Different length phrases,(The caregiver is educating. The caregiver is educating little children.),70,crowd
+118,longShortPhrases,Different length phrases,(The teacher is teaching. The teacher is teaching diligent pupils.),70,crowd
+119,longShortPhrases,Different length phrases,(The pupil is writing. The pupil is writing a dictation thoughtfully.),70,crowd
+120,longShortPhrases,Different length phrases,(The children are reading. The children are reading an amusing book.),70,crowd
+121,longShortPhrases,Different length phrases,(The sportsman is winning. The sportsman is winning the race.),70,crowd
+122,longShortPhrases,Different length phrases,(The children are playing. The children are playing at the stadium.),70,crowd
+123,longShortPhrases,Different length phrases,(The train is going. The train is going along the railway.),70,crowd
+124,longShortPhrases,Different length phrases,(The van is tearing. The van is tearing along the motorway.),70,crowd
+125,longShortPhrases,Different length phrases,(The elephant is carrying. The elephant is carrying an old handler.),70,crowd
+126,longShortPhrases,Different length phrases,(The mother is eating. The mother is eating a tasty bun.),70,crowd
+127,longShortPhrases,Different length phrases,(Mary returned. Mary returned late from school.),70,crowd
+128,longShortPhrases,Different length phrases,(I am eating. I am eating delicious jam.),70,crowd
+129,longShortPhrases,Different length phrases,(The sun is shining. The sun is shining brightly outside.),70,crowd
+130,longShortPhrases,Different length phrases,(Went out for a walk. Peter went out for a walk early in the morning.),70,crowd
+131,longShortPhrases,Different length phrases,(Mother is washing. Mother is washing dirty dishes.),70,crowd
+132,longShortPhrases,Different length phrases,(The dog is barking. The dog is barking at a passer-by.),70,crowd
+133,longShortPhrases,Different length phrases,(I am tired. I am tired of work.),70,crowd
+134,longShortPhrases,Different length phrases,(A beautiful picture. Kate drew a beautiful picture.),70,crowd
+135,longShortPhrases,Different length phrases,(Completed the courses. Mike completed the programming courses.),70,crowd
+136,longShortPhrases,Different length phrases,(Turned eighting years. My sister turned eighting years.),70,crowd
+137,longShortPhrases,Different length phrases,(Left the house. Father left the house early in the morning.),70,crowd
+138,longShortPhrases,Different length phrases,(The birds are signing. The birds sing at drawn.),70,crowd
+139,longShortPhrases,Different length phrases,(The postman brought. The postman brought home a letter.),70,crowd
+140,longShortPhrases,Different length phrases,(Lights went out. Lights went out in the room.),70,crowd
+141,longShortPhrases,Different length phrases,(I love eating. I love eating ice-cream.),70,crowd
+142,longShortPhrases,Different length phrases,(Came out of the forest. Grandpa came out of the forest.),70,crowd
+143,longShortPhrases,Different length phrases,(Is drinking tea. Is drinking tea with lemon.),70,crowd
+144,longShortPhrases,Different length phrases,(Everyone fell asleep. Everyone fell asleep late at night.),70,crowd
+145,longShortPhrases,Different length phrases,(We are playing. We are playing voleyball.),70,crowd
+146,longShortPhrases,Different length phrases,(Fifteen students. Fifteen students went outside.),70,crowd
+147,longShortPhrases,Different length phrases,(I am typing. I am typing quickly.),70,crowd
+148,longShortPhrases,Different length phrases,(Half past eight. Returned half past eight.),70,crowd
+149,longShortPhrases,Different length phrases,(Parents gave. Parents gave a present.),70,crowd
+150,longShortPhrases,Different length phrases,(I am going to school. I am going to school tomorrow.),70,crowd
+1,noPhrases,"With ""not"" particle phrases ",(The boy came to the cinema. The boy did not come to the cinema.),0,
+2,noPhrases,"With ""not"" particle phrases ",(The cat is meowing on the roof. The cat is meowing not on the roof.),0,
+3,noPhrases,"With ""not"" particle phrases ",(The bird is sitting on the tree. The bird is not sitting on the tree.),0,
+4,noPhrases,"With ""not"" particle phrases ",(The chick fell out of the nest. The chick did not fall out of the nest.),0,
+5,noPhrases,"With ""not"" particle phrases ",(The child wants to drink. The child does not want to drink.),0,
+6,noPhrases,"With ""not"" particle phrases ",(The teenagers are listening to music. The teenagers aren't listening to music.),0,
+7,noPhrases,"With ""not"" particle phrases ",(The girl is reading a popular magazine. The girl is not reading a popular magazine.),0,
+8,noPhrases,"With ""not"" particle phrases ",(The puppy is laying down on the carpet. The puppy is laying down not on the carpet.),0,
+9,noPhrases,"With ""not"" particle phrases ",(The foal is tired of playing. The foal is not tired of playing.),0,
+10,noPhrases,"With ""not"" particle phrases ",(A stain appeared on the floor. A stain appeared not on the floor.),0,
+11,noPhrases,"With ""not"" particle phrases ",(A black car is going on the road. Not a black car is going on the road.),0,
+12,noPhrases,"With ""not"" particle phrases ",(The performer is singing into a microphone. The performer is not singing into a microphone.),0,
+13,noPhrases,"With ""not"" particle phrases ",(The mouse dived into the hole. The mouse did not dive into the hole.),0,
+14,noPhrases,"With ""not"" particle phrases ",(The pupils are writing an essay. The pupils are writing not an essay.),0,
+15,noPhrases,"With ""not"" particle phrases ",(A cover for the saucepan has disappeared. A cover for the saucepan has not disappeared.),0,
+16,noPhrases,"With ""not"" particle phrases ",(The girl is cutting out the pattern with scissors. The girl is cutting out a pattern not with scissors.),0,
+17,noPhrases,"With ""not"" particle phrases ",(There is a dining table in the kitchen. There is not a dining table in the kitchen.),0,
+18,noPhrases,"With ""not"" particle phrases ",(The brother is solving an entertaining task. The brother is not solving an entertaining task.),0,
+19,noPhrases,"With ""not"" particle phrases ",(The doorbell rang. It was not the doorbell that rang.),0,
+20,noPhrases,"With ""not"" particle phrases ",(I heard the chirp of a seagull. I did not hear the chirp of a seagull.),0,
+21,noPhrases,"With ""not"" particle phrases ",(The whistle of the kettle is heard. The whistle of the kettle is not heard.),0,
+22,noPhrases,"With ""not"" particle phrases ",(There is a rustling of leaves underfoott. There is no rustling of leaves underfoot.),0,
+23,noPhrases,"With ""not"" particle phrases ",(You can hear the rattling of dishes. You cannot hear the rattling of dishes.),0,
+24,noPhrases,"With ""not"" particle phrases ",(A toy train passed quickly. Not a toy train locomotive passed quickly.),0,
+25,noPhrases,"With ""not"" particle phrases ",(A white owl perched on a branch. Not a white owl perched on a branch.),0,
+26,noPhrases,"With ""not"" particle phrases ",(I am drinking cola. I am not drinking cola.),0,
+27,noPhrases,"With ""not"" particle phrases ",(I have a blue t-shirt. I do not have a blue t-shirt.),0,
+28,noPhrases,"With ""not"" particle phrases ",(The cat is sitting on the fence. The cat is not sitting on the fence.),0,
+29,noPhrases,"With ""not"" particle phrases ",(The father is driving. The father is not driving.),0,
+30,noPhrases,"With ""not"" particle phrases ",(The bus is going. The bus is not going.),0,
+31,noPhrases,"With ""not"" particle phrases ",(The girl is crying. The girl is not crying.),0,
+32,noPhrases,"With ""not"" particle phrases ",(The boy has a blue ballon. The boy does not have a blue balloon.),0,
+33,noPhrases,"With ""not"" particle phrases ",(There are horses in the zoo. There are no horses in the zoo.),0,
+34,noPhrases,"With ""not"" particle phrases ",(There are dogs in the circus. There are no dogs in the circus.),0,
+35,noPhrases,"With ""not"" particle phrases ",(I am listening to the music. I am not listening to the music.),0,
+36,noPhrases,"With ""not"" particle phrases ",(The children are sleeping. The children are not sleeping.),0,
+37,noPhrases,"With ""not"" particle phrases ",(It is raining. It is not raining.),0,
+38,noPhrases,"With ""not"" particle phrases ",(The sun is shining. The sun is not shining.),0,
+39,noPhrases,"With ""not"" particle phrases ",(It is snowing outside. It is not snowing outside.),0,
+40,noPhrases,"With ""not"" particle phrases ",(Grandma is knitting. Grandma is not knitting.),0,
+41,noPhrases,"With ""not"" particle phrases ",(Mum is washing. Mum is not washing.),0,
+42,noPhrases,"With ""not"" particle phrases ",(Mum is sewing a dress. Mum is not sewing a dress.),0,
+43,noPhrases,"With ""not"" particle phrases ",(The children are eating porridge. The children are not eating porridge.),0,
+44,noPhrases,"With ""not"" particle phrases ",(Alex has got a big flat. Alex has not got a big flat.),0,
+45,noPhrases,"With ""not"" particle phrases ",(I am drawing a picture. I am not drawing a picture.),0,
+46,noPhrases,"With ""not"" particle phrases ",(The boy is swimming. The boy is not swimming.),0,
+47,noPhrases,"With ""not"" particle phrases ",(The butterfly is flying. The butterfly is not flying.),0,
+48,noPhrases,"With ""not"" particle phrases ",(There is a bike on the road. There is not a bike on the road.),0,
+49,noPhrases,"With ""not"" particle phrases ",(It is my mum's birthday today. It is not my mum's birthday today.),0,
+50,noPhrases,"With ""not"" particle phrases ",(I study at school. I do not study at school.),0,
+101,noPhrases,"With ""not"" particle phrases ",(The boy came to the cinema. The boy did not come to the cinema.),70,voices
+102,noPhrases,"With ""not"" particle phrases ",(The cat is meowing on the roof. The cat is meowing not on the roof.),70,voices
+103,noPhrases,"With ""not"" particle phrases ",(The bird is sitting on the tree. The bird is not sitting on the tree.),70,voices
+104,noPhrases,"With ""not"" particle phrases ",(The chick fell out of the nest. The chick did not fall out of the nest.),70,voices
+105,noPhrases,"With ""not"" particle phrases ",(The child wants to drink. The child does not want to drink.),70,voices
+106,noPhrases,"With ""not"" particle phrases ",(The teenagers are listening to music. The teenagers aren't listening to music.),70,voices
+107,noPhrases,"With ""not"" particle phrases ",(The girl is reading a popular magazine. The girl is not reading a popular magazine.),70,voices
+108,noPhrases,"With ""not"" particle phrases ",(The puppy is laying down on the carpet. The puppy is laying down not on the carpet.),70,voices
+109,noPhrases,"With ""not"" particle phrases ",(The foal is tired of playing. The foal is not tired of playing.),70,voices
+110,noPhrases,"With ""not"" particle phrases ",(A stain appeared on the floor. A stain appeared not on the floor.),70,voices
+111,noPhrases,"With ""not"" particle phrases ",(A black car is going on the road. Not a black car is going on the road.),70,voices
+112,noPhrases,"With ""not"" particle phrases ",(The performer is singing into a microphone. The performer is not singing into a microphone.),70,voices
+113,noPhrases,"With ""not"" particle phrases ",(The mouse dived into the hole. The mouse did not dive into the hole.),70,voices
+114,noPhrases,"With ""not"" particle phrases ",(The pupils are writing an essay. The pupils are writing not an essay.),70,voices
+115,noPhrases,"With ""not"" particle phrases ",(A cover for the saucepan has disappeared. A cover for the saucepan has not disappeared.),70,voices
+116,noPhrases,"With ""not"" particle phrases ",(The girl is cutting out the pattern with scissors. The girl is cutting out a pattern not with scissors.),70,voices
+117,noPhrases,"With ""not"" particle phrases ",(There is a dining table in the kitchen. There is not a dining table in the kitchen.),70,voices
+118,noPhrases,"With ""not"" particle phrases ",(The brother is solving an entertaining task. The brother is not solving an entertaining task.),70,voices
+119,noPhrases,"With ""not"" particle phrases ",(The doorbell rang. It was not the doorbell that rang.),70,voices
+120,noPhrases,"With ""not"" particle phrases ",(I heard the chirp of a seagull. I did not hear the chirp of a seagull.),70,voices
+121,noPhrases,"With ""not"" particle phrases ",(The whistle of the kettle is heard. The whistle of the kettle is not heard.),70,voices
+122,noPhrases,"With ""not"" particle phrases ",(There is a rustling of leaves underfoott. There is no rustling of leaves underfoot.),70,voices
+123,noPhrases,"With ""not"" particle phrases ",(You can hear the rattling of dishes. You cannot hear the rattling of dishes.),70,voices
+124,noPhrases,"With ""not"" particle phrases ",(A toy train passed quickly. Not a toy train locomotive passed quickly.),70,voices
+125,noPhrases,"With ""not"" particle phrases ",(A white owl perched on a branch. Not a white owl perched on a branch.),70,voices
+126,noPhrases,"With ""not"" particle phrases ",(I am drinking cola. I am not drinking cola.),70,voices
+127,noPhrases,"With ""not"" particle phrases ",(I have a blue t-shirt. I do not have a blue t-shirt.),70,voices
+128,noPhrases,"With ""not"" particle phrases ",(The cat is sitting on the fence. The cat is not sitting on the fence.),70,voices
+129,noPhrases,"With ""not"" particle phrases ",(The father is driving. The father is not driving.),70,voices
+130,noPhrases,"With ""not"" particle phrases ",(The bus is going. The bus is not going.),70,voices
+131,noPhrases,"With ""not"" particle phrases ",(The girl is crying. The girl is not crying.),70,voices
+132,noPhrases,"With ""not"" particle phrases ",(The boy has a blue ballon. The boy does not have a blue balloon.),70,voices
+133,noPhrases,"With ""not"" particle phrases ",(There are horses in the zoo. There are no horses in the zoo.),70,voices
+134,noPhrases,"With ""not"" particle phrases ",(There are dogs in the circus. There are no dogs in the circus.),70,voices
+135,noPhrases,"With ""not"" particle phrases ",(I am listening to the music. I am not listening to the music.),70,voices
+136,noPhrases,"With ""not"" particle phrases ",(The children are sleeping. The children are not sleeping.),70,voices
+137,noPhrases,"With ""not"" particle phrases ",(It is raining. It is not raining.),70,voices
+138,noPhrases,"With ""not"" particle phrases ",(The sun is shining. The sun is not shining.),70,voices
+139,noPhrases,"With ""not"" particle phrases ",(It is snowing outside. It is not snowing outside.),70,voices
+140,noPhrases,"With ""not"" particle phrases ",(Grandma is knitting. Grandma is not knitting.),70,voices
+141,noPhrases,"With ""not"" particle phrases ",(Mum is washing. Mum is not washing.),70,voices
+142,noPhrases,"With ""not"" particle phrases ",(Mum is sewing a dress. Mum is not sewing a dress.),70,voices
+143,noPhrases,"With ""not"" particle phrases ",(The children are eating porridge. The children are not eating porridge.),70,voices
+144,noPhrases,"With ""not"" particle phrases ",(Alex has got a big flat. Alex has not got a big flat.),70,voices
+145,noPhrases,"With ""not"" particle phrases ",(I am drawing a picture. I am not drawing a picture.),70,voices
+146,noPhrases,"With ""not"" particle phrases ",(The boy is swimming. The boy is not swimming.),70,voices
+147,noPhrases,"With ""not"" particle phrases ",(The butterfly is flying. The butterfly is not flying.),70,voices
+148,noPhrases,"With ""not"" particle phrases ",(There is a bike on the road. There is not a bike on the road.),70,voices
+149,noPhrases,"With ""not"" particle phrases ",(It is my mum's birthday today. It is not my mum's birthday today.),70,voices
+150,noPhrases,"With ""not"" particle phrases ",(I study at school. I do not study at school.),70,voices
+1,similarPhrases,Similar phrases,(I love soup. I love coupe.),0,
+2,similarPhrases,Similar phrases,(The girl’s neck hurts. The girl's back hurts.),0,
+3,similarPhrases,Similar phrases,(The mouse has got small eyes. The louse has got small eyes.),0,
+4,similarPhrases,Similar phrases,(There is a flag on the tower. There is a flag in the bower.),0,
+5,similarPhrases,Similar phrases,(There is an owl in the garden. There is a fowl in the garden.),0,
+6,similarPhrases,Similar phrases,(Mum is taking a bag. Mum is taking a bug.),0,
+7,similarPhrases,Similar phrases,(Ben has got a duck. Ben has got a truck.),0,
+8,similarPhrases,Similar phrases,(Gary has got a box. Larry has got a box.),0,
+9,similarPhrases,Similar phrases,(There is a big cat on the poster. There is a big bat on the poster.),0,
+10,similarPhrases,Similar phrases,(Billy has got keys. Willie has got keys.),0,
+11,similarPhrases,Similar phrases,(There is a goat in the field. There is a boat in the field.),0,
+12,similarPhrases,Similar phrases,(There is a poppy in the bag. There is a copy in the bag.),0,
+13,similarPhrases,Similar phrases,(A bird perched on a hill. A bird perched on a mill.),0,
+14,similarPhrases,Similar phrases,(The rat is in the trap. The bat is in the trap.),0,
+15,similarPhrases,Similar phrases,(There is a mote in the soup. There is a coat in the soup.),0,
+16,similarPhrases,Similar phrases,(A ball fell on the floor. A doll fell on the floor.),0,
+17,similarPhrases,Similar phrases,(A doll fell out of the closet. A ball fell out of the closet.),0,
+18,similarPhrases,Similar phrases,(Christine has got a bear. Christine has got a pear.),0,
+19,similarPhrases,Similar phrases,(The dog has a bone. The dog has a stone.),0,
+20,similarPhrases,Similar phrases,(The cat is basking in the sun. The rat is basking in the sun.),0,
+21,similarPhrases,Similar phrases,(The guys have got a cake. The guys have got a snake.),0,
+22,similarPhrases,Similar phrases,(There is a code in the notebook. There is an ode in the notebook.),0,
+23,similarPhrases,Similar phrases,(Mum is hugging a boy. Mum is hugging her toy.),0,
+24,similarPhrases,Similar phrases,(The painting depicts a river. The painting depicts a liver.),0,
+25,similarPhrases,Similar phrases,(In the book there is a picture of a lane. In the book there is a picture of a plane.),0,
+26,similarPhrases,Similar phrases,(A bast house. A vast house.),0,
+27,similarPhrases,Similar phrases,Grandpa is eating potatoes. Grandpa is eating tomatoes.),0,
+28,similarPhrases,Similar phrases,(There are forks on the table. There are corks on the table.),0,
+29,similarPhrases,Similar phrases,(There is a mat on the floor. There is a cat on the floor.),0,
+30,similarPhrases,Similar phrases,(A stranger is buying flowers. A ranger is buying flowers.),0,
+31,similarPhrases,Similar phrases,(A train is flying over the ground. A plane is flying over the ground.),0,
+32,similarPhrases,Similar phrases,(The children made a snow house. The children made a snow mouse.),0,
+33,similarPhrases,Similar phrases,(There are pawns on the table. There are prawns on the table.),0,
+34,similarPhrases,Similar phrases,(There is a shovel on the grass. There is a hovel on the grass.),0,
+35,similarPhrases,Similar phrases,(Grandma is sitting on the bench. Grandma is sitting on the trench.),0,
+36,similarPhrases,Similar phrases,(Raspberries grow in the garden. Cranberries grow in the garden.),0,
+37,similarPhrases,Similar phrases,(Peter is old. Peter is cold.),0,
+38,similarPhrases,Similar phrases,(There is a duck on the shore. There is a truck on the shore.),0,
+39,similarPhrases,Similar phrases,(The boy is drawing a spoon. The boy is drawing the moon.),0,
+40,similarPhrases,Similar phrases,(A donkey is standing near the fence. A monkey is standing near the fence.),0,
+41,similarPhrases,Similar phrases,(There is a dog in the garden. There is a frog in the garden.),0,
+42,similarPhrases,Similar phrases,(The boy saw a crown. The boy saw a town.),0,
+43,similarPhrases,Similar phrases,(There is a goat in the barn. There is a coat in the barn.),0,
+44,similarPhrases,Similar phrases,(There is a table in the living room. There is a cable in the living room.),0,
+45,similarPhrases,Similar phrases,(There is a map in the classroom. There is a cap in the classroom.),0,
+46,similarPhrases,Similar phrases,(There is a mountain on the photo. There is a fountain on the photo.),0,
+47,similarPhrases,Similar phrases,(Children are resting on the lane. Children are resting on the lake.),0,
+48,similarPhrases,Similar phrases,(Steve saw racoons. Steve saw balloons.),0,
+49,similarPhrases,Similar phrases,(There is a hose in the bucket. There is a rose in the bucket.),0,
+50,similarPhrases,Similar phrases,(There is a pool in the garden. There is a tool in the garden.),0,
+101,similarPhrases,Similar phrases,(I love soup. I love coupe.),70,crowd
+102,similarPhrases,Similar phrases,(The girl’s neck hurts. The girl's back hurts.),70,crowd
+103,similarPhrases,Similar phrases,(The mouse has got small eyes. The louse has got small eyes.),70,crowd
+104,similarPhrases,Similar phrases,(There is a flag on the tower. There is a flag in the bower.),70,crowd
+105,similarPhrases,Similar phrases,(There is an owl in the garden. There is a fowl in the garden.),70,crowd
+106,similarPhrases,Similar phrases,(Mum is taking a bag. Mum is taking a bug.),70,crowd
+107,similarPhrases,Similar phrases,(Ben has got a duck. Ben has got a truck.),70,crowd
+108,similarPhrases,Similar phrases,(Gary has got a box. Larry has got a box.),70,crowd
+109,similarPhrases,Similar phrases,(There is a big cat on the poster. There is a big bat on the poster.),70,crowd
+110,similarPhrases,Similar phrases,(Billy has got keys. Willie has got keys.),70,crowd
+111,similarPhrases,Similar phrases,(There is a goat in the field. There is a boat in the field.),70,crowd
+112,similarPhrases,Similar phrases,(There is a poppy in the bag. There is a copy in the bag.),70,crowd
+113,similarPhrases,Similar phrases,(A bird perched on a hill. A bird perched on a mill.),70,crowd
+114,similarPhrases,Similar phrases,(The rat is in the trap. The bat is in the trap.),70,crowd
+115,similarPhrases,Similar phrases,(There is a mote in the soup. There is a coat in the soup.),70,crowd
+116,similarPhrases,Similar phrases,(A ball fell on the floor. A doll fell on the floor.),70,crowd
+117,similarPhrases,Similar phrases,(A doll fell out of the closet. A ball fell out of the closet.),70,crowd
+118,similarPhrases,Similar phrases,(Christine has got a bear. Christine has got a pear.),70,crowd
+119,similarPhrases,Similar phrases,(The dog has a bone. The dog has a stone.),70,crowd
+120,similarPhrases,Similar phrases,(The cat is basking in the sun. The rat is basking in the sun.),70,crowd
+121,similarPhrases,Similar phrases,(The guys have got a cake. The guys have got a snake.),70,crowd
+122,similarPhrases,Similar phrases,(There is a code in the notebook. There is an ode in the notebook.),70,crowd
+123,similarPhrases,Similar phrases,(Mum is hugging a boy. Mum is hugging her toy.),70,crowd
+124,similarPhrases,Similar phrases,(The painting depicts a river. The painting depicts a liver.),70,crowd
+125,similarPhrases,Similar phrases,(In the book there is a picture of a lane. In the book there is a picture of a plane.),70,crowd
+126,similarPhrases,Similar phrases,(A bast house. A vast house.),70,crowd
+127,similarPhrases,Similar phrases,Grandpa is eating potatoes. Grandpa is eating tomatoes.),70,crowd
+128,similarPhrases,Similar phrases,(There are forks on the table. There are corks on the table.),70,crowd
+129,similarPhrases,Similar phrases,(There is a mat on the floor. There is a cat on the floor.),70,crowd
+130,similarPhrases,Similar phrases,(A stranger is buying flowers. A ranger is buying flowers.),70,crowd
+131,similarPhrases,Similar phrases,(A train is flying over the ground. A plane is flying over the ground.),70,crowd
+132,similarPhrases,Similar phrases,(The children made a snow house. The children made a snow mouse.),70,crowd
+133,similarPhrases,Similar phrases,(There are pawns on the table. There are prawns on the table.),70,crowd
+134,similarPhrases,Similar phrases,(There is a shovel on the grass. There is a hovel on the grass.),70,crowd
+135,similarPhrases,Similar phrases,(Grandma is sitting on the bench. Grandma is sitting on the trench.),70,crowd
+136,similarPhrases,Similar phrases,(Raspberries grow in the garden. Cranberries grow in the garden.),70,crowd
+137,similarPhrases,Similar phrases,(Peter is old. Peter is cold.),70,crowd
+138,similarPhrases,Similar phrases,(There is a duck on the shore. There is a truck on the shore.),70,crowd
+139,similarPhrases,Similar phrases,(The boy is drawing a spoon. The boy is drawing the moon.),70,crowd
+140,similarPhrases,Similar phrases,(A donkey is standing near the fence. A monkey is standing near the fence.),70,crowd
+141,similarPhrases,Similar phrases,(There is a dog in the garden. There is a frog in the garden.),70,crowd
+142,similarPhrases,Similar phrases,(The boy saw a crown. The boy saw a town.),70,crowd
+143,similarPhrases,Similar phrases,(There is a goat in the barn. There is a coat in the barn.),70,crowd
+144,similarPhrases,Similar phrases,(There is a table in the living room. There is a cable in the living room.),70,crowd
+145,similarPhrases,Similar phrases,(There is a map in the classroom. There is a cap in the classroom.),70,crowd
+146,similarPhrases,Similar phrases,(There is a mountain on the photo. There is a fountain on the photo.),70,crowd
+147,similarPhrases,Similar phrases,(Children are resting on the lane. Children are resting on the lake.),70,crowd
+148,similarPhrases,Similar phrases,(Steve saw racoons. Steve saw balloons.),70,crowd
+149,similarPhrases,Similar phrases,(There is a hose in the bucket. There is a rose in the bucket.),70,crowd
+150,similarPhrases,Similar phrases,(There is a pool in the garden. There is a tool in the garden.),70,crowd
+1,differentEndPhrases,Different end phrases,(The cat has got a bright bow. The cat has got bright bows.),0,
+2,differentEndPhrases,Different end phrases,(The dog has got a new costume. The dog has got new costumes.),0,
+3,differentEndPhrases,Different end phrases,(There is a stiker in the old album. There are stikers in the old albums.),0,
+4,differentEndPhrases,Different end phrases,(There is a photo on the old business card. There are photos on the old business cards.),0,
+5,differentEndPhrases,Different end phrases,(A mushroom grows in a forest. Mushrooms grow in a forest.),0,
+6,differentEndPhrases,Different end phrases,(There is an apple on the branch of the apple tree. There are apples on the branches of the apple tree.),0,
+7,differentEndPhrases,Different end phrases,(A new cabinet has a handle. New cabinets have handles.),0,
+8,differentEndPhrases,Different end phrases,(There is a new pencil in the pencil case. There are new pencils in the pencil case.),0,
+9,differentEndPhrases,Different end phrases,(The office has a modern armchair. The office has modern armchairs.),0,
+10,differentEndPhrases,Different end phrases,(There is a new display panel at the station. There are new display panels at the stations.),0,
+11,differentEndPhrases,Different end phrases,(There is a new movie at the cinema. There are new movies at the cinema.),0,
+12,differentEndPhrases,Different end phrases,(There is a new video in TikTok. There are new videos in TikTok.),0,
+13,differentEndPhrases,Different end phrases,(The leg of the chair is broken. The legs of the chair are broken.),0,
+14,differentEndPhrases,Different end phrases,(The bear's paw was torn off. The bear's paws were torn off.),0,
+15,differentEndPhrases,Different end phrases,(There is a new dish in the cafe. There are new dishes in the cafe.),0,
+16,differentEndPhrases,Different end phrases,(A small bus has four wheels. Small buses have four wheels.),0,
+17,differentEndPhrases,Different end phrases,(A large bus has six wheels. Large buses have six wheels.),0,
+18,differentEndPhrases,Different end phrases,(The premier of the play staged at the theater. The premiers of the plays staged at the theaters.),0,
+19,differentEndPhrases,Different end phrases,(The girl has a beautiful flower. The girl has beautiful flowers.),0,
+20,differentEndPhrases,Different end phrases,(There is a sausage in the plate. There are sausages in the plate.),0,
+21,differentEndPhrases,Different end phrases,(A cat is sitting on the porch. Cats are sitting on the porch.),0,
+22,differentEndPhrases,Different end phrases,(The boy caught a butterfly. The boy caught butterflies.),0,
+23,differentEndPhrases,Different end phrases,(There is a picture on the wall. There are pictures on the wall.),0,
+24,differentEndPhrases,Different end phrases,(Mary baked a cake. Mary baked cakes.),0,
+25,differentEndPhrases,Different end phrases,(We are rushing to our friend. We are rushing to our friends.),0,
+26,differentEndPhrases,Different end phrases,(There is a bus on the way. There are buses on the way.),0,
+27,differentEndPhrases,Different end phrases,(There is a dress in the wardrobe. There are dresses in the wardrobe.),0,
+28,differentEndPhrases,Different end phrases,(There is a box on the floor. There are boxes on the floor.),0,
+29,differentEndPhrases,Different end phrases,(The boy put on a sock. The boy put on socks.),0,
+30,differentEndPhrases,Different end phrases,(The forester found a mushroom. The forester found mushrooms.),0,
+31,differentEndPhrases,Different end phrases,(A fish is swimming in the bucket. Fish are swimming in the bucket.),0,
+32,differentEndPhrases,Different end phrases,(There is a pear on the pear tree. There are pears on the pear tree.),0,
+33,differentEndPhrases,Different end phrases,(There is a bus in the garage. There are buses in the garage.),0,
+34,differentEndPhrases,Different end phrases,(An airplane is flying in the sky. Airplanes are flying in the sky.),0,
+35,differentEndPhrases,Different end phrases,(There is a leaf on the ground. There are leaves on the ground.),0,
+36,differentEndPhrases,Different end phrases,(The ball fell into the river. The balls fell into the river.),0,
+37,differentEndPhrases,Different end phrases,(A bird is sitting on the branch. Birds are sitting on the branch.),0,
+38,differentEndPhrases,Different end phrases,(Mom bought a pillow. Mom bought pillows.),0,
+39,differentEndPhrases,Different end phrases,(Uncle is carrying a package. Uncle is carrying packages.),0,
+40,differentEndPhrases,Different end phrases,(Grandpa is calling his grandson. Grandpa is calling his grandchildren.),0,
+41,differentEndPhrases,Different end phrases,(There is a flower in the vase. There are flowers in the vase.),0,
+42,differentEndPhrases,Different end phrases,(A star is shining in the sky. Stars are shining in the sky.),0,
+43,differentEndPhrases,Different end phrases,(There is a book on the shelf. There are books on the shelf.),0,
+44,differentEndPhrases,Different end phrases,(There is a mug on the table. There are mugs on the table.),0,
+45,differentEndPhrases,Different end phrases,(The clown has a balloon in his hand. The clown has balloons in his hand.),0,
+46,differentEndPhrases,Different end phrases,(Dad brought a balloon. Dad brought balloons.),0,
+47,differentEndPhrases,Different end phrases,(Grandpa brought an apple. Grandpa brought apples.),0,
+48,differentEndPhrases,Different end phrases,(A soldier is walking in the street. Soldiers are walking in the street.),0,
+49,differentEndPhrases,Different end phrases,(There is a cow in the street. There are cows in the street.),0,
+50,differentEndPhrases,Different end phrases,(Jack bought a banana. Jack bought apples.),0,
+101,differentEndPhrases,Different end phrases,(The cat has got a bright bow. The cat has got bright bows.),70,rain
+102,differentEndPhrases,Different end phrases,(The dog has got a new costume. The dog has got new costumes.),70,rain
+103,differentEndPhrases,Different end phrases,(There is a stiker in the old album. There are stikers in the old albums.),70,rain
+104,differentEndPhrases,Different end phrases,(There is a photo on the old business card. There are photos on the old business cards.),70,rain
+105,differentEndPhrases,Different end phrases,(A mushroom grows in a forest. Mushrooms grow in a forest.),70,rain
+106,differentEndPhrases,Different end phrases,(There is an apple on the branch of the apple tree. There are apples on the branches of the apple tree.),70,rain
+107,differentEndPhrases,Different end phrases,(A new cabinet has a handle. New cabinets have handles.),70,rain
+108,differentEndPhrases,Different end phrases,(There is a new pencil in the pencil case. There are new pencils in the pencil case.),70,rain
+109,differentEndPhrases,Different end phrases,(The office has a modern armchair. The office has modern armchairs.),70,rain
+110,differentEndPhrases,Different end phrases,(There is a new display panel at the station. There are new display panels at the stations.),70,rain
+111,differentEndPhrases,Different end phrases,(There is a new movie at the cinema. There are new movies at the cinema.),70,rain
+112,differentEndPhrases,Different end phrases,(There is a new video in TikTok. There are new videos in TikTok.),70,rain
+113,differentEndPhrases,Different end phrases,(The leg of the chair is broken. The legs of the chair are broken.),70,rain
+114,differentEndPhrases,Different end phrases,(The bear's paw was torn off. The bear's paws were torn off.),70,rain
+115,differentEndPhrases,Different end phrases,(There is a new dish in the cafe. There are new dishes in the cafe.),70,rain
+116,differentEndPhrases,Different end phrases,(A small bus has four wheels. Small buses have four wheels.),70,rain
+117,differentEndPhrases,Different end phrases,(A large bus has six wheels. Large buses have six wheels.),70,rain
+118,differentEndPhrases,Different end phrases,(The premier of the play staged at the theater. The premiers of the plays staged at the theaters.),70,rain
+119,differentEndPhrases,Different end phrases,(The girl has a beautiful flower. The girl has beautiful flowers.),70,rain
+120,differentEndPhrases,Different end phrases,(There is a sausage in the plate. There are sausages in the plate.),70,rain
+121,differentEndPhrases,Different end phrases,(A cat is sitting on the porch. Cats are sitting on the porch.),70,rain
+122,differentEndPhrases,Different end phrases,(The boy caught a butterfly. The boy caught butterflies.),70,rain
+123,differentEndPhrases,Different end phrases,(There is a picture on the wall. There are pictures on the wall.),70,rain
+124,differentEndPhrases,Different end phrases,(Mary baked a cake. Mary baked cakes.),70,rain
+125,differentEndPhrases,Different end phrases,(We are rushing to our friend. We are rushing to our friends.),70,rain
+126,differentEndPhrases,Different end phrases,(There is a bus on the way. There are buses on the way.),70,rain
+127,differentEndPhrases,Different end phrases,(There is a dress in the wardrobe. There are dresses in the wardrobe.),70,rain
+128,differentEndPhrases,Different end phrases,(There is a box on the floor. There are boxes on the floor.),70,rain
+129,differentEndPhrases,Different end phrases,(The boy put on a sock. The boy put on socks.),70,rain
+130,differentEndPhrases,Different end phrases,(The forester found a mushroom. The forester found mushrooms.),70,rain
+131,differentEndPhrases,Different end phrases,(A fish is swimming in the bucket. Fish are swimming in the bucket.),70,rain
+132,differentEndPhrases,Different end phrases,(There is a pear on the pear tree. There are pears on the pear tree.),70,rain
+133,differentEndPhrases,Different end phrases,(There is a bus in the garage. There are buses in the garage.),70,rain
+134,differentEndPhrases,Different end phrases,(An airplane is flying in the sky. Airplanes are flying in the sky.),70,rain
+135,differentEndPhrases,Different end phrases,(There is a leaf on the ground. There are leaves on the ground.),70,rain
+136,differentEndPhrases,Different end phrases,(The ball fell into the river. The balls fell into the river.),70,rain
+137,differentEndPhrases,Different end phrases,(A bird is sitting on the branch. Birds are sitting on the branch.),70,rain
+138,differentEndPhrases,Different end phrases,(Mom bought a pillow. Mom bought pillows.),70,rain
+139,differentEndPhrases,Different end phrases,(Uncle is carrying a package. Uncle is carrying packages.),70,rain
+140,differentEndPhrases,Different end phrases,(Grandpa is calling his grandson. Grandpa is calling his grandchildren.),70,rain
+141,differentEndPhrases,Different end phrases,(There is a flower in the vase. There are flowers in the vase.),70,rain
+142,differentEndPhrases,Different end phrases,(A star is shining in the sky. Stars are shining in the sky.),70,rain
+143,differentEndPhrases,Different end phrases,(There is a book on the shelf. There are books on the shelf.),70,rain
+144,differentEndPhrases,Different end phrases,(There is a mug on the table. There are mugs on the table.),70,rain
+145,differentEndPhrases,Different end phrases,(The clown has a balloon in his hand. The clown has balloons in his hand.),70,rain
+146,differentEndPhrases,Different end phrases,(Dad brought a balloon. Dad brought balloons.),70,rain
+147,differentEndPhrases,Different end phrases,(Grandpa brought an apple. Grandpa brought apples.),70,rain
+148,differentEndPhrases,Different end phrases,(A soldier is walking in the street. Soldiers are walking in the street.),70,rain
+149,differentEndPhrases,Different end phrases,(There is a cow in the street. There are cows in the street.),70,rain
+150,differentEndPhrases,Different end phrases,(Jack bought a banana. Jack bought apples.),70,rain
+1,shortWords,Short words phrases,(Here is the ball. There is a ball over there.),0,
+2,shortWords,Short words phrases,(Here is the hut. Here is this hut.),0,
+3,shortWords,Short words phrases,(There are two cats here. There are three cats here.),0,
+4,shortWords,Short words phrases,(Here are five pears. There are seven pears.),0,
+5,shortWords,Short words phrases,(We do not have it. They do not have it.),0,
+6,shortWords,Short words phrases,(This is not here. That is not there.),0,
+7,shortWords,Short words phrases,(Here is the fluff. Here is the fur.),0,
+8,shortWords,Short words phrases,(There are seven branches here. There are five branches here.),0,
+9,shortWords,Short words phrases,(Here is the hat. Here is the cat.),0,
+10,shortWords,Short words phrases,(Here is one mouse. Here is one house.),0,
+11,shortWords,Short words phrases,(There is a hog over there. There is a dog over there.),0,
+12,shortWords,Short words phrases,(There are three trees here. There are two trees here.),0,
+13,shortWords,Short words phrases,(Mark is already here. Mark is already there.),0,
+14,shortWords,Short words phrases,(Jane is already there. Jane is still there.),0,
+15,shortWords,Short words phrases,(Megan is eating limes. Megan is eating lemons.),0,
+16,shortWords,Short words phrases,(Helen is drinking milk. Helen is drinking coke.),0,
+17,shortWords,Short words phrases,(He is drinking water. He is pouring water.),0,
+18,shortWords,Short words phrases,(There is an elk in the forest. There is a fox in the forest.),0,
+19,shortWords,Short words phrases,(There is a bridge here. There is a bridge there.),0,
+20,shortWords,Short words phrases,(Here is the stump. Here is the bump.),0,
+21,shortWords,Short words phrases,(This is a lorry. This is Lori.),0,
+22,shortWords,Short words phrases,(There will be a farm here. There will be a flag here.),0,
+23,shortWords,Short words phrases,(Son has rubbish in his room. Uncle has rubbish in her room.),0,
+24,shortWords,Short words phrases,(I hear rain. I hear a whistle.),0,
+25,shortWords,Short words phrases,(I see a light. I see a cake.),0,
+26,shortWords,Short words phrases,(The cat is eating fish. The cat is eating meat.),0,
+27,shortWords,Short words phrases,(Moss covered the bush. Moss covered the stump.),0,
+28,shortWords,Short words phrases,(It was raining all day. The sun was shining all day.),0,
+29,shortWords,Short words phrases,(I see the shine of waves. I see the shine of fish.),0,
+30,shortWords,Short words phrases,(Alex is my brother. Alex is our brother.),0,
+31,shortWords,Short words phrases,(This is your plan. This is my plan.),0,
+32,shortWords,Short words phrases,(A thrush is singing now. A thrush is singing today.),0,
+33,shortWords,Short words phrases,(Here is the eye. Here is the ear.),0,
+34,shortWords,Short words phrases,(There are already lights. Now there are lights.),0,
+35,shortWords,Short words phrases,(There is a house there. There is a mouse there.),0,
+36,shortWords,Short words phrases,(The chair is here. The table is here.),0,
+37,shortWords,Short words phrases,(There is an elk next to the tree. There is a whelk next to the tree.),0,
+38,shortWords,Short words phrases,"(I am writing ""mouth"". I am writing ""south"".)",0,
+39,shortWords,Short words phrases,(There is a ball near the river. There is a doll near the river.),0,
+40,shortWords,Short words phrases,(Give money to me. Give money to him.),0,
+41,shortWords,Short words phrases,(It is raining now. It is lightening now.),0,
+42,shortWords,Short words phrases,(There is a fox. There is a box.),0,
+43,shortWords,Short words phrases,(Take a cup there. Take a pup there.),0,
+44,shortWords,Short words phrases,(Grandfather sees the table. Grandfather sees the gable.),0,
+45,shortWords,Short words phrases,(He has got sweaters. He has got letters.),0,
+46,shortWords,Short words phrases,(Accept a gift from me. Accept a gift from him.),0,
+47,shortWords,Short words phrases,(Here is the bay. Here is the ray.),0,
+48,shortWords,Short words phrases,(This is the floor. This is the door.),0,
+49,shortWords,Short words phrases,(A fox has a tail. A girl has a nail.),0,
+50,shortWords,Short words phrases,(Grandpa proposed a toast. Grandpa saw a ghost.),0,
+51,shortWords,Short words phrases,(The hedgehog is carrying a mushroom. The hedgehog is looking for a mushroom.),0,
+52,shortWords,Short words phrases,(In the forest there is a bear. In the forest there is fresh air.),0,
+53,shortWords,Short words phrases,(The bull is eating in the meadow. The bull is running in the meadow.),0,
+101,shortWords,Short words phrases,(Here is the ball. There is a ball over there.),70,crowd
+102,shortWords,Short words phrases,(Here is the hut. Here is this hut.),70,crowd
+103,shortWords,Short words phrases,(There are two cats here. There are three cats here.),70,crowd
+104,shortWords,Short words phrases,(Here are five pears. There are seven pears.),70,crowd
+105,shortWords,Short words phrases,(We do not have it. They do not have it.),70,crowd
+106,shortWords,Short words phrases,(This is not here. That is not there.),70,crowd
+107,shortWords,Short words phrases,(Here is the fluff. Here is the fur.),70,crowd
+108,shortWords,Short words phrases,(There are seven branches here. There are five branches here.),70,crowd
+109,shortWords,Short words phrases,(Here is the hat. Here is the cat.),70,crowd
+110,shortWords,Short words phrases,(Here is one mouse. Here is one house.),70,crowd
+111,shortWords,Short words phrases,(There is a hog over there. There is a dog over there.),70,crowd
+112,shortWords,Short words phrases,(There are three trees here. There are two trees here.),70,crowd
+113,shortWords,Short words phrases,(Mark is already here. Mark is already there.),70,crowd
+114,shortWords,Short words phrases,(Jane is already there. Jane is still there.),70,crowd
+115,shortWords,Short words phrases,(Megan is eating limes. Megan is eating lemons.),70,crowd
+116,shortWords,Short words phrases,(Helen is drinking milk. Helen is drinking coke.),70,crowd
+117,shortWords,Short words phrases,(He is drinking water. He is pouring water.),70,crowd
+118,shortWords,Short words phrases,(There is an elk in the forest. There is a fox in the forest.),70,crowd
+119,shortWords,Short words phrases,(There is a bridge here. There is a bridge there.),70,crowd
+120,shortWords,Short words phrases,(Here is the stump. Here is the bump.),70,crowd
+121,shortWords,Short words phrases,(This is a lorry. This is Lori.),70,crowd
+122,shortWords,Short words phrases,(There will be a farm here. There will be a flag here.),70,crowd
+123,shortWords,Short words phrases,(Son has rubbish in his room. Uncle has rubbish in her room.),70,crowd
+124,shortWords,Short words phrases,(I hear rain. I hear a whistle.),70,crowd
+125,shortWords,Short words phrases,(I see a light. I see a cake.),70,crowd
+126,shortWords,Short words phrases,(The cat is eating fish. The cat is eating meat.),70,crowd
+127,shortWords,Short words phrases,(Moss covered the bush. Moss covered the stump.),70,crowd
+128,shortWords,Short words phrases,(It was raining all day. The sun was shining all day.),70,crowd
+129,shortWords,Short words phrases,(I see the shine of waves. I see the shine of fish.),70,crowd
+130,shortWords,Short words phrases,(Alex is my brother. Alex is our brother.),70,crowd
+131,shortWords,Short words phrases,(This is your plan. This is my plan.),70,crowd
+132,shortWords,Short words phrases,(A thrush is singing now. A thrush is singing today.),70,crowd
+133,shortWords,Short words phrases,(Here is the eye. Here is the ear.),70,crowd
+134,shortWords,Short words phrases,(There are already lights. Now there are lights.),70,crowd
+135,shortWords,Short words phrases,(There is a house there. There is a mouse there.),70,crowd
+136,shortWords,Short words phrases,(The chair is here. The table is here.),70,crowd
+137,shortWords,Short words phrases,(There is an elk next to the tree. There is a whelk next to the tree.),70,crowd
+138,shortWords,Short words phrases,"(I am writing ""mouth"". I am writing ""south"".)",70,crowd
+139,shortWords,Short words phrases,(There is a ball near the river. There is a doll near the river.),70,crowd
+140,shortWords,Short words phrases,(Give money to me. Give money to him.),70,crowd
+141,shortWords,Short words phrases,(It is raining now. It is lightening now.),70,crowd
+142,shortWords,Short words phrases,(There is a fox. There is a box.),70,crowd
+143,shortWords,Short words phrases,(Take a cup there. Take a pup there.),70,crowd
+144,shortWords,Short words phrases,(Grandfather sees the table. Grandfather sees the gable.),70,crowd
+145,shortWords,Short words phrases,(He has got sweaters. He has got letters.),70,crowd
+146,shortWords,Short words phrases,(Accept a gift from me. Accept a gift from him.),70,crowd
+147,shortWords,Short words phrases,(Here is the bay. Here is the ray.),70,crowd
+148,shortWords,Short words phrases,(This is the floor. This is the door.),70,crowd
+149,shortWords,Short words phrases,(A fox has a tail. A girl has a nail.),70,crowd
+150,shortWords,Short words phrases,(Grandpa proposed a toast. Grandpa saw a ghost.),70,crowd
+151,shortWords,Short words phrases,(The hedgehog is carrying a mushroom. The hedgehog is looking for a mushroom.),70,crowd
+152,shortWords,Short words phrases,(In the forest there is a bear. In the forest there is fresh air.),70,crowd
+153,shortWords,Short words phrases,(The bull is eating in the meadow. The bull is running in the meadow.),70,crowd
+1,prepositionPhrases,Preposition phrases,(There is a bird under the tree. There is a bird above the tree.),0,
+2,prepositionPhrases,Preposition phrases,(The seller put fruit in the box. The seller put fruit on the box.),0,
+3,prepositionPhrases,Preposition phrases,(The kitten crawled under the sofa. The kitten climbed onto the sofa.),0,
+4,prepositionPhrases,Preposition phrases,(A snake crawled out of the bag. A snake crawled out from under the bag.),0,
+5,prepositionPhrases,Preposition phrases,(A birch grows in front of the house. A birch grows near the house.),0,
+6,prepositionPhrases,Preposition phrases,(A hare jumped out from behind the bushes. A hare jumped out of the bushes.),0,
+7,prepositionPhrases,Preposition phrases,(The family is walking along the sidewalk. The family is walking to the sidewalk.),0,
+8,prepositionPhrases,Preposition phrases,(Children are throwing stones across the stream. Children are throwing stones into the stream.),0,
+9,prepositionPhrases,Preposition phrases,(Acorns fell from the oak. Acorns fell near the oak.),0,
+10,prepositionPhrases,Preposition phrases,(The student put a notebook on the table. The student put a notebook in the table.),0,
+11,prepositionPhrases,Preposition phrases,(They are showing a movie for us. They are showing a movie about us.),0,
+12,prepositionPhrases,Preposition phrases,(Compote is not tasty without apples. Apple compote is not tasty.),0,
+13,prepositionPhrases,Preposition phrases,(Our parents will come to take us. Our parents will come with us.),0,
+14,prepositionPhrases,Preposition phrases,(They say a lot of good things about you. They say a lot of good things relating to you.),0,
+15,prepositionPhrases,Preposition phrases,(The tram is going to the avenue. The tram is going from the avenue.),0,
+16,prepositionPhrases,Preposition phrases,(Houses were built near the river. Houses were built along the river.),0,
+17,prepositionPhrases,Preposition phrases,(There is a cafe along the road. There is a cafe on the way.),0,
+18,prepositionPhrases,Preposition phrases,(We walked to the forest. We walked from the forest.),0,
+19,prepositionPhrases,Preposition phrases,( We met a hedgehog toward the way.  We met a hedgehog on the way.),0,
+20,prepositionPhrases,Preposition phrases,(I went to the theater for my mother. I went to the theater without my mother.),0,
+21,prepositionPhrases,Preposition phrases,(A mushroom grew under the aspen. A mushroom grew behind the aspen.),0,
+22,prepositionPhrases,Preposition phrases,(A man is walking under an umbrella. A man is walking behind an umbrella.),0,
+23,prepositionPhrases,Preposition phrases,(There is a fly on the lamp. There is a fly above the lamp.),0,
+24,prepositionPhrases,Preposition phrases,(I am worried without my friends. I worry about my friends.),0,
+25,prepositionPhrases,Preposition phrases,(I received a package from you. I received a package for you.),0,
+26,prepositionPhrases,Preposition phrases,(The cat is sitting on the bench. The cat is sitting under the bench.),0,
+27,prepositionPhrases,Preposition phrases,(The pen is in the pencil case. The pen is under the pencil case.),0,
+28,prepositionPhrases,Preposition phrases,(There are glasses in the case. There are glasses behind the case.),0,
+29,prepositionPhrases,Preposition phrases,(The boy is going by bus. The boy is riding a bike.),0,
+30,prepositionPhrases,Preposition phrases,(There is a baby in the house. There is a baby on the house.),0,
+31,prepositionPhrases,Preposition phrases,(There is bread on the breadbin. There is bread in the breadbin.),0,
+32,prepositionPhrases,Preposition phrases,(There are sweets in front of the box. There sweets behind the box.),0,
+33,prepositionPhrases,Preposition phrases,(The crow is sitting under the roof. The crow is sitting on the roof.),0,
+34,prepositionPhrases,Preposition phrases,(A man is standing behind the wall. A man is standing in front of the wall.),0,
+35,prepositionPhrases,Preposition phrases,(A sea-line is stretched near the fence. A sea-line is stretched along the fence.),0,
+36,prepositionPhrases,Preposition phrases,"(On the way, we met my grandmother. Along the way, we met my grandmother.)",0,
+37,prepositionPhrases,Preposition phrases,(There are apples in the bucket. There are apples on the bucket.),0,
+38,prepositionPhrases,Preposition phrases,(There is a shop along the way. There is a shop near the road.),0,
+39,prepositionPhrases,Preposition phrases,(I am lying in the sun. I am lying under the sun.),0,
+40,prepositionPhrases,Preposition phrases,(I am standing in front of the mirror. I am standing behind the mirror.),0,
+41,prepositionPhrases,Preposition phrases,(There is a doll under the table. There is a doll behind the table.),0,`
+42,prepositionPhrases,Preposition phrases,(There is a boy on the chair. There is a boy behind the chair.),0,
+43,prepositionPhrases,Preposition phrases,(There are benches along the wall. There are benches near the wall.),0,
+44,prepositionPhrases,Preposition phrases,(There are bananas in the bag. There are bananas on the bag.),0,
+45,prepositionPhrases,Preposition phrases,(There is a saucepan in the cupboard. There is a saucepan on the cupboard.),0,
+46,prepositionPhrases,Preposition phrases,(There is a cork in the bottle. There is a cork on the bottle.),0,
+47,prepositionPhrases,Preposition phrases,(There is  a match behind the box. There is a match under the box.),0,
+48,prepositionPhrases,Preposition phrases,(There is a mouse under the fridge. There is a mouse behind the fridge.),0,
+49,prepositionPhrases,Preposition phrases,(There is dust behind the chest. There is dust under the chest.),0,
+50,prepositionPhrases,Preposition phrases,(I came from my brother. I came to take my brother.),0,
+51,prepositionPhrases,Preposition phrases,(The kitten is sitting in a box. The kitten is sitting on the box.),0,
+101,prepositionPhrases,Preposition phrases,(There is a bird under the tree. There is a bird above the tree.),70,rain
+102,prepositionPhrases,Preposition phrases,(The seller put fruit in the box. The seller put fruit on the box.),70,rain
+103,prepositionPhrases,Preposition phrases,(The kitten crawled under the sofa. The kitten climbed onto the sofa.),70,rain
+104,prepositionPhrases,Preposition phrases,(A snake crawled out of the bag. A snake crawled out from under the bag.),70,rain
+105,prepositionPhrases,Preposition phrases,(A birch grows in front of the house. A birch grows near the house.),70,rain
+106,prepositionPhrases,Preposition phrases,(A hare jumped out from behind the bushes. A hare jumped out of the bushes.),70,rain
+107,prepositionPhrases,Preposition phrases,(The family is walking along the sidewalk. The family is walking to the sidewalk.),70,rain
+108,prepositionPhrases,Preposition phrases,(Children are throwing stones across the stream. Children are throwing stones into the stream.),70,rain
+109,prepositionPhrases,Preposition phrases,(Acorns fell from the oak. Acorns fell near the oak.),70,rain
+110,prepositionPhrases,Preposition phrases,(The student put a notebook on the table. The student put a notebook in the table.),70,rain
+111,prepositionPhrases,Preposition phrases,(They are showing a movie for us. They are showing a movie about us.),70,rain
+112,prepositionPhrases,Preposition phrases,(Compote is not tasty without apples. Apple compote is not tasty.),70,rain
+113,prepositionPhrases,Preposition phrases,(Our parents will come to take us. Our parents will come with us.),70,rain
+114,prepositionPhrases,Preposition phrases,(They say a lot of good things about you. They say a lot of good things relating to you.),70,rain
+115,prepositionPhrases,Preposition phrases,(The tram is going to the avenue. The tram is going from the avenue.),70,rain
+116,prepositionPhrases,Preposition phrases,(Houses were built near the river. Houses were built along the river.),70,rain
+117,prepositionPhrases,Preposition phrases,(There is a cafe along the road. There is a cafe on the way.),70,rain
+118,prepositionPhrases,Preposition phrases,(We walked to the forest. We walked from the forest.),70,rain
+119,prepositionPhrases,Preposition phrases,( We met a hedgehog toward the way.  We met a hedgehog on the way.),70,rain
+120,prepositionPhrases,Preposition phrases,(I went to the theater for my mother. I went to the theater without my mother.),70,rain
+121,prepositionPhrases,Preposition phrases,(A mushroom grew under the aspen. A mushroom grew behind the aspen.),70,rain
+122,prepositionPhrases,Preposition phrases,(A man is walking under an umbrella. A man is walking behind an umbrella.),70,rain
+123,prepositionPhrases,Preposition phrases,(There is a fly on the lamp. There is a fly above the lamp.),70,rain
+124,prepositionPhrases,Preposition phrases,(I am worried without my friends. I worry about my friends.),70,rain
+125,prepositionPhrases,Preposition phrases,(I received a package from you. I received a package for you.),70,rain
+126,prepositionPhrases,Preposition phrases,(The cat is sitting on the bench. The cat is sitting under the bench.),70,rain
+127,prepositionPhrases,Preposition phrases,(The pen is in the pencil case. The pen is under the pencil case.),70,rain
+128,prepositionPhrases,Preposition phrases,(There are glasses in the case. There are glasses behind the case.),70,rain
+129,prepositionPhrases,Preposition phrases,(The boy is going by bus. The boy is riding a bike.),70,rain
+130,prepositionPhrases,Preposition phrases,(There is a baby in the house. There is a baby on the house.),70,rain
+131,prepositionPhrases,Preposition phrases,(There is bread on the breadbin. There is bread in the breadbin.),70,rain
+132,prepositionPhrases,Preposition phrases,(There are sweets in front of the box. There sweets behind the box.),70,rain
+133,prepositionPhrases,Preposition phrases,(The crow is sitting under the roof. The crow is sitting on the roof.),70,rain
+134,prepositionPhrases,Preposition phrases,(A man is standing behind the wall. A man is standing in front of the wall.),70,rain
+135,prepositionPhrases,Preposition phrases,(A sea-line is stretched near the fence. A sea-line is stretched along the fence.),70,rain
+136,prepositionPhrases,Preposition phrases,"(On the way, we met my grandmother. Along the way, we met my grandmother.)",70,rain
+137,prepositionPhrases,Preposition phrases,(There are apples in the bucket. There are apples on the bucket.),70,rain
+138,prepositionPhrases,Preposition phrases,(There is a shop along the way. There is a shop near the road.),70,rain
+139,prepositionPhrases,Preposition phrases,(I am lying in the sun. I am lying under the sun.),70,rain
+140,prepositionPhrases,Preposition phrases,(I am standing in front of the mirror. I am standing behind the mirror.),70,rain
+141,prepositionPhrases,Preposition phrases,(There is a doll under the table. There is a doll behind the table.),70,rain
+142,prepositionPhrases,Preposition phrases,(There is a boy on the chair. There is a boy behind the chair.),70,rain
+143,prepositionPhrases,Preposition phrases,(There are benches along the wall. There are benches near the wall.),70,rain
+144,prepositionPhrases,Preposition phrases,(There are bananas in the bag. There are bananas on the bag.),70,rain
+145,prepositionPhrases,Preposition phrases,(There is a saucepan in the cupboard. There is a saucepan on the cupboard.),70,rain
+146,prepositionPhrases,Preposition phrases,(There is a cork in the bottle. There is a cork on the bottle.),70,rain
+147,prepositionPhrases,Preposition phrases,(There is  a match behind the box. There is a match under the box.),70,rain
+148,prepositionPhrases,Preposition phrases,(There is a mouse under the fridge. There is a mouse behind the fridge.),70,rain
+149,prepositionPhrases,Preposition phrases,(There is dust behind the chest. There is dust under the chest.),70,rain
+150,prepositionPhrases,Preposition phrases,(I came from my brother. I came to take my brother.),70,rain
+151,prepositionPhrases,Preposition phrases,(The kitten is sitting in a box. The kitten is sitting on the box.),70,rain

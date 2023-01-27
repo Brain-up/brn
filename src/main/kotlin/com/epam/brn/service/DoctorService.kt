@@ -1,6 +1,6 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
@@ -14,8 +14,8 @@ class DoctorService(
 
     fun addPatientToDoctorAsDoctor(doctorId: Long, patientId: Long) {
         val currentUser = userAccountService.getCurrentUser().toDto()
-        val patient = userAccountService.findUserById(patientId)
-        val doctor = userAccountService.findUserById(doctorId)
+        val patient = userAccountService.findUserDtoById(patientId)
+        val doctor = userAccountService.findUserDtoById(doctorId)
 
         checkUserIsNotAdmin(patient, USING_ADMIN_ID_FOR_PATIENT_WARN)
         checkUserIsNotAdmin(doctor, USING_ADMIN_ID_FOR_DOCTOR_WARN)
@@ -44,7 +44,7 @@ class DoctorService(
 
     fun deleteDoctorFromPatientAsDoctor(doctorId: Long, patientId: Long) {
         val currentUser = userAccountService.getCurrentUser().toDto()
-        val patient = userAccountService.findUserById(patientId)
+        val patient = userAccountService.findUserDtoById(patientId)
 
         checkUserIsNotAdmin(patient, USING_ADMIN_ID_FOR_PATIENT_WARN)
 
@@ -62,7 +62,7 @@ class DoctorService(
 
     fun deleteDoctorFromPatientAsPatient(patientId: Long) {
         val currentUser = userAccountService.getCurrentUser().toDto()
-        val patient = userAccountService.findUserById(patientId)
+        val patient = userAccountService.findUserDtoById(patientId)
 
         checkUserIsNotAdmin(patient, USING_ADMIN_ID_FOR_PATIENT_WARN)
 
@@ -72,26 +72,26 @@ class DoctorService(
         userAccountService.removeDoctorFromPatient(patientId)
     }
 
-    fun getPatientsForDoctor(doctorId: Long): List<UserAccountResponse> {
+    fun getPatientsForDoctor(doctorId: Long): List<UserAccountDto> {
         val currentUser = userAccountService.getCurrentUser().toDto()
         if (!roleService.isUserHasRole(currentUser, BrnRole.ADMIN) && currentUser.id != doctorId)
             throw IllegalArgumentException("It is forbidden to get patients of another doctor")
         return userAccountService.getPatientsForDoctor(doctorId)
     }
 
-    fun getDoctorAssignedToPatient(patientId: Long): UserAccountResponse {
-        val patient = userAccountService.findUserById(patientId)
+    fun getDoctorAssignedToPatient(patientId: Long): UserAccountDto {
+        val patient = userAccountService.findUserDtoById(patientId)
         val currentUser = userAccountService.getCurrentUser().toDto()
         return when {
             !roleService.isUserHasRole(currentUser, BrnRole.ADMIN) && currentUser.id != patientId -> {
                 throw IllegalArgumentException("It is forbidden to get a doctor from another patient")
             }
             patient.doctorId == null -> throw IllegalArgumentException("No doctor found")
-            else -> userAccountService.findUserById(patient.doctorId!!)
+            else -> userAccountService.findUserDtoById(patient.doctorId!!)
         }
     }
 
-    fun checkUserIsNotAdmin(user: UserAccountResponse, message: String) {
+    fun checkUserIsNotAdmin(user: UserAccountDto, message: String) {
         if (roleService.isUserHasRole(user, BrnRole.ADMIN)) {
             val currentUser = userAccountService.getCurrentUser()
             log.error("Current user '${currentUser.id}' is trying to use admin id '${user.id}'. $message")

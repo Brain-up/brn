@@ -26,7 +26,7 @@
     "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
     "develop": "cross-env FIREBASE_PROJECT_ID=brainup-spb-dev-bb6d0 FIREBASE_AUTH_DOMAIN=brainup-spb-dev-bb6d0.firebaseapp.com FIREBASE_API_KEY=AIzaSyB03Q4ZCxdqaKuN7cJqCQGhkibYD4Q-qsc ember s --secure-proxy=false --proxy=http://localhost:8081",
     "remote": "ember s --secure-proxy=false --proxy=http://ecse005003f1.epam.com/",
-    "remote:prod": "ember s --secure-proxy=true --proxy=https://brainup.site/",
+    "remote:prod": "ember s --secure-proxy=true --proxy=https://brainup.fun/",
     "mirage": "ember s",
     "postinstall": "patch-package"
   },
@@ -190,7 +190,7 @@
     "ember-fast-cli": "^1.3.0",
     "firebase": "^8.10.0",
     "idle-js": "^1.2.0",
-    "luxon": "^1.27.0",
+    "luxon": "^1.28.1",
     "patch-package": "6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "stylelint": "^13.6.1",

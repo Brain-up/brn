@@ -15,4 +15,21 @@ a[rel='noopener'] {
   overflow: hidden;
 }
 
+
+.items-center li {
+  margin: 3px;
+  padding: 2px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+}
+
+
+.items-center li:hover {
+  border: 1px solid #f3f3f5;
+}
+
+a img {
+  object-fit: contain;
+  height: 48px;
+}
 /*! purgecss end ignore */

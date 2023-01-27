@@ -8,8 +8,8 @@ import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistic.UserPeriodStatisticService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -20,7 +20,7 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/v2/statistics")
-@Api(value = "/statistics", tags = ["Statistics"], description = "Contains actions over user statistic details")
+@Tag(name = "Statistics", description = "Contains actions over user statistic details")
 @RolesAllowed(BrnRole.USER)
 class UserStatisticControllerV2(
     private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
@@ -29,7 +29,7 @@ class UserStatisticControllerV2(
     private val roleService: RoleService
 ) {
     @GetMapping("/study/year")
-    @ApiOperation("Get user's yearly statistic for the period. Where period is a two dates in the ISO date time format")
+    @Operation(summary = "Get user's yearly statistic for the period. Where period is a two dates in the ISO date time format")
     fun getUserYearlyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
@@ -44,7 +44,7 @@ class UserStatisticControllerV2(
     }
 
     @GetMapping("/study/week")
-    @ApiOperation("Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format")
+    @Operation(summary = "Get user's weekly statistic for the period. Where period is a two dates in the ISO date time format")
     fun getUserWeeklyStatistic(
         @RequestParam(name = "from", required = true) from: LocalDateTime,
         @RequestParam(name = "to", required = true) to: LocalDateTime,
@@ -59,7 +59,7 @@ class UserStatisticControllerV2(
     }
 
     @GetMapping("/study/day")
-    @ApiOperation("Get user's details daily statistic for the day. Where day is a date in the ISO date time format")
+    @Operation(summary = "Get user's details daily statistic for the day. Where day is a date in the ISO date time format")
     fun getUserDailyDetailsStatistics(
         @RequestParam(name = "day", required = true) day: LocalDateTime,
         @RequestParam(name = "userId") userId: Long?

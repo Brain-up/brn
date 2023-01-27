@@ -1,17 +1,19 @@
 package com.epam.brn.auth
 
+import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
 import com.epam.brn.repo.RoleRepository
 import com.epam.brn.service.impl.RoleServiceImpl
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
 import kotlin.test.assertEquals
@@ -116,5 +118,27 @@ internal class RoleServiceImplTest {
         // THEN
         verify(exactly = 1) { roleRepository.findAll() }
         assertEquals(1, allRoles.size)
+    }
+
+    @Test
+    fun `should check users roles`() {
+        // GIVEN
+        val user = UserAccountDto(email = "email", bornYear = 1111, name = "name", gender = BrnGender.FEMALE)
+        user.roles = mutableSetOf("USER")
+        // WHEN
+        val result = roleServiceImpl.isUserHasRole(user, "USER")
+        // THEN
+        result shouldBe true
+    }
+
+    @Test
+    fun `should check users has not role`() {
+        // GIVEN
+        val user = UserAccountDto(email = "email", bornYear = 1111, name = "name", gender = BrnGender.FEMALE)
+        user.roles = mutableSetOf("USER")
+        // WHEN
+        val result = roleServiceImpl.isUserHasRole(user, "ADMIN")
+        // THEN
+        result shouldBe false
     }
 }

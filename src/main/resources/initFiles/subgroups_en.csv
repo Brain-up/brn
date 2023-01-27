@@ -1,7 +1,7 @@
 seriesType, level, code, name, description
 DURATION_SIGNALS,1,durationSignals,Length signals,
 FREQUENCY_SIGNALS,1,frequencySignals,Frequency signals,
-SINGLE_SIMPLE_WORDS ,1,family,Family,Family words
+SINGLE_SIMPLE_WORDS,1,family,Family,Family words
 SINGLE_SIMPLE_WORDS,2,home,Home,Home words
 SINGLE_SIMPLE_WORDS,3,food,Food,
 SINGLE_SIMPLE_WORDS,4,clothes,Clothes,
@@ -21,6 +21,25 @@ SINGLE_SIMPLE_WORDS,17,game,Game,
 SINGLE_SIMPLE_WORDS,18,adventure,Adventure,
 SINGLE_SIMPLE_WORDS,19,hospital,Hospital,
 SINGLE_SIMPLE_WORDS,20,feelings,Feelings,
+SINGLE_SIMPLE_WORDS,21,toys,Toys,
+SINGLE_SIMPLE_WORDS,22,insects,Insects,
+SINGLE_SIMPLE_WORDS,23,interior,Interior,
+SINGLE_SIMPLE_WORDS,24,kitchen,Kitchen,
+SINGLE_SIMPLE_WORDS,25,music,Music,
+SINGLE_SIMPLE_WORDS,26,birds,Birds,
+SINGLE_SIMPLE_WORDS,27,jewelry,Jewelry,
+SINGLE_SIMPLE_WORDS,28,history,History,
+SINGLE_SIMPLE_WORDS,29,actions,Actions,
+SINGLE_SIMPLE_WORDS,30,fruit,Fruits,
+SINGLE_SIMPLE_WORDS,31,plants,Plants,
+SINGLE_SIMPLE_WORDS,32,trees,Trees,
+SINGLE_SIMPLE_WORDS,33,sport,Sports,
+SINGLE_SIMPLE_WORDS,34,dogs,Dogs,
+SINGLE_SIMPLE_WORDS,35,stationery,Stationery,
+SINGLE_SIMPLE_WORDS,36,literature,Literature,
+SINGLE_SIMPLE_WORDS,37,languages,Languages,
+SINGLE_SIMPLE_WORDS,38,physics,Physics,
+SINGLE_SIMPLE_WORDS,39,biology,Biology,
 WORDS_SEQUENCES,1,words_2_from_6,2 words from 6, Matrix with 2 columns and 3 rows
 WORDS_SEQUENCES,2,words_3_from_6,3 words from 6, Matrix with 3 columns and 3 rows
 WORDS_SEQUENCES,3,words_3_from_9,3 words from 9, Matrix with 3 columns and 3 rows

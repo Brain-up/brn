@@ -1,6 +1,6 @@
 const task = {
-  exerciseType: 'SINGLE_SIMPLE_WORDS',
-  type: 'task/SINGLE_SIMPLE_WORDS',
+  exerciseMechanism: 'WORDS',
+  type: 'task/WORDS',
   name: '',
   wrongAnswers: [],
   correctAnswer: 'вить',

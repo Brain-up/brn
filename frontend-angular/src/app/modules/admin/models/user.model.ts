@@ -20,7 +20,7 @@ export interface User {
   }[];
   name: string;
   spentTime: number;
-  studyDaysInLastMonth: number;
+  studyDaysInCurrentMonth: number;
   userId: string;
 }
 

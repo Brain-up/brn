@@ -3,7 +3,7 @@ package com.epam.brn.integration
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.BrnResponse
-import com.epam.brn.dto.response.UserAccountResponse
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Role
@@ -80,8 +80,8 @@ class UserDetailsControllerIT : BaseIT() {
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BrnResponse::class.java)
-        val resultUser: UserAccountResponse =
-            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
+        val resultUser: UserAccountDto =
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
         resultUser.id shouldBe user.id
         resultUser.name shouldBe user.fullName
         resultUser.avatar shouldBe "/pictures/testAvatar"
@@ -103,8 +103,8 @@ class UserDetailsControllerIT : BaseIT() {
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BrnResponse::class.java)
-        val resultUser: UserAccountResponse =
-            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountResponse::class.java)
+        val resultUser: UserAccountDto =
+            objectMapper.readValue(gson.toJson(baseResponseDto.data), UserAccountDto::class.java)
         resultUser.id shouldBe user.id
         resultUser.name shouldBe "newName"
         resultUser.bornYear shouldBe 1950
@@ -315,8 +315,8 @@ class UserDetailsControllerIT : BaseIT() {
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
 
         val data = gson.fromJson(response, BrnResponse::class.java).data
-        val users: List<UserAccountResponse> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountResponse>>() {})
+        val users: List<UserAccountDto> =
+            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountDto>>() {})
 
         // THEN
         users.size shouldBe 1

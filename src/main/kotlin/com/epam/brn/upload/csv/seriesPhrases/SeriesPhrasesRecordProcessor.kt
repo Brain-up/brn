@@ -26,15 +26,11 @@ class SeriesPhrasesRecordProcessor(
     private val wordsService: WordsService,
 ) : RecordProcessor<SeriesPhrasesRecord, Exercise> {
 
-    @Value(value = "\${brn.picture.file.default.path}")
-    private lateinit var pictureDefaultPath: String
-
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
 
-    override fun isApplicable(record: Any): Boolean {
-        return record is SeriesPhrasesRecord
-    }
+    override fun isApplicable(record: Any): Boolean =
+        record is SeriesPhrasesRecord
 
     @Transactional
     override fun process(records: List<SeriesPhrasesRecord>, locale: BrnLocale): List<Exercise> {
@@ -87,7 +83,6 @@ class SeriesPhrasesRecordProcessor(
                 Resource(
                     word = phrase,
                     locale = locale.locale,
-                    pictureFileUrl = pictureDefaultPath
                 )
             )
         resource.audioFileUrl = audioPath

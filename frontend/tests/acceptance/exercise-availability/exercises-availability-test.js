@@ -74,6 +74,8 @@ module('Acceptance | exercises availability', function (hooks) {
     getServerResponses(newData);
 
     await chooseAnswer('test option');
+    await chooseAnswer('test option');
+    await chooseAnswer('test option');
 
     await continueAfterStats();
 

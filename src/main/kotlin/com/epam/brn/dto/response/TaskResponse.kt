@@ -11,5 +11,6 @@ data class TaskResponse(
     val exerciseMechanism: ExerciseMechanism = exerciseType.toMechanism(),
     val name: String? = "",
     val serialNumber: Int? = 0,
-    val answerOptions: List<ResourceResponse> = emptyList(),
+    val answerOptions: List<ResourceResponse> = HashSet(),
+    val shouldBeWithPictures: Boolean = true,
 )
