@@ -3,7 +3,6 @@ package com.epam.brn.upload.csv.seriesWordsKoroleva
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
-import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -305,54 +304,6 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 answerOptions = mutableListOf(resource("бал"), resource("бум"), resource("быль")),
                 correctAnswer = resource("быль")
             )
-        )
-    }
-
-    private fun resource_бал(): Resource {
-        return Resource(
-            word = "бал",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бал.ogg",
-        )
-    }
-
-    private fun resource_бум(): Resource {
-        return Resource(
-            word = "бум",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бум.ogg",
-        )
-    }
-
-    private fun resource_быль(): Resource {
-        return Resource(
-            word = "быль",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/быль.ogg",
-        )
-    }
-
-    private fun resource_вить(): Resource {
-        return Resource(
-            word = "вить",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/вить.ogg",
-        )
-    }
-
-    private fun resource_гад(): Resource {
-        return Resource(
-            word = "гад",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/гад.ogg",
-        )
-    }
-
-    private fun resource_дуб(): Resource {
-        return Resource(
-            word = "дуб",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/дуб.ogg",
         )
     }
 }

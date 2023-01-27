@@ -98,12 +98,12 @@ internal class SeriesMatrixRecordProcessorTest {
         every { taskRepositoryMock.save(ofType(Task::class)) } returns Task()
         every { seriesRepositoryMock.findById(2L) } returns Optional.of(series)
 
-        mockFindResourceByWordLike("девочка", resource("девочка"))
-        mockFindResourceByWordLike("бабушка", resource("бабушка"))
-        mockFindResourceByWordLike("дедушка", resource("дедушка"))
-        mockFindResourceByWordLike("сидит", resource("сидит"))
-        mockFindResourceByWordLike("лежит", resource("лежит"))
-        mockFindResourceByWordLike("идет", resource("идет"))
+        mockFindResourceByWordLike("девочка", createResource("девочка"))
+        mockFindResourceByWordLike("бабушка", createResource("бабушка"))
+        mockFindResourceByWordLike("дедушка", createResource("дедушка"))
+        mockFindResourceByWordLike("сидит", createResource("сидит"))
+        mockFindResourceByWordLike("лежит", createResource("лежит"))
+        mockFindResourceByWordLike("идет", createResource("идет"))
     }
 
     private fun mockFindResourceByWordLike(word: String, result: Resource) {
@@ -160,12 +160,12 @@ internal class SeriesMatrixRecordProcessorTest {
         val exercise = createExercise()
         every { exerciseRepositoryMock.save(exercise) } returns exercise
         val expectedResources = listOf(
-            resource("девочка"),
-            resource("бабушка"),
-            resource("дедушка"),
-            resource("сидит"),
-            resource("лежит"),
-            resource("идет")
+            createResource("девочка"),
+            createResource("бабушка"),
+            createResource("дедушка"),
+            createResource("сидит"),
+            createResource("лежит"),
+            createResource("идет")
         )
         // WHEN
         val actual = seriesMatrixRecordProcessor.process(
@@ -199,61 +199,17 @@ internal class SeriesMatrixRecordProcessorTest {
             serialNumber = 2,
             exercise = exercise,
             answerOptions = mutableListOf(
-                resource("девочка"),
-                resource("бабушка"),
-                resource("дедушка"),
-                resource("сидит"),
-                resource("лежит"),
-                resource("идет")
+                createResource("девочка"),
+                createResource("бабушка"),
+                createResource("дедушка"),
+                createResource("сидит"),
+                createResource("лежит"),
+                createResource("идет")
             )
         )
     }
 
-    private fun resource_девочка(): Resource {
-        return Resource(
-            word = "девочка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/девочка.jpg"
-        )
-    }
-
-    private fun resource_бабушка(): Resource {
-        return Resource(
-            word = "бабушка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/бабушка.jpg"
-        )
-    }
-
-    private fun resource_дедушка(): Resource {
-        return Resource(
-            word = "дедушка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/дедушка.jpg"
-        )
-    }
-
-    private fun resource_сидит(): Resource {
-        return Resource(
-            word = "сидит",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/сидит.jpg"
-        )
-    }
-
-    private fun resource_лежит(): Resource {
-        return Resource(
-            word = "лежит",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/лежит.jpg"
-        )
-    }
-
-    private fun resource_идет(): Resource {
-        return Resource(
-            word = "идет",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/идет.jpg"
-        )
+    private fun createResource(word: String): Resource {
+        return resource(word, "pictures/withWord/$word.jpg")
     }
 }
