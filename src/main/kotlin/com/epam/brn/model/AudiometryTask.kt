@@ -52,7 +52,7 @@ class AudiometryTask(
     var ear: String = EAR.BOTH.name,
 ) {
     override fun toString() =
-        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
+        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear)"
 
     fun toDto(): Any {
         return when (audiometry!!.audiometryType) {

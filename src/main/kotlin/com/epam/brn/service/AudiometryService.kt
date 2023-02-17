@@ -57,7 +57,7 @@ class AudiometryService(
         val nextTasks = mutableListOf<AudiometryTask>()
         mapZoneTasks.forEach { (zone, zoneTasks) ->
             run {
-                val doneIndex = zoneTasks.indexOf(mapZoneLastTask[zone])
+                val doneIndex = zoneTasks.indexOfFirst { it.id == mapZoneLastTask[zone]?.id }
                 val nextIndex = if (zoneTasks.size > doneIndex + 1) doneIndex + 1 else 0
                 val secondTask = zoneTasks[nextIndex]
                 nextTasks.add(secondTask)
