@@ -88,22 +88,4 @@ class Contributor(
         "Contributor(id=$id, name=$name, description=$description, company=$company, nameEn=$nameEn, " +
             "descriptionEn=$descriptionEn, companyEn=$companyEn, type=$type, pictureUrl=$pictureUrl," +
             "contribution=$contribution, gitHubUser=$gitHubUser)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Contributor
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (description != other.description) return false
-        if (company != other.company) return false
-        if (nameEn != other.nameEn) return false
-        if (descriptionEn != other.descriptionEn) return false
-        if (companyEn != other.companyEn) return false
-        if (type != other.type) return false
-        if (pictureUrl != other.pictureUrl) return false
-        return true
-    }
 }

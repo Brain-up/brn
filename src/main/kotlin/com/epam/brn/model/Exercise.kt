@@ -88,24 +88,6 @@ class Exercise(
         "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, noiseUrl=$noiseUrl, " +
             "template=$template, active=$active, playWordsCount=$playWordsCount, wordsColumns=$wordsColumns)"
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Exercise
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (template != other.template) return false
-        if (level != other.level) return false
-        if (noiseLevel != other.noiseLevel) return false
-        if (noiseUrl != other.noiseUrl) return false
-        if (playWordsCount != other.playWordsCount) return false
-        if (wordsColumns != other.wordsColumns) return false
-
-        return true
-    }
-
     fun addTask(task: Task) {
         tasks.add(task)
     }

@@ -56,20 +56,4 @@ class SubGroup(
     override fun toString() =
         "SubGroup(id=$id, name='$name', code='$code', description=$description, level=$level, " +
             "withPictures=$withPictures)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as SubGroup
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (code != other.code) return false
-        if (description != other.description) return false
-        if (level != other.level) return false
-        if (withPictures != other.withPictures) return false
-
-        return true
-    }
 }

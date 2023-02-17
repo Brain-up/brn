@@ -50,21 +50,4 @@ class Resource(
 
     override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word'," +
         " pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Resource
-
-        if (id != other.id) return false
-        if (audioFileUrl != other.audioFileUrl) return false
-        if (word != other.word) return false
-        if (wordType != other.wordType) return false
-        if (pictureFileUrl != other.pictureFileUrl) return false
-        if (soundsCount != other.soundsCount) return false
-        if (description != other.description) return false
-
-        return true
-    }
 }

@@ -20,15 +20,5 @@ class SinAudiometryResult(
     @JoinColumn(name = "audiometry_history_id")
     var audiometryHistory: AudiometryHistory? = null
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as SinAudiometryResult
-        if (id != other.id) return false
-        if (frequency != other.frequency) return false
-        if (soundLevel != other.soundLevel) return false
-        return true
-    }
-
     override fun toString() = "SinAudiometryResult(id=$id, frequency=$frequency, soundLevel=$soundLevel, audiometryHistoryId=${audiometryHistory?.id})"
 }

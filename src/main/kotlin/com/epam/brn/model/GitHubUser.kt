@@ -34,22 +34,4 @@ class GitHubUser(
     override fun toString() =
         "GitHubUser(id=$id, login='$login', name=$name, email=$email, avatarUrl=$avatarUrl, bio=$bio, " +
             "company=$company, contributions=$contributions)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as GitHubUser
-
-        if (id != other.id) return false
-        if (login != other.login) return false
-        if (name != other.name) return false
-        if (email != other.email) return false
-        if (avatarUrl != other.avatarUrl) return false
-        if (bio != other.bio) return false
-        if (company != other.company) return false
-        if (contributions != other.contributions) return false
-
-        return true
-    }
 }

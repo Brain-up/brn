@@ -53,19 +53,4 @@ class Series(
     )
 
     override fun toString() = "Series(id=$id, type=$type, level=$level, name='$name', description='$description')"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Series
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (type != other.type) return false
-        if (description != other.description) return false
-        if (exerciseGroup != other.exerciseGroup) return false
-
-        return true
-    }
 }

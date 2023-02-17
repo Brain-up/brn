@@ -54,19 +54,6 @@ class AudiometryTask(
     override fun toString() =
         "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as AudiometryTask
-        if (id != other.id) return false
-        if (level != other.level) return false
-        if (minFrequency != other.minFrequency) return false
-        if (maxFrequency != other.maxFrequency) return false
-        if (frequencyZone != other.frequencyZone) return false
-        if (audiometryGroup != other.audiometryGroup) return false
-        return true
-    }
-
     fun toDto(): Any {
         return when (audiometry!!.audiometryType) {
             AudiometryType.SIGNALS.name -> AudiometrySignalsTaskResponse(
