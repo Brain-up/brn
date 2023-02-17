@@ -12,5 +12,5 @@ data class AudiometryLopotkoTaskResponse(
 
     val count: Int = 10,
     val showSize: Int = 9,
-    val answerOptions: MutableSet<Resource>
+    val answerOptions: List<Resource>
 )

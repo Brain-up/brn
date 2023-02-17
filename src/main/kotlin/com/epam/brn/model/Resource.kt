@@ -34,7 +34,7 @@ class Resource(
     var pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
     @ManyToMany(mappedBy = "answerOptions", cascade = [CascadeType.MERGE])
-    var tasks: MutableSet<Task> = HashSet(),
+    var tasks: MutableList<Task> = mutableListOf(),
     var description: String? = ""
 ) {
     fun toResponse() = ResourceResponse(

@@ -4,7 +4,7 @@ import com.epam.brn.enums.FrequencyZone
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
 
-fun AudiometryTask.copy(id: Long? = this.id, answerOptions: MutableSet<Resource> = this.answerOptions) = AudiometryTask(
+fun AudiometryTask.copy(id: Long? = this.id, answerOptions: MutableList<Resource> = this.answerOptions) = AudiometryTask(
     id = id,
     level = 1,
     audiometryGroup = "A",

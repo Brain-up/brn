@@ -29,7 +29,7 @@ class Series(
     @JoinColumn(name = "exercise_group_id")
     var exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val subGroups: MutableSet<SubGroup> = LinkedHashSet()
+    val subGroups: MutableList<SubGroup> = mutableListOf()
 ) {
 
     constructor(record: SeriesGenericRecord, exerciseGroup: ExerciseGroup) : this(

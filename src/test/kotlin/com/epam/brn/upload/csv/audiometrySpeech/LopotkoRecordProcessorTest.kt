@@ -125,7 +125,7 @@ internal class LopotkoRecordProcessorTest {
     @Test
     fun `should create correct answer options`() {
         // given
-        val resources = mutableSetOf(
+        val resources = mutableListOf(
             resource_бал(),
             resource_бум(),
             resource_быль(),

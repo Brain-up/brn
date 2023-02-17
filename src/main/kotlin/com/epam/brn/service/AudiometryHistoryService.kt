@@ -36,7 +36,7 @@ class AudiometryHistoryService(
         return savedAudiometryHistory.id!!
     }
 
-    private fun getSpecificHeadphonesFromCurrentUser(headphones: MutableSet<Headphones>, headphonesId: Long?) =
+    private fun getSpecificHeadphonesFromCurrentUser(headphones: List<Headphones>, headphonesId: Long?) =
         headphones.find() { entity ->
             entity.id == headphonesId
         } ?: throw IllegalArgumentException("Current user has ho headphones with id=$headphonesId")

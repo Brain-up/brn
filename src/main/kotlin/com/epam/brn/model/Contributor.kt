@@ -42,7 +42,7 @@ class Contributor(
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "contributor_id")
-    var contacts: MutableSet<Contact> = mutableSetOf()
+    var contacts: MutableList<Contact> = mutableListOf()
 
     fun toContributorResponse(locale: String = "ru-ru"): ContributorResponse {
         val dto = ContributorResponse(

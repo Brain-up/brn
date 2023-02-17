@@ -43,9 +43,9 @@ class Exercise(
     @JoinColumn(name = "sub_group_id")
     var subGroup: SubGroup? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val tasks: MutableSet<Task> = LinkedHashSet(),
+    val tasks: MutableList<Task> = mutableListOf(),
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val signals: MutableSet<Signal> = LinkedHashSet()
+    val signals: MutableList<Signal> = mutableListOf()
 ) {
     @LastModifiedBy
     @Column(name = "changed_by")

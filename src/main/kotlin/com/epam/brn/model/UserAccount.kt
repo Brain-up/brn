@@ -51,7 +51,7 @@ class UserAccount(
     @ManyToOne(fetch = FetchType.LAZY)
     var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var headphones: MutableSet<Headphones> = hashSetOf()
+    var headphones: MutableList<Headphones> = mutableListOf()
 ) {
     var password: String? = null
 

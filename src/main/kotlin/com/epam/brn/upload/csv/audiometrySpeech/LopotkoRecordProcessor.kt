@@ -33,7 +33,7 @@ class LopotkoRecordProcessor(
         val audiometryTasks = mutableSetOf<AudiometryTask>()
 
         records.forEach { record ->
-            val answerOptions: MutableSet<Resource> = extractAnswerOptions(record, locale)
+            val answerOptions = extractAnswerOptions(record, locale)
             resourceRepository.saveAll(answerOptions)
 
             val audiometryTask = extractAudiometryTask(record, answerOptions)
@@ -49,14 +49,14 @@ class LopotkoRecordProcessor(
         return audiometryTasks.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: LopotkoRecord, locale: BrnLocale): MutableSet<Resource> {
+    private fun extractAnswerOptions(record: LopotkoRecord, locale: BrnLocale): MutableList<Resource> {
 //      todo: think about voice gender! if (record.exerciseName.startsWith("М")) audioPath = audioPathAlena
         return record.words
             .asSequence()
             .map { it.toStringWithoutBraces() }
             .distinct()
             .map { toResource(it, locale) }
-            .toMutableSet()
+            .toMutableList()
     }
 
     private fun toResource(word: String, locale: BrnLocale): Resource {
@@ -83,7 +83,7 @@ class LopotkoRecordProcessor(
         return resource
     }
 
-    private fun extractAudiometryTask(record: LopotkoRecord, answerOptions: MutableSet<Resource>): AudiometryTask {
+    private fun extractAudiometryTask(record: LopotkoRecord, answerOptions: MutableList<Resource>): AudiometryTask {
         val audiometry = audiometryRepository.findByAudiometryTypeAndLocale(
             AudiometryType.valueOf(record.type).name,
             record.locale.locale

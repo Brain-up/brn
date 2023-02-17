@@ -45,7 +45,7 @@ class AudiometryTask(
         joinColumns = [JoinColumn(name = "audiometry_task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
-    var answerOptions: MutableSet<Resource> = hashSetOf(),
+    var answerOptions: MutableList<Resource> = mutableListOf(),
 
     // == for frequency diagnostic
     val frequencies: String? = null,
