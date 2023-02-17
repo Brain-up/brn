@@ -14,10 +14,13 @@ export default class ProfileComponent extends Component {
   @service('user-data') userData!: UserDataService;
 
   @tracked showAvatarsModal = false;
-  @tracked selectedAvatar: string | number = 0;
 
   get avatarUrl() {
     return this.userData.avatarUrl;
+  }
+
+  get avatar() {
+    return this.userData.userAvatar;
   }
 
   get user() {
@@ -58,16 +61,15 @@ export default class ProfileComponent extends Component {
     return this.intl.t('registration_form.empty_lastname');
   }
 
-  @action onAvatarSelect(id: number) {
-    if (!id) {
-      return;
-    }
-    this.selectedAvatar = id;
-  }
-
-  @action onAvatarSubmit() {
+  @action onAvatarSubmit(selectedAvatar: string) {
     this.showAvatarsModal = false;
-    this.userData.selectedAvatarId = this.selectedAvatar;
+    this.userData.network.patchUserInfo({
+      avatar: selectedAvatar,
+    });
+    this.userData.userModel = {
+      ...(this.userData.userModel as UserDTO),
+      avatar: selectedAvatar,
+    };
   }
 
   @action onCancel() {
@@ -75,7 +77,6 @@ export default class ProfileComponent extends Component {
   }
 
   @action onShowAvatars() {
-    this.selectedAvatar = this.userData.selectedAvatarId;
     this.showAvatarsModal = true;
   }
 

@@ -1,17 +1,28 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | ui/avatars', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`<Ui::Avatars />`);
+  test('it renders avatars', async function (assert) {
+    this.setProperties({
+      selectedAvatar: '1',
+      onCancel: () => void 0,
+      onAvatarSubmit: () => void 0,
+    });
+    await render(
+      hbs`<Ui::Avatars @selectedAvatar={{this.selectedAvatar}} @onCancel={{this.onCancel}} @onSubmit={{this.onAvatarSubmit}} />`,
+    );
 
     assert.dom('img').exists({ count: 20 });
+    assert.dom('[data-test-avatar-btn="1"]').hasClass('activeTab');
+
+    await click(`[data-test-avatar-btn="2"]`);
+
+    assert.dom('[data-test-avatar-btn="1"]').hasNoClass('activeTab');
+
+    assert.dom('[data-test-avatar-btn="2"]').hasClass('activeTab');
   });
 });
