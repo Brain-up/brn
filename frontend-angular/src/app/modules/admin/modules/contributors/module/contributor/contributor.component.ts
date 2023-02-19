@@ -5,14 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
 import { finalize } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationRef } from '@angular/core';
 
 @Component({
   selector: 'app-contributor',
   templateUrl: './contributor.component.html',
   styleUrls: ['./contributor.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class ContributorComponent implements OnInit {
   public contributorForm: FormGroup;
   public contributor;
@@ -20,6 +19,7 @@ export class ContributorComponent implements OnInit {
   public file: File;
   public showErrormessage: boolean;
   public readonly isLoading$ = new BehaviorSubject(false);
+  public pictureUrlSubj = new BehaviorSubject('');
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -62,6 +62,7 @@ export class ContributorComponent implements OnInit {
 
   public fillForm(contributor: Contributor): void {
     this.contributorForm.patchValue(contributor);
+    this.pictureUrlSubj.next(this.pictureUrl.value);
   }
 
   public get pictureUrl(): AbstractControl {
@@ -156,7 +157,7 @@ export class ContributorComponent implements OnInit {
     }
   }
 
-  public cancelInput() {
+  public cancelInput(): void {
     this.router.navigate(['contributors']);
   }
 
@@ -172,6 +173,7 @@ export class ContributorComponent implements OnInit {
       formatData.append('fileName', this.nameEn.value.trim().split(' ').join('_'));
       this.contributorApiService.uploadContributorImage(formatData).subscribe(resp => {
         this.pictureUrl.setValue(resp.data);
+        this.pictureUrlSubj.next(resp.data);
         this.showErrormessage = false;
       });
     }

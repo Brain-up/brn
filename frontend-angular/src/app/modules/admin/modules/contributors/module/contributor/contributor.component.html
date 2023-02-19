@@ -1,4 +1,4 @@
-<div *ngIf="showErrormessage" calss="show-error">Please fill "Name_en" field before upload image</div>
+<div *ngIf="showErrormessage" class="show-error">Please fill  the "Name_en" field before upload an image</div>
 <div class="content">
   <mat-progress-bar
     *ngIf="isLoading$ | async; else contributorsTable"
@@ -11,11 +11,10 @@
     <form [formGroup]="contributorForm">
       <div class="icon-group">
         <button mat-fab class="load" color="primary" (click)="fileUpload.click()">
-          <ng-container *ngIf="pictureUrl.value">
+          <ng-container *ngIf="pictureUrlSubj | async">
             <img
               class=avatar
-              formControlName="pictureUrl"
-              src="{{ pictureUrl.value }}" alt="picture"/>
+              src="{{ pictureUrlSubj | async }}" alt="picture"/>
           </ng-container>
           <mat-icon *ngIf="!pictureUrl.value" class="icon-load" svgIcon="foto-download"></mat-icon>
           <span
