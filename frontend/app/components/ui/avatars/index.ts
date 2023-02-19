@@ -1,34 +1,29 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
-import UserDataService from 'brn/services/user-data';
 
 interface IComponentArguments {
-  onSelect?: (id?: number) => void;
-  onSubmit?: () => void;
-  onCancel?: () => void;
+  selectedAvatar: string;
+  onSubmit: (avatar: string) => void;
+  onCancel: () => void;
 }
 
 export default class UiAvatarsComponent extends Component<IComponentArguments> {
-  @service('user-data') userData!: UserDataService;
-  @tracked selectedAvatar = 0;
+  @tracked preferredAvatar!: string;
 
-  get activeTab() {
-    return (
-      this.selectedAvatar ||
-      parseInt(this.userData.selectedAvatarId.toString(), 10)
-    );
+  @action storeCurrentAvatar() {
+    this.preferredAvatar = this.args.selectedAvatar;
   }
 
-  @action onSelect(id: number) {
-    this.selectedAvatar = id;
-    this.args.onSelect?.(id);
+  @action onSelect(avatar: string) {
+    this.preferredAvatar = avatar;
+  }
+
+  @action onSubmit() {
+    this.args.onSubmit(this.preferredAvatar);
   }
 
   get avatars() {
-    return new Array(20).fill(0).map((_, index) => {
-      return `/pictures/avatars/avatar ${index + 1}.png`;
-    });
+    return new Array(20).fill(0).map((_, index) => (index + 1).toString());
   }
 }

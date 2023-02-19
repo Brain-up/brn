@@ -45,9 +45,7 @@ function draw(canvas, frequency, duration, amplitude, width, height, text) {
     const end = start + width; // canvas.width
     const leftPad = end - fullWidth;
 
-    // console.log(start, end);
     const speed = 0;
-    // console.log(progress, start, end);
     ctx.beginPath();
 
     for (let i = start; i <= Math.min(end, fullWidth); i += 1) {
@@ -58,7 +56,7 @@ function draw(canvas, frequency, duration, amplitude, width, height, text) {
       }
       ctx.lineTo(
         i,
-        center + Math.sin(tick * speed + (i * frequency) / 5) * amplitude,
+        center + Math.sin(tick * speed + i * frequency) * amplitude,
       );
       if (isEnd) {
         ctx.lineTo(i, center);
@@ -74,7 +72,7 @@ function draw(canvas, frequency, duration, amplitude, width, height, text) {
         const isEnd = i === leftPad;
         ctx.lineTo(
           i,
-          center + Math.sin(tick * speed + i * (frequency / 5)) * amplitude,
+          center + Math.sin(tick * speed + i * frequency) * amplitude,
         );
         if (isEnd) {
           ctx.lineTo(i, center);
