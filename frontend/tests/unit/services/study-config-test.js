@@ -11,6 +11,11 @@ module('Unit | Service | study-config', function(hooks) {
   });
 
   test('it toggles image visibility', function(assert) {
+    const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
+    
+    controller.set('model', {
+      shouldBeWithPictures: true,
+    });
     let service = this.owner.lookup('service:study-config');
     assert.true(service.showImages);
     service.toggleImageVisibility();
