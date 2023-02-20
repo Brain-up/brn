@@ -16,8 +16,11 @@ import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.Delete
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
@@ -107,13 +110,17 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     override fun isFileExist(filePath: String, fileName: String): Boolean {
         val fullFileName = createFullFileName(filePath, fileName)
-
-        val request = ListObjectsV2Request.builder()
-            .bucket(awsConfig.bucketName)
-            .prefix(fullFileName)
-            .build()
-        val result = s3Client.listObjectsV2(request)
-        return result.hasContents()
+        // Recommended way to check file existence according to AWS documentation https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadObject_section.html
+        return try {
+            val request = HeadObjectRequest.builder()
+                .bucket(awsConfig.bucketName)
+                .key(fullFileName)
+                .build()
+            s3Client.headObject(request)
+            true
+        } catch (e: NoSuchKeyException) {
+            false
+        }
     }
 
     override fun createFullFileName(
