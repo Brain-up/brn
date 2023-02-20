@@ -11,6 +11,12 @@ module('Integration | Component | image-display-block', function (hooks) {
     this.set('fileUrl', '/pictures/вить.jpg');
     this.set('label', 'вить');
 
+    const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
+    
+    controller.set('model', {
+      shouldBeWithPictures: true,
+    });
+
     await render(hbs`<ImageDisplayBlock
       data-test-component-container
       @pictureFileUrl={{this.fileUrl}}
