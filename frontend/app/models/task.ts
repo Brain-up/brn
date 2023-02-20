@@ -26,6 +26,8 @@ export default class Task extends CompletionDependent {
   @attr('number') order!: number;
   @attr('number') repetitionCount!: number;
 
+  @attr('boolean') shouldBeWithPictures!: boolean;
+
   @attr() answerOptions!: any;
   // @ts-expect-error attr default value
   @attr('', {
