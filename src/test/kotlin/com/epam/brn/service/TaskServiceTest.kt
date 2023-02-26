@@ -16,6 +16,7 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
+import com.epam.brn.service.cloud.CloudService
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -50,7 +51,7 @@ internal class TaskServiceTest {
     lateinit var resourceRepositoryMock: ResourceRepository
 
     @MockK
-    lateinit var urlConversionService: UrlConversionService
+    lateinit var cloudService: CloudService
 
     @MockK
     lateinit var task1Mock: Task
@@ -108,7 +109,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            val baseFileUrl = "baseFileUrl"
+            every { cloudService.baseFileUrl() } returns (baseFileUrl)
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -151,7 +153,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            val baseFileUrl = "baseFileUrl"
+            every { cloudService.baseFileUrl() } returns (baseFileUrl)
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -180,7 +183,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_WORDS_KOROLEVA.name
 
-            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
+            val baseFileUrl = "baseFileUrl"
+            every { cloudService.baseFileUrl() } returns (baseFileUrl)
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE) as List<TaskResponse>
@@ -230,7 +234,9 @@ internal class TaskServiceTest {
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+
+            val baseFileUrl = "baseFileUrl"
+            every { cloudService.baseFileUrl() } returns (baseFileUrl)
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -272,7 +278,9 @@ internal class TaskServiceTest {
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+
+            val baseFileUrl = "baseFileUrl"
+            every { cloudService.baseFileUrl() } returns (baseFileUrl)
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -303,8 +311,10 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name
 
-            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
             every { task1Mock.exercise } returns exerciseMock
+
+            val baseFileUrl = "baseFileUrl"
+            every { cloudService.baseFileUrl() } returns (baseFileUrl)
 
             // WHEN
             var foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -338,7 +348,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.DI.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            val baseFileUrl = "baseFileUrl"
+            every { cloudService.baseFileUrl() } returns (baseFileUrl)
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
