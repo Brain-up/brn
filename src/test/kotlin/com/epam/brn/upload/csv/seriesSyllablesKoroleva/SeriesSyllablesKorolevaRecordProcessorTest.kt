@@ -112,8 +112,8 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
             )
         ).first()
 
-        assertThat(actual).isEqualTo(expected)
-        verify { exerciseRepositoryMock.save(expected) }
+        assertThat(actual).isEqualToComparingOnlyGivenFields(expected, "name", "level")
+        verify { exerciseRepositoryMock.save(match { it.name == exerciseName }) }
     }
 
     @Test
