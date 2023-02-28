@@ -144,7 +144,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
             .first().tasks
 
         tasks.forEach {
-            assertThat(it.answerOptions).containsExactlyElementsOf(expected)
+            assertThat(it.answerOptions).usingRecursiveFieldByFieldElementComparator().containsExactlyElementsOf(expected)
             verify { resourceRepositoryMock.saveAll(it.answerOptions) }
         }
     }
@@ -222,6 +222,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         return Resource(
             word = "бал",
             wordType = WordType.OBJECT.toString(),
+            locale = "ru-ru"
         )
     }
 
@@ -229,6 +230,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         return Resource(
             word = "бум",
             wordType = WordType.OBJECT.toString(),
+            locale = "ru-ru"
         )
     }
 
@@ -236,6 +238,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         return Resource(
             word = "быль",
             wordType = WordType.OBJECT.toString(),
+            locale = "ru-ru"
         )
     }
 
@@ -243,6 +246,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         return Resource(
             word = "вить",
             wordType = WordType.OBJECT.toString(),
+            locale = "ru-ru"
         )
     }
 
@@ -250,6 +254,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         return Resource(
             word = "гад",
             wordType = WordType.OBJECT.toString(),
+            locale = "ru-ru"
         )
     }
 
@@ -257,6 +262,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         return Resource(
             word = "дуб",
             wordType = WordType.OBJECT.toString(),
+            locale = "ru-ru"
         )
     }
 }
