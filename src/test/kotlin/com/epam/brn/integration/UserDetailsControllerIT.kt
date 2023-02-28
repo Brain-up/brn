@@ -15,7 +15,6 @@ import com.epam.brn.repo.HeadphonesRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
-import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.assertj.core.api.Assertions
@@ -64,8 +63,8 @@ class UserDetailsControllerIT : BaseIT() {
         // THEN
         patientsByDoctor.size shouldBe 2
         patientsByDoctorId.size shouldBe 2
-        patientsByDoctor shouldContainAll listOf(patient1, patient2)
-        patientsByDoctorId shouldContainAll listOf(patient1, patient2)
+        Assertions.assertThat(patientsByDoctor).usingElementComparatorOnFields("id", "email").containsExactlyInAnyOrder(patient1, patient2)
+        Assertions.assertThat(patientsByDoctorId).usingElementComparatorOnFields("id", "email").containsExactlyInAnyOrder(patient1, patient2)
     }
 
     @Test
@@ -292,7 +291,7 @@ class UserDetailsControllerIT : BaseIT() {
             bornYear = 2000,
             active = true,
         )
-        user1.roleSet = mutableSetOf(roleAdmin, roleUser)
+        user1.roleSet = mutableListOf(roleAdmin, roleUser)
 
         val user2 = UserAccount(
             fullName = "testUserFirstName2",
@@ -301,7 +300,7 @@ class UserDetailsControllerIT : BaseIT() {
             bornYear = 2000,
             active = true,
         )
-        user2.roleSet = mutableSetOf(roleUser)
+        user2.roleSet = mutableListOf(roleUser)
 
         userAccountRepository.save(user1)
         userAccountRepository.save(user2)

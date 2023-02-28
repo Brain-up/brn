@@ -48,12 +48,13 @@ class SeriesWordsKorolevaRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesWordsKorolevaRecord, locale: BrnLocale): MutableSet<Resource> =
+    private fun extractAnswerOptions(record: SeriesWordsKorolevaRecord, locale: BrnLocale): MutableList<Resource> =
         record.words
             .asSequence()
             .map { it.toStringWithoutBraces() }
+            .distinct()
             .map { toResource(it, locale) }
-            .toMutableSet()
+            .toMutableList()
 
     private fun toResource(word: String, locale: BrnLocale): Resource {
         val audioPath = wordsService.getSubFilePathForWord(
@@ -85,6 +86,6 @@ class SeriesWordsKorolevaRecordProcessor(
             wordsColumns = record.wordsColumns,
         )
 
-    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
+    private fun generateOneTask(exercise: Exercise, answerOptions: MutableList<Resource>) =
         Task(exercise = exercise, answerOptions = answerOptions)
 }

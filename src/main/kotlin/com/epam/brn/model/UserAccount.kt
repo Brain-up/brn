@@ -25,7 +25,7 @@ import javax.persistence.OneToMany
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-data class UserAccount(
+class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -51,7 +51,7 @@ data class UserAccount(
     @ManyToOne(fetch = FetchType.LAZY)
     var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var headphones: MutableSet<Headphones> = hashSetOf()
+    var headphones: MutableList<Headphones> = mutableListOf()
 ) {
     var password: String? = null
 
@@ -64,7 +64,7 @@ data class UserAccount(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    var roleSet: MutableSet<Role> = hashSetOf()
+    var roleSet: MutableList<Role> = mutableListOf()
 
     override fun toString(): String {
         return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
@@ -103,24 +103,4 @@ data class UserAccount(
         bornYear = bornYear,
         gender = gender?.let { BrnGender.valueOf(it) },
     )
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as UserAccount
-
-        if (id != other.id) return false
-        if (userId != other.userId) return false
-        if (email != other.email) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (userId?.hashCode() ?: 0)
-        result = 31 * result + (email?.hashCode() ?: 0)
-        return result
-    }
 }

@@ -15,7 +15,7 @@ import javax.persistence.Table
 // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to group being a reserved word in db.
 @Entity
 @Table(name = "exercise_group")
-data class ExerciseGroup(
+class ExerciseGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -44,25 +44,6 @@ data class ExerciseGroup(
         description = description,
         series = series.map { series -> series.id }.toMutableList()
     )
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as ExerciseGroup
-        if (id != other.id) return false
-        if (locale != other.locale) return false
-        if (name != other.name) return false
-        if (description != other.description) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + locale.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        return result
-    }
 
     override fun toString() = "ExerciseGroup(id=$id, name='$name', locale = $locale, description=$description)"
 }

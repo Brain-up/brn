@@ -205,7 +205,7 @@ internal class ContributorServiceTest {
         existContributor.company = "company"
         existContributor.description = "description"
         existContributor.pictureUrl = "pictureUrl"
-        existContributor.contacts = mutableSetOf(Contact(value = "email"))
+        existContributor.contacts = mutableListOf(Contact(value = "email"))
         val capturedContributor = slot<Contributor>()
         val updatedContributor = mockk<Contributor>()
         every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns existContributor
@@ -256,6 +256,6 @@ internal class ContributorServiceTest {
             name = name,
             type = ContributorType.SPECIALIST,
             contribution = contribution
-        ).apply { this.contacts = contacts }
+        ).apply { this.contacts = contacts.toMutableList() }
     }
 }

@@ -28,23 +28,6 @@ class Audiometry(
     @OneToMany(mappedBy = "audiometry", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val audiometryTasks: MutableList<AudiometryTask> = ArrayList()
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as Audiometry
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (description != other.description) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + name.hashCode()
-        result = 31 * result + audiometryType.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        return result
-    }
 
     override fun toString() =
         "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"

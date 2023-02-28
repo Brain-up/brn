@@ -56,7 +56,7 @@ class SeriesPhrasesRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesPhrasesRecord, locale: BrnLocale): MutableSet<Resource> {
+    private fun extractAnswerOptions(record: SeriesPhrasesRecord, locale: BrnLocale): MutableList<Resource> {
         val words = record.phrases
             .asSequence()
             .map { it.toStringWithoutBraces() }
@@ -66,7 +66,7 @@ class SeriesPhrasesRecordProcessor(
             .joinToString(" ").replace(".", "")
         var phraseSecond = words.subList(words.indexOf(lastWordOnFirstPhrase) + 1, words.size)
             .joinToString(" ").replace(".", "")
-        return mutableSetOf(toResource(phraseFirst, locale), toResource(phraseSecond, locale))
+        return mutableListOf(toResource(phraseFirst, locale), toResource(phraseSecond, locale))
     }
 
     private fun toResource(phrase: String, locale: BrnLocale): Resource {
@@ -100,6 +100,6 @@ class SeriesPhrasesRecordProcessor(
             active = true
         )
 
-    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
+    private fun generateOneTask(exercise: Exercise, answerOptions: MutableList<Resource>) =
         Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
 }

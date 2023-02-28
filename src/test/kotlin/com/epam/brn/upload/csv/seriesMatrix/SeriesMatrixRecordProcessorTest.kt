@@ -13,9 +13,9 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
-import com.epam.brn.enums.WordType
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
+import com.epam.brn.utils.resource
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -98,12 +98,12 @@ internal class SeriesMatrixRecordProcessorTest {
         every { taskRepositoryMock.save(ofType(Task::class)) } returns Task()
         every { seriesRepositoryMock.findById(2L) } returns Optional.of(series)
 
-        mockFindResourceByWordLike("девочка", resource_девочка())
-        mockFindResourceByWordLike("бабушка", resource_бабушка())
-        mockFindResourceByWordLike("дедушка", resource_дедушка())
-        mockFindResourceByWordLike("сидит", resource_сидит())
-        mockFindResourceByWordLike("лежит", resource_лежит())
-        mockFindResourceByWordLike("идет", resource_идет())
+        mockFindResourceByWordLike("девочка", createResource("девочка"))
+        mockFindResourceByWordLike("бабушка", createResource("бабушка"))
+        mockFindResourceByWordLike("дедушка", createResource("дедушка"))
+        mockFindResourceByWordLike("сидит", createResource("сидит"))
+        mockFindResourceByWordLike("лежит", createResource("лежит"))
+        mockFindResourceByWordLike("идет", createResource("идет"))
     }
 
     private fun mockFindResourceByWordLike(word: String, result: Resource) {
@@ -159,13 +159,13 @@ internal class SeriesMatrixRecordProcessorTest {
         // GIVEN
         val exercise = createExercise()
         every { exerciseRepositoryMock.save(exercise) } returns exercise
-        val expectedResources = setOf(
-            resource_девочка(),
-            resource_бабушка(),
-            resource_дедушка(),
-            resource_сидит(),
-            resource_лежит(),
-            resource_идет()
+        val expectedResources = listOf(
+            createResource("девочка"),
+            createResource("бабушка"),
+            createResource("дедушка"),
+            createResource("сидит"),
+            createResource("лежит"),
+            createResource("идет")
         )
         // WHEN
         val actual = seriesMatrixRecordProcessor.process(
@@ -179,8 +179,8 @@ internal class SeriesMatrixRecordProcessorTest {
                 )
             )
         ).first().tasks.first().answerOptions
-        // THEN
-        assertThat(actual).containsExactlyElementsOf(expectedResources)
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expectedResources)
     }
 
     private fun createExercise(): Exercise {
@@ -198,62 +198,18 @@ internal class SeriesMatrixRecordProcessorTest {
         return Task(
             serialNumber = 2,
             exercise = exercise,
-            answerOptions = mutableSetOf(
-                resource_девочка(),
-                resource_бабушка(),
-                resource_дедушка(),
-                resource_сидит(),
-                resource_лежит(),
-                resource_идет()
+            answerOptions = mutableListOf(
+                createResource("девочка"),
+                createResource("бабушка"),
+                createResource("дедушка"),
+                createResource("сидит"),
+                createResource("лежит"),
+                createResource("идет")
             )
         )
     }
 
-    private fun resource_девочка(): Resource {
-        return Resource(
-            word = "девочка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/девочка.jpg"
-        )
-    }
-
-    private fun resource_бабушка(): Resource {
-        return Resource(
-            word = "бабушка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/бабушка.jpg"
-        )
-    }
-
-    private fun resource_дедушка(): Resource {
-        return Resource(
-            word = "дедушка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/дедушка.jpg"
-        )
-    }
-
-    private fun resource_сидит(): Resource {
-        return Resource(
-            word = "сидит",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/сидит.jpg"
-        )
-    }
-
-    private fun resource_лежит(): Resource {
-        return Resource(
-            word = "лежит",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/лежит.jpg"
-        )
-    }
-
-    private fun resource_идет(): Resource {
-        return Resource(
-            word = "идет",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/идет.jpg"
-        )
+    private fun createResource(word: String): Resource {
+        return resource(word, "pictures/withWord/$word.jpg")
     }
 }

@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 @Entity
-data class Series(
+class Series(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -29,7 +29,7 @@ data class Series(
     @JoinColumn(name = "exercise_group_id")
     var exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val subGroups: MutableSet<SubGroup> = LinkedHashSet()
+    val subGroups: MutableList<SubGroup> = mutableListOf()
 ) {
 
     constructor(record: SeriesGenericRecord, exerciseGroup: ExerciseGroup) : this(
@@ -53,27 +53,4 @@ data class Series(
     )
 
     override fun toString() = "Series(id=$id, type=$type, level=$level, name='$name', description='$description')"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Series
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (type != other.type) return false
-        if (description != other.description) return false
-        if (exerciseGroup != other.exerciseGroup) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + exerciseGroup.hashCode()
-        return result
-    }
 }

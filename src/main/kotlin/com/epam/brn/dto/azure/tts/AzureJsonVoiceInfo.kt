@@ -39,6 +39,6 @@ class AzureJsonVoiceInfo(
         sampleRateHertz = sampleRateHertz,
         voiceType = voiceType,
         status = status,
-        styleList = styles
+        styleList = styles.toMutableList()
     )
 }

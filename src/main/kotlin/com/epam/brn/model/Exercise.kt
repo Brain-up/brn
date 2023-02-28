@@ -26,7 +26,7 @@ import javax.persistence.UniqueConstraint
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
 @EntityListeners(AuditingEntityListener::class)
-data class Exercise(
+class Exercise(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -43,9 +43,9 @@ data class Exercise(
     @JoinColumn(name = "sub_group_id")
     var subGroup: SubGroup? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val tasks: MutableSet<Task> = LinkedHashSet(),
+    val tasks: MutableList<Task> = mutableListOf(),
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val signals: MutableSet<Signal> = LinkedHashSet()
+    val signals: MutableList<Signal> = mutableListOf()
 ) {
     @LastModifiedBy
     @Column(name = "changed_by")
@@ -87,35 +87,6 @@ data class Exercise(
     override fun toString() =
         "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, noiseUrl=$noiseUrl, " +
             "template=$template, active=$active, playWordsCount=$playWordsCount, wordsColumns=$wordsColumns)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Exercise
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (template != other.template) return false
-        if (level != other.level) return false
-        if (noiseLevel != other.noiseLevel) return false
-        if (noiseUrl != other.noiseUrl) return false
-        if (playWordsCount != other.playWordsCount) return false
-        if (wordsColumns != other.wordsColumns) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + name.hashCode()
-        result = 31 * result + level.hashCode()
-        result = 31 * result + (template?.hashCode() ?: 0)
-        result = 31 * result + (noiseLevel)
-        result = 31 * result + (playWordsCount)
-        result = 31 * result + (wordsColumns)
-        return result
-    }
 
     fun addTask(task: Task) {
         tasks.add(task)

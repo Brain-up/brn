@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint
         Index(name = "audio_file_idx", columnList = "audioFileUrl")
     ]
 )
-data class Resource(
+class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -34,7 +34,7 @@ data class Resource(
     var pictureFileUrl: String? = "",
     var soundsCount: Int? = 0,
     @ManyToMany(mappedBy = "answerOptions", cascade = [CascadeType.MERGE])
-    var tasks: MutableSet<Task> = HashSet(),
+    var tasks: MutableList<Task> = mutableListOf(),
     var description: String? = ""
 ) {
     fun toResponse() = ResourceResponse(
@@ -50,32 +50,4 @@ data class Resource(
 
     override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word'," +
         " pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Resource
-
-        if (id != other.id) return false
-        if (audioFileUrl != other.audioFileUrl) return false
-        if (word != other.word) return false
-        if (wordType != other.wordType) return false
-        if (pictureFileUrl != other.pictureFileUrl) return false
-        if (soundsCount != other.soundsCount) return false
-        if (description != other.description) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (audioFileUrl?.hashCode() ?: 0)
-        result = 31 * result + (word.hashCode())
-        result = 31 * result + wordType.hashCode()
-        result = 31 * result + (pictureFileUrl?.hashCode() ?: 0)
-        result = 31 * result + (soundsCount ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        return result
-    }
 }

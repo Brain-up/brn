@@ -63,7 +63,7 @@ internal class AudiometryHistoryServiceTest {
         // GIVEN
         val headphonesDto = HeadphonesDto(name = "test", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, id = 5L)
         val headphonesEntity = headphonesDto.toEntity()
-        userAccount.headphones = mutableSetOf(headphonesEntity)
+        userAccount.headphones = mutableListOf(headphonesEntity)
         every { userAccountService.getCurrentUser() } returns userAccount
         val audiometryHistory = spyk(
             AudiometryHistory(
@@ -105,7 +105,7 @@ internal class AudiometryHistoryServiceTest {
         // GIVEN
         val headphonesDto = HeadphonesDto(name = "test", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, id = 5L)
         val headphonesEntity = headphonesDto.toEntity()
-        userAccount.headphones = mutableSetOf(headphonesEntity)
+        userAccount.headphones = mutableListOf(headphonesEntity)
         every { userAccountService.getCurrentUser() } returns userAccount
         val audiometryHistory = spyk(
             AudiometryHistory(

@@ -120,7 +120,7 @@ class InitialDataLoader(
     private fun addAdminAllRoles() {
         val admin = userAccountRepository.findUserAccountByEmail(ADMIN_EMAIL).get()
         val allRoles = roleService.findAll()
-        admin.roleSet.addAll(allRoles.minus(admin.roleSet))
+        admin.roleSet = allRoles.toMutableList()
         userAccountRepository.save(admin)
     }
 

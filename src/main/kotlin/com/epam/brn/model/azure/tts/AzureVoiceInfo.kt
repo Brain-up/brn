@@ -41,5 +41,5 @@ class AzureVoiceInfo(
         joinColumns = [JoinColumn(name = "style_id")],
         inverseJoinColumns = [JoinColumn(name = "voice_id")]
     )
-    val styleList: MutableSet<AzureSpeechStyle> = mutableSetOf()
+    val styleList: MutableList<AzureSpeechStyle> = mutableListOf()
 )

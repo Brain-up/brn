@@ -164,7 +164,7 @@ class ContributorControllerIT : BaseIT() {
         nameEn = name,
         type = type,
         contribution = contribution
-    ).apply { this.contacts = contacts }
+    ).apply { this.contacts = contacts.toMutableList() }
 
     private fun createContributorRequest(
         name: String,

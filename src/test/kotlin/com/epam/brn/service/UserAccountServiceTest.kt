@@ -12,6 +12,7 @@ import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
+import com.epam.brn.utils.copy
 import com.google.firebase.auth.UserRecord
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -368,7 +369,7 @@ internal class UserAccountServiceTest {
         @Test
         fun `should return all headphones for current the user`() {
             val headphones = Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
-            val headphonesToAdd = mutableSetOf(headphones)
+            val headphonesToAdd = mutableListOf(headphones)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
@@ -405,7 +406,7 @@ internal class UserAccountServiceTest {
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
 
-            val headphonesToAdd = mutableSetOf(headphones)
+            val headphonesToAdd = mutableListOf(headphones)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",
@@ -440,7 +441,7 @@ internal class UserAccountServiceTest {
                 type = HeadphonesType.IN_EAR_BLUETOOTH
             )
 
-            val headphonesToAdd = mutableSetOf(headphones)
+            val headphonesToAdd = mutableListOf(headphones)
             val userAccount = UserAccount(
                 id = 1L,
                 fullName = "testUserFirstName",

@@ -20,7 +20,7 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["audiometryGroup", "frequencyZone"])])
-data class AudiometryTask(
+class AudiometryTask(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -45,34 +45,14 @@ data class AudiometryTask(
         joinColumns = [JoinColumn(name = "audiometry_task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
     )
-    var answerOptions: MutableSet<Resource> = hashSetOf(),
+    var answerOptions: MutableList<Resource> = mutableListOf(),
 
     // == for frequency diagnostic
     val frequencies: String? = null,
     var ear: String = EAR.BOTH.name,
 ) {
     override fun toString() =
-        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as AudiometryTask
-        if (id != other.id) return false
-        if (level != other.level) return false
-        if (minFrequency != other.minFrequency) return false
-        if (maxFrequency != other.maxFrequency) return false
-        if (frequencyZone != other.frequencyZone) return false
-        if (audiometryGroup != other.audiometryGroup) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + audiometryGroup.hashCode()
-        result = 31 * result + frequencyZone.hashCode()
-        return result
-    }
+        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear)"
 
     fun toDto(): Any {
         return when (audiometry!!.audiometryType) {

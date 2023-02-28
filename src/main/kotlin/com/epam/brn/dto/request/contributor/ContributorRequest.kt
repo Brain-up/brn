@@ -51,7 +51,7 @@ data class ContributorRequest(
             type = type!!,
             active = active,
         )
-        contributor.contacts = contacts.map { it.toEntity() }.toMutableSet()
+        contributor.contacts = contacts.map { it.toEntity() }.toMutableList()
         return contributor
     }
 }

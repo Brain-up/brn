@@ -156,15 +156,18 @@ internal class SubGroupServiceTest {
         val seriesMockk = mockkClass(Series::class, relaxed = true)
         val subGroupMockk = mockkClass(SubGroup::class, relaxed = true)
         val subGroupRequest = SubGroupRequest("Test name", 1, "code", "Test description")
-        every { subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level!!) } returns null
-        every { seriesRepository.findById(seriesId) } returns Optional.of(seriesMockk)
-        every { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) } returns subGroupMockk
+        every { subGroupRepository.findByNameAndLevel(any(), any()) } returns null
+        every { seriesRepository.findById(any()) } returns Optional.of(seriesMockk)
+        every { subGroupRepository.save(any()) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
-        every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
+        every { urlConversionService.makeUrlForSubGroupPicture(any()) } returns "url/code"
         // WHEN
         subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest)
         // THEN
-        verify(exactly = 1) { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) }
+        verify(exactly = 1) { subGroupRepository.save(match { it.name == "Test name" && it.level == 1 }) }
+        verify(exactly = 0) { subGroupRepository.findById(seriesId) }
+        verify(exactly = 1) { subGroupRepository.findByNameAndLevel("Test name", 1) }
+        verify(exactly = 1) { urlConversionService.makeUrlForSubGroupPicture("code") }
     }
 
     @Test

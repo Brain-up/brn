@@ -19,7 +19,7 @@ import javax.persistence.Table
 @Entity
 @Table
 @DynamicUpdate
-data class Contributor(
+class Contributor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -42,7 +42,7 @@ data class Contributor(
 
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "contributor_id")
-    var contacts: MutableSet<Contact> = mutableSetOf()
+    var contacts: MutableList<Contact> = mutableListOf()
 
     fun toContributorResponse(locale: String = "ru-ru"): ContributorResponse {
         val dto = ContributorResponse(
@@ -88,34 +88,4 @@ data class Contributor(
         "Contributor(id=$id, name=$name, description=$description, company=$company, nameEn=$nameEn, " +
             "descriptionEn=$descriptionEn, companyEn=$companyEn, type=$type, pictureUrl=$pictureUrl," +
             "contribution=$contribution, gitHubUser=$gitHubUser)"
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Contributor
-
-        if (id != other.id) return false
-        if (name != other.name) return false
-        if (description != other.description) return false
-        if (company != other.company) return false
-        if (nameEn != other.nameEn) return false
-        if (descriptionEn != other.descriptionEn) return false
-        if (companyEn != other.companyEn) return false
-        if (type != other.type) return false
-        if (pictureUrl != other.pictureUrl) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + (company?.hashCode() ?: 0)
-        result = 31 * result + (nameEn?.hashCode() ?: 0)
-        result = 31 * result + (descriptionEn?.hashCode() ?: 0)
-        result = 31 * result + (companyEn?.hashCode() ?: 0)
-        result = 31 * result + (pictureUrl?.hashCode() ?: 0)
-        return result
-    }
 }
