@@ -1,7 +1,9 @@
 package com.epam.brn.job
 
+import com.epam.brn.model.Resource
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.cloud.CloudService
+import io.micrometer.core.instrument.util.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Component
 import kotlin.system.measureTimeMillis
 
 @Component
-class ResourceUrlUpdateJob(
+class ResourcePictureUrlUpdateJob(
     private val cloudService: CloudService,
     private val resourceService: ResourceService
 ) {
@@ -23,32 +25,39 @@ class ResourceUrlUpdateJob(
     private val log = logger()
 
     @Scheduled(cron = "\${brn.resources.pictures.update-job.cron}")
-    fun updatePictureUrl(): ResourceUrlUpdateJobResponse {
+    fun updatePictureUrl(): ResourcePictureUrlUpdateJobResponse {
         log.info("Start Job: update picture URLs")
-        val response = ResourceUrlUpdateJobResponse()
+        val response = ResourcePictureUrlUpdateJobResponse()
         val executionTime = measureTimeMillis {
             try {
-                val defaultFolderPictures = cloudService.getFilePathMap(defaultPicturesPath)
-                val unverifiedFolderPictures = cloudService.getFilePathMap(unverifiedPicturesPath)
+                val updatedResources = arrayListOf<Resource>()
+
+                val defaultFolderPictures: Map<String, String> = cloudService.getFilePathMap(defaultPicturesPath)
+                val unverifiedFolderPictures: Map<String, String> = cloudService.getFilePathMap(unverifiedPicturesPath)
 
                 val resources = resourceService.findAll()
                 for (resource in resources) {
                     var fileUrl = String()
                     if (defaultFolderPictures.containsKey(resource.word)) {
                         fileUrl = defaultFolderPictures[resource.word].toString()
-                        response.defaultCount++
+                        response.inDefaultFolderPicturesCount++
                     } else if (unverifiedFolderPictures.containsKey(resource.word)) {
                         fileUrl = unverifiedFolderPictures[resource.word].toString()
-                        response.unverifiedCount++
+                        response.inUnverifiedFolderPicturesCount++
                     } else {
                         log.debug("No picture for ${resource.word} found")
-                        response.notFoundCount++
+                        response.notFoundPictureForWordCount++
                     }
 
-                    if (fileUrl.isNotEmpty()) {
+                    val shouldUpdateUrl = fileUrl.isNotEmpty() && !fileUrl.equals(resource.pictureFileUrl)
+                    val shouldCleanUrl = fileUrl.isEmpty() && StringUtils.isNotEmpty(resource.pictureFileUrl)
+                    if (shouldUpdateUrl || shouldCleanUrl) {
                         resource.pictureFileUrl = fileUrl
-                        resourceService.save(resource)
+                        updatedResources.add(resource)
                     }
+                }
+                if (updatedResources.isNotEmpty()) {
+                    resourceService.saveAll(updatedResources)
                 }
             } catch (e: Exception) {
                 response.success = false
@@ -60,9 +69,9 @@ class ResourceUrlUpdateJob(
             """
                 End Job: update picture URLs
                 Success: ${response.success}
-                Used default URLs count: ${response.defaultCount}
-                Used unverified URLs count: ${response.unverifiedCount}
-                Not found count: ${response.notFoundCount}
+                Used default URLs count: ${response.inDefaultFolderPicturesCount}
+                Used unverified URLs count: ${response.inUnverifiedFolderPicturesCount}
+                Not found count: ${response.notFoundPictureForWordCount}
                 Execution Time: ${executionTime / 1000}s
             """
         log.info(logStatement)
@@ -71,11 +80,11 @@ class ResourceUrlUpdateJob(
     }
 }
 
-data class ResourceUrlUpdateJobResponse(
+data class ResourcePictureUrlUpdateJobResponse(
     var success: Boolean = true,
-    var defaultCount: Int = 0,
-    var unverifiedCount: Int = 0,
-    var notFoundCount: Int = 0,
+    var inDefaultFolderPicturesCount: Int = 0,
+    var inUnverifiedFolderPicturesCount: Int = 0,
+    var notFoundPictureForWordCount: Int = 0,
     var executionTime: Long = 0,
     var errorMessage: String? = null
 )

@@ -36,4 +36,6 @@ class ResourceService(private val resourceRepository: ResourceRepository) {
             it.toResponse()
         } ?: throw EntityNotFoundException("Resource not found by id=$id")
     }
+
+    fun saveAll(resources: List<Resource>): List<Resource> = resourceRepository.saveAll(resources).toList()
 }

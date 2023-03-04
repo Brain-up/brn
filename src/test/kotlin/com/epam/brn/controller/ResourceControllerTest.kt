@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
-import com.epam.brn.job.ResourceUrlUpdateJob
+import com.epam.brn.job.ResourcePictureUrlUpdateJob
 import com.epam.brn.service.ResourceService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -25,7 +25,7 @@ internal class ResourceControllerTest {
     lateinit var resourceService: ResourceService
 
     @MockK
-    lateinit var resourceUrlUpdateJob: ResourceUrlUpdateJob
+    lateinit var resourcePictureUrlUpdateJob: ResourcePictureUrlUpdateJob
 
     @Test
     fun updateResourceDescription() {

@@ -4,8 +4,8 @@ import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
-import com.epam.brn.job.ResourceUrlUpdateJob
-import com.epam.brn.job.ResourceUrlUpdateJobResponse
+import com.epam.brn.job.ResourcePictureUrlUpdateJob
+import com.epam.brn.job.ResourcePictureUrlUpdateJobResponse
 import com.epam.brn.service.ResourceService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -25,7 +25,7 @@ import javax.annotation.security.RolesAllowed
 @RolesAllowed(BrnRole.ADMIN)
 class ResourceController(
     val resourceService: ResourceService,
-    val resourcePictureUpdateJob: ResourceUrlUpdateJob
+    val resourcePictureUpdateJob: ResourcePictureUrlUpdateJob
 ) {
 
     @PatchMapping("/{id}")
@@ -39,7 +39,7 @@ class ResourceController(
 
     @PostMapping("/update")
     @Operation(summary = "Update picture URL for all resources")
-    fun updateResourceUrls(): ResponseEntity<ResourceUrlUpdateJobResponse> {
+    fun updateResourceUrls(): ResponseEntity<ResourcePictureUrlUpdateJobResponse> {
         return ResponseEntity.ok(resourcePictureUpdateJob.updatePictureUrl())
     }
 }
