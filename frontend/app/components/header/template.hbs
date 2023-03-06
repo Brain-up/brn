@@ -16,9 +16,9 @@
         />
       </LinkTo>
     </div>
-    <div class="nav-links self-stretchx relative z-10 flex items-center w-auto">
+    <div class="nav-links flex items-center w-auto">
       <div
-        class="text-xss sm:text-xs
+        class="text-s sm:text-xs flex flex-wrap justify-center py-2
           {{if
             this.session.isAuthenticated
             "text-white"
@@ -69,7 +69,7 @@
           Telegram
         </a>
         <span
-          class="sm:px-4 inline-block px-2 py-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
+          class="sm:px-4 inline-block px-2 mr-0 font-semibold tracking-wider text-white uppercase rounded-full"
         >
           <button
             type="button"
@@ -105,7 +105,7 @@
             type="button"
           >{{t "header.more"}}</button>
           <input type="checkbox" />
-          <div class="sm:text-base bottom absolute z-10 py-2 text-xs rounded">
+          <div class="sm:text-base bottom absolute z-20 py-2 text-xs rounded">
             <a
               target="_blank"
               href="https://opencollective.com/brainup"
@@ -134,7 +134,7 @@
       </div>
     </div>
     {{#if this.session.isAuthenticated}}
-      <div class="flex justify-end ml-6">
+      <div class="flex items-center justify-end ml-6">
         <GlobalTimer />
 
         <LinkTo

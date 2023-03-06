@@ -32,36 +32,6 @@
   outline: none;
 }
 
-.speech-exercise,
-.non-speech-exercises {
-  background-image: url(/pictures/exercise-type/speech-exercises.svg);
-  background-repeat: no-repeat;
-  background-size: contain;
-  display: block;
-  height: 230px;
-  width: 410px;
-}
-
-.non-speech-exercises {
-  background-image: url(/pictures/exercise-type/non-speech-exercises.svg);
-}
-
-@media (max-width: 640px){
-  .speech-exercise,
-  .non-speech-exercises {
-    background-image: url(/pictures/exercise-type/speech-exercises.svg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    display: block;
-    height: 135px;
-    width: 220px;
-  }
-
-  .non-speech-exercises {
-    background-image: url(/pictures/exercise-type/non-speech-exercises.svg);
-  }
-}
-
 .progress {
   display: flex;
   padding-top: 30px;

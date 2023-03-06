@@ -1,7 +1,7 @@
 import Service, { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Router from '@ember/routing/router-service';
-import NetworkService, { LatestUserDTO, UserDTO } from 'brn/services/network';
+import NetworkService, { UserDTO } from 'brn/services/network';
 import IntlService from 'ember-intl/services/intl';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
@@ -15,34 +15,12 @@ export default class UserDataService extends Service {
   @tracked
   userModel!: UserDTO | undefined;
 
-  get userId() {
-    return this.session.data?.user?.id;
+  get userAvatar(): string {
+    return this.userModel?.avatar || '1';
   }
-  get keyForAvatar() {
-    return `user:${this.userId}:avatar_id`;
-  }
-
-  @tracked _selectedAvatarId = this.userModel && localStorage.getItem(this.keyForAvatar) || 1;
 
   get avatarUrl() {
-    if (this.session.data?.authenticated?.user?.photoURL) {
-      return this.session.data?.authenticated.user.photoURL;
-    }
-    return `/pictures/avatars/avatar ${this.selectedAvatarId}.png`;
-  }
-
-  get selectedAvatarId() {
-    return this.userModel?.avatar || this._selectedAvatarId;
-  }
-  set selectedAvatarId(value) {
-    localStorage.setItem(this.keyForAvatar, value.toString());
-    this.network.patchUserInfo({
-      avatar: value.toString(),
-    } as LatestUserDTO);
-    if (this.userModel) {
-      this.userModel.avatar = value.toString();
-    }
-    this._selectedAvatarId = value;
+    return `/pictures/avatars/avatar ${this.userAvatar}.png`;
   }
 
   @tracked selectedLocale: string | null = null;
@@ -61,7 +39,7 @@ export default class UserDataService extends Service {
 
   shouldUpdateRoute() {
     const prefix = this.router.currentRouteName.split('.')[0];
-    
+
     return prefix === 'groups' || prefix === 'group';
   }
 

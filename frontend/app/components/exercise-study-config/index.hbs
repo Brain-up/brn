@@ -1,15 +1,17 @@
-<div class="mt-2 mb-2 ml-2 mr-2">
-  <button
-    data-test-toggle-image-visibility
-    type="button"
-    class="hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 p-2.5 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 inline-flex items-center mt-2 text-sm font-medium text-center text-blue-700 border border-blue-700 rounded-full"
-    {{on "click" this.studyConfig.toggleImageVisibility}}
-  >
+{{#if this.studyConfig.showImageToggler}}
+  <div class="mt-2 mb-2 ml-2 mr-2">
+    <button
+      data-test-toggle-image-visibility
+      type="button"
+      class="hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 p-2.5 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 inline-flex items-center mt-2 text-sm font-medium text-center text-blue-700 border border-blue-700 rounded-full"
+      {{on "click" this.studyConfig.toggleImageVisibility}}
+    >
 
-    <FaIcon
-      {{! template-lint-disable no-inline-styles }}
-      style="width:24px;height:24px;padding:4px"
-      @icon={{if this.studyConfig.showImages "align-justify" "image"}}
-    />
-  </button>
-</div>
+      <FaIcon
+        {{! template-lint-disable no-inline-styles }}
+        style="width:24px;height:24px;padding:4px"
+        @icon={{if this.studyConfig.showImages "align-justify" "image"}}
+      />
+    </button>
+  </div>
+{{/if}}
