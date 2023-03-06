@@ -27,8 +27,8 @@ class GitHubContributorRefreshJob(
     @Value("\${github.contributors.sync.organization-name}")
     private val gitHubOrganizationName: String = ""
 
-    @Value("\${github.contributors.sync.repository-name}")
-    private val gitHubRepositoryName: String = ""
+    @Value("\${github.contributors.sync.repository-names}")
+    private lateinit var gitHubRepositoryNames: Set<String>
 
     @Value("#{'\${github.contributors.bot-logins}'.split(',')}")
     private lateinit var botLogins: Set<String>
@@ -51,34 +51,44 @@ class GitHubContributorRefreshJob(
     @Transactional
     fun synchronizeContributors() {
         log.info("Start sync contributors from GitHub.")
-        var gitHubContributorsCount: Int
+
+        var gitHubContributorsCount = 0
         var createdContributorsCount = 0
         var updatedContributorsCount = 0
-        gitHubApiClient
-            .getGitHubContributors(gitHubOrganizationName, gitHubRepositoryName, pageSize)
-            .also { log.info("From GitHub repo was got ${it.size} contributors.") }
-            .filter { !botLogins.contains(it.login) }
-            .also { gitHubContributorsCount = it.count() }
-            .forEach { gitHubContributor ->
-                val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
-                log.debug("Gotten user from GitHubApi $gitHubUserDto")
-                val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
-                log.debug("User in database $existGitHubUser")
-                val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent) {
-                    updatedContributorsCount++
-                    updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
-                } else {
-                    createdContributorsCount++
-                    createGitHubUser(gitHubUserDto, gitHubContributor)
+        gitHubRepositoryNames.forEach { repositoryName ->
+            gitHubApiClient
+                .getGitHubContributors(gitHubOrganizationName, repositoryName, pageSize)
+                .also { log.info("From GitHub repo [$repositoryName] was got ${it.size} contributors.") }
+                .filter { !botLogins.contains(it.login) }
+                .also { gitHubContributorsCount += it.count() }
+                .forEach { gitHubContributor ->
+                    val gitHubUserDto: GitHubUserDto = gitHubApiClient.getGitHubUser(gitHubContributor.login)!!
+                    log.debug("Gotten user from repository: $repositoryName GitHubApi $gitHubUserDto")
+                    val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
+                    log.debug("User in database $existGitHubUser")
+                    val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent) {
+                        updatedContributorsCount++
+                        updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
+                    } else {
+                        createdContributorsCount++
+                        createGitHubUser(gitHubUserDto, gitHubContributor)
+                    }
+                    val contributor = contributorService.createOrUpdateByGitHubUser(savedGitHubUser, repositoryName)
+                    log.debug("Created\\Updated contributor in database $contributor")
                 }
-                val contributor = contributorService.createOrUpdateByGitHubUser(savedGitHubUser)
-                log.debug("Created\\Updated contributor in database $contributor")
-            }
+            log.info(
+                "GitHubUsers synchronization job for repository [$repositoryName] end: " +
+                        "gitHubContributorsCount=$gitHubContributorsCount, " +
+                        "createdContributorsCount=$createdContributorsCount, " +
+                        "updatedContributorsCount=$updatedContributorsCount."
+            )
+        }
+
         log.info(
-            "GitHubUsers synchronization job end: " +
-                "gitHubContributorsCount=$gitHubContributorsCount, " +
-                "createdContributorsCount=$createdContributorsCount, " +
-                "updatedContributorsCount=$updatedContributorsCount."
+            "GitHubUsers synchronization job for repositories [$gitHubRepositoryNames] end: " +
+                    "gitHubContributorsCount=$gitHubContributorsCount, " +
+                    "createdContributorsCount=$createdContributorsCount, " +
+                    "updatedContributorsCount=$updatedContributorsCount."
         )
     }
 
