@@ -55,17 +55,18 @@ class ContributorServiceImpl(
     }
 
     @Transactional
-    override fun createOrUpdateByGitHubUser(gitHubUser: GitHubUser): Contributor {
+    override fun createOrUpdateByGitHubUser(gitHubUser: GitHubUser, repositoryName: String): Contributor {
         val existContributor = contributorRepository.findByGitHubUser(gitHubUser)
         return existContributor
-            ?.updateByGitHubUser(gitHubUser)
-            ?: createContributor(gitHubUser)
+            ?.updateByGitHubUser(gitHubUser, repositoryName)
+            ?: createContributor(gitHubUser, repositoryName)
     }
 
-    private fun createContributor(gitHubUser: GitHubUser): Contributor {
+    private fun createContributor(gitHubUser: GitHubUser, repositoryName: String): Contributor {
         val contributor = Contributor(
             contribution = gitHubUser.contributions,
             name = gitHubUser.name ?: "gitHubNick:${gitHubUser.login}",
+            repositoryName = repositoryName,
             company = gitHubUser.company,
             pictureUrl = gitHubUser.avatarUrl,
             description = gitHubUser.bio
@@ -77,11 +78,13 @@ class ContributorServiceImpl(
         return contributorRepository.save(contributor)
     }
 
-    private fun Contributor.updateByGitHubUser(gitHubUser: GitHubUser): Contributor {
+    private fun Contributor.updateByGitHubUser(gitHubUser: GitHubUser, repositoryName: String): Contributor {
         if (this.contribution != gitHubUser.contributions)
             this.contribution = gitHubUser.contributions
         if (this.name.isNullOrEmpty() || this.name != gitHubUser.name)
             this.name = gitHubUser.name ?: gitHubUser.login
+        if (this.repositoryName.isNullOrEmpty())
+            this.repositoryName = repositoryName
         if (this.company.isNullOrEmpty())
             this.company = gitHubUser.company
         if (this.description.isNullOrEmpty())
