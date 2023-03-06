@@ -51,9 +51,7 @@ internal class GroupRecordProcessorTest {
         // WHEN
         val actual = groupRecordProcessor.process(records)
         // THEN
-        for (i in 0 until expected.size) {
-            assertThat(actual[i]).isEqualTo(expected[i])
-        }
+        assertThat(actual).usingRecursiveFieldByFieldElementComparator().containsExactlyElementsOf(expected)
         verify(exactly = records.size) { exerciseGroupRepository.findByCode(ofType(String::class)) }
         verify(inverse = true) { exerciseGroupRepository.save(ofType(ExerciseGroup::class)) }
     }

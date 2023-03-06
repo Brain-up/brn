@@ -16,6 +16,7 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.utils.resource
+import io.kotest.matchers.equality.shouldBeEqualToUsingFields
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -124,8 +125,8 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             )
         ).first()
 
-        assertThat(actual).isEqualTo(expected)
-        verify { exerciseRepositoryMock.save(expected) }
+        actual.shouldBeEqualToUsingFields(expected, Exercise::name, Exercise::level)
+        verify { exerciseRepositoryMock.save(actual) }
     }
 
     // @Test

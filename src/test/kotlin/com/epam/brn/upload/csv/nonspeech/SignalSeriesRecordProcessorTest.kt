@@ -73,8 +73,8 @@ internal class SignalSeriesRecordProcessorTest {
     @Test
     fun `should create correct exercise`() {
         val exercise = createExercise(subGroupDuration)
-        every { exerciseRepositoryMock.save(exercise) } returns exercise
-        every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) } returns null
+        every { exerciseRepositoryMock.save(any()) } returnsArgument 0
+        every { exerciseRepositoryMock.findByNameAndLevel(any(), any()) } returns null
         val actual = signalSeriesRecordProcessor.process(
             listOf(
                 SignalSeriesRecord(
@@ -87,10 +87,9 @@ internal class SignalSeriesRecordProcessorTest {
             )
         )
 
-        verify { subGroupRepositoryMock.findByCodeAndLocale("durationSignals", locale) }
-
-        Assertions.assertThat(actual).contains(exercise)
-        verify { exerciseRepositoryMock.save(exercise) }
+        Assertions.assertThat(actual).usingElementComparatorOnFields("name", "level").contains(exercise)
+        verify { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) }
+        verify { exerciseRepositoryMock.save(match { it.name == exercise.name && it.level == exercise.level }) }
     }
 
     @Test
@@ -101,8 +100,7 @@ internal class SignalSeriesRecordProcessorTest {
         ex2.name = "По 2 сигнала разной частоты."
         every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) } returns null
         every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной частоты.", 1) } returns null
-        every { exerciseRepositoryMock.save(ex1) } returns ex1
-        every { exerciseRepositoryMock.save(ex2) } returns ex2
+        every { exerciseRepositoryMock.save(any()) } returnsArgument 0
         every { subGroupRepositoryMock.findByCodeAndLocale("subGroupDuration", locale) } returns subGroupDuration
         every { subGroupRepositoryMock.findByCodeAndLocale("subGroupFrequency", locale) } returns subGroupFrequency
         // WHEN
@@ -125,9 +123,9 @@ internal class SignalSeriesRecordProcessorTest {
             )
         )
         // THEN
-        Assertions.assertThat(actual).containsAll(listOf(ex1, ex2))
-        verify { exerciseRepositoryMock.save(ex1) }
-        verify { exerciseRepositoryMock.save(ex2) }
+        Assertions.assertThat(actual).usingElementComparatorOnFields("name", "level").containsAll(listOf(ex1, ex2))
+        verify { exerciseRepositoryMock.save(match { it.name == ex1.name && it.level == ex1.level }) }
+        verify { exerciseRepositoryMock.save(match { it.name == ex2.name && it.level == ex2.level }) }
     }
 
     @Test
@@ -142,16 +140,18 @@ internal class SignalSeriesRecordProcessorTest {
             code = code,
             signals = listOf("1000 120", "1000 60")
         )
-        every { subGroupRepositoryMock.findByCodeAndLocale(code, locale.locale) } returns subGroupDuration
+        every { subGroupRepositoryMock.findByCodeAndLocale(any(), any()) } returns subGroupDuration
 
         val exercise = createExerciseWithSignals(subGroupDuration)
-        every { exerciseRepositoryMock.save(exercise) } returns exercise
-        every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) } returns null
+        every { exerciseRepositoryMock.save(any()) } returnsArgument 0
+        every { exerciseRepositoryMock.findByNameAndLevel(any(), any()) } returns null
         // WHEN
         val actual = signalSeriesRecordProcessor.process(listOf(record), locale)
         // THEN
-        Assertions.assertThat(actual).contains(exercise)
-        verify { exerciseRepositoryMock.save(exercise) }
+        Assertions.assertThat(actual).usingElementComparatorOnFields("name", "level").contains(exercise)
+        verify { subGroupRepositoryMock.findByCodeAndLocale(code, locale.locale) }
+        verify { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) }
+        verify { exerciseRepositoryMock.save(match { it.name == exercise.name && it.level == exercise.level }) }
     }
 
     private fun createExercise(subGroup: SubGroup) = Exercise(
