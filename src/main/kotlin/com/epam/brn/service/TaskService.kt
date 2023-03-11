@@ -70,9 +70,8 @@ class TaskService(
     private fun processAnswerOptions(task: Task) {
         task.answerOptions
             .forEach { resource ->
-                if (resource.pictureFileUrl != null) {
+                if (resource.pictureFileUrl != null)
                     resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
-                }
             }
     }
 

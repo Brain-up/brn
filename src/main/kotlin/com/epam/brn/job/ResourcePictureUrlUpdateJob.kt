@@ -3,7 +3,6 @@ package com.epam.brn.job
 import com.epam.brn.model.Resource
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.cloud.CloudService
-import io.micrometer.core.instrument.util.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
@@ -49,16 +48,15 @@ class ResourcePictureUrlUpdateJob(
                         response.notFoundPictureForWordCount++
                     }
 
-                    val shouldUpdateUrl = fileUrl.isNotEmpty() && !fileUrl.equals(resource.pictureFileUrl)
-                    val shouldCleanUrl = fileUrl.isEmpty() && StringUtils.isNotEmpty(resource.pictureFileUrl)
+                    val shouldUpdateUrl = fileUrl.isNotEmpty() && fileUrl != resource.pictureFileUrl
+                    val shouldCleanUrl = fileUrl.isEmpty() && !resource.pictureFileUrl.isNullOrEmpty()
                     if (shouldUpdateUrl || shouldCleanUrl) {
                         resource.pictureFileUrl = fileUrl
                         updatedResources.add(resource)
                     }
                 }
-                if (updatedResources.isNotEmpty()) {
+                if (updatedResources.isNotEmpty())
                     resourceService.saveAll(updatedResources)
-                }
             } catch (e: Exception) {
                 response.success = false
                 response.errorMessage = e.message

@@ -79,9 +79,10 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
             .bucket(awsConfig.bucketName)
             .prefix(folderPath)
             .build()
-        return s3Client.listObjectsV2(request).contents().associate {
-            (File(it.key()).nameWithoutExtension to it.key())
-        }
+        return s3Client.listObjectsV2(request)
+            .contents()
+            .filter { !it.key().endsWith(FOLDER_DELIMITER) }
+            .associate { (File(it.key()).nameWithoutExtension to it.key()) }
     }
 
     override fun deleteFiles(fileNames: List<String>) {
