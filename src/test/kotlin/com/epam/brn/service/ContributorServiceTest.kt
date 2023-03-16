@@ -32,6 +32,8 @@ internal class ContributorServiceTest {
     @MockK
     private lateinit var contributorRepository: ContributorRepository
 
+    private val githubRepositoryName = "brn"
+
     @Test
     fun `should get all contributors`() {
         // GIVEN
@@ -130,68 +132,77 @@ internal class ContributorServiceTest {
     @Test
     fun `should create contributor by github user with contact`() {
         // GIVEN
-        val gitHunUserMockK = mockk<GitHubUser>()
+        val gitHubUserMockK = mockk<GitHubUser>()
         val contributorMockK = mockk<Contributor>()
-        every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns null
+
+        every { contributorRepository.findByGitHubUser(gitHubUserMockK) } returns null
         every { contributorRepository.save(any()) } returns contributorMockK
-        every { gitHunUserMockK.name } returns "name"
-        every { gitHunUserMockK.company } returns "company"
-        every { gitHunUserMockK.avatarUrl } returns "avatarUrl"
-        every { gitHunUserMockK.bio } returns "bio"
-        every { gitHunUserMockK.email } returns "mail"
-        every { gitHunUserMockK.contributions } returns 1
+        every { contributorMockK.repositoryName } returns githubRepositoryName
+
+        every { gitHubUserMockK.name } returns "name"
+        every { gitHubUserMockK.company } returns "company"
+        every { gitHubUserMockK.avatarUrl } returns "avatarUrl"
+        every { gitHubUserMockK.bio } returns "bio"
+        every { gitHubUserMockK.email } returns "mail"
+        every { gitHubUserMockK.contributions } returns 1
+
         // WHEN
-        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK)
+        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
         // THEN
         assertEquals(resultContributor, contributorMockK)
-        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
+        assertEquals(githubRepositoryName, resultContributor.repositoryName)
+        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHubUserMockK) }
         verify(exactly = 1) { contributorRepository.save(any()) }
     }
 
     @Test
     fun `should update contributor by github user without contacts`() {
         // GIVEN
-        val gitHunUserMockK = mockk<GitHubUser>()
+        val gitHubUserMockK = mockk<GitHubUser>()
         val existContributor = Contributor(name = "Contributor")
         val updatedContributor = mockk<Contributor>()
+        every { updatedContributor.repositoryName } returns "brn"
         val capturedContributor = slot<Contributor>()
-        every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns existContributor
-        every { gitHunUserMockK.name } returns "name"
-        every { gitHunUserMockK.company } returns "company"
-        every { gitHunUserMockK.avatarUrl } returns "avatarUrl"
-        every { gitHunUserMockK.bio } returns "bio"
-        every { gitHunUserMockK.email } returns null
+        every { contributorRepository.findByGitHubUser(gitHubUserMockK) } returns existContributor
+        every { gitHubUserMockK.name } returns "name"
+        every { gitHubUserMockK.company } returns "company"
+        every { gitHubUserMockK.avatarUrl } returns "avatarUrl"
+        every { gitHubUserMockK.bio } returns "bio"
+        every { gitHubUserMockK.email } returns null
         every { contributorRepository.save(capture(capturedContributor)) } returns updatedContributor
-        every { gitHunUserMockK.contributions } returns 1
+        every { gitHubUserMockK.contributions } returns 1
+
         // WHEN
-        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK)
+        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
         // THEN
         assertEquals(updatedContributor, resultContributor)
+        assertEquals(githubRepositoryName, resultContributor.repositoryName)
         assertEquals(0, capturedContributor.captured.contacts.size)
-        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
+        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHubUserMockK) }
         verify(exactly = 1) { contributorRepository.save(existContributor) }
     }
 
     @Test
-    fun `should update contributor by github user`() {
+    fun `should update contributor by github user with empty repository name`() {
         // GIVEN
-        val gitHunUserMockK = mockk<GitHubUser>()
-        val existContributor = Contributor(name = "Contributor")
-        val updatedContributor = mockk<Contributor>()
-        every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns existContributor
-        every { gitHunUserMockK.name } returns "name"
-        every { gitHunUserMockK.company } returns "company"
-        every { gitHunUserMockK.avatarUrl } returns "avatarUrl"
-        every { gitHunUserMockK.bio } returns "bio"
-        every { gitHunUserMockK.email } returns "mail"
-        every { contributorRepository.save(existContributor) } returns updatedContributor
-        every { gitHunUserMockK.contributions } returns 1
+        val existContributor = Contributor(name = "Contributor", repositoryName = "")
+        val gitHubUserMockK = mockk<GitHubUser>()
+        every { contributorRepository.findByGitHubUser(gitHubUserMockK) } returns existContributor
+        every { contributorRepository.save(existContributor) } returns existContributor
+
+        every { gitHubUserMockK.name } returns "name"
+        every { gitHubUserMockK.company } returns "company"
+        every { gitHubUserMockK.avatarUrl } returns "avatarUrl"
+        every { gitHubUserMockK.bio } returns "bio"
+        every { gitHubUserMockK.email } returns "mail"
+        every { gitHubUserMockK.contributions } returns 1
         // WHEN
-        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK)
+        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
         // THEN
         assertNotNull(resultContributor)
-        assertEquals(updatedContributor, resultContributor)
-        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
+        assertEquals(existContributor, resultContributor)
+        assertEquals(githubRepositoryName, resultContributor.repositoryName)
+        verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHubUserMockK) }
         verify(exactly = 1) { contributorRepository.save(existContributor) }
     }
 
@@ -206,8 +217,10 @@ internal class ContributorServiceTest {
         existContributor.description = "description"
         existContributor.pictureUrl = "pictureUrl"
         existContributor.contacts = mutableSetOf(Contact(value = "email"))
+
         val capturedContributor = slot<Contributor>()
         val updatedContributor = mockk<Contributor>()
+        every { updatedContributor.repositoryName } returns githubRepositoryName
         every { contributorRepository.findByGitHubUser(gitHunUserMockK) } returns existContributor
         every { gitHunUserMockK.name } returns "new name"
         every { gitHunUserMockK.company } returns "new company"
@@ -217,9 +230,10 @@ internal class ContributorServiceTest {
         every { contributorRepository.save(capture(capturedContributor)) } returns updatedContributor
         every { gitHunUserMockK.contributions } returns 1
         // WHEN
-        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK)
+        val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK, githubRepositoryName)
         // THEN
         assertEquals(updatedContributor, resultContributor)
+        assertEquals(githubRepositoryName, resultContributor.repositoryName)
         assertEquals(existContributor, capturedContributor.captured)
         assertEquals(1, capturedContributor.captured.contacts.size)
         verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
