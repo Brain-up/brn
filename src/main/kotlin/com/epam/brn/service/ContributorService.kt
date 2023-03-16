@@ -11,5 +11,5 @@ interface ContributorService {
     fun getAllContributors(): List<ContributorResponse>
     fun createContributor(contributorRequest: ContributorRequest): ContributorResponse
     fun updateContributor(id: Long, contributorRequest: ContributorRequest): ContributorResponse
-    fun createOrUpdateByGitHubUser(gitHubUser: GitHubUser): Contributor
+    fun createOrUpdateByGitHubUser(gitHubUser: GitHubUser, repositoryName: String): Contributor
 }
