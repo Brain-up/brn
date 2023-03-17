@@ -1,4 +1,4 @@
-package com.epam.brn.repo
+package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
@@ -6,6 +6,9 @@ import com.epam.brn.model.Resource
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.ResourceRepository
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -21,6 +24,12 @@ abstract class BaseTest {
     val nameOfTaskWithAnswers = "firstTask"
     var exerciseId: Long? = null
     var savedTasked: Task? = null
+
+    @AfterAll
+    fun deleteAfterTest() {
+        exerciseGroupRepository.deleteAll()
+        resourceRepository.deleteAll()
+    }
 
     @BeforeAll
     fun init() {
