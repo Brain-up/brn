@@ -1,6 +1,7 @@
-package com.epam.brn.repo
+package com.epam.brn.integration.repo
 
 import com.epam.brn.model.Task
+import com.epam.brn.repo.TaskRepository
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_TWO
 import org.assertj.core.api.Assertions.assertThat
