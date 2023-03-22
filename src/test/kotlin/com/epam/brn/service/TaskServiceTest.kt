@@ -93,7 +93,7 @@ internal class TaskServiceTest {
         fun `should return tasks by exerciseId(SINGLE_SIMPLE_WORDS)`() {
             // GIVEN
             val expectedTaskSize = 2
-            val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
+            val resource = Resource(word = "word", locale = BrnLocale.RU.locale, pictureFileUrl = "fileUrl")
             every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
                 task1Mock,
                 task2Mock
