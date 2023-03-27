@@ -22,6 +22,7 @@ import com.epam.brn.repo.TaskRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.streams.toList
 import kotlin.system.measureTimeMillis
 
 @Service
@@ -69,14 +70,16 @@ class TaskService(
 
     private fun processAnswerOptions(task: Task) {
         val time = measureTimeMillis {
-            task.answerOptions
-                .parallelStream()
-                .forEach { resource ->
-                    resource.pictureFileUrl =
-                        urlConversionService.makeUrlForTaskPicture(resource.word)
-                }
+            val taskPicturesUrls = urlConversionService.makeUrlsForTaskPictures(
+                task.answerOptions
+                    .parallelStream()
+                    .map { it.word }
+                    .toList()
+            )
+            task.answerOptions.parallelStream().forEach { resource ->
+                resource.pictureFileUrl = taskPicturesUrls.getOrDefault(resource.word, "")
+            }
         }
-        log.debug("End processAnswerOptions for taskId=$task, time=$time")
     }
 
     @Transactional

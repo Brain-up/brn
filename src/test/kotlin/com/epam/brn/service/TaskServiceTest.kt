@@ -108,7 +108,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            every { urlConversionService.makeUrlsForTaskPictures(listOf(resource.word)) } returns
+                mapOf(resource.word to "fullPictureUrl")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -151,7 +152,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            every { urlConversionService.makeUrlsForTaskPictures(listOf(resource.word)) } returns
+                mapOf(resource.word to "fullPictureUrl")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -180,7 +182,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SINGLE_WORDS_KOROLEVA.name
 
-            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
+            every { urlConversionService.makeUrlsForTaskPictures(any()) } returns
+                mapOf(resource1.word to "fullPictureUrl", resource2.word to "fullPictureUrl")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE) as List<TaskResponse>
@@ -230,7 +233,8 @@ internal class TaskServiceTest {
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.WORDS_SEQUENCES.name
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            every { urlConversionService.makeUrlsForTaskPictures(listOf(resource.word)) } returns
+                mapOf(resource.word to "fullPictureUrl")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -272,7 +276,8 @@ internal class TaskServiceTest {
             every { exerciseMock.subGroup } returns subGroupMock
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.SENTENCE.name
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            every { urlConversionService.makeUrlsForTaskPictures(listOf(resource.word)) } returns
+                mapOf(resource.word to "fullPictureUrl")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -303,7 +308,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.PHRASES.name
 
-            every { urlConversionService.makeUrlForTaskPicture(any()) } returns "fullPictureUrl"
+            every { urlConversionService.makeUrlsForTaskPictures(any()) } returns
+                mapOf(resource.word to "fullPictureUrl")
             every { task1Mock.exercise } returns exerciseMock
 
             // WHEN
@@ -338,7 +344,8 @@ internal class TaskServiceTest {
             every { subGroupMock.series } returns seriesMock
             every { seriesMock.type } returns ExerciseType.DI.name
 
-            every { urlConversionService.makeUrlForTaskPicture(resource.word) } returns "fullPictureUrl"
+            every { urlConversionService.makeUrlsForTaskPictures(listOf(resource.word)) } returns
+                mapOf(resource.word to "fullPictureUrl")
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {

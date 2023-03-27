@@ -46,7 +46,8 @@ internal class UrlConversionServiceTest {
         val unverifiedPicturesPath = "pictures/unverified"
         val fullFileName = "${defaultPicturesPath}word.png"
         val extensions: Set<String> = setOf(".png", ".jpg")
-        every { cloudService.isFileExist(eq(defaultPicturesPath), any()) } returns true
+        every { cloudService.findExistingFiles(eq(defaultPicturesPath), any(), any()) } returns
+            mapOf(word to "$baseFileUrl/$fullFileName")
         every { cloudService.createFullFileName(any(), any()) } returns fullFileName
         every { cloudService.baseFileUrl() } returns baseFileUrl
         ReflectionTestUtils.setField(urlConversionService, "defaultPicturesPath", defaultPicturesPath)
@@ -54,9 +55,9 @@ internal class UrlConversionServiceTest {
         ReflectionTestUtils.setField(urlConversionService, "pictureExtensions", extensions)
 
         // WHEN
-        val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
+        val resultPicturesUrls = urlConversionService.makeUrlsForTaskPictures(listOf(word))
         // THEN
-        assertEquals("$baseFileUrl/$fullFileName", resultPictureUrl)
+        assertEquals(mapOf(word to "$baseFileUrl/$fullFileName"), resultPicturesUrls)
     }
 
     // @Test after 2243 task will be implemented
@@ -68,35 +69,36 @@ internal class UrlConversionServiceTest {
         val unverifiedPicturesPath = "pictures/unverified/"
         val fullFileName = "${defaultPicturesPath}word.png"
         val extensions: Set<String> = setOf(".png", ".jpg")
-        every { cloudService.isFileExist(eq(defaultPicturesPath), any()) } returns false
-        every { cloudService.isFileExist(eq(unverifiedPicturesPath), any()) } returns true
+        every { cloudService.findExistingFiles(eq(defaultPicturesPath), any(), any()) } returns emptyMap()
+        every { cloudService.findExistingFiles(eq(unverifiedPicturesPath), any(), any()) } returns
+            mapOf(word to "$baseFileUrl/$fullFileName")
         every { cloudService.createFullFileName(any(), any()) } returns fullFileName
         every { cloudService.baseFileUrl() } returns baseFileUrl
         ReflectionTestUtils.setField(urlConversionService, "defaultPicturesPath", defaultPicturesPath)
         ReflectionTestUtils.setField(urlConversionService, "unverifiedPicturesPath", unverifiedPicturesPath)
         ReflectionTestUtils.setField(urlConversionService, "pictureExtensions", extensions)
         // WHEN
-        val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
+        val resultPictureUrl = urlConversionService.makeUrlsForTaskPictures(listOf(word))
         // THEN
-        assertEquals("$baseFileUrl/$fullFileName", resultPictureUrl)
+        assertEquals(mapOf(word to "$baseFileUrl/$fullFileName"), resultPictureUrl)
     }
 
     @Test
-    fun `should return emptyString when picture doesn't exists`() {
+    fun `should return empty map when picture doesn't exists`() {
         // GIVEN
         val word = "word"
         val defaultPicturesPath = "pictures/"
         val unverifiedPicturesPath = "pictures/unverified"
         val extensions: Set<String> = setOf(".png", ".jpg")
-        every { cloudService.isFileExist(eq(defaultPicturesPath), any()) } returns false
-        every { cloudService.isFileExist(eq(unverifiedPicturesPath), any()) } returns false
+        every { cloudService.findExistingFiles(eq(defaultPicturesPath), any(), any()) } returns emptyMap()
+        every { cloudService.findExistingFiles(eq(unverifiedPicturesPath), any(), any()) } returns emptyMap()
         ReflectionTestUtils.setField(urlConversionService, "defaultPicturesPath", defaultPicturesPath)
         ReflectionTestUtils.setField(urlConversionService, "unverifiedPicturesPath", unverifiedPicturesPath)
         ReflectionTestUtils.setField(urlConversionService, "pictureExtensions", extensions)
         // WHEN
-        val resultPictureUrl = urlConversionService.makeUrlForTaskPicture(word)
+        val resultPictureUrl = urlConversionService.makeUrlsForTaskPictures(listOf(word))
         // THEN
-        assertEquals("", resultPictureUrl)
+        assertEquals(emptyMap(), resultPictureUrl)
     }
 
     @Test
