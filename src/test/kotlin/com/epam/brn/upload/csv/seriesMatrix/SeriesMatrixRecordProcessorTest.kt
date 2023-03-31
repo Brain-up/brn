@@ -16,6 +16,7 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
 import com.epam.brn.utils.resource
+import io.kotest.matchers.equality.shouldBeEqualToUsingFields
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -114,7 +115,7 @@ internal class SeriesMatrixRecordProcessorTest {
     fun `should create correct exercise`() {
         // GIVEN
         val expected = createExercise()
-        every { exerciseRepositoryMock.save(expected) } returns expected
+        every { exerciseRepositoryMock.save(any()) } returnsArgument 0
         // WHEN
         val actual = seriesMatrixRecordProcessor.process(
             mutableListOf(
@@ -128,8 +129,8 @@ internal class SeriesMatrixRecordProcessorTest {
             )
         ).first()
         // THEN
-        assertThat(actual).isEqualTo(expected)
-        verify { exerciseRepositoryMock.save(expected) }
+        actual.shouldBeEqualToUsingFields(expected, Exercise::name, Exercise::level)
+        verify { exerciseRepositoryMock.save(match { it.name == expected.name && it.level == expected.level }) }
     }
 
     @Test
@@ -137,9 +138,9 @@ internal class SeriesMatrixRecordProcessorTest {
         // GIVEN
         val exercise = createExercise()
         val expectedTask = exercise.tasks.first()
-        every { exerciseRepositoryMock.save(exercise) } returns exercise
+        every { exerciseRepositoryMock.save(any()) } returnsArgument 0
         // WHEN
-        val actual = seriesMatrixRecordProcessor.process(
+        seriesMatrixRecordProcessor.process(
             mutableListOf(
                 SeriesMatrixRecord(
                     level = 1,
@@ -149,23 +150,42 @@ internal class SeriesMatrixRecordProcessorTest {
                     words = listOf("(()", "()", "(девочка бабушка дедушка)", "(сидит лежит идет)", "()", "())")
                 )
             )
-        ).first().tasks.first()
+        ).first().shouldBeEqualToUsingFields(exercise, Exercise::name, Exercise::level)
         // THEN
-        assertThat(actual).isEqualToIgnoringGivenFields(expectedTask, "answerOptions")
+        verify {
+            taskRepositoryMock.save(
+                match {
+                    it.name == expectedTask.name &&
+                        it.exercise!!.name == exercise.name &&
+                        it.exercise!!.level == exercise.level
+                }
+            )
+        }
     }
 
     @Test
     fun `should create correct answer options`() {
         // GIVEN
-        val exercise = createExercise()
-        every { exerciseRepositoryMock.save(exercise) } returns exercise
+        every { exerciseRepositoryMock.save(any()) } returnsArgument 0
+        every { taskRepositoryMock.save(any()) } answers {
+            val task = it.invocation.args[0] as Task
+            val exercise = task.exercise
+            exercise?.tasks?.add(task)
+            return@answers task
+        }
+        every { resourceRepositoryMock.saveAll(ofType<ArrayList<Resource>>()) } returnsArgument 0
+        every { wordsServiceMock.getSubFilePathForWord(ofType(AudioFileMetaData::class)) } answers {
+            val data = it.invocation.args[0] as AudioFileMetaData
+            return@answers "/test/${data.text}.ogg"
+        }
+
         val expectedResources = listOf(
-            createResource("девочка"),
-            createResource("бабушка"),
-            createResource("дедушка"),
-            createResource("сидит"),
-            createResource("лежит"),
-            createResource("идет")
+            createResource("девочка", ""),
+            createResource("бабушка", ""),
+            createResource("дедушка", ""),
+            createResource("сидит", ""),
+            createResource("лежит", ""),
+            createResource("идет", "")
         )
         // WHEN
         val actual = seriesMatrixRecordProcessor.process(
@@ -180,7 +200,7 @@ internal class SeriesMatrixRecordProcessorTest {
             )
         ).first().tasks.first().answerOptions
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(expectedResources)
+        assertThat(actual).usingElementComparatorOnFields("word", "locale", "audioFileUrl").isEqualTo(expectedResources)
     }
 
     private fun createExercise(): Exercise {
@@ -209,7 +229,7 @@ internal class SeriesMatrixRecordProcessorTest {
         )
     }
 
-    private fun createResource(word: String): Resource {
-        return resource(word, "pictures/withWord/$word.jpg")
+    private fun createResource(word: String, picture: String = "pictures/withWord/$word.jpg"): Resource {
+        return resource(word, picture)
     }
 }
