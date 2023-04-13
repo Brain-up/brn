@@ -59,6 +59,10 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
         TODO("Not yet implemented")
     }
 
+    override fun getFilePathMap(folderPath: String): Map<String, String> {
+        TODO("Not yet implemented")
+    }
+
     override fun deleteFiles(fileNames: List<String>) {
         TODO("Not yet implemented")
     }

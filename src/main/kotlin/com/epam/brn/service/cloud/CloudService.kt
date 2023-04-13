@@ -43,6 +43,11 @@ interface CloudService {
     fun getFileNames(folderPath: String): List<String>
 
     /**
+     * Get map of file paths with file name as key.
+     */
+    fun getFilePathMap(folderPath: String): Map<String, String>
+
+    /**
      * Delete specified files
      */
     fun deleteFiles(fileNames: List<String>)

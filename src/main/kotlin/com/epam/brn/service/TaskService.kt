@@ -19,17 +19,17 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
+import com.epam.brn.service.cloud.CloudService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.system.measureTimeMillis
 
 @Service
 class TaskService(
     private val taskRepository: TaskRepository,
     private val exerciseRepository: ExerciseRepository,
     private val resourceRepository: ResourceRepository,
-    private val urlConversionService: UrlConversionService,
+    private val cloudService: CloudService,
 ) {
     private val log = logger()
 
@@ -68,15 +68,11 @@ class TaskService(
     }
 
     private fun processAnswerOptions(task: Task) {
-        val time = measureTimeMillis {
-            task.answerOptions
-                .parallelStream()
-                .forEach { resource ->
-                    resource.pictureFileUrl =
-                        urlConversionService.makeUrlForTaskPicture(resource.word)
-                }
-        }
-        log.debug("End processAnswerOptions for taskId=$task, time=$time")
+        task.answerOptions
+            .forEach { resource ->
+                if (!resource.pictureFileUrl.isNullOrEmpty())
+                    resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
+            }
     }
 
     @Transactional
