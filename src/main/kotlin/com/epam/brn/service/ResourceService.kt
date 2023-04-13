@@ -27,6 +27,8 @@ class ResourceService(private val resourceRepository: ResourceRepository) {
 
     fun save(resource: Resource): Resource = resourceRepository.save(resource)
 
+    fun findAll(): List<Resource> = resourceRepository.findAll().iterator().asSequence().toList()
+
     fun updateDescription(id: Long, description: String): ResourceResponse {
         return resourceRepository.findByIdOrNull(id)?.let {
             it.description = description
@@ -34,4 +36,6 @@ class ResourceService(private val resourceRepository: ResourceRepository) {
             it.toResponse()
         } ?: throw EntityNotFoundException("Resource not found by id=$id")
     }
+
+    fun saveAll(resources: List<Resource>): List<Resource> = resourceRepository.saveAll(resources).toList()
 }

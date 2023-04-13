@@ -4,7 +4,7 @@ export function getData() {
       serialNumber: 1,
       id: 1,
       name: 'default',
-      exerciseType: 'SINGLE_WORDS',
+      exerciseMechanism: 'WORDS',
       answerOptions: [
         {
           id: 4,
@@ -55,7 +55,7 @@ export function getData() {
       serialNumber: 2,
       id: 2,
       name: 'default',
-      exerciseType: 'SINGLE_WORDS',
+      exerciseMechanism: 'WORDS',
       answerOptions: [
         {
           id: 4,
@@ -106,7 +106,7 @@ export function getData() {
       serialNumber: 3,
       id: 3,
       name: 'default',
-      exerciseType: 'SINGLE_WORDS',
+      exerciseMechanism: 'WORDS',
       answerOptions: [
         {
           id: 4,
@@ -158,16 +158,19 @@ export function getData() {
     {
       order: 1,
       id: 1,
-      exerciseType: 'SINGLE_WORDS',
+      exerciseMechanism: 'WORDS',
       name: 'default',
-      tasks: [{ id: 1 }, { id: 2 }],
+      tasks: [
+        { id: 1, exerciseMechanism: 'WORDS' },
+        { id: 2, exerciseMechanism: 'WORDS' },
+      ],
     },
     {
       order: 2,
       id: 2,
-      exerciseType: 'SINGLE_WORDS',
+      exerciseMechanism: 'WORDS',
       name: 'default',
-      tasks: [{ id: 3 }],
+      tasks: [{ id: 3, exerciseMechanism: 'WORDS' }],
     },
   ];
   const series = [
@@ -176,7 +179,6 @@ export function getData() {
       id: 1,
       name: 'default',
       exerciseGroupId: 1,
-      type: 'SINGLE_WORDS',
     },
   ];
   const groups = [

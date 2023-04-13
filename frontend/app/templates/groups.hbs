@@ -9,7 +9,7 @@
     <LinkTo @route="group" @model={{@model.lastObject}} title={{@model.lastObject.description}}>
       <ExerciseType
         @initial={{@model.lastObject.name}}
-        class="speech-exercise"
+        @img="speech-exercises"
       />
     </LinkTo>
   </li>
@@ -17,7 +17,7 @@
     <LinkTo @route="group" @model={{@model.firstObject}} title={{@model.firstObject.description}}>
       <ExerciseType
         @initial={{@model.firstObject.name}}
-        class="non-speech-exercises"
+        @img="non-speech-exercises"
       />
     </LinkTo>
   </li>

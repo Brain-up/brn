@@ -1,0 +1,470 @@
+<div id="canvas-container">
+  <canvas id="canvas"></canvas>
+</div>
+
+canvas {
+    transform: scale(0.3);
+    border: 4px solid red;
+  }
+
+  const canvasContainer = document.getElementById("canvas-container");
+  const canvas = document.getElementById("canvas");
+  
+  // set canvas size to 320x240px
+  canvas.width = 320;
+  canvas.height = 240;
+  
+  const ctx = canvas.getContext("2d");
+  
+  canvasContainer.style.display = "flex";
+  canvas.style.flex = "1";
+  
+  const audioCtx = new AudioContext();
+  let oscillator = audioCtx.createOscillator();
+  oscillator.frequency.value = 440; // frequency in hertz
+  oscillator.connect(audioCtx.destination);
+  
+  // set duration in milliseconds
+  const duration = 6000;
+  
+  let time = 0;
+  let xPos = 0;
+  
+  // Create gradient
+  const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+  gradient.addColorStop(0,"rgba(255, 0, 0, 0.5)");
+  gradient.addColorStop(1,"rgba(0, 0, 255, 0.5)");
+  
+  const render = () => {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 3;
+    
+    //sin wave
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height/2);
+    
+    for(let i = 0; i <= xPos; i++) {
+  ctx.lineTo(i, canvas.height/2 + (Math.sin(time + i * 0.05) * 50));
+  }
+  ctx.strokeStyle = "green";
+  ctx.stroke();
+  
+  //cos wave
+  ctx.beginPath();
+  ctx.moveTo(0, canvas.height/2);
+  for(let i = 0; i <= xPos; i++) {
+  ctx.lineTo(i, canvas.height/2 + (Math.cos(time + i * 0.05) * 50));
+  }
+  ctx.strokeStyle = "blue";
+  ctx.stroke();
+    
+    // fill the space between sin and cos
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.moveTo(0, canvas.height/2);
+  for(let i = 0; i <= xPos; i++) {
+  ctx.lineTo(i, canvas.height/2 + (Math.sin(time + i * 0.05) * 50));
+  ctx.lineTo(i, canvas.height/2 + (Math.cos(time + i * 0.05) * 50));
+  }
+  ctx.lineTo(xPos, canvas.height/2);
+  ctx.closePath();
+  ctx.fill();
+  
+  time += 0.003;
+  xPos += 1;
+  
+  if (time > duration / 1000 || xPos > canvas.width) {
+  time = 0;
+  xPos = 0;
+  oscillator.disconnect();
+  oscillator = audioCtx.createOscillator();
+  oscillator.frequency.value = 440;
+  oscillator.connect(audioCtx.destination);
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + (duration / 1000));
+  }
+  requestAnimationFrame(render);
+  };
+  
+  render();
+
+
+  /////////////////////////////////
+
+
+  const canvasContainer = document.getElementById("canvas-container");
+const canvas = document.getElementById("canvas");
+
+// set canvas size to 320x240px
+canvas.width = 320;
+canvas.height = 240;
+
+const ctx = canvas.getContext("2d");
+
+canvasContainer.style.display = "flex";
+canvas.style.flex = "1";
+
+const audioCtx = new AudioContext();
+
+let oscillator;
+
+// set duration in milliseconds
+let duration = 6000;
+
+let time = 0;
+let xPos = 0;
+
+// Create gradient
+const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+gradient.addColorStop(0,"rgba(255, 0, 0, 0.5)");
+gradient.addColorStop(1,"rgba(0, 0, 255, 0.5)");
+
+const render = (frequency, amountOfWaves, amplitude) => {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.lineWidth = 3;
+  
+  //sin wave
+  ctx.beginPath();
+  ctx.moveTo(0, canvas.height/2);
+  for(let i = 0; i <=xPos; i += amountOfWaves) {
+ctx.lineTo(i, canvas.height/2 + (Math.sin(time + i * frequency) * amplitude));
+}
+ctx.strokeStyle = "green";
+ctx.stroke();
+  
+  //cos wave
+ctx.beginPath();
+ctx.moveTo(0, canvas.height/2);
+for(let i = 0; i <= xPos; i += amountOfWaves) {
+ctx.lineTo(i, canvas.height/2 + (Math.cos(time + i * frequency) * amplitude));
+}
+ctx.strokeStyle = "blue";
+ctx.stroke();
+  
+  // fill the space between sin and cos
+ctx.fillStyle = gradient;
+ctx.beginPath();
+ctx.moveTo(0, canvas.height/2);
+for(let i = 0; i <= xPos; i += amountOfWaves) {
+ctx.lineTo(i, canvas.height/2 + (Math.sin(time + i * frequency) * amplitude));
+ctx.lineTo(i, canvas.height/2 + (Math.cos(time + i * frequency) * amplitude));
+}
+ctx.lineTo(xPos, canvas.height/2);
+ctx.closePath();
+ctx.fill();
+
+time += 0.003;
+xPos += 1;
+  
+  if (time > duration / 1000 || xPos > canvas.width) {
+time = 0;
+xPos = 0;
+oscillator.disconnect();
+}
+requestAnimationFrame(() => render(frequency, amountOfWaves, amplitude));
+};
+
+const initCanvas = (frequency, duration, amountOfWaves, amplitude) => {
+oscillator = audioCtx.createOscillator();
+oscillator.frequency.value = frequency;
+oscillator.connect(audioCtx.destination);
+oscillator.start();
+oscillator.stop(audioCtx.currentTime + (duration / 1000));
+this.duration = duration;
+render(frequency, amountOfWaves, amplitude);
+}
+
+initCanvas(940,890,3,30);
+
+
+//////////////////////////////
+
+const canvasContainer = document.getElementById("canvas-container");
+const canvas = document.getElementById("canvas");
+
+// set canvas size to 320x240px
+canvas.width = 320;
+canvas.height = 240;
+
+const ctx = canvas.getContext("2d");
+
+canvasContainer.style.display = "flex";
+canvas.style.flex = "1";
+
+const audioCtx = new AudioContext();
+
+let oscillator;
+
+// set duration in milliseconds
+let duration = 6000;
+
+let time = 0;
+
+// Create gradient
+const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+gradient.addColorStop(0,"rgba(255, 0, 0, 0.5)");
+gradient.addColorStop(1,"rgba(0, 0, 255, 0.5)");
+
+const render = (frequency, amountOfWaves, amplitude) => {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.lineWidth = 3;
+  
+  //sin wave
+  ctx.beginPath();
+  for(let i = 0; i <= canvas.width; i += amountOfWaves) {
+    ctx.lineTo(i, canvas.height/2 + (Math.sin(time + i * frequency) * amplitude));
+}
+ctx.strokeStyle = "green";
+ctx.stroke();
+
+//cos wave
+ctx.beginPath();
+for(let i = 0; i <= canvas.width; i += amountOfWaves) {
+ctx.lineTo(i, canvas.height/2 + (Math.cos(time + i * frequency) * amplitude));
+}
+ctx.strokeStyle = "blue";
+ctx.stroke();
+
+// fill the space between sin and cos
+ctx.fillStyle = gradient;
+ctx.beginPath();
+for(let i = 0; i <= canvas.width; i += amountOfWaves) {
+ctx.lineTo(i, canvas.height/2 + (Math.sin(time + i * frequency) * amplitude));
+ctx.lineTo(i, canvas.height/2 + (Math.cos(time + i * frequency) * amplitude));
+}
+ctx.lineTo(canvas.width, canvas.height/2);
+ctx.closePath();
+ctx.fill();
+
+time += 0.003;
+  
+  if (time > duration / 1000) {
+time = 0;
+oscillator.disconnect();
+}
+requestAnimationFrame(() => render(frequency, amountOfWaves, amplitude));
+};
+
+// function to initialize canvas with frequency, duration, amount of waves, and amplitude
+const initCanvas = (frequency, duration, amountOfWaves, amplitude) => {
+oscillator = audioCtx.createOscillator();
+oscillator.frequency.value = frequency;
+oscillator.connect(audioCtx.destination);
+oscillator.start();
+oscillator.stop(audioCtx.currentTime + (duration / 1000));
+this.duration = duration;
+render(frequency, amountOfWaves, amplitude);
+}
+
+initCanvas(940, 60, 4, 50);
+
+
+//////////////////////////////
+
+
+function draw(canvasId, frequency, duration, amplitude) {
+  const canvas = document.getElementById(canvasId);
+  canvas.width = 320;
+  canvas.height = 240;
+  const ctx = canvas.getContext("2d");
+
+  const audioCtx = new AudioContext();
+  let oscillator;
+  let startTime;
+
+  const render = () => {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 3;
+
+    // Draw horizontal wave for frequency representation
+    ctx.beginPath();
+    // Draw duration gradient
+    const timePassed = Date.now() - startTime;
+    const progress = timePassed / (duration / 1000);
+    for (let i = 0; i <= canvas.width; i += 1) {
+      ctx.lineTo(i, canvas.height / 2 + (Math.sin(Date.now() * 0.003 + i * frequency) * amplitude));
+    }
+    ctx.strokeStyle = `rgb(0, ${(progress||1)/10+1}, ${progress/5+1})`
+    ctx.stroke();
+
+    
+    //ctx.fillStyle = progress < 0.9 ? "black" : "white";
+    // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (timePassed < duration) {
+      requestAnimationFrame(render);
+    } else {
+      startTime = Date.now();
+      requestAnimationFrame(render);
+    }
+  };
+
+  // Initialize animation
+  startTime = Date.now();
+  oscillator = audioCtx.createOscillator();
+  oscillator.frequency.value = frequency;
+  oscillator.connect(audioCtx.destination);
+  oscillator.start();
+  requestAnimationFrame(render);
+}
+
+// Example usage:
+draw("canvas", 0.05, 550, 90);
+
+
+/////////
+
+
+function draw(canvasId, frequency, duration, amplitude) {
+  const canvas = document.getElementById(canvasId);
+  canvas.width = 320;
+  canvas.height = 240;
+  const ctx = canvas.getContext("2d");
+
+  const audioCtx = new AudioContext();
+  let oscillator;
+  let startTime;
+
+  const render = () => {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 3;
+    const timePassed = Date.now() - startTime;
+    const progress = timePassed / (duration / 1000);
+
+    ctx.beginPath();
+    for (let i = 0; i < 2 * Math.PI; i += Math.PI/180) {
+      const x = canvas.width/2 + amplitude * Math.cos(i) + amplitude/2 * Math.cos(Date.now()*frequency + i*10) * Math.cos(i);
+      const y = canvas.height / 2 + amplitude * Math.sin(i) + amplitude/2 * Math.sin(Date.now()*frequency + i*10) * Math.sin(i);
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgb(0, ${(progress||1)/10+1}, ${progress/5+1})`;
+    ctx.stroke();
+
+    if (timePassed < duration) {
+      requestAnimationFrame(render);
+    } else {
+      startTime = Date.now();
+      requestAnimationFrame(render);
+    }
+  };
+
+  // Initialize animation
+  startTime = Date.now();
+  oscillator = audioCtx.createOscillator();
+  oscillator.frequency.value = frequency;
+  oscillator.connect(audioCtx.destination);
+  oscillator.start();
+  requestAnimationFrame(render);
+}
+
+// Example usage:
+draw("canvas", 1/500, 550, 90);
+
+//////////
+
+
+function draw(canvasId, frequency, duration, amplitude) {
+  const canvas = document.getElementById(canvasId);
+  canvas.width = 320;
+  canvas.height = 240;
+  const ctx = canvas.getContext("2d");
+
+  const audioCtx = new AudioContext();
+  let oscillator;
+  let startTime;
+
+  const render = () => {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 3;
+    const timePassed = Date.now() - startTime;
+    const progress = timePassed / (duration / 1000);
+
+    ctx.beginPath();
+    for (let i = 0; i < 2 * Math.PI; i += Math.PI/180) {
+      const sin = Math.sin(Date.now()*frequency + i*10);
+      const x = canvas.width/2 + (amplitude + (amplitude/2*sin)) * Math.cos(i);
+      const y = canvas.height / 2 + (amplitude + (amplitude/2*sin)) * Math.sin(i);
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgb(0, ${(progress||1)/10+1}, ${progress/5+1})`;
+    ctx.stroke();
+
+    if (timePassed < duration) {
+      requestAnimationFrame(render);
+    } else {
+      startTime = Date.now();
+      requestAnimationFrame(render);
+    }
+  };
+
+  // Initialize animation
+  startTime = Date.now();
+  oscillator = audioCtx.createOscillator();
+  oscillator.frequency.value = frequency;
+  oscillator.connect(audioCtx.destination);
+  oscillator.start();
+  requestAnimationFrame(render);
+}
+
+// Example usage:
+draw("canvas", 15000, 550, 90);
+
+
+
+///////////
+
+
+function draw(canvasId, frequency, duration, amplitude) {
+  const canvas = document.getElementById(canvasId);
+  canvas.width = 320;
+  canvas.height = 240;
+  const ctx = canvas.getContext("2d");
+
+  const audioCtx = new AudioContext();
+  let oscillator;
+  let startTime;
+
+  const render = () => {
+    //ctx.fillStyle = "white";
+    //ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 1;
+    const timePassed = Date.now() - startTime;
+    const progress = timePassed / (duration / 1000);
+
+    ctx.beginPath();
+    for (let i = 0; i < 2 * Math.PI; i += Math.PI/180) {
+      const sin = Math.sin(Date.now()*frequency);
+      const x = canvas.width/2 + (amplitude + (amplitude/1*sin)) * Math.cos(i);
+      const y = canvas.height / 2 + (amplitude + (amplitude/1*sin)) * Math.sin(i);
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgb(${progress/5}, ${(progress)/10}, ${progress/3})`;
+    ctx.stroke();
+
+    if (timePassed < duration) {
+      requestAnimationFrame(render);
+    } else {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      startTime = Date.now();
+      requestAnimationFrame(render);
+    }
+  };
+
+  // Initialize animation
+  startTime = Date.now();
+  oscillator = audioCtx.createOscillator();
+  oscillator.frequency.value = frequency;
+  oscillator.connect(audioCtx.destination);
+  oscillator.start();
+  requestAnimationFrame(render);
+}
+
+// Example usage:
+draw("canvas", 50, 20050, 150);

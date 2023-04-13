@@ -79,6 +79,7 @@ a.active {
   display: none;
   position: absolute;
   top: 58px;
+  right: 0;
 }
 
 .dropdown input[type='checkbox']:checked + div {

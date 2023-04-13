@@ -10,8 +10,9 @@ export default class ApplicationRoute extends Route {
   @service('intl') intl!: IntlService;
 
   beforeModel() {
-    const rawLocale = localStorage.getItem('locale');
-    const locale = rawLocale === 'en-us' ? 'en-us' : 'ru-ru';
+    const navigatorLanguage = navigator.languages.filter(el => el.includes('-')).map(el => el.toLowerCase())[0];
+    const rawLocale = localStorage.getItem('locale') || navigatorLanguage;
+    const locale = rawLocale === 'ru-ru' ? 'ru-ru' : 'en-us';
     this.intl.setLocale([locale]);
   }
 

@@ -1,6 +1,6 @@
 const task = {
-  exerciseType: 'WORDS_SEQUENCES',
-  type: 'task/WORDS_SEQUENCES',
+  exerciseMechanism: 'MATRIX',
+  type: 'task/MATRIX',
   name: '',
   wrongAnswers: [],
   template: '<OBJECT OBJECT_ACTION>',

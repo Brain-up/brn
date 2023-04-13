@@ -4,7 +4,7 @@
     @containerClass="max-w-4xl flex bg-white rounded-lg text-2xl m-auto"
   >
     <Ui::Avatars
-      @onSelect={{this.onAvatarSelect}}
+      @selectedAvatar={{this.avatar}}
       @onCancel={{this.onCancel}}
       @onSubmit={{this.onAvatarSubmit}}
     />
@@ -107,7 +107,6 @@
       >
         {{t "password_reset_form.update_password"}}
       </LinkTo>
-
     </div>
   </div>
 </section>

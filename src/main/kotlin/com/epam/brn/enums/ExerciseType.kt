@@ -13,6 +13,17 @@ enum class ExerciseType {
     SYLLABLES_KOROLEVA;
 }
 
+val exercisesWithPictures = setOf(
+    ExerciseType.WORDS_SEQUENCES,
+    ExerciseType.SENTENCE,
+    ExerciseType.SINGLE_SIMPLE_WORDS,
+    ExerciseType.SINGLE_WORDS_KOROLEVA,
+    ExerciseType.FREQUENCY_WORDS
+)
+
+fun ExerciseType.shouldBeWithPictures(): Boolean =
+    exercisesWithPictures.contains(this)
+
 fun ExerciseType.toMechanism(): ExerciseMechanism = mapExerciseTypeToMechanism
     .getOrElse(this) { throw IllegalArgumentException("No ExerciseMechanism is defined for $this.") }
 

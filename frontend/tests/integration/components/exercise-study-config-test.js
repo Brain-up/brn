@@ -10,6 +10,12 @@ module('Integration | Component | exercise-study-config', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
+    const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
+    
+    controller.set('model', {
+      shouldBeWithPictures: true,
+    });
+
     await render(hbs`<ExerciseStudyConfig />`);
 
     assert.dom('button').exists();
@@ -17,5 +23,18 @@ module('Integration | Component | exercise-study-config', function(hooks) {
     await click('[data-test-toggle-image-visibility]');
 
     assert.dom('button').exists();
+  });
+
+  test('it not renders without flag', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.set('myAction', function(val) { ... });
+
+    const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
+    
+    controller.set('model', {
+      shouldBeWithPictures: false,
+    });
+
+    assert.dom('button').doesNotExist();
   });
 });

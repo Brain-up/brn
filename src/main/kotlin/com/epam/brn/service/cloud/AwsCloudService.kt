@@ -21,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
+import java.io.File
 import java.io.InputStream
 import java.io.Serializable
 import javax.crypto.Mac
@@ -71,6 +72,17 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         return s3Client.listObjectsV2(request).contents().map {
             it.key().substring(it.key().lastIndexOf(FOLDER_DELIMITER))
         }
+    }
+
+    override fun getFilePathMap(folderPath: String): Map<String, String> {
+        val request = ListObjectsV2Request.builder()
+            .bucket(awsConfig.bucketName)
+            .prefix(folderPath)
+            .build()
+        return s3Client.listObjectsV2(request)
+            .contents()
+            .filter { !it.key().endsWith(FOLDER_DELIMITER) }
+            .associate { (File(it.key()).nameWithoutExtension to it.key()) }
     }
 
     override fun deleteFiles(fileNames: List<String>) {
