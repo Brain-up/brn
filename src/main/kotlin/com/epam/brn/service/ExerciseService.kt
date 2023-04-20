@@ -62,18 +62,21 @@ class ExerciseService(
     }
 
     fun findExercisesByUserIdAndSubGroupId(userId: Long, subGroupId: Long): List<ExerciseDto> {
-        log.info("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
+        log.debug("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
         val currentUserRoles = userAccountService.getCurrentUserRoles()
-        log.info("Current user is admin: ${userId == 1L}))")
         if (currentUserRoles.contains(BrnRole.ADMIN) || currentUserRoles.contains(BrnRole.SPECIALIST))
             return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
         val openSubGroupExercises =
             getAvailableExercisesForSubGroup(doneSubGroupExercises, subGroupExercises, userId, subGroupId)
-        return subGroupExercises.map { exercise ->
-            updateExerciseDto(exercise.toDto(openSubGroupExercises.contains(exercise)))
-        }
+        return subGroupExercises
+            .mapIndexed { index, exercise ->
+                val updatedExerciseDto =
+                    updateExerciseDto(exercise.toDto(openSubGroupExercises.contains(exercise)))
+                updatedExerciseDto.level = index + 1
+                updatedExerciseDto
+            }
     }
 
     fun getAvailableExerciseIds(exerciseIds: List<Long>): List<Long> {
