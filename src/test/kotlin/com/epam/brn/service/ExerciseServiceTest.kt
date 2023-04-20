@@ -103,8 +103,8 @@ internal class ExerciseServiceTest {
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
-        val exercise1 = Exercise(id = 1, name = "pets")
-        val exercise2 = Exercise(id = 2, name = "pets")
+        val exercise1 = Exercise(id = 1, name = "pets", level = 2)
+        val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.ADMIN)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
@@ -117,6 +117,8 @@ internal class ExerciseServiceTest {
         actualResult shouldHaveSize 2
         actualResult.filter { it.available } shouldHaveSize 2
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        actualResult[0].level shouldBe 2
+        actualResult[1].level shouldBe 100
     }
 
     @Test
@@ -177,13 +179,13 @@ internal class ExerciseServiceTest {
                 ofType(Long::class)
             )
         }
-        actualResult[0].level shouldBe 0
-        actualResult[1].level shouldBe 1
-        actualResult[2].level shouldBe 2
+        actualResult[0].level shouldBe 1
+        actualResult[1].level shouldBe 2
+        actualResult[2].level shouldBe 3
     }
 
     @Test
-    fun `should get 3 exercises with 1 available for user with bad history`() {
+    fun `should get 3 exercises with 1 available for USER with bad history`() {
         // GIVEN
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
@@ -227,7 +229,7 @@ internal class ExerciseServiceTest {
     }
 
     @Test
-    fun `should get 3 exercises with 3 available for user with all exercises done`() {
+    fun `should get 3 exercises with 3 available for USER with all exercises done`() {
         // GIVEN
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)

@@ -74,7 +74,7 @@ class ExerciseService(
             .mapIndexed { index, exercise ->
                 val updatedExerciseDto =
                     updateExerciseDto(exercise.toDto(openSubGroupExercises.contains(exercise)))
-                updatedExerciseDto.level = index
+                updatedExerciseDto.level = index + 1
                 updatedExerciseDto
             }
     }
