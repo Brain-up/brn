@@ -143,15 +143,15 @@ internal class ExerciseServiceTest {
     }
 
     @Test
-    fun `should get 3 exercises with 1 available for user without history`() {
+    fun `should get 3 exercises with 1 available for user without history for USER`() {
         // GIVEN
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
-        val exercise1 = Exercise(id = 1, name = "pets")
-        val exercise2 = Exercise(id = 2, name = "pets")
-        val exercise3 = Exercise(id = 3, name = "pets")
+        val exercise1 = Exercise(id = 1, name = "pets", level = 1)
+        val exercise2 = Exercise(id = 2, name = "pets", level = 2)
+        val exercise3 = Exercise(id = 3, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(
@@ -177,6 +177,9 @@ internal class ExerciseServiceTest {
                 ofType(Long::class)
             )
         }
+        actualResult[0].level shouldBe 0
+        actualResult[1].level shouldBe 1
+        actualResult[2].level shouldBe 2
     }
 
     @Test
