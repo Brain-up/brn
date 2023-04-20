@@ -128,8 +128,8 @@ internal class ExerciseServiceTest {
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
-        val exercise1 = Exercise(id = 1, name = "pets")
-        val exercise2 = Exercise(id = 2, name = "pets")
+        val exercise1 = Exercise(id = 1, name = "pets", level = 2)
+        val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.SPECIALIST, BrnRole.USER)
         every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
@@ -142,6 +142,8 @@ internal class ExerciseServiceTest {
         actualResult shouldHaveSize 2
         actualResult.filter { it.available } shouldHaveSize 2
         verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        actualResult[0].level shouldBe 2
+        actualResult[1].level shouldBe 100
     }
 
     @Test
