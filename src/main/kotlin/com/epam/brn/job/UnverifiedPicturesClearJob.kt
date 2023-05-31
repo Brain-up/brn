@@ -3,7 +3,6 @@ package com.epam.brn.job
 import com.epam.brn.service.cloud.CloudService
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
