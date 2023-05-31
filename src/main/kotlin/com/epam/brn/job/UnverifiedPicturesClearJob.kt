@@ -16,14 +16,15 @@ class UnverifiedPicturesClearJob(private val cloudService: CloudService) {
 
     private val log = logger()
 
-    @Scheduled(cron = "\${brn.resources.unverified-pictures.clean-job.cron}")
+    // todo: fix it as now it removes folder unverified
+    // @Scheduled(cron = "\${brn.resources.unverified-pictures.clean-job.cron}")
     fun clearUnusedPictures() {
         val defaultFolderPictures = cloudService.getFileNames(defaultPicturesPath)
         val unverifiedFolderPictures = cloudService.getFileNames(unverifiedPicturesPath)
 
-        val fileNamesToDelete = defaultFolderPictures.intersect(unverifiedFolderPictures).map {
-            unverifiedPicturesPath.plus(it)
-        }
+        val fileNamesToDelete = defaultFolderPictures
+            .intersect(unverifiedFolderPictures)
+            .map { unverifiedPicturesPath.plus(it) }
 
         cloudService.deleteFiles(fileNamesToDelete)
         log.info("Files are deleted from \"$unverifiedPicturesPath\"")
