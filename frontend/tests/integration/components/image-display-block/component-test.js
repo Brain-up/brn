@@ -30,7 +30,7 @@ module('Integration | Component | image-display-block', function (hooks) {
     );
     assert.equal(
       pageObject.imageAttribute,
-      '--word-picture-url:url(\\/pictures/вить.jpg);',
+      '--word-picture-url:url(\\/pictures\\/вить\\.jpg);',
       'has a right image variable',
     );
   });
