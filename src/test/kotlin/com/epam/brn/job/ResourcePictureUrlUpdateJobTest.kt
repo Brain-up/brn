@@ -29,7 +29,7 @@ internal class ResourcePictureUrlUpdateJobTest {
     private lateinit var resourceService: ResourceService
 
     private val defaultPicturesPath = "pictures/"
-    private val unverifiedPicturesPath = "pictures/unverified/"
+    private val unverifiedPicturesPath = "pictures-unverified/"
 
     @BeforeEach
     fun init() {
@@ -57,7 +57,9 @@ internal class ResourcePictureUrlUpdateJobTest {
         // THEN
         assertEquals(resource.pictureFileUrl, defaultFolderPictures[resource.word])
         assertEquals(1, jobResponse.inDefaultFolderPicturesCount)
-        assertEquals(0, jobResponse.inUnverifiedFolderPicturesCount)
+        assertEquals(1, jobResponse.inUnverifiedFolderPicturesCount)
+        assertEquals(1, jobResponse.withCorrectDefaultUrlResources)
+        assertEquals(0, jobResponse.withUnverifiedUrlResources)
         assertTrue(jobResponse.success)
     }
 
@@ -80,8 +82,10 @@ internal class ResourcePictureUrlUpdateJobTest {
 
         // THEN
         assertEquals(resource.pictureFileUrl, unverifiedFolderPictures[resource.word])
-        assertEquals(0, jobResponse.inDefaultFolderPicturesCount)
+        assertEquals(1, jobResponse.inDefaultFolderPicturesCount)
         assertEquals(1, jobResponse.inUnverifiedFolderPicturesCount)
+        assertEquals(0, jobResponse.withCorrectDefaultUrlResources)
+        assertEquals(1, jobResponse.withUnverifiedUrlResources)
         assertTrue(jobResponse.success)
     }
 
@@ -124,9 +128,11 @@ internal class ResourcePictureUrlUpdateJobTest {
 
         // THEN
         assertTrue(resource.pictureFileUrl!!.isEmpty())
-        assertEquals(0, jobResponse.inDefaultFolderPicturesCount)
-        assertEquals(0, jobResponse.inUnverifiedFolderPicturesCount)
-        assertEquals(1, jobResponse.notFoundPictureForWordCount)
+        assertEquals(1, jobResponse.inDefaultFolderPicturesCount)
+        assertEquals(1, jobResponse.inUnverifiedFolderPicturesCount)
+        assertEquals(0, jobResponse.withUnverifiedUrlResources)
+        assertEquals(0, jobResponse.withCorrectDefaultUrlResources)
+        assertEquals(1, jobResponse.withoutPicturesResources)
         assertTrue(jobResponse.success)
     }
 

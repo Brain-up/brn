@@ -30,6 +30,6 @@ class UnverifiedPicturesClearJob(private val cloudService: CloudService) {
             .map { unverifiedPicturesPath.plus(it) }
 
         cloudService.deleteFiles(fileNamesToDelete)
-        log.info("Files are deleted from \"$unverifiedPicturesPath\"")
+        log.info("Files ${fileNamesToDelete.size} are deleted from \"$unverifiedPicturesPath\"")
     }
 }
