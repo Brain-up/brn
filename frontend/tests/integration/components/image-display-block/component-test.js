@@ -28,8 +28,8 @@ module('Integration | Component | image-display-block', function (hooks) {
       'shows a given label',
     );
     assert.equal(
-      pageObject.imageAttribute.split(' ').join(''),
-      '--word-picture-url:url(\\/pictures\\/вить\\.jpg);',
+      pageObject.imageAttribute,
+      '--word-picture-url: url(/pictures/вить.jpg);',
       'has a right image variable',
     );
   });
