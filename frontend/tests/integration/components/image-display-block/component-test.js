@@ -12,7 +12,6 @@ module('Integration | Component | image-display-block', function (hooks) {
     this.set('label', 'вить');
 
     const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
-
     controller.set('model', {
       shouldBeWithPictures: true,
     });
