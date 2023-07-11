@@ -192,7 +192,7 @@
     "firebase": "^8.10.0",
     "idle-js": "^1.2.0",
     "luxon": "^1.28.1",
-    "patch-package": "6.4.7",
+    "patch-package": "7.0.1",
     "postinstall-postinstall": "^2.1.0",
     "stylelint": "^13.6.1",
     "stylelint-config-recommended": "^3.0.0",
