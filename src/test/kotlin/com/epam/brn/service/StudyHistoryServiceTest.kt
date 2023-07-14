@@ -3,8 +3,8 @@ package com.epam.brn.service
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
-import com.epam.brn.model.Exercise
 import com.epam.brn.enums.BrnGender
+import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
@@ -23,6 +23,9 @@ import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryServiceTest {
@@ -143,7 +146,7 @@ internal class StudyHistoryServiceTest {
         val historiesForCurrentUser = studyHistoryService.getHistoriesForCurrentUser(fromMock, toMock)
 
         // THEN
-        historiesForCurrentUser shouldBe(expectedStudyHistoryDto)
+        historiesForCurrentUser shouldBe (expectedStudyHistoryDto)
     }
 
     @Test
@@ -173,7 +176,7 @@ internal class StudyHistoryServiceTest {
         val monthHistoriesForCurrentUser = studyHistoryService.getMonthHistoriesForCurrentUser(1, 1)
 
         // THEN
-        monthHistoriesForCurrentUser shouldBe(expectedStudyHistoryDto)
+        monthHistoriesForCurrentUser shouldBe (expectedStudyHistoryDto)
     }
 
     @Test
@@ -192,7 +195,7 @@ internal class StudyHistoryServiceTest {
     }
 
     @Test
-    fun `getDailyStatistics should return statistic for day`() {
+    fun `getDailyStatistics should return statistics for day`() {
         // GIVEN
         val userId = 1L
         val exerciseDate = LocalDateTime.now()
@@ -206,6 +209,7 @@ internal class StudyHistoryServiceTest {
         every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
+        every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
         every {
@@ -219,14 +223,15 @@ internal class StudyHistoryServiceTest {
             repeatedExercises = 0,
             doneExercisesSuccessfullyFromFirstTime = 1,
             listenWordsCount = listenWordsCount,
+            duration = 60.toDuration(DurationUnit.MINUTES)
         )
 
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)
-        val statistic = statisticsForPeriod.first()
+        val statistics = statisticsForPeriod.first()
 
         // THEN
-        assertEquals(expectedStatistic, statistic)
+        assertEquals(expectedStatistic, statistics)
     }
 
     @Test
@@ -246,6 +251,7 @@ internal class StudyHistoryServiceTest {
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { userAccountServiceMock.getCurrentUserDto().id } returns userId
+        every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
         every {
@@ -259,6 +265,7 @@ internal class StudyHistoryServiceTest {
             repeatedExercises = repeatedExercises,
             doneExercisesSuccessfullyFromFirstTime = 1,
             listenWordsCount = listenWordsCount,
+            duration = 60.toDuration(DurationUnit.MINUTES)
         )
 
         // WHEN
@@ -284,7 +291,7 @@ internal class StudyHistoryServiceTest {
         every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
-
+        every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
         val userDailyDetailStatistics = listOf(studyHistoryMockK, studyHistoryMockK)
         every {
             studyHistoryRepositoryMock.getHistories(userId, any(), any())
@@ -297,6 +304,7 @@ internal class StudyHistoryServiceTest {
             repeatedExercises = userDailyDetailStatistics.size,
             doneExercisesSuccessfullyFromFirstTime = 0,
             listenWordsCount = userDailyDetailStatistics.size * listenWordsCount,
+            duration = 120.toDuration(DurationUnit.MINUTES)
         )
 
         // WHEN
@@ -317,14 +325,17 @@ internal class StudyHistoryServiceTest {
         val exerciseId = 1L
         val seriesName = "seriesName"
         val listenWordsCount = 15
+        val spentTimeInSeconds1 = 4515L
 
         val seriesId2 = 2L
         val exerciseId2 = 10L
         val seriesName2 = "seriesName2"
         val listenWordsCount2 = 5
+        val spentTimeInSeconds2 = 1931L
 
         val exerciseId3 = 5L
         val listenWordsCount3 = 10
+        val spentTimeInSeconds3 = 3600L
 
         val studyHistoryMockK = mockk<StudyHistory>()
         every { studyHistoryMockK.exercise.subGroup!!.series.name }.returnsMany(
@@ -346,6 +357,11 @@ internal class StudyHistoryServiceTest {
             listenWordsCount3.toShort(),
             listenWordsCount2.toShort()
         )
+        every { studyHistoryMockK.spentTimeInSeconds }.returnsMany(
+            spentTimeInSeconds1,
+            spentTimeInSeconds2,
+            spentTimeInSeconds3
+        )
 
         val userDailyDetailStatistics = listOf(
             studyHistoryMockK,
@@ -364,6 +380,7 @@ internal class StudyHistoryServiceTest {
             repeatedExercises = 0,
             doneExercisesSuccessfullyFromFirstTime = 1,
             listenWordsCount = listenWordsCount,
+            duration = Duration.parse("75m 15s")
         )
 
         val expectedStatistic2 = UserDailyDetailStatisticsDto(
@@ -373,6 +390,7 @@ internal class StudyHistoryServiceTest {
             repeatedExercises = 2,
             doneExercisesSuccessfullyFromFirstTime = 1,
             listenWordsCount = 2 * listenWordsCount2 + listenWordsCount3,
+            duration = Duration.parse("152m 11s")
         )
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)
