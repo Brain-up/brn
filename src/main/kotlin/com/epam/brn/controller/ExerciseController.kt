@@ -1,13 +1,13 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.request.ExerciseRequest
 import com.epam.brn.dto.request.exercise.ExerciseCreateDto
-import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.dto.response.BrnResponse
+import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.RoleService
 import com.epam.brn.upload.CsvUploadService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -75,7 +75,7 @@ class ExerciseController(
 
     @GetMapping(value = ["/byWord"])
     @Operation(summary = "Get exercises containing specified word")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun getExercisesByWord(
         @RequestParam(
             value = "word",
