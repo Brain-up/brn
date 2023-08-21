@@ -30,7 +30,7 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "billboard.js": "^3.0.3",
     "dayjs": "^1.10.4",
-    "firebase": "^8.10.0",
+    "firebase": "^10.2.0",
     "fp-ts": "^2.5.3",
     "http-status-codes": "^2.1.4",
     "rxjs": "~6.5.4",
