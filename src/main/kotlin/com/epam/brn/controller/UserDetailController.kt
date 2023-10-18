@@ -1,9 +1,9 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.HeadphonesDto
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.BrnResponse
-import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
@@ -39,7 +39,7 @@ class UserDetailController(
 ) {
     @GetMapping
     @Operation(summary = "Get all users with/without analytic data")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun getUsers(
         @RequestParam("withAnalytics", defaultValue = "false") withAnalytics: Boolean,
         @RequestParam("role", defaultValue = "USER") role: String,
@@ -52,7 +52,7 @@ class UserDetailController(
 
     @GetMapping(value = ["/{userId}"])
     @Operation(summary = "Get user by id")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun findUserById(@PathVariable("userId") id: Long): ResponseEntity<BrnResponse<List<UserAccountDto>>> {
         return ResponseEntity.ok()
             .body(BrnResponse(data = listOf(userAccountService.findUserDtoById(id))))
@@ -102,7 +102,7 @@ class UserDetailController(
 
     @GetMapping(value = ["/{userId}/headphones"])
     @Operation(summary = "Get all user's headphones")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun getAllHeadphonesForUser(
         @PathVariable("userId", required = true) userId: Long
     ) = ResponseEntity

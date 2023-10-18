@@ -35,7 +35,7 @@ class CloudController(
 
     @GetMapping("/upload")
     @Operation(summary = "Get cloud upload form")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Throws(Exception::class)
     fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BrnResponse<Map<String, Any>>> {
         if (filePath.isNullOrEmpty())
@@ -58,7 +58,7 @@ class CloudController(
 
     @GetMapping("/folders")
     @Operation(summary = "Get cloud folder structure")
-    @RolesAllowed(BrnRole.ADMIN)
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Throws(Exception::class)
     fun listBucket(): ResponseEntity<BrnResponse<List<String>>> =
         ResponseEntity.ok(BrnResponse(cloudService.getStorageFolders()))
