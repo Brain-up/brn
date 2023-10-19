@@ -28,8 +28,8 @@ internal class UnverifiedPicturesClearJobTest {
         ReflectionTestUtils.setField(unverifiedPicturesClearJob, "unverifiedPicturesPath", "unverifiedPicturesPath")
         val capturedFileNames = slot<List<String>>()
 
-        every { cloudService.getFileNames("defaultPicturesPath") } returns listOf("/file1.png", "/file2.png")
-        every { cloudService.getFileNames("unverifiedPicturesPath") } returns listOf("/file2.png", "/file3.png")
+        every { cloudService.getFileNames("defaultPicturesPath") } returns listOf("/file1.png", "/file2.png", "/")
+        every { cloudService.getFileNames("unverifiedPicturesPath") } returns listOf("/file2.png", "/file3.png", "/")
         every { cloudService.deleteFiles(capture(capturedFileNames)) } just Runs
 
         // WHEN
