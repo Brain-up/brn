@@ -45,6 +45,8 @@ data class UserAccount(
     @LastModifiedBy
     @Column(name = "changed_by")
     var changedBy: String = "",
+    @Column(name = "last_visit")
+    var lastVisit: LocalDateTime? = null,
     var avatar: String? = null,
     var photo: String? = null,
     var description: String? = null,
@@ -53,7 +55,6 @@ data class UserAccount(
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var headphones: MutableSet<Headphones> = hashSetOf()
 ) {
-    var lastVisit: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
     var password: String? = null
 
     @Column(name = "is_firebase_error")
