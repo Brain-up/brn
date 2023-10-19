@@ -16,6 +16,7 @@ data class UserAccountDto(
     var active: Boolean = true,
     val created: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
     val changed: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC),
+    val lastVisit: LocalDateTime? = null,
     var avatar: String? = null,
     val photo: String? = null,
     val description: String? = null,

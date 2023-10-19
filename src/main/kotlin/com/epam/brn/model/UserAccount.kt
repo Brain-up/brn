@@ -83,6 +83,7 @@ data class UserAccount(
         gender = gender?.let { BrnGender.valueOf(it) },
         created = created,
         changed = changed,
+        lastVisit = lastVisit,
         avatar = avatar,
         photo = photo,
         description = description,
