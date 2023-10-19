@@ -1,5 +1,7 @@
 package com.epam.brn.dto.statistic
 
+import kotlin.time.Duration
+
 data class UserDailyDetailStatisticsDto(
 
     /** Name of series */
@@ -18,5 +20,8 @@ data class UserDailyDetailStatisticsDto(
     val doneExercisesSuccessfullyFromFirstTime: Int,
 
     /** Count listened words in a day */
-    val listenWordsCount: Int
+    val listenWordsCount: Int,
+
+    /** Estimated minutes */
+    val duration: Duration
 )

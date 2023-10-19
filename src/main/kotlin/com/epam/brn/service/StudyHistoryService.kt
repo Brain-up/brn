@@ -9,6 +9,8 @@ import com.epam.brn.repo.StudyHistoryRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 @Service
 class StudyHistoryService(
@@ -89,13 +91,15 @@ class StudyHistoryService(
                     val doneExercisesSuccessfullyFromFirstTime = studyHistoryByExercise
                         .count { it.value.size == 1 }
                     val listenWordsCount = histories.sumOf { it.tasksCount.toInt() }
+                    val seconds = histories.sumOf { it.spentTimeInSeconds ?: 0L }
                     val userDailyDetailStatisticsDto = UserDailyDetailStatisticsDto(
                         seriesName = seriesName,
                         allDoneExercises = allDoneExercisesCount,
                         uniqueDoneExercises = uniqueDoneExercisesCount,
                         doneExercisesSuccessfullyFromFirstTime = doneExercisesSuccessfullyFromFirstTime,
                         repeatedExercises = allDoneExercisesCount - doneExercisesSuccessfullyFromFirstTime,
-                        listenWordsCount = listenWordsCount
+                        listenWordsCount = listenWordsCount,
+                        duration = (seconds.toDouble() / 60).toDuration(DurationUnit.MINUTES)
                     )
                     result.add(userDailyDetailStatisticsDto)
                 }
