@@ -9,7 +9,7 @@ jobs:
   build_and_publish_backend:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@master
     - name: Publish to Registry brainup/brn-backend
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -19,7 +19,7 @@ jobs:
   build_and_publish_frontend:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@master
     - name: Publish to Registry brainup/brn-frontend
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -30,7 +30,7 @@ jobs:
   build_and_publish_frontend_with_tls:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@master
     - name: Publish to Registry brainup/brn-frontend-with-tls
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -46,7 +46,7 @@ jobs:
         # runners: [ epam, vscale ]
         runners: [ vscale ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@master
       - name: Configure secrets
         run: |
           echo "$S3_KEY"|base64 -d > aws-key.properties

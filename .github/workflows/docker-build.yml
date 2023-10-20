@@ -6,7 +6,7 @@ jobs:
   build_backend:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@master
     - name: Build the Docker image for backend
       run: docker build . --file Dockerfile --tag brainup/brn-backend
     - name: List of docker images
@@ -14,7 +14,7 @@ jobs:
   build_frontend:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@master
     - name: Build the Docker image for frontent
       run: docker build . --file Dockerfile_frontend --tag brainup/brn-frontend
     - name: List of docker images
