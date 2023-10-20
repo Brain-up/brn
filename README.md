@@ -35,7 +35,7 @@ Most importantly being an open source project you can show your work in it to an
 6. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
 7. Paintest: for creation pictures for exercises. 
 8. Sign language specialist to create/improve content.
-9. QA engeniers. 
+9. QA engineers. 
 
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
@@ -47,7 +47,7 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 
 ## HOW TO JOIN?
 You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) https://t.me/ElenaLovesSpb
-or to project emaeil [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
+or to project email [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
 Also we have project team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
 Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 
@@ -141,7 +141,7 @@ docker stop idContainer # for stop running container
 docker rm $(docker ps -a -q) # Remove all stopped containers
 ```
 ## Development tips:
-1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you choosed and discused it with @ElenaSpb, send your githubnick to her.
+1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you chose and discussed it with @ElenaSpb, send your githubnick to her.
 2. Create branch from dev with the codename of your task, i.e. #GitHub_TaskNumber#.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards.
 4. Create pull request with task name and description about what was done. 
@@ -171,8 +171,8 @@ Use format '#GitHub_TaskNumber-# issue description' or 'Merge description'. Issu
 
 ### Sonar:
 1. https://sonarcloud.io/code?id=Brain-up_brn our project sonar cloud.
-2. To view test coveradge locally  
- 2.1 use jacoco gradle task locally `jacocoTestReport` 
+2. To view test coverage locally  
+ 2.1 use jacoco gradle task locally `jacocoTestReport`  
  2.2 command line: `gradle jacocoTestReport`
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
@@ -180,10 +180,10 @@ Use format '#GitHub_TaskNumber-# issue description' or 'Merge description'. Issu
 - EPAM for Jira/Confluence, test instance and Jenkins, for contribution support program.
 - JetBrains for IDEA licenses
 - Selectel for public instance
-- GitHub for code place and actions where we run CICD
+- GitHub for code place and actions where we run CI/CD
 - Yandex for Yandex Speech Kit service and free account to use it
 
-### Thanks all volunteerы for contribution!
+### Thanks all volunteers for contribution!
 
 ### License
 CC0 1.0 Universal https://joinup.ec.europa.eu/licence/cc0-10-universal-cc0-10-public-domain-dedication  
