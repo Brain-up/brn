@@ -69,17 +69,15 @@ class UserAccountServiceImpl(
             .toSet()
 
     override fun getCurrentUser(): UserAccount {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val email = authentication.name ?: getNameFromPrincipals(authentication)
+        val email = getCurrentUserEmail()
         return userAccountRepository.findUserAccountByEmail(email)
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
     override fun markVisitForCurrentUser() {
-        getCurrentUser().let {
-            it.lastVisit = timeService.now()
-            userAccountRepository.save(it)
-        }
+        val email = getCurrentUserEmail()
+        val lastVisit = timeService.now()
+        return userAccountRepository.updateLastVisitByEmail(email, lastVisit)
     }
 
     override fun getCurrentUserDto(): UserAccountDto =
@@ -156,6 +154,11 @@ class UserAccountServiceImpl(
         this.photo = changeRequest.photo ?: photo
         this.description = changeRequest.description ?: description
         return this
+    }
+
+    private fun getCurrentUserEmail(): String {
+        val authentication = SecurityContextHolder.getContext().authentication
+        return authentication.name ?: getNameFromPrincipals(authentication)
     }
 
     private fun getNameFromPrincipals(authentication: Authentication): String {

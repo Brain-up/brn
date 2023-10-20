@@ -15,11 +15,13 @@ import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.google.firebase.auth.UserRecord
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockkClass
+import io.mockk.just
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -301,39 +303,22 @@ internal class UserAccountServiceTest {
         }
 
         @Test
-        fun `should mark visit current session user`() {
+        fun `should mark visit for current session user`() {
             // GIVEN
             val email = "test@test.ru"
-            val userAccount = UserAccount(
-                id = 1L,
-                fullName = "testUserFirstName",
-                email = email,
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                changed = LocalDateTime.now().minusMinutes(5),
-                avatar = null
-            )
-            val userAccountUpdated = userAccount.copy()
             val now = LocalDateTime.now(ZoneOffset.UTC)
-            userAccountUpdated.lastVisit = now
-            val userArgumentCaptor = slot<UserAccount>()
 
             SecurityContextHolder.setContext(securityContext)
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
-            every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
-            every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             every { timeService.now() } returns now
+            every { userAccountRepository.updateLastVisitByEmail(email, now) } just Runs
+
             // WHEN
             userAccountService.markVisitForCurrentUser()
+
             // THEN
-            verify { userAccountRepository.findUserAccountByEmail(email) }
-            verify { userAccountRepository.save(userArgumentCaptor.captured) }
-            val userForSave = userArgumentCaptor.captured
-            assertThat(userForSave.lastVisit).isEqualTo(now)
-            assertThat(userForSave.id).isEqualTo(userAccount.id)
-            assertThat(userForSave.fullName).isEqualTo(userAccount.fullName)
+            verify { userAccountRepository.updateLastVisitByEmail(email, now) }
         }
     }
 
