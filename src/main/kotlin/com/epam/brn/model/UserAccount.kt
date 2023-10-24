@@ -83,7 +83,6 @@ data class UserAccount(
         gender = gender?.let { BrnGender.valueOf(it) },
         created = created,
         changed = changed,
-        lastVisit = lastVisit ?: created,
         avatar = avatar,
         photo = photo,
         description = description,
@@ -105,6 +104,7 @@ data class UserAccount(
         email = email,
         bornYear = bornYear,
         gender = gender?.let { BrnGender.valueOf(it) },
+        lastVisit = lastVisit ?: created,
     )
 
     override fun equals(other: Any?): Boolean {

@@ -18,7 +18,7 @@ import { getRandomString } from '@shared/helpers/get-random-string';
 
 export class AdminApiServiceFake
   implements Pick<AdminApiService,
-    'getUserWeeklyStatistics' | 'getUserYearlyStatistics' | 'getUserDailyDetailStatistics' | 'getUsers' | 'getUserDailyDetailStatistics'> {
+    'getUserWeeklyStatistics' | 'getUserYearlyStatistics' | 'getUsers' | 'getUserDailyDetailStatistics'> {
   private readonly options: IOptions = {};
 
   constructor(o?: IOptions) {
@@ -94,6 +94,7 @@ export class AdminApiServiceFake
         Date.now() - getRandomIntInclusive(0, 365 * 24 * 60 * 60 * 1000),
       ).toISOString();
       const lastDone = dayjs(firstDone).add(1, 'month').toISOString();
+      const lastVisit = dayjs(lastDone).add(1, 'day').toISOString();
 
       const lastWeek: number[] = [];
       for (let dayNumber = 0; dayNumber < DAYS_IN_WEEK; dayNumber++) {
@@ -126,6 +127,7 @@ export class AdminApiServiceFake
         userId: '1234',
         spentTime: 10,
         doneExercises: 2,
+        lastVisit,
       });
     }
 

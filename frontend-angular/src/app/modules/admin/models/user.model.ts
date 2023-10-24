@@ -22,6 +22,7 @@ export interface User {
   spentTime: number;
   studyDaysInCurrentMonth: number;
   userId: string;
+  lastVisit: string;
 }
 
 export interface UserMapped extends User {
