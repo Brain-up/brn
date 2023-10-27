@@ -11,6 +11,7 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.HeadphonesService
 import com.epam.brn.service.RoleService
+import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.UserRecord
 import org.springframework.data.domain.Pageable
@@ -24,7 +25,8 @@ import java.security.Principal
 class UserAccountServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val roleService: RoleService,
-    private val headphonesService: HeadphonesService
+    private val headphonesService: HeadphonesService,
+    private val timeService: TimeService
 ) : UserAccountService {
 
     override fun findUserByEmail(email: String): UserAccountDto =
@@ -71,6 +73,13 @@ class UserAccountServiceImpl(
         val email = authentication.name ?: getNameFromPrincipals(authentication)
         return userAccountRepository.findUserAccountByEmail(email)
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
+    }
+
+    override fun markVisitForCurrentUser() {
+        getCurrentUser().let {
+            it.lastVisit = timeService.now()
+            userAccountRepository.save(it)
+        }
     }
 
     override fun getCurrentUserDto(): UserAccountDto =

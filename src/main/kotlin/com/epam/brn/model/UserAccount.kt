@@ -53,6 +53,7 @@ data class UserAccount(
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var headphones: MutableSet<Headphones> = hashSetOf()
 ) {
+    var lastVisit: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
     var password: String? = null
 
     @Column(name = "is_firebase_error")
