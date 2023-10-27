@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Contributor } from '@admin/models/contrubutor.model';
+import { Contributor, UploadContributorImage } from '@admin/models/contrubutor.model';
 import { Observable } from 'rxjs';
 import { GetContributors } from '@admin/models/endpoints.model';
 import { map, pluck } from 'rxjs/operators';
@@ -25,7 +25,7 @@ export class ContributorApiService {
   public createContributor(
     payload: Contributor
   ): Observable<Contributor> {
-     return this.httpClient.post<Contributor>(
+    return this.httpClient.post<Contributor>(
       '/api/contributors',
       payload
     );
@@ -37,6 +37,15 @@ export class ContributorApiService {
   ): Observable<Contributor> {
     return this.httpClient.put<Contributor>(
       `/api/contributors/${contributorId}`,
+      payload
+    );
+  }
+
+  public uploadContributorImage(
+    payload: FormData
+  ): Observable<UploadContributorImage> {
+    return this.httpClient.post<UploadContributorImage>(
+      '/api/cloud/upload/contributor/picture',
       payload
     );
   }

@@ -18,6 +18,16 @@ export interface Contributor {
   pictureUrl: string;
   type: string;
 }
+
+export interface UploadContributorImage {
+  data: string;
+  errors: Array<{}>;
+  meta: Array<{}>;
+}
+
 export const contributorTypes = ['DEVELOPER', 'SPECIALIST', 'DESIGNER', 'QA', 'OTHER'];
+
+
+
 
 
