@@ -1,6 +1,7 @@
 package com.epam.brn.config
 
 import com.epam.brn.auth.filter.FirebaseTokenAuthenticationFilter
+import com.epam.brn.auth.filter.RememberLastVisitFilter
 import com.epam.brn.enums.BrnRole
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,7 +22,8 @@ import javax.servlet.http.HttpServletResponse
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 class WebSecurityBasicConfiguration(
-    private val firebaseTokenAuthenticationFilter: FirebaseTokenAuthenticationFilter
+    private val firebaseTokenAuthenticationFilter: FirebaseTokenAuthenticationFilter,
+    private val rememberLastVisitFilter: RememberLastVisitFilter,
 ) : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
@@ -32,6 +34,7 @@ class WebSecurityBasicConfiguration(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilterBefore(firebaseTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterAfter(rememberLastVisitFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
             .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**").hasRole(BrnRole.ADMIN)
             .and()

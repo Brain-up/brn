@@ -11,6 +11,7 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.HeadphonesService
 import com.epam.brn.service.RoleService
+import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.UserRecord
 import org.springframework.data.domain.Pageable
@@ -24,7 +25,8 @@ import java.security.Principal
 class UserAccountServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val roleService: RoleService,
-    private val headphonesService: HeadphonesService
+    private val headphonesService: HeadphonesService,
+    private val timeService: TimeService
 ) : UserAccountService {
 
     override fun findUserByEmail(email: String): UserAccountDto =
@@ -67,10 +69,15 @@ class UserAccountServiceImpl(
             .toSet()
 
     override fun getCurrentUser(): UserAccount {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val email = authentication.name ?: getNameFromPrincipals(authentication)
+        val email = getCurrentUserEmail()
         return userAccountRepository.findUserAccountByEmail(email)
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
+    }
+
+    override fun markVisitForCurrentUser() {
+        val email = getCurrentUserEmail()
+        val lastVisit = timeService.now()
+        return userAccountRepository.updateLastVisitByEmail(email, lastVisit)
     }
 
     override fun getCurrentUserDto(): UserAccountDto =
@@ -147,6 +154,11 @@ class UserAccountServiceImpl(
         this.photo = changeRequest.photo ?: photo
         this.description = changeRequest.description ?: description
         return this
+    }
+
+    private fun getCurrentUserEmail(): String {
+        val authentication = SecurityContextHolder.getContext().authentication
+        return authentication.name ?: getNameFromPrincipals(authentication)
     }
 
     private fun getNameFromPrincipals(authentication: Authentication): String {

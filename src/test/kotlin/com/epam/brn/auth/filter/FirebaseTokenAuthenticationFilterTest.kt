@@ -85,8 +85,10 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { brainUpUserDetailsService.loadUserByUsername(email) } returns customUserDetailsMock
+
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
+
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
         assertNotNull(authentication)
@@ -127,6 +129,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
+
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
         assertNotNull(authentication)
@@ -151,9 +154,16 @@ internal class FirebaseTokenAuthenticationFilterTest {
         val filterChain = FilterChain { _, _ -> }
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
-        every { firebaseAuth.verifyIdToken(tokenMock, true) } throws (FirebaseAuthException(FirebaseException(ErrorCode.INVALID_ARGUMENT, "Token invalid", null)))
+        every {
+            firebaseAuth.verifyIdToken(
+                tokenMock,
+                true
+            )
+        } throws (FirebaseAuthException(FirebaseException(ErrorCode.INVALID_ARGUMENT, "Token invalid", null)))
+
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
+
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
         assertNull(authentication)
@@ -176,8 +186,10 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
         every { firebaseAuth.verifyIdToken(tokenMock, true) } throws (IllegalArgumentException())
+
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
+
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
         assertNull(authentication)
@@ -208,6 +220,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
+
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
         assertNull(authentication)

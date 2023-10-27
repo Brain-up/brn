@@ -34,4 +34,6 @@ interface UserAccountService {
     fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount
     fun removeDoctorFromPatient(userId: Long): UserAccount
     fun getPatientsForDoctor(doctorId: Long): List<UserAccountDto>
+
+    fun markVisitForCurrentUser()
 }
