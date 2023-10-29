@@ -156,7 +156,8 @@
               "Type": "Type",
               "Company": "Company",
               "Contact": "Contact",
-              "Contribution": "Contribution"
+              "Contribution": "Contribution",
+              "Active":"Active/Inactive"
             }
           }
         },
