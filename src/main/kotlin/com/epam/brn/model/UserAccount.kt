@@ -45,6 +45,8 @@ data class UserAccount(
     @LastModifiedBy
     @Column(name = "changed_by")
     var changedBy: String = "",
+    @Column(name = "last_visit")
+    var lastVisit: LocalDateTime? = null,
     var avatar: String? = null,
     var photo: String? = null,
     var description: String? = null,
@@ -102,6 +104,7 @@ data class UserAccount(
         email = email,
         bornYear = bornYear,
         gender = gender?.let { BrnGender.valueOf(it) },
+        lastVisit = lastVisit ?: created,
     )
 
     override fun equals(other: Any?): Boolean {

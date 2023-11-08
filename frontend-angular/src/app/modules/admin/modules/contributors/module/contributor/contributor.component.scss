@@ -1,6 +1,11 @@
 @import 'colors.scss';
 @import 'variables.scss';
 
+.show-error {
+  color: red;
+  text-align: center
+}
+
 .container {
   max-width: 900px;
   margin: auto;
@@ -50,6 +55,10 @@ button.load {
 mat-icon {
   width: 80px;
   height: 80px;
+}
+
+.file-input {
+  display: none;
 }
 
 label, .avatar-label {

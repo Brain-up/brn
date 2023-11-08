@@ -15,11 +15,13 @@ import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.google.firebase.auth.UserRecord
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockkClass
+import io.mockk.just
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
@@ -33,6 +35,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Optional
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -77,6 +80,9 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var pageable: Pageable
+
+    @MockK
+    lateinit var timeService: TimeService
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -294,6 +300,25 @@ internal class UserAccountServiceTest {
             assertThat(userForSave.description).isEqualTo(description)
             assertThat(userForSave.fullName).isEqualTo("newName")
             assertThat(userForSave.id).isEqualTo(userAccount.id)
+        }
+
+        @Test
+        fun `should mark visit for current session user`() {
+            // GIVEN
+            val email = "test@test.ru"
+            val now = LocalDateTime.now(ZoneOffset.UTC)
+
+            SecurityContextHolder.setContext(securityContext)
+            every { securityContext.authentication } returns authentication
+            every { authentication.name } returns email
+            every { timeService.now() } returns now
+            every { userAccountRepository.updateLastVisitByEmail(email, now) } just Runs
+
+            // WHEN
+            userAccountService.markVisitForCurrentUser()
+
+            // THEN
+            verify { userAccountRepository.updateLastVisitByEmail(email, now) }
         }
     }
 

@@ -28,6 +28,7 @@ export class ContributorsComponent implements OnInit, OnDestroy {
     'company',
     'contacts',
     'contribution',
+    'active'
   ];
   public readonly isLoading$ = new BehaviorSubject(true);
   public contributorsList: Contributor[];
