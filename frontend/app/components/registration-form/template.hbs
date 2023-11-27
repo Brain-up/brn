@@ -42,6 +42,7 @@
           @placeholder={{t "registration_form.birthday_placeholder"}}
           @model={{this}}
           @name="birthday"
+          {{on "keydown" this.setBirthday}}
         />
       </div>
       <div class="mb-4">
