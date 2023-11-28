@@ -11,6 +11,9 @@ Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
 Product Vision https://github.com/Brain-up/brn/wiki/Product-Vision.
 
 ## SCIENTIFIC SOURCES
+
+
+fffff
 - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit
 - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/
 
