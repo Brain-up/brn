@@ -50,6 +50,7 @@
         minlength="4"
         maxlength="4"
         pattern="[0-9]{4}"
+        {{on "keydown" this.setBirthday}}
         {{on "change" (fn this.onInput "birthday")}}
         @warning={{this.warningErrorDate}}
         @model={{this.user}}

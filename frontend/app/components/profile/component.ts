@@ -117,4 +117,21 @@ export default class ProfileComponent extends Component {
       });
     }
   }
+
+  @action 
+  setBirthday(e: Event) {
+      const key = e.key;
+      const allowedKeys = [
+        'Backspace',
+        'Delete',
+        'Tab',
+        'Enter',
+        'ArrowLeft',
+        'ArrowRight',
+      ];
+      const isValid = allowedKeys.includes(key) || !isNaN(key as any);
+      if (!isValid) {
+        e.preventDefault();
+      }
+  }
 }

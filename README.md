@@ -17,8 +17,8 @@ fffff
 - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit
 - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/
 
-## Published ARTICLES about our project
-- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english)
+## Published ARTICLES about our project 
+- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english) will be fixed soon
 - https://wearecommunity.io/communities/community-platform/articles/753 01.12.2020 russian 
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
@@ -60,7 +60,7 @@ Project on epam plus (for Epamers only): https://plus.epam.com/projects/115
 https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview
 (https://github.com/Brain-up/brn/wiki)
 ### RoadMap: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap
-### Product Vision: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision
+### Product Vision: https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision (https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision)
 
 ### Jira
 https://awclub.atlassian.net/jira/software/c/projects/EPMLABSBRN/issues
