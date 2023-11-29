@@ -70,7 +70,7 @@ class InitialDataLoader(
     }
 
     fun getSourceFiles(): List<String> {
-        var profile: String = environment.activeProfiles[0].lowercase()
+        val profile: String = environment.activeProfiles[0].lowercase()
         val subFolder = if (profile == "dev") "dev/" else ""
         return listOf(
             "groups_.csv",
@@ -103,14 +103,27 @@ class InitialDataLoader(
             val specialistRole =
                 roleService.save(Role(name = BrnRole.SPECIALIST))
             val admin = addAdminUser(setOf(adminRole, userRole, specialistRole))
-            val listOfUsers = mutableListOf(admin)
-            listOfUsers.addAll(addDefaultUsers(userRole))
+            val firstUser = createUser("Name1", "default@default.ru", setOf(userRole))
+            val secondUser = createUser("Name2", "default2@default.ru", setOf(userRole, specialistRole))
+            val autoTestUser = createUser("autoTestUser", AUTO_TEST_USER_EMAIL, setOf(userRole))
+            val autoTestSpecialist =
+                createUser("autoTestSpecialist", AUTO_TEST_SPECIALIST_EMAIL, setOf(userRole, specialistRole))
+            val listOfUsers = mutableListOf(admin, firstUser, secondUser, autoTestUser, autoTestSpecialist)
             userAccountRepository.saveAll(listOfUsers)
+        } else {
+            try {
+                roleService.findByName(BrnRole.SPECIALIST)
+            } catch (e: EntityNotFoundException) {
+                roleService.save(Role(name = BrnRole.SPECIALIST))
+            }
         }
-        try {
-            roleService.findByName(BrnRole.SPECIALIST)
-        } catch (e: EntityNotFoundException) {
-            roleService.save(Role(name = BrnRole.SPECIALIST))
+        if (userAccountRepository.findUserAccountByEmail(AUTO_TEST_USER_EMAIL).isEmpty) {
+            val userRole = roleService.findByName(BrnRole.USER)
+            val specialistRole = roleService.findByName(BrnRole.SPECIALIST)
+            val autoTestUser = createUser("autoTestUser", AUTO_TEST_USER_EMAIL, setOf(userRole))
+            val autoTestSpecialist =
+                createUser("autoTestSpecialist", AUTO_TEST_SPECIALIST_EMAIL, setOf(userRole, specialistRole))
+            userAccountRepository.saveAll(listOf(autoTestUser, autoTestSpecialist))
         }
         addAdminAllRoles()
         audiometryLoader.loadInitialAudiometricsWithTasks()
@@ -185,31 +198,24 @@ class InitialDataLoader(
         return userAccount
     }
 
-    private fun addDefaultUsers(userRole: Role): MutableList<UserAccount> {
+    private fun createUser(name: String, email: String, roles: Set<Role>): UserAccount {
         val password = passwordEncoder.encode("password")
-        val firstUser = UserAccount(
-            fullName = "Name1",
-            email = "default@default.ru",
+        val userAccount = UserAccount(
+            fullName = name,
+            email = email,
             active = true,
-            bornYear = 1999,
-            gender = BrnGender.MALE.toString()
+            bornYear = 2000,
+            gender = BrnGender.MALE.toString(),
         )
-        val secondUser = UserAccount(
-            fullName = "Name2",
-            email = "default2@default.ru",
-            active = true,
-            bornYear = 1999,
-            gender = BrnGender.FEMALE.toString()
-        )
-        firstUser.password = password
-        secondUser.password = password
-        firstUser.roleSet.addAll(setOf(userRole))
-        secondUser.roleSet.addAll(setOf(userRole))
-        return mutableListOf(firstUser, secondUser)
+        userAccount.password = password
+        userAccount.roleSet.addAll(roles)
+        return userAccount
     }
 }
 
 const val ADMIN_EMAIL = "admin@admin.com"
+const val AUTO_TEST_USER_EMAIL = "autoTestUser@brainup.spb.ru"
+const val AUTO_TEST_SPECIALIST_EMAIL = "autoTestSpecialist@brainup.spb.ru"
 
 const val SINGLE_SIMPLE_WORDS_FILE_NAME = "series_words_ru"
 const val SINGLE_SIMPLE_WORDS_EN_FILE_NAME = "series_words_en"
