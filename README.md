@@ -52,7 +52,7 @@ or to project email [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) 
 Also we have project chats:
 dev team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
 QA team Telegram chat: https://t.me/+EJs2EH5mTKs4YWE6
-Autotest Phyton team chat: https://t.me/+Kv0uYVqMwQNkNzRi
+Autotest Python team chat: https://t.me/+Kv0uYVqMwQNkNzRi
 
 # GETTING STARTED!
 ## Resources:
