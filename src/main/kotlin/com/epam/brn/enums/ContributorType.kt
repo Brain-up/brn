@@ -4,6 +4,7 @@ enum class ContributorType {
     DEVELOPER,
     SPECIALIST,
     QA,
+    AUTOTESTER,
     DESIGNER,
     OTHER,
 }
