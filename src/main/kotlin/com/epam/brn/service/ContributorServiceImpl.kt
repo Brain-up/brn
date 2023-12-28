@@ -68,6 +68,10 @@ class ContributorServiceImpl(
             name = gitHubUser.name ?: "gitHubNick:${gitHubUser.login}",
             repositoryName = repositoryName,
             company = gitHubUser.company,
+            type = if (repositoryName == "auto-tests-python")
+                ContributorType.AUTOTESTER
+            else
+                ContributorType.DEVELOPER,
             pictureUrl = gitHubUser.avatarUrl,
             description = gitHubUser.bio
         )
