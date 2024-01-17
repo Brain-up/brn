@@ -133,6 +133,17 @@ avatar_controls:
   submit: Сохранить
   title: Выбор аватара
 
+headphones:
+  form_field_title: Наушники
+  form_field_no_headphones: Наушники не выбраны
+  form_field_select_headphones: Выбрать наушники
+  title: Выбор наушников
+  description: Выберите наушники, в которых вы будете проходить тест
+  no_headphones: Нет наушников, добавьте новые наушники
+  name_placeholder: Новые наушники
+  cancel: Отменить
+  select: Выбрать
+
 contact:
   header: Контакты
   text:
