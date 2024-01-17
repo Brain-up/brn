@@ -12,6 +12,13 @@ import AnswerOption from 'brn/utils/answer-option';
 import SingleSimpleWordTask from 'brn/models/task/single-simple-words';
 export default class SingleSimpleWordsComponent extends Component<SingleSimpleWordTask> {
   @tracked currentAnswer: string[] = [];
+  willDestroy(): void {
+    super.willDestroy();
+    if (this.audio.isPlaying) {
+      this.audio.stop();
+    }
+    document.body.dataset.correctAnswer = '';
+  }
   get audioFileUrl() {
     const task = this.firstUncompletedTask;
     if (!task) {
@@ -21,6 +28,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
       return null;
     }
     const answer = task.answer[0] as AnswerOption;
+    document.body.dataset.correctAnswer = answer.word;
     const useGeneratedUrl =
       this.args.task.usePreGeneratedAudio && answer.audioFileUrl;
     const url = useGeneratedUrl
