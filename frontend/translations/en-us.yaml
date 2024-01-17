@@ -152,9 +152,9 @@ contact:
   for_developers: 'For developers:'
 
 description:
-  header: 'About the ''<span class="text-indigo-600">''Brain-Up''</span>'''
+  header: 'About the ''<span class="text-indigo-600">''BrainUp''</span>'''
   intro:
-    A team of volunteers started to develop the Brain-Up interactive audio exercise platform for people with cognitive speech problems.
+    A team of volunteers started to develop the BrainUp interactive audio exercise platform for people with cognitive speech problems.
     The ability to hear and to understand speech can be significantly improved thanks to these special and regular activities. Welcome!
   context:
     header: Background information
@@ -177,7 +177,7 @@ description:
       3:
         In the history of this draft more than 40 people have taken part in the development of apps from different countries (Russia, Ukraine,
         Belarus, Poland, Netherlands, Mexico) since 2019.
-      4: The working version of the Brain-Up program is already ready, where one can register and practice right now."
+      4: The working version of the BrainUp program is already ready, where one can register and practice right now."
   exercises:
     header: Training plan and exercise program
     us_recomendations:
@@ -265,7 +265,7 @@ description:
     header: With the support
     thanks_words: We would like to thank everyone who participates and supports our project!
   join_us:
-    header: 'Join ''<span class="text-indigo-600">''Brain-Up''</span>''!'
+    header: 'Join ''<span class="text-indigo-600">''BrainUp''</span>''!'
     description: We will be glad to everyone who wants to join and contribute to our project.
     contact:
       start: "If you want to join our team, you can write to our lead Elena Moshnikova: "
