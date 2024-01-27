@@ -8,10 +8,10 @@ import { TaskItem } from 'brn/utils/task-item';
 import { tracked } from '@glimmer/tracking';
 import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
-import AudioService from 'brn/services/audio';
+import type AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
-import WordsSequences from 'brn/models/task/words-sequences';
-import AnswerOption from 'brn/utils/answer-option';
+import type WordsSequences from 'brn/models/task/words-sequences';
+import type AnswerOption from 'brn/utils/answer-option';
 
 function getEmptyTemplate(
   selectedItemsOrder: string[] = [],
@@ -62,8 +62,15 @@ export default class WordsSequencesComponent<
       ({ completedInCurrentCycle }) => completedInCurrentCycle === false,
     );
   }
+  willDestroy(): void {
+    super.willDestroy(...arguments);
+    document.body.dataset.correctAnswer = '';
+  }
   get firstUncompletedTask() {
-    return this.uncompletedTasks.firstObject;
+    const item = this.uncompletedTasks.firstObject;
+    const words = item?.answer.mapBy('word');
+    document.body.dataset.correctAnswer = words?.join(',');
+    return item;
   }
   get audioFiles() {
     if (!this.firstUncompletedTask) {
