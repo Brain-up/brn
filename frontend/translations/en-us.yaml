@@ -312,5 +312,6 @@ contributors:
     DEVELOPER: 'Developers'
     SPECIALIST: 'Specialists'
     QA: 'Quality Assurance'
+    AUTOTESTER: 'Developers in test'
     DESIGNER: 'Designers'
     OTHER: 'Other'
