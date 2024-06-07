@@ -191,7 +191,7 @@ task<Test>("integrationTest") {
     description = "Runs the integration tests on Postgres Test Container."
 }
 
-sonarqube {
+sonar {
     properties {
         // Root project information
         property("sonar.projectKey", "Brain-up_brn")
