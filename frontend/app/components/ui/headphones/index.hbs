@@ -1,0 +1,65 @@
+<div
+  {{did-insert this.loadHeadphones}}
+  class="p-8 relative flex flex-row flex-wrap justify-between
+    {{style-namespace "ui/headphones"}}"
+>
+  <div class="w-full mb-6 font-extrabold text-purple-600">{{t
+      "headphones.title"
+    }}
+  </div>
+  {{#if this.isLoading}}
+    <LoadingSpinner />
+  {{else}}
+    <div class="modal-max-h w-full overflow-y-auto">
+      {{#if this.hasAvailableHeadphonse}}
+        <div class="w-full mb-2 text-sm font-light">{{t
+            "headphones.description"
+          }}</div>
+        {{#each this.availableHeadphones as |headphones|}}
+          <label class="block w-full my-4 text-base cursor-pointer">
+            <input
+              name="headphones"
+              class="w-8 h-8 align-middle"
+              type="radio"
+              value={{headphones.name}}
+              checked={{eq this.selectedHeadphones.id headphones.id}}
+              {{on "change" (fn this.selectHeadphones headphones)}}
+            />
+            {{headphones.name}}
+          </label>
+        {{/each}}
+      {{else}}
+        <p class="text-base">{{t "headphones.no_headphones"}}</p>
+      {{/if}}
+
+      <div class="w-full my-4">
+        <Input
+          type="text"
+          class="focus:outline-none focus:shadow-outline w-full py-2 text-base leading-tight border-b-2 appearance-none"
+          placeholder={{t "headphones.name_placeholder"}}
+          @value={{this.newHeadphonesName}}
+          @enter={{this.addHeadphones}}
+        />
+      </div>
+    </div>
+
+  {{/if}}
+
+  <div class="sm:justify-end flex justify-between w-full mt-8">
+    <Ui::Button
+      data-test-submit-form
+      @kind="outline"
+      class="w-full text-lg"
+      @title={{t "headphones.cancel"}}
+      {{on "click" @onCancel}}
+    />
+
+    <Ui::Button
+      @type="button"
+      data-test-submit-form
+      class="w-full text-lg"
+      @title={{t "headphones.select"}}
+      {{on "click" (fn @onSubmit this.selectedHeadphones)}}
+    />
+  </div>
+</div>
