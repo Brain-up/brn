@@ -23,7 +23,7 @@ plugins {
     kotlin("plugin.jpa")
     id("org.jetbrains.kotlin.plugin.allopen")
     jacoco
-    id("org.sonarqube") version "5.0.0.4638"
+    id("org.sonarqube") version "3.0"
 }
 
 allOpen {
@@ -43,7 +43,7 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -191,7 +191,7 @@ task<Test>("integrationTest") {
     description = "Runs the integration tests on Postgres Test Container."
 }
 
-sonar {
+sonarqube {
     properties {
         // Root project information
         property("sonar.projectKey", "Brain-up_brn")
