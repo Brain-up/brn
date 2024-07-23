@@ -534,6 +534,22 @@ annotationTypes:
         description: Delete doctor from patient
         responses:
           200
+    /autotest/del
+     delete:
+       description: Delete autotest users by given prefix
+       responses:
+         200:
+           body:
+             application/json:
+               example: !include samples/user_deletion_result.json
+    /autotest/del/{email}
+         delete:
+           description: Delete autotest user by email
+           responses:
+             200:
+               body:
+                 application/json:
+                   example: !include samples/user_deletion_result.json
 
 # CLOUD  ----------------------
 /cloud:

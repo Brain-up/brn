@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
-import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.model.UserAccount
 import com.google.firebase.auth.UserRecord
 import org.springframework.data.domain.Pageable
@@ -36,4 +36,6 @@ interface UserAccountService {
     fun getPatientsForDoctor(doctorId: Long): List<UserAccountDto>
 
     fun markVisitForCurrentUser()
+    fun deleteAutoTestUsers(): Long
+    fun deleteAutoTestUserByEmail(email: String): Long
 }

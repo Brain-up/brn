@@ -1,14 +1,14 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.HeadphonesDto
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.request.UserAccountCreateRequest
 import com.epam.brn.dto.response.BrnResponse
-import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
@@ -313,5 +313,36 @@ internal class UserDetailControllerTest {
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BrnResponse<*>).data shouldBe listOf(userAccountDto)
+    }
+
+    @Test
+    fun `deleteAutoTestUsers should return count of deleted users`() {
+        // GIVEN
+        val usersCount = 2L
+        every { userAccountService.deleteAutoTestUsers() } returns usersCount
+
+        // WHEN
+        val result = userDetailController.deleteAutoTestUsers()
+
+        // THEN
+        verify { userAccountService.deleteAutoTestUsers() }
+        result.statusCodeValue shouldBe HttpStatus.SC_OK
+        (result.body as BrnResponse<*>).data shouldBe usersCount
+    }
+
+    @Test
+    fun `deleteAutoTestUserByEmail should return count of deleted users`() {
+        // GIVEN
+        val email = "autotest_n@170472339.1784415.com"
+        val usersCount = 1L
+        every { userAccountService.deleteAutoTestUserByEmail(email) } returns usersCount
+
+        // WHEN
+        val result = userDetailController.deleteAutoTestUserByEmail(email)
+
+        // THEN
+        verify { userAccountService.deleteAutoTestUserByEmail(email) }
+        result.statusCodeValue shouldBe HttpStatus.SC_OK
+        (result.body as BrnResponse<*>).data shouldBe usersCount
     }
 }

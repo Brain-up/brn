@@ -14,6 +14,7 @@ import com.epam.brn.service.RoleService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.UserRecord
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -26,8 +27,10 @@ class UserAccountServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val roleService: RoleService,
     private val headphonesService: HeadphonesService,
-    private val timeService: TimeService
+    private val timeService: TimeService,
 ) : UserAccountService {
+    @Value("\${users.delete.prefix}")
+    private lateinit var prefix: String
 
     override fun findUserByEmail(email: String): UserAccountDto =
         userAccountRepository.findUserAccountByEmail(email)
@@ -172,4 +175,11 @@ class UserAccountServiceImpl(
 
     private fun getDefaultRoleSet(): MutableSet<Role> =
         setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
+
+    override fun deleteAutoTestUsers(): Long = userAccountRepository.deleteUserAccountsByEmailStartsWith(prefix)
+    override fun deleteAutoTestUserByEmail(email: String): Long =
+        if (email.startsWith(prefix))
+             userAccountRepository.deleteUserAccountByEmailIs(email)
+         else
+            throw IllegalArgumentException("email = [$email] must start with prefix = [$prefix]")
 }

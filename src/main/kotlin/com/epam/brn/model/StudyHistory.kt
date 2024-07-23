@@ -25,7 +25,7 @@ data class StudyHistory(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable = true, updatable = false)
     var userAccount: UserAccount,
 
     @ManyToOne(fetch = FetchType.LAZY)
