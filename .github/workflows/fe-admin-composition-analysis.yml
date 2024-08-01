@@ -21,7 +21,7 @@ jobs:
     name: npm audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2-beta
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: rwjblue/setup-volta@v1
