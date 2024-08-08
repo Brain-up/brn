@@ -126,4 +126,18 @@ class UserDetailController(
     @Operation(summary = "Delete doctor from patient")
     fun deleteDoctorFromPatient(@PathVariable patientId: Long) =
         doctorService.deleteDoctorFromPatientAsPatient(patientId)
+
+    @RolesAllowed(BrnRole.ADMIN)
+    @DeleteMapping("/autotest/del")
+    @Operation(summary = "Delete all auto test users")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteAutoTestUsers() = ResponseEntity.ok()
+        .body(BrnResponse(data = userAccountService.deleteAutoTestUsers()))
+
+    @DeleteMapping("/autotest/del/{email}")
+    @Operation(summary = "Delete auto test user by email")
+    @Throws(Exception::class)
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteAutoTestUserByEmail(@PathVariable("email") email: String) =
+        ResponseEntity.ok().body(BrnResponse(data = userAccountService.deleteAutoTestUserByEmail(email)))
 }

@@ -61,4 +61,10 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
             where u.email = :email"""
     )
     fun updateLastVisitByEmail(email: String, lastVisit: LocalDateTime)
+
+    @Transactional
+    fun deleteUserAccountsByEmailStartsWith(prefix: String): Long
+
+    @Transactional
+    fun deleteUserAccountByEmailIs(email: String): Long
 }
