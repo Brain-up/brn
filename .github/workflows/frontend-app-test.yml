@@ -7,7 +7,7 @@ jobs:
     name: Frontend tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: rwjblue/setup-volta@v1
       - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
       - name: Install dependencies
@@ -30,7 +30,7 @@ jobs:
     name: Test coverage changes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - uses: rwjblue/setup-volta@v1
       - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
       - name: Install dependencies
@@ -48,7 +48,7 @@ jobs:
 #    name: App build
 #    runs-on: ubuntu-latest
 #    steps:
-#      - uses: actions/checkout@v2-beta
+#      - uses: actions/checkout@v4
 #        with:
 #          fetch-depth: 0
 #      - name: Change dir to frontend
