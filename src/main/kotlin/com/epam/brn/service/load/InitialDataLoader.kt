@@ -106,8 +106,7 @@ class InitialDataLoader(
             val firstUser = createUser("Name1", "default@default.ru", setOf(userRole))
             val secondUser = createUser("Name2", "default2@default.ru", setOf(userRole, specialistRole))
             val autoTestUser = createUser("autoTestUser", AUTO_TEST_USER_EMAIL, setOf(userRole))
-            val autoTestSpecialist =
-                createUser("autoTestSpecialist", AUTO_TEST_SPECIALIST_EMAIL, setOf(userRole, specialistRole))
+            val autoTestSpecialist = createUser("autoTestSpecialist", AUTO_TEST_SPECIALIST_EMAIL, setOf(userRole, specialistRole))
             val listOfUsers = listOf(admin, firstUser, secondUser, autoTestUser, autoTestSpecialist)
             userAccountRepository.saveAll(listOfUsers)
         } else {
