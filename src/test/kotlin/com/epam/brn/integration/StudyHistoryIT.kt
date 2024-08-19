@@ -1,19 +1,22 @@
 package com.epam.brn.integration
 
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.enums.BrnGender
+import com.epam.brn.model.Role
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.UserAccountService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,6 +57,12 @@ class StudyHistoryIT : BaseIT() {
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
 
+    @Autowired
+    lateinit var roleRepository: RoleRepository
+
+    @Autowired
+    lateinit var userAccountService: UserAccountService
+
     @AfterEach
     fun deleteAfterTest() {
         studyHistoryRepository.deleteAll()
@@ -62,6 +71,7 @@ class StudyHistoryIT : BaseIT() {
         seriesRepository.deleteAll()
         exerciseGroupRepository.deleteAll()
         userAccountRepository.deleteAll()
+        roleRepository.deleteAll()
     }
 
     @Test
@@ -226,6 +236,110 @@ class StudyHistoryIT : BaseIT() {
         assertEquals(0, result)
     }
 
+    @Test
+    fun `test delete study history when delete autotest users`() {
+        // GIVEN
+        val roleUser = insertRole(BrnRole.USER)
+
+        val user1 = UserAccount(
+            fullName = "autotest_n1",
+            email = "autotest_n@1704819771.8820736.com",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user1.roleSet = mutableSetOf(roleUser)
+
+        val user2 = UserAccount(
+            fullName = "autotest_n1",
+            email = "autotest_n@170472339.1784415.com",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user2.roleSet = mutableSetOf(roleUser)
+
+        userAccountRepository.saveAll(listOf(user1, user2))
+
+        val existingSeries = insertSeries()
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise("FirstName", subGroup)
+        val existingExerciseSecond = insertExercise("SecondName", subGroup)
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        val historyFirstExerciseOne = insertStudyHistory(user1, existingExerciseFirst, now)
+        val historySecondExerciseOne = insertStudyHistory(user2, existingExerciseSecond, now)
+
+        studyHistoryRepository
+            .saveAll(
+                listOf(
+                    historyFirstExerciseOne,
+                    historySecondExerciseOne,
+                )
+            )
+
+        // WHEN
+        val count = userAccountService.deleteAutoTestUsers()
+
+        val result1 = user1.id?.let {
+            studyHistoryRepository.findLastByUserAccountIdAndExercises(
+                it,
+                listOf(existingExerciseFirst.id!!)
+            )
+        }
+
+        val result2 = user1.id?.let {
+            studyHistoryRepository.findLastByUserAccountIdAndExercises(
+                it,
+                listOf(existingExerciseFirst.id!!)
+            )
+        }
+
+        // THEN
+        assertEquals(2, count)
+        assertEquals(0, result1?.size)
+        assertEquals(0, result2?.size)
+    }
+
+    @Test
+    fun `test delete study history when delete single autotest user`() {
+        // GIVEN
+        val roleUser = insertRole(BrnRole.USER)
+        val email = "autotest_n@1704819771.8820736.com"
+
+        val user1 = UserAccount(
+            fullName = "autotest_n1",
+            email = email,
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user1.roleSet = mutableSetOf(roleUser)
+        userAccountRepository.save(user1)
+
+        val exerciseFirstName = "FirstName"
+        val existingSeries = insertSeries()
+        val subGroup = insertSubGroup(existingSeries)
+        val existingExerciseFirst = insertExercise(exerciseFirstName, subGroup)
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        val historyFirstExerciseTwo = insertStudyHistory(user1, existingExerciseFirst, now)
+
+        studyHistoryRepository.save(historyFirstExerciseTwo)
+
+        // WHEN
+        val count = userAccountService.deleteAutoTestUserByEmail(email)
+
+        val result1 = user1.id?.let {
+            studyHistoryRepository.findLastByUserAccountIdAndExercises(
+                it,
+                listOf(existingExerciseFirst.id!!)
+            )
+        }
+
+        // THEN
+        assertEquals(1, count)
+        assertEquals(0, result1?.size)
+    }
+
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise,
@@ -289,4 +403,6 @@ class StudyHistoryIT : BaseIT() {
             )
         )
     }
+
+    private fun insertRole(roleName: String): Role = roleRepository.save(Role(name = roleName))
 }
