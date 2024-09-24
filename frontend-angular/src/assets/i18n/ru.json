@@ -73,6 +73,7 @@
           "UsersTable": {
             "ColumnsName": {
               "Favorite": "Любимый",
+              "Email": "Электронное письмо",
               "FirstVisit": "Первый визит",
               "LastVisit": "Последнее посещение",
               "LastStudyActivity": "Последнее учебное занятие",
