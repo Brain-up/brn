@@ -30,6 +30,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   public dataSource: MatTableDataSource<UserMapped>;
   public readonly displayedColumns: string[] = [
     'name',
+    'email',
     'firstDone',
     'lastDone',
     'lastVisit',
