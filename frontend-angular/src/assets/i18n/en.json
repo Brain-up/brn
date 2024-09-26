@@ -73,6 +73,7 @@
           "UsersTable": {
             "ColumnsName": {
               "Favorite": "Favorite",
+              "Email": "Email",
               "FirstVisit": "First visit",
               "LastVisit": "Last visit",
               "LastStudyActivity": "Last study activity",
