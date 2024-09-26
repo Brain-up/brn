@@ -8,4 +8,4 @@ export const environment = {
   },
 };
 
-import 'zone.js/dist/zone-error';
+import 'zone.js/plugins/zone-error';
