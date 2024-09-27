@@ -1,11 +1,8 @@
 import { CloudApiService } from './cloud-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { UploadForm } from '@admin/models/upload-form';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 const baseUrl = '/api/cloud';
 const filePath = '/random/path/example.json';
@@ -16,9 +13,9 @@ describe('CloudApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [CloudApiService],
-    });
+    imports: [],
+    providers: [CloudApiService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     service = TestBed.inject(CloudApiService);
     controller = TestBed.inject(HttpTestingController);
   });

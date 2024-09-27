@@ -1,12 +1,9 @@
 import { User } from '@admin/models/user.model';
 import { Dayjs } from 'dayjs';
 import { AdminApiService } from './admin-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Exercise } from '@admin/models/exercise';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import * as dayjs from 'dayjs';
@@ -26,9 +23,9 @@ describe('AdminApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AdminApiService],
-    });
+    imports: [],
+    providers: [AdminApiService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     service = TestBed.inject(AdminApiService);
     controller = TestBed.inject(HttpTestingController);
   });

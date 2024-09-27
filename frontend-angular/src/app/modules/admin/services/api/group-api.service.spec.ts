@@ -1,11 +1,8 @@
 import { Group } from '@admin/models/group';
 import { GroupApiService } from './group-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 const baseUrl = '/api/groups';
 const locale = 'en';
@@ -17,9 +14,9 @@ describe('GroupApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [GroupApiService],
-    });
+    imports: [],
+    providers: [GroupApiService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     service = TestBed.inject(GroupApiService);
     controller = TestBed.inject(HttpTestingController);
   });

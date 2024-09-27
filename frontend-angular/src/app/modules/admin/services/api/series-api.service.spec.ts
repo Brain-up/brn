@@ -1,11 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Series } from '@admin/models/series';
 import { SeriesApiService } from './series-api.service';
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 const baseUrl = '/api/series';
 const groupId = 1234;
@@ -18,9 +15,9 @@ describe('SeriesApiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [SeriesApiService],
-    });
+    imports: [],
+    providers: [SeriesApiService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
     service = TestBed.inject(SeriesApiService);
     controller = TestBed.inject(HttpTestingController);
   });
