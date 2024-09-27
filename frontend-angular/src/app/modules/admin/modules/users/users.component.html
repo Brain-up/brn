@@ -73,6 +73,20 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{
+            'Admin.Modules.Users.Components.UsersTable.ColumnsName.Email'
+              | translate
+          }}
+        </th>
+        <td mat-cell *matCellDef="let user">
+          <div *ngIf="user.email" class="subItem">
+           {{ user.email }}
+          </div>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="firstDone">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{
