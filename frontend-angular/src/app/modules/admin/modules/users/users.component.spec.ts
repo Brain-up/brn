@@ -15,7 +15,7 @@ import { Subject } from 'rxjs';
 import { UsersComponent } from './users.component';
 import { PipesModule } from '@shared/pipes/pipes.module';
 import {  MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource, MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { TokenService } from '@root/services/token.service';
 import { UserMapped } from '@admin/models/user.model';
 

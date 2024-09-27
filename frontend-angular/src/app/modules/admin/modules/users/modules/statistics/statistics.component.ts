@@ -4,7 +4,7 @@ import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { Dayjs } from 'dayjs';
 import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
 import { HOME_PAGE_URL } from '@shared/constants/common-constants';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
 import { Subject } from 'rxjs';
 import { TokenService } from '@root/services/token.service';

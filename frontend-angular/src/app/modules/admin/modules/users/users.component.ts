@@ -2,9 +2,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { TokenService } from '@root/services/token.service';
 import { User, UserMapped } from '@admin/models/user.model';
 import {

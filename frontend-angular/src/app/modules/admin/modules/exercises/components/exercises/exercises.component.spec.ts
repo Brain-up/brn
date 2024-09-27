@@ -1,6 +1,6 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Exercise, Task } from '@admin/models/exercise';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { ExercisesComponent } from './exercises.component';
 import { values } from 'fp-ts/lib/Map';

@@ -13,7 +13,7 @@ import { Dayjs } from 'dayjs';
 import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 
 @Component({
   selector: 'app-daily-time-table',
