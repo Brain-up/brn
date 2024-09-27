@@ -1,11 +1,11 @@
 import { AUTH_PAGE_URL } from '@shared/constants/common-constants';
-import { CanActivate, CanLoad, Router, UrlTree } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { TokenService } from '@root/services/token.service';
 import { UserCredential } from '@root/models/auth-token';
 
 @Injectable()
-export class AuthAccessGuard implements CanLoad, CanActivate {
+export class AuthAccessGuard  {
   constructor(
     private readonly tokenService: TokenService,
     private readonly router: Router,
