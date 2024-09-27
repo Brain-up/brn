@@ -29,10 +29,12 @@ form, .contacts {
   margin-right: $margin-20;
 }
 
-::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+::ng-deep .mat-mdc-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
   background-color: #a179f2;
 }
-::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+/* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+::ng-deep .mat-mdc-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
   background-color: #cebaf8;
 }
 

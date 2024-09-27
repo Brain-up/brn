@@ -6,7 +6,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { StatisticsComponent } from './statistics.component';
 import { AdminApiService } from '@admin/services/api/admin-api.service';

@@ -7,7 +7,7 @@ $main-font-family: Montserrat;
 // Plus imports for other components in your app.
 @import './app/styles/exercises';
 
-$custom-typography: mat.define-legacy-typography-config(
+$custom-typography: mat.define-typography-config(
   $font-family: $main-font-family,
 );
 
@@ -22,8 +22,8 @@ $custom-typography: mat.define-legacy-typography-config(
 //  If you don't need the default component typographies but still want the hierarchy styles,
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy($custom-typography);`
-@include mat.all-legacy-component-typographies($custom-typography);
-@include mat.legacy-core();
+@include mat.all-component-typographies($custom-typography);
+@include mat.core();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -40,7 +40,7 @@ $frontend-angular-theme: mat.define-light-theme($frontend-angular-primary, $fron
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-legacy-component-themes($frontend-angular-theme);
+@include mat.all-component-themes($frontend-angular-theme);
 
 // Material override
 @import './app/styles/material-override.scss';

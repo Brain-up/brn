@@ -22,20 +22,21 @@ table {
 }
 
 ::ng-deep {
-  .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  .mat-mdc-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
     background: $brain-gradient !important;
   }
-
-  .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
+  .mat-mdc-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
     background-color: $white;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
   .mat-slide-toggle-bar {
     height: 22px !important;
     width: 36px !important;
     border-radius: 20px !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
   .mat-slide-toggle-thumb-container {
     top: 1px !important;
   }

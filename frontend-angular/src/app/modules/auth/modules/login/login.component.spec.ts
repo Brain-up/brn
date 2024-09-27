@@ -1,7 +1,7 @@
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
 import { UntypedFormBuilder } from '@angular/forms';
 import { LoginComponent } from './login.component';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SnackBarService } from '@root/services/snack-bar.service';
 import { TranslateModule } from '@ngx-translate/core';

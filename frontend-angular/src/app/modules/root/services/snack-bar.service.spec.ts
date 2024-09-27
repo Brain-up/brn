@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { SnackBarService } from './snack-bar.service';
 

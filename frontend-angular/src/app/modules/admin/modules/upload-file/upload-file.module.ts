@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
 import { UploadFileRoutingModule } from './upload-file-routing.module';
 import { UploadFileComponent } from './upload-file.component';
