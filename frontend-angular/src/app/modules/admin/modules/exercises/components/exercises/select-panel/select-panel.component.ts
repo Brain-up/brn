@@ -7,7 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { GroupApiService } from '@admin/services/api/group-api.service';
@@ -51,10 +51,10 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
   series$: Observable<Series[]>;
   subGroups$: Observable<Subgroup[]>;
 
-  languagesControl = new FormControl();
-  groupsControl = new FormControl();
-  seriesControl = new FormControl();
-  subGroupsControl = new FormControl();
+  languagesControl = new UntypedFormControl();
+  groupsControl = new UntypedFormControl();
+  seriesControl = new UntypedFormControl();
+  subGroupsControl = new UntypedFormControl();
   ngUnsubscribe = new Subject<void>();
   private readonly LOG_SOURCE = 'SelectPanelComponent';
 

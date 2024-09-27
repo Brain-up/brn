@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { mergeMap, takeUntil } from 'rxjs/operators';
@@ -18,11 +18,11 @@ export class LoadFilesComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
 
   public folders$: Observable<string[]>;
-  public uploadFileForm: FormGroup;
+  public uploadFileForm: UntypedFormGroup;
 
   constructor(
     private readonly router: Router,
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly snackBarService: SnackBarService,
     private readonly cloudApiService: CloudApiService,
     private readonly adminApiService: AdminApiService,

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
@@ -21,14 +21,14 @@ import { TranslateService } from '@ngx-translate/core';
 export class LoadTasksComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();
 
-  public tasksGroup: FormGroup;
+  public tasksGroup: UntypedFormGroup;
   public fileFormat$: Observable<string>;
   public groups$: Observable<Group[]>;
   public series$: Observable<Series[]>;
 
   constructor(
     private readonly router: Router,
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly snackBarService: SnackBarService,
     private readonly groupApiService: GroupApiService,
     private readonly seriesApiService: SeriesApiService,

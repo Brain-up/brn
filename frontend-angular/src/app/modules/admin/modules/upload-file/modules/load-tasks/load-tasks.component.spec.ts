@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoadTasksComponent } from './load-tasks.component';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SnackBarService } from '@root/services/snack-bar.service';
 import { GroupApiService } from '@admin/services/api/group-api.service';
@@ -20,7 +20,7 @@ describe('LoadTasksComponent', () => {
       imports: [TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: {} },
-        { provide: FormBuilder, useValue: {} },
+        { provide: UntypedFormBuilder, useValue: {} },
         { provide: SnackBarService, useValue: {} },
         { provide: GroupApiService, useValue: {} },
         { provide: SeriesApiService, useValue: {} },

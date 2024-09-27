@@ -1,5 +1,5 @@
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { LoginComponent } from './login.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ require('firebase/auth');
 describe('LoginComponent', () => {
   let fixture: ComponentFixture<LoginComponent>;
   let component: LoginComponent;
-  const formBuilder: FormBuilder = new FormBuilder();
+  const formBuilder: UntypedFormBuilder = new UntypedFormBuilder();
   const mockSnackbar = jasmine.createSpyObj(['open']);
 
   const mockAuthenticationApiService: any = {
@@ -32,7 +32,7 @@ describe('LoginComponent', () => {
       imports: [MatSnackBarModule, TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: {} },
-        { provide: FormBuilder, useValue: formBuilder },
+        { provide: UntypedFormBuilder, useValue: formBuilder },
         {
           provide: AuthenticationApiService,
           useValue: { mockAuthenticationApiService },

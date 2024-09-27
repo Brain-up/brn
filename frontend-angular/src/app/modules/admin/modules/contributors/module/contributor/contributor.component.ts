@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Contributor, contributorTypes } from '@admin/models/contrubutor.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
@@ -13,7 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 
 export class ContributorComponent implements OnInit {
-  public contributorForm: FormGroup;
+  public contributorForm: UntypedFormGroup;
   public contributor;
   public contributorTypes = contributorTypes;
   public file: File;
@@ -23,7 +23,7 @@ export class ContributorComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private contributorApiService: ContributorApiService,
   ) {
