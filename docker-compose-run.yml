@@ -9,6 +9,7 @@ services:
       POSTGRES_DB: brn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: _POSTGRES_PASSWORD_
+      DATABASE_ALREADY_EXISTS: 'true'
     volumes:
       - dbdata:/var/lib/postgresql/data
   brn:
