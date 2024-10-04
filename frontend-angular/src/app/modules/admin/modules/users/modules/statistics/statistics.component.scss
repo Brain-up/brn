@@ -11,6 +11,10 @@
     display: flex;
     align-items: flex-start;
 
+    .user-data {
+      z-index: 2;
+    }
+
     .profile-name {
       margin-top: $margin-8;
     }

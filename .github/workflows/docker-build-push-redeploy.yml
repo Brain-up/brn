@@ -43,8 +43,7 @@ jobs:
     runs-on: ${{ matrix.runners }}
     strategy:
       matrix:
-        # runners: [ epam, vscale ]
-        runners: [ vscale ]
+        runners: [ selectel ]
     steps:
       - uses: actions/checkout@v4
       - name: Configure secrets
@@ -70,11 +69,8 @@ jobs:
         run: |
           docker-compose pull
           docker-compose up -d --no-deps brn
-      - name: Redeploy frontend epam
-        if: matrix.runners == 'epam'
-        run: docker-compose up -d --no-deps brn_fe
-      - name: Redeploy frontend vscale
-        if: matrix.runners == 'vscale'
+      - name: Redeploy frontend selectel
+        if: matrix.runners == 'selectel'
         run: docker-compose up -d --no-deps brn_fe_with_tls
       - name: Remove old images
         run: docker image prune -af
