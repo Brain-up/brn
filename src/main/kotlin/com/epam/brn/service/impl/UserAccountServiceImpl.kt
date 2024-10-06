@@ -29,7 +29,7 @@ class UserAccountServiceImpl(
     private val headphonesService: HeadphonesService,
     private val timeService: TimeService,
 ) : UserAccountService {
-    @Value("\${users.delete.prefix}")
+    @Value("\${autotest.users.deletion.prefix}")
     private lateinit var prefix: String
 
     override fun findUserByEmail(email: String): UserAccountDto =

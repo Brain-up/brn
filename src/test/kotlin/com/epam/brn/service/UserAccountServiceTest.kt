@@ -533,7 +533,6 @@ internal class UserAccountServiceTest {
     @Test
     fun `should throw IllegalArgumentException when email not starts from prefix`() {
         // GIVEN
-        val usersCount = 1L
         val email = "aaa@bbb.com"
         val prefix = "autotest"
         ReflectionTestUtils.setField(userAccountService, "prefix", prefix)
