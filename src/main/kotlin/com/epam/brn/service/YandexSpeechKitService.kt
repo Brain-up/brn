@@ -3,7 +3,6 @@ package com.epam.brn.service
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.YandexServiceException
-import org.apache.commons.io.FileUtils
 import org.apache.http.NameValuePair
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpPost
@@ -19,7 +18,6 @@ import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.io.File
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -33,14 +31,19 @@ class YandexSpeechKitService(
 ) : TextToSpeechService {
     @Value("\${yandex.getTokenLink}")
     lateinit var uriGetIamToken: String
+
     @Value("\${yandex.authToken}")
     lateinit var authToken: String
+
     @Value("\${yandex.generationAudioLink}")
     lateinit var uriGenerationAudioFile: String
+
     @Value("\${yandex.folderId}")
     lateinit var folderId: String
+
     @Value("\${yandex.format}")
     lateinit var format: String
+
     @Value("\${yandex.emotion}")
     lateinit var emotion: String
 
@@ -114,24 +117,6 @@ class YandexSpeechKitService(
         return httpEntity.content
     }
 
-    /**
-     * Generate .ogg audio file from yandex cloud speech kit service if it is absent locally
-     */
-    @Transactional
-    override fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
-        val fileName = wordsService.getLocalFilePathForWord(audioFileMetaData)
-        log.info("For word $audioFileMetaData started creation audio file with name `$fileName`")
-        val fileOgg = File(fileName)
-        if (fileOgg.exists()) {
-            log.info("File ${fileOgg.name} is already exist, generation was skipped.")
-            return fileOgg
-        }
-        val inputStream = generateAudioStream(audioFileMetaData)
-        FileUtils.copyInputStreamToFile(inputStream, fileOgg)
-        log.info("File for $audioFileMetaData was created: $fileName")
-        return fileOgg
-    }
-
     fun validateLocaleAndVoice(locale: String, voice: String) {
         if (!BrnLocale.values().map { it.locale }.contains(locale.lowercase()))
             throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
@@ -140,7 +125,7 @@ class YandexSpeechKitService(
             throw IllegalArgumentException("Locale $locale does not support voice $voice, only $localeVoices.")
     }
 
-    override fun generateAudioOggFileWithValidation(audioFileMetaData: AudioFileMetaData): InputStream {
+    override fun generateAudioOggStreamWithValidation(audioFileMetaData: AudioFileMetaData): InputStream {
         validateLocaleAndVoice(audioFileMetaData.locale, audioFileMetaData.voice)
         return generateAudioStream(
             AudioFileMetaData(
