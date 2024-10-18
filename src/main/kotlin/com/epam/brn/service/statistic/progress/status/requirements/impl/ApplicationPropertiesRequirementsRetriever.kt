@@ -20,8 +20,8 @@ class ApplicationPropertiesRequirementsRetriever(
         status: UserExercisingProgressStatus,
         period: UserExercisingPeriod
     ): StatusRequirements {
-        val periodName = period.name.toLowerCase()
-        val statusName = status.name.toLowerCase()
+        val periodName = period.name.lowercase()
+        val statusName = status.name.lowercase()
         return StatusRequirements(
             maximalRequirements = environment.getProperty("brn.statistic.progress.$periodName.status.$statusName.maximal")
                 ?.toInt()

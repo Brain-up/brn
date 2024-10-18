@@ -75,7 +75,7 @@ dependencies {
     implementation("com.google.cloud:google-cloud-storage:1.110.0")
 
     implementation("org.json:json:$jsonVersion")
-    implementation("net.bramp.ffmpeg:ffmpeg:0.7.0")
+    implementation("commons-io:commons-io:2.17.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")

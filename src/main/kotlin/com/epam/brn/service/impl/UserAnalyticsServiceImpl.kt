@@ -66,7 +66,7 @@ class UserAnalyticsServiceImpl(
     }
 
     override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
-        textToSpeechService.generateAudioOggFileWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
+        textToSpeechService.generateAudioOggStreamWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
 
     override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
         val currentUserId = userAccountService.getCurrentUserId()

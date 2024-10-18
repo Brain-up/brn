@@ -90,7 +90,6 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 ofType(String::class)
             )
         } returns Optional.empty()
-        every { wordsServiceMock.addWordsToDictionary(ofType(BrnLocale::class), any()) } returns Unit
         every { wordsServiceMock.getDefaultWomanVoiceForLocale(BrnLocale.RU.locale) } returns Voice.ALYSS.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, level) } returns Optional.empty()
         every { resourceRepositoryMock.saveAll(any<List<Resource>>()) } returns emptySet()

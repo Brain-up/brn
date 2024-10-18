@@ -45,7 +45,6 @@ class LopotkoRecordProcessor(
             if (existAudiometryTask == null)
                 audiometryTasks.add(audiometryTaskRepository.save(audiometryTask))
         }
-        wordsService.createTxtFilesWithDiagnosticWords(mapHashWord)
         return audiometryTasks.toMutableList()
     }
 
