@@ -65,7 +65,7 @@ class UserAnalyticsServiceImpl(
         return users
     }
 
-    override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
+    override fun prepareAudioStreamForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
         textToSpeechService.generateAudioOggStreamWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
 
     override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
@@ -91,9 +91,6 @@ class UserAnalyticsServiceImpl(
 
     fun isDoneBad(lastHistory: StudyHistory?): Boolean =
         lastHistory != null && !exerciseService.isDoneWell(lastHistory)
-
-    fun isMultiWords(seriesType: ExerciseType): Boolean =
-        seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
 
     fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistic>): Int =
         dayStudyStatistics
