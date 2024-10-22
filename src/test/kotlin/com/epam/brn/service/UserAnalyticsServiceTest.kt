@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
+import java.io.InputStream
 import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
@@ -239,5 +240,25 @@ internal class UserAnalyticsServiceTest {
         // THEN
         metaDataResult.speedFloat shouldBe "0.8"
         metaDataResult.speedCode shouldBe AzureRates.SLOW
+    }
+
+    @Test
+    fun `should prepareAudioStreamForUser`() {
+        // GIVEN
+        val studyHistory = mockk<StudyHistory>()
+        val audioStreamMock = InputStream.nullInputStream()
+        every { userAccountService.getCurrentUserId() } returns currentUserId
+        every {
+            studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+        } returns studyHistory
+        every { exerciseService.isDoneWell(studyHistory) } returns false
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        val audioFileMetaData = AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        every { textToSpeechService.generateAudioOggStreamWithValidation(audioFileMetaData) } returns audioStreamMock
+        // WHEN
+        val audioStreamResult = userAnalyticsService.prepareAudioStreamForUser(exerciseId, audioFileMetaData)
+
+        // THEN
+        audioStreamResult.toString().isNotEmpty()
     }
 }
