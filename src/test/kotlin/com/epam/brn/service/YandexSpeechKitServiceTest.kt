@@ -37,4 +37,24 @@ internal class YandexSpeechKitServiceTest {
         // WHEN
         assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice(locale, "") }
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["FILIPP", "NICK"])
+    fun `should success pass voice validation without Exceptions`(voice: String) {
+        val yandexVoices = listOf("FILIPP", "NICK")
+        every { timeService.now() } returns LocalDateTime.now()
+        every { wordsService.getVoicesForLocale("ru-ru") } returns yandexVoices
+        // WHEN
+        yandexSpeechKitService.validateLocaleAndVoice("ru-ru", voice)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["ddd", "rrr"])
+    fun `should failed on voice validation`(voice: String) {
+        val yandexVoices = listOf("FILIPP", "NICK")
+        every { timeService.now() } returns LocalDateTime.now()
+        every { wordsService.getVoicesForLocale("ru-ru") } returns yandexVoices
+        // WHEN
+        assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice("ru-ru", voice) }
+    }
 }

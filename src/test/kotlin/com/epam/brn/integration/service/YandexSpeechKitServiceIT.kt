@@ -39,7 +39,7 @@ internal class YandexSpeechKitServiceIT {
     }
 
     @Test
-    fun `should generate ogg audio file`() {
+    fun `should generate ogg audio stream with validation`() {
         val locale = BrnLocale.RU.locale
         val voice = Voice.OKSANA.name
         val speed = "1"
