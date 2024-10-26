@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db_brn:
     image: postgres:13
@@ -33,13 +32,13 @@ services:
       - firebase_config_json
     depends_on:
       - db_brn
-  brn_fe:
-    image: brainup/brn-frontend:latest
-    container_name: brn_fe
-#    ports:
-#      - 80:80
-    depends_on:
-      - brn
+#   brn_fe:
+#     image: brainup/brn-frontend:latest
+#     container_name: brn_fe
+# #    ports:
+# #      - 80:80
+#     depends_on:
+#       - brn
   brn_fe_with_tls:
     image: brainup/brn-frontend-with-tls:latest
     container_name: brn_fe_with_tls

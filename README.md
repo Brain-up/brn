@@ -127,11 +127,11 @@ Note that if you are using IntelliJ, you may want to use version 2019.2 and late
 (back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
 From console, from project's folder, execute:
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 Alternatively, use daemon mode (no console output):
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 Local REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
 Public is always here https://brainup.site/admin/swagger (login with ADMIN role user)
