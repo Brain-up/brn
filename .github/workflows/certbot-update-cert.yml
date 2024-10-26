@@ -26,7 +26,7 @@ jobs:
           API_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
       - name: Update certs 
         run: |
-          docker-compose pull
-          docker-compose run --rm certbot renew --allow-subset-of-names
-          docker-compose restart brn_fe_with_tls
+          docker compose pull
+          docker compose run --rm certbot renew --allow-subset-of-names
+          docker compose restart brn_fe_with_tls
           docker image prune -af

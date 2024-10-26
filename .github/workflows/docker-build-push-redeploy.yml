@@ -67,10 +67,10 @@ jobs:
 # Link 2: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepsif
       - name: Redeploy backend
         run: |
-          docker-compose pull
-          docker-compose up -d --no-deps brn
+          docker compose pull
+          docker compose up -d --no-deps brn
       - name: Redeploy frontend selectel
         if: matrix.runners == 'selectel'
-        run: docker-compose up -d --no-deps brn_fe_with_tls
+        run: docker compose up -d --no-deps brn_fe_with_tls
       - name: Remove old images
         run: docker image prune -af
