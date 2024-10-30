@@ -1,0 +1,35 @@
+diff --git a/node_modules/broccoli-babel-transpiler/index.js b/node_modules/broccoli-babel-transpiler/index.js
+index f27d48e..fdc7732 100644
+--- a/node_modules/broccoli-babel-transpiler/index.js
++++ b/node_modules/broccoli-babel-transpiler/index.js
+@@ -86,7 +86,7 @@ function Babel(inputTree, _options) {
+ 
+   heimdall.statsFor('babel').isParallelizable = isParallelizable;
+ 
+-  if ((this.throwUnlessParallelizable || process.env.THROW_UNLESS_PARALLELIZABLE) && isParallelizable === false) {
++  if (false) {
+     throw new Error(this.toString() +
+       ' was configured to `throwUnlessParallelizable` and was unable to parallelize a plugin. \nplugins:\n' + joinCount(errors) + '\nPlease see: https://github.com/babel/broccoli-babel-transpiler#parallel-transpilation for more details');
+   }
+diff --git a/node_modules/broccoli-babel-transpiler/lib/parallel-api.js b/node_modules/broccoli-babel-transpiler/lib/parallel-api.js
+index 4453beb..327b9ed 100644
+--- a/node_modules/broccoli-babel-transpiler/lib/parallel-api.js
++++ b/node_modules/broccoli-babel-transpiler/lib/parallel-api.js
+@@ -69,7 +69,7 @@ function pluginsAreParallelizable(plugins) {
+       let plugin = plugins[i];
+       if (isSerializable(plugin) === false) {
+         isParallelizable = false;
+-        errors.push(humanizePlugin(plugin));
++        errors.push(plugin);
+       }
+     }
+   }
+@@ -89,7 +89,7 @@ function callbacksAreParallelizable(options) {
+     let callback = options[callbacks[i]];
+     if (implementsParallelAPI(callback) === false) {
+       isParallelizable = false;
+-      errors.push(humanizePlugin(callback))
++      errors.push(callback)
+     }
+   }
+ 

@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { DateTime } from 'luxon';
@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 module(
   'Integration | Component | statistics/week-time-track',
   function (hooks) {
-    setupRenderingTest(hooks);
+    setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
 
     test('it renders', async function (assert) {
       const TRACK_DATA = [
@@ -33,7 +33,7 @@ module(
       await render(hbs`<Statistics::WeekTimeTrack
         @isLoading={{this.isLoadingWeekTimeTrackData}}
         @selectedMonth={{this.selectedMonth}}
-        @data={{this.rawWeekTimeTrackData}}        
+        @data={{this.rawWeekTimeTrackData}}
       />`);
 
       const selectedMonth = DateTime.fromISO('2021-06-23');
@@ -55,7 +55,7 @@ module(
       await render(hbs`<Statistics::WeekTimeTrack
         @isLoading={{this.isLoadingWeekTimeTrackData}}
         @selectedMonth={{this.selectedMonth}}
-        @data={{this.rawWeekTimeTrackData}}        
+        @data={{this.rawWeekTimeTrackData}}
       />`);
 
       const selectedMonth = DateTime.fromISO('2021-06-23');
