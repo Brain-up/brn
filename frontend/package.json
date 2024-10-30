@@ -176,7 +176,7 @@
     "typescript": "^4.5.5"
   },
   "engines": {
-    "node": ">= 12"
+    "node": ">= 22"
   },
   "ember": {
     "edition": "octane"
@@ -199,7 +199,7 @@
     "tone": "^14.7.60"
   },
   "volta": {
-    "node": "14.18.2",
+    "node": "22.11.0",
     "yarn": "1.22.10"
   },
   "ember-addon": {
