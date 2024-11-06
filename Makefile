@@ -12,15 +12,15 @@ docker_clean_app_images: stop
 	docker rmi brn_test db_brn brn
 
 docker_clean_test_containers:
-	docker-compose -f docker-compose-unit-test.yml down
+	docker compose -f docker-compose-unit-test.yml down
 
 docker_unit_test: clean
-	docker-compose -f docker-compose-unit-test.yml up --build --force-recreate --exit-code-from brn-test
+	docker compose -f docker-compose-unit-test.yml up --build --force-recreate --exit-code-from brn-test
 
 start:
-	docker-compose up --build --force-recreate
+	docker compose up --build --force-recreate
 
 stop:
-	docker-compose down
+	docker compose down
 
 restart: clean stop start
