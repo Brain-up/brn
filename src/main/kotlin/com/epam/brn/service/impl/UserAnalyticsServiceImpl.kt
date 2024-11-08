@@ -2,7 +2,7 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
@@ -13,7 +13,7 @@ import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
-import com.epam.brn.service.statistic.UserPeriodStatisticService
+import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -28,7 +28,7 @@ class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
+    private val userDayStatisticService: UserPeriodStatisticsService<DayStudyStatistics>,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
@@ -48,17 +48,17 @@ class UserAnalyticsServiceImpl(
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
         users.onEach { user ->
-            user.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, user.id)
+            user.lastWeek = userDayStatisticService.getStatisticsForPeriod(from, to, user.id)
             user.studyDaysInCurrentMonth = countWorkDaysForMonth(
-                userDayStatisticService.getStatisticForPeriod(startOfCurrentMonth, now, user.id)
+                userDayStatisticService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id)
             )
 
-            val userStatistic = studyHistoryRepository.getStatisticByUserAccountId(user.id)
+            val userStatistics = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
             user.apply {
-                this.firstDone = userStatistic.firstStudy
-                this.lastDone = userStatistic.lastStudy
-                this.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
-                this.doneExercises = userStatistic.doneExercises
+                this.firstDone = userStatistics.firstStudy
+                this.lastDone = userStatistics.lastStudy
+                this.spentTime = userStatistics.spentTime.toDuration(DurationUnit.SECONDS)
+                this.doneExercises = userStatistics.doneExercises
             }
         }
 
@@ -95,7 +95,7 @@ class UserAnalyticsServiceImpl(
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
 
-    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistic>): Int =
+    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistics>): Int =
         dayStudyStatistics
             .map { it.date }
             .groupBy { it.dayOfMonth }
