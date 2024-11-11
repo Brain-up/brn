@@ -15,7 +15,6 @@ Product Vision https://github.com/Brain-up/brn/wiki/Product-Vision.
 - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/
 
 ## Published ARTICLES about our project 
-- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english) will be fixed soon
 - https://wearecommunity.io/communities/community-platform/articles/753 01.12.2020 russian 
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
@@ -128,11 +127,11 @@ Note that if you are using IntelliJ, you may want to use version 2019.2 and late
 (back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
 From console, from project's folder, execute:
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 Alternatively, use daemon mode (no console output):
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 Local REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
 Public is always here https://brainup.site/admin/swagger (login with ADMIN role user)
