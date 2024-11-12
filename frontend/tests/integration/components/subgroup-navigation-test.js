@@ -10,7 +10,7 @@ module('Integration | Component | subgroup-navigation', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<SubgroupNavigation @group={{array}} />`);
+    await render(hbs`<SubgroupNavigation @group={{(array)}} />`);
 
     assert.dom('ul').exists();
   });
