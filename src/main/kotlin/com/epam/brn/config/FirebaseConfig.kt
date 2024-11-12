@@ -20,11 +20,9 @@ class FirebaseConfig {
     fun firebaseApp(): FirebaseApp {
         if (FirebaseApp.getApps().isEmpty()) {
             val refreshToken = FileInputStream(firebaseCredentialsPath)
-
             val options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(refreshToken))
                 .build()
-
             FirebaseApp.initializeApp(options)
         }
         return FirebaseApp.getInstance()
