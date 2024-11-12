@@ -1,5 +1,6 @@
 package com.epam.brn.service
 
+import com.epam.brn.exception.YandexServiceException
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -109,5 +110,24 @@ internal class YandexSpeechKitServiceTest {
         // THEN
         resultToken shouldBe "iamTokenValue"
         httpResponse.statusLine.statusCode shouldBe 200
+    }
+
+    @Test
+    fun `should throw Exception if status code is not 200`() {
+        yandexSpeechKitService.iamToken = ""
+        yandexSpeechKitService.authToken = "authToken"
+        yandexSpeechKitService.uriGetIamToken = "uriGetIamToken"
+
+        val httpClientBuilder = mockk<HttpClientBuilder>()
+        val httpClient = mockk<CloseableHttpClient>()
+        val httpResponse = mockk<CloseableHttpResponse>()
+
+        mockkStatic(HttpClientBuilder::class)
+        every { HttpClientBuilder.create() } returns httpClientBuilder
+        every { httpClientBuilder.build() } returns httpClient
+        every { httpClient.execute(any()) } returns httpResponse
+        every { httpResponse.statusLine.statusCode } returns 100
+        // WHEN & THEN
+        assertThrows<YandexServiceException> { yandexSpeechKitService.getYandexIamTokenForAudioGeneration() }
     }
 }
