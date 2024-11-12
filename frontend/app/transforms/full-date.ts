@@ -11,7 +11,7 @@ class FullDate extends DateTransform {
         DateTime.fromISO(serialized as unknown as string, { zone: 'utc', locale: browserLocale })) ||
       null
     );
-  };
+  }
 }
 
 declare module 'ember-data/types/registries/transform' {
