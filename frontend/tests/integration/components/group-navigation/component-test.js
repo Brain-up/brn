@@ -18,13 +18,11 @@ module('Integration | Component | group-navigation', function (hooks) {
       return group;
     });
     this.setProperties({ group });
-
     await render(hbs`<GroupNavigation @group={{this.group}}/>`);
-
     assert.equal(
-      this.element.querySelectorAll('button').length,
+      this.element.querySelectorAll('a').length,
       3,
-      '3 buttons',
+      '3 links',
     );
   });
 });
