@@ -95,7 +95,7 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
-    "@ember/render-modifiers": "^1.0.2",
+    "@ember/render-modifiers": "2.1.0",
     "@ember/test-helpers": "4.0.4",
     "@fortawesome/ember-fontawesome": "^0.3.0",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
@@ -147,7 +147,7 @@
     "ember-intl": "7.0.7",
     "ember-load-initializers": "^2.1.2",
     "ember-modal-dialog": "4.1.4",
-    "ember-modifier": "3.0.0",
+    "ember-modifier": "4.2.0",
     "ember-page-title": "^6.0.3",
     "ember-qunit": "8.1.1",
     "ember-ref-bucket": "^4.0.0",
