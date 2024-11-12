@@ -1,6 +1,9 @@
+import { createServer } from 'miragejs';
+
+
 /* eslint-disable @typescript-eslint/no-empty-function */
-export default function() {
-  this.passthrough('/write-coverage');
+export default function(config) {
+  // this.passthrough('/write-coverage');
 
   // These comments are here to help you get started. Feel free to delete them.
 
@@ -24,23 +27,23 @@ export default function() {
 
     https://www.ember-cli-mirage.com/docs/route-handlers/shorthands
   */
-  this.namespace = 'api'
-  this.timing = 10;
-  this.get('/users/current', ()=>{
-    return {
-      data: {
-        firstName: 'First-Name',
-        lastName: 'Last-Name',
-        email: 'em@il'
-      }
-    }
-  });
-  this.get('/v2/statistics/study/week', () => {});
-  this.get('/v2/statistics/study/year', () => {} );
-  this.resource('groups');
-  this.resource('series');
-  this.resource('exercises');
-  this.resource('tasks');
-  this.resource('study-history');
-
+          // this.namespace = 'api'
+          // this.timing = 10;
+          // this.get('/users/current', ()=>{
+          //   return {
+          //     data: {
+          //       firstName: 'First-Name',
+          //       lastName: 'Last-Name',
+          //       email: 'em@il'
+          //     }
+          //   }
+          // });
+          // this.get('/v2/statistics/study/week', () => {});
+          // this.get('/v2/statistics/study/year', () => {} );
+          // this.resource('groups');
+          // this.resource('series');
+          // this.resource('exercises');
+          // this.resource('tasks');
+          // this.resource('study-history');
+  return createServer(config);
 }
