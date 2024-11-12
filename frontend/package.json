@@ -142,7 +142,7 @@
     "ember-data": "4.12.3",
     "miragejs": "0.1.48",
     "ember-export-application-global": "^2.0.1",
-    "ember-fetch": "^8.0.2",
+    "ember-fetch": "8.1.2",
     "ember-firebase-service": "^9.0.1",
     "ember-intl": "7.0.7",
     "ember-load-initializers": "^2.1.2",
