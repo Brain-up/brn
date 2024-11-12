@@ -92,6 +92,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.powermock:powermock-mockito-release-full:1.5.4")
 
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
