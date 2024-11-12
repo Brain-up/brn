@@ -8,6 +8,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.apache.http.HttpEntity
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.impl.client.CloseableHttpClient
@@ -110,6 +111,9 @@ internal class YandexSpeechKitServiceTest {
         // THEN
         resultToken shouldBe "iamTokenValue"
         httpResponse.statusLine.statusCode shouldBe 200
+
+        unmockkStatic(HttpClientBuilder::class)
+        unmockkStatic(EntityUtils::class)
     }
 
     @Test
