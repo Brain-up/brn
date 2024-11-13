@@ -1,9 +1,10 @@
 name: Update TLS certificates for selectel
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron:  '0 0 15 * *'
+# on:
+#   workflow_dispatch:
+#   schedule:
+#     - cron:  '0 0 15 * *'
+on: pull_request
 
 jobs:
   update_certs:
