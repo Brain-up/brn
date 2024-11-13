@@ -9,18 +9,27 @@ import java.util.Optional
 @Repository
 interface TaskRepository : JpaRepository<Task, Long> {
 
-    @Query("select DISTINCT t FROM Task t left JOIN FETCH t.answerOptions")
+    @Query("""
+        select DISTINCT t FROM Task t 
+        left JOIN FETCH t.answerOptions ao 
+        WHERE t IN (select t2 from Task t2)
+    """)
     fun findAllTasksWithJoinedAnswers(): List<Task>
 
-    @Query("select DISTINCT t FROM Task t left JOIN FETCH t.answerOptions where t.exercise.id = ?1")
+    @Query("""
+        select DISTINCT t FROM Task t 
+        left JOIN FETCH t.answerOptions ao 
+        where t.exercise.id = :id
+        AND t IN (select t2 from Task t2 where t2.exercise.id = :id)
+    """)
     fun findTasksByExerciseIdWithJoinedAnswers(id: Long): List<Task>
 
-    @Query(
-        "select DISTINCT t " +
-            "FROM Task t " +
-            "left JOIN FETCH t.answerParts " +
-            "left JOIN FETCH t.answerOptions " +
-            "where t.id = ?1"
-    )
+    @Query("""
+        select DISTINCT t FROM Task t 
+        left JOIN FETCH t.answerParts ap
+        left JOIN FETCH t.answerOptions ao
+        where t.id = :id 
+        AND t IN (select t2 from Task t2 where t2.id = :id)
+    """)
     override fun findById(id: Long): Optional<Task>
 }

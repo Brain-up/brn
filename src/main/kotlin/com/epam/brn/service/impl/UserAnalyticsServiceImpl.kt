@@ -35,34 +35,36 @@ class UserAnalyticsServiceImpl(
     private val exerciseService: ExerciseService,
 ) : UserAnalyticsService {
 
-    private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
+    private val listTextExercises = setOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
 
     override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
-        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
-
         val now = timeService.now()
-        val firstWeekDay = WeekFields.of(Locale.getDefault()).dayOfWeek()
-        val startDay = now.with(firstWeekDay, 1L)
-        val from = startDay.with(LocalTime.MIN)
-        val to = startDay.plusDays(7L).with(LocalTime.MAX)
+        val (from, to) = calculateDateRange(now)
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
-        users.onEach { user ->
-            user.lastWeek = userDayStatisticService.getStatisticsForPeriod(from, to, user.id)
-            user.studyDaysInCurrentMonth = countWorkDaysForMonth(
-                userDayStatisticService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id)
-            )
+        val users = userAccountRepository.findUsersAccountsByRole(role)
+        val userIds = users.map { it.id }
 
-            val userStatistics = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
-            user.apply {
-                this.firstDone = userStatistics.firstStudy
-                this.lastDone = userStatistics.lastStudy
-                this.spentTime = userStatistics.spentTime.toDuration(DurationUnit.SECONDS)
-                this.doneExercises = userStatistics.doneExercises
+        val userStatisticsMap = studyHistoryRepository.getStatisticsByUserAccountIds(userIds)
+            .associateBy { it.userId }
+
+        return users.map { user ->
+            val userId = user.id
+            val analytics = user.toAnalyticsDto().apply {
+                lastWeek = userDayStatisticService.getStatisticsForPeriod(from, to, userId)
+                studyDaysInCurrentMonth = countWorkDaysForMonth(
+                    userDayStatisticService.getStatisticsForPeriod(startOfCurrentMonth, now, userId)
+                )
+                
+                userStatisticsMap[userId]?.let { stats ->
+                    firstDone = stats.firstStudy
+                    lastDone = stats.lastStudy
+                    spentTime = stats.spentTime.toDuration(DurationUnit.SECONDS)
+                    doneExercises = stats.doneExercises
+                }
             }
+            analytics
         }
-
-        return users
     }
 
     override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
@@ -70,23 +72,23 @@ class UserAnalyticsServiceImpl(
 
     override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
         val currentUserId = userAccountService.getCurrentUserId()
-        val lastExerciseHistory = studyHistoryRepository
-            .findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
+        
+        val lastExerciseHistory = if (audioFileMetaData.text.contains(" ") || !listTextExercises.contains(seriesType)) {
+            studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+        } else null
 
-        val text = audioFileMetaData.text
-        if (!listTextExercises.contains(seriesType))
-            audioFileMetaData.text = text.replace(" ", ", ")
+        return audioFileMetaData.apply {
+            if (!listTextExercises.contains(seriesType)) {
+                text = text.replace(" ", ", ")
+            }
 
-        if (text.contains(" ")) {
-            if (isDoneBad(lastExerciseHistory))
-                audioFileMetaData.setSpeedSlowest()
-            else
-                audioFileMetaData.setSpeedSlow()
-        } else if (isDoneBad(lastExerciseHistory)) {
-            audioFileMetaData.setSpeedSlow()
+            when {
+                text.contains(" ") && isDoneBad(lastExerciseHistory) -> setSpeedSlowest()
+                text.contains(" ") -> setSpeedSlow()
+                isDoneBad(lastExerciseHistory) -> setSpeedSlow()
+            }
         }
-        return audioFileMetaData
     }
 
     fun isDoneBad(lastHistory: StudyHistory?): Boolean =
@@ -100,4 +102,12 @@ class UserAnalyticsServiceImpl(
             .map { it.date }
             .groupBy { it.dayOfMonth }
             .keys.size
+
+    private fun calculateDateRange(now: LocalDateTime): Pair<LocalDateTime, LocalDateTime> {
+        val firstWeekDay = WeekFields.of(Locale.getDefault()).dayOfWeek()
+        val startDay = now.with(firstWeekDay, 1L)
+        val from = startDay.with(LocalTime.MIN)
+        val to = startDay.plusDays(7L).with(LocalTime.MAX)
+        return from to to
+    }
 }

@@ -17,8 +17,10 @@ class ExerciseGroupsService(
 
     fun findAllGroups(): List<ExerciseGroupDto> {
         log.debug("Searching all groups")
-        val groups: List<ExerciseGroup> = exerciseGroupRepository.findAll()
-        return groups.map { group -> group.toDto() }
+        return exerciseGroupRepository.findAll()
+            .asSequence()
+            .map { it.toDto() }
+            .toList()
     }
 
     fun findGroupDtoById(groupId: Long): ExerciseGroupDto {
@@ -30,10 +32,13 @@ class ExerciseGroupsService(
 
     fun findByLocale(locale: String): List<ExerciseGroupDto> {
         log.debug("Searching groups by locale=$locale")
-        if (locale.isEmpty())
-            return exerciseGroupRepository.findAll().map { group -> group.toDto() }
-        return exerciseGroupRepository.findByLocale(locale)
-            .map { group -> group.toDto() }
+        return when {
+            locale.isBlank() -> findAllGroups()
+            else -> exerciseGroupRepository.findByLocale(locale)
+                .asSequence()
+                .map { it.toDto() }
+                .toList()
+        }
     }
 
     fun save(exerciseGroup: ExerciseGroup): ExerciseGroup {

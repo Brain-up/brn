@@ -85,13 +85,9 @@ class TaskService(
     }
 }
 
-val vowels = "а,е,ё,и,о,у,э,ы,ю,я".toCharArray()
+private val vowelSet = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ы', 'ю', 'я')
 
-fun String.findSyllableCount(): Int {
-    var syllableCount = 0
-    this.toCharArray().forEach { if (vowels.contains(it)) syllableCount++ }
-    return syllableCount
-}
+fun String.findSyllableCount(): Int = count { it in vowelSet }
 
 fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
     id = id!!,
@@ -103,18 +99,19 @@ fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
 )
 
 fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
-    val mapVowelCountToWord: Map<Int, List<Resource>> =
-        this.groupBy { resource -> resource.word.findSyllableCount() }
-    val resultDtoSet = mutableSetOf<ResourceResponse>()
-    mapVowelCountToWord.keys
-        .sorted()
-        .forEachIndexed { index, vowelCount ->
-            val resources = mapVowelCountToWord[vowelCount]?.map { it.toResponse() }
-            resources?.forEach {
-                it.columnNumber = index
-                it.soundsCount = vowelCount
-            }
-            resultDtoSet.addAll(resources ?: emptySet())
+    val resultDtoSet = this.mapTo(ArrayList(size)) { resource ->
+        val syllableCount = resource.word.findSyllableCount()
+        resource.toResponse().apply {
+            soundsCount = syllableCount
         }
-    return resultDtoSet.toHashSet()
+    }
+    
+    val syllableCounts = resultDtoSet.map { it.soundsCount }.distinct().sorted()
+    val syllableToColumn = syllableCounts.withIndex().associate { (index, count) -> count to index }
+    
+    resultDtoSet.forEach { response ->
+        response.columnNumber = syllableToColumn[response.soundsCount]!!
+    }
+    
+    return HashSet(resultDtoSet)
 }

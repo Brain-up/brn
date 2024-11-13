@@ -79,30 +79,21 @@ class StudyHistoryService(
 
     private fun calculateUserDailyDetailStatistics(studyHistories: List<StudyHistory>):
         MutableList<UserDailyDetailStatisticsDto> {
-            val result = mutableListOf<UserDailyDetailStatisticsDto>()
-            studyHistories
+            return studyHistories
                 .groupBy { it.exercise.subGroup!!.series.name }
-                .forEach { (seriesName, histories) ->
-                    val allDoneExercisesCount = histories.size
-                    val studyHistoryByExercise = histories
-                        .groupBy { it.exercise.id }
-                    val uniqueDoneExercisesCount = studyHistoryByExercise
-                        .count()
-                    val doneExercisesSuccessfullyFromFirstTime = studyHistoryByExercise
-                        .count { it.value.size == 1 }
-                    val listenWordsCount = histories.sumOf { it.tasksCount.toInt() }
-                    val seconds = histories.sumOf { it.spentTimeInSeconds ?: 0L }
-                    val userDailyDetailStatisticsDto = UserDailyDetailStatisticsDto(
+                .map { (seriesName, histories) ->
+                    val exerciseGroups = histories.groupBy { it.exercise.id }
+                    UserDailyDetailStatisticsDto(
                         seriesName = seriesName,
-                        allDoneExercises = allDoneExercisesCount,
-                        uniqueDoneExercises = uniqueDoneExercisesCount,
-                        doneExercisesSuccessfullyFromFirstTime = doneExercisesSuccessfullyFromFirstTime,
-                        repeatedExercises = allDoneExercisesCount - doneExercisesSuccessfullyFromFirstTime,
-                        listenWordsCount = listenWordsCount,
-                        duration = (seconds.toDouble() / 60).toDuration(DurationUnit.MINUTES)
+                        allDoneExercises = histories.size,
+                        uniqueDoneExercises = exerciseGroups.size,
+                        doneExercisesSuccessfullyFromFirstTime = exerciseGroups.count { it.value.size == 1 },
+                        repeatedExercises = histories.size - exerciseGroups.count { it.value.size == 1 },
+                        listenWordsCount = histories.sumOf { it.tasksCount.toInt() },
+                        duration = (histories.sumOf { it.spentTimeInSeconds ?: 0L }.toDouble() / 60)
+                            .toDuration(DurationUnit.MINUTES)
                     )
-                    result.add(userDailyDetailStatisticsDto)
                 }
-            return result
+                .toMutableList()
         }
 }

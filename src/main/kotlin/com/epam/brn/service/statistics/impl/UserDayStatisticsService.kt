@@ -23,15 +23,16 @@ class UserDayStatisticsService(
             from = from,
             to = to
         )
-        return studyHistories.map {
-            val filteredStudyHistories = studyHistories.filter { studyHistoryFilter ->
-                studyHistoryFilter.startTime.toLocalDate() == it.startTime.toLocalDate()
+        
+        // Group histories by date first to avoid repeated filtering
+        return studyHistories
+            .groupBy { it.startTime.toLocalDate() }
+            .map { (_, dailyHistories) ->
+                DayStudyStatistics(
+                    exercisingTimeSeconds = dailyHistories.sumOf { it.executionSeconds },
+                    date = dailyHistories.first().startTime,
+                    progress = progressManager.getStatus(UserExercisingPeriod.DAY, dailyHistories)
+                )
             }
-            DayStudyStatistics(
-                exercisingTimeSeconds = filteredStudyHistories.sumOf { dayStudyHistory -> dayStudyHistory.executionSeconds },
-                date = it.startTime,
-                progress = progressManager.getStatus(UserExercisingPeriod.DAY, filteredStudyHistories)
-            )
-        }.distinctBy { it.date.toLocalDate() }
     }
 }

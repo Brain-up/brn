@@ -25,9 +25,7 @@ class SubGroupService(
         log.debug("Try to find subGroups for seriesId=$seriesId")
         return subGroupRepository
             .findBySeriesId(seriesId)
-            .parallelStream()
             .map { subGroup -> toSubGroupResponse(subGroup) }
-            .collect(Collectors.toList())
             .sortedWith(compareBy({ it.level }, { it.withPictures }))
     }
 
@@ -59,15 +57,17 @@ class SubGroupService(
 
     fun addSubGroupToSeries(subGroupRequest: SubGroupRequest, seriesId: Long): SubGroupResponse {
         log.debug("try to find subgroup by name=${subGroupRequest.name} and the level=${subGroupRequest.level}")
-        val existSubGroup = subGroupRepository.findByNameAndLevel(subGroupRequest.name, subGroupRequest.level!!)
+        val level = subGroupRequest.level ?: throw IllegalArgumentException("Level is required")
+        val existSubGroup = subGroupRepository.findByNameAndLevel(subGroupRequest.name, level)
         if (existSubGroup != null)
-            throw IllegalArgumentException("The subgroup with name=${subGroupRequest.name} and the level=${subGroupRequest.level} already exists!")
+            throw IllegalArgumentException("The subgroup with name=${subGroupRequest.name} and the level=$level already exists!")
+        
         log.debug("try to find Series by Id=$seriesId")
         val series = seriesRepository.findById(seriesId)
             .orElseThrow { EntityNotFoundException("No series was found by id=$seriesId.") }
-        val subGroup = subGroupRequest.toModel(series)
-        val savedSubGroup = subGroupRepository.save(subGroup)
-        return toSubGroupResponse(savedSubGroup)
+        
+        return subGroupRepository.save(subGroupRequest.toModel(series))
+            .let { toSubGroupResponse(it) }
     }
 
     fun toSubGroupResponse(subGroup: SubGroup): SubGroupResponse {
