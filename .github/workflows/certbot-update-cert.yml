@@ -14,6 +14,7 @@ jobs:
       - name: Configure secrets
         run: |
           echo "$S3_KEY"|base64 -d > aws-key.properties
+          echo "$FIREBASE_CONFIG"|base64 -d > firebase_config.json
           mv docker-compose-run.yml docker-compose.yml
           sed -i -e "s/_YANDEX_AUTH_TOKEN_/\\$YANDEX_AUTH_TOKEN/" docker-compose.yml
           sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
@@ -21,13 +22,12 @@ jobs:
           sed -i -e "s/_API_GITHUB_TOKEN_/\\$API_GITHUB_TOKEN/" docker-compose.yml
         env:
           S3_KEY: ${{ secrets.S3_KEY }}
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
           YANDEX_AUTH_TOKEN: ${{ secrets.YANDEX_AUTH_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           API_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
       - name: Update certs 
         run: |
-          docker compose pull
           docker compose run --rm certbot renew --allow-subset-of-names
           docker compose restart brn_fe_with_tls
-          docker image prune -af
