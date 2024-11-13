@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.runners }}
     strategy:
       matrix:
-        runners: [ epam, vscale ]
+        runners: [ selectel ]
     steps:
       - uses: actions/checkout@v4
       - name: Configure secrets
