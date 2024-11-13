@@ -18,8 +18,11 @@ interface SeriesRepository : CrudRepository<Series, Long> {
 
     fun findByNameIn(names: List<String>): List<Series>
 
-    @Query("select distinct s from Series s left join fetch s.exerciseGroup where s.exerciseGroup.id = :groupId")
-    fun findByExerciseGroupLike(groupId: Long): List<Series>
+    @Query("""
+        select s from Series s 
+        where s.exerciseGroup.id = :groupId
+    """)
+    fun findByExerciseGroupId(groupId: Long): List<Series>
 
     @Query("select distinct s from Series s left join fetch s.exercises where s.id = :seriesId")
     fun findSeriesWithExercisesById(seriesId: Long): Optional<Series>
