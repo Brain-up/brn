@@ -72,9 +72,11 @@ class UserAccountServiceImpl(
             .toSet()
 
     override fun getCurrentUser(): UserAccount {
-        val email = getCurrentUserEmail()
-        return userAccountRepository.findUserAccountByEmail(email)
-            .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
+        val authentication = SecurityContextHolder.getContext().authentication
+        return authentication.details as? UserAccount
+            ?: userAccountRepository.findUserAccountByEmail(getCurrentUserEmail())
+                .orElseThrow { EntityNotFoundException("No user was found for email=${authentication.name}") }
+                .also { authentication.details = it }
     }
 
     override fun markVisitForCurrentUser() {
@@ -96,6 +98,7 @@ class UserAccountServiceImpl(
         userAccountRepository
             .findUsersAccountsByRole(role)
             .map { it.toDto() }
+            .toList()
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {
         val currentUserAccount = getCurrentUser()
@@ -173,8 +176,9 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    private fun getDefaultRoleSet(): MutableSet<Role> =
+    private val defaultRoleSet: MutableSet<Role> by lazy {
         setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
+    }
 
     override fun deleteAutoTestUsers(): Long = userAccountRepository.deleteUserAccountsByEmailStartsWith(prefix)
     override fun deleteAutoTestUserByEmail(email: String): Long =

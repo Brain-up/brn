@@ -34,19 +34,18 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     companion object {
         private const val FOLDER_DELIMITER = "/"
+        private val mapperIndented: ObjectWriter = run {
+            val indenter = DefaultIndenter().withLinefeed("\r\n")
+            val printer = DefaultPrettyPrinter().withObjectIndenter(indenter)
+            val objectMapper = ObjectMapper()
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT)
+            objectMapper.writer(printer)
+        }
     }
 
     private val log = logger()
 
-    private final val mapperIndented: ObjectWriter
-
-    init {
-        val indenter = DefaultIndenter().withLinefeed("\r\n")
-        val printer = DefaultPrettyPrinter().withObjectIndenter(indenter)
-        val objectMapper = ObjectMapper()
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT)
-        mapperIndented = objectMapper.writer(printer)
-    }
+    private val hmacSHA256: Mac = Mac.getInstance("HmacSHA256")
 
     override fun bucketUrl(): String = awsConfig.bucketLink
 
@@ -172,21 +171,20 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         return key
     }
 
-    private fun getFolders(prefix: String): ArrayList<String> {
+    private fun getFolders(prefix: String): List<String> {
         val listObjectsV2Request = ListObjectsV2Request.builder()
             .delimiter(FOLDER_DELIMITER)
             .prefix(prefix)
             .bucket(awsConfig.bucketName)
             .build()
         val result = s3Client.listObjectsV2(listObjectsV2Request)
-        val matchingKeys = result.commonPrefixes()
-        val folders: ArrayList<String> = ArrayList()
-        matchingKeys.forEach {
-            val currentPrefix = it.prefix()
-            folders.add(currentPrefix)
-            folders.addAll(getFolders(prefix + currentPrefix))
+        return buildList {
+            result.commonPrefixes().forEach {
+                val currentPrefix = it.prefix()
+                add(currentPrefix)
+                addAll(getFolders(prefix + currentPrefix))
+            }
         }
-        return folders
     }
 
     private fun signature(conditions: AwsConfig.Conditions): Map<String, Serializable> {
@@ -262,9 +260,10 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
     }
 
     private fun hmacSHA256(data: String, key: ByteArray): ByteArray {
-        val mac = Mac.getInstance("HmacSHA256")
-        mac.init(SecretKeySpec(key, "HmacSHA256"))
-        return mac.doFinal(data.toByteArray())
+        synchronized(hmacSHA256) {
+            hmacSHA256.init(SecretKeySpec(key, "HmacSHA256"))
+            return hmacSHA256.doFinal(data.toByteArray())
+        }
     }
 
     private fun toHex(bytes: ByteArray): String = bytes.joinToString("") { "%02x".format(it) }

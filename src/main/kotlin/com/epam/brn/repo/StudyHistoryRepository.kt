@@ -25,23 +25,31 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
 
     @Query(
-        "SELECT s FROM StudyHistory s " +
-            " WHERE (s.userAccount.id, s.startTime) " +
-            " IN (SELECT userAccount.id, max(startTime) " +
-            "       FROM StudyHistory " +
-            "       GROUP BY exercise.id, userAccount.id " +
-            "       HAVING userAccount.id = :userId)"
+        """
+        SELECT s FROM StudyHistory s 
+        WHERE s.userAccount.id = :userId
+        AND s.startTime = (
+            SELECT MAX(sh.startTime)
+            FROM StudyHistory sh
+            WHERE sh.userAccount.id = s.userAccount.id
+            AND sh.exercise.id = s.exercise.id
+        )
+        """
     )
     fun findLastByUserAccountId(userId: Long): List<StudyHistory>
 
     @Query(
-        "SELECT s FROM StudyHistory s " +
-            " WHERE (s.userAccount.id, s.startTime) " +
-            " IN (SELECT userAccount.id, max(startTime) " +
-            "       FROM StudyHistory " +
-            "       WHERE exercise.subGroup.id = :subGroupId  " +
-            "       GROUP BY exercise.id, userAccount.id " +
-            "       HAVING userAccount.id = :userId)"
+        """
+        SELECT s FROM StudyHistory s 
+        WHERE s.exercise.subGroup.id = :subGroupId
+        AND s.userAccount.id = :userId
+        AND s.startTime = (
+            SELECT MAX(sh.startTime)
+            FROM StudyHistory sh
+            WHERE sh.userAccount.id = s.userAccount.id
+            AND sh.exercise.id = s.exercise.id
+        )
+        """
     )
     fun findLastBySubGroupAndUserAccount(subGroupId: Long, userId: Long): List<StudyHistory>
 
@@ -93,9 +101,16 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     ): List<StudyHistory>
 
     @Query(
-        "SELECT MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
-            " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
-            " FROM StudyHistory s WHERE user_id = :userId"
+        """
+        SELECT NEW com.epam.brn.model.projection.UserStatisticView(
+            MIN(s.startTime),
+            MAX(s.startTime),
+            COALESCE(SUM(s.spentTimeInSeconds), 0),
+            COUNT(DISTINCT s.exercise.id)
+        )
+        FROM StudyHistory s 
+        WHERE s.userAccount.id = :userId
+        """
     )
     fun getStatisticsByUserAccountId(userId: Long?): UserStatisticView
 

@@ -10,49 +10,62 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.Optional
+import org.springframework.data.repository.query.Param
 
 @Repository
 interface UserAccountRepository : JpaRepository<UserAccount, Long> {
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
-            left JOIN FETCH u.headphones where u.fullName = ?1"""
+        """select u FROM UserAccount u 
+            JOIN FETCH u.roleSet 
+            LEFT JOIN FETCH u.headphones 
+            where u.fullName = :fullName"""
     )
-    fun findUserAccountByName(fullName: String): Optional<UserAccount>
+    fun findUserAccountByName(@Param("fullName") fullName: String): Optional<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
-            left JOIN FETCH u.headphones where LOWER(u.email) = LOWER( ?1)"""
+        """select u FROM UserAccount u 
+            JOIN FETCH u.roleSet 
+            LEFT JOIN FETCH u.headphones 
+            where LOWER(u.email) = LOWER(:email)"""
     )
-    fun findUserAccountByEmail(email: String): Optional<UserAccount>
+    fun findUserAccountByEmail(@Param("email") email: String): Optional<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet
-            left JOIN FETCH u.headphones where u.id = ?1"""
+        """select u FROM UserAccount u 
+            JOIN FETCH u.roleSet 
+            LEFT JOIN FETCH u.headphones 
+            where u.id = :id"""
     )
-    fun findUserAccountById(id: Long): Optional<UserAccount>
+    fun findUserAccountById(@Param("id") id: Long): Optional<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
-            left JOIN FETCH u.headphones where u.doctor = ?1"""
+        """select u FROM UserAccount u 
+            JOIN FETCH u.roleSet 
+            LEFT JOIN FETCH u.headphones 
+            where u.doctor = :doctor"""
     )
-    fun findUserAccountsByDoctor(doctor: UserAccount): List<UserAccount>
+    fun findUserAccountsByDoctor(@Param("doctor") doctor: UserAccount): List<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet 
-            left JOIN FETCH u.headphones where u.doctor.id = ?1"""
+        """select u FROM UserAccount u 
+            JOIN FETCH u.roleSet 
+            LEFT JOIN FETCH u.headphones 
+            where u.doctor.id = :doctorId"""
     )
-    fun findUserAccountsByDoctorId(doctorId: Long): List<UserAccount>
+    fun findUserAccountsByDoctorId(@Param("doctorId") doctorId: Long): List<UserAccount>
 
     fun findByUserId(uuid: String): UserAccount?
 
     fun findAllByUserIdIsNullAndIsFirebaseErrorIsFalse(pageable: Pageable): Page<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet roles 
-            left JOIN FETCH u.headphones where roles.name = :roleName"""
+        """select u FROM UserAccount u 
+            JOIN FETCH u.roleSet roles 
+            LEFT JOIN FETCH u.headphones 
+            where roles.name = :roleName"""
     )
-    fun findUsersAccountsByRole(roleName: String): List<UserAccount>
+    fun findUsersAccountsByRole(@Param("roleName") roleName: String): List<UserAccount>
 
     @Transactional
     @Modifying

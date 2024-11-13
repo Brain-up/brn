@@ -19,13 +19,16 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
 
     override fun getStorageFolders(): List<String> {
         val blobs = cloudConfig.storage!!.get(cloudConfig.bucketName).list()
-
         val folders: MutableSet<String> = TreeSet()
+        
         for (blob in blobs.iterateAll()) {
-            var fileName = blob.name.replaceAfterLast("/", "")
-            while (fileName.contains("/")) {
-                folders.add(fileName)
-                fileName = fileName.removeSuffix("/").replaceAfterLast("/", "")
+            val parts = blob.name.split("/")
+            val sb = StringBuilder()
+            
+            // Build each parent folder path
+            for (i in 0 until parts.size - 1) {
+                sb.append(parts[i]).append("/")
+                folders.add(sb.toString())
             }
         }
         return ArrayList(folders)
