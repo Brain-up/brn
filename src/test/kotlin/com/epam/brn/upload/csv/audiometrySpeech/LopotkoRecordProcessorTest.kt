@@ -96,7 +96,6 @@ internal class LopotkoRecordProcessorTest {
                 ofType(String::class)
             )
         } returns null
-        every { wordsService.createTxtFilesWithDiagnosticWords(any()) } returns Unit
 
         mockFindResourceByWordLike("бал", resource_бал())
         mockFindResourceByWordLike("бум", resource_бум())

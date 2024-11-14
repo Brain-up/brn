@@ -61,7 +61,6 @@ internal class SeriesPhrasesRecordProcessorTest {
         every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
         every { wordsService.getSubFilePathForWord(any()) } returns ""
         every { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) } returns Optional.empty()
-        every { wordsService.addWordsToDictionary(any(), any()) } returns Unit
         every { resourceRepository.saveAll(any<List<Resource>>()) } returns emptyList()
         every { exerciseRepository.save(any()) } returns exercise
 
@@ -74,7 +73,6 @@ internal class SeriesPhrasesRecordProcessorTest {
         verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
         verify(exactly = 2) { wordsService.getSubFilePathForWord(any()) }
         verify(exactly = 2) { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) }
-        verify(exactly = 1) { wordsService.addWordsToDictionary(any(), any()) }
         verify(exactly = 1) { resourceRepository.saveAll(any<List<Resource>>()) }
         verify(exactly = 1) { exerciseRepository.save(any()) }
         exercises shouldHaveSize 1
