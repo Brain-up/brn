@@ -28,7 +28,7 @@ class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userDayStatisticService: UserPeriodStatisticsService<DayStudyStatistics>,
+    private val userDayStatisticsService: UserPeriodStatisticsService<DayStudyStatistics>,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
@@ -48,25 +48,25 @@ class UserAnalyticsServiceImpl(
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
         users.onEach { user ->
-            user.lastWeek = userDayStatisticService.getStatisticsForPeriod(from, to, user.id)
+            user.lastWeek = userDayStatisticsService.getStatisticsForPeriod(from, to, user.id)
             user.studyDaysInCurrentMonth = countWorkDaysForMonth(
-                userDayStatisticService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id)
+                userDayStatisticsService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id)
             )
 
-            val userStatistics = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
+            val userStatistic = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
             user.apply {
-                this.firstDone = userStatistics.firstStudy
-                this.lastDone = userStatistics.lastStudy
-                this.spentTime = userStatistics.spentTime.toDuration(DurationUnit.SECONDS)
-                this.doneExercises = userStatistics.doneExercises
+                this.firstDone = userStatistic.firstStudy
+                this.lastDone = userStatistic.lastStudy
+                this.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
+                this.doneExercises = userStatistic.doneExercises
             }
         }
 
         return users
     }
 
-    override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
-        textToSpeechService.generateAudioOggFileWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
+    override fun prepareAudioStreamForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
+        textToSpeechService.generateAudioOggStreamWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
 
     override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
         val currentUserId = userAccountService.getCurrentUserId()
