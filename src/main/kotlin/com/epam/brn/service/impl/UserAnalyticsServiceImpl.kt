@@ -28,7 +28,7 @@ class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
+    private val userDayStatisticsService: UserPeriodStatisticsService<DayStudyStatistics>,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
@@ -48,12 +48,12 @@ class UserAnalyticsServiceImpl(
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
         users.onEach { user ->
-            user.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, user.id)
+            user.lastWeek = userDayStatisticsService.getStatisticsForPeriod(from, to, user.id)
             user.studyDaysInCurrentMonth = countWorkDaysForMonth(
-                userDayStatisticService.getStatisticForPeriod(startOfCurrentMonth, now, user.id)
+                userDayStatisticsService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id)
             )
 
-            val userStatistic = studyHistoryRepository.getStatisticByUserAccountId(user.id)
+            val userStatistic = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
             user.apply {
                 this.firstDone = userStatistic.firstStudy
                 this.lastDone = userStatistic.lastStudy
@@ -95,7 +95,7 @@ class UserAnalyticsServiceImpl(
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
 
-    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistic>): Int =
+    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistics>): Int =
         dayStudyStatistics
             .map { it.date }
             .groupBy { it.dayOfMonth }
