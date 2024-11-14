@@ -148,7 +148,7 @@ class AzureTextToSpeechServiceTest {
         every { ttsService.textToSpeech(audioFileMetaData) } returns mockInputStream
 
         // WHEN
-        val file = ttsService.generateAudioOggFileWithValidation(audioFileMetaData)
+        val file = ttsService.generateAudioOggStreamWithValidation(audioFileMetaData)
 
         // THEN
         file.readBytes() shouldBe audioBytes

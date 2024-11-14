@@ -22,4 +22,4 @@ jobs:
           API_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
       - name: Create cert
         run: |
-          docker-compose run --rm certbot certonly --webroot --webroot-path=/var/www/html --email brainupproject@yandex.ru -d brainup.fun
+          docker compose run --rm certbot certonly --webroot --webroot-path=/var/www/html --email brainupproject@yandex.ru -d brainup.fun

@@ -76,7 +76,7 @@ class AzureTextToSpeechService(
     }
 
     @ExcludeFromJacocoGeneratedReport
-    override fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
+    fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
         val fileName = wordsService.getLocalFilePathForWord(audioFileMetaData)
         log.info("For word $audioFileMetaData started creation audio file with name `$fileName`")
         val fileOgg = File(fileName)
@@ -109,7 +109,7 @@ class AzureTextToSpeechService(
      * @param pitch See description in [AzurePitches]
      * @param style Closely related to chosen voice. See azure_speech_style table [AzureVoiceInfo.styleList]
      */
-    override fun generateAudioOggFileWithValidation(audioFileMetaData: AudioFileMetaData): InputStream =
+    override fun generateAudioOggStreamWithValidation(audioFileMetaData: AudioFileMetaData): InputStream =
         textToSpeech(audioFileMetaData)
 
     /**

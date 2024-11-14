@@ -121,17 +121,17 @@ end-point specification is here: https://github.com/Brain-up/brn/blob/master/api
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
 #### Useful Postman scripts:
-- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistic (you can use it with `brnlogin` request in `Test` tab)
+- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistics (you can use it with `brnlogin` request in `Test` tab)
 
 ### Deploy Application USING DOCKER COMPOSE:
 (back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
 From console, from project's folder, execute:
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 Alternatively, use daemon mode (no console output):
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 Local REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
 Public is always here https://brainup.site/admin/swagger (login with ADMIN role user)

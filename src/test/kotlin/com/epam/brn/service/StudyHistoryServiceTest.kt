@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.UserAccountDto
-import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
+import com.epam.brn.dto.statistics.UserDailyDetailStatisticsDto
 import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
@@ -235,7 +235,7 @@ internal class StudyHistoryServiceTest {
     }
 
     @Test
-    fun `getDailyStatistics without user should return statistic for day for user from current session`() {
+    fun `getDailyStatistics without user should return statistics for day for user from current session`() {
         // GIVEN
         val userId = 1L
         val exerciseDate = LocalDateTime.now()
@@ -270,14 +270,14 @@ internal class StudyHistoryServiceTest {
 
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate)
-        val statistic = statisticsForPeriod.first()
+        val statistics = statisticsForPeriod.first()
 
         // THEN
-        assertEquals(expectedStatistic, statistic)
+        assertEquals(expectedStatistic, statistics)
     }
 
     @Test
-    fun `getDailyStatistics (2 equals exercise) should return statistic for day`() {
+    fun `getDailyStatistics (2 equals exercise) should return statistics for day`() {
         // GIVEN
         val userId = 1L
         val exerciseDate = LocalDateTime.now()
@@ -312,12 +312,12 @@ internal class StudyHistoryServiceTest {
 
         // THEN
         assertEquals(1, statisticsForPeriod.size)
-        val statistic = statisticsForPeriod.first()
-        assertEquals(expectedStatistic, statistic)
+        val statistics = statisticsForPeriod.first()
+        assertEquals(expectedStatistic, statistics)
     }
 
     @Test
-    fun `getDailyStatistics (2 different series with one repeated exercise) should return statistic for day`() {
+    fun `getDailyStatistics (2 different series with one repeated exercise) should return statistics for day`() {
         // GIVEN
         val userId = 1L
         val exerciseDate = LocalDateTime.now()

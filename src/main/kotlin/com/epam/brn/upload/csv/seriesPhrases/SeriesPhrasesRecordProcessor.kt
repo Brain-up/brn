@@ -42,7 +42,6 @@ class SeriesPhrasesRecordProcessor(
             val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
                 val answerOptions = extractAnswerOptions(record, locale)
-                wordsService.addWordsToDictionary(locale, answerOptions.map { resource -> resource.word })
                 resourceRepository.saveAll(answerOptions)
 
                 val newExercise = generateExercise(record, subGroup)
