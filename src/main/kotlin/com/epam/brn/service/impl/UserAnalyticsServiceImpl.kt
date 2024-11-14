@@ -2,7 +2,7 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
@@ -13,7 +13,7 @@ import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
-import com.epam.brn.service.statistic.UserPeriodStatisticService
+import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -91,6 +91,9 @@ class UserAnalyticsServiceImpl(
 
     fun isDoneBad(lastHistory: StudyHistory?): Boolean =
         lastHistory != null && !exerciseService.isDoneWell(lastHistory)
+
+    fun isMultiWords(seriesType: ExerciseType): Boolean =
+        seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
 
     fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistic>): Int =
         dayStudyStatistics

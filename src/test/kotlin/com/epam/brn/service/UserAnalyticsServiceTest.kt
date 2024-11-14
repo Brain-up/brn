@@ -2,7 +2,7 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.azure.tts.AzureRates
-import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.Voice
@@ -14,7 +14,7 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAnalyticsServiceImpl
-import com.epam.brn.service.statistic.UserPeriodStatisticService
+import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -45,7 +45,7 @@ internal class UserAnalyticsServiceTest {
     lateinit var exerciseRepository: ExerciseRepository
 
     @MockK
-    lateinit var userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>
+    lateinit var userDayStatisticService: UserPeriodStatisticsService<DayStudyStatistics>
 
     @MockK
     lateinit var timeService: TimeService
@@ -66,7 +66,7 @@ internal class UserAnalyticsServiceTest {
     lateinit var doctorAccount: UserAccount
 
     @MockK(relaxed = true)
-    lateinit var dayStudyStatistic: DayStudyStatistic
+    lateinit var dayStudyStatistics: DayStudyStatistics
 
     @MockK
     lateinit var userStatisticView: UserStatisticView
@@ -75,16 +75,16 @@ internal class UserAnalyticsServiceTest {
     fun `should return all users with analytics`() {
 
         val usersList = listOf(doctorAccount, doctorAccount)
-        val dayStatisticList = listOf(dayStudyStatistic, dayStudyStatistic)
+        val dayStatisticList = listOf(dayStudyStatistics, dayStudyStatistics)
         every { userStatisticView.firstStudy } returns LocalDateTime.now()
         every { userStatisticView.lastStudy } returns LocalDateTime.now()
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
         every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
-        every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
+        every { userDayStatisticService.getStatisticsForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
-        every { studyHistoryRepository.getStatisticByUserAccountId(any()) } returns userStatisticView
+        every { studyHistoryRepository.getStatisticsByUserAccountId(any()) } returns userStatisticView
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
@@ -95,16 +95,16 @@ internal class UserAnalyticsServiceTest {
     fun `should not return user with analytics`() {
 
         val usersList = listOf(doctorAccount)
-        val dayStatisticList = emptyList<DayStudyStatistic>()
+        val dayStatisticList = emptyList<DayStudyStatistics>()
         every { userStatisticView.firstStudy } returns LocalDateTime.now()
         every { userStatisticView.lastStudy } returns LocalDateTime.now()
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
         every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
-        every { userDayStatisticService.getStatisticForPeriod(any(), any(), any()) } returns dayStatisticList
+        every { userDayStatisticService.getStatisticsForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
-        every { studyHistoryRepository.getStatisticByUserAccountId(any()) } returns userStatisticView
+        every { studyHistoryRepository.getStatisticsByUserAccountId(any()) } returns userStatisticView
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
@@ -202,7 +202,7 @@ internal class UserAnalyticsServiceTest {
     }
 
     @Test
-    fun `should prepareAudioFileMetaData default speed correctly for one word and good statistic`() {
+    fun `should prepareAudioFileMetaData default speed correctly for one word and good statistics`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
         every { userAccountService.getCurrentUserId() } returns currentUserId
@@ -223,7 +223,7 @@ internal class UserAnalyticsServiceTest {
     }
 
     @Test
-    fun `should prepareAudioFileMetaData slow correctly for single word and bad statistic`() {
+    fun `should prepareAudioFileMetaData slow correctly for single word and bad statistics`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
         every { userAccountService.getCurrentUserId() } returns currentUserId

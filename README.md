@@ -121,7 +121,7 @@ end-point specification is here: https://github.com/Brain-up/brn/blob/master/api
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
 #### Useful Postman scripts:
-- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistic (you can use it with `brnlogin` request in `Test` tab)
+- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistics (you can use it with `brnlogin` request in `Test` tab)
 
 ### Deploy Application USING DOCKER COMPOSE:
 (back-end part and front-end parts, but it is rather slow. it is better to use GitPod)

@@ -26,7 +26,7 @@ Start to implement mobile version of application.
 
 2022
 Implement `Diagnostic` module with 3 tests for user to measure their progress in application regularly.
-Implement `Statistic` module for analysing how regular user make exercises.
+Implement `Statistics` module for analysing how regular user make exercises.
 Implement new design for site.
 
 Platform updates and requirements gathering.

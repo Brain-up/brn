@@ -281,7 +281,7 @@ internal class UserDetailControllerTest {
     }
 
     @Test
-    fun `getUsers should return users with statistic when withAnalytics is true`() {
+    fun `getUsers should return users with statistics when withAnalytics is true`() {
         // GIVEN
         val withAnalytics = true
         val role = BrnRole.USER
