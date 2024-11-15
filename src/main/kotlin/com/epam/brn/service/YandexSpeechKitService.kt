@@ -43,8 +43,8 @@ class YandexSpeechKitService(
     @Value("\${yandex.format}")
     lateinit var format: String
 
-    @Value("\${yandex.emotion}")
-    lateinit var emotion: String
+    @Value("\${yandex.emotions}")
+    lateinit var emotions: List<String>
 
     var iamToken: String = ""
     var iamTokenExpiresTime: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
@@ -78,6 +78,7 @@ class YandexSpeechKitService(
      */
     fun generateAudioStream(audioFileMetaData: AudioFileMetaData): InputStream {
         val token = getYandexIamTokenForAudioGeneration()
+        val emotion = emotions.random()
         val parameters = ArrayList<NameValuePair>().apply {
             add(BasicNameValuePair("folderId", folderId))
             add(BasicNameValuePair("lang", audioFileMetaData.locale))
