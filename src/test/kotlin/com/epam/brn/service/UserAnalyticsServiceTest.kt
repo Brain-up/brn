@@ -131,8 +131,8 @@ internal class UserAnalyticsServiceTest {
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
-        metaDataResult.speedFloat shouldBe "0.8"
-        metaDataResult.speedCode shouldBe AzureRates.SLOW
+        metaDataResult.speedFloat shouldBe "1.2"
+        metaDataResult.speedCode shouldBe AzureRates.FAST
         metaDataResult.text shouldBe "мама, папа"
     }
 
@@ -152,8 +152,8 @@ internal class UserAnalyticsServiceTest {
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
-        metaDataResult.speedFloat shouldBe "0.8"
-        metaDataResult.speedCode shouldBe AzureRates.SLOW
+        metaDataResult.speedFloat shouldBe "1.2"
+        metaDataResult.speedCode shouldBe AzureRates.FAST
         metaDataResult.text shouldBe "мама папа"
     }
 
@@ -174,8 +174,8 @@ internal class UserAnalyticsServiceTest {
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
-        metaDataResult.speedFloat shouldBe "0.65"
-        metaDataResult.speedCode shouldBe AzureRates.X_SLOW
+        metaDataResult.speedFloat shouldBe "0.8"
+        metaDataResult.speedCode shouldBe AzureRates.SLOW
         metaDataResult.text shouldBe "мама, папа"
     }
 
@@ -196,8 +196,8 @@ internal class UserAnalyticsServiceTest {
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
-        metaDataResult.speedFloat shouldBe "0.65"
-        metaDataResult.speedCode shouldBe AzureRates.X_SLOW
+        metaDataResult.speedFloat shouldBe "0.8"
+        metaDataResult.speedCode shouldBe AzureRates.SLOW
         metaDataResult.text shouldBe "мама папа"
     }
 
@@ -217,8 +217,8 @@ internal class UserAnalyticsServiceTest {
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
-        metaDataResult.speedFloat shouldBe "1"
-        metaDataResult.speedCode shouldBe AzureRates.DEFAULT
+        metaDataResult.speedFloat shouldBe "1.2"
+        metaDataResult.speedCode shouldBe AzureRates.FAST
         metaDataResult.text shouldBe "мама"
     }
 
@@ -240,6 +240,22 @@ internal class UserAnalyticsServiceTest {
         // THEN
         metaDataResult.speedFloat shouldBe "0.8"
         metaDataResult.speedCode shouldBe AzureRates.SLOW
+    }
+
+    @Test
+    fun `should prepareAudioFileMetaData normal speed for single word`() {
+        // GIVEN
+        every { userAccountService.getCurrentUserId() } returns currentUserId
+        every {
+            studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+        } returns null
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        val audioFileMetaData = AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        // WHEN
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        // THEN
+        metaDataResult.speedFloat shouldBe "1"
+        metaDataResult.speedCode shouldBe AzureRates.DEFAULT
     }
 
     @Test

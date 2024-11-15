@@ -66,31 +66,33 @@ class UserAnalyticsServiceImpl(
     }
 
     override fun prepareAudioStreamForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
-        textToSpeechService.generateAudioOggStreamWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
+        textToSpeechService
+            .generateAudioOggStreamWithValidation(
+                prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+            )
 
     override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
         val currentUserId = userAccountService.getCurrentUserId()
         val lastExerciseHistory = studyHistoryRepository
             .findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
-
         val text = audioFileMetaData.text
         if (!listTextExercises.contains(seriesType))
             audioFileMetaData.text = text.replace(" ", ", ")
-
-        if (text.contains(" ")) {
-            if (isDoneBad(lastExerciseHistory))
-                audioFileMetaData.setSpeedSlowest()
-            else
-                audioFileMetaData.setSpeedSlow()
-        } else if (isDoneBad(lastExerciseHistory)) {
+        if (lastExerciseHistory == null)
+            audioFileMetaData.setSpeedNormal()
+        else if (isDoneBad(lastExerciseHistory))
             audioFileMetaData.setSpeedSlow()
-        }
+        else if (isDoneWell(lastExerciseHistory))
+            audioFileMetaData.setSpeedFaster()
         return audioFileMetaData
     }
 
     fun isDoneBad(lastHistory: StudyHistory?): Boolean =
         lastHistory != null && !exerciseService.isDoneWell(lastHistory)
+
+    fun isDoneWell(lastHistory: StudyHistory?): Boolean =
+        lastHistory != null && exerciseService.isDoneWell(lastHistory)
 
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES

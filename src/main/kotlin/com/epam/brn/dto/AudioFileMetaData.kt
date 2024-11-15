@@ -22,4 +22,14 @@ data class AudioFileMetaData(
         this.speedCode = AzureRates.X_SLOW
         this.speedFloat = "0.65"
     }
+
+    fun setSpeedNormal() {
+        this.speedCode = AzureRates.DEFAULT
+        this.speedFloat = "1"
+    }
+
+    fun setSpeedFaster() {
+        this.speedCode = AzureRates.FAST
+        this.speedFloat = "1.2"
+    }
 }
