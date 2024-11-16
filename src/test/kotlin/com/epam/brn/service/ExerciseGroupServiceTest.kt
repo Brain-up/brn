@@ -10,7 +10,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
@@ -23,20 +22,6 @@ internal class ExerciseGroupServiceTest {
 
     @InjectMockKs
     lateinit var exerciseGroupsService: ExerciseGroupsService
-
-    @Test
-    fun `should get all groups`() {
-        // GIVEN
-        val exerciseGroupMock: ExerciseGroup = mockk(relaxed = true)
-        val exerciseGroupDtoMock = ExerciseGroupDto(id = 1, locale = "en", name = "name", description = "descr")
-
-        every { exerciseGroupMock.toDto() } returns (exerciseGroupDtoMock)
-        every { exerciseGroupRepository.findAll() } returns (listOf(exerciseGroupMock))
-        // WHEN
-        val actualResult: List<ExerciseGroupDto> = exerciseGroupsService.findAllGroups()
-        // THEN
-        assertTrue(actualResult.contains(exerciseGroupDtoMock))
-    }
 
     @Test
     fun `should get group by id`() {

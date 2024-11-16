@@ -45,6 +45,13 @@ data class ExerciseGroup(
         series = series.map { series -> series.id }.toMutableList()
     )
 
+    fun toDtoWithoutSeries() = ExerciseGroupDto(
+        id = id,
+        locale = locale,
+        name = name,
+        description = description
+    )
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

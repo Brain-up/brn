@@ -6,6 +6,7 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.util.Optional
 
@@ -15,34 +16,25 @@ class ExerciseGroupsService(
 ) {
     private val log = logger()
 
-    fun findAllGroups(): List<ExerciseGroupDto> {
-        log.debug("Searching all groups")
-        val groups: List<ExerciseGroup> = exerciseGroupRepository.findAll()
-        return groups.map { group -> group.toDto() }
-    }
-
+    @Cacheable("groupsById")
     fun findGroupDtoById(groupId: Long): ExerciseGroupDto {
         log.debug("Searching group with id=$groupId")
         val group: Optional<ExerciseGroup> = exerciseGroupRepository.findById(groupId)
-        return group.map { x -> x.toDto() }
-            .orElseThrow { EntityNotFoundException("no group was found for id=$groupId") }
+        return group.map { it.toDto() }
+            .orElseThrow { EntityNotFoundException("No group was found for id=$groupId") }
     }
 
+    @Cacheable("groupsByLocale")
     fun findByLocale(locale: String): List<ExerciseGroupDto> {
-        log.debug("Searching groups by locale=$locale")
-        if (locale.isEmpty())
-            return exerciseGroupRepository.findAll().map { group -> group.toDto() }
-        return exerciseGroupRepository.findByLocale(locale)
-            .map { group -> group.toDto() }
-    }
-
-    fun save(exerciseGroup: ExerciseGroup): ExerciseGroup {
-        return exerciseGroupRepository.save(exerciseGroup)
+        return if (locale.isEmpty())
+            exerciseGroupRepository.findAll().map { group -> group.toDto() }
+        else exerciseGroupRepository.findByLocale(locale)
+            .map { group -> group.toDtoWithoutSeries() }
     }
 
     fun findGroupByCode(groupCode: String): ExerciseGroup {
         log.debug("Searching group with code=$groupCode")
         return exerciseGroupRepository.findByCode(groupCode)
-            .orElseThrow { EntityNotFoundException("no group was found for code=$groupCode") }
+            .orElseThrow { EntityNotFoundException("No group was found for code=$groupCode") }
     }
 }
