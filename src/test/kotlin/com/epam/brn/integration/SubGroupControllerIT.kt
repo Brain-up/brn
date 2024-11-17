@@ -95,8 +95,7 @@ class SubGroupControllerIT : BaseIT() {
                 .contentType(MediaType.APPLICATION_JSON)
         )
         // THEN
-        resultAction
-            .andExpect(status().isOk)
+        resultAction.andExpect(status().isOk)
     }
 
     @Test
@@ -115,7 +114,10 @@ class SubGroupControllerIT : BaseIT() {
         resultAction
             .andExpect(status().isBadRequest)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.content().string(containsString("Can not delete subGroup because there are exercises that refer to the subGroup.")))
+            .andExpect(
+                MockMvcResultMatchers.content()
+                    .string(containsString("Can not delete subGroup because there are exercises that refer to the subGroup."))
+            )
     }
 
     @Test
@@ -133,7 +135,10 @@ class SubGroupControllerIT : BaseIT() {
         resultAction
             .andExpect(status().isBadRequest)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.content().string(containsString("Can not delete subGroup because subGroup is not found by this id.")))
+            .andExpect(
+                MockMvcResultMatchers.content()
+                    .string(containsString("Can not delete subGroup because subGroup is not found by this id."))
+            )
     }
 
     @Test
