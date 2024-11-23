@@ -21,6 +21,8 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.cloud.CloudService
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -33,6 +35,7 @@ class TaskService(
 ) {
     private val log = logger()
 
+    @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
@@ -51,6 +54,7 @@ class TaskService(
         }
     }
 
+    @Cacheable("tasksById")
     fun getTaskById(taskId: Long): Any {
         log.debug("Searching task with id=$taskId")
         val task =
@@ -75,6 +79,7 @@ class TaskService(
             }
     }
 
+    @CacheEvict("tasksByExerciseId", "tasksById")
     @Transactional
     fun save(task: Task): Task {
         val resources = mutableSetOf<Resource>()
@@ -85,13 +90,9 @@ class TaskService(
     }
 }
 
-val vowels = "а,е,ё,и,о,у,э,ы,ю,я".toCharArray()
+private val vowelSet = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ы', 'ю', 'я')
 
-fun String.findSyllableCount(): Int {
-    var syllableCount = 0
-    this.toCharArray().forEach { if (vowels.contains(it)) syllableCount++ }
-    return syllableCount
-}
+fun String.findSyllableCount(): Int = count { it in vowelSet }
 
 fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
     id = id!!,

@@ -52,8 +52,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.security:spring-security-test")
     implementation("org.springframework.boot:spring-boot-devtools")
+
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
 
