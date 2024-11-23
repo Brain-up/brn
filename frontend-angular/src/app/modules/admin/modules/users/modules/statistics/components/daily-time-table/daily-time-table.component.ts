@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject } from '@angular/core';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { Dayjs } from 'dayjs';
 import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
@@ -23,6 +14,9 @@ import { MatTableDataSource } from '@angular/material/table';
     standalone: false
 })
 export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
+  private readonly adminApiService = inject(AdminApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   private readonly destroyer$ = new Subject<void>();
 
   @Input()
@@ -45,12 +39,6 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
     'doneExercisesSuccessfullyFromFirstTime',
     'listenWordsCount'
   ];
-
-  constructor(
-    private readonly adminApiService: AdminApiService,
-    private readonly cdr: ChangeDetectorRef,
-  ) {
-  }
 
   ngOnInit(): void {
     this.loadData();

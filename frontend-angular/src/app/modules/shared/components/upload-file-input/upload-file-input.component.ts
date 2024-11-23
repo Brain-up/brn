@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ViewChild,
-  forwardRef,
-  Renderer2,
-  ElementRef,
-  HostListener,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, forwardRef, Renderer2, ElementRef, HostListener, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -24,13 +16,13 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
     standalone: false
 })
 export class UploadFileInputComponent implements ControlValueAccessor {
+  private readonly renderer = inject(Renderer2);
+
   private onChange: (value: File) => void;
   private onTouched: () => void;
 
   @ViewChild('file', { static: true })
   private file: ElementRef<HTMLInputElement>;
-
-  constructor(private readonly renderer: Renderer2) {}
 
   @HostListener('change')
   public change(): void {

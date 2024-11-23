@@ -11,13 +11,7 @@ import { TokenService } from '@root/services/token.service';
 import { User } from '@admin/models/user.model';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 
 @Component({
     selector: 'app-statistics',
@@ -27,6 +21,12 @@ import {
     standalone: false
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly adminApiService = inject(AdminApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private tokenService = inject(TokenService);
+  readonly matDialog = inject(MatDialog);
+
   private readonly destroyer$ = new Subject<void>();
   public readonly userId: number;
 
@@ -43,13 +43,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   public monthTimeTrackData: UserYearlyStatistics[];
   public userData: any;
 
-  constructor(
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly adminApiService: AdminApiService,
-    private readonly cdr: ChangeDetectorRef,
-    private tokenService: TokenService,
-    public readonly matDialog: MatDialog,
-  ) {
+  constructor() {
     this.userId = Number(this.activatedRoute.snapshot.params.userId);
   }
 

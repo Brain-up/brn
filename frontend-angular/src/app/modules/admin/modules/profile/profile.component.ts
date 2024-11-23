@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { TokenService } from '@root/services/token.service';
 import { UserCredential } from '@root/models/auth-token';
 
@@ -10,8 +10,9 @@ import { UserCredential } from '@root/models/auth-token';
     standalone: false
 })
 export class ProfileComponent implements OnInit {
+  private readonly tokenService = inject(TokenService);
+
   public adminData: UserCredential;
-  constructor(private readonly tokenService: TokenService) {}
 
   ngOnInit(): void {
     this.getAdmindata();

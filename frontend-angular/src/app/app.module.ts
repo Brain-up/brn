@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,7 +42,10 @@ import { environment } from 'src/environments/environment';
         provideHttpClient(withInterceptorsFromDi()),
     ] })
 export class AppModule {
-  constructor(translateService: TranslateService, svgIconsRegistrarService: SvgIconsRegistrarService) {
+  constructor() {
+    const translateService = inject(TranslateService);
+    const svgIconsRegistrarService = inject(SvgIconsRegistrarService);
+
     translateService.setDefaultLang(ALocaleStorage.LANG.get() ?? DEFAULT_LANG);
     dayjs.locale(translateService.defaultLang);
 

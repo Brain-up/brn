@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Contributor, contributorTypes } from '@admin/models/contrubutor.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,6 +14,11 @@ import { BehaviorSubject } from 'rxjs';
 })
 
 export class ContributorComponent implements OnInit {
+  private activatedRoute = inject(ActivatedRoute);
+  private formBuilder = inject(UntypedFormBuilder);
+  private router = inject(Router);
+  private contributorApiService = inject(ContributorApiService);
+
   public contributorForm: UntypedFormGroup;
   public contributor;
   public contributorTypes = contributorTypes;
@@ -21,14 +26,6 @@ export class ContributorComponent implements OnInit {
   public showErrormessage: boolean;
   public readonly isLoading$ = new BehaviorSubject(false);
   public pictureUrlSubj = new BehaviorSubject('');
-
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private contributorApiService: ContributorApiService,
-  ) {
-  }
 
   ngOnInit(): void {
     this.createForm();

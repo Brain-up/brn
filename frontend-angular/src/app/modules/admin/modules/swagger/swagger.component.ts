@@ -2,12 +2,7 @@ import SwaggerUI from 'swagger-ui';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, inject } from '@angular/core';
 
 @Component({
     selector: 'app-swagger',
@@ -17,7 +12,8 @@ import {
     standalone: false
 })
 export class SwaggerComponent implements OnDestroy, OnInit {
-  constructor(private readonly adminApiService: AdminApiService) {}
+  private readonly adminApiService = inject(AdminApiService);
+
 
   set swagger(value: string) {
     this.swaggerUI = SwaggerUI({

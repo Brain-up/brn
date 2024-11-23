@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -16,19 +16,17 @@ import { TranslateService } from '@ngx-translate/core';
     standalone: false
 })
 export class LoadFilesComponent implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly formBuilder = inject(UntypedFormBuilder);
+  private readonly snackBarService = inject(SnackBarService);
+  private readonly cloudApiService = inject(CloudApiService);
+  private readonly adminApiService = inject(AdminApiService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly destroyer$ = new Subject<void>();
 
   public folders$: Observable<string[]>;
   public uploadFileForm: UntypedFormGroup;
-
-  constructor(
-    private readonly router: Router,
-    private readonly formBuilder: UntypedFormBuilder,
-    private readonly snackBarService: SnackBarService,
-    private readonly cloudApiService: CloudApiService,
-    private readonly adminApiService: AdminApiService,
-    private readonly translateService: TranslateService
-  ) {}
 
   ngOnInit(): void {
     this.folders$ = this.cloudApiService.getFolders();

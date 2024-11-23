@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
@@ -21,6 +14,9 @@ import { AdminApiService } from '@admin/services/api/admin-api.service';
     standalone: false
 })
 export class ExercisesComponent implements OnInit, OnDestroy {
+  private readonly adminApiService = inject(AdminApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   @ViewChild(MatSort) sort: MatSort;
   groupId: string;
   seriesId: string;
@@ -33,8 +29,6 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   private groupId$ = new Subject<string>();
   private subGroupId$ = new Subject<number>();
   private subscription: Subscription;
-
-  constructor(private readonly adminApiService: AdminApiService, private readonly cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.initDataSource();

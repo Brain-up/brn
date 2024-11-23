@@ -7,13 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TokenService } from '@root/services/token.service';
 import { User, UserMapped } from '@admin/models/user.model';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 
 @Component({
     selector: 'app-users',
@@ -23,6 +17,11 @@ import {
     standalone: false
 })
 export class UsersComponent implements OnInit, OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
+  private readonly adminApiService = inject(AdminApiService);
+  private router = inject(Router);
+  private tokenService = inject(TokenService);
+
   private readonly destroyer$ = new Subject<void>();
   private getUsersSubscription: Subscription;
   private sorting: MatSort;
@@ -57,13 +56,6 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.dataSource.paginator = this.paging;
     }
   }
-
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private readonly adminApiService: AdminApiService,
-    private router: Router,
-    private tokenService: TokenService,
-  ) {}
 
   public ngOnInit(): void {
     this.getUsers();

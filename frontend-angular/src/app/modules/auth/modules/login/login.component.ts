@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
@@ -19,17 +14,15 @@ import { TranslateService } from '@ngx-translate/core';
     standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  private readonly authenticationApiService = inject(AuthenticationApiService);
+  private readonly formBuilder = inject(UntypedFormBuilder);
+  private readonly router = inject(Router);
+  private readonly snackBarService = inject(SnackBarService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly destroyer$ = new Subject<void>();
   public loginForm: UntypedFormGroup;
   public loginError: Observable<string>;
-
-  constructor(
-    private readonly authenticationApiService: AuthenticationApiService,
-    private readonly formBuilder: UntypedFormBuilder,
-    private readonly router: Router,
-    private readonly snackBarService: SnackBarService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({

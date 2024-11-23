@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -34,6 +26,11 @@ enum DEFAULT_SELECT_VALUE {
     standalone: false
 })
 export class SelectPanelComponent implements OnInit, OnDestroy {
+  private readonly groupApiService = inject(GroupApiService);
+  private readonly seriesApiService = inject(SeriesApiService);
+  private readonly subGroupApiService = inject(SubGroupApiService);
+  private readonly adminApiService = inject(AdminApiService);
+
   @Input() set groupId(groupId: string) {
     this.groupsControl.setValue(groupId);
   }
@@ -58,13 +55,6 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
   subGroupsControl = new UntypedFormControl();
   ngUnsubscribe = new Subject<void>();
   private readonly LOG_SOURCE = 'SelectPanelComponent';
-
-  constructor(
-    private readonly groupApiService: GroupApiService,
-    private readonly seriesApiService: SeriesApiService,
-    private readonly subGroupApiService: SubGroupApiService,
-    private readonly adminApiService: AdminApiService
-  ) {}
 
   ngOnInit(): void {
     this.initGroups();

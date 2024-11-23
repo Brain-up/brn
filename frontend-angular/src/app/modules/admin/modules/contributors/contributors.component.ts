@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -16,6 +16,10 @@ import { ContributorApiService } from '@admin/services/api/contributor-api.servi
     standalone: false
 })
 export class ContributorsComponent implements OnInit, OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
+  private readonly contributorApiService = inject(ContributorApiService);
+  private router = inject(Router);
+
   private readonly destroyer$ = new Subject<void>();
   private getContributorsSubscription: Subscription;
   private sorting: MatSort;
@@ -46,13 +50,6 @@ export class ContributorsComponent implements OnInit, OnDestroy {
     if (this.paging) {
       this.dataSource.paginator = this.paging;
     }
-  }
-
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private readonly contributorApiService: ContributorApiService,
-    private router: Router,
-  ) {
   }
 
   ngOnInit(): void {

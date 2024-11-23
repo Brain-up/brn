@@ -3,7 +3,7 @@ import { Dayjs } from 'dayjs';
 import { Exercise } from '@admin/models/exercise';
 import { GetContributors, GetUsers } from '@admin/models/endpoints.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { map, pluck, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Roles } from '@admin/models/roles.type';
@@ -16,7 +16,8 @@ import { Contributor } from '@admin/models/contrubutor.model';
 
 @Injectable()
 export class AdminApiService {
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
+
 
   public sendFormData(action: string, body: FormData): Observable<void> {
     return this.httpClient.post<void>(action, body);

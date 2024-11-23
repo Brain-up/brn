@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '@root/services/token.service';
 import {
@@ -10,13 +10,13 @@ import {
 
 @Injectable()
 export class AuthenticationApiService {
+  private readonly angularFireAuth = inject(AngularFireAuth);
+  private readonly router = inject(Router);
+  private readonly tokenService = inject(TokenService);
+
   private authState: any = null;
 
-  constructor(
-    private readonly angularFireAuth: AngularFireAuth,
-    private readonly router: Router,
-    private readonly tokenService: TokenService,
-  ) {
+  constructor() {
     this.initAuth();
   }
 

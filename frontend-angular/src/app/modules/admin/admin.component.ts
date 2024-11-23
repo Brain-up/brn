@@ -1,5 +1,5 @@
 import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TokenService } from '@root/services/token.service';
 import { UserCredential } from '@root/models/auth-token';
@@ -12,6 +12,9 @@ import { UserCredential } from '@root/models/auth-token';
     standalone: false
 })
 export class AdminComponent implements OnInit {
+  private readonly authenticationApiService = inject(AuthenticationApiService);
+  private readonly tokenService = inject(TokenService);
+
   public adminName: UserCredential;
   public readonly mainTabs = [
     { label: marker('Admin.Menu.Users'), link: 'users' },
@@ -21,11 +24,6 @@ export class AdminComponent implements OnInit {
     { label: marker('Admin.Menu.UploadFile'), link: 'upload-file' },
     { label: marker('Admin.Menu.Swagger'), link: 'swagger' },
   ];
-
-  constructor(
-    private readonly authenticationApiService: AuthenticationApiService,
-    private readonly tokenService: TokenService,
-  ) {}
 
   public ngOnInit(): void {
     this.getAdminName();
