@@ -8,7 +8,7 @@ describe('AppComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    declarations: [AppComponent],
+    imports: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA],
 });
 

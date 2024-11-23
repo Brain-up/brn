@@ -21,7 +21,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
 
-@NgModule({ declarations: [AppComponent],
+@NgModule(/* TODO(standalone-migration): clean up removed NgModule class manually. 
+{ declarations: [AppComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
@@ -40,7 +41,7 @@ import { environment } from 'src/environments/environment';
         { provide: HTTP_INTERCEPTORS, useClass: ExceptionsInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: StripUndefinedParamsInterceptor, multi: true },
         provideHttpClient(withInterceptorsFromDi()),
-    ] })
+    ] } */)
 export class AppModule {
   constructor() {
     const translateService = inject(TranslateService);
