@@ -17,6 +17,9 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   private readonly adminApiService = inject(AdminApiService);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  // TODO: Skipped for migration because:
+  //  Class of this query is manually instantiated. This is discouraged and prevents
+  //  migration.
   @ViewChild(MatSort) sort: MatSort;
   groupId: string;
   seriesId: string;

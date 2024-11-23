@@ -44,12 +44,16 @@ export class UsersComponent implements OnInit, OnDestroy {
   public readonly isLoading$ = new BehaviorSubject(true);
   public userList: UserMapped[];
 
+  // TODO: Skipped for migration because:
+  //  Accessor queries cannot be migrated as they are too complex.
   @ViewChild(MatSort) set sort(sort: MatSort) {
     this.sorting = sort;
     if (this.sorting) {
       this.dataSource.sort = this.sorting;
     }
   }
+  // TODO: Skipped for migration because:
+  //  Accessor queries cannot be migrated as they are too complex.
   @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
     this.paging = paginator;
     if (this.paging) {

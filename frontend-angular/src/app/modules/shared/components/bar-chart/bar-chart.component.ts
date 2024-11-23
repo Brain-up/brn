@@ -68,6 +68,8 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
   private barIndex: number | null;
   private chartColumns: BarDataType = [];
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the query. This prevents migration.
   @ViewChild('chart')
   chartElemRef: ElementRef;
 
