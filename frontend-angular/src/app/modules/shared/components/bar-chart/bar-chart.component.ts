@@ -7,7 +7,7 @@ import {
   Input,
   OnDestroy,
   Output,
-  ViewChild,
+  viewChild
 } from '@angular/core';
 import { bar, bb, Chart, DataItem } from 'billboard.js';
 import { BarDataType } from './models/bar-data';
@@ -58,7 +58,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
     this.chartOptions = options;
 
-    if (this.chartElemRef) {
+    if (this.chartElemRef()) {
       this.chart?.destroy();
       this.buildChart(this.clickItem);
     }
@@ -70,8 +70,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
   // TODO: Skipped for migration because:
   //  Your application code writes to the query. This prevents migration.
-  @ViewChild('chart')
-  chartElemRef: ElementRef;
+  readonly chartElemRef = viewChild<ElementRef>('chart');
 
   @Output() clickItem = new EventEmitter<number>();
 
@@ -85,7 +84,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
   private buildChart(onClickItem): void {
     this.chart = bb.generate({
-      bindto: this.chartElemRef.nativeElement,
+      bindto: this.chartElemRef().nativeElement,
 
       data: {
         type: bar(),
@@ -112,7 +111,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
     });
 
     if (this.barIndex != null) {
-      const barItem = this.chartElemRef.nativeElement.querySelector('.bb-bar-' + this.barIndex);
+      const barItem = this.chartElemRef().nativeElement.querySelector('.bb-bar-' + this.barIndex);
       if (barItem) {
         barItem.classList.add(SELECTED_BAR_CLASS_NAME);
       }
