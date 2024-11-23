@@ -1,5 +1,5 @@
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { BarChartModule } from '@shared/components/bar-chart/bar-chart.module';
+
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -20,24 +20,23 @@ import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
     imports: [
-        BarChartModule,
-        CommonModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatIconModule,
-        MatMenuModule,
-        MatProgressBarModule,
-        MatTabsModule,
-        StatisticsRoutingModule,
-        TranslateModule,
-        MatTableModule,
-        MonthTimeTrackComponent,
-        MonthTimeTrackItemComponent,
-        StatisticsComponent,
-        StatisticsInfoDialogComponent,
-        WeekTimeTrackComponent,
-        DailyTimeTableComponent,
-    ],
+    CommonModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatTabsModule,
+    StatisticsRoutingModule,
+    TranslateModule,
+    MatTableModule,
+    MonthTimeTrackComponent,
+    MonthTimeTrackItemComponent,
+    StatisticsComponent,
+    StatisticsInfoDialogComponent,
+    WeekTimeTrackComponent,
+    DailyTimeTableComponent,
+],
     providers: [AdminApiService],
 })
 export class StatisticsModule {}

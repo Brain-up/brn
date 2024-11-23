@@ -9,22 +9,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgModule } from '@angular/core';
-import { PipesModule } from '@shared/pipes/pipes.module';
+
 import { SeriesApiService } from './services/api/series-api.service';
 import { SubGroupApiService } from './services/api/sub-group-api.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
-        AdminRoutingModule,
-        CommonModule,
-        MatButtonModule,
-        MatIconModule,
-        MatToolbarModule,
-        PipesModule,
-        TranslateModule,
-        AdminComponent,
-    ],
+    AdminRoutingModule,
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    TranslateModule,
+    AdminComponent,
+],
     providers: [
         AdminApiService,
         AuthenticationApiService,
