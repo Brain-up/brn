@@ -119,7 +119,10 @@ internal class UserAnalyticsServiceTest {
     fun `should prepareAudioFileMetaData with adding comma and slow speed for words with good stat WORDS`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
@@ -140,7 +143,10 @@ internal class UserAnalyticsServiceTest {
     fun `should prepareAudioFileMetaData without adding comma and slow speed for words with good stat PHRASES`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
@@ -158,10 +164,13 @@ internal class UserAnalyticsServiceTest {
     }
 
     @Test
-    fun `should prepareAudioFileMetaData with adding comma and slowest speed for words with bad stat WORDS`() {
+    fun `should prepareAudioFileMetaData with adding comma and slowest speed for words with bad stat WORDS `() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
@@ -177,13 +186,38 @@ internal class UserAnalyticsServiceTest {
         metaDataResult.speedFloat shouldBe "0.8"
         metaDataResult.speedCode shouldBe AzureRates.SLOW
         metaDataResult.text shouldBe "мама, папа"
+        metaDataResult.voice shouldBe Voice.marina.name
+    }
+
+    @Test
+    fun `should prepareAudioFileMetaData with lera voice up to 18 years old user`() {
+        // GIVEN
+        val studyHistory = mockk<StudyHistory>()
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2000
+        every { currentUser.id } returns currentUserId
+        every {
+            studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+        } returns studyHistory
+        every { exerciseService.isDoneWell(studyHistory) } returns true
+        every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        val audioFileMetaData =
+            AudioFileMetaData("мама папа", BrnLocale.RU.locale, "", "1", AzureRates.DEFAULT)
+        // WHEN
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        // THEN
+        metaDataResult.voice shouldBe Voice.lera.name
     }
 
     @Test
     fun `should prepareAudioFileMetaData without adding comma and slowest speed for words with bad stat PHRASES`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
@@ -205,13 +239,17 @@ internal class UserAnalyticsServiceTest {
     fun `should prepareAudioFileMetaData default speed correctly for one word and good statistics`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-        val audioFileMetaData = AudioFileMetaData("мама", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        val audioFileMetaData =
+            AudioFileMetaData("мама", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
@@ -226,13 +264,17 @@ internal class UserAnalyticsServiceTest {
     fun `should prepareAudioFileMetaData slow correctly for single word and bad statistics`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-        val audioFileMetaData = AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        val audioFileMetaData =
+            AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
@@ -245,12 +287,16 @@ internal class UserAnalyticsServiceTest {
     @Test
     fun `should prepareAudioFileMetaData normal speed for single word`() {
         // GIVEN
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns null
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-        val audioFileMetaData = AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        val audioFileMetaData =
+            AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
         // THEN
@@ -263,13 +309,17 @@ internal class UserAnalyticsServiceTest {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
         val audioStreamMock = InputStream.nullInputStream()
-        every { userAccountService.getCurrentUserId() } returns currentUserId
+        val currentUser = mockk<UserAccount>()
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { currentUser.bornYear } returns 2023
+        every { currentUser.id } returns currentUserId
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
-        val audioFileMetaData = AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
+        val audioFileMetaData =
+            AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         every { textToSpeechService.generateAudioOggStreamWithValidation(audioFileMetaData) } returns audioStreamMock
         // WHEN
         val audioStreamResult = userAnalyticsService.prepareAudioStreamForUser(exerciseId, audioFileMetaData)

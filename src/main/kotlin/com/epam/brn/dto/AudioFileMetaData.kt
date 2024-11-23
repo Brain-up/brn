@@ -5,7 +5,7 @@ import com.epam.brn.dto.azure.tts.AzureRates
 data class AudioFileMetaData(
     var text: String,
     val locale: String,
-    val voice: String,
+    var voice: String,
     var speedFloat: String = "1",
     var speedCode: AzureRates = AzureRates.DEFAULT,
     val gender: String? = null,
