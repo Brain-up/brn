@@ -7,30 +7,33 @@
 ></div>
 
 <div class="content">
-  <mat-progress-bar *ngIf="isLoading; else dataTemplate" mode="indeterminate"></mat-progress-bar>
+  @if (isLoading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  } @else {
+    @if (barData?.length) {
+      <app-bar-chart
+        [data]="barData"
+        [options]="barOptions"
+        [initialBarIndex]="initialIndex"
+        (clickItem)="onClickItem($event)"
+      ></app-bar-chart>
+    } @else {
+      <div class="empty-data">
+        {{ 'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData' | translate }}
+      </div>
+    }
+  }
 </div>
 
-<div *ngIf="selectedDay">
-  <app-daily-time-table
-    [userId]="userId"
-    [day]="selectedDay"
-  ></app-daily-time-table>
-</div>
+@if (selectedDay) {
+  <div>
+    <app-daily-time-table
+      [userId]="userId"
+      [day]="selectedDay"
+    ></app-daily-time-table>
+  </div>
+}
 
 <!-- #region Templates -->
-<ng-template #dataTemplate>
-  <app-bar-chart
-    *ngIf="barData?.length; else emptyDataTemplate"
-    [data]="barData"
-    [options]="barOptions"
-    [initialBarIndex]="initialIndex"
-    (clickItem)="onClickItem($event)"
-  ></app-bar-chart>
-</ng-template>
 
-<ng-template #emptyDataTemplate>
-  <div class="empty-data">
-    {{ 'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.EmptyData' | translate }}
-  </div>
-</ng-template>
 <!-- #endregion -->

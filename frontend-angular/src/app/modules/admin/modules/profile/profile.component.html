@@ -1,19 +1,19 @@
-<div class="profile" *ngIf="adminData">
-  <mat-card appearance="outlined" class="content">
-    <div class="avatar-card">
-      <div class="avatar">{{ adminData.user.displayName | shortName }}</div>
-    </div>
-
-    <div class="info">
-      <mat-label class="label">{{ 'Admin.Modules.Profile.Name' | translate }}</mat-label>
-      <mat-form-field>
-        <input matInput disabled value="{{ adminData.user.displayName }}" />
-      </mat-form-field>
-
-      <mat-label class="label">{{ 'Admin.Modules.Profile.Email' | translate }}</mat-label>
-      <mat-form-field>
-        <input matInput disabled value="{{ adminData.user.email }}" />
-      </mat-form-field>
-    </div>
-  </mat-card>
-</div>
+@if (adminData) {
+  <div class="profile">
+    <mat-card appearance="outlined" class="content">
+      <div class="avatar-card">
+        <div class="avatar">{{ adminData.user.displayName | shortName }}</div>
+      </div>
+      <div class="info">
+        <mat-label class="label">{{ 'Admin.Modules.Profile.Name' | translate }}</mat-label>
+        <mat-form-field>
+          <input matInput disabled value="{{ adminData.user.displayName }}" />
+        </mat-form-field>
+        <mat-label class="label">{{ 'Admin.Modules.Profile.Email' | translate }}</mat-label>
+        <mat-form-field>
+          <input matInput disabled value="{{ adminData.user.email }}" />
+        </mat-form-field>
+      </div>
+    </mat-card>
+  </div>
+}
