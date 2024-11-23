@@ -5,6 +5,8 @@ enum class Voice {
     NICK,
     ERKANYAVAS,
     OKSANA,
+    marina,
+    lera,
     ALYSS,
     SILAERKAN
 }
