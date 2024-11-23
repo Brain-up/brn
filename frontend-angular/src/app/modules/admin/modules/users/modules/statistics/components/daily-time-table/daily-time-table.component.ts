@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input } from '@angular/core';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { Dayjs } from 'dayjs';
 import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
@@ -19,11 +19,9 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
 
   private readonly destroyer$ = new Subject<void>();
 
-  @Input()
-  public userId: number;
+  public readonly userId = input<number>(undefined);
 
-  @Input()
-  public day: Dayjs;
+  public readonly day = input<Dayjs>(undefined);
 
   public isLoadingWeekTimeTrackData = true;
 
@@ -56,8 +54,8 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
   private loadData() {
     this.isLoadingWeekTimeTrackData = true;
     this.adminApiService.getUserDailyDetailStatistics(
-      this.userId,
-      this.day
+      this.userId(),
+      this.day()
     ).pipe(
       finalize(() => {
         this.isLoadingWeekTimeTrackData = false;

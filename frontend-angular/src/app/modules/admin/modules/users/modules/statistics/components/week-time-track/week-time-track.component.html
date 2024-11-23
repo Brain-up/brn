@@ -7,7 +7,7 @@
 ></div>
 
 <div class="content">
-  @if (isLoading) {
+  @if (isLoading()) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   } @else {
     @if (barData?.length) {
@@ -28,7 +28,7 @@
 @if (selectedDay) {
   <div>
     <app-daily-time-table
-      [userId]="userId"
+      [userId]="userId()"
       [day]="selectedDay"
     ></app-daily-time-table>
   </div>

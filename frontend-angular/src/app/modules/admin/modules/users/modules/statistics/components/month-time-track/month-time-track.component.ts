@@ -21,12 +21,18 @@ import {
 export class MonthTimeTrackComponent {
   public monthTimeTrackItemsData: IMonthTimeTrackItemData[];
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input()
   public isLoading = true;
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input()
   public selectedMonth: Dayjs;
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set data(data: UserYearlyStatistics[] | undefined) {
     if (!data) {

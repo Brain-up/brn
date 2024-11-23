@@ -31,12 +31,18 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
   private readonly subGroupApiService = inject(SubGroupApiService);
   private readonly adminApiService = inject(AdminApiService);
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input() set groupId(groupId: string) {
     this.groupsControl.setValue(groupId);
   }
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input() set seriesId(seriesId: string) {
     this.seriesControl.setValue(seriesId);
   }
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input() set subGroupId(subGroupId: string) {
     this.subGroupsControl.setValue(subGroupId);
   }

@@ -24,6 +24,8 @@ export const SELECTED_BAR_CLASS_NAME = 'selected-bar';
 })
 export class BarChartComponent implements AfterViewInit, OnDestroy {
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set initialBarIndex(initialIndex: number) {
     if (initialIndex == null) {
@@ -33,6 +35,8 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
     this.barIndex = initialIndex;
   }
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set data(data: BarDataType) {
     if (!data) {
@@ -44,6 +48,8 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
     this.chart?.load({columns: this.chartColumns});
   }
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set options(options: BarOptionsType) {
     if (!options) {

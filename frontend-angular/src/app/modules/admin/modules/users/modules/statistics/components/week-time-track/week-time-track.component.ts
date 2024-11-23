@@ -1,6 +1,6 @@
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, input } from '@angular/core';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 import { secondsTo } from '@shared/helpers/seconds-to';
@@ -74,17 +74,19 @@ export class WeekTimeTrackComponent {
 
   public initialIndex: number;
 
-  @Input()
-  public isLoading = true;
+  public readonly isLoading = input(true);
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input()
   public selectedMonth: Dayjs;
 
-  @Input()
-  public userId: number;
+  public readonly userId = input<number>(undefined);
 
   public selectedDay: Dayjs;
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set data(data: UserWeeklyStatistics[] | undefined) {
     if (!data) {

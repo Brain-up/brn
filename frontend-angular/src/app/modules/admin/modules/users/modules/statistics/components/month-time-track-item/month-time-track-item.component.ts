@@ -12,10 +12,14 @@ import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data
 export class MonthTimeTrackItemComponent {
   public readonly USER_EXERCISING_PROGRESS_STATUS_COLOR = USER_EXERCISING_PROGRESS_STATUS_COLOR;
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input()
   @HostBinding('class.selected')
   public isSelected = false;
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input()
   public data: IMonthTimeTrackItemData;
 }
