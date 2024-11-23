@@ -8,9 +8,8 @@ describe('NotFoundComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NotFoundComponent],
-      imports: [TranslateModule.forRoot()],
-    });
+    imports: [TranslateModule.forRoot(), NotFoundComponent],
+});
 
     fixture = TestBed.createComponent(NotFoundComponent);
     component = fixture.componentInstance;

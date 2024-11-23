@@ -13,18 +13,18 @@ import { SelectPanelComponent } from './components/exercises/select-panel/select
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [ExercisesComponent, SelectPanelComponent],
-  imports: [
-    CommonModule,
-    ExercisesRoutingModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatSelectModule,
-    MatSlideToggleModule,
-    MatSortModule,
-    MatTableModule,
-    ReactiveFormsModule,
-    TranslateModule
-  ],
+    imports: [
+        CommonModule,
+        ExercisesRoutingModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatSortModule,
+        MatTableModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        ExercisesComponent, SelectPanelComponent
+    ],
 })
 export class ExercisesModule {}

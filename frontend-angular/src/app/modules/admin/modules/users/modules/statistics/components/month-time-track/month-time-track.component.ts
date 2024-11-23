@@ -16,8 +16,7 @@ import {
     selector: 'app-month-time-track',
     templateUrl: './month-time-track.component.html',
     styleUrls: ['./month-time-track.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonthTimeTrackComponent {
   public monthTimeTrackItemsData: IMonthTimeTrackItemData[];

@@ -10,10 +10,9 @@ describe('StatisticsInfoDialogComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StatisticsInfoDialogComponent],
-      imports: [TranslateModule.forRoot()],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    imports: [TranslateModule.forRoot(), StatisticsInfoDialogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(StatisticsInfoDialogComponent);
     component = fixture.componentInstance;

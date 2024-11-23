@@ -28,18 +28,17 @@ describe('LoginComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoginComponent],
-      imports: [MatSnackBarModule, TranslateModule.forRoot()],
-      providers: [
+    imports: [MatSnackBarModule, TranslateModule.forRoot(), LoginComponent],
+    providers: [
         { provide: Router, useValue: {} },
         { provide: UntypedFormBuilder, useValue: formBuilder },
         {
-          provide: AuthenticationApiService,
-          useValue: { mockAuthenticationApiService },
+            provide: AuthenticationApiService,
+            useValue: { mockAuthenticationApiService },
         },
         { provide: SnackBarService, useValue: mockSnackbar },
-      ],
-    });
+    ],
+});
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

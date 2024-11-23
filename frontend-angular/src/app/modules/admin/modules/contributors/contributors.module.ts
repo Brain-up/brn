@@ -13,22 +13,20 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
-  declarations: [
-    ContributorsComponent
-  ],
-  imports: [
-    CommonModule,
-    ContributorsRoutingModule,
-    MatProgressBarModule,
-    TranslateModule,
-    MatPaginatorModule,
-    MatIconModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTableModule,
-    MatRippleModule,
-    MatSortModule
-  ]
+    imports: [
+        CommonModule,
+        ContributorsRoutingModule,
+        MatProgressBarModule,
+        TranslateModule,
+        MatPaginatorModule,
+        MatIconModule,
+        MatInputModule,
+        MatButtonModule,
+        MatTableModule,
+        MatRippleModule,
+        MatSortModule,
+        ContributorsComponent
+    ]
 })
 export class ContributorsModule {
 }

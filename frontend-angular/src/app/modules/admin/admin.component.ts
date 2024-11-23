@@ -8,8 +8,7 @@ import { UserCredential } from '@root/models/auth-token';
     selector: 'app-admin',
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminComponent implements OnInit {
   private readonly authenticationApiService = inject(AuthenticationApiService);

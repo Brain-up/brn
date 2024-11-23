@@ -9,9 +9,8 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProfileComponent],
-      imports: [PipesModule, TranslateModule.forRoot()],
-    }).compileComponents();
+    imports: [PipesModule, TranslateModule.forRoot(), ProfileComponent],
+}).compileComponents();
   });
 
   beforeEach(() => {

@@ -15,23 +15,23 @@ import { SubGroupApiService } from './services/api/sub-group-api.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [AdminComponent],
-  imports: [
-    AdminRoutingModule,
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatToolbarModule,
-    PipesModule,
-    TranslateModule,
-  ],
-  providers: [
-    AdminApiService,
-    AuthenticationApiService,
-    CloudApiService,
-    GroupApiService,
-    SeriesApiService,
-    SubGroupApiService,
-  ],
+    imports: [
+        AdminRoutingModule,
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatToolbarModule,
+        PipesModule,
+        TranslateModule,
+        AdminComponent,
+    ],
+    providers: [
+        AdminApiService,
+        AuthenticationApiService,
+        CloudApiService,
+        GroupApiService,
+        SeriesApiService,
+        SubGroupApiService,
+    ],
 })
 export class AdminModule {}

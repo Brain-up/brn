@@ -5,7 +5,6 @@ import { UploadFileRoutingModule } from './upload-file-routing.module';
 import { UploadFileComponent } from './upload-file.component';
 
 @NgModule({
-  declarations: [UploadFileComponent],
-  imports: [UploadFileRoutingModule, TranslateModule, MatButtonModule],
+    imports: [UploadFileRoutingModule, TranslateModule, MatButtonModule, UploadFileComponent],
 })
 export class UploadFileModule {}

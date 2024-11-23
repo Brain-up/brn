@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     selector: 'app-statistics-info-dialog',
     templateUrl: './statistics-info-dialog.component.html',
     styleUrls: ['./statistics-info-dialog.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsInfoDialogComponent {}

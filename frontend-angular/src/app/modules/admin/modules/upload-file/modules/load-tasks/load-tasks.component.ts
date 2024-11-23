@@ -16,8 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'app-load-tasks',
     templateUrl: './load-tasks.component.html',
     styleUrls: ['./load-tasks.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadTasksComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);

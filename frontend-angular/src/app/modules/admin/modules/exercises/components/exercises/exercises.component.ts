@@ -10,8 +10,7 @@ import { AdminApiService } from '@admin/services/api/admin-api.service';
     selector: 'app-exercises',
     templateUrl: './exercises.component.html',
     styleUrls: ['./exercises.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExercisesComponent implements OnInit, OnDestroy {
   private readonly adminApiService = inject(AdminApiService);

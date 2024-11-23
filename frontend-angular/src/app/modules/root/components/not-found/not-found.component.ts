@@ -5,8 +5,7 @@ import { HOME_PAGE_URL } from '@shared/constants/common-constants';
     selector: 'app-not-found',
     templateUrl: './not-found.component.html',
     styleUrls: ['./not-found.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotFoundComponent {
   public readonly HOME_PAGE_URL = HOME_PAGE_URL;

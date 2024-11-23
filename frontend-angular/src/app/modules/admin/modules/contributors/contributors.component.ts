@@ -12,8 +12,7 @@ import { ContributorApiService } from '@admin/services/api/contributor-api.servi
     selector: 'app-contributors',
     templateUrl: './contributors.component.html',
     styleUrls: ['./contributors.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContributorsComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);

@@ -10,8 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private readonly authenticationApiService = inject(AuthenticationApiService);

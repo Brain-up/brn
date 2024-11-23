@@ -21,7 +21,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
 
-@NgModule({ declarations: [AppComponent, NotFoundComponent],
+@NgModule({ declarations: [AppComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
@@ -35,7 +35,7 @@ import { environment } from 'src/environments/environment';
         MatSnackBarModule,
         MatButtonModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFireAuthModule], providers: [
+        AngularFireAuthModule, NotFoundComponent], providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ExceptionsInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: StripUndefinedParamsInterceptor, multi: true },

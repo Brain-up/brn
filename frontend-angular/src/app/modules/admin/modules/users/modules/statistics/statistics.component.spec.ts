@@ -24,20 +24,20 @@ describe('StatisticsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StatisticsComponent],
-      imports: [
+    imports: [
         RouterTestingModule,
         TranslateModule.forRoot(),
         MatDialogModule,
-      ],
-      providers: [
+        StatisticsComponent,
+    ],
+    providers: [
         {
-          provide: AdminApiService,
-          useFactory: () => new AdminApiServiceFake({ responseDelayInMs }),
+            provide: AdminApiService,
+            useFactory: () => new AdminApiServiceFake({ responseDelayInMs }),
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(StatisticsComponent);
     component = fixture.componentInstance;

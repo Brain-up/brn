@@ -19,27 +19,25 @@ import { DailyTimeTableComponent } from './components/daily-time-table/daily-tim
 import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
-  declarations: [
-    MonthTimeTrackComponent,
-    MonthTimeTrackItemComponent,
-    StatisticsComponent,
-    StatisticsInfoDialogComponent,
-    WeekTimeTrackComponent,
-    DailyTimeTableComponent,
-  ],
-  imports: [
-    BarChartModule,
-    CommonModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatIconModule,
-    MatMenuModule,
-    MatProgressBarModule,
-    MatTabsModule,
-    StatisticsRoutingModule,
-    TranslateModule,
-    MatTableModule,
-  ],
-  providers: [AdminApiService],
+    imports: [
+        BarChartModule,
+        CommonModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatIconModule,
+        MatMenuModule,
+        MatProgressBarModule,
+        MatTabsModule,
+        StatisticsRoutingModule,
+        TranslateModule,
+        MatTableModule,
+        MonthTimeTrackComponent,
+        MonthTimeTrackItemComponent,
+        StatisticsComponent,
+        StatisticsInfoDialogComponent,
+        WeekTimeTrackComponent,
+        DailyTimeTableComponent,
+    ],
+    providers: [AdminApiService],
 })
 export class StatisticsModule {}

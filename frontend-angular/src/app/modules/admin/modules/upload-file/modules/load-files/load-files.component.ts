@@ -12,8 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'app-load-files',
     templateUrl: './load-files.component.html',
     styleUrls: ['./load-files.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadFilesComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);

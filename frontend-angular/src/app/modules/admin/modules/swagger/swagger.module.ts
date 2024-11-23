@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { SwaggerComponent } from './swagger.component';
 
 @NgModule({
-  declarations: [SwaggerComponent],
-  imports: [CommonModule, SwaggerRoutingModule],
+    imports: [CommonModule, SwaggerRoutingModule, SwaggerComponent],
 })
 export class SwaggerModule {}

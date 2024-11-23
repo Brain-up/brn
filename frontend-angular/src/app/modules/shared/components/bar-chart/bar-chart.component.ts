@@ -19,8 +19,7 @@ export const SELECTED_BAR_CLASS_NAME = 'selected-bar';
     selector: 'app-bar-chart',
     templateUrl: './bar-chart.component.html',
     styleUrls: ['./bar-chart.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BarChartComponent implements AfterViewInit, OnDestroy {
 

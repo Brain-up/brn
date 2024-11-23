@@ -10,17 +10,15 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
-  declarations: [
-    ContributorComponent
-  ],
-  imports: [
-    CommonModule,
-    ContributorRoutingModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatSlideToggleModule
-  ]
+    imports: [
+        CommonModule,
+        ContributorRoutingModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        MatIconModule,
+        MatProgressBarModule,
+        MatSlideToggleModule,
+        ContributorComponent
+    ]
 })
 export class ContributorModule { }

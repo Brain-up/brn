@@ -44,25 +44,25 @@ describe('ContributorsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ContributorsComponent],
-      imports: [
+    imports: [
         TranslateModule.forRoot(),
-        RouterTestingModule.withRoutes([mockedRoutes])
-      ],
-      providers: [
+        RouterTestingModule.withRoutes([mockedRoutes]),
+        ContributorsComponent
+    ],
+    providers: [
         {
-          provide: ActivatedRoute,
-          useValue: {}
+            provide: ActivatedRoute,
+            useValue: {}
         },
         {
-          provide: ContributorApiService,
-          useValue: {
-            getContributors: () => of(mockContributors),
-          },
+            provide: ContributorApiService,
+            useValue: {
+                getContributors: () => of(mockContributors),
+            },
         }
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+})
       .compileComponents();
   });
 

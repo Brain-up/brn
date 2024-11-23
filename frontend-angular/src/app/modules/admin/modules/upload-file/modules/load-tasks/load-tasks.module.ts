@@ -8,14 +8,14 @@ import { LoadTasksRoutingModule } from './load-tasks-routing.module';
 import { LoadTasksComponent } from './load-tasks.component';
 
 @NgModule({
-  declarations: [LoadTasksComponent],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    LoadTasksRoutingModule,
-    TranslateModule,
-    UploadFileInputModule,
-    MatSelectModule,
-  ],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        LoadTasksRoutingModule,
+        TranslateModule,
+        UploadFileInputModule,
+        MatSelectModule,
+        LoadTasksComponent,
+    ],
 })
 export class LoadTasksModule {}

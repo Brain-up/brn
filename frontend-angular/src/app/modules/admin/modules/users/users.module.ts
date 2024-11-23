@@ -17,23 +17,23 @@ import { UsersComponent } from './users.component';
 import { UsersRoutingModule } from './users-routing.module';
 
 @NgModule({
-  declarations: [UsersComponent],
-  imports: [
-    BarChartModule,
-    CommonModule,
-    MatButtonToggleModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatSlideToggleModule,
-    MatSortModule,
-    MatTableModule,
-    PipesModule,
-    TranslateModule,
-    UsersRoutingModule,
-  ],
-  providers: [AdminApiService],
+    imports: [
+        BarChartModule,
+        CommonModule,
+        MatButtonToggleModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatSlideToggleModule,
+        MatSortModule,
+        MatTableModule,
+        PipesModule,
+        TranslateModule,
+        UsersRoutingModule,
+        UsersComponent,
+    ],
+    providers: [AdminApiService],
 })
 export class UsersModule {}

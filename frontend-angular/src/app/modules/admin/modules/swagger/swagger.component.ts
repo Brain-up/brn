@@ -8,8 +8,7 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, inject } from '@
     selector: 'app-swagger',
     templateUrl: './swagger.component.html',
     styleUrls: ['./swagger.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SwaggerComponent implements OnDestroy, OnInit {
   private readonly adminApiService = inject(AdminApiService);

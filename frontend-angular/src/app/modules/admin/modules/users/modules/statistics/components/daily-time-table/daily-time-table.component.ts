@@ -10,8 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
     selector: 'app-daily-time-table',
     templateUrl: './daily-time-table.component.html',
     styleUrls: ['./daily-time-table.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
   private readonly adminApiService = inject(AdminApiService);

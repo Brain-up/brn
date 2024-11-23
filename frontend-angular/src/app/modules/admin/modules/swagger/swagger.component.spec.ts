@@ -24,11 +24,11 @@ describe('SwaggerComponent', () => {
     mockAdminApiService.getSwaggerUi.and.returnValue(of(data));
 
     TestBed.configureTestingModule({
-      declarations: [SwaggerComponent],
-      providers: [
+    imports: [SwaggerComponent],
+    providers: [
         { provide: AdminApiService, useValue: { mockAdminApiService } },
-      ],
-    }).compileComponents();
+    ],
+}).compileComponents();
   });
 
   beforeEach(() => {

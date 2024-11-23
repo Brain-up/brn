@@ -48,11 +48,10 @@ describe('ContributorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ContributorComponent],
     schemas: [NO_ERRORS_SCHEMA],
     imports: [TranslateModule.forRoot(),
         RouterTestingModule.withRoutes([mockedRoutes]),
-        ReactiveFormsModule],
+        ReactiveFormsModule, ContributorComponent],
     providers: [
         {
             provide: ActivatedRoute,

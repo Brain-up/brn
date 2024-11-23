@@ -6,8 +6,7 @@ import { AuthComponent } from './auth.component';
 import { AuthenticationApiService } from './services/api/authentication-api.service';
 
 @NgModule({
-  declarations: [AuthComponent],
-  imports: [AuthRoutingModule, TranslateModule, MatToolbarModule],
-  providers: [AuthenticationApiService],
+    imports: [AuthRoutingModule, TranslateModule, MatToolbarModule, AuthComponent],
+    providers: [AuthenticationApiService],
 })
 export class AuthModule {}

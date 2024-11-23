@@ -22,8 +22,7 @@ enum DEFAULT_SELECT_VALUE {
     selector: 'app-select-panel',
     templateUrl: './select-panel.component.html',
     styleUrls: ['./select-panel.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectPanelComponent implements OnInit, OnDestroy {
   private readonly groupApiService = inject(GroupApiService);

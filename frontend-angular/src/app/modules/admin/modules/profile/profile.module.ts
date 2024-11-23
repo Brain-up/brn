@@ -9,15 +9,15 @@ import { ProfileRoutingModule } from './profile-routing.module';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [ProfileComponent],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    PipesModule,
-    ProfileRoutingModule,
-    TranslateModule
-  ],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        PipesModule,
+        ProfileRoutingModule,
+        TranslateModule,
+        ProfileComponent
+    ],
 })
 export class ProfileModule {}

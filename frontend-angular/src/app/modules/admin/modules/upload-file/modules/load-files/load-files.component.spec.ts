@@ -25,18 +25,17 @@ describe('LoadFilesComponent', () => {
     );
 
     await TestBed.configureTestingModule({
-      declarations: [LoadFilesComponent],
-      imports: [TranslateModule.forRoot()],
-      providers: [
+    imports: [TranslateModule.forRoot(), LoadFilesComponent],
+    providers: [
         { provide: Router, useValue: {} },
         { provide: UntypedFormBuilder, useValue: {} },
         { provide: SnackBarService, useValue: {} },
         { provide: CloudApiService, useValue: {} },
         { provide: AdminApiService, useValue: {} },
         { provide: TranslateService, useValue: {} },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(LoadFilesComponent);
     component = fixture.componentInstance;

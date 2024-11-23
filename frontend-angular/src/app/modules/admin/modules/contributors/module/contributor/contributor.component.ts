@@ -9,8 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 @Component({
     selector: 'app-contributor',
     templateUrl: './contributor.component.html',
-    styleUrls: ['./contributor.component.scss'],
-    standalone: false
+    styleUrls: ['./contributor.component.scss']
 })
 
 export class ContributorComponent implements OnInit {

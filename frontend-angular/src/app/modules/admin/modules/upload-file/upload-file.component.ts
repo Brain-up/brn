@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     selector: 'app-upload-file',
     templateUrl: './upload-file.component.html',
     styleUrls: ['./upload-file.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UploadFileComponent {}

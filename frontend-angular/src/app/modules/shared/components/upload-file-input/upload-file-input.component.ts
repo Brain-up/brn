@@ -12,8 +12,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
             useExisting: forwardRef(() => UploadFileInputComponent),
             multi: true,
         },
-    ],
-    standalone: false
+    ]
 })
 export class UploadFileInputComponent implements ControlValueAccessor {
   private readonly renderer = inject(Renderer2);

@@ -17,10 +17,9 @@ describe('WeekTimeTrackComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WeekTimeTrackComponent],
-      imports: [TranslateModule.forRoot()],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    imports: [TranslateModule.forRoot(), WeekTimeTrackComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(WeekTimeTrackComponent);
     component = fixture.componentInstance;

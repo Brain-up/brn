@@ -13,16 +13,15 @@ describe('DailyTimeTableComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DailyTimeTableComponent],
-      imports: [TranslateModule.forRoot()],
-      providers: [
+    imports: [TranslateModule.forRoot(), DailyTimeTableComponent],
+    providers: [
         {
-          provide: AdminApiService,
-          useFactory: () => new AdminApiServiceFake({responseDelayInMs}),
+            provide: AdminApiService,
+            useFactory: () => new AdminApiServiceFake({ responseDelayInMs }),
         },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+});
     fixture = TestBed.createComponent(DailyTimeTableComponent);
     component = fixture.componentInstance;
   });

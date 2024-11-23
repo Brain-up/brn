@@ -12,10 +12,9 @@ describe('MonthTimeTrackComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MonthTimeTrackComponent],
-      imports: [TranslateModule.forRoot()],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    imports: [TranslateModule.forRoot(), MonthTimeTrackComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(MonthTimeTrackComponent);
     component = fixture.componentInstance;

@@ -17,8 +17,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
     selector: 'app-statistics',
     templateUrl: './statistics.component.html',
     styleUrls: ['./statistics.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
   private readonly activatedRoute = inject(ActivatedRoute);

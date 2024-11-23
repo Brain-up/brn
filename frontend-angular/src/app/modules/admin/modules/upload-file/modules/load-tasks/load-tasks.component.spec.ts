@@ -16,9 +16,8 @@ describe('LoadTasksComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadTasksComponent],
-      imports: [TranslateModule.forRoot()],
-      providers: [
+    imports: [TranslateModule.forRoot(), LoadTasksComponent],
+    providers: [
         { provide: Router, useValue: {} },
         { provide: UntypedFormBuilder, useValue: {} },
         { provide: SnackBarService, useValue: {} },
@@ -26,9 +25,9 @@ describe('LoadTasksComponent', () => {
         { provide: SeriesApiService, useValue: {} },
         { provide: AdminApiService, useValue: {} },
         { provide: TranslateService, useValue: {} },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(LoadTasksComponent);
     component = fixture.componentInstance;

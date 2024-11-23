@@ -35,15 +35,14 @@ describe('SelectPanelComponent', () => {
     ]);
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [SelectPanelComponent],
-      providers: [
+    imports: [ReactiveFormsModule, SelectPanelComponent],
+    providers: [
         { GroupApiService, useValue: groupApiServiceMock },
         { SeriesApiService, useValue: seriesApiServiceMock },
         { SubGroupApiService, useValue: subGroupApiServiceMock },
         { AdminApiService, useValue: adminApiServiceMock },
-      ],
-    });
+    ],
+});
 
     component = new SelectPanelComponent(
       groupApiServiceMock,

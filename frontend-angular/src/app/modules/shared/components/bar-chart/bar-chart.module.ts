@@ -4,8 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BarChartComponent } from './bar-chart.component';
 
 @NgModule({
-  declarations: [BarChartComponent],
-  imports: [CommonModule, TranslateModule],
-  exports: [BarChartComponent],
+    imports: [CommonModule, TranslateModule, BarChartComponent],
+    exports: [BarChartComponent],
 })
 export class BarChartModule {}

@@ -13,8 +13,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, injec
     selector: 'app-users',
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);

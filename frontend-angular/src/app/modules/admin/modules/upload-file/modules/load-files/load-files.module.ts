@@ -7,7 +7,6 @@ import { LoadFilesRoutingModule } from './load-files-routing.module';
 import { LoadFilesComponent } from './load-files.component';
 
 @NgModule({
-  declarations: [LoadFilesComponent],
-  imports: [CommonModule, ReactiveFormsModule, LoadFilesRoutingModule, TranslateModule, UploadFileInputModule],
+    imports: [CommonModule, ReactiveFormsModule, LoadFilesRoutingModule, TranslateModule, UploadFileInputModule, LoadFilesComponent],
 })
 export class LoadFilesModule {}

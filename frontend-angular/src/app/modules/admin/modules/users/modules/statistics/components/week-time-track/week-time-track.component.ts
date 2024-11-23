@@ -13,8 +13,7 @@ import { DataItem } from 'billboard.js';
     selector: 'app-week-time-track',
     templateUrl: './week-time-track.component.html',
     styleUrls: ['./week-time-track.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WeekTimeTrackComponent {
   private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
