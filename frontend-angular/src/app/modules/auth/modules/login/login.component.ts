@@ -12,10 +12,11 @@ import { SnackBarService } from '@root/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();

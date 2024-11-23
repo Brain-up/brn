@@ -9,7 +9,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({
-  template: '',
+    template: '',
+    standalone: false
 })
 class DummyComponent {
 }

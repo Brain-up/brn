@@ -10,10 +10,11 @@ import { IWeekChartDataItem } from '../../models/week-char-data-item';
 import { DataItem } from 'billboard.js';
 
 @Component({
-  selector: 'app-week-time-track',
-  templateUrl: './week-time-track.component.html',
-  styleUrls: ['./week-time-track.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-week-time-track',
+    templateUrl: './week-time-track.component.html',
+    styleUrls: ['./week-time-track.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class WeekTimeTrackComponent {
   private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;

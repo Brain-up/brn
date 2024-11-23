@@ -12,10 +12,11 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-month-time-track',
-  templateUrl: './month-time-track.component.html',
-  styleUrls: ['./month-time-track.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-month-time-track',
+    templateUrl: './month-time-track.component.html',
+    styleUrls: ['./month-time-track.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MonthTimeTrackComponent {
   public monthTimeTrackItemsData: IMonthTimeTrackItemData[];

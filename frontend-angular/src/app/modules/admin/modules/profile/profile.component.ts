@@ -3,10 +3,11 @@ import { TokenService } from '@root/services/token.service';
 import { UserCredential } from '@root/models/auth-token';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProfileComponent implements OnInit {
   public adminData: UserCredential;

@@ -9,7 +9,8 @@ import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 
 
 @Component({
-  template: '',
+    template: '',
+    standalone: false
 })
 class DummyComponent {
 }

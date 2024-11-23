@@ -3,10 +3,11 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular
 import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
 
 @Component({
-  selector: 'app-month-time-track-item',
-  templateUrl: './month-time-track-item.component.html',
-  styleUrls: ['./month-time-track-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-month-time-track-item',
+    templateUrl: './month-time-track-item.component.html',
+    styleUrls: ['./month-time-track-item.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MonthTimeTrackItemComponent {
   public readonly USER_EXERCISING_PROGRESS_STATUS_COLOR = USER_EXERCISING_PROGRESS_STATUS_COLOR;

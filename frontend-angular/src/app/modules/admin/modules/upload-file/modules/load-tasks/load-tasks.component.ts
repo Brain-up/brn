@@ -13,10 +13,11 @@ import { SeriesApiService } from '@admin/services/api/series-api.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-load-tasks',
-  templateUrl: './load-tasks.component.html',
-  styleUrls: ['./load-tasks.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-load-tasks',
+    templateUrl: './load-tasks.component.html',
+    styleUrls: ['./load-tasks.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class LoadTasksComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();

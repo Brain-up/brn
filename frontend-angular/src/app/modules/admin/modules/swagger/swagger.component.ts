@@ -10,10 +10,11 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-swagger',
-  templateUrl: './swagger.component.html',
-  styleUrls: ['./swagger.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-swagger',
+    templateUrl: './swagger.component.html',
+    styleUrls: ['./swagger.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SwaggerComponent implements OnDestroy, OnInit {
   constructor(private readonly adminApiService: AdminApiService) {}

@@ -27,10 +27,11 @@ enum DEFAULT_SELECT_VALUE {
 }
 
 @Component({
-  selector: 'app-select-panel',
-  templateUrl: './select-panel.component.html',
-  styleUrls: ['./select-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-select-panel',
+    templateUrl: './select-panel.component.html',
+    styleUrls: ['./select-panel.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class SelectPanelComponent implements OnInit, OnDestroy {
   @Input() set groupId(groupId: string) {

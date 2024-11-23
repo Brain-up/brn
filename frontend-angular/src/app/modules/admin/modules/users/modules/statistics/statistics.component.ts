@@ -20,10 +20,11 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-statistics',
-  templateUrl: './statistics.component.html',
-  styleUrls: ['./statistics.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-statistics',
+    templateUrl: './statistics.component.html',
+    styleUrls: ['./statistics.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();

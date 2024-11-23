@@ -9,10 +9,11 @@ import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-load-files',
-  templateUrl: './load-files.component.html',
-  styleUrls: ['./load-files.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-load-files',
+    templateUrl: './load-files.component.html',
+    styleUrls: ['./load-files.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class LoadFilesComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();

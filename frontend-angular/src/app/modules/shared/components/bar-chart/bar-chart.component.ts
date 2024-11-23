@@ -16,10 +16,11 @@ import { BarOptionsType } from './models/bar-options';
 export const SELECTED_BAR_CLASS_NAME = 'selected-bar';
 
 @Component({
-  selector: 'app-bar-chart',
-  templateUrl: './bar-chart.component.html',
-  styleUrls: ['./bar-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-bar-chart',
+    templateUrl: './bar-chart.component.html',
+    styleUrls: ['./bar-chart.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BarChartComponent implements AfterViewInit, OnDestroy {
 

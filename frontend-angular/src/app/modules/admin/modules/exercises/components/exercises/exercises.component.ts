@@ -14,10 +14,11 @@ import { Answer, Exercise, Task } from '@admin/models/exercise';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 
 @Component({
-  selector: 'app-exercises',
-  templateUrl: './exercises.component.html',
-  styleUrls: ['./exercises.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-exercises',
+    templateUrl: './exercises.component.html',
+    styleUrls: ['./exercises.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ExercisesComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;

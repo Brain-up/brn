@@ -9,10 +9,11 @@ import { Contributor } from '@admin/models/contrubutor.model';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
 
 @Component({
-  selector: 'app-contributors',
-  templateUrl: './contributors.component.html',
-  styleUrls: ['./contributors.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-contributors',
+    templateUrl: './contributors.component.html',
+    styleUrls: ['./contributors.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ContributorsComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();

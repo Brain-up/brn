@@ -5,10 +5,11 @@ import { TokenService } from '@root/services/token.service';
 import { UserCredential } from '@root/models/auth-token';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AdminComponent implements OnInit {
   public adminName: UserCredential;

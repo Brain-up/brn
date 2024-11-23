@@ -10,17 +10,18 @@ import {
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
-  selector: 'app-upload-file-input',
-  templateUrl: './upload-file-input.component.html',
-  styleUrls: ['./upload-file-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UploadFileInputComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-upload-file-input',
+    templateUrl: './upload-file-input.component.html',
+    styleUrls: ['./upload-file-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => UploadFileInputComponent),
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class UploadFileInputComponent implements ControlValueAccessor {
   private onChange: (value: File) => void;

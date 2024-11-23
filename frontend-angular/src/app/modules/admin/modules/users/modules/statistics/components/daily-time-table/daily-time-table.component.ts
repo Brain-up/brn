@@ -16,10 +16,11 @@ import { Subject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-daily-time-table',
-  templateUrl: './daily-time-table.component.html',
-  styleUrls: ['./daily-time-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-daily-time-table',
+    templateUrl: './daily-time-table.component.html',
+    styleUrls: ['./daily-time-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
   private readonly destroyer$ = new Subject<void>();

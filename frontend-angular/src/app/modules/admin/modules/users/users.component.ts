@@ -16,10 +16,11 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-users',
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UsersComponent implements OnInit, OnDestroy {
   private readonly destroyer$ = new Subject<void>();

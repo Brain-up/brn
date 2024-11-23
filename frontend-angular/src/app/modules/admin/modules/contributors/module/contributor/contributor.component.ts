@@ -7,9 +7,10 @@ import { finalize } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-contributor',
-  templateUrl: './contributor.component.html',
-  styleUrls: ['./contributor.component.scss'],
+    selector: 'app-contributor',
+    templateUrl: './contributor.component.html',
+    styleUrls: ['./contributor.component.scss'],
+    standalone: false
 })
 
 export class ContributorComponent implements OnInit {
