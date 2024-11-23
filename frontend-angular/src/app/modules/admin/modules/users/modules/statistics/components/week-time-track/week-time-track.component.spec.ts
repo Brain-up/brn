@@ -122,7 +122,7 @@ describe('WeekTimeTrackComponent', () => {
     component.selectedMonth = dayjs(selectedMonth);
     for (let i = 0; i < 31; i++) {
       component.onClickItem(i);
-      const date = component.selectedMonth.clone();
+      const date = component.selectedMonth().clone();
       expect(component.selectedDay).toEqual(date.set('date', i));
     }
   });

@@ -78,8 +78,7 @@ export class WeekTimeTrackComponent {
 
   // TODO: Skipped for migration because:
   //  Your application code writes to the input. This prevents migration.
-  @Input()
-  public selectedMonth: Dayjs;
+  public readonly selectedMonth = input<Dayjs>(undefined);
 
   public readonly userId = input<number>(undefined);
 
@@ -96,7 +95,7 @@ export class WeekTimeTrackComponent {
     this.chartData = [];
     let lastDay = null;
     let lastIndex = null;
-    for (let dayNumber = 1; dayNumber <= this.selectedMonth.daysInMonth(); dayNumber++) {
+    for (let dayNumber = 1; dayNumber <= this.selectedMonth().daysInMonth(); dayNumber++) {
       const realRawItem = data.find((rawItem) => dayjs(rawItem.date).date() === dayNumber);
 
       if (realRawItem) {
@@ -111,7 +110,7 @@ export class WeekTimeTrackComponent {
             progress: realRawItem.progress,
           }
           : {
-            x: dayjs(this.selectedMonth.set('date', dayNumber)).format('dd'),
+            x: dayjs(this.selectedMonth().set('date', dayNumber)).format('dd'),
             y: 0,
             progress: 'BAD',
           }
@@ -143,13 +142,13 @@ export class WeekTimeTrackComponent {
 
   public isAllowNextMonth(): boolean {
     /// for December
-    if (this.selectedMonth.add(1, 'month').month() === 0 ) {
-      return this.selectedMonth.month() <= dayjs().subtract(1, 'month').month();
+    if (this.selectedMonth().add(1, 'month').month() === 0 ) {
+      return this.selectedMonth().month() <= dayjs().subtract(1, 'month').month();
     }
-    return this.selectedMonth.add(1, 'month').month() <= dayjs().month();
+    return this.selectedMonth().add(1, 'month').month() <= dayjs().month();
   }
 
   onClickItem(index: number) {
-    this.selectedDay = this.selectedMonth.clone().set('date', index);
+    this.selectedDay = this.selectedMonth().clone().set('date', index);
   }
 }

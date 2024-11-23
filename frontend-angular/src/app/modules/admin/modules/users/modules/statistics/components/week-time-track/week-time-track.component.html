@@ -2,7 +2,7 @@
   class="title"
   [innerHTML]="
     'Admin.Modules.Users.Modules.Statistics.Components.WeekTimeTrack.Title [month]'
-      | translate: { month: selectedMonth.format('MMMM') }
+      | translate: { month: selectedMonth().format('MMMM') }
   "
 ></div>
 

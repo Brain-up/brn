@@ -80,8 +80,8 @@ describe('MonthTimeTrackComponent', () => {
         })
           .getUserYearlyStatistics(
             1,
-            component.selectedMonth.startOf('year'),
-            component.selectedMonth.endOf('year'),
+            component.selectedMonth().startOf('year'),
+            component.selectedMonth().endOf('year'),
           )
           .toPromise();
 
@@ -141,8 +141,8 @@ describe('MonthTimeTrackComponent', () => {
       component.data = await new AdminApiServiceFake({ responseDelayInMs: 100 })
         .getUserYearlyStatistics(
           1,
-          component.selectedMonth.startOf('year'),
-          component.selectedMonth.endOf('year'),
+          component.selectedMonth().startOf('year'),
+          component.selectedMonth().endOf('year'),
         )
         .toPromise();
 
@@ -163,8 +163,8 @@ describe('MonthTimeTrackComponent', () => {
       })
         .getUserYearlyStatistics(
           1,
-          component.selectedMonth.startOf('year'),
-          component.selectedMonth.endOf('year'),
+          component.selectedMonth().startOf('year'),
+          component.selectedMonth().endOf('year'),
         )
         .toPromise();
 

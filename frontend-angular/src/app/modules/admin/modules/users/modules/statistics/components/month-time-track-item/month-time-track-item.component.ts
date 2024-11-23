@@ -1,5 +1,5 @@
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, input } from '@angular/core';
 import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
 
 @Component({
@@ -14,12 +14,10 @@ export class MonthTimeTrackItemComponent {
 
   // TODO: Skipped for migration because:
   //  Your application code writes to the input. This prevents migration.
-  @Input()
   @HostBinding('class.selected')
-  public isSelected = false;
+public readonly isSelected = input(false);
 
   // TODO: Skipped for migration because:
   //  Your application code writes to the input. This prevents migration.
-  @Input()
-  public data: IMonthTimeTrackItemData;
+  public readonly data = input<IMonthTimeTrackItemData>(undefined);
 }

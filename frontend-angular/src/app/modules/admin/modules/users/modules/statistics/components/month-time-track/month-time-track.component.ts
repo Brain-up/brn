@@ -9,6 +9,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  input
 } from '@angular/core';
 
 @Component({
@@ -23,13 +24,11 @@ export class MonthTimeTrackComponent {
 
   // TODO: Skipped for migration because:
   //  Your application code writes to the input. This prevents migration.
-  @Input()
-  public isLoading = true;
+  public readonly isLoading = input(true);
 
   // TODO: Skipped for migration because:
   //  Your application code writes to the input. This prevents migration.
-  @Input()
-  public selectedMonth: Dayjs;
+  public readonly selectedMonth = input<Dayjs>(undefined);
 
   // TODO: Skipped for migration because:
   //  Accessor inputs cannot be migrated as they are too complex.
@@ -105,14 +104,14 @@ export class MonthTimeTrackComponent {
 
   public isSelectedMonth(data: IMonthTimeTrackItemData): boolean {
     return (
-      data.date.year() === this.selectedMonth.year() &&
-      data.date.month() === this.selectedMonth.month() &&
+      data.date.year() === this.selectedMonth().year() &&
+      data.date.month() === this.selectedMonth().month() &&
       data.days !== 0
     );
   }
 
   public isAllowNextYear(): boolean {
-    return this.selectedMonth.add(1, 'year').year() <= dayjs().year();
+    return this.selectedMonth().add(1, 'year').year() <= dayjs().year();
   }
 
   public hasValidTrackItem(): boolean {

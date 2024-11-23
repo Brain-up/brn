@@ -1,7 +1,7 @@
 <div
   class="title"
   [innerHTML]="
-    'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.Title [year]' | translate: { year: selectedMonth.year() }
+    'Admin.Modules.Users.Modules.Statistics.Components.MonthTimeTrack.Title [year]' | translate: { year: selectedMonth().year() }
   "
 ></div>
 
@@ -11,7 +11,7 @@
   </button>
 
   <div class="month-time-track-items-wrap">
-    @if (isLoading) {
+    @if (isLoading()) {
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     } @else {
       @if (hasValidTrackItem()) {
