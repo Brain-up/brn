@@ -80,7 +80,8 @@ class UserAnalyticsServiceImpl(
         if (!listTextExercises.contains(seriesType))
             audioFileMetaData.text = text.replace(" ", ", ")
         val currentUser = userAccountService.getCurrentUser()
-        audioFileMetaData.voice = choseVoiceForUser(currentUser)
+        // todo use choseVoiceForUser(currentUser) after moving to yandex speechKit v3
+        audioFileMetaData.voice = Voice.marina.name
         setSpeedForUser(currentUser, exerciseId, audioFileMetaData)
         return audioFileMetaData
     }
