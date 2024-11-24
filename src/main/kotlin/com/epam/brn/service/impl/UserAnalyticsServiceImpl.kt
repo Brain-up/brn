@@ -64,7 +64,6 @@ class UserAnalyticsServiceImpl(
                 this.doneExercises = userStatistic.doneExercises
             }
         }
-
         return users
     }
 
