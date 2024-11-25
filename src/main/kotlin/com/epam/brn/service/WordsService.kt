@@ -15,25 +15,26 @@ class WordsService {
 
     private val mapYandexLocaleManVoice =
         mapOf(
-            BrnLocale.RU.locale to Voice.FILIPP,
-            BrnLocale.EN.locale to Voice.NICK,
-            BrnLocale.TR.locale to Voice.ERKANYAVAS
+            BrnLocale.RU.locale to listOf(Voice.FILIPP),
+            BrnLocale.EN.locale to listOf(Voice.NICK),
+            BrnLocale.TR.locale to listOf(Voice.ERKANYAVAS)
         )
 
     private val mapYandexLocaleWomanVoice =
         mapOf(
-            BrnLocale.RU.locale to Voice.OKSANA,
-            BrnLocale.EN.locale to Voice.ALYSS,
-            BrnLocale.TR.locale to Voice.SILAERKAN
+            BrnLocale.RU.locale to listOf(Voice.OKSANA, Voice.marina, Voice.lera),
+            BrnLocale.EN.locale to listOf(Voice.ALYSS),
+            BrnLocale.TR.locale to listOf(Voice.SILAERKAN)
         )
 
     fun getDefaultManVoiceForLocale(locale: String): String =
-        mapYandexLocaleManVoice[locale]!!.name
-    fun getDefaultWomanVoiceForLocale(locale: String): String =
-        mapYandexLocaleWomanVoice[locale]!!.name
+        mapYandexLocaleManVoice[locale]!!.first().name
 
-    fun getVoicesForLocale(locale: String): List<String?> =
-        listOf(mapYandexLocaleManVoice[locale]?.name, mapYandexLocaleWomanVoice[locale]?.name)
+    fun getDefaultWomanVoiceForLocale(locale: String): String =
+        mapYandexLocaleWomanVoice[locale]!!.first().name
+
+    fun getVoicesForLocale(locale: String): List<String> =
+        mapYandexLocaleManVoice[locale]!!.map { it.name }.plus(mapYandexLocaleWomanVoice[locale]!!.map { it.name })
 
     fun getLocalFilePathForWord(audioFileMetaData: AudioFileMetaData) =
         "$localFolderForFiles${getSubFilePathForWord(audioFileMetaData)}"
