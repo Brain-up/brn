@@ -1,10 +1,10 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | text-image-button', function (hooks) {
-  setupRenderingTest(hooks);
+  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
 
   test('sets right classes and action', async function (assert) {
     this.set('clickAction', () => {

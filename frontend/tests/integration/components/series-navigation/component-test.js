@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import pageObject from './test-support/page-object';
@@ -7,7 +7,7 @@ import pageObject from './test-support/page-object';
 const TEST_EXERCISE_NAMES = ['Type 1', 'Type 2'];
 
 module('Integration | Component | series-navigation', function (hooks) {
-  setupRenderingTest(hooks);
+  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
 
   hooks.beforeEach(async function () {
     const store = this.owner.lookup('service:store');

@@ -1,20 +1,18 @@
 // eslint-disable-next-line ember/use-ember-data-rfc-395-imports
 import DS from 'ember-data';
 import { DateTime } from 'luxon';
-import { inject as service } from '@ember/service';
-import UserDataService from 'brn/services/user-data';
 const { DateTransform } = DS;
-const FullDate = DateTransform.extend({
-  userData: service('user-data'),
+class FullDate extends DateTransform {
   deserialize(serialized: Record<string, never>): DateTime | null {
-    const locale = (this.userData as unknown as UserDataService).activeLocale as unknown as string
+    //
+    const browserLocale  = (navigator && navigator.language) || 'en';
     return (
       (serialized &&
-        DateTime.fromISO(serialized as unknown as string, { zone: 'utc', locale })) ||
+        DateTime.fromISO(serialized as unknown as string, { zone: 'utc', locale: browserLocale })) ||
       null
     );
-  },
-});
+  }
+}
 
 declare module 'ember-data/types/registries/transform' {
   export default interface TransformRegistry {
