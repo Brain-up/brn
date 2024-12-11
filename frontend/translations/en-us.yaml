@@ -45,6 +45,7 @@ registration_form:
   invalid_date: Invalid date
   empty_gender: Empty gender
   empty_lastname: Empty LastName
+  agree_terms: You must agree to the terms before registering
   gender: Gender
   gender_female: Female
   gender_male: Male
