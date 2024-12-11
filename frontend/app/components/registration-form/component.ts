@@ -32,6 +32,9 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @tracked gender!: 'MALE' | 'FEMALE';
   @tracked agreed = false;
 
+  @tracked agreedStatusErrorMessage = '';
+  @tracked serverErrorMessage = '';
+
   get warningPasswordsEquality() {
     if (this.repeatPassword === undefined) {
       return false;
@@ -110,7 +113,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       ) as FirebaseAuthenticator;
       yield auth.registerUser(user.email, user.password);
     } catch (e) {
-      this.errorMessage = e.message;
+      this.serverErrorMessage = e.message;
       yield this.registrationTask.cancelAll();
       return;
     }
@@ -139,6 +142,17 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @action
   onSubmit(e: SubmitEvent & any) {
     e.preventDefault();
+    if (!this.agreed) {
+      this.agreedStatusErrorMessage = this.intl.t('registration_form.agree_terms');
+      return;
+    }
+
+    if (this.errorMessage) {
+      return;
+    }
+
+    this.serverErrorMessage = ''
+
     this.registrationTask.perform();
   }
 
@@ -150,6 +164,10 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   @action
   setAgreedStatus(e: Document & any) {
     this.agreed = e.target.checked;
+
+    if (this.agreed) {
+      this.agreedStatusErrorMessage = '';
+    }
   }
 
   @action
@@ -166,7 +184,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
     const isValid = allowedKeys.includes(key) || !isNaN(key as any);
     if (!isValid) {
       e.preventDefault();
-    }  
-    
+    }
+
   }
 }
