@@ -35,6 +35,8 @@ class TaskService(
 ) {
     private val log = logger()
 
+    private val tempPictureStorageUrl = "https://github.com/Brain-up/brn-pictures/blob/main/"
+
     @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
@@ -74,8 +76,10 @@ class TaskService(
     private fun processAnswerOptions(task: Task) {
         task.answerOptions
             .forEach { resource ->
-                if (!resource.pictureFileUrl.isNullOrEmpty())
-                    resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
+                resource.pictureFileUrl = tempPictureStorageUrl + resource.word + ".png"
+// todo: return s3 using when it will be open for Russia
+//                if (!resource.pictureFileUrl.isNullOrEmpty())
+//                    resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
             }
     }
 
