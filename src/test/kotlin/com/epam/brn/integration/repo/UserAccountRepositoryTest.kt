@@ -18,7 +18,6 @@ import java.time.temporal.ChronoUnit
 @DataJpaTest
 @Tag("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("UserAccountRepository tests")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserAccountRepositoryTest {
 

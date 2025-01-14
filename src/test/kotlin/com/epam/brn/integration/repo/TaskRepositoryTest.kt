@@ -17,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 @DataJpaTest
 @Tag("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("TaskRepository tests")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TaskRepositoryTest : BaseTest() {
 
