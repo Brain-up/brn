@@ -35,7 +35,8 @@ class TaskService(
 ) {
     private val log = logger()
 
-    private val tempPictureStorageUrl = "https://github.com/Brain-up/brn-pictures/blob/main/"
+    // private val tempPictureStorageUrl = "https://github.com/Brain-up/brn-pictures/blob/main/"
+    private val tempPictureStorageUrl = "https://brnup.s3.eu-north-1.amazonaws.com/pictures/"
 
     @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
