@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 
 abstract class BaseTest {
-
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
 
