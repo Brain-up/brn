@@ -29,7 +29,6 @@ abstract class BaseTest {
         var exerciseId: Long? = null
         var savedTasked: Task? = null
 
-
         @AfterAll
         @JvmStatic
         fun deleteAfterTest() {
