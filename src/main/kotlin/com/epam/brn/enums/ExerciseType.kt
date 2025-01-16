@@ -18,7 +18,8 @@ val exercisesWithPictures = setOf(
     ExerciseType.SENTENCE,
     ExerciseType.SINGLE_SIMPLE_WORDS,
     ExerciseType.SINGLE_WORDS_KOROLEVA,
-    ExerciseType.FREQUENCY_WORDS
+    ExerciseType.FREQUENCY_WORDS,
+    ExerciseType.PHRASES,
 )
 
 fun ExerciseType.shouldBeWithPictures(): Boolean =
