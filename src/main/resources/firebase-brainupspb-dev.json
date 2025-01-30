@@ -1,8 +1,8 @@
 {
   "type": "service_account",
   "project_id": "brainup-spb-dev-bb6d0",
-  "private_key_id": "askElena https://t.me/ElenaLovesSpb",
-  "private_key": "askElena ",
+  "private_key_id": "{askElena https://t.me/ElenaLovesSpb}",
+  "private_key": "{askElena}",
   "client_email": "firebase-adminsdk-a3xzg@brainup-spb-dev-bb6d0.iam.gserviceaccount.com",
   "client_id": "118039374628498438928",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
