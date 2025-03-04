@@ -46,7 +46,7 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 
 ## HOW TO JOIN?
 Project on Epam Plus (for Epamers only): https://plus.epam.com/projects/21598/overview
-You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) [https://t.me/ElenaLovesSpb](https://t.me/ElenaBrainUp)
+You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) [https://t.me/ElenaBrainUp](https://t.me/ElenaBrainUp)
 or to project email [brainupspbproject@gmail.com](mailto:brainupspbproject@gmail.com) describing your interests or any questions you may have.  
 Also we have project chats:
 dev team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
