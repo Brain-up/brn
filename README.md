@@ -4,7 +4,7 @@
 This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
 It is projected to contain several series of media exercises, which should be added incrementally. 
 
-Our current version is here : http://brainup.fun && http://31.184.253.199/ (test user default@default.ru password).
+Our current version is here : https://brainup.site (test user: default@default.ru/password, test specialist: default2@default.ru/password ).
 Now you as a user can register and start doing exercises.
 
 Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
@@ -46,8 +46,8 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 
 ## HOW TO JOIN?
 Project on Epam Plus (for Epamers only): https://plus.epam.com/projects/21598/overview
-You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) https://t.me/ElenaLovesSpb
-or to project email [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
+You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) [https://t.me/ElenaBrainUp](https://t.me/ElenaBrainUp)
+or to project email [brainupspbproject@gmail.com](mailto:brainupspbproject@gmail.com) describing your interests or any questions you may have.  
 Also we have project chats:
 dev team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
 QA team Telegram chat: https://t.me/+EJs2EH5mTKs4YWE6
