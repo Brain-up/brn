@@ -1,6 +1,6 @@
 groupCode, level, type, name, description
 SPEECH_RU_RU, 1, SINGLE_SIMPLE_WORDS, Слова, Распознавание слов
-SPEECH_RU_RU, 2, PHRASES, Похожие фразы, Распознавание похожих фраз
+SPEECH_RU_RU, 2, PHRASES, Фразы, Распознавание похожих фраз
 SPEECH_RU_RU, 3, WORDS_SEQUENCES, Группа слов, Распознавание последовательности слов
 SPEECH_RU_RU, 5, SENTENCE, Предложения, Распознавание предложений
 SPEECH_RU_RU, 6, DI, Дихотическое слушание, Дихотическое слушание
