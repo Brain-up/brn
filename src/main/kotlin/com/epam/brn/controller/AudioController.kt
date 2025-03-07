@@ -37,7 +37,7 @@ class AudioController(private val userAnalyticsService: UserAnalyticsService) {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(
                 toByteArray(
-                    userAnalyticsService.prepareAudioFileForUser(
+                    userAnalyticsService.prepareAudioStreamForUser(
                         exerciseId,
                         AudioFileMetaData(
                             text = text,

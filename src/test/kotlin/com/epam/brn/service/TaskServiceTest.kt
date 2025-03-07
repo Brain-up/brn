@@ -451,7 +451,7 @@ internal class TaskServiceTest {
             // THEN
             (taskById as TaskResponse).exerciseMechanism shouldBe ExerciseMechanism.WORDS
             taskById.id shouldBe LONG_ONE
-            taskById.shouldBeWithPictures shouldBe false
+            taskById.shouldBeWithPictures shouldBe true
         }
 
         @Test

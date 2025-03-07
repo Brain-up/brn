@@ -32,13 +32,13 @@ internal class AudioControllerTest {
         val locale = "locale"
         val stream: InputStream = ByteArrayInputStream(byteArrayOf(10, 20, 30, 40, 50))
         val audioFileMetaData = AudioFileMetaData(text, locale, "", "1", AzureRates.DEFAULT, null, null, null)
-        every { userAnalyticsService.prepareAudioFileForUser(1, audioFileMetaData) } returns stream
+        every { userAnalyticsService.prepareAudioStreamForUser(1, audioFileMetaData) } returns stream
 
         // WHEN
         val audioByteArray = controller.getAudioByteArray(text, 1, locale, "", "1")
 
         // THEN
         assertEquals(HttpStatus.SC_OK, audioByteArray.statusCode.value())
-        verify(exactly = 1) { userAnalyticsService.prepareAudioFileForUser(1, audioFileMetaData) }
+        verify(exactly = 1) { userAnalyticsService.prepareAudioStreamForUser(1, audioFileMetaData) }
     }
 }

@@ -52,8 +52,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.security:spring-security-test")
     implementation("org.springframework.boot:spring-boot-devtools")
+
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
 
@@ -75,7 +77,7 @@ dependencies {
     implementation("com.google.cloud:google-cloud-storage:1.110.0")
 
     implementation("org.json:json:$jsonVersion")
-    implementation("net.bramp.ffmpeg:ffmpeg:0.7.0")
+    implementation("commons-io:commons-io:2.17.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
@@ -92,6 +94,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.powermock:powermock-mockito-release-full:1.5.4")
 
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("com.natpryce:hamkrest:1.8.0.1")

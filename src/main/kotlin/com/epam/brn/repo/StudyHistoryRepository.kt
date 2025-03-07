@@ -97,7 +97,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
             " FROM StudyHistory s WHERE user_id = :userId"
     )
-    fun getStatisticByUserAccountId(userId: Long?): UserStatisticView
+    fun getStatisticsByUserAccountId(userId: Long?): UserStatisticView
 
     @Query(
         "SELECT s FROM StudyHistory s " +

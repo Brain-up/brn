@@ -1,7 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
-import com.epam.brn.dto.statistic.UserDailyDetailStatisticsDto
+import com.epam.brn.dto.statistics.UserDailyDetailStatisticsDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository

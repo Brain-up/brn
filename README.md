@@ -4,7 +4,7 @@
 This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
 It is projected to contain several series of media exercises, which should be added incrementally. 
 
-Our current version is here : http://brainup.fun && http://31.184.253.199/ (test user default@default.ru password).
+Our current version is here : https://brainup.site (test user: default@default.ru/password, test specialist: default2@default.ru/password ).
 Now you as a user can register and start doing exercises.
 
 Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
@@ -15,7 +15,6 @@ Product Vision https://github.com/Brain-up/brn/wiki/Product-Vision.
 - Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/
 
 ## Published ARTICLES about our project 
-- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english) will be fixed soon
 - https://wearecommunity.io/communities/community-platform/articles/753 01.12.2020 russian 
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
@@ -47,8 +46,8 @@ Join us! Learn something new, try your skills, prove yourself, get experience an
 
 ## HOW TO JOIN?
 Project on Epam Plus (for Epamers only): https://plus.epam.com/projects/21598/overview
-You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) https://t.me/ElenaLovesSpb
-or to project email [brainupproject@yandex.ru](mailto:brainupproject@yandex.ru) describing your interests or any questions you may have.  
+You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) [https://t.me/ElenaBrainUp](https://t.me/ElenaBrainUp)
+or to project email [brainupspbproject@gmail.com](mailto:brainupspbproject@gmail.com) describing your interests or any questions you may have.  
 Also we have project chats:
 dev team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
 QA team Telegram chat: https://t.me/+EJs2EH5mTKs4YWE6
@@ -122,17 +121,17 @@ end-point specification is here: https://github.com/Brain-up/brn/blob/master/api
 Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
 
 #### Useful Postman scripts:
-- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistic (you can use it with `brnlogin` request in `Test` tab)
+- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistics (you can use it with `brnlogin` request in `Test` tab)
 
 ### Deploy Application USING DOCKER COMPOSE:
 (back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
 From console, from project's folder, execute:
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 Alternatively, use daemon mode (no console output):
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 Local REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
 Public is always here https://brainup.site/admin/swagger (login with ADMIN role user)

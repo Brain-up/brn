@@ -4,7 +4,6 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -18,7 +17,6 @@ import java.time.temporal.ChronoUnit
 @DataJpaTest
 @Tag("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("UserAccountRepository tests")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserAccountRepositoryTest {
 
