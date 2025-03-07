@@ -1,7 +1,7 @@
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -27,7 +27,6 @@ import { WeekTimeTrackComponent } from './components/week-time-track/week-time-t
   styleUrls: ['./statistics.component.scss'],
   imports: [
     RouterLink,
-    CommonModule,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
@@ -37,8 +36,8 @@ import { WeekTimeTrackComponent } from './components/week-time-track/week-time-t
     TranslateModule,
     MatTableModule,
     MonthTimeTrackComponent,
-    WeekTimeTrackComponent,
-  ],
+    WeekTimeTrackComponent
+],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsComponent implements OnInit, OnDestroy {

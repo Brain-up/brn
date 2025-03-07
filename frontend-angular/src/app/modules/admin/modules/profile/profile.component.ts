@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,13 +13,12 @@ import { ShortNamePipe } from '@shared/pipes/short-name.pipe';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   imports: [
-    CommonModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     TranslateModule,
     ShortNamePipe
-  ],
+],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit {

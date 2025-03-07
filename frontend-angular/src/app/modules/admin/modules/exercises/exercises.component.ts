@@ -1,6 +1,6 @@
 import { Answer, Exercise } from '@admin/models/exercise';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +19,6 @@ import { Task } from '@admin/models/exercise';
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss'],
   imports: [
-    CommonModule,
     MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
@@ -29,7 +28,7 @@ import { Task } from '@admin/models/exercise';
     ReactiveFormsModule,
     TranslateModule,
     SelectPanelComponent
-  ],
+],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExercisesComponent implements OnInit, OnDestroy {

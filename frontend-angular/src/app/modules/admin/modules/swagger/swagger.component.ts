@@ -1,5 +1,5 @@
 import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import SwaggerUI from 'swagger-ui';
   selector: 'app-swagger',
   templateUrl: './swagger.component.html',
   styleUrls: ['./swagger.component.scss'],
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SwaggerComponent implements OnDestroy, OnInit {

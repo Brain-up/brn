@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,13 +22,12 @@ import { SubGroupApiService } from './services/api/sub-group-api.service';
   styleUrls: ['./admin.component.scss'],
   imports: [
     RouterModule,
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
     TranslateModule,
-    ShortNamePipe,
-  ],
+    ShortNamePipe
+],
   providers: [
     AdminApiService,
     AuthenticationApiService,
