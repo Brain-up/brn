@@ -1,10 +1,10 @@
 import { Routes } from "@angular/router";
-import { ContributorsComponent } from "./contributors.component";
+
 
 export const CONTRIBUTORS_ROUTES: Routes = [
   {
     path: "",
-    component: ContributorsComponent,
+    loadComponent: () => import('./contributors.component').then(m => m.ContributorsComponent),
   },
   {
     path: "contributor/:contributorId",

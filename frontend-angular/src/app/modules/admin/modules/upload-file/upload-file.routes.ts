@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { UploadFileComponent } from './upload-file.component';
+
 
 export const UPLOAD_FILE_ROUTES: Routes = [
   {
     path: '',
-    component: UploadFileComponent,
+    loadComponent: () => import('./upload-file.component').then(m => m.UploadFileComponent),
     children: [
       {
         path: '',

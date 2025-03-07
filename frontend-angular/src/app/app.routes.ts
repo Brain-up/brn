@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { NotFoundComponent } from '@root/components/not-found/not-found.component';
+
 import { AuthAccessGuard } from '@root/guards/auth-access.guard';
 import { GuestAccessGuard } from '@root/guards/guest-access.guard';
 
@@ -22,6 +22,6 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: '**',
-    component: NotFoundComponent,
+    loadComponent: () => import('@root/components/not-found/not-found.component').then(m => m.NotFoundComponent),
   },
 ];
