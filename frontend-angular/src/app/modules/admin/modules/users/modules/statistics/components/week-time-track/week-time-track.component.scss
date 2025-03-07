@@ -20,7 +20,7 @@
     align-items: center;
     padding: 32px 15px;
     height: 200px;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of progress-bar that may no longer apply for the MDC version. */
     mat-progress-bar {
       height: 5px;
       border-radius: 5px;

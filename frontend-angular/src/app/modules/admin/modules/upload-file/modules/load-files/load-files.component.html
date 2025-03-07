@@ -6,7 +6,9 @@
       </label>
 
       <select formControlName="folder" class="upload-file__form-control">
-        <option *ngFor="let folder of folders$ | async" [value]="folder">{{ folder }}</option>
+        @for (folder of folders$ | async; track folder) {
+          <option [value]="folder">{{ folder }}</option>
+        }
       </select>
     </div>
 

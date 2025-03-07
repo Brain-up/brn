@@ -1,28 +1,37 @@
-<div *ngIf="showErrormessage" class="show-error">Please fill  the "Name_en" field before upload an image</div>
-<div class="content">
-  <mat-progress-bar
-    *ngIf="isLoading$ | async; else contributorsTable"
-    mode="indeterminate"
-  ></mat-progress-bar>
+@if (showErrormessage) {
+<div class="show-error">
+  Please fill the "Name_en" field before upload an image
 </div>
-<ng-template #contributorsTable>
+}
+<div class="content">
+  @if (isLoading$ | async) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  } @else {
   <div class="container">
     <span class="inform"> (*) required field </span>
     <form [formGroup]="contributorForm">
       <div class="icon-group">
-        <button mat-fab class="load" color="primary" (click)="fileUpload.click()">
-          <ng-container *ngIf="pictureUrlSubj | async">
-            <img
-              class=avatar
-              src="{{ pictureUrlSubj | async }}" alt="picture"/>
-          </ng-container>
-          <mat-icon *ngIf="!pictureUrl.value" class="icon-load" svgIcon="foto-download"></mat-icon>
-          <span
-            class="avatar-label"
-          > {{
-            'Admin.Modules.Contributors.Module.Contributor.Form.Avatar'
-              | translate
-            }}</span>
+        <button
+          mat-fab
+          class="load"
+          color="primary"
+          (click)="fileUpload.click()"
+        >
+          @if (pictureUrlSubj | async) {
+          <img
+            class="avatar"
+            src="{{ pictureUrlSubj | async }}"
+            alt="picture"
+          />
+          } @if (!pictureUrl.value) {
+          <mat-icon class="icon-load" svgIcon="foto-download"></mat-icon>
+          }
+          <span class="avatar-label">
+            {{
+              "Admin.Modules.Contributors.Module.Contributor.Form.Avatar"
+                | translate
+            }}</span
+          >
         </button>
       </div>
       <input
@@ -31,235 +40,175 @@
         accept=".png, .jpg, .jpeg, .svg"
         (change)="uploadImage($event)"
         #fileUpload
-      >
-
+      />
       <div class="input-box-active">
-        <label for="status"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.Active'
+        <label for="status">{{
+          "Admin.Modules.Contributors.Module.Contributor.Form.Active"
             | translate
-          }}</label>
+        }}</label>
         <mat-slide-toggle
-          formControlName="active" ngDefaultControl
+          formControlName="active"
+          ngDefaultControl
           id="status"
         ></mat-slide-toggle>
       </div>
-
       <div class="input-box">
         <label for="name"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.Name'
-            | translate
-          }} *</label>
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
+          >{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.Name"
+              | translate
+          }}
+          *</label
         >
-        <span *ngIf="name.errors && (name.dirty || name.touched)"
-              class="cross-validation-error"
-        >
-        {{ getErrorMessage(name.errors) }}
+        <input id="name" type="text" formControlName="name" />
+        @if (name.errors && (name.dirty || name.touched)) {
+        <span class="cross-validation-error">
+          {{ getErrorMessage(name.errors) }}
         </span>
-
-      </div>
-
-      <div class="input-box">
-        <label
-          for="nameEn"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.NameEn'
-            | translate
-          }} *</label>
-        <input
-          id="nameEn"
-          type="text"
-          formControlName="nameEn"
-        >
-        <span *ngIf="nameEn.errors && (nameEn.dirty || nameEn.touched)"
-              class="cross-validation-error"
-        >
-        {{ getErrorMessage(nameEn.errors) }}
-      </span>
+        }
       </div>
       <div class="input-box">
-        <label
-          for="description"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.Description'
-            | translate
-          }} *</label>
+        <label for="nameEn"
+          >{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.NameEn"
+              | translate
+          }}
+          *</label
+        >
+        <input id="nameEn" type="text" formControlName="nameEn" />
+        @if (nameEn.errors && (nameEn.dirty || nameEn.touched)) {
+        <span class="cross-validation-error">
+          {{ getErrorMessage(nameEn.errors) }}
+        </span>
+        }
+      </div>
+      <div class="input-box">
+        <label for="description"
+          >{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.Description"
+              | translate
+          }}
+          *</label
+        >
         <textarea
           id="description"
           type="text"
           formControlName="description"
         ></textarea>
-        <span *ngIf="description.errors && (description.dirty || description.touched)"
-              class="cross-validation-error"
-        >
-        {{ getErrorMessage(description.errors) }}
-      </span>
+        @if (description.errors && (description.dirty || description.touched)) {
+        <span class="cross-validation-error">
+          {{ getErrorMessage(description.errors) }}
+        </span>
+        }
       </div>
-
       <div class="input-box">
-        <label
-          for="descriptionEn"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.DescriptionEn'
-            | translate
-          }}  *</label>
+        <label for="descriptionEn"
+          >{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.DescriptionEn"
+              | translate
+          }}
+          *</label
+        >
         <textarea
           id="descriptionEn"
           type="text"
           formControlName="descriptionEn"
         ></textarea>
-        <span *ngIf="descriptionEn.errors && (descriptionEn.dirty || descriptionEn.touched)"
-              class="cross-validation-error"
-        >
-        {{ getErrorMessage(descriptionEn.errors) }}
-      </span>
+        @if (descriptionEn.errors && (descriptionEn.dirty ||
+        descriptionEn.touched)) {
+        <span class="cross-validation-error">
+          {{ getErrorMessage(descriptionEn.errors) }}
+        </span>
+        }
       </div>
-
       <div class="input-box">
-        <label
-          for="contribution"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.Contributions'
-            | translate
-          }} *</label>
-        <input
-          id="contribution"
-          type=number
-          formControlName="contribution"
+        <label for="contribution"
+          >{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.Contributions"
+              | translate
+          }}
+          *</label
         >
-        <span *ngIf="contribution.errors && (contribution.dirty || contribution.touched)"
-              class="cross-validation-error"
-        >
-        {{ getErrorMessage(contribution.errors) }}
-      </span>
+        <input id="contribution" type="number" formControlName="contribution" />
+        @if (contribution.errors && (contribution.dirty ||
+        contribution.touched)) {
+        <span class="cross-validation-error">
+          {{ getErrorMessage(contribution.errors) }}
+        </span>
+        }
       </div>
-
       <div class="input-box">
-        <label
-          for="company"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.Company'
+        <label for="company">{{
+          "Admin.Modules.Contributors.Module.Contributor.Form.Company"
             | translate
-          }}</label>
-        <input
-          id="company"
-          type="text"
-          formControlName="company"
-        >
+        }}</label>
+        <input id="company" type="text" formControlName="company" />
       </div>
-
       <div class="input-box">
-        <label
-          for="companyEn"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.CompanyEn'
+        <label for="companyEn">{{
+          "Admin.Modules.Contributors.Module.Contributor.Form.CompanyEn"
             | translate
-          }}</label>
-        <input
-          id="companyEn"
-          type="text"
-          formControlName="companyEn"
-        >
+        }}</label>
+        <input id="companyEn" type="text" formControlName="companyEn" />
       </div>
-
       <div class="input-box">
-        <label
-          for="type"
-        >{{
-          'Admin.Modules.Contributors.Module.Contributor.Form.Type'
-            | translate
-          }}</label>
-        <select
-          id="type"
-          formControlName="type"
-        >
-          <option
-            *ngFor="let type of contributorTypes"
-            [value]="type"
-          >
-            {{ type}}
+        <label for="type">{{
+          "Admin.Modules.Contributors.Module.Contributor.Form.Type" | translate
+        }}</label>
+        <select id="type" formControlName="type">
+          @for (type of contributorTypes; track type) {
+          <option [value]="type">
+            {{ type }}
           </option>
+          }
         </select>
-
       </div>
-
-      <div
-        class="contacts"
-        formGroupName="contacts"
-      >
+      <div class="contacts" formGroupName="contacts">
         <div class="input-box">
-          <label
-            for="phone"
-          >{{
-            'Admin.Modules.Contributors.Module.Contributor.Form.Phone'
+          <label for="phone">{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.Phone"
               | translate
-            }}</label>
-          <input
-            id="phone"
-            type="text"
-            formControlName="phone"
-          >
+          }}</label>
+          <input id="phone" type="text" formControlName="phone" />
         </div>
-
         <div class="input-box">
-          <label
-            for="email"
-          >{{
-            'Admin.Modules.Contributors.Module.Contributor.Form.Email'
+          <label for="email">{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.Email"
               | translate
-            }}</label>
-          <input
-            id="email"
-            type="text"
-            formControlName="email"
-          >
+          }}</label>
+          <input id="email" type="text" formControlName="email" />
         </div>
-
         <div class="input-box">
-          <label
-            for="telegram"
-          >{{
-            'Admin.Modules.Contributors.Module.Contributor.Form.Telegram'
+          <label for="telegram">{{
+            "Admin.Modules.Contributors.Module.Contributor.Form.Telegram"
               | translate
-            }}</label>
-          <input
-            id="telegram"
-            type="text"
-            formControlName="telegram"
-          >
+          }}</label>
+          <input id="telegram" type="text" formControlName="telegram" />
         </div>
-
       </div>
-
     </form>
-
     <div class="bottom-buttons">
-      <button
-        mat-raised-button
-        class="cancel-button"
-        (click)="cancelInput()"
-      >{{
-        'Admin.Modules.Contributors.Module.Contributor.Buttons.Cancel'
-          | translate
-          | uppercase
-        }}</button>
-
+      <button mat-raised-button class="cancel-button" (click)="cancelInput()">
+        {{
+          "Admin.Modules.Contributors.Module.Contributor.Buttons.Cancel"
+            | translate
+            | uppercase
+        }}
+      </button>
       <button
         mat-raised-button
         class="save-button"
-        [ngClass]="{disabled: contributorForm.invalid}"
+        [ngClass]="{ disabled: contributorForm.invalid }"
         [disabled]="contributorForm.invalid"
         (click)="saveContributor()"
-      >{{
-        'Admin.Modules.Contributors.Module.Contributor.Buttons.Save'
-          | translate
-          | uppercase
-        }}</button>
+      >
+        {{
+          "Admin.Modules.Contributors.Module.Contributor.Buttons.Save"
+            | translate
+            | uppercase
+        }}
+      </button>
     </div>
   </div>
-</ng-template>
+  }
+</div>

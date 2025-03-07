@@ -23,16 +23,16 @@ describe('AdminComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AdminComponent],
-      imports: [
+    imports: [
         PipesModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
         RouterTestingModule,
-        TranslateModule.forRoot()
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [AuthenticationApiService, TokenService],
-    });
+        TranslateModule.forRoot(),
+        AdminComponent
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+    providers: [AuthenticationApiService, TokenService],
+});
 
     fixture = TestBed.createComponent(AdminComponent);
     component = fixture.componentInstance;

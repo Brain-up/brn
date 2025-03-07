@@ -125,16 +125,8 @@
             "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] }
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     }
-  },
-  "defaultProject": "frontend-angular"
+  }
 }
