@@ -1,19 +1,27 @@
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 import { secondsTo } from '@shared/helpers/seconds-to';
-import * as dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { IWeekChartDataItem } from '../../models/week-char-data-item';
-import { DataItem } from 'billboard.js';
+import { BarChartComponent } from '@shared/components/bar-chart/bar-chart.component';
+import { DailyTimeTableComponent } from '../daily-time-table/daily-time-table.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
-    selector: 'app-week-time-track',
-    templateUrl: './week-time-track.component.html',
-    styleUrls: ['./week-time-track.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-week-time-track',
+  templateUrl: './week-time-track.component.html',
+  styleUrls: ['./week-time-track.component.scss'],
+  imports: [
+    MatProgressBarModule,
+    BarChartComponent,
+    DailyTimeTableComponent,
+    TranslateModule
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WeekTimeTrackComponent {
   private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
@@ -37,7 +45,7 @@ export class WeekTimeTrackComponent {
       },
       y: {
         tick: {
-          text: {show: false},
+          text: { show: false },
           culling: false,
           show: false,
           outer: false,
@@ -141,7 +149,7 @@ export class WeekTimeTrackComponent {
 
   public isAllowNextMonth(): boolean {
     /// for December
-    if (this.selectedMonth().add(1, 'month').month() === 0 ) {
+    if (this.selectedMonth().add(1, 'month').month() === 0) {
       return this.selectedMonth().month() <= dayjs().subtract(1, 'month').month();
     }
     return this.selectedMonth().add(1, 'month').month() <= dayjs().month();

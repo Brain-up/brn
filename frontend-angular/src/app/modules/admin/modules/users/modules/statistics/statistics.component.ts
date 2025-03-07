@@ -1,23 +1,45 @@
-import * as dayjs from 'dayjs';
-import { ActivatedRoute } from '@angular/router';
-import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { Dayjs } from 'dayjs';
-import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
-import { HOME_PAGE_URL } from '@shared/constants/common-constants';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
-import { Subject } from 'rxjs';
-import { TokenService } from '@root/services/token.service';
-import { User } from '@admin/models/user.model';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { TokenService } from '@root/services/token.service';
+import { HOME_PAGE_URL } from '@shared/constants/common-constants';
+import dayjs, { Dayjs } from 'dayjs';
+import { User } from 'firebase/auth';
+import { Subject, finalize, takeUntil } from 'rxjs';
+import { MonthTimeTrackComponent } from './components/month-time-track/month-time-track.component';
+import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
+import { WeekTimeTrackComponent } from './components/week-time-track/week-time-track.component';
 
 @Component({
-    selector: 'app-statistics',
-    templateUrl: './statistics.component.html',
-    styleUrls: ['./statistics.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-statistics',
+  templateUrl: './statistics.component.html',
+  styleUrls: ['./statistics.component.scss'],
+  imports: [
+    RouterLink,
+    CommonModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatTabsModule,
+    TranslateModule,
+    MatTableModule,
+    MonthTimeTrackComponent,
+    WeekTimeTrackComponent,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
   private readonly activatedRoute = inject(ActivatedRoute);

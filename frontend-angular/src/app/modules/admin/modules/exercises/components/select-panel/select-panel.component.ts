@@ -1,28 +1,39 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { catchError, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { GroupApiService } from '@admin/services/api/group-api.service';
-import { SeriesApiService } from '@admin/services/api/series-api.service';
-import { SubGroupApiService } from '@admin/services/api/sub-group-api.service';
-import { LANGUAGES } from './languages';
-import { Language } from '../../../models/language';
 import { Group } from '@admin/models/group';
 import { Series } from '@admin/models/series';
 import { Subgroup } from '@admin/models/subgroup';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { GroupApiService } from '@admin/services/api/group-api.service';
+import { SeriesApiService } from '@admin/services/api/series-api.service';
+import { SubGroupApiService } from '@admin/services/api/sub-group-api.service';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { catchError, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Language } from '../../models/language';
+import { LANGUAGES } from './languages';
 
 enum DEFAULT_SELECT_VALUE {
- languageId = 'ru-ru',
- groupId = 2,
- seriesIdName = '1;Слова'
+  languageId = 'ru-ru',
+  groupId = 2,
+  seriesIdName = '1;Слова'
 }
 
 @Component({
-    selector: 'app-select-panel',
-    templateUrl: './select-panel.component.html',
-    styleUrls: ['./select-panel.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-select-panel',
+  templateUrl: './select-panel.component.html',
+  styleUrls: ['./select-panel.component.scss'],
+  imports: [
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    TranslateModule,
+    AsyncPipe,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectPanelComponent implements OnInit, OnDestroy {
   private readonly groupApiService = inject(GroupApiService);
@@ -165,14 +176,14 @@ export class SelectPanelComponent implements OnInit, OnDestroy {
   }
 
   private setDefaultLanguage() {
-    this.languagesControl.setValue(DEFAULT_SELECT_VALUE.languageId, {emitEvent: false});
+    this.languagesControl.setValue(DEFAULT_SELECT_VALUE.languageId, { emitEvent: false });
   }
 
   private setDefaultGroup() {
-    this.groupsControl.setValue(DEFAULT_SELECT_VALUE.groupId, {emitEvent: false});
+    this.groupsControl.setValue(DEFAULT_SELECT_VALUE.groupId, { emitEvent: false });
   }
 
   private setDefaultSeries() {
-    this.seriesControl.setValue(DEFAULT_SELECT_VALUE.seriesIdName, {emitEvent: false});
+    this.seriesControl.setValue(DEFAULT_SELECT_VALUE.seriesIdName, { emitEvent: false });
   }
 }

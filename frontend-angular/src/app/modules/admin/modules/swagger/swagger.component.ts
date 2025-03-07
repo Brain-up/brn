@@ -1,14 +1,16 @@
-import SwaggerUI from 'swagger-ui';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, inject } from '@angular/core';
+import SwaggerUI from 'swagger-ui';
 
 @Component({
-    selector: 'app-swagger',
-    templateUrl: './swagger.component.html',
-    styleUrls: ['./swagger.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-swagger',
+  templateUrl: './swagger.component.html',
+  styleUrls: ['./swagger.component.scss'],
+  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SwaggerComponent implements OnDestroy, OnInit {
   private readonly adminApiService = inject(AdminApiService);

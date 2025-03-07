@@ -1,19 +1,47 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { User, UserMapped } from '@admin/models/user.model';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { TokenService } from '@root/services/token.service';
+import { BarChartComponent } from '@shared/components/bar-chart/bar-chart.component';
+import { DurationTransformPipe } from '@shared/pipes/duration-transform.pipe';
+import { ShortNamePipe } from '@shared/pipes/short-name.pipe';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { TokenService } from '@root/services/token.service';
-import { User, UserMapped } from '@admin/models/user.model';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 
 @Component({
-    selector: 'app-users',
-    templateUrl: './users.component.html',
-    styleUrls: ['./users.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styleUrls: ['./users.component.scss'],
+  imports: [
+    CommonModule,
+    MatButtonToggleModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatSlideToggleModule,
+    MatSortModule,
+    MatTableModule,
+    TranslateModule,
+    BarChartComponent,
+    DatePipe,
+    DurationTransformPipe,
+    ShortNamePipe,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);

@@ -1,22 +1,30 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
-import { SnackBarService } from '@root/services/snack-bar.service';
 import { Group } from '@admin/models/group';
 import { Series } from '@admin/models/series';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { GroupApiService } from '@admin/services/api/group-api.service';
 import { SeriesApiService } from '@admin/services/api/series-api.service';
-import { TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SnackBarService } from '@root/services/snack-bar.service';
+import { Observable, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-load-tasks',
-    templateUrl: './load-tasks.component.html',
-    styleUrls: ['./load-tasks.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-load-tasks',
+  templateUrl: './load-tasks.component.html',
+  styleUrls: ['./load-tasks.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatSelectModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadTasksComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);

@@ -1,18 +1,37 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { finalize, takeUntil } from 'rxjs/operators';
 import { Contributor } from '@admin/models/contrubutor.model';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-contributors',
-    templateUrl: './contributors.component.html',
-    styleUrls: ['./contributors.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-contributors',
+  templateUrl: './contributors.component.html',
+  styleUrls: ['./contributors.component.scss'],
+  imports: [
+    CommonModule,
+    MatProgressBarModule,
+    TranslateModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    MatRippleModule,
+    MatSortModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContributorsComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);
@@ -89,7 +108,7 @@ export class ContributorsComponent implements OnInit, OnDestroy {
   public navigateToSelectedContributor(contributor: Contributor): void {
     this.router.navigate(['contributor', contributor.id], {
       relativeTo: this.activatedRoute,
-      state: {data: contributor},
+      state: { data: contributor },
     });
   }
 

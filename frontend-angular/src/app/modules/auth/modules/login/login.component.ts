@@ -1,16 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@root/services/snack-bar.service';
-import { TranslateService } from '@ngx-translate/core';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private readonly authenticationApiService = inject(AuthenticationApiService);

@@ -1,16 +1,36 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
-import { map, filter, switchMap, tap } from 'rxjs/operators';
-import { Answer, Exercise, Task } from '@admin/models/exercise';
+import { Answer, Exercise } from '@admin/models/exercise';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject, combineLatest, filter, map, Subject, Subscription, switchMap, tap } from 'rxjs';
+import { SelectPanelComponent } from './components/select-panel/select-panel.component';
+import { Task } from '@admin/models/exercise';
 
 @Component({
-    selector: 'app-exercises',
-    templateUrl: './exercises.component.html',
-    styleUrls: ['./exercises.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-exercises',
+  templateUrl: './exercises.component.html',
+  styleUrls: ['./exercises.component.scss'],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatSortModule,
+    MatTableModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    SelectPanelComponent
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExercisesComponent implements OnInit, OnDestroy {
   private readonly adminApiService = inject(AdminApiService);
@@ -65,7 +85,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
     let res = '';
     tasks.forEach((task: Task) => {
-      const row  = task.answerOptions.map((answer: Answer) => answer.word).join(' ');
+      const row = task.answerOptions.map((answer: Answer) => answer.word).join(' ');
       res += row + '\n';
     });
 
@@ -73,7 +93,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource(): void {
-    this.displayedColumns = [ 'id', 'seriesId', 'name', 'level', 'noise', 'noiseSound', 'tasks', 'available'];
+    this.displayedColumns = ['id', 'seriesId', 'name', 'level', 'noise', 'noiseSound', 'tasks', 'available'];
   }
 
   private initExercises() {

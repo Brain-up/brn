@@ -1,23 +1,21 @@
-import * as dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
+
+import { GetUsers } from '@admin/models/endpoints.model';
 import { Exercise } from '@admin/models/exercise';
-import { GetContributors, GetUsers } from '@admin/models/endpoints.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { map, pluck, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { Roles } from '@admin/models/roles.type';
+import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import { UserMapped, UserWithNoAnalytics } from '@admin/models/user.model';
-import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
-import { Contributor } from '@admin/models/contrubutor.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import dayjs, { Dayjs } from 'dayjs';
+import { Observable } from 'rxjs';
+import { map, pluck } from 'rxjs/operators';
 
 @Injectable()
 export class AdminApiService {
   private readonly httpClient = inject(HttpClient);
-
 
   public sendFormData(action: string, body: FormData): Observable<void> {
     return this.httpClient.post<void>(action, body);
@@ -89,7 +87,7 @@ export class AdminApiService {
                 colors: {
                   data: (item) =>
                     USER_EXERCISING_PROGRESS_STATUS_COLOR[
-                      user.lastWeek.map(({ progress }) => progress)[item.index]
+                    user.lastWeek.map(({ progress }) => progress)[item.index]
                     ],
                 },
                 axis: { x: { show: false }, y: { show: false } },
@@ -101,7 +99,7 @@ export class AdminApiService {
             };
             user.progress = user.diagnosticProgress.SIGNALS;
             return user;
-          }),
+          }).slice(0, 10),
         ),
       );
   }

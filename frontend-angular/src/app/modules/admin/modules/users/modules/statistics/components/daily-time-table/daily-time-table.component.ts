@@ -4,12 +4,15 @@ import { Dayjs } from 'dayjs';
 import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-daily-time-table',
     templateUrl: './daily-time-table.component.html',
     styleUrls: ['./daily-time-table.component.scss'],
+    imports: [MatProgressBarModule, MatTableModule, TranslateModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {

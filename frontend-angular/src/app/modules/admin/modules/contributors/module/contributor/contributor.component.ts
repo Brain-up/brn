@@ -1,15 +1,29 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Contributor, contributorTypes } from '@admin/models/contrubutor.model';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
-import { finalize } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-contributor',
-    templateUrl: './contributor.component.html',
-    styleUrls: ['./contributor.component.scss']
+  selector: 'app-contributor',
+  templateUrl: './contributor.component.html',
+  styleUrls: ['./contributor.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatSlideToggleModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ContributorComponent implements OnInit {
@@ -36,24 +50,24 @@ export class ContributorComponent implements OnInit {
 
   createForm(): void {
     this.contributorForm = this.formBuilder.group({
-        company: [''],
-        companyEn: [''],
-        contribution: [0, Validators.min(1)],
-        contacts: this.formBuilder.group({
-          phone: [''],
-          email: [''],
-          telegram: ['']
-        }),
-        description: ['', [Validators.required, Validators.maxLength(512)]],
-        descriptionEn: ['', [Validators.required, Validators.maxLength(512)]],
-        id: null,
-        pictureUrl: [''],
-        name: ['', [Validators.required, Validators.maxLength(255)]],
-        nameEn: ['', [Validators.required, Validators.maxLength(255)]],
-        type: 'DEVELOPER',
-        active: [true],
-        github_user_id: [''],
-      }
+      company: [''],
+      companyEn: [''],
+      contribution: [0, Validators.min(1)],
+      contacts: this.formBuilder.group({
+        phone: [''],
+        email: [''],
+        telegram: ['']
+      }),
+      description: ['', [Validators.required, Validators.maxLength(512)]],
+      descriptionEn: ['', [Validators.required, Validators.maxLength(512)]],
+      id: null,
+      pictureUrl: [''],
+      name: ['', [Validators.required, Validators.maxLength(255)]],
+      nameEn: ['', [Validators.required, Validators.maxLength(255)]],
+      type: 'DEVELOPER',
+      active: [true],
+      github_user_id: [''],
+    }
     );
   }
 
@@ -120,9 +134,9 @@ export class ContributorComponent implements OnInit {
     Object.entries(this.contributor.contacts).forEach(([key, value]) => {
       if (value) {
         convertContactsForSave.push({
-            type: key.toUpperCase(),
-            value
-          }
+          type: key.toUpperCase(),
+          value
+        }
         );
       }
     });
@@ -140,16 +154,16 @@ export class ContributorComponent implements OnInit {
         this.contributorApiService.updateContributor(this.id, this.contributor)
           .pipe(
             finalize(() => this.isLoading$.next(false)),
-           )
+          )
           .subscribe(
-            () =>  this.router.navigate(['contributors'])
+            () => this.router.navigate(['contributors'])
           )
         : this.contributorApiService.createContributor(this.contributor)
           .pipe(
             finalize(() => this.isLoading$.next(false)),
           )
           .subscribe(
-            () =>  this.router.navigate(['contributors'])
+            () => this.router.navigate(['contributors'])
           );
     }
   }

@@ -1,7 +1,3 @@
-import * as dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
-import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
-import { secondsTo } from '@shared/helpers/seconds-to';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import {
   ChangeDetectionStrategy,
@@ -11,12 +7,20 @@ import {
   Output,
   input
 } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TranslateModule } from '@ngx-translate/core';
+import { secondsTo } from '@shared/helpers/seconds-to';
+import dayjs, { Dayjs } from 'dayjs';
+import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
+import { MonthTimeTrackItemComponent } from '../month-time-track-item/month-time-track-item.component';
 
 @Component({
-    selector: 'app-month-time-track',
-    templateUrl: './month-time-track.component.html',
-    styleUrls: ['./month-time-track.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-month-time-track',
+  templateUrl: './month-time-track.component.html',
+  styleUrls: ['./month-time-track.component.scss'],
+  imports: [MatIconModule, MonthTimeTrackItemComponent, MatProgressBarModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonthTimeTrackComponent {
   public monthTimeTrackItemsData: IMonthTimeTrackItemData[];
