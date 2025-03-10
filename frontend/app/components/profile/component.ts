@@ -7,6 +7,7 @@ import UserDataService from 'brn/services/user-data';
 import IntlService from 'ember-intl/services/intl';
 import { UserDTO } from 'brn/services/network';
 import { isBornYearValid, isNotEmptyString } from 'brn/utils/validators';
+import HeadphoneModel from 'brn/models/headphone';
 
 export default class ProfileComponent extends Component {
   @service('intl') intl!: IntlService;
@@ -14,6 +15,8 @@ export default class ProfileComponent extends Component {
   @service('user-data') userData!: UserDataService;
 
   @tracked showAvatarsModal = false;
+  @tracked showHeadphonesModal = false;
+  @tracked selectedHeadphones!: HeadphoneModel;
 
   get avatarUrl() {
     return this.userData.avatarUrl;
@@ -78,6 +81,20 @@ export default class ProfileComponent extends Component {
 
   @action onShowAvatars() {
     this.showAvatarsModal = true;
+  }
+
+  @action onShowEarphones() {
+    this.showHeadphonesModal = true;
+  }
+
+  @action onCloseHeadphonesModal(): void {
+    this.showHeadphonesModal = false;
+  }
+
+  @action onSelectHeadphones(selectedHeadphones: HeadphoneModel): void {
+    this.showHeadphonesModal = false;
+    this.selectedHeadphones = selectedHeadphones;
+    // todo
   }
 
   @action setLocale(localeName: string) {
