@@ -39,7 +39,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^18.0.0",
+    "@angular-builders/custom-webpack": "^19.0.0",
     "@angular-devkit/architect": "0.1900.1",
     "@angular-devkit/core": "19.0.1",
     "@angular/build": "^19.0.1",

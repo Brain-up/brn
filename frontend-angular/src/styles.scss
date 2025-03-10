@@ -47,7 +47,7 @@ $frontend-angular-theme: mat.m2-define-light-theme($frontend-angular-primary, $f
 @import './app/styles/material-override.scss';
 
 // Styles of app libs
-@import 'billboard.js/src/scss/billboard.scss';
+@import '../node_modules/billboard.js/src/scss/billboard.scss';
 
 // Global styles
 html,

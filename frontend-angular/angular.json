@@ -100,16 +100,16 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "frontend-angular:build",
+            "buildTarget": "frontend-angular:build",
             "proxyConfig": "src/proxy.conf.json",
             "open": true
           },
           "configurations": {
             "production": {
-              "browserTarget": "frontend-angular:build:production"
+              "buildTarget": "frontend-angular:build:production"
             },
             "dev": {
-              "browserTarget": "frontend-angular:build:dev",
+              "buildTarget": "frontend-angular:build:dev",
               "proxyConfig": "src/proxy.conf.dev.json"
             }
           }
