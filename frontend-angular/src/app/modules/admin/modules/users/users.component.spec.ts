@@ -86,8 +86,7 @@ describe('UsersComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [UsersComponent],
-      imports: [
+    imports: [
         // MatPaginatorHarness,
         // MatSortHarness,
         // MatTableHarness,
@@ -95,24 +94,24 @@ describe('UsersComponent', () => {
         MatSortModule,
         PipesModule,
         RouterTestingModule.withRoutes([
-          {
-            path: ':userId/statistics',
-            component: StatisticsComponent,
-          },
+            {
+                path: ':userId/statistics',
+                component: StatisticsComponent,
+            },
         ]),
         TranslateModule.forRoot(),
-      ],
-      providers: [
+        UsersComponent,
+    ],
+    providers: [
         {
-          provide: AdminApiService,
-          useFactory: () =>
-            new AdminApiServiceFake({ responseDelayInMs, usersNumber }),
+            provide: AdminApiService,
+            useFactory: () => new AdminApiServiceFake({ responseDelayInMs, usersNumber }),
         },
         { provide: ActivatedRoute, useValue: fakeActivatedRoute },
         { provide: TokenService, useValue: fakeTokenService },
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(UsersComponent);
     component = fixture.componentInstance;

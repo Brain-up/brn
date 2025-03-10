@@ -10,8 +10,8 @@ describe('BarChartComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [BarChartComponent],
-    });
+    imports: [BarChartComponent],
+});
 
     fixture = TestBed.createComponent(BarChartComponent);
     component = fixture.componentInstance;

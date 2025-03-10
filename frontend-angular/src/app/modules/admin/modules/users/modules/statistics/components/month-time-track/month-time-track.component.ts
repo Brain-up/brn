@@ -1,7 +1,3 @@
-import * as dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
-import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
-import { secondsTo } from '@shared/helpers/seconds-to';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
 import {
   ChangeDetectionStrategy,
@@ -9,23 +5,36 @@ import {
   EventEmitter,
   Input,
   Output,
+  input
 } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TranslateModule } from '@ngx-translate/core';
+import { secondsTo } from '@shared/helpers/seconds-to';
+import dayjs, { Dayjs } from 'dayjs';
+import { IMonthTimeTrackItemData } from '../../models/month-time-track-item-data';
+import { MonthTimeTrackItemComponent } from '../month-time-track-item/month-time-track-item.component';
 
 @Component({
   selector: 'app-month-time-track',
   templateUrl: './month-time-track.component.html',
   styleUrls: ['./month-time-track.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIconModule, MonthTimeTrackItemComponent, MatProgressBarModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonthTimeTrackComponent {
   public monthTimeTrackItemsData: IMonthTimeTrackItemData[];
 
-  @Input()
-  public isLoading = true;
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
+  public readonly isLoading = input(true);
 
-  @Input()
-  public selectedMonth: Dayjs;
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
+  public readonly selectedMonth = input<Dayjs>(undefined);
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set data(data: UserYearlyStatistics[] | undefined) {
     if (!data) {
@@ -98,14 +107,14 @@ export class MonthTimeTrackComponent {
 
   public isSelectedMonth(data: IMonthTimeTrackItemData): boolean {
     return (
-      data.date.year() === this.selectedMonth.year() &&
-      data.date.month() === this.selectedMonth.month() &&
+      data.date.year() === this.selectedMonth().year() &&
+      data.date.month() === this.selectedMonth().month() &&
       data.days !== 0
     );
   }
 
   public isAllowNextYear(): boolean {
-    return this.selectedMonth.add(1, 'year').year() <= dayjs().year();
+    return this.selectedMonth().add(1, 'year').year() <= dayjs().year();
   }
 
   public hasValidTrackItem(): boolean {

@@ -1,20 +1,43 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { finalize, takeUntil } from 'rxjs/operators';
 import { Contributor } from '@admin/models/contrubutor.model';
 import { ContributorApiService } from '@admin/services/api/contributor-api.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contributors',
   templateUrl: './contributors.component.html',
   styleUrls: ['./contributors.component.scss'],
+  imports: [
+    CommonModule,
+    MatProgressBarModule,
+    TranslateModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    MatRippleModule,
+    MatSortModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContributorsComponent implements OnInit, OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
+  private readonly contributorApiService = inject(ContributorApiService);
+  private router = inject(Router);
+
   private readonly destroyer$ = new Subject<void>();
   private getContributorsSubscription: Subscription;
   private sorting: MatSort;
@@ -33,6 +56,8 @@ export class ContributorsComponent implements OnInit, OnDestroy {
   public readonly isLoading$ = new BehaviorSubject(true);
   public contributorsList: Contributor[];
 
+  // TODO: Skipped for migration because:
+  //  Accessor queries cannot be migrated as they are too complex.
   @ViewChild(MatSort) set sort(sort: MatSort) {
     this.sorting = sort;
     if (this.sorting) {
@@ -40,18 +65,13 @@ export class ContributorsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // TODO: Skipped for migration because:
+  //  Accessor queries cannot be migrated as they are too complex.
   @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
     this.paging = paginator;
     if (this.paging) {
       this.dataSource.paginator = this.paging;
     }
-  }
-
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private readonly contributorApiService: ContributorApiService,
-    private router: Router,
-  ) {
   }
 
   ngOnInit(): void {
@@ -88,7 +108,7 @@ export class ContributorsComponent implements OnInit, OnDestroy {
   public navigateToSelectedContributor(contributor: Contributor): void {
     this.router.navigate(['contributor', contributor.id], {
       relativeTo: this.activatedRoute,
-      state: {data: contributor},
+      state: { data: contributor },
     });
   }
 

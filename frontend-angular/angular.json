@@ -100,16 +100,16 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "frontend-angular:build",
+            "buildTarget": "frontend-angular:build",
             "proxyConfig": "src/proxy.conf.json",
             "open": true
           },
           "configurations": {
             "production": {
-              "browserTarget": "frontend-angular:build:production"
+              "buildTarget": "frontend-angular:build:production"
             },
             "dev": {
-              "browserTarget": "frontend-angular:build:dev",
+              "buildTarget": "frontend-angular:build:dev",
               "proxyConfig": "src/proxy.conf.dev.json"
             }
           }
@@ -125,16 +125,8 @@
             "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] }
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     }
-  },
-  "defaultProject": "frontend-angular"
+  }
 }

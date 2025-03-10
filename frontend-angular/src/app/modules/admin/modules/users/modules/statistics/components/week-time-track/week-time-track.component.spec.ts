@@ -17,10 +17,9 @@ describe('WeekTimeTrackComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WeekTimeTrackComponent],
-      imports: [TranslateModule.forRoot()],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    imports: [TranslateModule.forRoot(), WeekTimeTrackComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(WeekTimeTrackComponent);
     component = fixture.componentInstance;
@@ -122,7 +121,7 @@ describe('WeekTimeTrackComponent', () => {
     component.selectedMonth = dayjs(selectedMonth);
     for (let i = 0; i < 31; i++) {
       component.onClickItem(i);
-      const date = component.selectedMonth.clone();
+      const date = component.selectedMonth().clone();
       expect(component.selectedDay).toEqual(date.set('date', i));
     }
   });
