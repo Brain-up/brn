@@ -35,7 +35,7 @@ export class AdminApiServiceFake
   }
 
   public getUserWeeklyStatistics(
-    userId: number,
+    _userId: number,
     from: Dayjs,
     to: Dayjs,
   ): Observable<UserWeeklyStatistics[]> {
@@ -59,7 +59,7 @@ export class AdminApiServiceFake
   }
 
   public getUserYearlyStatistics(
-    userId: number,
+    _userId: number,
     from: Dayjs,
     to: Dayjs,
   ): Observable<UserYearlyStatistics[]> {
@@ -134,7 +134,7 @@ export class AdminApiServiceFake
     return of(users).pipe(
       delay(this.options.responseDelayInMs),
       map((userList: UserMapped[]) =>
-        userList.map((user, i) => {
+        userList.map((user, _i) => {
           user.age = dayjs().year() - user.bornYear;
           user.currentWeekChart = {
             data: [
@@ -167,8 +167,8 @@ export class AdminApiServiceFake
   }
 
   public getUserDailyDetailStatistics(
-    userId: number,
-    day: Dayjs
+    _userId: number,
+    _day: Dayjs
   ): Observable<UserDailyDetailStatistics[]> {
     const response: UserDailyDetailStatistics[] = [];
     response.push({

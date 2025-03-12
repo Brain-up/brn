@@ -44,7 +44,7 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
     this.loadData();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     this.loadData();
   }
 

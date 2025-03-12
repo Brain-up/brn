@@ -1,12 +1,12 @@
-import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder } from '@angular/forms';
-import { LoginComponent } from './login.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SnackBarService } from '@root/services/snack-bar.service';
+import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-require('firebase/auth');
+import { SnackBarService } from '@root/services/snack-bar.service';
+import { LoginComponent } from './login.component';
+// require('firebase/auth');
 
 describe('LoginComponent', () => {
   let fixture: ComponentFixture<LoginComponent>;
@@ -20,8 +20,8 @@ describe('LoginComponent', () => {
     },
   };
 
-  const routerStub: Router = jasmine.createSpyObj('Router', ['navigate']);
-  const authStub: AuthenticationApiService = jasmine.createSpyObj(
+  const _routerStub: Router = jasmine.createSpyObj('Router', ['navigate']);
+  const _authStub: AuthenticationApiService = jasmine.createSpyObj(
     'RegistrationService',
     ['loginWithEmail'],
   );

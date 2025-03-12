@@ -1,13 +1,12 @@
 import {
-    HTTP_INTERCEPTORS,
-    HttpClient,
-    provideHttpClient,
-    withInterceptorsFromDi,
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
 } from "@angular/common/http";
 import { enableProdMode, importProvidersFrom } from "@angular/core";
 import { AngularFireModule } from "@angular/fire/compat";
 import { AngularFireAuthModule } from "@angular/fire/compat/auth";
-import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
@@ -24,44 +23,44 @@ import { APP_ROUTES } from "./app/app.routes";
 import { environment } from "./environments/environment";
 
 if (environment.production) {
-    enableProdMode();
+  enableProdMode();
 }
 
 bootstrapApplication(AppComponent, {
-    providers: [
-        importProvidersFrom(
-            BrowserModule,
-            TranslateModule.forRoot({
-                loader: {
-                    provide: TranslateLoader,
-                    useFactory: (httpClient: HttpClient) =>
-                        new TranslateHttpLoader(
-                            httpClient,
-                            "assets/i18n/",
-                            `.json?cacheOff=${process.env.CACHE_OFF}`
-                        ),
-                    deps: [HttpClient],
-                },
-            }),
-            MatSnackBarModule,
-            AngularFireModule.initializeApp(environment.firebaseConfig),
-            AngularFireAuthModule
-        ),
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: ExceptionsInterceptor,
-            multi: true,
+  providers: [
+    importProvidersFrom(
+      BrowserModule,
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: (httpClient: HttpClient) =>
+            new TranslateHttpLoader(
+              httpClient,
+              "assets/i18n/",
+              `.json?cacheOff=${process.env.CACHE_OFF}`
+            ),
+          deps: [HttpClient],
         },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: StripUndefinedParamsInterceptor,
-            multi: true,
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideAnimations(),
-        provideRouter(APP_ROUTES),
-        GuestAccessGuard,
-        AuthAccessGuard
-    ],
+      }),
+      MatSnackBarModule,
+      AngularFireModule.initializeApp(environment.firebaseConfig),
+      AngularFireAuthModule
+    ),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ExceptionsInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: StripUndefinedParamsInterceptor,
+      multi: true,
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimations(),
+    provideRouter(APP_ROUTES),
+    GuestAccessGuard,
+    AuthAccessGuard,
+  ],
 }).catch((err) => console.error(err));

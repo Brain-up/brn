@@ -1,18 +1,13 @@
-import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { GroupApiService } from '@admin/services/api/group-api.service';
-import { SeriesApiService } from '@admin/services/api/series-api.service';
-import { SubGroupApiService } from '@admin/services/api/sub-group-api.service';
-import {
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { SelectPanelComponent } from './select-panel.component';
+import { AdminApiService } from "@admin/services/api/admin-api.service";
+import { GroupApiService } from "@admin/services/api/group-api.service";
+import { SeriesApiService } from "@admin/services/api/series-api.service";
+import { SubGroupApiService } from "@admin/services/api/sub-group-api.service";
+import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { ReactiveFormsModule } from "@angular/forms";
+import { Subject } from "rxjs";
+import { SelectPanelComponent } from "./select-panel.component";
 
-describe('SelectPanelComponent', () => {
+describe("SelectPanelComponent", () => {
   let component: SelectPanelComponent;
 
   let groupApiServiceMock;
@@ -21,45 +16,45 @@ describe('SelectPanelComponent', () => {
   let adminApiServiceMock;
 
   beforeEach(() => {
-    groupApiServiceMock = jasmine.createSpyObj('GroupApiService', [
-      'getGroups',
+    groupApiServiceMock = jasmine.createSpyObj("GroupApiService", [
+      "getGroups",
     ]);
-    seriesApiServiceMock = jasmine.createSpyObj('SeriesApiService', [
-      'getSeriesByGroupId',
+    seriesApiServiceMock = jasmine.createSpyObj("SeriesApiService", [
+      "getSeriesByGroupId",
     ]);
-    subGroupApiServiceMock = jasmine.createSpyObj('SubGroupApiService', [
-      'getSubgroupsBySeriesId',
+    subGroupApiServiceMock = jasmine.createSpyObj("SubGroupApiService", [
+      "getSubgroupsBySeriesId",
     ]);
-    adminApiServiceMock = jasmine.createSpyObj('AdminApiService', [
-      'getExercisesBySubGroupId',
+    adminApiServiceMock = jasmine.createSpyObj("AdminApiService", [
+      "getExercisesBySubGroupId",
     ]);
 
     TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, SelectPanelComponent],
-    providers: [
+      imports: [ReactiveFormsModule, SelectPanelComponent],
+      providers: [
         { GroupApiService, useValue: groupApiServiceMock },
         { SeriesApiService, useValue: seriesApiServiceMock },
         { SubGroupApiService, useValue: subGroupApiServiceMock },
         { AdminApiService, useValue: adminApiServiceMock },
-    ],
-});
+      ],
+    });
 
     component = new SelectPanelComponent(
       groupApiServiceMock,
       seriesApiServiceMock,
       subGroupApiServiceMock,
-      adminApiServiceMock,
+      adminApiServiceMock
     );
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 
-  it('hook ngOnInit', fakeAsync(() => {
-    component.groupId = 'groupId';
-    component.seriesId = 'seriesId';
-    component.subGroupId = 'subGroupId';
+  it("hook ngOnInit", fakeAsync(() => {
+    component.groupId = "groupId";
+    component.seriesId = "seriesId";
+    component.subGroupId = "subGroupId";
     component.ngOnInit();
     tick();
     expect(component.groupsControl).toBeTruthy();
@@ -67,9 +62,9 @@ describe('SelectPanelComponent', () => {
     expect(component.subGroupsControl).toBeTruthy();
   }));
 
-  it('should unsubscribe when destoryed', () => {
+  it("should unsubscribe when destoryed", () => {
     component.ngUnsubscribe = new Subject();
-    const spyDestroy = spyOn(Subject.prototype, 'next');
+    const spyDestroy = spyOn(Subject.prototype, "next");
     component.ngOnDestroy();
     expect(spyDestroy).toHaveBeenCalledTimes(1);
   });

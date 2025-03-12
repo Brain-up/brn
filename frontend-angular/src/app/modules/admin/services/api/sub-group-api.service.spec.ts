@@ -29,11 +29,11 @@ describe('SubGroupApiService', () => {
   });
 
   it('should call get series by group id', () => {
-    let subgroup: Subgroup[] | undefined;
+    let _subgroup: Subgroup[] | undefined;
     const url = `${baseUrl}?seriesId=${seriesId}`;
 
     service.getSubgroupsBySeriesId(seriesId).subscribe((data) => {
-      subgroup = data;
+      _subgroup = data;
     });
 
     const request = controller.expectOne(url);

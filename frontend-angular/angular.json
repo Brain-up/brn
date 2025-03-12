@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -30,14 +33,27 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              { "glob": "**/*", "input": "../api-contract/samples", "output": "api" }
+              {
+                "glob": "**/*",
+                "input": "../api-contract/samples",
+                "output": "api"
+              }
             ],
-            "styles": ["src/styles.scss", "node_modules/swagger-ui/dist/swagger-ui.css"],
-            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] },
+            "styles": [
+              "src/styles.scss",
+              "node_modules/swagger-ui/dist/swagger-ui.css"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/styles"
+              ]
+            },
             "indexTransform": "src/index-transform.ts",
             "customWebpackConfig": {
               "path": "custom-webpack-config.ts",
-              "mergeRules": { "externals": "replace" }
+              "mergeRules": {
+                "externals": "replace"
+              }
             }
           },
           "configurations": {
@@ -121,9 +137,27 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
-            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] }
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/styles"
+              ]
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }

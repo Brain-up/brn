@@ -10,7 +10,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 @Component({
     template: '',
-    standalone: false
+    
 })
 class DummyComponent {
 }

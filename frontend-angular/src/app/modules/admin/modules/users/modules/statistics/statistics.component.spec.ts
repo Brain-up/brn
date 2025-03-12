@@ -1,20 +1,19 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
+import { AdminApiService } from "@admin/services/api/admin-api.service";
+import { AdminApiServiceFake } from "@admin/services/api/admin-api.service.fake";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import {
   ComponentFixture,
   fakeAsync,
   TestBed,
   tick,
-} from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
-import { StatisticsComponent } from './statistics.component';
-import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { AdminApiServiceFake } from '@admin/services/api/admin-api.service.fake';
-import * as dayjs from 'dayjs';
-import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
+} from "@angular/core/testing";
+import { MatDialogModule } from "@angular/material/dialog";
+import { RouterTestingModule } from "@angular/router/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { StatisticsInfoDialogComponent } from "./components/statistics-info-dialog/statistics-info-dialog.component";
+import { StatisticsComponent } from "./statistics.component";
 
-describe('StatisticsComponent', () => {
+describe("StatisticsComponent", () => {
   const responseDelayInMs = 0;
   const tickInMs = responseDelayInMs + 100;
 
@@ -24,28 +23,28 @@ describe('StatisticsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [
+      imports: [
         RouterTestingModule,
         TranslateModule.forRoot(),
         MatDialogModule,
         StatisticsComponent,
-    ],
-    providers: [
+      ],
+      providers: [
         {
-            provide: AdminApiService,
-            useFactory: () => new AdminApiServiceFake({ responseDelayInMs }),
+          provide: AdminApiService,
+          useFactory: () => new AdminApiServiceFake({ responseDelayInMs }),
         },
-    ],
-    schemas: [NO_ERRORS_SCHEMA],
-});
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    });
 
     fixture = TestBed.createComponent(StatisticsComponent);
     component = fixture.componentInstance;
     hostElement = fixture.nativeElement;
   });
 
-  describe('should call loading data', () => {
-    it('should call hook ngOnInit', fakeAsync(() => {
+  describe("should call loading data", () => {
+    it("should call hook ngOnInit", fakeAsync(() => {
       component.ngOnInit();
 
       tick(tickInMs);
@@ -65,7 +64,7 @@ describe('StatisticsComponent', () => {
     //   expect(component.weekTimeTrackData).toBeTruthy();
     // }));
 
-    it('should call loadPrevYear', fakeAsync(() => {
+    it("should call loadPrevYear", fakeAsync(() => {
       const currentYear = component.selectedMonth.year();
 
       component.loadPrevYear();
@@ -77,7 +76,7 @@ describe('StatisticsComponent', () => {
       expect(component.monthTimeTrackData).toBeTruthy();
     }));
 
-    it('should call loadNextYear', fakeAsync(() => {
+    it("should call loadNextYear", fakeAsync(() => {
       const currentYear = component.selectedMonth.year();
 
       component.loadNextYear();
@@ -90,18 +89,18 @@ describe('StatisticsComponent', () => {
     }));
   });
 
-  it('should opened statistics info dialog', () => {
-    const matDialogOpenSpy = spyOn(component.matDialog, 'open');
+  it("should opened statistics info dialog", () => {
+    const matDialogOpenSpy = spyOn(component.matDialog, "open");
     const statisticsInfoDialogButtonElem =
       hostElement.querySelector<HTMLButtonElement>(
-        'button.statistics-info-dialog',
+        "button.statistics-info-dialog"
       );
 
     statisticsInfoDialogButtonElem.click();
 
     expect(matDialogOpenSpy).toHaveBeenCalledWith(
       StatisticsInfoDialogComponent,
-      { width: '650px' },
+      { width: "650px" }
     );
   });
 });

@@ -21,13 +21,14 @@ export interface Contributor {
 
 export interface UploadContributorImage {
   data: string;
-  errors: Array<{}>;
-  meta: Array<{}>;
+  errors: Array<any>;
+  meta: Array<any>;
 }
 
-export const contributorTypes = ['DEVELOPER', 'SPECIALIST', 'DESIGNER', 'QA', 'OTHER'];
-
-
-
-
-
+export const contributorTypes = [
+  "DEVELOPER",
+  "SPECIALIST",
+  "DESIGNER",
+  "QA",
+  "OTHER",
+];
