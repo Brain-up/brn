@@ -17,6 +17,10 @@ describe("MonthTimeTrackItemComponent", () => {
     component = fixture.componentInstance;
   });
 
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
+
   describe("Selected class on host", () => {
     beforeEach(() => {
       fixture.componentRef.setInput("data", {
