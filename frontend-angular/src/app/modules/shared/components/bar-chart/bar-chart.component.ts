@@ -7,7 +7,7 @@ import {
   Input,
   OnDestroy,
   Output,
-  ViewChild,
+  viewChild
 } from '@angular/core';
 import { bar, bb, Chart, DataItem } from 'billboard.js';
 import { BarDataType } from './models/bar-data';
@@ -16,13 +16,15 @@ import { BarOptionsType } from './models/bar-options';
 export const SELECTED_BAR_CLASS_NAME = 'selected-bar';
 
 @Component({
-  selector: 'app-bar-chart',
-  templateUrl: './bar-chart.component.html',
-  styleUrls: ['./bar-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-bar-chart',
+    templateUrl: './bar-chart.component.html',
+    styleUrls: ['./bar-chart.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BarChartComponent implements AfterViewInit, OnDestroy {
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set initialBarIndex(initialIndex: number) {
     if (initialIndex == null) {
@@ -32,6 +34,8 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
     this.barIndex = initialIndex;
   }
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set data(data: BarDataType) {
     if (!data) {
@@ -43,6 +47,8 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
     this.chart?.load({columns: this.chartColumns});
   }
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set options(options: BarOptionsType) {
     if (!options) {
@@ -51,7 +57,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
     this.chartOptions = options;
 
-    if (this.chartElemRef) {
+    if (this.chartElemRef()) {
       this.chart?.destroy();
       this.buildChart(this.clickItem);
     }
@@ -61,8 +67,9 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
   private barIndex: number | null;
   private chartColumns: BarDataType = [];
 
-  @ViewChild('chart')
-  chartElemRef: ElementRef;
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the query. This prevents migration.
+  chartElemRef = viewChild<ElementRef>('chart');
 
   @Output() clickItem = new EventEmitter<number>();
 
@@ -76,7 +83,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
   private buildChart(onClickItem): void {
     this.chart = bb.generate({
-      bindto: this.chartElemRef.nativeElement,
+      bindto: this.chartElemRef().nativeElement,
 
       data: {
         type: bar(),
@@ -103,7 +110,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
     });
 
     if (this.barIndex != null) {
-      const barItem = this.chartElemRef.nativeElement.querySelector('.bb-bar-' + this.barIndex);
+      const barItem = this.chartElemRef().nativeElement.querySelector('.bb-bar-' + this.barIndex);
       if (barItem) {
         barItem.classList.add(SELECTED_BAR_CLASS_NAME);
       }

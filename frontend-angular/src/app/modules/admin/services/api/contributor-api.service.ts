@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Contributor, UploadContributorImage } from '@admin/models/contrubutor.model';
 import { Observable } from 'rxjs';
@@ -9,9 +9,8 @@ import { map, pluck } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ContributorApiService {
+  private httpClient = inject(HttpClient);
 
-  constructor(private httpClient: HttpClient) {
-  }
 
   public getContributors(): Observable<Contributor[]> {
     return this.httpClient

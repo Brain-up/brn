@@ -1,24 +1,33 @@
-import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
-import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
-import * as dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
-import { getRandomIntInclusive } from '@shared/helpers/get-random-int-inclusive';
+import { Observable, of } from "rxjs";
+import { delay, map } from "rxjs/operators";
+import { UserWeeklyStatistics } from "@admin/models/user-weekly-statistics";
+import { UserYearlyStatistics } from "@admin/models/user-yearly-statistics";
+import { UserDailyDetailStatistics } from "@admin/models/user-daily-detail-statistics";
+import dayjs, { Dayjs } from "dayjs";
+import { getRandomIntInclusive } from "@shared/helpers/get-random-int-inclusive";
 import {
   USER_EXERCISING_PROGRESS_STATUS_COLOR,
   UserExercisingProgressStatusType,
-} from '@admin/models/user-exercising-progress-status';
-import { AdminApiService } from './admin-api.service';
-import { DAYS_IN_WEEK, MONTHS_IN_YEAR, } from '@shared/constants/common-constants';
-import { User, UserMapped } from '@admin/models/user.model';
-import { getRandomBool } from '@shared/helpers/get-random-bool';
-import { getRandomString } from '@shared/helpers/get-random-string';
+} from "@admin/models/user-exercising-progress-status";
+import { AdminApiService } from "./admin-api.service";
+import {
+  DAYS_IN_WEEK,
+  MONTHS_IN_YEAR,
+} from "@shared/constants/common-constants";
+import { User, UserMapped } from "@admin/models/user.model";
+import { getRandomBool } from "@shared/helpers/get-random-bool";
+import { getRandomString } from "@shared/helpers/get-random-string";
 
 export class AdminApiServiceFake
-  implements Pick<AdminApiService,
-    'getUserWeeklyStatistics' | 'getUserYearlyStatistics' | 'getUsers' | 'getUserDailyDetailStatistics'> {
+  implements
+    Pick<
+      AdminApiService,
+      | "getUserWeeklyStatistics"
+      | "getUserYearlyStatistics"
+      | "getUsers"
+      | "getUserDailyDetailStatistics"
+    >
+{
   private readonly options: IOptions = {};
 
   constructor(o?: IOptions) {
@@ -35,45 +44,45 @@ export class AdminApiServiceFake
   }
 
   public getUserWeeklyStatistics(
-    userId: number,
+    _userId: number,
     from: Dayjs,
-    to: Dayjs,
+    to: Dayjs
   ): Observable<UserWeeklyStatistics[]> {
     const response: UserWeeklyStatistics[] = [];
     const daysNumber = to < dayjs() ? dayjs(to).daysInMonth() : dayjs().date();
 
     for (let dayNumber = 0; dayNumber < daysNumber; dayNumber++) {
       response.push({
-        date: dayjs(from).add(dayNumber, 'day').toString(),
+        date: dayjs(from).add(dayNumber, "day").toString(),
         exercisingTimeSeconds: getRandomIntInclusive(
           0,
-          this.options.exercisingTimeSecondsLimit,
+          this.options.exercisingTimeSecondsLimit
         ),
         progress: this.getRandomUserExercisingProgressStatusColor(),
       });
     }
 
     return of(
-      this.options.isUserWeeklyStatisticsEmptyData ? [] : response,
+      this.options.isUserWeeklyStatisticsEmptyData ? [] : response
     ).pipe(delay(this.options.responseDelayInMs));
   }
 
   public getUserYearlyStatistics(
-    userId: number,
+    _userId: number,
     from: Dayjs,
-    to: Dayjs,
+    to: Dayjs
   ): Observable<UserYearlyStatistics[]> {
     const response: UserYearlyStatistics[] = [];
     const monthsNumber = to < dayjs() ? MONTHS_IN_YEAR : dayjs().month() + 1;
 
     for (let monthNumber = 0; monthNumber < monthsNumber; monthNumber++) {
-      const today = dayjs(from).add(monthNumber, 'month');
+      const today = dayjs(from).add(monthNumber, "month");
 
       response.push({
         date: today.toString(),
         exercisingTimeSeconds: getRandomIntInclusive(
           0,
-          this.options.exercisingTimeSecondsLimit,
+          this.options.exercisingTimeSecondsLimit
         ),
         progress: this.getRandomUserExercisingProgressStatusColor(),
         exercisingDays: today.daysInMonth(),
@@ -81,7 +90,7 @@ export class AdminApiServiceFake
     }
 
     return of(
-      this.options.isUserYearlyStatisticsEmptyData ? [] : response,
+      this.options.isUserYearlyStatisticsEmptyData ? [] : response
     ).pipe(delay(this.options.responseDelayInMs));
   }
 
@@ -91,10 +100,10 @@ export class AdminApiServiceFake
     for (let i = 0; i < this.options.usersNumber; i++) {
       const name = getRandomString(7);
       const firstDone = dayjs(
-        Date.now() - getRandomIntInclusive(0, 365 * 24 * 60 * 60 * 1000),
+        Date.now() - getRandomIntInclusive(0, 365 * 24 * 60 * 60 * 1000)
       ).toISOString();
-      const lastDone = dayjs(firstDone).add(1, 'month').toISOString();
-      const lastVisit = dayjs(lastDone).add(1, 'day').toISOString();
+      const lastDone = dayjs(firstDone).add(1, "month").toISOString();
+      const lastVisit = dayjs(lastDone).add(1, "day").toISOString();
 
       const lastWeek: number[] = [];
       for (let dayNumber = 0; dayNumber < DAYS_IN_WEEK; dayNumber++) {
@@ -105,26 +114,26 @@ export class AdminApiServiceFake
         active: getRandomBool(),
         bornYear: getRandomIntInclusive(
           1980,
-          dayjs().subtract(10, 'year').year(),
+          dayjs().subtract(10, "year").year()
         ),
-        diagnosticProgress: {SIGNALS: getRandomBool()},
+        diagnosticProgress: { SIGNALS: getRandomBool() },
         email: `${name}@gmail.com`,
         firstDone,
-        gender: getRandomBool() ? 'MALE' : 'FEMALE',
+        gender: getRandomBool() ? "MALE" : "FEMALE",
         id: i + 1,
         lastDone,
         lastWeek: lastWeek.map((value) => ({
-          date: '1234',
+          date: "1234",
           exercisingTimeSeconds: value,
           progress: this.getRandomUserExercisingProgressStatusColor(),
         })),
         name,
         studyDaysInCurrentMonth: getRandomIntInclusive(
           0,
-          dayjs().subtract(1, 'month').daysInMonth(),
+          dayjs().subtract(1, "month").daysInMonth()
         ),
         isFavorite: getRandomBool(),
-        userId: '1234',
+        userId: "1234",
         spentTime: 10,
         doneExercises: 2,
         lastVisit,
@@ -134,14 +143,14 @@ export class AdminApiServiceFake
     return of(users).pipe(
       delay(this.options.responseDelayInMs),
       map((userList: UserMapped[]) =>
-        userList.map((user, i) => {
+        userList.map((user, _i) => {
           user.age = dayjs().year() - user.bornYear;
           user.currentWeekChart = {
             data: [
               [
-                'data',
+                "data",
                 ...user.lastWeek.map(
-                  ({exercisingTimeSeconds}) => exercisingTimeSeconds,
+                  ({ exercisingTimeSeconds }) => exercisingTimeSeconds
                 ),
               ],
             ],
@@ -149,47 +158,47 @@ export class AdminApiServiceFake
               colors: {
                 data: (item) =>
                   USER_EXERCISING_PROGRESS_STATUS_COLOR[
-                    user.lastWeek.map(({progress}) => progress)[item.index]
-                    ],
+                    user.lastWeek.map(({ progress }) => progress)[item.index]
+                  ],
               },
-              axis: {x: {show: false}, y: {show: false}},
-              size: {height: 60, width: 140},
-              legend: {show: false},
-              tooltip: {show: false},
-              bar: {width: 8, radius: 4},
+              axis: { x: { show: false }, y: { show: false } },
+              size: { height: 60, width: 140 },
+              legend: { show: false },
+              tooltip: { show: false },
+              bar: { width: 8, radius: 4 },
             },
           };
           user.progress = user.diagnosticProgress.SIGNALS;
           return user;
-        }),
-      ),
+        })
+      )
     );
   }
 
   public getUserDailyDetailStatistics(
-    userId: number,
-    day: Dayjs
+    _userId: number,
+    _day: Dayjs
   ): Observable<UserDailyDetailStatistics[]> {
     const response: UserDailyDetailStatistics[] = [];
     response.push({
-      seriesName: 'Слова Королёвой',
+      seriesName: "Слова Королёвой",
       allDoneExercises: 10,
       uniqueDoneExercises: 5,
       repeatedExercises: 8,
       doneExercisesSuccessfullyFromFirstTime: 1,
-      listenWordsCount: 10
+      listenWordsCount: 10,
     });
     response.push({
-      seriesName: 'Слова тестовые',
+      seriesName: "Слова тестовые",
       allDoneExercises: 100,
       uniqueDoneExercises: 50,
       repeatedExercises: 50,
       doneExercisesSuccessfullyFromFirstTime: 50,
-      listenWordsCount: 25
+      listenWordsCount: 25,
     });
 
     return of(
-      this.options.isUserDailyDetailStatisticsEmptyData ? [] : response,
+      this.options.isUserDailyDetailStatisticsEmptyData ? [] : response
     ).pipe(delay(this.options.responseDelayInMs));
   }
 
@@ -197,17 +206,17 @@ export class AdminApiServiceFake
     switch (
       getRandomIntInclusive(
         0,
-        Object.keys(USER_EXERCISING_PROGRESS_STATUS_COLOR).length - 1,
+        Object.keys(USER_EXERCISING_PROGRESS_STATUS_COLOR).length - 1
       )
-      ) {
+    ) {
       case 0:
-        return 'BAD';
+        return "BAD";
 
       case 1:
-        return 'GOOD';
+        return "GOOD";
 
       case 2:
-        return 'GREAT';
+        return "GREAT";
     }
   }
 }

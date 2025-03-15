@@ -4,21 +4,35 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "module": "es2020",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "dom"],
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "paths": {
-      "@root/*": ["src/app/modules/root/*"],
-      "@shared/*": ["src/app/modules/shared/*"],
-      "@auth/*": ["src/app/modules/auth/*"],
-      "@admin/*": ["src/app/modules/admin/*"]
-    }
+      "@root/*": [
+        "src/app/modules/root/*"
+      ],
+      "@shared/*": [
+        "src/app/modules/shared/*"
+      ],
+      "@auth/*": [
+        "src/app/modules/auth/*"
+      ],
+      "@admin/*": [
+        "src/app/modules/admin/*"
+      ]
+    },
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "strictTemplates": true,

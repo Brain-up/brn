@@ -8,7 +8,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { WeekTimeTrackComponent } from './week-time-track.component';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 
 describe('WeekTimeTrackComponent', () => {
@@ -17,10 +17,9 @@ describe('WeekTimeTrackComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WeekTimeTrackComponent],
-      imports: [TranslateModule.forRoot()],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    imports: [TranslateModule.forRoot(), WeekTimeTrackComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(WeekTimeTrackComponent);
     component = fixture.componentInstance;
@@ -84,7 +83,7 @@ describe('WeekTimeTrackComponent', () => {
         progress: 'GOOD',
       },
     ];
-    component.selectedMonth = dayjs(lastStatisticDayInMonth);
+    fixture.componentRef.setInput('selectedMonth', dayjs(lastStatisticDayInMonth));
     component.data = data;
     tick();
     expect(component.initialIndex).toBe(24);
@@ -92,20 +91,20 @@ describe('WeekTimeTrackComponent', () => {
   }));
 
   it('should isAllowNextMonth set to false', () => {
-    component.selectedMonth = dayjs();
+    fixture.componentRef.setInput('selectedMonth', dayjs());
     component.isAllowNextMonth();
     expect(component.isAllowNextMonth()).toBeFalsy();
   });
 
   it('should loadNextMonth not emit event', () => {
-    component.selectedMonth = dayjs();
+    fixture.componentRef.setInput('selectedMonth', dayjs());
     const loadNextMonthEventSpy = spyOn(component.loadNextMonthEvent, 'emit');
     component.loadNextMonth();
     expect(loadNextMonthEventSpy).toHaveBeenCalledTimes(0);
   });
 
   it('should loadNextMonth emit event', () => {
-    component.selectedMonth = dayjs().subtract(1, 'month');
+    fixture.componentRef.setInput('selectedMonth', dayjs().subtract(1, 'month'));
     const loadNextMonthEventSpy = spyOn(component.loadNextMonthEvent, 'emit');
     component.loadNextMonth();
     expect(loadNextMonthEventSpy).toHaveBeenCalledTimes(1);
@@ -119,10 +118,10 @@ describe('WeekTimeTrackComponent', () => {
 
   it('should onClickItem return right selected day of month', () => {
     const selectedMonth = Date.UTC(2022, 0, 10);
-    component.selectedMonth = dayjs(selectedMonth);
+    fixture.componentRef.setInput('selectedMonth', dayjs(selectedMonth));
     for (let i = 0; i < 31; i++) {
       component.onClickItem(i);
-      const date = component.selectedMonth.clone();
+      const date = component.selectedMonth().clone();
       expect(component.selectedDay).toEqual(date.set('date', i));
     }
   });

@@ -1,19 +1,27 @@
 import { USER_EXERCISING_PROGRESS_STATUS_COLOR } from '@admin/models/user-exercising-progress-status';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { BarDataType } from '@shared/components/bar-chart/models/bar-data';
 import { BarOptionsType } from '@shared/components/bar-chart/models/bar-options';
 import { secondsTo } from '@shared/helpers/seconds-to';
-import * as dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { IWeekChartDataItem } from '../../models/week-char-data-item';
-import { DataItem } from 'billboard.js';
+import { BarChartComponent } from '@shared/components/bar-chart/bar-chart.component';
+import { DailyTimeTableComponent } from '../daily-time-table/daily-time-table.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-week-time-track',
   templateUrl: './week-time-track.component.html',
   styleUrls: ['./week-time-track.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatProgressBarModule,
+    BarChartComponent,
+    DailyTimeTableComponent,
+    TranslateModule
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WeekTimeTrackComponent {
   private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
@@ -37,7 +45,7 @@ export class WeekTimeTrackComponent {
       },
       y: {
         tick: {
-          text: {show: false},
+          text: { show: false },
           culling: false,
           show: false,
           outer: false,
@@ -73,17 +81,18 @@ export class WeekTimeTrackComponent {
 
   public initialIndex: number;
 
-  @Input()
-  public isLoading = true;
+  public readonly isLoading = input(true);
 
-  @Input()
-  public selectedMonth: Dayjs;
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
+  public readonly selectedMonth = input<Dayjs>(undefined);
 
-  @Input()
-  public userId: number;
+  public readonly userId = input<number>(undefined);
 
   public selectedDay: Dayjs;
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input()
   public set data(data: UserWeeklyStatistics[] | undefined) {
     if (!data) {
@@ -93,7 +102,7 @@ export class WeekTimeTrackComponent {
     this.chartData = [];
     let lastDay = null;
     let lastIndex = null;
-    for (let dayNumber = 1; dayNumber <= this.selectedMonth.daysInMonth(); dayNumber++) {
+    for (let dayNumber = 1; dayNumber <= this.selectedMonth().daysInMonth(); dayNumber++) {
       const realRawItem = data.find((rawItem) => dayjs(rawItem.date).date() === dayNumber);
 
       if (realRawItem) {
@@ -108,7 +117,7 @@ export class WeekTimeTrackComponent {
             progress: realRawItem.progress,
           }
           : {
-            x: dayjs(this.selectedMonth.set('date', dayNumber)).format('dd'),
+            x: dayjs(this.selectedMonth().set('date', dayNumber)).format('dd'),
             y: 0,
             progress: 'BAD',
           }
@@ -140,13 +149,13 @@ export class WeekTimeTrackComponent {
 
   public isAllowNextMonth(): boolean {
     /// for December
-    if (this.selectedMonth.add(1, 'month').month() === 0 ) {
-      return this.selectedMonth.month() <= dayjs().subtract(1, 'month').month();
+    if (this.selectedMonth().add(1, 'month').month() === 0) {
+      return this.selectedMonth().month() <= dayjs().subtract(1, 'month').month();
     }
-    return this.selectedMonth.add(1, 'month').month() <= dayjs().month();
+    return this.selectedMonth().add(1, 'month').month() <= dayjs().month();
   }
 
   onClickItem(index: number) {
-    this.selectedDay = this.selectedMonth.clone().set('date', index);
+    this.selectedDay = this.selectedMonth().clone().set('date', index);
   }
 }

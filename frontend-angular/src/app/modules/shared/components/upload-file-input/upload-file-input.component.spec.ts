@@ -9,9 +9,9 @@ describe('UploadFileInputComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [UploadFileInputComponent],
-      providers: [Renderer2],
-    });
+    imports: [UploadFileInputComponent],
+    providers: [Renderer2],
+});
 
     fixture = TestBed.createComponent(UploadFileInputComponent);
     component = fixture.componentInstance;

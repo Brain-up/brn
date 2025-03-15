@@ -9,10 +9,9 @@ describe('UploadFileComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [UploadFileComponent],
-      imports: [TranslateModule.forRoot()],
-      schemas: [NO_ERRORS_SCHEMA],
-    });
+    imports: [TranslateModule.forRoot(), UploadFileComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+});
 
     fixture = TestBed.createComponent(UploadFileComponent);
     component = fixture.componentInstance;

@@ -1,5 +1,5 @@
-import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireModule } from '@angular/fire/compat';
 import { AuthenticationApiService } from './authentication-api.service';
 import { of } from 'rxjs';
 import { environment } from 'src/environments/environment';
