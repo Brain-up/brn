@@ -1,4 +1,4 @@
-import { ElementRef } from "@angular/core";
+import { ElementRef, signal } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import {
   BarChartComponent,
@@ -58,7 +58,7 @@ describe("BarChartComponent", () => {
     const daysData = Array.from({ length: daysInMonth }, (_v, i) => i);
     const barData: BarDataType = [["data", ...daysData]];
     const childViewElement: HTMLElement = document.createElement("div");
-    component.chartElemRef = new ElementRef<any>(childViewElement);
+    component.chartElemRef = signal(new ElementRef<any>(childViewElement));
     component.data = barData;
     component.ngAfterViewInit();
     for (let i = 0; i < daysInMonth; i++) {
@@ -75,7 +75,7 @@ describe("BarChartComponent", () => {
     const daysData = Array.from({ length: daysInMonth }, (_v, i) => i);
     const barData: BarDataType = [["data", ...daysData]];
     const childViewElement: HTMLElement = document.createElement("div");
-    component.chartElemRef = new ElementRef<any>(childViewElement);
+    component.chartElemRef = signal(new ElementRef<any>(childViewElement));
     component.data = barData;
     for (let i = 0; i < daysInMonth; i++) {
       component.initialBarIndex = i;

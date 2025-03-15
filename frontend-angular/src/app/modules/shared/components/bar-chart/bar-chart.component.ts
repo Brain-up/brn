@@ -69,7 +69,7 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
   // TODO: Skipped for migration because:
   //  Your application code writes to the query. This prevents migration.
-  readonly chartElemRef = viewChild<ElementRef>('chart');
+  chartElemRef = viewChild<ElementRef>('chart');
 
   @Output() clickItem = new EventEmitter<number>();
 

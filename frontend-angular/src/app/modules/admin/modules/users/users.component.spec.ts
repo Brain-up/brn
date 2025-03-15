@@ -14,7 +14,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { TokenService } from "@root/services/token.service";
-import { PipesModule } from "@shared/pipes/pipes.module";
 import { Subject } from "rxjs";
 import { StatisticsComponent } from "./modules/statistics/statistics.component";
 import { UsersComponent } from "./users.component";
@@ -88,7 +87,6 @@ describe("UsersComponent", () => {
       imports: [
         MatTableModule,
         MatSortModule,
-        PipesModule,
         RouterTestingModule.withRoutes([
           {
             path: ":userId/statistics",

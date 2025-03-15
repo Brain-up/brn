@@ -1,25 +1,61 @@
 import { Task } from "@admin/models/exercise";
-import { fakeAsync, tick } from "@angular/core/testing";
-import { Subscription } from "rxjs";
+import { AdminApiService } from "@admin/services/api/admin-api.service";
+import { GroupApiService } from "@admin/services/api/group-api.service";
+import { SeriesApiService } from "@admin/services/api/series-api.service";
+import { SubGroupApiService } from "@admin/services/api/sub-group-api.service";
+import { ChangeDetectorRef } from "@angular/core";
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from "@angular/core/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { of, Subscription } from "rxjs";
 import { ExercisesComponent } from "./exercises.component";
 
 describe("ExercisesComponent", () => {
   let component: ExercisesComponent;
-  let adminApiServiceMock;
-  let changeDetectorRefMock;
+  let fixture: ComponentFixture<ExercisesComponent>;
 
-  beforeEach(() => {
-    adminApiServiceMock = jasmine.createSpyObj("AdminApiService", [
-      "getExercisesBySubGroupId",
-    ]);
-    changeDetectorRefMock = jasmine.createSpyObj("ChangeDetectorRef", [
-      "detectChanges",
-    ]);
+  const adminApiServiceMock = jasmine.createSpyObj("AdminApiService", {
+    getExercisesBySubGroupId: of([]),
+  });
+  const changeDetectorRefMock = jasmine.createSpyObj("ChangeDetectorRef", [
+    "detectChanges",
+  ]);
+  const groupApiServiceMock = jasmine.createSpyObj("GroupApiService", [
+    "getGroups",
+  ]);
+  const seriesApiServiceMock = jasmine.createSpyObj("SeriesApiService", [
+    "getSeriesByGroupId",
+  ]);
+  const subGroupApiServiceMock = jasmine.createSpyObj("SubGroupApiService", [
+    "getSubgroupsBySeriesId",
+  ]);
 
-    component = new ExercisesComponent(
-      adminApiServiceMock,
-      changeDetectorRefMock
-    );
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ExercisesComponent, TranslateModule.forRoot()],
+      providers: [
+        {
+          provide: AdminApiService,
+          useValue: adminApiServiceMock,
+        },
+        {
+          provide: ChangeDetectorRef,
+          useValue: changeDetectorRefMock,
+        },
+        { provide: GroupApiService, useValue: groupApiServiceMock },
+        { provide: SeriesApiService, useValue: seriesApiServiceMock },
+        { provide: SubGroupApiService, useValue: subGroupApiServiceMock },
+        { provide: AdminApiService, useValue: adminApiServiceMock },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ExercisesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it("should create", () => {
@@ -46,7 +82,8 @@ describe("ExercisesComponent", () => {
       component.showExercises = true;
       component.seriesName$.next("1234");
       component[`groupId$`].next("1234");
-      component[`subGroupId$`].next(undefined);
+      component[`subGroupId$`].next(1234);
+
       component.ngOnInit();
       tick();
       expect(component.showExercises).toEqual(true);

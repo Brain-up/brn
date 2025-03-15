@@ -2,12 +2,19 @@ import { AdminApiService } from "@admin/services/api/admin-api.service";
 import { GroupApiService } from "@admin/services/api/group-api.service";
 import { SeriesApiService } from "@admin/services/api/series-api.service";
 import { SubGroupApiService } from "@admin/services/api/sub-group-api.service";
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Subject } from "rxjs";
 import { SelectPanelComponent } from "./select-panel.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 describe("SelectPanelComponent", () => {
+  let fixture: ComponentFixture<SelectPanelComponent>;
   let component: SelectPanelComponent;
 
   let groupApiServiceMock;
@@ -30,21 +37,17 @@ describe("SelectPanelComponent", () => {
     ]);
 
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, SelectPanelComponent],
+      imports: [ReactiveFormsModule, TranslateModule.forRoot(), SelectPanelComponent],
       providers: [
-        { GroupApiService, useValue: groupApiServiceMock },
-        { SeriesApiService, useValue: seriesApiServiceMock },
-        { SubGroupApiService, useValue: subGroupApiServiceMock },
-        { AdminApiService, useValue: adminApiServiceMock },
+        { provide: GroupApiService, useValue: groupApiServiceMock },
+        { provide: SeriesApiService, useValue: seriesApiServiceMock },
+        { provide: SubGroupApiService, useValue: subGroupApiServiceMock },
+        { provide: AdminApiService, useValue: adminApiServiceMock },
       ],
     });
 
-    component = new SelectPanelComponent(
-      groupApiServiceMock,
-      seriesApiServiceMock,
-      subGroupApiServiceMock,
-      adminApiServiceMock
-    );
+    fixture = TestBed.createComponent(SelectPanelComponent);
+    component = fixture.componentInstance;
   });
 
   it("should create", () => {
