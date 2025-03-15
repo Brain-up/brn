@@ -1,69 +1,66 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ContributorsComponent } from './contributors.component';
-import { of } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
-import { ContributorApiService } from '@admin/services/api/contributor-api.service';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
-
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ContributorsComponent } from "./contributors.component";
+import { of } from "rxjs";
+import { TranslateModule } from "@ngx-translate/core";
+import { ContributorApiService } from "@admin/services/api/contributor-api.service";
+import { ActivatedRoute } from "@angular/router";
+import { RouterTestingModule } from "@angular/router/testing";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 @Component({
-    template: '',
-    
+  template: "",
 })
-class DummyComponent {
-}
+class DummyComponent {}
 
-describe('ContributorsComponent', () => {
+describe("ContributorsComponent", () => {
   let component: ContributorsComponent;
   let fixture: ComponentFixture<ContributorsComponent>;
   const mockContributors = [
     {
       id: 1,
-      name: 'Petr',
-      description: 'FE',
-      company: 'EPAM',
-      pictureUrl: 'HTTP/',
+      name: "Petr",
+      description: "FE",
+      company: "EPAM",
+      pictureUrl: "HTTP/",
       contacts: [
         {
-          type: 'phone',
-          value: '1234567'
-        }
+          type: "phone",
+          value: "1234567",
+        },
       ],
-      type: 'DEVELOPER',
+      type: "DEVELOPER",
       contribution: 100,
       active: true,
-    }
+    },
   ];
-  const mockedRoutes =
-    {
-      path: 'contributor',
-      component: DummyComponent,
-    };
+  const mockedRoutes = {
+    path: "contributor",
+    component: DummyComponent,
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
+      imports: [
+        NoopAnimationsModule,
         TranslateModule.forRoot(),
         RouterTestingModule.withRoutes([mockedRoutes]),
-        ContributorsComponent
-    ],
-    providers: [
+        ContributorsComponent,
+      ],
+      providers: [
         {
-            provide: ActivatedRoute,
-            useValue: {}
+          provide: ActivatedRoute,
+          useValue: {},
         },
         {
-            provide: ContributorApiService,
-            useValue: {
-                getContributors: () => of(mockContributors),
-            },
-        }
-    ],
-    schemas: [NO_ERRORS_SCHEMA],
-})
-      .compileComponents();
+          provide: ContributorApiService,
+          useValue: {
+            getContributors: () => of(mockContributors),
+          },
+        },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -72,11 +69,11 @@ describe('ContributorsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get contributors from server', () => {
+  it("should get contributors from server", () => {
     expect(component.contributorsList).toEqual(mockContributors);
   });
 });

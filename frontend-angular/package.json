@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "19.0.0",
-    "@angular-devkit/build-angular": "19.0.0",
+    "@angular-devkit/build-angular": "19.2.1",
     "@angular-devkit/architect": "0.1900.1",
     "@angular-devkit/core": "19.0.0",
     "@angular-eslint/builder": "19.0.0",

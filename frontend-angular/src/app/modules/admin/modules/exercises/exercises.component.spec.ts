@@ -10,6 +10,7 @@ import {
   TestBed,
   tick,
 } from "@angular/core/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateModule } from "@ngx-translate/core";
 import { of, Subscription } from "rxjs";
 import { ExercisesComponent } from "./exercises.component";
@@ -36,7 +37,11 @@ describe("ExercisesComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExercisesComponent, TranslateModule.forRoot()],
+      imports: [
+        NoopAnimationsModule,
+        ExercisesComponent,
+        TranslateModule.forRoot(),
+      ],
       providers: [
         {
           provide: AdminApiService,
