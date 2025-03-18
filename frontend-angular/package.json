@@ -30,17 +30,17 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "billboard.js": "^3.0.3",
     "dayjs": "^1.11.13",
-    "firebase": "^10.13.2",
+    "firebase": "^11.4.0",
     "fp-ts": "^2.5.3",
     "http-status-codes": "^2.1.4",
     "rxjs": "^7.4.0",
-    "swagger-ui": "^4.19.1",
+    "swagger-ui": "5.0.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "19.0.0",
-    "@angular-devkit/build-angular": "19.2.1",
+    "@angular-devkit/build-angular": "19.2.3",
     "@angular-devkit/architect": "0.1900.1",
     "@angular-devkit/core": "19.0.0",
     "@angular-eslint/builder": "19.0.0",
@@ -48,7 +48,7 @@
     "@angular-eslint/eslint-plugin-template": "19.0.0",
     "@angular-eslint/schematics": "19.0.0",
     "@angular-eslint/template-parser": "19.0.0",
-    "@angular/build": "19.0.0",
+    "@angular/build": "19.2.3",
     "@angular/cli": "19.0.0",
     "@angular/compiler-cli": "19.0.0",
     "@angular/language-service": "19.0.0",
@@ -77,7 +77,6 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "open": "^7.0.3",
-    "protractor": "^7.0.0",
     "ts-node": "~8.8.2",
     "typescript": "~5.6.3"
   }
