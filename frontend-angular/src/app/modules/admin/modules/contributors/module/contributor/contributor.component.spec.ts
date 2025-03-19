@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContributorComponent } from './contributor.component';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
@@ -6,9 +6,11 @@ import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @Component({
-  template: '',
+    template: '',
+    
 })
 class DummyComponent {
 }
@@ -46,21 +48,19 @@ describe('ContributorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        TranslateModule.forRoot(),
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [TranslateModule.forRoot(),
         RouterTestingModule.withRoutes([mockedRoutes]),
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-      ],
-      declarations: [ContributorComponent],
-      providers: [
+        ReactiveFormsModule, ContributorComponent],
+    providers: [
         {
-          provide: ActivatedRoute,
-          useValue: {}
-        }
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+            provide: ActivatedRoute,
+            useValue: {}
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
       .compileComponents();
   });
 

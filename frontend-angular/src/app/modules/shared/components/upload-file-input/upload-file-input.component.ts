@@ -1,39 +1,30 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ViewChild,
-  forwardRef,
-  Renderer2,
-  ElementRef,
-  HostListener,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, Renderer2, ElementRef, HostListener, inject, viewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
-  selector: 'app-upload-file-input',
-  templateUrl: './upload-file-input.component.html',
-  styleUrls: ['./upload-file-input.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UploadFileInputComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-upload-file-input',
+    templateUrl: './upload-file-input.component.html',
+    styleUrls: ['./upload-file-input.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => UploadFileInputComponent),
+            multi: true,
+        },
+    ]
 })
 export class UploadFileInputComponent implements ControlValueAccessor {
+  private readonly renderer = inject(Renderer2);
+
   private onChange: (value: File) => void;
   private onTouched: () => void;
 
-  @ViewChild('file', { static: true })
-  private file: ElementRef<HTMLInputElement>;
-
-  constructor(private readonly renderer: Renderer2) {}
+  readonly file = viewChild<ElementRef<HTMLInputElement>>('file');
 
   @HostListener('change')
   public change(): void {
-    this.onChange(this.file.nativeElement.files.item(0));
+    this.onChange(this.file().nativeElement.files.item(0));
   }
 
   @HostListener('blur')
@@ -42,7 +33,7 @@ export class UploadFileInputComponent implements ControlValueAccessor {
   }
 
   public writeValue(value: FileList): void {
-    this.renderer.setProperty(this.file.nativeElement, 'files', value);
+    this.renderer.setProperty(this.file().nativeElement, 'files', value);
   }
 
   public registerOnChange(fn: any): void {
@@ -54,6 +45,6 @@ export class UploadFileInputComponent implements ControlValueAccessor {
   }
 
   public setDisabledState(value: boolean): void {
-    this.renderer.setProperty(this.file.nativeElement, 'disabled', value);
+    this.renderer.setProperty(this.file().nativeElement, 'disabled', value);
   }
 }

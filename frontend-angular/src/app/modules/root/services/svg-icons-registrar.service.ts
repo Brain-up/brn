@@ -1,15 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({ providedIn: 'root' })
 export class SvgIconsRegistrarService {
-  private static readonly ICONS_FOLDER_PATH = 'assets/icons/';
+  private readonly matIconRegistry = inject(MatIconRegistry);
+  private readonly domSanitizer = inject(DomSanitizer);
 
-  constructor(
-    private readonly matIconRegistry: MatIconRegistry,
-    private readonly domSanitizer: DomSanitizer,
-  ) {}
+  private static readonly ICONS_FOLDER_PATH = 'assets/icons/';
 
   public registerIcons(): void {
     this.matIconRegistry

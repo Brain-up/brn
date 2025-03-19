@@ -1,24 +1,31 @@
-import { Group } from '@admin/models/group';
-import { GroupApiService } from './group-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
 import {
-  HttpClientTestingModule,
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from "@angular/common/http";
+import {
   HttpTestingController,
-} from '@angular/common/http/testing';
+  provideHttpClientTesting,
+} from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
+import { GroupApiService } from "./group-api.service";
 
-const baseUrl = '/api/groups';
-const locale = 'en';
+const baseUrl = "/api/groups";
+const locale = "en";
 const id = 1234;
 
-describe('GroupApiService', () => {
+describe("GroupApiService", () => {
   let service: GroupApiService;
   let controller: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [GroupApiService],
+      imports: [],
+      providers: [
+        GroupApiService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     });
     service = TestBed.inject(GroupApiService);
     controller = TestBed.inject(HttpTestingController);
@@ -28,42 +35,39 @@ describe('GroupApiService', () => {
     controller.verify();
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call get groups with locale', () => {
-    let groups: Group[] | undefined;
+  it("should call get groups with locale", () => {
     const url = baseUrl;
 
-    service.getGroups(locale).subscribe((data) => {
-      groups = data;
-    });
+    service.getGroups(locale).subscribe((_groups) => {});
 
     const request = controller.expectOne(`${url}?locale=${locale}`);
-    expect(request.request.method).toEqual('GET');
-    request.flush('', { status: 204, statusText: 'No Data' });
+    expect(request.request.method).toEqual("GET");
+    request.flush("", { status: 204, statusText: "No Data" });
     controller.verify();
   });
 
-  it('should check call errors on get groups with locale', () => {
-    const errorEvent = new ErrorEvent('API error');
+  it("should check call errors on get groups with locale", () => {
+    const errorEvent = new ErrorEvent("API error");
     const status = 500;
-    const statusText = 'Server error';
+    const statusText = "Server error";
     const url = baseUrl;
 
     let actualError: HttpErrorResponse | undefined;
 
     service.getGroups(locale).subscribe(
       () => {
-        fail('Next handler must not be called');
+        fail("Next handler must not be called");
       },
       (error) => {
         actualError = error;
       },
       () => {
-        fail('Complete handler must not be called');
-      },
+        fail("Complete handler must not be called");
+      }
     );
 
     controller
@@ -71,51 +75,48 @@ describe('GroupApiService', () => {
       .error(errorEvent, { status, statusText });
 
     if (!actualError) {
-      throw new Error('Error needs to be defined');
+      throw new Error("Error needs to be defined");
     }
     expect(actualError.error).toBe(errorEvent);
     expect(actualError.status).toBe(status);
     expect(actualError.statusText).toBe(statusText);
   });
 
-  it('should call get group by id', () => {
-    let group: Group | undefined;
+  it("should call get group by id", () => {
     const url = `${baseUrl}/${id}`;
 
-    service.getGroupById(id).subscribe((data) => {
-      group = data;
-    });
+    service.getGroupById(id).subscribe((_group) => {});
 
     const request = controller.expectOne(url);
-    expect(request.request.method).toEqual('GET');
-    request.flush('', { status: 204, statusText: 'No Data' });
+    expect(request.request.method).toEqual("GET");
+    request.flush("", { status: 204, statusText: "No Data" });
     controller.verify();
   });
 
-  it('should check call errors on get group by id', () => {
-    const errorEvent = new ErrorEvent('API error');
+  it("should check call errors on get group by id", () => {
+    const errorEvent = new ErrorEvent("API error");
     const status = 500;
-    const statusText = 'Server error';
+    const statusText = "Server error";
     const url = `${baseUrl}/${id}`;
 
     let actualError: HttpErrorResponse | undefined;
 
     service.getGroupById(id).subscribe(
       () => {
-        fail('Next handler must not be called');
+        fail("Next handler must not be called");
       },
       (error) => {
         actualError = error;
       },
       () => {
-        fail('Complete handler must not be called');
-      },
+        fail("Complete handler must not be called");
+      }
     );
 
     controller.expectOne(url).error(errorEvent, { status, statusText });
 
     if (!actualError) {
-      throw new Error('Error needs to be defined');
+      throw new Error("Error needs to be defined");
     }
     expect(actualError.error).toBe(errorEvent);
     expect(actualError.status).toBe(status);

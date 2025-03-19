@@ -17,7 +17,7 @@
       color: $dark-violet-color;
     }
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
   mat-dialog-content {
     margin-bottom: 10px;
 
@@ -45,10 +45,11 @@
       }
     }
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
+  /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
   mat-dialog-actions {
     justify-content: center;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
     button[mat-dialog-close] {
       border: 1px solid $cold-violet-color;
       box-sizing: border-box;

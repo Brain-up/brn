@@ -1,4 +1,4 @@
-import { Language } from '../../../models/language';
+import { Language } from '../../models/language';
 
 export const LANGUAGES: Language[] = [
   {id: 'ru-ru', name: 'Русский'},

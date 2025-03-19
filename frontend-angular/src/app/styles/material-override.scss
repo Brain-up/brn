@@ -5,36 +5,36 @@
   overflow-y: auto;
 }
 
-.mat-dialog-container {
+.mat-mdc-dialog-container {
   border-radius: 16px !important;
   box-shadow: 0px 12px 38px #00000026, 0px 15px 12px #00000026;
 }
 
-.mat-progress-bar {
+.mat-mdc-progress-bar {
   margin: 200px auto;
   width: 80% !important;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of progress-bar that may no longer apply for the MDC version. */
   .mat-progress-bar-buffer {
     background-color: $dark-violet-color;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of progress-bar that may no longer apply for the MDC version. */
   .mat-progress-bar-fill::after {
     background-color: $latter-grey-color;
   }
 }
 
-.mat-paginator {
+.mat-mdc-paginator {
   font-size: $font-size-14 !important;
-
-  .mat-paginator-page-size .mat-select-trigger {
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
+  .mat-mdc-paginator-page-size .mat-select-trigger {
     font-size: $font-size-14 !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
   .mat-select-value {
     color: $active-grey-color !important;
   }
   
-  .mat-paginator-page-size-label {
+  .mat-mdc-paginator-page-size-label {
     display: none;
   }
 }
@@ -48,25 +48,27 @@
     color: $dark-violet-color;
   }
 
-  .mat-input-element {
+  .mat-mdc-input-element {
     color: $active-grey-color;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-wrapper {
     margin: 0;
     padding-bottom: 0;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-flex {
     margin-top: 0;
     padding: 0 $padding-20 !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-outline-thick {
     color: $dark-violet-color !important;
   }
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
+/* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
 .mat-button-toggle-group-appearance-standard,
 .favorite-toggler {
   border-radius: 16px !important;
@@ -77,23 +79,23 @@
   height: 32px;
   position: relative;
   width: 210px;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
   .mat-button-toggle-checked {
     background: $brain-gradient;
     color: $hardly-grey-color !important;
     transition: all $transition-time;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
   .mat-button-toggle {
     border-left: none !important;
     color: $cold-violet-color;
     width: 50%;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
   .mat-button-toggle-label-content {
     line-height: 32px !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
   .mat-button-toggle-focus-overlay {
     background-color: transparent;
   }
