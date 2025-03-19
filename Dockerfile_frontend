@@ -14,7 +14,7 @@ FROM node:20 AS build-frontend-angular
 COPY frontend-angular/ /src/
 WORKDIR /src
 ENV NODE_OPTIONS=--openssl-legacy-provider
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npm run build
 
 FROM nginx:alpine
