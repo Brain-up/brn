@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import mockService from '../../../test-support/mock-service';
 
 module('Integration | Component | timer', function (hooks) {
-  setupRenderingTest(hooks);
+  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
 
   test('supports mm:ss format', async function (assert) {
     mockService(this.owner, 'studying-timer', {

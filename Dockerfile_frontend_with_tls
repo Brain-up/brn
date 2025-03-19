@@ -7,6 +7,7 @@ RUN node node_modules/ember-cli/bin/ember deploy production
 FROM node:20 AS build-frontend-angular
 COPY frontend-angular/ /src/
 WORKDIR /src
+ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN npm ci
 RUN npm run build
 
