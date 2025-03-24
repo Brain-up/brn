@@ -6,6 +6,9 @@ on:
       - 'frontend-angular/**'
       - '.github/workflows/frontend-admin.yml'
 
+env:
+  NODE_OPTIONS: --openssl-legacy-provider
+
 jobs:
   lint:
     name: lint
