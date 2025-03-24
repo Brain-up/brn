@@ -26,7 +26,7 @@ class ResourceController(
     @GetMapping
     @Operation(summary = "Get all resources")
     fun getResources(): ResponseEntity<List<ResourceResponse>> =
-         ResponseEntity.ok(resourceService.findAll().sortedBy { it.word }.map { it.toResponse() })
+        ResponseEntity.ok(resourceService.findAll().sortedBy { it.word }.map { it.toResponse() })
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update resource description by resource id")
