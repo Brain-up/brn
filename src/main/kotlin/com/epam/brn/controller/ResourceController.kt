@@ -23,18 +23,20 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/resources")
 @Tag(name = "Resources", description = "Contains actions over resources")
-@RolesAllowed(BrnRole.ADMIN)
+
 class ResourceController(
     val resourceService: ResourceService,
     val resourcePictureUpdateJob: ResourcePictureUrlUpdateJob
 ) {
 
     @GetMapping
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Operation(summary = "Get all resources")
     fun getResources(): ResponseEntity<List<ResourceResponse>> =
         ResponseEntity.ok(resourceService.findAll().sortedBy { it.word }.map { it.toResponse() })
 
     @PatchMapping("/{id}")
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Operation(summary = "Update resource description by resource id")
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
@@ -44,6 +46,7 @@ class ResourceController(
             .body(BrnResponse(data = resourceService.updateDescription(id, request.description!!)))
 
     @PostMapping("/update")
+    @RolesAllowed(BrnRole.ADMIN)
     @Operation(summary = "Update picture URL for all resources")
     fun updateResourceUrls(): ResponseEntity<ResourcePictureUrlUpdateJobResponse> =
         ResponseEntity.ok(resourcePictureUpdateJob.updatePictureUrl())
