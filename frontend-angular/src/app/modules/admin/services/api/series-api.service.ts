@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -6,7 +6,8 @@ import { Series } from '../../models/series';
 
 @Injectable()
 export class SeriesApiService {
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient = inject(HttpClient);
+
 
   public getSeriesByGroupId(groupId: number): Observable<Series[]> {
     return this.httpClient.get<{ data: Series[] }>(`/api/series?groupId=${groupId}`).pipe(pluck('data'));

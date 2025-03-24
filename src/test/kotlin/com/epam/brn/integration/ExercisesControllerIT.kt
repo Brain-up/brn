@@ -21,7 +21,6 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.google.gson.Gson
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -60,9 +59,6 @@ class ExercisesControllerIT : BaseIT() {
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
 
-    @Autowired
-    lateinit var gson: Gson
-
     @AfterEach
     fun deleteAfterTest() {
         studyHistoryRepository.deleteAll()
@@ -80,7 +76,7 @@ class ExercisesControllerIT : BaseIT() {
         val exerciseName = "ExerciseNameTest"
         val existingSeries = insertSeries()
         val subGroup = insertSubGroup(existingSeries)
-        val existingExercise = insertExercise(exerciseName, subGroup)
+        val existingExercise = insertExercise(subGroup, exerciseName)
         insertStudyHistory(existingUser, existingExercise, LocalDateTime.now().minusHours(1))
         insertStudyHistory(existingUser, existingExercise, LocalDateTime.now())
         // WHEN
@@ -103,7 +99,7 @@ class ExercisesControllerIT : BaseIT() {
         val exerciseName = "ExerciseNameTest"
         val existingSeries = insertSeries()
         val subGroup = insertSubGroup(existingSeries)
-        val existingExercise = insertExercise(exerciseName, subGroup)
+        val existingExercise = insertExercise(subGroup, exerciseName)
         // WHEN
         val resultAction = mockMvc.perform(
             MockMvcRequestBuilders
@@ -131,7 +127,7 @@ class ExercisesControllerIT : BaseIT() {
         val exerciseName = "ExerciseNameTest"
         val existingSeries = insertSeries()
         val subGroup = insertSubGroup(existingSeries)
-        val exercise = insertExercise(exerciseName, subGroup)
+        val exercise = insertExercise(subGroup, exerciseName)
         val requestJson: String = objectMapper.writeValueAsString(ExerciseRequest(listOf(exercise.id!!)))
         // WHEN
         val resultAction = mockMvc.perform(
@@ -299,12 +295,11 @@ class ExercisesControllerIT : BaseIT() {
         )
     }
 
-    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
-        SubGroup(series = series, level = 1, code = "code", name = "subGroup name")
-    )
+    private fun insertSubGroup(series: Series): SubGroup =
+        subGroupRepository.save(SubGroup(series = series, level = 1, code = "code", name = "subGroup name"))
 
-    fun insertExercise(exerciseName: String, subGroup: SubGroup): Exercise {
-        return exerciseRepository.save(
+    fun insertExercise(subGroup: SubGroup, exerciseName: String): Exercise =
+        exerciseRepository.save(
             Exercise(
                 subGroup = subGroup,
                 level = 0,
@@ -313,13 +308,7 @@ class ExercisesControllerIT : BaseIT() {
                 noiseUrl = "/testNoiseUrl"
             )
         )
-    }
 
-    fun insertExercise(exerciseName: String): Exercise {
-        return exerciseRepository.save(
-            Exercise(
-                name = exerciseName
-            )
-        )
-    }
+    fun insertExercise(exerciseName: String): Exercise =
+        exerciseRepository.save(Exercise(name = exerciseName))
 }

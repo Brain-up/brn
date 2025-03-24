@@ -1,9 +1,9 @@
 @import 'colors';
 
-.select__panel.mat-select-panel {
+.select__panel.mat-mdc-select-panel {
   background: $hardly-grey-color;
 
-  .mat-option {
+  .mat-mdc-option {
     font-family: Montserrat;
     font-size: 16px;
     font-weight: normal;

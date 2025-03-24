@@ -56,6 +56,7 @@
           type="radio"
           class="w-3 h-3 border-gray-300"
           id="female"
+          checked={{eq this.gender "FEMALE"}}
           {{on "change" this.setGender}}
         />
         <label class="ml-1 text-sm text-gray-500" for="female">
@@ -68,6 +69,7 @@
           value="MALE"
           class="w-3 h-3 ml-4"
           id="male"
+          checked={{eq this.gender "MALE"}}
           {{on "change" this.setGender}}
         />
         <label class="ml-1 text-sm text-gray-500" for="male">
@@ -120,12 +122,18 @@
             {{this.errorMessage}}
           </p>
         {{/if}}
+        {{#if this.serverErrorMessage}}
+          <p data-test-form-error class="mt-2 text-xs text-red-500">
+            {{this.serverErrorMessage}}
+          </p>
+        {{/if}}
       </div>
       <div class="flex mb-4">
         <input
           id="agreement"
           name="agreement"
           type="checkbox"
+          checked={{this.agreed}}
           {{on "change" this.setAgreedStatus}}
         />
         <label class="block ml-2 text-sm" for="agreement">
@@ -138,11 +146,16 @@
           </LinkTo>
         </label>
       </div>
+      {{#if this.agreedStatusErrorMessage}}
+        <p data-test-form-error class="mt-2 text-xs text-red-500">
+          {{this.agreedStatusErrorMessage}}
+        </p>
+      {{/if}}
       <div class="flex mb-4">
         <Ui::Button
           @type="submit"
           class="w-full"
-          disabled={{not this.agreed}}
+          disabled={{false}}
           data-test-submit-form
           @title={{t "registration_form.registration"}}
         />

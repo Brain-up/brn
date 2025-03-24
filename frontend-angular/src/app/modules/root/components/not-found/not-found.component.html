@@ -1,6 +1,10 @@
-<span class="particle" *ngFor="let d of digits">{{ d.four }}</span>
+@for (d of digits; track d) {
+  <span class="particle">{{ d.four }}</span>
+}
 
-<span class="particle" *ngFor="let d of digits">{{ d.zero }}</span>
+@for (d of digits; track d) {
+  <span class="particle">{{ d.zero }}</span>
+}
 
 <div class="content">
   <p>{{ 'Root.Components.NotFound.Text' | translate }}</p>

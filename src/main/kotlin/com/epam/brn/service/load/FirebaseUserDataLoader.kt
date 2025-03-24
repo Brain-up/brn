@@ -11,6 +11,7 @@ import com.google.firebase.auth.hash.Bcrypt
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils
 import java.util.UUID
 import java.util.stream.Collectors
 
+@Profile("!integration-tests")
 @Service
 class FirebaseUserDataLoader(
     val firebaseAuth: FirebaseAuth,

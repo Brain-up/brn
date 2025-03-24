@@ -1,31 +1,52 @@
-import * as dayjs from 'dayjs';
-import { ActivatedRoute } from '@angular/router';
-import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { Dayjs } from 'dayjs';
-import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
-import { HOME_PAGE_URL } from '@shared/constants/common-constants';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
-import { Subject } from 'rxjs';
-import { TokenService } from '@root/services/token.service';
-import { User } from '@admin/models/user.model';
 import { UserWeeklyStatistics } from '@admin/models/user-weekly-statistics';
 import { UserYearlyStatistics } from '@admin/models/user-yearly-statistics';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
+
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { TokenService } from '@root/services/token.service';
+import { HOME_PAGE_URL } from '@shared/constants/common-constants';
+import dayjs, { Dayjs } from 'dayjs';
+import { User } from 'firebase/auth';
+import { Subject, finalize, takeUntil } from 'rxjs';
+import { MonthTimeTrackComponent } from './components/month-time-track/month-time-track.component';
+import { StatisticsInfoDialogComponent } from './components/statistics-info-dialog/statistics-info-dialog.component';
+import { WeekTimeTrackComponent } from './components/week-time-track/week-time-track.component';
 
 @Component({
   selector: 'app-statistics',
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    RouterLink,
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatTabsModule,
+    TranslateModule,
+    MatTableModule,
+    MonthTimeTrackComponent,
+    WeekTimeTrackComponent
+],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly adminApiService = inject(AdminApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private tokenService = inject(TokenService);
+  readonly matDialog = inject(MatDialog);
+
   private readonly destroyer$ = new Subject<void>();
   public readonly userId: number;
 
@@ -42,13 +63,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   public monthTimeTrackData: UserYearlyStatistics[];
   public userData: any;
 
-  constructor(
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly adminApiService: AdminApiService,
-    private readonly cdr: ChangeDetectorRef,
-    private tokenService: TokenService,
-    public readonly matDialog: MatDialog,
-  ) {
+  constructor() {
     this.userId = Number(this.activatedRoute.snapshot.params.userId);
   }
 

@@ -534,6 +534,22 @@ annotationTypes:
         description: Delete doctor from patient
         responses:
           200
+    /autotest/del
+     delete:
+       description: Delete autotest users by given prefix
+       responses:
+         200:
+           body:
+             application/json:
+               example: !include samples/user_deletion_result.json
+    /autotest/del/{email}
+         delete:
+           description: Delete autotest user by email
+           responses:
+             200:
+               body:
+                 application/json:
+                   example: !include samples/user_deletion_result.json
 
 # CLOUD  ----------------------
 /cloud:
@@ -654,10 +670,10 @@ annotationTypes:
   description: Second version of API
   # STATISTICS ----------------------------------
   /statistics:
-    description: Contains actions over user statistic details
+    description: Contains actions over user statistics details
     /study/day:
       get:
-        description: Get user's details daily statistic for the day. Where day is a date in the ISO date time format
+        description: Get user's details daily statistics for the day. Where day is a date in the ISO date time format
         queryParameters:
           userId:
             type: integer
@@ -691,7 +707,7 @@ annotationTypes:
               }
     /study/week:
       get:
-        description: Get user's weekly statistic for period. Where period is a two dates in the ISO date time format
+        description: Get user's weekly statistics for period. Where period is a two dates in the ISO date time format
         queryParameters:
           from:
             required: true
@@ -721,7 +737,7 @@ annotationTypes:
               }
     /study/year:
       get:
-        description: Get user's yearly statistic for period. Where period is a two dates in the ISO date time format
+        description: Get user's yearly statistics for period. Where period is a two dates in the ISO date time format
         queryParameters:
           from:
             required: true

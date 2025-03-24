@@ -21,7 +21,7 @@ class SwaggerConfig {
         .contact(
             Contact()
                 .name("Elena.Moshnikova")
-                .url("https://www.epam.com/")
+                .url("https://t.me/ElenaLovesSpb")
                 .email("brainupproject@yandex.ru")
         )
 
