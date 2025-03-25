@@ -15,6 +15,7 @@ import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
+import com.epam.brn.service.WordsService
 import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -36,6 +37,7 @@ class UserAnalyticsServiceImpl(
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
     private val exerciseService: ExerciseService,
+    private val wordsService: WordsService,
 ) : UserAnalyticsService {
 
     private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
@@ -68,10 +70,9 @@ class UserAnalyticsServiceImpl(
     }
 
     override fun prepareAudioStreamForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
-        textToSpeechService
-            .generateAudioOggStreamWithValidation(
-                prepareAudioFileMetaData(exerciseId, audioFileMetaData)
-            )
+        textToSpeechService.generateAudioOggStreamWithValidation(
+            prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        )
 
     override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
         val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
@@ -80,7 +81,7 @@ class UserAnalyticsServiceImpl(
             audioFileMetaData.text = text.replace(" ", ", ")
         val currentUser = userAccountService.getCurrentUser()
         // todo use choseVoiceForUser(currentUser) after moving to yandex speechKit v3
-        audioFileMetaData.voice = Voice.marina.name
+        audioFileMetaData.voice = wordsService.getDefaultWomanVoiceForLocale(audioFileMetaData.locale)
         setSpeedForUser(currentUser, exerciseId, audioFileMetaData)
         return audioFileMetaData
     }
