@@ -192,7 +192,7 @@ internal class UserAnalyticsServiceTest {
         metaDataResult.speedFloat shouldBe "0.8"
         metaDataResult.speedCode shouldBe AzureRates.SLOW
         metaDataResult.text shouldBe "мама, папа"
-        metaDataResult.voice shouldBe Voice.marina.name
+        metaDataResult.voice shouldBe Voice.FILIPP.name
     }
 
     @Test
@@ -332,6 +332,7 @@ internal class UserAnalyticsServiceTest {
         val audioFileMetaData =
             AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         every { textToSpeechService.generateAudioOggStreamWithValidation(audioFileMetaData) } returns audioStreamMock
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         // WHEN
         val audioStreamResult = userAnalyticsService.prepareAudioStreamForUser(exerciseId, audioFileMetaData)
 
