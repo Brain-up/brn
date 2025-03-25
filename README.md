@@ -39,8 +39,10 @@ Most importantly being an open source project you can show your work in it to an
 6. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
 7. Paintest: for creation pictures for exercises. 
 8. Sign language specialist to create/improve content.
-9. QA engineers. 
-
+9. QA engineers.
+10. Russian-speech specialists to help us with content.
+11. English-speech specialists to help us with content.
+    
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
