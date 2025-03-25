@@ -11,6 +11,10 @@
     display: flex;
     align-items: flex-start;
 
+    .user-data {
+      z-index: 2;
+    }
+
     .profile-name {
       margin-top: $margin-8;
     }
@@ -44,14 +48,15 @@
 }
 
 .content {
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
   ::ng-deep .mat-tab-label {
     font-size: $font-size-16;
   }
 
-  ::ng-deep .mat-tab-body {
+  ::ng-deep .mat-mdc-tab-body {
     padding-top: $padding-48;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
   ::ng-deep .mat-tab-labels {
     padding: $padding-16 0;
   }
@@ -59,10 +64,11 @@
   ::ng-deep .mat-ink-bar {
     background-color: $dark-violet-color;
   }
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
   ::ng-deep .mat-tab-label-active {
     color: $dark-violet-color;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
   ::ng-deep .mat-tab-disabled {
     color: inherit;
   }

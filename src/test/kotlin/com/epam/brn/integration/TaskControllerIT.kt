@@ -5,13 +5,13 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.repo.TaskRepository
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.Task
+import com.epam.brn.repo.TaskRepository
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -28,19 +28,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class TaskControllerIT : BaseIT() {
 
     @Autowired
-    lateinit var taskRepository: TaskRepository
-
-    @Autowired
     lateinit var exerciseRepository: ExerciseRepository
-
     @Autowired
     lateinit var subGroupRepository: SubGroupRepository
-
     @Autowired
     lateinit var seriesRepository: SeriesRepository
-
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
+    @Autowired
+    private lateinit var taskRepository: TaskRepository
 
     lateinit var exercise: Exercise
 
@@ -145,8 +141,8 @@ class TaskControllerIT : BaseIT() {
         )
     }
 
-    private fun insertTask(exercise: Exercise): Task {
-        return taskRepository.save(
+    private fun insertTask(exercise: Exercise): Task =
+        taskRepository.save(
             Task(
                 id = 1,
                 name = "${exercise.name} Task",
@@ -154,5 +150,4 @@ class TaskControllerIT : BaseIT() {
                 exercise = exercise
             )
         )
-    }
 }

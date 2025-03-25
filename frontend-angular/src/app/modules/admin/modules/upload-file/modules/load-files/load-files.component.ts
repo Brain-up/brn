@@ -1,33 +1,33 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { AdminApiService } from '@admin/services/api/admin-api.service';
+import { CloudApiService } from '@admin/services/api/cloud-api.service';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SnackBarService } from '@root/services/snack-bar.service';
 import { Observable, Subject } from 'rxjs';
 import { mergeMap, takeUntil } from 'rxjs/operators';
-import { SnackBarService } from '@root/services/snack-bar.service';
-import { CloudApiService } from '@admin/services/api/cloud-api.service';
-import { AdminApiService } from '@admin/services/api/admin-api.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-load-files',
   templateUrl: './load-files.component.html',
   styleUrls: ['./load-files.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadFilesComponent implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly formBuilder = inject(UntypedFormBuilder);
+  private readonly snackBarService = inject(SnackBarService);
+  private readonly cloudApiService = inject(CloudApiService);
+  private readonly adminApiService = inject(AdminApiService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly destroyer$ = new Subject<void>();
 
   public folders$: Observable<string[]>;
-  public uploadFileForm: FormGroup;
-
-  constructor(
-    private readonly router: Router,
-    private readonly formBuilder: FormBuilder,
-    private readonly snackBarService: SnackBarService,
-    private readonly cloudApiService: CloudApiService,
-    private readonly adminApiService: AdminApiService,
-    private readonly translateService: TranslateService
-  ) {}
+  public uploadFileForm: UntypedFormGroup;
 
   ngOnInit(): void {
     this.folders$ = this.cloudApiService.getFolders();

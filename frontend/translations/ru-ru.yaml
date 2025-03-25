@@ -47,6 +47,7 @@ registration_form:
   empty_gender: Пол не указан
   empty_lastname: Фамилия не Указана
   warning_enter_credentials: Пожалуйста, введите логин и пароль.
+  agree_terms: Вы должны согласиться с условиями перед регистрацией
   gender: Пол
   gender_female: Женский
   gender_male: Мужской

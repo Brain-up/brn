@@ -10,9 +10,9 @@ jobs:
     runs-on: ${{ matrix.runners }}
     strategy:
       matrix:
-        runners: [ epam, vscale ]
+        runners: [ selectel ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Configure secrets
         run: |
           echo "$S3_KEY"|base64 -d > aws-key.properties
@@ -27,6 +27,6 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       - name: Redeploy application
         run: |
-          docker-compose pull
-          docker-compose down
-          docker-compose up -d
+          docker compose pull
+          docker compose down
+          docker compose up -d

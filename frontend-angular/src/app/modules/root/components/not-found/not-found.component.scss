@@ -26,8 +26,8 @@
         $delay: random(10) * 0.1;
         $anim: nth($anims, random(length($anims)));
 
-        top: random(100) / (100 + $size/8) * 100%;
-        left: random(100) / (100 + $size/10) * 100%;
+        top: calc(random(100) / (100 + $size/8)) * 100%;
+        left: calc(random(100) / (100 + $size/10)) * 100%;
         font-size: $size + px;
         filter: blur((#{$blur}) + px);
         animation: $speed + s $anim infinite;

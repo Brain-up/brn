@@ -21,6 +21,8 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.cloud.CloudService
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -33,6 +35,10 @@ class TaskService(
 ) {
     private val log = logger()
 
+    // private val tempPictureStorageUrl = "https://github.com/Brain-up/brn-pictures/blob/main/"
+    private val tempPictureStorageUrl = "https://brnup.s3.eu-north-1.amazonaws.com/pictures/"
+
+    @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
         val exercise: Exercise = exerciseRepository.findById(exerciseId)
             .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
@@ -51,6 +57,7 @@ class TaskService(
         }
     }
 
+    @Cacheable("tasksById")
     fun getTaskById(taskId: Long): Any {
         log.debug("Searching task with id=$taskId")
         val task =
@@ -70,11 +77,14 @@ class TaskService(
     private fun processAnswerOptions(task: Task) {
         task.answerOptions
             .forEach { resource ->
-                if (!resource.pictureFileUrl.isNullOrEmpty())
-                    resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
+                resource.pictureFileUrl = tempPictureStorageUrl + resource.word + ".png"
+// todo: return s3 using when it will be open for Russia
+//                if (!resource.pictureFileUrl.isNullOrEmpty())
+//                    resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
             }
     }
 
+    @CacheEvict("tasksByExerciseId", "tasksById")
     @Transactional
     fun save(task: Task): Task {
         val resources = mutableSetOf<Resource>()
@@ -85,13 +95,9 @@ class TaskService(
     }
 }
 
-val vowels = "а,е,ё,и,о,у,э,ы,ю,я".toCharArray()
+private val vowelSet = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ы', 'ю', 'я')
 
-fun String.findSyllableCount(): Int {
-    var syllableCount = 0
-    this.toCharArray().forEach { if (vowels.contains(it)) syllableCount++ }
-    return syllableCount
-}
+fun String.findSyllableCount(): Int = count { it in vowelSet }
 
 fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
     id = id!!,

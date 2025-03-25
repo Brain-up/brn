@@ -1,14 +1,14 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
-import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.UserAccountChangeRequest
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Role
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Headphones
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
@@ -20,12 +20,13 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockkClass
 import io.mockk.just
+import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -34,6 +35,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Optional
@@ -494,6 +496,50 @@ internal class UserAccountServiceTest {
             val userAccountDtos = userAccountService.getUsers(pageable = pageable, BrnRole.USER)
             // THEN
             userAccountDtos.size shouldBe 3
+        }
+    }
+
+    @Test
+    fun `should delete all auto test users`() {
+        // GIVEN
+        val usersCount = 2L
+        val prefix = "autotest"
+        ReflectionTestUtils.setField(userAccountService, "prefix", prefix)
+        every { userAccountService.deleteAutoTestUsers() } returns usersCount
+
+        // WHEN
+         userAccountService.deleteAutoTestUsers()
+
+        // THEN
+        verify { userAccountRepository.deleteUserAccountsByEmailStartsWith(prefix) }
+    }
+
+    @Test
+    fun `should delete auto test user by email`() {
+        // GIVEN
+        val usersCount = 1L
+        val email = "autotest_n@1704819771.8820736.com"
+        val prefix = "autotest"
+        ReflectionTestUtils.setField(userAccountService, "prefix", prefix)
+        every { userAccountService.deleteAutoTestUserByEmail(email) } returns usersCount
+
+        // WHEN
+        userAccountService.deleteAutoTestUserByEmail(email)
+
+        // THEN
+        verify { userAccountRepository.deleteUserAccountByEmailIs(email) }
+    }
+
+    @Test
+    fun `should throw IllegalArgumentException when email not starts from prefix`() {
+        // GIVEN
+        val email = "aaa@bbb.com"
+        val prefix = "autotest"
+        ReflectionTestUtils.setField(userAccountService, "prefix", prefix)
+
+        // WHEN & THEN
+        assertThrows(IllegalArgumentException::class.java) {
+            userAccountService.deleteAutoTestUserByEmail(email)
         }
     }
 

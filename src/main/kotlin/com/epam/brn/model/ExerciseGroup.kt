@@ -6,6 +6,7 @@ import com.epam.brn.upload.csv.group.GroupRecord
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -27,7 +28,7 @@ data class ExerciseGroup(
     val name: String,
     @Column
     val description: String? = "",
-    @OneToMany(mappedBy = "exerciseGroup", cascade = [(CascadeType.ALL)])
+    @OneToMany(mappedBy = "exerciseGroup", fetch = FetchType.LAZY, cascade = [(CascadeType.ALL)])
     val series: MutableList<Series> = ArrayList()
 ) {
     constructor(record: GroupRecord) : this(
@@ -43,6 +44,13 @@ data class ExerciseGroup(
         name = name,
         description = description,
         series = series.map { series -> series.id }.toMutableList()
+    )
+
+    fun toDtoWithoutSeries() = ExerciseGroupDto(
+        id = id,
+        locale = locale,
+        name = name,
+        description = description
     )
 
     override fun equals(other: Any?): Boolean {

@@ -1,17 +1,17 @@
 package com.epam.brn.integration
 
 import com.epam.brn.dto.HeadphonesDto
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.dto.response.BrnResponse
-import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.model.Role
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Headphones
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.HeadphonesRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
@@ -25,11 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 
@@ -310,7 +310,6 @@ class UserDetailsControllerIT : BaseIT() {
         val response = mockMvc.perform(
             MockMvcRequestBuilders.get(baseUrl)
                 .param("role", BrnRole.ADMIN)
-
         )
             .andExpect(status().isOk)
             .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
@@ -323,6 +322,96 @@ class UserDetailsControllerIT : BaseIT() {
         users.size shouldBe 1
     }
 
+    @Test
+    fun `deleteAutoTestUsers should delete all auto test users`() {
+        // GIVEN
+        val roleUser = insertRole(BrnRole.USER)
+
+        val user1 = UserAccount(
+            fullName = "autotest_n1",
+            email = "autotest_n@1704819771.8820736.com",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user1.roleSet = mutableSetOf(roleUser)
+
+        val user2 = UserAccount(
+            fullName = "autotest_n1",
+            email = "autotest_n@170472339.1784415.com",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user2.roleSet = mutableSetOf(roleUser)
+
+        userAccountRepository.save(user1)
+        userAccountRepository.save(user2)
+
+        // WHEN
+        val response = mockMvc.perform(
+            delete("$baseUrl/autotest/del")
+            .contentType("application/json")
+        ).andExpect(status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BrnResponse::class.java).data
+
+        // THEN
+         data shouldBe 2
+    }
+
+    @Test
+    fun `deleteAutoTestUserByEmail should delete auto test user by email`() {
+        // GIVEN
+        val roleUser = insertRole(BrnRole.USER)
+        val email = "autotest_n@1704819771.8820736.com"
+
+        val user1 = UserAccount(
+            fullName = "autotest_n1",
+            email = email,
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user1.roleSet = mutableSetOf(roleUser)
+        userAccountRepository.save(user1)
+
+        // WHEN
+        val response = mockMvc.perform(
+            delete("$baseUrl/autotest/del/$email")
+            .contentType("application/json")
+        ).andExpect(status().isOk)
+            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+
+        val data = gson.fromJson(response, BrnResponse::class.java).data
+
+        // THEN
+        data shouldBe 1
+    }
+
+    @Test
+    fun `deleteAutoTestUserByEmail should return 500 when email not autotest`() {
+        // GIVEN
+        val roleUser = insertRole(BrnRole.USER)
+        val email = "abc@xyz.com"
+
+        val user1 = UserAccount(
+            fullName = "user1",
+            email = email,
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            active = true,
+        )
+        user1.roleSet = mutableSetOf(roleUser)
+        userAccountRepository.save(user1)
+
+        // WHEN
+        mockMvc.perform(
+            delete("$baseUrl/autotest/del/$email")
+                .contentType("application/json")
+        ).andExpect(status().isBadRequest)
+    }
     @AfterEach
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()

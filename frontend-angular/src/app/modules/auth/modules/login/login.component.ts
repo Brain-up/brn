@@ -1,34 +1,29 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
+
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthenticationApiService } from '@auth/services/api/authentication-api.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@root/services/snack-bar.service';
-import { TranslateService } from '@ngx-translate/core';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  private readonly destroyer$ = new Subject<void>();
-  public loginForm: FormGroup;
-  public loginError: Observable<string>;
+  private readonly authenticationApiService = inject(AuthenticationApiService);
+  private readonly formBuilder = inject(UntypedFormBuilder);
+  private readonly router = inject(Router);
+  private readonly snackBarService = inject(SnackBarService);
+  private readonly translateService = inject(TranslateService);
 
-  constructor(
-    private readonly authenticationApiService: AuthenticationApiService,
-    private readonly formBuilder: FormBuilder,
-    private readonly router: Router,
-    private readonly snackBarService: SnackBarService,
-    private readonly translateService: TranslateService,
-  ) {}
+  private readonly destroyer$ = new Subject<void>();
+  public loginForm: UntypedFormGroup;
+  public loginError: Observable<string>;
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({

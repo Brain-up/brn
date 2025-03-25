@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -30,14 +33,27 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              { "glob": "**/*", "input": "../api-contract/samples", "output": "api" }
+              {
+                "glob": "**/*",
+                "input": "../api-contract/samples",
+                "output": "api"
+              }
             ],
-            "styles": ["src/styles.scss", "node_modules/swagger-ui/dist/swagger-ui.css"],
-            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] },
+            "styles": [
+              "src/styles.scss",
+              "node_modules/swagger-ui/dist/swagger-ui.css"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/styles"
+              ]
+            },
             "indexTransform": "src/index-transform.ts",
             "customWebpackConfig": {
               "path": "custom-webpack-config.ts",
-              "mergeRules": { "externals": "replace" }
+              "mergeRules": {
+                "externals": "replace"
+              }
             }
           },
           "configurations": {
@@ -59,7 +75,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -86,7 +102,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -100,16 +116,16 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "frontend-angular:build",
+            "buildTarget": "frontend-angular:build",
             "proxyConfig": "src/proxy.conf.json",
             "open": true
           },
           "configurations": {
             "production": {
-              "browserTarget": "frontend-angular:build:production"
+              "buildTarget": "frontend-angular:build:production"
             },
             "dev": {
-              "browserTarget": "frontend-angular:build:dev",
+              "buildTarget": "frontend-angular:build:dev",
               "proxyConfig": "src/proxy.conf.dev.json"
             }
           }
@@ -121,20 +137,30 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
-            "stylePreprocessorOptions": { "includePaths": ["src/app/styles"] }
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/styles"
+              ]
+            }
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
     }
-  },
-  "defaultProject": "frontend-angular"
+  }
 }

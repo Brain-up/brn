@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'durationTransform',
-})
+@Pipe({ name: 'durationTransform' })
 export class DurationTransformPipe implements PipeTransform {
   transform(spentTime: number): string {
     if (spentTime) {
