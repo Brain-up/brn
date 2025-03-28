@@ -52,7 +52,14 @@ internal class LopotkoRecordProcessorTest {
         minFrequency = 200,
         maxFrequency = 400,
     )
-    private val savedAudiometryTask = audiometryTask.copy(id = 1)
+    private val savedAudiometryTask = AudiometryTask(
+        id = 1,
+        level = 1,
+        audiometryGroup = "A",
+        frequencyZone = FrequencyZone.LOW.name,
+        minFrequency = 200,
+        maxFrequency = 400,
+    )
     private val lopotkoRecord = LopotkoRecord(
         BrnLocale.RU,
         AudiometryType.SPEECH.name,
@@ -131,7 +138,15 @@ internal class LopotkoRecordProcessorTest {
             resource_гад(),
             resource_дуб()
         )
-        val audiometryTaskWithResources = savedAudiometryTask.copy(answerOptions = resources)
+        val audiometryTaskWithResources = AudiometryTask(
+            id = 1,
+            level = 1,
+            audiometryGroup = "A",
+            frequencyZone = FrequencyZone.LOW.name,
+            minFrequency = 200,
+            maxFrequency = 400,
+            answerOptions = resources
+        )
         every { audiometryTaskRepository.save(ofType(AudiometryTask::class)) } returns audiometryTaskWithResources
         // when
         val actualtask = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()

@@ -25,7 +25,7 @@ import javax.persistence.OneToMany
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-data class UserAccount(
+class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -67,11 +67,6 @@ data class UserAccount(
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
     var roleSet: MutableSet<Role> = hashSetOf()
-
-    override fun toString(): String {
-        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
-            " bornYear=$bornYear, gender=$gender, description=$description, doctor=$doctor)"
-    }
 
     fun toDto() = UserAccountDto(
         id = id,

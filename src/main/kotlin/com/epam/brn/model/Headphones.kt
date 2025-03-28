@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "userId"])])
-data class Headphones(
+class Headphones(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -59,9 +59,5 @@ data class Headphones(
         result = 31 * result + name.hashCode()
         result = 31 * result + type.hashCode()
         return result
-    }
-
-    override fun toString(): String {
-        return "Headphones(id=$id, name='$name', type=$type, description='$description')"
     }
 }

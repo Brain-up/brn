@@ -233,15 +233,14 @@ internal class UserAccountServiceTest {
                 changed = LocalDateTime.now().minusMinutes(5),
                 avatar = null
             )
-            val userAccountUpdated = userAccount.copy()
-            userAccountUpdated.avatar = avatarUrl
+            userAccount.avatar = avatarUrl
             val userArgumentCaptor = slot<UserAccount>()
 
             SecurityContextHolder.setContext(securityContext)
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
+            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccount
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateAvatarForCurrentUser(avatarUrl)
@@ -278,18 +277,17 @@ internal class UserAccountServiceTest {
                 description = description,
                 name = "newName"
             )
-            val userAccountUpdated = userAccount.copy()
-            userAccountUpdated.avatar = avatarUrl
-            userAccountUpdated.photo = photoUrl
-            userAccountUpdated.description = description
-            userAccountUpdated.fullName = "newName"
+            userAccount.avatar = avatarUrl
+            userAccount.photo = photoUrl
+            userAccount.description = description
+            userAccount.fullName = "newName"
             val userArgumentCaptor = slot<UserAccount>()
 
             SecurityContextHolder.setContext(securityContext)
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
+            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccount
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateCurrentUser(userAccountChangeRequest)
