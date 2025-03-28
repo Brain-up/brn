@@ -26,7 +26,7 @@ import javax.persistence.UniqueConstraint
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
 @EntityListeners(AuditingEntityListener::class)
-data class Exercise(
+class Exercise(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -83,10 +83,6 @@ data class Exercise(
         subGroupName = subGroup?.name,
         seriesName = subGroup?.series?.name
     )
-
-    override fun toString() =
-        "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, noiseUrl=$noiseUrl, " +
-            "template=$template, active=$active, playWordsCount=$playWordsCount, wordsColumns=$wordsColumns)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

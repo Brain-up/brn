@@ -46,9 +46,6 @@ class Audiometry(
         return result
     }
 
-    override fun toString() =
-        "Audiometry(id=$id, name='$name', audiometryType=$audiometryType, description=$description)"
-
     fun toDtoWithoutTasks() = AudiometryResponse(
         id,
         locale,

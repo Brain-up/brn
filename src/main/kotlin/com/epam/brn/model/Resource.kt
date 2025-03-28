@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint
         Index(name = "audio_file_idx", columnList = "audioFileUrl")
     ]
 )
-data class Resource(
+class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -47,10 +47,6 @@ data class Resource(
         wordType = WordType.valueOf(wordType),
         description = description
     )
-
-    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word'," +
-        " pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

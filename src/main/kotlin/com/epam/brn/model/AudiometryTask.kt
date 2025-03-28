@@ -20,7 +20,7 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["audiometryGroup", "frequencyZone"])])
-data class AudiometryTask(
+class AudiometryTask(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -51,9 +51,6 @@ data class AudiometryTask(
     val frequencies: String? = null,
     var ear: String = EAR.BOTH.name,
 ) {
-    override fun toString() =
-        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -81,6 +78,7 @@ data class AudiometryTask(
                 EAR.valueOf(ear),
                 frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() }
             )
+
             AudiometryType.SPEECH.name -> AudiometryLopotkoTaskResponse(
                 id,
                 level!!,
@@ -92,11 +90,13 @@ data class AudiometryTask(
                 showSize!!,
                 answerOptions
             )
+
             AudiometryType.SPEECH.name -> AudiometryMatrixTaskResponse(
                 id,
                 count!!,
                 answerOptions
             )
+
             else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
         }
     }

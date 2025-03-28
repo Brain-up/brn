@@ -12,7 +12,7 @@ import javax.persistence.Table
 
 @Entity
 @Table
-data class Contact(
+class Contact(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -30,10 +30,6 @@ data class Contact(
 
     override fun hashCode(): Int {
         return id?.hashCode() ?: 0
-    }
-
-    override fun toString(): String {
-        return "Contact(id=$id, type=$type, value='$value')"
     }
 
     fun toDto(): ContactDto {

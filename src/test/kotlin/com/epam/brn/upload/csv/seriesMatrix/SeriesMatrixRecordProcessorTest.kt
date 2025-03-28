@@ -151,7 +151,7 @@ internal class SeriesMatrixRecordProcessorTest {
             )
         ).first().tasks.first()
         // THEN
-        assertThat(actual).isEqualToIgnoringGivenFields(expectedTask, "answerOptions")
+        assertThat(actual).isEqualTo(expectedTask)
     }
 
     @Test

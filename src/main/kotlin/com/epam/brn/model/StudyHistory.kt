@@ -19,7 +19,7 @@ import javax.persistence.UniqueConstraint
     uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "exercise_id", "startTime"])],
     indexes = [Index(name = "study_history_ix_user_exercise", columnList = "user_id,exercise_id")]
 )
-data class StudyHistory(
+class StudyHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -43,9 +43,6 @@ data class StudyHistory(
     var rightAnswersIndex: Float? = 1.0f,
 
 ) {
-    override fun toString() =
-        "StudyHistory(id=$id, userAccount=$userAccount, exercise=$exercise, startTime=$startTime, endTime=$endTime, spentTime=$spentTimeInSeconds, tasksCount=$tasksCount, wrongAnswers=$wrongAnswers)"
-
     fun toDto() = StudyHistoryDto(
         id = this.id,
         exerciseId = this.exercise.id!!,
