@@ -119,7 +119,8 @@ docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PA
 ### Back end Kotlin Part:
 1. Run command 'gradle build' from main project folder to build project with tests.
 2. Application.kt is the main class to run application from Idea for example.
-3. Get Postman Collection from https://www.postman.com/koylubaevNT/workspace/brainup/collection/2686902-d91ba307-e131-4d4f-a308-0a272e063c95 and environment from https://www.postman.com/koylubaevNT/workspace/brainup/environment/2686902-95b2c495-82a1-4244-83c7-dad7f8efebd7.
+3. Get Postman Collection from [https://www.postman.com/koylubaevNT/workspace/brainup/collection/2686902-d91ba307-e131-4d4f-a308-0a272e063c95 and environment from https://www.postman.com/koylubaevNT/workspace/brainup/environment/2686902-95b2c495-82a1-4244-83c7-dad7f8efebd7](https://brnteam.postman.co/workspace/My-Workspace~d7a4e69a-0ba8-4c56-8fc0-4e27e1998f7c/collection/2464717-96455e8c-ba11-49ed-a299-5c1b77b31db8?action=share&creator=2464717).
+You can directly login on www.brainup.site with some user, for example default2@default.ru / password, than use his token in postamn in Authorization tab use Bearer Token and put here yours.
 4. Make post request from "Firebase" folder "Get Authorization Token" using credentials. 
 5. Then you can call all other end-points from this Postman collection
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
