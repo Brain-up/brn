@@ -188,7 +188,7 @@ internal class UserAccountServiceTest {
             assertThat(userAccountDtoReturned.userId).isEqualTo(uid)
             assertThat(userAccountDtoReturned.email).isEqualTo(email)
             assertNotNull(userAccountDtoReturned.roles)
-            assertThat(userAccountDtoReturned.roles!!.size).isEqualTo(1)
+            assertThat(userAccountDtoReturned.roles.size).isEqualTo(1)
 
             verify(exactly = 1) { userAccountRepository.findUserAccountByEmail(email) }
             verify(exactly = 1) { userAccountRepository.save(captureMyObject.captured) }

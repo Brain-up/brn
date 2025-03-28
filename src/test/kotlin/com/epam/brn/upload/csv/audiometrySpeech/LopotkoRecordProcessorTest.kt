@@ -123,7 +123,7 @@ internal class LopotkoRecordProcessorTest {
         // when
         val actual = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()
         val expected = savedAudiometryTask
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "id")
+        assertThat(actual).isEqualTo(expected)
         verify { audiometryTaskRepository.save(ofType(AudiometryTask::class)) }
     }
 
