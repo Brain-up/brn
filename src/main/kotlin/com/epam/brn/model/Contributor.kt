@@ -19,7 +19,7 @@ import javax.persistence.Table
 @Entity
 @Table
 @DynamicUpdate
-data class Contributor(
+class Contributor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -86,11 +86,6 @@ data class Contributor(
         )
     }
 
-    override fun toString() =
-        "Contributor(id=$id, name=$name, repositoryName=$repositoryName, description=$description, " +
-                "company=$company, nameEn=$nameEn, descriptionEn=$descriptionEn, companyEn=$companyEn, " +
-                "type=$type, pictureUrl=$pictureUrl, contribution=$contribution, gitHubUser=$gitHubUser)"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -112,7 +107,7 @@ data class Contributor(
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode())
+        result = 31 * result + (name.hashCode())
         result = 31 * result + (repositoryName?.hashCode() ?: 0)
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + (company?.hashCode() ?: 0)
