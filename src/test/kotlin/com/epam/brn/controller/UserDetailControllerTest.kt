@@ -1,5 +1,6 @@
 package com.epam.brn.controller
 
+import com.epam.brn.config.UserDetailControllerConfig
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
@@ -12,11 +13,12 @@ import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
-import com.google.firebase.auth.FirebaseAuth
+import com.epam.brn.service.UserAnalyticsServiceV1
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
 import io.mockk.mockk
@@ -39,17 +41,20 @@ internal class UserDetailControllerTest {
     @InjectMockKs
     lateinit var userDetailController: UserDetailController
 
-    @MockK
-    lateinit var userAccountService: UserAccountService
+    @RelaxedMockK
+    lateinit var config: UserDetailControllerConfig
 
     @MockK
-    lateinit var firebaseAuth: FirebaseAuth
+    lateinit var userAccountService: UserAccountService
 
     @MockK
     private lateinit var doctorService: DoctorService
 
     @MockK
     private lateinit var userAnalyticsService: UserAnalyticsService
+
+    @MockK
+    private lateinit var userAnalyticsServiceV1: UserAnalyticsServiceV1
 
     lateinit var userAccountDto: UserAccountDto
 
@@ -294,6 +299,25 @@ internal class UserDetailControllerTest {
 
         // THEN
         verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
+        users.statusCodeValue shouldBe HttpStatus.SC_OK
+        (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
+    }
+
+    @Test
+    fun `getUsers should return users with statistics when withAnalytics is true for V1 analytics service version`() {
+        // GIVEN
+        val withAnalytics = true
+        val role = BrnRole.USER
+        val pageable = mockk<Pageable>()
+        val userWithAnalyticsResponse = mockk<UserWithAnalyticsResponse>()
+        every { config.isUseNewAnalyticsService } returns true
+        every { userAnalyticsServiceV1.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
+
+        // WHEN
+        val users = userDetailController.getUsers(withAnalytics, role, pageable)
+
+        // THEN
+        verify(exactly = 1) { userAnalyticsServiceV1.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
     }

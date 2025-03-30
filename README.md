@@ -115,6 +115,7 @@ docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PA
 ```bash
 docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:13
 ```
+if you want container start automatically on system boot you must use --restart=always option
 
 ### Back end Kotlin Part:
 1. Run command 'gradle build' from main project folder to build project with tests.
@@ -172,7 +173,7 @@ docker rm $(docker ps -a -q) # Remove all stopped containers
 https://github.com/Brain-up/brn/wiki/Kotlin-request-dto-validation-with-annotations
 
 ### Flyway scripts naming
-use `V2yearmonthday_taskNumber`
+use `V2yyyymmdd_taskNumber`
 for example `V220210804_899`.
 
 ### Branches:
