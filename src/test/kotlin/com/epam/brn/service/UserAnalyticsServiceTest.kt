@@ -71,6 +71,9 @@ internal class UserAnalyticsServiceTest {
     @MockK
     lateinit var userStatisticView: UserStatisticView
 
+    @MockK
+    lateinit var wordsService: WordsService
+
     @Test
     fun `should return all users with analytics`() {
 
@@ -120,6 +123,7 @@ internal class UserAnalyticsServiceTest {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
         val currentUser = mockk<UserAccount>()
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         every { userAccountService.getCurrentUser() } returns currentUser
         every { currentUser.bornYear } returns 2023
         every { currentUser.id } returns currentUserId
@@ -152,6 +156,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.PHRASES.name
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
@@ -176,6 +181,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
@@ -186,10 +192,10 @@ internal class UserAnalyticsServiceTest {
         metaDataResult.speedFloat shouldBe "0.8"
         metaDataResult.speedCode shouldBe AzureRates.SLOW
         metaDataResult.text shouldBe "мама, папа"
-        metaDataResult.voice shouldBe Voice.marina.name
+        metaDataResult.voice shouldBe Voice.FILIPP.name
     }
 
-    // @Test todo: after moving to v3 yandex speech kit
+    @Test
     fun `should prepareAudioFileMetaData with lera voice up to 18 years old user`() {
         // GIVEN
         val studyHistory = mockk<StudyHistory>()
@@ -204,10 +210,11 @@ internal class UserAnalyticsServiceTest {
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, "", "1", AzureRates.DEFAULT)
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         // WHEN
         val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
         // THEN
-        metaDataResult.voice shouldBe Voice.lera.name
+        metaDataResult.voice shouldBe Voice.FILIPP.name
     }
 
     @Test
@@ -223,6 +230,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.PHRASES.name
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
@@ -248,6 +256,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
             AudioFileMetaData("мама", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
@@ -273,6 +282,7 @@ internal class UserAnalyticsServiceTest {
         } returns studyHistory
         every { exerciseService.isDoneWell(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
             AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
@@ -295,6 +305,7 @@ internal class UserAnalyticsServiceTest {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns null
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
             AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
@@ -321,6 +332,7 @@ internal class UserAnalyticsServiceTest {
         val audioFileMetaData =
             AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         every { textToSpeechService.generateAudioOggStreamWithValidation(audioFileMetaData) } returns audioStreamMock
+        every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         // WHEN
         val audioStreamResult = userAnalyticsService.prepareAudioStreamForUser(exerciseId, audioFileMetaData)
 

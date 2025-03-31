@@ -15,15 +15,15 @@ class WordsService {
 
     private val mapYandexLocaleManVoice =
         mapOf(
-            BrnLocale.RU.locale to listOf(Voice.FILIPP),
-            BrnLocale.EN.locale to listOf(Voice.NICK),
+            BrnLocale.RU.locale to listOf(Voice.alexander, Voice.kirill, Voice.FILIPP),
+            BrnLocale.EN.locale to listOf(Voice.john, Voice.NICK),
             BrnLocale.TR.locale to listOf(Voice.ERKANYAVAS)
         )
 
     private val mapYandexLocaleWomanVoice =
         mapOf(
-            BrnLocale.RU.locale to listOf(Voice.OKSANA, Voice.marina, Voice.lera),
-            BrnLocale.EN.locale to listOf(Voice.ALYSS),
+            BrnLocale.RU.locale to listOf(Voice.marina, Voice.dasha, Voice.OKSANA, Voice.lera),
+            BrnLocale.EN.locale to listOf(Voice.john, Voice.ALYSS),
             BrnLocale.TR.locale to listOf(Voice.SILAERKAN)
         )
 

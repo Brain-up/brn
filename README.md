@@ -8,7 +8,7 @@ Our current version is here : https://brainup.site (test user: default@default.r
 Now you as a user can register and start doing exercises.
 
 Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
-Product Vision https://github.com/Brain-up/brn/wiki/Product-Vision.
+Product Vision: [https://github.com/Brain-up/brn/wiki/Product-Vision](https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision).
 
 ## SCIENTIFIC SOURCES
 - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit
@@ -39,8 +39,10 @@ Most importantly being an open source project you can show your work in it to an
 6. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
 7. Paintest: for creation pictures for exercises. 
 8. Sign language specialist to create/improve content.
-9. QA engineers. 
-
+9. QA engineers.
+10. Russian-speech specialists to help us with content.
+11. English-speech specialists to help us with content.
+    
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
