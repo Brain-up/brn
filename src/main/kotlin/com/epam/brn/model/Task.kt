@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 
 @Entity
-data class Task(
+class Task(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -62,8 +62,6 @@ data class Task(
         template = template,
         shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
-
-    override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

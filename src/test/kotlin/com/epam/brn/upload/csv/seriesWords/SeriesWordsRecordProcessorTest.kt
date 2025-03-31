@@ -127,7 +127,7 @@ internal class SeriesWordsRecordProcessorTest {
         verify { exerciseRepositoryMock.save(expected) }
     }
 
-    // @Test
+    @Test
     fun `should create correct task`() {
         val expected = createExercise().tasks.first()
 
@@ -144,7 +144,7 @@ internal class SeriesWordsRecordProcessorTest {
             )
         ).first().tasks.first()
 
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "answerOptions")
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
@@ -242,37 +242,31 @@ internal class SeriesWordsRecordProcessorTest {
                 exercise = exercise,
                 serialNumber = 1,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бал()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 2,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бум()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 3,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_быль()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 4,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бал()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 5,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бум()
             ),
             Task(
                 exercise = exercise,
                 serialNumber = 6,
                 answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_быль()
             )
         )
     }

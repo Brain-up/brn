@@ -9,7 +9,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "github_user")
 @DynamicUpdate
-data class GitHubUser(
+class GitHubUser(
     @Id
     var id: Long,
     var login: String,
@@ -20,7 +20,6 @@ data class GitHubUser(
     var company: String?,
     var contributions: Long
 ) {
-
     fun toDto(): GitHubUserDto = GitHubUserDto(
         id = id,
         login = login,
@@ -30,10 +29,6 @@ data class GitHubUser(
         bio = bio,
         company = company,
     )
-
-    override fun toString() =
-        "GitHubUser(id=$id, login='$login', name=$name, email=$email, avatarUrl=$avatarUrl, bio=$bio, " +
-            "company=$company, contributions=$contributions)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -13,7 +13,7 @@ import javax.persistence.Table
 
 @Entity
 @Table
-data class Notification(
+class Notification(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
