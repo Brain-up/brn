@@ -22,7 +22,7 @@ Closed for public:
 - https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english) will be fixed soon
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
 
-Only for epamers:
+Only for Epamers:
 - https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html 
 - https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html 
  
@@ -63,21 +63,19 @@ Autotest Python team chat: https://t.me/+Kv0uYVqMwQNkNzRi
 # GETTING STARTED!
 ## Resources:
 ### Documentation
-https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview
-(https://github.com/Brain-up/brn/wiki)
-### RoadMap: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap
-### Product Vision: https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision (https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision)
-
-### Jira
-https://awclub.atlassian.net/jira/software/c/projects/EPMLABSBRN/issues
-(https://github.com/Brain-up/brn/issues)
-
+https://github.com/Brain-up/brn/wiki  (old Epam resourse https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview)
+### Product Vision: 
+https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision (old one https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision)
+### RoadMap: 
+https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap
+### Project Issues
+https://github.com/Brain-up/brn/issues
 ### Coding standards
 https://github.com/Brain-up/brn/wiki/Coding-Standards  
 
 ## Development:
 
-### Development prerequisites
+### FE Development prerequisites
 1. FrontEnd: Install node v12 or above https://nodejs.org/en/download/
 2. FrontEnd: Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
 3. FrontEnd: In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
@@ -116,7 +114,7 @@ docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PA
 docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:13
 ```
 
-### Back end Kotlin Part:
+### Back-end Kotlin Part:
 1. Run command 'gradle build' from main project folder to build project with tests.
 2. Application.kt is the main class to run application from Idea for example.
 3. Get Postman Collection from [https://www.postman.com/koylubaevNT/workspace/brainup/collection/2686902-d91ba307-e131-4d4f-a308-0a272e063c95 and environment from https://www.postman.com/koylubaevNT/workspace/brainup/environment/2686902-95b2c495-82a1-4244-83c7-dad7f8efebd7](https://brnteam.postman.co/workspace/My-Workspace~d7a4e69a-0ba8-4c56-8fc0-4e27e1998f7c/collection/2464717-96455e8c-ba11-49ed-a299-5c1b77b31db8?action=share&creator=2464717).
