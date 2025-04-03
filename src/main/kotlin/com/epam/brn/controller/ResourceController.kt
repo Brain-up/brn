@@ -47,9 +47,7 @@ class ResourceController(
 
     @GetMapping
     @Operation(summary = "Get all resources")
-    fun getContributors(
-        @RequestParam(name = "locale", required = false, defaultValue = "ru-ru") locale: String,
-    ): ResponseEntity<BrnResponse<List<ResourceResponse>>> = ResponseEntity.ok()
+    fun getResources(): ResponseEntity<BrnResponse<List<ResourceResponse>>> = ResponseEntity.ok()
         .body(
             BrnResponse(resourceService.findAll().map { map -> map.toResponse() })
         )
