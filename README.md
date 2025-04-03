@@ -8,7 +8,7 @@ Our current version is here : https://brainup.site (test user: default@default.r
 Now you as a user can register and start doing exercises.
 
 Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
-Product Vision https://github.com/Brain-up/brn/wiki/Product-Vision.
+Product Vision: [https://github.com/Brain-up/brn/wiki/Product-Vision](https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision).
 
 ## SCIENTIFIC SOURCES
 - Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit
@@ -17,9 +17,14 @@ Product Vision https://github.com/Brain-up/brn/wiki/Product-Vision.
 ## Published ARTICLES about our project 
 - https://wearecommunity.io/communities/community-platform/articles/753 01.12.2020 russian 
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
+
+Closed for public:
+- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english) will be fixed soon
 - https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
-- https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html (only for epamers)
-- https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html (only for epamers)
+
+Only for Epamers:
+- https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html 
+- https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html 
  
 ## WHY JOIN OUR PROJECT AS A DEVELOPER?
 We use the latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. We will review your code, give you advice to improve it and listen to your suggestions. 
@@ -34,8 +39,10 @@ Most importantly being an open source project you can show your work in it to an
 6. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
 7. Paintest: for creation pictures for exercises. 
 8. Sign language specialist to create/improve content.
-9. QA engineers. 
-
+9. QA engineers.
+10. Russian-speech specialists to help us with content.
+11. English-speech specialists to help us with content.
+    
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
 ## TOOLS WE USE
@@ -56,21 +63,19 @@ Autotest Python team chat: https://t.me/+Kv0uYVqMwQNkNzRi
 # GETTING STARTED!
 ## Resources:
 ### Documentation
-https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview
-(https://github.com/Brain-up/brn/wiki)
-### RoadMap: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap
-### Product Vision: https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision (https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision)
-
-### Jira
-https://awclub.atlassian.net/jira/software/c/projects/EPMLABSBRN/issues
-(https://github.com/Brain-up/brn/issues)
-
+https://github.com/Brain-up/brn/wiki  (old Epam resourse https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview)
+### Product Vision: 
+https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision (old one https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision)
+### RoadMap: 
+https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap
+### Project Issues
+https://github.com/Brain-up/brn/issues
 ### Coding standards
 https://github.com/Brain-up/brn/wiki/Coding-Standards  
 
 ## Development:
 
-### Development prerequisites
+### FE Development prerequisites
 1. FrontEnd: Install node v12 or above https://nodejs.org/en/download/
 2. FrontEnd: Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
 3. FrontEnd: In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
@@ -109,10 +114,11 @@ docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PA
 docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:13
 ```
 
-### Back end Kotlin Part:
+### Back-end Kotlin Part:
 1. Run command 'gradle build' from main project folder to build project with tests.
 2. Application.kt is the main class to run application from Idea for example.
-3. Get Postman Collection from https://www.postman.com/koylubaevNT/workspace/brainup/collection/2686902-d91ba307-e131-4d4f-a308-0a272e063c95 and environment from https://www.postman.com/koylubaevNT/workspace/brainup/environment/2686902-95b2c495-82a1-4244-83c7-dad7f8efebd7.
+3. Get Postman Collection from [https://www.postman.com/koylubaevNT/workspace/brainup/collection/2686902-d91ba307-e131-4d4f-a308-0a272e063c95 and environment from https://www.postman.com/koylubaevNT/workspace/brainup/environment/2686902-95b2c495-82a1-4244-83c7-dad7f8efebd7](https://brnteam.postman.co/workspace/My-Workspace~d7a4e69a-0ba8-4c56-8fc0-4e27e1998f7c/collection/2464717-96455e8c-ba11-49ed-a299-5c1b77b31db8?action=share&creator=2464717).
+You can directly login on www.brainup.site with some user, for example default2@default.ru / password, than use his token in postamn in Authorization tab use Bearer Token and put here yours.
 4. Make post request from "Firebase" folder "Get Authorization Token" using credentials. 
 5. Then you can call all other end-points from this Postman collection
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml

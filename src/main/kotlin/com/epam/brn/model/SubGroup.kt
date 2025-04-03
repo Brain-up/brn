@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
-data class SubGroup(
+class SubGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -52,11 +52,6 @@ data class SubGroup(
         withPictures = withPictures,
         exercises = exercises.map { exercise -> exercise.id }.toMutableList()
     )
-
-    override fun toString() =
-        "SubGroup(id=$id, name='$name', code='$code', description=$description, level=$level, " +
-            "withPictures=$withPictures)"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

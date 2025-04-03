@@ -78,7 +78,7 @@ class YandexSpeechKitService(
      */
     fun generateAudioStream(audioFileMetaData: AudioFileMetaData): InputStream {
         val token = getYandexIamTokenForAudioGeneration()
-        val emotion = emotions.random()
+        val emotion = emotions.first()
         val parameters = ArrayList<NameValuePair>().apply {
             add(BasicNameValuePair("folderId", folderId))
             add(BasicNameValuePair("lang", audioFileMetaData.locale))
