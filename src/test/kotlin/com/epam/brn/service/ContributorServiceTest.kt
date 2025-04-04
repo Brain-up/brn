@@ -16,12 +16,12 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import org.amshove.kluent.internal.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
 import kotlin.test.assertNotNull
+import org.junit.jupiter.api.Assertions.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class ContributorServiceTest {
@@ -239,6 +239,7 @@ internal class ContributorServiceTest {
         verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
         verify(exactly = 1) { contributorRepository.save(existContributor) }
     }
+
     private fun createContributorRequest(
         name: String,
         contribution: Long,

@@ -14,7 +14,7 @@ import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.load.AudiometryLoader
 import com.epam.brn.service.load.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
-import org.amshove.kluent.shouldHaveSize
+import io.kotest.matchers.collections.shouldHaveSize
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
