@@ -18,6 +18,7 @@ import software.amazon.awssdk.services.s3.model.Delete
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
@@ -26,11 +27,15 @@ import java.io.InputStream
 import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import org.springframework.beans.factory.annotation.Value
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired private val s3Client: S3Client) :
     CloudService {
+
+    @Value("\${brn.resources.default-pictures.path}")
+    lateinit var defaultPicturesPath: String
 
     companion object {
         private const val FOLDER_DELIMITER = "/"
@@ -73,6 +78,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
             it.key().substring(it.key().lastIndexOf(FOLDER_DELIMITER))
         }
     }
+
+    override fun getPicturesNamesFromMainFolder(): List<String> = getFileNames(defaultPicturesPath)
 
     override fun getFilePathMap(folderPath: String): Map<String, String> {
         val request = ListObjectsV2Request.builder()
@@ -119,13 +126,17 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     override fun isFileExist(filePath: String, fileName: String): Boolean {
         val fullFileName = createFullFileName(filePath, fileName)
-
-        val request = ListObjectsV2Request.builder()
-            .bucket(awsConfig.bucketName)
-            .prefix(fullFileName)
-            .build()
-        val result = s3Client.listObjectsV2(request)
-        return result.hasContents()
+        // Recommended way to check file existence according to AWS documentation https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadObject_section.html
+        return try {
+            val request = HeadObjectRequest.builder()
+                .bucket(awsConfig.bucketName)
+                .key(fullFileName)
+                .build()
+            s3Client.headObject(request)
+            true
+        } catch (e: NoSuchKeyException) {
+            false
+        }
     }
 
     override fun createFullFileName(
