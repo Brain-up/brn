@@ -66,8 +66,7 @@ Autotest Python team chat: https://t.me/+Kv0uYVqMwQNkNzRi
 https://github.com/Brain-up/brn/wiki  (old Epam resourse https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview)
 ### Product Vision: 
 https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision (old one https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision)
-### RoadMap: 
-https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap
+(old one RoadMap: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap)
 ### Project Issues
 https://github.com/Brain-up/brn/issues
 ### Coding standards
