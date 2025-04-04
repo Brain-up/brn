@@ -80,6 +80,7 @@ class ResourcePictureUrlUpdateJob(
                 Used unverified URLs count: ${response.withUnverifiedUrlResources}
                 Without pictures resources: ${response.resourcesWithoutPictures}
                 Updated resources: ${response.updatedPicturedResources}
+                Cleaned pictures from resources: ${response.cleanedResourcePicturesFromResource}
                 Execution Time: ${executionTime / 1000}s
             """
         log.info(logStatement)
