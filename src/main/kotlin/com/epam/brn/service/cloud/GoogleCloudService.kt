@@ -71,14 +71,6 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
         TODO("Not yet implemented")
     }
 
-    override fun findExistingFiles(
-        filePath: String,
-        words: List<String?>,
-        extensions: Set<String>
-    ): Map<String, String> {
-        TODO("Not yet implemented")
-    }
-
     override fun createFullFileName(path: String, filename: String): String {
         TODO("Not yet implemented")
     }

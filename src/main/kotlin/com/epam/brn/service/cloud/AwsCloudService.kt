@@ -139,26 +139,6 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         }
     }
 
-    override fun findExistingFiles(filePath: String, words: List<String?>, extensions: Set<String>): Map<String, String> {
-        val result = mutableMapOf<String, String>()
-        val request = ListObjectsV2Request.builder()
-            .bucket(awsConfig.bucketName)
-            .prefix(filePath)
-            .build()
-        val objects = s3Client.listObjectsV2(request).contents()
-
-        words.forEach { word ->
-            extensions.forEach { ext ->
-                val fullFileName = createFullFileName(filePath, "$word.$ext")
-                if (objects.any { it.key().equals(fullFileName) }) {
-                    result[word!!] = baseFileUrl() + "/" + fullFileName
-                }
-            }
-        }
-
-        return result
-    }
-
     override fun createFullFileName(
         path: String,
         filename: String

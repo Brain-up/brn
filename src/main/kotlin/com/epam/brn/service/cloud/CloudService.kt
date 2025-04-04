@@ -61,12 +61,6 @@ interface CloudService {
      * Check that file is exist in cloud storage
      */
     fun isFileExist(filePath: String, fileName: String): Boolean
-
-    /**
-     * Find existing files for specified words in cloud storage
-     */
-    fun findExistingFiles(filePath: String, words: List<String?>, extensions: Set<String>): Map<String, String>
-
     /**
      * Create full name of file
      */
