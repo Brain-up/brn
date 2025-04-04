@@ -1,0 +1,217 @@
+@if (showErrormessage) {
+    <div class="show-error">
+      Please fill the "Name_en" field before upload an image
+    </div>
+    }
+    <div class="content">      
+      @if (isLoading$ | async) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      } @else {
+      <div class="container">
+        <span class="inform"> (*) required field </span>
+        <form [formGroup]="resourcesForm">
+          <!-- <div class="icon-group">
+            <button
+              mat-fab
+              class="load"
+              color="primary"
+              (click)="fileUpload.click()"
+            >
+              @if (pictureUrlSubj | async) {
+              <img
+                class="avatar"
+                src="{{ pictureUrlSubj | async }}"
+                alt="picture"
+              />
+              } @if (!pictureUrl.value) {
+              <mat-icon class="icon-load" svgIcon="foto-download"></mat-icon>
+              }
+              <span class="avatar-label">
+                {{
+                  "Admin.Modules.Resources.Module.Resource.Form.Avatar"
+                    | translate
+                }}</span
+              >
+            </button>
+          </div>
+          <input
+            class="file-input"
+            type="file"
+            accept=".png, .jpg, .jpeg, .svg"
+            (change)="uploadImage($event)"
+            #fileUpload
+          /> -->
+
+          
+          <div class="input-box">
+            <label for="columnNumber"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.columnNumber"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="columnNumber" type="text" formControlName="columnNumber" />
+            @if (columnNumber.errors && (columnNumber.dirty || columnNumber.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(columnNumber.errors) }}
+            </span>
+            }
+          </div>
+          <div class="input-box">
+            <label for="description"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.description"
+                  | translate
+              }}
+              *</label
+            >
+            <textarea
+              id="description"
+              type="text"
+              formControlName="description"
+            ></textarea>
+            @if (description.errors && (description.dirty || description.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(description.errors) }}
+            </span>
+            }
+          </div>
+          <div class="input-box">
+            <label for="audioFileUrl"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.audioFileUrl"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="audioFileUrl" type="text" formControlName="audioFileUrl" />
+            @if (audioFileUrl.errors && (audioFileUrl.dirty || audioFileUrl.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(audioFileUrl.errors) }}
+            </span>
+            }
+          </div>
+          <div class="input-box">
+            <label for="soundsCount"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.soundsCount"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="soundsCount" type="text" formControlName="soundsCount" />
+            @if (soundsCount.errors && (soundsCount.dirty || soundsCount.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(soundsCount.errors) }}
+            </span>
+            }
+          </div>
+          <div class="input-box">
+            <label for="word"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.word"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="word" type="text" formControlName="word" />
+            @if (word.errors && (word.dirty || word.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(word.errors) }}
+            </span>
+            }
+          </div>
+
+          <div class="input-box">
+            <label for="wordType"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.wordType"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="wordType" type="text" formControlName="wordType" />
+            @if (wordType.errors && (wordType.dirty || wordType.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(wordType.errors) }}
+            </span>
+            }
+          </div>
+          <div class="input-box">
+            <label for="wordPronounce"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.wordPronounce"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="wordPronounce" type="text" formControlName="wordPronounce" />
+            @if (wordPronounce.errors && (wordPronounce.dirty || wordPronounce.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(wordPronounce.errors) }}
+            </span>
+            }
+          </div>          
+          <div class="input-box">
+            <label for="pictureFileUrl"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.pictureFileUrl"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="pictureFileUrl" type="text" formControlName="pictureFileUrl" />
+            @if (pictureFileUrl.errors && (pictureFileUrl.dirty || pictureFileUrl.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(pictureFileUrl.errors) }}
+            </span>
+            }
+          </div>
+          
+          
+          <!-- <div class="input-box">
+            <label for="contribution"
+              >{{
+                "Admin.Modules.Resources.Module.Resource.Form.Contributions"
+                  | translate
+              }}
+              *</label
+            >
+            <input id="contribution" type="number" formControlName="contribution" />
+            @if (contribution.errors && (contribution.dirty ||
+            contribution.touched)) {
+            <span class="cross-validation-error">
+              {{ getErrorMessage(contribution.errors) }}
+            </span>
+            }
+          </div> -->
+          
+          
+        </form>
+        <div class="bottom-buttons">
+          <button mat-raised-button class="cancel-button" (click)="cancelInput()">
+            {{
+              "Admin.Modules.Resources.Module.Resource.Buttons.Cancel"
+                | translate
+                | uppercase
+            }}
+          </button>
+          <button
+            mat-raised-button
+            class="save-button"
+            [ngClass]="{ disabled: resourcesForm.invalid }"
+            [disabled]="resourcesForm.invalid"
+            (click)="saveResources()"
+          >
+            {{
+              "Admin.Modules.Resources.Module.Resource.Buttons.Save"
+                | translate
+                | uppercase
+            }}
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    

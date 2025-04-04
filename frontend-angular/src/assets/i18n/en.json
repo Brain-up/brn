@@ -191,6 +191,48 @@
             }
           }
         }
+      },
+      "Resources": {
+        "Components": {
+          "ResourcesTable": {
+            "ColumnsName": {
+              "columnNumber": "columnNumber",
+              "description": "description",
+              "audioFileUrl": "audioFileUrl",
+              "soundsCount": "soundsCount",
+              "word": "word",
+              "wordType": "wordType",
+              "wordPronounce": "wordPronounce",
+              "id": "id",
+              "pictureFileUrl":"pictureFileUrl"
+            }
+          }
+        },
+        "EmptyData": "No resources available",
+        "NoMatchForSearch": "No resources matching the filter",
+        "Search": "Search",
+        "SelectPage": "Select page of resources",
+        "AddButton": "ADD RESOURCES",
+        "Module": {
+          "Resource": {
+            "Buttons": {
+              "Save": "Save",
+              "Cancel": "Cancel"
+            },
+            "Form": {              
+              "columnNumber": "columnNumber",
+              "description": "description",
+              "audioFileUrl": "audioFileUrl",
+              "soundsCount": "soundsCount",
+              "word": "word",
+              "wordType": "wordType",
+              "wordPronounce": "wordPronounce",
+              "id": "id",
+              "pictureFileUrl":"pictureFileUrl"
+              
+            }
+          }
+        }
       }
     }
   },
