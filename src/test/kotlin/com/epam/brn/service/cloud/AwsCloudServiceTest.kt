@@ -10,6 +10,7 @@ import io.mockk.slot
 import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
@@ -357,6 +358,19 @@ class AwsCloudServiceTest {
 
         // THEN
         assertEquals(listOf("/file1.png", "/file2.png"), actual)
+    }
+
+    @Test
+    fun `should check is file exist`() {
+        // GIVEN
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.headObject(any<HeadObjectRequest>()) } returns null
+
+        // WHEN
+        val actual = awsCloudService.isFileExist("testPath", "testName")
+
+        // THEN
+        assertTrue(actual)
     }
 
     @Test
