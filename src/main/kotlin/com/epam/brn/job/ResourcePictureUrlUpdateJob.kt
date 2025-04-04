@@ -48,13 +48,16 @@ class ResourcePictureUrlUpdateJob(
                         response.withUnverifiedUrlResources++
                     } else {
                         log.debug("No picture for ${resource.word} found")
-                        response.withoutPicturesResources++
+                        response.resourcesWithoutPictures++
                     }
 
                     val shouldUpdateUrl = fileUrl.isNotEmpty() && fileUrl != resource.pictureFileUrl
                     val shouldCleanUrl = fileUrl.isEmpty() && !resource.pictureFileUrl.isNullOrEmpty()
                     if (shouldUpdateUrl || shouldCleanUrl) {
-                        response.updatedResources++
+                        if (shouldUpdateUrl)
+                            response.updatedPicturedResources++
+                        else
+                            response.cleanedResourcePicturesFromResource++
                         resource.pictureFileUrl = fileUrl
                         updatedResources.add(resource)
                     }
@@ -75,8 +78,8 @@ class ResourcePictureUrlUpdateJob(
                 Pictures in Unverified folder: ${response.inUnverifiedFolderPicturesCount}
                 Used default URLs count: ${response.withCorrectDefaultUrlResources}
                 Used unverified URLs count: ${response.withUnverifiedUrlResources}
-                Without pictures resources: ${response.withoutPicturesResources}
-                Updated resources: ${response.updatedResources}
+                Without pictures resources: ${response.resourcesWithoutPictures}
+                Updated resources: ${response.updatedPicturedResources}
                 Execution Time: ${executionTime / 1000}s
             """
         log.info(logStatement)
@@ -91,8 +94,9 @@ data class ResourcePictureUrlUpdateJobResponse(
     var inUnverifiedFolderPicturesCount: Int = 0,
     var withCorrectDefaultUrlResources: Int = 0,
     var withUnverifiedUrlResources: Int = 0,
-    var withoutPicturesResources: Int = 0,
-    var updatedResources: Int = 0,
+    var resourcesWithoutPictures: Int = 0,
+    var updatedPicturedResources: Int = 0,
+    var cleanedResourcePicturesFromResource: Int = 0,
     var executionTime: Long = 0,
     var errorMessage: String = "No errors!"
 )

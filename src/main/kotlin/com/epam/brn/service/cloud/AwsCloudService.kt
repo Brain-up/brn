@@ -26,11 +26,15 @@ import java.io.InputStream
 import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import org.springframework.beans.factory.annotation.Value
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
 class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired private val s3Client: S3Client) :
     CloudService {
+
+    @Value("\${brn.resources.default-pictures.path}")
+    lateinit var defaultPicturesPath: String
 
     companion object {
         private const val FOLDER_DELIMITER = "/"
@@ -73,6 +77,8 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
             it.key().substring(it.key().lastIndexOf(FOLDER_DELIMITER))
         }
     }
+
+    override fun getPicturesNamesFromMainFolder(): List<String> = getFileNames(defaultPicturesPath)
 
     override fun getFilePathMap(folderPath: String): Map<String, String> {
         val request = ListObjectsV2Request.builder()
