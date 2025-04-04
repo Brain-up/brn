@@ -18,6 +18,7 @@ import software.amazon.awssdk.services.s3.model.Delete
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
@@ -125,13 +126,37 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     override fun isFileExist(filePath: String, fileName: String): Boolean {
         val fullFileName = createFullFileName(filePath, fileName)
+        // Recommended way to check file existence according to AWS documentation https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadObject_section.html
+        return try {
+            val request = HeadObjectRequest.builder()
+                .bucket(awsConfig.bucketName)
+                .key(fullFileName)
+                .build()
+            s3Client.headObject(request)
+            true
+        } catch (e: NoSuchKeyException) {
+            false
+        }
+    }
 
+    override fun findExistingFiles(filePath: String, words: List<String?>, extensions: Set<String>): Map<String, String> {
+        val result = mutableMapOf<String, String>()
         val request = ListObjectsV2Request.builder()
             .bucket(awsConfig.bucketName)
-            .prefix(fullFileName)
+            .prefix(filePath)
             .build()
-        val result = s3Client.listObjectsV2(request)
-        return result.hasContents()
+        val objects = s3Client.listObjectsV2(request).contents()
+
+        words.forEach { word ->
+            extensions.forEach { ext ->
+                val fullFileName = createFullFileName(filePath, "$word.$ext")
+                if (objects.any { it.key().equals(fullFileName) }) {
+                    result[word!!] = baseFileUrl() + "/" + fullFileName
+                }
+            }
+        }
+
+        return result
     }
 
     override fun createFullFileName(
