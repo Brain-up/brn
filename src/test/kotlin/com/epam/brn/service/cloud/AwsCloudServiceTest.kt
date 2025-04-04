@@ -7,6 +7,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
+import kotlin.test.assertFalse
 import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -24,6 +25,7 @@ import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectResponse
@@ -371,6 +373,19 @@ class AwsCloudServiceTest {
 
         // THEN
         assertTrue(actual)
+    }
+
+    @Test
+    fun `should check file is not exist`() {
+        // GIVEN
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.headObject(any<HeadObjectRequest>()) } throws (NoSuchKeyException.builder().build())
+
+        // WHEN
+        val actual = awsCloudService.isFileExist("testPath", "testName")
+
+        // THEN
+        assertFalse(actual)
     }
 
     @Test
