@@ -74,4 +74,8 @@ class GoogleCloudService(@Autowired private val cloudConfig: GoogleCloudConfig) 
     override fun createFullFileName(path: String, filename: String): String {
         TODO("Not yet implemented")
     }
+
+    override fun getPicturesNamesFromMainFolder(): List<String> {
+        TODO("Not yet implemented")
+    }
 }

@@ -35,7 +35,6 @@ class TaskService(
 ) {
     private val log = logger()
 
-    // private val tempPictureStorageUrl = "https://github.com/Brain-up/brn-pictures/blob/main/"
     private val tempPictureStorageUrl = "https://brnup.s3.eu-north-1.amazonaws.com/pictures/"
 
     @Cacheable("tasksByExerciseId")
@@ -47,12 +46,15 @@ class TaskService(
         return when (val type = valueOf(exercise.subGroup!!.series.type)) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 tasks.map { task -> task.toTaskResponse(type) }
+
             SINGLE_WORDS_KOROLEVA ->
                 tasks.map { task -> task.toDetailWordsTaskDto(type) }
+
             WORDS_SEQUENCES, SENTENCE ->
                 tasks.map { task ->
                     task.toWordsGroupSeriesTaskDto(type, task.exercise?.template)
                 }
+
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
@@ -66,10 +68,13 @@ class TaskService(
         return when (val type = valueOf(task.exercise!!.subGroup!!.series.type)) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 task.toTaskResponse(type)
+
             SINGLE_WORDS_KOROLEVA ->
                 task.toDetailWordsTaskDto(type)
+
             WORDS_SEQUENCES, SENTENCE ->
                 task.toWordsGroupSeriesTaskDto(type, task.exercise?.template)
+
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
@@ -77,10 +82,8 @@ class TaskService(
     private fun processAnswerOptions(task: Task) {
         task.answerOptions
             .forEach { resource ->
-                resource.pictureFileUrl = tempPictureStorageUrl + resource.word + ".png"
-// todo: return s3 using when it will be open for Russia
-//                if (!resource.pictureFileUrl.isNullOrEmpty())
-//                    resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
+                if (!resource.pictureFileUrl.isNullOrEmpty())
+                    resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
             }
     }
 

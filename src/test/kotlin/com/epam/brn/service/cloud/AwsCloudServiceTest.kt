@@ -7,11 +7,14 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
+import kotlin.test.assertFalse
 import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.test.util.ReflectionTestUtils
 import software.amazon.awssdk.core.internal.waiters.DefaultWaiterResponse
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
@@ -22,6 +25,7 @@ import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.PutObjectResponse
@@ -339,6 +343,49 @@ class AwsCloudServiceTest {
 
         // THEN
         assertEquals(listOf("/file1.png", "/file2.png"), actual)
+    }
+
+    @Test
+    fun `should return fileNames for main folder`() {
+        // GIVEN
+        ReflectionTestUtils.setField(awsCloudService, "defaultPicturesPath", "pictures/")
+        val listObjectsV2Result = listObjectsV2Result(
+            mutableListOf("folder/path/file1.png", "folder/path/file2.png")
+        )
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.listObjectsV2(any<ListObjectsV2Request>()) } returns listObjectsV2Result
+
+        // WHEN
+        val actual = awsCloudService.getPicturesNamesFromMainFolder()
+
+        // THEN
+        assertEquals(listOf("/file1.png", "/file2.png"), actual)
+    }
+
+    @Test
+    fun `should check is file exist`() {
+        // GIVEN
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.headObject(any<HeadObjectRequest>()) } returns null
+
+        // WHEN
+        val actual = awsCloudService.isFileExist("testPath", "testName")
+
+        // THEN
+        assertTrue(actual)
+    }
+
+    @Test
+    fun `should check file is not exist`() {
+        // GIVEN
+        every { awsConfig.bucketName } returns BUCKET
+        every { s3Client.headObject(any<HeadObjectRequest>()) } throws (NoSuchKeyException.builder().build())
+
+        // WHEN
+        val actual = awsCloudService.isFileExist("testPath", "testName")
+
+        // THEN
+        assertFalse(actual)
     }
 
     @Test

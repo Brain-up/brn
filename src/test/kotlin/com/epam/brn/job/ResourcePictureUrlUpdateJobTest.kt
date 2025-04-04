@@ -132,7 +132,7 @@ internal class ResourcePictureUrlUpdateJobTest {
         assertEquals(1, jobResponse.inUnverifiedFolderPicturesCount)
         assertEquals(0, jobResponse.withUnverifiedUrlResources)
         assertEquals(0, jobResponse.withCorrectDefaultUrlResources)
-        assertEquals(1, jobResponse.withoutPicturesResources)
+        assertEquals(1, jobResponse.resourcesWithoutPictures)
         assertTrue(jobResponse.success)
     }
 
