@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
 import kotlin.test.assertFailsWith
-import org.amshove.kluent.`should be`
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseGroupServiceTest {
@@ -62,8 +61,8 @@ internal class ExerciseGroupServiceTest {
         val actualResult: List<ExerciseGroupDto> = exerciseGroupsService.findByLocale(locale)
         // THEN
         actualResult.isNotEmpty()
-        actualResult.first().id `should be` 1
-        actualResult.first().locale `should be` "ru-ru"
+        assertEquals(1L, actualResult.first().id)
+        assertEquals("ru-ru", actualResult.first().locale)
     }
 
     @Test

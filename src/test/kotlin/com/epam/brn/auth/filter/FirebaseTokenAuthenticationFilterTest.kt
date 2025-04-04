@@ -20,7 +20,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -92,7 +91,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
         assertNotNull(authentication)
-        authentication.shouldBeInstanceOf(UsernamePasswordAuthenticationToken::class.java)
+        authentication is UsernamePasswordAuthenticationToken
         assertEquals(email, authentication.name)
         assertEquals(1, authentication.authorities.size)
 
@@ -133,7 +132,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
         assertNotNull(authentication)
-        authentication.shouldBeInstanceOf(UsernamePasswordAuthenticationToken::class.java)
+        authentication is UsernamePasswordAuthenticationToken
         assertEquals(email, authentication.name)
         assertEquals(1, authentication.authorities.size)
 
