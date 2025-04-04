@@ -61,6 +61,11 @@ services:
     depends_on:
       - brn_fe_with_tls
     command: certonly --webroot --webroot-path=/var/www/html --email brainupspbproject@gmail.com --agree-tos --no-eff-email
+  aws-cli:
+    image: amazon/aws-cli
+    container_name: aws-cli
+    secrets:
+      - aws-key
 secrets:
   aws-key:
     file: aws-key.properties
