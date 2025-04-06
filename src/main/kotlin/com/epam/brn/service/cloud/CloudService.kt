@@ -67,6 +67,7 @@ interface CloudService {
         filePath: String,
         fileName: String,
     ): Boolean
+
     /**
      * Create full name of file
      */

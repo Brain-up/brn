@@ -54,10 +54,11 @@ class ResourcePictureUrlUpdateJob(
                         val shouldUpdateUrl = fileUrl.isNotEmpty() && fileUrl != resource.pictureFileUrl
                         val shouldCleanUrl = fileUrl.isEmpty() && !resource.pictureFileUrl.isNullOrEmpty()
                         if (shouldUpdateUrl || shouldCleanUrl) {
-                            if (shouldUpdateUrl)
-                            response.updatedPicturedResources++
-                        else
-                            response.cleanedResourcePicturesFromResource++
+                            if (shouldUpdateUrl) {
+                                response.updatedPicturedResources++
+                            } else {
+                                response.cleanedResourcePicturesFromResource++
+                            }
                             resource.pictureFileUrl = fileUrl
                             updatedResources.add(resource)
                         }

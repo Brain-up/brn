@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.core.sync.RequestBody
@@ -27,15 +28,16 @@ import java.io.InputStream
 import java.io.Serializable
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import org.springframework.beans.factory.annotation.Value
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
 class AwsCloudService(
     @Autowired private val awsConfig: AwsConfig,
     @Autowired private val s3Client: S3Client,
-) : CloudService {@Value("\${brn.resources.default-pictures.path}")
+) : CloudService {
+    @Value("\${brn.resources.default-pictures.path}")
     lateinit var defaultPicturesPath: String
+
     companion object {
         private const val FOLDER_DELIMITER = "/"
     }
@@ -142,13 +144,13 @@ class AwsCloudService(
         val fullFileName = createFullFileName(filePath, fileName)
         // Recommended way to check file existence according to AWS documentation https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadObject_section.html
         return try {
-        val request =
-            HeadObjectRequest
-                .builder()
-                .bucket(awsConfig.bucketName)
-                .key(fullFileName)
-                .build()
-         s3Client.headObject(request)
+            val request =
+                HeadObjectRequest
+                    .builder()
+                    .bucket(awsConfig.bucketName)
+                    .key(fullFileName)
+                    .build()
+            s3Client.headObject(request)
             true
         } catch (e: NoSuchKeyException) {
             false

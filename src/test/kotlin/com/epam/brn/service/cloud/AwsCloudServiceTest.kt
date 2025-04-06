@@ -7,7 +7,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
-import kotlin.test.assertFalse
 import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -33,6 +32,7 @@ import software.amazon.awssdk.services.s3.model.S3Object
 import software.amazon.awssdk.services.s3.waiters.S3Waiter
 import java.io.File
 import java.util.Arrays
+import kotlin.test.assertFalse
 
 @ExtendWith(MockKExtension::class)
 class AwsCloudServiceTest {
@@ -386,9 +386,10 @@ class AwsCloudServiceTest {
     fun `should return fileNames for main folder`() {
         // GIVEN
         ReflectionTestUtils.setField(awsCloudService, "defaultPicturesPath", "pictures/")
-        val listObjectsV2Result = listObjectsV2Result(
-            mutableListOf("folder/path/file1.png", "folder/path/file2.png")
-        )
+        val listObjectsV2Result =
+            listObjectsV2Result(
+                mutableListOf("folder/path/file1.png", "folder/path/file2.png"),
+            )
         every { awsConfig.bucketName } returns BUCKET
         every { s3Client.listObjectsV2(any<ListObjectsV2Request>()) } returns listObjectsV2Result
 
