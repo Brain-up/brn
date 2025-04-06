@@ -158,26 +158,6 @@ tasks.register<JavaExec>("ktlintFormat") {
     )
 }
 
-// tasks.register("ktlintFormat", JavaExec::class.java) {
-//    description = "Fix Kotlin code style deviations."
-//    group = "formatting"
-//    classpath = ktlint
-//    main = "com.pinterest.ktlint.Main"
-//    args = listOf("-F", "src/**/*.kt")
-// }
-//
-// tasks.register("ktlint", JavaExec::class.java) {
-//    group = "verification"
-//    description = "Runs ktlint."
-//    main = "com.pinterest.ktlint.Main"
-//    classpath = ktlint
-//    args = listOf(
-//        "--reporter=plain",
-//        "--reporter=checkstyle,output=${project.buildDir}/reports/ktlint/ktlint-checkstyle-report.xml",
-//        "src/**/*.kt"
-//    )
-// }
-
 project.exec {
     commandLine = "git config core.hooksPath .githooks".split(" ")
 }
