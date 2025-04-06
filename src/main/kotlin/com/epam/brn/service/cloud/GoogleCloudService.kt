@@ -86,4 +86,8 @@ class GoogleCloudService(
     ): String {
         TODO("Not yet implemented")
     }
+
+    override fun getPicturesNamesFromMainFolder(): List<String> {
+        TODO("Not yet implemented")
+    }
 }

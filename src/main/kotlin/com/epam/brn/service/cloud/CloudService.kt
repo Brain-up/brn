@@ -46,6 +46,11 @@ interface CloudService {
     fun getFileNames(folderPath: String): List<String>
 
     /**
+     * Get list of pictures in main folder
+     */
+    fun getPicturesNamesFromMainFolder(): List<String>
+
+    /**
      * Get map of file paths with file name as key.
      */
     fun getFilePathMap(folderPath: String): Map<String, String>
@@ -62,7 +67,6 @@ interface CloudService {
         filePath: String,
         fileName: String,
     ): Boolean
-
     /**
      * Create full name of file
      */
