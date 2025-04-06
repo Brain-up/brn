@@ -13,5 +13,5 @@ data class GitHubContributorDto(
     var type: String? = null,
     @JsonProperty("site_admin")
     var siteAdmin: Boolean? = null,
-    val contributions: Long
+    val contributions: Long,
 )

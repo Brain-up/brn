@@ -29,29 +29,31 @@ class ExerciseGroup(
     @Column
     val description: String? = "",
     @OneToMany(mappedBy = "exerciseGroup", fetch = FetchType.LAZY, cascade = [(CascadeType.ALL)])
-    val series: MutableList<Series> = ArrayList()
+    val series: MutableList<Series> = ArrayList(),
 ) {
     constructor(record: GroupRecord) : this(
         code = record.code,
         locale = record.locale,
         name = record.name,
-        description = record.description
+        description = record.description,
     )
 
-    fun toDto() = ExerciseGroupDto(
-        id = id,
-        locale = locale,
-        name = name,
-        description = description,
-        series = series.map { series -> series.id }.toMutableList()
-    )
+    fun toDto() =
+        ExerciseGroupDto(
+            id = id,
+            locale = locale,
+            name = name,
+            description = description,
+            series = series.map { series -> series.id }.toMutableList(),
+        )
 
-    fun toDtoWithoutSeries() = ExerciseGroupDto(
-        id = id,
-        locale = locale,
-        name = name,
-        description = description
-    )
+    fun toDtoWithoutSeries() =
+        ExerciseGroupDto(
+            id = id,
+            locale = locale,
+            name = name,
+            description = description,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

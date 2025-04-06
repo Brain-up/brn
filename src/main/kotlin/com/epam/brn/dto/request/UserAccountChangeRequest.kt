@@ -12,5 +12,5 @@ data class UserAccountChangeRequest(
     val gender: BrnGender? = null,
     val avatar: String? = null,
     val photo: String? = null,
-    val description: String? = null
+    val description: String? = null,
 )

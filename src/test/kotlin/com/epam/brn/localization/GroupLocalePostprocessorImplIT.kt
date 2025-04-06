@@ -19,7 +19,6 @@ import kotlin.test.assertEquals
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
 internal class GroupLocalePostprocessorImplIT {
-
     @Autowired
     lateinit var groupLocalePostprocessor: GroupLocalePostprocessorImpl
 
@@ -37,47 +36,48 @@ internal class GroupLocalePostprocessorImplIT {
 
     companion object {
         @JvmStatic
-        private fun getEnUsLocaleExerciseGroupsData() = listOf(
-            Arguments.of(
-                ExerciseGroupDto(
-                    id = null,
-                    locale = "en",
-                    name = "Неречевые упражнения",
-                    description = null,
-                    series = mutableListOf()
+        private fun getEnUsLocaleExerciseGroupsData() =
+            listOf(
+                Arguments.of(
+                    ExerciseGroupDto(
+                        id = null,
+                        locale = "en",
+                        name = "Неречевые упражнения",
+                        description = null,
+                        series = mutableListOf(),
+                    ),
+                    "non-speech exercises",
                 ),
-                "non-speech exercises"
-            ),
-            Arguments.of(
-                ExerciseGroupDto(
-                    id = null,
-                    locale = "en",
-                    name = "Речевые упражнения",
-                    description = null,
-                    series = mutableListOf()
+                Arguments.of(
+                    ExerciseGroupDto(
+                        id = null,
+                        locale = "en",
+                        name = "Речевые упражнения",
+                        description = null,
+                        series = mutableListOf(),
+                    ),
+                    "speech exercises",
                 ),
-                "speech exercises"
-            ),
-            Arguments.of(
-                ExerciseGroupDto(
-                    id = null,
-                    locale = "ru",
-                    name = "Неречевые упражнения",
-                    description = null,
-                    series = mutableListOf()
+                Arguments.of(
+                    ExerciseGroupDto(
+                        id = null,
+                        locale = "ru",
+                        name = "Неречевые упражнения",
+                        description = null,
+                        series = mutableListOf(),
+                    ),
+                    "Неречевые упражнения",
                 ),
-                "Неречевые упражнения"
-            ),
-            Arguments.of(
-                ExerciseGroupDto(
-                    id = null,
-                    locale = "ru",
-                    name = "Речевые упражнения",
-                    description = null,
-                    series = mutableListOf()
+                Arguments.of(
+                    ExerciseGroupDto(
+                        id = null,
+                        locale = "ru",
+                        name = "Речевые упражнения",
+                        description = null,
+                        series = mutableListOf(),
+                    ),
+                    "Речевые упражнения",
                 ),
-                "Речевые упражнения"
             )
-        )
     }
 }

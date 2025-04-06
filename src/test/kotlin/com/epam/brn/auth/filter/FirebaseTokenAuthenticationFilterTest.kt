@@ -1,9 +1,9 @@
 package com.epam.brn.auth.filter
 
+import com.epam.brn.auth.model.CustomUserDetails
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Role
-import com.epam.brn.auth.model.CustomUserDetails
 import com.epam.brn.model.UserAccount
 import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.TokenHelperUtils
@@ -39,7 +39,6 @@ import kotlin.test.assertNull
 @ExtendWith(MockKExtension::class)
 @DisplayName("FirebaseTokenAuthenticationFilter test using MockK")
 internal class FirebaseTokenAuthenticationFilterTest {
-
     @InjectMockKs
     lateinit var firebaseTokenAuthenticationFilter: FirebaseTokenAuthenticationFilter
 
@@ -70,8 +69,13 @@ internal class FirebaseTokenAuthenticationFilterTest {
         SecurityContextHolder.clearContext()
     }
 
+    /*
+    should set authentication by UsernamePasswordAuthenticationToken
+    when user exist in local DB
+    and firebase and not create new user in local database
+     */
     @Test
-    fun `should set authentication by UsernamePasswordAuthenticationToken when user exist in local DB and firebase and not create new user in local database`() {
+    fun `should set authentication when user exist in local DB`() {
         // GIVEN
         val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
         val token = "firebaseTokenMock"
@@ -102,8 +106,13 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
 
+    /*
+    should set authentication by UsernamePasswordAuthenticationToken
+    when user not exist in local DB and exist in firebase DB
+    and create new user in local database`() {
+     */
     @Test
-    fun `should set authentication by UsernamePasswordAuthenticationToken when user not exist in local DB and exist in firebase DB and create new user in local database`() {
+    fun `should set authentication when user not exist in local DB`() {
         // GIVEN
         val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
         val tokenMock = "firebaseTokenMock"
@@ -117,14 +126,16 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseAuth.verifyIdToken(tokenMock, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
-        every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen
+            customUserDetailsMock
         every { firebaseUserService.getUserByUuid(uuid) } returns userRecordMock
-        every { userAccountService.createUser(userRecordMock) } returns UserAccountDto(
-            email = email,
-            bornYear = 0,
-            gender = null,
-            name = fullName
-        )
+        every { userAccountService.createUser(userRecordMock) } returns
+            UserAccountDto(
+                email = email,
+                bornYear = 0,
+                gender = null,
+                name = fullName,
+            )
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(requestMock, responseMock, filterChain)
@@ -156,7 +167,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every {
             firebaseAuth.verifyIdToken(
                 tokenMock,
-                true
+                true,
             )
         } throws (FirebaseAuthException(FirebaseException(ErrorCode.INVALID_ARGUMENT, "Token invalid", null)))
 
@@ -214,7 +225,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseAuth.verifyIdToken(tokenMock, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
-        every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen
+            customUserDetailsMock
         every { firebaseUserService.getUserByUuid(uuid) } returns null
 
         // WHEN
@@ -232,18 +244,20 @@ internal class FirebaseTokenAuthenticationFilterTest {
     }
 
     private fun createUserAccountMock(): UserAccount {
-        val userAccount = UserAccount(
-            id = 1L,
-            userId = uuid,
-            email = email,
-            fullName = fullName
-        )
-        userAccount.roleSet = mutableSetOf(
-            Role(
+        val userAccount =
+            UserAccount(
                 id = 1L,
-                name = BrnRole.USER
+                userId = uuid,
+                email = email,
+                fullName = fullName,
             )
-        )
+        userAccount.roleSet =
+            mutableSetOf(
+                Role(
+                    id = 1L,
+                    name = BrnRole.USER,
+                ),
+            )
         return userAccount
     }
 }

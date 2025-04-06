@@ -8,34 +8,45 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class ResourceService(private val resourceRepository: ResourceRepository) {
-
+class ResourceService(
+    private val resourceRepository: ResourceRepository,
+) {
     fun findFirstResourceByWord(word: String): Resource? {
         val resources = resourceRepository.findByWord(word)
         return if (resources.isNotEmpty()) resources.first() else null
     }
+
     fun findFirstResourceByWordLike(word: String): Resource? {
         val resources = resourceRepository.findByWordLike(word)
         return if (resources.isNotEmpty()) resources.first() else null
     }
 
-    fun findFirstByWordAndAudioFileUrlLike(word: String, audioFileName: String): Resource? {
-        return resourceRepository
+    fun findFirstByWordAndAudioFileUrlLike(
+        word: String,
+        audioFileName: String,
+    ): Resource? =
+        resourceRepository
             .findFirstByWordAndAudioFileUrlLike(word, audioFileName)
             .orElse(null)
-    }
 
     fun save(resource: Resource): Resource = resourceRepository.save(resource)
 
-    fun findAll(): List<Resource> = resourceRepository.findAll().iterator().asSequence().toList()
+    fun findAll(): List<Resource> =
+        resourceRepository
+            .findAll()
+            .iterator()
+            .asSequence()
+            .toList()
 
-    fun updateDescription(id: Long, description: String): ResourceResponse {
-        return resourceRepository.findByIdOrNull(id)?.let {
+    fun updateDescription(
+        id: Long,
+        description: String,
+    ): ResourceResponse =
+        resourceRepository.findByIdOrNull(id)?.let {
             it.description = description
             resourceRepository.save(it)
             it.toResponse()
         } ?: throw EntityNotFoundException("Resource not found by id=$id")
-    }
 
     fun saveAll(resources: List<Resource>): List<Resource> = resourceRepository.saveAll(resources).toList()
 }

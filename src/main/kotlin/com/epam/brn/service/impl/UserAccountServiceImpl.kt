@@ -33,36 +33,36 @@ class UserAccountServiceImpl(
     private lateinit var prefix: String
 
     override fun findUserByEmail(email: String): UserAccountDto =
-        userAccountRepository.findUserAccountByEmail(email)
+        userAccountRepository
+            .findUserAccountByEmail(email)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
 
-    override fun findUserDtoByUuid(uuid: String): UserAccountDto? =
-        userAccountRepository.findByUserId(uuid)?.toDto()
+    override fun findUserDtoByUuid(uuid: String): UserAccountDto? = userAccountRepository.findByUserId(uuid)?.toDto()
 
     override fun createUser(firebaseUserRecord: UserRecord): UserAccountDto {
         val existUser = userAccountRepository.findUserAccountByEmail(firebaseUserRecord.email)
         existUser.ifPresent {
             throw IllegalArgumentException("The user already exists!")
         }
-        val userAccount = UserAccount(
-            fullName = firebaseUserRecord.displayName,
-            email = firebaseUserRecord.email,
-            userId = firebaseUserRecord.uid
-        )
+        val userAccount =
+            UserAccount(
+                fullName = firebaseUserRecord.displayName,
+                email = firebaseUserRecord.email,
+                userId = firebaseUserRecord.uid,
+            )
         userAccount.roleSet = getDefaultRoleSet()
         return userAccountRepository.save(userAccount).toDto()
     }
 
-    override fun findUserDtoById(id: Long): UserAccountDto =
-        findUserById(id).toDto()
+    override fun findUserDtoById(id: Long): UserAccountDto = findUserById(id).toDto()
 
     override fun findUserById(id: Long): UserAccount =
-        userAccountRepository.findUserAccountById(id)
+        userAccountRepository
+            .findUserAccountById(id)
             .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
 
-    override fun getAllHeadphonesForUser(userId: Long) =
-        headphonesService.getAllHeadphonesForUser(userId)
+    override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
 
     override fun getAllHeadphonesForCurrentUser() =
         getCurrentUser()
@@ -73,7 +73,8 @@ class UserAccountServiceImpl(
 
     override fun getCurrentUser(): UserAccount {
         val email = getCurrentUserEmail()
-        return userAccountRepository.findUserAccountByEmail(email)
+        return userAccountRepository
+            .findUserAccountByEmail(email)
             .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
     }
 
@@ -83,16 +84,16 @@ class UserAccountServiceImpl(
         return userAccountRepository.updateLastVisitByEmail(email, lastVisit)
     }
 
-    override fun getCurrentUserDto(): UserAccountDto =
-        getCurrentUser().toDto()
+    override fun getCurrentUserDto(): UserAccountDto = getCurrentUser().toDto()
 
-    override fun getCurrentUserRoles(): Set<String> =
-        getCurrentUserDto().roles.toSet()
+    override fun getCurrentUserRoles(): Set<String> = getCurrentUserDto().roles.toSet()
 
-    override fun getCurrentUserId(): Long =
-        getCurrentUser().id!!
+    override fun getCurrentUserId(): Long = getCurrentUser().id!!
 
-    override fun getUsers(pageable: Pageable, role: String): List<UserAccountDto> =
+    override fun getUsers(
+        pageable: Pageable,
+        role: String,
+    ): List<UserAccountDto> =
         userAccountRepository
             .findUsersAccountsByRole(role)
             .map { it.toDto() }
@@ -103,7 +104,10 @@ class UserAccountServiceImpl(
         return userAccountRepository.save(currentUserAccount).toDto()
     }
 
-    override fun addHeadphonesToUser(userId: Long, headphonesDto: HeadphonesDto): HeadphonesDto {
+    override fun addHeadphonesToUser(
+        userId: Long,
+        headphonesDto: HeadphonesDto,
+    ): HeadphonesDto {
         val userAccount = findUserById(userId)
         val entityHeadphones = headphonesDto.toEntity()
         entityHeadphones.userAccount = userAccount
@@ -118,22 +122,27 @@ class UserAccountServiceImpl(
 
     override fun deleteHeadphonesForCurrentUser(headphonesId: Long) {
         val currentUserAccount = getCurrentUser()
-        val headphones = currentUserAccount.headphones.firstOrNull { it.id == headphonesId }
-            ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
+        val headphones =
+            currentUserAccount.headphones.firstOrNull { it.id == headphonesId }
+                ?: throw EntityNotFoundException("Can not delete headphones. No headphones was found by Id=$headphonesId")
         headphones.active = false
         headphonesService.save(headphones)
     }
 
-    override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto {
-        return getCurrentUser().let {
-            if (userChangeRequest.isNotEmpty())
-                userAccountRepository.save(it.updateFields(changeRequest = userChangeRequest))
-            else it
-        }.toDto()
-    }
+    override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto =
+        getCurrentUser()
+            .let {
+                if (userChangeRequest.isNotEmpty()) {
+                    userAccountRepository.save(it.updateFields(changeRequest = userChangeRequest))
+                } else {
+                    it
+                }
+            }.toDto()
 
-    override fun updateDoctorForPatient(userId: Long, doctorId: Long): UserAccount =
-        userAccountRepository.save(findUserById(userId).apply { doctor = findUserById(doctorId) })
+    override fun updateDoctorForPatient(
+        userId: Long,
+        doctorId: Long,
+    ): UserAccount = userAccountRepository.save(findUserById(userId).apply { doctor = findUserById(doctorId) })
 
     override fun removeDoctorFromPatient(userId: Long): UserAccount =
         userAccountRepository.save(findUserById(userId).apply { doctor = null })
@@ -166,20 +175,23 @@ class UserAccountServiceImpl(
 
     private fun getNameFromPrincipals(authentication: Authentication): String {
         val principal = authentication.principal
-        if (principal is UserDetails)
+        if (principal is UserDetails) {
             return principal.username
-        if (principal is Principal)
+        }
+        if (principal is Principal) {
             return principal.name
+        }
         throw EntityNotFoundException("There is no user in the session")
     }
 
-    private fun getDefaultRoleSet(): MutableSet<Role> =
-        setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
+    private fun getDefaultRoleSet(): MutableSet<Role> = setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
 
     override fun deleteAutoTestUsers(): Long = userAccountRepository.deleteUserAccountsByEmailStartsWith(prefix)
+
     override fun deleteAutoTestUserByEmail(email: String): Long =
-        if (email.startsWith(prefix))
-             userAccountRepository.deleteUserAccountByEmailIs(email)
-         else
+        if (email.startsWith(prefix)) {
+            userAccountRepository.deleteUserAccountByEmailIs(email)
+        } else {
             throw IllegalArgumentException("email = [$email] must start with prefix = [$prefix]")
+        }
 }

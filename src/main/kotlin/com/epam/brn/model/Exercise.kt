@@ -38,14 +38,13 @@ class Exercise(
     var active: Boolean = true,
     var playWordsCount: Int = 1,
     var wordsColumns: Int = 3,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_group_id")
     var subGroup: SubGroup? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val tasks: MutableSet<Task> = LinkedHashSet(),
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val signals: MutableSet<Signal> = LinkedHashSet()
+    val signals: MutableSet<Signal> = LinkedHashSet(),
 ) {
     @LastModifiedBy
     @Column(name = "changed_by")
@@ -54,35 +53,38 @@ class Exercise(
     @Column(name = "changed_when")
     @LastModifiedDate
     var changedWhen: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
-    fun toDto(available: Boolean = true) = ExerciseDto(
-        seriesId = subGroup?.id,
-        id = id,
-        name = name,
-        template = template,
-        level = level,
-        noise = NoiseDto(noiseLevel, noiseUrl),
-        available = available,
-        tasks = tasks.map { task -> task.toTaskResponse(ExerciseType.valueOf(this.subGroup!!.series.type)) },
-        signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
-        active = active,
-        changedBy = changedBy,
-        changedWhen = changedWhen,
-        playWordsCount = playWordsCount,
-        wordsColumns = wordsColumns,
-    )
 
-    fun toDtoWithWords() = ExerciseWithWordsResponse(
-        id = id,
-        name = name,
-        active = active,
-        changedBy = changedBy,
-        changedWhen = changedWhen,
-        playWordsCount = playWordsCount,
-        wordsColumns = wordsColumns,
-        words = tasks.flatMap { it.answerOptions }.associate { it.id!! to it.word },
-        subGroupName = subGroup?.name,
-        seriesName = subGroup?.series?.name
-    )
+    fun toDto(available: Boolean = true) =
+        ExerciseDto(
+            seriesId = subGroup?.id,
+            id = id,
+            name = name,
+            template = template,
+            level = level,
+            noise = NoiseDto(noiseLevel, noiseUrl),
+            available = available,
+            tasks = tasks.map { task -> task.toTaskResponse(ExerciseType.valueOf(this.subGroup!!.series.type)) },
+            signals = signals.map { signal -> signal.toSignalDto() }.toMutableList(),
+            active = active,
+            changedBy = changedBy,
+            changedWhen = changedWhen,
+            playWordsCount = playWordsCount,
+            wordsColumns = wordsColumns,
+        )
+
+    fun toDtoWithWords() =
+        ExerciseWithWordsResponse(
+            id = id,
+            name = name,
+            active = active,
+            changedBy = changedBy,
+            changedWhen = changedWhen,
+            playWordsCount = playWordsCount,
+            wordsColumns = wordsColumns,
+            words = tasks.flatMap { it.answerOptions }.associate { it.id!! to it.word },
+            subGroupName = subGroup?.name,
+            seriesName = subGroup?.series?.name,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

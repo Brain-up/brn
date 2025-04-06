@@ -14,7 +14,13 @@ data class GitHubApiClientProperty(
     val connectionTimeout: Int,
     val readTimeout: Int,
 ) {
-    data class GitHubApiUrl(val base: String, val path: GitHubApiPath) {
-        data class GitHubApiPath(val contributors: String, val users: String)
+    data class GitHubApiUrl(
+        val base: String,
+        val path: GitHubApiPath,
+    ) {
+        data class GitHubApiPath(
+            val contributors: String,
+            val users: String,
+        )
     }
 }

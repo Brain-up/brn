@@ -15,10 +15,9 @@ class SinAudiometryResult(
     val id: Long = 0,
     val frequency: Int,
     val soundLevel: Int,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_history_id")
-    var audiometryHistory: AudiometryHistory? = null
+    var audiometryHistory: AudiometryHistory? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

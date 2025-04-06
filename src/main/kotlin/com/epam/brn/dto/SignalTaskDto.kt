@@ -9,5 +9,5 @@ data class SignalTaskDto(
     val name: String? = "",
     val url: String? = "",
     val frequency: Int? = null,
-    val length: Int? = null
+    val length: Int? = null,
 )

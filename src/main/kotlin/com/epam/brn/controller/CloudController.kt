@@ -30,16 +30,18 @@ import javax.annotation.security.RolesAllowed
 @RolesAllowed(BrnRole.USER)
 class CloudController(
     @Autowired private val cloudService: CloudService,
-    @Autowired private val cloudUploadService: CloudUploadService
+    @Autowired private val cloudUploadService: CloudUploadService,
 ) {
-
     @GetMapping("/upload")
     @Operation(summary = "Get cloud upload form")
     @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Throws(Exception::class)
-    fun signatureForClientDirectUpload(@RequestParam filePath: String?): ResponseEntity<BrnResponse<Map<String, Any>>> {
-        if (filePath.isNullOrEmpty())
+    fun signatureForClientDirectUpload(
+        @RequestParam filePath: String?,
+    ): ResponseEntity<BrnResponse<Map<String, Any>>> {
+        if (filePath.isNullOrEmpty()) {
             throw IllegalArgumentException("File path should be non empty")
+        }
         val signedForm = cloudService.uploadForm(filePath)
         return ResponseEntity.ok(BrnResponse(signedForm))
     }
@@ -47,26 +49,23 @@ class CloudController(
     @GetMapping("/url")
     @Operation(summary = "Get cloud bucket url")
     @Throws(Exception::class)
-    fun bucketUrl(): ResponseEntity<BrnResponse<String>> =
-        ResponseEntity.ok(BrnResponse(cloudService.bucketUrl()))
+    fun bucketUrl(): ResponseEntity<BrnResponse<String>> = ResponseEntity.ok(BrnResponse(cloudService.bucketUrl()))
 
     @GetMapping("/baseFileUrl")
     @Operation(summary = "Get cloud base file url")
     @Throws(Exception::class)
-    fun baseFileUrl(): ResponseEntity<BrnResponse<String>> =
-        ResponseEntity.ok(BrnResponse(cloudService.baseFileUrl()))
+    fun baseFileUrl(): ResponseEntity<BrnResponse<String>> = ResponseEntity.ok(BrnResponse(cloudService.baseFileUrl()))
 
     @GetMapping("/folders")
     @Operation(summary = "Get cloud folder structure")
     @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     @Throws(Exception::class)
-    fun listBucket(): ResponseEntity<BrnResponse<List<String>>> =
-        ResponseEntity.ok(BrnResponse(cloudService.getStorageFolders()))
+    fun listBucket(): ResponseEntity<BrnResponse<List<String>>> = ResponseEntity.ok(BrnResponse(cloudService.getStorageFolders()))
 
     @PostMapping(value = ["/upload/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
     @Operation(summary = "Load unverified picture file to cloud storage")
     fun loadUnverifiedPicture(
-        @RequestParam(value = "file") multipartFile: MultipartFile
+        @RequestParam(value = "file") multipartFile: MultipartFile,
     ): ResponseEntity<BrnResponse<Any>> {
         cloudUploadService.uploadUnverifiedPictureFile(multipartFile)
         return ResponseEntity(HttpStatus.CREATED)
@@ -77,10 +76,9 @@ class CloudController(
     @RolesAllowed(BrnRole.ADMIN)
     fun uploadContributorPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile,
-        @RequestParam(value = "fileName") fileName: String
-    ): ResponseEntity<BrnResponse<String>> {
-        return ResponseEntity
+        @RequestParam(value = "fileName") fileName: String,
+    ): ResponseEntity<BrnResponse<String>> =
+        ResponseEntity
             .status(HttpStatus.CREATED)
             .body(BrnResponse(cloudUploadService.uploadContributorPicture(multipartFile, fileName)))
-    }
 }

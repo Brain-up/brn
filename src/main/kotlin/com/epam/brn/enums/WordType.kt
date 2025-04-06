@@ -10,11 +10,12 @@ enum class WordType {
     PHRASE,
     SENTENCE,
     AUDIOMETRY_WORD,
-    UNKNOWN;
+    UNKNOWN,
+    ;
 
     companion object {
-        fun of(wordGroupPosition: Int): WordType {
-            return when (wordGroupPosition) {
+        fun of(wordGroupPosition: Int): WordType =
+            when (wordGroupPosition) {
                 0 -> COUNT
                 1 -> OBJECT_DESCRIPTION
                 2 -> OBJECT
@@ -23,6 +24,5 @@ enum class WordType {
                 5 -> ADDITION_OBJECT
                 else -> UNKNOWN
             }
-        }
     }
 }

@@ -8,9 +8,15 @@ import java.util.Optional
 
 @Repository
 interface AudiometryRepository : JpaRepository<Audiometry, Long> {
-    fun findByAudiometryTypeAndLocale(audiometryType: String, locale: String): Audiometry?
+    fun findByAudiometryTypeAndLocale(
+        audiometryType: String,
+        locale: String,
+    ): Audiometry?
+
     fun findByAudiometryType(audiometryType: String): List<Audiometry>
+
     fun findByLocale(locale: String): List<Audiometry>
+
     fun findByName(locale: String): Optional<Audiometry>
 
     @Query("select distinct a from Audiometry a left JOIN FETCH a.audiometryTasks where a.id = ?1")

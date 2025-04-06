@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface HeadphonesRepository : JpaRepository<Headphones, Long> {
-
     @Query(
-        "SELECT headphones FROM Headphones headphones WHERE headphones.userAccount.id = :userId AND headphones.active = true"
+        "SELECT headphones FROM Headphones headphones WHERE headphones.userAccount.id = :userId AND headphones.active = true",
     )
-    fun getHeadphonesForUser(@Param("userId") userId: Long): List<Headphones>
+    fun getHeadphonesForUser(
+        @Param("userId") userId: Long,
+    ): List<Headphones>
 }

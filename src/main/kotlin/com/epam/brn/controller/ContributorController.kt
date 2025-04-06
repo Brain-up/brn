@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
 import com.epam.brn.dto.request.contributor.ContributorRequest
-import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.dto.response.BrnResponse
+import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.service.ContributorService
@@ -26,33 +26,40 @@ import javax.validation.Valid
 @RequestMapping("/contributors")
 @Tag(
     name = "Contributors",
-    description = "Contains actions over contributors of this project"
+    description = "Contains actions over contributors of this project",
 )
-class ContributorController(val contributorService: ContributorService) {
-
+class ContributorController(
+    val contributorService: ContributorService,
+) {
     @GetMapping
     @Operation(summary = "Get all contributors by type")
     fun getContributors(
         @RequestParam(name = "locale", required = false, defaultValue = "ru-ru") locale: String,
         @RequestParam(name = "type", required = false) type: ContributorType?,
-    ): ResponseEntity<BrnResponse<List<ContributorResponse>>> = ResponseEntity.ok()
-        .body(
-            BrnResponse(
-                data = if (type == null)
-                    contributorService.getAllContributors()
-                else
-                    contributorService.getContributors(locale, type)
+    ): ResponseEntity<BrnResponse<List<ContributorResponse>>> =
+        ResponseEntity
+            .ok()
+            .body(
+                BrnResponse(
+                    data =
+                        if (type == null) {
+                            contributorService.getAllContributors()
+                        } else {
+                            contributorService.getContributors(locale, type)
+                        },
+                ),
             )
-        )
 
     @PostMapping
     @Operation(summary = "Add a new contributor")
     @RolesAllowed(BrnRole.ADMIN)
     fun createContributor(
         @Parameter(description = "Contributor data", required = true)
-        @Valid @RequestBody contributorDto: ContributorRequest
+        @Valid
+        @RequestBody contributorDto: ContributorRequest,
     ): ResponseEntity<BrnResponse<ContributorResponse>> =
-        ResponseEntity.status(HttpStatus.CREATED)
+        ResponseEntity
+            .status(HttpStatus.CREATED)
             .body(BrnResponse(data = contributorService.createContributor(contributorDto)))
 
     @PutMapping("/{contributorId}")
@@ -61,8 +68,10 @@ class ContributorController(val contributorService: ContributorService) {
     fun updateContributor(
         @PathVariable("contributorId") contributorId: Long,
         @Parameter(description = "Contributor data", required = true)
-        @Valid @RequestBody contributorDto: ContributorRequest
+        @Valid
+        @RequestBody contributorDto: ContributorRequest,
     ): ResponseEntity<BrnResponse<ContributorResponse>> =
-        ResponseEntity.ok()
+        ResponseEntity
+            .ok()
             .body(BrnResponse(data = contributorService.updateContributor(contributorId, contributorDto)))
 }

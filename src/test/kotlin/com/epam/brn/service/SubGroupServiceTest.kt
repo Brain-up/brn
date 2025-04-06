@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
-import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
+import com.epam.brn.dto.response.SubGroupResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
@@ -25,7 +25,6 @@ import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class SubGroupServiceTest {
-
     @InjectMockKs
     private lateinit var subGroupService: SubGroupService
 
@@ -52,7 +51,8 @@ internal class SubGroupServiceTest {
         val subGroupResponse = SubGroupResponse(seriesId, 1L, 5, "name", pictureUrl, "description", false)
         val subGroupResponseWithPictures1 = SubGroupResponse(seriesId, 2L, 1, "name", pictureUrl, "description", true)
         val subGroupResponseWithPictures2 = SubGroupResponse(seriesId, 2L, 2, "name", pictureUrl, "description", true)
-        every { subGroupRepository.findBySeriesId(seriesId) } returns listOf(subGroupMockk, subGroupMockkWithPictures2, subGroupMockkWithPictures1)
+        every { subGroupRepository.findBySeriesId(seriesId) } returns
+            listOf(subGroupMockk, subGroupMockkWithPictures2, subGroupMockkWithPictures1)
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns pictureUrl
         every { subGroupMockk.toResponse(pictureUrl) } returns subGroupResponse
         every { subGroupMockkWithPictures1.toResponse(pictureUrl) } returns subGroupResponseWithPictures1
@@ -180,7 +180,7 @@ internal class SubGroupServiceTest {
         shouldThrow<IllegalArgumentException> {
             subGroupService.addSubGroupToSeries(
                 seriesId = seriesId,
-                subGroupRequest = subGroupRequest
+                subGroupRequest = subGroupRequest,
             )
         }
     }
@@ -197,13 +197,13 @@ internal class SubGroupServiceTest {
         shouldThrow<EntityNotFoundException> {
             subGroupService.addSubGroupToSeries(
                 seriesId = seriesId,
-                subGroupRequest = subGroupRequest
+                subGroupRequest = subGroupRequest,
             )
         }
     }
 
     @Test
-    fun`updateSubGroupById should update existing subgroup`() {
+    fun `updateSubGroupById should update existing subgroup`() {
         // GIVEN
         val subGroupId = 1L
         val subGroupChangeRequest = SubGroupChangeRequest(withPictures = true)
@@ -219,7 +219,7 @@ internal class SubGroupServiceTest {
     }
 
     @Test
-    fun`updateSubGroupById should throw exception when subgroup does not exist`() {
+    fun `updateSubGroupById should throw exception when subgroup does not exist`() {
         // GIVEN
         val subGroupId = 1L
         every { subGroupRepository.findById(subGroupId) } returns Optional.empty()

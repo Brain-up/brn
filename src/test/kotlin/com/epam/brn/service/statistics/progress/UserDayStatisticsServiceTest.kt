@@ -22,7 +22,6 @@ import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class UserDayStatisticsServiceTest {
-
     @InjectMockKs
     private lateinit var userDayStatisticsService: UserDayStatisticsService
 
@@ -67,18 +66,19 @@ internal class UserDayStatisticsServiceTest {
         every {
             progressStatusManager.getStatus(
                 UserExercisingPeriod.DAY,
-                studyHistories
+                studyHistories,
             )
         } returns userProgress
         every { studyHistory.executionSeconds } returns exercisingSeconds
         every {
             studyHistoryRepository.getHistories(userAccountId, from, to)
         } returns studyHistories
-        val expectedStatistic = DayStudyStatistics(
-            date = studyHistoryDate,
-            exercisingTimeSeconds = exercisingSeconds,
-            progress = userProgress
-        )
+        val expectedStatistic =
+            DayStudyStatistics(
+                date = studyHistoryDate,
+                exercisingTimeSeconds = exercisingSeconds,
+                progress = userProgress,
+            )
 
         // WHEN
         val statisticForPeriod = userDayStatisticsService.getStatisticsForPeriod(from, to)

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class WordsServiceTest {
-
     @InjectMockKs
     lateinit var wordsService: WordsService
 

@@ -8,5 +8,5 @@ import com.epam.brn.dto.statistics.Statistics
 data class SubGroupStatisticsResponse(
     val subGroupId: Long,
     val completedExercises: Int = 0,
-    val totalExercises: Int
+    val totalExercises: Int,
 ) : Statistics(progress = null)

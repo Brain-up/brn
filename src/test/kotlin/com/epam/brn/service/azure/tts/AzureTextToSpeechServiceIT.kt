@@ -21,19 +21,19 @@ import org.springframework.transaction.annotation.Transactional
 
 @TestPropertySource(properties = ["default.tts.provider=azure"])
 class AzureTextToSpeechServiceIT : BaseWireMockIT() {
-
     @Autowired
     private lateinit var service: AzureTextToSpeechService
 
     @Autowired
     private lateinit var azureVoiceRepo: AzureVoiceInfoRepository
 
-    private val params = AudioFileMetaData(
-        voice = "af-ZA-AdriNeural",
-        gender = "Female",
-        locale = "af-ZA",
-        text = "text"
-    )
+    private val params =
+        AudioFileMetaData(
+            voice = "af-ZA-AdriNeural",
+            gender = "Female",
+            locale = "af-ZA",
+            text = "text",
+        )
     private val audioData = byteArrayOf(10, 20, 30, 40, 50)
 
     @AfterEach
@@ -96,8 +96,8 @@ class AzureTextToSpeechServiceIT : BaseWireMockIT() {
                     aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                        .withBodyFile("azure/tts/allVoices.json")
-                )
+                        .withBodyFile("azure/tts/allVoices.json"),
+                ),
         )
     }
 
@@ -108,8 +108,8 @@ class AzureTextToSpeechServiceIT : BaseWireMockIT() {
                     aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeader(CONTENT_TYPE, "audio/mpeg")
-                        .withBody(audioData)
-                )
+                        .withBody(audioData),
+                ),
         )
     }
 }

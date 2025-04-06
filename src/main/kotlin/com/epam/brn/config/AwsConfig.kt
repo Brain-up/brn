@@ -30,7 +30,7 @@ class AwsConfig(
     @Value("\${aws.credentialsPath:}") credentialsPath: String,
     @Value("\${aws.accessKeyId:}") accessKeyIdProperty: String,
     @Value("\${aws.secretAccessKey:}") secretAccessKeyProperty: String,
-    @Value("\${aws.region}") val region: String
+    @Value("\${aws.region}") val region: String,
 ) {
     private val log = logger()
 
@@ -61,6 +61,7 @@ class AwsConfig(
     val baseFileUrl: String = ""
 
     fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
+
     fun uuid(): String = UUID.randomUUID().toString()
 
     private lateinit var accessKeyId: String
@@ -89,13 +90,15 @@ class AwsConfig(
 
     @Bean
     fun s3Client(): S3Client {
-        val credentials = StaticCredentialsProvider.create(
-            AwsBasicCredentials.create(
-                accessKeyId,
-                secretAccessKey
+        val credentials =
+            StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(
+                    accessKeyId,
+                    secretAccessKey,
+                ),
             )
-        )
-        return S3Client.builder()
+        return S3Client
+            .builder()
             .credentialsProvider(credentials)
             .region(Region.of(region))
             .build()
@@ -109,8 +112,17 @@ class AwsConfig(
         val amzDateTime = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")!!.format(instant())
 
         return Conditions(
-            date, bucketName, accessRule, uuid(), credential,
-            amzDateTime, expiration, filePath, successActionRedirect, contentTypeStartsWith, metaTagStartsWith
+            date,
+            bucketName,
+            accessRule,
+            uuid(),
+            credential,
+            amzDateTime,
+            expiration,
+            filePath,
+            successActionRedirect,
+            contentTypeStartsWith,
+            metaTagStartsWith,
         )
     }
 
@@ -127,7 +139,7 @@ class AwsConfig(
         uploadKey: String,
         successActionRedirect: String,
         contentTypeStartsWith: String,
-        metaTagStartsWith: String
+        metaTagStartsWith: String,
     ) {
         val date: String = date
         val bucket: Pair<String, String> = "bucket" to bucket
@@ -143,8 +155,8 @@ class AwsConfig(
         val contentTypeStartsWith: Pair<String, String> = "Content-Type" to contentTypeStartsWith
         val metaTagStartsWith: Pair<String, String> = "x-amz-meta-tag" to metaTagStartsWith
 
-        override fun toString(): String {
-            return "Conditions(date='$date'," +
+        override fun toString(): String =
+            "Conditions(date='$date'," +
                 " bucket=$bucket," +
                 " acl=$acl, uuid=$uuid," +
                 " serverSideEncryption=$serverSideEncryption," +
@@ -153,6 +165,5 @@ class AwsConfig(
                 " uploadKey=$uploadKey, successActionRedirect=$successActionRedirect," +
                 " contentTypeStartsWith=$contentTypeStartsWith," +
                 " metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
-        }
     }
 }

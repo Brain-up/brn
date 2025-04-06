@@ -29,28 +29,29 @@ class Series(
     @JoinColumn(name = "exercise_group_id")
     var exerciseGroup: ExerciseGroup,
     @OneToMany(mappedBy = "series", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val subGroups: MutableSet<SubGroup> = LinkedHashSet()
+    val subGroups: MutableSet<SubGroup> = LinkedHashSet(),
 ) {
-
     constructor(record: SeriesGenericRecord, exerciseGroup: ExerciseGroup) : this(
         exerciseGroup = exerciseGroup,
         level = record.level,
         type = ExerciseType.valueOf(record.type).toString(),
         name = record.name,
-        description = record.description
+        description = record.description,
     )
 
-    fun toDto() = SeriesDto(
-        group = exerciseGroup.id!!,
-        id = id,
-        level = level,
-        name = name,
-        type = ExerciseType.valueOf(type),
-        description = description,
-        subGroups = subGroups
-            .sortedBy { it.withPictures }
-            .map { subGroup -> subGroup.id!! }
-    )
+    fun toDto() =
+        SeriesDto(
+            group = exerciseGroup.id!!,
+            id = id,
+            level = level,
+            name = name,
+            type = ExerciseType.valueOf(type),
+            description = description,
+            subGroups =
+                subGroups
+                    .sortedBy { it.withPictures }
+                    .map { subGroup -> subGroup.id!! },
+        )
 
     override fun toString() = "Series(id=$id, type=$type, level=$level, name='$name', description='$description')"
 

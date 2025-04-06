@@ -20,7 +20,7 @@ data class UserAccountCreateRequest(
     @field:Email(message = "{validation.field.email.invalid-format}")
     @field:Pattern(
         regexp = VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE,
-        message = "{validation.field.email.invalid-format.cyrillic.not.allowed}"
+        message = "{validation.field.email.invalid-format.cyrillic.not.allowed}",
     )
     val email: String,
     @field:NotBlank(message = "{validation.field.password.blank}")
@@ -32,16 +32,18 @@ data class UserAccountCreateRequest(
     val gender: BrnGender,
     val avatar: String? = null,
     val photo: String? = null,
-    val description: String? = null
+    val description: String? = null,
 ) {
     var roles: MutableSet<String>? = mutableSetOf()
-    fun toModel() = UserAccount(
-        fullName = name,
-        email = email,
-        bornYear = bornYear,
-        gender = gender.toString(),
-        avatar = avatar,
-        photo = photo,
-        description = description
-    )
+
+    fun toModel() =
+        UserAccount(
+            fullName = name,
+            email = email,
+            bornYear = bornYear,
+            gender = gender.toString(),
+            avatar = avatar,
+            photo = photo,
+            description = description,
+        )
 }

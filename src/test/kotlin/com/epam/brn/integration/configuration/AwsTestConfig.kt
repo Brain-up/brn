@@ -20,14 +20,13 @@ import java.time.ZoneOffset
 @Configuration
 @Testcontainers
 class AwsTestConfig {
-
     companion object {
-
         const val BUCKET_NAME = "somebucket"
 
         @Container
-        public var localStack = LocalStackContainer(DockerImageName.parse("localstack/localstack:0.14.3"))
-            .withServices(LocalStackContainer.Service.S3)
+        public var localStack =
+            LocalStackContainer(DockerImageName.parse("localstack/localstack:0.14.3"))
+                .withServices(LocalStackContainer.Service.S3)
 
         init {
             localStack.start()
@@ -41,33 +40,37 @@ class AwsTestConfig {
         @Value("\${aws.credentialsPath}") credentialsPath: String,
         @Value("\${aws.accessKeyId}") accessKeyIdProperty: String,
         @Value("\${aws.secretAccessKey}") secretAccessKeyProperty: String,
-        @Value("\${aws.region}") region: String
-    ): AwsConfig {
-        return object : AwsConfig(expireAfterDuration, accessRuleCanned, credentialsPath, accessKeyIdProperty, secretAccessKeyProperty, region) {
+        @Value("\${aws.region}") region: String,
+    ): AwsConfig =
+        object : AwsConfig(expireAfterDuration, accessRuleCanned, credentialsPath, accessKeyIdProperty, secretAccessKeyProperty, region) {
             override fun instant(): OffsetDateTime = Instant.ofEpochMilli(1580384357114).atOffset(ZoneOffset.UTC)
+
             override fun uuid(): String = "c49791b2-b27b-4edf-bac8-8734164c20e6"
         }
-    }
 
     @Bean
     fun s3Client(): S3Client {
-        val credentials = StaticCredentialsProvider.create(
-            AwsBasicCredentials.create(
-                localStack.accessKey,
-                localStack.secretKey
+        val credentials =
+            StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(
+                    localStack.accessKey,
+                    localStack.secretKey,
+                ),
             )
-        )
 
-        val s3Client = S3Client.builder()
-            .endpointOverride(localStack.getEndpointOverride(LocalStackContainer.Service.S3))
-            .credentialsProvider(credentials)
-            .region(Region.of(localStack.region))
-            .build()
+        val s3Client =
+            S3Client
+                .builder()
+                .endpointOverride(localStack.getEndpointOverride(LocalStackContainer.Service.S3))
+                .credentialsProvider(credentials)
+                .region(Region.of(localStack.region))
+                .build()
 
         s3Client.createBucket(
-            CreateBucketRequest.builder()
+            CreateBucketRequest
+                .builder()
                 .bucket(BUCKET_NAME)
-                .build()
+                .build(),
         )
         return s3Client
     }

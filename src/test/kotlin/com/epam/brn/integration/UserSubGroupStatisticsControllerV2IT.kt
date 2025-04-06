@@ -20,7 +20,6 @@ import kotlin.test.assertNotNull
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class UserSubGroupStatisticsControllerV2IT : BaseIT() {
-
     private val baseUrl = "/v2/statistics"
     private val exercisingYear = 2020
     private val exercisingMonth = 11
@@ -32,6 +31,7 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
     fun deleteAfterTest() {
         deleteInsertedTestData()
     }
+
     @Test
     @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `should return user statistics for days API version 2`() {
@@ -46,13 +46,17 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/week")
-                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
-                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("$baseUrl/study/week")
+                        .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                        .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat)),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val resultStatistic: List<DayStudyStatistics> =
@@ -65,6 +69,7 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
             assertNotNull(it.exercisingTimeSeconds)
         }
     }
+
     @Test
     @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `should return user statistics for days API version 2 for user with role user`() {
@@ -79,13 +84,17 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/week")
-                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
-                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("$baseUrl/study/week")
+                        .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                        .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat)),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val resultStatistic: List<DayStudyStatistics> =
@@ -98,6 +107,7 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
             assertNotNull(it.exercisingTimeSeconds)
         }
     }
+
     @Test
     @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
     fun `should return user statistics for month API version 2`() {
@@ -113,13 +123,17 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/year")
-                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
-                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("$baseUrl/study/year")
+                        .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                        .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat)),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val resultStatistic: List<MonthStudyStatistics> =
@@ -148,13 +162,17 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         val dateFormat = DateTimeFormatter.ISO_DATE_TIME
 
         // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/year")
-                .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
-                .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat))
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("$baseUrl/study/year")
+                        .param(fromParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
+                        .param(toParameterName, LocalDateTime.of(exercisingYear, exercisingMonth, 27, 1, 1).format(dateFormat)),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val resultStatistic: List<MonthStudyStatistics> =
@@ -196,18 +214,22 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         insertDefaultStudyHistory(user, exercise1, LocalDateTime.of(exercisingYear, exercisingMonth, 3, 13, 0), 5, 2, 1, 1)
 
         // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/day")
-                .param(dayParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("$baseUrl/study/day")
+                        .param(dayParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat)),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val resultStatistic: List<UserDailyDetailStatisticsDto> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
-                object : TypeReference<List<UserDailyDetailStatisticsDto>>() {}
+                object : TypeReference<List<UserDailyDetailStatisticsDto>>() {},
             )
 
         // THEN
@@ -257,18 +279,22 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         insertDefaultStudyHistory(user, exercise1, LocalDateTime.of(exercisingYear, exercisingMonth, 3, 13, 0), 5, 2, 1, 1)
 
         // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get("$baseUrl/study/day")
-                .param(dayParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat))
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get("$baseUrl/study/day")
+                        .param(dayParamName, LocalDateTime.of(exercisingYear, exercisingMonth, 1, 1, 1).format(dateFormat)),
+                ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val resultStatistic: List<UserDailyDetailStatisticsDto> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
-                object : TypeReference<List<UserDailyDetailStatisticsDto>>() {}
+                object : TypeReference<List<UserDailyDetailStatisticsDto>>() {},
             )
 
         // THEN

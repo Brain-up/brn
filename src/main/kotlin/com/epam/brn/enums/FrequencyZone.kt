@@ -5,5 +5,5 @@ enum class FrequencyZone {
     MEDIUM_LOW,
     MEDIUM,
     MEDIUM_HIGH,
-    HIGH
+    HIGH,
 }

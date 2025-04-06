@@ -18,17 +18,18 @@ class GitHubUser(
     var avatarUrl: String?,
     var bio: String?,
     var company: String?,
-    var contributions: Long
+    var contributions: Long,
 ) {
-    fun toDto(): GitHubUserDto = GitHubUserDto(
-        id = id,
-        login = login,
-        name = name,
-        email = email,
-        avatarUrl = avatarUrl,
-        bio = bio,
-        company = company,
-    )
+    fun toDto(): GitHubUserDto =
+        GitHubUserDto(
+            id = id,
+            login = login,
+            name = name,
+            email = email,
+            avatarUrl = avatarUrl,
+            bio = bio,
+            company = company,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

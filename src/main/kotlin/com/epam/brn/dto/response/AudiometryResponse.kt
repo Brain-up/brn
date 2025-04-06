@@ -11,5 +11,5 @@ data class AudiometryResponse(
     var name: String,
     val audiometryType: AudiometryType,
     var description: String?,
-    val audiometryTasks: Any
+    val audiometryTasks: Any,
 )

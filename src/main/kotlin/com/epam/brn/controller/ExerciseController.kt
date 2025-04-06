@@ -35,17 +35,18 @@ import javax.validation.Valid
 class ExerciseController(
     @Autowired val exerciseService: ExerciseService,
     @Autowired val csvUploadService: CsvUploadService,
-    @Autowired val roleService: RoleService
+    @Autowired val roleService: RoleService,
 ) {
-
     @PostMapping
     @Operation(summary = "Create new exercise for existing subgroup")
     @RolesAllowed(BrnRole.ADMIN)
     fun createExercise(
         @Parameter(description = "Exercise data", required = true)
-        @Valid @RequestBody exerciseCreateDto: ExerciseCreateDto
+        @Valid
+        @RequestBody exerciseCreateDto: ExerciseCreateDto,
     ): ResponseEntity<BrnResponse<ExerciseDto>> =
-        ResponseEntity.status(HttpStatus.CREATED)
+        ResponseEntity
+            .status(HttpStatus.CREATED)
             .body(BrnResponse(data = exerciseService.createExercise(exerciseCreateDto)))
 
     @GetMapping
@@ -53,25 +54,26 @@ class ExerciseController(
     fun getExercisesBySubGroup(
         @RequestParam(
             value = "subGroupId",
-            required = true
-        ) subGroupId: Long
+            required = true,
+        ) subGroupId: Long,
     ): ResponseEntity<BrnResponse<List<ExerciseDto>>> {
-        val result = if (roleService.isCurrentUserAdmin()) {
-            exerciseService.findExercisesWithTasksBySubGroup(subGroupId)
-        } else {
-            exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)
-        }
+        val result =
+            if (roleService.isCurrentUserAdmin()) {
+                exerciseService.findExercisesWithTasksBySubGroup(subGroupId)
+            } else {
+                exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId)
+            }
         return ResponseEntity.ok().body(BrnResponse(data = result))
     }
 
     @GetMapping(value = ["/{exerciseId}"])
     @Operation(summary = "Get exercise by id")
     fun getExercisesByID(
-        @PathVariable("exerciseId") exerciseId: Long
-    ): ResponseEntity<BrnResponse<ExerciseDto>> {
-        return ResponseEntity.ok()
+        @PathVariable("exerciseId") exerciseId: Long,
+    ): ResponseEntity<BrnResponse<ExerciseDto>> =
+        ResponseEntity
+            .ok()
             .body(BrnResponse(data = exerciseService.findExerciseById(exerciseId)))
-    }
 
     @GetMapping(value = ["/byWord"])
     @Operation(summary = "Get exercises containing specified word")
@@ -79,24 +81,26 @@ class ExerciseController(
     fun getExercisesByWord(
         @RequestParam(
             value = "word",
-            required = true
-        ) word: String
-    ): ResponseEntity<BrnResponse<List<ExerciseWithWordsResponse>>> {
-        return ResponseEntity.ok().body(BrnResponse(data = exerciseService.findExercisesByWord(word)))
-    }
+            required = true,
+        ) word: String,
+    ): ResponseEntity<BrnResponse<List<ExerciseWithWordsResponse>>> =
+        ResponseEntity.ok().body(BrnResponse(data = exerciseService.findExercisesByWord(word)))
 
     @PostMapping(value = ["/byIds"])
     @Operation(summary = "Get available exercise ids for current user by input ids which have same subgroup")
     fun getExercisesByIds(
-        @Validated @RequestBody exerciseRequest: ExerciseRequest
-    ): ResponseEntity<BrnResponse<List<Long>>> {
-        return ResponseEntity.ok()
+        @Validated @RequestBody exerciseRequest: ExerciseRequest,
+    ): ResponseEntity<BrnResponse<List<Long>>> =
+        ResponseEntity
+            .ok()
             .body(BrnResponse(data = exerciseService.getAvailableExerciseIds(exerciseRequest.ids)))
-    }
 
     @PutMapping(value = ["/{exerciseId}/active/{active}"])
     @Operation(summary = "Update active status of the exercise")
-    fun updateExerciseStatus(@PathVariable("exerciseId") exerciseId: Long, @PathVariable("active") active: Boolean) {
+    fun updateExerciseStatus(
+        @PathVariable("exerciseId") exerciseId: Long,
+        @PathVariable("active") active: Boolean,
+    ) {
         exerciseService.updateActiveStatus(exerciseId, active)
     }
 
@@ -105,7 +109,7 @@ class ExerciseController(
     @RolesAllowed(BrnRole.ADMIN)
     fun loadExercises(
         @RequestParam(value = "seriesId") seriesId: Long,
-        @RequestParam(value = "taskFile") file: MultipartFile
+        @RequestParam(value = "taskFile") file: MultipartFile,
     ): ResponseEntity<BrnResponse<Any>> {
         csvUploadService.loadExercises(seriesId, file)
         return ResponseEntity(HttpStatus.CREATED)

@@ -12,27 +12,30 @@ import javax.persistence.EntityNotFoundException
 @Component
 class SubgroupGenericRecordProcessor(
     private val seriesRepository: SeriesRepository,
-    private val subGroupRepository: SubGroupRepository
+    private val subGroupRepository: SubGroupRepository,
 ) : RecordProcessor<SubgroupGenericRecord, SubGroup> {
-
-    override fun isApplicable(record: Any): Boolean {
-        return record is SubgroupGenericRecord
-    }
+    override fun isApplicable(record: Any): Boolean = record is SubgroupGenericRecord
 
     @Transactional
-    override fun process(records: List<SubgroupGenericRecord>, locale: BrnLocale): List<SubGroup> {
-        val subGroups = records
-            .map {
-                val series = seriesRepository
-                    .findByTypeAndLocale(it.seriesType, locale.locale)
-                    ?: throw EntityNotFoundException("Series ${it.seriesType} and group locale $locale was not found.")
-                SubGroup(it, series)
-            }
+    override fun process(
+        records: List<SubgroupGenericRecord>,
+        locale: BrnLocale,
+    ): List<SubGroup> {
+        val subGroups =
+            records
+                .map {
+                    val series =
+                        seriesRepository
+                            .findByTypeAndLocale(it.seriesType, locale.locale)
+                            ?: throw EntityNotFoundException("Series ${it.seriesType} and group locale $locale was not found.")
+                    SubGroup(it, series)
+                }
         subGroups.forEach { subGroup ->
             run {
                 val existSubGroup = subGroupRepository.findByNameAndLevel(subGroup.name, subGroup.level)
-                if (existSubGroup == null)
+                if (existSubGroup == null) {
                     subGroupRepository.save(subGroup)
+                }
             }
         }
         return subGroups

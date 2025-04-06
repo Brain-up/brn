@@ -11,23 +11,22 @@ import org.springframework.stereotype.Component
 @Component
 class WeekExercisingStatusRetriever(
     private val requirementsManager: StatusRequirementsManager,
-    private val restTimeRetriever: UserRestTimeRetriever
+    private val restTimeRetriever: UserRestTimeRetriever,
 ) : ExercisingStatusRetriever<List<StudyHistory>> {
     override fun getStatus(progress: List<StudyHistory>): UserExercisingProgressStatus? {
         val periodRequirements = requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK)
         val startTime = progress.minByOrNull { it.startTime }!!.startTime.toLocalDate()
         val endTime = progress.maxByOrNull { it.startTime }!!.startTime.toLocalDate()
-        val maximalUserCoolDownDays = restTimeRetriever.getMaximalUserRestTime(
-            userId = progress.first().userAccount.id,
-            from = startTime,
-            to = endTime
-        )
+        val maximalUserCoolDownDays =
+            restTimeRetriever.getMaximalUserRestTime(
+                userId = progress.first().userAccount.id,
+                from = startTime,
+                to = endTime,
+            )
         val statusRequirement =
             periodRequirements.firstOrNull { 7 - maximalUserCoolDownDays in it.minimalRequirements until it.maximalRequirements }
         return statusRequirement?.status
     }
 
-    override fun getSupportedPeriods(): List<UserExercisingPeriod> {
-        return listOf(UserExercisingPeriod.WEEK)
-    }
+    override fun getSupportedPeriods(): List<UserExercisingPeriod> = listOf(UserExercisingPeriod.WEEK)
 }

@@ -10,15 +10,17 @@ import java.io.InputStream
 @Component
 class SignalSeriesRecordProvider : MappingIteratorProvider<SignalSeriesRecord> {
     override fun iterator(inputStream: InputStream): MappingIterator<SignalSeriesRecord> {
-        val csvMapper = CsvMapper().apply {
-            enable(CsvParser.Feature.TRIM_SPACES)
-        }
+        val csvMapper =
+            CsvMapper().apply {
+                enable(CsvParser.Feature.TRIM_SPACES)
+            }
 
-        val csvSchema = csvMapper
-            .schemaFor(SignalSeriesRecord::class.java)
-            .withColumnReordering(true)
-            .withArrayElementSeparator(";")
-            .withHeader()
+        val csvSchema =
+            csvMapper
+                .schemaFor(SignalSeriesRecord::class.java)
+                .withColumnReordering(true)
+                .withArrayElementSeparator(";")
+                .withHeader()
 
         return csvMapper
             .readerFor(SignalSeriesRecord::class.java)
@@ -26,7 +28,5 @@ class SignalSeriesRecordProvider : MappingIteratorProvider<SignalSeriesRecord> {
             .readValues(inputStream)
     }
 
-    override fun isApplicable(format: String): Boolean {
-        return SignalSeriesRecord.FORMAT == format
-    }
+    override fun isApplicable(format: String): Boolean = SignalSeriesRecord.FORMAT == format
 }

@@ -7,5 +7,5 @@ enum class HeadphonesType {
     IN_EAR_BLUETOOTH,
     ON_EAR_NO_BLUETOOTH,
     OVER_EAR_NO_BLUETOOTH,
-    IN_EAR_NO_BLUETOOTH
+    IN_EAR_NO_BLUETOOTH,
 }

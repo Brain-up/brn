@@ -28,31 +28,37 @@ class AudiometryService(
             .map { a -> a.toDtoWithoutTasks() }
 
     fun getAudiometry(audiometryId: Long): AudiometryResponse {
-        val audiometry = audiometryRepository.findById(audiometryId)
-            .orElseGet { throw EntityNotFoundException("No audiometry was found with id=$audiometryId") }
+        val audiometry =
+            audiometryRepository
+                .findById(audiometryId)
+                .orElseGet { throw EntityNotFoundException("No audiometry was found with id=$audiometryId") }
         val userTasks = getUserAudiometryTasks(audiometry)
         return audiometry.toDtoWithTasks(userTasks)
     }
 
-    fun getUserAudiometryTasks(audiometry: Audiometry): List<AudiometryTask> {
-        return when (audiometry.audiometryType) {
-            AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name -> audiometryTaskRepository.findByAudiometry(
-                audiometry
-            )
+    fun getUserAudiometryTasks(audiometry: Audiometry): List<AudiometryTask> =
+        when (audiometry.audiometryType) {
+            AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name ->
+                audiometryTaskRepository.findByAudiometry(
+                    audiometry,
+                )
             AudiometryType.SPEECH.name -> {
                 val user = userAccountService.getCurrentUser()
                 findSecondSpeechAudiometryTasks(user, audiometry)
             }
             else -> throw IllegalArgumentException("Audiometry `$audiometry` does not supported in the system.")
         }
-    }
 
-    fun findSecondSpeechAudiometryTasks(user: UserAccount, audiometry: Audiometry): List<AudiometryTask> {
+    fun findSecondSpeechAudiometryTasks(
+        user: UserAccount,
+        audiometry: Audiometry,
+    ): List<AudiometryTask> {
         val userHistory = audiometryHistoryRepository.findByUserAndAudiometry(user, audiometry)
-        val mapZoneLastTask = userHistory
-            .groupBy({ it.audiometryTask.frequencyZone }, { it })
-            .map { mapZoneTasks -> Pair(mapZoneTasks.key, mapZoneTasks.value.maxByOrNull { it.startTime }) }
-            .associate { it.first to it.second!!.audiometryTask }
+        val mapZoneLastTask =
+            userHistory
+                .groupBy({ it.audiometryTask.frequencyZone }, { it })
+                .map { mapZoneTasks -> Pair(mapZoneTasks.key, mapZoneTasks.value.maxByOrNull { it.startTime }) }
+                .associate { it.first to it.second!!.audiometryTask }
         val mapZoneTasks = audiometry.audiometryTasks.groupBy({ it.frequencyZone }, { it })
         val nextTasks = mutableListOf<AudiometryTask>()
         mapZoneTasks.forEach { (zone, zoneTasks) ->

@@ -36,7 +36,6 @@ import kotlin.test.assertEquals
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class StudyHistoryIT : BaseIT() {
-
     private val baseUrl = "/study-history"
 
     @Autowired
@@ -95,8 +94,8 @@ class StudyHistoryIT : BaseIT() {
                     historyFirstExerciseOne,
                     historyFirstExerciseTwo,
                     historySecondExerciseOne,
-                    historySecondExerciseTwo
-                )
+                    historySecondExerciseTwo,
+                ),
             )
         // WHEN
         val result = existingUser.id?.let { studyHistoryRepository.findLastByUserAccountId(it) }
@@ -125,16 +124,17 @@ class StudyHistoryIT : BaseIT() {
                     historyFirstExerciseOne,
                     historyFirstExerciseTwo,
                     historySecondExerciseOne,
-                    historySecondExerciseTwo
-                )
+                    historySecondExerciseTwo,
+                ),
             )
         // WHEN
-        val result = existingUser.id?.let {
-            studyHistoryRepository.findLastByUserAccountIdAndExercises(
-                it,
-                listOf(existingExerciseFirst.id!!)
-            )
-        }
+        val result =
+            existingUser.id?.let {
+                studyHistoryRepository.findLastByUserAccountIdAndExercises(
+                    it,
+                    listOf(existingExerciseFirst.id!!),
+                )
+            }
         // THEN
         assertEquals(1, result?.size)
     }
@@ -160,14 +160,15 @@ class StudyHistoryIT : BaseIT() {
                     historyFirstExerciseOne,
                     historyFirstExerciseTwo,
                     historySecondExerciseOne,
-                    historySecondExerciseTwo
-                )
+                    historySecondExerciseTwo,
+                ),
             )
         // WHEN
-        val result = existingUser.id?.let {
-            studyHistoryRepository
-                .getDayTimer(it, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))
-        }
+        val result =
+            existingUser.id?.let {
+                studyHistoryRepository
+                    .getDayTimer(it, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))
+            }
         // THEN
         assertEquals(488, result)
     }
@@ -193,15 +194,16 @@ class StudyHistoryIT : BaseIT() {
                     historyFirstExerciseOne,
                     historyFirstExerciseTwo,
                     historySecondExerciseOne,
-                    historySecondExerciseTwo
-                )
+                    historySecondExerciseTwo,
+                ),
             )
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/todayTimer")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("$baseUrl/todayTimer")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -214,11 +216,12 @@ class StudyHistoryIT : BaseIT() {
         // GIVEN
         insertUser()
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl/todayTimer")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("$baseUrl/todayTimer")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -241,22 +244,24 @@ class StudyHistoryIT : BaseIT() {
         // GIVEN
         val roleUser = insertRole(BrnRole.USER)
 
-        val user1 = UserAccount(
-            fullName = "autotest_n1",
-            email = "autotest_n@1704819771.8820736.com",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user1 =
+            UserAccount(
+                fullName = "autotest_n1",
+                email = "autotest_n@1704819771.8820736.com",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user1.roleSet = mutableSetOf(roleUser)
 
-        val user2 = UserAccount(
-            fullName = "autotest_n1",
-            email = "autotest_n@170472339.1784415.com",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user2 =
+            UserAccount(
+                fullName = "autotest_n1",
+                email = "autotest_n@170472339.1784415.com",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user2.roleSet = mutableSetOf(roleUser)
 
         userAccountRepository.saveAll(listOf(user1, user2))
@@ -274,25 +279,27 @@ class StudyHistoryIT : BaseIT() {
                 listOf(
                     historyFirstExerciseOne,
                     historySecondExerciseOne,
-                )
+                ),
             )
 
         // WHEN
         val count = userAccountService.deleteAutoTestUsers()
 
-        val result1 = user1.id?.let {
-            studyHistoryRepository.findLastByUserAccountIdAndExercises(
-                it,
-                listOf(existingExerciseFirst.id!!)
-            )
-        }
+        val result1 =
+            user1.id?.let {
+                studyHistoryRepository.findLastByUserAccountIdAndExercises(
+                    it,
+                    listOf(existingExerciseFirst.id!!),
+                )
+            }
 
-        val result2 = user1.id?.let {
-            studyHistoryRepository.findLastByUserAccountIdAndExercises(
-                it,
-                listOf(existingExerciseFirst.id!!)
-            )
-        }
+        val result2 =
+            user1.id?.let {
+                studyHistoryRepository.findLastByUserAccountIdAndExercises(
+                    it,
+                    listOf(existingExerciseFirst.id!!),
+                )
+            }
 
         // THEN
         assertEquals(2, count)
@@ -306,13 +313,14 @@ class StudyHistoryIT : BaseIT() {
         val roleUser = insertRole(BrnRole.USER)
         val email = "autotest_n@1704819771.8820736.com"
 
-        val user1 = UserAccount(
-            fullName = "autotest_n1",
-            email = email,
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user1 =
+            UserAccount(
+                fullName = "autotest_n1",
+                email = email,
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user1.roleSet = mutableSetOf(roleUser)
         userAccountRepository.save(user1)
 
@@ -328,12 +336,13 @@ class StudyHistoryIT : BaseIT() {
         // WHEN
         val count = userAccountService.deleteAutoTestUserByEmail(email)
 
-        val result1 = user1.id?.let {
-            studyHistoryRepository.findLastByUserAccountIdAndExercises(
-                it,
-                listOf(existingExerciseFirst.id!!)
-            )
-        }
+        val result1 =
+            user1.id?.let {
+                studyHistoryRepository.findLastByUserAccountIdAndExercises(
+                    it,
+                    listOf(existingExerciseFirst.id!!),
+                )
+            }
 
         // THEN
         assertEquals(1, count)
@@ -343,9 +352,9 @@ class StudyHistoryIT : BaseIT() {
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise,
-        startTime: LocalDateTime
-    ): StudyHistory {
-        return studyHistoryRepository.save(
+        startTime: LocalDateTime,
+    ): StudyHistory =
+        studyHistoryRepository.save(
             StudyHistory(
                 userAccount = existingUser,
                 exercise = existingExercise,
@@ -354,55 +363,57 @@ class StudyHistoryIT : BaseIT() {
                 executionSeconds = 122,
                 tasksCount = 12,
                 wrongAnswers = 2,
-                replaysCount = 4
-            )
+                replaysCount = 4,
+            ),
         )
-    }
 
-    private fun insertUser(): UserAccount {
-        return userAccountRepository.save(
+    private fun insertUser(): UserAccount =
+        userAccountRepository.save(
             UserAccount(
                 fullName = "testUserFirstName",
                 gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = "test@test.test",
-                active = true
-            )
+                active = true,
+            ),
         )
-    }
 
     private fun insertSeries(): Series {
-        val exerciseGroup = exerciseGroupRepository.save(
-            ExerciseGroup(
-                code = "CODE",
-                description = "desc",
-                name = "group"
+        val exerciseGroup =
+            exerciseGroupRepository.save(
+                ExerciseGroup(
+                    code = "CODE",
+                    description = "desc",
+                    name = "group",
+                ),
             )
-        )
         return seriesRepository.save(
             Series(
                 description = "desc",
                 name = "series",
                 exerciseGroup = exerciseGroup,
                 level = 1,
-                type = "type"
-            )
+                type = "type",
+            ),
         )
     }
 
-    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
-        SubGroup(series = series, level = 1, code = "code", name = "subGroup name")
-    )
+    private fun insertSubGroup(series: Series): SubGroup =
+        subGroupRepository.save(
+            SubGroup(series = series, level = 1, code = "code", name = "subGroup name"),
+        )
 
-    fun insertExercise(exerciseName: String, subGroup: SubGroup): Exercise {
-        return exerciseRepository.save(
+    fun insertExercise(
+        exerciseName: String,
+        subGroup: SubGroup,
+    ): Exercise =
+        exerciseRepository.save(
             Exercise(
                 subGroup = subGroup,
                 level = 0,
-                name = exerciseName
-            )
+                name = exerciseName,
+            ),
         )
-    }
 
     private fun insertRole(roleName: String): Role = roleRepository.save(Role(name = roleName))
 }

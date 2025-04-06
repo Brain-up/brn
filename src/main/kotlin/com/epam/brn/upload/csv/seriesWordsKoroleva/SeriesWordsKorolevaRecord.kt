@@ -14,7 +14,7 @@ data class SeriesWordsKorolevaRecord(
     @JsonProperty("playWordsCount")
     val playWordsCount: Int,
     @JsonProperty("wordsColumns")
-    val wordsColumns: Int
+    val wordsColumns: Int,
 ) {
     companion object {
         const val FORMAT = "level,code,exerciseName,words,playWordsCount, wordsColumns"

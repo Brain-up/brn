@@ -17,9 +17,6 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.databind.ObjectMapper
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import org.amshove.kluent.internal.platformClassName
 import org.junit.jupiter.api.Tag
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,6 +25,9 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -35,7 +35,6 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @Tag("integration-test")
 @Testcontainers
 abstract class BaseIT {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -44,18 +43,25 @@ abstract class BaseIT {
 
     @Autowired
     private lateinit var userAccountRepository: UserAccountRepository
+
     @Autowired
     private lateinit var studyHistoryRepository: StudyHistoryRepository
+
     @Autowired
     private lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @Autowired
     private lateinit var seriesRepository: SeriesRepository
+
     @Autowired
     private lateinit var subGroupRepository: SubGroupRepository
+
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
+
     @Autowired
     private lateinit var taskRepository: TaskRepository
+
     @Autowired
     private lateinit var roleRepository: RoleRepository
 
@@ -96,8 +102,8 @@ abstract class BaseIT {
                 exercise = exercise,
                 tasksCount = taskCount,
                 wrongAnswers = wrongAnswers,
-                replaysCount = replaysCount
-            )
+                replaysCount = replaysCount,
+            ),
         )
     }
 
@@ -105,26 +111,32 @@ abstract class BaseIT {
         exerciseRepository.save(
             Exercise(
                 name = "Test exercise ${subGroup.id}",
-                subGroup = subGroup
-            )
+                subGroup = subGroup,
+            ),
         )
 
-    fun insertDefaultExercise(subGroup: SubGroup? = null, name: String = "Test exercise"): Exercise =
+    fun insertDefaultExercise(
+        subGroup: SubGroup? = null,
+        name: String = "Test exercise",
+    ): Exercise =
         exerciseRepository.save(
             Exercise(
                 name = name,
-                subGroup = subGroup
-            )
+                subGroup = subGroup,
+            ),
         )
 
-    fun insertDefaultSubGroup(series: Series, level: Int): SubGroup =
+    fun insertDefaultSubGroup(
+        series: Series,
+        level: Int,
+    ): SubGroup =
         subGroupRepository.save(
             SubGroup(
                 series = series,
                 level = level,
                 code = "code",
-                name = "${series.name}subGroupName$level"
-            )
+                name = "${series.name}subGroupName$level",
+            ),
         )
 
     fun insertDefaultSeries(seriesName: String = "Series for ${platformClassName()}"): Series =
@@ -133,8 +145,8 @@ abstract class BaseIT {
                 name = seriesName,
                 exerciseGroup = insertDefaultExerciseGroup("${seriesName}ExerciseGroup"),
                 type = "Type",
-                level = 1
-            )
+                level = 1,
+            ),
         )
 
     fun insertDefaultExerciseGroup(name: String = "Test exercise group for ${platformClassName()}"): ExerciseGroup =
@@ -142,8 +154,8 @@ abstract class BaseIT {
             ExerciseGroup(
                 code = "CODE",
                 description = "Description",
-                name = name
-            )
+                name = name,
+            ),
         )
 
     fun createUser(
@@ -152,18 +164,17 @@ abstract class BaseIT {
         active: Boolean = true,
         bornYear: Int = 2000,
         gender: String = BrnGender.FEMALE.toString(),
-        roles: MutableSet<Role> = mutableSetOf()
-    ): UserAccount {
-        return userAccountRepository.save(
+        roles: MutableSet<Role> = mutableSetOf(),
+    ): UserAccount =
+        userAccountRepository.save(
             UserAccount(
                 fullName = fullName ?: email,
                 email = email,
                 active = active,
                 bornYear = bornYear,
-                gender = gender
-            ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } }
+                gender = gender,
+            ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } },
         )
-    }
 
     fun createRole(roleName: String): Role =
         roleRepository.findByName(roleName)

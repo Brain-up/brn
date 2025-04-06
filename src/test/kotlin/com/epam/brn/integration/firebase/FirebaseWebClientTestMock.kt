@@ -9,7 +9,6 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Service
 class FirebaseWebClientTestMock {
-
     private val webClient: WebClient
 
     @Value("\${webclient.firebase.path.verify-password}")
@@ -18,20 +17,25 @@ class FirebaseWebClientTestMock {
     @Value("#{\${webclient.firebase.verify-password.query}}")
     private lateinit var verifyPasswordQuery: MultiValueMap<String, String>
 
-    constructor(@Value("\${webclient.firebase.url}") url: String) {
-        webClient = WebClient.builder()
-            .baseUrl(url)
-            .build()
+    constructor(
+        @Value("\${webclient.firebase.url}") url: String,
+    ) {
+        webClient =
+            WebClient
+                .builder()
+                .baseUrl(url)
+                .build()
     }
 
-    fun verifyPassword(request: FirebaseVerifyPasswordRequest): FirebaseVerifyPasswordResponse? {
-        return webClient.post()
+    fun verifyPassword(request: FirebaseVerifyPasswordRequest): FirebaseVerifyPasswordResponse? =
+        webClient
+            .post()
             .uri { uriBuilder ->
-                uriBuilder.path(verifyPasswordPath)
-                    .queryParams(verifyPasswordQuery).build()
-            }
-            .bodyValue(request)
+                uriBuilder
+                    .path(verifyPasswordPath)
+                    .queryParams(verifyPasswordQuery)
+                    .build()
+            }.bodyValue(request)
             .exchangeToMono { response -> response.bodyToMono(FirebaseVerifyPasswordResponse::class.java) }
             .block()
-    }
 }

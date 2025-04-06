@@ -8,12 +8,13 @@ data class NotificationDto(
     var userAccount: Long? = null,
     var text: String,
     var date: LocalDateTime,
-    var checked: Boolean
+    var checked: Boolean,
 ) {
-    fun toEntity() = Notification(
-        id = this.id,
-        text = this.text,
-        scheduledDate = this.date,
-        checked = this.checked
-    )
+    fun toEntity() =
+        Notification(
+            id = this.id,
+            text = this.text,
+            scheduledDate = this.date,
+            checked = this.checked,
+        )
 }

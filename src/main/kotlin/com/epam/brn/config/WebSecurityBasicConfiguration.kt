@@ -25,39 +25,40 @@ class WebSecurityBasicConfiguration(
     private val firebaseTokenAuthenticationFilter: FirebaseTokenAuthenticationFilter,
     private val rememberLastVisitFilter: RememberLastVisitFilter,
 ) : WebSecurityConfigurerAdapter() {
-
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http
             .csrf()
             .disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilterBefore(firebaseTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterAfter(rememberLastVisitFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeRequests()
-            .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**").hasRole(BrnRole.ADMIN)
+            .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**")
+            .hasRole(BrnRole.ADMIN)
             .and()
-            .formLogin().disable()
-            .httpBasic().disable()
+            .formLogin()
+            .disable()
+            .httpBasic()
+            .disable()
             .exceptionHandling()
             .authenticationEntryPoint(authenticationEntryPoint())
             .accessDeniedHandler(accessDeniedHandler())
     }
 
     @Bean
-    fun accessDeniedHandler(): AccessDeniedHandler? {
-        return AccessDeniedHandler { _, response: HttpServletResponse, _ ->
+    fun accessDeniedHandler(): AccessDeniedHandler? =
+        AccessDeniedHandler { _, response: HttpServletResponse, _ ->
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied")
         }
-    }
 
     @Bean
-    fun authenticationEntryPoint(): AuthenticationEntryPoint? {
-        return AuthenticationEntryPoint { _, response: HttpServletResponse, _ ->
+    fun authenticationEntryPoint(): AuthenticationEntryPoint? =
+        AuthenticationEntryPoint { _, response: HttpServletResponse, _ ->
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
         }
-    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()

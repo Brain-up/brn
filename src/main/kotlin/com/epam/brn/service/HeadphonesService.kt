@@ -5,5 +5,6 @@ import com.epam.brn.model.Headphones
 
 interface HeadphonesService {
     fun save(headphones: Headphones): HeadphonesDto
+
     fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto>
 }

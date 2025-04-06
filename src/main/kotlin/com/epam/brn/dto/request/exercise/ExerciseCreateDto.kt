@@ -16,12 +16,12 @@ import javax.validation.constraints.NotNull
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
-    property = "typeOfExercise"
+    property = "typeOfExercise",
 )
 @JsonSubTypes(
     JsonSubTypes.Type(ExerciseWordsCreateDto::class, name = "SINGLE_SIMPLE_WORDS"),
     JsonSubTypes.Type(ExercisePhrasesCreateDto::class, name = "PHRASES"),
-    JsonSubTypes.Type(ExerciseSentencesCreateDto::class, name = "SENTENCE")
+    JsonSubTypes.Type(ExerciseSentencesCreateDto::class, name = "SENTENCE"),
 )
 sealed class ExerciseCreateDto(
     @Schema(description = "type of exercise", required = true, example = "phrases")
@@ -38,7 +38,7 @@ sealed class ExerciseCreateDto(
     open val level: Int?,
     @Schema(description = "Exercise name", required = true, example = "Фразы разной длительности")
     @field:NotBlank
-    open val exerciseName: String
+    open val exerciseName: String,
 )
 
 @Schema(name = "ExerciseWordsCreateDto", description = "Request dto for create exercise 'words'")
@@ -62,16 +62,17 @@ data class ExerciseWordsCreateDto(
     @field:NotNull
     val noiseLevel: Int,
     @Schema(description = "Noise url", required = false, example = "voices")
-    val noiseUrl: String? = null
+    val noiseUrl: String? = null,
 ) : ExerciseCreateDto(ExerciseType.SINGLE_SIMPLE_WORDS, locale, subGroup, level, exerciseName) {
-    fun toSeriesWordsRecord() = SeriesWordsRecord(
-        level = level,
-        code = subGroup,
-        exerciseName = exerciseName,
-        words = words,
-        noiseLevel = noiseLevel,
-        noiseUrl = noiseUrl.orEmpty()
-    )
+    fun toSeriesWordsRecord() =
+        SeriesWordsRecord(
+            level = level,
+            code = subGroup,
+            exerciseName = exerciseName,
+            words = words,
+            noiseLevel = noiseLevel,
+            noiseUrl = noiseUrl.orEmpty(),
+        )
 }
 
 @Schema(name = "ExercisePhrasesCreateDto", description = "Request dto for create exercise 'phrases'")
@@ -95,16 +96,17 @@ data class ExercisePhrasesCreateDto(
     @field:NotNull
     val noiseLevel: Int,
     @Schema(description = "noise url", required = false, example = "voices")
-    val noiseUrl: String? = null
+    val noiseUrl: String? = null,
 ) : ExerciseCreateDto(ExerciseType.PHRASES, locale, subGroup, level, exerciseName) {
-    fun toSeriesPhrasesRecord() = SeriesPhrasesRecord(
-        level = level,
-        code = subGroup,
-        exerciseName = exerciseName,
-        phrases = phrases.toListWithDot(),
-        noiseLevel = noiseLevel,
-        noiseUrl = noiseUrl.orEmpty()
-    )
+    fun toSeriesPhrasesRecord() =
+        SeriesPhrasesRecord(
+            level = level,
+            code = subGroup,
+            exerciseName = exerciseName,
+            phrases = phrases.toListWithDot(),
+            noiseLevel = noiseLevel,
+            noiseUrl = noiseUrl.orEmpty(),
+        )
 }
 
 @Schema(name = "ExerciseSentencesCreateDto", description = "Request dto for create exercise 'sentences'")
@@ -126,13 +128,14 @@ data class ExerciseSentencesCreateDto(
     val orderNumber: Int,
     @Schema(description = "Sets of words for creating sentences", required = true)
     @field:NotNull
-    val words: SetOfWords
+    val words: SetOfWords,
 ) : ExerciseCreateDto(ExerciseType.SENTENCE, locale, subGroup, level, exerciseName) {
-    fun toSeriesMatrixRecord() = SeriesMatrixRecord(
-        level = level,
-        code = subGroup,
-        exerciseName = exerciseName,
-        orderNumber = orderNumber,
-        words = words.toRecordList()
-    )
+    fun toSeriesMatrixRecord() =
+        SeriesMatrixRecord(
+            level = level,
+            code = subGroup,
+            exerciseName = exerciseName,
+            orderNumber = orderNumber,
+            words = words.toRecordList(),
+        )
 }

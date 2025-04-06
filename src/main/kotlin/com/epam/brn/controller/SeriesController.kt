@@ -21,18 +21,24 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/series")
 @Tag(name = "Series", description = "Contains actions over series")
 @RolesAllowed(BrnRole.USER)
-class SeriesController(@Autowired val seriesService: SeriesService, @Autowired val csvUploadService: CsvUploadService) {
-
+class SeriesController(
+    @Autowired val seriesService: SeriesService,
+    @Autowired val csvUploadService: CsvUploadService,
+) {
     @GetMapping
     @Operation(summary = "Get all series for group")
-    fun getSeriesForGroup(@RequestParam(value = "groupId") groupId: Long): ResponseEntity<BrnResponse<List<SeriesDto>>> {
+    fun getSeriesForGroup(
+        @RequestParam(value = "groupId") groupId: Long,
+    ): ResponseEntity<BrnResponse<List<SeriesDto>>> {
         val listDto = seriesService.findSeriesForGroup(groupId)
         return ok(BrnResponse(data = listDto))
     }
 
     @GetMapping("{seriesId}")
     @Operation(summary = "Get series for id")
-    fun getSeriesForId(@PathVariable(value = "seriesId") seriesId: Long): ResponseEntity<BrnResponse<SeriesDto>> {
+    fun getSeriesForId(
+        @PathVariable(value = "seriesId") seriesId: Long,
+    ): ResponseEntity<BrnResponse<SeriesDto>> {
         val seriesDto = seriesService.findSeriesDtoForId(seriesId)
         return ok(BrnResponse(data = seriesDto))
     }
@@ -40,8 +46,6 @@ class SeriesController(@Autowired val seriesService: SeriesService, @Autowired v
     @GetMapping("/fileFormat/{seriesId}")
     @Operation(summary = "Get series file format by series id")
     fun getSampleStringForSeriesFile(
-        @PathVariable(value = "seriesId") seriesId: Long
-    ): ResponseEntity<BrnResponse<String>> {
-        return ok(BrnResponse(csvUploadService.getSampleStringForSeriesExerciseFile(seriesId)))
-    }
+        @PathVariable(value = "seriesId") seriesId: Long,
+    ): ResponseEntity<BrnResponse<String>> = ok(BrnResponse(csvUploadService.getSampleStringForSeriesExerciseFile(seriesId)))
 }

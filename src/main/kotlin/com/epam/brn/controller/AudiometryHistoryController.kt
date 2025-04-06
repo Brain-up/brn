@@ -18,10 +18,12 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/audiometry-history")
 @Tag(name = "Audiometry History", description = "Contains actions for audiometry history")
 @RolesAllowed(BrnRole.USER)
-class AudiometryHistoryController(private val audiometryHistoryService: AudiometryHistoryService) {
-
+class AudiometryHistoryController(
+    private val audiometryHistoryService: AudiometryHistoryService,
+) {
     @PostMapping
     @Operation(summary = "Save speech audiometry history")
-    fun save(@Validated @RequestBody audiometryHistory: AudiometryHistoryRequest): ResponseEntity<BrnResponse<Long>> =
-        ResponseEntity.ok().body(BrnResponse(data = audiometryHistoryService.save(audiometryHistory)))
+    fun save(
+        @Validated @RequestBody audiometryHistory: AudiometryHistoryRequest,
+    ): ResponseEntity<BrnResponse<Long>> = ResponseEntity.ok().body(BrnResponse(data = audiometryHistoryService.save(audiometryHistory)))
 }

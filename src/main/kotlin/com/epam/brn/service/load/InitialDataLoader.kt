@@ -50,17 +50,18 @@ class InitialDataLoader(
     var directoryPath: Path? = null
 
     companion object {
-        private val mapSeriesTypeInitFile = mapOf(
-            ExerciseType.SINGLE_SIMPLE_WORDS.name to SINGLE_SIMPLE_WORDS_FILE_NAME,
-            ExerciseType.PHRASES.name to PHRASES_FILE_NAME_RU,
-            ExerciseType.WORDS_SEQUENCES.name to WORDS_SEQUENCES_FILE_NAME,
-            ExerciseType.SENTENCE.name to SENTENCES_FILE_NAME,
-            ExerciseType.FREQUENCY_WORDS.name to SINGLE_FREQUENCY_WORDS_FILE_NAME,
-            ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
-            ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
-            ExerciseType.SINGLE_WORDS_KOROLEVA.name to SINGLE_WORDS_KOROLEVA_FILE_NAME,
-            ExerciseType.SYLLABLES_KOROLEVA.name to SYLLABLES_KOROLEVA_FILE_NAME,
-        )
+        private val mapSeriesTypeInitFile =
+            mapOf(
+                ExerciseType.SINGLE_SIMPLE_WORDS.name to SINGLE_SIMPLE_WORDS_FILE_NAME,
+                ExerciseType.PHRASES.name to PHRASES_FILE_NAME_RU,
+                ExerciseType.WORDS_SEQUENCES.name to WORDS_SEQUENCES_FILE_NAME,
+                ExerciseType.SENTENCE.name to SENTENCES_FILE_NAME,
+                ExerciseType.FREQUENCY_WORDS.name to SINGLE_FREQUENCY_WORDS_FILE_NAME,
+                ExerciseType.DURATION_SIGNALS.name to SIGNALS_FILE_NAME,
+                ExerciseType.FREQUENCY_SIGNALS.name to SIGNALS_FILE_NAME,
+                ExerciseType.SINGLE_WORDS_KOROLEVA.name to SINGLE_WORDS_KOROLEVA_FILE_NAME,
+                ExerciseType.SYLLABLES_KOROLEVA.name to SYLLABLES_KOROLEVA_FILE_NAME,
+            )
 
         fun getInputStreamFromSeriesInitFile(seriesType: String): InputStream {
             val fileName = mapSeriesTypeInitFile[seriesType]
@@ -90,7 +91,7 @@ class InitialDataLoader(
             "signal_exercises_en.csv",
             "$subFolder$SENTENCES_FILE_NAME.csv",
             "$subFolder$SENTENCES_EN_FILE_NAME.csv",
-            "lopotko_ru.csv"
+            "lopotko_ru.csv",
         )
     }
 
@@ -138,20 +139,22 @@ class InitialDataLoader(
 
     private fun initExercisesFromFiles() {
         log.debug("Initialization started")
-        if (directoryPath != null)
+        if (directoryPath != null) {
             initDataFromDirectory(directoryPath!!)
-        else
+        } else {
             initDataFromClassPath()
+        }
     }
 
     private fun initDataFromDirectory(directoryToScan: Path) {
         log.debug("Loading data from $directoryToScan.")
-        if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath))
+        if (!Files.exists(directoryToScan) || !Files.isDirectory(directoryPath)) {
             throw IllegalArgumentException("$directoryToScan with initial data does not exist")
+        }
         getSourceFiles().forEach {
             loadFromInputStream(
                 Files.newInputStream(directoryToScan.resolve(it)),
-                uploadService.getLocaleFromFileName(it)
+                uploadService.getLocaleFromFileName(it),
             )
         }
     }
@@ -161,12 +164,15 @@ class InitialDataLoader(
         getSourceFiles().forEach {
             loadFromInputStream(
                 resourceLoader.getResource("classpath:initFiles/$it").inputStream,
-                uploadService.getLocaleFromFileName(it)
+                uploadService.getLocaleFromFileName(it),
             )
         }
     }
 
-    private fun loadFromInputStream(inputStream: InputStream, locale: BrnLocale) {
+    private fun loadFromInputStream(
+        inputStream: InputStream,
+        locale: BrnLocale,
+    ) {
         try {
             uploadService.load(inputStream, locale)
         } finally {
@@ -190,22 +196,27 @@ class InitialDataLoader(
                 email = ADMIN_EMAIL,
                 active = true,
                 bornYear = 1999,
-                gender = BrnGender.MALE.toString()
+                gender = BrnGender.MALE.toString(),
             )
         userAccount.password = password
         userAccount.roleSet.addAll(adminRoles)
         return userAccount
     }
 
-    private fun createUser(name: String, email: String, roles: Set<Role>): UserAccount {
+    private fun createUser(
+        name: String,
+        email: String,
+        roles: Set<Role>,
+    ): UserAccount {
         val password = passwordEncoder.encode("password")
-        val userAccount = UserAccount(
-            fullName = name,
-            email = email,
-            active = true,
-            bornYear = 2000,
-            gender = BrnGender.MALE.toString(),
-        )
+        val userAccount =
+            UserAccount(
+                fullName = name,
+                email = email,
+                active = true,
+                bornYear = 2000,
+                gender = BrnGender.MALE.toString(),
+            )
         userAccount.password = password
         userAccount.roleSet.addAll(roles)
         return userAccount

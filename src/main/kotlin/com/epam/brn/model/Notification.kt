@@ -22,13 +22,14 @@ class Notification(
     var userAccount: UserAccount? = null,
     var text: String,
     var scheduledDate: LocalDateTime,
-    var checked: Boolean = false
+    var checked: Boolean = false,
 ) {
-    fun toDto() = NotificationDto(
-        id = id,
-        userAccount = userAccount!!.id,
-        text = text,
-        date = scheduledDate,
-        checked = checked
-    )
+    fun toDto() =
+        NotificationDto(
+            id = id,
+            userAccount = userAccount!!.id,
+            text = text,
+            date = scheduledDate,
+            checked = checked,
+        )
 }
