@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class SubGroupControllerTest {
-
     @InjectMockKs
     private lateinit var subGroupController: SubGroupController
 
@@ -57,6 +56,7 @@ internal class SubGroupControllerTest {
         seriesForId.statusCode.value() shouldBe HttpStatus.SC_OK
         seriesForId.body!!.data shouldBe subGroupResponse
     }
+
     @Test
     fun `deleteSubGroupById should delete subGroup by subGroupId`() {
         // GIVEN

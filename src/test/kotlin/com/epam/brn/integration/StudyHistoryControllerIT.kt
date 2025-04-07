@@ -19,7 +19,6 @@ import kotlin.test.assertNotNull
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class StudyHistoryControllerIT : BaseIT() {
-
     private val baseUrl = "/study-history"
 
     @Autowired
@@ -39,24 +38,25 @@ class StudyHistoryControllerIT : BaseIT() {
         val exercise = insertDefaultExercise()
         insertDefaultUser()
         val studyHistoryDtoId = 1L
-        val studyHistoryDto = StudyHistoryDto(
-            id = studyHistoryDtoId,
-            exerciseId = exercise.id!!,
-            startTime = LocalDateTime.now(),
-            endTime = LocalDateTime.now().plusMinutes(5),
-            executionSeconds = 300,
-            tasksCount = 3,
-            replaysCount = 3,
-            wrongAnswers = 1
-        )
+        val studyHistoryDto =
+            StudyHistoryDto(
+                id = studyHistoryDtoId,
+                exerciseId = exercise.id!!,
+                startTime = LocalDateTime.now(),
+                endTime = LocalDateTime.now().plusMinutes(5),
+                executionSeconds = 300,
+                tasksCount = 3,
+                replaysCount = 3,
+                wrongAnswers = 1,
+            )
         val requestBody = objectMapper.writeValueAsString(studyHistoryDto)
         // WHEN
-        mockMvc.perform(
-            post(baseUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
-        )
-            .andExpect(status().isOk)
+        mockMvc
+            .perform(
+                post(baseUrl)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody),
+            ).andExpect(status().isOk)
 
         // THEN
         assertNotNull(repository.findById(studyHistoryDtoId))
@@ -68,11 +68,13 @@ class StudyHistoryControllerIT : BaseIT() {
         insertDefaultUser()
 
         // WHEN
-        val response = mockMvc.perform(get("$baseUrl/todayTimer"))
-            .andExpect(status().isOk)
-            .andReturn()
-            .response
-            .getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(get("$baseUrl/todayTimer"))
+                .andExpect(status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val singleObjectResponseDto = gson.fromJson(response, BrnResponse::class.java)
 

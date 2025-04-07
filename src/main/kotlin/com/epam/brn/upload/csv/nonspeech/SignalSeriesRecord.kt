@@ -13,7 +13,7 @@ data class SignalSeriesRecord(
     @JsonProperty("exerciseType")
     val exerciseType: ExerciseType,
     @JsonProperty("signals")
-    val signals: List<String>
+    val signals: List<String>,
 ) {
     companion object {
         const val FORMAT = "level,code,exerciseName,exerciseType,signals"

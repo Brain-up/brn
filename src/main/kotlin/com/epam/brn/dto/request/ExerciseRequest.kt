@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonInclude
-data class ExerciseRequest @JsonCreator constructor(
-    @JsonProperty("ids")
-    var ids: List<Long>
-)
+data class ExerciseRequest
+    @JsonCreator
+    constructor(
+        @JsonProperty("ids")
+        var ids: List<Long>,
+    )

@@ -31,27 +31,27 @@ class SubGroup(
     @JoinColumn(name = "exercise_series_id")
     var series: Series,
     @OneToMany(mappedBy = "subGroup", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val exercises: MutableList<Exercise> = ArrayList()
+    val exercises: MutableList<Exercise> = ArrayList(),
 ) {
-
     constructor(record: SubgroupGenericRecord, series: Series) : this(
         series = series,
         level = record.level,
         code = record.code,
         name = record.name,
-        description = record.description
+        description = record.description,
     )
 
-    fun toResponse(pictureUrl: String) = SubGroupResponse(
-        seriesId = series.id!!,
-        id = id!!,
-        name = name,
-        pictureUrl = pictureUrl,
-        description = description,
-        level = level,
-        withPictures = withPictures,
-        exercises = exercises.map { exercise -> exercise.id }.toMutableList()
-    )
+    fun toResponse(pictureUrl: String) =
+        SubGroupResponse(
+            seriesId = series.id!!,
+            id = id!!,
+            name = name,
+            pictureUrl = pictureUrl,
+            description = description,
+            level = level,
+            withPictures = withPictures,
+            exercises = exercises.map { exercise -> exercise.id }.toMutableList(),
+        )
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

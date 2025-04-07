@@ -1,10 +1,10 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.dto.statistics.MonthStudyStatistics
 import com.epam.brn.dto.statistics.UserDailyDetailStatisticsDto
+import com.epam.brn.service.RoleService
 import com.epam.brn.service.StudyHistoryService
 import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import io.kotest.matchers.shouldBe
@@ -24,7 +24,6 @@ import kotlin.test.assertEquals
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserStatisticControllerV2 test using MockK")
 internal class UserStatisticsControllerV2Test {
-
     @InjectMockKs
     private lateinit var userStatisticControllerV2: UserStatisticControllerV2
 
@@ -122,7 +121,7 @@ internal class UserStatisticsControllerV2Test {
             userMonthStatisticService.getStatisticsForPeriod(
                 date,
                 date,
-                userId
+                userId,
             )
         } returns listOf(monthStudyStatistics)
         every { roleService.isCurrentUserAdmin() } returns true

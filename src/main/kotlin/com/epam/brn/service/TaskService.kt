@@ -39,8 +39,10 @@ class TaskService(
 
     @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
-        val exercise: Exercise = exerciseRepository.findById(exerciseId)
-            .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
+        val exercise: Exercise =
+            exerciseRepository
+                .findById(exerciseId)
+                .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
         return when (val type = valueOf(exercise.subGroup!!.series.type)) {
@@ -65,7 +67,14 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         processAnswerOptions(task)
-        return when (val type = valueOf(task.exercise!!.subGroup!!.series.type)) {
+        return when (
+            val type =
+                valueOf(
+                    task.exercise!!
+                        .subGroup!!
+                        .series.type,
+                )
+        ) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 task.toTaskResponse(type)
 
@@ -102,14 +111,15 @@ private val vowelSet = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ы', 'ю
 
 fun String.findSyllableCount(): Int = count { it in vowelSet }
 
-fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
-    id = id!!,
-    exerciseType = exerciseType,
-    exerciseMechanism = exerciseType.toMechanism(),
-    name = name,
-    serialNumber = serialNumber,
-    answerOptions = answerOptions.toResourceDtoSet()
-)
+fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) =
+    TaskResponse(
+        id = id!!,
+        exerciseType = exerciseType,
+        exerciseMechanism = exerciseType.toMechanism(),
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.toResourceDtoSet(),
+    )
 
 fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
     val mapVowelCountToWord: Map<Int, List<Resource>> =

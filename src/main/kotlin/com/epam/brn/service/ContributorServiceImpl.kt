@@ -16,29 +16,38 @@ import kotlin.streams.toList
 class ContributorServiceImpl(
     val contributorRepository: ContributorRepository,
 ) : ContributorService {
-
     @Transactional(readOnly = true)
-    override fun getAllContributors(): List<ContributorResponse> {
-        return contributorRepository.findAll().stream()
+    override fun getAllContributors(): List<ContributorResponse> =
+        contributorRepository
+            .findAll()
+            .stream()
             .map { e -> e.toContributorResponse() }
             .toList()
-    }
 
     @Transactional(readOnly = true)
-    override fun getContributors(locale: String, type: ContributorType): List<ContributorResponse> {
-        return contributorRepository.findAllByType(type).stream()
+    override fun getContributors(
+        locale: String,
+        type: ContributorType,
+    ): List<ContributorResponse> =
+        contributorRepository
+            .findAllByType(type)
+            .stream()
             .map { e -> e.toContributorResponse(locale) }
             .toList()
-    }
 
     @Transactional
     override fun createContributor(request: ContributorRequest): ContributorResponse =
         contributorRepository.save(request.toEntity()).toContributorResponse()
 
     @Transactional
-    override fun updateContributor(id: Long, contributorRequest: ContributorRequest): ContributorResponse {
-        val contributor = contributorRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("Contributor with id=$id was not found") }
+    override fun updateContributor(
+        id: Long,
+        contributorRequest: ContributorRequest,
+    ): ContributorResponse {
+        val contributor =
+            contributorRepository
+                .findById(id)
+                .orElseThrow { EntityNotFoundException("Contributor with id=$id was not found") }
         contributor.name = contributorRequest.name
         contributor.nameEn = contributorRequest.nameEn
         contributor.description = contributorRequest.description
@@ -55,26 +64,34 @@ class ContributorServiceImpl(
     }
 
     @Transactional
-    override fun createOrUpdateByGitHubUser(gitHubUser: GitHubUser, repositoryName: String): Contributor {
+    override fun createOrUpdateByGitHubUser(
+        gitHubUser: GitHubUser,
+        repositoryName: String,
+    ): Contributor {
         val existContributor = contributorRepository.findByGitHubUser(gitHubUser)
         return existContributor
             ?.updateByGitHubUser(gitHubUser, repositoryName)
             ?: createContributor(gitHubUser, repositoryName)
     }
 
-    private fun createContributor(gitHubUser: GitHubUser, repositoryName: String): Contributor {
-        val contributor = Contributor(
-            contribution = gitHubUser.contributions,
-            name = gitHubUser.name ?: "gitHubNick:${gitHubUser.login}",
-            repositoryName = repositoryName,
-            company = gitHubUser.company,
-            type = if (repositoryName == "auto-tests-python")
-                ContributorType.AUTOTESTER
-            else
-                ContributorType.DEVELOPER,
-            pictureUrl = gitHubUser.avatarUrl,
-            description = gitHubUser.bio
-        )
+    private fun createContributor(
+        gitHubUser: GitHubUser,
+        repositoryName: String,
+    ): Contributor {
+        val contributor =
+            Contributor(
+                contribution = gitHubUser.contributions,
+                name = gitHubUser.name ?: "gitHubNick:${gitHubUser.login}",
+                repositoryName = repositoryName,
+                company = gitHubUser.company,
+                type =
+                    if (repositoryName == "auto-tests-python")
+                        ContributorType.AUTOTESTER
+                    else
+                        ContributorType.DEVELOPER,
+                pictureUrl = gitHubUser.avatarUrl,
+                description = gitHubUser.bio,
+            )
         contributor.gitHubUser = gitHubUser
         gitHubUser.email?.let { email ->
             contributor.contacts.add(Contact(value = email))
@@ -82,7 +99,10 @@ class ContributorServiceImpl(
         return contributorRepository.save(contributor)
     }
 
-    private fun Contributor.updateByGitHubUser(gitHubUser: GitHubUser, repositoryName: String): Contributor {
+    private fun Contributor.updateByGitHubUser(
+        gitHubUser: GitHubUser,
+        repositoryName: String,
+    ): Contributor {
         if (this.contribution != gitHubUser.contributions)
             this.contribution = gitHubUser.contributions
         if (this.name.isNullOrEmpty() || this.name != gitHubUser.name)

@@ -15,7 +15,6 @@ import kotlin.test.assertNull
 @ExtendWith(MockKExtension::class)
 @DisplayName("TokenHelperUtils test using MockK")
 internal class TokenHelperUtilsTest {
-
     @InjectMockKs
     private lateinit var tokenHelperUtils: TokenHelperUtils
 

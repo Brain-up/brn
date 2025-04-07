@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 class AzureVoiceLoader(
     private val azureTtsService: AzureTextToSpeechService,
     private val azureVoiceRepo: AzureVoiceInfoRepository,
-    private val azureTtsProperties: AzureTtsProperties
+    private val azureTtsProperties: AzureTtsProperties,
 ) : CommandLineRunner {
     val log = logger()
 
@@ -31,18 +31,23 @@ class AzureVoiceLoader(
             log.info("Azure voice info table already filled")
             return
         }
-        val jsonVoices = azureTtsService.getVoices()
-            .filter { azureTtsProperties.acceptedLocales.contains(it.locale) }
-        val allStyles = jsonVoices.flatMap { it.styleList ?: emptyList() }
-            .distinct()
-            .map { AzureSpeechStyle(name = it) }
-            .toMutableSet()
+        val jsonVoices =
+            azureTtsService
+                .getVoices()
+                .filter { azureTtsProperties.acceptedLocales.contains(it.locale) }
+        val allStyles =
+            jsonVoices
+                .flatMap { it.styleList ?: emptyList() }
+                .distinct()
+                .map { AzureSpeechStyle(name = it) }
+                .toMutableSet()
 
-        val voices = jsonVoices.map { voice ->
-            voice.convertToEntity(
-                allStyles.filter { style -> voice.styleList?.contains(style.name) ?: false }.toMutableSet()
-            )
-        }
+        val voices =
+            jsonVoices.map { voice ->
+                voice.convertToEntity(
+                    allStyles.filter { style -> voice.styleList?.contains(style.name) ?: false }.toMutableSet(),
+                )
+            }
         log.info("Filling Azure voices table. Found [${voices.count()}] voices and [${allStyles.size} styles]")
         azureVoiceRepo.saveAll(voices)
     }

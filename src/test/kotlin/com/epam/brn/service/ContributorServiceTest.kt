@@ -16,16 +16,15 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
 import kotlin.test.assertNotNull
-import org.junit.jupiter.api.Assertions.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class ContributorServiceTest {
-
     @InjectMockKs
     private lateinit var contributorService: ContributorServiceImpl
 
@@ -93,12 +92,13 @@ internal class ContributorServiceTest {
         val contributorId = 1L
         val originalEmailContact = Contact(1L, ContactType.EMAIL, "user@test.com")
         val originalPhoneContact = Contact(2L, ContactType.PHONE, "1234567")
-        val contributor = createContributor(
-            contributorId,
-            "Contributor",
-            5L,
-            mutableSetOf(originalEmailContact, originalPhoneContact)
-        )
+        val contributor =
+            createContributor(
+                contributorId,
+                "Contributor",
+                5L,
+                mutableSetOf(originalEmailContact, originalPhoneContact),
+            )
 
         val updatedContact = ContactRequest(ContactType.EMAIL, "new@test.com")
         val contributorRequest = createContributorRequest("Updated Contributor", 6L, setOf(updatedContact))
@@ -243,9 +243,9 @@ internal class ContributorServiceTest {
     private fun createContributorRequest(
         name: String,
         contribution: Long,
-        contacts: Set<ContactRequest>
-    ): ContributorRequest {
-        return ContributorRequest(
+        contacts: Set<ContactRequest>,
+    ): ContributorRequest =
+        ContributorRequest(
             name = name,
             nameEn = name,
             type = ContributorType.SPECIALIST,
@@ -258,19 +258,17 @@ internal class ContributorServiceTest {
             pictureUrl = null,
             active = true,
         )
-    }
 
     private fun createContributor(
         id: Long?,
         name: String,
         contribution: Long,
-        contacts: MutableSet<Contact> = mutableSetOf()
-    ): Contributor {
-        return Contributor(
+        contacts: MutableSet<Contact> = mutableSetOf(),
+    ): Contributor =
+        Contributor(
             id = id,
             name = name,
             type = ContributorType.SPECIALIST,
-            contribution = contribution
+            contribution = contribution,
         ).apply { this.contacts = contacts }
-    }
 }

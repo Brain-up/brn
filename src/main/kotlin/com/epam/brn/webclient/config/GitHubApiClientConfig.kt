@@ -15,27 +15,29 @@ import reactor.netty.http.client.HttpClient
 
 @Configuration
 class GitHubApiClientConfig(
-    val property: GitHubApiClientProperty
+    val property: GitHubApiClientProperty,
 ) {
-
     @Bean
     fun gitHubApiWebClient(webClientBuilder: WebClient.Builder): WebClient {
-        val strategies = ExchangeStrategies.builder()
-            .codecs { codecs: ClientCodecConfigurer ->
-                codecs.defaultCodecs().maxInMemorySize(property.codecMaxSize)
-            }
-            .build()
+        val strategies =
+            ExchangeStrategies
+                .builder()
+                .codecs { codecs: ClientCodecConfigurer ->
+                    codecs.defaultCodecs().maxInMemorySize(property.codecMaxSize)
+                }.build()
 
         if (property.loggingEnabled) {
             val customizer: WebClientCustomizer = WebClientLoggingCustomizer()
             customizer.customize(webClientBuilder)
         }
 
-        val httpClient = HttpClient.create()
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, property.connectionTimeout)
-            .doOnConnected { connection ->
-                connection.addHandlerLast(ReadTimeoutHandler(property.readTimeout))
-            }
+        val httpClient =
+            HttpClient
+                .create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, property.connectionTimeout)
+                .doOnConnected { connection ->
+                    connection.addHandlerLast(ReadTimeoutHandler(property.readTimeout))
+                }
 
         val connector = ReactorClientHttpConnector(httpClient)
         return webClientBuilder

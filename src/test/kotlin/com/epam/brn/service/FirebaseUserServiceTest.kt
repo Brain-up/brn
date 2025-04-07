@@ -14,7 +14,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class FirebaseUserServiceTest {
-
     @InjectMockKs
     lateinit var firebaseUserService: FirebaseUserService
 

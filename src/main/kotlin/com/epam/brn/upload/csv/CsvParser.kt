@@ -10,8 +10,9 @@ import java.io.InputStreamReader
 import java.util.stream.Collectors
 
 @Service
-class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {
-
+class CsvParser(
+    val iteratorProviders: List<MappingIteratorProvider<out Any>>,
+) {
     val log = logger()
 
     companion object {
@@ -37,7 +38,7 @@ class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {
                         log.debug("Successfully parsed line $lineNumberInFile: '$originalValue'.")
                     } catch (e: Exception) {
                         errors.add(
-                            "Failed to parse line $lineNumberInFile: '$originalValue'. Error: ${e.localizedMessage}"
+                            "Failed to parse line $lineNumberInFile: '$originalValue'. Error: ${e.localizedMessage}",
                         )
                         log.debug("Failed to parse line $lineNumberInFile", e)
                     }
@@ -53,23 +54,24 @@ class CsvParser(val iteratorProviders: List<MappingIteratorProvider<out Any>>) {
     }
 
     fun readOriginalLines(inputStream: InputStream): MutableList<String> {
-        val originalLines = BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
-            .lines()
-            .collect(Collectors.toList())
+        val originalLines =
+            BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
+                .lines()
+                .collect(Collectors.toList())
         inputStream.reset()
         return originalLines
     }
 
-    private fun getProvider(header: String): MappingIteratorProvider<out Any> {
-        return iteratorProviders.stream()
+    private fun getProvider(header: String): MappingIteratorProvider<out Any> =
+        iteratorProviders
+            .stream()
             .filter { it.isApplicable(header) }
             .findFirst()
             .orElseThrow { ParseException("There is no applicable iterator provider for format '$header'.") }
-    }
 
-    class ParseException(message: String = "Parsing error. Please check csv file content format.") :
-        RuntimeException(message) {
-
+    class ParseException(
+        message: String = "Parsing error. Please check csv file content format.",
+    ) : RuntimeException(message) {
         lateinit var errors: List<String>
 
         constructor(errors: List<String>) : this() {

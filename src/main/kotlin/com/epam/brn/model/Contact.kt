@@ -18,7 +18,7 @@ class Contact(
     var id: Long? = null,
     @Enumerated(EnumType.STRING)
     var type: ContactType = ContactType.EMAIL,
-    var value: String
+    var value: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -28,14 +28,11 @@ class Contact(
         return id != null && id == other.id
     }
 
-    override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
-    }
+    override fun hashCode(): Int = id?.hashCode() ?: 0
 
-    fun toDto(): ContactDto {
-        return ContactDto(
+    fun toDto(): ContactDto =
+        ContactDto(
             type = type.name,
-            value = value
+            value = value,
         )
-    }
 }

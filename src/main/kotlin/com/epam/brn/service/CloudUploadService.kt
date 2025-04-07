@@ -13,9 +13,8 @@ import org.springframework.web.multipart.MultipartFile
 @Service
 class CloudUploadService(
     @Autowired private val cloudService: CloudService,
-    @Autowired private val resourceService: ResourceService
+    @Autowired private val resourceService: ResourceService,
 ) {
-
     @Value("\${brn.resources.default-pictures.path}")
     lateinit var defaultPicturesPath: String
 
@@ -60,7 +59,10 @@ class CloudUploadService(
         cloudService.uploadFile(unverifiedPicturesPath, fullFileName, multipartFile.inputStream)
     }
 
-    fun uploadContributorPicture(multipartFile: MultipartFile, fileName: String): String {
+    fun uploadContributorPicture(
+        multipartFile: MultipartFile,
+        fileName: String,
+    ): String {
         val fileExtension = FilenameUtils.getExtension(multipartFile.originalFilename)
         val fullFileName = "$fileName.$fileExtension"
         val fileSize = multipartFile.size
@@ -73,18 +75,24 @@ class CloudUploadService(
         return "${cloudService.baseFileUrl()}/$contributorPicturesPath/$fullFileName"
     }
 
-    private fun verifyFileExtension(file: MultipartFile, extensions: Set<String>) {
+    private fun verifyFileExtension(
+        file: MultipartFile,
+        extensions: Set<String>,
+    ) {
         if (!extensions.contains(FilenameUtils.getExtension(file.originalFilename))) {
             throw IllegalArgumentException("File extension should be one of $extensions")
         }
     }
 
-    private fun verifyPictureSize(file: MultipartFile, maxSize: DataSize) {
+    private fun verifyPictureSize(
+        file: MultipartFile,
+        maxSize: DataSize,
+    ) {
         val fileSize = file.size
         if (fileSize > maxSize.toBytes()) {
             val humanReadablePictureMaxSize = FileUtils.byteCountToDisplaySize(maxSize.toBytes())
             throw IllegalArgumentException(
-                "File size [$fileSize] should be less than max file size [$humanReadablePictureMaxSize]"
+                "File size [$fileSize] should be less than max file size [$humanReadablePictureMaxSize]",
             )
         }
     }

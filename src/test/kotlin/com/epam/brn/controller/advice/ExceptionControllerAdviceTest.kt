@@ -44,7 +44,6 @@ internal class ExceptionControllerAdviceTest {
 
     // @Test
     fun `should handle MethodArgumentNotValidException`() {
-
         // GIVEN
         val bindingResult = mockk<BindingResult>()
         val method = mockk<Method>()
@@ -52,10 +51,11 @@ internal class ExceptionControllerAdviceTest {
         every { method.toGenericString() } returns ""
         val methodParameter = MethodParameter(method, -1)
         val exception = MethodArgumentNotValidException(methodParameter, bindingResult)
-        val fieldErrors: List<FieldError> = listOf(
-            FieldError("TestEntity", "field1", "INCORRECT_FIELD_FORMAT"),
-            FieldError("TestEntity", "firstName", "FIRST_NAME_MUST_NOT_HAVE_SPACES")
-        )
+        val fieldErrors: List<FieldError> =
+            listOf(
+                FieldError("TestEntity", "field1", "INCORRECT_FIELD_FORMAT"),
+                FieldError("TestEntity", "firstName", "FIRST_NAME_MUST_NOT_HAVE_SPACES"),
+            )
         every { bindingResult.fieldErrors } returns fieldErrors
         every { bindingResult.errorCount } returns fieldErrors.size
         every { bindingResult.allErrors } returns fieldErrors
@@ -67,9 +67,9 @@ internal class ExceptionControllerAdviceTest {
             (responseEntity.body as BrnResponse).errors.containsAll(
                 listOf(
                     "INCORRECT_FIELD_FORMAT",
-                    "FIRST_NAME_MUST_NOT_HAVE_SPACES"
-                )
-            )
+                    "FIRST_NAME_MUST_NOT_HAVE_SPACES",
+                ),
+            ),
         )
         assertNotNull((responseEntity.body as BrnResponse).errors)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
@@ -158,8 +158,9 @@ internal class ExceptionControllerAdviceTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
         assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
         assertTrue(
-            (responseEntity.body as BrnResponse).errors
-                .contains("Formatting error. Please upload file with csv extension.")
+            (responseEntity.body as BrnResponse)
+                .errors
+                .contains("Formatting error. Please upload file with csv extension."),
         )
     }
 
@@ -191,7 +192,9 @@ internal class ExceptionControllerAdviceTest {
     @Test
     fun `should handle AccessDeniedException`() {
         // GIVEN
-        val exception = org.springframework.security.access.AccessDeniedException("some exception")
+        val exception =
+            org.springframework.security.access
+                .AccessDeniedException("some exception")
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleAccessDeniedException(exception)
         // THEN

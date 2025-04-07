@@ -16,9 +16,7 @@ import java.io.InputStream
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-
 internal class AudioControllerTest {
-
     @InjectMockKs
     lateinit var controller: AudioController
 

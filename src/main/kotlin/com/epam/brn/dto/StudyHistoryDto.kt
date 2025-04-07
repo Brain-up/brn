@@ -20,26 +20,31 @@ data class StudyHistoryDto(
     @field:NotNull
     var replaysCount: Int?, // -- count of replays.  --
     @field:NotNull
-    var wrongAnswers: Int? // -- wrong answers count --
+    var wrongAnswers: Int?, // -- wrong answers count --
 ) {
-    override fun toString(): String = "StudyHistoryDto(" +
-        "exerciseId=$exerciseId, " +
-        "startTime=$startTime, " +
-        "endTime=$endTime, " +
-        "executionSeconds=$executionSeconds," +
-        "tasksCount=$tasksCount, " +
-        "wrongAnswers=$wrongAnswers)"
+    override fun toString(): String =
+        "StudyHistoryDto(" +
+            "exerciseId=$exerciseId, " +
+            "startTime=$startTime, " +
+            "endTime=$endTime, " +
+            "executionSeconds=$executionSeconds," +
+            "tasksCount=$tasksCount, " +
+            "wrongAnswers=$wrongAnswers)"
 
-    fun toEntity(userAccount: UserAccount, exercise: Exercise): StudyHistory = StudyHistory(
-        userAccount = userAccount,
-        exercise = exercise,
-        startTime = this.startTime,
-        endTime = this.endTime,
-        executionSeconds = this.executionSeconds!!,
-        tasksCount = this.tasksCount!!,
-        wrongAnswers = this.wrongAnswers!!,
-        replaysCount = this.replaysCount!!,
-        repetitionIndex = replaysCount!!.toFloat() / (tasksCount!! + replaysCount!!),
-        rightAnswersIndex = (tasksCount!! - wrongAnswers!!).toFloat() / tasksCount!!,
-    )
+    fun toEntity(
+        userAccount: UserAccount,
+        exercise: Exercise,
+    ): StudyHistory =
+        StudyHistory(
+            userAccount = userAccount,
+            exercise = exercise,
+            startTime = this.startTime,
+            endTime = this.endTime,
+            executionSeconds = this.executionSeconds!!,
+            tasksCount = this.tasksCount!!,
+            wrongAnswers = this.wrongAnswers!!,
+            replaysCount = this.replaysCount!!,
+            repetitionIndex = replaysCount!!.toFloat() / (tasksCount!! + replaysCount!!),
+            rightAnswersIndex = (tasksCount!! - wrongAnswers!!).toFloat() / tasksCount!!,
+        )
 }

@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN])
 class ResourceControllerIT : BaseIT() {
-
     private val baseUrl = "/resources"
 
     @Autowired
@@ -33,12 +32,13 @@ class ResourceControllerIT : BaseIT() {
         val requestJson = objectMapper.writeValueAsString(UpdateResourceDescriptionRequest(descriptionForUpdate))
 
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .patch("$baseUrl/${resource.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .patch("$baseUrl/${resource.id}")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestJson),
+            )
 
         // THEN
         resultAction

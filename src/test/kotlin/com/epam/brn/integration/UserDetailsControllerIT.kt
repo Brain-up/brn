@@ -25,17 +25,16 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN, BrnRole.USER])
 class UserDetailsControllerIT : BaseIT() {
-
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
 
@@ -73,10 +72,11 @@ class UserDetailsControllerIT : BaseIT() {
         // GIVEN
         val user = insertUser()
         // WHEN
-        val resultAction = mockMvc.perform(
-            put("$currentUserBaseUrl/avatar")
-                .queryParam("avatar", "/pictures/testAvatar")
-        )
+        val resultAction =
+            mockMvc.perform(
+                put("$currentUserBaseUrl/avatar")
+                    .queryParam("avatar", "/pictures/testAvatar"),
+            )
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
@@ -95,11 +95,12 @@ class UserDetailsControllerIT : BaseIT() {
         val user = insertUser()
         // WHEN
         val body = objectMapper.writeValueAsString(UserAccountChangeRequest(name = "newName", bornYear = 1950))
-        val resultAction = mockMvc.perform(
-            patch(currentUserBaseUrl)
-                .content(body)
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                patch(currentUserBaseUrl)
+                    .content(body)
+                    .contentType("application/json"),
+            )
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
@@ -121,11 +122,12 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
-        val resultAction = mockMvc.perform(
-            post("$baseUrl/${user.id}/headphones")
-                .content(body)
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                post("$baseUrl/${user.id}/headphones")
+                    .content(body)
+                    .contentType("application/json"),
+            )
         // THEN
         assertHeadphonesAreCreated(resultAction)
     }
@@ -137,11 +139,12 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
-        val resultAction = mockMvc.perform(
-            post("$baseUrl/current/headphones")
-                .content(body)
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                post("$baseUrl/current/headphones")
+                    .content(body)
+                    .contentType("application/json"),
+            )
         // THEN
         assertHeadphonesAreCreated(resultAction)
     }
@@ -154,11 +157,12 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH))
-        val resultAction = mockMvc.perform(
-            post("$baseUrl/current/headphones")
-                .content(body)
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                post("$baseUrl/current/headphones")
+                    .content(body)
+                    .contentType("application/json"),
+            )
         // THEN
         assertHeadphonesAreCreated(resultAction)
     }
@@ -180,18 +184,28 @@ class UserDetailsControllerIT : BaseIT() {
         // GIVEN
         val user = insertUser()
         insertThreeHeadphonesForUser(user)
-        val headphonesId = userAccountRepository.findUserAccountByName("testUserFirstName")
-            .get().headphones.first().id
+        val headphonesId =
+            userAccountRepository
+                .findUserAccountByName("testUserFirstName")
+                .get()
+                .headphones
+                .first()
+                .id
         // WHEN
-        val resultAction = mockMvc.perform(
-            delete("$baseUrl/current/headphones/$headphonesId")
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                delete("$baseUrl/current/headphones/$headphonesId")
+                    .contentType("application/json"),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
-        userAccountRepository.findUserAccountById(user.id!!).get()
-            .headphones.filter { it.active }.size shouldBe 2
+        userAccountRepository
+            .findUserAccountById(user.id!!)
+            .get()
+            .headphones
+            .filter { it.active }
+            .size shouldBe 2
     }
 
     @Test
@@ -202,11 +216,12 @@ class UserDetailsControllerIT : BaseIT() {
         // WHEN
         val body =
             objectMapper.writeValueAsString(HeadphonesDto(name = "first", active = true, type = null))
-        val resultAction = mockMvc.perform(
-            post("$baseUrl/current/headphones")
-                .content(body)
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                post("$baseUrl/current/headphones")
+                    .content(body)
+                    .contentType("application/json"),
+            )
         // THEN
         resultAction.andExpect(status().isCreated)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
@@ -224,27 +239,30 @@ class UserDetailsControllerIT : BaseIT() {
         val user = insertUser()
         insertThreeHeadphonesForUser(user)
         // WHEN
-        val resultAction = mockMvc.perform(
-            get("$baseUrl/${user.id}/headphones")
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                get("$baseUrl/${user.id}/headphones")
+                    .contentType("application/json"),
+            )
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponse = objectMapper.readValue(responseJson, BrnResponse::class.java)
-        val returnedHeadphones = objectMapper.readValue(
-            gson.toJson(baseResponse.data),
-            object : TypeReference<List<HeadphonesDto>>() {}
-        )
-        Assertions.assertThat(returnedHeadphones)
+        val returnedHeadphones =
+            objectMapper.readValue(
+                gson.toJson(baseResponse.data),
+                object : TypeReference<List<HeadphonesDto>>() {},
+            )
+        Assertions
+            .assertThat(returnedHeadphones)
             .hasSize(3)
             .usingElementComparatorOnFields("name", "type")
             .containsAll(
                 listOf(
                     HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
                     HeadphonesDto(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH),
-                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH)
-                )
+                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH),
+                ),
             )
     }
 
@@ -254,28 +272,31 @@ class UserDetailsControllerIT : BaseIT() {
         val user = insertUser()
         insertThreeHeadphonesForUser(user)
         // WHEN
-        val resultAction = mockMvc.perform(
-            get("$baseUrl/current/headphones")
-                .contentType("application/json")
-        )
+        val resultAction =
+            mockMvc.perform(
+                get("$baseUrl/current/headphones")
+                    .contentType("application/json"),
+            )
         // THEN
         resultAction.andExpect(status().isOk)
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponse = objectMapper.readValue(responseJson, BrnResponse::class.java)
-        val returnedHeadphones = objectMapper.readValue(
-            gson.toJson(baseResponse.data),
-            object : TypeReference<List<HeadphonesDto>>() {}
-        )
+        val returnedHeadphones =
+            objectMapper.readValue(
+                gson.toJson(baseResponse.data),
+                object : TypeReference<List<HeadphonesDto>>() {},
+            )
         returnedHeadphones shouldNotBe null
-        Assertions.assertThat(returnedHeadphones)
+        Assertions
+            .assertThat(returnedHeadphones)
             .hasSize(3)
             .usingElementComparatorOnFields("name", "type")
             .containsAll(
                 listOf(
                     HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
                     HeadphonesDto(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH),
-                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH)
-                )
+                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH),
+                ),
             )
     }
 
@@ -285,34 +306,40 @@ class UserDetailsControllerIT : BaseIT() {
         val roleAdmin = insertRole(BrnRole.ADMIN)
         val roleUser = insertRole(BrnRole.USER)
 
-        val user1 = UserAccount(
-            fullName = "testUserFirstName",
-            email = "test@test.test",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user1 =
+            UserAccount(
+                fullName = "testUserFirstName",
+                email = "test@test.test",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user1.roleSet = mutableSetOf(roleAdmin, roleUser)
 
-        val user2 = UserAccount(
-            fullName = "testUserFirstName2",
-            email = "test2@test.test",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user2 =
+            UserAccount(
+                fullName = "testUserFirstName2",
+                email = "test2@test.test",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user2.roleSet = mutableSetOf(roleUser)
 
         userAccountRepository.save(user1)
         userAccountRepository.save(user2)
 
         // WHEN
-        val response = mockMvc.perform(
-            MockMvcRequestBuilders.get(baseUrl)
-                .param("role", BrnRole.ADMIN)
-        )
-            .andExpect(status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get(baseUrl)
+                        .param("role", BrnRole.ADMIN),
+                ).andExpect(status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = gson.fromJson(response, BrnResponse::class.java).data
         val users: List<UserAccountDto> =
@@ -327,38 +354,44 @@ class UserDetailsControllerIT : BaseIT() {
         // GIVEN
         val roleUser = insertRole(BrnRole.USER)
 
-        val user1 = UserAccount(
-            fullName = "autotest_n1",
-            email = "autotest_n@1704819771.8820736.com",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user1 =
+            UserAccount(
+                fullName = "autotest_n1",
+                email = "autotest_n@1704819771.8820736.com",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user1.roleSet = mutableSetOf(roleUser)
 
-        val user2 = UserAccount(
-            fullName = "autotest_n1",
-            email = "autotest_n@170472339.1784415.com",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user2 =
+            UserAccount(
+                fullName = "autotest_n1",
+                email = "autotest_n@170472339.1784415.com",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user2.roleSet = mutableSetOf(roleUser)
 
         userAccountRepository.save(user1)
         userAccountRepository.save(user2)
 
         // WHEN
-        val response = mockMvc.perform(
-            delete("$baseUrl/autotest/del")
-            .contentType("application/json")
-        ).andExpect(status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    delete("$baseUrl/autotest/del")
+                        .contentType("application/json"),
+                ).andExpect(status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = gson.fromJson(response, BrnResponse::class.java).data
 
         // THEN
-         data shouldBe 2
+        data shouldBe 2
     }
 
     @Test
@@ -367,22 +400,27 @@ class UserDetailsControllerIT : BaseIT() {
         val roleUser = insertRole(BrnRole.USER)
         val email = "autotest_n@1704819771.8820736.com"
 
-        val user1 = UserAccount(
-            fullName = "autotest_n1",
-            email = email,
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user1 =
+            UserAccount(
+                fullName = "autotest_n1",
+                email = email,
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user1.roleSet = mutableSetOf(roleUser)
         userAccountRepository.save(user1)
 
         // WHEN
-        val response = mockMvc.perform(
-            delete("$baseUrl/autotest/del/$email")
-            .contentType("application/json")
-        ).andExpect(status().isOk)
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            mockMvc
+                .perform(
+                    delete("$baseUrl/autotest/del/$email")
+                        .contentType("application/json"),
+                ).andExpect(status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val data = gson.fromJson(response, BrnResponse::class.java).data
 
@@ -396,22 +434,25 @@ class UserDetailsControllerIT : BaseIT() {
         val roleUser = insertRole(BrnRole.USER)
         val email = "abc@xyz.com"
 
-        val user1 = UserAccount(
-            fullName = "user1",
-            email = email,
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            active = true,
-        )
+        val user1 =
+            UserAccount(
+                fullName = "user1",
+                email = email,
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                active = true,
+            )
         user1.roleSet = mutableSetOf(roleUser)
         userAccountRepository.save(user1)
 
         // WHEN
-        mockMvc.perform(
-            delete("$baseUrl/autotest/del/$email")
-                .contentType("application/json")
-        ).andExpect(status().isBadRequest)
+        mockMvc
+            .perform(
+                delete("$baseUrl/autotest/del/$email")
+                    .contentType("application/json"),
+            ).andExpect(status().isBadRequest)
     }
+
     @AfterEach
     fun deleteAfterTest() {
         userAccountRepository.deleteAll()
@@ -419,15 +460,18 @@ class UserDetailsControllerIT : BaseIT() {
         headphonesRepository.deleteAll()
     }
 
-    private fun insertUser(email_: String = email, doctor_: UserAccount? = null): UserAccount =
+    private fun insertUser(
+        email_: String = email,
+        doctor_: UserAccount? = null,
+    ): UserAccount =
         userAccountRepository.save(
             UserAccount(
                 fullName = "testUserFirstName",
                 gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 email = email_,
-                doctor = doctor_
-            )
+                doctor = doctor_,
+            ),
         )
 
     private fun insertThreeHeadphonesForUser(user: UserAccount) {
@@ -435,16 +479,15 @@ class UserDetailsControllerIT : BaseIT() {
             listOf(
                 Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH, userAccount = user),
                 Headphones(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH, userAccount = user),
-                Headphones(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user)
-            )
+                Headphones(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH, userAccount = user),
+            ),
         )
     }
 
-    private fun insertRole(roleName: String): Role {
-        return roleRepository.save(
+    private fun insertRole(roleName: String): Role =
+        roleRepository.save(
             Role(
-                name = roleName
-            )
+                name = roleName,
+            ),
         )
-    }
 }

@@ -5,5 +5,5 @@ import com.epam.brn.model.Resource
 data class AudiometryMatrixTaskResponse(
     val id: Long?,
     val count: Int = 10,
-    val answerOptions: MutableSet<Resource>
+    val answerOptions: MutableSet<Resource>,
 )

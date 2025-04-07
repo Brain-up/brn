@@ -7,18 +7,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
 data class SubgroupGenericRecord(
     @JsonProperty("seriesType")
     val seriesType: String,
-
     @JsonProperty("level")
     val level: Int,
-
     @JsonProperty("code")
     val code: String,
-
     @JsonProperty("name")
     val name: String,
-
     @JsonProperty("description")
-    val description: String
+    val description: String,
 ) {
     companion object {
         const val FORMAT = "seriesType, level, code, name, description"

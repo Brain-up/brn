@@ -11,28 +11,28 @@ import javax.annotation.security.RolesAllowed
 
 @Configuration
 class SwaggerConfig {
-
     @Bean
     fun openApi() = OpenAPI().info(apiInfo())
 
-    private fun apiInfo() = Info()
-        .title("Brain Up project")
-        .description("REST API for brn")
-        .contact(
-            Contact()
-                .name("Elena.Moshnikova")
-                .url("https://t.me/ElenaLovesSpb")
-                .email("brainupproject@yandex.ru")
-        )
+    private fun apiInfo() =
+        Info()
+            .title("Brain Up project")
+            .description("REST API for brn")
+            .contact(
+                Contact()
+                    .name("Elena.Moshnikova")
+                    .url("https://t.me/ElenaLovesSpb")
+                    .email("brainupproject@yandex.ru"),
+            )
 
     @Bean
-    fun rolesAllowedCustomizer(): OperationCustomizer? {
-        return OperationCustomizer { operation, handlerMethod ->
+    fun rolesAllowedCustomizer(): OperationCustomizer? =
+        OperationCustomizer { operation, handlerMethod ->
             var allowedRoles: Array<String>? = null
             var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
-            if (rolesAllowedAnnotation != null)
+            if (rolesAllowedAnnotation != null) {
                 allowedRoles = rolesAllowedAnnotation.value
-            else {
+            } else {
                 rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
                 if (rolesAllowedAnnotation != null)
                     allowedRoles = rolesAllowedAnnotation.value
@@ -52,7 +52,6 @@ class SwaggerConfig {
             operation.description = sb.toString()
             operation
         }
-    }
 
     @Bean
     fun sortTagsCustomiser(): OpenApiCustomiser = OpenApiCustomiser { openApi -> openApi.tags.sortBy { it.name } }

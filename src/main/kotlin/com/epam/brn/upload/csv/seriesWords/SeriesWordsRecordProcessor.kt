@@ -23,28 +23,32 @@ class SeriesWordsRecordProcessor(
     private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val wordsService: WordsService
+    private val wordsService: WordsService,
 ) : RecordProcessor<SeriesWordsRecord, Exercise> {
-
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
 
     val possibleWordsInExerciseCount = listOf(3, 4, 6, 9)
 
-    override fun isApplicable(record: Any): Boolean =
-        record is SeriesWordsRecord
+    override fun isApplicable(record: Any): Boolean = record is SeriesWordsRecord
 
     @Transactional
-    override fun process(records: List<SeriesWordsRecord>, locale: BrnLocale): List<Exercise> {
+    override fun process(
+        records: List<SeriesWordsRecord>,
+        locale: BrnLocale,
+    ): List<Exercise> {
         val exercises = mutableSetOf<Exercise>()
         records.forEach { record ->
-            val subGroup = subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
-                ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
+            val subGroup =
+                subGroupRepository.findByCodeAndLocale(record.code, locale.locale)
+                    ?: throw EntityNotFoundException("No subGroup was found for code=${record.code} and locale={${locale.locale}}")
             val existExercise = exerciseRepository.findExerciseByNameAndLevel(record.exerciseName, record.level)
             if (!existExercise.isPresent) {
                 val answerOptions = extractAnswerOptions(record, locale)
                 if (!possibleWordsInExerciseCount.contains(answerOptions.size))
-                    throw IllegalArgumentException("In exercise should be $possibleWordsInExerciseCount words. Current: ${answerOptions.map { it.word }}")
+                    throw IllegalArgumentException(
+                        "In exercise should be $possibleWordsInExerciseCount words. Current: ${answerOptions.map { it.word }}",
+                    )
                 resourceRepository.saveAll(answerOptions)
 
                 val newExercise = generateExercise(record, subGroup)
@@ -56,41 +60,57 @@ class SeriesWordsRecordProcessor(
         return exercises.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: SeriesWordsRecord, locale: BrnLocale): MutableSet<Resource> =
+    private fun extractAnswerOptions(
+        record: SeriesWordsRecord,
+        locale: BrnLocale,
+    ): MutableSet<Resource> =
         record.words
             .asSequence()
             .map { it.toStringWithoutBraces() }
             .map { toResource(it, locale) }
             .toMutableSet()
 
-    private fun toResource(word: String, locale: BrnLocale): Resource {
-        val audioPath = wordsService.getSubFilePathForWord(
-            AudioFileMetaData(
-                word,
-                locale.locale,
-                wordsService.getDefaultManVoiceForLocale(locale.locale)
+    private fun toResource(
+        word: String,
+        locale: BrnLocale,
+    ): Resource {
+        val audioPath =
+            wordsService.getSubFilePathForWord(
+                AudioFileMetaData(
+                    word,
+                    locale.locale,
+                    wordsService.getDefaultManVoiceForLocale(locale.locale),
+                ),
             )
-        )
         val resource =
-            resourceRepository.findFirstByWordAndLocaleAndWordType(word, locale.locale, WordType.OBJECT.toString())
+            resourceRepository
+                .findFirstByWordAndLocaleAndWordType(word, locale.locale, WordType.OBJECT.toString())
                 .orElse(Resource(word = word, locale = locale.locale))
         resource.audioFileUrl = audioPath
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }
 
-    private fun generateExercise(record: SeriesWordsRecord, subGroup: SubGroup) =
-        Exercise(
-            subGroup = subGroup,
-            name = record.exerciseName,
-            level = record.level,
-            noiseLevel = record.noiseLevel,
-            noiseUrl = if (!record.noiseUrl.isNullOrEmpty()) String.format(
-                fonAudioPath,
-                record.noiseUrl
-            ) else ""
-        )
+    private fun generateExercise(
+        record: SeriesWordsRecord,
+        subGroup: SubGroup,
+    ) = Exercise(
+        subGroup = subGroup,
+        name = record.exerciseName,
+        level = record.level,
+        noiseLevel = record.noiseLevel,
+        noiseUrl =
+            if (!record.noiseUrl.isNullOrEmpty())
+                String.format(
+                    fonAudioPath,
+                    record.noiseUrl,
+                )
+            else
+                "",
+    )
 
-    private fun generateOneTask(exercise: Exercise, answerOptions: MutableSet<Resource>) =
-        Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
+    private fun generateOneTask(
+        exercise: Exercise,
+        answerOptions: MutableSet<Resource>,
+    ) = Task(exercise = exercise, serialNumber = 1, answerOptions = answerOptions)
 }

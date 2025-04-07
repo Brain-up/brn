@@ -26,19 +26,20 @@ class AzureJsonVoiceInfo(
     @field:JsonProperty("VoiceType")
     var voiceType: String,
     @field:JsonProperty("Status")
-    var status: String
+    var status: String,
 ) {
-    fun convertToEntity(styles: MutableSet<AzureSpeechStyle> = mutableSetOf()) = AzureVoiceInfo(
-        name = name,
-        displayName = displayName,
-        localName = localName,
-        shortName = shortName,
-        gender = gender,
-        locale = locale,
-        localeName = localeName,
-        sampleRateHertz = sampleRateHertz,
-        voiceType = voiceType,
-        status = status,
-        styleList = styles
-    )
+    fun convertToEntity(styles: MutableSet<AzureSpeechStyle> = mutableSetOf()) =
+        AzureVoiceInfo(
+            name = name,
+            displayName = displayName,
+            localName = localName,
+            shortName = shortName,
+            gender = gender,
+            locale = locale,
+            localeName = localeName,
+            sampleRateHertz = sampleRateHertz,
+            voiceType = voiceType,
+            status = status,
+            styleList = styles,
+        )
 }

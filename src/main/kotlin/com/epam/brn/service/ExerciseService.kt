@@ -27,7 +27,6 @@ class ExerciseService(
     private val urlConversionService: UrlConversionService,
     private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
 ) {
-
     @Value(value = "\${minRepetitionIndex}")
     private lateinit var minRepetitionIndex: Number
 
@@ -37,12 +36,17 @@ class ExerciseService(
     private val log = logger()
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
-        val exercise = exerciseRepository.findById(exerciseID)
-            .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
+        val exercise =
+            exerciseRepository
+                .findById(exerciseID)
+                .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
         return updateExerciseDto(exercise.toDto())
     }
 
-    fun findExerciseByNameAndLevel(name: String, level: Int): Exercise =
+    fun findExerciseByNameAndLevel(
+        name: String,
+        level: Int,
+    ): Exercise =
         exerciseRepository
             .findExerciseByNameAndLevel(name, level)
             .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
@@ -61,7 +65,10 @@ class ExerciseService(
         return findExercisesByUserIdAndSubGroupId(currentUserId, subGroupId)
     }
 
-    fun findExercisesByUserIdAndSubGroupId(userId: Long, subGroupId: Long): List<ExerciseDto> {
+    fun findExercisesByUserIdAndSubGroupId(
+        userId: Long,
+        subGroupId: Long,
+    ): List<ExerciseDto> {
         log.debug("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
         val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
         val currentUserRoles = userAccountService.getCurrentUserRoles()
@@ -93,14 +100,16 @@ class ExerciseService(
         doneSubGroupExercises: List<Exercise>,
         subGroupExercises: List<Exercise>,
         userId: Long,
-        subGroupId: Long
+        subGroupId: Long,
     ): Set<Exercise> {
         if (doneSubGroupExercises.size == subGroupExercises.size)
             return doneSubGroupExercises.toSet()
         val mapDoneNameToExercise = doneSubGroupExercises.groupBy({ it.name }, { it })
         val availableExercises = mutableSetOf<Exercise>()
-        val lastHistoryMap = studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId)
-            .groupBy({ it.exercise }, { it })
+        val lastHistoryMap =
+            studyHistoryRepository
+                .findLastBySubGroupAndUserAccount(subGroupId, userId)
+                .groupBy({ it.exercise }, { it })
         subGroupExercises
             .groupBy({ it.name }, { it })
             .forEach { (name, currentNameExercises) ->
@@ -141,7 +150,10 @@ class ExerciseService(
         return exerciseDto
     }
 
-    fun updateActiveStatus(exerciseId: Long, active: Boolean) {
+    fun updateActiveStatus(
+        exerciseId: Long,
+        active: Boolean,
+    ) {
         var exercise = exerciseRepository.findById(exerciseId).get()
         exercise.active = active
         exerciseRepository.save(exercise)
@@ -159,31 +171,39 @@ class ExerciseService(
 
     @Transactional(rollbackFor = [Exception::class])
     fun createExercise(exerciseCreateDto: ExerciseCreateDto): ExerciseDto {
-        val exercise = when (exerciseCreateDto) {
-            is ExerciseWordsCreateDto -> {
-                val seriesWordsRecord = exerciseCreateDto.toSeriesWordsRecord()
-                val exercise = createExercise(seriesWordsRecord, exerciseCreateDto.locale)
-                    ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
-                exercise
+        val exercise =
+            when (exerciseCreateDto) {
+                is ExerciseWordsCreateDto -> {
+                    val seriesWordsRecord = exerciseCreateDto.toSeriesWordsRecord()
+                    val exercise =
+                        createExercise(seriesWordsRecord, exerciseCreateDto.locale)
+                            ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                    exercise
+                }
+                is ExercisePhrasesCreateDto -> {
+                    val seriesPhrasesRecord = exerciseCreateDto.toSeriesPhrasesRecord()
+                    val exercise =
+                        createExercise(seriesPhrasesRecord, exerciseCreateDto.locale)
+                            ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                    exercise
+                }
+                is ExerciseSentencesCreateDto -> {
+                    val seriesMatrixRecord = exerciseCreateDto.toSeriesMatrixRecord()
+                    val exercise =
+                        createExercise(seriesMatrixRecord, exerciseCreateDto.locale)
+                            ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
+                    exercise
+                }
             }
-            is ExercisePhrasesCreateDto -> {
-                val seriesPhrasesRecord = exerciseCreateDto.toSeriesPhrasesRecord()
-                val exercise = createExercise(seriesPhrasesRecord, exerciseCreateDto.locale)
-                    ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
-                exercise
-            }
-            is ExerciseSentencesCreateDto -> {
-                val seriesMatrixRecord = exerciseCreateDto.toSeriesMatrixRecord()
-                val exercise = createExercise(seriesMatrixRecord, exerciseCreateDto.locale)
-                    ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
-                exercise
-            }
-        }
         return exercise.toDto()
     }
 
-    private fun createExercise(exerciseRecord: Any, locale: BrnLocale): Exercise? =
-        recordProcessors.stream()
+    private fun createExercise(
+        exerciseRecord: Any,
+        locale: BrnLocale,
+    ): Exercise? =
+        recordProcessors
+            .stream()
             .filter { it.isApplicable(exerciseRecord) }
             .findFirst()
             .orElseThrow { RuntimeException("There is no applicable processor for type '${exerciseRecord.javaClass}'") }

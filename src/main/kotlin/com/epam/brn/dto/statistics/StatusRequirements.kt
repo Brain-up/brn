@@ -6,5 +6,5 @@ package com.epam.brn.dto.statistics
 data class StatusRequirements(
     var status: UserExercisingProgressStatus,
     var minimalRequirements: Int,
-    var maximalRequirements: Int
+    var maximalRequirements: Int,
 )

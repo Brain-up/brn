@@ -10,23 +10,24 @@ enum class ExerciseType {
     DI,
     DURATION_SIGNALS,
     FREQUENCY_SIGNALS,
-    SYLLABLES_KOROLEVA;
+    SYLLABLES_KOROLEVA,
 }
 
-val exercisesWithPictures = setOf(
-    ExerciseType.WORDS_SEQUENCES,
-    ExerciseType.SENTENCE,
-    ExerciseType.SINGLE_SIMPLE_WORDS,
-    ExerciseType.SINGLE_WORDS_KOROLEVA,
-    ExerciseType.FREQUENCY_WORDS,
-    ExerciseType.PHRASES,
-)
+val exercisesWithPictures =
+    setOf(
+        ExerciseType.WORDS_SEQUENCES,
+        ExerciseType.SENTENCE,
+        ExerciseType.SINGLE_SIMPLE_WORDS,
+        ExerciseType.SINGLE_WORDS_KOROLEVA,
+        ExerciseType.FREQUENCY_WORDS,
+        ExerciseType.PHRASES,
+    )
 
-fun ExerciseType.shouldBeWithPictures(): Boolean =
-    exercisesWithPictures.contains(this)
+fun ExerciseType.shouldBeWithPictures(): Boolean = exercisesWithPictures.contains(this)
 
-fun ExerciseType.toMechanism(): ExerciseMechanism = mapExerciseTypeToMechanism
-    .getOrElse(this) { throw IllegalArgumentException("No ExerciseMechanism is defined for $this.") }
+fun ExerciseType.toMechanism(): ExerciseMechanism =
+    mapExerciseTypeToMechanism
+        .getOrElse(this) { throw IllegalArgumentException("No ExerciseMechanism is defined for $this.") }
 
 val mapExerciseTypeToMechanism =
     mapOf(

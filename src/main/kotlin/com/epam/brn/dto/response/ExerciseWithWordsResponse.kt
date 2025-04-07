@@ -13,5 +13,5 @@ data class ExerciseWithWordsResponse(
     val wordsColumns: Int? = 3,
     val words: Map<Long, String> = emptyMap(),
     val subGroupName: String?,
-    val seriesName: String?
+    val seriesName: String?,
 )

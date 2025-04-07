@@ -1,2 +1,8 @@
+# rules table: https://pinterest.github.io/ktlint/1.5.0/rules/standard/#__tabbed_33_2
+
 [*.{kt,kts}]
 disabled_rules = import-ordering, indent
+# ktlint_standard_import-ordering = disabled
+# ktlint_standard_indent = disabled
+ktlint_standard_blank-line-before-declaration = disabled
+ktlint_standard_multiline-if-else = disabled

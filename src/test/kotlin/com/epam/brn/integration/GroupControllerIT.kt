@@ -26,17 +26,20 @@ import kotlin.test.assertFalse
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class GroupControllerIT : BaseIT() {
-
     private val baseUrl = "/groups"
 
     @Autowired
     private lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
     @Autowired
     private lateinit var seriesRepository: SeriesRepository
+
     @Autowired
     private lateinit var subGroupRepository: SubGroupRepository
+
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
+
     @Autowired
     private lateinit var taskRepository: TaskRepository
 
@@ -59,12 +62,13 @@ class GroupControllerIT : BaseIT() {
         val exercise = insertExercise(subGroup1, "ex1")
         val task = insertTask(exercise)
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get(baseUrl)
-                .param("locale", BrnLocale.RU.locale)
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get(baseUrl)
+                    .param("locale", BrnLocale.RU.locale)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -80,11 +84,12 @@ class GroupControllerIT : BaseIT() {
         val exerciseGroupName = "GroupName"
         val existingExerciseGroup = insertExerciseGroup(exerciseGroupName)
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get(baseUrl + "/" + existingExerciseGroup.id)
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get(baseUrl + "/" + existingExerciseGroup.id)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -93,46 +98,59 @@ class GroupControllerIT : BaseIT() {
         assertTrue(response.contains(existingExerciseGroup.name))
     }
 
-    fun insertExerciseGroup(exerciseGroupName: String, locale: String = BrnLocale.RU.locale): ExerciseGroup =
+    fun insertExerciseGroup(
+        exerciseGroupName: String,
+        locale: String = BrnLocale.RU.locale,
+    ): ExerciseGroup =
         exerciseGroupRepository.save(
             ExerciseGroup(
                 code = "CODE",
                 description = "desc",
                 name = exerciseGroupName,
-                locale = locale
-            )
+                locale = locale,
+            ),
         )
 
-    fun insertSeries(group: ExerciseGroup, name: String): Series {
-        val series = Series(
-            name = name,
-            description = "description",
-            exerciseGroup = group,
-            level = 1,
-            type = ExerciseType.SINGLE_SIMPLE_WORDS.name
-        )
+    fun insertSeries(
+        group: ExerciseGroup,
+        name: String,
+    ): Series {
+        val series =
+            Series(
+                name = name,
+                description = "description",
+                exerciseGroup = group,
+                level = 1,
+                type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
+            )
         return seriesRepository.save(series)
     }
 
-    fun insertSubGroup(series: Series, level: Int): SubGroup =
+    fun insertSubGroup(
+        series: Series,
+        level: Int,
+    ): SubGroup =
         subGroupRepository.save(
             SubGroup(
                 series = series,
                 level = level,
                 code = "code",
-                name = "${series.name}subGroupName$level"
-            )
+                name = "${series.name}subGroupName$level",
+            ),
         )
 
-    fun insertExercise(subGroup: SubGroup, exerciseName: String): Exercise =
+    fun insertExercise(
+        subGroup: SubGroup,
+        exerciseName: String,
+    ): Exercise =
         exerciseRepository.save(
             Exercise(
                 subGroup = subGroup,
                 level = 0,
                 name = exerciseName,
                 noiseLevel = 50,
-                noiseUrl = "/testNoiseUrl"
-            )
+                noiseUrl = "/testNoiseUrl",
+            ),
         )
 
     fun insertTask(exercise: Exercise): Task =
@@ -141,7 +159,7 @@ class GroupControllerIT : BaseIT() {
                 id = 1,
                 name = "${exercise.name} Task",
                 serialNumber = 1,
-                exercise = exercise
-            )
+                exercise = exercise,
+            ),
         )
 }

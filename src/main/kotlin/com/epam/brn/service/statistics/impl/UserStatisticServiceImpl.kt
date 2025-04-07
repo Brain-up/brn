@@ -17,15 +17,15 @@ class UserStatisticServiceImpl(
     private val exerciseRepository: ExerciseRepository,
     private val userAccountService: UserAccountService,
 ) : UserStatisticService<SubGroupStatisticsResponse> {
-
     override fun getSubGroupStatistic(subGroupsIds: List<Long>): List<SubGroupStatisticsResponse> {
         val userAccount = userAccountService.getCurrentUserDto()
-        return subGroupsIds.map {
-            SubGroupStatisticsResponse(
-                subGroupId = it,
-                totalExercises = exerciseRepository.findExercisesBySubGroupId(it).size,
-                completedExercises = studyHistoryRepository.getDoneExercises(it, userAccount.id!!).size
-            )
-        }.toList()
+        return subGroupsIds
+            .map {
+                SubGroupStatisticsResponse(
+                    subGroupId = it,
+                    totalExercises = exerciseRepository.findExercisesBySubGroupId(it).size,
+                    completedExercises = studyHistoryRepository.getDoneExercises(it, userAccount.id!!).size,
+                )
+            }.toList()
     }
 }

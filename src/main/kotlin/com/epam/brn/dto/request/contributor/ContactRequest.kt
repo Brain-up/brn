@@ -9,13 +9,13 @@ import javax.validation.constraints.NotNull
 data class ContactRequest(
     @field:NotNull
     val type: ContactType?,
-
     @field:NotBlank
     @field:Length(max = 255)
-    val value: String?
+    val value: String?,
 ) {
-    fun toEntity() = Contact(
-        type = this.type!!,
-        value = this.value!!
-    )
+    fun toEntity() =
+        Contact(
+            type = this.type!!,
+            value = this.value!!,
+        )
 }

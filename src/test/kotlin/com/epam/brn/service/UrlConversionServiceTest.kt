@@ -15,7 +15,6 @@ import kotlin.test.assertEquals
 @ExtendWith(MockKExtension::class)
 @DisplayName("UrlConversionService test using MockK")
 internal class UrlConversionServiceTest {
-
     @InjectMockKs
     private lateinit var urlConversionService: UrlConversionService
 

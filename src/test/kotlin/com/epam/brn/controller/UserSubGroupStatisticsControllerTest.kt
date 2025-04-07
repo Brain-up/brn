@@ -20,7 +20,6 @@ import kotlin.test.assertEquals
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserStatisticController test using MockK")
 internal class UserSubGroupStatisticsControllerTest {
-
     @InjectMockKs
     private lateinit var userStatisticController: UserSubGroupStatisticController
 

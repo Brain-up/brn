@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.enums.BrnGender
 import com.epam.brn.service.DoctorService
 import io.kotest.matchers.shouldBe
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class DoctorControllerTest {
-
     @InjectMockKs
     private lateinit var doctorController: DoctorController
 
@@ -77,16 +76,15 @@ internal class DoctorControllerTest {
         id: Long?,
         email: String?,
         roles: MutableSet<String> = mutableSetOf(),
-        doctorId: Long? = null
-    ): UserAccountDto {
-        return UserAccountDto(
+        doctorId: Long? = null,
+    ): UserAccountDto =
+        UserAccountDto(
             id = id,
             name = email,
             email = email,
             gender = BrnGender.MALE,
             bornYear = 2000,
             active = true,
-            doctorId = doctorId
+            doctorId = doctorId,
         ).apply { this.roles = roles }
-    }
 }
