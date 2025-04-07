@@ -107,47 +107,43 @@ abstract class BaseIT {
         )
     }
 
-    fun insertDefaultExerciseWithSubGroup(subGroup: SubGroup): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                name = "Test exercise ${subGroup.id}",
-                subGroup = subGroup,
-            ),
-        )
+    fun insertDefaultExerciseWithSubGroup(subGroup: SubGroup): Exercise = exerciseRepository.save(
+        Exercise(
+            name = "Test exercise ${subGroup.id}",
+            subGroup = subGroup,
+        ),
+    )
 
     fun insertDefaultExercise(
         subGroup: SubGroup? = null,
         name: String = "Test exercise",
-    ): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                name = name,
-                subGroup = subGroup,
-            ),
-        )
+    ): Exercise = exerciseRepository.save(
+        Exercise(
+            name = name,
+            subGroup = subGroup,
+        ),
+    )
 
     fun insertDefaultSubGroup(
         series: Series,
         level: Int,
-    ): SubGroup =
-        subGroupRepository.save(
-            SubGroup(
-                series = series,
-                level = level,
-                code = "code",
-                name = "${series.name}subGroupName$level",
-            ),
-        )
+    ): SubGroup = subGroupRepository.save(
+        SubGroup(
+            series = series,
+            level = level,
+            code = "code",
+            name = "${series.name}subGroupName$level",
+        ),
+    )
 
-    fun insertDefaultSeries(seriesName: String = "Series for ${platformClassName()}"): Series =
-        seriesRepository.save(
-            Series(
-                name = seriesName,
-                exerciseGroup = insertDefaultExerciseGroup("${seriesName}ExerciseGroup"),
-                type = "Type",
-                level = 1,
-            ),
-        )
+    fun insertDefaultSeries(seriesName: String = "Series for ${platformClassName()}"): Series = seriesRepository.save(
+        Series(
+            name = seriesName,
+            exerciseGroup = insertDefaultExerciseGroup("${seriesName}ExerciseGroup"),
+            type = "Type",
+            level = 1,
+        ),
+    )
 
     fun insertDefaultExerciseGroup(name: String = "Test exercise group for ${platformClassName()}"): ExerciseGroup =
         exerciseGroupRepository.save(
@@ -165,18 +161,16 @@ abstract class BaseIT {
         bornYear: Int = 2000,
         gender: String = BrnGender.FEMALE.toString(),
         roles: MutableSet<Role> = mutableSetOf(),
-    ): UserAccount =
-        userAccountRepository.save(
-            UserAccount(
-                fullName = fullName ?: email,
-                email = email,
-                active = active,
-                bornYear = bornYear,
-                gender = gender,
-            ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } },
-        )
+    ): UserAccount = userAccountRepository.save(
+        UserAccount(
+            fullName = fullName ?: email,
+            email = email,
+            active = active,
+            bornYear = bornYear,
+            gender = gender,
+        ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } },
+    )
 
-    fun createRole(roleName: String): Role =
-        roleRepository.findByName(roleName)
-            ?: roleRepository.save(Role(name = roleName))
+    fun createRole(roleName: String): Role = roleRepository.findByName(roleName)
+        ?: roleRepository.save(Role(name = roleName))
 }

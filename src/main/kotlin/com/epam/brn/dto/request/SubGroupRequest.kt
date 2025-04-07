@@ -18,12 +18,11 @@ data class SubGroupRequest
         @field:NotBlank
         var description: String?,
     ) {
-        fun toModel(series: Series) =
-            SubGroup(
-                name = this.name,
-                level = this.level!!,
-                code = this.code,
-                description = this.description,
-                series = series,
-            )
+        fun toModel(series: Series) = SubGroup(
+            name = this.name,
+            level = this.level!!,
+            code = this.code,
+            description = this.description,
+            series = series,
+        )
     }

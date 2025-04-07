@@ -38,8 +38,7 @@ class TaskController(
     @Operation(summary = "Get task by id")
     fun getTaskById(
         @PathVariable("taskId") taskId: Long,
-    ): ResponseEntity<BrnResponse<Any>> =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = taskService.getTaskById(taskId)))
+    ): ResponseEntity<BrnResponse<Any>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = taskService.getTaskById(taskId)))
 }

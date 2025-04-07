@@ -46,23 +46,21 @@ class Audiometry(
         return result
     }
 
-    fun toDtoWithoutTasks() =
-        AudiometryResponse(
-            id,
-            locale,
-            name,
-            AudiometryType.valueOf(audiometryType),
-            description,
-            emptyList<String>(),
-        )
+    fun toDtoWithoutTasks() = AudiometryResponse(
+        id,
+        locale,
+        name,
+        AudiometryType.valueOf(audiometryType),
+        description,
+        emptyList<String>(),
+    )
 
-    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryResponse =
-        AudiometryResponse(
-            id,
-            locale,
-            name,
-            AudiometryType.valueOf(audiometryType),
-            description,
-            tasks.map { it.toDto() },
-        )
+    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryResponse = AudiometryResponse(
+        id,
+        locale,
+        name,
+        AudiometryType.valueOf(audiometryType),
+        description,
+        tasks.map { it.toDto() },
+    )
 }

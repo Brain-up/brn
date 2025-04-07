@@ -53,12 +53,11 @@ class SeriesWordsKorolevaRecordProcessor(
     private fun extractAnswerOptions(
         record: SeriesWordsKorolevaRecord,
         locale: BrnLocale,
-    ): MutableSet<Resource> =
-        record.words
-            .asSequence()
-            .map { it.toStringWithoutBraces() }
-            .map { toResource(it, locale) }
-            .toMutableSet()
+    ): MutableSet<Resource> = record.words
+        .asSequence()
+        .map { it.toStringWithoutBraces() }
+        .map { toResource(it, locale) }
+        .toMutableSet()
 
     private fun toResource(
         word: String,

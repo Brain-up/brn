@@ -39,10 +39,9 @@ class ResourceController(
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest,
-    ): ResponseEntity<BrnResponse<ResourceResponse>> =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = resourceService.updateDescription(id, request.description!!)))
+    ): ResponseEntity<BrnResponse<ResourceResponse>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = resourceService.updateDescription(id, request.description!!)))
 
     @PostMapping("/update")
     @RolesAllowed(BrnRole.ADMIN)

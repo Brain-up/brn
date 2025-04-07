@@ -62,17 +62,16 @@ class AzureTextToSpeechService(
      * Receives all available voices for Azure TTS service
      */
     @ExcludeFromJacocoGeneratedReport
-    fun getVoices(): List<AzureJsonVoiceInfo> =
-        azureAllVoicesWebClient
-            .get()
-            .headers { headers ->
-                headers.set("Ocp-Apim-Subscription-Key", azureTtsProperties.ocpApimSubscriptionKey)
-            }.retrieve()
-            .bodyToFlux(AzureJsonVoiceInfo::class.java)
-            .collectList()
-            .doOnError { e -> log.error("Error while getting Azure voices, \nerror: {}", e) }
-            .block(Duration.ofSeconds(15))
-            ?: throw AzureTtsException("Azure TTS does not provide voices")
+    fun getVoices(): List<AzureJsonVoiceInfo> = azureAllVoicesWebClient
+        .get()
+        .headers { headers ->
+            headers.set("Ocp-Apim-Subscription-Key", azureTtsProperties.ocpApimSubscriptionKey)
+        }.retrieve()
+        .bodyToFlux(AzureJsonVoiceInfo::class.java)
+        .collectList()
+        .doOnError { e -> log.error("Error while getting Azure voices, \nerror: {}", e) }
+        .block(Duration.ofSeconds(15))
+        ?: throw AzureTtsException("Azure TTS does not provide voices")
 
     @ExcludeFromJacocoGeneratedReport
     fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
@@ -147,15 +146,14 @@ class AzureTextToSpeechService(
      *  2. by locale + gender from DB (gender is optional, by default it's azure.tts.default-gender)
      *  3. from properties
      */
-    fun getVoiceInfo(params: AudioFileMetaData): AzureVoiceInfo =
-        defaultIfBlank(params.voice, null)
-            ?.let { azureVoiceRepo.findByShortName(it) }
-            ?: getVoiceInfoByLocalAndGender(params.locale, params.gender)
-            ?: AzureVoiceInfo(
-                shortName = azureTtsProperties.defaultVoiceName,
-                gender = azureTtsProperties.defaultGender,
-                locale = azureTtsProperties.defaultLang,
-            )
+    fun getVoiceInfo(params: AudioFileMetaData): AzureVoiceInfo = defaultIfBlank(params.voice, null)
+        ?.let { azureVoiceRepo.findByShortName(it) }
+        ?: getVoiceInfoByLocalAndGender(params.locale, params.gender)
+        ?: AzureVoiceInfo(
+            shortName = azureTtsProperties.defaultVoiceName,
+            gender = azureTtsProperties.defaultGender,
+            locale = azureTtsProperties.defaultLang,
+        )
 
     private fun getVoiceInfoByLocalAndGender(
         locale: String,

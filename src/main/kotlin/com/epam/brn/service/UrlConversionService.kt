@@ -11,11 +11,10 @@ class UrlConversionService(
     @Value("\${aws.folderForThemePictures}")
     private lateinit var folderForThemePictures: String
 
-    fun makeUrlForNoise(noiseUrl: String?): String =
-        if (noiseUrl.isNullOrEmpty())
-            ""
-        else
-            cloudService.baseFileUrl() + noiseUrl
+    fun makeUrlForNoise(noiseUrl: String?): String = if (noiseUrl.isNullOrEmpty())
+        ""
+    else
+        cloudService.baseFileUrl() + noiseUrl
 
     fun makeUrlForSubGroupPicture(subGroupCode: String): String =
         cloudService.baseFileUrl() + folderForThemePictures + "/" + subGroupCode + ".svg"

@@ -30,9 +30,8 @@ class Contact(
 
     override fun hashCode(): Int = id?.hashCode() ?: 0
 
-    fun toDto(): ContactDto =
-        ContactDto(
-            type = type.name,
-            value = value,
-        )
+    fun toDto(): ContactDto = ContactDto(
+        type = type.name,
+        value = value,
+    )
 }

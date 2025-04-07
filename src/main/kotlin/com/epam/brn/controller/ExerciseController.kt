@@ -44,10 +44,9 @@ class ExerciseController(
         @Parameter(description = "Exercise data", required = true)
         @Valid
         @RequestBody exerciseCreateDto: ExerciseCreateDto,
-    ): ResponseEntity<BrnResponse<ExerciseDto>> =
-        ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(BrnResponse(data = exerciseService.createExercise(exerciseCreateDto)))
+    ): ResponseEntity<BrnResponse<ExerciseDto>> = ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(BrnResponse(data = exerciseService.createExercise(exerciseCreateDto)))
 
     @GetMapping
     @Operation(summary = "Get exercises for subgroup with tasks. If called by current user, availability calculation is included")
@@ -70,10 +69,9 @@ class ExerciseController(
     @Operation(summary = "Get exercise by id")
     fun getExercisesByID(
         @PathVariable("exerciseId") exerciseId: Long,
-    ): ResponseEntity<BrnResponse<ExerciseDto>> =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = exerciseService.findExerciseById(exerciseId)))
+    ): ResponseEntity<BrnResponse<ExerciseDto>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = exerciseService.findExerciseById(exerciseId)))
 
     @GetMapping(value = ["/byWord"])
     @Operation(summary = "Get exercises containing specified word")
@@ -90,10 +88,9 @@ class ExerciseController(
     @Operation(summary = "Get available exercise ids for current user by input ids which have same subgroup")
     fun getExercisesByIds(
         @Validated @RequestBody exerciseRequest: ExerciseRequest,
-    ): ResponseEntity<BrnResponse<List<Long>>> =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = exerciseService.getAvailableExerciseIds(exerciseRequest.ids)))
+    ): ResponseEntity<BrnResponse<List<Long>>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = exerciseService.getAvailableExerciseIds(exerciseRequest.ids)))
 
     @PutMapping(value = ["/{exerciseId}/active/{active}"])
     @Operation(summary = "Update active status of the exercise")

@@ -22,14 +22,13 @@ class Signal(
     @JoinColumn(name = "exercise_id")
     var exercise: Exercise? = null,
 ) {
-    fun toSignalDto() =
-        SignalTaskDto(
-            id = id,
-            name = name,
-            url = url,
-            frequency = frequency,
-            length = length,
-        )
+    fun toSignalDto() = SignalTaskDto(
+        id = id,
+        name = name,
+        url = url,
+        frequency = frequency,
+        length = length,
+    )
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

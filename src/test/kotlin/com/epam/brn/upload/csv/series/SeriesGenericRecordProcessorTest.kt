@@ -97,53 +97,51 @@ internal class SeriesGenericRecordProcessorTest {
         verify(inverse = true) { seriesRepository.save(ofType(Series::class)) }
     }
 
-    private fun createActualSeriesList() =
-        mutableListOf(
-            Series(
-                type = "WORDS_SEQUENCES",
-                name = "name",
-                level = 0,
-                description = "desc",
-                exerciseGroup = exerciseGroups[0],
-            ),
-            Series(
-                type = "SENTENCE",
-                name = "name1",
-                level = 1,
-                description = "desc1",
-                exerciseGroup = exerciseGroups[0],
-            ),
-            Series(
-                type = "SINGLE_SIMPLE_WORDS",
-                name = "name2",
-                level = 2,
-                description = "desc2",
-                exerciseGroup = exerciseGroups[1],
-            ),
-        )
+    private fun createActualSeriesList() = mutableListOf(
+        Series(
+            type = "WORDS_SEQUENCES",
+            name = "name",
+            level = 0,
+            description = "desc",
+            exerciseGroup = exerciseGroups[0],
+        ),
+        Series(
+            type = "SENTENCE",
+            name = "name1",
+            level = 1,
+            description = "desc1",
+            exerciseGroup = exerciseGroups[0],
+        ),
+        Series(
+            type = "SINGLE_SIMPLE_WORDS",
+            name = "name2",
+            level = 2,
+            description = "desc2",
+            exerciseGroup = exerciseGroups[1],
+        ),
+    )
 
-    private fun createInputSeriesGenericRecordList() =
-        mutableListOf(
-            SeriesGenericRecord(
-                groupCode = "CODE1",
-                level = 0,
-                type = "WORDS_SEQUENCES",
-                name = "name",
-                description = "desc",
-            ),
-            SeriesGenericRecord(
-                groupCode = "CODE1",
-                level = 1,
-                type = "SENTENCE",
-                name = "name1",
-                description = "desc1",
-            ),
-            SeriesGenericRecord(
-                groupCode = "CODE2",
-                level = 2,
-                type = "SINGLE_SIMPLE_WORDS",
-                name = "name2",
-                description = "desc2",
-            ),
-        )
+    private fun createInputSeriesGenericRecordList() = mutableListOf(
+        SeriesGenericRecord(
+            groupCode = "CODE1",
+            level = 0,
+            type = "WORDS_SEQUENCES",
+            name = "name",
+            description = "desc",
+        ),
+        SeriesGenericRecord(
+            groupCode = "CODE1",
+            level = 1,
+            type = "SENTENCE",
+            name = "name1",
+            description = "desc1",
+        ),
+        SeriesGenericRecord(
+            groupCode = "CODE2",
+            level = 2,
+            type = "SINGLE_SIMPLE_WORDS",
+            name = "name2",
+            description = "desc2",
+        ),
+    )
 }

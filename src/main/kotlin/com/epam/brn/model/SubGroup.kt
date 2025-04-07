@@ -41,17 +41,16 @@ class SubGroup(
         description = record.description,
     )
 
-    fun toResponse(pictureUrl: String) =
-        SubGroupResponse(
-            seriesId = series.id!!,
-            id = id!!,
-            name = name,
-            pictureUrl = pictureUrl,
-            description = description,
-            level = level,
-            withPictures = withPictures,
-            exercises = exercises.map { exercise -> exercise.id }.toMutableList(),
-        )
+    fun toResponse(pictureUrl: String) = SubGroupResponse(
+        seriesId = series.id!!,
+        id = id!!,
+        name = name,
+        pictureUrl = pictureUrl,
+        description = description,
+        level = level,
+        withPictures = withPictures,
+        exercises = exercises.map { exercise -> exercise.id }.toMutableList(),
+    )
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

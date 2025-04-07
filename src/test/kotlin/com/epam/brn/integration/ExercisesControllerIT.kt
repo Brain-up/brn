@@ -258,30 +258,28 @@ class ExercisesControllerIT : BaseIT() {
         existingUser: UserAccount,
         existingExercise: Exercise,
         startTime: LocalDateTime,
-    ): StudyHistory =
-        studyHistoryRepository.save(
-            StudyHistory(
-                userAccount = existingUser,
-                exercise = existingExercise,
-                endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
-                startTime = startTime,
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 3,
-                replaysCount = 4,
-            ),
-        )
+    ): StudyHistory = studyHistoryRepository.save(
+        StudyHistory(
+            userAccount = existingUser,
+            exercise = existingExercise,
+            endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
+            startTime = startTime,
+            executionSeconds = 122,
+            tasksCount = 12,
+            wrongAnswers = 3,
+            replaysCount = 4,
+        ),
+    )
 
-    private fun insertUser(): UserAccount =
-        userAccountRepository.save(
-            UserAccount(
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@test.test",
-                active = true,
-            ),
-        )
+    private fun insertUser(): UserAccount = userAccountRepository.save(
+        UserAccount(
+            fullName = "testUserFirstName",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            email = "test@test.test",
+            active = true,
+        ),
+    )
 
     private fun insertSeries(): Series {
         val exerciseGroup =
@@ -309,16 +307,15 @@ class ExercisesControllerIT : BaseIT() {
     fun insertExercise(
         subGroup: SubGroup,
         exerciseName: String,
-    ): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                subGroup = subGroup,
-                level = 0,
-                name = exerciseName,
-                noiseLevel = 50,
-                noiseUrl = "/testNoiseUrl",
-            ),
-        )
+    ): Exercise = exerciseRepository.save(
+        Exercise(
+            subGroup = subGroup,
+            level = 0,
+            name = exerciseName,
+            noiseLevel = 50,
+            noiseUrl = "/testNoiseUrl",
+        ),
+    )
 
     fun insertExercise(exerciseName: String): Exercise = exerciseRepository.save(Exercise(name = exerciseName))
 }

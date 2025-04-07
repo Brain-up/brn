@@ -353,30 +353,28 @@ class StudyHistoryIT : BaseIT() {
         existingUser: UserAccount,
         existingExercise: Exercise,
         startTime: LocalDateTime,
-    ): StudyHistory =
-        studyHistoryRepository.save(
-            StudyHistory(
-                userAccount = existingUser,
-                exercise = existingExercise,
-                endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
-                startTime = startTime,
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 2,
-                replaysCount = 4,
-            ),
-        )
+    ): StudyHistory = studyHistoryRepository.save(
+        StudyHistory(
+            userAccount = existingUser,
+            exercise = existingExercise,
+            endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
+            startTime = startTime,
+            executionSeconds = 122,
+            tasksCount = 12,
+            wrongAnswers = 2,
+            replaysCount = 4,
+        ),
+    )
 
-    private fun insertUser(): UserAccount =
-        userAccountRepository.save(
-            UserAccount(
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@test.test",
-                active = true,
-            ),
-        )
+    private fun insertUser(): UserAccount = userAccountRepository.save(
+        UserAccount(
+            fullName = "testUserFirstName",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            email = "test@test.test",
+            active = true,
+        ),
+    )
 
     private fun insertSeries(): Series {
         val exerciseGroup =
@@ -398,22 +396,20 @@ class StudyHistoryIT : BaseIT() {
         )
     }
 
-    private fun insertSubGroup(series: Series): SubGroup =
-        subGroupRepository.save(
-            SubGroup(series = series, level = 1, code = "code", name = "subGroup name"),
-        )
+    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
+        SubGroup(series = series, level = 1, code = "code", name = "subGroup name"),
+    )
 
     fun insertExercise(
         exerciseName: String,
         subGroup: SubGroup,
-    ): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                subGroup = subGroup,
-                level = 0,
-                name = exerciseName,
-            ),
-        )
+    ): Exercise = exerciseRepository.save(
+        Exercise(
+            subGroup = subGroup,
+            level = 0,
+            name = exerciseName,
+        ),
+    )
 
     private fun insertRole(roleName: String): Role = roleRepository.save(Role(name = roleName))
 }

@@ -13,9 +13,8 @@ data class ContactRequest(
     @field:Length(max = 255)
     val value: String?,
 ) {
-    fun toEntity() =
-        Contact(
-            type = this.type!!,
-            value = this.value!!,
-        )
+    fun toEntity() = Contact(
+        type = this.type!!,
+        value = this.value!!,
+    )
 }

@@ -62,12 +62,11 @@ class CsvParser(
         return originalLines
     }
 
-    private fun getProvider(header: String): MappingIteratorProvider<out Any> =
-        iteratorProviders
-            .stream()
-            .filter { it.isApplicable(header) }
-            .findFirst()
-            .orElseThrow { ParseException("There is no applicable iterator provider for format '$header'.") }
+    private fun getProvider(header: String): MappingIteratorProvider<out Any> = iteratorProviders
+        .stream()
+        .filter { it.isApplicable(header) }
+        .findFirst()
+        .orElseThrow { ParseException("There is no applicable iterator provider for format '$header'.") }
 
     class ParseException(
         message: String = "Parsing error. Please check csv file content format.",

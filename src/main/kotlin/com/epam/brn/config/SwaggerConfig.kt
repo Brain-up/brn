@@ -14,44 +14,42 @@ class SwaggerConfig {
     @Bean
     fun openApi() = OpenAPI().info(apiInfo())
 
-    private fun apiInfo() =
-        Info()
-            .title("Brain Up project")
-            .description("REST API for brn")
-            .contact(
-                Contact()
-                    .name("Elena.Moshnikova")
-                    .url("https://t.me/ElenaLovesSpb")
-                    .email("brainupproject@yandex.ru"),
-            )
+    private fun apiInfo() = Info()
+        .title("Brain Up project")
+        .description("REST API for brn")
+        .contact(
+            Contact()
+                .name("Elena.Moshnikova")
+                .url("https://t.me/ElenaLovesSpb")
+                .email("brainupproject@yandex.ru"),
+        )
 
     @Bean
-    fun rolesAllowedCustomizer(): OperationCustomizer? =
-        OperationCustomizer { operation, handlerMethod ->
-            var allowedRoles: Array<String>? = null
-            var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
-            if (rolesAllowedAnnotation != null) {
+    fun rolesAllowedCustomizer(): OperationCustomizer? = OperationCustomizer { operation, handlerMethod ->
+        var allowedRoles: Array<String>? = null
+        var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
+        if (rolesAllowedAnnotation != null) {
+            allowedRoles = rolesAllowedAnnotation.value
+        } else {
+            rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
+            if (rolesAllowedAnnotation != null)
                 allowedRoles = rolesAllowedAnnotation.value
-            } else {
-                rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
-                if (rolesAllowedAnnotation != null)
-                    allowedRoles = rolesAllowedAnnotation.value
-            }
-
-            val sb = StringBuilder("Roles: ")
-            if (allowedRoles != null)
-                sb.append("**${allowedRoles.joinToString(",")}**")
-            else
-                sb.append("**PUBLIC**")
-
-            operation.description?.let {
-                sb.append("<br/>")
-                sb.append(it)
-            }
-
-            operation.description = sb.toString()
-            operation
         }
+
+        val sb = StringBuilder("Roles: ")
+        if (allowedRoles != null)
+            sb.append("**${allowedRoles.joinToString(",")}**")
+        else
+            sb.append("**PUBLIC**")
+
+        operation.description?.let {
+            sb.append("<br/>")
+            sb.append(it)
+        }
+
+        operation.description = sb.toString()
+        operation
+    }
 
     @Bean
     fun sortTagsCustomiser(): OpenApiCustomiser = OpenApiCustomiser { openApi -> openApi.tags.sortBy { it.name } }

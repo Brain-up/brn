@@ -43,15 +43,14 @@ class StudyHistory(
     var repetitionIndex: Float? = 0.0f,
     var rightAnswersIndex: Float? = 1.0f,
 ) {
-    fun toDto() =
-        StudyHistoryDto(
-            id = this.id,
-            exerciseId = this.exercise.id!!,
-            startTime = this.startTime,
-            endTime = this.endTime,
-            executionSeconds = this.executionSeconds,
-            tasksCount = this.tasksCount,
-            wrongAnswers = this.wrongAnswers,
-            replaysCount = this.replaysCount,
-        )
+    fun toDto() = StudyHistoryDto(
+        id = this.id,
+        exerciseId = this.exercise.id!!,
+        startTime = this.startTime,
+        endTime = this.endTime,
+        executionSeconds = this.executionSeconds,
+        tasksCount = this.tasksCount,
+        wrongAnswers = this.wrongAnswers,
+        replaysCount = this.replaysCount,
+    )
 }

@@ -352,14 +352,13 @@ internal class DoctorServiceTest {
         id: Long?,
         email: String?,
         doctorId: Long? = null,
-    ): UserAccountDto =
-        UserAccountDto(
-            id = id,
-            name = email,
-            email = email,
-            gender = BrnGender.MALE,
-            bornYear = 2000,
-            active = true,
-            doctorId = doctorId,
-        )
+    ): UserAccountDto = UserAccountDto(
+        id = id,
+        name = email,
+        email = email,
+        gender = BrnGender.MALE,
+        bornYear = 2000,
+        active = true,
+        doctorId = doctorId,
+    )
 }

@@ -112,49 +112,44 @@ class TaskControllerIT : BaseIT() {
         Assertions.assertEquals(task.id, actual.getLong("id"))
     }
 
-    private fun insertExerciseGroup(): ExerciseGroup =
-        exerciseGroupRepository.save(
-            ExerciseGroup(
-                code = "CODE",
-                description = "desc",
-                name = "group",
-            ),
-        )
+    private fun insertExerciseGroup(): ExerciseGroup = exerciseGroupRepository.save(
+        ExerciseGroup(
+            code = "CODE",
+            description = "desc",
+            name = "group",
+        ),
+    )
 
-    private fun insertSeries(exerciseGroup: ExerciseGroup): Series =
-        seriesRepository.save(
-            Series(
-                id = 1,
-                description = "desc",
-                name = "series",
-                exerciseGroup = exerciseGroup,
-                level = 1,
-                type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
-            ),
-        )
+    private fun insertSeries(exerciseGroup: ExerciseGroup): Series = seriesRepository.save(
+        Series(
+            id = 1,
+            description = "desc",
+            name = "series",
+            exerciseGroup = exerciseGroup,
+            level = 1,
+            type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
+        ),
+    )
 
-    private fun insertSubGroup(series: Series): SubGroup =
-        subGroupRepository.save(
-            SubGroup(series = series, level = 1, code = "code", name = "subGroup name"),
-        )
+    private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
+        SubGroup(series = series, level = 1, code = "code", name = "subGroup name"),
+    )
 
-    private fun insertExercise(subGroup: SubGroup): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                id = 1,
-                subGroup = subGroup,
-                level = 0,
-                name = "exercise",
-            ),
-        )
+    private fun insertExercise(subGroup: SubGroup): Exercise = exerciseRepository.save(
+        Exercise(
+            id = 1,
+            subGroup = subGroup,
+            level = 0,
+            name = "exercise",
+        ),
+    )
 
-    private fun insertTask(exercise: Exercise): Task =
-        taskRepository.save(
-            Task(
-                id = 1,
-                name = "${exercise.name} Task",
-                serialNumber = 1,
-                exercise = exercise,
-            ),
-        )
+    private fun insertTask(exercise: Exercise): Task = taskRepository.save(
+        Task(
+            id = 1,
+            name = "${exercise.name} Task",
+            serialNumber = 1,
+            exercise = exercise,
+        ),
+    )
 }

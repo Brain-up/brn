@@ -186,18 +186,17 @@ class ContributorControllerIT : BaseIT() {
         contribution: Long = 1,
         type: ContributorType = ContributorType.SPECIALIST,
         contacts: Set<ContactRequest> = setOf(),
-    ): ContributorRequest =
-        ContributorRequest(
-            name = name,
-            nameEn = name,
-            description = name,
-            descriptionEn = name,
-            contribution = contribution,
-            type = type,
-            contacts = contacts,
-            company = null,
-            companyEn = null,
-            pictureUrl = null,
-            active = true,
-        )
+    ): ContributorRequest = ContributorRequest(
+        name = name,
+        nameEn = name,
+        description = name,
+        descriptionEn = name,
+        contribution = contribution,
+        type = type,
+        contacts = contacts,
+        company = null,
+        companyEn = null,
+        pictureUrl = null,
+        active = true,
+    )
 }

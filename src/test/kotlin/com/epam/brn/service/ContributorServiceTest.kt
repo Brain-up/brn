@@ -244,31 +244,29 @@ internal class ContributorServiceTest {
         name: String,
         contribution: Long,
         contacts: Set<ContactRequest>,
-    ): ContributorRequest =
-        ContributorRequest(
-            name = name,
-            nameEn = name,
-            type = ContributorType.SPECIALIST,
-            contribution = contribution,
-            contacts = contacts,
-            company = null,
-            companyEn = null,
-            description = null,
-            descriptionEn = null,
-            pictureUrl = null,
-            active = true,
-        )
+    ): ContributorRequest = ContributorRequest(
+        name = name,
+        nameEn = name,
+        type = ContributorType.SPECIALIST,
+        contribution = contribution,
+        contacts = contacts,
+        company = null,
+        companyEn = null,
+        description = null,
+        descriptionEn = null,
+        pictureUrl = null,
+        active = true,
+    )
 
     private fun createContributor(
         id: Long?,
         name: String,
         contribution: Long,
         contacts: MutableSet<Contact> = mutableSetOf(),
-    ): Contributor =
-        Contributor(
-            id = id,
-            name = name,
-            type = ContributorType.SPECIALIST,
-            contribution = contribution,
-        ).apply { this.contacts = contacts }
+    ): Contributor = Contributor(
+        id = id,
+        name = name,
+        type = ContributorType.SPECIALIST,
+        contribution = contribution,
+    ).apply { this.contacts = contacts }
 }

@@ -68,43 +68,41 @@ class UserAccount(
     )
     var roleSet: MutableSet<Role> = hashSetOf()
 
-    fun toDto() =
-        UserAccountDto(
-            id = id,
-            userId = userId,
-            name = fullName,
-            active = active,
-            email = email,
-            bornYear = bornYear,
-            gender = gender?.let { BrnGender.valueOf(it) },
-            created = created,
-            changed = changed,
-            avatar = avatar,
-            photo = photo,
-            description = description,
-            headphones =
-                headphones
-                    .map(Headphones::toDto)
-                    .toHashSet(),
-            doctorId = doctor?.id,
-        ).also {
-            it.roles =
-                this.roleSet
-                    .map(Role::name)
-                    .toMutableSet()
-        }
+    fun toDto() = UserAccountDto(
+        id = id,
+        userId = userId,
+        name = fullName,
+        active = active,
+        email = email,
+        bornYear = bornYear,
+        gender = gender?.let { BrnGender.valueOf(it) },
+        created = created,
+        changed = changed,
+        avatar = avatar,
+        photo = photo,
+        description = description,
+        headphones =
+            headphones
+                .map(Headphones::toDto)
+                .toHashSet(),
+        doctorId = doctor?.id,
+    ).also {
+        it.roles =
+            this.roleSet
+                .map(Role::name)
+                .toMutableSet()
+    }
 
-    fun toAnalyticsDto() =
-        UserWithAnalyticsResponse(
-            id = id,
-            userId = userId,
-            name = fullName,
-            active = active,
-            email = email,
-            bornYear = bornYear,
-            gender = gender?.let { BrnGender.valueOf(it) },
-            lastVisit = lastVisit ?: created,
-        )
+    fun toAnalyticsDto() = UserWithAnalyticsResponse(
+        id = id,
+        userId = userId,
+        name = fullName,
+        active = active,
+        email = email,
+        bornYear = bornYear,
+        gender = gender?.let { BrnGender.valueOf(it) },
+        lastVisit = lastVisit ?: created,
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

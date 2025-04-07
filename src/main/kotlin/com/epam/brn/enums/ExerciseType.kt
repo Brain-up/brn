@@ -25,9 +25,8 @@ val exercisesWithPictures =
 
 fun ExerciseType.shouldBeWithPictures(): Boolean = exercisesWithPictures.contains(this)
 
-fun ExerciseType.toMechanism(): ExerciseMechanism =
-    mapExerciseTypeToMechanism
-        .getOrElse(this) { throw IllegalArgumentException("No ExerciseMechanism is defined for $this.") }
+fun ExerciseType.toMechanism(): ExerciseMechanism = mapExerciseTypeToMechanism
+    .getOrElse(this) { throw IllegalArgumentException("No ExerciseMechanism is defined for $this.") }
 
 val mapExerciseTypeToMechanism =
     mapOf(

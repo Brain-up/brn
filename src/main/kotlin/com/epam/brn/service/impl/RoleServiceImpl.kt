@@ -14,15 +14,13 @@ import org.springframework.web.context.request.ServletRequestAttributes
 class RoleServiceImpl(
     private val roleRepository: RoleRepository,
 ) : RoleService {
-    override fun findById(id: Long): Role =
-        roleRepository
-            .findById(id)
-            .orElseThrow { EntityNotFoundException("Role with id = $id is not found") }
+    override fun findById(id: Long): Role = roleRepository
+        .findById(id)
+        .orElseThrow { EntityNotFoundException("Role with id = $id is not found") }
 
-    override fun findByName(name: String): Role =
-        roleRepository
-            .findByName(name)
-            ?: throw EntityNotFoundException("Role with name = $name is not found")
+    override fun findByName(name: String): Role = roleRepository
+        .findByName(name)
+        ?: throw EntityNotFoundException("Role with name = $name is not found")
 
     override fun save(role: Role) = roleRepository.save(role)
 

@@ -37,17 +37,16 @@ class Resource(
     var tasks: MutableSet<Task> = HashSet(),
     var description: String? = "",
 ) {
-    fun toResponse() =
-        ResourceResponse(
-            id = id,
-            audioFileUrl = audioFileUrl,
-            word = word.replace("+", ""),
-            wordPronounce = word,
-            pictureFileUrl = pictureFileUrl,
-            soundsCount = soundsCount,
-            wordType = WordType.valueOf(wordType),
-            description = description,
-        )
+    fun toResponse() = ResourceResponse(
+        id = id,
+        audioFileUrl = audioFileUrl,
+        word = word.replace("+", ""),
+        wordPronounce = word,
+        pictureFileUrl = pictureFileUrl,
+        soundsCount = soundsCount,
+        wordType = WordType.valueOf(wordType),
+        description = description,
+    )
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

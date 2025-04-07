@@ -64,10 +64,9 @@ class SubGroupController(
         @Parameter(name = "seriesId", description = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
         @Valid @RequestBody subGroupRequest: SubGroupRequest,
-    ): ResponseEntity<BrnResponse<SubGroupResponse>> =
-        ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(BrnResponse(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
+    ): ResponseEntity<BrnResponse<SubGroupResponse>> = ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(BrnResponse(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
     @PatchMapping("/{subGroupId}")
     @Operation(summary = "Update subgroup by id")

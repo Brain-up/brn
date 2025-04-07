@@ -64,15 +64,14 @@ data class ExerciseWordsCreateDto(
     @Schema(description = "Noise url", required = false, example = "voices")
     val noiseUrl: String? = null,
 ) : ExerciseCreateDto(ExerciseType.SINGLE_SIMPLE_WORDS, locale, subGroup, level, exerciseName) {
-    fun toSeriesWordsRecord() =
-        SeriesWordsRecord(
-            level = level,
-            code = subGroup,
-            exerciseName = exerciseName,
-            words = words,
-            noiseLevel = noiseLevel,
-            noiseUrl = noiseUrl.orEmpty(),
-        )
+    fun toSeriesWordsRecord() = SeriesWordsRecord(
+        level = level,
+        code = subGroup,
+        exerciseName = exerciseName,
+        words = words,
+        noiseLevel = noiseLevel,
+        noiseUrl = noiseUrl.orEmpty(),
+    )
 }
 
 @Schema(name = "ExercisePhrasesCreateDto", description = "Request dto for create exercise 'phrases'")
@@ -98,15 +97,14 @@ data class ExercisePhrasesCreateDto(
     @Schema(description = "noise url", required = false, example = "voices")
     val noiseUrl: String? = null,
 ) : ExerciseCreateDto(ExerciseType.PHRASES, locale, subGroup, level, exerciseName) {
-    fun toSeriesPhrasesRecord() =
-        SeriesPhrasesRecord(
-            level = level,
-            code = subGroup,
-            exerciseName = exerciseName,
-            phrases = phrases.toListWithDot(),
-            noiseLevel = noiseLevel,
-            noiseUrl = noiseUrl.orEmpty(),
-        )
+    fun toSeriesPhrasesRecord() = SeriesPhrasesRecord(
+        level = level,
+        code = subGroup,
+        exerciseName = exerciseName,
+        phrases = phrases.toListWithDot(),
+        noiseLevel = noiseLevel,
+        noiseUrl = noiseUrl.orEmpty(),
+    )
 }
 
 @Schema(name = "ExerciseSentencesCreateDto", description = "Request dto for create exercise 'sentences'")
@@ -130,12 +128,11 @@ data class ExerciseSentencesCreateDto(
     @field:NotNull
     val words: SetOfWords,
 ) : ExerciseCreateDto(ExerciseType.SENTENCE, locale, subGroup, level, exerciseName) {
-    fun toSeriesMatrixRecord() =
-        SeriesMatrixRecord(
-            level = level,
-            code = subGroup,
-            exerciseName = exerciseName,
-            orderNumber = orderNumber,
-            words = words.toRecordList(),
-        )
+    fun toSeriesMatrixRecord() = SeriesMatrixRecord(
+        level = level,
+        code = subGroup,
+        exerciseName = exerciseName,
+        orderNumber = orderNumber,
+        words = words.toRecordList(),
+    )
 }

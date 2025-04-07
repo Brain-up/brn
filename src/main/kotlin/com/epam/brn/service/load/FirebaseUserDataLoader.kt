@@ -114,10 +114,9 @@ class FirebaseUserDataLoader(
         }
     }
 
-    private fun createEmailIdentified(it: UserAccount): EmailIdentifier? =
-        try {
-            EmailIdentifier(it.email)
-        } catch (e: Exception) {
-            null
-        }
+    private fun createEmailIdentified(it: UserAccount): EmailIdentifier? = try {
+        EmailIdentifier(it.email)
+    } catch (e: Exception) {
+        null
+    }
 }

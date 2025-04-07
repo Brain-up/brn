@@ -187,79 +187,72 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
         return exercise
     }
 
-    private fun createTasks(exercise: Exercise): List<Task> =
-        listOf(
-            Task(
-                exercise = exercise,
-                serialNumber = 1,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бал(),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 2,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бум(),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 3,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_быль(),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 4,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бал(),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 5,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_бум(),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 6,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-                correctAnswer = resource_быль(),
-            ),
-        )
+    private fun createTasks(exercise: Exercise): List<Task> = listOf(
+        Task(
+            exercise = exercise,
+            serialNumber = 1,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+            correctAnswer = resource_бал(),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 2,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+            correctAnswer = resource_бум(),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 3,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+            correctAnswer = resource_быль(),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 4,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+            correctAnswer = resource_бал(),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 5,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+            correctAnswer = resource_бум(),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 6,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+            correctAnswer = resource_быль(),
+        ),
+    )
 
-    private fun resource_бал(): Resource =
-        Resource(
-            word = "бал",
-            wordType = WordType.OBJECT.toString(),
-        )
+    private fun resource_бал(): Resource = Resource(
+        word = "бал",
+        wordType = WordType.OBJECT.toString(),
+    )
 
-    private fun resource_бум(): Resource =
-        Resource(
-            word = "бум",
-            wordType = WordType.OBJECT.toString(),
-        )
+    private fun resource_бум(): Resource = Resource(
+        word = "бум",
+        wordType = WordType.OBJECT.toString(),
+    )
 
-    private fun resource_быль(): Resource =
-        Resource(
-            word = "быль",
-            wordType = WordType.OBJECT.toString(),
-        )
+    private fun resource_быль(): Resource = Resource(
+        word = "быль",
+        wordType = WordType.OBJECT.toString(),
+    )
 
-    private fun resource_вить(): Resource =
-        Resource(
-            word = "вить",
-            wordType = WordType.OBJECT.toString(),
-        )
+    private fun resource_вить(): Resource = Resource(
+        word = "вить",
+        wordType = WordType.OBJECT.toString(),
+    )
 
-    private fun resource_гад(): Resource =
-        Resource(
-            word = "гад",
-            wordType = WordType.OBJECT.toString(),
-        )
+    private fun resource_гад(): Resource = Resource(
+        word = "гад",
+        wordType = WordType.OBJECT.toString(),
+    )
 
-    private fun resource_дуб(): Resource =
-        Resource(
-            word = "дуб",
-            wordType = WordType.OBJECT.toString(),
-        )
+    private fun resource_дуб(): Resource = Resource(
+        word = "дуб",
+        wordType = WordType.OBJECT.toString(),
+    )
 }

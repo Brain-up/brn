@@ -57,47 +57,45 @@ internal class GroupRecordProcessorTest {
         verify(inverse = true) { exerciseGroupRepository.save(ofType(ExerciseGroup::class)) }
     }
 
-    private fun createActualGroupList() =
-        mutableListOf(
-            ExerciseGroup(
-                code = "CODE",
-                name = "name",
-                locale = "ru-ru",
-                description = "desc",
-            ),
-            ExerciseGroup(
-                code = "CODE1",
-                name = "name1",
-                locale = "ru-ru1",
-                description = "desc1",
-            ),
-            ExerciseGroup(
-                code = "CODE2",
-                name = "name2",
-                locale = "ru-ru2",
-                description = "desc2",
-            ),
-        )
+    private fun createActualGroupList() = mutableListOf(
+        ExerciseGroup(
+            code = "CODE",
+            name = "name",
+            locale = "ru-ru",
+            description = "desc",
+        ),
+        ExerciseGroup(
+            code = "CODE1",
+            name = "name1",
+            locale = "ru-ru1",
+            description = "desc1",
+        ),
+        ExerciseGroup(
+            code = "CODE2",
+            name = "name2",
+            locale = "ru-ru2",
+            description = "desc2",
+        ),
+    )
 
-    private fun createInputGroupRecordList() =
-        mutableListOf(
-            GroupRecord(
-                code = "CODE",
-                locale = "ru-ru",
-                name = "name",
-                description = "desc",
-            ),
-            GroupRecord(
-                code = "CODE1",
-                locale = "ru-ru1",
-                name = "name1",
-                description = "desc1",
-            ),
-            GroupRecord(
-                code = "CODE2",
-                locale = "ru-ru2",
-                name = "name2",
-                description = "desc2",
-            ),
-        )
+    private fun createInputGroupRecordList() = mutableListOf(
+        GroupRecord(
+            code = "CODE",
+            locale = "ru-ru",
+            name = "name",
+            description = "desc",
+        ),
+        GroupRecord(
+            code = "CODE1",
+            locale = "ru-ru1",
+            name = "name1",
+            description = "desc1",
+        ),
+        GroupRecord(
+            code = "CODE2",
+            locale = "ru-ru2",
+            name = "name2",
+            description = "desc2",
+        ),
+    )
 }

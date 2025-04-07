@@ -84,16 +84,15 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
 
     companion object {
         @JvmStatic
-        private fun getUserEmailsAndAccountData() =
-            listOf(
-                Arguments.of("default@gmail.com", null, null),
-                Arguments.of("default1@gmail.com", null, null),
-                Arguments.of("default2@gmail.com", null, null),
-                Arguments.of(
-                    "missed@g.com",
-                    UsernameNotFoundException::class.java,
-                    "User with email: missed@g.com doesn't exist",
-                ),
-            )
+        private fun getUserEmailsAndAccountData() = listOf(
+            Arguments.of("default@gmail.com", null, null),
+            Arguments.of("default1@gmail.com", null, null),
+            Arguments.of("default2@gmail.com", null, null),
+            Arguments.of(
+                "missed@g.com",
+                UsernameNotFoundException::class.java,
+                "User with email: missed@g.com doesn't exist",
+            ),
+        )
     }
 }

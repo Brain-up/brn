@@ -34,8 +34,7 @@ class GroupController(
     @Operation(summary = "Get group by id")
     fun getGroupById(
         @PathVariable("groupId") groupId: Long,
-    ): ResponseEntity<BrnResponse<ExerciseGroupDto>> =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = exerciseGroupsService.findGroupDtoById(groupId)))
+    ): ResponseEntity<BrnResponse<ExerciseGroupDto>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = exerciseGroupsService.findGroupDtoById(groupId)))
 }

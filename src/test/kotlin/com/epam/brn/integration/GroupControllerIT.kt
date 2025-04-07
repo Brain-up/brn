@@ -101,15 +101,14 @@ class GroupControllerIT : BaseIT() {
     fun insertExerciseGroup(
         exerciseGroupName: String,
         locale: String = BrnLocale.RU.locale,
-    ): ExerciseGroup =
-        exerciseGroupRepository.save(
-            ExerciseGroup(
-                code = "CODE",
-                description = "desc",
-                name = exerciseGroupName,
-                locale = locale,
-            ),
-        )
+    ): ExerciseGroup = exerciseGroupRepository.save(
+        ExerciseGroup(
+            code = "CODE",
+            description = "desc",
+            name = exerciseGroupName,
+            locale = locale,
+        ),
+    )
 
     fun insertSeries(
         group: ExerciseGroup,
@@ -129,37 +128,34 @@ class GroupControllerIT : BaseIT() {
     fun insertSubGroup(
         series: Series,
         level: Int,
-    ): SubGroup =
-        subGroupRepository.save(
-            SubGroup(
-                series = series,
-                level = level,
-                code = "code",
-                name = "${series.name}subGroupName$level",
-            ),
-        )
+    ): SubGroup = subGroupRepository.save(
+        SubGroup(
+            series = series,
+            level = level,
+            code = "code",
+            name = "${series.name}subGroupName$level",
+        ),
+    )
 
     fun insertExercise(
         subGroup: SubGroup,
         exerciseName: String,
-    ): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                subGroup = subGroup,
-                level = 0,
-                name = exerciseName,
-                noiseLevel = 50,
-                noiseUrl = "/testNoiseUrl",
-            ),
-        )
+    ): Exercise = exerciseRepository.save(
+        Exercise(
+            subGroup = subGroup,
+            level = 0,
+            name = exerciseName,
+            noiseLevel = 50,
+            noiseUrl = "/testNoiseUrl",
+        ),
+    )
 
-    fun insertTask(exercise: Exercise): Task =
-        taskRepository.save(
-            Task(
-                id = 1,
-                name = "${exercise.name} Task",
-                serialNumber = 1,
-                exercise = exercise,
-            ),
-        )
+    fun insertTask(exercise: Exercise): Task = taskRepository.save(
+        Task(
+            id = 1,
+            name = "${exercise.name} Task",
+            serialNumber = 1,
+            exercise = exercise,
+        ),
+    )
 }

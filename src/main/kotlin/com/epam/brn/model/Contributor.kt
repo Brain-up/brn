@@ -69,25 +69,24 @@ class Contributor(
         return dto
     }
 
-    fun toContributorDetailsDto(): ContributorDetailsResponse =
-        ContributorDetailsResponse(
-            id = id!!,
-            type = type.name,
-            name = name,
-            description = description,
-            company = company,
-            nameEn = nameEn,
-            descriptionEn = descriptionEn,
-            companyEn = companyEn,
-            pictureUrl = pictureUrl,
-            active = active,
-            gitHubUser = gitHubUser?.toDto(),
-            contacts =
-                contacts
-                    .map {
-                        it.toDto()
-                    }.toSet(),
-        )
+    fun toContributorDetailsDto(): ContributorDetailsResponse = ContributorDetailsResponse(
+        id = id!!,
+        type = type.name,
+        name = name,
+        description = description,
+        company = company,
+        nameEn = nameEn,
+        descriptionEn = descriptionEn,
+        companyEn = companyEn,
+        pictureUrl = pictureUrl,
+        active = active,
+        gitHubUser = gitHubUser?.toDto(),
+        contacts =
+            contacts
+                .map {
+                    it.toDto()
+                }.toSet(),
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

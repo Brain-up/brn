@@ -76,8 +76,7 @@ class CloudController(
     fun uploadContributorPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile,
         @RequestParam(value = "fileName") fileName: String,
-    ): ResponseEntity<BrnResponse<String>> =
-        ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(BrnResponse(cloudUploadService.uploadContributorPicture(multipartFile, fileName)))
+    ): ResponseEntity<BrnResponse<String>> = ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(BrnResponse(cloudUploadService.uploadContributorPicture(multipartFile, fileName)))
 }

@@ -44,15 +44,14 @@ class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf(),
 ) {
-    fun toTaskResponse(exerciseType: ExerciseType) =
-        TaskResponse(
-            id = id!!,
-            exerciseType = exerciseType,
-            name = name,
-            serialNumber = serialNumber,
-            answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
-            shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
-        )
+    fun toTaskResponse(exerciseType: ExerciseType) = TaskResponse(
+        id = id!!,
+        exerciseType = exerciseType,
+        name = name,
+        serialNumber = serialNumber,
+        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
+        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
+    )
 
     fun toWordsGroupSeriesTaskDto(
         exerciseType: ExerciseType,

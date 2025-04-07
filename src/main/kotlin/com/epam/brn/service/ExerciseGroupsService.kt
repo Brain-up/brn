@@ -26,13 +26,12 @@ class ExerciseGroupsService(
     }
 
     @Cacheable("groupsByLocale")
-    fun findByLocale(locale: String): List<ExerciseGroupDto> =
-        if (locale.isEmpty())
-            exerciseGroupRepository.findAll().map { group -> group.toDtoWithoutSeries() }
-        else
-            exerciseGroupRepository
-                .findByLocale(locale)
-                .map { group -> group.toDtoWithoutSeries() }
+    fun findByLocale(locale: String): List<ExerciseGroupDto> = if (locale.isEmpty())
+        exerciseGroupRepository.findAll().map { group -> group.toDtoWithoutSeries() }
+    else
+        exerciseGroupRepository
+            .findByLocale(locale)
+            .map { group -> group.toDtoWithoutSeries() }
 
     fun findGroupByCode(groupCode: String): ExerciseGroup {
         log.debug("Searching group with code=$groupCode")

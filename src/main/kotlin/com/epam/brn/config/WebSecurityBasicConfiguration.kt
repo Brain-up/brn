@@ -49,16 +49,14 @@ class WebSecurityBasicConfiguration(
     }
 
     @Bean
-    fun accessDeniedHandler(): AccessDeniedHandler? =
-        AccessDeniedHandler { _, response: HttpServletResponse, _ ->
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied")
-        }
+    fun accessDeniedHandler(): AccessDeniedHandler? = AccessDeniedHandler { _, response: HttpServletResponse, _ ->
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied")
+    }
 
     @Bean
-    fun authenticationEntryPoint(): AuthenticationEntryPoint? =
-        AuthenticationEntryPoint { _, response: HttpServletResponse, _ ->
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
-        }
+    fun authenticationEntryPoint(): AuthenticationEntryPoint? = AuthenticationEntryPoint { _, response: HttpServletResponse, _ ->
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()

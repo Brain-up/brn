@@ -23,29 +23,26 @@ class ResourceService(
     fun findFirstByWordAndAudioFileUrlLike(
         word: String,
         audioFileName: String,
-    ): Resource? =
-        resourceRepository
-            .findFirstByWordAndAudioFileUrlLike(word, audioFileName)
-            .orElse(null)
+    ): Resource? = resourceRepository
+        .findFirstByWordAndAudioFileUrlLike(word, audioFileName)
+        .orElse(null)
 
     fun save(resource: Resource): Resource = resourceRepository.save(resource)
 
-    fun findAll(): List<Resource> =
-        resourceRepository
-            .findAll()
-            .iterator()
-            .asSequence()
-            .toList()
+    fun findAll(): List<Resource> = resourceRepository
+        .findAll()
+        .iterator()
+        .asSequence()
+        .toList()
 
     fun updateDescription(
         id: Long,
         description: String,
-    ): ResourceResponse =
-        resourceRepository.findByIdOrNull(id)?.let {
-            it.description = description
-            resourceRepository.save(it)
-            it.toResponse()
-        } ?: throw EntityNotFoundException("Resource not found by id=$id")
+    ): ResourceResponse = resourceRepository.findByIdOrNull(id)?.let {
+        it.description = description
+        resourceRepository.save(it)
+        it.toResponse()
+    } ?: throw EntityNotFoundException("Resource not found by id=$id")
 
     fun saveAll(resources: List<Resource>): List<Resource> = resourceRepository.saveAll(resources).toList()
 }

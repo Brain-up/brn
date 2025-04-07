@@ -13,12 +13,11 @@ data class HeadphonesDto(
     var description: String = "",
     var userAccount: Long? = null,
 ) {
-    fun toEntity() =
-        Headphones(
-            id = id,
-            name = name,
-            active = active ?: true,
-            type = type ?: HeadphonesType.NOT_DEFINED,
-            description = description,
-        )
+    fun toEntity() = Headphones(
+        id = id,
+        name = name,
+        active = active ?: true,
+        type = type ?: HeadphonesType.NOT_DEFINED,
+        description = description,
+    )
 }

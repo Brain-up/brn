@@ -58,17 +58,15 @@ class UserDetailController(
     @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun findUserById(
         @PathVariable("userId") id: Long,
-    ): ResponseEntity<BrnResponse<List<UserAccountDto>>> =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = listOf(userAccountService.findUserDtoById(id))))
+    ): ResponseEntity<BrnResponse<List<UserAccountDto>>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = listOf(userAccountService.findUserDtoById(id))))
 
     @GetMapping(value = ["/current"])
     @Operation(summary = "Get current logged in user")
-    fun getCurrentUser() =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = listOf(userAccountService.getCurrentUserDto())))
+    fun getCurrentUser() = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = listOf(userAccountService.getCurrentUserDto())))
 
     @PatchMapping(value = ["/current"])
     @Operation(summary = "Update current logged in user")
@@ -124,10 +122,9 @@ class UserDetailController(
 
     @GetMapping(value = ["/current/headphones"])
     @Operation(summary = "Get all headphones for current user")
-    fun getAllHeadphonesForUser() =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
+    fun getAllHeadphonesForUser() = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = userAccountService.getAllHeadphonesForCurrentUser().toList()))
 
     @GetMapping("/current/{patientId}/doctor")
     @Operation(summary = "Get patient's doctor")
@@ -148,10 +145,9 @@ class UserDetailController(
     @DeleteMapping("/autotest/del")
     @Operation(summary = "Delete all auto test users")
     @ResponseStatus(HttpStatus.OK)
-    fun deleteAutoTestUsers() =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = userAccountService.deleteAutoTestUsers()))
+    fun deleteAutoTestUsers() = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = userAccountService.deleteAutoTestUsers()))
 
     @DeleteMapping("/autotest/del/{email}")
     @Operation(summary = "Delete auto test user by email")

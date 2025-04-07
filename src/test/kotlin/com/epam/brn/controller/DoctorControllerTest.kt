@@ -77,14 +77,13 @@ internal class DoctorControllerTest {
         email: String?,
         roles: MutableSet<String> = mutableSetOf(),
         doctorId: Long? = null,
-    ): UserAccountDto =
-        UserAccountDto(
-            id = id,
-            name = email,
-            email = email,
-            gender = BrnGender.MALE,
-            bornYear = 2000,
-            active = true,
-            doctorId = doctorId,
-        ).apply { this.roles = roles }
+    ): UserAccountDto = UserAccountDto(
+        id = id,
+        name = email,
+        email = email,
+        gender = BrnGender.MALE,
+        bornYear = 2000,
+        active = true,
+        doctorId = doctorId,
+    ).apply { this.roles = roles }
 }

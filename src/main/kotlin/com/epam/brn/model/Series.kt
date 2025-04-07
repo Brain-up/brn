@@ -39,19 +39,18 @@ class Series(
         description = record.description,
     )
 
-    fun toDto() =
-        SeriesDto(
-            group = exerciseGroup.id!!,
-            id = id,
-            level = level,
-            name = name,
-            type = ExerciseType.valueOf(type),
-            description = description,
-            subGroups =
-                subGroups
-                    .sortedBy { it.withPictures }
-                    .map { subGroup -> subGroup.id!! },
-        )
+    fun toDto() = SeriesDto(
+        group = exerciseGroup.id!!,
+        id = id,
+        level = level,
+        name = name,
+        type = ExerciseType.valueOf(type),
+        description = description,
+        subGroups =
+            subGroups
+                .sortedBy { it.withPictures }
+                .map { subGroup -> subGroup.id!! },
+    )
 
     override fun toString() = "Series(id=$id, type=$type, level=$level, name='$name', description='$description')"
 

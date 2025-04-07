@@ -213,60 +213,53 @@ internal class SeriesMatrixRecordProcessorTest {
         return exercise
     }
 
-    private fun createTask(exercise: Exercise): Task =
-        Task(
-            serialNumber = 2,
-            exercise = exercise,
-            answerOptions =
-                mutableSetOf(
-                    resource_девочка(),
-                    resource_бабушка(),
-                    resource_дедушка(),
-                    resource_сидит(),
-                    resource_лежит(),
-                    resource_идет(),
-                ),
-        )
+    private fun createTask(exercise: Exercise): Task = Task(
+        serialNumber = 2,
+        exercise = exercise,
+        answerOptions =
+            mutableSetOf(
+                resource_девочка(),
+                resource_бабушка(),
+                resource_дедушка(),
+                resource_сидит(),
+                resource_лежит(),
+                resource_идет(),
+            ),
+    )
 
-    private fun resource_девочка(): Resource =
-        Resource(
-            word = "девочка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/девочка.jpg",
-        )
+    private fun resource_девочка(): Resource = Resource(
+        word = "девочка",
+        wordType = WordType.OBJECT.toString(),
+        pictureFileUrl = "pictures/withWord/девочка.jpg",
+    )
 
-    private fun resource_бабушка(): Resource =
-        Resource(
-            word = "бабушка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/бабушка.jpg",
-        )
+    private fun resource_бабушка(): Resource = Resource(
+        word = "бабушка",
+        wordType = WordType.OBJECT.toString(),
+        pictureFileUrl = "pictures/withWord/бабушка.jpg",
+    )
 
-    private fun resource_дедушка(): Resource =
-        Resource(
-            word = "дедушка",
-            wordType = WordType.OBJECT.toString(),
-            pictureFileUrl = "pictures/withWord/дедушка.jpg",
-        )
+    private fun resource_дедушка(): Resource = Resource(
+        word = "дедушка",
+        wordType = WordType.OBJECT.toString(),
+        pictureFileUrl = "pictures/withWord/дедушка.jpg",
+    )
 
-    private fun resource_сидит(): Resource =
-        Resource(
-            word = "сидит",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/сидит.jpg",
-        )
+    private fun resource_сидит(): Resource = Resource(
+        word = "сидит",
+        wordType = WordType.OBJECT_ACTION.toString(),
+        pictureFileUrl = "pictures/withWord/сидит.jpg",
+    )
 
-    private fun resource_лежит(): Resource =
-        Resource(
-            word = "лежит",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/лежит.jpg",
-        )
+    private fun resource_лежит(): Resource = Resource(
+        word = "лежит",
+        wordType = WordType.OBJECT_ACTION.toString(),
+        pictureFileUrl = "pictures/withWord/лежит.jpg",
+    )
 
-    private fun resource_идет(): Resource =
-        Resource(
-            word = "идет",
-            wordType = WordType.OBJECT_ACTION.toString(),
-            pictureFileUrl = "pictures/withWord/идет.jpg",
-        )
+    private fun resource_идет(): Resource = Resource(
+        word = "идет",
+        wordType = WordType.OBJECT_ACTION.toString(),
+        pictureFileUrl = "pictures/withWord/идет.jpg",
+    )
 }

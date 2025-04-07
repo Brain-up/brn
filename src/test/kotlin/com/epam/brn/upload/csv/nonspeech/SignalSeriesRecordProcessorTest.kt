@@ -162,12 +162,11 @@ internal class SignalSeriesRecordProcessorTest {
         verify { exerciseRepositoryMock.save(exercise) }
     }
 
-    private fun createExercise(subGroup: SubGroup) =
-        Exercise(
-            subGroup = subGroup,
-            name = "По 2 сигнала разной длительности.",
-            level = 1,
-        )
+    private fun createExercise(subGroup: SubGroup) = Exercise(
+        subGroup = subGroup,
+        name = "По 2 сигнала разной длительности.",
+        level = 1,
+    )
 
     private fun createExerciseWithSignals(subGroup: SubGroup): Exercise {
         val exercise =

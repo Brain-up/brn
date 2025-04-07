@@ -36,48 +36,47 @@ internal class GroupLocalePostprocessorImplIT {
 
     companion object {
         @JvmStatic
-        private fun getEnUsLocaleExerciseGroupsData() =
-            listOf(
-                Arguments.of(
-                    ExerciseGroupDto(
-                        id = null,
-                        locale = "en",
-                        name = "Неречевые упражнения",
-                        description = null,
-                        series = mutableListOf(),
-                    ),
-                    "non-speech exercises",
+        private fun getEnUsLocaleExerciseGroupsData() = listOf(
+            Arguments.of(
+                ExerciseGroupDto(
+                    id = null,
+                    locale = "en",
+                    name = "Неречевые упражнения",
+                    description = null,
+                    series = mutableListOf(),
                 ),
-                Arguments.of(
-                    ExerciseGroupDto(
-                        id = null,
-                        locale = "en",
-                        name = "Речевые упражнения",
-                        description = null,
-                        series = mutableListOf(),
-                    ),
-                    "speech exercises",
+                "non-speech exercises",
+            ),
+            Arguments.of(
+                ExerciseGroupDto(
+                    id = null,
+                    locale = "en",
+                    name = "Речевые упражнения",
+                    description = null,
+                    series = mutableListOf(),
                 ),
-                Arguments.of(
-                    ExerciseGroupDto(
-                        id = null,
-                        locale = "ru",
-                        name = "Неречевые упражнения",
-                        description = null,
-                        series = mutableListOf(),
-                    ),
-                    "Неречевые упражнения",
+                "speech exercises",
+            ),
+            Arguments.of(
+                ExerciseGroupDto(
+                    id = null,
+                    locale = "ru",
+                    name = "Неречевые упражнения",
+                    description = null,
+                    series = mutableListOf(),
                 ),
-                Arguments.of(
-                    ExerciseGroupDto(
-                        id = null,
-                        locale = "ru",
-                        name = "Речевые упражнения",
-                        description = null,
-                        series = mutableListOf(),
-                    ),
-                    "Речевые упражнения",
+                "Неречевые упражнения",
+            ),
+            Arguments.of(
+                ExerciseGroupDto(
+                    id = null,
+                    locale = "ru",
+                    name = "Речевые упражнения",
+                    description = null,
+                    series = mutableListOf(),
                 ),
-            )
+                "Речевые упражнения",
+            ),
+        )
     }
 }

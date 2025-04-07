@@ -156,14 +156,13 @@ suspend fun doSomethingUsefulTwo(): Int {
     return 29
 }
 
-fun simple(): Flow<Int> =
-    flow {
-        // flow builder
-        for (i in 1..3) {
-            delay(1000) // pretend we are doing something useful here
-            emit(i) // emit next value
-        }
+fun simple(): Flow<Int> = flow {
+    // flow builder
+    for (i in 1..3) {
+        delay(1000) // pretend we are doing something useful here
+        emit(i) // emit next value
     }
+}
 
 suspend fun performRequest(request: Int): String {
     delay(1000) // imitate long-running asynchronous work

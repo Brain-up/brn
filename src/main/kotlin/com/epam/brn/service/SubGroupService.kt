@@ -24,11 +24,10 @@ class SubGroupService(
     private val log = logger()
 
     @Cacheable("subgroupsBySeriesId")
-    fun findSubGroupsForSeries(seriesId: Long): List<SubGroupResponse> =
-        subGroupRepository
-            .findBySeriesId(seriesId)
-            .map { subGroup -> toSubGroupResponse(subGroup) }
-            .sortedWith(compareBy({ it.level }, { it.withPictures }))
+    fun findSubGroupsForSeries(seriesId: Long): List<SubGroupResponse> = subGroupRepository
+        .findBySeriesId(seriesId)
+        .map { subGroup -> toSubGroupResponse(subGroup) }
+        .sortedWith(compareBy({ it.level }, { it.withPictures }))
 
     @Cacheable("subgroupsBySubGroupId")
     fun findById(subGroupId: Long): SubGroupResponse {

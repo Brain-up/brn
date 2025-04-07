@@ -463,16 +463,15 @@ class UserDetailsControllerIT : BaseIT() {
     private fun insertUser(
         email_: String = email,
         doctor_: UserAccount? = null,
-    ): UserAccount =
-        userAccountRepository.save(
-            UserAccount(
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = email_,
-                doctor = doctor_,
-            ),
-        )
+    ): UserAccount = userAccountRepository.save(
+        UserAccount(
+            fullName = "testUserFirstName",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            email = email_,
+            doctor = doctor_,
+        ),
+    )
 
     private fun insertThreeHeadphonesForUser(user: UserAccount) {
         headphonesRepository.saveAll(
@@ -484,10 +483,9 @@ class UserDetailsControllerIT : BaseIT() {
         )
     }
 
-    private fun insertRole(roleName: String): Role =
-        roleRepository.save(
-            Role(
-                name = roleName,
-            ),
-        )
+    private fun insertRole(roleName: String): Role = roleRepository.save(
+        Role(
+            name = roleName,
+        ),
+    )
 }

@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service
 class StatusRequirementsManagerImpl(
     private val statusRequirementsRetriever: StatusRequirementsRetriever,
 ) : StatusRequirementsManager {
-    override fun getPeriodRequirements(period: UserExercisingPeriod): List<StatusRequirements> =
-        UserExercisingProgressStatus.values().map {
-            statusRequirementsRetriever.getRequirementsForStatus(it, period)
-        }
+    override fun getPeriodRequirements(period: UserExercisingPeriod): List<StatusRequirements> = UserExercisingProgressStatus.values().map {
+        statusRequirementsRetriever.getRequirementsForStatus(it, period)
+    }
 }

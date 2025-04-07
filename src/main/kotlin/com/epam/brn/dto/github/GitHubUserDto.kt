@@ -16,15 +16,14 @@ data class GitHubUserDto(
     val email: String? = null,
     val bio: String? = null,
 ) {
-    fun toEntity(contributionsLevel: Long) =
-        GitHubUser(
-            id = id,
-            name = name,
-            login = login,
-            email = email,
-            avatarUrl = avatarUrl,
-            bio = bio,
-            company = company,
-            contributions = contributionsLevel,
-        )
+    fun toEntity(contributionsLevel: Long) = GitHubUser(
+        id = id,
+        name = name,
+        login = login,
+        email = email,
+        avatarUrl = avatarUrl,
+        bio = bio,
+        company = company,
+        contributions = contributionsLevel,
+    )
 }

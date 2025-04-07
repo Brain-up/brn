@@ -111,15 +111,14 @@ private val vowelSet = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ы', 'ю
 
 fun String.findSyllableCount(): Int = count { it in vowelSet }
 
-fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) =
-    TaskResponse(
-        id = id!!,
-        exerciseType = exerciseType,
-        exerciseMechanism = exerciseType.toMechanism(),
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.toResourceDtoSet(),
-    )
+fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
+    id = id!!,
+    exerciseType = exerciseType,
+    exerciseMechanism = exerciseType.toMechanism(),
+    name = name,
+    serialNumber = serialNumber,
+    answerOptions = answerOptions.toResourceDtoSet(),
+)
 
 fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {
     val mapVowelCountToWord: Map<Int, List<Resource>> =

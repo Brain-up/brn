@@ -52,10 +52,9 @@ class StudyHistoryService(
         userId: Long,
         from: LocalDateTime,
         to: LocalDateTime,
-    ): List<StudyHistoryDto> =
-        studyHistoryRepository
-            .getHistories(userId, from, to)
-            .map { it.toDto() }
+    ): List<StudyHistoryDto> = studyHistoryRepository
+        .getHistories(userId, from, to)
+        .map { it.toDto() }
 
     fun getUserDailyStatistics(
         day: LocalDateTime,
@@ -86,10 +85,9 @@ class StudyHistoryService(
         userId: Long,
         month: Int,
         year: Int,
-    ): List<StudyHistoryDto> =
-        studyHistoryRepository
-            .getMonthHistories(userId, month, year)
-            .map { it.toDto() }
+    ): List<StudyHistoryDto> = studyHistoryRepository
+        .getMonthHistories(userId, month, year)
+        .map { it.toDto() }
 
     fun isUserHasStatistics(userId: Long): Boolean = studyHistoryRepository.isUserHasStatistics(userId)
 

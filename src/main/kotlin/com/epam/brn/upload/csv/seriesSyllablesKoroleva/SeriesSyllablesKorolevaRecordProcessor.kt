@@ -50,12 +50,11 @@ class SeriesSyllablesKorolevaRecordProcessor(
     private fun extractAnswerOptions(
         record: SeriesSyllablesKorolevaRecord,
         locale: BrnLocale,
-    ): MutableSet<Resource> =
-        record.words
-            .asSequence()
-            .map { it.toStringWithoutBraces() }
-            .map { toResource(it, locale) }
-            .toMutableSet()
+    ): MutableSet<Resource> = record.words
+        .asSequence()
+        .map { it.toStringWithoutBraces() }
+        .map { toResource(it, locale) }
+        .toMutableSet()
 
     private fun toResource(
         word: String,

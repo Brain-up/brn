@@ -82,26 +82,24 @@ internal class AudiometryServiceIT {
     private fun insetHeadphones() =
         headphonesRepository.save(Headphones(name = "first", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH))
 
-    private fun insertUser(): UserAccount =
-        userAccountRepository.save(
-            UserAccount(
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@test.test",
-                active = true,
-            ),
-        )
+    private fun insertUser(): UserAccount = userAccountRepository.save(
+        UserAccount(
+            fullName = "testUserFirstName",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            email = "test@test.test",
+            active = true,
+        ),
+    )
 
-    private fun insertSpeechAudiometry(): Audiometry =
-        audiometryRepository.save(
-            Audiometry(
-                locale = BrnLocale.EN.locale,
-                name = "Speech diagnostic",
-                description = "Speech diagnostic with Lopotko words sequences",
-                audiometryType = AudiometryType.SPEECH.name,
-            ),
-        )
+    private fun insertSpeechAudiometry(): Audiometry = audiometryRepository.save(
+        Audiometry(
+            locale = BrnLocale.EN.locale,
+            name = "Speech diagnostic",
+            description = "Speech diagnostic with Lopotko words sequences",
+            audiometryType = AudiometryType.SPEECH.name,
+        ),
+    )
 
     private fun insertSpeechAudiometryTasks(audiometry: Audiometry): List<AudiometryTask> {
         val task1Low =

@@ -154,15 +154,14 @@ class AwsConfig(
         val contentTypeStartsWith: Pair<String, String> = "Content-Type" to contentTypeStartsWith
         val metaTagStartsWith: Pair<String, String> = "x-amz-meta-tag" to metaTagStartsWith
 
-        override fun toString(): String =
-            "Conditions(date='$date'," +
-                " bucket=$bucket," +
-                " acl=$acl, uuid=$uuid," +
-                " serverSideEncryption=$serverSideEncryption," +
-                " credential=$credential, algorithm=$algorithm," +
-                " dateTime=$dateTime, expiration=$expiration," +
-                " uploadKey=$uploadKey, successActionRedirect=$successActionRedirect," +
-                " contentTypeStartsWith=$contentTypeStartsWith," +
-                " metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
+        override fun toString(): String = "Conditions(date='$date'," +
+            " bucket=$bucket," +
+            " acl=$acl, uuid=$uuid," +
+            " serverSideEncryption=$serverSideEncryption," +
+            " credential=$credential, algorithm=$algorithm," +
+            " dateTime=$dateTime, expiration=$expiration," +
+            " uploadKey=$uploadKey, successActionRedirect=$successActionRedirect," +
+            " contentTypeStartsWith=$contentTypeStartsWith," +
+            " metaTagStartsWith=$metaTagStartsWith, uploadKey=$uploadKey)"
     }
 }

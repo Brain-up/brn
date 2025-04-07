@@ -32,15 +32,14 @@ class Headphones(
     @JoinColumn(name = "userId")
     var userAccount: UserAccount? = null,
 ) {
-    fun toDto() =
-        HeadphonesDto(
-            id,
-            name = name,
-            active = active,
-            description = description,
-            type = type,
-            userAccount = userAccount?.id,
-        )
+    fun toDto() = HeadphonesDto(
+        id,
+        name = name,
+        active = active,
+        description = description,
+        type = type,
+        userAccount = userAccount?.id,
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

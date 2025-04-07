@@ -61,20 +61,19 @@ class GitHubApiClient
             return gitHubContributorDtos
         }
 
-        fun getGitHubUser(username: String): GitHubUserDto? =
-            gitHubApiWebClient
-                .get()
-                .uri(gitHubApiClientProperty.url.path.users, username)
-                .headers {
-                    it.set(HttpHeaders.ACCEPT, "application/vnd.github+json")
-                    if (gitHubApiClientProperty.token.isNotEmpty())
-                        it.set(
-                            HttpHeaders.AUTHORIZATION,
-                            "${gitHubApiClientProperty.typeToken} ${gitHubApiClientProperty.token}",
-                        )
-                }.retrieve()
-                .onStatus(HttpStatus::isError) { Mono.empty() }
-                .bodyToMono(GitHubUserDto::class.java)
-                .onErrorResume { Mono.empty() }
-                .block()
+        fun getGitHubUser(username: String): GitHubUserDto? = gitHubApiWebClient
+            .get()
+            .uri(gitHubApiClientProperty.url.path.users, username)
+            .headers {
+                it.set(HttpHeaders.ACCEPT, "application/vnd.github+json")
+                if (gitHubApiClientProperty.token.isNotEmpty())
+                    it.set(
+                        HttpHeaders.AUTHORIZATION,
+                        "${gitHubApiClientProperty.typeToken} ${gitHubApiClientProperty.token}",
+                    )
+            }.retrieve()
+            .onStatus(HttpStatus::isError) { Mono.empty() }
+            .bodyToMono(GitHubUserDto::class.java)
+            .onErrorResume { Mono.empty() }
+            .block()
     }

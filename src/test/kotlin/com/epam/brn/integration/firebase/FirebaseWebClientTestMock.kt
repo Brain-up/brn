@@ -27,15 +27,14 @@ class FirebaseWebClientTestMock {
                 .build()
     }
 
-    fun verifyPassword(request: FirebaseVerifyPasswordRequest): FirebaseVerifyPasswordResponse? =
-        webClient
-            .post()
-            .uri { uriBuilder ->
-                uriBuilder
-                    .path(verifyPasswordPath)
-                    .queryParams(verifyPasswordQuery)
-                    .build()
-            }.bodyValue(request)
-            .exchangeToMono { response -> response.bodyToMono(FirebaseVerifyPasswordResponse::class.java) }
-            .block()
+    fun verifyPassword(request: FirebaseVerifyPasswordRequest): FirebaseVerifyPasswordResponse? = webClient
+        .post()
+        .uri { uriBuilder ->
+            uriBuilder
+                .path(verifyPasswordPath)
+                .queryParams(verifyPasswordQuery)
+                .build()
+        }.bodyValue(request)
+        .exchangeToMono { response -> response.bodyToMono(FirebaseVerifyPasswordResponse::class.java) }
+        .block()
 }

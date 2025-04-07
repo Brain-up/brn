@@ -66,35 +66,34 @@ class AudiometryTask(
         return result
     }
 
-    fun toDto(): Any =
-        when (audiometry!!.audiometryType) {
-            AudiometryType.SIGNALS.name ->
-                AudiometrySignalsTaskResponse(
-                    id,
-                    EAR.valueOf(ear),
-                    frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() },
-                )
+    fun toDto(): Any = when (audiometry!!.audiometryType) {
+        AudiometryType.SIGNALS.name ->
+            AudiometrySignalsTaskResponse(
+                id,
+                EAR.valueOf(ear),
+                frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() },
+            )
 
-            AudiometryType.SPEECH.name ->
-                AudiometryLopotkoTaskResponse(
-                    id,
-                    level!!,
-                    audiometryGroup!!,
-                    frequencyZone!!,
-                    minFrequency!!,
-                    maxFrequency!!,
-                    count!!,
-                    showSize!!,
-                    answerOptions,
-                )
+        AudiometryType.SPEECH.name ->
+            AudiometryLopotkoTaskResponse(
+                id,
+                level!!,
+                audiometryGroup!!,
+                frequencyZone!!,
+                minFrequency!!,
+                maxFrequency!!,
+                count!!,
+                showSize!!,
+                answerOptions,
+            )
 
-            AudiometryType.SPEECH.name ->
-                AudiometryMatrixTaskResponse(
-                    id,
-                    count!!,
-                    answerOptions,
-                )
+        AudiometryType.SPEECH.name ->
+            AudiometryMatrixTaskResponse(
+                id,
+                count!!,
+                answerOptions,
+            )
 
-            else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
-        }
+        else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
+    }
 }

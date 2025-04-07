@@ -46,10 +46,9 @@ class ExerciseService(
     fun findExerciseByNameAndLevel(
         name: String,
         level: Int,
-    ): Exercise =
-        exerciseRepository
-            .findExerciseByNameAndLevel(name, level)
-            .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
+    ): Exercise = exerciseRepository
+        .findExerciseByNameAndLevel(name, level)
+        .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
 
     fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId")
@@ -159,15 +158,13 @@ class ExerciseService(
         exerciseRepository.save(exercise)
     }
 
-    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> =
-        exerciseRepository
-            .findExercisesBySubGroupId(subGroupId)
-            .map { updateExerciseDto(it.toDto()) }
+    fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> = exerciseRepository
+        .findExercisesBySubGroupId(subGroupId)
+        .map { updateExerciseDto(it.toDto()) }
 
-    fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> =
-        exerciseRepository
-            .findExercisesByWord(word)
-            .map { it.toDtoWithWords() }
+    fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> = exerciseRepository
+        .findExercisesByWord(word)
+        .map { it.toDtoWithWords() }
 
     @Transactional(rollbackFor = [Exception::class])
     fun createExercise(exerciseCreateDto: ExerciseCreateDto): ExerciseDto {
@@ -201,12 +198,11 @@ class ExerciseService(
     private fun createExercise(
         exerciseRecord: Any,
         locale: BrnLocale,
-    ): Exercise? =
-        recordProcessors
-            .stream()
-            .filter { it.isApplicable(exerciseRecord) }
-            .findFirst()
-            .orElseThrow { RuntimeException("There is no applicable processor for type '${exerciseRecord.javaClass}'") }
-            .process(listOf(exerciseRecord) as List<Nothing>, locale)
-            .firstOrNull() as Exercise?
+    ): Exercise? = recordProcessors
+        .stream()
+        .filter { it.isApplicable(exerciseRecord) }
+        .findFirst()
+        .orElseThrow { RuntimeException("There is no applicable processor for type '${exerciseRecord.javaClass}'") }
+        .process(listOf(exerciseRecord) as List<Nothing>, locale)
+        .firstOrNull() as Exercise?
 }
