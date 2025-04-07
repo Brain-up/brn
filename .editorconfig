@@ -2,5 +2,7 @@
 
 [*.{kt,kts}]
 disabled_rules = import-ordering, indent
+ktlint_standard_import-ordering = disabled
+ktlint_standard_indent = disabled
 ktlint_standard_blank-line-before-declaration = disabled
 ktlint_standard_multiline-if-else = disabled
