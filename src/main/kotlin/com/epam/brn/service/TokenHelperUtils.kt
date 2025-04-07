@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest
 
 @Component
 class TokenHelperUtils {
-
     fun getBearerToken(request: HttpServletRequest): String? {
         var bearerToken: String? = null
         val authorization = request.getHeader("Authorization")

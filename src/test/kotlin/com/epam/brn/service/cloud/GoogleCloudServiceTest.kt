@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockMultipartFile
 
 @ExtendWith(MockKExtension::class)
 class GoogleCloudServiceTest {
-
     @MockK
     lateinit var storage: Storage
 
@@ -37,13 +36,14 @@ class GoogleCloudServiceTest {
     @Suppress("UNCHECKED_CAST")
     fun `should return correct folder structure`() {
         // GIVEN
-        val resources = listOf(
-            mockBlob("folder0/file1"),
-            mockBlob("folder2/folder3/file4"),
-            mockBlob("folder2/file5"),
-            mockBlob("folder7/"),
-            mockBlob("file6")
-        )
+        val resources =
+            listOf(
+                mockBlob("folder0/file1"),
+                mockBlob("folder2/folder3/file4"),
+                mockBlob("folder2/file5"),
+                mockBlob("folder7/"),
+                mockBlob("file6"),
+            )
         val pageBlob = mockk<Page<Blob>>()
         every { pageBlob.iterateAll() } returns resources
         val bucket = mockk<Bucket>()
@@ -63,7 +63,7 @@ class GoogleCloudServiceTest {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
-                MockMultipartFile("file.jpg", "data".toByteArray()).inputStream
+                MockMultipartFile("file.jpg", "data".toByteArray()).inputStream,
             )
         }
     }
@@ -74,7 +74,7 @@ class GoogleCloudServiceTest {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
-                "filedata".toByteArray().inputStream()
+                "filedata".toByteArray().inputStream(),
             )
         }
     }

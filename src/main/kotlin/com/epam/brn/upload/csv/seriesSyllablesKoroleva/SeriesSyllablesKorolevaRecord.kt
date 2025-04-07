@@ -12,7 +12,7 @@ data class SeriesSyllablesKorolevaRecord(
     @JsonProperty("words")
     val words: List<String>,
     @JsonProperty("wordsColumns")
-    val wordsColumns: Int
+    val wordsColumns: Int,
 ) {
     companion object {
         const val FORMAT = "level,code,exerciseName,words,wordsColumns"

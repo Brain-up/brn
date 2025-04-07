@@ -11,29 +11,28 @@ import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 
 @Service
-class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService {
+class RoleServiceImpl(
+    private val roleRepository: RoleRepository,
+) : RoleService {
+    override fun findById(id: Long): Role = roleRepository
+        .findById(id)
+        .orElseThrow { EntityNotFoundException("Role with id = $id is not found") }
 
-    override fun findById(id: Long): Role =
-        roleRepository
-            .findById(id)
-            .orElseThrow { EntityNotFoundException("Role with id = $id is not found") }
+    override fun findByName(name: String): Role = roleRepository
+        .findByName(name)
+        ?: throw EntityNotFoundException("Role with name = $name is not found")
 
-    override fun findByName(name: String): Role =
-        roleRepository
-            .findByName(name)
-            ?: throw EntityNotFoundException("Role with name = $name is not found")
-
-    override fun save(role: Role) =
-        roleRepository.save(role)
+    override fun save(role: Role) = roleRepository.save(role)
 
     override fun isCurrentUserAdmin(): Boolean {
         val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
         return request.isUserInRole(BrnRole.ADMIN)
     }
 
-    override fun isUserHasRole(user: UserAccountDto, role: String): Boolean =
-        user.roles.contains(role)
+    override fun isUserHasRole(
+        user: UserAccountDto,
+        role: String,
+    ): Boolean = user.roles.contains(role)
 
-    override fun findAll(): List<Role> =
-        roleRepository.findAll()
+    override fun findAll(): List<Role> = roleRepository.findAll()
 }

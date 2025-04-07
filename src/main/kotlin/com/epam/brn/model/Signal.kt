@@ -20,14 +20,14 @@ class Signal(
     val length: Int? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
-    var exercise: Exercise? = null
+    var exercise: Exercise? = null,
 ) {
     fun toSignalDto() = SignalTaskDto(
         id = id,
         name = name,
         url = url,
         frequency = frequency,
-        length = length
+        length = length,
     )
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

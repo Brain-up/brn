@@ -14,22 +14,30 @@ import javax.naming.OperationNotSupportedException
 
 @Component
 class ApplicationPropertiesRequirementsRetriever(
-    private val environment: Environment
+    private val environment: Environment,
 ) : StatusRequirementsRetriever {
     override fun getRequirementsForStatus(
         status: UserExercisingProgressStatus,
-        period: UserExercisingPeriod
+        period: UserExercisingPeriod,
     ): StatusRequirements {
         val periodName = period.name.lowercase()
         val statusName = status.name.lowercase()
         return StatusRequirements(
-            maximalRequirements = environment.getProperty("brn.statistics.progress.$periodName.status.$statusName.maximal")
-                ?.toInt()
-                ?: throw OperationNotSupportedException("Maximal requirements for period: $periodName or status: $statusName are not supported yet"),
-            minimalRequirements = environment.getProperty("brn.statistics.progress.$periodName.status.$statusName.minimal")
-                ?.toInt()
-                ?: throw OperationNotSupportedException("Minimal requirements for period: $periodName or status: $statusName are not supported yet"),
-            status = status
+            maximalRequirements =
+                environment
+                    .getProperty("brn.statistics.progress.$periodName.status.$statusName.maximal")
+                    ?.toInt()
+                    ?: throw OperationNotSupportedException(
+                        "Maximal requirements for period: $periodName or status: $statusName are not supported yet",
+                    ),
+            minimalRequirements =
+                environment
+                    .getProperty("brn.statistics.progress.$periodName.status.$statusName.minimal")
+                    ?.toInt()
+                    ?: throw OperationNotSupportedException(
+                        "Minimal requirements for period: $periodName or status: $statusName are not supported yet",
+                    ),
+            status = status,
         )
     }
 }

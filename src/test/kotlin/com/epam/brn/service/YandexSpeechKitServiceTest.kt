@@ -24,7 +24,6 @@ import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
 internal class YandexSpeechKitServiceTest {
-
     @InjectMockKs
     lateinit var yandexSpeechKitService: YandexSpeechKitService
 
@@ -96,9 +95,9 @@ internal class YandexSpeechKitServiceTest {
         every { HttpClientBuilder.create() } returns httpClientBuilder
         mockkStatic(EntityUtils::class)
         every { EntityUtils.toString(any()) } returns "{\n" +
-                " \"iamToken\": \"iamTokenValue\",\n" +
-                " \"expiresAt\": \"2040-11-24T11:48:38.503511+03:00\"\n" +
-                "}"
+            " \"iamToken\": \"iamTokenValue\",\n" +
+            " \"expiresAt\": \"2040-11-24T11:48:38.503511+03:00\"\n" +
+            "}"
 
         every { httpClientBuilder.build() } returns httpClient
         every { httpClient.execute(any()) } returns httpResponse

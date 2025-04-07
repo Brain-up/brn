@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.service.RoleService
 import com.epam.brn.service.StudyHistoryService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -18,7 +18,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryControllerTest {
-
     @InjectMockKs
     lateinit var studyHistoryController: StudyHistoryController
 
@@ -31,16 +30,17 @@ internal class StudyHistoryControllerTest {
     @Test
     fun `should create new study history`() {
         // GIVEN
-        val dto = StudyHistoryDto(
-            id = 1L,
-            exerciseId = 1L,
-            startTime = LocalDateTime.now().minusMinutes(1),
-            endTime = LocalDateTime.now(),
-            executionSeconds = 60,
-            tasksCount = 1,
-            replaysCount = 4,
-            wrongAnswers = 3
-        )
+        val dto =
+            StudyHistoryDto(
+                id = 1L,
+                exerciseId = 1L,
+                startTime = LocalDateTime.now().minusMinutes(1),
+                endTime = LocalDateTime.now(),
+                executionSeconds = 60,
+                tasksCount = 1,
+                replaysCount = 4,
+                wrongAnswers = 3,
+            )
         every { studyHistoryService.save(dto) } returns dto
 
         // WHEN

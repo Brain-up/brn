@@ -33,7 +33,7 @@ class AzureTextToSpeechService(
     private val azureTtsWebClient: WebClient,
     private val azureAllVoicesWebClient: WebClient,
     private val azureVoiceRepo: AzureVoiceInfoRepository,
-    private val azureTtsProperties: AzureTtsProperties
+    private val azureTtsProperties: AzureTtsProperties,
 ) : TextToSpeechService {
     val log = logger()
 
@@ -43,13 +43,13 @@ class AzureTextToSpeechService(
     @ExcludeFromJacocoGeneratedReport
     fun textToSpeech(params: AudioFileMetaData): InputStream {
         val textToSpeechRequest = getTextToSpeechRequest(params)
-        return azureTtsWebClient.post()
+        return azureTtsWebClient
+            .post()
             .headers { headers ->
                 headers.set("Ocp-Apim-Subscription-Key", azureTtsProperties.ocpApimSubscriptionKey)
                 headers.set("X-Microsoft-OutputFormat", azureTtsProperties.defaultOutputFormat)
                 headers.set("Content-type", "application/ssml+xml")
-            }
-            .bodyValue(textToSpeechRequest)
+            }.bodyValue(textToSpeechRequest)
             .retrieve()
             .bodyToMono(InputStreamResource::class.java)
             .doOnError { e -> log.error("Error while processing Azure text-to-speech request, \nerror: {}", e) }
@@ -62,18 +62,16 @@ class AzureTextToSpeechService(
      * Receives all available voices for Azure TTS service
      */
     @ExcludeFromJacocoGeneratedReport
-    fun getVoices(): List<AzureJsonVoiceInfo> {
-        return azureAllVoicesWebClient.get()
-            .headers { headers ->
-                headers.set("Ocp-Apim-Subscription-Key", azureTtsProperties.ocpApimSubscriptionKey)
-            }
-            .retrieve()
-            .bodyToFlux(AzureJsonVoiceInfo::class.java)
-            .collectList()
-            .doOnError { e -> log.error("Error while getting Azure voices, \nerror: {}", e) }
-            .block(Duration.ofSeconds(15))
-            ?: throw AzureTtsException("Azure TTS does not provide voices")
-    }
+    fun getVoices(): List<AzureJsonVoiceInfo> = azureAllVoicesWebClient
+        .get()
+        .headers { headers ->
+            headers.set("Ocp-Apim-Subscription-Key", azureTtsProperties.ocpApimSubscriptionKey)
+        }.retrieve()
+        .bodyToFlux(AzureJsonVoiceInfo::class.java)
+        .collectList()
+        .doOnError { e -> log.error("Error while getting Azure voices, \nerror: {}", e) }
+        .block(Duration.ofSeconds(15))
+        ?: throw AzureTtsException("Azure TTS does not provide voices")
 
     @ExcludeFromJacocoGeneratedReport
     fun generateAudioOggFile(audioFileMetaData: AudioFileMetaData): File {
@@ -84,13 +82,14 @@ class AzureTextToSpeechService(
             log.info("File ${fileOgg.name} is already exist, generation was skipped.")
             return fileOgg
         }
-        val inputStream = textToSpeech(
-            AudioFileMetaData(
-                text = audioFileMetaData.text,
-                locale = audioFileMetaData.locale,
-                voice = audioFileMetaData.voice
+        val inputStream =
+            textToSpeech(
+                AudioFileMetaData(
+                    text = audioFileMetaData.text,
+                    locale = audioFileMetaData.locale,
+                    voice = audioFileMetaData.voice,
+                ),
             )
-        )
         FileUtils.copyInputStreamToFile(inputStream, fileOgg)
         log.info("File for $audioFileMetaData was created: $fileName")
         return fileOgg
@@ -109,8 +108,7 @@ class AzureTextToSpeechService(
      * @param pitch See description in [AzurePitches]
      * @param style Closely related to chosen voice. See azure_speech_style table [AzureVoiceInfo.styleList]
      */
-    override fun generateAudioOggStreamWithValidation(audioFileMetaData: AudioFileMetaData): InputStream =
-        textToSpeech(audioFileMetaData)
+    override fun generateAudioOggStreamWithValidation(audioFileMetaData: AudioFileMetaData): InputStream = textToSpeech(audioFileMetaData)
 
     /**
      * Creates XML request to Azure TTS service
@@ -120,22 +118,25 @@ class AzureTextToSpeechService(
 
         return XmlMapper().writeValueAsString(
             AzureTextToSpeechRequest(
-                voice = Voice(
-                    name = voiceInfo.shortName,
-                    gender = voiceInfo.gender,
-                    lang = voiceInfo.locale,
-                    prosody = Prosody(
-                        pitch = defaultIfBlank(params.pitch, AzurePitches.DEFAULT.code),
-                        rate = params.speedCode.code,
-                        expressAs = ExpressAs(
-                            style = voiceInfo.styleList.find { it.name == params.style }?.name,
-                            styledegree = params.styleDegree,
-                            text = params.text
-                        )
+                voice =
+                    Voice(
+                        name = voiceInfo.shortName,
+                        gender = voiceInfo.gender,
+                        lang = voiceInfo.locale,
+                        prosody =
+                            Prosody(
+                                pitch = defaultIfBlank(params.pitch, AzurePitches.DEFAULT.code),
+                                rate = params.speedCode.code,
+                                expressAs =
+                                    ExpressAs(
+                                        style = voiceInfo.styleList.find { it.name == params.style }?.name,
+                                        styledegree = params.styleDegree,
+                                        text = params.text,
+                                    ),
+                            ),
                     ),
-                ),
                 lang = voiceInfo.locale,
-            )
+            ),
         )
     }
 
@@ -145,20 +146,24 @@ class AzureTextToSpeechService(
      *  2. by locale + gender from DB (gender is optional, by default it's azure.tts.default-gender)
      *  3. from properties
      */
-    fun getVoiceInfo(params: AudioFileMetaData): AzureVoiceInfo =
-        defaultIfBlank(params.voice, null)
-            ?.let { azureVoiceRepo.findByShortName(it) }
-            ?: getVoiceInfoByLocalAndGender(params.locale, params.gender)
-            ?: AzureVoiceInfo(
-                shortName = azureTtsProperties.defaultVoiceName,
-                gender = azureTtsProperties.defaultGender,
-                locale = azureTtsProperties.defaultLang
-            )
+    fun getVoiceInfo(params: AudioFileMetaData): AzureVoiceInfo = defaultIfBlank(params.voice, null)
+        ?.let { azureVoiceRepo.findByShortName(it) }
+        ?: getVoiceInfoByLocalAndGender(params.locale, params.gender)
+        ?: AzureVoiceInfo(
+            shortName = azureTtsProperties.defaultVoiceName,
+            gender = azureTtsProperties.defaultGender,
+            locale = azureTtsProperties.defaultLang,
+        )
 
-    private fun getVoiceInfoByLocalAndGender(locale: String, gender: String?) =
-        azureVoiceRepo.findByLocaleIgnoreCaseAndGenderIgnoreCase(locale, gender ?: azureTtsProperties.defaultGender)
-            .firstOrNull()
+    private fun getVoiceInfoByLocalAndGender(
+        locale: String,
+        gender: String?,
+    ) = azureVoiceRepo
+        .findByLocaleIgnoreCaseAndGenderIgnoreCase(locale, gender ?: azureTtsProperties.defaultGender)
+        .firstOrNull()
 
-    private fun defaultIfBlank(text: String?, defaultValue: String?): String? =
-        if (text == null || text.isBlank()) defaultValue else text
+    private fun defaultIfBlank(
+        text: String?,
+        defaultValue: String?,
+    ): String? = if (text == null || text.isBlank()) defaultValue else text
 }

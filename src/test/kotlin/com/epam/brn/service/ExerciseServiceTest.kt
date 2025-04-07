@@ -61,18 +61,20 @@ internal class ExerciseServiceTest {
     @MockK
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
 
-    private val series = Series(
-        id = 1L,
-        name = "Распознавание простых слов",
-        type = "type",
-        level = 1,
-        description = "Распознавание простых слов",
-        exerciseGroup = ExerciseGroup(
-            code = "SPEECH_RU_RU",
-            name = "Речевые упражнения",
-            description = "Речевые упражнения"
+    private val series =
+        Series(
+            id = 1L,
+            name = "Распознавание простых слов",
+            type = "type",
+            level = 1,
+            description = "Распознавание простых слов",
+            exerciseGroup =
+                ExerciseGroup(
+                    code = "SPEECH_RU_RU",
+                    name = "Речевые упражнения",
+                    description = "Речевые упражнения",
+                ),
         )
-    )
 
     @Test
     fun `should get exercises by user`() {
@@ -158,11 +160,12 @@ internal class ExerciseServiceTest {
         val exercise3 = Exercise(id = 3, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(
-            exercise1,
-            exercise2,
-            exercise3
-        )
+        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns
+            listOf(
+                exercise1,
+                exercise2,
+                exercise3,
+            )
         every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
@@ -178,7 +181,7 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) {
             studyHistoryRepository.findLastBySubGroupAndUserAccount(
                 ofType(Long::class),
-                ofType(Long::class)
+                ofType(Long::class),
             )
         }
         actualResult[0].level shouldBe 1
@@ -203,14 +206,16 @@ internal class ExerciseServiceTest {
         every { lastStudyHistoryMockk.replaysCount } returns 2
         every { lastStudyHistoryMockk.wrongAnswers } returns 5
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(
-            exercise1,
-            exercise2,
-            exercise3
-        )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(
-            lastStudyHistoryMockk
-        )
+        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns
+            listOf(
+                exercise1,
+                exercise2,
+                exercise3,
+            )
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns
+            listOf(
+                lastStudyHistoryMockk,
+            )
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
 
@@ -225,7 +230,7 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) {
             studyHistoryRepository.findLastBySubGroupAndUserAccount(
                 ofType(Long::class),
-                ofType(Long::class)
+                ofType(Long::class),
             )
         }
     }
@@ -281,9 +286,10 @@ internal class ExerciseServiceTest {
         val exerciseName = "name"
         val exerciseMock = Exercise(id = 1)
         val exerciseLevel = 1
-        every { exerciseRepository.findExerciseByNameAndLevel(exerciseName, exerciseLevel) } returns Optional.of(
-            exerciseMock
-        )
+        every { exerciseRepository.findExerciseByNameAndLevel(exerciseName, exerciseLevel) } returns
+            Optional.of(
+                exerciseMock,
+            )
         // WHEN
         val actualResult: Exercise = exerciseService.findExerciseByNameAndLevel("name", 1)
         // THEN
@@ -327,28 +333,30 @@ internal class ExerciseServiceTest {
     fun `should return 2 availableExercises for one subgroup with last done success`() {
         // GIVEN
         val subGroupId = 5L
-        val subGroup = SubGroup(
-            id = subGroupId,
-            series = series,
-            level = 1,
-            code = "code",
-            name = "subGroup name"
-        )
+        val subGroup =
+            SubGroup(
+                id = subGroupId,
+                series = series,
+                level = 1,
+                code = "code",
+                name = "subGroup name",
+            )
         val ex1 = Exercise(id = 1, name = "pets", subGroup = subGroup)
         val ex2 = Exercise(id = 2, name = "pets", subGroup = subGroup)
         val ex3 = Exercise(id = 3, name = "pets ddd", subGroup = subGroup)
         val ex4 = Exercise(id = 4, name = "pets ddd", subGroup = subGroup)
         val listAll = listOf(ex1, ex2, ex3, ex4)
         val listDone = listOf(ex1)
-        val studyHistory1 = StudyHistory(
-            exercise = ex1,
-            userAccount = mockkClass(UserAccount::class),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 5,
-            replaysCount = 0
-        )
+        val studyHistory1 =
+            StudyHistory(
+                exercise = ex1,
+                userAccount = mockkClass(UserAccount::class),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 5,
+                replaysCount = 0,
+            )
         every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, 1) } returns listOf(studyHistory1)
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
@@ -364,13 +372,14 @@ internal class ExerciseServiceTest {
     fun `should return availableExercises for one subgroup with last done success`() {
         // GIVEN
         val subGroupId = 5L
-        val subGroup = SubGroup(
-            id = subGroupId,
-            series = series,
-            level = 1,
-            code = "code",
-            name = "subGroup name"
-        )
+        val subGroup =
+            SubGroup(
+                id = subGroupId,
+                series = series,
+                level = 1,
+                code = "code",
+                name = "subGroup name",
+            )
         val userId = 1L
         val ex1 = Exercise(id = 1, name = "pets", subGroup = subGroup)
         val ex2 = Exercise(id = 2, name = "pets", subGroup = subGroup)
@@ -378,28 +387,31 @@ internal class ExerciseServiceTest {
         val ex4 = Exercise(id = 4, name = "pets ddd", subGroup = subGroup)
         val listAll = listOf(ex1, ex2, ex3, ex4)
         val listDone = listOf(ex1, ex3)
-        val studyHistoryWithExercise1 = StudyHistory(
-            exercise = ex1,
-            userAccount = mockkClass(UserAccount::class),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 0,
-            replaysCount = 0
-        )
-        val studyHistoryWithExercise3 = StudyHistory(
-            exercise = ex3,
-            userAccount = mockkClass(UserAccount::class),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 1,
-            replaysCount = 1
-        )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(
-            studyHistoryWithExercise1,
-            studyHistoryWithExercise3
-        )
+        val studyHistoryWithExercise1 =
+            StudyHistory(
+                exercise = ex1,
+                userAccount = mockkClass(UserAccount::class),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 0,
+                replaysCount = 0,
+            )
+        val studyHistoryWithExercise3 =
+            StudyHistory(
+                exercise = ex3,
+                userAccount = mockkClass(UserAccount::class),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 1,
+                replaysCount = 1,
+            )
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns
+            listOf(
+                studyHistoryWithExercise1,
+                studyHistoryWithExercise3,
+            )
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
 
@@ -414,13 +426,14 @@ internal class ExerciseServiceTest {
     fun `should return availableExercises for one subgroup with last done UNSUCCESS`() {
         // GIVEN
         val subGroupId = 5L
-        val subGroup = SubGroup(
-            id = subGroupId,
-            series = series,
-            level = 1,
-            code = "code",
-            name = "subGroup name"
-        )
+        val subGroup =
+            SubGroup(
+                id = subGroupId,
+                series = series,
+                level = 1,
+                code = "code",
+                name = "subGroup name",
+            )
         val ex1 = Exercise(id = 1, name = "pets", subGroup = subGroup)
         val ex2 = Exercise(id = 2, name = "pets", subGroup = subGroup)
         val ex3 = Exercise(id = 3, name = "pets", subGroup = subGroup)
@@ -429,28 +442,31 @@ internal class ExerciseServiceTest {
         val userAccountId = 1L
         val listAll = listOf(ex1, ex2, ex3, ex4, ex5)
         val listDone = listOf(ex1, ex2)
-        val studyHistoryWithExercise1 = StudyHistory(
-            exercise = ex1,
-            userAccount = mockk(),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 0,
-            replaysCount = 0
-        )
-        val studyHistoryWithExercise2 = StudyHistory(
-            exercise = ex2,
-            userAccount = mockk(),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 5,
-            replaysCount = 1
-        )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns listOf(
-            studyHistoryWithExercise1,
-            studyHistoryWithExercise2
-        )
+        val studyHistoryWithExercise1 =
+            StudyHistory(
+                exercise = ex1,
+                userAccount = mockk(),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 0,
+                replaysCount = 0,
+            )
+        val studyHistoryWithExercise2 =
+            StudyHistory(
+                exercise = ex2,
+                userAccount = mockk(),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 5,
+                replaysCount = 1,
+            )
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns
+            listOf(
+                studyHistoryWithExercise1,
+                studyHistoryWithExercise2,
+            )
 
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
@@ -466,20 +482,22 @@ internal class ExerciseServiceTest {
     fun `should return availableExercises for several subgroups`() {
         // GIVEN
         val subGroupId = 5L
-        val subGroup1 = SubGroup(
-            id = subGroupId,
-            series = series,
-            level = 1,
-            code = "code",
-            name = "subGroup name"
-        )
-        val subGroup2 = SubGroup(
-            id = 6,
-            series = series,
-            level = 2,
-            code = "code2",
-            name = "subGroup name2"
-        )
+        val subGroup1 =
+            SubGroup(
+                id = subGroupId,
+                series = series,
+                level = 1,
+                code = "code",
+                name = "subGroup name",
+            )
+        val subGroup2 =
+            SubGroup(
+                id = 6,
+                series = series,
+                level = 2,
+                code = "code2",
+                name = "subGroup name2",
+            )
         val ex1 = Exercise(id = 1, name = "pets", subGroup = subGroup1)
         val ex2 = Exercise(id = 2, name = "pets", subGroup = subGroup1)
         val ex3 = Exercise(id = 3, name = "pets ddd", subGroup = subGroup1)
@@ -491,40 +509,44 @@ internal class ExerciseServiceTest {
         val listAll = listOf(ex1, ex2, ex3, ex4, ex11, ex12, ex13, ex14)
         val userAccountId = 1L
         val listDone = listOf(ex1, ex2, ex11)
-        val studyHistoryWithExercise1 = StudyHistory(
-            exercise = ex1,
-            userAccount = mockkClass(UserAccount::class),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 0,
-            replaysCount = 0
-        )
-        val studyHistoryWithExercise2 = StudyHistory(
-            exercise = ex2,
-            userAccount = mockkClass(UserAccount::class),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 2,
-            replaysCount = 2
-        )
+        val studyHistoryWithExercise1 =
+            StudyHistory(
+                exercise = ex1,
+                userAccount = mockkClass(UserAccount::class),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 0,
+                replaysCount = 0,
+            )
+        val studyHistoryWithExercise2 =
+            StudyHistory(
+                exercise = ex2,
+                userAccount = mockkClass(UserAccount::class),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 2,
+                replaysCount = 2,
+            )
 
-        val studyHistoryWithExercise11 = StudyHistory(
-            exercise = ex11,
-            userAccount = mockk(),
-            startTime = LocalDateTime.now(),
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 6,
-            replaysCount = 4
-        )
+        val studyHistoryWithExercise11 =
+            StudyHistory(
+                exercise = ex11,
+                userAccount = mockk(),
+                startTime = LocalDateTime.now(),
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 6,
+                replaysCount = 4,
+            )
 
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns listOf(
-            studyHistoryWithExercise1,
-            studyHistoryWithExercise2,
-            studyHistoryWithExercise11
-        )
+        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns
+            listOf(
+                studyHistoryWithExercise1,
+                studyHistoryWithExercise2,
+                studyHistoryWithExercise11,
+            )
 
         ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
         ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
@@ -539,14 +561,15 @@ internal class ExerciseServiceTest {
     @Test
     fun `should be return new exercise from ExerciseWordsCreateDto`() {
         // GIVEN
-        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            words = listOf("word1", "word2"),
-            noiseLevel = 0
-        )
+        val exerciseWordsCreateDto =
+            ExerciseWordsCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                words = listOf("word1", "word2"),
+                noiseLevel = 0,
+            )
         val exercise = Exercise(name = exerciseWordsCreateDto.exerciseName)
         val wordsRecordProcessor = mockk<SeriesWordsRecordProcessor>()
         every { recordProcessors.stream() } returns Stream.of(wordsRecordProcessor)
@@ -566,14 +589,15 @@ internal class ExerciseServiceTest {
     @Test
     fun `should be throw IllegalArgumentException in createAndGenerateExerciseWords`() {
         // GIVEN
-        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            words = listOf("word1", "word2"),
-            noiseLevel = 0
-        )
+        val exerciseWordsCreateDto =
+            ExerciseWordsCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                words = listOf("word1", "word2"),
+                noiseLevel = 0,
+            )
         val wordsRecordProcessor = mockk<SeriesWordsRecordProcessor>()
         every { recordProcessors.stream() } returns Stream.of(wordsRecordProcessor)
         every { wordsRecordProcessor.isApplicable(any()) } returns true
@@ -592,14 +616,15 @@ internal class ExerciseServiceTest {
     @Test
     fun `should be return new exercise from ExercisePhrasesCreateDto`() {
         // GIVEN
-        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            phrases = Phrases("short phrase", "long phrase"),
-            noiseLevel = 0
-        )
+        val exercisePhrasesCreateDto =
+            ExercisePhrasesCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                phrases = Phrases("short phrase", "long phrase"),
+                noiseLevel = 0,
+            )
         val exercise = Exercise(name = exercisePhrasesCreateDto.exerciseName)
         val seriesPhrasesRecordProcessor = mockk<SeriesPhrasesRecordProcessor>()
         every { recordProcessors.stream() } returns Stream.of(seriesPhrasesRecordProcessor)
@@ -619,14 +644,15 @@ internal class ExerciseServiceTest {
     @Test
     fun `should be throw IllegalArgumentException in createAndGenerateExercisePhrases`() {
         // GIVEN
-        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            phrases = Phrases("short phrase", "long phrase"),
-            noiseLevel = 0
-        )
+        val exercisePhrasesCreateDto =
+            ExercisePhrasesCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                phrases = Phrases("short phrase", "long phrase"),
+                noiseLevel = 0,
+            )
         val seriesPhrasesRecordProcessor = mockk<SeriesPhrasesRecordProcessor>()
         every { recordProcessors.stream() } returns Stream.of(seriesPhrasesRecordProcessor)
         every { seriesPhrasesRecordProcessor.isApplicable(any()) } returns true
@@ -646,14 +672,15 @@ internal class ExerciseServiceTest {
     @Test
     fun `should be return new exercise from ExerciseSentencesCreateDto`() {
         // GIVEN
-        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            orderNumber = 1,
-            words = SetOfWords(listOf("count1", "count2"))
-        )
+        val exerciseSentencesCreateDto =
+            ExerciseSentencesCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                orderNumber = 1,
+                words = SetOfWords(listOf("count1", "count2")),
+            )
         val exercise = Exercise(name = exerciseSentencesCreateDto.exerciseName)
         val seriesMatrixRecordProcessor = mockk<SeriesMatrixRecordProcessor>()
         every { recordProcessors.stream() } returns Stream.of(seriesMatrixRecordProcessor)
@@ -673,14 +700,15 @@ internal class ExerciseServiceTest {
     @Test
     fun `should be IllegalArgumentException in createAndGenerateExerciseSentences`() {
         // GIVEN
-        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            orderNumber = 1,
-            words = SetOfWords(listOf("count1", "count2"))
-        )
+        val exerciseSentencesCreateDto =
+            ExerciseSentencesCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                orderNumber = 1,
+                words = SetOfWords(listOf("count1", "count2")),
+            )
         val seriesMatrixRecordProcessor = mockk<SeriesMatrixRecordProcessor>()
         every { recordProcessors.stream() } returns Stream.of(seriesMatrixRecordProcessor)
         every { seriesMatrixRecordProcessor.isApplicable(any()) } returns true

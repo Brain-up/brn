@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.dto.response.RoleResponse
 import com.epam.brn.model.Role
+import com.epam.brn.service.RoleService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class RoleControllerTest {
-
     @InjectMockKs
     lateinit var roleController: RoleController
 

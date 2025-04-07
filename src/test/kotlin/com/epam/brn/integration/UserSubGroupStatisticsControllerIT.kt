@@ -20,7 +20,6 @@ import java.time.format.DateTimeFormatter
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class UserSubGroupStatisticsControllerIT : BaseIT() {
-
     @Autowired
     private lateinit var exerciseRepository: ExerciseRepository
 
@@ -44,37 +43,42 @@ class UserSubGroupStatisticsControllerIT : BaseIT() {
         // GIVEN
         val currentUser = insertDefaultUser()
         val series = insertDefaultSeries()
-        val subGroups = listOf(
-            insertDefaultSubGroup(series, 1),
-            insertDefaultSubGroup(series, 10)
-        )
+        val subGroups =
+            listOf(
+                insertDefaultSubGroup(series, 1),
+                insertDefaultSubGroup(series, 10),
+            )
         val subGroupIds = subGroups.map { it.id }
         val exercises =
             exerciseRepository.saveAll(
                 listOf(
                     Exercise(
                         name = "Test exercise ${subGroups[0].id}",
-                        subGroup = subGroups[0]
+                        subGroup = subGroups[0],
                     ),
                     Exercise(
                         name = "Test exercise ${subGroups[1].id}",
-                        subGroup = subGroups[1]
-                    )
-                )
+                        subGroup = subGroups[1],
+                    ),
+                ),
             )
 
         insertDefaultStudyHistory(currentUser, exercises.first())
 
         // WHEN
-        val resultAction = mockMvc.perform(
-            get("$baseUrl/subgroups")
-                .param("ids", "${subGroupIds.get(0)},${subGroupIds.get(1)}")
-        )
+        val resultAction =
+            mockMvc.perform(
+                get("$baseUrl/subgroups")
+                    .param("ids", "${subGroupIds.get(0)},${subGroupIds.get(1)}"),
+            )
 
-        val response = resultAction
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val response =
+            resultAction
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
 
         val baseResponse = objectMapper.readValue(response, BrnResponse::class.java)
         val baseResponseJson = gson.toJson(baseResponse.data)

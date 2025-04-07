@@ -22,7 +22,6 @@ import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class UserMonthStatisticsServiceTest {
-
     @InjectMockKs
     private lateinit var userMonthStatisticsService: UserMonthStatisticsService
 
@@ -80,16 +79,17 @@ internal class UserMonthStatisticsServiceTest {
         every {
             progressStatusManager.getStatus(
                 UserExercisingPeriod.WEEK,
-                studyHistories
+                studyHistories,
             )
         } returns progress
 
-        val expectedStatistic = MonthStudyStatistics(
-            date = studyHistory.startTime,
-            exercisingTimeSeconds = executionSeconds * 2,
-            exercisingDays = 1,
-            progress = progress
-        )
+        val expectedStatistic =
+            MonthStudyStatistics(
+                date = studyHistory.startTime,
+                exercisingTimeSeconds = executionSeconds * 2,
+                exercisingDays = 1,
+                progress = progress,
+            )
 
         // WHEN
         val statisticsForPeriod = userMonthStatisticsService.getStatisticsForPeriod(from, to)
@@ -101,10 +101,11 @@ internal class UserMonthStatisticsServiceTest {
 
     @Test
     fun `getStatisticsForPeriod should return statistics for period when there are histories for some month`() {
-        val studyHistories = listOf(
-            studyHistory,
-            studyHistorySecond
-        )
+        val studyHistories =
+            listOf(
+                studyHistory,
+                studyHistorySecond,
+            )
         // GIVEN
         every { studyHistorySecond.startTime } returns secondStudyHistoryDate
         every { studyHistorySecond.executionSeconds } returns executionSeconds
@@ -116,25 +117,27 @@ internal class UserMonthStatisticsServiceTest {
         every {
             progressStatusManager.getStatus(
                 UserExercisingPeriod.WEEK,
-                listOf(studyHistorySecond)
+                listOf(studyHistorySecond),
             )
         } returns progress
         every {
             studyHistoryRepository.getHistories(userId, from, to)
         } returns studyHistories
 
-        val firstExpectedStudyStatistic = MonthStudyStatistics(
-            date = studyHistoryDate,
-            exercisingTimeSeconds = executionSeconds,
-            exercisingDays = 1,
-            progress = progress
-        )
-        val secondExpectedStudyStatistic = MonthStudyStatistics(
-            date = studyHistoryDate,
-            exercisingTimeSeconds = executionSeconds,
-            exercisingDays = 1,
-            progress = progress
-        )
+        val firstExpectedStudyStatistic =
+            MonthStudyStatistics(
+                date = studyHistoryDate,
+                exercisingTimeSeconds = executionSeconds,
+                exercisingDays = 1,
+                progress = progress,
+            )
+        val secondExpectedStudyStatistic =
+            MonthStudyStatistics(
+                date = studyHistoryDate,
+                exercisingTimeSeconds = executionSeconds,
+                exercisingDays = 1,
+                progress = progress,
+            )
 
         // WHEN
         val statisticForPeriod = userMonthStatisticsService.getStatisticsForPeriod(from, to)
@@ -143,11 +146,11 @@ internal class UserMonthStatisticsServiceTest {
         assertEquals(2, statisticForPeriod.size)
         assertEquals(
             firstExpectedStudyStatistic,
-            statisticForPeriod.first { it.date.month == firstExpectedStudyStatistic.date.month }
+            statisticForPeriod.first { it.date.month == firstExpectedStudyStatistic.date.month },
         )
         assertEquals(
             secondExpectedStudyStatistic,
-            statisticForPeriod.first { it.date.month == secondExpectedStudyStatistic.date.month }
+            statisticForPeriod.first { it.date.month == secondExpectedStudyStatistic.date.month },
         )
     }
 

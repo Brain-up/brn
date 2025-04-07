@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.dto.StudyHistoryDto
+import com.epam.brn.service.RoleService
 import com.epam.brn.service.StudyHistoryService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryControllerV2Test {
-
     @InjectMockKs
     lateinit var studyHistoryControllerV2: StudyHistoryControllerV2
 

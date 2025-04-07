@@ -18,7 +18,6 @@ import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class ResourcePictureUrlUpdateJobTest {
-
     @InjectMockKs
     private lateinit var resourcePictureUrlUpdateJob: ResourcePictureUrlUpdateJob
 

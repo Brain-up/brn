@@ -7,7 +7,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
-import kotlin.test.assertFalse
 import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -33,10 +32,10 @@ import software.amazon.awssdk.services.s3.model.S3Object
 import software.amazon.awssdk.services.s3.waiters.S3Waiter
 import java.io.File
 import java.util.Arrays
+import kotlin.test.assertFalse
 
 @ExtendWith(MockKExtension::class)
 class AwsCloudServiceTest {
-
     companion object {
         const val X_AMZ_SIGNATURE = "x-amz-signature"
         const val X_AMZ_META_UUID = "x-amz-meta-uuid"
@@ -89,36 +88,45 @@ class AwsCloudServiceTest {
         every { awsConfig.serviceName } returns "s3"
         every { awsConfig.bucketLink } returns "https://somebucket.s3.amazonaws.com"
 
-        val conditions: AwsConfig.Conditions = AwsConfig.Conditions(
-            TEST_DATE,
-            TEST_BUCKET, TEST_ACCESS_RULE,
-            TEST_UUID,
-            TEST_CREDENTIAL,
-            TEST_AMZ_DATE,
-            TEST_EXPIRATION_DATE,
-            TEST_FILEPATH,
-            "", "", ""
-        )
+        val conditions: AwsConfig.Conditions =
+            AwsConfig.Conditions(
+                TEST_DATE,
+                TEST_BUCKET,
+                TEST_ACCESS_RULE,
+                TEST_UUID,
+                TEST_CREDENTIAL,
+                TEST_AMZ_DATE,
+                TEST_EXPIRATION_DATE,
+                TEST_FILEPATH,
+                "",
+                "",
+                "",
+            )
         every { awsConfig.buildConditions(any()) } returns conditions
 
         // WHEN
         val actual = awsCloudService.uploadForm("")
 
         // THEN
-        val expected: Map<String, Any> = mapOf(
-            "action" to "https://somebucket.s3.amazonaws.com",
-            "input" to listOf(
-                mapOf("policy" to "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="),
-                mapOf(X_AMZ_SIGNATURE to "4d39e2b2ac5833352544d379dadad1ffba3148d9936d814f36f50b7af2cd8e8e"),
-                mapOf("key" to TEST_FILEPATH),
-                mapOf(ACL to TEST_ACCESS_RULE),
-                mapOf(X_AMZ_META_UUID to TEST_UUID),
-                mapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
-                mapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
-                mapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
-                mapOf(X_AMZ_DATE to TEST_AMZ_DATE)
+        val expected: Map<String, Any> =
+            mapOf(
+                "action" to "https://somebucket.s3.amazonaws.com",
+                "input" to
+                    listOf(
+                        mapOf(
+                            "policy" to
+                                "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ==",
+                        ),
+                        mapOf(X_AMZ_SIGNATURE to "4d39e2b2ac5833352544d379dadad1ffba3148d9936d814f36f50b7af2cd8e8e"),
+                        mapOf("key" to TEST_FILEPATH),
+                        mapOf(ACL to TEST_ACCESS_RULE),
+                        mapOf(X_AMZ_META_UUID to TEST_UUID),
+                        mapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
+                        mapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
+                        mapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
+                        mapOf(X_AMZ_DATE to TEST_AMZ_DATE),
+                    ),
             )
-        )
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -127,19 +135,21 @@ class AwsCloudServiceTest {
         // GIVEN
         val expected =
             "ew0KICAiY29uZGl0aW9ucyIgOiBbIHsNCiAgICAiYnVja2V0IiA6ICJzb21lYnVja2V0Ig0KICB9LCB7DQogICAgImFjbCIgOiAicHJpdmF0ZSINCiAgfSwgWyAic3RhcnRzLXdpdGgiLCAiJGtleSIsICJ0YXNrcy8ke2ZpbGVuYW1lfSIgXSwgew0KICAgICJ4LWFtei1tZXRhLXV1aWQiIDogImM0OTc5MWIyLWIyN2ItNGVkZi1iYWM4LTg3MzQxNjRjMjBlNiINCiAgfSwgew0KICAgICJ4LWFtei1zZXJ2ZXItc2lkZS1lbmNyeXB0aW9uIiA6ICJBRVMyNTYiDQogIH0sIHsNCiAgICAieC1hbXotY3JlZGVudGlhbCIgOiAiQUtJQUk3S0xLQVRXVkNNRUtHUEEvMjAyMDAxMzAvdXMtZWFzdC0yL3MzL2F3czRfcmVxdWVzdCINCiAgfSwgew0KICAgICJ4LWFtei1hbGdvcml0aG0iIDogIkFXUzQtSE1BQy1TSEEyNTYiDQogIH0sIHsNCiAgICAieC1hbXotZGF0ZSIgOiAiMjAyMDAxMzBUMTEzOTE3WiINCiAgfSBdLA0KICAiZXhwaXJhdGlvbiIgOiAiMjAyMC0wMS0zMFQyMTozOToxNy4xMTRaIg0KfQ=="
-        val conditions = hashMapOf(
-            "expiration" to TEST_EXPIRATION_DATE,
-            "conditions" to listOf(
-                hashMapOf(BUCKET to TEST_BUCKET),
-                hashMapOf(ACL to TEST_ACCESS_RULE),
-                arrayOf("starts-with", "\$key", TEST_FILEPATH),
-                hashMapOf(X_AMZ_META_UUID to TEST_UUID),
-                hashMapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
-                hashMapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
-                hashMapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
-                hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE)
+        val conditions =
+            hashMapOf(
+                "expiration" to TEST_EXPIRATION_DATE,
+                "conditions" to
+                    listOf(
+                        hashMapOf(BUCKET to TEST_BUCKET),
+                        hashMapOf(ACL to TEST_ACCESS_RULE),
+                        arrayOf("starts-with", "\$key", TEST_FILEPATH),
+                        hashMapOf(X_AMZ_META_UUID to TEST_UUID),
+                        hashMapOf(X_AMZ_SERVER_SIDE_ENCRYPTION to TEST_ENC_ALGORYTHM),
+                        hashMapOf(X_AMZ_CREDENTIAL to TEST_CREDENTIAL),
+                        hashMapOf(X_AMZ_ALGORITHM to TEST_HASH_ALGORYTHM),
+                        hashMapOf(X_AMZ_DATE to TEST_AMZ_DATE),
+                    ),
             )
-        )
 
         // WHEN
         val base64 = awsCloudService.toJsonBase64(conditions)
@@ -159,9 +169,9 @@ class AwsCloudServiceTest {
                     FOLDER_SUBFOLDER,
                     FOLDER_SUBFOLDER_2,
                     FOLDER_SUBFOLDER_3,
-                    FOLDER_SUBFOLDER_4
-                )
-            )
+                    FOLDER_SUBFOLDER_4,
+                ),
+            ),
         )
         returnFolders.add(listObjectsV2Result(listOf(FOLDER_SUBFOLDER_SUBDIR, FOLDER_SUBFOLDER_SUBDIR2)))
         returnFolders.add(listObjectsV2Result(listOf()))
@@ -180,11 +190,20 @@ class AwsCloudServiceTest {
         val listBucket = awsCloudService.getStorageFolders()
 
         // THEN
-        val expected: List<String> = listOf(
-            FOLDER, FOLDER_SUBFOLDER, FOLDER_SUBFOLDER_SUBDIR, FOLDER_SUBFOLDER_SUBDIR2,
-            FOLDER_SUBFOLDER_2, FOLDER_SUBFOLDER_3, FOLDER_SUBFOLDER_3_SUBDIR, FOLDER_SUBFOLDER_3_SUBDIR2,
-            FOLDER_SUBFOLDER_4, FOLDER_2, FOLDER_3
-        )
+        val expected: List<String> =
+            listOf(
+                FOLDER,
+                FOLDER_SUBFOLDER,
+                FOLDER_SUBFOLDER_SUBDIR,
+                FOLDER_SUBFOLDER_SUBDIR2,
+                FOLDER_SUBFOLDER_2,
+                FOLDER_SUBFOLDER_3,
+                FOLDER_SUBFOLDER_3_SUBDIR,
+                FOLDER_SUBFOLDER_3_SUBDIR2,
+                FOLDER_SUBFOLDER_4,
+                FOLDER_2,
+                FOLDER_3,
+            )
         assertEquals(expected, listBucket)
     }
 
@@ -192,17 +211,21 @@ class AwsCloudServiceTest {
     fun `should create folder`() {
         // GIVEN
         val folderPath = "new-folder/"
-        val putObjectResponse = PutObjectResponse.builder()
-            .eTag("tag")
-            .build()
-        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
-            .response(
-                HeadObjectResponse.builder()
-                    .eTag("tag")
-                    .build()
-            )
-            .attemptsExecuted(1)
-            .build()
+        val putObjectResponse =
+            PutObjectResponse
+                .builder()
+                .eTag("tag")
+                .build()
+        val waiterResponse =
+            DefaultWaiterResponse
+                .builder<HeadObjectResponse>()
+                .response(
+                    HeadObjectResponse
+                        .builder()
+                        .eTag("tag")
+                        .build(),
+                ).attemptsExecuted(1)
+                .build()
         val putObjectRequestSlot = slot<PutObjectRequest>()
         val waitObjectRequestSlot = slot<HeadObjectRequest>()
         val requestBodySlot = slot<RequestBody>()
@@ -229,17 +252,21 @@ class AwsCloudServiceTest {
     fun `should create folder with correct delimiter for folder`() {
         // GIVEN
         val folderPath = "new-folder"
-        val putObjectResponse = PutObjectResponse.builder()
-            .eTag("tag")
-            .build()
-        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
-            .response(
-                HeadObjectResponse.builder()
-                    .eTag("tag")
-                    .build()
-            )
-            .attemptsExecuted(1)
-            .build()
+        val putObjectResponse =
+            PutObjectResponse
+                .builder()
+                .eTag("tag")
+                .build()
+        val waiterResponse =
+            DefaultWaiterResponse
+                .builder<HeadObjectResponse>()
+                .response(
+                    HeadObjectResponse
+                        .builder()
+                        .eTag("tag")
+                        .build(),
+                ).attemptsExecuted(1)
+                .build()
         val putObjectRequestSlot = slot<PutObjectRequest>()
         val waitObjectRequestSlot = slot<HeadObjectRequest>()
         val requestBodySlot = slot<RequestBody>()
@@ -293,18 +320,27 @@ class AwsCloudServiceTest {
         // GIVEN
         val fileName = "file.name"
         val filePath = "some/path/"
-        val file = File(this.javaClass.classLoader.getResource("inputData/test-file.txt")!!.file)
-        val putObjectResponse = PutObjectResponse.builder()
-            .eTag("tag")
-            .build()
-        val waiterResponse = DefaultWaiterResponse.builder<HeadObjectResponse>()
-            .response(
-                HeadObjectResponse.builder()
-                    .eTag("tag")
-                    .build()
+        val file =
+            File(
+                this.javaClass.classLoader
+                    .getResource("inputData/test-file.txt")!!
+                    .file,
             )
-            .attemptsExecuted(1)
-            .build()
+        val putObjectResponse =
+            PutObjectResponse
+                .builder()
+                .eTag("tag")
+                .build()
+        val waiterResponse =
+            DefaultWaiterResponse
+                .builder<HeadObjectResponse>()
+                .response(
+                    HeadObjectResponse
+                        .builder()
+                        .eTag("tag")
+                        .build(),
+                ).attemptsExecuted(1)
+                .build()
         val putObjectRequestSlot = slot<PutObjectRequest>()
         val waitObjectRequestSlot = slot<HeadObjectRequest>()
         val requestBodySlot = slot<RequestBody>()
@@ -332,9 +368,10 @@ class AwsCloudServiceTest {
     fun `should return fileNames for specified folder`() {
         // GIVEN
         val folderPath = "folder/path"
-        val listObjectsV2Result = listObjectsV2Result(
-            mutableListOf("folder/path/file1.png", "folder/path/file2.png")
-        )
+        val listObjectsV2Result =
+            listObjectsV2Result(
+                mutableListOf("folder/path/file1.png", "folder/path/file2.png"),
+            )
         every { awsConfig.bucketName } returns BUCKET
         every { s3Client.listObjectsV2(any<ListObjectsV2Request>()) } returns listObjectsV2Result
 
@@ -349,9 +386,10 @@ class AwsCloudServiceTest {
     fun `should return fileNames for main folder`() {
         // GIVEN
         ReflectionTestUtils.setField(awsCloudService, "defaultPicturesPath", "pictures/")
-        val listObjectsV2Result = listObjectsV2Result(
-            mutableListOf("folder/path/file1.png", "folder/path/file2.png")
-        )
+        val listObjectsV2Result =
+            listObjectsV2Result(
+                mutableListOf("folder/path/file1.png", "folder/path/file2.png"),
+            )
         every { awsConfig.bucketName } returns BUCKET
         every { s3Client.listObjectsV2(any<ListObjectsV2Request>()) } returns listObjectsV2Result
 
@@ -392,9 +430,10 @@ class AwsCloudServiceTest {
     fun `should delete specified files`() {
         // GIVEN
         val filesToDelete = mutableListOf("folder/path/file1.png", "folder/path/file2.png")
-        val expectedObjectIdentifiers = filesToDelete.map {
-            ObjectIdentifier.builder().key(it).build()
-        }
+        val expectedObjectIdentifiers =
+            filesToDelete.map {
+                ObjectIdentifier.builder().key(it).build()
+            }
         val deleteRequestSlot = slot<DeleteObjectsRequest>()
         val deleteObjectsResponse = DeleteObjectsResponse.builder().build()
         every { awsConfig.bucketName } returns BUCKET
@@ -411,15 +450,15 @@ class AwsCloudServiceTest {
         val result = mockk<ListObjectsV2Response>()
         val objectSummaries: List<CommonPrefix> = toObjectSummaries(keys)
 
-        val contents = keys.map {
-            S3Object.builder().key(it).build()
-        }
+        val contents =
+            keys.map {
+                S3Object.builder().key(it).build()
+            }
 
         every { result.commonPrefixes() } returns objectSummaries
         every { result.contents() } returns contents
         return result
     }
 
-    private fun toObjectSummaries(keys: List<String>): List<CommonPrefix> =
-        keys.map { CommonPrefix.builder().prefix(it).build() }.toList()
+    private fun toObjectSummaries(keys: List<String>): List<CommonPrefix> = keys.map { CommonPrefix.builder().prefix(it).build() }.toList()
 }

@@ -18,20 +18,23 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/groups")
 @Tag(name = "Groups", description = "Contains actions over groups")
 @RolesAllowed(BrnRole.USER)
-class GroupController(val exerciseGroupsService: ExerciseGroupsService) {
-
+class GroupController(
+    val exerciseGroupsService: ExerciseGroupsService,
+) {
     // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to
     // group being a reserved word in db.
     @GetMapping
     @Operation(summary = "Get all groups by locale if it was set")
-    fun getGroups(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String): ResponseEntity<BrnResponse<List<ExerciseGroupDto>>> {
-        return ResponseEntity.ok().body(BrnResponse(data = exerciseGroupsService.findByLocale(locale)))
-    }
+    fun getGroups(
+        @RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String,
+    ): ResponseEntity<BrnResponse<List<ExerciseGroupDto>>> =
+        ResponseEntity.ok().body(BrnResponse(data = exerciseGroupsService.findByLocale(locale)))
 
     @GetMapping(value = ["/{groupId}"])
     @Operation(summary = "Get group by id")
-    fun getGroupById(@PathVariable("groupId") groupId: Long): ResponseEntity<BrnResponse<ExerciseGroupDto>> {
-        return ResponseEntity.ok()
-            .body(BrnResponse(data = exerciseGroupsService.findGroupDtoById(groupId)))
-    }
+    fun getGroupById(
+        @PathVariable("groupId") groupId: Long,
+    ): ResponseEntity<BrnResponse<ExerciseGroupDto>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = exerciseGroupsService.findGroupDtoById(groupId)))
 }

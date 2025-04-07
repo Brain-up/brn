@@ -33,16 +33,16 @@ class Task(
     @JoinTable(
         name = "task_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")],
     )
     var answerOptions: MutableSet<Resource> = hashSetOf(),
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "answer_parts_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")],
     )
-    var answerParts: MutableMap<Int, Resource> = mutableMapOf()
+    var answerParts: MutableMap<Int, Resource> = mutableMapOf(),
 ) {
     fun toTaskResponse(exerciseType: ExerciseType) = TaskResponse(
         id = id!!,
@@ -53,7 +53,10 @@ class Task(
         shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
-    fun toWordsGroupSeriesTaskDto(exerciseType: ExerciseType, template: String? = "") = TaskWordsGroupResponse(
+    fun toWordsGroupSeriesTaskDto(
+        exerciseType: ExerciseType,
+        template: String? = "",
+    ) = TaskWordsGroupResponse(
         id = id!!,
         exerciseType = exerciseType,
         name = name,

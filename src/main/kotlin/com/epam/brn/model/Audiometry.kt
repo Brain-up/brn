@@ -26,7 +26,7 @@ class Audiometry(
     val audiometryType: String,
     var description: String? = "",
     @OneToMany(mappedBy = "audiometry", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val audiometryTasks: MutableList<AudiometryTask> = ArrayList()
+    val audiometryTasks: MutableList<AudiometryTask> = ArrayList(),
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -52,17 +52,15 @@ class Audiometry(
         name,
         AudiometryType.valueOf(audiometryType),
         description,
-        emptyList<String>()
+        emptyList<String>(),
     )
 
-    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryResponse {
-        return AudiometryResponse(
-            id,
-            locale,
-            name,
-            AudiometryType.valueOf(audiometryType),
-            description,
-            tasks.map { it.toDto() }
-        )
-    }
+    fun toDtoWithTasks(tasks: List<AudiometryTask>): AudiometryResponse = AudiometryResponse(
+        id,
+        locale,
+        name,
+        AudiometryType.valueOf(audiometryType),
+        description,
+        tasks.map { it.toDto() },
+    )
 }

@@ -7,5 +7,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface AzureVoiceInfoRepository : JpaRepository<AzureVoiceInfo, Long> {
     fun findByShortName(shortName: String): AzureVoiceInfo?
-    fun findByLocaleIgnoreCaseAndGenderIgnoreCase(locale: String, gender: String): MutableList<AzureVoiceInfo>
+    fun findByLocaleIgnoreCaseAndGenderIgnoreCase(
+        locale: String,
+        gender: String,
+    ): MutableList<AzureVoiceInfo>
 }

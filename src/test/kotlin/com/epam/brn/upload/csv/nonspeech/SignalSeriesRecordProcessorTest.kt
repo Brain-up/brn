@@ -1,9 +1,9 @@
 package com.epam.brn.upload.csv.nonspeech
 
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.Series
 import com.epam.brn.model.Signal
 import com.epam.brn.model.SubGroup
@@ -30,43 +30,48 @@ internal class SignalSeriesRecordProcessorTest {
     @InjectMockKs
     private lateinit var signalSeriesRecordProcessor: SignalSeriesRecordProcessor
 
-    private val exerciseGroup = ExerciseGroup(
-        code = "NON_SPEECH_RU_RU",
-        name = "Неречевые упражнения",
-        description = "Неречевые упражнения"
-    )
+    private val exerciseGroup =
+        ExerciseGroup(
+            code = "NON_SPEECH_RU_RU",
+            name = "Неречевые упражнения",
+            description = "Неречевые упражнения",
+        )
 
-    private val seriesDuration = Series(
-        id = 2L,
-        level = 1,
-        type = "type",
-        name = "Длительность сигналов тест",
-        description = "Длительность сигналов тест",
-        exerciseGroup = exerciseGroup
-    )
+    private val seriesDuration =
+        Series(
+            id = 2L,
+            level = 1,
+            type = "type",
+            name = "Длительность сигналов тест",
+            description = "Длительность сигналов тест",
+            exerciseGroup = exerciseGroup,
+        )
 
-    private val subGroupDuration = SubGroup(
-        series = seriesDuration,
-        level = 1,
-        code = "durationSignals",
-        name = "subGroup durationSignals"
-    )
+    private val subGroupDuration =
+        SubGroup(
+            series = seriesDuration,
+            level = 1,
+            code = "durationSignals",
+            name = "subGroup durationSignals",
+        )
 
-    private val subGroupFrequency = SubGroup(
-        series = seriesDuration,
-        level = 1,
-        code = "frequencySignals",
-        name = "subGroup frequencySignals"
-    )
+    private val subGroupFrequency =
+        SubGroup(
+            series = seriesDuration,
+            level = 1,
+            code = "frequencySignals",
+            name = "subGroup frequencySignals",
+        )
 
     private val locale = BrnLocale.RU.locale
 
     @BeforeEach
     internal fun setUp() {
-        signalSeriesRecordProcessor = SignalSeriesRecordProcessor(
-            subGroupRepositoryMock,
-            exerciseRepositoryMock
-        )
+        signalSeriesRecordProcessor =
+            SignalSeriesRecordProcessor(
+                subGroupRepositoryMock,
+                exerciseRepositoryMock,
+            )
         every { subGroupRepositoryMock.findByCodeAndLocale("durationSignals", locale) } returns subGroupDuration
     }
 
@@ -75,17 +80,18 @@ internal class SignalSeriesRecordProcessorTest {
         val exercise = createExercise(subGroupDuration)
         every { exerciseRepositoryMock.save(exercise) } returns exercise
         every { exerciseRepositoryMock.findByNameAndLevel("По 2 сигнала разной длительности.", 1) } returns null
-        val actual = signalSeriesRecordProcessor.process(
-            listOf(
-                SignalSeriesRecord(
-                    exerciseName = "По 2 сигнала разной длительности.",
-                    exerciseType = ExerciseType.DURATION_SIGNALS,
-                    level = 1,
-                    code = "durationSignals",
-                    signals = emptyList()
-                )
+        val actual =
+            signalSeriesRecordProcessor.process(
+                listOf(
+                    SignalSeriesRecord(
+                        exerciseName = "По 2 сигнала разной длительности.",
+                        exerciseType = ExerciseType.DURATION_SIGNALS,
+                        level = 1,
+                        code = "durationSignals",
+                        signals = emptyList(),
+                    ),
+                ),
             )
-        )
 
         verify { subGroupRepositoryMock.findByCodeAndLocale("durationSignals", locale) }
 
@@ -106,24 +112,25 @@ internal class SignalSeriesRecordProcessorTest {
         every { subGroupRepositoryMock.findByCodeAndLocale("subGroupDuration", locale) } returns subGroupDuration
         every { subGroupRepositoryMock.findByCodeAndLocale("subGroupFrequency", locale) } returns subGroupFrequency
         // WHEN
-        val actual = signalSeriesRecordProcessor.process(
-            listOf(
-                SignalSeriesRecord(
-                    exerciseName = "По 2 сигнала разной длительности.",
-                    exerciseType = ExerciseType.DURATION_SIGNALS,
-                    level = 1,
-                    code = "subGroupDuration",
-                    signals = emptyList()
+        val actual =
+            signalSeriesRecordProcessor.process(
+                listOf(
+                    SignalSeriesRecord(
+                        exerciseName = "По 2 сигнала разной длительности.",
+                        exerciseType = ExerciseType.DURATION_SIGNALS,
+                        level = 1,
+                        code = "subGroupDuration",
+                        signals = emptyList(),
+                    ),
+                    SignalSeriesRecord(
+                        exerciseName = "По 2 сигнала разной частоты.",
+                        exerciseType = ExerciseType.FREQUENCY_SIGNALS,
+                        level = 1,
+                        code = "subGroupFrequency",
+                        signals = emptyList(),
+                    ),
                 ),
-                SignalSeriesRecord(
-                    exerciseName = "По 2 сигнала разной частоты.",
-                    exerciseType = ExerciseType.FREQUENCY_SIGNALS,
-                    level = 1,
-                    code = "subGroupFrequency",
-                    signals = emptyList()
-                )
             )
-        )
         // THEN
         Assertions.assertThat(actual).containsAll(listOf(ex1, ex2))
         verify { exerciseRepositoryMock.save(ex1) }
@@ -135,13 +142,14 @@ internal class SignalSeriesRecordProcessorTest {
         // GIVEN
         val locale = BrnLocale.RU
         val code = "subGroupDuration"
-        val record = SignalSeriesRecord(
-            exerciseName = "По 2 сигнала разной длительности.",
-            exerciseType = ExerciseType.DURATION_SIGNALS,
-            level = 1,
-            code = code,
-            signals = listOf("1000 120", "1000 60")
-        )
+        val record =
+            SignalSeriesRecord(
+                exerciseName = "По 2 сигнала разной длительности.",
+                exerciseType = ExerciseType.DURATION_SIGNALS,
+                level = 1,
+                code = code,
+                signals = listOf("1000 120", "1000 60"),
+            )
         every { subGroupRepositoryMock.findByCodeAndLocale(code, locale.locale) } returns subGroupDuration
 
         val exercise = createExerciseWithSignals(subGroupDuration)
@@ -157,27 +165,29 @@ internal class SignalSeriesRecordProcessorTest {
     private fun createExercise(subGroup: SubGroup) = Exercise(
         subGroup = subGroup,
         name = "По 2 сигнала разной длительности.",
-        level = 1
+        level = 1,
     )
 
     private fun createExerciseWithSignals(subGroup: SubGroup): Exercise {
-        val exercise = Exercise(
-            subGroup = subGroup,
-            name = "По 2 сигнала разной длительности.",
-            level = 1
-        )
-        val signals = listOf(
-            Signal(
-                frequency = 1000,
-                length = 120,
-                exercise = exercise
-            ),
-            Signal(
-                frequency = 1000,
-                length = 60,
-                exercise = exercise
+        val exercise =
+            Exercise(
+                subGroup = subGroup,
+                name = "По 2 сигнала разной длительности.",
+                level = 1,
             )
-        )
+        val signals =
+            listOf(
+                Signal(
+                    frequency = 1000,
+                    length = 120,
+                    exercise = exercise,
+                ),
+                Signal(
+                    frequency = 1000,
+                    length = 60,
+                    exercise = exercise,
+                ),
+            )
         exercise.addSignals(signals)
         return exercise
     }

@@ -9,19 +9,19 @@ import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class LopotkoRecordMappingIteratorProvider :
-    MappingIteratorProvider<LopotkoRecord> {
-
+class LopotkoRecordMappingIteratorProvider : MappingIteratorProvider<LopotkoRecord> {
     override fun iterator(inputStream: InputStream): MappingIterator<LopotkoRecord> {
-        val csvMapper = CsvMapper().apply {
-            enable(CsvParser.Feature.TRIM_SPACES)
-        }
+        val csvMapper =
+            CsvMapper().apply {
+                enable(CsvParser.Feature.TRIM_SPACES)
+            }
 
-        val csvSchema = csvMapper
-            .schemaFor(LopotkoRecord::class.java)
-            .withColumnReordering(true)
-            .withArrayElementSeparator(StringUtils.SPACE)
-            .withHeader()
+        val csvSchema =
+            csvMapper
+                .schemaFor(LopotkoRecord::class.java)
+                .withColumnReordering(true)
+                .withArrayElementSeparator(StringUtils.SPACE)
+                .withHeader()
 
         return csvMapper
             .readerFor(LopotkoRecord::class.java)
@@ -29,7 +29,5 @@ class LopotkoRecordMappingIteratorProvider :
             .readValues(inputStream)
     }
 
-    override fun isApplicable(format: String): Boolean {
-        return LopotkoRecord.FORMAT == format
-    }
+    override fun isApplicable(format: String): Boolean = LopotkoRecord.FORMAT == format
 }

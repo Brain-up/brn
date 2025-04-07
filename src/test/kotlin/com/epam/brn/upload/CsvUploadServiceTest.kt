@@ -1,8 +1,8 @@
 package com.epam.brn.upload
 
 import com.epam.brn.enums.BrnLocale
-import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.enums.ExerciseType
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.CsvParser
@@ -20,7 +20,6 @@ import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class CsvUploadServiceTest {
-
     @InjectMockKs
     lateinit var uploadService: CsvUploadService
 
@@ -45,7 +44,8 @@ internal class CsvUploadServiceTest {
         val actual = uploadService.getSampleStringForSeriesExerciseFile(1)
         // then
         val expected =
-            """level,code,exerciseName,words,noiseLevel,noiseUrl
+            """
+level,code,exerciseName,words,noiseLevel,noiseUrl
 1,family,Семья,(сын ребёнок мама),0,
 2,family,Семья,(отец брат дедушка),0,
 3,family,Семья,(бабушка муж внучка),0,
@@ -60,7 +60,7 @@ internal class CsvUploadServiceTest {
         every { seriesRepository.findById(invalidSeriesId) } returns Optional.empty()
         assertThrows(EntityNotFoundException::class.java) {
             uploadService.getSampleStringForSeriesExerciseFile(
-                invalidSeriesId
+                invalidSeriesId,
             )
         }
     }

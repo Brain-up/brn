@@ -27,7 +27,6 @@ import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesPhrasesRecordProcessorTest {
-
     @InjectMockKs
     private lateinit var seriesPhrasesRecordProcessor: SeriesPhrasesRecordProcessor
 
@@ -46,14 +45,15 @@ internal class SeriesPhrasesRecordProcessorTest {
     @Test
     fun `should create correct exercise`() {
         // GIVEN
-        val seriesPhrasesRecord = SeriesPhrasesRecord(
-            level = 1,
-            code = "subgroup code",
-            exerciseName = "exercise name",
-            phrases = listOf("some text.", "next text"),
-            noiseLevel = 0,
-            noiseUrl = ""
-        )
+        val seriesPhrasesRecord =
+            SeriesPhrasesRecord(
+                level = 1,
+                code = "subgroup code",
+                exerciseName = "exercise name",
+                phrases = listOf("some text.", "next text"),
+                noiseLevel = 0,
+                noiseUrl = "",
+            )
         val subGroup = mockk<SubGroup>()
         val exercise = mockk<Exercise>()
         every { exerciseRepository.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
@@ -85,14 +85,15 @@ internal class SeriesPhrasesRecordProcessorTest {
     @Test
     fun `should not create exercise because exercise exist`() {
         // GIVEN
-        val seriesPhrasesRecord = SeriesPhrasesRecord(
-            level = 1,
-            code = "subgroup code",
-            exerciseName = "exercise name",
-            phrases = listOf("some text.", "next text"),
-            noiseLevel = 0,
-            noiseUrl = ""
-        )
+        val seriesPhrasesRecord =
+            SeriesPhrasesRecord(
+                level = 1,
+                code = "subgroup code",
+                exerciseName = "exercise name",
+                phrases = listOf("some text.", "next text"),
+                noiseLevel = 0,
+                noiseUrl = "",
+            )
         val subGroupMock = mockk<SubGroup>()
         val exerciseMock = mockk<Exercise>()
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns subGroupMock
@@ -110,21 +111,23 @@ internal class SeriesPhrasesRecordProcessorTest {
     @Test
     fun `should throw EntityNotFoundException`() {
         // GIVEN
-        val seriesPhrasesRecord = SeriesPhrasesRecord(
-            level = 1,
-            code = "subgroup code",
-            exerciseName = "exercise name",
-            phrases = listOf("some text.", "next text"),
-            noiseLevel = 0,
-            noiseUrl = ""
-        )
+        val seriesPhrasesRecord =
+            SeriesPhrasesRecord(
+                level = 1,
+                code = "subgroup code",
+                exerciseName = "exercise name",
+                phrases = listOf("some text.", "next text"),
+                noiseLevel = 0,
+                noiseUrl = "",
+            )
         val locale = BrnLocale.RU
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns null
 
         // WHEN
-        val exception = shouldThrow<EntityNotFoundException> {
-            seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), locale)
-        }
+        val exception =
+            shouldThrow<EntityNotFoundException> {
+                seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), locale)
+            }
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findByCodeAndLocale(any(), any()) }

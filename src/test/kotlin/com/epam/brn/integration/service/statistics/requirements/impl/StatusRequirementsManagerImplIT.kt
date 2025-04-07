@@ -14,21 +14,22 @@ import kotlin.test.assertEquals
  */
 
 class StatusRequirementsManagerImplIT : BaseIT() {
-
     @Autowired
     private lateinit var manager: StatusRequirementsManagerImpl
 
-    private val periodRequirementsWeek = listOf(
-        StatusRequirements(UserExercisingProgressStatus.BAD, 0, 5),
-        StatusRequirements(UserExercisingProgressStatus.GOOD, 5, 6),
-        StatusRequirements(UserExercisingProgressStatus.GREAT, 6, 8)
-    )
+    private val periodRequirementsWeek =
+        listOf(
+            StatusRequirements(UserExercisingProgressStatus.BAD, 0, 5),
+            StatusRequirements(UserExercisingProgressStatus.GOOD, 5, 6),
+            StatusRequirements(UserExercisingProgressStatus.GREAT, 6, 8),
+        )
 
-    private val periodRequirementsDay = listOf(
-        StatusRequirements(UserExercisingProgressStatus.BAD, 0, 15),
-        StatusRequirements(UserExercisingProgressStatus.GOOD, 15, 20),
-        StatusRequirements(UserExercisingProgressStatus.GREAT, 20, 60 * 24)
-    )
+    private val periodRequirementsDay =
+        listOf(
+            StatusRequirements(UserExercisingProgressStatus.BAD, 0, 15),
+            StatusRequirements(UserExercisingProgressStatus.GOOD, 15, 20),
+            StatusRequirements(UserExercisingProgressStatus.GREAT, 20, 60 * 24),
+        )
 
     @Test
     fun `getPeriodRequirements should return all requirements for WEEK period`() {

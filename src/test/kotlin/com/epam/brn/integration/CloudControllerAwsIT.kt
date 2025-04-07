@@ -27,7 +27,6 @@ private const val WORD = "fileName"
 @Tag("integration-test")
 @TestPropertySource(properties = ["cloud.provider=aws"])
 class CloudControllerAwsIT {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -44,11 +43,13 @@ class CloudControllerAwsIT {
     @Test
     fun `should get correct signature and policy for S3 upload`() {
         val filePath = "tasks/\${filename}"
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("/cloud/upload").queryParam("filePath", filePath)
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("/cloud/upload")
+                    .queryParam("filePath", filePath)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
 
         // THEN
         val response =
@@ -97,16 +98,19 @@ class CloudControllerAwsIT {
     fun `should upload allowed file to S3`() {
         val fileName = "$WORD.png"
         val fileData = "some text"
-        val file = MockMultipartFile(
-            "file",
-            fileName,
-            MediaType.APPLICATION_OCTET_STREAM_VALUE,
-            fileData.toByteArray()
-        )
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/cloud/upload/picture")
-                .file(file)
-        )
+        val file =
+            MockMultipartFile(
+                "file",
+                fileName,
+                MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                fileData.toByteArray(),
+            )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .multipart("/cloud/upload/picture")
+                    .file(file),
+            )
 
         // THEN
         resultAction
@@ -117,16 +121,19 @@ class CloudControllerAwsIT {
     fun `should not upload non allowed file by extension file to S3`() {
         val fileName = "$WORD.not-allowed-ext"
         val fileData = "some text"
-        val file = MockMultipartFile(
-            "file",
-            fileName,
-            MediaType.APPLICATION_OCTET_STREAM_VALUE,
-            fileData.toByteArray()
-        )
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/cloud/upload/picture")
-                .file(file)
-        )
+        val file =
+            MockMultipartFile(
+                "file",
+                fileName,
+                MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                fileData.toByteArray(),
+            )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .multipart("/cloud/upload/picture")
+                    .file(file),
+            )
 
         // THEN
         resultAction

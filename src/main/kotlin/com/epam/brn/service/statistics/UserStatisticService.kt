@@ -5,8 +5,7 @@ import com.epam.brn.dto.statistics.Statistics
 /**
  *@author Nikolai Lazarev
  */
-interface UserStatisticService <T : Statistics> {
-
+interface UserStatisticService<T : Statistics> {
     /**
      * Should return subGroups progress for user
      * @param subGroupsIds - list of sub groups ids which statistics should be returned

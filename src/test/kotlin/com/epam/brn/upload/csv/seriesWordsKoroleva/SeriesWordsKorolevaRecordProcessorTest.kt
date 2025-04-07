@@ -30,7 +30,6 @@ import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesWordsKorolevaRecordProcessorTest {
-
     @MockK
     private lateinit var seriesRepositoryMock: SeriesRepository
 
@@ -52,18 +51,20 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
     @InjectMockKs
     private lateinit var seriesWordsKorolevaRecordProcessor: SeriesWordsKorolevaRecordProcessor
 
-    private val series = Series(
-        id = 1L,
-        name = "Распознавание простых слов",
-        type = "type",
-        level = 1,
-        description = "Распознавание простых слов",
-        exerciseGroup = ExerciseGroup(
-            code = "SPEECH_RU_RU",
-            name = "Речевые упражнения",
-            description = "Речевые упражнения"
+    private val series =
+        Series(
+            id = 1L,
+            name = "Распознавание простых слов",
+            type = "type",
+            level = 1,
+            description = "Распознавание простых слов",
+            exerciseGroup =
+                ExerciseGroup(
+                    code = "SPEECH_RU_RU",
+                    name = "Речевые упражнения",
+                    description = "Речевые упражнения",
+                ),
         )
-    )
 
     private val level = 1
     private val exerciseName = "Однослоговые слова без шума"
@@ -73,12 +74,13 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
 
     @BeforeEach
     internal fun setUp() {
-        seriesWordsKorolevaRecordProcessor = SeriesWordsKorolevaRecordProcessor(
-            subGroupRepositoryMock,
-            resourceRepositoryMock,
-            exerciseRepositoryMock,
-            wordsServiceMock
-        )
+        seriesWordsKorolevaRecordProcessor =
+            SeriesWordsKorolevaRecordProcessor(
+                subGroupRepositoryMock,
+                resourceRepositoryMock,
+                exerciseRepositoryMock,
+                wordsServiceMock,
+            )
 
         every { seriesRepositoryMock.findById(1L) } returns Optional.of(series)
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", BrnLocale.RU.locale) } returns subGroupMock
@@ -87,7 +89,7 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
             resourceRepositoryMock.findFirstByWordAndLocaleAndWordType(
                 ofType(String::class),
                 ofType(String::class),
-                ofType(String::class)
+                ofType(String::class),
             )
         } returns Optional.empty()
         every { wordsServiceMock.getDefaultWomanVoiceForLocale(BrnLocale.RU.locale) } returns Voice.ALYSS.name
@@ -103,25 +105,30 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
         mockFindResourceByWordLike("дуб", resource_дуб())
     }
 
-    private fun mockFindResourceByWordLike(word: String, result: Resource) {
+    private fun mockFindResourceByWordLike(
+        word: String,
+        result: Resource,
+    ) {
         every { resourceRepositoryMock.findFirstByWordLike(word) } returns Optional.of(result)
     }
 
     @Test
     fun `should create correct exercise`() {
         val expected = createExercise()
-        val actual = seriesWordsKorolevaRecordProcessor.process(
-            mutableListOf(
-                SeriesWordsKorolevaRecord(
-                    level = level,
-                    code = "pictureUrl",
-                    exerciseName = exerciseName,
-                    words = words,
-                    playWordsCount = playWordsCount,
-                    wordsColumns = wordsColumns
-                )
-            )
-        ).first()
+        val actual =
+            seriesWordsKorolevaRecordProcessor
+                .process(
+                    mutableListOf(
+                        SeriesWordsKorolevaRecord(
+                            level = level,
+                            code = "pictureUrl",
+                            exerciseName = exerciseName,
+                            words = words,
+                            playWordsCount = playWordsCount,
+                            wordsColumns = wordsColumns,
+                        ),
+                    ),
+                ).first()
 
         assertThat(actual).isEqualTo(expected)
         verify { exerciseRepositoryMock.save(expected) }
@@ -131,32 +138,37 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
     fun `should create correct task`() {
         val expected = createExercise().tasks.first()
 
-        val actual = seriesWordsKorolevaRecordProcessor.process(
-            mutableListOf(
-                SeriesWordsKorolevaRecord(
-                    level = 1,
-                    code = "pictureUrl",
-                    exerciseName = exerciseName,
-                    playWordsCount = 1,
-                    wordsColumns = 3,
-                    words = listOf("(бал", "бум", "быль)")
-                )
-            )
-        ).first().tasks.first()
+        val actual =
+            seriesWordsKorolevaRecordProcessor
+                .process(
+                    mutableListOf(
+                        SeriesWordsKorolevaRecord(
+                            level = 1,
+                            code = "pictureUrl",
+                            exerciseName = exerciseName,
+                            playWordsCount = 1,
+                            wordsColumns = 3,
+                            words = listOf("(бал", "бум", "быль)"),
+                        ),
+                    ),
+                ).first()
+                .tasks
+                .first()
 
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `should create correct answer options`() {
-        val expected = setOf(
-            resource_бал(),
-            resource_бум(),
-            resource_быль(),
-            resource_вить(),
-            resource_гад(),
-            resource_дуб()
-        )
+        val expected =
+            setOf(
+                resource_бал(),
+                resource_бум(),
+                resource_быль(),
+                resource_вить(),
+                resource_гад(),
+                resource_дуб(),
+            )
         every { subGroupRepositoryMock.findByCodeAndLocale("pictureUrl", BrnLocale.RU.locale) } returns subGroupMock
         every { wordsServiceMock.getDefaultManVoiceForLocale(BrnLocale.RU.locale) } returns Voice.ALYSS.name
         every { exerciseRepositoryMock.findExerciseByNameAndLevel(exerciseName, 1) } returns Optional.empty()
@@ -165,8 +177,8 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "бал",
                     BrnLocale.RU.locale,
-                    Voice.ALYSS.name
-                )
+                    Voice.ALYSS.name,
+                ),
             )
         } returns "/test/бал.ogg"
         every {
@@ -174,8 +186,8 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "бум",
                     BrnLocale.RU.locale,
-                    Voice.ALYSS.name
-                )
+                    Voice.ALYSS.name,
+                ),
             )
         } returns "/test/бум.ogg"
         every {
@@ -183,8 +195,8 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "быль",
                     BrnLocale.RU.locale,
-                    Voice.ALYSS.name
-                )
+                    Voice.ALYSS.name,
+                ),
             )
         } returns "/test/быль.ogg"
         every {
@@ -192,8 +204,8 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "вить",
                     BrnLocale.RU.locale,
-                    Voice.ALYSS.name
-                )
+                    Voice.ALYSS.name,
+                ),
             )
         } returns "/test/вить.ogg"
         every {
@@ -201,8 +213,8 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "гад",
                     BrnLocale.RU.locale,
-                    Voice.ALYSS.name
-                )
+                    Voice.ALYSS.name,
+                ),
             )
         } returns "/test/гад.ogg"
         every {
@@ -210,25 +222,26 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                 AudioFileMetaData(
                     "дуб",
                     BrnLocale.RU.locale,
-                    Voice.ALYSS.name
-                )
+                    Voice.ALYSS.name,
+                ),
             )
         } returns "/test/дуб.ogg"
 
-        val tasks = seriesWordsKorolevaRecordProcessor
-            .process(
-                mutableListOf(
-                    SeriesWordsKorolevaRecord(
-                        1,
-                        "pictureUrl",
-                        exerciseName,
-                        words,
-                        playWordsCount,
-                        wordsColumns
-                    )
-                )
-            )
-            .first().tasks
+        val tasks =
+            seriesWordsKorolevaRecordProcessor
+                .process(
+                    mutableListOf(
+                        SeriesWordsKorolevaRecord(
+                            1,
+                            "pictureUrl",
+                            exerciseName,
+                            words,
+                            playWordsCount,
+                            wordsColumns,
+                        ),
+                    ),
+                ).first()
+                .tasks
 
         tasks.forEach {
             assertThat(it.answerOptions).containsExactlyElementsOf(expected)
@@ -248,103 +261,90 @@ internal class SeriesWordsKorolevaRecordProcessorTest {
                         exerciseName = exerciseName,
                         words = words,
                         playWordsCount = playWordsCount,
-                        wordsColumns = wordsColumns
-                    )
-                )
+                        wordsColumns = wordsColumns,
+                    ),
+                ),
             )
         }
     }
 
     private fun createExercise(): Exercise {
-        val exercise = Exercise(
-            name = exerciseName,
-            playWordsCount = 1,
-            level = 1
-        )
+        val exercise =
+            Exercise(
+                name = exerciseName,
+                playWordsCount = 1,
+                level = 1,
+            )
         exercise.addTasks(createTasks(exercise))
         return exercise
     }
 
-    private fun createTasks(exercise: Exercise): List<Task> {
-        return listOf(
-            Task(
-                exercise = exercise,
-                serialNumber = 0,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 1,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 2,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 3,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 4,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-            ),
-            Task(
-                exercise = exercise,
-                serialNumber = 5,
-                answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
-            )
-        )
-    }
+    private fun createTasks(exercise: Exercise): List<Task> = listOf(
+        Task(
+            exercise = exercise,
+            serialNumber = 0,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 1,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 2,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 3,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 4,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+        ),
+        Task(
+            exercise = exercise,
+            serialNumber = 5,
+            answerOptions = mutableSetOf(resource_бал(), resource_бум(), resource_быль()),
+        ),
+    )
 
-    private fun resource_бал(): Resource {
-        return Resource(
-            word = "бал",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бал.ogg",
-        )
-    }
+    private fun resource_бал(): Resource = Resource(
+        word = "бал",
+        wordType = WordType.OBJECT.toString(),
+        audioFileUrl = "/test/бал.ogg",
+    )
 
-    private fun resource_бум(): Resource {
-        return Resource(
-            word = "бум",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/бум.ogg",
-        )
-    }
+    private fun resource_бум(): Resource = Resource(
+        word = "бум",
+        wordType = WordType.OBJECT.toString(),
+        audioFileUrl = "/test/бум.ogg",
+    )
 
-    private fun resource_быль(): Resource {
-        return Resource(
-            word = "быль",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/быль.ogg",
-        )
-    }
+    private fun resource_быль(): Resource = Resource(
+        word = "быль",
+        wordType = WordType.OBJECT.toString(),
+        audioFileUrl = "/test/быль.ogg",
+    )
 
-    private fun resource_вить(): Resource {
-        return Resource(
-            word = "вить",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/вить.ogg",
-        )
-    }
+    private fun resource_вить(): Resource = Resource(
+        word = "вить",
+        wordType = WordType.OBJECT.toString(),
+        audioFileUrl = "/test/вить.ogg",
+    )
 
-    private fun resource_гад(): Resource {
-        return Resource(
-            word = "гад",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/гад.ogg",
-        )
-    }
+    private fun resource_гад(): Resource = Resource(
+        word = "гад",
+        wordType = WordType.OBJECT.toString(),
+        audioFileUrl = "/test/гад.ogg",
+    )
 
-    private fun resource_дуб(): Resource {
-        return Resource(
-            word = "дуб",
-            wordType = WordType.OBJECT.toString(),
-            audioFileUrl = "/test/дуб.ogg",
-        )
-    }
+    private fun resource_дуб(): Resource = Resource(
+        word = "дуб",
+        wordType = WordType.OBJECT.toString(),
+        audioFileUrl = "/test/дуб.ogg",
+    )
 }

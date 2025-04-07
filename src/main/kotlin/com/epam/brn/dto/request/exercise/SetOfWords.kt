@@ -16,7 +16,7 @@ data class SetOfWords(
     @Schema(description = "Words with wordType=ADDITION_OBJECT_DESCRIPTION", example = "[красные, белые, желтые]")
     val additionObjectDescription: List<String> = emptyList(),
     @Schema(description = "Words with wordType=ADDITION_OBJECT", example = "[шторы, пышки, вилки]")
-    val additionObject: List<String> = emptyList()
+    val additionObject: List<String> = emptyList(),
 ) {
     fun toRecordList(): List<String> = listOf(
         count.joinToString(separator = StringUtils.SPACE),
@@ -24,7 +24,7 @@ data class SetOfWords(
         objectWord.joinToString(separator = StringUtils.SPACE),
         objectAction.joinToString(separator = StringUtils.SPACE),
         additionObjectDescription.joinToString(separator = StringUtils.SPACE),
-        additionObject.joinToString(separator = StringUtils.SPACE)
+        additionObject.joinToString(separator = StringUtils.SPACE),
     )
 
     fun toFlattenList(): List<String> = listOf(

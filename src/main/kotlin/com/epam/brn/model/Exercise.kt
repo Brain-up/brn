@@ -38,14 +38,13 @@ class Exercise(
     var active: Boolean = true,
     var playWordsCount: Int = 1,
     var wordsColumns: Int = 3,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_group_id")
     var subGroup: SubGroup? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val tasks: MutableSet<Task> = LinkedHashSet(),
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val signals: MutableSet<Signal> = LinkedHashSet()
+    val signals: MutableSet<Signal> = LinkedHashSet(),
 ) {
     @LastModifiedBy
     @Column(name = "changed_by")
@@ -81,7 +80,7 @@ class Exercise(
         wordsColumns = wordsColumns,
         words = tasks.flatMap { it.answerOptions }.associate { it.id!! to it.word },
         subGroupName = subGroup?.name,
-        seriesName = subGroup?.series?.name
+        seriesName = subGroup?.series?.name,
     )
 
     override fun equals(other: Any?): Boolean {

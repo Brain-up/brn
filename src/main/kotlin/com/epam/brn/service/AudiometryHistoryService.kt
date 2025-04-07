@@ -20,9 +20,10 @@ class AudiometryHistoryService(
     @Transactional(rollbackOn = [Exception::class])
     fun save(request: AudiometryHistoryRequest): Long {
         val currentUser = userAccountService.getCurrentUser()
-        val audiometryTask = audiometryTaskRepository
-            .findById(request.audiometryTaskId!!)
-            .orElseThrow { EntityNotFoundException("AudiometryTask with id=$request.audiometryTaskId was not found!") }
+        val audiometryTask =
+            audiometryTaskRepository
+                .findById(request.audiometryTaskId!!)
+                .orElseThrow { EntityNotFoundException("AudiometryTask with id=$request.audiometryTaskId was not found!") }
         val headphonesFromUser = getSpecificHeadphonesFromCurrentUser(currentUser.headphones, request.headphones)
         val audiometryHistory = request.toEntity(currentUser, audiometryTask, headphonesFromUser)
         val savedAudiometryHistory = audiometryHistoryRepository.save(audiometryHistory)
@@ -32,14 +33,16 @@ class AudiometryHistoryService(
                     SinAudiometryResult(
                         frequency = frequency,
                         soundLevel = sound,
-                        audiometryHistory = savedAudiometryHistory
-                    )
+                        audiometryHistory = savedAudiometryHistory,
+                    ),
                 )
             }
         return savedAudiometryHistory.id!!
     }
 
-    private fun getSpecificHeadphonesFromCurrentUser(headphones: MutableSet<Headphones>, headphonesId: Long?) =
-        headphones.find { entity -> entity.id == headphonesId }
-            ?: throw IllegalArgumentException("Current user has ho headphones with id=$headphonesId")
+    private fun getSpecificHeadphonesFromCurrentUser(
+        headphones: MutableSet<Headphones>,
+        headphonesId: Long?,
+    ) = headphones.find { entity -> entity.id == headphonesId }
+        ?: throw IllegalArgumentException("Current user has ho headphones with id=$headphonesId")
 }

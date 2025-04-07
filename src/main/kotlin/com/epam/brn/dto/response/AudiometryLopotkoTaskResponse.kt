@@ -9,8 +9,7 @@ data class AudiometryLopotkoTaskResponse(
     val frequencyZone: String,
     val minFrequency: Int,
     val maxFrequency: Int,
-
     val count: Int = 10,
     val showSize: Int = 9,
-    val answerOptions: MutableSet<Resource>
+    val answerOptions: MutableSet<Resource>,
 )

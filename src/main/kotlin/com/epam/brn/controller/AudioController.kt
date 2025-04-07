@@ -20,8 +20,9 @@ import javax.annotation.security.RolesAllowed
 @Tag(name = "Audio", description = "Contains actions for getting audio file for words")
 @ConditionalOnProperty(name = ["default.tts.provider"])
 @RolesAllowed(BrnRole.USER)
-class AudioController(private val userAnalyticsService: UserAnalyticsService) {
-
+class AudioController(
+    private val userAnalyticsService: UserAnalyticsService,
+) {
     @GetMapping(produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @Operation(summary = "Get audio resource for text and exerciseId")
     fun getAudioByteArray(
@@ -33,23 +34,23 @@ class AudioController(private val userAnalyticsService: UserAnalyticsService) {
         @RequestParam(required = false) gender: String? = null,
         @RequestParam(required = false) pitch: String? = null,
         @RequestParam(required = false) style: String? = null,
-    ): ResponseEntity<ByteArray> {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(
-                toByteArray(
-                    userAnalyticsService.prepareAudioStreamForUser(
-                        exerciseId,
-                        AudioFileMetaData(
-                            text = text,
-                            locale = locale,
-                            voice = voice,
-                            gender = gender,
-                            speedFloat = speed,
-                            pitch = pitch,
-                            style = style
-                        )
-                    )
-                )
-            )
-    }
+    ): ResponseEntity<ByteArray> = ResponseEntity
+        .ok()
+        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        .body(
+            toByteArray(
+                userAnalyticsService.prepareAudioStreamForUser(
+                    exerciseId,
+                    AudioFileMetaData(
+                        text = text,
+                        locale = locale,
+                        voice = voice,
+                        gender = gender,
+                        speedFloat = speed,
+                        pitch = pitch,
+                        style = style,
+                    ),
+                ),
+            ),
+        )
 }

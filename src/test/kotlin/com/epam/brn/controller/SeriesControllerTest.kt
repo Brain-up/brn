@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesControllerTest {
-
     @InjectMockKs
     lateinit var seriesController: SeriesController
 

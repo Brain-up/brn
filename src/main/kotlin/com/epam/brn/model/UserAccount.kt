@@ -53,7 +53,7 @@ class UserAccount(
     @ManyToOne(fetch = FetchType.LAZY)
     var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var headphones: MutableSet<Headphones> = hashSetOf()
+    var headphones: MutableSet<Headphones> = hashSetOf(),
 ) {
     var password: String? = null
 
@@ -64,7 +64,7 @@ class UserAccount(
     @JoinTable(
         name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")],
     )
     var roleSet: MutableSet<Role> = hashSetOf()
 
@@ -81,14 +81,16 @@ class UserAccount(
         avatar = avatar,
         photo = photo,
         description = description,
-        headphones = headphones
-            .map(Headphones::toDto)
-            .toHashSet(),
-        doctorId = doctor?.id
+        headphones =
+            headphones
+                .map(Headphones::toDto)
+                .toHashSet(),
+        doctorId = doctor?.id,
     ).also {
-        it.roles = this.roleSet
-            .map(Role::name)
-            .toMutableSet()
+        it.roles =
+            this.roleSet
+                .map(Role::name)
+                .toMutableSet()
     }
 
     fun toAnalyticsDto() = UserWithAnalyticsResponse(
