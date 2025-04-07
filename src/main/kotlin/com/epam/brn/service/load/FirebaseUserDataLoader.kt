@@ -5,7 +5,6 @@ import com.epam.brn.repo.UserAccountRepository
 import com.google.firebase.auth.EmailIdentifier
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ImportUserRecord
-import com.google.firebase.auth.UserIdentifier
 import com.google.firebase.auth.UserImportOptions
 import com.google.firebase.auth.hash.Bcrypt
 import org.apache.logging.log4j.kotlin.logger
@@ -18,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import java.util.UUID
-import java.util.stream.Collectors
 
 @Profile("!integration-tests")
 @Service
@@ -51,26 +49,23 @@ class FirebaseUserDataLoader(
             val foundedUsersContentMap = foundedUsersContent.associateBy { it.id }
             val userEmails =
                 foundedUsersContent
-                    .stream()
                     .map { createEmailIdentified(it) }
                     .filter { it != null }
-                    .collect(Collectors.toList())
+                    .toList()
 
-            val foundedFirebaseUsers = firebaseAuth.getUsers(userEmails as Collection<UserIdentifier>?)
+            val foundedFirebaseUsers = firebaseAuth.getUsers(userEmails)
             val map = foundedFirebaseUsers.users.associateBy { it.email }
 
             foundedUsersContent
-                .filter {
-                    !map.containsKey(it.email)
-                }.forEach {
+                .filter { !map.containsKey(it.email) }
+                .forEach {
                     it.userId = UUID.randomUUID().toString()
 
                     val pwd =
-                        if (StringUtils.hasText(it.password)) {
+                        if (StringUtils.hasText(it.password))
                             it.password?.encodeToByteArray()
-                        } else {
+                        else
                             passwordEncoder.encode(UUID.randomUUID().toString()).encodeToByteArray()
-                        }
 
                     try {
                         users.add(
@@ -92,7 +87,7 @@ class FirebaseUserDataLoader(
 
             if (users.size > 0) {
                 val importUsers = firebaseAuth.importUsers(users, options)
-                importUsers.errors.stream().forEach {
+                importUsers.errors.forEach {
                     log.error("Import user to firebase error: ${it.reason}.")
                     log.debug("Index: ${it.index}, idUsers.size: ${idUsers.size}")
                     val userId = idUsers[it.index]
