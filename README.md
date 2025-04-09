@@ -7,6 +7,8 @@ It is projected to contain several series of media exercises, which should be ad
 Our current version is here : https://brainup.site (test user: default@default.ru/password, test specialist: default2@default.ru/password ).
 Now you as a user can register and start doing exercises.
 
+Very useful schema of platform structure and features: https://github.com/Brain-up/brn/wiki/Some-platform-organization-description
+
 Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
 Product Vision: [https://github.com/Brain-up/brn/wiki/Product-Vision](https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision).
 
