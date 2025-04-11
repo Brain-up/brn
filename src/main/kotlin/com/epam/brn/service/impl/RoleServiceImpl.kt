@@ -9,14 +9,15 @@ import com.epam.brn.service.RoleService
 import org.springframework.stereotype.Service
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
+import org.springframework.data.repository.findByIdOrNull
 
 @Service
 class RoleServiceImpl(
     private val roleRepository: RoleRepository,
 ) : RoleService {
     override fun findById(id: Long): Role = roleRepository
-        .findById(id)
-        .orElseThrow { EntityNotFoundException("Role with id = $id is not found") }
+        .findByIdOrNull(id)
+        ?: throw EntityNotFoundException("Role with id = $id is not found")
 
     override fun findByName(name: String): Role = roleRepository
         .findByName(name)

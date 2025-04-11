@@ -16,7 +16,7 @@ val springDocOpenApiVersion: String by properties
 plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management")
-    kotlin("jvm")
+    kotlin("jvm") version "1.9.22"
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
     id("org.jetbrains.kotlin.plugin.allopen")

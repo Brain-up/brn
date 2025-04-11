@@ -10,6 +10,7 @@ import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.repository.findByIdOrNull
 
 @Service
 class ContributorServiceImpl(
@@ -43,8 +44,8 @@ class ContributorServiceImpl(
     ): ContributorResponse {
         val contributor =
             contributorRepository
-                .findById(id)
-                .orElseThrow { EntityNotFoundException("Contributor with id=$id was not found") }
+                .findByIdOrNull(id)
+                ?: throw EntityNotFoundException("Contributor with id=$id was not found")
         contributor.name = contributorRequest.name
         contributor.nameEn = contributorRequest.nameEn
         contributor.description = contributorRequest.description
