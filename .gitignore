@@ -19,6 +19,7 @@ creds.txt
 .settings
 .springBeans
 .sts4-cache
+frontend-angular/package-lock.json
 
 ### IntelliJ IDEA ###
 .idea
