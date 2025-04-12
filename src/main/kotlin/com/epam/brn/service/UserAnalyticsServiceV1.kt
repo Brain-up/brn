@@ -4,5 +4,8 @@ import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import org.springframework.data.domain.Pageable
 
 interface UserAnalyticsServiceV1 {
-    fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse>
+    fun getUsersWithAnalytics(
+        pageable: Pageable,
+        role: String,
+    ): List<UserWithAnalyticsResponse>
 }

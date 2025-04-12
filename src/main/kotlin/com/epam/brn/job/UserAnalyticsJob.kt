@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 @ConditionalOnProperty(name = ["brn.user.analytics.job.enabled"], havingValue = "true")
 class UserAnalyticsJob(
-    private val jdbcTemplate: JdbcTemplate
+    private val jdbcTemplate: JdbcTemplate,
 ) {
     private val log = logger()
+
     @Scheduled(cron = "@midnight")
     @Transactional
     fun fillUserAnalytics() {
@@ -39,12 +40,12 @@ private const val FILL_USER_ANALYTICS_SQL: String = """
                     FROM study_history s1
                     WHERE s1.user_id = s.user_id
                       AND s1.start_time between date_trunc('month', current_date)
-                      AND date_trunc('month', current_date) + interval '1 month - 1 microsecond'),
+                      AND current_date),
                     r.name            
             FROM study_history s,
                  user_roles ur,
                  role r
             WHERE s.user_id = ur.user_id
-                  AND ur.role_id = r.id
+              AND ur.role_id = r.id
             GROUP BY s.user_id, r.name;
         """

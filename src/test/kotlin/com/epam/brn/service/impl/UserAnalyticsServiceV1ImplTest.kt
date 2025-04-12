@@ -24,7 +24,6 @@ private const val ONE_LONG = 1L
 
 @ExtendWith(MockKExtension::class)
 class UserAnalyticsServiceV1ImplTest {
-
     @InjectMockKs
     lateinit var service: UserAnalyticsServiceV1Impl
 

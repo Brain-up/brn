@@ -25,7 +25,10 @@ interface UserAnalyticsRepository : JpaRepository<UserAnalytics, Long> {
      from UserAnalytics a 
      join UserAccount u on a.userId = u.id  
      where a.roleName=:roleName
-    """
+    """,
     )
-    fun getUserAnalytics(pageable: Pageable, roleName: String): List<UsersWithAnalyticsView>
+    fun getUserAnalytics(
+        pageable: Pageable,
+        roleName: String,
+    ): List<UsersWithAnalyticsView>
 }

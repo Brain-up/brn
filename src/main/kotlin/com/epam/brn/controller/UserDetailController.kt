@@ -39,7 +39,7 @@ class UserDetailController(
     private val doctorService: DoctorService,
     private val config: UserDetailControllerConfig,
     private val userAnalyticsService: UserAnalyticsService,
-    private val userAnalyticsServiceV1: UserAnalyticsServiceV1
+    private val userAnalyticsServiceV1: UserAnalyticsServiceV1,
 ) {
     @GetMapping
     @Operation(summary = "Get all users with/without analytic data")
@@ -49,7 +49,12 @@ class UserDetailController(
         @RequestParam("role", defaultValue = "USER") role: String,
         @PageableDefault pageable: Pageable,
     ): ResponseEntity<Any> {
-        val users = if (withAnalytics) if (config.isUseNewAnalyticsService) userAnalyticsServiceV1.getUsersWithAnalytics(pageable, role) else userAnalyticsService.getUsersWithAnalytics(pageable, role)
+        val users =
+            if (withAnalytics)
+                if (config.isUseNewAnalyticsService)
+                    userAnalyticsServiceV1.getUsersWithAnalytics(pageable, role)
+                else
+                    userAnalyticsService.getUsersWithAnalytics(pageable, role)
             else
                 userAccountService.getUsers(pageable, role)
         return ResponseEntity.ok().body(BrnResponse(data = users))

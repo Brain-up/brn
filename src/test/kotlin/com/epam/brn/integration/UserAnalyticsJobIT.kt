@@ -60,7 +60,7 @@ class UserAnalyticsJobIT : BaseIT() {
             it.lastDone shouldBe secondStudyHistory.startTime
             it.spentTime shouldBe (firstStudyHistory.spentTimeInSeconds ?: 0L) + (secondStudyHistory.spentTimeInSeconds ?: 0L)
             it.doneExercises shouldBe 2
-            it.studyDays shouldBe 1
+            it.studyDays shouldBe 0
             it.roleName shouldBe roleName
         }
     }
